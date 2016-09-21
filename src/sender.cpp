@@ -6,11 +6,11 @@
 
 // #include "std_msgs/Float32MultiArray.h"
 // #include "beginner_tutorials/robocup_command.h"
-#include "roboteam_robothub/robot_command.h"
+#include "roboteam_msgs/RobotCommand.h"
 
 #include <iostream>
 
-void sendCommands(const roboteam_robothub::robot_command::ConstPtr &_msg)
+void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
     ROS_INFO_STREAM("message received for robot: " << _msg->id);
 

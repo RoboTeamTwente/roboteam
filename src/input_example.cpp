@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 
-#include "roboteam_robothub/robot_command.h"
+#include "roboteam_msgs/RobotCommand.h"
 
 #include <vector>
 #include <iostream>
@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "input_example");
     ros::NodeHandle n;
-    ros::Publisher chatter_pub = n.advertise<roboteam_robothub::robot_command>("robotcommands", 1000);
+    ros::Publisher chatter_pub = n.advertise<roboteam_msgs::RobotCommand>("robotcommands", 1000);
     ros::Rate loop_rate(60);
 
     int id;
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     kick_vel = 0.0;
     chip_vel = 0.0;
 
-    roboteam_robothub::robot_command command;
+    roboteam_msgs::RobotCommand command;
 
     command.id = id;
     command.active = active;

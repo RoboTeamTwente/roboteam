@@ -8,6 +8,7 @@ set(libs)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  roboteam_msgs
 )
 
 set(QT_USE_QTNETWORK TRUE)
@@ -19,10 +20,10 @@ find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 list(APPEND libs ${PROTOBUF_LIBRARIES})
 
-add_message_files(
-	FILES 
-	robot_command.msg
-)
+#add_message_files(
+#	FILES 
+#	robot_command.msg
+#)
 
 protobuf_generate_cpp(PROTO_CPP PROTO_H
     src/grSim_Replacement.proto
@@ -36,16 +37,15 @@ include_directories(
 
 add_executable(sender ${PROTO_CPP} ${PROTO_H} src/sender.cpp)
 target_link_libraries(sender ${catkin_LIBRARIES} ${libs})
-#target_link_libraries(sender ${libs})
-add_dependencies(sender roboteam_robothub_generate_messages_cpp)
+add_dependencies(sender roboteam_msgs_generate_messages_cpp)
 
 add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})
 
-find_package(message_generation)
+#find_package(message_generation)
 
-generate_messages(DEPENDENCIES std_msgs)
+#generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime roboteam_msgs
 )

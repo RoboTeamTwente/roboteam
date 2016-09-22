@@ -5,10 +5,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(libs)
 
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   roboteam_msgs
+  rostest
 )
 
 set(QT_USE_QTNETWORK TRUE)
@@ -32,6 +35,7 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
 )
 
 include_directories(
+  src
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -49,3 +53,6 @@ target_link_libraries(input ${catkin_LIBRARIES})
 catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
+
+catkin_add_gtest(packing_test test/packing_test.cpp src/packing.cpp)
+target_link_libraries(packing_test ${catkin_LIBRARIES})

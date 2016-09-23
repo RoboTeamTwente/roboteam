@@ -1,4 +1,4 @@
-#include "packing.h"
+#include "roboteam_robothub/packing.h"
 
 #include <array>
 #include <cassert>
@@ -47,10 +47,6 @@ boost::optional<std::array<uint8_t, 7>> createRobotPacket(int id, int robot_vel,
                                                          bool rot_cclockwise, int w_vel, uint8_t kick_force,
                                                          bool do_kick, bool chip, bool forced,
                                                          bool dribble_cclockwise, uint8_t dribble_vel) {
-    // TODO: Maybe replace this with if's and then a ROS_ERROR?
-    // And the function will just plug zero or a default value
-    // Or maybe return an optional?
-    // Make sure every value is within range
     if (!((id >= 0 && id < 16)
             && (robot_vel >= 0 && robot_vel < 4096)
             && (w >= 0 && w < 512)
@@ -67,7 +63,7 @@ boost::optional<std::array<uint8_t, 7>> createRobotPacket(int id, int robot_vel,
     // First and second nibble of robot velocity
     byteArr[1] = static_cast<uint8_t>(robot_vel);
     // Second to ninth bit of moving direction
-    byteArr[2] = uint8_t{w >> 1};
+    byteArr[2] = static_cast<uint8_t>(w >> 1);
     // First bit of moving direction
     // Then bit that designates clockwise rotation or not
     // Last three bits of angular velocity

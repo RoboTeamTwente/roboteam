@@ -1,4 +1,4 @@
-#include "packing.h"
+#include "roboteam_robothub/packing.h"
 
 #include <iostream>
 
@@ -121,7 +121,3 @@ TEST(PackingTestSuite, simplePacking) {
     }
 }
 
-int main(int argc, char **argv){
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

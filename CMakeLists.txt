@@ -35,7 +35,7 @@ protobuf_generate_cpp(PROTO_CPP PROTO_H
 )
 
 include_directories(
-  src
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -54,5 +54,11 @@ catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
 
-catkin_add_gtest(packing_test test/packing_test.cpp src/packing.cpp)
-target_link_libraries(packing_test ${catkin_LIBRARIES})
+catkin_add_gtest(robothub_test
+    test/main.cpp
+    test/packing_test.cpp
+    test/comm_test.cpp
+    
+    src/packing.cpp
+    )
+target_link_libraries(robothub_test ${catkin_LIBRARIES})

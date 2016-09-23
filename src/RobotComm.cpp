@@ -20,7 +20,11 @@ bool RobotComm::sendRobotPacket(
 
     if (packet) {
         send(*packet);
+
+        return true;
     }
+
+    return false;
 }
 
 void RobotComm::send(std::array<uint8_t, 7> msg) {

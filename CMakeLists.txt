@@ -39,13 +39,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(sender ${PROTO_CPP} ${PROTO_H} src/sender.cpp)
-target_link_libraries(sender ${catkin_LIBRARIES} ${libs})
-add_dependencies(sender roboteam_msgs_generate_messages_cpp)
-
-add_executable(input src/input_example.cpp)
-target_link_libraries(input ${catkin_LIBRARIES})
-
 #find_package(message_generation)
 
 #generate_messages(DEPENDENCIES std_msgs)
@@ -53,6 +46,14 @@ target_link_libraries(input ${catkin_LIBRARIES})
 catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
+
+add_executable(sender ${PROTO_CPP} ${PROTO_H} src/sender.cpp)
+target_link_libraries(sender ${catkin_LIBRARIES} ${libs})
+add_dependencies(sender roboteam_msgs_generate_messages_cpp)
+
+add_executable(input src/input_example.cpp)
+target_link_libraries(input ${catkin_LIBRARIES})
+add_dependencies(input ${catkin_EXPORTED_TARGETS})
 
 catkin_add_gtest(robothub_test
     test/main.cpp

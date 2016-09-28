@@ -1,12 +1,10 @@
-#include <QtNetwork>
-#include <ros/ros.h>
-
+#include "roboteam_msgs/RobotCommand.h"
 #include "grSim_Packet.pb.h"
 #include "grSim_Commands.pb.h"
 
-#include "roboteam_msgs/RobotCommand.h"
-
 #include <iostream>
+#include <QtNetwork>
+#include <ros/ros.h>
 
 void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
@@ -49,8 +47,7 @@ void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     udpsocket.writeDatagram(dgram, _addr, _port);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;

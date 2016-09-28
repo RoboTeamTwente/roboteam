@@ -19,4 +19,8 @@ Position Position::move(const Vector2& vec, double rot_vel) {
     return Position(x + vec.x, y + vec.y, rot + rot_vel);
 }
 
+bool Position::operator==(const Position& other) {
+    return x == other.x && y == other.y && rot == other.rot;
+}
+
 }

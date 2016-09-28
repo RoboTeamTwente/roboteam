@@ -3,13 +3,13 @@ project(roboteam_robothub)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(libs)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  message_generation
   roboteam_msgs
   rostest
 )
@@ -17,21 +17,18 @@ find_package(catkin REQUIRED COMPONENTS
 set(QT_USE_QTNETWORK TRUE)
 find_package(Qt REQUIRED)
 include(${QT_USE_FILE})
-list(APPEND libs ${QT_LIBRARIES})
 
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
-list(APPEND libs ${PROTOBUF_LIBRARIES})
-
-#add_message_files(
-#	FILES 
-#	robot_command.msg
-#)
 
 protobuf_generate_cpp(PROTO_CPP PROTO_H
-    src/grSim_Replacement.proto
-    src/grSim_Commands.proto
-    src/grSim_Packet.proto
+    src/proto/grSim_Replacement.proto
+    src/proto/grSim_Commands.proto
+    src/proto/grSim_Packet.proto
+)
+
+catkin_package(
+	CATKIN_DEPENDS message_runtime
 )
 
 include_directories(
@@ -47,9 +44,9 @@ catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
 
-add_executable(sender ${PROTO_CPP} ${PROTO_H} src/sender.cpp)
-target_link_libraries(sender ${catkin_LIBRARIES} ${libs})
-add_dependencies(sender roboteam_msgs_generate_messages_cpp)
+add_executable(roboteam_robothub src/main.cpp ${PROTO_CPP} ${PROTO_H})
+target_link_libraries(roboteam_robothub ${catkin_LIBRARIES} ${QT_LIBRARIES} ${PROTOBUF_LIBRARIES} ${PROTOBUF_LIBRARY})
+add_dependencies(roboteam_robothub roboteam_msgs_generate_messages_cpp)
 
 add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})

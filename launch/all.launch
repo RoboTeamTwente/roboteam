@@ -1,0 +1,15 @@
+<launch>
+	<node pkg="roboteam_robothub" name="sender" type="sender"/>
+	<node pkg="roboteam_vision" name="vision" type="roboteam_vision"/>
+	<node pkg="roboteam_world" name="world" type="dummy_world"/>
+
+	<node pkg="joy" type="joy_node" name="js0" >
+        <remap from="joy" to="js0" />
+        <param name="dev" value="/dev/input/js0" />
+    </node>
+    
+	<node pkg="roboteam_input" type="roboteam_input" name="roboteam_input_1">
+		<param name="joy" value="js0" />
+	</node>
+
+</launch>

@@ -1,5 +1,5 @@
 #include <QtNetwork>
-#include <ros/ros.h>
+#include "ros/ros.h" 
 
 #include "grSim_Packet.pb.h"
 #include "grSim_Commands.pb.h"
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber sub = n.subscribe("robotcommands", 1000, sendCommands);
+    ros::Subscriber sub = n.subscribe("robotcommands1", 1000, sendCommands);
     loop_rate.sleep();
     ros::spin();
     

@@ -23,4 +23,8 @@ bool Position::operator==(const Position& other) {
     return x == other.x && y == other.y && rot == other.rot;
 }
 
+bool Position::operator!=(const Position& other) {
+    return x != other.x || y != other.y || rot != other.rot;
+}
+
 }

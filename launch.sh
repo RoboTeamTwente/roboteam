@@ -9,12 +9,17 @@ else
 fi
 
 pushd $WS
-catkin_make
+catkin_make >/dev/null 2>/dev/null
 source devel/setup.sh
 popd
 
-pushd $WS/src/NavSim
-java -jar ./NavSim.jar &
-popd
+shutdown() {
+    PGID=$(ps -o pgid= $$ | grep -o [0-9]*)
+    setsid kill -- -$PGID
+    exit 0
+}
 
-grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch && fg
+trap "shutdown" SIGINT SIGTERM
+
+(cd $WS/src/NavSim; java -jar ./NavSim.jar) & grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch >/dev/null 2>/dev/null &
+wait

@@ -17,6 +17,7 @@ public:
 	Position rotate(double rot_vel);
 	Position move(const Vector2& vec, double rot_vel);
 	bool operator==(const Position& other);
+	bool operator!=(const Position& other);
 	double x, y, rot;
 };
 

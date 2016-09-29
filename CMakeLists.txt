@@ -182,3 +182,12 @@ target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+catkin_add_gtest(utils_test 
+    test/main.cpp 
+    test/Vector2Test.cpp
+    test/PositionTest.cpp
+    src/Vector2.cpp
+    src/Position.cpp
+)
+target_link_libraries(utils_test ${catkin_LIBRARIES})

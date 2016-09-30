@@ -6,7 +6,9 @@ Position::~Position(){}
 Vector2 Position::location() {
     return Vector2(x, y);
 }
-
+double Position::getRot(){
+	return rot;
+}
 Position Position::translate(const Vector2& vec) {
     return Position(x + vec.x, y + vec.y, rot);
 }

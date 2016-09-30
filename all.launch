@@ -2,6 +2,5 @@
     <param name="num_cams" value="1"/>
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
-    <node pkg="steering" type="steering" name="steering"/>
     <node pkg="roboteam_robothub" type="sender" name="sender"/>
 </launch>

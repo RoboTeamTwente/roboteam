@@ -13,6 +13,7 @@ public:
 	Position(double x, double y, double rot) : x(x), y(y), rot(rot) {}
 	~Position();
 	Vector2 location();
+	double getRot();
 	Position translate(const Vector2& vec);
 	Position rotate(double rot_vel);
 	Position move(const Vector2& vec, double rot_vel);

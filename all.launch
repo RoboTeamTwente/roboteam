@@ -3,5 +3,5 @@
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
     <node pkg="steering" type="steering" name="steering"/>
-    <node pkg="roboteam_robothub" type="sender" name="sender"/>
+    <node pkg="roboteam_robothub" type="roboteam_robothub" name="sender"/>
 </launch>

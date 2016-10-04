@@ -8,7 +8,7 @@
 
 void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
-    ROS_INFO_STREAM("message received for robot: " << _msg->id);
+    //ROS_INFO_STREAM("message received for robot: " << _msg->id);
 
     grSim_Packet packet;
     bool yellow = true;
@@ -28,12 +28,24 @@ void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     command->set_veltangent(_msg->x_vel);
     command->set_velnormal(_msg->y_vel);
     command->set_velangular(_msg->w_vel);
+	
+	if(_msg->kicker){
+    	command->set_kickspeedx(_msg->kicker_vel);
+    }
+    else {
+    	command->set_kickspeedx(0);
+    }
+    if(_msg->chipper){
 
-    command->set_kickspeedx(_msg->kick_vel);
-    command->set_kickspeedz(_msg->chip_vel);
+    	command->set_kickspeedz(_msg->chipper_vel);
+    }
+    else {
+    	command->set_kickspeedz(0);
+    }
+    
     command->set_spinner(_msg->dribbler);
-
-    QByteArray dgram;
+	
+	QByteArray dgram;
     dgram.resize(packet.ByteSize());
     packet.SerializeToArray(dgram.data(), dgram.size());
     
@@ -52,7 +64,7 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber sub = n.subscribe("robotcommands1", 1000, sendCommands);
+    ros::Subscriber sub = n.subscribe("robotcommands", 1000, sendCommands);
     loop_rate.sleep();
     ros::spin();
     

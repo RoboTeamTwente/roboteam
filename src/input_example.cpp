@@ -47,8 +47,8 @@ int main(int argc, char **argv)
     command.y_vel = y_vel;
     command.w_vel = w_vel;
     command.dribbler = dribbler;
-    command.kick_vel = kick_vel;
-    command.chip_vel = chip_vel;
+    command.kicker_vel = kick_vel;
+    command.chipper_vel = chip_vel;
 
     // Publish the command
     chatter_pub.publish(command);

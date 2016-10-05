@@ -6,6 +6,8 @@ project(roboteam_utils)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED)
 
+set(CMAKE_CXX_FLAGS "--std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -187,6 +189,7 @@ catkin_add_gtest(utils_test
     test/main.cpp 
     test/Vector2Test.cpp
     test/PositionTest.cpp
+    test/GraphTest.cpp
     src/Vector2.cpp
     src/Position.cpp
 )

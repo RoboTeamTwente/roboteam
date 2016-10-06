@@ -7,6 +7,8 @@
 #include <list>
 #include <stdint.h>
 #include <map>
+#include <string>
+#include <sstream>
 
 namespace rtt {
 
@@ -55,7 +57,7 @@ public:
     void connect(const Vertex<T>& in, const Vertex<T>& out, const double cost) {
         Edge<T> e(in, out, cost);
         adj[in.id].push_back(e);
-        adj[out.id].push_back(e);
+        //adj[out.id].push_back(e);
     }
     
     uint32_t get_size() const { return size; }
@@ -105,6 +107,21 @@ public:
             }
         }
         return boost::optional<std::list<Vertex<T>>>();
+    }
+    
+    std::string to_DOT() const {
+        std::stringstream ss;
+        ss << "digraph Graph {\n";
+        for (unsigned int i = 0; i < size; i++) {
+            ss << "N_" << i << ";\n";
+        }
+        for (const auto& from : adj) {
+            for (const auto& to : from) {
+                ss << "N_" << to.in.id << "->N_" << to.out.id << " [label=" << to.cost << "];\n";
+            }
+        }
+        ss << "}";
+        return ss.str();
     }
 };
     

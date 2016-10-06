@@ -24,8 +24,8 @@ TEST(GraphTests, structure) {
     assert_contains(g.neighbors(v1), Edge<>(v1, v2, 1.0));
     assert_contains(g.neighbors(v1), Edge<>(v1, v3, 4.0));
     assert_contains(g.neighbors(v2), Edge<>(v2, v3, 2.0));
-    assert_contains(g.neighbors(v3), Edge<>(v1, v3, 4.0));
-    assert_contains(g.neighbors(v3), Edge<>(v2, v3, 2.0));
+    assert_contains(g.neighbors(v3), Edge<>(v1, v3, 4.0), true);
+    assert_contains(g.neighbors(v3), Edge<>(v2, v3, 2.0), true);
     ASSERT_TRUE(g.neighbors(v4).empty());
     std::list<Vertex<>> path;
     path.push_back(v1);

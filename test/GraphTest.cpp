@@ -36,3 +36,49 @@ TEST(GraphTests, structure) {
     ASSERT_EQ(*found, path);
     
 }
+
+struct Heuristic {
+    double operator()(const int& a, const int& b) { return b - a; }
+};
+
+void assert_path_equals(Graph<int> g, Vertex<int> start, Vertex<int> goal, std::list<Vertex<int>>* expected) {
+    boost::optional<std::list<Vertex<int>>> found = g.astar<Heuristic>(start, goal, Heuristic());
+    
+    if (expected) {
+        ASSERT_TRUE((bool) found);
+        ASSERT_EQ(*expected, *found);
+    } else {
+        ASSERT_FALSE((bool) found);
+    }
+}
+
+TEST(GraphTests, astar) {
+    Graph<int> g;
+    Vertex<int> v1 = g.add_vertex(boost::optional<int>(0));
+    Vertex<int> v2 = g.add_vertex(boost::optional<int>(1));
+    Vertex<int> v3 = g.add_vertex(boost::optional<int>(2));
+    Vertex<int> v4 = g.add_vertex(boost::optional<int>(1));
+    Vertex<int> v5 = g.add_vertex(boost::optional<int>(2));
+    g.connect(v1, v4, 5.0);
+    g.connect(v1, v2, 1.0);
+    g.connect(v2, v3, 2.0);
+    g.connect(v3, v4, 1.0);
+    g.connect(v4, v5, 1.5);
+    g.connect(v3, v5, 4.0);
+    
+    std::list<Vertex<int>> path_1_5, path_2_3, path_4_4;
+    path_1_5.push_back(v1);
+    path_1_5.push_back(v2);
+    path_1_5.push_back(v3);
+    path_1_5.push_back(v4);
+    path_1_5.push_back(v5);
+    path_2_3.push_back(v2);
+    path_2_3.push_back(v3);
+    path_4_4.push_back(v4);
+    
+    assert_path_equals(g, v1, v5, &path_1_5);
+    assert_path_equals(g, v2, v3, &path_2_3);
+    assert_path_equals(g, v4, v4, &path_4_4);
+    assert_path_equals(g, v4, v1, nullptr);
+    assert_path_equals(g, v5, v4, nullptr);
+}

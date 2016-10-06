@@ -9,6 +9,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <functional>
 
 namespace rtt {
 
@@ -109,15 +110,60 @@ public:
         return boost::optional<std::list<Vertex<T>>>();
     }
     
+    template<typename K, typename V>
+    inline V get_or_default(std::map<K, V> m, K key, V def) const {
+        return m.find(key) == m.end() ? def : m.at(key);
+    }
+    
+    template<typename HeuristicCost>
+    boost::optional<std::list<Vertex<T>>> astar(const Vertex<T>& start,
+                                          const Vertex<T>& goal,
+                                          HeuristicCost heurisitc) const {
+        std::vector<Vertex<T>> open, closed;
+        open.push_back(start);
+        std::map<Vertex<T>, Vertex<T>> parents;
+        std::map<Vertex<T>, double> gscores, fscores;
+        gscores[start] = 0.0;
+        fscores[start] = heurisitc(*(start.val), *(goal.val));
+        while (!open.empty()) {
+            Vertex<T> current = *std::min_element(open.begin(), open.end(), 
+                [fscores](Vertex<T> a, Vertex<T> b) { return fscores.at(a) < fscores.at(b); });
+            open.erase(std::remove(open.begin(), open.end(), current), open.end());
+            if (current == goal) {
+                std::list<Vertex<T>> path;
+                path.push_front(goal);
+                Vertex<T> v = goal;
+                while (parents.find(v) != parents.end()) {
+                    path.push_front(v = parents.at(v));
+                }
+                return boost::optional<std::list<Vertex<T>>>(path);
+            }
+            closed.push_back(goal);
+            for (const Edge<T>& e : adj[current.id]) {
+                Vertex<T> neighbor = e.other_end(current);
+                double tentative = get_or_default(gscores, current, 99999999.0) + e.cost;
+                if (std::find(open.begin(), open.end(), neighbor) == open.end()) {
+                    open.push_back(neighbor);
+                } else if (tentative >= get_or_default(gscores, neighbor, 9999999.0)) {
+                    continue;
+                }
+                parents[neighbor] = current;
+                gscores[neighbor] = tentative;
+                fscores[neighbor] = tentative + heurisitc(*(neighbor.val), *(goal.val));
+            }
+        }
+        return boost::optional<std::list<Vertex<T>>>();
+    }    
+    
     std::string to_DOT() const {
         std::stringstream ss;
-        ss << "digraph Graph {\n";
+        ss << "digraph g {\n";
         for (unsigned int i = 0; i < size; i++) {
-            ss << "N_" << i << ";\n";
+            ss << "  N" << i << ";\n";
         }
         for (const auto& from : adj) {
             for (const auto& to : from) {
-                ss << "N_" << to.in.id << "->N_" << to.out.id << " [label=" << to.cost << "];\n";
+                ss << "  N" << to.in.id << " -> N" << to.out.id << " [label=\"" << to.cost << "\"];\n";
             }
         }
         ss << "}";

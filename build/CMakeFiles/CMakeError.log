@@ -1,0 +1,154 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_084be/fast"
+/usr/bin/make -f CMakeFiles/cmTC_084be.dir/build.make CMakeFiles/cmTC_084be.dir/build
+make[1]: Entering directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_084be.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_084be.dir/CheckSymbolExists.c.o   -c /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_084be
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_084be.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_084be.dir/CheckSymbolExists.c.o  -o cmTC_084be -rdynamic 
+CMakeFiles/cmTC_084be.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_084be.dir/build.make:97: recipe for target 'cmTC_084be' failed
+make[1]: *** [cmTC_084be] Error 1
+make[1]: Leaving directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_084be/fast' failed
+make: *** [cmTC_084be/fast] Error 2
+
+File /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_00445/fast"
+/usr/bin/make -f CMakeFiles/cmTC_00445.dir/build.make CMakeFiles/cmTC_00445.dir/build
+make[1]: Entering directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_00445.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_00445.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_00445
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_00445.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_00445.dir/CheckFunctionExists.c.o  -o cmTC_00445 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_00445.dir/build.make:97: recipe for target 'cmTC_00445' failed
+make[1]: *** [cmTC_00445] Error 1
+make[1]: Leaving directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_00445/fast' failed
+make: *** [cmTC_00445/fast] Error 2
+
+
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_88b63/fast"
+/usr/bin/make -f CMakeFiles/cmTC_88b63.dir/build.make CMakeFiles/cmTC_88b63.dir/build
+make[1]: Entering directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_88b63.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4   -o CMakeFiles/cmTC_88b63.dir/CheckSymbolExists.cxx.o -c /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_WIN’ was not declared in this scope
+   return ((int*)(&Q_WS_WIN))[argc];
+                   ^
+CMakeFiles/cmTC_88b63.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_88b63.dir/CheckSymbolExists.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_88b63.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_88b63/fast' failed
+make: *** [cmTC_88b63/fast] Error 2
+
+File /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_78d05/fast"
+/usr/bin/make -f CMakeFiles/cmTC_78d05.dir/build.make CMakeFiles/cmTC_78d05.dir/build
+make[1]: Entering directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_78d05.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4   -o CMakeFiles/cmTC_78d05.dir/CheckSymbolExists.cxx.o -c /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_QWS’ was not declared in this scope
+   return ((int*)(&Q_WS_QWS))[argc];
+                   ^
+CMakeFiles/cmTC_78d05.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_78d05.dir/CheckSymbolExists.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_78d05.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_78d05/fast' failed
+make: *** [cmTC_78d05/fast] Error 2
+
+File /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_MAC exist failed with the following output:
+Change Dir: /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_f3b9a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_f3b9a.dir/build.make CMakeFiles/cmTC_f3b9a.dir/build
+make[1]: Entering directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f3b9a.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -I/usr/include/qt4   -o CMakeFiles/cmTC_f3b9a.dir/CheckSymbolExists.cxx.o -c /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_MAC’ was not declared in this scope
+   return ((int*)(&Q_WS_MAC))[argc];
+                   ^
+CMakeFiles/cmTC_f3b9a.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_f3b9a.dir/CheckSymbolExists.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_f3b9a.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory '/home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_f3b9a/fast' failed
+make: *** [cmTC_f3b9a/fast] Error 2
+
+File /home/ewoud/catkin_ws/src/roboteam_robothub/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_MAC
+  return ((int*)(&Q_WS_MAC))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

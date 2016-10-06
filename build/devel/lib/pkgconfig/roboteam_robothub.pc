@@ -1,0 +1,8 @@
+prefix=/home/ewoud/catkin_ws/src/roboteam_robothub/build/devel
+
+Name: roboteam_robothub
+Description: Description of roboteam_robothub
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ewoud/catkin_ws/src/roboteam_robothub/build/devel/lib 
+Requires: message_runtime roboteam_msgs

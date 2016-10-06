@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/ewoud/catkin_ws/src/roboteam_robothub/build/devel/setup.sh

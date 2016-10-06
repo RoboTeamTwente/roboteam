@@ -76,15 +76,16 @@ int main(int argc, char **argv)
     command.data.clear();
     command.data.insert(command.data.end(), inputs.begin(), inputs.end());
     // Fill the RobotCommand message with the keyboard inputs
-    // command.id = id;
-    // command.active = active;
-    // command.x_vel = x_vel;
-    // command.y_vel = y_vel;
-    // command.w_vel = w_vel;
-    // command.dribbler = dribbler;
-    // command.kick_vel = kick_vel;
-    // command.chip_vel = chip_vel;
-
+/*
+    command.id = id;
+    command.active = active;
+    command.x_vel = x_vel;
+    command.y_vel = y_vel;
+    command.w_vel = w_vel;
+    command.dribbler = dribbler;
+    command.kicker_vel = kick_vel;
+    command.chipper_vel = chip_vel;
+*/
     // Publish the command
     chatter_pub.publish(command);
 

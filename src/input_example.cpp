@@ -6,6 +6,9 @@
 
 #include <vector>
 #include <iostream>
+#include <math.h>
+
+#define PI 3.14159265
 
 int id;
 bool active;
@@ -30,10 +33,10 @@ int main(int argc, char **argv)
     // ros::Rate loop_rate(60);
     
     // Keyboard inputs
-    double wheel1;
-    double wheel2;
-    double wheel3;
-    double wheel4;
+    double fr_wheel;
+    double fl_wheel;
+    double br_wheel;
+    double bl_wheel;
 
     std::cout << "Enter an x speed: ";
     std::cin >> x_vel;
@@ -46,10 +49,14 @@ int main(int argc, char **argv)
 
     float robot_radius = 0.09;
     float wheel_radius = 0.03;
-    wheel1 = x_vel/(2*3.1415*wheel_radius);
-    wheel2 = y_vel/(2*3.1415*wheel_radius);
-    wheel3 = x_vel/(2*3.1415*wheel_radius);
-    wheel4 = y_vel/(2*3.1415*wheel_radius);
+    float theta1 = 0.25*PI;
+    float theta2 = 0.75*PI;
+    float theta3 = 1.25*PI;
+    float theta4 = 1.75*PI;
+    fr_wheel = (-sin(theta1)*x_vel + cos(theta1)*y_vel + robot_radius*w_vel) / wheel_radius;
+    fl_wheel = (-sin(theta2)*x_vel + cos(theta2)*y_vel + robot_radius*w_vel) / wheel_radius;
+    bl_wheel = (-sin(theta3)*x_vel + cos(theta3)*y_vel + robot_radius*w_vel) / wheel_radius;
+    br_wheel = (-sin(theta4)*x_vel + cos(theta4)*y_vel + robot_radius*w_vel) / wheel_radius;
 
     active = true;
     dribbler = false;
@@ -58,7 +65,7 @@ int main(int argc, char **argv)
 
     // Initialize RobotCommand message;
     // roboteam_msgs::RobotCommand command;
-    std::vector<double> inputs = {wheel1, wheel2, wheel3, wheel4};
+    std::vector<double> inputs = {fr_wheel, fl_wheel, br_wheel, bl_wheel};
     std_msgs::Float64MultiArray command;
 
     command.layout.dim.push_back(std_msgs::MultiArrayDimension());

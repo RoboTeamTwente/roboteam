@@ -44,6 +44,8 @@ int main(int argc, char **argv)
     std::cin >> y_vel;
     std::cout << "Enter a rotational speed: ";
     std::cin >> w_vel;
+    // std::cout << "wheel4: ";
+    // std::cin >> br_wheel;
     // std::cout << "Enter a speed for wheel 4: ";
     // std::cin >> wheel4;
 
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
 
     // Initialize RobotCommand message;
     // roboteam_msgs::RobotCommand command;
-    std::vector<double> inputs = {fr_wheel, fl_wheel, br_wheel, bl_wheel};
+    std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
     std_msgs::Float64MultiArray command;
 
     command.layout.dim.push_back(std_msgs::MultiArrayDimension());

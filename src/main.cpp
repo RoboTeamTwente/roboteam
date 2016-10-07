@@ -84,7 +84,7 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     float bl_wheel = (-sin(theta3)*x_vel + cos(theta3)*y_vel + robot_radius*w_vel) / wheel_radius;
     float br_wheel = (-sin(theta4)*x_vel + cos(theta4)*y_vel + robot_radius*w_vel) / wheel_radius;
 
-    std::vector<double> inputs = {fr_wheel, fl_wheel, br_wheel, bl_wheel};
+    std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
     std_msgs::Float64MultiArray command;
 
     command.layout.dim.push_back(std_msgs::MultiArrayDimension());

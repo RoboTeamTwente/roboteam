@@ -14,6 +14,10 @@ find_package(catkin REQUIRED COMPONENTS
   rostest
 )
 
+# This part actually makes sure the network interface
+# of Qt4 is included! So while rqt uses Qt5, for our
+# networking purposes we use Qt4. 
+# RoboTeam Twente works in mysterious ways.
 set(QT_USE_QTNETWORK TRUE)
 find_package(Qt REQUIRED)
 include(${QT_USE_FILE})

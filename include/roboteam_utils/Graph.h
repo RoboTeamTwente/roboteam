@@ -115,16 +115,15 @@ public:
         return m.find(key) == m.end() ? def : m.at(key);
     }
     
-    template<typename HeuristicCost>
     boost::optional<std::list<Vertex<T>>> astar(const Vertex<T>& start,
                                           const Vertex<T>& goal,
-                                          HeuristicCost heurisitc) const {
+                                          std::function<double(const T&, const T&)> heuristic) const {
         std::vector<Vertex<T>> open, closed;
         open.push_back(start);
         std::map<Vertex<T>, Vertex<T>> parents;
         std::map<Vertex<T>, double> gscores, fscores;
         gscores[start] = 0.0;
-        fscores[start] = heurisitc(*(start.val), *(goal.val));
+        fscores[start] = heuristic(*(start.val), *(goal.val));
         while (!open.empty()) {
             Vertex<T> current = *std::min_element(open.begin(), open.end(), 
                 [fscores](Vertex<T> a, Vertex<T> b) { return fscores.at(a) < fscores.at(b); });
@@ -149,7 +148,7 @@ public:
                 }
                 parents[neighbor] = current;
                 gscores[neighbor] = tentative;
-                fscores[neighbor] = tentative + heurisitc(*(neighbor.val), *(goal.val));
+                fscores[neighbor] = tentative + heuristic(*(neighbor.val), *(goal.val));
             }
         }
         return boost::optional<std::list<Vertex<T>>>();

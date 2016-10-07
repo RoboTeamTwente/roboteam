@@ -21,5 +21,5 @@ shutdown() {
 
 trap "shutdown" SIGINT SIGTERM
 
-(cd $WS/src/NavSim; java -jar ./NavSim.jar) & grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch &
+grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch &
 wait

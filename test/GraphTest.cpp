@@ -42,7 +42,7 @@ struct Heuristic {
 };
 
 void assert_path_equals(Graph<int> g, Vertex<int> start, Vertex<int> goal, std::list<Vertex<int>>* expected) {
-    boost::optional<std::list<Vertex<int>>> found = g.astar<Heuristic>(start, goal, Heuristic());
+    boost::optional<std::list<Vertex<int>>> found = g.astar(start, goal, [](const int& a, const int& b) { return b - a; } );
     
     if (expected) {
         ASSERT_TRUE((bool) found);

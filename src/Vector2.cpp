@@ -36,6 +36,10 @@ double Vector2::length() const {
     return sqrt(x*x+y*y);
 }
 
+double Vector2::angle() const {
+    return atan2(y,x);
+}
+
 Vector2 Vector2::lerp(const Vector2& other, double factor) const {
     return Vector2(x + (other.x - x) * factor, y + (other.y - y) * factor);
 }

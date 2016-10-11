@@ -17,6 +17,7 @@ public:
 	Vector2 scale(double scalar) const;
 	Vector2 normalize() const;
 	double length() const;
+	double angle() const;
     Vector2 lerp(const Vector2& other, double factor) const;
 	bool operator==(const Vector2& other) const;
 	bool operator!=(const Vector2& other) const;

@@ -6,10 +6,12 @@
 #include <vector>
 #include <list>
 #include <stdint.h>
+#include <math.h>
 #include <map>
 #include <string>
 #include <sstream>
 #include <functional>
+#include "roboteam_utils/Vector2.h"
 
 namespace rtt {
 
@@ -156,7 +158,7 @@ public:
     
     std::string to_DOT() const {
         std::stringstream ss;
-        ss << "digraph g {\n";
+        ss << "digraph {\n";
         for (unsigned int i = 0; i < size; i++) {
             ss << "  N" << i << ";\n";
         }
@@ -168,8 +170,26 @@ public:
         ss << "}";
         return ss.str();
     }
-};
     
+    static std::string to_DOT(Graph<roboteam_utils::Vector2> graph) {
+        std::stringstream ss;
+        ss << "strict digraph {\n";
+        for (unsigned int i = 0; i < graph.size; i++) {
+            ss << "  N" << i << ";\n";
+        }
+        for (const auto& from : graph.adj) {
+            for (const auto& to : from) {
+                ss << "  N" << to.in.id << " -> N" << to.out.id 
+                    << " [label=\"" << to.cost << "\""
+                    << " pos=\"" << to.in.val->x+5 << "," << to.in.val->y+5 <<"!\"];\n";
+            }
+        }
+        ss << "}";
+        return ss.str();
+    }
+};
+
+   
 }
 
 #endif

@@ -175,13 +175,12 @@ public:
         std::stringstream ss;
         ss << "strict digraph {\n";
         for (unsigned int i = 0; i < graph.size; i++) {
-            ss << "  N" << i << ";\n";
+            ss << "  N" << i << " [pos=\"" << graph[i].val->x*10+300 << "," << graph[i].val->y*10+200 << "!\"]\n";
         }
         for (const auto& from : graph.adj) {
             for (const auto& to : from) {
                 ss << "  N" << to.in.id << " -> N" << to.out.id 
-                    << " [label=\"" << to.cost << "\""
-                    << " pos=\"" << to.in.val->x+5 << "," << to.in.val->y+5 <<"!\"];\n";
+                    << " [label=\"" << to.cost << "\"];\n";
             }
         }
         ss << "}";

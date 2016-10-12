@@ -18,6 +18,7 @@ public:
 	Vector2 normalize() const;
 	double length() const;
     Vector2 lerp(const Vector2& other, double factor) const;
+    Vector2 rotate(double radials) const;
 	bool operator==(const Vector2& other) const;
 	bool operator!=(const Vector2& other) const;
     bool operator<(const Vector2& other) const;

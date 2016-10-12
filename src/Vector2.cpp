@@ -40,6 +40,12 @@ Vector2 Vector2::lerp(const Vector2& other, double factor) const {
     return Vector2(x + (other.x - x) * factor, y + (other.y - y) * factor);
 }
 
+Vector2 Vector2::rotate(double radials) const {
+    double c = cosl(radials);
+    double s = sinl(radials);
+    return Vector2(x * c - y * s, x * s + y * c);
+}
+
 bool Vector2::operator==(const Vector2& other) const {
     return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
 }

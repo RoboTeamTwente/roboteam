@@ -11,7 +11,7 @@ template<typename C, typename T>
 void assert_contains(C c, T v, bool invert = false) {
     ASSERT_TRUE(invert == (std::find(c.begin(), c.end(), v) == c.end()));
 }
-
+/*
 TEST(GraphTests, structure) {
     Graph<> g;
     Vertex<> v1 = g.add_vertex();
@@ -36,10 +36,7 @@ TEST(GraphTests, structure) {
     ASSERT_EQ(*found, path);
     
 }
-
-struct Heuristic {
-    double operator()(const int& a, const int& b) { return b - a; }
-};
+*/
 
 void assert_path_equals(Graph<int> g, Vertex<int> start, Vertex<int> goal, std::list<Vertex<int>>* expected) {
     boost::optional<std::list<Vertex<int>>> found = g.astar(start, goal, [](const int& a, const int& b) { return b - a; } );

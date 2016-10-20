@@ -34,7 +34,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     // command->set_wheel4(0.0);
     command->set_veltangent(_msg->x_vel);
     command->set_velnormal(_msg->y_vel);
-    command->set_velangular(_msg->w_vel);
+    command->set_velangular(_msg->w);
 	
 	if(_msg->kicker){
     	command->set_kickspeedx(_msg->kicker_vel);
@@ -72,17 +72,17 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 
     float x_vel = _msg->x_vel;
     float y_vel = _msg->y_vel;
-    float w_vel = _msg->w_vel;
+    float w = _msg->w;
     float robot_radius = 0.09;
     float wheel_radius = 0.03;
     float theta1 = 0.25*PI;
     float theta2 = 0.75*PI;
     float theta3 = 1.25*PI;
     float theta4 = 1.75*PI;
-    float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float br_wheel = (-1/sin(theta4)*x_vel + 1/cos(theta4)*y_vel + robot_radius*w_vel) / wheel_radius;
+    float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w) / wheel_radius;
+    float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w) / wheel_radius;
+    float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w) / wheel_radius;
+    float br_wheel = (-1/sin(theta4)*x_vel + 1/cos(theta4)*y_vel + robot_radius*w) / wheel_radius;
 
     std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
     std_msgs::Float64MultiArray command;

@@ -79,10 +79,10 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     float theta2 = 0.75*PI;
     float theta3 = 1.25*PI;
     float theta4 = 1.75*PI;
-    float fr_wheel = (-sin(theta1)*x_vel + cos(theta1)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float fl_wheel = (-sin(theta2)*x_vel + cos(theta2)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float bl_wheel = (-sin(theta3)*x_vel + cos(theta3)*y_vel + robot_radius*w_vel) / wheel_radius;
-    float br_wheel = (-sin(theta4)*x_vel + cos(theta4)*y_vel + robot_radius*w_vel) / wheel_radius;
+    float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w_vel) / wheel_radius;
+    float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w_vel) / wheel_radius;
+    float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w_vel) / wheel_radius;
+    float br_wheel = (-1/sin(theta4)*x_vel + 1/cos(theta4)*y_vel + robot_radius*w_vel) / wheel_radius;
 
     std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
     std_msgs::Float64MultiArray command;

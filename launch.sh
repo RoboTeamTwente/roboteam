@@ -9,7 +9,7 @@ else
 fi
 
 pushd $WS
-catkin_make >/dev/null 2>/dev/null
+# catkin_make >/dev/null 2>/dev/null
 source devel/setup.sh
 popd
 

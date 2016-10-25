@@ -50,6 +50,18 @@ Vector2 Vector2::rotate(double radials) const {
     return Vector2(x * c - y * s, x * s + y * c);
 }
 
+Vector2 Vector2::project(const Vector2& line_a, const Vector2& line_b) const {
+    Vector2 ab = line_b - line_a;
+    Vector2 ap = *this - line_a;
+    double t = ap.dot(ab) / ab.dot(ab);
+    if (t < 0) {
+        return line_a;
+    } else if (t > 1) {
+        return line_b;
+    }
+    return line_a + ab.scale(t);
+}
+
 bool Vector2::operator==(const Vector2& other) const {
     return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
 }

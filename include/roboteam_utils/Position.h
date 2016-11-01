@@ -17,6 +17,7 @@ public:
 	Position translate(const Vector2& vec) const;
 	Position rotate(double rot_vel) const;
 	Position move(const Vector2& vec, double rot_vel) const;
+    bool real() const;
 	bool operator==(const Position& other) const;
 	bool operator!=(const Position& other) const;
 	double x, y, rot;

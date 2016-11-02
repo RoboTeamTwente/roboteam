@@ -9,7 +9,7 @@ else
 fi
 
 pushd $WS
-catkin_make >/dev/null 2>/dev/null
+# catkin_make >/dev/null 2>/dev/null
 source devel/setup.sh
 popd
 
@@ -21,5 +21,5 @@ shutdown() {
 
 trap "shutdown" SIGINT SIGTERM
 
-(cd $WS/src/NavSim; java -jar ./NavSim.jar) & grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch >/dev/null 2>/dev/null &
+grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch &
 wait

@@ -62,6 +62,10 @@ Vector2 Vector2::project(const Vector2& line_a, const Vector2& line_b) const {
     return line_a + ab.scale(t);
 }
 
+bool Vector2::real() const {
+    return x == x && y == y; // NaN check
+}
+
 bool Vector2::operator==(const Vector2& other) const {
     return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
 }

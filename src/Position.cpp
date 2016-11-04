@@ -23,6 +23,10 @@ Position Position::move(const Vector2& vec, double rot_vel) const {
     return Position(x + vec.x, y + vec.y, rot + rot_vel);
 }
 
+bool Position::real() const {
+    return x == x && y == y && rot == rot; // NaN check
+}
+
 bool Position::operator==(const Position& other) const {
     return x == other.x && y == other.y && rot == other.rot;
 }

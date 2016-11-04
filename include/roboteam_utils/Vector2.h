@@ -21,6 +21,7 @@ public:
     Vector2 lerp(const Vector2& other, double factor) const;
     Vector2 rotate(double radials) const;
     Vector2 project(const Vector2& line_a, const Vector2& line_b) const;
+    bool real() const;
 	bool operator==(const Vector2& other) const;
 	bool operator!=(const Vector2& other) const;
     bool operator<(const Vector2& other) const;

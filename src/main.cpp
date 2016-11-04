@@ -18,8 +18,11 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
     ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
-    bool yellow = true;
-    packet.mutable_commands()->set_isteamyellow(yellow);
+
+    std::string color;
+    ros::param::get("our_color", color);
+
+    packet.mutable_commands()->set_isteamyellow(color == "yellow");
     packet.mutable_commands()->set_timestamp(0.0);
 
     // Initialize a grSim command (grSim is the robocup SSL simulator created by Parsians)

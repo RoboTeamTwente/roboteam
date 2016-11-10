@@ -4,7 +4,7 @@ project(roboteam_utils)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roboteam_msgs)
 
 set(CMAKE_CXX_FLAGS "--std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 
@@ -110,7 +110,10 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include)
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+  include
+)
 
 ## Declare a C++ library
 # add_library(roboteam_utils

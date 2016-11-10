@@ -1,6 +1,8 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
+#include "roboteam_msgs/Vector2f.h"
+
 namespace roboteam_utils
 {
 
@@ -10,6 +12,7 @@ public:
 	Vector2() : x(0), y(0) {}
 	Vector2(double x, double y) : x(x), y(y) {}
 	Vector2(const Vector2& copy) : x(copy.x), y(copy.y) {}
+    Vector2(const roboteam_msgs::Vector2f& msg) : Vector2(msg.x, msg.y) {}
 	~Vector2();
 	double dot(const Vector2& other) const;
 	double dist(const Vector2& other) const;
@@ -31,6 +34,7 @@ public:
 	Vector2 operator*(const Vector2& other) const;
 	Vector2 operator*(const double& other) const;
 	Vector2 operator/(const double& other) const;
+    
 	double x, y;
 };
 

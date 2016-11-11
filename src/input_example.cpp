@@ -19,11 +19,6 @@ bool dribbler;
 float kick_vel;
 float chip_vel;
 
-// float wheel1;
-// float wheel2;
-// float wheel3;
-// float wheel4;
-
 int main(int argc, char **argv)
 {
     // Create ros node 'input_example' and advertise on ropic 'robotcommands'
@@ -44,10 +39,6 @@ int main(int argc, char **argv)
     std::cin >> y_vel;
     std::cout << "Enter a rotational speed: ";
     std::cin >> w_vel;
-    // std::cout << "wheel4: ";
-    // std::cin >> br_wheel;
-    // std::cout << "Enter a speed for wheel 4: ";
-    // std::cin >> wheel4;
 
     float robot_radius = 0.09;
     float wheel_radius = 0.03;
@@ -77,23 +68,11 @@ int main(int argc, char **argv)
     // command.data = inputs;
     command.data.clear();
     command.data.insert(command.data.end(), inputs.begin(), inputs.end());
-    // Fill the RobotCommand message with the keyboard inputs
-/*
-    command.id = id;
-    command.active = active;
-    command.x_vel = x_vel;
-    command.y_vel = y_vel;
-    command.w_vel = w_vel;
-    command.dribbler = dribbler;
-    command.kicker_vel = kick_vel;
-    command.chipper_vel = chip_vel;
-*/
+
     // Publish the command
     chatter_pub.publish(command);
 
     ROS_INFO_STREAM("command sent for robot: " << id);
-
-    // loop_rate.sleep();
     ros::spin();
 
 	return 0;

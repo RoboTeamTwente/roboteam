@@ -4,8 +4,6 @@
 
 namespace roboteam_utils {
 
-Vector2::~Vector2(){} // NOP
-
 double Vector2::dot(const Vector2& other) const {
     return x * other.x + y * other.y;
 }
@@ -111,6 +109,18 @@ Vector2 Vector2::operator/(const double& other) const {
 
 bool Vector2::operator<(const Vector2& other) const {
     return length() < other.length();
+}
+
+void Vector2::operator=(const roboteam_msgs::Vector2f& msg) {
+    x = msg.x;
+    y = msg.y;
+}
+
+Vector2::operator roboteam_msgs::Vector2f() const {
+    roboteam_msgs::Vector2f msg;
+    msg.x = x;
+    msg.y = y;
+    return msg;
 }
 
 }

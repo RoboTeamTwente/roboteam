@@ -101,13 +101,26 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     pub.publish(command);
 }
 
+void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    std::string robot_output_target = "grsim";
+    ros::param::get("robot_output_target", robot_output_target);
+    if (robot_output_target == "grsim") {
+        sendGRsimCommands(msg);
+    } else if (robot_output_target == "gazebo") {
+        sendGazeboCommands(msg);
+    } else if (robot_output_target == "serial") {
+        // sendSerialCommands(msg);
+    } else { // Default to grsim
+        sendGRsimCommands(msg);
+    }
+}
+
 int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber subGRsim = n.subscribe("robotcommands", 1000, sendGazeboCommands);
-    ros::Subscriber subGazebo = n.subscribe("robotcommands", 1000, sendGRsimCommands);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
     loop_rate.sleep();
     ros::spin();

@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: roboteam_robothub
-Description: Description of roboteam_robothub
-Version: 0.0.0
-Cflags: 
-Libs: -L/usr/local/lib 
-Requires: message_runtime roboteam_msgs

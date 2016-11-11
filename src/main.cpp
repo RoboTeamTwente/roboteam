@@ -4,6 +4,7 @@
 #include "std_msgs/Float64MultiArray.h"
 
 #include <iostream>
+#include <string>
 #include <QtNetwork>
 #include <ros/ros.h>
 
@@ -64,9 +65,11 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     quint16 _port;
 
     // Send to IP address and port specified in grSim
-    _addr = "127.0.0.1";
-    _port = 20011;
-    udpsocket.writeDatagram(dgram, _addr, _port);
+    std::string grsim_ip = "127.0.0.1";
+    int grsim_port = 20011;
+    ros::param::get("grsim/ip", grsim_ip);
+    ros::param::get("grsim/port", grsim_port);
+    udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), _port);
 }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)

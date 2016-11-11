@@ -39,7 +39,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     command->set_veltangent(_msg->x_vel);
     command->set_velnormal(_msg->y_vel);
     command->set_velangular(_msg->w);
-	
+
 	if(_msg->kicker){
     	command->set_kickspeedx(_msg->kicker_vel);
     }
@@ -53,16 +53,14 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     else {
     	command->set_kickspeedz(0);
     }
-    
+
     command->set_spinner(_msg->dribbler);
-	
+
 	QByteArray dgram;
     dgram.resize(packet.ByteSize());
     packet.SerializeToArray(dgram.data(), dgram.size());
-    
+
     QUdpSocket udpsocket;
-    QHostAddress _addr;
-    quint16 _port;
 
     // Send to IP address and port specified in grSim
     std::string grsim_ip = "127.0.0.1";
@@ -127,6 +125,6 @@ int main(int argc, char *argv[]) {
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
     loop_rate.sleep();
     ros::spin();
-    
+
     return 0;
 }

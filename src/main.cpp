@@ -67,7 +67,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     int grsim_port = 20011;
     ros::param::get("grsim/ip", grsim_ip);
     ros::param::get("grsim/port", grsim_port);
-    udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), _port);
+    udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)

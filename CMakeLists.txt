@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(roboteam_robothub)
 
+# Needed for the documentation generator.
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

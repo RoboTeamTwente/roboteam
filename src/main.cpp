@@ -17,7 +17,7 @@ ros::Publisher pub;
 
 void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
-    ROS_INFO_STREAM("received message for GRsim");
+    // ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 
     std::string color;
@@ -72,7 +72,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
-    ROS_INFO("received message for Gazebo!");
+    // ROS_INFO("received message for Gazebo!");
 
     float x_vel = _msg->x_vel;
     float y_vel = _msg->y_vel;

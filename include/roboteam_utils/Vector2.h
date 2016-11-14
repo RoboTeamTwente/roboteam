@@ -13,7 +13,6 @@ public:
 	Vector2(double x, double y) : x(x), y(y) {}
 	Vector2(const Vector2& copy) : x(copy.x), y(copy.y) {}
     Vector2(const roboteam_msgs::Vector2f& msg) : Vector2(msg.x, msg.y) {}
-	~Vector2();
 	double dot(const Vector2& other) const;
 	double dist(const Vector2& other) const;
 	double dist2(const Vector2& other) const;
@@ -34,7 +33,8 @@ public:
 	Vector2 operator*(const Vector2& other) const;
 	Vector2 operator*(const double& other) const;
 	Vector2 operator/(const double& other) const;
-    
+    void operator=(const roboteam_msgs::Vector2f& msg);
+    operator roboteam_msgs::Vector2f() const;
 	double x, y;
 };
 

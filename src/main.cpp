@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
     loop_rate.sleep();
     ros::spin();

@@ -1,6 +1,6 @@
 <launch>
-    <arg name="legacy_packets" default="true" />
-    <param name="use_legacy_packets" type="boolean" value="$(arg legacy_packets)" />
+    <arg name="legacy_packets" default="false" />
+    <param name="use_legacy_packets" type="boolean" value="false" />
 
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>

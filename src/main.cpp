@@ -1,5 +1,5 @@
-#include "grSim_Packet.pb.h"
-#include "grSim_Commands.pb.h"
+#include "roboteam_utils/grSim_Packet.pb.h"
+#include "roboteam_utils/grSim_Commands.pb.h"
 #include "roboteam_msgs/RobotCommand.h"
 #include "std_msgs/Float64MultiArray.h"
 

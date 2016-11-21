@@ -1,82 +1,115 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(roboteam_utils)
 
+# The code to generate protobuf files is mostly from here:
+# http://answers.ros.org/question/192882/using-catkin-to-generate-and-use-protobuf-messages/
+# See dustingooding's answer.
+# Get all the cpp files to compile.
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roboteam_msgs)
-
-set(CMAKE_CXX_FLAGS "--std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
-
-
+find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
 
 find_package(Protobuf REQUIRED)
-include_directories(${PROTOBUF_INCLUDE_DIRS})
 
-
-protobuf_generate_cpp(PROTO_CPP PROTO_H
-    src/proto/grSim_Replacement.proto
-    src/proto/grSim_Commands.proto
-    src/proto/grSim_Packet.proto
-    src/proto/messages_robocup_ssl_detection.proto
-    src/proto/messages_robocup_ssl_geometry.proto
-    src/proto/messages_robocup_ssl_geometry_legacy.proto
-    src/proto/messages_robocup_ssl_referee.proto
-    src/proto/messages_robocup_ssl_wrapper.proto
-    src/proto/messages_robocup_ssl_wrapper_legacy.proto
+set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
+set(proto_files
+    ${proto_dir}/grSim_Replacement.proto
+    ${proto_dir}/grSim_Commands.proto
+    ${proto_dir}/grSim_Packet.proto
+    ${proto_dir}/messages_robocup_ssl_detection.proto
+    ${proto_dir}/messages_robocup_ssl_geometry.proto
+    ${proto_dir}/messages_robocup_ssl_geometry_legacy.proto
+    ${proto_dir}/messages_robocup_ssl_referee.proto
+    ${proto_dir}/messages_robocup_ssl_wrapper.proto
+    ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
 )
+message(STATUS "Proto Source Dir: ${proto_dir}")
+message(STATUS "Proto Source Files: ${proto_files}")
 
+# Set up destination directories
+catkin_destinations()
+set(proto_gen_cpp_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+set(proto_gen_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_PYTHON_DESTINATION})
+file(MAKE_DIRECTORY ${proto_gen_cpp_dir})
+file(MAKE_DIRECTORY ${proto_gen_python_dir})
+set(protogen_include_dirs ${proto_gen_cpp_dir}/../ ${proto_gen_python_dir})
+message(STATUS "Proto Include Dirs: ${protogen_include_dirs}")
 
-protobuf_generate_python(PROTO_PY
-    src/proto/grSim_Replacement.proto
-    src/proto/grSim_Commands.proto
-    src/proto/grSim_Packet.proto
-    src/proto/messages_robocup_ssl_detection.proto
-    src/proto/messages_robocup_ssl_geometry.proto
-    src/proto/messages_robocup_ssl_geometry_legacy.proto
-    src/proto/messages_robocup_ssl_referee.proto
-    src/proto/messages_robocup_ssl_wrapper.proto
-    src/proto/messages_robocup_ssl_wrapper_legacy.proto
-)
-
-
+# catkin_python_setup()
 
 catkin_package(
-  INCLUDE_DIRS include ${CMAKE_CURRENT_BINARY_DIR} # Allows for including of generated protobuf header files.
-  LIBRARIES roboteam_utils roboteam_utils_proto
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+  INCLUDE_DIRS include ${protogen_include_dirs}
+  LIBRARIES roboteam_utils ${PROJECT_NAME}_proto
 )
 
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(
-  ${catkin_INCLUDE_DIRS}
-  include
+    ${catkin_INCLUDE_DIRS}
+    include
+    ${PROTOBUF_INCLUDE_DIR}
+    ${PROTOBUF_INCLUDE_DIR}/../../
 )
 
-## Declare a C++ library
-# add_library(roboteam_utils
-#   src/${PROJECT_NAME}/roboteam_utils.cpp
-# )
+# Create lists of files to be generated.
+set(proto_gen_cpp_files "")
+set(proto_gen_python_files "")
+foreach(proto_file ${proto_files})
+    get_filename_component(proto_name ${proto_file} NAME_WE)
+    list(APPEND proto_gen_cpp_files ${proto_gen_cpp_dir}/${proto_name}.pb.h ${proto_gen_cpp_dir}/${proto_name}.pb.cc)
+    list(APPEND proto_gen_python_files ${proto_gen_python_dir}/${proto_name}_pb2.py)
+endforeach(proto_file ${proto_files})
+
+# Run protoc and generate language-specific headers.
+add_custom_command(
+    OUTPUT ${proto_gen_cpp_files} ${proto_gen_python_files}
+    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --proto_path=${proto_dir} --cpp_out=${proto_gen_cpp_dir} --python_out=${proto_gen_python_dir} ${proto_files}
+    DEPENDS ${PROTOBUF_PROTOC_EXECUTABLE} ${proto_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+set_source_files_properties(${proto_gen_cpp_files} PROPERTIES GENERATED TRUE)
+set_source_files_properties(${proto_gen_python_files} PROPERTIES GENERATED TRUE)
+
+# Make the python message folder a python package.
+file(APPEND ${proto_gen_python_dir}/__init__.py "")
+
+add_custom_target(${PROJECT_NAME}_generate_headers
+    DEPENDS ${proto_gen_cpp_files} ${proto_gen_python_files}
+)
+
+# Create proto library for linking.
+add_library(${PROJECT_NAME}_proto ${proto_gen_cpp_files})
+target_link_libraries(${PROJECT_NAME}_proto ${PROTOBUF_LIBRARY})
+add_dependencies(${PROJECT_NAME}_proto ${PROJECT_NAME}_generate_headers)
+
+install(TARGETS ${PROJECT_NAME}_proto
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY ${proto_gen_cpp_dir}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+)
+
+install(DIRECTORY ${proto_gen_python_dir}/
+  DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}
+  FILES_MATCHING PATTERN "*.py"
+)
+
 
 add_library(roboteam_utils src/Vector2.cpp src/Position.cpp)
 add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
 
 # Protobuf messages.
-add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H})
-add_dependencies(roboteam_utils_proto ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(roboteam_utils_proto ${catkin_LIBRARIES} ${PROTOBUF_LIBRARIES} ${PROTOBUF_LIBRARY})
+# add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})
+# add_dependencies(roboteam_utils_proto ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# target_link_libraries(roboteam_utils_proto ${catkin_LIBRARIES} ${PROTOBUF_LIBRARIES} ${PROTOBUF_LIBRARY})
 
-catkin_add_gtest(utils_test 
-    test/main.cpp 
+catkin_add_gtest(utils_test
+    test/main.cpp
     test/Vector2Test.cpp
     test/PositionTest.cpp
     test/GraphTest.cpp

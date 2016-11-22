@@ -15,6 +15,9 @@
 
 ros::Publisher pub;
 
+QUdpSocket udpsocket;
+
+
 void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 {
     // ROS_INFO_STREAM("received message for GRsim");
@@ -59,8 +62,6 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
 	QByteArray dgram;
     dgram.resize(packet.ByteSize());
     packet.SerializeToArray(dgram.data(), dgram.size());
-
-    QUdpSocket udpsocket;
 
     // Send to IP address and port specified in grSim
     std::string grsim_ip = "127.0.0.1";

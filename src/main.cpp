@@ -1,5 +1,6 @@
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
+#include "roboteam_utils/Vector2.h"
 #include "roboteam_msgs/RobotCommand.h"
 #include "std_msgs/Float64MultiArray.h"
 
@@ -50,8 +51,11 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     	command->set_kickspeedx(0);
     }
     if(_msg->chipper){
+        roboteam_utils::Vector2 vel = roboteam_utils::Vector2(_msg->chipper_vel, 0);
+        vel = vel.rotate(PI/4); // 45 degrees up.
 
-    	command->set_kickspeedz(_msg->chipper_vel);
+        command->set_kickspeedx(vel.x);
+    	command->set_kickspeedz(vel.y);
     }
     else {
     	command->set_kickspeedz(0);

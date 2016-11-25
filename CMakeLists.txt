@@ -12,6 +12,14 @@ find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
 
 find_package(Protobuf REQUIRED)
 
+set(CMAKE_CXX_FLAGS "\
+--std=c++14 ${CMAKE_CXX_FLAGS} \
+-Wall \
+-Wno-unused-function \
+-Wsign-compare \
+-g \
+")
+
 set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
 set(proto_files
     ${proto_dir}/grSim_Replacement.proto

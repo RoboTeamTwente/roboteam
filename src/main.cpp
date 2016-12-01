@@ -1,18 +1,33 @@
-#include "grSim_Packet.pb.h"
-#include "grSim_Commands.pb.h"
+#include "roboteam_utils/grSim_Packet.pb.h"
+#include "roboteam_utils/grSim_Commands.pb.h"
+#include "roboteam_utils/Vector2.h"
 #include "roboteam_msgs/RobotCommand.h"
+#include "std_msgs/Float64MultiArray.h"
 
 #include <iostream>
+#include <string>
 #include <QtNetwork>
 #include <ros/ros.h>
 
-void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
-{
-    ROS_INFO_STREAM("message received for robot: " << _msg->id);
+#include <vector>
+#include <math.h>
 
+#define PI 3.14159265
+
+ros::Publisher pub;
+
+QUdpSocket udpsocket;
+
+
+void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
+{
+    // ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
-    bool yellow = true;
-    packet.mutable_commands()->set_isteamyellow(yellow);
+
+    std::string color;
+    ros::param::get("our_color", color);
+
+    packet.mutable_commands()->set_isteamyellow(color == "yellow");
     packet.mutable_commands()->set_timestamp(0.0);
 
     // Initialize a grSim command (grSim is the robocup SSL simulator created by Parsians)
@@ -27,24 +42,83 @@ void sendCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     // command->set_wheel4(0.0);
     command->set_veltangent(_msg->x_vel);
     command->set_velnormal(_msg->y_vel);
-    command->set_velangular(_msg->w_vel);
+    command->set_velangular(_msg->w);
 
-    command->set_kickspeedx(_msg->kick_vel);
-    command->set_kickspeedz(_msg->chip_vel);
+	if(_msg->kicker){
+    	command->set_kickspeedx(_msg->kicker_vel);
+    }
+    else {
+    	command->set_kickspeedx(0);
+    }
+    if(_msg->chipper){
+        roboteam_utils::Vector2 vel = roboteam_utils::Vector2(_msg->chipper_vel, 0);
+        vel = vel.rotate(PI/4); // 45 degrees up.
+
+        command->set_kickspeedx(vel.x);
+    	command->set_kickspeedz(vel.y);
+    }
+    else {
+    	command->set_kickspeedz(0);
+    }
+
     command->set_spinner(_msg->dribbler);
 
-    QByteArray dgram;
+	QByteArray dgram;
     dgram.resize(packet.ByteSize());
     packet.SerializeToArray(dgram.data(), dgram.size());
-    
-    QUdpSocket udpsocket;
-    QHostAddress _addr;
-    quint16 _port;
 
     // Send to IP address and port specified in grSim
-    _addr = "127.0.0.1";
-    _port = 20011;
-    udpsocket.writeDatagram(dgram, _addr, _port);
+    std::string grsim_ip = "127.0.0.1";
+    int grsim_port = 20011;
+    ros::param::get("grsim/ip", grsim_ip);
+    ros::param::get("grsim/port", grsim_port);
+    udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
+}
+
+void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
+{
+    // ROS_INFO("received message for Gazebo!");
+
+    float x_vel = _msg->x_vel;
+    float y_vel = _msg->y_vel;
+    float w = _msg->w;
+    float robot_radius = 0.09;
+    float wheel_radius = 0.03;
+    float theta1 = 0.25*PI;
+    float theta2 = 0.75*PI;
+    float theta3 = 1.25*PI;
+    float theta4 = 1.75*PI;
+    float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w) / wheel_radius;
+    float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w) / wheel_radius;
+    float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w) / wheel_radius;
+    float br_wheel = (-1/sin(theta4)*x_vel + 1/cos(theta4)*y_vel + robot_radius*w) / wheel_radius;
+
+    std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
+    std_msgs::Float64MultiArray command;
+
+    command.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    command.layout.dim[0].size = 4;
+    command.layout.dim[0].stride = 1;
+    command.layout.dim[0].label = "speeds";
+
+    command.data.clear();
+    command.data.insert(command.data.end(), inputs.begin(), inputs.end());
+
+    pub.publish(command);
+}
+
+void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    std::string robot_output_target = "grsim";
+    ros::param::get("robot_output_target", robot_output_target);
+    if (robot_output_target == "grsim") {
+        sendGRsimCommands(msg);
+    } else if (robot_output_target == "gazebo") {
+        sendGazeboCommands(msg);
+    } else if (robot_output_target == "serial") {
+        // sendSerialCommands(msg);
+    } else { // Default to grsim
+        sendGRsimCommands(msg);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -52,9 +126,10 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber sub = n.subscribe("robotcommands1", 1000, sendCommands);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommand);
+    pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
     loop_rate.sleep();
     ros::spin();
-    
+
     return 0;
 }

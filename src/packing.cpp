@@ -43,7 +43,7 @@ namespace rtt {
  * \param dribble_cclockwise If true dribbler will spin counter clockwise
  * \param dribble_vel Must be between 0 and 7.
  */
-boost::optional<std::array<uint8_t, 7>> createRobotPacket(int id, int robot_vel, int w,
+boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel, int w,
                                                          bool rot_cclockwise, int w_vel, uint8_t kick_force,
                                                          bool do_kick, bool chip, bool forced,
                                                          bool dribble_cclockwise, uint8_t dribble_vel) {
@@ -55,7 +55,7 @@ boost::optional<std::array<uint8_t, 7>> createRobotPacket(int id, int robot_vel,
         return boost::none;
     }
 
-    std::array<uint8_t, 7> byteArr;
+    packed_protocol_message byteArr;
 
     // First nibble are the robot id
     // Second nibble are the third nibble of robot velocity
@@ -83,7 +83,7 @@ boost::optional<std::array<uint8_t, 7>> createRobotPacket(int id, int robot_vel,
                     | static_cast<uint8_t>(dribble_cclockwise << 3)
                     | static_cast<uint8_t>(dribble_vel & 7);
 
-    return boost::optional<std::array<uint8_t, 7>>(byteArr);
+    return boost::optional<packed_protocol_message>(byteArr);
 }
 
 }

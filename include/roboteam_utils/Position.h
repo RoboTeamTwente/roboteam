@@ -20,6 +20,10 @@ public:
     bool real() const;
 	bool operator==(const Position& other) const;
 	bool operator!=(const Position& other) const;
+	Position operator+(const Position& other) const;
+	Position operator-(const Position& other) const;
+	Position operator*(const double& other) const;
+	Position scale(double scalar) const;
 	double x, y, rot;
 };
 

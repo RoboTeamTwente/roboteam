@@ -4,8 +4,6 @@
 
 namespace roboteam_utils {
 
-Vector2::~Vector2(){} // NOP
-
 double Vector2::dot(const Vector2& other) const {
     return x * other.x + y * other.y;
 }
@@ -66,6 +64,22 @@ bool Vector2::real() const {
     return x == x && y == y; // NaN check
 }
 
+Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& point) const {
+    Vector2 vectorToPoint = point - startPoint;
+    double angle = this->angle() - vectorToPoint.angle();
+    double projectionLength = vectorToPoint.length() * cos(angle);
+
+    roboteam_utils::Vector2 closestPoint;
+    if (projectionLength > this->length()) {
+        closestPoint = *this + startPoint;
+    } else if (projectionLength < 0) {
+        closestPoint = startPoint;
+    } else {
+        closestPoint = this->scale(projectionLength / this->length()) + startPoint;
+    }
+    return closestPoint;
+}
+
 bool Vector2::operator==(const Vector2& other) const {
     return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
 }
@@ -95,6 +109,18 @@ Vector2 Vector2::operator/(const double& other) const {
 
 bool Vector2::operator<(const Vector2& other) const {
     return length() < other.length();
+}
+
+void Vector2::operator=(const roboteam_msgs::Vector2f& msg) {
+    x = msg.x;
+    y = msg.y;
+}
+
+Vector2::operator roboteam_msgs::Vector2f() const {
+    roboteam_msgs::Vector2f msg;
+    msg.x = x;
+    msg.y = y;
+    return msg;
 }
 
 }

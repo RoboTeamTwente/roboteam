@@ -21,5 +21,5 @@ shutdown() {
 
 trap "shutdown" SIGINT SIGTERM
 
-grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/all.launch &
+grsim & rqt -s roboteam_sim --force-discover & roslaunch $WS/src/roboteam_utils/mini.launch &
 wait

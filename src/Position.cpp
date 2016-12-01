@@ -35,4 +35,20 @@ bool Position::operator!=(const Position& other) const {
     return x != other.x || y != other.y || rot != other.rot;
 }
 
+Position Position::operator+(const Position& other) const {
+    return Position(x+other.x, y+other.y, rot+other.rot);
+}
+
+Position Position::operator-(const Position& other) const {
+    return Position(x-other.x, y-other.y, rot-other.rot);
+}
+
+Position Position::operator*(const double& other) const {
+    return Position(x*other, y*other, rot*other);
+}
+
+Position Position::scale(double scalar) const {
+    return Position(x*scalar, y*scalar, rot*scalar);
+}
+
 }

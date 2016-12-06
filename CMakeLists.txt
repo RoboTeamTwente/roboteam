@@ -56,6 +56,14 @@ add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})
 add_dependencies(input ${catkin_EXPORTED_TARGETS})
 
+
+add_executable(packet_tester
+    src/packet_tester.cpp
+    src/packing.cpp
+    )
+target_link_libraries(packet_tester ${catkin_LIBRARIES})
+add_dependencies(packet_tester ${catkin_EXPORTED_TARGETS})
+
 catkin_add_gtest(robothub_test
     test/main.cpp
     test/packing_test.cpp

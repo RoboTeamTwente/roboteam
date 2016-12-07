@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <boost/format.hpp>
 
 #include "roboteam_robothub/packing.h"
 
@@ -70,6 +71,18 @@ int main(const std::vector<std::string>& arguments) {
 
     if (manual) {
         std::cout << "Sending a manual packet.\n";
+
+        id = std::stoi(get_safe_input("id (0-15): "));
+        robot_vel = std::stoi(get_safe_input("robot_vel (0-4095): "));
+        w = std::stoi(get_safe_input("w (0-511): "));
+        rot_cclockwise = get_safe_input("rot_cclockwise (true/false): ") == "true";
+        w_vel = std::stoi(get_safe_input("w_vel (0-2047): "));
+        kick_force = std::stoi(get_safe_input("kick_force (0-255): "));
+        do_kick = get_safe_input("do_kick (true/false): ") == "true";
+        chip = get_safe_input("chip (true/false): ") == "true";
+        forced = get_safe_input("forced (true/false): ") == "true";
+        dribble_cclockwise = get_safe_input("dribble_cclockwise (true/false): ") == "true";
+        dribble_vel = std::stoi(get_safe_input("dribble_vel (0-7): "));
     } else {
         std::cout << "Sending an example packet.\n";
         
@@ -86,7 +99,9 @@ int main(const std::vector<std::string>& arguments) {
         dribble_vel = 5;
     }
 
-    #define FIELD(id) std::cout << "\t" #id ": " << get_pretty_value(id) << "\n"
+    namespace bf = boost;
+
+    #define FIELD(id) std::cout << bf::format("\t%-20s %-20s\n") % #id % get_pretty_value(id);
 
     std::cout << "Packet:\n";
     FIELD(id);
@@ -124,12 +139,18 @@ int main(const std::vector<std::string>& arguments) {
 
     std::cout << "All params ok.\n";
 
+    std::cout << "Message contents: \n";
+
+    auto msg = *possibleMsg;
+
+    for (const auto& byte : msg) {
+        std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+    }
+
     if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
         std::cout << "Sending message canceled. Aborting.\n";
         return 0;
     }
-
-    auto msg = *possibleMsg;
 
     std::cout << "Creating file object...\n";
 

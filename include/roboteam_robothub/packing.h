@@ -16,21 +16,14 @@ boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel
                                         bool do_kick, bool chip, bool forced,
                                         bool dribble_cclockwise, uint8_t dribble_vel);
 
+std::string byteToBinary(uint8_t byte);
+
 template<unsigned int N>
 std::string byteArrayToString(std::array<uint8_t, N> bytes) {
     std::string result = "";
 
     for (auto byte : bytes) {
-        std::string byteStr = "";
-        for (int i = 0; i < 8; i++) {
-            if ((byte & (1 << i)) == (1 << i)) {
-                byteStr = "1" + byteStr;
-            } else {
-                byteStr = "0" + byteStr;
-            }
-        }
-
-        result += byteStr + "\n";
+        result += byteToBinary(byte) + "\n";
     }
 
     return result;

@@ -86,4 +86,17 @@ boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel
     return boost::optional<packed_protocol_message>(byteArr);
 }
 
+std::string byteToBinary(uint8_t byte) {
+    std::string byteStr = "";
+    for (int i = 0; i < 8; i++) {
+        if ((byte & (1 << i)) == (1 << i)) {
+            byteStr = "1" + byteStr;
+        } else {
+            byteStr = "0" + byteStr;
+        }
+    }
+
+    return byteStr;
 }
+
+} // rtt

@@ -106,10 +106,27 @@ install(DIRECTORY ${proto_gen_python_dir}/
   FILES_MATCHING PATTERN "*.py"
 )
 
+add_executable(constants_generator src/ConstantsGenerator.cpp)
+target_link_libraries(constants_generator ${catkin_LIBRARIES})
 
-add_library(roboteam_utils src/Vector2.cpp src/Position.cpp)
-add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_custom_command(
+	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.stamp
+	COMMAND ${PROJECT_SOURCE_DIR}/generate_constants.sh
+	DEPENDS constants_generator
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+	COMMENT "Generating constants file"
+)
+add_custom_target(generate_constants_t
+	ALL
+	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.stamp
+)
+
+add_library(roboteam_utils src/Vector2.cpp src/Position.cpp src/constants.cpp)
+add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} generate_constants_t)
 target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
+
+
+
 
 # Protobuf messages.
 # add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})

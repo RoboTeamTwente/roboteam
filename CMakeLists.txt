@@ -110,15 +110,15 @@ add_executable(constants_generator src/ConstantsGenerator.cpp)
 target_link_libraries(constants_generator ${catkin_LIBRARIES})
 
 add_custom_command(
-	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.stamp
+	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.cpp
 	COMMAND ${PROJECT_SOURCE_DIR}/generate_constants.sh
-	DEPENDS constants_generator
+	DEPENDS constants_generator ${PROJECT_SOURCE_DIR}/String\ Constants
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 	COMMENT "Generating constants file"
 )
 add_custom_target(generate_constants_t
 	ALL
-	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.stamp
+	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.cpp
 )
 
 add_library(roboteam_utils src/Vector2.cpp src/Position.cpp src/constants.cpp)

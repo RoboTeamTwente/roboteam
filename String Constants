@@ -12,28 +12,26 @@
     "SERVICE_NAVSIM": "navsim",
     "SERVICE_WORLD_RESET": "world_reset",
 
-    "PARAM_ITERATIONS_PER_SECOND": "role_iterations_per_second",
-    "PARAM_ITERATIONS_PER_SECOND_TYPE": "int",
+    "PARAM_ITERATIONS_PER_SECOND": {"name": "role_iterations_per_second", "type": "int"},
     "PARAM_NUM_ROLE_NODES": {"name": "num_role_nodes", "type": "int"},
     "PARAM_OUR_SIDE": {"name": "our_side", "type": "string", "values": ["left", "right"]},
     "PARAM_OUR_COLOR": {"name": "our_color", "type": "string", "values": ["yellow", "blue"]},
     
 
-    "LPARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
+    "PARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
     
 
     "NODE_TACTICS": "tactics",
     "NODE_DO_STRATEGY": "doStrategy",
     "NODE_KEEPER_TEST": "KeeperTactic",
     "NODE_KICK_AT_GOAL_TEST": "KickAtGoal",
+    "NODE_DRIBBLE_TEST": "DribbleTest",
     "NODE_AVOID_ROBOTS_TEST": "AvoidRobotsTest",
     "NODE_FOLLOW_PATH_TEST": "FollowPathTest",
     "NODE_GET_BALL_TEST": "GetBallTest",
     "NODE_GO_TO_POS_TEST": "GoToPosTest",
     "NODE_KICK_TEST": "KickTest",
     "NODE_ROTATE_AROUND_POINT_TEST": "RotateAroundPoint",
-    "NODE_STAND_FREE_TEST": "StandFreeTest",
-	
-    "CMD_GET_SYSTEM_STATE": "getSystemState"
+    "NODE_STAND_FREE_TEST": "StandFreeTest"
 
 }

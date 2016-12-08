@@ -164,7 +164,7 @@ int main(const std::vector<std::string>& arguments) {
     std::cout << "Writing bytes to files... ";
 
     fout.write((char *) msg.data(), msg.size());
-    
+
     std::cout << "Done.\n";
 
     return 0;

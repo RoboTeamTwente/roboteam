@@ -32,8 +32,6 @@ set(proto_files
     ${proto_dir}/messages_robocup_ssl_wrapper.proto
     ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
 )
-message(STATUS "Proto Source Dir: ${proto_dir}")
-message(STATUS "Proto Source Files: ${proto_files}")
 
 # Set up destination directories
 catkin_destinations()
@@ -42,7 +40,6 @@ set(proto_gen_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_PYTHON_DESTINAT
 file(MAKE_DIRECTORY ${proto_gen_cpp_dir})
 file(MAKE_DIRECTORY ${proto_gen_python_dir})
 set(protogen_include_dirs ${proto_gen_cpp_dir}/../ ${proto_gen_python_dir})
-message(STATUS "Proto Include Dirs: ${protogen_include_dirs}")
 
 # catkin_python_setup()
 

@@ -11,6 +11,10 @@
     
     "SERVICE_NAVSIM": "navsim",
     "SERVICE_WORLD_RESET": "world_reset",
+    "SERVICE_OPPONENT_TRACKER": "tracker",
+
+    "TRACKER_TYPE_SPEED": "Speed",
+    "TRACKER_TYPE_ACCEL": "Acceleration",
 
     "PARAM_ITERATIONS_PER_SECOND": {"name": "role_iterations_per_second", "type": "int"},
     "PARAM_NUM_ROLE_NODES": {"name": "num_role_nodes", "type": "int"},

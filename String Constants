@@ -1,7 +1,7 @@
 {
     "TOPIC_ROLE_DIRECTIVE": "role_directive",
     "TOPIC_ROLE_FEEDBACK": "role_feedback",
-    "TOPIC_WOLRD_STATE": "world_state",
+    "TOPIC_WORLD_STATE": "world_state",
     "TOPIC_GEOMETRY": "vision_geometry",
     "TOPIC_COMMANDS": "robotcommands",
     "TOPIC_REFEREE": "vision_referee",

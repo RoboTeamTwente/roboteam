@@ -1,0 +1,11 @@
+<launch>
+    <arg name="legacy_packets" default="false" />
+    <param name="use_legacy_packets" type="boolean" value="$(arg legacy_packets)" />
+
+    <node pkg="roboteam_world" type="filtered_world" name="world"/>
+    <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
+    <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" />
+
+    <node name="robot1" pkg="roboteam_tactics" type="RoleNode" output="screen" />
+    <node name="robot2" pkg="roboteam_tactics" type="RoleNode" output="screen" />
+</launch>

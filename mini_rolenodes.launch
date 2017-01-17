@@ -6,6 +6,7 @@
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
     <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" />
 
+    <param name="role_iterations_per_second" type="int" value="30" />
     <node name="robot1" pkg="roboteam_tactics" type="RoleNode" output="screen" />
     <node name="robot2" pkg="roboteam_tactics" type="RoleNode" output="screen" />
 </launch>

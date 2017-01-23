@@ -123,4 +123,12 @@ Vector2::operator roboteam_msgs::Vector2f() const {
     return msg;
 }
 
+std::ostream& Vector2::write(std::ostream& os) const {
+    return os << "{ x = " << x << ", y = " << y << " }";
+}
+
+}
+
+std::ostream& operator<<(std::ostream& os, const roboteam_utils::Vector2& vec) {
+    return vec.write(os);
 }

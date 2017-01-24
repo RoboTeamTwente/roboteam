@@ -19,8 +19,7 @@ ros::Publisher pub;
 QUdpSocket udpsocket;
 
 
-void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
-{
+void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 

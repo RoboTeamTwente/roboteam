@@ -126,6 +126,8 @@ add_library(
     src/world_analysis.cpp
     src/LastWorld.cpp
     src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
 )
 add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} generate_constants_t)
 target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
@@ -148,5 +150,7 @@ catkin_add_gtest(utils_test
     src/world_analysis.cpp
     src/LastWorld.cpp
     src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
 )
 target_link_libraries(utils_test ${catkin_LIBRARIES})

@@ -5,6 +5,10 @@
 
 namespace rtt {
 
+double toDegrees(double radians);
+
+double toRadians(double degrees);
+
 double cleanAngle(double angle);
 roboteam_utils::Vector2 worldToRobotFrame(roboteam_utils::Vector2 requiredv, double rotation);
 double computeAngle(roboteam_utils::Vector2 robotPos, roboteam_utils::Vector2 faceTowardsPos);

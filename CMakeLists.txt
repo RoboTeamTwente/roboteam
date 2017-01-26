@@ -8,6 +8,15 @@ project(roboteam_utils)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+set(ENABLE_DEBUG_GRAPHICS TRUE)
+
+if (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=1)
+else (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
+endif (ENABLE_DEBUG_GRAPHICS)
+
+
 find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
 
 find_package(Protobuf REQUIRED)

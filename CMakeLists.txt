@@ -118,7 +118,18 @@ add_custom_target(generate_constants_t
 	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.cpp
 )
 
-add_library(roboteam_utils src/Vector2.cpp src/Position.cpp src/constants.cpp)
+add_library(
+    roboteam_utils
+    src/Vector2.cpp
+    src/Position.cpp
+    src/constants.cpp
+    src/world_analysis.cpp
+    src/LastWorld.cpp
+    src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
+    src/Cone.cpp
+)
 add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} generate_constants_t)
 target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
 
@@ -137,5 +148,11 @@ catkin_add_gtest(utils_test
     test/GraphTest.cpp
     src/Vector2.cpp
     src/Position.cpp
+    src/world_analysis.cpp
+    src/LastWorld.cpp
+    src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
+    src/Cone.cpp
 )
 target_link_libraries(utils_test ${catkin_LIBRARIES})

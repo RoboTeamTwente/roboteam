@@ -10,7 +10,7 @@
 namespace rtt {
 
 /**
- * Packet format, inspired by the (old?) RoboJackets protocol.
+ * Command packet format, inspired by the (old?) RoboJackets protocol.
  *
  * Byte     Config      Description
  * 1        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
@@ -24,6 +24,24 @@ namespace rtt {
  *                      i: forced or not
  *                      j: counterclockwise dribbler
  *                      kkk: dribbler speed, 0 - 7
+ */
+
+/**
+ * Packet response format, inspired by Hans, Jim & Bob.
+ *
+ * Byte     Config      Description
+ *                      Robot ID
+ *                      ACK or NACK bit (whether or not the command was actually
+ *                      dispatched from the base station)
+ *                      Battery level
+ *                      Ball sensor (binary or continuous)
+ *                      Bit for debug information
+ *
+ *                      If bit for debug is one, extra info is also sent:
+ *                      Gyroscopoe info
+ *                      Accelerometer info
+ *
+ *                      Copy of command packet, possibly only when requested.
  */
 
 /**

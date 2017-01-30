@@ -56,12 +56,10 @@ void LastWorld::wait_for_first_messages() {
     }
 }
 
-roboteam_msgs::Vector2f LastWorld::PredictBallPos(double t) {
+Vector2 LastWorld::predictBallPos(double t) {
 	roboteam_msgs::WorldBall ball = lastWorld.ball;
-	roboteam_msgs::Vector2f ballVel = ball.vel;
-	roboteam_msgs::Vector2f predictedBallPos;
-	predictedBallPos.x = ball.pos.x + ballVel.x * t;
-	predictedBallPos.y = ball.pos.y + ballVel.y * t;
+	Vector2 ballVel(ball.vel);
+	Vector2 predictedBallPos = Vector2(ball.pos) + ballVel.scale(t);
 	return predictedBallPos;
 }
 

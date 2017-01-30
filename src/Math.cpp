@@ -22,6 +22,13 @@ double cleanAngle(double angle){
 	}
 }
 
+bool isPointInCircle(roboteam_utils::Vector2 center, double radius, roboteam_utils::Vector2 point) {
+	double xDiffSqr = (point.x-center.x)*(point.x-center.x);
+	double yDiffSqr = (point.y-center.y)*(point.y-center.y);
+	double radiusSqr = radius*radius;
+	return ((xDiffSqr + yDiffSqr) < (radiusSqr));
+}
+
 roboteam_utils::Vector2 worldToRobotFrame(roboteam_utils::Vector2 requiredv, double rotation){
     roboteam_utils::Vector2 robotRequiredv;
     robotRequiredv.x=requiredv.x*cos(-rotation)-requiredv.y*sin(-rotation);

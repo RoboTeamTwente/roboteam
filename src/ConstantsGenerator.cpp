@@ -78,7 +78,6 @@ void generate_constants(const nlohmann::json& json, std::ostream& dest_str, bool
 
 #include <array>
 #include <string>
-#include "ros/ros.h"
 
 // generated from String Constants
 
@@ -86,7 +85,9 @@ namespace rtt {
 
 using string = std::string;
 
-)" : R"(#include "roboteam_utils/constants.h"
+)" : R"(
+#include <ros/ros.h>
+#include "roboteam_utils/constants.h"
 
 namespace rtt {
     

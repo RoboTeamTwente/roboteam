@@ -1,6 +1,9 @@
-#include "roboteam_utils/ConstantsGenerator.h"
+#include <vector>
+#include <fstream>
 #include <sstream>
 #include <cstdio>
+
+#include "roboteam_utils/ConstantsGenerator.h"
 
 namespace rtt {
 

@@ -1,12 +1,23 @@
 #pragma once
-#include <ros/ros.h>
 
-#include "roboteam_msgs/World.h"
-#include "roboteam_msgs/WorldBall.h"
-#include "roboteam_msgs/GeometryFieldSize.h"
+// TODO: WorldAndGeomCallbackCreator could be facored into it's own file
+// Therewith losing the next two includes for every condition/skill/tactic!
+#include <ros/node_handle.h>
+#include <ros/subscriber.h>
+
+#include <ros/message_forward.h>
+
+namespace roboteam_msgs {
+
+ROS_DECLARE_MESSAGE(World);
+ROS_DECLARE_MESSAGE(WorldBall);
+ROS_DECLARE_MESSAGE(GeometryFieldSize);
+ROS_DECLARE_MESSAGE(GeometryData);
+
+} // roboteam_msgs
+
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/constants.h"
-#include "roboteam_msgs/GeometryData.h"
 
 namespace rtt {
 

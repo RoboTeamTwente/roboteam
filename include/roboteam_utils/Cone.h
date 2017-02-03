@@ -9,7 +9,6 @@ class Cone {
 public:
 	Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 centerPoint, double distance);
 	Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 side1, roboteam_utils::Vector2 side2);
-	// double CleanAngle(double angle);
 	bool IsWithinCone(roboteam_utils::Vector2 point);
 	bool IsWithinCone(roboteam_utils::Vector2 point, double marginRadius);
 	bool IsWithinField(roboteam_utils::Vector2 point);

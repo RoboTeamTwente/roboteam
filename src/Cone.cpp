@@ -5,8 +5,6 @@
 #include "roboteam_msgs/GeometryFieldSize.h"
 #include "roboteam_utils/Math.h"
 
-
-
 #include <cmath>
 
 namespace rtt {
@@ -35,19 +33,6 @@ Cone::Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 side1, ro
 	this->side1 = (center-start).rotate(0.5*angle);
 	this->side2 = (center-start).rotate(-0.5*angle);
 }
-
-// double Cone::CleanAngle(double cleanangle) {
-// 	if (cleanangle <= M_PI && cleanangle >= -M_PI) {
-// 		return cleanangle;
-// 	} else if (cleanangle > M_PI) {
-// 		cleanangle -= 2*M_PI;
-// 		return CleanAngle(cleanangle);
-// 	} else if (cleanangle < M_PI) {
-// 		cleanangle += 2*M_PI;
-// 		return CleanAngle(cleanangle);
-// 	}
-// 	return 0.0;
-// }
 
 bool Cone::IsWithinCone(roboteam_utils::Vector2 point) {
 	// ROS_INFO_STREAM("point: " << point.x << " " << point.y);
@@ -121,8 +106,6 @@ roboteam_utils::Vector2 Cone::SecondClosestPointOnSide(roboteam_utils::Vector2 p
 	roboteam_utils::Vector2 option1 = vectorToCenter.rotate(angle).scale(vectorToPoint.length() / vectorToCenter.length()) + start;
 	roboteam_utils::Vector2 option2 = vectorToCenter.rotate(-angle).scale(vectorToPoint.length() / vectorToCenter.length()) + start;
 
-
-
 	if (pointAngle >= 0) {
 		if (IsWithinField(option2)) return option2;
 		else if (IsWithinField(option1)) return option1;
@@ -194,19 +177,15 @@ Cone Cone::MergeCones(Cone otherCone) {
 	}
 
 	if (this->IsWithinCone(otherCone.side1 + otherCone.start) && this->IsWithinCone(otherCone.side2 + otherCone.start)) {
-		// ROS_INFO_STREAM("2 in 1");
 		return *this;
 	}
 	if (otherCone.IsWithinCone(side1 + start) && otherCone.IsWithinCone(side2 + start)) {
-		// ROS_INFO_STREAM("1 in 2");
 		return otherCone;
 
 	}
 
 	double angleDiff1 = fabs(cleanAngle(side1.angle() - otherCone.side2.angle()));
 	double angleDiff2 = fabs(cleanAngle(side2.angle() - otherCone.side1.angle()));
-
-	// ROS_INFO_STREAM("angleDiff1: " << angleDiff1 << " angleDiff2 " << angleDiff2);
 
 	if (angleDiff1 > angleDiff2) {
 		return Cone(start, side1, otherCone.side2);

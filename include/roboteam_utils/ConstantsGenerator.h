@@ -1,6 +1,6 @@
+#pragma once
+
 #include <string>
-#include <vector>
-#include <fstream>
 #include <ostream>
 #include "roboteam_utils/json.hpp"
 

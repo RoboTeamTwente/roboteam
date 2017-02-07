@@ -8,6 +8,14 @@ project(roboteam_utils)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+set(ENABLE_DEBUG_GRAPHICS TRUE)
+
+if (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=1)
+else (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
+endif (ENABLE_DEBUG_GRAPHICS)
+
 find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
 
 find_package(Protobuf REQUIRED)
@@ -18,7 +26,8 @@ set(CMAKE_CXX_FLAGS "\
 -Wno-unused-function \
 -Wsign-compare \
 -g \
-")
+"
+)
 
 set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
 set(proto_files
@@ -103,13 +112,20 @@ install(DIRECTORY ${proto_gen_python_dir}/
   FILES_MATCHING PATTERN "*.py"
 )
 
-add_executable(constants_generator src/ConstantsGenerator.cpp)
-target_link_libraries(constants_generator ${catkin_LIBRARIES})
+add_executable(constants_generator
+    "${PROJECT_SOURCE_DIR}/src/ConstantsGenerator.cpp"
+    )
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES 
+    "${PROJECT_SOURCE_DIR}/src/constants.cpp"
+    "${PROJECT_SOURCE_DIR}/include/roboteam_utils/constants.h"
+    )
 
 add_custom_command(
 	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.cpp
 	COMMAND ${PROJECT_SOURCE_DIR}/generate_constants.sh
-	DEPENDS constants_generator ${PROJECT_SOURCE_DIR}/String\ Constants
+	DEPENDS 
+        constants_generator 
+        "${PROJECT_SOURCE_DIR}/String Constants"
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 	COMMENT "Generating constants file"
 )
@@ -118,9 +134,27 @@ add_custom_target(generate_constants_t
 	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.cpp
 )
 
-add_library(roboteam_utils src/Vector2.cpp src/Position.cpp src/constants.cpp)
-add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} generate_constants_t)
-target_link_libraries(roboteam_utils ${catkin_LIBRARIES} ${PROJECT_NAME}_proto)
+add_library(
+    roboteam_utils
+    src/Vector2.cpp
+    src/Position.cpp
+    src/constants.cpp
+    src/world_analysis.cpp
+    src/LastWorld.cpp
+    src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
+    src/Cone.cpp
+)
+add_dependencies(roboteam_utils
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    ${catkin_EXPORTED_TARGETS} 
+    generate_constants_t
+    )
+target_link_libraries(roboteam_utils
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}_proto
+    )
 
 
 
@@ -137,5 +171,11 @@ catkin_add_gtest(utils_test
     test/GraphTest.cpp
     src/Vector2.cpp
     src/Position.cpp
+    src/world_analysis.cpp
+    src/LastWorld.cpp
+    src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
+    src/Cone.cpp
 )
 target_link_libraries(utils_test ${catkin_LIBRARIES})

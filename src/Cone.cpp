@@ -28,10 +28,9 @@ Cone::Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 side1, ro
 	roboteam_utils::Vector2 tempSide2 = side2.scale(2 / side2.length());
 	this->angle = cleanAngle(tempSide1.angle() - tempSide2.angle());
 	this->center = tempSide2.rotate(0.5*angle) + this->start;
-	this->radius = (this->center - tempSide1).length();
-
 	this->side1 = (center-start).rotate(0.5*angle);
 	this->side2 = (center-start).rotate(-0.5*angle);
+	this->radius = (start+side1 - center).length();
 }
 
 bool Cone::IsWithinCone(roboteam_utils::Vector2 point) {
@@ -116,26 +115,27 @@ roboteam_utils::Vector2 Cone::SecondClosestPointOnSide(roboteam_utils::Vector2 p
 	return point;
 }
 
-roboteam_utils::Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, roboteam_utils::Vector2 point, roboteam_utils::Vector2 closeTo) {
+roboteam_utils::Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, roboteam_utils::Vector2 point, roboteam_utils::Vector2 closeTo, Draw drawer, std::vector<std::string> names) {
 	if (!(this->IsWithinCone(point) && otherCone.IsWithinCone(point))) {
 		ROS_WARN("This point is not inside either of the cones");
 		return point;
 	}
 
+	std::vector<roboteam_utils::Vector2> intersections;
+	intersections.push_back(LineIntersection(start, side1, otherCone.start, otherCone.side1));
+	intersections.push_back(LineIntersection(start, side1, otherCone.start, otherCone.side2));
+	intersections.push_back(LineIntersection(start, side2, otherCone.start, otherCone.side1));
+	intersections.push_back(LineIntersection(start, side2, otherCone.start, otherCone.side2));
 
-	// Find the closest intersection of the two cones
-	roboteam_utils::Vector2 intersection1 = LineIntersection(start, side1, otherCone.start, otherCone.side1);
-	roboteam_utils::Vector2 intersection2 = LineIntersection(start, side1, otherCone.start, otherCone.side2);
-	roboteam_utils::Vector2 intersection3 = LineIntersection(start, side2, otherCone.start, otherCone.side1);
-	roboteam_utils::Vector2 intersection4 = LineIntersection(start, side2, otherCone.start, otherCone.side2);
+	std::vector<double> costs;
+	for (size_t i = 0; i < intersections.size(); i++) {
+		// drawer.DrawPoint(names.at(i), intersections.at(i));
+		double cost = (intersections.at(i) - closeTo).length()*1 + (intersections.at(i) - point).length()*2;
+		costs.push_back(cost);
+	}
 
-
-	roboteam_utils::Vector2 closestPointSoFar = intersection1;
-	if ((intersection2 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection2)) closestPointSoFar = intersection2;
-	if ((intersection3 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection3)) closestPointSoFar = intersection3;
-	if ((intersection4 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection4)) closestPointSoFar = intersection4;
-	if (closestPointSoFar.length() > 100.0) {closestPointSoFar = point;}
-	return closestPointSoFar;
+	int min_pos = distance(costs.begin(), min_element(costs.begin(),costs.end()));
+	return intersections.at(min_pos);
 }
 
 roboteam_utils::Vector2 Cone::LineIntersection(roboteam_utils::Vector2 line1Start, roboteam_utils::Vector2 line1Dir, roboteam_utils::Vector2 line2Start, roboteam_utils::Vector2 line2Dir) {

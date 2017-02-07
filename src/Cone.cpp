@@ -122,31 +122,15 @@ roboteam_utils::Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, robotea
 		return point;
 	}
 
-	roboteam_utils::Vector2 closestPointSoFar(100.0, 100.0);
 
-	roboteam_utils::Vector2 option1 = side1.scale(10 / side1.length()).closestPointOnVector(start, point);
-	roboteam_utils::Vector2 option2 = side2.scale(10 / side2.length()).closestPointOnVector(start, point);
-	roboteam_utils::Vector2 option3 = otherCone.side1.scale(10 / otherCone.side1.length()).closestPointOnVector(otherCone.start, point);
-	roboteam_utils::Vector2 option4 = otherCone.side2.scale(10 / otherCone.side2.length()).closestPointOnVector(otherCone.start, point);
-
-	// Find the one of these options that is closest to closeTo
-	if (!otherCone.IsWithinCone(option1) && (option1 - closeTo).length() - (closestPointSoFar - closeTo).length()) closestPointSoFar = option1;
-	if (!otherCone.IsWithinCone(option2) && (option2 - closeTo).length() - (closestPointSoFar - closeTo).length()) closestPointSoFar = option2;
-	if (!this->IsWithinCone(option3) && (option3 - closeTo).length() - (closestPointSoFar - closeTo).length()) closestPointSoFar = option3;
-	if (!this->IsWithinCone(option4) && (option4 - closeTo).length() - (closestPointSoFar - closeTo).length()) closestPointSoFar = option4;
-
-	// If one of these is found, return immediately because they will always be the closest
-	if ((closestPointSoFar - closeTo).length() < 100.0) {
-		return closestPointSoFar;
-	}
-
-	// Otherwise, find the closest intersection of the two cones
+	// Find the closest intersection of the two cones
 	roboteam_utils::Vector2 intersection1 = LineIntersection(start, side1, otherCone.start, otherCone.side1);
 	roboteam_utils::Vector2 intersection2 = LineIntersection(start, side1, otherCone.start, otherCone.side2);
 	roboteam_utils::Vector2 intersection3 = LineIntersection(start, side2, otherCone.start, otherCone.side1);
 	roboteam_utils::Vector2 intersection4 = LineIntersection(start, side2, otherCone.start, otherCone.side2);
 
-	if ((intersection1 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection1)) closestPointSoFar = intersection1;
+
+	roboteam_utils::Vector2 closestPointSoFar = intersection1;
 	if ((intersection2 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection2)) closestPointSoFar = intersection2;
 	if ((intersection3 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection3)) closestPointSoFar = intersection3;
 	if ((intersection4 - closeTo).length() < (closestPointSoFar - closeTo).length() && IsWithinField(intersection4)) closestPointSoFar = intersection4;

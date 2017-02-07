@@ -4,6 +4,7 @@
 
 namespace roboteam_utils {
 
+    
 double Vector2::dot(const Vector2& other) const {
     return x * other.x + y * other.y;
 }

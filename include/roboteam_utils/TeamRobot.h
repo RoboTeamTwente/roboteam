@@ -12,7 +12,7 @@ namespace rtt {
         bool our_team;
         
         bool operator<(TeamRobot other) const {
-            return id < other.id;
+            return (id | (our_team << 2)) < (other.id | (other.our_team << 2));
         }
     };
 

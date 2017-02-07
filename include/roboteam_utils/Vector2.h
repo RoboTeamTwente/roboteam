@@ -11,7 +11,7 @@ namespace roboteam_utils
 class Vector2
 {
 public:
-	Vector2() : x(0), y(0) {}
+	constexpr Vector2() : x(0), y(0) {}
 	Vector2(double x, double y) : x(x), y(y) {}
 	Vector2(const Vector2& copy) : x(copy.x), y(copy.y) {}
     Vector2(const roboteam_msgs::Vector2f& msg) : Vector2(msg.x, msg.y) {}
@@ -44,6 +44,8 @@ public:
 
 	double x, y;
 };
+
+constexpr Vector2 ZERO_VECTOR = Vector2();
 
 }
 

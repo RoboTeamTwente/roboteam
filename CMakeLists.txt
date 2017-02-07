@@ -153,6 +153,7 @@ add_dependencies(roboteam_utils
     )
 target_link_libraries(roboteam_utils
     ${catkin_LIBRARIES}
+    ${PROJECT_NAME}_proto
     )
 
 

@@ -120,7 +120,7 @@ add_custom_target(generate_constants_t
 
 add_library(roboteam_utils src/Vector2.cpp src/Position.cpp src/constants.cpp)
 add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} generate_constants_t)
-target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
+target_link_libraries(roboteam_utils ${catkin_LIBRARIES} ${PROJECT_NAME}_proto)
 
 
 

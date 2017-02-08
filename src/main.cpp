@@ -5,6 +5,7 @@
 #include "std_msgs/Float64MultiArray.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <QtNetwork>
 #include <ros/ros.h>
@@ -17,7 +18,6 @@
 ros::Publisher pub;
 
 QUdpSocket udpsocket;
-
 
 void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // ROS_INFO_STREAM("received message for GRsim");
@@ -74,8 +74,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
 
-void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
-{
+void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // ROS_INFO("received message for Gazebo!");
 
     float x_vel = _msg->x_vel;
@@ -106,6 +105,39 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg)
     pub.publish(command);
 }
 
+// IMPORTANT NOTE (I have to place it somewhere)
+// Make sure ModemManager has been eradicated from
+// your Ubuntu installation. otherwise, upon serial
+// connection, it will dump about 30 characters of random bytes
+// into the connection, screwing up the connection.
+// ModemManager is a program/service of some sort.
+// http://askubuntu.com/questions/216114/how-can-i-remove-modem-manager-from-boot
+// sudo apt-get purge modemmanager + reboot or something should do the trick
+
+namespace {
+
+std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
+bool serialPortOpen = false;
+std::fstream serialFile; 
+
+} // anonymous namespace
+
+void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
+    if (!serialPortOpen) {
+        // Open serial port
+    } 
+
+    // Write message to it
+    
+    // Listen for ack
+    // TODO: @Performance this should probably done in such a way that it doesn't
+    // block ros::spin()
+    
+
+
+    // We're done
+}
+
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     std::string robot_output_target = "grsim";
     ros::param::get("robot_output_target", robot_output_target);
@@ -114,7 +146,7 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     } else if (robot_output_target == "gazebo") {
         sendGazeboCommands(msg);
     } else if (robot_output_target == "serial") {
-        // sendSerialCommands(msg);
+        sendSerialCommands(msg);
     } else { // Default to grsim
         sendGRsimCommands(msg);
     }

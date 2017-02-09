@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <vector>
 #include <math.h>
+#include <boost/asio.hpp>
 
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
@@ -118,10 +119,11 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
 namespace {
 
+// http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
 std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
-std::fstream serialFile; 
+boost::asio::serial_port serialPort(;
 
 } // anonymous namespace
 
@@ -146,7 +148,7 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     // have the safety of utils' constants.
 
     bool normaliseField =  false;
-    ros::param::getCached("normalise_field", normaliseField);
+    ros::param::getCached("normalize_field", normaliseField);
 
     if (normaliseField) {
         std::string ourSide = "left";

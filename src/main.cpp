@@ -123,13 +123,24 @@ namespace {
 
 std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
-boost::asio::serial_port serialPort(;
+boost::asio::io_service io;
+boost::asio::serial_port serialPort(io);
 
 } // anonymous namespace
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     if (!serialPortOpen) {
         // Open serial port
+        boost::system::error_code errorCode;
+        serialPort.open(SERIAL_FILE_PATH, errorCode);
+        switch (errorCode.value()) {
+            case boost::system::errc::success:
+                serialPortOpen = true;
+                break;
+            default:
+                std::cerr << "[RobotHub] ERROR! Could not open serial port!\n";
+                return;
+        }
     } 
 
     // Write message to it

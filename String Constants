@@ -8,6 +8,7 @@
     "TOPIC_DEBUG_POINTS": "view_debug_points",
     "TOPIC_DEBUG_LINES": "view_debug_lines",
     "TOPIC_DETECTION": "vision_detection",
+    "TOPIC_FIELD_NORMALISATION" : "field_normalisation",
     
     "SERVICE_NAVSIM": "navsim",
     "SERVICE_WORLD_RESET": "world_reset",

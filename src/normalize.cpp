@@ -1,4 +1,4 @@
-#include "roboteam_utils/normalise.h"
+#include "roboteam_utils/normalize.h"
 #include "roboteam_utils/constants.h"
 
 #include <string>
@@ -8,7 +8,7 @@ namespace rtt {
 
 using namespace roboteam_msgs;
 
-World normalize_world(World world) {
+World normalizeWorld(World world) {
     bool should_normalize = false;
     std::string our_side;
 
@@ -16,22 +16,25 @@ World normalize_world(World world) {
     get_PARAM_OUR_SIDE(our_side);
 
 
-    if (!(should_normalize && our_side == "right")) {
+    if (should_normalize && our_side == "right") {
+        return rotateWorld(world);
+    } else {
         // No need to normalize.
         return world;
     }
+}
 
-    World norm_world(world);
+World rotateWorld(World world) {
+    World rot_world(world);
 
     // Rotate the ball.
-    norm_world.ball.pos.x *= -1;
-    norm_world.ball.pos.y *= -1;
+    rot_world.ball.pos.x *= -1;
+    rot_world.ball.pos.y *= -1;
 
-    norm_world.ball.vel.x *= -1;
-    norm_world.ball.vel.y *= -1;
+    rot_world.ball.vel.x *= -1;
+    rot_world.ball.vel.y *= -1;
 
-
-    return norm_world;
+    return rot_world;
 }
 
 roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command) {

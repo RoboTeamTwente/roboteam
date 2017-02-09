@@ -145,7 +145,7 @@ add_library(
     src/Draw.cpp
     src/Math.cpp
     src/Cone.cpp
-    src/normalise.cpp
+    src/normalize.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -179,6 +179,6 @@ catkin_add_gtest(utils_test
     src/Draw.cpp
     src/Math.cpp
     src/Cone.cpp
-    src/normalise.cpp
+    src/normalize.cpp
 )
 target_link_libraries(utils_test ${catkin_LIBRARIES})

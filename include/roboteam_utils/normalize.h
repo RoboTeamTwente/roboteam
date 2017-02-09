@@ -5,7 +5,16 @@
 
 namespace rtt {
 
-roboteam_msgs::World normalize_world(roboteam_msgs::World world);
+/**
+ * Rotates the world when needed. e.g. when the 'normalize_world' parameter is
+ * set and our field side is 'right'.
+ */
+roboteam_msgs::World normalizeWorld(roboteam_msgs::World world);
+
+/**
+ * Rotates a world message 180 degrees.
+ */
+roboteam_msgs::World rotateWorld(roboteam_msgs::World world);
 
 /**
  * "Rotates" the robot command. I.e., if you would rotate the field, and then rotate the robot command,

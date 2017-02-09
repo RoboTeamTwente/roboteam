@@ -1,17 +1,19 @@
-#include "roboteam_utils/grSim_Packet.pb.h"
-#include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_msgs/RobotCommand.h"
-#include "std_msgs/Float64MultiArray.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <QtNetwork>
 #include <ros/ros.h>
-
 #include <vector>
 #include <math.h>
+
+#include "roboteam_utils/grSim_Packet.pb.h"
+#include "roboteam_utils/grSim_Commands.pb.h"
+#include "roboteam_utils/Vector2.h"
+#include "roboteam_utils/normalise.h"
+#include "roboteam_utils/constants.h"
+
+#include "roboteam_msgs/RobotCommand.h"
+#include "std_msgs/Float64MultiArray.h"
 
 #define PI 3.14159265
 
@@ -116,6 +118,7 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
 namespace {
 
+
 std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 std::fstream serialFile; 
@@ -133,14 +136,33 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // TODO: @Performance this should probably done in such a way that it doesn't
     // block ros::spin()
     
-
-
     // We're done
 }
 
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    roboteam_msgs::RobotCommand command;
+
+    // TODO: @Safety I would like to use getcached here, but I would also like to
+    // have the safety of utils' constants.
+
+    bool normaliseField =  false;
+    ros::param::getCached("normalise_field", normaliseField);
+
+    if (normaliseField) {
+        std::string ourSide = "left";
+        ros::param::getCached("our_side", ourSide);
+
+        if (ourSide == "right") {
+            command = rtt::rotateRobotCommand(*msg);
+        } else {
+            command = *msg;
+        }
+    } else {
+        command = *msg;
+    }
+
     std::string robot_output_target = "grsim";
-    ros::param::get("robot_output_target", robot_output_target);
+    ros::param::getCached("robot_output_target", robot_output_target);
     if (robot_output_target == "grsim") {
         sendGRsimCommands(msg);
     } else if (robot_output_target == "gazebo") {

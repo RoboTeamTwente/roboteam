@@ -9,7 +9,7 @@
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
 #include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/normalise.h"
+#include "roboteam_utils/normalize.h"
 #include "roboteam_utils/constants.h"
 
 #include "roboteam_msgs/RobotCommand.h"
@@ -145,10 +145,10 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     // TODO: @Safety I would like to use getcached here, but I would also like to
     // have the safety of utils' constants.
 
-    bool normaliseField =  false;
-    ros::param::getCached("normalise_field", normaliseField);
+    bool normalizeField =  false;
+    ros::param::getCached("normalize_field", normalizeField);
 
-    if (normaliseField) {
+    if (normalizeField) {
         std::string ourSide = "left";
         ros::param::getCached("our_side", ourSide);
 

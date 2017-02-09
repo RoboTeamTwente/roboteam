@@ -145,6 +145,7 @@ add_library(
     src/Draw.cpp
     src/Math.cpp
     src/Cone.cpp
+    src/normalise.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 

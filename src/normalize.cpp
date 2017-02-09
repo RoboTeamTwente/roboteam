@@ -1,6 +1,8 @@
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/constants.h"
 
+#include "roboteam_utils/Math.h"
+
 #include <string>
 
 
@@ -8,34 +10,54 @@ namespace rtt {
 
 using namespace roboteam_msgs;
 
-World normalizeWorld(World world) {
-    bool should_normalize = false;
+DetectionFrame normalizeDetectionFrame(DetectionFrame frame) {
     std::string our_side;
-
-    get_PARAM_NORMALISE_FIELD(should_normalize);
     get_PARAM_OUR_SIDE(our_side);
 
-
-    if (should_normalize && our_side == "right") {
-        return rotateWorld(world);
+    if (our_side == "right") {
+        return rotateDetectionFrame(frame);
     } else {
         // No need to normalize.
-        return world;
+        return frame;
     }
 }
 
-World rotateWorld(World world) {
-    World rot_world(world);
+DetectionFrame rotateDetectionFrame(DetectionFrame frame) {
+    for (auto& ball : frame.balls) {
+        ball = rotateBall(ball);
+    }
 
-    // Rotate the ball.
-    rot_world.ball.pos.x *= -1;
-    rot_world.ball.pos.y *= -1;
+    for (auto& bot : frame.us) {
+        bot = rotateRobot(bot);
+    }
 
-    rot_world.ball.vel.x *= -1;
-    rot_world.ball.vel.y *= -1;
+    for (auto& bot : frame.them) {
+        bot = rotateRobot(bot);
+    }
 
-    return rot_world;
+    return frame;
 }
+
+DetectionBall rotateBall(DetectionBall ball) {
+    ball.pos.x *= -1;
+    ball.pos.y *= -1;
+    ball.pixel_pos.x *= -1;
+    ball.pixel_pos.y *= -1;
+
+    return ball;
+}
+
+
+DetectionRobot rotateRobot(DetectionRobot bot) {
+    bot.pos.x *= -1;
+    bot.pos.y *= -1;
+    bot.orientation = cleanAngle(bot.orientation + M_PI);
+    bot.pixel_pos.x *= -1;
+    bot.pixel_pos.y *= -1;
+
+    return bot;
+}
+
 
 roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command) {
     roboteam_msgs::RobotCommand newCommand;

@@ -1,20 +1,30 @@
 #pragma once
 
-#include <roboteam_msgs/World.h>
+#include <roboteam_msgs/DetectionFrame.h>
 #include <roboteam_msgs/RobotCommand.h>
 
 namespace rtt {
 
 /**
- * Rotates the world when needed. e.g. when the 'normalize_world' parameter is
+ * Rotates the detectionframe when needed. e.g. when the 'normalize_world' parameter is
  * set and our field side is 'right'.
  */
-roboteam_msgs::World normalizeWorld(roboteam_msgs::World world);
+roboteam_msgs::DetectionFrame normalizeDetectionFrame(roboteam_msgs::DetectionFrame world);
 
 /**
- * Rotates a world message 180 degrees.
+ * Rotates a detectionframe message 180 degrees.
  */
-roboteam_msgs::World rotateWorld(roboteam_msgs::World world);
+roboteam_msgs::DetectionFrame rotateDetectionFrame(roboteam_msgs::DetectionFrame world);
+
+/**
+ * Rotates a detectionball message 180 degrees.
+ */
+roboteam_msgs::DetectionBall rotateBall(roboteam_msgs::DetectionBall ball);
+
+/**
+ * Rotates a detectionrobot message 180 degrees.
+ */
+roboteam_msgs::DetectionRobot rotateRobot(roboteam_msgs::DetectionRobot bot);
 
 /**
  * "Rotates" the robot command. I.e., if you would rotate the field, and then rotate the robot command,

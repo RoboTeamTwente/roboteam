@@ -21,7 +21,7 @@
     "PARAM_OUR_SIDE": {"name": "our_side", "type": "string", "values": ["left", "right"]},
     "PARAM_OUR_COLOR": {"name": "our_color", "type": "string", "values": ["yellow", "blue"]},
 
-    "PARAM_NORMALISE_FIELD" : {"name": "normalize_field", "type": "bool"},
+    "PARAM_NORMALIZE_FIELD": {"name": "normalize_field", "type": "bool"},
 
     "PARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
 

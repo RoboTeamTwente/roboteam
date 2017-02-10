@@ -16,7 +16,7 @@ else (ENABLE_DEBUG_GRAPHICS)
     add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
 endif (ENABLE_DEBUG_GRAPHICS)
 
-find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
+find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy roscpp)
 
 find_package(Protobuf REQUIRED)
 
@@ -53,8 +53,12 @@ set(protogen_include_dirs ${proto_gen_cpp_dir}/../ ${proto_gen_python_dir})
 # catkin_python_setup()
 
 catkin_package(
-  INCLUDE_DIRS include ${protogen_include_dirs}
-  LIBRARIES roboteam_utils ${PROJECT_NAME}_proto
+  INCLUDE_DIRS 
+    include 
+    ${protogen_include_dirs}
+  LIBRARIES
+    roboteam_utils 
+    ${PROJECT_NAME}_proto
 )
 
 include_directories(
@@ -134,8 +138,7 @@ add_custom_target(generate_constants_t
 	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.cpp
 )
 
-add_library(
-    roboteam_utils
+add_library(roboteam_utils
     src/Vector2.cpp
     src/Position.cpp
     src/constants.cpp
@@ -157,9 +160,6 @@ target_link_libraries(roboteam_utils
     ${PROJECT_NAME}_proto
     )
 
-
-
-
 # Protobuf messages.
 # add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})
 # add_dependencies(roboteam_utils_proto ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -170,13 +170,13 @@ catkin_add_gtest(utils_test
     test/Vector2Test.cpp
     test/PositionTest.cpp
     test/GraphTest.cpp
-    src/Vector2.cpp
-    src/Position.cpp
-    src/world_analysis.cpp
-    src/LastWorld.cpp
-    src/LastRef.cpp
-    src/Draw.cpp
-    src/Math.cpp
-    src/Cone.cpp
 )
-target_link_libraries(utils_test ${catkin_LIBRARIES})
+add_dependencies(utils_test
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    ${catkin_EXPORTED_TARGETS} 
+    generate_constants_t
+    )
+target_link_libraries(utils_test
+    roboteam_utils
+	${catkin_LIBRARIES}
+	)

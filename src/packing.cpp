@@ -7,6 +7,9 @@
 #include <memory>
 #include <boost/optional.hpp>
 
+#include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_utils/Vector2.h"
+
 namespace rtt {
 
 /**
@@ -14,15 +17,15 @@ namespace rtt {
  *
  * Byte     Config      Description
  * 1        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
- * 2        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 4095 (mm/s)
- * 3        cccccccc    cccccccc: Moving direction, resolution 2 * pi / 512
- * 4        000cdeee    c: Moving direction, d: Rotation direction,
+ * 2        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 8191 (mm/s)
+ * 3        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution 2 * pi / 512
+ * 4        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
  * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0-2047 (deg/s)
  * 6        ffffffff    ffffffff: Kick force, 0 - 255
  * 7        0ghijkkk    g: whether or not to kick
  *                      h: whether or not to chip
  *                      i: forced or not
- *                      j: counterclockwise dribbler
+ *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
  *                      kkk: dribbler speed, 0 - 7
  */
 
@@ -44,16 +47,123 @@ namespace rtt {
  *                      Copy of command packet, possibly only when requested.
  */
 
+namespace {
+
+uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax) {
+    if (forceRaw >= max) {
+        return normMax;
+    } else if (forceRaw < 0) {
+        return 0;
+    } else {
+        return forceRaw / max * normMax;
+    }
+}
+
+} // anonymous namespace
+
+/**
+ * TODO: Measure our highest kicking power and use that to scale kick_vel!
+ */
+boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command) {
+
+    using roboteam_msgs::RobotCommand;
+    
+    //////////////////////////////
+    // Calculate robot velocity //
+    //////////////////////////////
+    roboteam_utils::Vector2 velocityVec(command.x_vel, command.y_vel);
+
+    int robot_vel = velocityVec.length() * 1000;
+    if (robot_vel > PACKET_MAX_ROBOT_VEL) {
+        robot_vel = PACKET_MAX_ROBOT_VEL;
+    }
+
+    ///////////////////////////
+    // Calculate robot angle //
+    ///////////////////////////
+    double rawAng = velocityVec.angle();
+    
+    // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
+    // in the positive domain.
+    if (rawAng < 0) {
+        rawAng += M_PI_2;
+    }
+
+    int ang = rawAng / M_PI_2 * 512;
+
+    if (ang > PACKET_MAX_ANG) {
+        ang = PACKET_MAX_ANG;
+    }
+
+    //////////////////////////////////////
+    // Calculate w & rotation direction //
+    //////////////////////////////////////
+    // Calculate w & if to rotate clockwise or counter-clockwise
+    // If w is positive it's counter clockwise
+    bool rot_cclockwise = command.w > 0;
+    double rawW = command.w;
+    if (command.w < 0) {
+        rawW = -rawW;
+    }
+    // w is in deg/s
+    int w = rawW * (180 / M_PI);
+
+    if (w > 2047) w = 2047;
+    if (w < 0) w = 0;
+    
+    //////////////////////////
+    // Calculate kick_force //
+    //////////////////////////
+    // uint8_t kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL);
+    // uint8_t dribbler_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL);
+    
+    uint8_t kick_force = 0;
+    uint8_t chip_force = 0;
+    bool do_chip = false;
+    bool do_kick = false;
+    bool do_forced = false;
+
+    if (command.kicker == true) {
+        do_kick = true;
+        kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL, 255);
+        do_forced = command.kicker_forced;
+    } else if (command.chipper == true) {
+        do_chip = true;
+        chip_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL, 255);
+        do_forced = command.chipper_forced;
+    }
+
+    bool dribble_cclockwise = false;
+    uint8_t dribble_vel = 0;
+    if (command.dribbler) {
+        dribble_vel = PACKET_MAX_DRIBBLE_VEL;
+    }
+
+    return createRobotPacket(
+            command.id,
+            robot_vel,
+            ang,
+            rot_cclockwise,
+            w,
+            std::max(kick_force, chip_force),
+            do_kick,
+            do_chip,
+            do_forced,
+            dribble_cclockwise,
+            dribble_vel
+            );
+}
+
 /**
  * All mentioned ranges are inclusive. If the specified ranges are violated,
  * the function returns boost::none.
  *
  * \param id Must be between 0 and 15
  * \param robot_vel Must be between 0 and 4095 (mm/s)
- * \param w Moving direction. Must be between 0 and 511. Resolution
+ * \param ang Moving direction. Must be between 0 and 511. Resolution
  *          is 2*pi/512
  * \param rot_cclockwise True if rotation is counter clockwise
- * \param w_vel Angular velocity. Must be between 0 and 2047
+ * \param w Angular velocity. Must be between 0 and 2047
  * \param kick_force Naturally between 0 and 255
  * \param do_kick Whether or not a chip or kick should be done
  * \param chip True if the robot should chip, otherwise a kick will be done
@@ -61,42 +171,43 @@ namespace rtt {
  * \param dribble_cclockwise If true dribbler will spin counter clockwise
  * \param dribble_vel Must be between 0 and 7.
  */
-boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel, int w,
-                                                         bool rot_cclockwise, int w_vel, uint8_t kick_force,
-                                                         bool do_kick, bool chip, bool forced,
+boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
+                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
+                                                         bool do_kick, bool do_chip, bool forced,
                                                          bool dribble_cclockwise, uint8_t dribble_vel) {
     if (!((id >= 0 && id < 16)
-            && (robot_vel >= 0 && robot_vel < 4096)
-            && (w >= 0 && w < 512)
-            && (w_vel >= 0 && w_vel < 2048)
+            && (robot_vel >= 0 && robot_vel < 8192)
+            && (ang >= 0 && ang < 512)
+            && (w >= 0 && w < 2048)
             && (dribble_vel >= 0 && dribble_vel < 8))) {
         return boost::none;
     }
 
     packed_protocol_message byteArr;
 
-    // First nibble are the robot id
+    // First nibble is the robot id
     // Second nibble are the third nibble of robot velocity
-    byteArr[0] = static_cast<uint8_t>(((id & 15) << 4) | ((robot_vel >> 8) & 15));
+    byteArr[0] = static_cast<uint8_t>(((id & 15) << 4) | ((robot_vel >> 9) & 15));
     // First and second nibble of robot velocity
-    byteArr[1] = static_cast<uint8_t>(robot_vel);
+    byteArr[1] = static_cast<uint8_t>(robot_vel >> 1);
     // Second to ninth bit of moving direction
-    byteArr[2] = static_cast<uint8_t>(w >> 1);
+    byteArr[2] = static_cast<uint8_t>(robot_vel & 1) << 7
+                | static_cast<uint8_t>(ang >> 2);
     // First bit of moving direction
     // Then bit that designates clockwise rotation or not
     // Last three bits of angular velocity
-    byteArr[3] = static_cast<uint8_t>((w & 1) << 4) 
+    byteArr[3] = static_cast<uint8_t>((ang & 3) << 6) 
                 | static_cast<uint8_t>(rot_cclockwise << 3)
-                | static_cast<uint8_t>((w_vel >> 8) & 7);
+                | static_cast<uint8_t>((w >> 8) & 7);
     // First two nibbles of angular velocity
-    byteArr[4] = static_cast<uint8_t>(w_vel);
+    byteArr[4] = static_cast<uint8_t>(w);
     // Just plug in the byte of kick-force
-    byteArr[5] = kick_force;
+    byteArr[5] = punt_power;
     // gggg = 0, 0, chip = 1 kick = 0, forced = 1 normal = 0
     // First the chip and forced bools, then a bool that designates
     // a clockwise dribbler, and then three bits to designate dribble velocity
     byteArr[6] = static_cast<uint8_t>(do_kick << 6)
-                    | static_cast<uint8_t>(chip << 5)
+                    | static_cast<uint8_t>(do_chip << 5)
                     | static_cast<uint8_t>(forced << 4)
                     | static_cast<uint8_t>(dribble_cclockwise << 3)
                     | static_cast<uint8_t>(dribble_vel & 7);

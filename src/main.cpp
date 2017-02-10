@@ -1,22 +1,23 @@
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <QtNetwork>
-#include <ros/ros.h>
-#include <vector>
-#include <math.h>
 #include <boost/asio.hpp>
+#include <fstream>
+#include <iostream>
+#include <math.h>
+#include <ros/ros.h>
+#include <string>
+#include <vector>
+#include <cmath>
 
-#include "roboteam_utils/grSim_Packet.pb.h"
-#include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/normalise.h"
-#include "roboteam_utils/constants.h"
-
-#include "roboteam_msgs/RobotCommand.h"
 #include "std_msgs/Float64MultiArray.h"
 
-#define PI 3.14159265
+#include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_utils/Vector2.h"
+#include "roboteam_utils/constants.h"
+#include "roboteam_utils/grSim_Commands.pb.h"
+#include "roboteam_utils/grSim_Packet.pb.h"
+#include "roboteam_utils/normalise.h"
+
+#include "roboteam_robothub/packing.h"
 
 ros::Publisher pub;
 
@@ -54,7 +55,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     }
     if(_msg->chipper){
         roboteam_utils::Vector2 vel = roboteam_utils::Vector2(_msg->chipper_vel, 0);
-        vel = vel.rotate(PI/4); // 45 degrees up.
+        vel = vel.rotate(M_PI/4); // 45 degrees up.
 
         command->set_kickspeedx(vel.x);
     	command->set_kickspeedz(vel.y);
@@ -85,10 +86,10 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     float w = _msg->w;
     float robot_radius = 0.09;
     float wheel_radius = 0.03;
-    float theta1 = 0.25*PI;
-    float theta2 = 0.75*PI;
-    float theta3 = 1.25*PI;
-    float theta4 = 1.75*PI;
+    float theta1 = 0.25 * M_PI;
+    float theta2 = 0.75 * M_PI;
+    float theta3 = 1.25 * M_PI;
+    float theta4 = 1.75 * M_PI;
     float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w) / wheel_radius;
     float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w) / wheel_radius;
     float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w) / wheel_radius;
@@ -143,13 +144,24 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         }
     } 
 
-    // Write message to it
-    
-    // Listen for ack
-    // TODO: @Performance this should probably done in such a way that it doesn't
-    // block ros::spin()
-    
-    // We're done
+    // Create message
+    if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
+        // Success!
+        // Write message to it
+        serialPort.write_some(*bytesOpt);
+        
+        
+        // Listen for ack
+        serialPort.read_some
+        // TODO: @Performance this should probably done in such a way that it doesn't
+        // block ros::spin()
+        
+        // We're done
+    } else {
+        // herp
+        std::cout << "Could not turn command into packet!\n";
+    }
+
 }
 
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {

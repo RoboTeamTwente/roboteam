@@ -8,7 +8,7 @@
     "TOPIC_DEBUG_POINTS": "view_debug_points",
     "TOPIC_DEBUG_LINES": "view_debug_lines",
     "TOPIC_DETECTION": "vision_detection",
-    
+
     "SERVICE_NAVSIM": "navsim",
     "SERVICE_WORLD_RESET": "world_reset",
     "SERVICE_OPPONENT_TRACKER": "tracker",
@@ -21,10 +21,10 @@
     "PARAM_OUR_SIDE": {"name": "our_side", "type": "string", "values": ["left", "right"]},
     "PARAM_OUR_COLOR": {"name": "our_color", "type": "string", "values": ["yellow", "blue"]},
 
-    "PARAM_NORMALISE_FIELD" : {"name": "normalise_field", "type": "bool"},
+    "PARAM_NORMALIZE_FIELD": {"name": "normalize_field", "type": "bool"},
 
     "PARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
-    
+
 
     "NODE_TACTICS": "tactics",
     "NODE_DO_STRATEGY": "doStrategy",

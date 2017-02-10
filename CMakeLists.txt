@@ -119,7 +119,7 @@ install(DIRECTORY ${proto_gen_python_dir}/
 add_executable(constants_generator
     "${PROJECT_SOURCE_DIR}/src/ConstantsGenerator.cpp"
     )
-set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES 
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
     "${PROJECT_SOURCE_DIR}/src/constants.cpp"
     "${PROJECT_SOURCE_DIR}/include/roboteam_utils/constants.h"
     )
@@ -127,8 +127,8 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 add_custom_command(
 	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.cpp
 	COMMAND ${PROJECT_SOURCE_DIR}/generate_constants.sh
-	DEPENDS 
-        constants_generator 
+	DEPENDS
+        constants_generator
         "${PROJECT_SOURCE_DIR}/String Constants"
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 	COMMENT "Generating constants file"
@@ -148,11 +148,11 @@ add_library(roboteam_utils
     src/Draw.cpp
     src/Math.cpp
     src/Cone.cpp
-    src/normalise.cpp
+    src/normalize.cpp
 )
 add_dependencies(roboteam_utils
-    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-    ${catkin_EXPORTED_TARGETS} 
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    ${catkin_EXPORTED_TARGETS}
     generate_constants_t
     )
 target_link_libraries(roboteam_utils
@@ -170,6 +170,7 @@ catkin_add_gtest(utils_test
     test/Vector2Test.cpp
     test/PositionTest.cpp
     test/GraphTest.cpp
+    #test/normaliseTest.cpp
 )
 add_dependencies(utils_test
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 

@@ -2,35 +2,56 @@
 
 #include <roboteam_msgs/DetectionFrame.h>
 #include <roboteam_msgs/RobotCommand.h>
+#include <roboteam_msgs/GeometryData.h>
+#include <roboteam_msgs/RefereeData.h>
 
 namespace rtt {
 
+using namespace roboteam_msgs;
+
 /**
- * Rotates the detectionframe when needed. e.g. when the 'normalize_world' parameter is
- * set and our field side is 'right'.
+ * Rotates the detectionframe when needed. e.g. when our field side is 'right'.
  */
-roboteam_msgs::DetectionFrame normalizeDetectionFrame(roboteam_msgs::DetectionFrame world);
+DetectionFrame normalizeDetectionFrame(DetectionFrame& world);
+
+GeometryData normalizeGeometryData(GeometryData& data);
+
+RefereeData normalizeRefereeData(RefereeData& data);
+
 
 /**
  * Rotates a detectionframe message 180 degrees.
  */
-roboteam_msgs::DetectionFrame rotateDetectionFrame(roboteam_msgs::DetectionFrame world);
+DetectionFrame rotateDetectionFrame(DetectionFrame& world);
 
 /**
  * Rotates a detectionball message 180 degrees.
  */
-roboteam_msgs::DetectionBall rotateBall(roboteam_msgs::DetectionBall ball);
+DetectionBall rotateBall(DetectionBall& ball);
 
 /**
  * Rotates a detectionrobot message 180 degrees.
  */
-roboteam_msgs::DetectionRobot rotateRobot(roboteam_msgs::DetectionRobot bot);
+DetectionRobot rotateRobot(DetectionRobot& bot);
+
+GeometryData rotateGeometryData(GeometryData& data);
+
+GeometryFieldSize rotateGeometryFieldSize(GeometryFieldSize& size);
+
+GeometryCameraCalibration rotateGeometryCameraCalibration(GeometryCameraCalibration& calib);
+
+FieldLineSegment rotateLine(FieldLineSegment& line);
+
+FieldCircularArc rotateArc(FieldCircularArc& arc);
+
+RefereeData rotateRefereeData(RefereeData& data);
+
 
 /**
  * "Rotates" the robot command. I.e., if you would rotate the field, and then rotate the robot command,
  * the robot would head in the same direction as it would have if you did not do those two rotations.
  * Effectively it only negates the x_vel and y_vel properties of the message.
  */
-roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command);
+RobotCommand rotateRobotCommand(RobotCommand const & command);
 
 } // rtt

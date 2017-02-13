@@ -67,6 +67,7 @@ int main(const std::vector<std::string>& arguments) {
 
     bool manual = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual)? ") == "manual";
 
+    // TODO: w should be ang, w_vel should be w
     int id;
     int robot_vel;
     int w;
@@ -153,38 +154,48 @@ int main(const std::vector<std::string>& arguments) {
 
     auto msg = *possibleMsg;
 
+    for (const auto& byte : msg) {
+        std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+    }
+
+    if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
+        std::cout << "Sending message canceled. Aborting.\n";
+        return 0;
+    }
+
+    std::cout << "Creating serial port...\n";
+
+    boost::system::error_code errorCode;
+    serialPort.open(output_file);
+    switch (errorCode.value()) {
+        case boost::system::errc::success:
+            // Great!
+            break;
+        default:
+            std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
+            exit(1);
+            break;
+    }
+
     bool keepGoing = true;
 
-    {
-        for (const auto& byte : msg) {
-            std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-        }
-
-        if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
-            std::cout << "Sending message canceled. Aborting.\n";
-            return 0;
-        }
-
-        std::cout << "Creating file object...\n";
-
-        std::ofstream fout(output_file, std::ios::binary | std::ios::out);
-
-        if (!fout) {
-            std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
-            return 1;
-        }
-
+    do {
         std::cout << "Writing bytes to files... ";
 
-        fout.write((char *) msg.data(), msg.size());
+        serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+        // TODO: @Hack base station crutches!
+        serialPort.write_some(boost::asio::buffer(msg.data(), 1));
 
         std::cout << "Done.\n";
 
-        if (get_safe_input("Check for ACK (Y/n): ", false) == "Y") {
-            
+        if (get_safe_input("Check for ACK (Y/n): ", false) != "n") {
+            uint8_t ackCode = 0;
+            int receivedBytes = serialPort.read_some(boost::asio::buffer(&ackCode, 1));
+            std::cout << "Received bytes: " << receivedBytes << "\n";
+            std::cout << "The byte: " << std::to_string(ackCode) << "\n";
         }
 
-        keepGoing = get_safe_input("Send again (y/N): ", false) == "y";
+        keepGoing = get_safe_input("Send again (Y/n): ", false) != "n";
     } while (keepGoing);
 
     return 0;

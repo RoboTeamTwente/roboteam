@@ -189,10 +189,19 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "Done.\n";
 
         if (get_safe_input("Check for ACK (Y/n): ", false) != "n") {
-            uint8_t ackCode = 0;
-            int receivedBytes = serialPort.read_some(boost::asio::buffer(&ackCode, 1));
+            int const numBytes = 3;
+            uint8_t ackCode[numBytes];
+            int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+            ackCode[numBytes - 1] = 0;
+
             std::cout << "Received bytes: " << receivedBytes << "\n";
-            std::cout << "The byte: " << std::to_string(ackCode) << "\n";
+
+            // std::cout << "The byte: " << std::to_string(ackCode[0]) << "\n";
+            // std::cout << "The byte: " << std::to_string(ackCode[1]) << "\n";
+
+            std::string returnMessage((char*) &ackCode[0]);
+            std::cout << "The message: " << returnMessage << "\n";
         }
 
         keepGoing = get_safe_input("Send again (Y/n): ", false) != "n";

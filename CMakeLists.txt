@@ -48,9 +48,18 @@ catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
 
-add_executable(roboteam_robothub src/main.cpp)
-target_link_libraries(roboteam_robothub ${catkin_LIBRARIES} ${QT_LIBRARIES})
-add_dependencies(roboteam_robothub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_executable(roboteam_robothub 
+    src/main.cpp
+    src/packing.cpp
+    )
+target_link_libraries(roboteam_robothub 
+    ${catkin_LIBRARIES} 
+    ${QT_LIBRARIES}
+    )
+add_dependencies(roboteam_robothub 
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    ${catkin_EXPORTED_TARGETS}
+    )
 
 add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})

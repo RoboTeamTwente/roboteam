@@ -15,7 +15,7 @@
 #include "roboteam_utils/constants.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
 #include "roboteam_utils/grSim_Packet.pb.h"
-#include "roboteam_utils/normalise.h"
+#include "roboteam_utils/normalize.h"
 
 #include "roboteam_robothub/packing.h"
 
@@ -122,7 +122,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
+std::string const SERIAL_FILE_PATH = "/dev/pts/22";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -148,13 +148,28 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
         // Success!
         // Write message to it
-        serialPort.write_some(*bytesOpt);
+        auto bytes = *bytesOpt;
+        serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
         
+        std::cout << "Expected message: \n";
+
+        for (const auto& byte : bytes) {
+            std::cout << "\t" << rtt::byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+        }
         
+        std::cout << "Waiting for ack...";
+
         // Listen for ack
-        serialPort.read_some
+        int readBytes = 0;
+        do {
+            readBytes = serialPort.read_some(boost::asio::buffer(bytes.data(), 1));
+        } while (readBytes == 0);
+
+        std::cout << " Got: " << std::to_string(bytes[0]) << "\n";
+        
         // TODO: @Performance this should probably done in such a way that it doesn't
         // block ros::spin()
+        // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something
         
         // We're done
     } else {

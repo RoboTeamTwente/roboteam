@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <boost/format.hpp>
+#include <boost/asio.hpp>
 
 #include "roboteam_robothub/packing.h"
 
@@ -44,6 +45,15 @@ std::string get_pretty_value<bool>(bool val) {
         return "false";
     }
 }
+
+namespace {
+
+// http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
+
+boost::asio::io_service io;
+boost::asio::serial_port serialPort(io);
+
+} // anonymous namespace
 
 int main(const std::vector<std::string>& arguments) {
     if (arguments.size() < 1) {
@@ -143,29 +153,39 @@ int main(const std::vector<std::string>& arguments) {
 
     auto msg = *possibleMsg;
 
-    for (const auto& byte : msg) {
-        std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-    }
+    bool keepGoing = true;
 
-    if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
-        std::cout << "Sending message canceled. Aborting.\n";
-        return 0;
-    }
+    {
+        for (const auto& byte : msg) {
+            std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+        }
 
-    std::cout << "Creating file object...\n";
+        if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
+            std::cout << "Sending message canceled. Aborting.\n";
+            return 0;
+        }
 
-    std::ofstream fout(output_file, std::ios::binary | std::ios::out);
+        std::cout << "Creating file object...\n";
 
-    if (!fout) {
-        std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
-        return 1;
-    }
+        std::ofstream fout(output_file, std::ios::binary | std::ios::out);
 
-    std::cout << "Writing bytes to files... ";
+        if (!fout) {
+            std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
+            return 1;
+        }
 
-    fout.write((char *) msg.data(), msg.size());
+        std::cout << "Writing bytes to files... ";
 
-    std::cout << "Done.\n";
+        fout.write((char *) msg.data(), msg.size());
+
+        std::cout << "Done.\n";
+
+        if (get_safe_input("Check for ACK (Y/n): ", false) == "Y") {
+            
+        }
+
+        keepGoing = get_safe_input("Send again (y/N): ", false) == "y";
+    } while (keepGoing);
 
     return 0;
 }

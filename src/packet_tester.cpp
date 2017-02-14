@@ -183,7 +183,7 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "Writing bytes to files... ";
 
         serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
-        // TODO: @Hack base station crutches!
+        // TODO: @Hack base station crutches! Pakcet length should be smaller
         serialPort.write_some(boost::asio::buffer(msg.data(), 1));
 
         std::cout << "Done.\n";

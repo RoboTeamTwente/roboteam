@@ -1,15 +1,19 @@
-#include <cstdint>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+#include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <chrono>
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "roboteam_robothub/packing.h"
 
 namespace rtt {
 
-std::string get_safe_input(std::string question = "", bool quit_on_empty = true) {
+std::string get_safe_input(std::string question = "", std::string defaultValue = "") {
     if (!question.empty()) {
         std::cout << question;
     }
@@ -17,9 +21,8 @@ std::string get_safe_input(std::string question = "", bool quit_on_empty = true)
     std::string input_str;
     
     if(std::getline(std::cin, input_str)) {
-        if (input_str.empty() && quit_on_empty) {
-            std::cout << "\nEmpty string passed as input. Aborting.\n";
-            exit(1);
+        if (input_str.empty()) {
+            return defaultValue;
         }
 
         return input_str;
@@ -45,6 +48,15 @@ std::string get_pretty_value<bool>(bool val) {
     }
 }
 
+namespace {
+
+// http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
+
+boost::asio::io_service io;
+boost::asio::serial_port serialPort(io);
+
+} // anonymous namespace
+
 int main(const std::vector<std::string>& arguments) {
     if (arguments.size() < 1) {
         std::cout << "No output file specified as argument. Aborting.\n";
@@ -57,11 +69,12 @@ int main(const std::vector<std::string>& arguments) {
 
     bool manual = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual)? ") == "manual";
 
+    // TODO: w should be ang, w_vel should be w
     int id;
     int robot_vel;
-    int w;
+    int ang;
     bool rot_cclockwise;
-    int w_vel;
+    int w;
     uint8_t kick_force;
     bool do_kick;
     bool chip;
@@ -72,25 +85,25 @@ int main(const std::vector<std::string>& arguments) {
     if (manual) {
         std::cout << "Sending a manual packet.\n";
 
-        id = std::stoi(get_safe_input("id (0-15): "));
-        robot_vel = std::stoi(get_safe_input("robot_vel (0-4095): "));
-        w = std::stoi(get_safe_input("w (0-511): "));
+        id = std::stoi(get_safe_input("id (0-15, 1): ", "1"));
+        robot_vel = std::stoi(get_safe_input("robot_vel (0-8191, 2000): ", "2000"));
+        ang = std::stoi(get_safe_input("ang (0-511, 300): ", "300"));
         rot_cclockwise = get_safe_input("rot_cclockwise (true/false): ") == "true";
-        w_vel = std::stoi(get_safe_input("w_vel (0-2047): "));
-        kick_force = std::stoi(get_safe_input("kick_force (0-255): "));
+        w = std::stoi(get_safe_input("w (0-2047, 1000): ", "1000"));
+        kick_force = std::stoi(get_safe_input("kick_force (0-255, 200): ", "200"));
         do_kick = get_safe_input("do_kick (true/false): ") == "true";
         chip = get_safe_input("chip (true/false): ") == "true";
         forced = get_safe_input("forced (true/false): ") == "true";
         dribble_cclockwise = get_safe_input("dribble_cclockwise (true/false): ") == "true";
-        dribble_vel = std::stoi(get_safe_input("dribble_vel (0-7): "));
+        dribble_vel = std::stoi(get_safe_input("dribble_vel (0-7, 5): ", "5"));
     } else {
         std::cout << "Sending an example packet.\n";
         
         id = 1;
         robot_vel = 2000;
-        w = 300;
+        ang = 300;
         rot_cclockwise = true;
-        w_vel = 1000;
+        w = 1000;
         kick_force = 200;
         do_kick = true;
         chip = false;
@@ -106,9 +119,9 @@ int main(const std::vector<std::string>& arguments) {
     std::cout << "Packet:\n";
     FIELD(id);
     FIELD(robot_vel);
-    FIELD(w);
+    FIELD(ang);
     FIELD(rot_cclockwise);
-    FIELD(w_vel);
+    FIELD(w);
     FIELD(kick_force);
     FIELD(do_kick);
     FIELD(chip);
@@ -121,9 +134,9 @@ int main(const std::vector<std::string>& arguments) {
     auto possibleMsg = createRobotPacket(
             id,
             robot_vel,
-            w,
+            ang,
             rot_cclockwise,
-            w_vel,
+            w,
             kick_force,
             do_kick,
             chip,
@@ -147,25 +160,111 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
     }
 
-    if (!get_safe_input("Press enter to send the packet or type something to cancel...", false).empty()) {
+    if (!get_safe_input("Press enter to open the port or type something to cancel...").empty()) {
         std::cout << "Sending message canceled. Aborting.\n";
         return 0;
     }
 
-    std::cout << "Creating file object...\n";
+    std::cout << "Creating serial port... ";
 
-    std::ofstream fout(output_file, std::ios::binary | std::ios::out);
-
-    if (!fout) {
-        std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
-        return 1;
+    boost::system::error_code errorCode;
+    serialPort.open(output_file);
+    switch (errorCode.value()) {
+        case boost::system::errc::success:
+            // Great!
+            break;
+        default:
+            std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
+            exit(1);
+            break;
     }
 
-    std::cout << "Writing bytes to files... ";
-
-    fout.write((char *) msg.data(), msg.size());
-
     std::cout << "Done.\n";
+
+    if (get_safe_input("Benchmark (y/N)? ", "N") != "N") {
+        bool checkForAck = get_safe_input("Check for ACK (Y/n): ", "Y") != "n";
+        int const MESSAGE_QUANTITY = std::stoi(get_safe_input("Amount of messages (10 000): ", "10000"));
+
+        int const numBytes = 3;
+        uint8_t ackCode[numBytes];
+
+        if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
+            std::cout << "Sending message canceled. Aborting.\n";
+            return 0;
+        }
+        
+        std::cout << "Sending packets..." << std::flush;
+
+        // There are other clocks, but this is usually the one you want.
+        // It corresponds to CLOCK_MONOTONIC at the syscall level.
+        using Clock = std::chrono::steady_clock;
+        using std::chrono::time_point;
+        using std::chrono::duration_cast;
+        using std::chrono::milliseconds;
+        using namespace std::literals::chrono_literals;
+        using std::this_thread::sleep_for;
+
+        time_point<Clock> start = Clock::now();
+
+        for (int i = 1; i < MESSAGE_QUANTITY + 1; ++i) {
+            serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+            // TODO: @Hack base station crutches! Pakcet length should be smaller
+            serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+
+            if (checkForAck) {
+                serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+            }
+
+            if (i % 100 == 0) {
+                std::cout << "." << std::flush;
+            }
+        }
+
+        time_point<Clock> end = Clock::now();
+
+        milliseconds diff = duration_cast<milliseconds>(end - start);
+
+        std::cout << "\nBenchmark done!\n";
+        std::cout << "Sent " << MESSAGE_QUANTITY << " messages.\n";
+        std::cout << "Duration: " << diff.count() << "ms" << std::endl;
+    } else {
+        // Single packet test
+
+        if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
+            std::cout << "Sending message canceled. Aborting.\n";
+            return 0;
+        }
+
+        bool keepGoing = true;
+
+        do {
+            std::cout << "Writing bytes to files... ";
+
+            serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+            // TODO: @Hack base station crutches! Pakcet length should be smaller
+            serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+
+            std::cout << "Done.\n";
+
+            if (get_safe_input("Check for ACK (Y/n): ", "Y") != "n") {
+                int const numBytes = 3;
+                uint8_t ackCode[numBytes];
+                int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+                ackCode[numBytes - 1] = 0;
+
+                std::cout << "Received bytes: " << receivedBytes << "\n";
+
+                // std::cout << "The byte: " << std::to_string(ackCode[0]) << "\n";
+                // std::cout << "The byte: " << std::to_string(ackCode[1]) << "\n";
+
+                std::string returnMessage((char*) &ackCode[0]);
+                std::cout << "The message: " << returnMessage << "\n";
+            }
+
+            keepGoing = get_safe_input("Send again (Y/n): ", "Y") != "n";
+        } while (keepGoing);
+    }
 
     return 0;
 }

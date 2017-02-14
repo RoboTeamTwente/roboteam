@@ -154,6 +154,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // Write message to it
         auto bytes = *bytesOpt;
         serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
+        // TODO: @Hack Crutches! Packet length should be 7!
+        serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
         
         std::cout << "Expected message: \n";
 
@@ -166,7 +168,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // Listen for ack
         int readBytes = 0;
         do {
-            readBytes = serialPort.read_some(boost::asio::buffer(bytes.data(), 1));
+            // TODO: @Incomplete ack format is undefined! Guessing it is 2 bytes!
+            readBytes = serialPort.read_some(boost::asio::buffer(bytes.data(), 2));
         } while (readBytes == 0);
 
         std::cout << " Got: " << std::to_string(bytes[0]) << "\n";

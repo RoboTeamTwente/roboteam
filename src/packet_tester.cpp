@@ -55,6 +55,7 @@ namespace {
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
 
+// All possible standard baud rates
 std::vector<std::string> baudRates = {
     "110",
     "300",
@@ -72,6 +73,7 @@ std::vector<std::string> baudRates = {
     "115200"
 };
 
+// "Extended" standard baud rates
 std::vector<std::string> nonStandardBaudRates = {
     "128000",
     "153600",
@@ -84,6 +86,10 @@ std::vector<std::string> nonStandardBaudRates = {
 } // anonymous namespace
 
 int main(const std::vector<std::string>& arguments) {
+    ////////////////////////
+    // Checking arguments //
+    ////////////////////////
+    
     if (arguments.size() < 1) {
         std::cout << "No output file specified as argument. Aborting.\n";
         return 1;
@@ -92,6 +98,10 @@ int main(const std::vector<std::string>& arguments) {
     std::string output_file = arguments.at(0);
 
     std::cout << "Output file: " << output_file << "\n";
+
+    /////////////////////
+    // Creating packet //
+    /////////////////////
 
     bool manual = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual)? ") == "manual";
 
@@ -111,17 +121,17 @@ int main(const std::vector<std::string>& arguments) {
     if (manual) {
         std::cout << "Sending a manual packet.\n";
 
-        id = std::stoi(get_safe_input("id (0-15, 1): ", "1"));
-        robot_vel = std::stoi(get_safe_input("robot_vel (0-8191, 2000): ", "2000"));
-        ang = std::stoi(get_safe_input("ang (0-511, 300): ", "300"));
-        rot_cclockwise = get_safe_input("rot_cclockwise (true/false): ") == "true";
-        w = std::stoi(get_safe_input("w (0-2047, 1000): ", "1000"));
-        kick_force = std::stoi(get_safe_input("kick_force (0-255, 200): ", "200"));
-        do_kick = get_safe_input("do_kick (true/false): ") == "true";
-        chip = get_safe_input("chip (true/false): ") == "true";
-        forced = get_safe_input("forced (true/false): ") == "true";
+        id                 = std::stoi(get_safe_input("id (0-15, 1): ", "1"));
+        robot_vel          = std::stoi(get_safe_input("robot_vel (0-8191, 2000): ", "2000"));
+        ang                = std::stoi(get_safe_input("ang (0-511, 300): ", "300"));
+        rot_cclockwise     = get_safe_input("rot_cclockwise (true/false): ") == "true";
+        w                  = std::stoi(get_safe_input("w (0-2047, 1000): ", "1000"));
+        kick_force         = std::stoi(get_safe_input("kick_force (0-255, 200): ", "200"));
+        do_kick            = get_safe_input("do_kick (true/false): ") == "true";
+        chip               = get_safe_input("chip (true/false): ") == "true";
+        forced             = get_safe_input("forced (true/false): ") == "true";
         dribble_cclockwise = get_safe_input("dribble_cclockwise (true/false): ") == "true";
-        dribble_vel = std::stoi(get_safe_input("dribble_vel (0-7, 5): ", "5"));
+        dribble_vel        = std::stoi(get_safe_input("dribble_vel (0-7, 5): ", "5"));
     } else {
         std::cout << "Sending an example packet.\n";
         
@@ -140,6 +150,10 @@ int main(const std::vector<std::string>& arguments) {
 
     namespace bf = boost;
 
+    /////////////////////
+    // Printing packet //
+    /////////////////////
+
     #define FIELD(id) std::cout << bf::format("\t%-20s %-20s\n") % #id % get_pretty_value(id);
 
     std::cout << "Packet:\n";
@@ -156,6 +170,10 @@ int main(const std::vector<std::string>& arguments) {
     FIELD(dribble_vel);
 
     std::cout << "Creating message... ";
+
+    ///////////////////////
+    // Converting packet //
+    ///////////////////////
 
     auto possibleMsg = createRobotPacket(
             id,
@@ -178,6 +196,10 @@ int main(const std::vector<std::string>& arguments) {
 
     std::cout << "All params ok.\n";
 
+    ////////////////////////////
+    // Printing binary packet //
+    ////////////////////////////
+
     std::cout << "Message contents: \n";
 
     auto msg = *possibleMsg;
@@ -185,6 +207,10 @@ int main(const std::vector<std::string>& arguments) {
     for (const auto& byte : msg) {
         std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
     }
+
+    //////////////////////////
+    // Creating serial port //
+    //////////////////////////
 
     if (!get_safe_input("Press enter to open the port or type something to cancel...").empty()) {
         std::cout << "Sending message canceled. Aborting.\n";
@@ -206,6 +232,10 @@ int main(const std::vector<std::string>& arguments) {
     }
 
     std::cout << "Done.\n";
+
+    ///////////////////////
+    // Setting baud rate //
+    ///////////////////////
 
     boost::asio::serial_port_base::baud_rate baudRate;
     serialPort.get_option(baudRate);
@@ -242,6 +272,10 @@ int main(const std::vector<std::string>& arguments) {
     }
 
     if (get_safe_input("Benchmark (y/N)? ", "N") != "N") {
+        ///////////////
+        // Benchmark //
+        ///////////////
+
         bool checkForAck = get_safe_input("Check for ACK (Y/n): ", "Y") != "n";
         int const MESSAGE_QUANTITY = std::stoi(get_safe_input("Amount of messages (10 000): ", "10000"));
 
@@ -288,7 +322,9 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "Sent " << MESSAGE_QUANTITY << " messages.\n";
         std::cout << "Duration: " << diff.count() << "ms" << std::endl;
     } else {
-        // Single packet test
+        ////////////////////////
+        // Single packet test //
+        ////////////////////////
 
         if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
             std::cout << "Sending message canceled. Aborting.\n";
@@ -330,6 +366,10 @@ int main(const std::vector<std::string>& arguments) {
 }
 
 } // rtt
+
+////////////////////
+// Bitch-ass main //
+////////////////////
 
 int main(int argc, char *argv[]) {
     std::vector<std::string> arguments(argv + 1, argv + argc);

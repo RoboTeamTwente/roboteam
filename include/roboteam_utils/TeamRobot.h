@@ -14,11 +14,11 @@ namespace rtt {
         bool operator<(TeamRobot other) const {
             return (id | (our_team << 2)) < (other.id | (other.our_team << 2));
         }
+        
+        bool operator==(TeamRobot other) const {
+            return id == other.id && our_team == other.our_team;
+        }
     };
 
-    inline TeamRobot get_bot_with_color(RobotID id, std::string color) {
-        std::string our_color;
-        get_PARAM_OUR_COLOR(our_color);
-        return {id, our_color == color};
-    }
+    TeamRobot get_bot_with_color(RobotID id, std::string color);
 }

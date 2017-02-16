@@ -149,6 +149,9 @@ add_library(roboteam_utils
     src/Math.cpp
     src/Cone.cpp
     src/normalize.cpp
+    src/TeamRobot.cpp
+    src/Clip.cpp
+    src/Optimization.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -170,6 +173,7 @@ catkin_add_gtest(utils_test
     test/Vector2Test.cpp
     test/PositionTest.cpp
     test/GraphTest.cpp
+    test/OptimizationTest.cpp
     #test/normaliseTest.cpp
 )
 add_dependencies(utils_test

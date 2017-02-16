@@ -4,6 +4,7 @@
 #include "roboteam_msgs/WorldBall.h"
 #include "roboteam_msgs/World.h"
 #include "roboteam_utils/LastWorld.h"
+#include "boost/optional.hpp"
 
 namespace rtt {
 

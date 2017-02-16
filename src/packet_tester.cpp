@@ -55,6 +55,32 @@ namespace {
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
 
+std::vector<std::string> baudRates = {
+    "110",
+    "300",
+    "600",
+    "1200",
+    "2400",
+    "4800",
+    "9600",
+    "14400",
+    "19200",
+    "28800",
+    "38400",
+    "56000",
+    "57600",
+    "115200"
+};
+
+std::vector<std::string> nonStandardBaudRates = {
+    "128000",
+    "153600",
+    "230400",
+    "256000",
+    "460800",
+    "921600 ",
+};
+
 } // anonymous namespace
 
 int main(const std::vector<std::string>& arguments) {
@@ -180,6 +206,40 @@ int main(const std::vector<std::string>& arguments) {
     }
 
     std::cout << "Done.\n";
+
+    boost::asio::serial_port_base::baud_rate baudRate;
+    serialPort.get_option(baudRate);
+    std::cout << "Baud rate: " << baudRate.value() << "\n";
+    
+    std::cout << "Other standard baud rates: \n";
+    for (auto br : baudRates) {
+        std::cout << "    " << br << "\n";
+    }
+    std::cout << "Less standard baud rates: \n";
+    for (auto br : nonStandardBaudRates) {
+        std::cout << "    " << br << "\n";
+    }
+
+    auto userBaudRateStr = get_safe_input("Set baud rate (or empty to leave at standard): ");
+    if (!userBaudRateStr.empty()) {
+        try {
+            int userBaudRate = std::stoi(userBaudRateStr);
+            baudRate = boost::asio::serial_port_base::baud_rate(userBaudRate);
+            boost::system::error_code ec;
+            serialPort.set_option(baudRate, ec);
+
+            if (ec != boost::system::errc::success) {
+                std::cout << "Could not set baud rate. Error: " << ec << ". " << ec.message() << "\n";
+            }
+
+            serialPort.get_option(baudRate);
+            std::cout << "Final baud rate: " << baudRate.value() << "\n";
+        } catch (std::invalid_argument const & ex) {
+            std::cout << "Invalid baudRate specified. Continuing with baudrate " << baudRate.value() << "\n";
+        } catch (std::out_of_range const & ex) {
+            std::cout << "Specified baud rate too large for an int. Continuing with baudrate " << baudRate.value() << "\n";
+        }
+    }
 
     if (get_safe_input("Benchmark (y/N)? ", "N") != "N") {
         bool checkForAck = get_safe_input("Check for ACK (Y/n): ", "Y") != "n";

@@ -103,7 +103,7 @@ int main(const std::vector<std::string>& arguments) {
     // Creating packet //
     /////////////////////
 
-    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/forward)? ", "EXAMPLE");
+    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/forward/backward/left/right)? ", "EXAMPLE");
 
     // TODO: w should be ang, w_vel should be w
     int id;
@@ -146,7 +146,7 @@ int main(const std::vector<std::string>& arguments) {
         forced = true;
         dribble_cclockwise = true;
         dribble_vel = 5;
-    } else if (packetType == "forward") {
+    } else if (packetType == "forward" || packetType == "backward" || packetType == "left" || packetType == "right") {
         id = 0;
         robot_vel = 1000;
         ang = 0;
@@ -158,6 +158,16 @@ int main(const std::vector<std::string>& arguments) {
         forced = false;
         dribble_cclockwise = false;
         dribble_vel = 0;
+
+        if (packetType == "forward") {
+            ang = 128;
+        } else if (packetType == "backward") {
+            ang = 384;
+        } else if (packetType == "left") {
+            ang = 256;
+        } else if (packetType == "right") {
+            ang = 0;
+        }
     }
 
     namespace bf = boost;

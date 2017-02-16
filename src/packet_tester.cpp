@@ -103,7 +103,7 @@ int main(const std::vector<std::string>& arguments) {
     // Creating packet //
     /////////////////////
 
-    bool manual = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual)? ") == "manual";
+    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/forward)? ", "EXAMPLE");
 
     // TODO: w should be ang, w_vel should be w
     int id;
@@ -118,7 +118,7 @@ int main(const std::vector<std::string>& arguments) {
     bool dribble_cclockwise;
     uint8_t dribble_vel;
 
-    if (manual) {
+    if (packetType == "manual") {
         std::cout << "Sending a manual packet.\n";
 
         id                 = std::stoi(get_safe_input("id (0-15, 1): ", "1"));
@@ -132,7 +132,7 @@ int main(const std::vector<std::string>& arguments) {
         forced             = get_safe_input("forced (true/false): ") == "true";
         dribble_cclockwise = get_safe_input("dribble_cclockwise (true/false): ") == "true";
         dribble_vel        = std::stoi(get_safe_input("dribble_vel (0-7, 5): ", "5"));
-    } else {
+    } else if (packetType == "EXAMPLE") {
         std::cout << "Sending an example packet.\n";
         
         id = 1;
@@ -146,6 +146,18 @@ int main(const std::vector<std::string>& arguments) {
         forced = true;
         dribble_cclockwise = true;
         dribble_vel = 5;
+    } else if (packetType == "forward") {
+        id = 0;
+        robot_vel = 1000;
+        ang = 0;
+        rot_cclockwise = false;
+        w = 0;
+        kick_force = 0;
+        do_kick = false;
+        chip = false;
+        forced = false;
+        dribble_cclockwise = false;
+        dribble_vel = 0;
     }
 
     namespace bf = boost;
@@ -220,13 +232,14 @@ int main(const std::vector<std::string>& arguments) {
     std::cout << "Creating serial port... ";
 
     boost::system::error_code errorCode;
-    serialPort.open(output_file);
+    serialPort.open(output_file, errorCode);
     switch (errorCode.value()) {
         case boost::system::errc::success:
             // Great!
             break;
         default:
-            std::cout << "An error occurred while creating the file object. Have you passed the right path?\n";
+            std::cout << "An error occurred while creating the file object. Have you passed the right path? "
+                      << "Boost error: " << errorCode << ", message: " << errorCode.message() << "\n";
             exit(1);
             break;
     }

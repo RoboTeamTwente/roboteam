@@ -174,6 +174,7 @@ catkin_add_gtest(utils_test
     test/PositionTest.cpp
     test/GraphTest.cpp
     test/OptimizationTest.cpp
+    test/BiMapTest.cpp
     #test/normaliseTest.cpp
 )
 add_dependencies(utils_test

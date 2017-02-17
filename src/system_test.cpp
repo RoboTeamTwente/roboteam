@@ -195,8 +195,32 @@ int main(const std::vector<std::string>& arguments) {
         b,     stop,
         start, stop
     };
+    
+    // TODO: @Feature the serial port should probably be encapsulated by a class
+    // that handles the extra byte that needs to be sent, incomplete acks, and the asyncness
+    // that boost offers
+    for (auto instruction : instructions) {
+        std::cout << "-- " << instruction.name << " --\n";
 
-    // TODO: Playback!
+        serialPort.write_some(boost::asio::buffer(instruction.packet.data(), instruction.packet.size()));
+        // TODO: @Hack base station crutches! Pakcet length should be smaller
+        serialPort.write_some(boost::asio::buffer(instruction.packet.data(), 1));
+
+        int const numBytes = 3;
+        uint8_t ackCode[numBytes];
+        int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+        ackCode[receivedBytes] = 0;
+
+        std::cout << "Received bytes: " << receivedBytes << "\n";
+
+        std::string returnMessage((char*) &ackCode[0]);
+        std::cout << "The message: " << returnMessage << "\n";
+        std::cout << "Sleeping a second...\n";
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::cout << "\n";
+    }
 }
 
 } // rtt

@@ -11,21 +11,36 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 line) {
+void Draw::DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine Line;
-    Line.name = name;
-    Line.remove = false;
-    roboteam_msgs::Vector2f startLine1;
-    startLine1.x = start.x;
-    startLine1.y = start.y;
-    roboteam_msgs::Vector2f endLine1;
-    endLine1.x = line.x + start.x;
-    endLine1.y = line.y + start.y;
-    Line.points.push_back(startLine1);
-    Line.points.push_back(endLine1);
-    Line.color = color;
-    debugPub.publish(Line);
+    roboteam_msgs::DebugLine line;
+    line.name = name;
+    line.remove = false;
+    roboteam_msgs::Vector2f startLine;
+    startLine.x = start.x;
+    startLine.y = start.y;
+    roboteam_msgs::Vector2f stopLine;
+    stopLine.x = stop.x + start.x;
+    stopLine.y = stop.y + start.y;
+    line.points.push_back(startLine);
+    line.points.push_back(stopLine);
+    line.color = color;
+    debugPub.publish(line);
+}
+}
+
+void Draw::DrawLine(std::string name, std::vector<roboteam_utils::Vector2> points) {
+if (RTT_ENABLE_DEBUG_GRAPHICS) {
+    roboteam_msgs::DebugLine line;
+    line.name = name;
+    line.remove = false;
+
+    for (auto& point : points) {
+        roboteam_msgs::Vector2f pointMsg(point);
+        line.points.push_back(pointMsg);
+    }
+
+    debugPub.publish(line);
 }
 }
 

@@ -2,6 +2,8 @@
 
 #include "ros/ros.h"
 
+#include <vector>
+
 #include "roboteam_msgs/DebugPoint.h"
 #include "roboteam_msgs/DebugLine.h"
 #include "roboteam_msgs/Vector2f.h"
@@ -14,7 +16,8 @@ class Draw {
 
 public:
     Draw();
-    void DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 line);
+    void DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop);
+    void DrawLine(std::string name, std::vector<roboteam_utils::Vector2> points);
     void RemoveLine(std::string name);
     void DrawPoint(std::string name, roboteam_utils::Vector2 point);
     void RemovePoint(std::string name);

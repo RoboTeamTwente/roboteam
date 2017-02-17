@@ -13,6 +13,24 @@
 
 namespace rtt {
 
+template<
+    typename T
+>
+std::string get_pretty_value(T val) {
+    return std::to_string(val);
+}
+
+template<>
+std::string get_pretty_value<bool>(bool val) {
+    if (val) {
+        return "true";
+    } else {
+        return "false";
+    }
+}
+
+namespace {
+
 std::string get_safe_input(std::string question = "", std::string defaultValue = "") {
     if (!question.empty()) {
         std::cout << question;
@@ -31,24 +49,6 @@ std::string get_safe_input(std::string question = "", std::string defaultValue =
     std::cout << "\nIO error. Aborting.\n";
     exit(1);
 }
-
-template<
-    typename T
->
-std::string get_pretty_value(T val) {
-    return std::to_string(val);
-}
-
-template<>
-std::string get_pretty_value<bool>(bool val) {
-    if (val) {
-        return "true";
-    } else {
-        return "false";
-    }
-}
-
-namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 

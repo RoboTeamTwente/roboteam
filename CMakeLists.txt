@@ -65,7 +65,6 @@ add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})
 add_dependencies(input ${catkin_EXPORTED_TARGETS})
 
-
 add_executable(packet_tester
     src/packet_tester.cpp
     src/packing.cpp
@@ -74,6 +73,18 @@ target_link_libraries(packet_tester
     ${catkin_LIBRARIES}
     )
 add_dependencies(packet_tester 
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
+add_executable(system_test
+    src/system_test.cpp
+    src/packing.cpp
+    )
+target_link_libraries(system_test
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(system_test 
     ${catkin_EXPORTED_TARGETS}
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     )

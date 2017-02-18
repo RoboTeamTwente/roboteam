@@ -151,37 +151,45 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // Create message
     if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
         // Success!
-        // Write message to it
         auto bytes = *bytesOpt;
+        // Write message to it
         serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
         // TODO: @Hack Crutches! Packet length should be 7!
         serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
         
-        std::cout << "Expected message: \n";
-
-        for (const auto& byte : bytes) {
-            std::cout << "\t" << rtt::byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-        }
+        // Print the packet as binary - should not be needed
+        // for (const auto& byte : bytes) {
+            // std::cout << "\t" << rtt::byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+        // }
         
-        std::cout << "Waiting for ack...";
-
         // Listen for ack
-        int readBytes = 0;
-        do {
-            // TODO: @Incomplete ack format is undefined! Guessing it is 2 bytes!
-            readBytes = serialPort.read_some(boost::asio::buffer(bytes.data(), 2));
-        } while (readBytes == 0);
+        // CAREFUL! The first ascii character is the robot ID
+        // _________________________________________
+        // _____________                ____________
+        // _____________ IN HEXADECIMAL ____________
+        // _________________________________________
+        bytes[0] = 0;
+        bytes[1] = 0;
+        // TODO: @Incomplete ack format is undefined/unstable! Guessing it is 2 bytes!
+        serialPort.read_some(boost::asio::buffer(bytes.data(), 2));
 
-        std::cout << " Got: " << std::to_string(bytes[0]) << "\n";
-        
+        // If the second character in the response is an ascii 0 character,
+        // it means sending the packet failed.
+        if (bytes[1] == '0') {
+            std::cout << "[RobotHub] Sending packet to robot #"
+                      << _msg->id
+                      << " failed\n";
+        }
+
         // TODO: @Performance this should probably done in such a way that it doesn't
         // block ros::spin()
-        // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something
+        // Altough it is pretty fast now at 1 packet per ms.
+        // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
         
         // We're done
     } else {
-        // herp
-        std::cout << "Could not turn command into packet!\n";
+        // Oh shit.
+        std::cout << "[RobotHub] Could not turn command into packet!\n";
     }
 
 }

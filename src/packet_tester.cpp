@@ -348,11 +348,8 @@ int main(const std::vector<std::string>& arguments) {
                 std::string returnMessage((char*) &ackCode[0]);
 
                 if (returnMessage[1] == '0') {
-                    // std::cout << "X" << std::flush;
                     failCount++;
                 }
-                
-                // std::cout << returnMessage << "\n";
             }
 
             if (i % 100 == 0) {

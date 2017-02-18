@@ -17,8 +17,24 @@ ROS_DECLARE_MESSAGE(RobotCommand);
 
 namespace rtt {
 
+struct LowLevelRobotCommand {
+    int id;
+    int robot_vel;
+    int ang;
+    bool rot_cclockwise;
+    int w;
+    // Indicates power for both kicking & chipping
+    uint8_t punt_power;
+    bool do_kick;
+    bool do_chip;
+    bool forced;
+    bool dribble_cclockwise;
+    uint8_t dribble_vel;
+} ;
+
 using packed_protocol_message = std::array<uint8_t, 7>;
 
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command);
 boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command);
 boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel, int ang,
                                         bool rot_cclockwise, int w, uint8_t punt_power,

@@ -61,6 +61,11 @@ uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax
 
 } // anonymous namespace
 
+/**
+ * Creates a low level robot command, i.e. a command from which you can construct a robot packet
+ * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
+ * uses this internally to convert a RobotCommand into something workable.
+ */
 LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command) {
     using roboteam_msgs::RobotCommand;
     

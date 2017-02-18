@@ -141,24 +141,6 @@ void testMessage() {
     std::cout << "\n";
 
     if (auto possibleRobotPacket = createRobotPacket(command)) {
-        // std::cout << "Packet creation successful. Resulting packet:\n";
-
-        // #define FIELD(id, unit) std::cout << bf::format("\t%-30s %-10s %s\n") % #id % get_pretty_value(id) % unit;
-
-        // FIELD(llcommand.id, "");
-        // FIELD(llcommand.robot_vel, "mm/s");
-        // FIELD(llcommand.ang, "where 512 = 2 * PI");
-        // FIELD(llcommand.rot_cclockwise, "bool ");
-        // FIELD(llcommand.w, "deg/s");
-        // FIELD(llcommand.punt_power, "where max = 255");
-        // FIELD(llcommand.do_kick, "bool ");
-        // FIELD(llcommand.do_chip, "bool ");
-        // FIELD(llcommand.forced, "bool ");
-        // FIELD(llcommand.dribble_cclockwise, "bool ");
-        // FIELD(llcommand.dribble_vel, "bool ");
-
-        // #undef FIELD
-
         auto msg = *possibleRobotPacket;
 
         std::cout << "\n";

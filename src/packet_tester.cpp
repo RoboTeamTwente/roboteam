@@ -1,5 +1,6 @@
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+namespace bf = boost;
 #include <chrono>
 #include <cstdint>
 #include <fstream>
@@ -9,6 +10,7 @@
 #include <thread>
 #include <vector>
 
+#include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_robothub/packing.h"
 
 namespace rtt {
@@ -83,6 +85,78 @@ std::vector<std::string> nonStandardBaudRates = {
     "921600 ",
 };
 
+void testMessage() {
+    auto getFloat = [](std::string name, float def) {
+        return std::stof(get_safe_input(name, std::to_string(def)));
+    };
+    auto getBool = [](std::string name, bool def) {
+        return get_safe_input(name, get_pretty_value(def)) == "true";
+    };
+
+    int id              = std::stoi( // Whoops
+                     get_safe_input("int   id             (       default 7)    : ", "7"));
+    bool active         = getBool  ("bool  active         (       default true) : ", true);
+    float x_vel         = getFloat ("float x_vel          (m/s,   default 0)    : ", 0);
+    float y_vel         = getFloat ("float y_vel          (m/s,   default 0)    : ", 0);
+    float w             = getFloat ("float w              (rad/s, default 0)    : ", 0);
+    bool dribbler       = getBool  ("bool  dribbler       (       default false): ", false);
+    bool kicker         = getBool  ("bool  kicker         (       default false): ", false);
+    bool kicker_forced  = getBool  ("bool  kicker_forced  (       default false): ", false);
+    float kicker_vel    = getFloat ("float kicker_vel     (m/s,   default 0)    : ", 0);
+    bool chipper        = getBool  ("bool  chipper        (       default false): ", false);
+    bool chipper_forced = getBool  ("bool  chipper_forced (       default false): ", false);
+    float chipper_vel   = getFloat ("float chipper_vel    (m/s,   default 0)    : ", 0);
+
+    roboteam_msgs::RobotCommand command;
+    command.id = id;
+    command.active = active;
+    command.x_vel = x_vel;
+    command.y_vel = y_vel;
+    command.w = w;
+    command.dribbler = dribbler;
+    command.kicker = kicker;
+    command.kicker_forced = kicker_forced;
+    command.kicker_vel = kicker_vel;
+    command.chipper = chipper;
+    command.chipper_forced = chipper_forced;
+    command.chipper_vel = chipper_vel;
+
+    std::cout << "\n";
+
+    auto llcommand = createLowLevelRobotCommand(command);
+
+    std::cout << "Low level robot command after conversion from robot command:\n";
+    std::cout << "id:                 " << llcommand.id << "\n";
+    std::cout << "robot_vel:          " << llcommand.robot_vel << " mm/s\n";
+    std::cout << "ang:                " << llcommand.ang << " (where 512 = 2 * PI)\n";
+    std::cout << "rot_cclockwise:     " << llcommand.rot_cclockwise << "\n";
+    std::cout << "w:                  " << llcommand.w << " deg/s\n";
+    std::cout << "punt_power:         " << std::to_string(llcommand.punt_power) << " (where 255 = max power)\n";
+    std::cout << "do_kick:            " << llcommand.do_kick << "\n";
+    std::cout << "do_chip:            " << llcommand.do_chip << "\n";
+    std::cout << "forced:             " << llcommand.forced << "\n";
+    std::cout << "dribble_cclockwise: " << llcommand.dribble_cclockwise << "\n";
+    std::cout << "dribble_vel:        " << std::to_string(llcommand.dribble_vel) << " (where 7 = max dribbler speed)\n";
+    
+    std::cout << "\n";
+
+    if (auto possibleRobotPacket = createRobotPacket(command)) {
+        auto msg = *possibleRobotPacket;
+
+        std::cout << "\n";
+        std::cout << "Binary packet:\n";
+
+        for (const auto& byte : msg) {
+            std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+        }
+
+    } else {
+        std::cout << "Somehow a packet could not be created. See the packet definition "
+                  << "in packing.cpp and compare the bounds for values to the values of "
+                  << "the low level robot command.\n";
+    };
+}
+
 } // anonymous namespace
 
 int main(const std::vector<std::string>& arguments) {
@@ -93,6 +167,16 @@ int main(const std::vector<std::string>& arguments) {
     if (arguments.size() < 1) {
         std::cout << "No output file specified as argument. Aborting.\n";
         return 1;
+    }
+
+    if (arguments.at(0) == "msg") {
+        testMessage();
+        exit(0);
+    }
+
+    if (std::find(arguments.begin(), arguments.end(), "--help") != arguments.end()) {
+        std::cout << "Arguments: either a port (/dev/ttyACM0 or something), --help for this, or msg to test the roboteam_msg to robot packet mechanism.\n";
+        exit(0);
     }
 
     std::string output_file = arguments.at(0);
@@ -121,7 +205,7 @@ int main(const std::vector<std::string>& arguments) {
     if (packetType == "manual") {
         std::cout << "Sending a manual packet.\n";
 
-        id                 = std::stoi(get_safe_input("id (0-15, 1): ", "1"));
+        id                 = std::stoi(get_safe_input("id (0-15, 7): ", "7"));
         robot_vel          = std::stoi(get_safe_input("robot_vel (0-8191, 2000): ", "2000"));
         ang                = std::stoi(get_safe_input("ang (0-511, 300): ", "300"));
         rot_cclockwise     = get_safe_input("rot_cclockwise (true/false): ") == "true";
@@ -135,7 +219,7 @@ int main(const std::vector<std::string>& arguments) {
     } else if (packetType == "EXAMPLE") {
         std::cout << "Sending an example packet.\n";
         
-        id = 1;
+        id = 7;
         robot_vel = 2000;
         ang = 300;
         rot_cclockwise = true;
@@ -147,7 +231,7 @@ int main(const std::vector<std::string>& arguments) {
         dribble_cclockwise = true;
         dribble_vel = 5;
     } else if (packetType == "forward" || packetType == "backward" || packetType == "left" || packetType == "right") {
-        id = 0;
+        id = 7;
         robot_vel = 1000;
         ang = 0;
         rot_cclockwise = false;
@@ -170,7 +254,6 @@ int main(const std::vector<std::string>& arguments) {
         }
     }
 
-    namespace bf = boost;
 
     /////////////////////
     // Printing packet //
@@ -312,6 +395,15 @@ int main(const std::vector<std::string>& arguments) {
         
         std::cout << "Sending packets..." << std::flush;
 
+        // Communicatie todo
+        // TODO: Make packet length 7 in hans's stuff
+        // TODO: Make library of hans nrf stuff
+        // gedaan: serial baud testing
+        // gedaan: SPI baud testing
+        // TODO: Make main pcb response 2 bytes instead of 2 ascii characters
+        // gedaan: Optization for hans' code, useful or not? Nee
+        // gedaan: WriteData optimaliseren bij Hans? Semi-lelijk
+
         // There are other clocks, but this is usually the one you want.
         // It corresponds to CLOCK_MONOTONIC at the syscall level.
         using Clock = std::chrono::steady_clock;
@@ -323,13 +415,24 @@ int main(const std::vector<std::string>& arguments) {
 
         time_point<Clock> start = Clock::now();
 
+        int failCount = 0;
+
         for (int i = 1; i < MESSAGE_QUANTITY + 1; ++i) {
             serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+
             // TODO: @Hack base station crutches! Pakcet length should be smaller
             serialPort.write_some(boost::asio::buffer(msg.data(), 1));
 
             if (checkForAck) {
                 serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+                ackCode[numBytes - 1] = 0;
+
+                std::string returnMessage((char*) &ackCode[0]);
+
+                if (returnMessage[1] == '0') {
+                    failCount++;
+                }
             }
 
             if (i % 100 == 0) {
@@ -344,6 +447,7 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "\nBenchmark done!\n";
         std::cout << "Sent " << MESSAGE_QUANTITY << " messages.\n";
         std::cout << "Duration: " << diff.count() << "ms" << std::endl;
+        std::cout << "Failures: " << failCount << "\n";
     } else {
         ////////////////////////
         // Single packet test //

@@ -92,11 +92,11 @@ packed_protocol_message makeKick(int id) {
         0,
         false,
         0,
-        100,  // 100 punt power
-        true, // enable kick
-        false,
-        true, // USE THE FORCE, PROTOBOT
-        false,
+        100,   // 100 punt power
+        true,  // enable kick
+        false, /////////////////////////////
+        true,  // USE THE FORCE, PR0TOBOT //
+        false, /////////////////////////////
         0
         );
 }

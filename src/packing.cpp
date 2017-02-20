@@ -62,10 +62,11 @@ uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax
 } // anonymous namespace
 
 /**
- * TODO: Measure our highest kicking power and use that to scale kick_vel!
+ * Creates a low level robot command, i.e. a command from which you can construct a robot packet
+ * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
+ * uses this internally to convert a RobotCommand into something workable.
  */
-boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command) {
-
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command) {
     using roboteam_msgs::RobotCommand;
     
     //////////////////////////////
@@ -86,10 +87,10 @@ boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotC
     // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
     // in the positive domain.
     if (rawAng < 0) {
-        rawAng += M_PI_2;
+        rawAng += M_PI * 2;
     }
 
-    int ang = rawAng / M_PI_2 * 512;
+    int ang = rawAng / (M_PI * 2) * 512;
 
     if (ang > PACKET_MAX_ANG) {
         ang = PACKET_MAX_ANG;
@@ -102,11 +103,11 @@ boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotC
     // If w is positive it's counter clockwise
     bool rot_cclockwise = command.w > 0;
     double rawW = command.w;
-    if (command.w < 0) {
+    if (rawW < 0) {
         rawW = -rawW;
     }
     // w is in deg/s
-    int w = rawW * (180 / M_PI);
+    int w = rawW / M_PI * 180;
 
     if (w > 2047) w = 2047;
     if (w < 0) w = 0;
@@ -139,18 +140,44 @@ boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotC
         dribble_vel = PACKET_MAX_DRIBBLE_VEL;
     }
 
+    ///////////////////////////////////////
+    // Construct low level robot command //
+    ///////////////////////////////////////
+
+    LowLevelRobotCommand llcommand;
+    llcommand.id = command.id;
+    llcommand.robot_vel = robot_vel;
+    llcommand.ang = ang;
+    llcommand.rot_cclockwise = rot_cclockwise;
+    llcommand.w = w;
+    llcommand.punt_power = std::max(kick_force, chip_force);
+    llcommand.do_kick = do_kick;
+    llcommand.do_chip = do_chip;
+    llcommand.forced = do_forced;
+    llcommand.dribble_cclockwise = dribble_cclockwise;
+    llcommand.dribble_vel = dribble_vel;
+
+    return llcommand;
+}
+
+/**
+ * TODO: Measure our highest kicking power and use that to scale kick_vel!
+ */
+boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command) {
+    auto llcommand = createLowLevelRobotCommand(command);
+
     return createRobotPacket(
-            command.id,
-            robot_vel,
-            ang,
-            rot_cclockwise,
-            w,
-            std::max(kick_force, chip_force),
-            do_kick,
-            do_chip,
-            do_forced,
-            dribble_cclockwise,
-            dribble_vel
+            llcommand.id,
+            llcommand.robot_vel,
+            llcommand.ang,
+            llcommand.rot_cclockwise,
+            llcommand.w,
+            llcommand.punt_power,
+            llcommand.do_kick,
+            llcommand.do_chip,
+            llcommand.forced,
+            llcommand.dribble_cclockwise,
+            llcommand.dribble_vel
             );
 }
 

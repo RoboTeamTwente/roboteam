@@ -126,7 +126,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string const SERIAL_FILE_PATH = "/dev/pts/22";
+std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);

@@ -33,6 +33,8 @@ std::string get_pretty_value<bool>(bool val) {
 
 namespace {
 
+bool portOpened = false;
+
 std::string get_safe_input(std::string question = "", std::string defaultValue = "") {
     if (!question.empty()) {
         std::cout << question;
@@ -163,9 +165,11 @@ int main(const std::vector<std::string>& arguments) {
     ////////////////////////
     // Checking arguments //
     ////////////////////////
+
+
     
-    if (arguments.size() < 1) {
-        std::cout << "No output file specified as argument. Aborting.\n";
+    if (arguments.size() < 2) {
+        std::cout << "Too few arguments, please specify output file and robotID. Aborting.\n";
         return 1;
     }
 
@@ -181,13 +185,23 @@ int main(const std::vector<std::string>& arguments) {
 
     std::string output_file = arguments.at(0);
 
-    std::cout << "Output file: " << output_file << "\n";
+    int robotID = std::stoi(arguments.at(1));
+
+    std::cout << "Output file: " << output_file << " robotID: " << robotID << "\n";
 
     /////////////////////
     // Creating packet //
     /////////////////////
 
-    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/forward/backward/left/right)? ", "EXAMPLE");
+
+    
+
+
+    
+
+
+
+    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/ forward (f)/ backward (b) / left (l) /right (r)/ stop (s)? ", "EXAMPLE");
 
     // TODO: w should be ang, w_vel should be w
     int id;
@@ -230,9 +244,10 @@ int main(const std::vector<std::string>& arguments) {
         forced = true;
         dribble_cclockwise = true;
         dribble_vel = 5;
-    } else if (packetType == "forward" || packetType == "backward" || packetType == "left" || packetType == "right") {
-        id = 7;
-        robot_vel = 1000;
+    } else if (packetType == "f" || packetType == "b" || packetType == "l" || packetType == "r" || 
+    		   packetType == "fl" || packetType == "fr" || packetType == "bl" || packetType == "br" ) {
+        id = robotID;
+        robot_vel = 2000;
         ang = 0;
         rot_cclockwise = false;
         w = 0;
@@ -243,36 +258,57 @@ int main(const std::vector<std::string>& arguments) {
         dribble_cclockwise = false;
         dribble_vel = 0;
 
-        if (packetType == "forward") {
+        if (packetType == "f") {
             ang = 128;
-        } else if (packetType == "backward") {
+        } else if (packetType == "b") {
             ang = 384;
-        } else if (packetType == "left") {
+        } else if (packetType == "l") {
             ang = 256;
-        } else if (packetType == "right") {
+        } else if (packetType == "r") {
             ang = 0;
+        } else if (packetType == "fl") {
+            ang = 192;
+        } else if (packetType == "fr") {
+            ang = 64;
+        } else if (packetType == "bl") {
+            ang = 320;
+        } else if (packetType == "br") {
+            ang = 448;
         }
-    }
+
+    } else if (packetType == "s") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
+        rot_cclockwise = true;
+        w = 0;
+        kick_force = 200;
+        do_kick = true;
+        chip = false;
+        forced = true;
+        dribble_cclockwise = true;
+        dribble_vel = 5;
+    } 
 
 
     /////////////////////
     // Printing packet //
     /////////////////////
 
-    #define FIELD(id) std::cout << bf::format("\t%-20s %-20s\n") % #id % get_pretty_value(id);
+    // #define FIELD(id) std::cout << bf::format("\t%-20s %-20s\n") % #id % get_pretty_value(id);
 
-    std::cout << "Packet:\n";
-    FIELD(id);
-    FIELD(robot_vel);
-    FIELD(ang);
-    FIELD(rot_cclockwise);
-    FIELD(w);
-    FIELD(kick_force);
-    FIELD(do_kick);
-    FIELD(chip);
-    FIELD(forced);
-    FIELD(dribble_cclockwise);
-    FIELD(dribble_vel);
+    // std::cout << "Packet:\n";
+    // FIELD(id);
+    // FIELD(robot_vel);
+    // FIELD(ang);
+    // FIELD(rot_cclockwise);
+    // FIELD(w);
+    // FIELD(kick_force);
+    // FIELD(do_kick);
+    // FIELD(chip);
+    // FIELD(forced);
+    // FIELD(dribble_cclockwise);
+    // FIELD(dribble_vel);
 
     std::cout << "Creating message... ";
 
@@ -299,45 +335,52 @@ int main(const std::vector<std::string>& arguments) {
         return 1;
     }
 
-    std::cout << "All params ok.\n";
+    // std::cout << "All params ok.\n";
 
     ////////////////////////////
     // Printing binary packet //
     ////////////////////////////
 
-    std::cout << "Message contents: \n";
+    // std::cout << "Message contents: \n";
 
     auto msg = *possibleMsg;
 
-    for (const auto& byte : msg) {
-        std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-    }
+    // for (const auto& byte : msg) {
+    //     std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
+    // }
 
     //////////////////////////
     // Creating serial port //
     //////////////////////////
 
-    if (!get_safe_input("Press enter to open the port or type something to cancel...").empty()) {
-        std::cout << "Sending message canceled. Aborting.\n";
-        return 0;
+    // if (!get_safe_input("Press enter to open the port or type something to cancel...").empty()) {
+    //     std::cout << "Sending message canceled. Aborting.\n";
+    //     return 0;
+    // }
+
+    // std::cout << "Creating serial port... ";
+
+
+    if (!portOpened) {
+
+    	boost::system::error_code errorCode;
+	    serialPort.open(output_file, errorCode);
+	    switch (errorCode.value()) {
+	        case boost::system::errc::success:
+	            // Great!
+	            break;
+	        default:
+	            std::cout << "An error occurred while creating the file object. Have you passed the right path? "
+	                      << "Boost error: " << errorCode << ", message: " << errorCode.message() << "\n";
+	            exit(1);
+	            break;
+	    }
+
+	    portOpened = true;
     }
+    
 
-    std::cout << "Creating serial port... ";
-
-    boost::system::error_code errorCode;
-    serialPort.open(output_file, errorCode);
-    switch (errorCode.value()) {
-        case boost::system::errc::success:
-            // Great!
-            break;
-        default:
-            std::cout << "An error occurred while creating the file object. Have you passed the right path? "
-                      << "Boost error: " << errorCode << ", message: " << errorCode.message() << "\n";
-            exit(1);
-            break;
-    }
-
-    std::cout << "Done.\n";
+    // std::cout << "Done.\n";
 
     ///////////////////////
     // Setting baud rate //
@@ -345,39 +388,42 @@ int main(const std::vector<std::string>& arguments) {
 
     boost::asio::serial_port_base::baud_rate baudRate;
     serialPort.get_option(baudRate);
-    std::cout << "Baud rate: " << baudRate.value() << "\n";
+    // std::cout << "Baud rate: " << baudRate.value() << "\n";
     
-    std::cout << "Other standard baud rates: \n";
-    for (auto br : baudRates) {
-        std::cout << "    " << br << "\n";
-    }
-    std::cout << "Less standard baud rates: \n";
-    for (auto br : nonStandardBaudRates) {
-        std::cout << "    " << br << "\n";
-    }
+    // std::cout << "Other standard baud rates: \n";
+    // for (auto br : baudRates) {
+    //     std::cout << "    " << br << "\n";
+    // }
+    // std::cout << "Less standard baud rates: \n";
+    // for (auto br : nonStandardBaudRates) {
+    //     std::cout << "    " << br << "\n";
+    // }
 
-    auto userBaudRateStr = get_safe_input("Set baud rate (or empty to leave at standard): ");
-    if (!userBaudRateStr.empty()) {
-        try {
-            int userBaudRate = std::stoi(userBaudRateStr);
-            baudRate = boost::asio::serial_port_base::baud_rate(userBaudRate);
-            boost::system::error_code ec;
-            serialPort.set_option(baudRate, ec);
+    // auto userBaudRateStr = get_safe_input("Set baud rate (or empty to leave at standard): ");
+    // if (!userBaudRateStr.empty()) {
+    //     try {
+    //         int userBaudRate = std::stoi(userBaudRateStr);
+    //         baudRate = boost::asio::serial_port_base::baud_rate(userBaudRate);
+    //         boost::system::error_code ec;
+    //         serialPort.set_option(baudRate, ec);
 
-            if (ec != boost::system::errc::success) {
-                std::cout << "Could not set baud rate. Error: " << ec << ". " << ec.message() << "\n";
-            }
+    //         if (ec != boost::system::errc::success) {
+    //             std::cout << "Could not set baud rate. Error: " << ec << ". " << ec.message() << "\n";
+    //         }
 
-            serialPort.get_option(baudRate);
-            std::cout << "Final baud rate: " << baudRate.value() << "\n";
-        } catch (std::invalid_argument const & ex) {
-            std::cout << "Invalid baudRate specified. Continuing with baudrate " << baudRate.value() << "\n";
-        } catch (std::out_of_range const & ex) {
-            std::cout << "Specified baud rate too large for an int. Continuing with baudrate " << baudRate.value() << "\n";
-        }
-    }
+    //         serialPort.get_option(baudRate);
+    //         std::cout << "Final baud rate: " << baudRate.value() << "\n";
+    //     } catch (std::invalid_argument const & ex) {
+    //         std::cout << "Invalid baudRate specified. Continuing with baudrate " << baudRate.value() << "\n";
+    //     } catch (std::out_of_range const & ex) {
+    //         std::cout << "Specified baud rate too large for an int. Continuing with baudrate " << baudRate.value() << "\n";
+    //     }
+    // }
 
-    if (get_safe_input("Benchmark (y/N)? ", "N") != "N") {
+    // bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
+    bool benchMark = false;
+
+    if (benchMark) {
         ///////////////
         // Benchmark //
         ///////////////
@@ -453,43 +499,47 @@ int main(const std::vector<std::string>& arguments) {
         // Single packet test //
         ////////////////////////
 
-        if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
-            std::cout << "Sending message canceled. Aborting.\n";
-            return 0;
-        }
+        // if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
+        //     std::cout << "Sending message canceled. Aborting.\n";
+        //     return 0;
+        // }
 
         bool keepGoing = true;
 
-        do {
-            std::cout << "Writing bytes to files... ";
+        // do {
+            // std::cout << "Writing bytes to files... ";
 
             serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
             // TODO: @Hack base station crutches! Pakcet length should be smaller
             serialPort.write_some(boost::asio::buffer(msg.data(), 1));
 
-            std::cout << "Done.\n";
+            // std::cout << "Done.\n";
 
-            if (get_safe_input("Check for ACK (Y/n): ", "Y") != "n") {
+
+            // if (get_safe_input("Check for ACK (Y/n): ", "Y") != "n") {
                 int const numBytes = 3;
                 uint8_t ackCode[numBytes];
                 int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
 
                 ackCode[numBytes - 1] = 0;
 
-                std::cout << "Received bytes: " << receivedBytes << "\n";
+                // std::cout << "Received bytes: " << receivedBytes << "\n";
 
                 // std::cout << "The byte: " << std::to_string(ackCode[0]) << "\n";
                 // std::cout << "The byte: " << std::to_string(ackCode[1]) << "\n";
 
                 std::string returnMessage((char*) &ackCode[0]);
-                std::cout << "The message: " << returnMessage << "\n";
-            }
+                std::cout << "ACK: " << returnMessage << "\n";
+            // }
 
-            keepGoing = get_safe_input("Send again (Y/n): ", "Y") != "n";
-        } while (keepGoing);
+            // keepGoing = get_safe_input("Send again (Y/n): ", "Y") != "n";
+        // } while (keepGoing);
     }
 
-    return 0;
+    
+
+
+	return 0;
 }
 
 } // rtt
@@ -501,5 +551,10 @@ int main(const std::vector<std::string>& arguments) {
 int main(int argc, char *argv[]) {
     std::vector<std::string> arguments(argv + 1, argv + argc);
 
-    return rtt::main(arguments);
+    while (true) {
+    	rtt::main(arguments);
+    }
+
+    return 0;
+    // return rtt::main(arguments);
 }

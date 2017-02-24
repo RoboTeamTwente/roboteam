@@ -134,6 +134,55 @@ boost::asio::serial_port serialPort(io);
 } // anonymous namespace
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
+    // ROS_INFO("Send serial command");
+
+    // int id;
+    // int robot_vel;
+    // int ang;
+    // bool rot_cclockwise;
+    // int w;
+    // uint8_t kick_force;
+    // bool do_kick;
+    // bool chip;
+    // bool forced;
+    // bool dribble_cclockwise;
+    // uint8_t dribble_vel;
+
+    // id = 7;
+    // robot_vel = 2000;
+    // ang = 300;
+    // rot_cclockwise = true;
+    // w = 1000;
+    // kick_force = 200;
+    // do_kick = true;
+    // chip = false;
+    // forced = true;
+    // dribble_cclockwise = true;
+    // dribble_vel = 5;
+
+    // auto possibleMsg = rtt::createRobotPacket(
+    //         id,
+    //         robot_vel,
+    //         ang,
+    //         rot_cclockwise,
+    //         w,
+    //         kick_force,
+    //         do_kick,
+    //         chip,
+    //         forced,
+    //         dribble_cclockwise,
+    //         dribble_vel
+    //         );
+
+    // if (!possibleMsg) {
+    //     std::cout << "An error occurred while creating the message. Please look at the constraints of createRobotPacket(). Aborting.";
+    //     // return 1;
+    //     return;
+    // }
+
+
+
+
     if (!serialPortOpen) {
         // Open serial port
         boost::system::error_code errorCode;
@@ -148,8 +197,12 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         }
     } 
 
+
     // Create message
     if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
+
+    // if ((bool) possibleMsg) {
+
         // Success!
         auto bytes = *bytesOpt;
         // Write message to it
@@ -168,17 +221,27 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // _____________                ____________
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
-        bytes[0] = 0;
-        bytes[1] = 0;
+
+        uint8_t ackCode[3];
         // TODO: @Incomplete ack format is undefined/unstable! Guessing it is 2 bytes!
-        serialPort.read_some(boost::asio::buffer(bytes.data(), 2));
+        serialPort.read_some(boost::asio::buffer(ackCode, 2));
 
         // If the second character in the response is an ascii 0 character,
         // it means sending the packet failed.
-        if (bytes[1] == '0') {
+        if (ackCode[1] == '0') {
             std::cout << "[RobotHub] Sending packet to robot #"
                       << _msg->id
                       << " failed\n";
+        } else if (ackCode[1] == '1') {
+            std::cout << "[RobotHub] Sending packet to robot #"
+                      << _msg->id
+                      << " succeeded\n";
+        } else {
+            std::cout << "[RobotHub] Sending packet to robot #"
+                      << _msg->id
+                      << " strange result: "
+                      << (int) ackCode[1] 
+                      << "\n";
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -187,6 +250,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
         
         // We're done
+
     } else {
         // Oh shit.
         std::cout << "[RobotHub] Could not turn command into packet!\n";
@@ -234,10 +298,14 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
     ros::Rate loop_rate(60);
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 10, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
-    loop_rate.sleep();
-    ros::spin();
+    
+    while (ros::ok()) {
+        loop_rate.sleep();
+        ros::spinOnce();
+    }
+    
 
     return 0;
 }

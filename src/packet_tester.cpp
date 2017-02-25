@@ -5,7 +5,6 @@ namespace bf = boost;
 #include <cstdint>
 #include <fstream>
 #include <iostream>
-#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
@@ -157,6 +156,31 @@ void testMessage() {
                   << "in packing.cpp and compare the bounds for values to the values of "
                   << "the low level robot command.\n";
     };
+}
+
+/// @brief Different ways a serial port may be flushed.
+enum flush_type
+{
+  flush_receive = TCIFLUSH,
+  flush_send = TCIOFLUSH,
+  flush_both = TCIOFLUSH
+};
+
+/// @brief Flush a serial port's buffers.
+///
+/// @param serial_port Port to flush.
+/// @param what Determines the buffers to flush.
+/// @param error Set to indicate what error occurred, if any.
+void flush_serial_port(
+    boost::asio::serial_port& serial_port,
+    flush_type what,
+    boost::system::error_code& error
+    ) {
+    if (0 == ::tcflush(serial_port.lowest_layer().native_handle(), what)) {
+        error = boost::system::error_code();
+    } else {
+        error = boost::system::error_code(errno, boost::asio::error::get_system_category());
+    }
 }
 
 } // anonymous namespace
@@ -420,8 +444,8 @@ int main(const std::vector<std::string>& arguments) {
     //     }
     // }
 
-    // bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
-    bool benchMark = false;
+    bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
+    // bool benchMark = false;
 
     if (benchMark) {
         ///////////////
@@ -468,6 +492,13 @@ int main(const std::vector<std::string>& arguments) {
 
             // TODO: @Hack base station crutches! Pakcet length should be smaller
             serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+
+            // boost::system::error_code err;
+            // flush_serial_port(serialPort, flush_type::flush_send, err);
+
+            // if (err != boost::system::errc::success) {
+                // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
+            // }
 
             if (checkForAck) {
                 serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));

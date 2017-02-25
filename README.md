@@ -65,6 +65,10 @@ Writes only the bytes 0, 1, and 255 to the base station.
 
 # What if...
 
+### The first ACK from the base station seems to take ages?
+
+Hook up the basestation, make sure nothing from ROS is running, and then connect to the port with `cutecom`. Send two or three messages (`////////` or `hhhhhhhh` will do) and close cutecom. If you then unhook the basestation and then start/connect everything as normal, the delay "should" be gone.
+
 ### I can only open the serial port once with screen, and then it stops working!
 
 `screen` closes the port when you close screen. Like, not closing like robothub or packet\_tester does it, but really close it. If you need to poke into the serial port before using it and still want to use it afterwards use `cat` and `printf` (or figure out how to keep screen from closing it. Would be interesting to know).

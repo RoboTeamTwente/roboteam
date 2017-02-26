@@ -1,7 +1,9 @@
 <launch>
     <arg name="legacy_packets" default="false" />
     <param name="use_legacy_packets" type="boolean" value="$(arg legacy_packets)" />
-	<param name="robot_output_target" type="string" value="serial" />
+
+    <arg name="robot_output_target" default="grsim" />
+    <param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
 
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>

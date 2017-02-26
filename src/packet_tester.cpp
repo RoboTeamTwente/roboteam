@@ -5,7 +5,6 @@ namespace bf = boost;
 #include <cstdint>
 #include <fstream>
 #include <iostream>
-#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
@@ -157,6 +156,31 @@ void testMessage() {
                   << "in packing.cpp and compare the bounds for values to the values of "
                   << "the low level robot command.\n";
     };
+}
+
+/// @brief Different ways a serial port may be flushed.
+enum flush_type
+{
+  flush_receive = TCIFLUSH,
+  flush_send = TCIOFLUSH,
+  flush_both = TCIOFLUSH
+};
+
+/// @brief Flush a serial port's buffers.
+///
+/// @param serial_port Port to flush.
+/// @param what Determines the buffers to flush.
+/// @param error Set to indicate what error occurred, if any.
+void flush_serial_port(
+    boost::asio::serial_port& serial_port,
+    flush_type what,
+    boost::system::error_code& error
+    ) {
+    if (0 == ::tcflush(serial_port.lowest_layer().native_handle(), what)) {
+        error = boost::system::error_code();
+    } else {
+        error = boost::system::error_code(errno, boost::asio::error::get_system_category());
+    }
 }
 
 } // anonymous namespace
@@ -434,6 +458,9 @@ int main(const std::vector<std::string>& arguments) {
     bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
     // bool benchMark = false;
 
+    
+    bool quickTest = get_safe_input("Quick test? (y/N) ", "N") != "N";
+
     if (benchMark) {
         ///////////////
         // Benchmark //
@@ -480,6 +507,13 @@ int main(const std::vector<std::string>& arguments) {
             // TODO: @Hack base station crutches! Pakcet length should be smaller
             serialPort.write_some(boost::asio::buffer(msg.data(), 1));
 
+            // boost::system::error_code err;
+            // flush_serial_port(serialPort, flush_type::flush_send, err);
+
+            // if (err != boost::system::errc::success) {
+                // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
+            // }
+
             if (checkForAck) {
                 serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
 
@@ -505,6 +539,122 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "Sent " << MESSAGE_QUANTITY << " messages.\n";
         std::cout << "Duration: " << diff.count() << "ms" << std::endl;
         std::cout << "Failures: " << failCount << "\n";
+    } else if (quickTest) {
+        std::cout << "Quicktest!\n";
+
+        id = robotID;
+        robot_vel = 2000;
+        ang = 0;
+        rot_cclockwise = false;
+        w = 0;
+        kick_force = 0;
+        do_kick = false;
+        chip = false;
+        forced = false;
+        dribble_cclockwise = false;
+        dribble_vel = 0;
+
+        ang = 128;
+
+        auto forwardMsg = *createRobotPacket(
+                id,
+                robot_vel,
+                ang,
+                rot_cclockwise,
+                w,
+                kick_force,
+                do_kick,
+                chip,
+                forced,
+                dribble_cclockwise,
+                dribble_vel
+                );
+
+        ang = 256 + 128;
+
+        auto backwardMsg = *createRobotPacket(
+                id,
+                robot_vel,
+                ang,
+                rot_cclockwise,
+                w,
+                kick_force,
+                do_kick,
+                chip,
+                forced,
+                dribble_cclockwise,
+                dribble_vel
+                );
+
+        int batchSize = std::stoi(get_safe_input("Batch size (100):", "100"));
+        int const numBytes = 3;
+        uint8_t ackCode[numBytes];
+
+        // Forward
+        std::cout << "Forward..." << std::flush;
+        auto msg = forwardMsg;
+        for (int i = 0; i < batchSize; ++i) {
+            serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+
+            // TODO: @Hack base station crutches! Pakcet length should be smaller
+            serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+
+            // boost::system::error_code err;
+            // flush_serial_port(serialPort, flush_type::flush_send, err);
+
+            // if (err != boost::system::errc::success) {
+                // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
+            // }
+
+            serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+            ackCode[numBytes - 1] = 0;
+
+            std::string returnMessage((char*) &ackCode[0]);
+
+            if (returnMessage[1] == '0') {
+                // failCount++;
+                std::cout << "X" << std::flush;
+            }
+
+            if (i % 100 == 0) {
+                std::cout << "." << std::flush;
+            }
+        }
+
+        // Backward
+        std::cout << "Backward..." << std::flush;
+        msg = backwardMsg;
+        for (int i = 1; i < batchSize + 1; ++i) {
+            serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+
+            // TODO: @Hack base station crutches! Pakcet length should be smaller
+            serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+
+            // boost::system::error_code err;
+            // flush_serial_port(serialPort, flush_type::flush_send, err);
+
+            // if (err != boost::system::errc::success) {
+                // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
+            // }
+
+            serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+
+            ackCode[numBytes - 1] = 0;
+
+            std::string returnMessage((char*) &ackCode[0]);
+
+            if (returnMessage[1] == '0') {
+                // failCount++;
+                std::cout << "X" << std::flush;
+            }
+
+            if (i % 100 == 0) {
+                std::cout << "." << std::flush;
+            }
+        }
+
+        std::cout << "Quicktest done!\n";
     } else {
         ////////////////////////
         // Single packet test //
@@ -520,9 +670,12 @@ int main(const std::vector<std::string>& arguments) {
         // do {
             // std::cout << "Writing bytes to files... ";
 
-            serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+            // serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
+            boost::asio::write(serialPort, boost::asio::buffer(msg.data(), msg.size()));
             // TODO: @Hack base station crutches! Pakcet length should be smaller
-            serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+            // serialPort.write_some(boost::asio::buffer(msg.data(), 1));
+            boost::asio::write(serialPort, boost::asio::buffer(msg.data(), 1));
+            // TODO: @Hack base station crutches! Pakcet length should be smaller
 
             // std::cout << "Done.\n";
 
@@ -530,7 +683,8 @@ int main(const std::vector<std::string>& arguments) {
             // if (get_safe_input("Check for ACK (Y/n): ", "Y") != "n") {
                 int const numBytes = 3;
                 uint8_t ackCode[numBytes];
-                int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+                // int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
+                int receivedBytes = boost::asio::read(serialPort, boost::asio::buffer(ackCode, numBytes - 1));
 
                 ackCode[numBytes - 1] = 0;
 

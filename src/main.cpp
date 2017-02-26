@@ -292,8 +292,9 @@ int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
-    ros::Rate loop_rate(60);
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1, processRobotCommand);
+
+    ros::Rate loop_rate(20);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1/*0*/, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
     
     while (ros::ok()) {

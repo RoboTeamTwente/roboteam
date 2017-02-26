@@ -146,6 +146,7 @@ boost::asio::serial_port serialPort(io);
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // ROS_INFO("Send serial command");
+    std::cout << "[RobotHub] Sending to robot " << _msg->id;
 
     // int id;
     // int robot_vel;
@@ -203,7 +204,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
                 serialPortOpen = true;
                 break;
             default:
-                std::cerr << "[RobotHub] ERROR! Could not open serial port!\n";
+                std::cerr << " ERROR! Could not open serial port!\n";
                 return;
         }
     } 
@@ -240,17 +241,11 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // If the second character in the response is an ascii 0 character,
         // it means sending the packet failed.
         if (ackCode[1] == '0') {
-            std::cout << "[RobotHub] Sending packet to robot #"
-                      << _msg->id
-                      << " failed\n";
+            std::cout << ", failed \n";
         } else if (ackCode[1] == '1') {
-            std::cout << "[RobotHub] Sending packet to robot #"
-                      << _msg->id
-                      << " succeeded\n";
+            std::cout << ", succeeded \n";
         } else {
-            std::cout << "[RobotHub] Sending packet to robot #"
-                      << _msg->id
-                      << " strange result: "
+            std::cout << " strange result: "
                       << (int) ackCode[1] 
                       << "\n";
         }
@@ -264,7 +259,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
     } else {
         // Oh shit.
-        std::cout << "[RobotHub] Could not turn command into packet!\n";
+        std::cout << " Could not turn command into packet!\n";
     }
 }
 
@@ -328,6 +323,7 @@ int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
+
     ros::Rate loop_rate(20);
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1/*0*/, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);

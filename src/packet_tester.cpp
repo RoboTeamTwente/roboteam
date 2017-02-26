@@ -287,6 +287,15 @@ int main(const std::vector<std::string>& arguments) {
         ang = 0;
         rot_cclockwise = false;
         w = 0;
+        if (packetType == "f") {
+            rot_cclockwise = false;
+            w = 10;
+        } else if (packetType == "b") {
+            rot_cclockwise = true;
+            w = 10;
+        }
+        
+        
         kick_force = 0;
         do_kick = false;
         chip = false;
@@ -468,7 +477,8 @@ int main(const std::vector<std::string>& arguments) {
     if (!portOpened) {
 
     	boost::system::error_code errorCode;
-	    serialPort.open(output_file, errorCode);
+	    std::cout << "Opening serial port \n";
+        serialPort.open(output_file, errorCode);
 	    switch (errorCode.value()) {
 	        case boost::system::errc::success:
 	            // Great!
@@ -481,6 +491,7 @@ int main(const std::vector<std::string>& arguments) {
 	    }
 
 	    portOpened = true;
+
     }
     
 
@@ -526,6 +537,7 @@ int main(const std::vector<std::string>& arguments) {
 
     bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
     // bool benchMark = false;
+
     
     bool quickTest = get_safe_input("Quick test? (y/N) ", "N") != "N";
 

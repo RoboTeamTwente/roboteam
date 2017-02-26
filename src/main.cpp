@@ -20,8 +20,18 @@
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/normalize.h"
 #include "std_msgs/Float64MultiArray.h"
+#include "std_msgs/Bool.h"
 
 #include "roboteam_robothub/packing.h"
+
+namespace {
+
+bool halt = false;
+
+void processHalt(const std_msgs::Bool::ConstPtr &msg) {
+    std::cout << "[RobotHub] Received a halt: " << (int) msg->data << "\n";
+    halt = msg->data;
+}
 
 ros::Publisher pub;
 
@@ -79,6 +89,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     int grsim_port = 20011;
     ros::param::get("grsim/ip", grsim_ip);
     ros::param::get("grsim/port", grsim_port);
+
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
 
@@ -255,11 +266,30 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // Oh shit.
         std::cout << "[RobotHub] Could not turn command into packet!\n";
     }
+}
 
+enum Mode {
+    SERIAL,
+    GRSIM,
+    GAZEBO
+} ;
+
+Mode getMode() {
+    std::string robot_output_target = "grsim";
+    ros::param::getCached("robot_output_target", robot_output_target);
+    if (robot_output_target == "grsim") {
+        return Mode::GRSIM;
+    } else if (robot_output_target == "serial") {
+        return Mode::SERIAL;
+    } else {
+        return Mode::GAZEBO;
+    }
 }
 
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     roboteam_msgs::RobotCommand command;
+
+    if (halt) return;
 
     // TODO: @Safety I would like to use getcached here, but I would also like to
     // have the safety of utils' constants.
@@ -280,18 +310,19 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
         command = *msg;
     }
 
-    std::string robot_output_target = "grsim";
-    ros::param::getCached("robot_output_target", robot_output_target);
-    if (robot_output_target == "grsim") {
+    auto mode = getMode();
+    if (mode == Mode::GRSIM) {
         sendGRsimCommands(msg);
-    } else if (robot_output_target == "gazebo") {
+    } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(msg);
-    } else if (robot_output_target == "serial") {
+    } else if (mode == Mode::SERIAL) {
         sendSerialCommands(msg);
     } else { // Default to grsim
         sendGRsimCommands(msg);
     }
 }
+
+} // anonymous namespace
 
 int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
@@ -300,12 +331,31 @@ int main(int argc, char *argv[]) {
     ros::Rate loop_rate(20);
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1/*0*/, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
+
+    ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
     
     while (ros::ok()) {
         loop_rate.sleep();
         ros::spinOnce();
+
+        // Stop all robots if needed!
+        if (halt) {
+            roboteam_msgs::RobotCommand::Ptr command(new roboteam_msgs::RobotCommand());
+            auto mode = getMode();
+            for (int i = 0; i < 16; ++i) {
+                command->id = i;
+                if (mode == Mode::GRSIM) {
+                    sendGRsimCommands(command);
+                } else if (mode == Mode::GAZEBO) {
+                    sendGazeboCommands(command);
+                } else if (mode == Mode::SERIAL) {
+                    sendSerialCommands(command);
+                } else { // Default to grsim
+                    sendGRsimCommands(command);
+                }
+            }
+        }
     }
-    
 
     return 0;
 }

@@ -271,17 +271,17 @@ int main(const std::vector<std::string>& arguments) {
     } else if (packetType == "f" || packetType == "b" || packetType == "l" || packetType == "r" || 
     		   packetType == "fl" || packetType == "fr" || packetType == "bl" || packetType == "br" ) {
         id = robotID;
-        robot_vel = 2000;
+        robot_vel = 4000;
         ang = 0;
         rot_cclockwise = false;
         w = 0;
-        if (packetType == "f") {
-            rot_cclockwise = false;
-            w = 10;
-        } else if (packetType == "b") {
-            rot_cclockwise = true;
-            w = 10;
-        }
+        // if (packetType == "f") {
+        //     rot_cclockwise = false;
+        //     w = 10;
+        // } else if (packetType == "b") {
+        //     rot_cclockwise = true;
+        //     w = 10;
+        // }
         
         
         kick_force = 0;
@@ -455,11 +455,12 @@ int main(const std::vector<std::string>& arguments) {
     //     }
     // }
 
-    bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
-    // bool benchMark = false;
+    // bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
+    bool benchMark = false;
 
     
-    bool quickTest = get_safe_input("Quick test? (y/N) ", "N") != "N";
+    // bool quickTest = get_safe_input("Quick test? (y/N) ", "N") != "N";
+    bool quickTest = false;
 
     if (benchMark) {
         ///////////////

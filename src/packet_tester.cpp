@@ -225,7 +225,19 @@ int main(const std::vector<std::string>& arguments) {
 
 
 
-    auto packetType = get_safe_input("Example packet or initialize packet by hand (EXAMPLE/manual/ forward (f)/ backward (b) / left (l) /right (r)/ stop (s)? ", "EXAMPLE");
+    auto packetType = get_safe_input(R"--(Packet type options:
+    EXAMPLE
+    manual
+    forward (f)
+    backward (b)
+    left (l)
+    right (r)
+    stop (s)
+    kick1 (k1)
+    kick2 (k2)
+    dribble on (d1/d4/d7)
+    dribble off (d0)
+    chip (c)? )--", "EXAMPLE");
 
     // TODO: w should be ang, w_vel should be w
     int id;
@@ -313,15 +325,83 @@ int main(const std::vector<std::string>& arguments) {
     	id = robotID;
         robot_vel = 0;
         ang = 0;
+        rot_cclockwise = false;
+        w = 0;
+        kick_force = 0;
+        do_kick = false;
+        chip = false;
+        forced = false;
+        dribble_cclockwise = false;
+        dribble_vel = 0;
+    } else if (packetType == "k1" || packetType == "kick1") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
         rot_cclockwise = true;
         w = 0;
-        kick_force = 200;
+        kick_force = 128;
         do_kick = true;
         chip = false;
         forced = true;
-        dribble_cclockwise = true;
-        dribble_vel = 5;
-    } 
+        dribble_cclockwise = 0;
+        dribble_vel = 0;
+    } else if (packetType == "k2" || packetType == "kick2") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
+        rot_cclockwise = true;
+        w = 0;
+        kick_force = 255;
+        do_kick = true;
+        chip = false;
+        forced = true;
+        dribble_cclockwise = 0;
+        dribble_vel = 0;
+    } else if (packetType == "d1" || packetType == "d4" || packetType == "d7" || packetType == "dribble on") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
+        rot_cclockwise = false;
+        w = 0;
+        kick_force = 0;
+        do_kick = false;
+        chip = false;
+        forced = false;
+        dribble_cclockwise = 0;
+        dribble_vel = 1;
+
+        if (packetType == "d1") {
+            dribble_vel = 1;
+        } else if (packetType == "d4") {
+            dribble_vel = 4;
+        } else if (packetType == "d7") {
+            dribble_vel = 7;
+        }
+    } else if (packetType == "d0" || packetType == "dribble off") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
+        rot_cclockwise = true;
+        w = 0;
+        kick_force = 0;
+        do_kick = false;
+        chip = false;
+        forced = false;
+        dribble_cclockwise = 0;
+        dribble_vel = 0;
+    } else if (packetType == "c" || packetType == "chip") {
+    	id = robotID;
+        robot_vel = 0;
+        ang = 0;
+        rot_cclockwise = true;
+        w = 0;
+        kick_force = 255;
+        do_kick = false;
+        chip = true;
+        forced = true;
+        dribble_cclockwise = 0;
+        dribble_vel = 0;
+    }
 
 
     /////////////////////

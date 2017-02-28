@@ -157,6 +157,10 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     llcommand.dribble_cclockwise = dribble_cclockwise;
     llcommand.dribble_vel = dribble_vel;
 
+    std::cout << "[RobotHub] ------------------------------------------\n";
+    std::cout << "[RobotHub] About to send the following w to the motor: " << llcommand.w << "\n";
+    std::cout << "[RobotHub] rot_cclockwise: " << (int) llcommand.rot_cclockwise << "\n";
+
     return llcommand;
 }
 
@@ -178,6 +182,22 @@ boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotC
             llcommand.forced,
             llcommand.dribble_cclockwise,
             llcommand.dribble_vel
+            );
+}
+
+boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc) {
+    return createRobotPacket(
+            llrc.id,
+            llrc.robot_vel,
+            llrc.ang,
+            llrc.rot_cclockwise,
+            llrc.w,
+            llrc.punt_power,
+            llrc.do_kick,
+            llrc.do_chip,
+            llrc.forced,
+            llrc.dribble_cclockwise,
+            llrc.dribble_vel
             );
 }
 
@@ -256,3 +276,22 @@ std::string byteToBinary(uint8_t byte) {
 }
 
 } // rtt
+
+bool operator==(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs) {
+    return
+        lhs.id == rhs.id &&
+        lhs.robot_vel == rhs.robot_vel &&
+        lhs.ang == rhs.ang &&
+        lhs.rot_cclockwise == rhs.rot_cclockwise &&
+        lhs.w == rhs.w &&
+        lhs.punt_power == rhs.punt_power &&
+        lhs.do_kick == rhs.do_kick &&
+        lhs.do_chip == rhs.do_chip &&
+        lhs.forced == rhs.forced &&
+        lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
+        lhs.dribble_vel == rhs.dribble_vel;
+}
+
+bool operator!=(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs) {
+    return !(lhs == rhs);
+}

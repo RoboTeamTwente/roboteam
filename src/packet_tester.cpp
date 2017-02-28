@@ -623,10 +623,10 @@ int main(const std::vector<std::string>& arguments) {
         std::cout << "Quicktest!\n";
 
         id = robotID;
-        robot_vel = 2000;
+        robot_vel = 0;
         ang = 0;
         rot_cclockwise = false;
-        w = 0;
+        w = 70;
         kick_force = 0;
         do_kick = false;
         chip = false;
@@ -634,7 +634,7 @@ int main(const std::vector<std::string>& arguments) {
         dribble_cclockwise = false;
         dribble_vel = 0;
 
-        ang = 128;
+        ang = 0;
 
         auto forwardMsg = *createRobotPacket(
                 id,
@@ -650,7 +650,9 @@ int main(const std::vector<std::string>& arguments) {
                 dribble_vel
                 );
 
-        ang = 256 + 128;
+        ang = 0;
+
+        w = 40;
 
         auto backwardMsg = *createRobotPacket(
                 id,
@@ -666,14 +668,14 @@ int main(const std::vector<std::string>& arguments) {
                 dribble_vel
                 );
 
-        int batchSize = std::stoi(get_safe_input("Batch size (100):", "100"));
+        // int batchSize = std::stoi(get_safe_input("Batch size (100):", "100"));
         int const numBytes = 3;
         uint8_t ackCode[numBytes];
 
         // Forward
-        std::cout << "Forward..." << std::flush;
+        std::cout << "Fast..." << std::flush;
         auto msg = forwardMsg;
-        for (int i = 0; i < batchSize; ++i) {
+        for (int i = 0; i < 0; ++i) {
             serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
 
             // TODO: @Hack base station crutches! Pakcet length should be smaller
@@ -694,18 +696,20 @@ int main(const std::vector<std::string>& arguments) {
 
             if (returnMessage[1] == '0') {
                 // failCount++;
-                std::cout << "X" << std::flush;
-            }
-
-            if (i % 100 == 0) {
+                // std::cout << "X" << std::flush;
+            } else {
                 std::cout << "." << std::flush;
             }
+
+            // if (i % 100 == 0) {
+                // std::cout << "." << std::flush;
+            // }
         }
 
         // Backward
-        std::cout << "Backward..." << std::flush;
+        std::cout << "Slow..." << std::flush;
         msg = backwardMsg;
-        for (int i = 1; i < batchSize + 1; ++i) {
+        for (int i = 1; i < 1000 + 1; ++i) {
             serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
 
             // TODO: @Hack base station crutches! Pakcet length should be smaller
@@ -726,11 +730,12 @@ int main(const std::vector<std::string>& arguments) {
 
             if (returnMessage[1] == '0') {
                 // failCount++;
-                std::cout << "X" << std::flush;
-            }
+                // std::cout << "X" << std::flush;
+            } else {
 
-            if (i % 100 == 0) {
+            // if (i % 100 == 0) {
                 std::cout << "." << std::flush;
+            // }
             }
         }
 

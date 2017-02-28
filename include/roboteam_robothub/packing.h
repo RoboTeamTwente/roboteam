@@ -32,9 +32,11 @@ struct LowLevelRobotCommand {
     uint8_t dribble_vel;
 } ;
 
+
 using packed_protocol_message = std::array<uint8_t, 7>;
 
 LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command);
+boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command);
 boost::optional<packed_protocol_message> createRobotPacket(int id, int robot_vel, int ang,
                                         bool rot_cclockwise, int w, uint8_t punt_power,
@@ -59,5 +61,8 @@ int const PACKET_MAX_ANG = 511;
 int const PACKET_MAX_DRIBBLE_VEL = 7;
 
 }
+
+bool operator==(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs);
+bool operator!=(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs);
 
 #endif // ROBOTHUB_SRC_PACKING_H_

@@ -77,6 +77,18 @@ add_dependencies(packet_tester
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     )
 
+add_executable(packet_tester_2
+    src/packet_tester_2.cpp
+    src/packing.cpp
+    )
+target_link_libraries(packet_tester_2
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(packet_tester_2
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
 add_executable(system_test
     src/system_test.cpp
     src/packing.cpp

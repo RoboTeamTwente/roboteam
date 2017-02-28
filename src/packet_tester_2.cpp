@@ -122,6 +122,9 @@ PacketResult trySendPacket(LowLevelRobotCommand llrc, std::string outputFile) {
         ba::write(serialPort, boost::asio::buffer(msg.data(), msg.size()));
         ba::write(serialPort, boost::asio::buffer(msg.data(), 1));
 
+        std::cout << "Sent packet: \n";
+        printCurrentPacket(llrc);
+
         int const numBytes = 3;
         uint8_t ackCode[numBytes];
 
@@ -391,6 +394,11 @@ int main(const std::vector<std::string>& arguments) {
     llrc.id = robotID;
 
     do {
+        std::cout << 1 + R"##(
+---------------------------
+-- RTT Packet Tester CMD --
+---------------------------
+)##";
         std::cout << "Current packet:\n";
 
         printCurrentPacket(llrc);
@@ -410,6 +418,25 @@ int main(const std::vector<std::string>& arguments) {
             sampleLLRC.id = robotID;
 
             sendCommand(sampleLLRC, outputFile, history);
+        } else if (instruction[0] == '-') {
+            auto historyStr = instruction.substr(1, instruction.size() - 1);
+
+            if (!isInteger(historyStr)) {
+                std::cout << "Could not parse historycommand. Please use the format \"-###\", where ### is a number between 1 and infinity\n";
+                continue;
+            }
+
+            // Between 1 and inf
+            int historyNum = std::stoi(historyStr);
+            // Between 0 and inf
+            int historyIndex = historyNum - 1;
+
+            if (!(historyIndex >= 0 && historyIndex < history.size())) {
+                std::cout << "Cannot look back in the history " << historyNum << " steps\n";
+                continue;
+            } 
+            
+            sendCommand(history[historyIndex], outputFile, history);
         } else {
             std::cout << "Unknown command\n";
         }

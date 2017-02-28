@@ -137,7 +137,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string const SERIAL_FILE_PATH = "/dev/ttyACM0";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -323,6 +323,13 @@ int main(int argc, char *argv[]) {
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
+
+    if (argc > 1) {
+        SERIAL_FILE_PATH = std::string(argv[1]);
+    } else if (ros::param::has("serialOut")) {
+        ros::param::get("serialOut", SERIAL_FILE_PATH);
+    }
+    ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
 
     ros::Rate loop_rate(20);
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1/*0*/, processRobotCommand);

@@ -269,7 +269,7 @@ int main(const std::vector<std::string>& arguments) {
     } else if (packetType == "EXAMPLE") {
         std::cout << "Sending an example packet.\n";
         
-        id = 7;
+        id = robotID;
         robot_vel = 2000;
         ang = 300;
         rot_cclockwise = true;

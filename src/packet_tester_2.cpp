@@ -1,7 +1,6 @@
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-namespace b = boost;
-namespace ba = boost::asio;
+#include <boost/algorithm/string.hpp>
 #include <chrono>
 #include <cstdint>
 #include <fstream>
@@ -13,6 +12,9 @@ namespace ba = boost::asio;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_robothub/packing.h"
+
+namespace b = boost;
+namespace ba = boost::asio;
 
 namespace rtt {
 
@@ -363,6 +365,153 @@ void sendCommand(LowLevelRobotCommand llrc, std::string outputFile, std::vector<
         history.push_back(llrc);
     }
 }
+
+int getSafeInt(std::string question, int defaultValue) {
+    std::string rawInput = get_safe_input(question, std::to_string(defaultValue));
+
+    try {
+        return std::stoi(rawInput);
+    } catch (...) {
+        std::cout << "Could not parse input \"" << rawInput << "\". Defaulting to " << defaultValue << "\n";
+        return defaultValue;
+    }
+}
+
+LowLevelRobotCommand getLowLevelRobotCommandFromInput() {
+    std::cout << "Please enter all the desired values\n";
+
+    LowLevelRobotCommand llrc = {};
+    
+    llrc.id                 = getSafeInt("\tid (0-15, 0): ", 0);
+    llrc.robot_vel          = getSafeInt("\trobot_vel (0-8191, 0): ", 0);
+    llrc.ang                = getSafeInt("\tang (0-511, 0): ", 0);
+    llrc.rot_cclockwise     = getSafeInt("\trot_cclockwise (0 or > 0, 0): ", 0) > 0;
+    llrc.w                  = getSafeInt("\tw (0-2047, 0): ", 0);
+    llrc.punt_power         = getSafeInt("\tpunt_power (0-255, 0): ", 0);
+    llrc.do_kick            = getSafeInt("\tdo_kick (0 or > 0, 0): ", 0) > 0;
+    llrc.do_chip            = getSafeInt("\tdo_chip (0 or > 0, 0): ", 0) > 0;
+    llrc.forced             = getSafeInt("\tforced (0 or > 0, 0): ", 0) > 0;
+    llrc.dribble_cclockwise = getSafeInt("\tdribble_cclockwise (0 or > 0, 0): ", 0) > 0;
+    llrc.dribble_vel        = getSafeInt("\tdribble_vel (0-7, 0): ", 0);
+
+    return llrc;
+}
+
+std::vector<std::string> llrcKeys = {
+    "id",
+    "robot_vel",
+    "ang",
+    "rot_cclockwise",
+    "w",
+    "punt_power",
+    "do_kick",
+    "do_chip",
+    "forced",
+    "dribble_cclockwise",
+    "dribble_vel"
+};
+
+b::optional<std::tuple<std::string, int>> parseAssignment(std::string instruction) {
+    auto eqPos = instruction.find("=");
+    if (eqPos == std::string::npos) {
+        return b::none;
+    } 
+
+    std::string index = b::trim_copy(instruction.substr(0, eqPos));
+    std::string value = b::trim_copy(instruction.substr(eqPos + 1));
+
+    auto keyIt = std::find(llrcKeys.begin(), llrcKeys.end(), index);
+    if (keyIt != llrcKeys.end()) {
+        index = std::to_string(keyIt - llrcKeys.begin());
+    }
+
+    try {
+        if (isInteger(index) || index == "A" || index == "a") {
+            if (index == "A" || index == "a") {
+                return std::make_tuple(llrcKeys.at(9), std::stoi(value));
+            }
+
+            int indexInt = std::stoi(index);
+
+            if (indexInt < 0 || indexInt > 9) {
+                std::cout << "Index " << indexInt << "is an invalid index\n";
+                return b::none;
+            }
+
+            return std::make_tuple(llrcKeys.at(indexInt), std::stoi(value));
+        } else {
+            return std::make_tuple(index, std::stoi(value));
+        }
+    } catch (...) {
+        return b::none;
+    }
+}
+
+LowLevelRobotCommand applyAssignment(std::tuple<std::string, int> assignmentInfo, LowLevelRobotCommand llrc) {
+    auto index = std::get<0>(assignmentInfo);
+    auto value = std::get<1>(assignmentInfo);
+
+    if (index == "id") { 
+        if (value < 0 || value > 15) {
+            std::cout << "id " << value << " has to be between 0 and 15 inclusive\n";
+            return llrc;
+        }
+
+        llrc.id = value;
+    } else if (index == "robot_vel") { 
+        if (value < 0 || value > 8191) {
+            std::cout << "robot_vel has to be between 0 and 8191 inclusive\n";
+            return llrc;
+        }
+
+        llrc.robot_vel = value;
+    } else if (index == "ang") {
+        if (value < 0 || value > 511) {
+            std::cout << "ang has to be between 0 and 511 inclusive\n";
+            return llrc;
+        }
+
+        llrc.ang = value;
+    } else if (index == "rot_cclockwise") { 
+        llrc.rot_cclockwise = value > 0;
+    } else if (index == "w") { 
+        if (value < 0 || value > 2047) {
+            std::cout << "w has to be between 0 and 2047 inclusive\n";
+            return llrc;
+        }
+
+        llrc.w = value;
+    } else if (index == "punt_power") {
+        if (value < 0 || value > 255) {
+            std::cout << "punt_power has to be between 0 and 255 inclusive\n";
+            return llrc;
+        }
+
+        llrc.punt_power = value;
+    } else if (index == "do_kick") {
+        llrc.do_kick = value > 0;
+    } else if (index == "do_chip") {
+        llrc.do_chip = value > 0;
+    } else if (index == "forced") {
+        llrc.forced = value > 0;
+    } else if (index == "dribble_cclockwise") { 
+        llrc.dribble_cclockwise = value > 0;
+    } else if (index == "dribble_vel") {
+        if (value < 0 || value > 7) {
+            std::cout << "dribble_vel has to be between 0 and 7 inclusive\n";
+            return llrc;
+        }
+
+        llrc.dribble_vel = value;
+    } else {
+        std::cout << "LowLevelRobotCommand variablename " << index << " is invalid\n";
+        return llrc;
+    }
+
+    std::cout << value << " => " << index << "\n";
+
+    return llrc;
+}
     
 } // anonymous namespace
 
@@ -383,15 +532,13 @@ int main(const std::vector<std::string>& arguments) {
 
     std::string outputFile = arguments.at(0);
 
-    int robotID = std::stoi(arguments.at(1));
+    LowLevelRobotCommand llrc = {};
+    llrc.id = std::stoi(arguments.at(1));
 
-    std::cout << "Output file: " << outputFile << " robotID: " << robotID << "\n";
+    std::cout << "Output file: " << outputFile << " robotID: " << llrc.id << "\n";
 
     bool quit = false;
     std::vector<LowLevelRobotCommand> history;
-
-    LowLevelRobotCommand llrc = {};
-    llrc.id = robotID;
 
     do {
         std::cout << 1 + R"##(
@@ -410,12 +557,18 @@ int main(const std::vector<std::string>& arguments) {
 
         if (beginsWithOrEquals(instruction, "quit")) {
             quit = true;
+        } else if (instruction == "manual") {
+            llrc = getLowLevelRobotCommandFromInput();
         } else if (instruction == "send") {
             sendCommand(llrc, outputFile, history);
+        } else if (auto assignmentOpt = parseAssignment(instruction)) {
+            auto assignmentInfo = *assignmentOpt;
+            
+            llrc = applyAssignment(assignmentInfo, llrc);
         } else if (auto possibleLLRC = trySampleCommand(instruction)) {
 
             auto sampleLLRC = *possibleLLRC;
-            sampleLLRC.id = robotID;
+            sampleLLRC.id = llrc.id;
 
             sendCommand(sampleLLRC, outputFile, history);
         } else if (instruction[0] == '-') {
@@ -441,549 +594,6 @@ int main(const std::vector<std::string>& arguments) {
             std::cout << "Unknown command\n";
         }
     } while (!quit);
-
-    /////////////////////
-    // Creating packet //
-    /////////////////////
-
-
-    
-
-
-    
-
-
-
-    // auto packetType = get_safe_input(R"--(Packet type options:
-
-    // // TODO: w should be ang, w_vel should be w
-    // int id;
-    // int robot_vel;
-    // int ang;
-    // bool rot_cclockwise;
-    // int w;
-    // uint8_t kick_force;
-    // bool do_kick;
-    // bool chip;
-    // bool forced;
-    // bool dribble_cclockwise;
-    // uint8_t dribble_vel;
-
-    // if (packetType == "manual") {
-        // std::cout << "Sending a manual packet.\n";
-
-        // id                 = std::stoi(get_safe_input("id (0-15, 7): ", "7"));
-        // robot_vel          = std::stoi(get_safe_input("robot_vel (0-8191, 2000): ", "2000"));
-        // ang                = std::stoi(get_safe_input("ang (0-511, 300): ", "300"));
-        // rot_cclockwise     = get_safe_input("rot_cclockwise (true/false): ") == "true";
-        // w                  = std::stoi(get_safe_input("w (0-2047, 1000): ", "1000"));
-        // kick_force         = std::stoi(get_safe_input("kick_force (0-255, 200): ", "200"));
-        // do_kick            = get_safe_input("do_kick (true/false): ") == "true";
-        // chip               = get_safe_input("chip (true/false): ") == "true";
-        // forced             = get_safe_input("forced (true/false): ") == "true";
-        // dribble_cclockwise = get_safe_input("dribble_cclockwise (true/false): ") == "true";
-        // dribble_vel        = std::stoi(get_safe_input("dribble_vel (0-7, 5): ", "5"));
-    // } else if (packetType == "EXAMPLE") {
-        // std::cout << "Sending an example packet.\n";
-        
-        // id = 7;
-        // robot_vel = 2000;
-        // ang = 300;
-        // rot_cclockwise = true;
-        // w = 1000;
-        // kick_force = 200;
-        // do_kick = true;
-        // chip = false;
-        // forced = true;
-        // dribble_cclockwise = true;
-        // dribble_vel = 5;
-    // } else if (packetType == "f" || packetType == "b" || packetType == "l" || packetType == "r" || 
-               // packetType == "fl" || packetType == "fr" || packetType == "bl" || packetType == "br" ) {
-        // id = robotID;
-        // robot_vel = 2000;
-        // ang = 0;
-        // rot_cclockwise = false;
-        // w = 0;
-        // if (packetType == "f") {
-            // rot_cclockwise = false;
-            // w = 10;
-        // } else if (packetType == "b") {
-            // rot_cclockwise = true;
-            // w = 10;
-        // }
-        
-        
-        // kick_force = 0;
-        // do_kick = false;
-        // chip = false;
-        // forced = false;
-        // dribble_cclockwise = false;
-        // dribble_vel = 0;
-
-        // if (packetType == "f") {
-            // ang = 128;
-        // } else if (packetType == "b") {
-            // ang = 384;
-        // } else if (packetType == "l") {
-            // ang = 256;
-        // } else if (packetType == "r") {
-            // ang = 0;
-        // } else if (packetType == "fl") {
-            // ang = 192;
-        // } else if (packetType == "fr") {
-            // ang = 64;
-        // } else if (packetType == "bl") {
-            // ang = 320;
-        // } else if (packetType == "br") {
-            // ang = 448;
-        // }
-
-    // } else if (packetType == "s") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = false;
-        // w = 0;
-        // kick_force = 0;
-        // do_kick = false;
-        // chip = false;
-        // forced = false;
-        // dribble_cclockwise = false;
-        // dribble_vel = 0;
-    // } else if (packetType == "k1" || packetType == "kick1") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = true;
-        // w = 0;
-        // kick_force = 128;
-        // do_kick = true;
-        // chip = false;
-        // forced = true;
-        // dribble_cclockwise = 0;
-        // dribble_vel = 0;
-    // } else if (packetType == "k2" || packetType == "kick2") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = true;
-        // w = 0;
-        // kick_force = 255;
-        // do_kick = true;
-        // chip = false;
-        // forced = true;
-        // dribble_cclockwise = 0;
-        // dribble_vel = 0;
-    // } else if (packetType == "d1" || packetType == "d4" || packetType == "d7" || packetType == "dribble on") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = false;
-        // w = 0;
-        // kick_force = 0;
-        // do_kick = false;
-        // chip = false;
-        // forced = false;
-        // dribble_cclockwise = 0;
-        // dribble_vel = 1;
-
-        // if (packetType == "d1") {
-            // dribble_vel = 1;
-        // } else if (packetType == "d4") {
-            // dribble_vel = 4;
-        // } else if (packetType == "d7") {
-            // dribble_vel = 7;
-        // }
-    // } else if (packetType == "d0" || packetType == "dribble off") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = true;
-        // w = 0;
-        // kick_force = 0;
-        // do_kick = false;
-        // chip = false;
-        // forced = false;
-        // dribble_cclockwise = 0;
-        // dribble_vel = 0;
-    // } else if (packetType == "c" || packetType == "chip") {
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = true;
-        // w = 0;
-        // kick_force = 255;
-        // do_kick = false;
-        // chip = true;
-        // forced = true;
-        // dribble_cclockwise = 0;
-        // dribble_vel = 0;
-    // }
-
-
-    // /////////////////////
-    // // Printing packet //
-    // /////////////////////
-
-    // // #define FIELD(id) std::cout << bf::format("\t%-20s %-20s\n") % #id % get_pretty_value(id);
-
-    // // std::cout << "Packet:\n";
-    // // FIELD(id);
-    // // FIELD(robot_vel);
-    // // FIELD(ang);
-    // // FIELD(rot_cclockwise);
-    // // FIELD(w);
-    // // FIELD(kick_force);
-    // // FIELD(do_kick);
-    // // FIELD(chip);
-    // // FIELD(forced);
-    // // FIELD(dribble_cclockwise);
-    // // FIELD(dribble_vel);
-
-    // std::cout << "Creating message... ";
-
-    // ///////////////////////
-    // // Converting packet //
-    // ///////////////////////
-
-    // auto possibleMsg = createRobotPacket(
-            // id,
-            // robot_vel,
-            // ang,
-            // rot_cclockwise,
-            // w,
-            // kick_force,
-            // do_kick,
-            // chip,
-            // forced,
-            // dribble_cclockwise,
-            // dribble_vel
-            // );
-
-    // if (!possibleMsg) {
-        // std::cout << "An error occurred while creating the message. Please look at the constraints of createRobotPacket(). Aborting.";
-        // return 1;
-    // }
-
-    // // std::cout << "All params ok.\n";
-
-    // ////////////////////////////
-    // // Printing binary packet //
-    // ////////////////////////////
-
-    // // std::cout << "Message contents: \n";
-
-    // auto msg = *possibleMsg;
-
-    // // for (const auto& byte : msg) {
-    // //     std::cout << "\t" << byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-    // // }
-
-    // //////////////////////////
-    // // Creating serial port //
-    // //////////////////////////
-
-    // // if (!get_safe_input("Press enter to open the port or type something to cancel...").empty()) {
-    // //     std::cout << "Sending message canceled. Aborting.\n";
-    // //     return 0;
-    // // }
-
-    // // std::cout << "Creating serial port... ";
-
-
-    // // std::cout << "Done.\n";
-
-    // ///////////////////////
-    // // Setting baud rate //
-    // ///////////////////////
-
-    // boost::asio::serial_port_base::baud_rate baudRate;
-    // serialPort.get_option(baudRate);
-    // // std::cout << "Baud rate: " << baudRate.value() << "\n";
-    
-    // // std::cout << "Other standard baud rates: \n";
-    // // for (auto br : baudRates) {
-    // //     std::cout << "    " << br << "\n";
-    // // }
-    // // std::cout << "Less standard baud rates: \n";
-    // // for (auto br : nonStandardBaudRates) {
-    // //     std::cout << "    " << br << "\n";
-    // // }
-
-    // // auto userBaudRateStr = get_safe_input("Set baud rate (or empty to leave at standard): ");
-    // // if (!userBaudRateStr.empty()) {
-    // //     try {
-    // //         int userBaudRate = std::stoi(userBaudRateStr);
-    // //         baudRate = boost::asio::serial_port_base::baud_rate(userBaudRate);
-    // //         boost::system::error_code ec;
-    // //         serialPort.set_option(baudRate, ec);
-
-    // //         if (ec != boost::system::errc::success) {
-    // //             std::cout << "Could not set baud rate. Error: " << ec << ". " << ec.message() << "\n";
-    // //         }
-
-    // //         serialPort.get_option(baudRate);
-    // //         std::cout << "Final baud rate: " << baudRate.value() << "\n";
-    // //     } catch (std::invalid_argument const & ex) {
-    // //         std::cout << "Invalid baudRate specified. Continuing with baudrate " << baudRate.value() << "\n";
-    // //     } catch (std::out_of_range const & ex) {
-    // //         std::cout << "Specified baud rate too large for an int. Continuing with baudrate " << baudRate.value() << "\n";
-    // //     }
-    // // }
-
-    // bool benchMark = get_safe_input("Benchmark (y/N)? ", "N") != "N";
-    // // bool benchMark = false;
-
-    
-    // bool quickTest = get_safe_input("Quick test? (y/N) ", "N") != "N";
-
-    // if (benchMark) {
-        // ///////////////
-        // // Benchmark //
-        // ///////////////
-
-        // bool checkForAck = get_safe_input("Check for ACK (Y/n): ", "Y") != "n";
-        // int const MESSAGE_QUANTITY = std::stoi(get_safe_input("Amount of messages (10 000): ", "10000"));
-
-        // int const numBytes = 3;
-        // uint8_t ackCode[numBytes];
-
-        // if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
-            // std::cout << "Sending message canceled. Aborting.\n";
-            // return 0;
-        // }
-        
-        // std::cout << "Sending packets..." << std::flush;
-
-        // // Communicatie todo
-        // // TODO: Make packet length 7 in hans's stuff
-        // // TODO: Make library of hans nrf stuff
-        // // gedaan: serial baud testing
-        // // gedaan: SPI baud testing
-        // // TODO: Make main pcb response 2 bytes instead of 2 ascii characters
-        // // gedaan: Optization for hans' code, useful or not? Nee
-        // // gedaan: WriteData optimaliseren bij Hans? Semi-lelijk
-
-        // // There are other clocks, but this is usually the one you want.
-        // // It corresponds to CLOCK_MONOTONIC at the syscall level.
-        // using Clock = std::chrono::steady_clock;
-        // using std::chrono::time_point;
-        // using std::chrono::duration_cast;
-        // using std::chrono::milliseconds;
-        // using namespace std::literals::chrono_literals;
-        // using std::this_thread::sleep_for;
-
-        // time_point<Clock> start = Clock::now();
-
-        // int failCount = 0;
-
-        // for (int i = 1; i < MESSAGE_QUANTITY + 1; ++i) {
-            // serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
-
-            // // TODO: @Hack base station crutches! Pakcet length should be smaller
-            // serialPort.write_some(boost::asio::buffer(msg.data(), 1));
-
-            // // boost::system::error_code err;
-            // // flush_serial_port(serialPort, flush_type::flush_send, err);
-
-            // // if (err != boost::system::errc::success) {
-                // // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
-            // // }
-
-            // if (checkForAck) {
-                // serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
-
-                // ackCode[numBytes - 1] = 0;
-
-                // std::string returnMessage((char*) &ackCode[0]);
-
-                // if (returnMessage[1] == '0') {
-                    // failCount++;
-                // }
-            // }
-
-            // if (i % 100 == 0) {
-                // std::cout << "." << std::flush;
-            // }
-        // }
-
-        // time_point<Clock> end = Clock::now();
-
-        // milliseconds diff = duration_cast<milliseconds>(end - start);
-
-        // std::cout << "\nBenchmark done!\n";
-        // std::cout << "Sent " << MESSAGE_QUANTITY << " messages.\n";
-        // std::cout << "Duration: " << diff.count() << "ms" << std::endl;
-        // std::cout << "Failures: " << failCount << "\n";
-    // } else if (quickTest) {
-        // std::cout << "Quicktest!\n";
-
-        // id = robotID;
-        // robot_vel = 0;
-        // ang = 0;
-        // rot_cclockwise = false;
-        // w = 70;
-        // kick_force = 0;
-        // do_kick = false;
-        // chip = false;
-        // forced = false;
-        // dribble_cclockwise = false;
-        // dribble_vel = 0;
-
-        // ang = 0;
-
-        // auto forwardMsg = *createRobotPacket(
-                // id,
-                // robot_vel,
-                // ang,
-                // rot_cclockwise,
-                // w,
-                // kick_force,
-                // do_kick,
-                // chip,
-                // forced,
-                // dribble_cclockwise,
-                // dribble_vel
-                // );
-
-        // ang = 0;
-
-        // w = 40;
-
-        // auto backwardMsg = *createRobotPacket(
-                // id,
-                // robot_vel,
-                // ang,
-                // rot_cclockwise,
-                // w,
-                // kick_force,
-                // do_kick,
-                // chip,
-                // forced,
-                // dribble_cclockwise,
-                // dribble_vel
-                // );
-
-        // // int batchSize = std::stoi(get_safe_input("Batch size (100):", "100"));
-        // int const numBytes = 3;
-        // uint8_t ackCode[numBytes];
-
-        // // Forward
-        // std::cout << "Fast..." << std::flush;
-        // auto msg = forwardMsg;
-        // for (int i = 0; i < 0; ++i) {
-            // serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
-
-            // // TODO: @Hack base station crutches! Pakcet length should be smaller
-            // serialPort.write_some(boost::asio::buffer(msg.data(), 1));
-
-            // // boost::system::error_code err;
-            // // flush_serial_port(serialPort, flush_type::flush_send, err);
-
-            // // if (err != boost::system::errc::success) {
-                // // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
-            // // }
-
-            // serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
-
-            // ackCode[numBytes - 1] = 0;
-
-            // std::string returnMessage((char*) &ackCode[0]);
-
-            // if (returnMessage[1] == '0') {
-                // // failCount++;
-                // // std::cout << "X" << std::flush;
-            // } else {
-                // std::cout << "." << std::flush;
-            // }
-
-            // // if (i % 100 == 0) {
-                // // std::cout << "." << std::flush;
-            // // }
-        // }
-
-        // // Backward
-        // std::cout << "Slow..." << std::flush;
-        // msg = backwardMsg;
-        // for (int i = 1; i < 1000 + 1; ++i) {
-            // serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
-
-            // // TODO: @Hack base station crutches! Pakcet length should be smaller
-            // serialPort.write_some(boost::asio::buffer(msg.data(), 1));
-
-            // // boost::system::error_code err;
-            // // flush_serial_port(serialPort, flush_type::flush_send, err);
-
-            // // if (err != boost::system::errc::success) {
-                // // std::cout << "Error flushing! Code: " << err.value() << ", message: " << err.message() << "\n";
-            // // }
-
-            // serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
-
-            // ackCode[numBytes - 1] = 0;
-
-            // std::string returnMessage((char*) &ackCode[0]);
-
-            // if (returnMessage[1] == '0') {
-                // // failCount++;
-                // // std::cout << "X" << std::flush;
-            // } else {
-
-            // // if (i % 100 == 0) {
-                // std::cout << "." << std::flush;
-            // // }
-            // }
-        // }
-
-        // std::cout << "Quicktest done!\n";
-    // } else {
-        // ////////////////////////
-        // // Single packet test //
-        // ////////////////////////
-
-        // // if (!get_safe_input("Press enter to continue type something to cancel...").empty()) {
-        // //     std::cout << "Sending message canceled. Aborting.\n";
-        // //     return 0;
-        // // }
-
-        // bool keepGoing = true;
-
-        // // do {
-            // // std::cout << "Writing bytes to files... ";
-
-            // // serialPort.write_some(boost::asio::buffer(msg.data(), msg.size()));
-            // boost::asio::write(serialPort, boost::asio::buffer(msg.data(), msg.size()));
-            // // TODO: @Hack base station crutches! Pakcet length should be smaller
-            // // serialPort.write_some(boost::asio::buffer(msg.data(), 1));
-            // boost::asio::write(serialPort, boost::asio::buffer(msg.data(), 1));
-            // // TODO: @Hack base station crutches! Pakcet length should be smaller
-
-            // // std::cout << "Done.\n";
-
-
-            // // if (get_safe_input("Check for ACK (Y/n): ", "Y") != "n") {
-                // int const numBytes = 3;
-                // uint8_t ackCode[numBytes];
-                // // int receivedBytes = serialPort.read_some(boost::asio::buffer(ackCode, numBytes - 1));
-                // int receivedBytes = boost::asio::read(serialPort, boost::asio::buffer(ackCode, numBytes - 1));
-
-                // ackCode[numBytes - 1] = 0;
-
-                // // std::cout << "Received bytes: " << receivedBytes << "\n";
-
-                // // std::cout << "The byte: " << std::to_string(ackCode[0]) << "\n";
-                // // std::cout << "The byte: " << std::to_string(ackCode[1]) << "\n";
-
-                // std::string returnMessage((char*) &ackCode[0]);
-                // std::cout << "ACK: " << returnMessage << "\n";
-            // // }
-
-            // // keepGoing = get_safe_input("Send again (Y/n): ", "Y") != "n";
-        // // } while (keepGoing);
-    // }
-
-    
-
 
 	return 0;
 }

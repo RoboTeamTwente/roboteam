@@ -516,10 +516,8 @@ LowLevelRobotCommand applyAssignment(std::tuple<std::string, int> assignmentInfo
 } // anonymous namespace
 
 int main(const std::vector<std::string>& arguments) {
-    ////////////////////////
-    // Checking arguments //
-    ////////////////////////
-    
+    // TODO: Print help! And add (h)elp command
+
     if (arguments.size() < 2) {
         std::cout << "Too few arguments, please specify output file and robotID. Aborting.\n";
         return 1;

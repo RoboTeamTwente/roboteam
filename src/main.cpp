@@ -332,7 +332,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
 
     ros::Rate loop_rate(20);
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1/*0*/, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);

@@ -13,7 +13,7 @@ int getCSCode(double x, double y) {
     return code;
 }
 
-bool cohenSutherlandClip(roboteam_utils::Vector2& point0, roboteam_utils::Vector2& point1) {
+bool cohenSutherlandClip(Vector2& point0, Vector2& point1) {
     int code0 = getCSCode(point0.x, point0.y);
     int code1 = getCSCode(point1.x, point1.y);
     bool accept = false;
@@ -32,7 +32,7 @@ bool cohenSutherlandClip(roboteam_utils::Vector2& point0, roboteam_utils::Vector
         double m = (point1.y - point0.y) / (point1.x - point0.x);
         double x, y;
         int& temp = code0 == CSCode::INSIDE ? code1 : code0; // temp = code of the outside point
-        roboteam_utils::Vector2& point = temp == code0 ? point0 : point1;
+        Vector2& point = temp == code0 ? point0 : point1;
         if (temp & CSCode::TOP) {
             x = point.x + (Y_MAX - point.y) / m;
             y = Y_MAX;

@@ -1,6 +1,6 @@
 #include "roboteam_utils/Position.h"
 
-namespace roboteam_utils {
+namespace rtt {
 
 Position::~Position(){}
 

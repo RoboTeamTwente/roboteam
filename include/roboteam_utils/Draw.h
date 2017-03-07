@@ -16,10 +16,10 @@ class Draw {
 
 public:
     Draw();
-    void DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop);
-    void DrawLine(std::string name, std::vector<roboteam_utils::Vector2> points);
+    void DrawLine(std::string name, Vector2 start, Vector2 stop);
+    void DrawLine(std::string name, std::vector<Vector2> points);
     void RemoveLine(std::string name);
-    void DrawPoint(std::string name, roboteam_utils::Vector2 point);
+    void DrawPoint(std::string name, Vector2 point);
     void RemovePoint(std::string name);
     void SetColor(int r, int g, int b);
 

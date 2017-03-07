@@ -84,43 +84,4 @@ typename std::set<typename BiMap<T, U>::LeftPair, typename BiMap<T, U>::LeftComp
     return leftSet.cend();
 }
 
-/*
-template<typename T, typename U>
-BiMap<T, U>::Iterator::Iterator() {
-    it = leftSet.begin();
-}
-
-template<typename T, typename U>
-BiMap<T, U>::Iterator::Iterator(const Iterator& other) {
-    it = other.it;
-}
-
-template<typename T, typename U>
-typename BiMap<T, U>::Iterator& BiMap<T, U>::Iterator::operator=(const Iterator& other) {
-    it = other.it;
-    return *this;
-}
-    
-template<typename T, typename U>
-bool BiMap<T, U>::Iterator::operator==(const Iterator& other) const {
-    return it == other.it;
-}
-    
-template<typename T, typename U>
-bool BiMap<T, U>::Iterator::operator!=(const Iterator& other) const {
-    return it != other.it;
-}
-
-template<typename T, typename U>
-typename BiMap<T, U>::Iterator::Pair& BiMap<T, U>::Iterator::operator*() {
-    auto ptr = *it;
-    Pair res(ptr.first, *ptr.second);
-    return res;
-}
-
-template<typename T, typename U>
-typename BiMap<T, U>::Iterator::Pair* BiMap<T, U>::Iterator::operator->() {
-    return nullptr;
-}
-*/
 }

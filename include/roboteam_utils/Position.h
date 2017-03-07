@@ -3,7 +3,7 @@
 
 #include "roboteam_utils/Vector2.h"
 
-namespace roboteam_utils
+namespace rtt
 {
 
 class Position

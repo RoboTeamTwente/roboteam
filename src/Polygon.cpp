@@ -3,7 +3,7 @@
 #include <queue>
 #include <boost/intrusive/sg_set.hpp>
 
-namespace roboteam_utils {
+namespace rtt {
     
 bool Polygon::add_vertex(const Vector2& vec) {
     if (sealed || !can_add(vec)) {

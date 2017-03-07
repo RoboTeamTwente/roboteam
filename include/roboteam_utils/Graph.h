@@ -171,7 +171,7 @@ public:
         return ss.str();
     }
     
-    static std::string to_DOT(Graph<roboteam_utils::Vector2> graph) {
+    static std::string to_DOT(Graph<Vector2> graph) {
         std::stringstream ss;
         ss << "strict digraph {\n";
         for (unsigned int i = 0; i < graph.size; i++) {

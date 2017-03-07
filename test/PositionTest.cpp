@@ -1,7 +1,7 @@
 #include "roboteam_utils/Position.h"
 #include <gtest/gtest.h>
 
-using namespace roboteam_utils;
+using namespace rtt;
 
 //#define ASSERT_ALL_EQ(p, x, y, rot) ASSERT_DOUBLE_EQ(p.x, x); \
 //                                    ASSERT_DOUBLE_EQ(p.y, y); \

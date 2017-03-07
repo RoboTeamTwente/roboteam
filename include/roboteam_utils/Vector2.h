@@ -5,7 +5,7 @@
 
 #include "roboteam_msgs/Vector2f.h"
 
-namespace roboteam_utils
+namespace rtt
 {
 
 class Vector2
@@ -49,6 +49,6 @@ constexpr Vector2 ZERO_VECTOR = Vector2();
 
 }
 
-std::ostream& operator<<(std::ostream& os, const roboteam_utils::Vector2& vec);
+std::ostream& operator<<(std::ostream& os, const Vector2& vec);
 
 #endif // VECTOR2_H

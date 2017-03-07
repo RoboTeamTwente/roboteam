@@ -10,9 +10,9 @@ double toDegrees(double radians);
 double toRadians(double degrees);
 
 double cleanAngle(double angle);
-bool isPointInCircle(roboteam_utils::Vector2 center, double radius, roboteam_utils::Vector2 point);
-roboteam_utils::Vector2 worldToRobotFrame(roboteam_utils::Vector2 requiredv, double rotation);
-double computeAngle(roboteam_utils::Vector2 robotPos, roboteam_utils::Vector2 faceTowardsPos);
+bool isPointInCircle(Vector2 center, double radius, Vector2 point);
+Vector2 worldToRobotFrame(Vector2 requiredv, double rotation);
+double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos);
 bool isBetweenAngles(double a1, double a2, double testAngle);
 double getClockwiseAngle(double a1, double a2);
 double getCounterClockwiseAngle(double a1, double a2);

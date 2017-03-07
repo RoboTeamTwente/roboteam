@@ -21,7 +21,7 @@ typedef enum CSCode {
 
 int getCSCode(double x, double y);
 
-bool cohenSutherlandClip(roboteam_utils::Vector2& point0, roboteam_utils::Vector2& point1);
+bool cohenSutherlandClip(Vector2& point0, Vector2& point1);
  
 }
 

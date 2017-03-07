@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
-using namespace roboteam_utils;
+using namespace rtt;
 
 TEST(VectorTests, instantiation) {
     Vector2 def;

@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace roboteam_utils {
+namespace rtt {
 
     
 double Vector2::dot(const Vector2& other) const {

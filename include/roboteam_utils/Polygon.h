@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace roboteam_utils {
+namespace rtt {
     
 class Polygon {
     public:

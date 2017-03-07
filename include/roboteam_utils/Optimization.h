@@ -18,25 +18,25 @@ double optimizeLinear(
     std::function<double(double)> scoreFunc     // The scoring function. Higher values are better.
 );
 
-roboteam_utils::Vector2 optimizeVector(
-    const roboteam_utils::Vector2& center,
+Vector2 optimizeVector(
+    const Vector2& center,
     double minXDev,
     double maxXDev,
     double minYDev,
     double maxYDev,
     double step,
     int refinement,
-    std::function<double(const roboteam_utils::Vector2&)> scoreFunc
+    std::function<double(const Vector2&)> scoreFunc
 );
 
-roboteam_utils::Vector2 sampleForVector(
-    const roboteam_utils::Vector2& center,
+Vector2 sampleForVector(
+    const Vector2& center,
     double minXDev,
     double maxXDev,
     double minYDev,
     double maxYDev,
     int samples,
-    std::function<double(const roboteam_utils::Vector2&)> scoreFunc
+    std::function<double(const Vector2&)> scoreFunc
 );
 
 }

@@ -3,6 +3,7 @@
 #include <set>
 #include <utility>
 #include <functional>
+#include <type_traits>
 
 namespace rtt {
     
@@ -24,24 +25,6 @@ class BiMap {
     T* lookupRight(const U& key) const;
     
     unsigned int size() const;
-    /*
-    class Iterator {
-        public:
-        typedef std::pair<T, U> Pair;
-        Iterator();
-        Iterator(const Iterator& other);
-        Iterator& operator=(const Iterator& other);
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
-        Pair& operator*();
-        Pair* operator->();
-        Iterator& operator++();
-        Iterator operator++(int);
-        
-        private:
-        typename std::set<LeftPair>::iterator it;
-    };
-    */
     
     typedef struct LeftComp : std::binary_function<LeftPair, LeftPair, bool> {
         bool operator()(const LeftPair& a, const LeftPair& b) const;

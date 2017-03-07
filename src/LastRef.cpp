@@ -17,4 +17,13 @@ void LastRef::set(roboteam_msgs::RefereeData refCommand) {
     LastRef::lastRef = refCommand;
 }
 
+const std::vector<RefStateTransitionFunction> LastRef::transitions = {
+    //TODO, for example:
+    [](RefState current, const roboteam_msgs::World& world) {
+        return current == RefState::INDIRECT_FREE_THEM && (int) world.us[0].pos.x % 2
+                ? boost::optional<RefState>(RefState::NORMAL_PLAY)
+                : boost::optional<RefState>();
+    }
+};
+
 }

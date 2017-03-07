@@ -9,8 +9,6 @@
 
 namespace rtt {
 
-using namespace roboteam_utils;
-
 void LastWorld::callback_world_state(const roboteam_msgs::WorldConstPtr& world) {
     LastWorld::set(*world);
     LastWorld::received_first_world = true;

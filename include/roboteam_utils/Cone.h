@@ -10,25 +10,25 @@ namespace rtt {
 
 class Cone {
 public:
-	Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 centerPoint, double distance);
-	Cone(roboteam_utils::Vector2 startPoint, roboteam_utils::Vector2 side1, roboteam_utils::Vector2 side2);
-	bool IsWithinCone(roboteam_utils::Vector2 point);
-	bool IsWithinCone(roboteam_utils::Vector2 point, double marginRadius);
-	bool IsWithinField(roboteam_utils::Vector2 point);
-	roboteam_utils::Vector2 ClosestPointOnSide(roboteam_utils::Vector2 point, roboteam_utils::Vector2 closeTo);
-	roboteam_utils::Vector2 SecondClosestPointOnSide(roboteam_utils::Vector2 point);
-	roboteam_utils::Vector2 ClosestPointOnSideTwoCones(Cone otherCone, roboteam_utils::Vector2 point, roboteam_utils::Vector2 closeTo, Draw drawer, std::vector<std::string> names);
-	static roboteam_utils::Vector2 LineIntersection(roboteam_utils::Vector2 line1Start, roboteam_utils::Vector2 line1Dir, roboteam_utils::Vector2 line2Start, roboteam_utils::Vector2 line2Dir);
+	Cone(Vector2 startPoint, Vector2 centerPoint, double distance);
+	Cone(Vector2 startPoint, Vector2 side1, Vector2 side2);
+	bool IsWithinCone(Vector2 point);
+	bool IsWithinCone(Vector2 point, double marginRadius);
+	bool IsWithinField(Vector2 point);
+	Vector2 ClosestPointOnSide(Vector2 point, Vector2 closeTo);
+	Vector2 SecondClosestPointOnSide(Vector2 point);
+	Vector2 ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo, Draw drawer, std::vector<std::string> names);
+	static Vector2 LineIntersection(Vector2 line1Start, Vector2 line1Dir, Vector2 line2Start, Vector2 line2Dir);
 	bool DoConesOverlap(Cone otherCone);
 	Cone MergeCones(Cone otherCone);
 	~Cone();
 
-	roboteam_utils::Vector2 start;
-	roboteam_utils::Vector2 center;
+	Vector2 start;
+	Vector2 center;
 	double radius;
 	double angle;
-	roboteam_utils::Vector2 side1;
-	roboteam_utils::Vector2 side2;
+	Vector2 side1;
+	Vector2 side2;
 private:
 	// Draw drawer;
 };

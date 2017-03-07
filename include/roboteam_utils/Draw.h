@@ -34,6 +34,7 @@ public:
      * \brief Creates the point and line publishers needed for drawing.
      */
     Draw();
+<<<<<<< HEAD
     /**
      * \brief Draws a single line.
      * \param name The unique name for this line.
@@ -67,6 +68,14 @@ public:
      * \brief Change the color for future draw commands.
      */
     void setColor(int r, int g, int b);
+=======
+    void DrawLine(std::string name, Vector2 start, Vector2 stop);
+    void DrawLine(std::string name, std::vector<Vector2> points);
+    void RemoveLine(std::string name);
+    void DrawPoint(std::string name, Vector2 point);
+    void RemovePoint(std::string name);
+    void SetColor(int r, int g, int b);
+>>>>>>> 2f7c666551686d295aa62055d35f0ccabac87e19
 
 private:
     ros::NodeHandle n;

@@ -32,27 +32,27 @@ double optimizeLinear(double from, double to, double step, int refinement, std::
     }
 }
 
-roboteam_utils::Vector2 optimizeVector(
-    const roboteam_utils::Vector2& center,
+Vector2 optimizeVector(
+    const Vector2& center,
     double minXDev,
     double maxXDev,
     double minYDev,
     double maxYDev,
     double step,
     int refinement,
-    std::function<double(const roboteam_utils::Vector2&)> scoreFunc)
+    std::function<double(const Vector2&)> scoreFunc)
 {
-    return roboteam_utils::Vector2(); // TODO
+    return Vector2(); // TODO
 }
 
-roboteam_utils::Vector2 sampleForVector(
-    const roboteam_utils::Vector2& center,
+Vector2 sampleForVector(
+    const Vector2& center,
     double minXDev,
     double maxXDev,
     double minYDev,
     double maxYDev,
     int samples,
-    std::function<double(const roboteam_utils::Vector2&)> scoreFunc)
+    std::function<double(const Vector2&)> scoreFunc)
 {
     static std::mt19937 rnd;
     double bestScore = NAN;
@@ -61,11 +61,11 @@ roboteam_utils::Vector2 sampleForVector(
     double maxX = center.x + maxXDev;
     double maxY = center.y + maxYDev;
     
-    roboteam_utils::Vector2 bestVec;
+    Vector2 bestVec;
     for (int i = 0; i < samples; i++) {
         double x = minX + (maxX - minX) * rnd();
         double y = minY + (maxY - minY) * rnd();
-        roboteam_utils::Vector2 vec(x, y);
+        Vector2 vec(x, y);
         double score = scoreFunc(vec);
         if (score > bestScore) {
             bestScore = score;

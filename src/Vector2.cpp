@@ -70,7 +70,7 @@ Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& 
     double angle = this->angle() - vectorToPoint.angle();
     double projectionLength = vectorToPoint.length() * cos(angle);
 
-    roboteam_utils::Vector2 closestPoint;
+    Vector2 closestPoint;
     if (projectionLength > this->length()) {
         closestPoint = *this + startPoint;
     } else if (projectionLength < 0) {
@@ -130,6 +130,6 @@ std::ostream& Vector2::write(std::ostream& os) const {
 
 }
 
-std::ostream& operator<<(std::ostream& os, const roboteam_utils::Vector2& vec) {
+std::ostream& operator<<(std::ostream& os, const rtt::Vector2& vec) {
     return vec.write(os);
 }

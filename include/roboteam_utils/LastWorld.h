@@ -21,8 +21,6 @@ ROS_DECLARE_MESSAGE(GeometryData);
 
 namespace rtt {
 
-using namespace roboteam_utils;
-
 class LastWorld {
     public:
     static void callback_world_state(const roboteam_msgs::WorldConstPtr& world);

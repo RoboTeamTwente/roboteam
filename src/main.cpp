@@ -58,7 +58,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     	command->set_kickspeedx(0);
     }
     if(_msg->chipper){
-        roboteam_utils::Vector2 vel = roboteam_utils::Vector2(_msg->chipper_vel, 0);
+        rtt::Vector2 vel = rtt::Vector2(_msg->chipper_vel, 0);
         vel = vel.rotate(M_PI/4); // 45 degrees up.
 
         command->set_kickspeedx(vel.x);

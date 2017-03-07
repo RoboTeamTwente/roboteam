@@ -72,7 +72,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     //////////////////////////////
     // Calculate robot velocity //
     //////////////////////////////
-    roboteam_utils::Vector2 velocityVec(command.x_vel, command.y_vel);
+    Vector2 velocityVec(command.x_vel, command.y_vel);
 
     int robot_vel = velocityVec.length() * 1000;
     if (robot_vel > PACKET_MAX_ROBOT_VEL) {

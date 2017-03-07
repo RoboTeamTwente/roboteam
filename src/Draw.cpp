@@ -11,7 +11,7 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::DrawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop) {
+void Draw::drawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     roboteam_msgs::DebugLine line;
     line.name = name;
@@ -29,7 +29,7 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::DrawLine(std::string name, std::vector<roboteam_utils::Vector2> points) {
+void Draw::drawLine(std::string name, std::vector<roboteam_utils::Vector2> points) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     roboteam_msgs::DebugLine line;
     line.name = name;
@@ -44,7 +44,7 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::RemoveLine(std::string name) {
+void Draw::demoveLine(std::string name) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     roboteam_msgs::DebugLine Line;
     Line.name = name;
@@ -53,7 +53,7 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::DrawPoint(std::string name, roboteam_utils::Vector2 point) {
+void Draw::drawPoint(std::string name, roboteam_utils::Vector2 point) {
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
         roboteam_msgs::DebugPoint position;
         position.name = name;
@@ -64,7 +64,7 @@ void Draw::DrawPoint(std::string name, roboteam_utils::Vector2 point) {
     }
 }
 
-void Draw::RemovePoint(std::string name) {
+void Draw::demovePoint(std::string name) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     roboteam_msgs::DebugPoint position;
     position.name = name;
@@ -73,7 +73,7 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
-void Draw::SetColor(int r, int g, int b) {
+void Draw::setColor(int r, int g, int b) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     color.r = r;
     color.g = g;

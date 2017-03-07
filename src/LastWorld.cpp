@@ -64,17 +64,11 @@ Vector2 LastWorld::predictBallPos(double t) {
 }
 
 Vector2 LastWorld::get_our_goal_center() {
-    std::string our_side;
-    get_PARAM_OUR_SIDE(our_side, false);
-    if (our_side == "left") {
-        return Vector2(field.field_length / -2, 0);
-    } else {
-        return Vector2(field.field_length / 2, 0);
-    }
+    return Vector2(field.field_length / -2, 0);
 }
 
 Vector2 LastWorld::get_their_goal_center() {
-    return get_our_goal_center() * -1;
+    return Vector2(field.field_length / 2, 0);
 }
 
 roboteam_msgs::World LastWorld::lastWorld;

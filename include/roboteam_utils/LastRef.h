@@ -11,6 +11,12 @@
 
 namespace rtt {
 
+/**
+ * /enum RefState
+ * /brief Used to hold the referee state.
+ *
+ * A different entity from the RefState used in the ros messages.
+ */
 enum class RefState {
     HALT = 0,
     STOP,
@@ -35,9 +41,17 @@ enum class RefState {
 
 typedef std::function<boost::optional<RefState>(RefState, const roboteam_msgs::World&)> RefStateTransitionFunction;
 
+/**
+ * \class LastRef
+ * \brief Utility class to keep the last received referee state.
+ */
 class LastRef {
     public:
     static roboteam_msgs::RefereeData get();
+    /**
+     * \brief Sets the refstate.
+     *        Only to be used when a new refstate has been received.
+     */
     static void set(roboteam_msgs::RefereeData refCommand);
 
     private:

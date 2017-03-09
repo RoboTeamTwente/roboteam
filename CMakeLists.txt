@@ -101,6 +101,17 @@ add_dependencies(system_test
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     )
 
+add_executable(barrage
+    src/barrage.cpp
+    )
+target_link_libraries(barrage
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(barrage
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
 catkin_add_gtest(robothub_test
     test/main.cpp
     test/packing_test.cpp

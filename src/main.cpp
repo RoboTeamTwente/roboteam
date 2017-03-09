@@ -338,6 +338,8 @@ int main(int argc, char *argv[]) {
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
     
     while (ros::ok()) {
+        // std::cout << "----- DOING A CYCLE! -----\n";
+
         loop_rate.sleep();
         ros::spinOnce();
 

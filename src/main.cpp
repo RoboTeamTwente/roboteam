@@ -7,6 +7,7 @@
 #include <ros/ros.h>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_utils/Vector2.h"
@@ -142,59 +143,12 @@ bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
 
+int acks = 0;
+int nacks = 0;
+
 } // anonymous namespace
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
-    // ROS_INFO("Send serial command");
-    std::cout << "[RobotHub] Sending to robot " << _msg->id;
-
-    // int id;
-    // int robot_vel;
-    // int ang;
-    // bool rot_cclockwise;
-    // int w;
-    // uint8_t kick_force;
-    // bool do_kick;
-    // bool chip;
-    // bool forced;
-    // bool dribble_cclockwise;
-    // uint8_t dribble_vel;
-
-    // id = 7;
-    // robot_vel = 2000;
-    // ang = 300;
-    // rot_cclockwise = true;
-    // w = 1000;
-    // kick_force = 200;
-    // do_kick = true;
-    // chip = false;
-    // forced = true;
-    // dribble_cclockwise = true;
-    // dribble_vel = 5;
-
-    // auto possibleMsg = rtt::createRobotPacket(
-    //         id,
-    //         robot_vel,
-    //         ang,
-    //         rot_cclockwise,
-    //         w,
-    //         kick_force,
-    //         do_kick,
-    //         chip,
-    //         forced,
-    //         dribble_cclockwise,
-    //         dribble_vel
-    //         );
-
-    // if (!possibleMsg) {
-    //     std::cout << "An error occurred while creating the message. Please look at the constraints of createRobotPacket(). Aborting.";
-    //     // return 1;
-    //     return;
-    // }
-
-
-
-
     if (!serialPortOpen) {
         // Open serial port
         boost::system::error_code errorCode;
@@ -209,23 +163,15 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         }
     } 
 
-
     // Create message
     if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
-
-    // if ((bool) possibleMsg) {
-
         // Success!
         auto bytes = *bytesOpt;
+
         // Write message to it
         serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
         // TODO: @Hack Crutches! Packet length should be 7!
         serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
-        
-        // Print the packet as binary - should not be needed
-        // for (const auto& byte : bytes) {
-            // std::cout << "\t" << rtt::byteToBinary(byte) << "\t" << std::to_string(byte) << "\n";
-        // }
         
         // Listen for ack
         // CAREFUL! The first ascii character is the robot ID
@@ -234,29 +180,31 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        uint8_t ackCode[3];
+        uint8_t ackCode[3] = {};
         // TODO: @Incomplete ack format is undefined/unstable! Guessing it is 2 bytes!
         serialPort.read_some(boost::asio::buffer(ackCode, 2));
 
         // If the second character in the response is an ascii 0 character,
         // it means sending the packet failed.
         if (ackCode[1] == '0') {
-            std::cout << ", failed \n";
+            nacks++;
         } else if (ackCode[1] == '1') {
-            std::cout << ", succeeded \n";
+            acks++;
         } else {
-            std::cout << " strange result: "
+            std::cout << "strange result: "
                       << (int) ackCode[1] 
                       << "\n";
+        }
+
+        int const MAX_NACKS = 20;
+        if (nacks > MAX_NACKS) {
+            std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
         // block ros::spin()
         // Altough it is pretty fast now at 1 packet per ms.
         // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
-        
-        // We're done
-
     } else {
         // Oh shit.
         std::cout << " Could not turn command into packet!\n";
@@ -336,6 +284,11 @@ int main(int argc, char *argv[]) {
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
+
+    using namespace std;
+    using namespace std::chrono; 
+    
+    high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
     
     while (ros::ok()) {
         // std::cout << "----- DOING A CYCLE! -----\n";
@@ -343,10 +296,11 @@ int main(int argc, char *argv[]) {
         loop_rate.sleep();
         ros::spinOnce();
 
+        auto mode = getMode();
+
         // Stop all robots if needed!
         if (halt) {
             roboteam_msgs::RobotCommand::Ptr command(new roboteam_msgs::RobotCommand());
-            auto mode = getMode();
             for (int i = 0; i < 16; ++i) {
                 command->id = i;
                 if (mode == Mode::GRSIM) {
@@ -358,6 +312,23 @@ int main(int argc, char *argv[]) {
                 } else { // Default to grsim
                     sendGRsimCommands(command);
                 }
+            }
+        }
+        
+        if (mode == Mode::SERIAL) {
+            auto timeDiff = high_resolution_clock::now() - lastStatistics;
+
+            if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+                lastStatistics = high_resolution_clock::now();
+
+                auto total = acks + nacks;
+                auto ackPercent = static_cast<int>((acks / (double) total) * 100);
+                auto nackPercent = static_cast<int>((nacks / (double) total) * 100);
+
+                std::cout << "-----------------------------------\n";
+                std::cout << "Sent messages the past second: " << total << "\n";
+                std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
+                std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
             }
         }
     }

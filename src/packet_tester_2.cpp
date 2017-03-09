@@ -219,6 +219,32 @@ std::map<std::string, LowLevelRobotCommand> sampleCommands = {
         false, // dribble_cclockwise 
         0      // dribble_vel 
     }},
+    {"rc", {    // right
+        7,     // id 
+        0,  // robot_vel 
+        0,     // ang 
+        false, // rot_cclockwise 
+        100,     // w 
+        0,     // punt_power
+        false, // do_kick 
+        false, // do_chip 
+        false, // forced 
+        false, // dribble_cclockwise 
+        0      // dribble_vel 
+    }},
+    {"rcc", {    // right
+        7,     // id 
+        0,  // robot_vel 
+        0,     // ang 
+        true, // rot_cclockwise 
+        100,     // w 
+        0,     // punt_power
+        false, // do_kick 
+        false, // do_chip 
+        false, // forced 
+        false, // dribble_cclockwise 
+        0      // dribble_vel 
+    }},
     {"s", {    // stop
         7,     // id 
         0,     // robot_vel 
@@ -317,6 +343,8 @@ std::string sampleCommandsText = R"--(Sample commands:
     backward (b)
     left (l)
     right (r)
+    clockwise (rc)
+    cclockwise (rcc)
     stop (s)
     kick (k)
     dribble on (d1/d4/d7)
@@ -332,6 +360,10 @@ b::optional<LowLevelRobotCommand> trySampleCommand(std::string instruction) {
         instruction = "d4";
     } else if (instruction == "dribble off") {
         instruction = "d0";
+    } else if (instruction == "clockwise" || instruction == "rc") {
+        instruction = "rc";
+    } else if (instruction == "cclockwise" || instruction == "rcc") {
+        instruction = "rcc";
     } else if (instruction[0] != 'd') {
         instruction = instruction.substr(0, 1);
     }

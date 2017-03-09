@@ -189,8 +189,6 @@ int main(const std::vector<std::string>& arguments) {
     ////////////////////////
     // Checking arguments //
     ////////////////////////
-
-
     
     if (arguments.size() < 2) {
         std::cout << "Too few arguments, please specify output file and robotID. Aborting.\n";
@@ -216,14 +214,6 @@ int main(const std::vector<std::string>& arguments) {
     /////////////////////
     // Creating packet //
     /////////////////////
-
-
-    
-
-
-    
-
-
 
     auto packetType = get_safe_input(R"--(Packet type options:
     EXAMPLE

@@ -5,67 +5,55 @@ namespace rtt {
 const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
 
 Draw::Draw() {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1000);
-    debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
-}
-}
-
-<<<<<<< HEAD
-void Draw::drawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop) {
-=======
-void Draw::DrawLine(std::string name, Vector2 start, Vector2 stop) {
->>>>>>> 2f7c666551686d295aa62055d35f0ccabac87e19
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine line;
-    line.name = name;
-    line.remove = false;
-    roboteam_msgs::Vector2f startLine;
-    startLine.x = start.x;
-    startLine.y = start.y;
-    roboteam_msgs::Vector2f stopLine;
-    stopLine.x = stop.x + start.x;
-    stopLine.y = stop.y + start.y;
-    line.points.push_back(startLine);
-    line.points.push_back(stopLine);
-    line.color = color;
-    debugPub.publish(line);
-}
-}
-
-<<<<<<< HEAD
-void Draw::drawLine(std::string name, std::vector<roboteam_utils::Vector2> points) {
-=======
-void Draw::DrawLine(std::string name, std::vector<Vector2> points) {
->>>>>>> 2f7c666551686d295aa62055d35f0ccabac87e19
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine line;
-    line.name = name;
-    line.remove = false;
-
-    for (auto& point : points) {
-        roboteam_msgs::Vector2f pointMsg(point);
-        line.points.push_back(pointMsg);
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1000);
+        debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
     }
-
-    debugPub.publish(line);
-}
 }
 
-void Draw::demoveLine(std::string name) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine Line;
-    Line.name = name;
-    Line.remove = true;
-    debugPub.publish(Line);
-}
+void Draw::DrawLine(std::string name, Vector2 start, Vector2 stop) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine line;
+        line.name = name;
+        line.remove = false;
+        roboteam_msgs::Vector2f startLine;
+        startLine.x = start.x;
+        startLine.y = start.y;
+        roboteam_msgs::Vector2f stopLine;
+        stopLine.x = stop.x + start.x;
+        stopLine.y = stop.y + start.y;
+        line.points.push_back(startLine);
+        line.points.push_back(stopLine);
+        line.color = color;
+        debugPub.publish(line);
+    }
 }
 
-<<<<<<< HEAD
-void Draw::drawPoint(std::string name, roboteam_utils::Vector2 point) {
-=======
+void Draw::DrawLine(std::string name, std::vector<Vector2> points) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine line;
+        line.name = name;
+        line.remove = false;
+
+        for (auto& point : points) {
+            roboteam_msgs::Vector2f pointMsg(point);
+            line.points.push_back(pointMsg);
+        }
+
+        debugPub.publish(line);
+    }
+}
+
+void Draw::RemoveLine(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine Line;
+        Line.name = name;
+        Line.remove = true;
+        debugPub.publish(Line);
+    }
+}
+
 void Draw::DrawPoint(std::string name, Vector2 point) {
->>>>>>> 2f7c666551686d295aa62055d35f0ccabac87e19
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
         roboteam_msgs::DebugPoint position;
         position.name = name;
@@ -76,21 +64,21 @@ void Draw::DrawPoint(std::string name, Vector2 point) {
     }
 }
 
-void Draw::demovePoint(std::string name) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugPoint position;
-    position.name = name;
-    position.remove = true;
-    debugPubPoint.publish(position);
-}
+void Draw::RemovePoint(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugPoint position;
+        position.name = name;
+        position.remove = true;
+        debugPubPoint.publish(position);
+    }
 }
 
-void Draw::setColor(int r, int g, int b) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    color.r = r;
-    color.g = g;
-    color.b = b;
-}
+void Draw::SetColor(int r, int g, int b) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        color.r = r;
+        color.g = g;
+        color.b = b;
+    }
 }
 
 } // rtt

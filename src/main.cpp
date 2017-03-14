@@ -277,10 +277,19 @@ int main(int argc, char *argv[]) {
     } else if (ros::param::has("serialOut")) {
         ros::param::get("serialOut", SERIAL_FILE_PATH);
     }
-    ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
 
-    ros::Rate loop_rate(20);
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommand);
+    auto mode = getMode();
+    if (mode == Mode::SERIAL) {
+        ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
+    }
+
+    int roleHz = 20;
+    ros::param::get("role_iterations_per_second", roleHz);
+    ros::Rate loop_rate(roleHz);
+
+    std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
+
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
@@ -296,7 +305,7 @@ int main(int argc, char *argv[]) {
         loop_rate.sleep();
         ros::spinOnce();
 
-        auto mode = getMode();
+        mode = getMode();
 
         // Stop all robots if needed!
         if (halt) {

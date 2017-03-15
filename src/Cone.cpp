@@ -129,7 +129,7 @@ Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 
 
 	std::vector<double> costs;
 	for (size_t i = 0; i < intersections.size(); i++) {
-		// drawer.DrawPoint(names.at(i), intersections.at(i));
+		// drawer.drawPoint(names.at(i), intersections.at(i));
 		double cost = (intersections.at(i) - closeTo).length()*1 + (intersections.at(i) - point).length()*2;
 		costs.push_back(cost);
 	}

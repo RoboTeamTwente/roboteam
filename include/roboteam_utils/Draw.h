@@ -34,20 +34,19 @@ public:
      * \brief Creates the point and line publishers needed for drawing.
      */
     Draw();
-<<<<<<< HEAD
     /**
      * \brief Draws a single line.
      * \param name The unique name for this line.
      * \param start The starting point of the line.
      * \param stop The end point of the line.
      */
-    void drawLine(std::string name, roboteam_utils::Vector2 start, roboteam_utils::Vector2 stop);
+    void drawLine(std::string name, Vector2 start, Vector2 stop);
     /**
      * \brief Draws a line consisting of multiple points.
      * \param name The unique name for this line.
      * \param points The points between which to draw the line, in the order supplied.
      */
-    void drawLine(std::string name, std::vector<roboteam_utils::Vector2> points);
+    void drawLine(std::string name, std::vector<Vector2> points);
     /**
      * \brief Removes the line with the supplied name.
      * \param name The name of the line to remove.
@@ -58,7 +57,7 @@ public:
      * \param name The unique name for this point.
      * \param point The location of the point.
      */
-    void drawPoint(std::string name, roboteam_utils::Vector2 point);
+    void drawPoint(std::string name, Vector2 point);
     /**
      * \brief Removes the point with the supplied name.
      * \param name The name of the line to remove.
@@ -68,14 +67,6 @@ public:
      * \brief Change the color for future draw commands.
      */
     void setColor(int r, int g, int b);
-=======
-    void DrawLine(std::string name, Vector2 start, Vector2 stop);
-    void DrawLine(std::string name, std::vector<Vector2> points);
-    void RemoveLine(std::string name);
-    void DrawPoint(std::string name, Vector2 point);
-    void RemovePoint(std::string name);
-    void SetColor(int r, int g, int b);
->>>>>>> 2f7c666551686d295aa62055d35f0ccabac87e19
 
 private:
     ros::NodeHandle n;

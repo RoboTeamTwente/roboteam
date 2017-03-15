@@ -5,11 +5,12 @@ namespace rtt {
 const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
 
 Draw::Draw() {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1000);
-    debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1000);
+        debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
+    }
 }
-}
+
 
 void Draw::drawLine(std::string name, Vector2 start, Vector2 stop) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
@@ -35,13 +36,13 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
     line.name = name;
     line.remove = false;
 
-    for (auto& point : points) {
-        roboteam_msgs::Vector2f pointMsg(point);
-        line.points.push_back(pointMsg);
-    }
+        for (auto& point : points) {
+            roboteam_msgs::Vector2f pointMsg(point);
+            line.points.push_back(pointMsg);
+        }
 
-    debugPub.publish(line);
-}
+        debugPub.publish(line);
+    }
 }
 
 void Draw::removeLine(std::string name) {
@@ -74,11 +75,11 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 
 void Draw::setColor(int r, int g, int b) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    color.r = r;
-    color.g = g;
-    color.b = b;
-}
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        color.r = r;
+        color.g = g;
+        color.b = b;
+    }
 }
 
 } // rtt

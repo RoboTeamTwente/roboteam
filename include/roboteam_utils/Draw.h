@@ -34,12 +34,14 @@ public:
      * \brief Creates the point and line publishers needed for drawing.
      */
     Draw();
+
     /**
      * \brief Draws a single line.
      * \param name The unique name for this line.
      * \param start The starting point of the line.
      * \param stop The end point of the line.
      */
+
     void drawLine(std::string name, Vector2 start, Vector2 stop);
     /**
      * \brief Draws a line consisting of multiple points.
@@ -67,7 +69,7 @@ public:
      * \brief Change the color for future draw commands.
      */
     void setColor(int r, int g, int b);
-
+    
 private:
     ros::NodeHandle n;
     ros::Publisher debugPub;

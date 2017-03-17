@@ -28,6 +28,7 @@ public:
     Vector2 project(const Vector2& line_a, const Vector2& line_b) const;
     bool real() const;
     Vector2 closestPointOnVector(const Vector2& startPoint, const Vector2& point) const;
+    Vector2 stretchToLength(double length) const;
 
 	bool operator==(const Vector2& other) const;
 	bool operator!=(const Vector2& other) const;

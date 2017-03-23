@@ -187,8 +187,12 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // If the second character in the response is an ascii 0 character,
         // it means sending the packet failed.
         if (ackCode[1] == '0') {
+            // successful_msg = false;
+            std::cout << " Nack!\n";
             nacks++;
         } else if (ackCode[1] == '1') {
+            // successful_msg = true;
+            std::cout << " Ack!\n";
             acks++;
         } else {
             std::cout << "strange result: "
@@ -198,7 +202,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
         int const MAX_NACKS = 20;
         if (nacks > MAX_NACKS) {
-            std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
+            // std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -209,6 +213,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
         // Oh shit.
         std::cout << " Could not turn command into packet!\n";
     }
+
+    
 }
 
 enum Mode {
@@ -309,9 +315,10 @@ int main(int argc, char *argv[]) {
 
         // Stop all robots if needed!
         if (halt) {
+            ROS_INFO("Sending halt commands!");
             roboteam_msgs::RobotCommand::Ptr command(new roboteam_msgs::RobotCommand());
-            for (int i = 0; i < 16; ++i) {
-                command->id = i;
+            // for (int i = 0; i < 16; ++i) {
+                command->id = 7;
                 if (mode == Mode::GRSIM) {
                     sendGRsimCommands(command);
                 } else if (mode == Mode::GAZEBO) {
@@ -321,7 +328,7 @@ int main(int argc, char *argv[]) {
                 } else { // Default to grsim
                     sendGRsimCommands(command);
                 }
-            }
+            // }
         }
         
         if (mode == Mode::SERIAL) {

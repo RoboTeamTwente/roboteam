@@ -20,8 +20,8 @@
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/normalize.h"
-#include "std_msgs/Float64MultiArray.h"
 #include "std_msgs/Bool.h"
+#include "std_msgs/Float64MultiArray.h"
 
 #include "roboteam_robothub/packing.h"
 
@@ -198,7 +198,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
         int const MAX_NACKS = 20;
         if (nacks > MAX_NACKS) {
-            std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
+            // std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -237,7 +237,7 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     // TODO: @Safety I would like to use getcached here, but I would also like to
     // have the safety of utils' constants.
 
-    bool normalizeField =  false;
+    bool normalizeField = false;
     ros::param::getCached("normalize_field", normalizeField);
 
     if (normalizeField) {
@@ -334,11 +334,15 @@ int main(int argc, char *argv[]) {
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
                 auto nackPercent = static_cast<int>((nacks / (double) total) * 100);
 
+                if (total == 0) {
+                    ackPercent = 0;
+                    nackPercent = 0;
+                }
+
                 std::cout << "-----------------------------------\n";
                 std::cout << "Sent messages the past second: " << total << "\n";
                 std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
-
                 acks=0;
                 nacks=0;
             }

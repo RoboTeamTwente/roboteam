@@ -157,9 +157,9 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     llcommand.dribble_cclockwise = dribble_cclockwise;
     llcommand.dribble_vel = dribble_vel;
 
-    std::cout << "[RobotHub] ------------------------------------------\n";
-    std::cout << "[RobotHub] About to send the following w to the motor: " << llcommand.w << "\n";
-    std::cout << "[RobotHub] rot_cclockwise: " << (int) llcommand.rot_cclockwise << "\n";
+    // std::cout << "[RobotHub] ------------------------------------------\n";
+    // std::cout << "[RobotHub] About to send the following w to the motor: " << llcommand.w << "\n";
+    // std::cout << "[RobotHub] rot_cclockwise: " << (int) llcommand.rot_cclockwise << "\n";
 
     return llcommand;
 }

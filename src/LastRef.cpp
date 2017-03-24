@@ -13,6 +13,10 @@ roboteam_msgs::RefereeData LastRef::get() {
     return LastRef::lastRef;
 }
 
+RefState LastRef::getState() {
+    return static_cast<RefState>(LastRef::lastRef.command.command);
+}
+
 void LastRef::set(roboteam_msgs::RefereeData refCommand) {
     LastRef::lastRef = refCommand;
 }

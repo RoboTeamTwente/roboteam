@@ -33,7 +33,7 @@ Cone::Cone(Vector2 startPoint, Vector2 side1, Vector2 side2) {
 	this->radius = (start+side1 - center).length();
 }
 
-bool Cone::IsWithinCone(Vector2 point) {
+bool Cone::IsWithinCone(Vector2 point) const {
 	// ROS_INFO_STREAM("point: " << point.x << " " << point.y);
 	Vector2 vectorToPoint = point-start;
 	Vector2 vectorToCenter = center-start;
@@ -47,7 +47,7 @@ bool Cone::IsWithinCone(Vector2 point) {
 	}
 }
 
-bool Cone::IsWithinCone(Vector2 point, double marginRadius) {
+bool Cone::IsWithinCone(Vector2 point, double marginRadius) const {
 	Vector2 vectorToPoint = point-start;
 	Vector2 vectorToCenter = center-start;
 	double extraAngle = atan(marginRadius / vectorToPoint.length());
@@ -60,7 +60,7 @@ bool Cone::IsWithinCone(Vector2 point, double marginRadius) {
 }
 
 
-bool Cone::IsWithinField(Vector2 point) {
+bool Cone::IsWithinField(Vector2 point) const {
  	roboteam_msgs::GeometryFieldSize field = LastWorld::get_field();
  	double fieldLimitX = field.field_length / 2.0;
 	double fieldLimitY = field.field_width / 2.0;
@@ -71,7 +71,7 @@ bool Cone::IsWithinField(Vector2 point) {
 	}
 }
 
-Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) {
+Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) const {
 	if (!IsWithinCone(point)) {
 		ROS_WARN("This point is not inside the cone");
 		return point;
@@ -93,7 +93,7 @@ Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) {
 	}
 }
 
-Vector2 Cone::SecondClosestPointOnSide(Vector2 point) {
+Vector2 Cone::SecondClosestPointOnSide(Vector2 point) const {
 	if (!IsWithinCone(point)) {
 		ROS_WARN("This point is not inside the cone");
 		return point;
@@ -114,7 +114,7 @@ Vector2 Cone::SecondClosestPointOnSide(Vector2 point) {
 	return point;
 }
 
-Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo, Draw drawer, std::vector<std::string> names) {
+Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo, Draw drawer, std::vector<std::string> names) const {
 	if (!(this->IsWithinCone(point) && otherCone.IsWithinCone(point))) {
 		ROS_WARN("This point is not inside either of the cones");
 		return point;
@@ -146,7 +146,7 @@ Vector2 Cone::LineIntersection(Vector2 line1Start, Vector2 line1Dir, Vector2 lin
 	return Vector2(intersectX, intersectY);
 }
 
-bool Cone::DoConesOverlap(Cone otherCone) {
+bool Cone::DoConesOverlap(Cone otherCone) const {
 	if (this->IsWithinCone(otherCone.side1 + otherCone.start) || this->IsWithinCone(otherCone.side2 + otherCone.start) || otherCone.IsWithinCone(side1 + start) || otherCone.IsWithinCone(side2 + start)) {
 		return true;
 	} else {
@@ -154,7 +154,7 @@ bool Cone::DoConesOverlap(Cone otherCone) {
 	}
 }
 
-Cone Cone::MergeCones(Cone otherCone) {
+Cone Cone::MergeCones(Cone otherCone) const {
 	if (!DoConesOverlap(otherCone)) {
 		ROS_WARN("No overlap");
 		return *this;

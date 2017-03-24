@@ -39,6 +39,8 @@ enum class RefState {
     NORMAL_PLAY
 };
 
+constexpr size_t REF_STATE_COUNT = static_cast<size_t>(RefState::NORMAL_PLAY) + 1;
+
 typedef std::function<boost::optional<RefState>(RefState, const roboteam_msgs::World&)> RefStateTransitionFunction;
 
 /**
@@ -53,6 +55,8 @@ class LastRef {
      *        Only to be used when a new refstate has been received.
      */
     static void set(roboteam_msgs::RefereeData refCommand);
+    
+    static RefState getState();
 
     private:
     static roboteam_msgs::RefereeData lastRef;

@@ -82,6 +82,12 @@ Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& 
     return closestPoint;
 }
 
+Vector2 Vector2::stretchToLength(double desiredLength) const {
+    double currentLength = length();
+    double frac = desiredLength / currentLength;
+    return Vector2(x*frac, y*frac);
+}
+
 bool Vector2::operator==(const Vector2& other) const {
     return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
 }

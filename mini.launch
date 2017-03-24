@@ -5,6 +5,9 @@
     <arg name="robot_output_target" default="grsim" />
     <param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
 
+    <arg name="should_normalize_field" default="true" />
+    <param name="normalize_field" type="boolean" value="$(arg should_normalize_field)" />
+
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
     <param name="serialOut" type="string" value="/dev/ttyACM0" />

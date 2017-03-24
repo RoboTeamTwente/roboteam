@@ -138,7 +138,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -283,7 +283,7 @@ int main(int argc, char *argv[]) {
         ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
     }
 
-    int roleHz = 20;
+    int roleHz = 5;
     ros::param::get("role_iterations_per_second", roleHz);
     ros::Rate loop_rate(roleHz);
 
@@ -338,6 +338,9 @@ int main(int argc, char *argv[]) {
                 std::cout << "Sent messages the past second: " << total << "\n";
                 std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
+
+                acks=0;
+                nacks=0;
             }
         }
     }

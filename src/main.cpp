@@ -138,7 +138,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -198,7 +198,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
         int const MAX_NACKS = 20;
         if (nacks > MAX_NACKS) {
-            std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
+            // std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -334,10 +334,18 @@ int main(int argc, char *argv[]) {
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
                 auto nackPercent = static_cast<int>((nacks / (double) total) * 100);
 
+                if (total == 0) {
+                    ackPercent = 0;
+                    nackPercent = 0;
+                }
+
                 std::cout << "-----------------------------------\n";
                 std::cout << "Sent messages the past second: " << total << "\n";
                 std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
+
+                acks = 0;
+                nacks = 0;
             }
         }
     }

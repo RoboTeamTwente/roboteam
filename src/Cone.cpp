@@ -76,7 +76,6 @@ Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) const {
 		ROS_WARN("This point is not inside the cone");
 		return point;
 	}
-
 	Vector2 option1 = side1.scale(10 / side1.length()).closestPointOnVector(start, point);
 	Vector2 option2 = side2.scale(10 / side2.length()).closestPointOnVector(start, point);
 
@@ -130,7 +129,8 @@ Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 
 	std::vector<double> costs;
 	for (size_t i = 0; i < intersections.size(); i++) {
 		// drawer.drawPoint(names.at(i), intersections.at(i));
-		double cost = (intersections.at(i) - closeTo).length()*1 + (intersections.at(i) - point).length()*2;
+		// double cost = (intersections.at(i) - closeTo).length()*1 + (intersections.at(i) - point).length()*2;
+		double cost = (intersections.at(i) - closeTo).length()*1;
 		costs.push_back(cost);
 	}
 

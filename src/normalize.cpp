@@ -153,8 +153,8 @@ FieldLineSegment rotateLine(FieldLineSegment& line) {
 FieldCircularArc rotateArc(FieldCircularArc& arc) {
     arc.center.x *= -1;
     arc.center.y *= -1;
-    arc.a1 = cleanAngle(arc.a1 + M_PI);
-    arc.a2 = cleanAngle(arc.a2 + M_PI);
+    arc.a1 = arc.a1 + M_PI;
+    arc.a2 = arc.a2 + M_PI;
 
     return arc;
 }

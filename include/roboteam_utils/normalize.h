@@ -22,7 +22,7 @@ RefereeData normalizeRefereeData(RefereeData& data);
 /**
  * Rotates a detectionframe message 180 degrees.
  */
-DetectionFrame rotateDetectionFrame(DetectionFrame& world);
+DetectionFrame rotateDetectionFrame(DetectionFrame const & world);
 
 /**
  * Rotates a detectionball message 180 degrees.

@@ -47,20 +47,22 @@ RefereeData normalizeRefereeData(RefereeData& data) {
     }
 }
 
-DetectionFrame rotateDetectionFrame(DetectionFrame& frame) {
-    for (auto& ball : frame.balls) {
+DetectionFrame rotateDetectionFrame(DetectionFrame const & frame) {
+    DetectionFrame newFrame = frame;
+
+    for (auto& ball : newFrame.balls) {
         ball = rotateBall(ball);
     }
 
-    for (auto& bot : frame.us) {
+    for (auto& bot : newFrame.us) {
         bot = rotateRobot(bot);
     }
 
-    for (auto& bot : frame.them) {
+    for (auto& bot : newFrame.them) {
         bot = rotateRobot(bot);
     }
 
-    return frame;
+    return newFrame;
 }
 
 DetectionBall rotateBall(DetectionBall& ball) {
@@ -169,18 +171,18 @@ RefereeData rotateRefereeData(RefereeData& data) {
 
 
 roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command) {
-    roboteam_msgs::RobotCommand newCommand;
+    roboteam_msgs::RobotCommand newCommand = command;
 
-    newCommand.id             = command.id;
-    newCommand.active         = command.active;
-    newCommand.w              = command.w;
-    newCommand.dribbler       = command.dribbler;
-    newCommand.kicker         = command.kicker;
-    newCommand.kicker_forced  = command.kicker_forced;
-    newCommand.kicker_vel     = command.kicker_vel;
-    newCommand.chipper        = command.chipper;
-    newCommand.chipper_forced = command.chipper_forced;
-    newCommand.chipper_vel    = command.chipper_vel;
+    // newCommand.id             = command.id;
+    // newCommand.active         = command.active;
+    // newCommand.w              = command.w;
+    // newCommand.dribbler       = command.dribbler;
+    // newCommand.kicker         = command.kicker;
+    // newCommand.kicker_forced  = command.kicker_forced;
+    // newCommand.kicker_vel     = command.kicker_vel;
+    // newCommand.chipper        = command.chipper;
+    // newCommand.chipper_forced = command.chipper_forced;
+    // newCommand.chipper_vel    = command.chipper_vel;
 
     newCommand.x_vel = -command.x_vel;
     newCommand.y_vel = -command.y_vel;

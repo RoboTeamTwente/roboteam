@@ -57,9 +57,11 @@ class LastRef {
     static void set(roboteam_msgs::RefereeData refCommand);
     
     static RefState getState();
+    static int getPreviousRefCommand();
 
     private:
     static roboteam_msgs::RefereeData lastRef;
+    static int previousRefCommand;
     static const std::vector<RefStateTransitionFunction> transitions;
 };
 

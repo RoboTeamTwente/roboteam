@@ -8,6 +8,7 @@
 namespace rtt {
 
 roboteam_msgs::RefereeData LastRef::lastRef;
+int LastRef::previousRefCommand = -1;
 
 roboteam_msgs::RefereeData LastRef::get() {
     return LastRef::lastRef;
@@ -18,6 +19,10 @@ RefState LastRef::getState() {
 }
 
 void LastRef::set(roboteam_msgs::RefereeData refCommand) {
+    if (refCommand.command.command != lastRef.command.command) {
+        previousRefCommand = lastRef.command.command;
+    }
+
     LastRef::lastRef = refCommand;
 }
 
@@ -29,5 +34,9 @@ const std::vector<RefStateTransitionFunction> LastRef::transitions = {
                 : boost::optional<RefState>();
     }
 };
+
+int LastRef::getPreviousRefCommand() {
+    return previousRefCommand;
+}
 
 }

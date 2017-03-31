@@ -20,8 +20,8 @@
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/normalize.h"
-#include "std_msgs/Float64MultiArray.h"
 #include "std_msgs/Bool.h"
+#include "std_msgs/Float64MultiArray.h"
 
 #include "roboteam_robothub/packing.h"
 
@@ -38,7 +38,7 @@ ros::Publisher pub;
 
 QUdpSocket udpsocket;
 
-void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
+void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 
@@ -50,7 +50,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
 
     // Initialize a grSim command (grSim is the robocup SSL simulator created by Parsians)
     grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
-    command->set_id(_msg->id);
+    command->set_id(_msg.id);
 
     // Fill the grSim command with the received values. Set either wheelspeed or robotspeed
     command->set_wheelsspeed(false);
@@ -58,18 +58,18 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     // command->set_wheel2(0.0);
     // command->set_wheel3(0.0);
     // command->set_wheel4(0.0);
-    command->set_veltangent(_msg->x_vel);
-    command->set_velnormal(_msg->y_vel);
-    command->set_velangular(_msg->w);
+    command->set_veltangent(_msg.x_vel);
+    command->set_velnormal(_msg.y_vel);
+    command->set_velangular(_msg.w);
 
-	if(_msg->kicker){
-    	command->set_kickspeedx(_msg->kicker_vel);
+	if(_msg.kicker){
+    	command->set_kickspeedx(_msg.kicker_vel);
     }
     else {
     	command->set_kickspeedx(0);
     }
-    if(_msg->chipper){
-        rtt::Vector2 vel = rtt::Vector2(_msg->chipper_vel, 0);
+    if(_msg.chipper){
+        rtt::Vector2 vel = rtt::Vector2(_msg.chipper_vel, 0);
         vel = vel.rotate(M_PI/4); // 45 degrees up.
 
         command->set_kickspeedx(vel.x);
@@ -79,7 +79,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     	command->set_kickspeedz(0);
     }
 
-    command->set_spinner(_msg->dribbler);
+    command->set_spinner(_msg.dribbler);
 
 	QByteArray dgram;
     dgram.resize(packet.ByteSize());
@@ -94,12 +94,12 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
 
-void sendGazeboCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
+void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO("received message for Gazebo!");
 
-    float x_vel = _msg->x_vel;
-    float y_vel = _msg->y_vel;
-    float w = _msg->w;
+    float x_vel = _msg.x_vel;
+    float y_vel = _msg.y_vel;
+    float w = _msg.w;
     float robot_radius = 0.09;
     float wheel_radius = 0.03;
     float theta1 = 0.25 * M_PI;
@@ -138,7 +138,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -148,7 +148,7 @@ int nacks = 0;
 
 } // anonymous namespace
 
-void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
+void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
     if (!serialPortOpen) {
         // Open serial port
         boost::system::error_code errorCode;
@@ -164,7 +164,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand::ConstPtr &_msg) {
     } 
 
     // Create message
-    if (auto bytesOpt = rtt::createRobotPacket(*_msg)) {
+    if (auto bytesOpt = rtt::createRobotPacket(_msg)) {
         // Success!
         auto bytes = *bytesOpt;
 
@@ -236,27 +236,39 @@ Mode getMode() {
 }
 
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
-    roboteam_msgs::RobotCommand command;
+    roboteam_msgs::RobotCommand command = *msg;
 
     if (halt) return;
 
-    // TODO: @Safety I would like to use getcached here, but I would also like to
-    // have the safety of utils' constants.
+    auto mode = getMode();
+    if (mode == Mode::GRSIM) {
+        sendGRsimCommands(command);
+    } else if (mode == Mode::GAZEBO) {
+        sendGazeboCommands(command);
+    } else if (mode == Mode::SERIAL) {
+        sendSerialCommands(command);
+    } else { // Default to grsim
+        sendGRsimCommands(command);
+    }
+}
 
-    bool normalizeField =  false;
-    ros::param::getCached("normalize_field", normalizeField);
+bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
+    return std::find(args.begin(), args.end(), arg) != args.end();
+}
 
-    if (normalizeField) {
-        std::string ourSide = "left";
-        ros::param::getCached("our_side", ourSide);
+void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCommand const>& msgEvent) {
 
-        if (ourSide == "right") {
-            command = rtt::rotateRobotCommand(*msg);
-        } else {
-            command = *msg;
-        }
+    auto const & publisherName = msgEvent.getPublisherName();
+    bool isYellow = publisherName.find("yellow") != std::string::npos;
+    std::string prefix;
+
+    auto msg = *msgEvent.getConstMessage();
+
+    if (isYellow) {
+        prefix = "/yellow";
     } else {
-        command = *msg;
+        msg.id += 3;
+        prefix = "/blue";
     }
 
     auto mode = getMode();
@@ -269,27 +281,48 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     } else { // Default to grsim
         sendGRsimCommands(msg);
     }
+
 }
+
+bool MERGING = false;
 
 } // anonymous namespace
 
 int main(int argc, char *argv[]) {
+    std::vector<std::string> args(argv, argv + argc);
+
+    if (hasArg(args, "--help") || hasArg(args, "-h")) {
+        std::cout << "--help or -h for help. --merge-mode to merge yellow and blue into robots 0-2 and 3-5 of the yellow team respectively.\n";
+        return 0;
+    }
+
+    MERGING = hasArg(args, "--merge-mode");
+
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
-    if (argc > 1) {
-        SERIAL_FILE_PATH = std::string(argv[1]);
-    } else if (ros::param::has("serialOut")) {
-        ros::param::get("serialOut", SERIAL_FILE_PATH);
-    }
+    // TODO: Do this with a proper flag
+    // if (argc > 1) {
+        // SERIAL_FILE_PATH = std::string(argv[1]);
+    // } else if (ros::param::has("serialOut")) {
+        // ros::param::get("serialOut", SERIAL_FILE_PATH);
+    // }
 
     auto mode = getMode();
     if (mode == Mode::SERIAL) {
         ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
     }
 
-    int roleHz = 20;
+    ros::Subscriber mergingRobotCommandsBlue;
+    ros::Subscriber mergingRobotCommandsYellow;
+
+    if (MERGING) {
+        mergingRobotCommandsBlue = n.subscribe("/blue/robotcommands", 1000, mergeAndProcessRobotCommand);
+        mergingRobotCommandsYellow = n.subscribe("/yellow/robotcommands", 1000, mergeAndProcessRobotCommand);
+    }
+
+    int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
     ros::Rate loop_rate(roleHz);
 
@@ -315,10 +348,10 @@ int main(int argc, char *argv[]) {
 
         // Stop all robots if needed!
         if (halt) {
-            ROS_INFO("Sending halt commands!");
-            roboteam_msgs::RobotCommand::Ptr command(new roboteam_msgs::RobotCommand());
-            // for (int i = 0; i < 16; ++i) {
-                command->id = 7;
+
+            roboteam_msgs::RobotCommand command;
+            for (int i = 0; i < 16; ++i) {
+                command.id = i;
                 if (mode == Mode::GRSIM) {
                     sendGRsimCommands(command);
                 } else if (mode == Mode::GAZEBO) {
@@ -341,10 +374,17 @@ int main(int argc, char *argv[]) {
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
                 auto nackPercent = static_cast<int>((nacks / (double) total) * 100);
 
+                if (total == 0) {
+                    ackPercent = 0;
+                    nackPercent = 0;
+                }
+
                 std::cout << "-----------------------------------\n";
                 std::cout << "Sent messages the past second: " << total << "\n";
                 std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
+                acks=0;
+                nacks=0;
             }
         }
     }

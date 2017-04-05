@@ -152,6 +152,7 @@ add_library(roboteam_utils
     src/TeamRobot.cpp
     src/Clip.cpp
     src/Optimization.cpp
+    src/RefLookup.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}

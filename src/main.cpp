@@ -138,7 +138,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
                 } else { // Default to grsim
                     sendGRsimCommands(command);
                 }
-            // }
+            }
         }
         
         if (mode == Mode::SERIAL) {

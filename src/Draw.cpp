@@ -30,6 +30,10 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 }
 
+void Draw::drawLineAbs(std::string name, Vector2 start, Vector2 stop) {
+    drawLine(name, start, stop - start);
+}
+
 void Draw::drawLine(std::string name, std::vector<Vector2> points) {
 if (RTT_ENABLE_DEBUG_GRAPHICS) {
     roboteam_msgs::DebugLine line;

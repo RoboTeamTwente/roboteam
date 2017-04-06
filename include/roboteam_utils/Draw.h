@@ -43,12 +43,14 @@ public:
      */
 
     void drawLine(std::string name, Vector2 start, Vector2 stop);
+    void drawLineAbs(std::string name, Vector2 start, Vector2 stop);
     /**
      * \brief Draws a line consisting of multiple points.
      * \param name The unique name for this line.
      * \param points The points between which to draw the line, in the order supplied.
      */
     void drawLine(std::string name, std::vector<Vector2> points);
+
     /**
      * \brief Removes the line with the supplied name.
      * \param name The name of the line to remove.

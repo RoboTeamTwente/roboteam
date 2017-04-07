@@ -138,7 +138,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
+std::string SERIAL_FILE_PATH = "/dev/rtt_basestation";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 10, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);

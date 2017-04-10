@@ -153,6 +153,7 @@ add_library(roboteam_utils
     src/Clip.cpp
     src/Optimization.cpp
     src/RefLookup.cpp
+    src/Arc.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -176,6 +177,7 @@ catkin_add_gtest(utils_test
     test/GraphTest.cpp
     test/OptimizationTest.cpp
     test/BiMapTest.cpp
+    test/ArcTest.cpp
     #test/normaliseTest.cpp
 )
 add_dependencies(utils_test

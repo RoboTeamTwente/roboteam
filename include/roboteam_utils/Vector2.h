@@ -12,9 +12,9 @@ class Vector2
 {
 public:
 	constexpr Vector2() : x(0), y(0) {}
-	Vector2(double x, double y) : x(x), y(y) {}
-	Vector2(const Vector2& copy) : x(copy.x), y(copy.y) {}
-    Vector2(const roboteam_msgs::Vector2f& msg) : Vector2(msg.x, msg.y) {}
+	constexpr Vector2(double x, double y) : x(x), y(y) {}
+	constexpr Vector2(const Vector2& copy) : x(copy.x), y(copy.y) {}
+    constexpr Vector2(const roboteam_msgs::Vector2f& msg) : Vector2(msg.x, msg.y) {}
 
 	double dot(const Vector2& other) const;
 	double dist(const Vector2& other) const;

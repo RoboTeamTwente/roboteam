@@ -4,7 +4,7 @@
 
     <node pkg="roboteam_world" type="filtered_world" name="world"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision"/>
-    <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" />
+    <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" output="screen"/>
 
     <param name="role_iterations_per_second" type="int" value="30" />
     <node name="robot0" pkg="roboteam_tactics" type="RoleNode" output="screen" />

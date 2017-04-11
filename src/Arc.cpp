@@ -4,6 +4,8 @@
 
 namespace rtt {
     
+Arc::Arc() : Arc(ZERO_VECTOR, 1.0) {}
+
 Arc::Arc(Vector2 center, double radius) : Arc(center, radius, 0.0, ARC_MAX) {}
 
 Arc::Arc(Vector2 center, double radius, double angleStart, double angleEnd)
@@ -87,6 +89,10 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
     } else {
         throw std::invalid_argument("Ellipse-line intersection not yet implemented");
     }
+}
+
+boost::optional<Vector2> Arc::arcPointTowards(Vector2 point) const {
+    return arcPointTowards((point - center).angle());
 }
 
 boost::optional<Vector2> Arc::arcPointTowards(double angle) const {

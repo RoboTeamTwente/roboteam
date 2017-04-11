@@ -154,6 +154,7 @@ add_library(roboteam_utils
     src/Optimization.cpp
     src/RefLookup.cpp
     src/Arc.cpp
+    src/Section.cpp
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}

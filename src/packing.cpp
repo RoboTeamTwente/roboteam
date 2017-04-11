@@ -138,8 +138,11 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     uint8_t dribble_vel = 0;
     if (command.dribbler) {
         dribble_vel = PACKET_MAX_DRIBBLE_VEL;
+        if (robot_vel > 500) {
+            dribble_vel = 2.0;
+        }
     }
-
+    
     ///////////////////////////////////////
     // Construct low level robot command //
     ///////////////////////////////////////

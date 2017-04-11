@@ -58,7 +58,7 @@ std::string byteArrayToString(std::array<uint8_t, N> bytes) {
 
 int const PACKET_MAX_ROBOT_VEL = 8191;
 int const PACKET_MAX_ANG = 511;
-int const PACKET_MAX_DRIBBLE_VEL = 7;
+int const PACKET_MAX_DRIBBLE_VEL = 5;
 
 }
 

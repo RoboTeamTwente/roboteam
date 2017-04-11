@@ -149,6 +149,7 @@ int nacks = 0;
 } // anonymous namespace
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+
     if (!serialPortOpen) {
         // Open serial port
         boost::system::error_code errorCode;
@@ -163,9 +164,11 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         }
     } 
 
+
     // Create message
     if (auto bytesOpt = rtt::createRobotPacket(_msg)) {
         // Success!
+
         auto bytes = *bytesOpt;
 
         // Write message to it
@@ -188,17 +191,18 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // it means sending the packet failed.
         if (ackCode[1] == '0') {
             // successful_msg = false;
-            std::cout << " Nack!\n";
+            // std::cout << " Nack!\n";
             nacks++;
         } else if (ackCode[1] == '1') {
             // successful_msg = true;
-            std::cout << " Ack!\n";
+            // std::cout << " Ack!\n";
             acks++;
         } else {
             std::cout << "strange result: "
                       << (int) ackCode[1] 
                       << "\n";
         }
+
 
         int const MAX_NACKS = 20;
         if (nacks > MAX_NACKS) {
@@ -214,7 +218,6 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         std::cout << " Could not turn command into packet!\n";
     }
 
-    
 }
 
 enum Mode {

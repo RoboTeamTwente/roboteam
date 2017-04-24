@@ -7,14 +7,19 @@ from python_qt_binding.QtCore import pyqtSlot
 
 class RobotTypeWidget(QtWidgets.QFrame):
 
-    def __init__(self, input_id):
+    def __init__(self, input_id, global_selector):
         super(RobotTypeWidget, self).__init__()
 
         self._id = input_id
+        self._global_selector = global_selector
 
         self.setLayout(QtWidgets.QHBoxLayout())
 
-        self._id_label = QtWidgets.QLabel("ID: " + str(self._id))
+        if self._global_selector:
+            self._id_label = QtWidgets.QLabel("All robots")
+        else:
+            self._id_label = QtWidgets.QLabel("ID: " + str(self._id))
+
         self.layout().addWidget(self._id_label)
 
         # ---- Type selector ----
@@ -29,11 +34,15 @@ class RobotTypeWidget(QtWidgets.QFrame):
 
         self.update_robot_type()
 
+        if self._global_selector:
+            self._type_selector.currentIndexChanged.connect(self.change_robot_type)
+
         # ---- Timer callback ----
         
-        self._timer = QtCore.QTimer()
-        self._timer.timeout.connect(self.update_robot_type)
-        self._timer.start(200)
+        if not global_selector:
+            self._timer = QtCore.QTimer()
+            self._timer.timeout.connect(self.update_robot_type)
+            self._timer.start(200)
 
         # ---- /Timer callback ----
 
@@ -43,14 +52,26 @@ class RobotTypeWidget(QtWidgets.QFrame):
 
     def change_robot_type(self, type_index):
         robot_type = self._type_selector.itemText(type_index)
-        param_name = self.get_param_base() + "robotType"
 
-        if robot_type == "unset":
-            rospy.delete_param(param_name)
+        if self._global_selector:
+            for i in range(0, 16):
+                param_name = "robot" + str(i) + "/robotType/"
+                if robot_type == "unset":
+                    rospy.delete_param(param_name)
+                else:
+                    rospy.set_param(param_name, robot_type)
         else:
-            rospy.set_param(param_name, robot_type)
+            param_name = self.get_param_base() + "robotType"
+
+            if robot_type == "unset":
+                rospy.delete_param(param_name)
+            else:
+                rospy.set_param(param_name, robot_type)
 
     def update_robot_type(self):
+        if self._global_selector:
+            return
+
         # Disconnect the signal so we can change the checkbox
         if self._type_selector.receivers(self._type_selector.currentIndexChanged) > 0:
             self._type_selector.currentIndexChanged.disconnect(self.change_robot_type)
@@ -95,5 +116,6 @@ class RobotTypeWidget(QtWidgets.QFrame):
         self._type_selector.currentIndexChanged.connect(self.change_robot_type)
 
     def shutdown_widget(self):
-        self._timer.stop()
+        if not self._global_selector:
+            self._timer.stop()
 

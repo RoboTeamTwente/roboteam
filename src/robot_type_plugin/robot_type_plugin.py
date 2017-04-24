@@ -44,8 +44,12 @@ class RobotTypePlugin(Plugin):
 
         self.robot_type_selectors = []
 
+        global_robot_type = robot_type_widget.RobotTypeWidget(-1, True)
+        self.robot_type_selectors.append(global_robot_type)
+        self._widget.layout().addWidget(global_robot_type)
+
         for i in range(0, 16):
-            new_robot_type = robot_type_widget.RobotTypeWidget(i)
+            new_robot_type = robot_type_widget.RobotTypeWidget(i, False)
             self.robot_type_selectors.append(new_robot_type)
             self._widget.layout().addWidget(new_robot_type)
 

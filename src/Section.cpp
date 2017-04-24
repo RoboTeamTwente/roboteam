@@ -26,4 +26,12 @@ bool Section::pointOnLine(const Vector2& point) const {
     return point.dist(a) + point.dist(b) - length < .0001;
 }    
     
+bool Section::operator==(const Section& other) const {
+    return a == other.a && b == other.b;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Section& sec) {
+    return stream << "Section[" << sec.a << ", " << sec.b << "]";
+}
+
 }

@@ -32,6 +32,12 @@ struct Section {
      * \return True if the point lies on the (non-extended) line segment.
      */
     bool pointOnLine(const Vector2& point) const;
+
+    bool operator==(const Section& other) const;
+
 };
+
+
+std::ostream& operator<<(std::ostream& stream, const Section& sec);
     
 }

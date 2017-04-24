@@ -48,8 +48,8 @@ public:
 
 constexpr Vector2 ZERO_VECTOR = Vector2();
 
+std::ostream& operator<<(std::ostream& os, const Vector2 vec);
 }
 
-std::ostream& operator<<(std::ostream& os, const rtt::Vector2& vec);
 
 #endif // VECTOR2_H

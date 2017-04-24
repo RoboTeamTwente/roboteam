@@ -41,7 +41,8 @@ double Vector2::angle() const {
 }
 
 Vector2 Vector2::lerp(const Vector2& other, double factor) const {
-    return Vector2(x + (other.x - x) * factor, y + (other.y - y) * factor);
+    //return Vector2(x + (other.x - x) * factor, y + (other.y - y) * factor);
+    return scale(factor) + other.scale(1 - factor);
 }
 
 Vector2 Vector2::rotate(double radials) const {
@@ -89,12 +90,12 @@ Vector2 Vector2::stretchToLength(double desiredLength) const {
 }
 
 bool Vector2::operator==(const Vector2& other) const {
-    return fabs(x-other.x) < 0.000001 && fabs(y-other.y) < 0.000001; 
+    return fabs(x-other.x) < 0.00001 && fabs(y-other.y) < 0.00001; 
 }
 
 
 bool Vector2::operator!=(const Vector2& other) const {
-    return fabs(x-other.x) > 0.000001 || fabs(y-other.y) > 0.000001; 
+    return fabs(x-other.x) > 0.00001 || fabs(y-other.y) > 0.00001; 
 }
 
 Vector2 Vector2::operator+(const Vector2& other) const {
@@ -135,8 +136,9 @@ std::ostream& Vector2::write(std::ostream& os) const {
     return os << "{ x = " << x << ", y = " << y << " }";
 }
 
-}
-
-std::ostream& operator<<(std::ostream& os, const rtt::Vector2& vec) {
+std::ostream& operator<<(std::ostream& os, const rtt::Vector2 vec) {
     return vec.write(os);
 }
+
+}
+

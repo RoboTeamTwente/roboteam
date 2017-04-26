@@ -9,9 +9,8 @@ namespace rtt
 class Position
 {
 public:
-	Position(): x(0), y(0), rot(0) {}
-	Position(double x, double y, double rot) : x(x), y(y), rot(rot) {}
-	~Position();
+	constexpr Position(): x(0), y(0), rot(0) {}
+	constexpr Position(double x, double y, double rot) : x(x), y(y), rot(rot) {}
 	Vector2 location() const;
 	double getRot() const;
 	Position translate(const Vector2& vec) const;

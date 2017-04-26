@@ -2,8 +2,6 @@
 
 namespace rtt {
 
-Position::~Position(){}
-
 Vector2 Position::location() const {
     return Vector2(x, y);
 }

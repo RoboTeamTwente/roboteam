@@ -2,6 +2,7 @@
 
 #include "Vector2.h"
 #include <functional>
+#include <type_traits>
 
 namespace rtt {
     
@@ -39,4 +40,70 @@ Vector2 sampleForVector(
     std::function<double(const Vector2&)> scoreFunc
 );
 
+/**
+ * \class GradientDescent
+ * \brief Optimizes a vector of numbers against a given function.
+ * \tparam Num Any numeric type. If it's not numeric, it won't compile.
+ * \tparam N The dimensionality of the problem.
+ *
+ * The score function should return greater values for better results.
+ */
+template<typename Num, size_t N>
+class GradientDescent {
+public:
+	static_assert(std::is_arithmetic<Num>{}, "GradientDescent Num must be an arithmetic type");
+	typedef std::array<Num, N> Data;
+	typedef std::function<Num(const Data&)> ScoreFunction;
+
+	/**
+	 * \brief Constructs a GradientDescent by explicitly providing each parameter.
+	 */
+	GradientDescent(ScoreFunction scorer, Data initialData, Data initialSteps,
+			std::array<std::pair<Num, Num>, N> limits);
+
+	/**
+	 * \brief Constructs a GradientDescent where each parameter has the same initial step size, and
+	 * the same upper and lower limits.
+	 */
+	GradientDescent(ScoreFunction scorer, Data initialData, Num initialStep, Num minimum, Num maximum);
+
+	/**
+	 * \brief Perform a single iteration of the algorithm.
+	 */
+	void singleIteration();
+
+	/**
+	 * \brief Continuously run the algorithm until getIterationCount() >= limit.
+	 * \return true if the algorithm ran at least once, false if not.
+	 */
+	bool iterateToLimit(size_t limit);
+
+	/**
+	 * \brief Continously run the algorithm until either the score exceeds
+	 * the given threshold, or until it has run limit times (irrespective of the total iteration count).
+	 */
+	bool iterateUntilScoreAtLeast(Num threshold, size_t limit = 1000);
+
+	/**
+	 * \brief Continously run the algorithm until the total change in the data was at most
+	 * the given threshold, or until it has run limit times (irrespective of the total iteration count).
+	 */
+	bool iterateUntilConvergent(Num threshold, size_t limit = 1000);
+
+	Num getLastScore() const;
+	Num getLastDivergence() const;
+	size_t getIterationCount() const;
+
+private:
+	ScoreFunction scorer;
+	std::array<std::pair<Num, Num>, N> limits;
+	Data data;
+	Data steps;
+	Num lastDivergence;
+	Num lastScore;
+	size_t iterationCount;
+};
+
 }
+
+#include "Optimization.tpp"

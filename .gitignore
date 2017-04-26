@@ -33,3 +33,5 @@ include/roboteam_utils/constants.h
 src/constants.cpp
 *~
 *.swp
+
+*.pyc

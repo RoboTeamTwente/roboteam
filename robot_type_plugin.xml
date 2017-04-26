@@ -1,0 +1,16 @@
+<library path="src">
+  <class name="RoboTeam robot type configurer" type="robot_type_plugin.robot_type_plugin.RobotTypePlugin" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      An example Python GUI plugin to create a great user interface.
+    </description>
+    <qtgui>
+        <group>
+          <label>RoboTeam Twente</label>
+          <icon type="file">icon.png</icon>
+        </group>
+      <label>RoboTeam robot type configurer</label>
+      <icon type="theme">applications-science</icon>
+      <statustip>Great bobe user bobe interface bobe to provide real value.</statustip>
+    </qtgui>
+  </class>
+</library>

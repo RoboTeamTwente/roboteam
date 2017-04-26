@@ -5,15 +5,23 @@ namespace rtt {
 template<typename Num, size_t N>
 GradientDescent<Num, N>::GradientDescent(ScoreFunction scorer, Data data,
 		Data initialSteps, std::array<std::pair<Num, Num>, N> limits)
-		: scorer(scorer), data(data), steps(initialSteps), limits(limits), iterationCount(0) {}
+		: scorer(scorer), data(data), steps(initialSteps), limits(limits),
+		  lastScore(-99999), iterationCount(0), justFlipped(true) {}
 
 template<typename Num, size_t N>
 GradientDescent<Num, N>::GradientDescent(ScoreFunction scorer, Data data, Num initialStep, Num minimum, Num maximum)
-	: scorer(scorer), data(data), iterationCount(0) {
+	: scorer(scorer), data(data), lastScore(-99999), iterationCount(0), justFlipped(true) {
 	for (size_t i = 0; i < N; i++) {
 		limits[i] = { minimum, maximum };
 		steps[i] = initialStep;
 	}
+}
+
+template<typename Num>
+inline Num clamp(Num min, Num actual, Num max) {
+	if (actual < min) return min;
+	if (actual > max) return max;
+	return actual;
 }
 
 template<typename Num, size_t N>
@@ -23,13 +31,13 @@ void GradientDescent<Num, N>::singleIteration() {
 	for (Num n : data) currentSum += n;
 
 	for (size_t i = 0; i < N; i++) {
-		data[i] += steps[i];
+		data[i] = clamp(limits[i].first, data[i] + steps[i], limits[i].second);
 		newSum += data[i];
 	}
 
 	double newScore = scorer(data);
 	if (lastScore > newScore) {
-		for (size_t i = 0; i < N; i++) steps[i] /= Num(-2);
+		for (size_t i = 0; i < N; i++) steps[i] *= Num(-.75);
 	}
 	lastScore = newScore;
 	lastDivergence = newSum - currentSum;
@@ -81,6 +89,11 @@ Num GradientDescent<Num, N>::getLastDivergence() const {
 template<typename Num, size_t N>
 size_t GradientDescent<Num, N>::getIterationCount() const {
 	return iterationCount;
+}
+
+template<typename Num, size_t N>
+typename GradientDescent<Num, N>::Data GradientDescent<Num, N>::getCurrentValues() const {
+	return data;
 }
 
 }

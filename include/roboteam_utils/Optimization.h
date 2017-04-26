@@ -93,6 +93,7 @@ public:
 	Num getLastScore() const;
 	Num getLastDivergence() const;
 	size_t getIterationCount() const;
+	Data getCurrentValues() const;
 
 private:
 	ScoreFunction scorer;
@@ -101,6 +102,7 @@ private:
 	Data steps;
 	Num lastDivergence;
 	Num lastScore;
+	bool justFlipped;
 	size_t iterationCount;
 };
 

@@ -6,11 +6,11 @@ template<typename Num, size_t N>
 GradientDescent<Num, N>::GradientDescent(ScoreFunction scorer, Data data,
 		Data initialSteps, std::array<std::pair<Num, Num>, N> limits)
 		: scorer(scorer), data(data), steps(initialSteps), limits(limits),
-		  lastScore(-99999), iterationCount(0), justFlipped(true) {}
+		  lastScore(-99999), justFlipped(true), iterationCount(0) {}
 
 template<typename Num, size_t N>
 GradientDescent<Num, N>::GradientDescent(ScoreFunction scorer, Data data, Num initialStep, Num minimum, Num maximum)
-	: scorer(scorer), data(data), lastScore(-99999), iterationCount(0), justFlipped(true) {
+	: scorer(scorer), data(data), lastScore(-99999), justFlipped(true), iterationCount(0) {
 	for (size_t i = 0; i < N; i++) {
 		limits[i] = { minimum, maximum };
 		steps[i] = initialStep;

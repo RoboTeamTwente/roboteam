@@ -1,6 +1,9 @@
+#include <map>
+#include <set>
 #include <boost/optional.hpp>
 
 #include "roboteam_utils/RefLookup.h"
+#include "roboteam_msgs/RefereeCommand.h"
 
 namespace b = boost;
 
@@ -64,6 +67,17 @@ const std::map <int, std::string> refcommandlookdown = {
 	{16, "BALL_PLACEMENT_US"},
 	{17, "BALL_PLACEMENT_THEM"}	
 } ;
+
+const std::set<int> implicitNormalStartRefCommands = {
+    roboteam_msgs::RefereeCommand::INDIRECT_FREE_US,
+    roboteam_msgs::RefereeCommand::INDIRECT_FREE_THEM,
+    roboteam_msgs::RefereeCommand::DIRECT_FREE_US,
+    roboteam_msgs::RefereeCommand::DIRECT_FREE_THEM
+} ;
+
+bool isImplicitNormalStartCommand(int cmd) {
+    return implicitNormalStartRefCommands.find(cmd) != implicitNormalStartRefCommands.end();
+}
 
 b::optional<std::string> getRefCommandName(int cmd) {
     auto cmdIt = refcommandlookdown.find(cmd);

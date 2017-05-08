@@ -33,7 +33,7 @@ namespace rtt {
  * 9        nnnnnppp    
  * 10       ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
  * 11       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
- *          qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
+ * 12       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
 
 /**
@@ -276,7 +276,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
                 | static_cast<uint8_t>(cam_ang >> 6);
 
     byteArr[9] = static_cast<uint8_t>(cam_ang << 2)
-                | static_cast<uint8_t>(;
+                | static_cast<uint8_t>(cam_w >> 9);
 
     byteArr[10] = 0;
 

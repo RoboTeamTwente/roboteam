@@ -68,15 +68,54 @@ const std::map <int, std::string> refcommandlookdown = {
 	{17, "BALL_PLACEMENT_THEM"}	
 } ;
 
-const std::set<int> implicitNormalStartRefCommands = {
-    roboteam_msgs::RefereeCommand::INDIRECT_FREE_US,
-    roboteam_msgs::RefereeCommand::INDIRECT_FREE_THEM,
-    roboteam_msgs::RefereeCommand::DIRECT_FREE_US,
-    roboteam_msgs::RefereeCommand::DIRECT_FREE_THEM
+// const std::set<int> implicitNormalStartRefCommands = {
+    // roboteam_msgs::RefereeCommand::INDIRECT_FREE_US,
+    // roboteam_msgs::RefereeCommand::INDIRECT_FREE_THEM,
+    // roboteam_msgs::RefereeCommand::DIRECT_FREE_US,
+    // roboteam_msgs::RefereeCommand::DIRECT_FREE_THEM
+// } ;
+
+// bool isImplicitNormalStartCommand(int cmd) {
+    // return implicitNormalStartRefCommands.find(cmd) != implicitNormalStartRefCommands.end();
+// }
+
+using roboteam_msgs::RefereeCommand;
+
+namespace b = boost;
+
+auto s = std::make_tuple<b::optional<int>, int>;
+
+const std::map<std::tuple<boost::optional<int>, int>, int> twoStagePairs = {
+    { s(RefereeCommand::PREPARE_KICKOFF_US, RefereeCommand::NORMAL_START), 
+        -1 /* DO_KICKOFF */
+    }, 
+    { s(RefereeCommand::PREPARE_KICKOFF_THEM, RefereeCommand::NORMAL_START),
+        -1 /* DEFEND_KICKOFF */
+    },
+    { s(RefereeCommand::PREPARE_PENALTY_US, RefereeCommand::NORMAL_START),
+        -1 /* DO_PENALTY */
+    },
+    { s(RefereeCommand::PREPARE_PENALTY_THEM, RefereeCommand::NORMAL_START),
+        -1 /* DEFEND_PENALTY */
+    },
+    { s(b::none, RefereeCommand::INDIRECT_FREE_US),
+        -1 /* DO_INDIRECT */
+    },
+    { s(b::none, RefereeCommand::INDIRECT_FREE_THEM),
+        -1 /* DEFEND_INDIRECT */
+    },
+    { s(b::none, RefereeCommand::DIRECT_FREE_US),
+        -1 /* DO_DIRECT */
+    },
+    { s(b::none, RefereeCommand::DIRECT_FREE_THEM),
+        -1 /* DEFEND_DIRECT */
+    },
 } ;
 
-bool isImplicitNormalStartCommand(int cmd) {
-    return implicitNormalStartRefCommands.find(cmd) != implicitNormalStartRefCommands.end();
+bool isTwoStage(int previousCmd, int currentCmd) {
+    return ((twoStagePairs.find(std::make_tuple(b::none, currentCmd)) != twoStagePairs.end())
+            || (twoStagePairs.find(std::make_tuple(previousCmd, currentCmd)) != twoStagePairs.end())
+            );
 }
 
 b::optional<std::string> getRefCommandName(int cmd) {

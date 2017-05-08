@@ -11,6 +11,12 @@
 
 namespace rtt {
 
+// Refstates expliciet nummeren
+// Refstate eigen states toevoegen
+// refcommandlookups met enum en niet met ints
+// refstateswitch en strategycomposer schrijven met enums
+// use the enum everywhere, conversion stuff should happen in lastref
+
 /**
  * /enum RefState
  * /brief Used to hold the referee state.
@@ -19,9 +25,9 @@ namespace rtt {
  */
 enum class RefState {
     HALT = 0,
-    STOP,
-    NORMAL_START,
-    FORCED_START,
+    STOP = 1,
+    NORMAL_START = 2,
+    FORCED_START = 3,
     PREPARE_KICKOFF_US,
     PREPARE_KICKOFF_THEM,
     PREPARE_PENALTY_US,

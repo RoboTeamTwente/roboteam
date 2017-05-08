@@ -24,17 +24,16 @@ namespace rtt {
  * 4        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
  * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
  * 6        ffffffff    ffffffff: Kick force, 0 - 255
- * 7        mghijkkk    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
- *                      g: whether or not to kick
+ * 7        0ghijkkk    g: whether or not to kick
  *                      h: whether or not to chip
  *                      i: forced or not
  *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
  *                      kkk: dribbler speed, 0 - 7
  * 8        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
- * 9        nnnnpppp    
- * 10       pppppqqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
+ * 9        nnnnnppp    
+ * 10       ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
  * 11       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
- *          
+ *          qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
 
 /**
@@ -146,9 +145,6 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     uint8_t dribble_vel = 0;
     if (command.dribbler) {
         dribble_vel = PACKET_MAX_DRIBBLE_VEL;
-        // if (robot_vel > 500) {
-        //     dribble_vel = 2.0;
-        // }
     }
     
     ///////////////////////////////////////
@@ -232,12 +228,17 @@ boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
                                                          bool rot_cclockwise, int32_t w, uint8_t punt_power,
                                                          bool do_kick, bool do_chip, bool forced,
-                                                         bool dribble_cclockwise, uint8_t dribble_vel) {
+                                                         bool dribble_cclockwise, uint8_t dribble_vel,
+                                                         int32_t cam_robot_vel, int32_t cam_ang,
+                                                         bool cam_rot_cclockwise, int32_t cam_w) {
     if (!((id >= 0 && id < 16)
             && (robot_vel >= 0 && robot_vel < 8192)
             && (ang >= 0 && ang < 512)
             && (w >= 0 && w < 2048)
-            && (dribble_vel >= 0 && dribble_vel < 8))) {
+            && (dribble_vel >= 0 && dribble_vel < 8))
+            && (cam_robot_vel >= 0 && cam_robot_vel < 8192)
+            && (cam_ang >= 0 && cam_ang < 512)
+            && (cam_w >= 0 && cam_w < 2048)) {
         return boost::none;
     }
 
@@ -261,7 +262,6 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     byteArr[4] = static_cast<uint8_t>(w);
     // Just plug in the byte of kick-force
     byteArr[5] = punt_power;
-    // gggg = 0, 0, chip = 1 kick = 0, forced = 1 normal = 0
     // First the chip and forced bools, then a bool that designates
     // a clockwise dribbler, and then three bits to designate dribble velocity
     byteArr[6] = static_cast<uint8_t>(do_kick << 6)
@@ -269,6 +269,16 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
                     | static_cast<uint8_t>(forced << 4)
                     | static_cast<uint8_t>(dribble_cclockwise << 3)
                     | static_cast<uint8_t>(dribble_vel & 7);
+    
+    byteArr[7] = static_cast<uint8_t>(cam_robot_vel >> 5);
+
+    byteArr[8] = static_cast<uint8_t>(cam_robot_vel << 5)
+                | static_cast<uint8_t>(cam_ang >> 6);
+
+    byteArr[9] = static_cast<uint8_t>(cam_ang << 2)
+                | static_cast<uint8_t>(;
+
+    byteArr[10] = 0;
 
     return boost::optional<packed_protocol_message>(byteArr);
 }

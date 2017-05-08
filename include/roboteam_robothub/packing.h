@@ -33,7 +33,7 @@ struct LowLevelRobotCommand {
 } ;
 
 
-using packed_protocol_message = std::array<uint8_t, 7>;
+using packed_protocol_message = std::array<uint8_t, 11>;
 
 LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command);
 boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);

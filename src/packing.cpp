@@ -15,18 +15,26 @@ namespace rtt {
 /**
  * Command packet format, inspired by the (old?) RoboJackets protocol.
  *
+ * Note: l and o are skipped because they are hard to discern from badly written 0's and 1's.
+ *
  * Byte     Config      Description
  * 1        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
  * 2        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 8191 (mm/s)
- * 3        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution 2 * pi / 512
+ * 3        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution (2 * pi / 512) (rad)
  * 4        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
- * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0-2047 (deg/s)
+ * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
  * 6        ffffffff    ffffffff: Kick force, 0 - 255
- * 7        0ghijkkk    g: whether or not to kick
+ * 7        mghijkkk    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
+ *                      g: whether or not to kick
  *                      h: whether or not to chip
  *                      i: forced or not
  *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
  *                      kkk: dribbler speed, 0 - 7
+ * 8        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
+ * 9        nnnnpppp    
+ * 10       pppppqqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
+ * 11       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
+ *          
  */
 
 /**

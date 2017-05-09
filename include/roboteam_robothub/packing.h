@@ -12,6 +12,7 @@
 namespace roboteam_msgs {
 
 ROS_DECLARE_MESSAGE(RobotCommand);
+ROS_DECLARE_MESSAGE(World)
 
 }
 
@@ -42,7 +43,7 @@ struct LowLevelRobotCommand {
 
 using packed_protocol_message = std::array<uint8_t, 12>;
 
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command);
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, boost::optional<roboteam_msgs::World const &> worldOpt = boost::none);
 boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command);
 

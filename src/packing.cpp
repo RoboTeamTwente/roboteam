@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <boost/optional.hpp>
+namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/World.h"
@@ -13,18 +14,6 @@
 #include "roboteam_utils/Math.h"
 
 namespace {
-
-// Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
-// we can use that
-boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World& world) {
-    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
-    for (const auto& bot : bots) {
-        if (bot.id == id) {
-            return boost::optional<roboteam_msgs::WorldRobot>(bot);
-        }
-    }
-    return boost::none;
-}
 
 }
 
@@ -85,6 +74,18 @@ uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax
     }
 }
 
+// Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
+// we can use that
+boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World& world) {
+    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
+    for (const auto& bot : bots) {
+        if (bot.id == id) {
+            return boost::optional<roboteam_msgs::WorldRobot>(bot);
+        }
+    }
+    return boost::none;
+}
+
 } // anonymous namespace
 
 /**
@@ -92,7 +93,7 @@ uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax
  * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
  * uses this internally to convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, roboteam_msgs::World const & world) {
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, b::optional<roboteam_msgs::World const &> worldOpt) {
     using roboteam_msgs::RobotCommand;
     
     //////////////////////////////
@@ -170,36 +171,40 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     // Figure out cam data //
     /////////////////////////
     
-    auto botOpt = getWorldBot(command.id, true, world);
     bool cam_data_on = false;
     int32_t cam_robot_vel = 0;
     int32_t cam_ang = 0;
     bool cam_rot_cclockwise = 0;
     int32_t cam_w = 0;
 
-    if (botOpt) {
-        auto bot = *botOpt;
+    if (worldOpt) {
+        auto const & world = *worldOpt;
+        auto botOpt = getWorldBot(command.id, true, world);
 
-        cam_data_on = true;
+        if (botOpt) {
+            auto bot = *botOpt;
 
-        Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
-        cam_robot_vel = camVelocityVec.length();
+            cam_data_on = true;
 
-        double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
-        
-        if (ang < 0) {
-            ang += 2 * M_PI;
+            Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
+            cam_robot_vel = camVelocityVec.length();
+
+            double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
+            
+            if (ang < 0) {
+                ang += 2 * M_PI;
+            }
+
+            cam_ang = ang / (2 * M_PI / 512.0);
+            
+            if (bot.w > 0) {
+                cam_rot_cclockwise = true;
+                cam_w = bot.w;
+            } else if (bot.w < 0) {
+                cam_rot_cclockwise = false;
+                cam_w = -bot.w;
+            } 
         }
-
-        cam_ang = ang / (2 * M_PI / 512.0);
-        
-        if (bot.w > 0) {
-            cam_rot_cclockwise = true;
-            cam_w = bot.w;
-        } else if (bot.w < 0) {
-            cam_rot_cclockwise = false;
-            cam_w = -bot.w;
-        } 
     }
     
     ///////////////////////////////////////
@@ -339,6 +344,9 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
 
     packed_protocol_message byteArr;
 
+    // Static cast truncates to the last 8 bits
+    // is implementation defined though.
+
     // First nibble is the robot id
     // Second nibble are the third nibble of robot velocity
     byteArr[0] = static_cast<uint8_t>(((id & 15) << 4) | ((robot_vel >> 9) & 15));
@@ -369,7 +377,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     
     byteArr[7] = static_cast<uint8_t>(cam_robot_vel >> 5);
 
-    byteArr[8] = static_cast<uint8_t>(cam_robot_vel << 5)
+    byteArr[8] = static_cast<uint8_t>(cam_robot_vel << 3)
                 | static_cast<uint8_t>(cam_ang >> 6);
 
     byteArr[9] = static_cast<uint8_t>(cam_ang << 2)

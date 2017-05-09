@@ -8,7 +8,10 @@
 #include <boost/optional.hpp>
 
 #include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_msgs/World.h"
 #include "roboteam_utils/Vector2.h"
+#include "roboteam_utils/Math.h"
+#include "roboteam_tactics/utils/utils.h"
 
 namespace rtt {
 
@@ -24,7 +27,8 @@ namespace rtt {
  * 4        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
  * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
  * 6        ffffffff    ffffffff: Kick force, 0 - 255
- * 7        0ghijkkk    g: whether or not to kick
+ * 7        rghijkkk    r: whether or not the 8th, 9th, 10th, 11th, and 12th byte are meaningful
+ *                      g: whether or not to kick
  *                      h: whether or not to chip
  *                      i: forced or not
  *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
@@ -73,7 +77,7 @@ uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax
  * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
  * uses this internally to convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command) {
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, roboteam_msgs::World const & world) {
     using roboteam_msgs::RobotCommand;
     
     //////////////////////////////
@@ -116,7 +120,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     // w is in deg/s
     int w = rawW / M_PI * 180;
 
-    if (w > 2047) w = 2047;
+    if (w > PACKET_MAX_W) w = PACKET_MAX_W;
     if (w < 0) w = 0;
     
     //////////////////////////
@@ -146,6 +150,42 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     if (command.dribbler) {
         dribble_vel = PACKET_MAX_DRIBBLE_VEL;
     }
+
+    /////////////////////////
+    // Figure out cam data //
+    /////////////////////////
+    
+    auto botOpt = getWorldBot(command.id, true, world);
+    bool cam_data_on = false;
+    int32_t cam_robot_vel = 0;
+    int32_t cam_ang = 0;
+    bool cam_rot_cclockwise = 0;
+    int32_t cam_w = 0;
+
+    if (botOpt) {
+        auto bot = *botOpt;
+
+        cam_data_on = true;
+
+        Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
+        cam_robot_vel = camVelocityVec.length();
+
+        double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
+        
+        if (ang < 0) {
+            ang += 2 * M_PI;
+        }
+
+        cam_ang = ang / (2 * M_PI / 512.0);
+        
+        if (bot.w > 0) {
+            cam_rot_cclockwise = true;
+            cam_w = bot.w;
+        } else if (bot.w < 0) {
+            cam_rot_cclockwise = false;
+            cam_w = -bot.w;
+        } 
+    }
     
     ///////////////////////////////////////
     // Construct low level robot command //
@@ -163,6 +203,11 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     llcommand.forced = do_forced;
     llcommand.dribble_cclockwise = dribble_cclockwise;
     llcommand.dribble_vel = dribble_vel;
+
+    llcommand.cam_data_on = cam_data_on;
+    llcommand.cam_robot_vel = cam_robot_vel;
+    llcommand.cam_ang = cam_ang;
+    llcommand.cam_w = cam_w;
 
     // std::cout << "[RobotHub] ------------------------------------------\n";
     // std::cout << "[RobotHub] About to send the following w to the motor: " << llcommand.w << "\n";
@@ -184,11 +229,16 @@ boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotC
             llcommand.rot_cclockwise,
             llcommand.w,
             llcommand.punt_power,
+            llcommand.cam_data_on,
             llcommand.do_kick,
             llcommand.do_chip,
             llcommand.forced,
             llcommand.dribble_cclockwise,
-            llcommand.dribble_vel
+            llcommand.dribble_vel,
+            llcommand.cam_robot_vel,
+            llcommand.cam_ang,
+            llcommand.cam_rot_cclockwise,
+            llcommand.cam_w
             );
 }
 
@@ -200,11 +250,16 @@ boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
             llrc.rot_cclockwise,
             llrc.w,
             llrc.punt_power,
+            llrc.cam_data_on,
             llrc.do_kick,
             llrc.do_chip,
             llrc.forced,
             llrc.dribble_cclockwise,
-            llrc.dribble_vel
+            llrc.dribble_vel,
+            llrc.cam_robot_vel,
+            llrc.cam_ang,
+            llrc.cam_rot_cclockwise,
+            llrc.cam_w
             );
 }
 
@@ -227,8 +282,10 @@ boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
  */
 boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
                                                          bool rot_cclockwise, int32_t w, uint8_t punt_power,
+                                                         bool cam_data_on,
                                                          bool do_kick, bool do_chip, bool forced,
                                                          bool dribble_cclockwise, uint8_t dribble_vel,
+                                                         
                                                          int32_t cam_robot_vel, int32_t cam_ang,
                                                          bool cam_rot_cclockwise, int32_t cam_w) {
     if (!((id >= 0 && id < 16)
@@ -262,9 +319,11 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     byteArr[4] = static_cast<uint8_t>(w);
     // Just plug in the byte of kick-force
     byteArr[5] = punt_power;
-    // First the chip and forced bools, then a bool that designates
+    // First the cam data on bit, then
+    // the chip and forced bools, then a bool that designates
     // a clockwise dribbler, and then three bits to designate dribble velocity
-    byteArr[6] = static_cast<uint8_t>(do_kick << 6)
+    byteArr[6] = static_cast<uint8_t>(cam_data_on << 7)
+                    | static_cast<uint8_t>(do_kick << 6)
                     | static_cast<uint8_t>(do_chip << 5)
                     | static_cast<uint8_t>(forced << 4)
                     | static_cast<uint8_t>(dribble_cclockwise << 3)
@@ -278,7 +337,10 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     byteArr[9] = static_cast<uint8_t>(cam_ang << 2)
                 | static_cast<uint8_t>(cam_w >> 9);
 
-    byteArr[10] = 0;
+    byteArr[10] = static_cast<uint8_t>(cam_w >> 1);
+
+    byteArr[11] = static_cast<uint8_t>((cam_w & 1) << 7)
+                | static_cast<uint8_t>(cam_rot_cclockwise << 6);
 
     return boost::optional<packed_protocol_message>(byteArr);
 }

@@ -11,7 +11,22 @@
 #include "roboteam_msgs/World.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Math.h"
-#include "roboteam_tactics/utils/utils.h"
+
+namespace {
+
+// Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
+// we can use that
+boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World& world) {
+    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
+    for (const auto& bot : bots) {
+        if (bot.id == id) {
+            return boost::optional<roboteam_msgs::WorldRobot>(bot);
+        }
+    }
+    return boost::none;
+}
+
+}
 
 namespace rtt {
 
@@ -263,6 +278,30 @@ boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
             );
 }
 
+boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
+                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
+                                                         bool do_kick, bool do_chip, bool forced,
+                                                         bool dribble_cclockwise, uint8_t dribble_vel) {
+    return createRobotPacket(
+            id,
+            robot_vel,
+            ang,
+            rot_cclockwise,
+            w,
+            punt_power,
+            false,
+            do_kick,
+            do_chip,
+            forced,
+            dribble_cclockwise,
+            dribble_vel,
+            0,
+            0,
+            false,
+            0
+            );
+}
+
 /**
  * All mentioned ranges are inclusive. If the specified ranges are violated,
  * the function returns boost::none.
@@ -285,7 +324,6 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
                                                          bool cam_data_on,
                                                          bool do_kick, bool do_chip, bool forced,
                                                          bool dribble_cclockwise, uint8_t dribble_vel,
-                                                         
                                                          int32_t cam_robot_vel, int32_t cam_ang,
                                                          bool cam_rot_cclockwise, int32_t cam_w) {
     if (!((id >= 0 && id < 16)

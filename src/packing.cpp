@@ -45,13 +45,22 @@ namespace rtt {
  */
 
 /**
- * Packet response format, inspired by Hans, Jim & Bob.
+ *  Old packet response format
  *
- * The first few things (id, ack/nack, battery critical, possibly ball) can possibly be compressed in the first byte. Maybe we can also add a bit to the command packet that turns these things on or off (lean mode)?
+ *  Byte    Config      Description
+ *  0       aaaaaaaa    Robot ID (ASCII, hexadecimal!)
+ *  1       bbbbbbbb    ACK or NACK byte. Either '0' or '1'. (ASCII, hexadecimal)
+ */
+
+/**
+ * New packet response format, inspired by Hans, Jim & Bob.
+ *
+ * The first few things (id, ack/nack, battery critical, possibly ball) can possibly be compressed in the first byte.
+ * Maybe we can also add a bit to the command packet that turns these things on or off (lean mode)?
  *
  * l and o are skipped because they are hard to discern from 0 and 1 in longhand
  *
- * ASCII size:      8 bytes
+ * ASCII size:      7 bytes
  * Compressed size: 5 bytes
  * Lean size:       1 byte (format yet to be determined)
  *
@@ -63,18 +72,18 @@ namespace rtt {
  * 3        dddddddd    d: Ball sensor (0 - 255, or 0-1) (can either be where it sees it, or how sure it is) (ASCII)
  *
  *                      Wheels
- *                          Wheel speed is 0 - 127, rounded to the nearest integer (rad)
+ *                          Wheel speed is 0 - 127, rounded to the nearest integer (rad / s)
  *                          Wheel direction: 0 is counterclockwise, 1 is clockwise
- * 4        efffffff    Front left.
+ * 4        efffffff    Front left. (wheel 1)
  *                      e: wheel direction 
  *                      f: wheel speed
- * 5        ghhhhhhh    Front right
+ * 5        ghhhhhhh    Front right (wheel 4)
  *                      g: wheel direction
  *                      h: wheel speed
- * 6        ijjjjjjj    Back left   
+ * 6        ijjjjjjj    Back left (wheel 2)
  *                      i: wheel direction
  *                      j: wheel speed
- * 7        kmmmmmmm    Back right
+ * 7        kmmmmmmm    Back right (wheel 3)
  *                      k: wheel direction
  *                      m: wheel speed
  *
@@ -427,6 +436,67 @@ std::string byteToBinary(uint8_t byte) {
     }
 
     return byteStr;
+}
+
+OldACK decodeOldACK(packed_old_ack const & packedAck) {
+    OldACK ack;
+
+    // Decode ID
+    if (packedAck[0] >= '0' && packedAck[0] <= '9') {
+        ack.robotID = static_cast<int>(packedAck[0] - '9');
+    } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
+        ack.robotID = static_cast<int>(packedAck[0] - 'A');
+    } else {
+        ack.robotID = -1;
+    }
+
+    // Decode robot ACK
+    ack.robotACK = packedAck[1] == '1';
+
+    return ack;
+}
+
+NewACK decodeNewACK(packed_new_ack const & packedAck) {
+    NewACK ack;
+
+    // Decode ID
+    if (packedAck[0] >= '0' && packedAck[0] <= '9') {
+        ack.robotID = static_cast<int>(packedAck[0] - '9');
+    } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
+        ack.robotID = static_cast<int>(packedAck[0] - 'A');
+    } else {
+        ack.robotID = -1;
+    }
+
+    // Decode robot ACK info
+    ack.robotACK = packedAck[1] == '1';
+
+    ack.batteryCritical = packedAck[2] == '1';
+
+    ack.ballSensor = static_cast<int>(packedAck[3]);
+
+    // Decode wheel speeds
+    auto decodeWheelDir = [](uint8_t wheelInfo) {
+        return static_cast<bool>((wheelInfo >> 7) & 1);
+    } ;
+    
+    auto decodeWheelSpeed = [](uint8_t wheelInfo) {
+        return static_cast<int>(wheelInfo & 127);
+    } ;
+
+    ack.flWheelDir = decodeWheelDir(packedAck[4]);
+    ack.flWheelSpeed = decodeWheelSpeed(packedAck[4]);
+
+    ack.frWheelDir = decodeWheelDir(packedAck[5]);
+    ack.frWheelSpeed = decodeWheelSpeed(packedAck[5]);
+
+    ack.blWheelDir = decodeWheelDir(packedAck[6]);
+    ack.blWheelSpeed = decodeWheelSpeed(packedAck[6]);
+
+    ack.brWheelDir = decodeWheelDir(packedAck[7]);
+    ack.brWheelSpeed = decodeWheelSpeed(packedAck[7]);
+    
+    return ack;
 }
 
 } // rtt

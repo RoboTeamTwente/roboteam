@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include <boost/optional.hpp>
-
 #include <ros/message_forward.h>
 
 #include "roboteam_msgs/World.h"
@@ -41,8 +40,33 @@ struct LowLevelRobotCommand {
     int32_t cam_w;
 } ;
 
+struct OldACK {
+    int robotID;
+    bool robotACK;
+} ;
+
+struct NewACK {
+    int robotID;
+    bool robotACK;
+    bool batteryCritical;
+    int ballSensor;
+
+    bool flWheelDir;
+    int flWheelSpeed;
+
+    bool frWheelDir;
+    int frWheelSpeed;
+
+    bool blWheelDir;
+    int blWheelSpeed;
+
+    bool brWheelDir;
+    int brWheelSpeed;
+} ;
 
 using packed_protocol_message = std::array<uint8_t, 12>;
+using packed_old_ack = std::array<uint8_t, 2>;
+using packed_new_ack = std::array<uint8_t, 8>;
 
 LowLevelRobotCommand createLowLevelRobotCommand( roboteam_msgs::RobotCommand const & command
                                                , boost::optional<roboteam_msgs::World> const & worldOpt = boost::none
@@ -66,6 +90,9 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
                                                          bool dribble_cclockwise, uint8_t dribble_vel,
                                                          int32_t cam_robot_vel, int32_t cam_ang,
                                                          bool cam_rot_cclockwise, int32_t cam_w);
+
+OldACK decodeOldACK(packed_old_ack const & packedAck);
+NewACK decodeNewACK(packed_new_ack const & packedAck);
 
 std::string byteToBinary(uint8_t byte);
 

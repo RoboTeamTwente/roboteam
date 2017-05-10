@@ -9,10 +9,11 @@
 
 #include <ros/message_forward.h>
 
+#include "roboteam_msgs/World.h"
+
 namespace roboteam_msgs {
 
 ROS_DECLARE_MESSAGE(RobotCommand);
-ROS_DECLARE_MESSAGE(World)
 
 }
 
@@ -43,9 +44,15 @@ struct LowLevelRobotCommand {
 
 using packed_protocol_message = std::array<uint8_t, 12>;
 
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, boost::optional<roboteam_msgs::World const &> worldOpt = boost::none);
+LowLevelRobotCommand createLowLevelRobotCommand( roboteam_msgs::RobotCommand const & command
+                                               , boost::optional<roboteam_msgs::World> const & worldOpt = boost::none
+                                               );
+
 boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
-boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command);
+
+boost::optional<packed_protocol_message> createRobotPacket( roboteam_msgs::RobotCommand const & command
+                                                          , boost::optional<roboteam_msgs::World> const & worldOpt = boost::none
+                                                          );
 
 boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
                                                          bool rot_cclockwise, int32_t w, uint8_t punt_power,

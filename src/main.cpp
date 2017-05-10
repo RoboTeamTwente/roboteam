@@ -8,8 +8,12 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <boost/optional.hpp>
+namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_msgs/World.h"
+#include "roboteam_utils/LastWorld.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/constants.h"
@@ -164,9 +168,14 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         }
     } 
 
-
     // Create message
-    if (auto bytesOpt = rtt::createRobotPacket(_msg)) {
+    
+    b::optional<roboteam_msgs::World> worldOpt;
+    if (rtt::LastWorld::have_received_first_world()) {
+        worldOpt = rtt::LastWorld::get();
+    }
+
+    if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
         // Success!
 
         auto bytes = *bytesOpt;
@@ -174,7 +183,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // Write message to it
         serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
         // TODO: @Hack Crutches! Packet length should be 7!
-        serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
+        // Disabled because new packet size is 12
+        // serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
         
         // Listen for ack
         // CAREFUL! The first ascii character is the robot ID
@@ -190,12 +200,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // If the second character in the response is an ascii 0 character,
         // it means sending the packet failed.
         if (ackCode[1] == '0') {
-            // successful_msg = false;
-            // std::cout << " Nack!\n";
             nacks++;
         } else if (ackCode[1] == '1') {
-            // successful_msg = true;
-            // std::cout << " Ack!\n";
             acks++;
         } else {
             std::cout << "strange result: "
@@ -314,7 +320,7 @@ int main(int argc, char *argv[]) {
 
     auto mode = getMode();
     if (mode == Mode::SERIAL) {
-        ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
+        ROS_INFO("[RobotHub] Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
     }
 
     ros::Subscriber mergingRobotCommandsBlue;
@@ -335,6 +341,9 @@ int main(int argc, char *argv[]) {
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
+
+    // Creates the callbacks for world and geom
+    rtt::WorldAndGeomCallbackCreator wgcc;
 
     using namespace std;
     using namespace std::chrono; 

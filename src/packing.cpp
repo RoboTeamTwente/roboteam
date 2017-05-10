@@ -25,36 +25,60 @@ namespace rtt {
  * Note: l and o are skipped because they are hard to discern from badly written 0's and 1's.
  *
  * Byte     Config      Description
- * 1        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
- * 2        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 8191 (mm/s)
- * 3        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution (2 * pi / 512) (rad)
- * 4        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
- * 5        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
- * 6        ffffffff    ffffffff: Kick force, 0 - 255
- * 7        rghijkkk    r: whether or not the 8th, 9th, 10th, 11th, and 12th byte are meaningful
+ * 0        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
+ * 1        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 8191 (mm/s)
+ * 2        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution (2 * pi / 512) (rad)
+ * 3        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
+ * 4        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
+ * 5        ffffffff    ffffffff: Kick force, 0 - 255
+ * 6        rghijkkk    r: whether or not the 8th, 9th, 10th, 11th, and 12th byte are meaningful
  *                      g: whether or not to kick
  *                      h: whether or not to chip
  *                      i: forced or not
  *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
  *                      kkk: dribbler speed, 0 - 7
- * 8        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
- * 9        nnnnnppp    
- * 10       ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
- * 11       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
- * 12       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
+ * 7        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
+ * 8        nnnnnppp    
+ * 9        ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
+ * 10       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
+ * 11       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
 
 /**
  * Packet response format, inspired by Hans, Jim & Bob.
  *
- * Byte     Config      Description
- *                      Robot ID
- *                      ACK or NACK bit (whether or not the command was actually
- *                      dispatched from the base station)
- *                      Battery level
- *                      Ball sensor (binary or continuous)
- *                      Bit for debug information
+ * The first few things (id, ack/nack, battery critical, possibly ball) can possibly be compressed in the first byte. Maybe we can also add a bit to the command packet that turns these things on or off (lean mode)?
  *
+ * l and o are skipped because they are hard to discern from 0 and 1 in longhand
+ *
+ * ASCII size:      8 bytes
+ * Compressed size: 5 bytes
+ * Lean size:       1 byte (format yet to be determined)
+ *
+ * Byte     Config      Description
+ * 0        aaaaaaaa    a: Robot ID (ASCII, hexadecimal!)
+ * 1        bbbbbbbb    b: ACK or NACK byte (whether or not the command was actually
+ *                         dispatched from the base station) (ASCII)
+ * 2        cccccccc    c: Battery critical indicator (ASCII)
+ * 3        dddddddd    d: Ball sensor (0 - 255, or 0-1) (can either be where it sees it, or how sure it is) (ASCII)
+ *
+ *                      Wheels
+ *                          Wheel speed is 0 - 127, rounded to the nearest integer (rad)
+ *                          Wheel direction: 0 is counterclockwise, 1 is clockwise
+ * 4        efffffff    Front left.
+ *                      e: wheel direction 
+ *                      f: wheel speed
+ * 5        ghhhhhhh    Front right
+ *                      g: wheel direction
+ *                      h: wheel speed
+ * 6        ijjjjjjj    Back left   
+ *                      i: wheel direction
+ *                      j: wheel speed
+ * 7        kmmmmmmm    Back right
+ *                      k: wheel direction
+ *                      m: wheel speed
+ *
+ * Optional additions for later:
  *                      If bit for debug is one, extra info is also sent:
  *                      Gyroscopoe info
  *                      Accelerometer info
@@ -93,7 +117,7 @@ boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool our
  * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
  * uses this internally to convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, b::optional<roboteam_msgs::World const &> worldOpt) {
+LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, b::optional<roboteam_msgs::World> const & worldOpt) {
     using roboteam_msgs::RobotCommand;
     
     //////////////////////////////
@@ -239,8 +263,9 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
 /**
  * TODO: Measure our highest kicking power and use that to scale kick_vel!
  */
-boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const & command) {
-    auto llcommand = createLowLevelRobotCommand(command);
+boost::optional<packed_protocol_message> createRobotPacket( roboteam_msgs::RobotCommand const & command
+                                                          , b::optional<roboteam_msgs::World> const & world) {
+    auto llcommand = createLowLevelRobotCommand(command, world);
 
     return createRobotPacket(
             llcommand.id,

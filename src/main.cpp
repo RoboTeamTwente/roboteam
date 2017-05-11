@@ -199,18 +199,6 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
 
         auto ack = rtt::decodeOldACK(ackCode);
 
-        // If the second character in the response is an ascii 0 character,
-        // it means sending the packet failed.
-        // if (ackCode[1] == '0') {
-            // nacks++;
-        // } else if (ackCode[1] == '1') {
-            // acks++;
-        // } else {
-            // std::cout << "strange result: "
-                      // << (int) ackCode[1] 
-                      // << "\n";
-        // }
-        
         if (ack.robotACK) {
             acks++;
         } else {

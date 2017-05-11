@@ -5,7 +5,27 @@
 #include "roboteam_utils/LastRef.h"
 #include "ros/ros.h"
 
+namespace b = boost;
+
 namespace rtt {
+
+boost::optional<RefState> toRefState(int refStateInt) {
+    if (refStateInt >= 0 && refStateInt <= 17) {
+        return static_cast<RefState>(refStateInt);
+    }
+
+    return b::none;
+}
+
+boost::optional<int> fromRefState(RefState refState) {
+    int rawRefState = static_cast<int>(refState);
+
+    if (rawRefState >= 0 && rawRefState < 17) {
+        return rawRefState;
+    }
+
+    return b::none;
+}
 
 roboteam_msgs::RefereeData LastRef::lastRef;
 int LastRef::previousRefCommand = -1;

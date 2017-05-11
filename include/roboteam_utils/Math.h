@@ -10,6 +10,7 @@ double toDegrees(double radians);
 double toRadians(double degrees);
 
 double cleanAngle(double angle);
+Vector2 limitAngleDiff(Vector2 vector1, Vector2 vector2, double maxAngleDiff);
 bool isPointInCircle(Vector2 center, double radius, Vector2 point);
 Vector2 worldToRobotFrame(Vector2 requiredv, double rotation);
 double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos);

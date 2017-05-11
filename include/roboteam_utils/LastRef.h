@@ -61,6 +61,39 @@ enum class RefState {
     DEFEND_DIRECT
 } ;
 
+std::vector<RefState> const ALL_REFSTATES = {
+    RefState::HALT,
+    RefState::STOP,
+    RefState::NORMAL_START,
+    RefState::FORCED_START,
+    RefState::PREPARE_KICKOFF_US,
+    RefState::PREPARE_KICKOFF_THEM,
+    RefState::PREPARE_PENALTY_US,
+    RefState::PREPARE_PENALTY_THEM,
+    RefState::DIRECT_FREE_US,
+    RefState::DIRECT_FREE_THEM,
+    RefState::INDIRECT_FREE_US,
+    RefState::INDIRECT_FREE_THEM,
+    RefState::TIMEOUT_US,
+    RefState::TIMEOUT_THEM,
+    RefState::GOAL_US,
+    RefState::GOAL_THEM,
+    RefState::BALL_PLACEMENT_US,
+    RefState::BALL_PLACEMENT_THEM,
+
+    RefState::NORMAL_PLAY,
+    RefState::DO_KICKOFF,
+    RefState::DEFEND_KICKOFF,
+    RefState::DO_PENALTY,
+    RefState::DEFEND_PENALTY,
+    RefState::DO_INDIRECT,
+    RefState::DEFEND_INDIRECT,
+    RefState::DO_DIRECT,
+    RefState::DEFEND_DIRECT
+} ;
+
+std::string refStateToString(RefState s);
+boost::optional<RefState> stringToRefState(std::string s);
 boost::optional<RefState> toRefState(int refStateInt);
 boost::optional<int> fromRefState(RefState refState);
 
@@ -81,13 +114,16 @@ class LastRef {
      */
     static void set(roboteam_msgs::RefereeData refCommand);
     
+    static bool hasReceivedFirstCommand();
     static RefState getState();
-    static int getPreviousRefCommand();
+    static boost::optional<RefState> getPreviousRefCommand();
 
     private:
     static roboteam_msgs::RefereeData lastRef;
-    static int previousRefCommand;
     static const std::vector<RefStateTransitionFunction> transitions;
+
+    static boost::optional<RefState> previousRefCommand;
+    static boost::optional<RefState> currentRefCommand;
 };
 
 }

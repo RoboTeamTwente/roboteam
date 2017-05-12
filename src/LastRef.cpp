@@ -46,8 +46,8 @@ std::string refStateToString(RefState s) {
         return "BALL_PLACEMENT_US";
     } else if (s == RefState::BALL_PLACEMENT_THEM) {
         return "BALL_PLACEMENT_THEM";
-    } else if (s == RefState::NORMAL_PLAY) {
-        return "NORMAL_PLAY";
+    // } else if (s == RefState::NORMAL_PLAY) {
+        // return "NORMAL_PLAY";
     } else if (s == RefState::DO_KICKOFF) {
         return "DO_KICKOFF";
     } else if (s == RefState::DEFEND_KICKOFF) {
@@ -56,14 +56,6 @@ std::string refStateToString(RefState s) {
         return "DO_PENALTY";
     } else if (s == RefState::DEFEND_PENALTY) {
         return "DEFEND_PENALTY";
-    } else if (s == RefState::DO_INDIRECT) {
-        return "DO_INDIRECT";
-    } else if (s == RefState::DEFEND_INDIRECT) {
-        return "DEFEND_INDIRECT";
-    } else if (s == RefState::DO_DIRECT) {
-        return "DO_DIRECT";
-    } else if (s == RefState::DEFEND_DIRECT) {;
-        return "DEFEND_DIRECT";
     } else {
         return "UNKNOWN REF STATE";
     }
@@ -106,8 +98,8 @@ b::optional<RefState> stringToRefState(std::string s) {
         return RefState::BALL_PLACEMENT_US;
     } else if (s == "BALL_PLACEMENT_THEM") {
         return RefState::BALL_PLACEMENT_THEM;
-    } else if (s == "NORMAL_PLAY") {
-        return RefState::NORMAL_PLAY;
+    // } else if (s == "NORMAL_PLAY") {
+        // return RefState::NORMAL_PLAY;
     } else if (s == "DO_KICKOFF") {
         return RefState::DO_KICKOFF;
     } else if (s == "DEFEND_KICKOFF") {
@@ -116,14 +108,6 @@ b::optional<RefState> stringToRefState(std::string s) {
         return RefState::DO_PENALTY;
     } else if (s == "DEFEND_PENALTY") {
         return RefState::DEFEND_PENALTY;
-    } else if (s == "DO_INDIRECT") {
-        return RefState::DO_INDIRECT;
-    } else if (s == "DEFEND_INDIRECT") {
-        return RefState::DEFEND_INDIRECT;
-    } else if (s == "DO_DIRECT") {
-        return RefState::DO_DIRECT;
-    } else if (s == "DEFEND_DIRECT") {;
-        return RefState::DEFEND_DIRECT;
     } else {
         return b::none;
     }
@@ -187,7 +171,7 @@ const std::vector<RefStateTransitionFunction> LastRef::transitions = {
     //TODO, for example:
     [](RefState current, const roboteam_msgs::World& world) {
         return current == RefState::INDIRECT_FREE_THEM && (int) world.us[0].pos.x % 2
-                ? boost::optional<RefState>(RefState::NORMAL_PLAY)
+                ? boost::optional<RefState>(RefState::NORMAL_START)
                 : boost::optional<RefState>();
     }
 };

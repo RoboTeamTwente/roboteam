@@ -50,15 +50,13 @@ enum class RefState {
 
     // Custom extended refstates
     // (notice they have no numeral identifiers - don't use them like that)
-    NORMAL_PLAY,
     DO_KICKOFF,
     DEFEND_KICKOFF,
     DO_PENALTY,
     DEFEND_PENALTY,
-    DO_INDIRECT,
-    DEFEND_INDIRECT,
-    DO_DIRECT,
-    DEFEND_DIRECT
+    
+    // TODO: Remove this state!
+    NORMAL_PLAY,
 } ;
 
 std::vector<RefState> const ALL_REFSTATES = {
@@ -81,15 +79,12 @@ std::vector<RefState> const ALL_REFSTATES = {
     RefState::BALL_PLACEMENT_US,
     RefState::BALL_PLACEMENT_THEM,
 
-    RefState::NORMAL_PLAY,
     RefState::DO_KICKOFF,
     RefState::DEFEND_KICKOFF,
     RefState::DO_PENALTY,
     RefState::DEFEND_PENALTY,
-    RefState::DO_INDIRECT,
-    RefState::DEFEND_INDIRECT,
-    RefState::DO_DIRECT,
-    RefState::DEFEND_DIRECT
+
+    RefState::NORMAL_PLAY,
 } ;
 
 std::string refStateToString(RefState s);
@@ -97,7 +92,7 @@ boost::optional<RefState> stringToRefState(std::string s);
 boost::optional<RefState> toRefState(int refStateInt);
 boost::optional<int> fromRefState(RefState refState);
 
-constexpr size_t REF_STATE_COUNT = static_cast<size_t>(RefState::NORMAL_PLAY) + 1;
+// constexpr size_t REF_STATE_COUNT = static_cast<size_t>(RefState::NORMAL_PLAY) + 1;
 
 typedef std::function<boost::optional<RefState>(RefState, const roboteam_msgs::World&)> RefStateTransitionFunction;
 

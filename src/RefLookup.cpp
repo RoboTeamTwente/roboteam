@@ -43,21 +43,23 @@ const std::map<std::pair<boost::optional<RefState>, RefState>, RefState> twoStat
         RefState::DEFEND_PENALTY 
     },
     { {b::none, RefState::INDIRECT_FREE_US},
-        RefState::DO_INDIRECT 
+        RefState::INDIRECT_FREE_US
     },
     { {b::none, RefState::INDIRECT_FREE_THEM},
-        RefState::DEFEND_INDIRECT 
+        RefState::INDIRECT_FREE_THEM
     },
     { {b::none, RefState::DIRECT_FREE_US},
-        RefState::DO_DIRECT 
+        RefState::DIRECT_FREE_US
     },
     { {b::none, RefState::DIRECT_FREE_THEM},
-        RefState::DEFEND_DIRECT 
+        RefState::DIRECT_FREE_THEM
     },
 } ;
 
 bool isTwoState(b::optional<RefState> previousCmdOpt, RefState currentCmd) {
-    return twoStatePairs.find({previousCmdOpt, currentCmd}) != twoStatePairs.end();
+    return twoStatePairs.find({previousCmdOpt, currentCmd}) != twoStatePairs.end()
+        || twoStatePairs.find({b::none, currentCmd}) != twoStatePairs.end()
+        ;
 }
 
 /**
@@ -68,6 +70,11 @@ b::optional<RefState> getFirstState(boost::optional<RefState> previousCmdOpt, Re
     auto stateIt = twoStatePairs.find({previousCmdOpt, currentCmd});
     if (stateIt != twoStatePairs.end()) {
         return stateIt->second;
+    } else {
+        stateIt = twoStatePairs.find({b::none, currentCmd});
+        if (stateIt != twoStatePairs.end()) {
+            return stateIt->second;
+        }
     }
 
     return b::none;

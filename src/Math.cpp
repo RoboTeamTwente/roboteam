@@ -22,6 +22,16 @@ double cleanAngle(double angle){
 	}
 }
 
+Vector2 limitAngleDiff(Vector2 vector1, Vector2 vector2, double maxAngleDiff) {
+    double angleDiff = cleanAngle(vector1.angle() - vector2.angle());
+    if (angleDiff > maxAngleDiff) {
+        vector1 = vector2.scale(vector1.length() / vector2.length()).rotate(maxAngleDiff);
+    } else if (angleDiff < -maxAngleDiff) {
+        vector1 = vector2.scale(vector1.length() / vector2.length()).rotate(-maxAngleDiff);
+    }
+    return vector1;
+}
+
 bool isPointInCircle(Vector2 center, double radius, Vector2 point) {
 	double xDiffSqr = (point.x-center.x)*(point.x-center.x);
 	double yDiffSqr = (point.y-center.y)*(point.y-center.y);

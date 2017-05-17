@@ -3,6 +3,7 @@
 #include <boost/optional.hpp>
 
 #include "roboteam_utils/RefLookup.h"
+#include "roboteam_utils/LastRef.h"
 #include "roboteam_msgs/RefereeCommand.h"
 
 namespace b = boost;
@@ -26,66 +27,57 @@ const std::map <std::string,int> refstagelookup = {
 	{"POST_GAME", 13}
 };
 
-const std::map <std::string,int> refcommandlookup = {
-	{"HALT",0},
-	{"STOP",1},
-	{"NORMAL_START",2},
-	{"FORCE_START",3},
-	{"PREPARE_KICKOFF_US",4},
-	{"PREPARE_KICKOFF_THEM",5},
-	{"PREPARE_PENALTY_US",6},
-	{"PREPARE_PENALTY_THEM",7},
-	{"DIRECT_FREE_US",8},
-	{"DIRECT_FREE_THEM",9},
-	{"INDIRECT_FREE_US",10},
-	{"INDIRECT_FREE_THEM",11},
-	{"TIMEOUT_US",12},
-	{"TIMEOUT_THEM",13},
-	{"GOAL_US",14},
-	{"GOAL_THEM",15},
-	{"BALL_PLACEMENT_US",16},
-	{"BALL_PLACEMENT_THEM",17}	
-};
+namespace b = boost;
 
-const std::map <int, std::string> refcommandlookdown = {
-	{0, "HALT"},
-	{1, "STOP"},
-	{2, "NORMAL_START"},
-	{3, "FORCE_START"},
-	{4, "PREPARE_KICKOFF_US"},
-	{5, "PREPARE_KICKOFF_THEM"},
-	{6, "PREPARE_PENALTY_US"},
-	{7, "PREPARE_PENALTY_THEM"},
-	{8, "DIRECT_FREE_US"},
-	{9, "DIRECT_FREE_THEM"},
-	{10, "INDIRECT_FREE_US"},
-	{11, "INDIRECT_FREE_THEM"},
-	{12, "TIMEOUT_US"},
-	{13, "TIMEOUT_THEM"},
-	{14, "GOAL_US"},
-	{15, "GOAL_THEM"},
-	{16, "BALL_PLACEMENT_US"},
-	{17, "BALL_PLACEMENT_THEM"}	
+const std::map<std::pair<boost::optional<RefState>, RefState>, RefState> twoStatePairs = {
+    { {RefState::PREPARE_KICKOFF_US, RefState::NORMAL_START}, 
+        RefState::DO_KICKOFF 
+    }, 
+    { {RefState::PREPARE_KICKOFF_THEM, RefState::NORMAL_START},
+        RefState::DEFEND_KICKOFF 
+    },
+    { {RefState::PREPARE_PENALTY_US, RefState::NORMAL_START},
+        RefState::DO_PENALTY 
+    },
+    { {RefState::PREPARE_PENALTY_THEM, RefState::NORMAL_START},
+        RefState::DEFEND_PENALTY 
+    },
+    { {b::none, RefState::INDIRECT_FREE_US},
+        RefState::INDIRECT_FREE_US
+    },
+    { {b::none, RefState::INDIRECT_FREE_THEM},
+        RefState::INDIRECT_FREE_THEM
+    },
+    { {b::none, RefState::DIRECT_FREE_US},
+        RefState::DIRECT_FREE_US
+    },
+    { {b::none, RefState::DIRECT_FREE_THEM},
+        RefState::DIRECT_FREE_THEM
+    },
 } ;
 
-const std::set<int> implicitNormalStartRefCommands = {
-    roboteam_msgs::RefereeCommand::INDIRECT_FREE_US,
-    roboteam_msgs::RefereeCommand::INDIRECT_FREE_THEM,
-    roboteam_msgs::RefereeCommand::DIRECT_FREE_US,
-    roboteam_msgs::RefereeCommand::DIRECT_FREE_THEM
-} ;
-
-bool isImplicitNormalStartCommand(int cmd) {
-    return implicitNormalStartRefCommands.find(cmd) != implicitNormalStartRefCommands.end();
+bool isTwoState(b::optional<RefState> previousCmdOpt, RefState currentCmd) {
+    return twoStatePairs.find({previousCmdOpt, currentCmd}) != twoStatePairs.end()
+        || twoStatePairs.find({b::none, currentCmd}) != twoStatePairs.end()
+        ;
 }
 
-b::optional<std::string> getRefCommandName(int cmd) {
-    auto cmdIt = refcommandlookdown.find(cmd);
-    if (cmdIt != refcommandlookdown.end()) {
-        return cmdIt->second;
+/**
+ *  Returns the first stage from the two stage pair previousCmd and currentCmd.
+ *  The second stage is always normal play.
+ */
+b::optional<RefState> getFirstState(boost::optional<RefState> previousCmdOpt, RefState currentCmd) {
+    auto stateIt = twoStatePairs.find({previousCmdOpt, currentCmd});
+    if (stateIt != twoStatePairs.end()) {
+        return stateIt->second;
     } else {
-        return b::none;
+        stateIt = twoStatePairs.find({b::none, currentCmd});
+        if (stateIt != twoStatePairs.end()) {
+            return stateIt->second;
+        }
     }
+
+    return b::none;
 }
 
 }

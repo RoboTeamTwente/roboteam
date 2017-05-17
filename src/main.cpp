@@ -138,8 +138,6 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
 // http://askubuntu.com/questions/216114/how-can-i-remove-modem-manager-from-boot
 // sudo apt-get purge modemmanager + reboot or something should do the trick
 
-namespace {
-
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
 std::string SERIAL_FILE_PATH = "/dev/ttyACM3";
@@ -150,12 +148,27 @@ boost::asio::serial_port serialPort(io);
 int acks = 0;
 int nacks = 0;
 
-} // anonymous namespace
+enum class SerialResultStatus {
+    NACK,
+    ACK,
+    STRANGE_RESPONSE,
+    CANT_OPEN_PORT,
+    COMMAND_TO_PACKET_FAILED
+} ;
 
-void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+struct SerialSendResult {
+    SerialResultStatus status;
+};
+
+// Returns true if ack, false if nack.
+SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+
+    SerialSendResult result;
+    result.status = SerialResultStatus::ACK;
 
     if (!serialPortOpen) {
         // Open serial port
+        // TODO: Doublecheck if serial file path changes or smth
         std::cout << "Opening serial port...\n";
         boost::system::error_code errorCode;
         serialPort.open(SERIAL_FILE_PATH, errorCode);
@@ -166,9 +179,10 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
                 break;
             default:
                 std::cerr << " ERROR! Could not open serial port!\n";
-                return;
+                result.status = SerialResultStatus::CANT_OPEN_PORT;
+                return result;
         }
-    } 
+    }
 
     // Create message
     
@@ -191,6 +205,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // }
 
         // Write message to it
+        // TODO: read/write can throw!
         b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()));
 
         // Listen for ack
@@ -200,11 +215,10 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        // int const returnSize = (2*12)+2;
         int const returnSize = 2;
         std::array<uint8_t, returnSize> ackCode;
         ackCode.fill('!');
-        // serialPort.read_some(boost::asio::buffer(ackCode.data(), returnSize));
+
         b::asio::read(serialPort, boost::asio::buffer(ackCode.data(), returnSize));
 
         // Uncomment for debug info
@@ -219,14 +233,11 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         auto ack = rtt::decodeOldACK(ackCode);
 
         if (ack.robotACK) {
-            acks++;
+            result.status = SerialResultStatus::ACK;
+            return result;
         } else {
-            nacks++;
-        }
-
-        int const MAX_NACKS = 20;
-        if (nacks > MAX_NACKS) {
-            // std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
+            result.status = SerialResultStatus::NACK;
+            return result;
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -235,7 +246,8 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
     } else {
         // Oh shit.
-        std::cout << " Could not turn command into packet!\n";
+        result.status = SerialResultStatus::COMMAND_TO_PACKET_FAILED;
+        return result;
     }
 }
 
@@ -243,7 +255,7 @@ enum Mode {
     SERIAL,
     GRSIM,
     GAZEBO
-} ;
+};
 
 Mode getMode() {
     std::string robot_output_target = "grsim";
@@ -257,21 +269,40 @@ Mode getMode() {
     }
 }
 
-void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
-    roboteam_msgs::RobotCommand command = *msg;
 
+void sendCommand(roboteam_msgs::RobotCommand command) {
     if (halt) return;
 
     auto mode = getMode();
+
     if (mode == Mode::GRSIM) {
         sendGRsimCommands(command);
     } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(command);
     } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(command);
+        auto result = sendSerialCommands(command);
+        switch (result.status) {
+            case SerialResultStatus::ACK:
+                acks++;
+                break;
+            case SerialResultStatus::NACK:
+                nacks++;
+                break;
+            default:
+                // TODO: Gracefully handle the other responses.
+                ROS_ERROR_STREAM("sendSerialCommands() return something other than ACK or NACK!\n");
+                break;
+        }
     } else { // Default to grsim
         sendGRsimCommands(command);
     }
+}
+
+
+void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    roboteam_msgs::RobotCommand command = *msg;
+
+    sendCommand(command);
 }
 
 bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
@@ -279,7 +310,6 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
 }
 
 void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCommand const>& msgEvent) {
-
     auto const & publisherName = msgEvent.getPublisherName();
     bool isYellow = publisherName.find("yellow") != std::string::npos;
     std::string prefix;
@@ -293,17 +323,7 @@ void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCom
         prefix = "/blue";
     }
 
-    auto mode = getMode();
-    if (mode == Mode::GRSIM) {
-        sendGRsimCommands(msg);
-    } else if (mode == Mode::GAZEBO) {
-        sendGazeboCommands(msg);
-    } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(msg);
-    } else { // Default to grsim
-        sendGRsimCommands(msg);
-    }
-
+    sendCommand(msg);
 }
 
 bool MERGING = false;
@@ -359,10 +379,10 @@ int main(int argc, char *argv[]) {
     rtt::WorldAndGeomCallbackCreator wgcc;
 
     using namespace std;
-    using namespace std::chrono; 
-    
+    using namespace std::chrono;
+
     high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
-    
+
     while (ros::ok()) {
         // std::cout << "----- DOING A CYCLE! -----\n";
 
@@ -377,18 +397,11 @@ int main(int argc, char *argv[]) {
             roboteam_msgs::RobotCommand command;
             for (int i = 0; i < 16; ++i) {
                 command.id = i;
-                if (mode == Mode::GRSIM) {
-                    sendGRsimCommands(command);
-                } else if (mode == Mode::GAZEBO) {
-                    sendGazeboCommands(command);
-                } else if (mode == Mode::SERIAL) {
-                    sendSerialCommands(command);
-                } else { // Default to grsim
-                    sendGRsimCommands(command);
-                }
+
+                sendCommand(command);
             }
         }
-        
+
         if (mode == Mode::SERIAL) {
             auto timeDiff = high_resolution_clock::now() - lastStatistics;
 

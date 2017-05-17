@@ -425,7 +425,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     return boost::optional<packed_protocol_message>(byteArr);
 }
 
-std::string byteToBinary(uint8_t byte) {
+std::string byteToBinary(uint8_t const & byte) {
     std::string byteStr = "";
     for (int i = 0; i < 8; i++) {
         if ((byte & (1 << i)) == (1 << i)) {

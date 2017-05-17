@@ -94,7 +94,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
 OldACK decodeOldACK(packed_old_ack const & packedAck);
 NewACK decodeNewACK(packed_new_ack const & packedAck);
 
-std::string byteToBinary(uint8_t byte);
+std::string byteToBinary(uint8_t const & byte);
 
 template<unsigned int N>
 std::string byteArrayToString(std::array<uint8_t, N> bytes) {

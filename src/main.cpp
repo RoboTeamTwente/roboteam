@@ -142,7 +142,7 @@ namespace {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM3";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -156,11 +156,13 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
 
     if (!serialPortOpen) {
         // Open serial port
+        std::cout << "Opening serial port...\n";
         boost::system::error_code errorCode;
         serialPort.open(SERIAL_FILE_PATH, errorCode);
         switch (errorCode.value()) {
             case boost::system::errc::success:
                 serialPortOpen = true;
+                std::cout << "Port opened.\n";
                 break;
             default:
                 std::cerr << " ERROR! Could not open serial port!\n";
@@ -180,12 +182,17 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
 
         auto bytes = *bytesOpt;
 
+        // Uncomment for debug info
+        // std::cout << "Byte size: " << bytes.size() << "\n";
+        // std::cout << "Bytes: \n";
+        // for (uint8_t b : bytes) {
+            // printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
+
+        // }
+
         // Write message to it
-        serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
-        // TODO: @Hack Crutches! Packet length should be 7!
-        // Disabled because new packet size is 12
-        // serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
-        
+        b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()));
+
         // Listen for ack
         // CAREFUL! The first ascii character is the robot ID
         // _________________________________________
@@ -193,9 +200,21 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        std::array<uint8_t, 2> ackCode;
-        // TODO: @Incomplete ack format is undefined/unstable! Guessing it is 2 bytes!
-        serialPort.read_some(boost::asio::buffer(ackCode.data(), 2));
+        // int const returnSize = (2*12)+2;
+        int const returnSize = 2;
+        std::array<uint8_t, returnSize> ackCode;
+        ackCode.fill('!');
+        // serialPort.read_some(boost::asio::buffer(ackCode.data(), returnSize));
+        b::asio::read(serialPort, boost::asio::buffer(ackCode.data(), returnSize));
+
+        // Uncomment for debug info
+        // std::cout << "AckCode size: " << ackCode.size() << "\n";
+        // std::cout << "ackCodes: \n";
+        // 
+        // for (int i = 0; i < returnSize; i += 2) {
+            // // uint8_t b = ackCode[i];
+            // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
+        // }
 
         auto ack = rtt::decodeOldACK(ackCode);
 
@@ -218,7 +237,6 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // Oh shit.
         std::cout << " Could not turn command into packet!\n";
     }
-
 }
 
 enum Mode {

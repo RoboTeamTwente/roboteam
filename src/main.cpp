@@ -146,9 +146,20 @@ boost::asio::serial_port serialPort(io);
 int acks = 0;
 int nacks = 0;
 
+enum SerialSendResult {
+    SERIAL_NACK,
+    SERIAL_ACK,
+    SERIAL_STRANGE_RESPONSE,
+    SERIAL_CANT_OPEN_PORT,
+    SERIAL_COMMAND_TO_PACKET_FAILED,
+};
+
 } // anonymous namespace
 
-void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+// Returns true if ack, false if nack.
+SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+
+    SerialSendResult result = SERIAL_NACK;
 
     if (!serialPortOpen) {
         // Open serial port
@@ -160,9 +171,9 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
                 break;
             default:
                 std::cerr << " ERROR! Could not open serial port!\n";
-                return;
+                return SERIAL_CANT_OPEN_PORT;
         }
-    } 
+    }
 
 
     // Create message
@@ -175,7 +186,7 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
         // TODO: @Hack Crutches! Packet length should be 7!
         serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
-        
+
         // Listen for ack
         // CAREFUL! The first ascii character is the robot ID
         // _________________________________________
@@ -192,15 +203,16 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         if (ackCode[1] == '0') {
             // successful_msg = false;
             // std::cout << " Nack!\n";
-            nacks++;
+            result = SERIAL_NACK;
         } else if (ackCode[1] == '1') {
             // successful_msg = true;
             // std::cout << " Ack!\n";
-            acks++;
+            result = SERIAL_ACK;
         } else {
             std::cout << "strange result: "
-                      << (int) ackCode[1] 
+                      << (int) ackCode[1]
                       << "\n";
+            result = SERIAL_STRANGE_RESPONSE;
         }
 
 
@@ -216,15 +228,17 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
     } else {
         // Oh shit.
         std::cout << " Could not turn command into packet!\n";
+        result = SERIAL_COMMAND_TO_PACKET_FAILED;
     }
 
+    return result;
 }
 
 enum Mode {
     SERIAL,
     GRSIM,
     GAZEBO
-} ;
+};
 
 Mode getMode() {
     std::string robot_output_target = "grsim";
@@ -249,7 +263,15 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(command);
     } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(command);
+        switch (sendSerialCommands(command)) {
+            case SERIAL_ACK:
+                acks++;
+            break;
+            case SERIAL_NACK:
+                nacks++;
+            break;
+            // TODO: Gracefully handle the other responses.
+        }
     } else { // Default to grsim
         sendGRsimCommands(command);
     }
@@ -337,10 +359,10 @@ int main(int argc, char *argv[]) {
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
     using namespace std;
-    using namespace std::chrono; 
-    
+    using namespace std::chrono;
+
     high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
-    
+
     while (ros::ok()) {
         // std::cout << "----- DOING A CYCLE! -----\n";
 
@@ -360,13 +382,21 @@ int main(int argc, char *argv[]) {
                 } else if (mode == Mode::GAZEBO) {
                     sendGazeboCommands(command);
                 } else if (mode == Mode::SERIAL) {
-                    sendSerialCommands(command);
+                    switch (sendSerialCommands(command)) {
+                        case SERIAL_ACK:
+                            acks++;
+                        break;
+                        case SERIAL_NACK:
+                            nacks++;
+                        break;
+                        // TODO: Gracefully handle the other responses.
+                    }
                 } else { // Default to grsim
                     sendGRsimCommands(command);
                 }
             }
         }
-        
+
         if (mode == Mode::SERIAL) {
             auto timeDiff = high_resolution_clock::now() - lastStatistics;
 

@@ -252,12 +252,12 @@ Mode getMode() {
     }
 }
 
-void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
-    roboteam_msgs::RobotCommand command = *msg;
 
+void sendCommand(roboteam_msgs::RobotCommand command) {
     if (halt) return;
 
     auto mode = getMode();
+
     if (mode == Mode::GRSIM) {
         sendGRsimCommands(command);
     } else if (mode == Mode::GAZEBO) {
@@ -275,6 +275,13 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     } else { // Default to grsim
         sendGRsimCommands(command);
     }
+}
+
+
+void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    roboteam_msgs::RobotCommand command = *msg;
+
+    sendCommand(command);
 }
 
 bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
@@ -296,25 +303,7 @@ void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCom
         prefix = "/blue";
     }
 
-    auto mode = getMode();
-    if (mode == Mode::GRSIM) {
-        sendGRsimCommands(msg);
-    } else if (mode == Mode::GAZEBO) {
-        sendGazeboCommands(msg);
-    } else if (mode == Mode::SERIAL) {
-        switch (sendSerialCommands(msg)) {
-            case SERIAL_ACK:
-                acks++;
-            break;
-            case SERIAL_NACK:
-                nacks++;
-            break;
-            // TODO: Gracefully handle the other responses.
-        }
-    } else { // Default to grsim
-        sendGRsimCommands(msg);
-    }
-
+    sendCommand(msg);
 }
 
 bool MERGING = false;
@@ -385,23 +374,8 @@ int main(int argc, char *argv[]) {
             roboteam_msgs::RobotCommand command;
             for (int i = 0; i < 16; ++i) {
                 command.id = i;
-                if (mode == Mode::GRSIM) {
-                    sendGRsimCommands(command);
-                } else if (mode == Mode::GAZEBO) {
-                    sendGazeboCommands(command);
-                } else if (mode == Mode::SERIAL) {
-                    switch (sendSerialCommands(command)) {
-                        case SERIAL_ACK:
-                            acks++;
-                        break;
-                        case SERIAL_NACK:
-                            nacks++;
-                        break;
-                        // TODO: Gracefully handle the other responses.
-                    }
-                } else { // Default to grsim
-                    sendGRsimCommands(command);
-                }
+
+                sendCommand(command);
             }
         }
 

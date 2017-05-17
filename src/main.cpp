@@ -302,7 +302,15 @@ void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCom
     } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(msg);
     } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(msg);
+        switch (sendSerialCommands(msg)) {
+            case SERIAL_ACK:
+                acks++;
+            break;
+            case SERIAL_NACK:
+                nacks++;
+            break;
+            // TODO: Gracefully handle the other responses.
+        }
     } else { // Default to grsim
         sendGRsimCommands(msg);
     }

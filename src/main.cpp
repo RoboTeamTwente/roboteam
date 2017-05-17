@@ -331,7 +331,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 10, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
@@ -384,6 +384,7 @@ int main(int argc, char *argv[]) {
 
                 std::cout << "-----------------------------------\n";
                 std::cout << "Sent messages the past second: " << total << "\n";
+                std::cout << "Capacity: " << std::floor(total / 360.0) << "%\n";
                 std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
                 acks=0;

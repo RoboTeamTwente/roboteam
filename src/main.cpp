@@ -12,6 +12,7 @@
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_msgs/RobotSerialStatus.h"
 #include "roboteam_msgs/World.h"
 #include "roboteam_utils/LastWorld.h"
 #include "roboteam_utils/Vector2.h"
@@ -140,7 +141,7 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
 
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM3";
+std::string SERIAL_FILE_PATH = "/dev/ttyACM1";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -148,13 +149,17 @@ boost::asio::serial_port serialPort(io);
 int acks = 0;
 int nacks = 0;
 
+
+std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
+
+
 enum class SerialResultStatus {
     NACK,
     ACK,
     STRANGE_RESPONSE,
     CANT_OPEN_PORT,
     COMMAND_TO_PACKET_FAILED
-} ;
+};
 
 struct SerialSendResult {
     SerialResultStatus status;
@@ -185,7 +190,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
     }
 
     // Create message
-    
+
     b::optional<roboteam_msgs::World> worldOpt;
     if (rtt::LastWorld::have_received_first_world()) {
         worldOpt = rtt::LastWorld::get();
@@ -224,7 +229,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // Uncomment for debug info
         // std::cout << "AckCode size: " << ackCode.size() << "\n";
         // std::cout << "ackCodes: \n";
-        // 
+        //
         // for (int i = 0; i < returnSize; i += 2) {
             // // uint8_t b = ackCode[i];
             // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
@@ -281,12 +286,15 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
         sendGazeboCommands(command);
     } else if (mode == Mode::SERIAL) {
         auto result = sendSerialCommands(command);
+
         switch (result.status) {
             case SerialResultStatus::ACK:
                 acks++;
+                serialStatusMap[command.id].acks++;
                 break;
             case SerialResultStatus::NACK:
                 nacks++;
+                serialStatusMap[command.id].nacks++;
                 break;
             default:
                 // TODO: Gracefully handle the other responses.
@@ -375,6 +383,9 @@ int main(int argc, char *argv[]) {
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
+
+    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1);
+
     // Creates the callbacks for world and geom
     rtt::WorldAndGeomCallbackCreator wgcc;
 
@@ -403,10 +414,11 @@ int main(int argc, char *argv[]) {
         }
 
         if (mode == Mode::SERIAL) {
-            auto timeDiff = high_resolution_clock::now() - lastStatistics;
+            auto timeNow = high_resolution_clock::now();
+            auto timeDiff = timeNow - lastStatistics;
 
             if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
-                lastStatistics = high_resolution_clock::now();
+                lastStatistics = timeNow;
 
                 auto total = acks + nacks;
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
@@ -424,8 +436,35 @@ int main(int argc, char *argv[]) {
                 std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
                 acks=0;
                 nacks=0;
+
+
+                for (auto &pair : serialStatusMap) {
+                    int id = pair.first;
+                    roboteam_msgs::RobotSerialStatus &status = pair.second;
+
+                    if (status.start_timeframe == ros::Time(0)) {
+                        // This is a new status message.
+                        // It has been initialized with an id of 0.
+                        // So we need to set it correctly.
+                        status.id = id;
+                    } else {
+                        // This status message is ready to be sent.
+                        status.end_timeframe = ros::Time::now();
+
+                        pubSerialStatus.publish(status);
+                    }
+
+                    // Set the new start time.
+                    status.start_timeframe = ros::Time::now();
+                    // Reset the ack and nack counters.
+                    status.acks = 0;
+                    status.nacks = 0;
+                }
             }
+
         }
+
+
     }
 
     return 0;

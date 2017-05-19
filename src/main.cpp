@@ -167,6 +167,7 @@ SerialResultStatus prevResultStatus = SerialResultStatus::ACK;
 
 int acks = 0;
 int nacks = 0;
+int networkMsgs = 0;
 
 // Returns true if ack, false if nack.
 SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
@@ -332,12 +333,11 @@ Mode getMode() {
 
 
 void sendCommand(roboteam_msgs::RobotCommand command) {
-    if (halt) return;
-
     auto mode = getMode();
 
     if (mode == Mode::GRSIM) {
         sendGRsimCommands(command);
+        networkMsgs++;
     } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(command);
     } else if (mode == Mode::SERIAL) {
@@ -364,6 +364,10 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     roboteam_msgs::RobotCommand command = *msg;
+
+    if (halt) {
+        return;
+    }
 
     sendCommand(command);
 }
@@ -468,19 +472,28 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (mode == Mode::SERIAL) {
-            std::string possibleNewSerialFilePath = serial_file_path;
-            ros::param::getCached("serial_file_path", possibleNewSerialFilePath);
+        auto timeNow = high_resolution_clock::now();
+        auto timeDiff = timeNow - lastStatistics;
 
-            if (possibleNewSerialFilePath != serial_file_path) {
-                newSerialFilePath = possibleNewSerialFilePath;
+        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+            lastStatistics = timeNow;
+
+            std::cout << "-----------------------------------\n";
+
+            std::cout << "Halting status: ";
+            if (halt) {
+                std::cout << "!!!HALTING!!!\n";
+            } else {
+                std::cout << "Not halting\n";
             }
 
-            auto timeNow = high_resolution_clock::now();
-            auto timeDiff = timeNow - lastStatistics;
+            if (mode == Mode::SERIAL) {
+                std::string possibleNewSerialFilePath = serial_file_path;
+                ros::param::getCached("serial_file_path", possibleNewSerialFilePath);
 
-            if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
-                lastStatistics = timeNow;
+                if (possibleNewSerialFilePath != serial_file_path) {
+                    newSerialFilePath = possibleNewSerialFilePath;
+                }
 
                 auto total = acks + nacks;
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
@@ -490,8 +503,6 @@ int main(int argc, char *argv[]) {
                     ackPercent = 0;
                     nackPercent = 0;
                 }
-
-                std::cout << "-----------------------------------\n";
 
                 if (prevResultStatus == SerialResultStatus::CANT_OPEN_PORT) {
                     std::cout << "Trying to open port " << serial_file_path << "...\n";
@@ -527,6 +538,9 @@ int main(int argc, char *argv[]) {
                         status.nacks = 0;
                     }
                 }
+            } else if (mode == Mode::GRSIM) {
+                std::cout << "Network messages sent: " << networkMsgs << "\n";
+                networkMsgs = 0;
             }
         }
     }

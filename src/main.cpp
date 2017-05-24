@@ -48,7 +48,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     grSim_Packet packet;
 
     std::string color;
-    ros::param::get("our_color", color);
+    ros::param::getCached("our_color", color);
 
     packet.mutable_commands()->set_isteamyellow(color == "yellow");
     packet.mutable_commands()->set_timestamp(0.0);
@@ -93,8 +93,8 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     // Send to IP address and port specified in grSim
     std::string grsim_ip = "127.0.0.1";
     int grsim_port = 20011;
-    ros::param::get("grsim/ip", grsim_ip);
-    ros::param::get("grsim/port", grsim_port);
+    ros::param::getCached("grsim/ip", grsim_ip);
+    ros::param::getCached("grsim/port", grsim_port);
 
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
@@ -159,7 +159,7 @@ struct SerialSendResult {
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 b::optional<std::string> newSerialFilePath;
-std::string serial_file_path = "/dev/ttyACM3";
+std::string serial_file_path = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);

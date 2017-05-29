@@ -25,6 +25,8 @@
 
 #include "roboteam_robothub/packing.h"
 
+#define VERIFY_COMMANDS
+
 namespace {
 
 bool halt = false;
@@ -38,8 +40,50 @@ ros::Publisher pub;
 
 QUdpSocket udpsocket;
 
+#ifdef VERIFY_COMMANDS
+
+bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string mode) {
+	if (cmd.id < 0) {
+		ROS_ERROR("RobotHub (%s): Invalid ID number: %d (should be positive)", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (fabs(cmd.x_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): X velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.x_vel);
+		return false;
+	}
+	if (fabs(cmd.y_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): Y velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.y_vel);
+		return false;
+	}
+	if (fabs(cmd.w) > 10000) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.w);
+		return false;
+	}
+	if (cmd.x_vel != cmd.x_vel) {
+		ROS_ERROR("RobotHub (%s): X velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.y_vel != cmd.y_vel) {
+		ROS_ERROR("RobotHub (%s): Y velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.w != cmd.w) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	return true;
+}
+
+#endif
+
 void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
-    // ROS_INFO_STREAM("received message for GRsim");
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "grsim")) {
+		return;
+	}
+#endif
+
+	// ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 
     std::string color;
@@ -96,7 +140,11 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO("received message for Gazebo!");
-
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "gazebo")) {
+		return;
+	}
+#endif
     float x_vel = _msg.x_vel;
     float y_vel = _msg.y_vel;
     float w = _msg.w;
@@ -149,7 +197,11 @@ int nacks = 0;
 } // anonymous namespace
 
 void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
-
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "serial")) {
+			return;
+		}
+#endif
     if (!serialPortOpen) {
         // Open serial port
         boost::system::error_code errorCode;
@@ -228,7 +280,7 @@ enum Mode {
 
 Mode getMode() {
     std::string robot_output_target = "grsim";
-    ros::param::getCached("robot_output_target", robot_output_target);
+    ros::param::get("robot_output_target", robot_output_target);
     if (robot_output_target == "grsim") {
         return Mode::GRSIM;
     } else if (robot_output_target == "serial") {

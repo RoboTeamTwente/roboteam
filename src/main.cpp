@@ -8,8 +8,13 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <boost/optional.hpp>
+namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_msgs/RobotSerialStatus.h"
+#include "roboteam_msgs/World.h"
+#include "roboteam_utils/LastWorld.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/constants.h"
@@ -87,7 +92,7 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     grSim_Packet packet;
 
     std::string color;
-    ros::param::get("our_color", color);
+    ros::param::getCached("our_color", color);
 
     packet.mutable_commands()->set_isteamyellow(color == "yellow");
     packet.mutable_commands()->set_timestamp(0.0);
@@ -132,8 +137,8 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     // Send to IP address and port specified in grSim
     std::string grsim_ip = "127.0.0.1";
     int grsim_port = 20011;
-    ros::param::get("grsim/ip", grsim_ip);
-    ros::param::get("grsim/port", grsim_port);
+    ros::param::getCached("grsim/ip", grsim_ip);
+    ros::param::getCached("grsim/port", grsim_port);
 
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
@@ -182,52 +187,121 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
 // http://askubuntu.com/questions/216114/how-can-i-remove-modem-manager-from-boot
 // sudo apt-get purge modemmanager + reboot or something should do the trick
 
-namespace {
-
 // http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
 
-std::string SERIAL_FILE_PATH = "/dev/ttyACM0";
+
+enum class SerialResultStatus {
+    ACK,
+    NACK,
+    STRANGE_RESPONSE,
+    CANT_OPEN_PORT,
+    COMMAND_TO_PACKET_FAILED,
+    UNKNOWN_WRITE_ERROR,
+    UNKNOWN_READ_ERROR,
+    CONNECTION_CLOSED_BY_PEER,
+	COMMAND_SANITY_CHECK_FAILED
+} ;
+
+struct SerialSendResult {
+    SerialResultStatus status;
+};
+
+std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
+b::optional<std::string> newSerialFilePath;
+std::string serial_file_path = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
+SerialResultStatus prevResultStatus = SerialResultStatus::ACK;
 
 int acks = 0;
 int nacks = 0;
+int networkMsgs = 0;
 
-} // anonymous namespace
+// Returns true if ack, false if nack.
+SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
-void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+    SerialSendResult result;
+    result.status = SerialResultStatus::ACK;
 #ifdef VERIFY_COMMANDS
 	if (!verifyCommandIntegrity(_msg, "serial")) {
-			return;
-		}
+		return { SerialResultStatus::COMMAND_SANITY_CHECK_FAILED };
+	}
 #endif
-    if (!serialPortOpen) {
+    if (!serialPortOpen || newSerialFilePath) {
+
+        if (newSerialFilePath) {
+            if (serialPortOpen) {
+                std::cout << "Closing port " << serial_file_path << " to open " << *newSerialFilePath << "...\n";
+                serialPort.close();
+            }
+
+            serial_file_path = *newSerialFilePath;
+            newSerialFilePath = boost::none;
+        }
         // Open serial port
+        // TODO: Doublecheck if serial file path changes or smth
+        // std::cout << "Opening serial port " << SERIAL_FILE_PATH << "...\n";
         boost::system::error_code errorCode;
-        serialPort.open(SERIAL_FILE_PATH, errorCode);
+        serialPort.open(serial_file_path, errorCode);
         switch (errorCode.value()) {
             case boost::system::errc::success:
                 serialPortOpen = true;
+                std::cout << "Port " << serial_file_path << " opened.\n";
                 break;
             default:
-                std::cerr << " ERROR! Could not open serial port!\n";
-                return;
+                // std::cerr << " ERROR! Could not open serial port!\n";
+                result.status = SerialResultStatus::CANT_OPEN_PORT;
+                return result;
         }
-    } 
-
+    }
 
     // Create message
-    if (auto bytesOpt = rtt::createRobotPacket(_msg)) {
+
+    b::optional<roboteam_msgs::World> worldOpt;
+    if (rtt::LastWorld::have_received_first_world()) {
+        worldOpt = rtt::LastWorld::get();
+    }
+
+    if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
         // Success!
 
         auto bytes = *bytesOpt;
 
+        // Uncomment for debug info
+        // std::cout << "Byte size: " << bytes.size() << "\n";
+        // std::cout << "Bytes: \n";
+        // for (uint8_t b : bytes) {
+            // printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
+
+        // }
+
         // Write message to it
-        serialPort.write_some(boost::asio::buffer(bytes.data(), bytes.size()));
-        // TODO: @Hack Crutches! Packet length should be 7!
-        serialPort.write_some(boost::asio::buffer(bytes.data(), 1));
-        
+        // TODO: read/write can throw!
+        b::system::error_code ec;
+        b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()), ec);
+
+        switch (ec.value()) {
+            case boost::asio::error::eof:
+                ROS_ERROR_STREAM("Connection closed by peer while writing! Closing port and trying to reopen...");
+                result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
+                serialPort.close();
+                serialPortOpen = false;
+                return result;
+                break;
+            case boost::system::errc::success:
+                // Everything's just peachy!
+                break;
+            default:
+                // Unknown read error!
+                ROS_ERROR_STREAM("Unknown write error! Closing the port and trying to reopen...");
+                serialPort.close();
+                serialPortOpen = false;
+                result.status = SerialResultStatus::UNKNOWN_WRITE_ERROR;
+                return result;
+                break;
+        }
+
         // Listen for ack
         // CAREFUL! The first ascii character is the robot ID
         // _________________________________________
@@ -235,30 +309,49 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        uint8_t ackCode[3] = {};
-        // TODO: @Incomplete ack format is undefined/unstable! Guessing it is 2 bytes!
-        serialPort.read_some(boost::asio::buffer(ackCode, 2));
+        int const returnSize = 2;
+        std::array<uint8_t, returnSize> ackCode;
+        ackCode.fill('!');
 
-        // If the second character in the response is an ascii 0 character,
-        // it means sending the packet failed.
-        if (ackCode[1] == '0') {
-            // successful_msg = false;
-            // std::cout << " Nack!\n";
-            nacks++;
-        } else if (ackCode[1] == '1') {
-            // successful_msg = true;
-            // std::cout << " Ack!\n";
-            acks++;
-        } else {
-            std::cout << "strange result: "
-                      << (int) ackCode[1] 
-                      << "\n";
+        b::asio::read(serialPort, boost::asio::buffer(ackCode.data(), returnSize), ec);
+
+        switch (ec.value()) {
+            case boost::asio::error::eof:
+                ROS_ERROR_STREAM("Connection closed by peer while reading! Closing port and trying to reopen...");
+                result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
+                serialPort.close();
+                serialPortOpen = false;
+                return result;
+                break;
+            case boost::system::errc::success:
+                // Peachy!
+                break;
+            default:
+                ROS_ERROR_STREAM("Unknown read error! Closing the port and trying to reopen...");
+                serialPort.close();
+                serialPortOpen = false;
+                result.status = SerialResultStatus::UNKNOWN_READ_ERROR;
+                return result;
+                break;
         }
 
+        // Uncomment for debug info
+        // std::cout << "AckCode size: " << ackCode.size() << "\n";
+        // std::cout << "ackCodes: \n";
+        //
+        // for (int i = 0; i < returnSize; i += 2) {
+            // // uint8_t b = ackCode[i];
+            // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
+        // }
 
-        int const MAX_NACKS = 20;
-        if (nacks > MAX_NACKS) {
-            // std::cout << "Got " << MAX_NACKS << " or more nacks over the past second of sending packets.\n";
+        auto ack = rtt::decodeOldACK(ackCode);
+
+        if (ack.robotACK) {
+            result.status = SerialResultStatus::ACK;
+            return result;
+        } else {
+            result.status = SerialResultStatus::NACK;
+            return result;
         }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
@@ -267,16 +360,16 @@ void sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
         // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
     } else {
         // Oh shit.
-        std::cout << " Could not turn command into packet!\n";
+        result.status = SerialResultStatus::COMMAND_TO_PACKET_FAILED;
+        return result;
     }
-
 }
 
 enum Mode {
     SERIAL,
     GRSIM,
     GAZEBO
-} ;
+};
 
 Mode getMode() {
     std::string robot_output_target = "grsim";
@@ -290,21 +383,45 @@ Mode getMode() {
     }
 }
 
-void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
-    roboteam_msgs::RobotCommand command = *msg;
 
-    if (halt) return;
-
+void sendCommand(roboteam_msgs::RobotCommand command) {
     auto mode = getMode();
+
     if (mode == Mode::GRSIM) {
         sendGRsimCommands(command);
+        networkMsgs++;
     } else if (mode == Mode::GAZEBO) {
         sendGazeboCommands(command);
     } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(command);
+        auto result = sendSerialCommands(command);
+
+        switch (result.status) {
+            case SerialResultStatus::ACK:
+                acks++;
+                serialStatusMap[command.id].acks++;
+                break;
+            case SerialResultStatus::NACK:
+                nacks++;
+                serialStatusMap[command.id].nacks++;
+                break;
+            default:
+                break;
+        }
+        prevResultStatus = result.status;
     } else { // Default to grsim
         sendGRsimCommands(command);
     }
+}
+
+
+void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
+    roboteam_msgs::RobotCommand command = *msg;
+
+    if (halt) {
+        return;
+    }
+
+    sendCommand(command);
 }
 
 bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
@@ -312,7 +429,6 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
 }
 
 void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCommand const>& msgEvent) {
-
     auto const & publisherName = msgEvent.getPublisherName();
     bool isYellow = publisherName.find("yellow") != std::string::npos;
     std::string prefix;
@@ -326,17 +442,7 @@ void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCom
         prefix = "/blue";
     }
 
-    auto mode = getMode();
-    if (mode == Mode::GRSIM) {
-        sendGRsimCommands(msg);
-    } else if (mode == Mode::GAZEBO) {
-        sendGazeboCommands(msg);
-    } else if (mode == Mode::SERIAL) {
-        sendSerialCommands(msg);
-    } else { // Default to grsim
-        sendGRsimCommands(msg);
-    }
-
+    sendCommand(msg);
 }
 
 bool MERGING = false;
@@ -365,9 +471,9 @@ int main(int argc, char *argv[]) {
     // }
 
     auto mode = getMode();
-    if (mode == Mode::SERIAL) {
-        ROS_INFO("Serial Device: %s\n", SERIAL_FILE_PATH.c_str());
-    }
+    // if (mode == Mode::SERIAL) {
+        // ROS_INFO("[RobotHub] Serial Device: %s\n", serial_file_path.c_str());
+    // }
 
     ros::Subscriber mergingRobotCommandsBlue;
     ros::Subscriber mergingRobotCommandsYellow;
@@ -383,16 +489,22 @@ int main(int argc, char *argv[]) {
 
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 10, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
+
+    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1);
+
+    // Creates the callbacks for world and geom
+    rtt::WorldAndGeomCallbackCreator wgcc;
+
     using namespace std;
-    using namespace std::chrono; 
-    
+    using namespace std::chrono;
+
     high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
-    
+
     while (ros::ok()) {
         // std::cout << "----- DOING A CYCLE! -----\n";
 
@@ -407,23 +519,33 @@ int main(int argc, char *argv[]) {
             roboteam_msgs::RobotCommand command;
             for (int i = 0; i < 16; ++i) {
                 command.id = i;
-                if (mode == Mode::GRSIM) {
-                    sendGRsimCommands(command);
-                } else if (mode == Mode::GAZEBO) {
-                    sendGazeboCommands(command);
-                } else if (mode == Mode::SERIAL) {
-                    sendSerialCommands(command);
-                } else { // Default to grsim
-                    sendGRsimCommands(command);
-                }
+
+                sendCommand(command);
             }
         }
-        
-        if (mode == Mode::SERIAL) {
-            auto timeDiff = high_resolution_clock::now() - lastStatistics;
 
-            if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
-                lastStatistics = high_resolution_clock::now();
+        auto timeNow = high_resolution_clock::now();
+        auto timeDiff = timeNow - lastStatistics;
+
+        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+            lastStatistics = timeNow;
+
+            std::cout << "-----------------------------------\n";
+
+            std::cout << "Halting status: ";
+            if (halt) {
+                std::cout << "!!!HALTING!!!\n";
+            } else {
+                std::cout << "Not halting\n";
+            }
+
+            if (mode == Mode::SERIAL) {
+                std::string possibleNewSerialFilePath = serial_file_path;
+                ros::param::getCached("serial_file_path", possibleNewSerialFilePath);
+
+                if (possibleNewSerialFilePath != serial_file_path) {
+                    newSerialFilePath = possibleNewSerialFilePath;
+                }
 
                 auto total = acks + nacks;
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
@@ -434,12 +556,43 @@ int main(int argc, char *argv[]) {
                     nackPercent = 0;
                 }
 
-                std::cout << "-----------------------------------\n";
-                std::cout << "Sent messages the past second: " << total << "\n";
-                std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
-                std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
-                acks=0;
-                nacks=0;
+                if (prevResultStatus == SerialResultStatus::CANT_OPEN_PORT) {
+                    std::cout << "Trying to open port " << serial_file_path << "...\n";
+                } else {
+                    std::cout << "Current port: " << serial_file_path << "\n";
+                    std::cout << "Sent messages the past second: " << total << "\n";
+                    std::cout << "Capacity: " << std::floor(total / 360.0) << "%\n";
+                    std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
+                    std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
+                    acks=0;
+                    nacks=0;
+
+                    for (auto &pair : serialStatusMap) {
+                        int id = pair.first;
+                        roboteam_msgs::RobotSerialStatus &status = pair.second;
+
+                        if (status.start_timeframe == ros::Time(0)) {
+                            // This is a new status message.
+                            // It has been initialized with an id of 0.
+                            // So we need to set it correctly.
+                            status.id = id;
+                        } else {
+                            // This status message is ready to be sent.
+                            status.end_timeframe = ros::Time::now();
+
+                            pubSerialStatus.publish(status);
+                        }
+
+                        // Set the new start time.
+                        status.start_timeframe = ros::Time::now();
+                        // Reset the ack and nack counters.
+                        status.acks = 0;
+                        status.nacks = 0;
+                    }
+                }
+            } else if (mode == Mode::GRSIM) {
+                std::cout << "Network messages sent: " << networkMsgs << "\n";
+                networkMsgs = 0;
             }
         }
     }

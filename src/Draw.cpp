@@ -6,9 +6,8 @@ const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
 
 Draw::Draw() {
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
-        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1);
-        debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
-        debugPubArc = n.advertise<roboteam_msgs::DebugArc>("view_debug_arcs", 1000);
+        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 10000);
+        debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 10000);
     }
 }
 

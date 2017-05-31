@@ -1,6 +1,8 @@
 <launch>
+    <arg name="robot_output_target" default="serial" />
+
     <include file="$(find roboteam_utils)/mini.launch">
-        <arg name="robot_output_target" value="serial" />
+        <arg name="robot_output_target" value="$(arg robot_output_target)" />
     </include>
 
     <param name="role_iterations_per_second" type="int" value="60" />

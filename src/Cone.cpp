@@ -26,8 +26,11 @@ Cone::Cone(Vector2 startPoint, Vector2 side1, Vector2 side2) {
 	this->start = startPoint;
 	Vector2 tempSide1 = side1.scale(2 / side1.length());
 	Vector2 tempSide2 = side2.scale(2 / side2.length());
+
 	this->angle = cleanAngle(tempSide1.angle() - tempSide2.angle());
-	this->center = tempSide2.rotate(0.5*angle) + this->start;
+	if (angle > 0) this->center = tempSide2.rotate(0.5*fabs(angle)) + this->start;
+	if (angle < 0) this->center = tempSide1.rotate(0.5*fabs(angle)) + this->start;
+	this->angle = fabs(angle);
 	this->side1 = (center-start).rotate(0.5*angle);
 	this->side2 = (center-start).rotate(-0.5*angle);
 	this->radius = (start+side1 - center).length();

@@ -6,6 +6,7 @@ const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
 
 Draw::Draw() {
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        // printf("Draw constructor \n");
         debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 10000);
         debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 10000);
     }
@@ -66,6 +67,7 @@ void Draw::drawPoint(std::string name, Vector2 point) {
         position.pos.y = point.y;
         position.color = color;
         debugPubPoint.publish(position);
+        // printf("drawing point! \n");
     }
 }
 

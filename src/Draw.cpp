@@ -6,8 +6,9 @@ const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
 
 Draw::Draw() {
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
-        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1000);
+        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 1);
         debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 1000);
+        debugPubArc = n.advertise<roboteam_msgs::DebugArc>("view_debug_arcs", 1000);
     }
 }
 
@@ -76,6 +77,30 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
     position.remove = true;
     debugPubPoint.publish(position);
 }
+}
+
+void Draw::drawArc(std::string name, const Arc& arc) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugArc msg;
+        msg.name = name;
+        msg.center.x = arc.center.x;
+        msg.center.y = arc.center.y;
+        msg.ellipseWidth = arc.length;
+        msg.ellipseHeight = arc.width;
+        msg.startAngle = arc.angleStart;
+        msg.endAngle = arc.angleEnd;
+        msg.fill = false;
+        debugPubArc.publish(msg);
+    }
+}
+    
+void Draw::removeArc(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugArc msg;
+        msg.name = name;
+        msg.remove = true;
+        debugPubArc.publish(msg);
+    }
 }
 
 void Draw::setColor(int r, int g, int b) {

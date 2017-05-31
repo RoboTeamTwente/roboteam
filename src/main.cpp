@@ -313,34 +313,114 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
     }
 }
 
-enum Mode {
+enum class RobotType {
     SERIAL,
     GRSIM,
+    ARDUINO,
     GAZEBO
-};
+} ;
 
-Mode getMode() {
-    std::string robot_output_target = "grsim";
-    ros::param::getCached("robot_output_target", robot_output_target);
-    if (robot_output_target == "grsim") {
-        return Mode::GRSIM;
-    } else if (robot_output_target == "serial") {
-        return Mode::SERIAL;
+b::optional<RobotType> stringToRobotType(std::string const & t) {
+    if (t == "serial") {
+        return RobotType::SERIAL;
+    } else if (t == "grsim") {
+        return RobotType::GRSIM;
+    } else if (t == "arduino") {
+        return RobotType::ARDUINO;
+    } else if (t == "gazebo") {
+        return RobotType::GAZEBO;
     } else {
-        return Mode::GAZEBO;
+        return b::none;
     }
 }
 
+std::string robotTypeToString(RobotType const t) {
+    switch(t) {
+        case RobotType::SERIAL:
+            return "serial";
+        case RobotType::GRSIM:
+            return "grsim";
+        case RobotType::ARDUINO:
+            return "arduino";
+        case RobotType::GAZEBO:
+            return "gazebo";
+    }
+    
+}
+
+std::map<int, RobotType> robotTypes;
+
+void updateRobotTypes() {
+    for (int i = 0; i < 16; ++i) {
+        std::string paramName = "/robot" + std::to_string(i) + "/robotType";
+        if (ros::param::has(paramName)) {
+            std::string paramRobotType = "";
+            ros::param::get(paramName, paramName);
+
+            if (auto robotTypeOpt = stringToRobotType(paramRobotType)) {
+                robotTypes[i] = *robotTypeOpt;
+            } else {
+                auto robotTypeIt = robotTypes.find(i);
+                if (robotTypeIt != robotTypes.end()) {
+                    ROS_ERROR_STREAM("Unexpected value set for the robot type of robot " 
+                            << i 
+                            << ": \"" 
+                            << paramRobotType
+                            << "\". Leaving setting at: "
+                            << robotTypeToString(robotTypes[i])
+                            );
+                } else {
+                    ROS_ERROR_STREAM("Unexpected value set for the robot type of robot " 
+                            << i 
+                            << ": \"" 
+                            << paramRobotType
+                            << "\". Leaving setting at unset."
+                            );
+                }
+            }
+        } else {
+            // No type detected for robot. That's okay.
+            // But delete the param from the map if it's there
+            auto typeIt = robotTypes.find(i);
+            if (typeIt != robotTypes.end()) {
+                robotTypes.erase(typeIt);
+            }
+        }
+    }
+}
+
+b::optional<RobotType> getMode(int id) {
+    auto const typeIt = robotTypes.find(id);
+
+    if (typeIt != robotTypes.end()) {
+        return typeIt->second;
+    } else {
+        return b::none;
+    }
+}
+
+std::set<RobotType> getDistinctTypes() {
+    std::set<RobotType> types;
+
+    for (auto const & pair : robotTypes) {
+        types.insert(pair.second);
+    }
+
+    return types;
+}
 
 void sendCommand(roboteam_msgs::RobotCommand command) {
-    auto mode = getMode();
+    auto mode = getMode(command.id);
 
-    if (mode == Mode::GRSIM) {
+    if (mode == b::none) {
+        // We skip this command, it's not meant for us
+        // No mode set!
+    } else if (mode == RobotType::GRSIM) {
         sendGRsimCommands(command);
         networkMsgs++;
-    } else if (mode == Mode::GAZEBO) {
+    } else if (mode == RobotType::GAZEBO) {
         sendGazeboCommands(command);
-    } else if (mode == Mode::SERIAL) {
+    } else if (mode == RobotType::SERIAL) {
         auto result = sendSerialCommands(command);
 
         switch (result.status) {
@@ -356,8 +436,10 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
                 break;
         }
         prevResultStatus = result.status;
+    } else if (mode == RobotType::ARDUINO) {
+        // Skip this one, not responsible for it
     } else { // Default to grsim
-        sendGRsimCommands(command);
+        // sendGRsimCommands(command);
     }
 }
 
@@ -411,18 +493,6 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
-    // TODO: Do this with a proper flag
-    // if (argc > 1) {
-        // SERIAL_FILE_PATH = std::string(argv[1]);
-    // } else if (ros::param::has("serialOut")) {
-        // ros::param::get("serialOut", SERIAL_FILE_PATH);
-    // }
-
-    auto mode = getMode();
-    // if (mode == Mode::SERIAL) {
-        // ROS_INFO("[RobotHub] Serial Device: %s\n", serial_file_path.c_str());
-    // }
-
     ros::Subscriber mergingRobotCommandsBlue;
     ros::Subscriber mergingRobotCommandsYellow;
 
@@ -453,13 +523,13 @@ int main(int argc, char *argv[]) {
 
     high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
 
+    updateRobotTypes();
+
     while (ros::ok()) {
         // std::cout << "----- DOING A CYCLE! -----\n";
 
         loop_rate.sleep();
         ros::spinOnce();
-
-        mode = getMode();
 
         // Stop all robots if needed!
         if (halt) {
@@ -476,6 +546,8 @@ int main(int argc, char *argv[]) {
         auto timeDiff = timeNow - lastStatistics;
 
         if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+            updateRobotTypes();
+
             lastStatistics = timeNow;
 
             std::cout << "-----------------------------------\n";
@@ -487,7 +559,10 @@ int main(int argc, char *argv[]) {
                 std::cout << "Not halting\n";
             }
 
-            if (mode == Mode::SERIAL) {
+            auto modes = getDistinctTypes();
+
+            if (modes.find(RobotType::SERIAL) != modes.end()) {
+                std::cout << "---- Serial ----\n";
                 std::string possibleNewSerialFilePath = serial_file_path;
                 ros::param::getCached("serial_file_path", possibleNewSerialFilePath);
 
@@ -538,7 +613,8 @@ int main(int argc, char *argv[]) {
                         status.nacks = 0;
                     }
                 }
-            } else if (mode == Mode::GRSIM) {
+            } else if (modes.find(RobotType::GRSIM) != modes.end()) {
+                std::cout << "---- GRSim ----\n";
                 std::cout << "Network messages sent: " << networkMsgs << "\n";
                 networkMsgs = 0;
             }

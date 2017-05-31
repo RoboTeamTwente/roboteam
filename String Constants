@@ -25,7 +25,6 @@
 
     "PARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
 
-
     "NODE_TACTICS": "tactics",
     "NODE_DO_STRATEGY": "doStrategy",
     "NODE_KEEPER_TEST": "KeeperTactic",

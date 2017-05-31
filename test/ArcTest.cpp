@@ -4,7 +4,7 @@
 namespace rtt {
     
 TEST(ArcTests, unitCircle) {
-    Arc circle(ZERO_VECTOR, 1.0);
+    Arc circle;
     ASSERT_EQ(circle.length, circle.width);
     ASSERT_DOUBLE_EQ(1.0, circle.length);
     ASSERT_DOUBLE_EQ(M_PIl * 2 - std::numeric_limits<float>::epsilon(), circle.angleEnd - circle.angleStart);

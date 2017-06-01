@@ -10,4 +10,7 @@
     <node name="robot0" pkg="roboteam_tactics" type="RoleNode" output="screen" />
     <node name="robot1" pkg="roboteam_tactics" type="RoleNode" output="screen" />
     <node name="robot2" pkg="roboteam_tactics" type="RoleNode" output="screen" />
+    <node name="robot3" pkg="roboteam_tactics" type="RoleNode" output="screen" />
+    <node name="robot4" pkg="roboteam_tactics" type="RoleNode" output="screen" />
+    <node name="robot5" pkg="roboteam_tactics" type="RoleNode" output="screen" />
 </launch>

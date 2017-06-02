@@ -223,11 +223,13 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
     SerialSendResult result;
     result.status = SerialResultStatus::ACK;
+
 #ifdef VERIFY_COMMANDS
 	if (!verifyCommandIntegrity(_msg, "serial")) {
 		return { SerialResultStatus::COMMAND_SANITY_CHECK_FAILED };
 	}
 #endif
+
     if (!serialPortOpen || newSerialFilePath) {
 
         if (newSerialFilePath) {
@@ -375,6 +377,8 @@ enum class RobotType {
 b::optional<RobotType> stringToRobotType(std::string const & t) {
     if (t == "serial") {
         return RobotType::SERIAL;
+    } else if (t == "proto") {
+        return RobotType::SERIAL;
     } else if (t == "grsim") {
         return RobotType::GRSIM;
     } else if (t == "arduino") {
@@ -385,18 +389,6 @@ b::optional<RobotType> stringToRobotType(std::string const & t) {
         return b::none;
     }
 }
-
-// Mode getMode() {
-    // std::string robot_output_target = "grsim";
-    // ros::param::get("robot_output_target", robot_output_target);
-    // if (robot_output_target == "grsim") {
-        // return Mode::GRSIM;
-    // } else if (robot_output_target == "serial") {
-        // return Mode::SERIAL;
-    // } else {
-        // return Mode::GRSIM;
-    // }
-// }
 
 std::string robotTypeToString(RobotType const t) {
     switch(t) {
@@ -419,14 +411,14 @@ void updateRobotTypes() {
         std::string paramName = "/robot" + std::to_string(i) + "/robotType";
         if (ros::param::has(paramName)) {
             std::string paramRobotType = "";
-            ros::param::get(paramName, paramName);
+            ros::param::get(paramName, paramRobotType);
 
             if (auto robotTypeOpt = stringToRobotType(paramRobotType)) {
                 robotTypes[i] = *robotTypeOpt;
             } else {
                 auto robotTypeIt = robotTypes.find(i);
                 if (robotTypeIt != robotTypes.end()) {
-                    ROS_ERROR_STREAM("Unexpected value set for the robot type of robot " 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
                             << i 
                             << ": \"" 
                             << paramRobotType
@@ -434,7 +426,7 @@ void updateRobotTypes() {
                             << robotTypeToString(robotTypes[i])
                             );
                 } else {
-                    ROS_ERROR_STREAM("Unexpected value set for the robot type of robot " 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
                             << i 
                             << ": \"" 
                             << paramRobotType
@@ -659,7 +651,8 @@ int main(int argc, char *argv[]) {
                         status.nacks = 0;
                     }
                 }
-            } else if (modes.find(RobotType::GRSIM) != modes.end()) {
+            }
+            if (modes.find(RobotType::GRSIM) != modes.end()) {
                 // If there's a robot set to GRSim print the amount of network messages sent
                 std::cout << "---- GRSim ----\n";
                 std::cout << "Network messages sent: " << networkMsgs << "\n";

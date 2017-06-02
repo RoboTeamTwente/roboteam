@@ -20,4 +20,10 @@ bool bot_has_ball(const roboteam_msgs::WorldRobot& bot, const roboteam_msgs::Wor
 
 static bool bot_has_ball(unsigned int id, bool our_team, const roboteam_msgs::WorldBall& ball) { return bot_has_ball(*lookup_bot(id, our_team), ball); }
 
+std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& bot_pos,
+                                                    const Vector2& point,
+                                                    const roboteam_msgs::World* world_ptr = nullptr,
+                                                    bool sight_only = true,
+													bool ignore_both_ends = false);
+
 } // rtt

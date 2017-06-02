@@ -1,21 +1,27 @@
 #include "roboteam_utils/Arc.h"
-
+#include "roboteam_utils/Math.h"
 #include <iostream>
 
 namespace rtt {
     
 Arc::Arc() : Arc(ZERO_VECTOR, 1.0) {}
 
-Arc::Arc(Vector2 center, double radius) : Arc(center, radius, 0.0, ARC_MAX) {}
+Arc::Arc(Vector2 center, double radius) : Arc(center, radius, 0, ARC_MAX) {}
 
 Arc::Arc(Vector2 center, double radius, double angleStart, double angleEnd)
     : Arc(center, radius, radius, angleStart, angleEnd) {}
  
 Arc::Arc(Vector2 center, double length, double width, double angleStart, double angleEnd)
-    : center(center), length(length), width(width), angleStart(normalize(angleStart)), angleEnd(normalize(angleEnd)) {}
+    : center(center), length(length), width(width), angleStart(normalize(angleStart)), angleEnd(normalize(angleEnd)) {
+
+	if (fabs(angleEnd) < .0001) {
+		angleEnd = ARC_MAX - .0001;
+	}
+
+}
  
 bool Arc::isCircle() const {
-    return length == width && angleStart == 0.0 && angleEnd == ARC_MAX;
+    return length == width && angleStart == 0 && angleEnd == ARC_MAX;
 }  
 
 bool Arc::isPartialCircle() const {
@@ -28,7 +34,11 @@ bool Arc::angleWithinArc(double angle) const {
 }   
    
 double Arc::normalize(double angle) {
-    return fmodl(fabsl(angle), M_PIl * 2);
+    angle = fmodl(angle, M_PIl * 2);
+    if (angle < 0) {
+        angle = M_PIl * 2 + angle;
+    }
+    return angle;
 }   
 
 bool Arc::pointInArc(const Vector2& point) const {
@@ -116,11 +126,11 @@ boost::optional<Vector2> Arc::arcPointTowards(double angle) const {
     }
     
     double tan2 = powl(tanl(angle), 2);
-    double denom = sqrtl(width*width  + length * length * tan2);
-    double sign = angle >= M_PI_2l || angle <= M_PIl + M_PI_2l ? -1 : 1;
+    double denom = sqrtl(width*width  + length * length / tan2);
+    double sign = angle > M_PI_2l && angle < + M_PIl + M_PI_2l ? -1 : 1;
     Vector2 point(
-        (sign * length * width) / denom,
-        (sign * length * width * tanl(angle))
+        (sign * length * width) / (sqrtl(width*width  + length * length * tan2)),
+        (sign * length * width) / (sqrtl(length*length + width*width / tan2))
     );
     return point;
 }

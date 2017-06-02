@@ -6,9 +6,11 @@
 
 #include "roboteam_msgs/DebugPoint.h"
 #include "roboteam_msgs/DebugLine.h"
+#include "roboteam_msgs/DebugArc.h"
 #include "roboteam_msgs/Vector2f.h"
 #include "roboteam_msgs/Color.h"
 #include "roboteam_utils/Vector2.h"
+#include "roboteam_utils/Arc.h"
 
 namespace rtt {
 
@@ -67,6 +69,11 @@ public:
      * \param name The name of the line to remove.
      */
     void removePoint(std::string name);
+    
+    void drawArc(std::string name, const Arc& arc);
+    
+    void removeArc(std::string name);
+    
     /**
      * \brief Change the color for future draw commands.
      */
@@ -76,6 +83,7 @@ private:
     ros::NodeHandle n;
     ros::Publisher debugPub;
     ros::Publisher debugPubPoint;
+    ros::Publisher debugPubArc;
     roboteam_msgs::Color color;
 };
 

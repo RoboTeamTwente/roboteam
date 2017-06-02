@@ -30,6 +30,8 @@ namespace b = boost;
 
 #include "roboteam_robothub/packing.h"
 
+#define VERIFY_COMMANDS
+
 namespace {
 
 bool halt = false;
@@ -43,12 +45,54 @@ ros::Publisher pub;
 
 QUdpSocket udpsocket;
 
+#ifdef VERIFY_COMMANDS
+
+bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string mode) {
+	if (cmd.id < 0) {
+		ROS_ERROR("RobotHub (%s): Invalid ID number: %d (should be positive)", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (fabs(cmd.x_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): X velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.x_vel);
+		return false;
+	}
+	if (fabs(cmd.y_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): Y velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.y_vel);
+		return false;
+	}
+	if (fabs(cmd.w) > 10000) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.w);
+		return false;
+	}
+	if (cmd.x_vel != cmd.x_vel) {
+		ROS_ERROR("RobotHub (%s): X velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.y_vel != cmd.y_vel) {
+		ROS_ERROR("RobotHub (%s): Y velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.w != cmd.w) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	return true;
+}
+
+#endif
+
 void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
-    // ROS_INFO_STREAM("received message for GRsim");
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "grsim")) {
+		return;
+	}
+#endif
+
+	// ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 
     std::string color;
-    ros::param::get("our_color", color);
+    ros::param::getCached("our_color", color);
 
     packet.mutable_commands()->set_isteamyellow(color == "yellow");
     packet.mutable_commands()->set_timestamp(0.0);
@@ -93,15 +137,19 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
     // Send to IP address and port specified in grSim
     std::string grsim_ip = "127.0.0.1";
     int grsim_port = 20011;
-    ros::param::get("grsim/ip", grsim_ip);
-    ros::param::get("grsim/port", grsim_port);
+    ros::param::getCached("grsim/ip", grsim_ip);
+    ros::param::getCached("grsim/port", grsim_port);
 
     udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip)), grsim_port);
 }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO("received message for Gazebo!");
-
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "gazebo")) {
+		return;
+	}
+#endif
     float x_vel = _msg.x_vel;
     float y_vel = _msg.y_vel;
     float w = _msg.w;
@@ -150,7 +198,8 @@ enum class SerialResultStatus {
     COMMAND_TO_PACKET_FAILED,
     UNKNOWN_WRITE_ERROR,
     UNKNOWN_READ_ERROR,
-    CONNECTION_CLOSED_BY_PEER
+    CONNECTION_CLOSED_BY_PEER,
+	COMMAND_SANITY_CHECK_FAILED
 } ;
 
 struct SerialSendResult {
@@ -159,7 +208,7 @@ struct SerialSendResult {
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 b::optional<std::string> newSerialFilePath;
-std::string serial_file_path = "/dev/ttyACM3";
+std::string serial_file_path = "/dev/ttyACM0";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -170,11 +219,15 @@ int nacks = 0;
 int networkMsgs = 0;
 
 // Returns true if ack, false if nack.
-SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
+SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
     SerialSendResult result;
     result.status = SerialResultStatus::ACK;
-
+#ifdef VERIFY_COMMANDS
+	if (!verifyCommandIntegrity(_msg, "serial")) {
+		return { SerialResultStatus::COMMAND_SANITY_CHECK_FAILED };
+	}
+#endif
     if (!serialPortOpen || newSerialFilePath) {
 
         if (newSerialFilePath) {
@@ -186,7 +239,6 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand &_msg) {
             serial_file_path = *newSerialFilePath;
             newSerialFilePath = boost::none;
         }
-
         // Open serial port
         // TODO: Doublecheck if serial file path changes or smth
         // std::cout << "Opening serial port " << SERIAL_FILE_PATH << "...\n";
@@ -334,6 +386,18 @@ b::optional<RobotType> stringToRobotType(std::string const & t) {
     }
 }
 
+// Mode getMode() {
+    // std::string robot_output_target = "grsim";
+    // ros::param::get("robot_output_target", robot_output_target);
+    // if (robot_output_target == "grsim") {
+        // return Mode::GRSIM;
+    // } else if (robot_output_target == "serial") {
+        // return Mode::SERIAL;
+    // } else {
+        // return Mode::GRSIM;
+    // }
+// }
+
 std::string robotTypeToString(RobotType const t) {
     switch(t) {
         case RobotType::SERIAL:
@@ -458,61 +522,35 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
     return std::find(args.begin(), args.end(), arg) != args.end();
 }
 
-void mergeAndProcessRobotCommand(const ros::MessageEvent<roboteam_msgs::RobotCommand const>& msgEvent) {
-    auto const & publisherName = msgEvent.getPublisherName();
-    bool isYellow = publisherName.find("yellow") != std::string::npos;
-    std::string prefix;
-
-    auto msg = *msgEvent.getConstMessage();
-
-    if (isYellow) {
-        prefix = "/yellow";
-    } else {
-        msg.id += 3;
-        prefix = "/blue";
-    }
-
-    sendCommand(msg);
-}
-
-bool MERGING = false;
-
 } // anonymous namespace
 
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
     if (hasArg(args, "--help") || hasArg(args, "-h")) {
-        std::cout << "--help or -h for help. --merge-mode to merge yellow and blue into robots 0-2 and 3-5 of the yellow team respectively.\n";
+        std::cout << "--help or -h for help.\n";
         return 0;
     }
-
-    MERGING = hasArg(args, "--merge-mode");
 
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
-    ros::Subscriber mergingRobotCommandsBlue;
-    ros::Subscriber mergingRobotCommandsYellow;
-
-    if (MERGING) {
-        mergingRobotCommandsBlue = n.subscribe("/blue/robotcommands", 1000, mergeAndProcessRobotCommand);
-        mergingRobotCommandsYellow = n.subscribe("/yellow/robotcommands", 1000, mergeAndProcessRobotCommand);
-    }
-
+    // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
     ros::Rate loop_rate(roleHz);
 
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
+    // Publisher and subscriber to get robotcommands and steer gazebo
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
+    // Halt subscriber
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
-
+    // Publisher for the serial status
     ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1);
 
     // Creates the callbacks for world and geom
@@ -523,17 +561,15 @@ int main(int argc, char *argv[]) {
 
     high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
 
+    // Get the initial robot types from rosparam
     updateRobotTypes();
 
     while (ros::ok()) {
-        // std::cout << "----- DOING A CYCLE! -----\n";
-
         loop_rate.sleep();
         ros::spinOnce();
 
         // Stop all robots if needed!
         if (halt) {
-
             roboteam_msgs::RobotCommand command;
             for (int i = 0; i < 16; ++i) {
                 command.id = i;
@@ -545,7 +581,9 @@ int main(int argc, char *argv[]) {
         auto timeNow = high_resolution_clock::now();
         auto timeDiff = timeNow - lastStatistics;
 
+        // Every second...
         if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+            // Get the robot types from rosparam
             updateRobotTypes();
 
             lastStatistics = timeNow;
@@ -561,15 +599,18 @@ int main(int argc, char *argv[]) {
 
             auto modes = getDistinctTypes();
 
+            // If there is a robot set to serial
             if (modes.find(RobotType::SERIAL) != modes.end()) {
+                // Check if a new file path was set
                 std::cout << "---- Serial ----\n";
                 std::string possibleNewSerialFilePath = serial_file_path;
-                ros::param::getCached("serial_file_path", possibleNewSerialFilePath);
+                ros::param::get("serial_file_path", possibleNewSerialFilePath);
 
                 if (possibleNewSerialFilePath != serial_file_path) {
                     newSerialFilePath = possibleNewSerialFilePath;
                 }
 
+                // Get the percentage of acks and nacks
                 auto total = acks + nacks;
                 auto ackPercent = static_cast<int>((acks / (double) total) * 100);
                 auto nackPercent = static_cast<int>((nacks / (double) total) * 100);
@@ -579,9 +620,13 @@ int main(int argc, char *argv[]) {
                     nackPercent = 0;
                 }
 
+                // If the port failed to open, print a message that we're trying to open it
                 if (prevResultStatus == SerialResultStatus::CANT_OPEN_PORT) {
                     std::cout << "Trying to open port " << serial_file_path << "...\n";
                 } else {
+                    // Otherwise everything was fine and dandy.
+                    // (Any other errors are handled by the sendSerial function itself by printing)
+                    // Print the status.
                     std::cout << "Current port: " << serial_file_path << "\n";
                     std::cout << "Sent messages the past second: " << total << "\n";
                     std::cout << "Capacity: " << std::floor(total / 360.0) << "%\n";
@@ -590,6 +635,7 @@ int main(int argc, char *argv[]) {
                     acks=0;
                     nacks=0;
 
+                    // Publish any status info on the robots
                     for (auto &pair : serialStatusMap) {
                         int id = pair.first;
                         roboteam_msgs::RobotSerialStatus &status = pair.second;
@@ -614,6 +660,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
             } else if (modes.find(RobotType::GRSIM) != modes.end()) {
+                // If there's a robot set to GRSim print the amount of network messages sent
                 std::cout << "---- GRSim ----\n";
                 std::cout << "Network messages sent: " << networkMsgs << "\n";
                 networkMsgs = 0;

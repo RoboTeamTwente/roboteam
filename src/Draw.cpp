@@ -14,21 +14,21 @@ Draw::Draw() {
 
 
 void Draw::drawLine(std::string name, Vector2 start, Vector2 stop) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine line;
-    line.name = name;
-    line.remove = false;
-    roboteam_msgs::Vector2f startLine;
-    startLine.x = start.x;
-    startLine.y = start.y;
-    roboteam_msgs::Vector2f stopLine;
-    stopLine.x = stop.x + start.x;
-    stopLine.y = stop.y + start.y;
-    line.points.push_back(startLine);
-    line.points.push_back(stopLine);
-    line.color = color;
-    debugPub.publish(line);
-}
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine line;
+        line.name = name;
+        line.remove = false;
+        roboteam_msgs::Vector2f startLine;
+        startLine.x = start.x;
+        startLine.y = start.y;
+        roboteam_msgs::Vector2f stopLine;
+        stopLine.x = stop.x + start.x;
+        stopLine.y = stop.y + start.y;
+        line.points.push_back(startLine);
+        line.points.push_back(stopLine);
+        line.color = color;
+        debugPub.publish(line);
+    }
 }
 
 void Draw::drawLineAbs(std::string name, Vector2 start, Vector2 stop) {
@@ -36,10 +36,10 @@ void Draw::drawLineAbs(std::string name, Vector2 start, Vector2 stop) {
 }
 
 void Draw::drawLine(std::string name, std::vector<Vector2> points) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine line;
-    line.name = name;
-    line.remove = false;
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine line;
+        line.name = name;
+        line.remove = false;
 
         for (auto& point : points) {
             roboteam_msgs::Vector2f pointMsg(point);
@@ -51,12 +51,12 @@ if (RTT_ENABLE_DEBUG_GRAPHICS) {
 }
 
 void Draw::removeLine(std::string name) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugLine Line;
-    Line.name = name;
-    Line.remove = true;
-    debugPub.publish(Line);
-}
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine Line;
+        Line.name = name;
+        Line.remove = true;
+        debugPub.publish(Line);
+    }
 }
 
 void Draw::drawPoint(std::string name, Vector2 point) {
@@ -72,12 +72,12 @@ void Draw::drawPoint(std::string name, Vector2 point) {
 }
 
 void Draw::removePoint(std::string name) {
-if (RTT_ENABLE_DEBUG_GRAPHICS) {
-    roboteam_msgs::DebugPoint position;
-    position.name = name;
-    position.remove = true;
-    debugPubPoint.publish(position);
-}
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugPoint position;
+        position.name = name;
+        position.remove = true;
+        debugPubPoint.publish(position);
+    }
 }
 
 void Draw::drawArc(std::string name, const Arc& arc) {

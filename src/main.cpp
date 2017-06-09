@@ -408,7 +408,7 @@ std::map<int, RobotType> robotTypes;
 
 void updateRobotTypes() {
     for (int i = 0; i < 16; ++i) {
-        std::string paramName = "/robot" + std::to_string(i) + "/robotType";
+        std::string paramName = "robot" + std::to_string(i) + "/robotType";
         if (ros::param::has(paramName)) {
             std::string paramRobotType = "";
             ros::param::get(paramName, paramRobotType);

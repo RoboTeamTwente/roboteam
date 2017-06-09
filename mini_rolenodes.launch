@@ -1,4 +1,6 @@
 <launch>
+
+
     <arg name="robot_output_target" default="grsim" />
 
     <include file="$(find roboteam_utils)/mini.launch">

@@ -178,8 +178,6 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     pub.publish(command);
 }
 
-// http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
-
 enum class SerialResultStatus {
     ACK,
     NACK,
@@ -391,7 +389,7 @@ std::string robotTypeToString(RobotType const t) {
         case RobotType::GAZEBO:
             return "gazebo";
     }
-    
+
 }
 
 std::map<int, RobotType> robotTypes;
@@ -408,17 +406,17 @@ void updateRobotTypes() {
             } else {
                 auto robotTypeIt = robotTypes.find(i);
                 if (robotTypeIt != robotTypes.end()) {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
-                            << i 
-                            << ": \"" 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
+                            << i
+                            << ": \""
                             << paramRobotType
                             << "\". Leaving setting at: "
                             << robotTypeToString(robotTypes[i])
                             );
                 } else {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
-                            << i 
-                            << ": \"" 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
+                            << i
+                            << ": \""
                             << paramRobotType
                             << "\". Leaving setting at unset."
                             );

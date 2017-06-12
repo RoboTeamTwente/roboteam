@@ -178,17 +178,6 @@ void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     pub.publish(command);
 }
 
-// IMPORTANT NOTE (I have to place it somewhere)
-// Make sure ModemManager has been eradicated from
-// your Ubuntu installation. otherwise, upon serial
-// connection, it will dump about 30 characters of random bytes
-// into the connection, screwing up the connection.
-// ModemManager is a program/service of some sort.
-// http://askubuntu.com/questions/216114/how-can-i-remove-modem-manager-from-boot
-// sudo apt-get purge modemmanager + reboot or something should do the trick
-
-// http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
-
 
 enum class SerialResultStatus {
     ACK,
@@ -401,7 +390,7 @@ std::string robotTypeToString(RobotType const t) {
         case RobotType::GAZEBO:
             return "gazebo";
     }
-    
+
 }
 
 std::map<int, RobotType> robotTypes;
@@ -418,17 +407,17 @@ void updateRobotTypes() {
             } else {
                 auto robotTypeIt = robotTypes.find(i);
                 if (robotTypeIt != robotTypes.end()) {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
-                            << i 
-                            << ": \"" 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
+                            << i
+                            << ": \""
                             << paramRobotType
                             << "\". Leaving setting at: "
                             << robotTypeToString(robotTypes[i])
                             );
                 } else {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot " 
-                            << i 
-                            << ": \"" 
+                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
+                            << i
+                            << ": \""
                             << paramRobotType
                             << "\". Leaving setting at unset."
                             );

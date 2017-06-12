@@ -26,6 +26,17 @@ Where `second_user` is your username. This command and a reboot should settle it
 
 Connect the base station. If everything is OK, a port will appear at `/dev/ttyACM0`. This is _the_ serial port, altough it disguises itself as a file. With `packet\_tester` you can send packets and test if the packets & acknowledgements are sent and received correctly. With `socat` (see below) you can spoof a serial port for testing without the base station. `robothub` will send RobotCommands into this port if you set the rosparam `robot_output_target` to "serial".
 
+### IMPORTANT NOTE
+Make sure ModemManager has been eradicated from
+your Ubuntu installation. otherwise, upon serial
+connection, it will dump about 30 characters of random bytes
+into the connection, screwing up the connection.
+ModemManager is a program/service of some sort.
+http://askubuntu.com/questions/216114/how-can-i-remove-modem-manager-from-boot
+sudo apt-get purge modemmanager + reboot or something should do the trick
+
+http://www.boost.org/doc/libs/1_40_0/doc/html/boost_asio/overview/serial_ports.html
+
 # Useful programs
 
 ## system\_test
@@ -41,7 +52,7 @@ Can be used to:
 
 # Useful commands
 
-### 
+###
 
 `socat -d -d pty,raw,echo=0 pty,raw,echo=0`
 
@@ -75,7 +86,7 @@ Hook up the basestation, make sure nothing from ROS is running, and then connect
 
 ### The base station seems to mess up the ACK's?
 
-Reconnect the base station. Open a terminal. `screen /dev/ttyACM0`. Hit a key 8 times (s or / or any key with a specific ascii code). If the base station responds with two hexadecimal characters it's working as expected. If it doesn't respond like that something weird is going on. 
+Reconnect the base station. Open a terminal. `screen /dev/ttyACM0`. Hit a key 8 times (s or / or any key with a specific ascii code). If the base station responds with two hexadecimal characters it's working as expected. If it doesn't respond like that something weird is going on.
 
 Candidates for "something weird":
 - Unplug and plug the base station again, and press "het knopje" again. It's easy to forget (Hans, can you implement a LED that lights up if it is initialized?).

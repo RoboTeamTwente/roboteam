@@ -22,7 +22,7 @@
     <param name="robot14/robotType" type="string" value="$(arg robot_output_target)" />
     <param name="robot15/robotType" type="string" value="$(arg robot_output_target)" />
 
-    <param name="robotClaimedBall" type="int" value="-1" />
+    <!-- <param name="robotClaimedBall" type="int" value="-1" /> -->
 
     <arg name="should_normalize_field" default="true" />
     <param name="normalize_field" type="boolean" value="$(arg should_normalize_field)" />

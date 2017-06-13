@@ -7,7 +7,7 @@
         <arg name="robot_output_target" value="$(arg robot_output_target)" />
     </include>
 
-    <param name="role_iterations_per_second" type="int" value="30" />
+    <param name="role_iterations_per_second" type="int" value="60" />
 
     <node name="robot0" pkg="roboteam_tactics" type="RoleNode" output="screen" />
     <node name="robot1" pkg="roboteam_tactics" type="RoleNode" output="screen" />

@@ -42,7 +42,7 @@ std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& 
     const roboteam_msgs::World world = world_ptr == nullptr ? LastWorld::get() : *world_ptr;
     const auto all_bots = boost::join(world.us, world.them);
 
-    double threshold = sight_only ? .15 : .35;
+    double threshold = sight_only ? .1 : .2;
 
     std::vector<std::pair<roboteam_msgs::WorldRobot, double>> obstacles;
     for (const auto& obs : all_bots) {
@@ -53,6 +53,7 @@ std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& 
         const Vector2 proj = obs_pos.project(bot_pos, point);
         double proj_dist = proj.dist(obs_pos);
         double dist_to_start = bot_pos.dist(obs_pos);
+
         if (proj_dist < threshold && dist_to_start > .0001) {
             obstacles.push_back(std::make_pair(obs, dist_to_start));
         }

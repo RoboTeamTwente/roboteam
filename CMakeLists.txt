@@ -29,6 +29,10 @@ set(CMAKE_CXX_FLAGS "\
 "
 )
 
+#####################################
+## Protobuf conversion & compiling ##
+#####################################
+
 set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
 set(proto_files
     ${proto_dir}/grSim_Replacement.proto
@@ -116,32 +120,54 @@ install(DIRECTORY ${proto_gen_python_dir}/
   FILES_MATCHING PATTERN "*.py"
 )
 
+##########################
+## Constants generation ##
+##########################
+
 add_executable(constants_generator
     "${PROJECT_SOURCE_DIR}/src/ConstantsGenerator.cpp"
     )
-set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-    "${PROJECT_SOURCE_DIR}/src/constants.cpp"
-    "${PROJECT_SOURCE_DIR}/include/roboteam_utils/constants.h"
-    )
+
+set(RTT_CONSTANTS_HEADER_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}/constants.h")
+set(RTT_CONSTANTS_SOURCE_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/roboteam_utils/constants.cpp")
+
+# Leaving this here in case we need it later at some point.
+# It used to be needed to get CMake to delete our headers and such when make clean was called
+# But it does it now automatically (as it should!)
+# set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+    # ${RTT_CONSTANTS_HEADER_FILE}
+    # ${RTT_CONSTANTS_SOURCE_FILE}
+    # )
 
 add_custom_command(
-	OUTPUT ${PROJECT_SOURCE_DIR}/src/constants.cpp
-	COMMAND ${PROJECT_SOURCE_DIR}/generate_constants.sh
+	OUTPUT 
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
+	COMMAND
+        ${PROJECT_SOURCE_DIR}/generate_constants.sh
+    ARGS
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
 	DEPENDS
         constants_generator
         "${PROJECT_SOURCE_DIR}/String Constants"
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-	COMMENT "Generating constants file"
+	COMMENT "Generating constants file..."
 )
 add_custom_target(generate_constants_t
 	ALL
-	DEPENDS ${PROJECT_SOURCE_DIR}/src/constants.cpp
+    DEPENDS
+        ${RTT_CONSTANTS_HEADER_FILE}
+        ${RTT_CONSTANTS_SOURCE_FILE}
 )
+
+###########################
+## Regular library stuff ##
+###########################
 
 add_library(roboteam_utils
     src/Vector2.cpp
     src/Position.cpp
-    src/constants.cpp
     src/world_analysis.cpp
     src/LastWorld.cpp
     src/LastRef.cpp
@@ -155,6 +181,7 @@ add_library(roboteam_utils
     src/RefLookup.cpp
     src/Arc.cpp
     src/Section.cpp
+    ${RTT_CONSTANTS_SOURCE_FILE}
 )
 add_dependencies(roboteam_utils
     ${${PROJECT_NAME}_EXPORTED_TARGETS}

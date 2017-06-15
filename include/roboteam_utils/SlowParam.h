@@ -56,7 +56,11 @@ template<
 class SlowParam {
 public:
     SlowParam(std::string const & paramName) : 
-            firstUpdate{true},
+            // This is set to false to make sure that
+            // if a default parameter is not passed
+            // the ros param is not set to 0 when first getting it
+            // (i.e. at the side of the parameter server)
+            updateRosParamToDefault{false},
             paramName{paramName},
             latestValue{},
             defaultValue{},
@@ -64,7 +68,7 @@ public:
             lastCheck{} { } 
 
     SlowParam(std::string const & paramName, T const & defaultValue) :
-            firstUpdate{true},
+            updateRosParamToDefault{true},
             paramName{paramName},
             latestValue{},
             defaultValue{defaultValue},
@@ -93,20 +97,19 @@ public:
     void getAndUpdateValue() {
         wasParamSet = ros::param::get(paramName, latestValue);
         lastCheck = std::chrono::high_resolution_clock::now();
-        std::cout << "Updating param: " << paramName << "!\n";
 
         // Only set the parameter to the default value if it was not set
         // If a default value was not given it will be zero initialized
-        if (firstUpdate && !wasParamSet) {
+        if (updateRosParamToDefault && !wasParamSet) {
             ros::param::set(paramName, defaultValue);
             latestValue = defaultValue;
         }
 
-        firstUpdate = false;
+        updateRosParamToDefault = false;
     }
 
 private:
-    bool firstUpdate;
+    bool updateRosParamToDefault;
     std::string const paramName;
     T latestValue;
     T defaultValue;

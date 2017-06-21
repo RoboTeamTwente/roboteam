@@ -10,12 +10,21 @@ namespace rtt {
 using namespace roboteam_msgs;
 
 /**
- * Rotates the detectionframe when needed. e.g. when our field side is 'right'.
+ * \brief Normalizes a detection frame when needed. e.g. when our field side is 'right'.
+ * \param world The frame to normalize.
  */
 DetectionFrame normalizeDetectionFrame(DetectionFrame& world);
 
+/**
+ * \brief Normalizes geometry data packet when needed. e.g. when our field side is 'right'.
+ * \param data The data to rotate.
+ */
 GeometryData normalizeGeometryData(GeometryData& data);
 
+/**
+ * \brief Normalizes a referee data packet when needed. e.g. when our field side is 'right'.
+ * \param data The data to rotate.
+ */
 RefereeData normalizeRefereeData(RefereeData& data);
 
 

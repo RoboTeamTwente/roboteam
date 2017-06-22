@@ -11,40 +11,16 @@ namespace rtt {
 using namespace roboteam_msgs;
 
 DetectionFrame normalizeDetectionFrame(DetectionFrame& frame) {
-    std::string our_side;
-    get_PARAM_OUR_SIDE(our_side);
-
-    if (our_side == "right") {
-        return rotateDetectionFrame(frame);
-    } else {
-        // No need to normalize.
-        return frame;
-    }
+    return rotateDetectionFrame(frame);
 }
 
 
 GeometryData normalizeGeometryData(GeometryData& data) {
-    std::string our_side;
-    get_PARAM_OUR_SIDE(our_side);
-
-    if (our_side == "right") {
-        return rotateGeometryData(data);
-    } else {
-        // No need to normalize.
-        return data;
-    }
+    return rotateGeometryData(data);
 }
 
 RefereeData normalizeRefereeData(RefereeData& data) {
-    std::string our_side;
-    get_PARAM_OUR_SIDE(our_side);
-
-    if (our_side == "right") {
-        return rotateRefereeData(data);
-    } else {
-        // No need to normalize.
-        return data;
-    }
+    return rotateRefereeData(data);
 }
 
 DetectionFrame rotateDetectionFrame(DetectionFrame const & frame) {

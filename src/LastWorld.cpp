@@ -11,6 +11,7 @@ namespace rtt {
 
 void LastWorld::callback_world_state(const roboteam_msgs::WorldConstPtr& world) {
     LastWorld::set(*world);
+    // ROS_INFO("new world");
     LastWorld::received_first_world = true;
 }
 

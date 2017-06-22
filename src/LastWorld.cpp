@@ -77,7 +77,7 @@ bool LastWorld::received_first_geom = false;
 bool LastWorld::received_first_world = false;
 
 WorldAndGeomCallbackCreator::WorldAndGeomCallbackCreator()
-    : worldSubscriber(n.subscribe<roboteam_msgs::World>(rtt::TOPIC_WORLD_STATE, 1, rtt::LastWorld::callback_world_state))
+    : worldSubscriber(n.subscribe<roboteam_msgs::World>(rtt::TOPIC_WORLD_STATE, 1, rtt::LastWorld::callback_world_state, ros::TransportHints().tcpNoDelay()))
     , geomSubscriber(n.subscribe<roboteam_msgs::GeometryData>(rtt::TOPIC_GEOMETRY, 1, rtt::LastWorld::callback_geom_data)) {}
 
 }

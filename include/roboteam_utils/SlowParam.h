@@ -93,7 +93,7 @@ public:
     void getAndUpdateValue() {
         wasParamSet = ros::param::get(paramName, latestValue);
         lastCheck = std::chrono::high_resolution_clock::now();
-        std::cout << "Updating param: " << paramName << "!\n";
+        // std::cout << "Updating param: " << paramName << "!\n";
 
         // Only set the parameter to the default value if it was not set
         // If a default value was not given it will be zero initialized

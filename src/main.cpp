@@ -86,6 +86,108 @@ SlowParam<std::string> colorParam("our_color");
 SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
 SlowParam<int>         grsim_port("grsim/port", 20011); 
 
+// Algorithm for efficient GRSim'ing:
+// - Receive msg
+// - Put in buffer
+//
+// When is the buffer flushed:
+// - After every ros::spinOnce(), flush buffer
+//      - Probably the cleanest, simplest. Not sure about effectiveness.
+//      - If in one spinonce you receive one robot instruction twice
+//        you drop a packet
+//      - If it takes multiple cycles to get a packet from everyone then this
+//        is a bad solution since it doesn't compress much.
+//      - If we run at the same speed as a rolenode however it seems appropriate
+//      - Maybe with an escape as soon as it drops one packet?
+// - Every 6 messages
+//      - Might drop a packet every once in a while
+//      - Like this the most atm.
+//      - What if there are 2 robots? Need to detect how many there are.
+//      - Reset that every 0.25 seconds?
+// - Every a certain amount of time
+//      - Might drop a packet every once in a while as well
+// - When a packet from every robot is received
+//      - Needs to be reset every 0.25 seconds or smth to account for robots leaving e.d.
+//      - If one rolenode crashes all robots have no instructions for 0.25 secs
+//
+// - Did some tests. With 4 testx's running it seems quite nicely separated, i.e.
+//   0 1 2 3 4 0 1 2 3 4, for some permutation of 0 1 2 3 4.
+//   So the following seems a nice approach. Also, the safety thing will make
+//   sure that for bad permutations or nodes that run faster than others it will
+//   still send packets at a better than worst-case-scenario rate. Did some more
+//   tests with randomly started testx's, still works like a charm.
+//
+// - Every time the buffer has reached the threshold, it will flush.
+// - Every 0.25 (or some other amount) of seconds robothub will check
+//   how many robots it has seen it that time period
+// - That will be its new threshold
+// - As long as all rolenodes run at the same Hz it should work fine
+// - If one crashes the system recovers in 0.25 secs.
+// - Safety: if two (or more/less?) packets are dropped from a specific robot
+//   robothub immediately evaluates how many robots there are, changes its
+//   threshold, and flushes the buffer.
+
+void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg) {
+    grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
+    
+    command->set_id(msg.id);
+    command->set_wheelsspeed(false);
+    command->set_veltangent(msg.x_vel);
+    command->set_velnormal(msg.y_vel);
+    command->set_velangular(msg.w);
+
+    if (msg.kicker) {
+        command->set_kickspeedx(msg.kicker_vel);
+    } else {
+        command->set_kickspeedx(0);
+    }
+
+    if (msg.chipper) {
+        rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
+        vel = vel.rotate(M_PI/4); // 45 degrees up.
+
+        command->set_kickspeedx(vel.x);
+    	command->set_kickspeedz(vel.y);
+    } else {
+        command->set_kickspeedz(0);
+    }
+
+    command->set_spinner(msg.dribbler);
+}
+
+// For repeated usage in sendGrSimPacket, saves an allocation
+thread_local std::array<char, 65536> packetBuffer;
+
+void sendGrSimPacket(grSim_Packet const & packet) {
+    packet.SerializeToArray(packetBuffer.data(), packetBuffer.size());
+    udpsocket.writeDatagram(
+            packetBuffer.data(),
+            packet.ByteSize(),
+            QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
+            );
+}
+
+void sendMultipleGRsimCommands(const std::vector<roboteam_msgs::RobotCommand> & msgs) {
+#ifdef VERIFY_COMMANDS
+    for (auto const & msg : msgs) {
+        if (!verifyCommandIntegrity(msg, "grsim")) {
+            return;
+        }
+    }
+#endif
+
+    grSim_Packet packet;
+
+    packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
+    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+
+    for (auto const & msg : msgs) {
+        addRobotCommandToPacket(packet, msg);
+    }
+
+    sendGrSimPacket(packet);
+}
+
 void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
 #ifdef VERIFY_COMMANDS
 	if (!verifyCommandIntegrity(_msg, "grsim")) {
@@ -93,50 +195,14 @@ void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
 	}
 #endif
 
-	// ROS_INFO_STREAM("received message for GRsim");
     grSim_Packet packet;
 
     packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
-    packet.mutable_commands()->set_timestamp(0.0);
+    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
 
-    // Initialize a grSim command (grSim is the robocup SSL simulator created by Parsians)
-    grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
-    command->set_id(_msg.id);
+    addRobotCommandToPacket(packet, _msg);
 
-    // Fill the grSim command with the received values. Set either wheelspeed or robotspeed
-    command->set_wheelsspeed(false);
-    // command->set_wheel1(0.0);
-    // command->set_wheel2(0.0);
-    // command->set_wheel3(0.0);
-    // command->set_wheel4(0.0);
-    command->set_veltangent(_msg.x_vel);
-    command->set_velnormal(_msg.y_vel);
-    command->set_velangular(_msg.w);
-
-	if(_msg.kicker){
-    	command->set_kickspeedx(_msg.kicker_vel);
-    }
-    else {
-    	command->set_kickspeedx(0);
-    }
-    if(_msg.chipper){
-        rtt::Vector2 vel = rtt::Vector2(_msg.chipper_vel, 0);
-        vel = vel.rotate(M_PI/4); // 45 degrees up.
-
-        command->set_kickspeedx(vel.x);
-    	command->set_kickspeedz(vel.y);
-    }
-    else {
-    	command->set_kickspeedz(0);
-    }
-
-    command->set_spinner(_msg.dribbler);
-
-	QByteArray dgram;
-    dgram.resize(packet.ByteSize());
-    packet.SerializeToArray(dgram.data(), dgram.size());
-
-    udpsocket.writeDatagram(dgram, QHostAddress(QString::fromStdString(grsim_ip())), grsim_port());
+    sendGrSimPacket(packet);
 }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
@@ -564,14 +630,14 @@ int main(int argc, char *argv[]) {
 
             lastStatistics = timeNow;
 
-            std::cout << "-----------------------------------\n";
+            // std::cout << "-----------------------------------\n";
 
-            std::cout << "Halting status: ";
-            if (halt) {
-                std::cout << "!!!HALTING!!!\n";
-            } else {
-                std::cout << "Not halting\n";
-            }
+            // std::cout << "Halting status: ";
+            // if (halt) {
+                // std::cout << "!!!HALTING!!!\n";
+            // } else {
+                // std::cout << "Not halting\n";
+            // }
 
             auto modes = getDistinctTypes();
 
@@ -638,8 +704,8 @@ int main(int argc, char *argv[]) {
             }
             if (modes.find(RobotType::GRSIM) != modes.end()) {
                 // If there's a robot set to GRSim print the amount of network messages sent
-                std::cout << "---- GRSim ----\n";
-                std::cout << "Network messages sent: " << networkMsgs << "\n";
+                // std::cout << "---- GRSim ----\n";
+                // std::cout << "Network messages sent: " << networkMsgs << "\n";
                 networkMsgs = 0;
             }
         }

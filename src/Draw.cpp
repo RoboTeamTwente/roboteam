@@ -18,14 +18,10 @@ void Draw::drawLine(std::string name, Vector2 start, Vector2 stop) {
         roboteam_msgs::DebugLine line;
         line.name = name;
         line.remove = false;
-        roboteam_msgs::Vector2f startLine;
-        startLine.x = start.x;
-        startLine.y = start.y;
-        roboteam_msgs::Vector2f stopLine;
-        stopLine.x = stop.x + start.x;
-        stopLine.y = stop.y + start.y;
-        line.points.push_back(startLine);
-        line.points.push_back(stopLine);
+        line.start.x = start.x;
+        line.start.y = start.y;
+        line.stop.x = stop.x + start.x;
+        line.stop.y = stop.y + start.y;
         line.color = color;
         debugPub.publish(line);
     }
@@ -33,21 +29,6 @@ void Draw::drawLine(std::string name, Vector2 start, Vector2 stop) {
 
 void Draw::drawLineAbs(std::string name, Vector2 start, Vector2 stop) {
     drawLine(name, start, stop - start);
-}
-
-void Draw::drawLine(std::string name, std::vector<Vector2> points) {
-    if (RTT_ENABLE_DEBUG_GRAPHICS) {
-        roboteam_msgs::DebugLine line;
-        line.name = name;
-        line.remove = false;
-
-        for (auto& point : points) {
-            roboteam_msgs::Vector2f pointMsg(point);
-            line.points.push_back(pointMsg);
-        }
-
-        debugPub.publish(line);
-    }
 }
 
 void Draw::removeLine(std::string name) {
@@ -94,7 +75,7 @@ void Draw::drawArc(std::string name, const Arc& arc) {
         debugPubArc.publish(msg);
     }
 }
-    
+
 void Draw::removeArc(std::string name) {
     if (RTT_ENABLE_DEBUG_GRAPHICS) {
         roboteam_msgs::DebugArc msg;

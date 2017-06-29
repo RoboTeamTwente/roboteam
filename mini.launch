@@ -33,5 +33,5 @@
     <node pkg="roboteam_world" type="filtered_world" name="world" output="screen"/>
     <node pkg="roboteam_vision" type="roboteam_vision" name="vision" />
     <param name="serialOut" type="string" value="/dev/ttyACM0" />
-    <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" output="screen"/>
+    <node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" output="screen" />
 </launch>

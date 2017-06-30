@@ -49,4 +49,12 @@ Position Position::scale(double scalar) const {
     return Position(x*scalar, y*scalar, rot*scalar);
 }
 
+std::ostream& Position::write(std::ostream& stream) const {
+	return stream << "{ x = " << x << ", y = " << y << ", rot = " << rot << " }";
+}
+
+std::ostream& operator<<(std::ostream& stream, const Position& pos) {
+	return pos.write(stream);
+}
+
 }

@@ -46,12 +46,6 @@ public:
 
     void drawLine(std::string name, Vector2 start, Vector2 stop);
     void drawLineAbs(std::string name, Vector2 start, Vector2 stop);
-    /**
-     * \brief Draws a line consisting of multiple points.
-     * \param name The unique name for this line.
-     * \param points The points between which to draw the line, in the order supplied.
-     */
-    void drawLine(std::string name, std::vector<Vector2> points);
 
     /**
      * \brief Removes the line with the supplied name.
@@ -69,16 +63,16 @@ public:
      * \param name The name of the line to remove.
      */
     void removePoint(std::string name);
-    
+
     void drawArc(std::string name, const Arc& arc);
-    
+
     void removeArc(std::string name);
-    
+
     /**
      * \brief Change the color for future draw commands.
      */
     void setColor(int r, int g, int b);
-    
+
 private:
     ros::NodeHandle n;
     ros::Publisher debugPub;

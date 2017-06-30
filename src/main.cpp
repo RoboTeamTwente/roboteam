@@ -236,7 +236,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 std::cout << "Port " << serial_file_path << " opened.\n";
                 break;
             default:
-                // std::cerr << " ERROR! Could not open serial port!\n";
+                std::cerr << " ERROR! Could not open serial port! " << errorCode.value() << "\n";
                 result.status = SerialResultStatus::CANT_OPEN_PORT;
                 return result;
         }

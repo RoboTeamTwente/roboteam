@@ -20,8 +20,6 @@ namespace b = boost;
 #include "roboteam_utils/constants.h"
 #include "roboteam_utils/constants.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/grSim_Packet.pb.h"
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/normalize.h"
@@ -30,6 +28,7 @@ namespace b = boost;
 #include "std_msgs/Float64MultiArray.h"
 
 #include "roboteam_robothub/packing.h"
+#include "roboteam_robothub/GRSim.h"
 
 #define VERIFY_COMMANDS
 
@@ -44,7 +43,6 @@ void processHalt(const std_msgs::Bool::ConstPtr &msg) {
 
 ros::Publisher pub;
 
-QUdpSocket udpsocket;
 
 #ifdef VERIFY_COMMANDS
 
@@ -82,9 +80,12 @@ bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string 
 
 #endif
 
-SlowParam<std::string> colorParam("our_color");
-SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
-SlowParam<int>         grsim_port("grsim/port", 20011); 
+rtt::GRSimCommander grsimCmd(true);
+SlowParam<bool> grSimBatch("grsim/batching", true);
+
+// SlowParam<std::string> colorParam("our_color");
+// SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
+// SlowParam<int>         grsim_port("grsim/port", 20011); 
 
 // Algorithm for efficient GRSim'ing:
 // - Receive msg
@@ -127,83 +128,82 @@ SlowParam<int>         grsim_port("grsim/port", 20011);
 //   robothub immediately evaluates how many robots there are, changes its
 //   threshold, and flushes the buffer.
 
-void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg) {
-    grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
+// void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg) {
+    // grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
     
-    command->set_id(msg.id);
-    command->set_wheelsspeed(false);
-    command->set_veltangent(msg.x_vel);
-    command->set_velnormal(msg.y_vel);
-    command->set_velangular(msg.w);
+    // command->set_id(msg.id);
+    // command->set_wheelsspeed(false);
+    // command->set_veltangent(msg.x_vel);
+    // command->set_velnormal(msg.y_vel);
+    // command->set_velangular(msg.w);
 
-    if (msg.kicker) {
-        command->set_kickspeedx(msg.kicker_vel);
-    } else {
-        command->set_kickspeedx(0);
-    }
+    // if (msg.kicker) {
+        // command->set_kickspeedx(msg.kicker_vel);
+    // } else {
+        // command->set_kickspeedx(0);
+    // }
 
-    if (msg.chipper) {
-        rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
-        vel = vel.rotate(M_PI/4); // 45 degrees up.
+    // if (msg.chipper) {
+        // rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
+        // vel = vel.rotate(M_PI/4); // 45 degrees up.
 
-        command->set_kickspeedx(vel.x);
-    	command->set_kickspeedz(vel.y);
-    } else {
-        command->set_kickspeedz(0);
-    }
+        // command->set_kickspeedx(vel.x);
+        // command->set_kickspeedz(vel.y);
+    // } else {
+        // command->set_kickspeedz(0);
+    // }
 
-    command->set_spinner(msg.dribbler);
-}
+    // command->set_spinner(msg.dribbler);
+// }
 
 // For repeated usage in sendGrSimPacket, saves an allocation
-thread_local std::array<char, 65536> packetBuffer;
 
-void sendGrSimPacket(grSim_Packet const & packet) {
-    packet.SerializeToArray(packetBuffer.data(), packetBuffer.size());
-    udpsocket.writeDatagram(
-            packetBuffer.data(),
-            packet.ByteSize(),
-            QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
-            );
-}
+// void sendGrSimPacket(grSim_Packet const & packet) {
+    // packet.SerializeToArray(packetBuffer.data(), packetBuffer.size());
+    // udpsocket.writeDatagram(
+            // packetBuffer.data(),
+            // packet.ByteSize(),
+            // QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
+            // );
+// }
 
-void sendMultipleGRsimCommands(const std::vector<roboteam_msgs::RobotCommand> & msgs) {
-#ifdef VERIFY_COMMANDS
-    for (auto const & msg : msgs) {
-        if (!verifyCommandIntegrity(msg, "grsim")) {
-            return;
-        }
-    }
-#endif
+// void sendMultipleGRsimCommands(const std::vector<roboteam_msgs::RobotCommand> & msgs) {
+// #ifdef VERIFY_COMMANDS
+    // for (auto const & msg : msgs) {
+        // if (!verifyCommandIntegrity(msg, "grsim")) {
+            // return;
+        // }
+    // }
+// #endif
 
-    grSim_Packet packet;
+    // grSim_Packet packet;
 
-    packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
-    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+    // packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
+    // packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
 
-    for (auto const & msg : msgs) {
-        addRobotCommandToPacket(packet, msg);
-    }
+    // for (auto const & msg : msgs) {
+        // addRobotCommandToPacket(packet, msg);
+    // }
 
-    sendGrSimPacket(packet);
-}
+    // sendGrSimPacket(packet);
+// }
 
-void sendGRsimCommands(const roboteam_msgs::RobotCommand & _msg) {
-#ifdef VERIFY_COMMANDS
-	if (!verifyCommandIntegrity(_msg, "grsim")) {
-		return;
-	}
-#endif
+// void sendGRsimCommand(const roboteam_msgs::RobotCommand & _msg) {
+// #ifdef VERIFY_COMMANDS
+	// if (!verifyCommandIntegrity(_msg, "grsim")) {
+		// return;
+	// }
+// #endif
 
-    grSim_Packet packet;
+    // grSim_Packet packet;
 
-    packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
-    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+    // packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
+    // packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
 
-    addRobotCommandToPacket(packet, _msg);
+    // addRobotCommandToPacket(packet, _msg);
 
-    sendGrSimPacket(packet);
-}
+    // sendGrSimPacket(packet);
+// }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO("received message for Gazebo!");
@@ -522,7 +522,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
         // We skip this command, it's not meant for us
         // No mode set!
     } else if (mode == RobotType::GRSIM) {
-        sendGRsimCommands(command);
+        grsimCmd.queueGRSimCommand(command);
         networkMsgs++;
     } else if (mode == RobotType::GAZEBO) {
         sendGazeboCommands(command);
@@ -620,6 +620,8 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        grsimCmd.setBatch(grSimBatch());
+
         auto timeNow = high_resolution_clock::now();
         auto timeDiff = timeNow - lastStatistics;
 
@@ -630,14 +632,14 @@ int main(int argc, char *argv[]) {
 
             lastStatistics = timeNow;
 
-            // std::cout << "-----------------------------------\n";
+            std::cout << "-----------------------------------\n";
 
-            // std::cout << "Halting status: ";
-            // if (halt) {
-                // std::cout << "!!!HALTING!!!\n";
-            // } else {
-                // std::cout << "Not halting\n";
-            // }
+            std::cout << "Halting status: ";
+            if (halt) {
+                std::cout << "!!!HALTING!!!\n";
+            } else {
+                std::cout << "Not halting\n";
+            }
 
             auto modes = getDistinctTypes();
 
@@ -704,9 +706,23 @@ int main(int argc, char *argv[]) {
             }
             if (modes.find(RobotType::GRSIM) != modes.end()) {
                 // If there's a robot set to GRSim print the amount of network messages sent
-                // std::cout << "---- GRSim ----\n";
-                // std::cout << "Network messages sent: " << networkMsgs << "\n";
+                std::cout << "---- GRSim ----\n";
+                std::cout << "Network messages sent: " << networkMsgs << "\n";
                 networkMsgs = 0;
+
+                std::cout << "Batching: ";
+                if (grsimCmd.isBatch()) {
+                    std::cout << "yes\n";
+                    rtt::GRSimCommander::Stats stats = grsimCmd.consumeStatistics();
+
+                    std::cout << "Average efficiency:       " << std::floor(stats.averageEfficiency * 100) << "%\n"
+                              << "Number of forced flushes: " << stats.numForcedFlushes << "\n"
+                              << "Current threshold:        " << stats.threshold << "\n"
+                              ;
+
+                } else {
+                    std::cout << "no\n";
+                }
             }
         }
     }

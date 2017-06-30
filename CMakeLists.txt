@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "-g -std=c++14 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-g -std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -51,6 +51,7 @@ catkin_package(
 add_executable(roboteam_robothub 
     src/main.cpp
     src/packing.cpp
+    src/GRSim.cpp
     )
 target_link_libraries(roboteam_robothub 
     ${catkin_LIBRARIES} 

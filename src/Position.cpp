@@ -21,7 +21,7 @@ Position Position::move(const Vector2& vec, double rot_vel) const {
     return Position(x + vec.x, y + vec.y, rot + rot_vel);
 }
 
-bool Position::real() const {
+bool Position::isNotNaN() const {
     return x == x && y == y && rot == rot; // NaN check
 }
 

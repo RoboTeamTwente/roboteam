@@ -21,7 +21,7 @@ Position Position::move(const Vector2& vec, double rot_vel) const {
     return Position(x + vec.x, y + vec.y, rot + rot_vel);
 }
 
-bool Position::real() const {
+bool Position::isNotNaN() const {
     return x == x && y == y && rot == rot; // NaN check
 }
 
@@ -47,6 +47,14 @@ Position Position::operator*(const double& other) const {
 
 Position Position::scale(double scalar) const {
     return Position(x*scalar, y*scalar, rot*scalar);
+}
+
+std::ostream& Position::write(std::ostream& stream) const {
+	return stream << "{ x = " << x << ", y = " << y << ", rot = " << rot << " }";
+}
+
+std::ostream& operator<<(std::ostream& stream, const Position& pos) {
+	return pos.write(stream);
 }
 
 }

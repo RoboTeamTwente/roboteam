@@ -72,4 +72,8 @@ std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& 
     return result;
 }
 
+bool bot_has_ball(unsigned int id, bool our_team, const roboteam_msgs::WorldBall& ball) {
+	return bot_has_ball(*lookup_bot(id, our_team), ball);
+}
+
 } // rtt

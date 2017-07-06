@@ -21,15 +21,15 @@ double Vector2::dist2(const Vector2& other) const {
 }
 
 Vector2 Vector2::scale(double scalar) const {
-    return Vector2(x*scalar, y*scalar);
+    return { x*scalar, y*scalar };
 }
 
 Vector2 Vector2::normalize() const {
     if (length() == 0.0) {
-        return Vector2();
+        return ZERO_VECTOR;
     }
     double d = 1.0 / length();
-    return Vector2(x*d, y*d);
+    return { x*d, y*d };
 }
 
 double Vector2::length() const {
@@ -41,30 +41,29 @@ double Vector2::angle() const {
 }
 
 Vector2 Vector2::lerp(const Vector2& other, double factor) const {
-    //return Vector2(x + (other.x - x) * factor, y + (other.y - y) * factor);
     return scale(factor) + other.scale(1 - factor);
 }
 
-Vector2 Vector2::rotate(double radials) const {
-    double c = cosl(radials);
-    double s = sinl(radials);
+Vector2 Vector2::rotate(double radians) const {
+    double c = cosl(radians);
+    double s = sinl(radians);
     return Vector2(x * c - y * s, x * s + y * c);
 }
 
-Vector2 Vector2::project(const Vector2& line_a, const Vector2& line_b) const {
-    Vector2 ab = line_b - line_a;
-    Vector2 ap = *this - line_a;
+Vector2 Vector2::project(const Vector2& lineA, const Vector2& lineB) const {
+    Vector2 ab = lineB - lineA;
+    Vector2 ap = *this - lineA;
     double t = ap.dot(ab) / ab.dot(ab);
     if (t < 0) {
-        return line_a;
+        return lineA;
     } else if (t > 1) {
-        return line_b;
+        return lineB;
     }
-    return line_a + ab.scale(t);
+    return lineA + ab.scale(t);
 }
 
-bool Vector2::real() const {
-    return x == x && y == y; // NaN check
+bool Vector2::isNotNaN() const {
+    return x == x && y == y; // NaN != NaN
 }
 
 Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& point) const {
@@ -86,7 +85,7 @@ Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& 
 Vector2 Vector2::stretchToLength(double desiredLength) const {
     double currentLength = length();
     double frac = desiredLength / currentLength;
-    return Vector2(x*frac, y*frac);
+    return { x*frac, y*frac };
 }
 
 bool Vector2::operator==(const Vector2& other) const {
@@ -95,25 +94,37 @@ bool Vector2::operator==(const Vector2& other) const {
 
 
 bool Vector2::operator!=(const Vector2& other) const {
-    return fabs(x-other.x) > 0.00001 || fabs(y-other.y) > 0.00001; 
+    return !(*this == other);
 }
 
 Vector2 Vector2::operator+(const Vector2& other) const {
-    return Vector2(x+other.x, y+other.y);
+    return { x+other.x, y+other.y };
+}
+
+Vector2 Vector2::operator+(const double& scalar) const {
+    return { x+scalar, y+scalar };
 }
 
 Vector2 Vector2::operator-(const Vector2& other) const {
-    return Vector2(x-other.x, y-other.y);
+    return { x-other.x, y-other.y };
+}
+
+Vector2 Vector2::operator-(const double& scalar) const {
+    return { x-scalar, y-scalar };
 }
 
 Vector2 Vector2::operator*(const Vector2& other) const {
-    return Vector2(x*other.x, y*other.y);
+    return { x*other.x, y*other.y };
 }
 Vector2 Vector2::operator*(const double& other) const {
-    return Vector2(x*other, y*other);
+    return { x*other, y*other };
 }
-Vector2 Vector2::operator/(const double& other) const {
-    return Vector2(x/other, y/other);
+Vector2 Vector2::operator/(const Vector2& other) const {
+    return { x/other.x, y/other.y };
+}
+
+Vector2 Vector2::operator/(const double& scalar) const {
+    return { x/scalar, y/scalar };
 }
 
 bool Vector2::operator<(const Vector2& other) const {

@@ -16,7 +16,7 @@ else (ENABLE_DEBUG_GRAPHICS)
     add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
 endif (ENABLE_DEBUG_GRAPHICS)
 
-find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy roscpp)
+find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy roscpp roslib)
 
 find_package(Protobuf REQUIRED)
 

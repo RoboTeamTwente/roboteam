@@ -18,7 +18,7 @@ boost::optional<roboteam_msgs::WorldRobot> lookup_their_bot(unsigned int id, con
 
 bool bot_has_ball(const roboteam_msgs::WorldRobot& bot, const roboteam_msgs::WorldBall& ball);
 
-static bool bot_has_ball(unsigned int id, bool our_team, const roboteam_msgs::WorldBall& ball) { return bot_has_ball(*lookup_bot(id, our_team), ball); }
+bool bot_has_ball(unsigned int id, bool our_team, const roboteam_msgs::WorldBall& ball);
 
 std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& bot_pos,
                                                     const Vector2& point,

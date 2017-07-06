@@ -258,7 +258,7 @@ struct SerialSendResult {
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 b::optional<std::string> newSerialFilePath;
-std::string serial_file_path = "/dev/ttyACM0";
+std::string serial_file_path = "/dev/ttyACM1";
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);

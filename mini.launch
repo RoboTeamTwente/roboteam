@@ -5,6 +5,11 @@
     <arg name="robot_output_target" default="grsim" />
     <param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
 
+    <arg name="grsim_batching" default="true" />
+    <group ns="grsim">
+        <param name="batching" type="bool" value="$(arg grsim_batching)" />
+    </group>
+    
     <param name="robot0/robotType"  type="string" value="$(arg robot_output_target)" />
     <param name="robot1/robotType"  type="string" value="$(arg robot_output_target)" />
     <param name="robot2/robotType"  type="string" value="$(arg robot_output_target)" />
@@ -21,8 +26,6 @@
     <param name="robot13/robotType" type="string" value="$(arg robot_output_target)" />
     <param name="robot14/robotType" type="string" value="$(arg robot_output_target)" />
     <param name="robot15/robotType" type="string" value="$(arg robot_output_target)" />
-
-    <!-- <param name="robotClaimedBall" type="int" value="-1" /> -->
 
     <arg name="should_normalize_field" default="true" />
     <param name="normalize_field" type="boolean" value="$(arg should_normalize_field)" />

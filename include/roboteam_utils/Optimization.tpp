@@ -1,5 +1,3 @@
-#include "Optimization.h" //temp
-
 namespace rtt {
 
 template<typename Num, size_t N>

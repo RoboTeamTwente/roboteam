@@ -157,8 +157,8 @@ add_custom_command(
 add_custom_target(generate_constants_t
 	ALL
     DEPENDS
-        ${RTT_CONSTANTS_HEADER_FILE}
         ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
 )
 
 ###########################

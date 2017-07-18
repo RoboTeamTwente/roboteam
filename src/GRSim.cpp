@@ -53,7 +53,45 @@ namespace b = boost;
 // before it changes its threshold. Is nice to see for performance evaluation.
 //
 
+#define VERIFY_COMMANDS
+
 namespace rtt {
+
+#ifdef VERIFY_COMMANDS
+
+bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string mode) {
+	if (cmd.id < 0) {
+		ROS_ERROR("RobotHub (%s): Invalid ID number: %d (should be positive)", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (fabs(cmd.x_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): X velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.x_vel);
+		return false;
+	}
+	if (fabs(cmd.y_vel) > 10000) {
+		ROS_ERROR("RobotHub (%s): Y velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.y_vel);
+		return false;
+	}
+	if (fabs(cmd.w) > 10000) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.w);
+		return false;
+	}
+	if (cmd.x_vel != cmd.x_vel) {
+		ROS_ERROR("RobotHub (%s): X velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.y_vel != cmd.y_vel) {
+		ROS_ERROR("RobotHub (%s): Y velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	if (cmd.w != cmd.w) {
+		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
+		return false;
+	}
+	return true;
+}
+
+#endif
 
 GRSimCommander::GRSimCommander(bool batch) :
         batch{batch},

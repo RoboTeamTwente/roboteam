@@ -113,6 +113,8 @@ class LastRef {
     static RefState getState();
     static boost::optional<RefState> getPreviousRefCommand();
 
+    static bool waitForFirstRefCommand();
+
     private:
     static roboteam_msgs::RefereeData lastRef;
     static const std::vector<RefStateTransitionFunction> transitions;

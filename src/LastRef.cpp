@@ -180,6 +180,23 @@ b::optional<RefState> LastRef::getPreviousRefCommand() {
     return previousRefCommand;
 }
 
+bool LastRef::waitForFirstRefCommand() {
+    ros::Rate fps60(60);
+
+    while (!(rtt::LastRef::hasReceivedFirstCommand())) {
+        fps60.sleep();
+        ros::spinOnce();
+
+        ROS_INFO_THROTTLE(1, "Waiting for first ref command...");
+
+        if (!ros::ok()) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool LastRef::hasReceivedFirstCommand() {
     return !!currentRefCommand;
 }

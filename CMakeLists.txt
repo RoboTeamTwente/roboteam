@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-g -std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -48,13 +48,70 @@ catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
 
-add_executable(roboteam_robothub src/main.cpp)
-target_link_libraries(roboteam_robothub ${catkin_LIBRARIES} ${QT_LIBRARIES})
-add_dependencies(roboteam_robothub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_executable(roboteam_robothub 
+    src/main.cpp
+    src/packing.cpp
+    src/GRSim.cpp
+    )
+target_link_libraries(roboteam_robothub 
+    ${catkin_LIBRARIES} 
+    ${QT_LIBRARIES}
+    )
+add_dependencies(roboteam_robothub 
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    ${catkin_EXPORTED_TARGETS}
+    )
 
 add_executable(input src/input_example.cpp)
 target_link_libraries(input ${catkin_LIBRARIES})
 add_dependencies(input ${catkin_EXPORTED_TARGETS})
+
+add_executable(packet_tester
+    src/packet_tester.cpp
+    src/packing.cpp
+    )
+target_link_libraries(packet_tester
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(packet_tester 
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
+add_executable(packet_tester_2
+    src/packet_tester_2.cpp
+    src/packing.cpp
+    )
+target_link_libraries(packet_tester_2
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(packet_tester_2
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
+add_executable(system_test
+    src/system_test.cpp
+    src/packing.cpp
+    )
+target_link_libraries(system_test
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(system_test 
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
+
+add_executable(barrage
+    src/barrage.cpp
+    )
+target_link_libraries(barrage
+    ${catkin_LIBRARIES}
+    )
+add_dependencies(barrage
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    )
 
 catkin_add_gtest(robothub_test
     test/main.cpp
@@ -63,4 +120,6 @@ catkin_add_gtest(robothub_test
 
     src/packing.cpp
     )
-target_link_libraries(robothub_test ${catkin_LIBRARIES})
+target_link_libraries(robothub_test
+    ${catkin_LIBRARIES}
+    )

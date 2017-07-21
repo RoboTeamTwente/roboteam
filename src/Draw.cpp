@@ -1,0 +1,96 @@
+#include "roboteam_utils/Draw.h"
+
+namespace rtt {
+
+const bool RTT_ENABLE_DEBUG_GRAPHICS = RTT_CMAKE_ENABLE_DEBUG_GRAPHICS;
+
+Draw::Draw() {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        // printf("Draw constructor \n");
+        debugPub = n.advertise<roboteam_msgs::DebugLine>("view_debug_lines", 10000);
+        debugPubPoint = n.advertise<roboteam_msgs::DebugPoint>("view_debug_points", 10000);
+    }
+}
+
+
+void Draw::drawLine(std::string name, Vector2 start, Vector2 stop) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine line;
+        line.name = name;
+        line.remove = false;
+        line.start.x = start.x;
+        line.start.y = start.y;
+        line.stop.x = stop.x + start.x;
+        line.stop.y = stop.y + start.y;
+        line.color = color;
+        debugPub.publish(line);
+    }
+}
+
+void Draw::drawLineAbs(std::string name, Vector2 start, Vector2 stop) {
+    drawLine(name, start, stop - start);
+}
+
+void Draw::removeLine(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugLine Line;
+        Line.name = name;
+        Line.remove = true;
+        debugPub.publish(Line);
+    }
+}
+
+void Draw::drawPoint(std::string name, Vector2 point) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugPoint position;
+        position.name = name;
+        position.pos.x = point.x;
+        position.pos.y = point.y;
+        position.color = color;
+        debugPubPoint.publish(position);
+        // printf("drawing point! \n");
+    }
+}
+
+void Draw::removePoint(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugPoint position;
+        position.name = name;
+        position.remove = true;
+        debugPubPoint.publish(position);
+    }
+}
+
+void Draw::drawArc(std::string name, const Arc& arc) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugArc msg;
+        msg.name = name;
+        msg.center.x = arc.center.x;
+        msg.center.y = arc.center.y;
+        msg.ellipseWidth = arc.length;
+        msg.ellipseHeight = arc.width;
+        msg.startAngle = arc.angleStart;
+        msg.endAngle = arc.angleEnd;
+        msg.fill = false;
+        debugPubArc.publish(msg);
+    }
+}
+
+void Draw::removeArc(std::string name) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        roboteam_msgs::DebugArc msg;
+        msg.name = name;
+        msg.remove = true;
+        debugPubArc.publish(msg);
+    }
+}
+
+void Draw::setColor(int r, int g, int b) {
+    if (RTT_ENABLE_DEBUG_GRAPHICS) {
+        color.r = r;
+        color.g = g;
+        color.b = b;
+    }
+}
+
+} // rtt

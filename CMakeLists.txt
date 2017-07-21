@@ -8,7 +8,15 @@ project(roboteam_utils)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy)
+set(ENABLE_DEBUG_GRAPHICS TRUE)
+
+if (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=1)
+else (ENABLE_DEBUG_GRAPHICS)
+    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
+endif (ENABLE_DEBUG_GRAPHICS)
+
+find_package(catkin REQUIRED COMPONENTS roboteam_msgs rospy roscpp roslib)
 
 find_package(Protobuf REQUIRED)
 
@@ -18,7 +26,12 @@ set(CMAKE_CXX_FLAGS "\
 -Wno-unused-function \
 -Wsign-compare \
 -g \
-")
+"
+)
+
+#####################################
+## Protobuf conversion & compiling ##
+#####################################
 
 set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
 set(proto_files
@@ -32,8 +45,6 @@ set(proto_files
     ${proto_dir}/messages_robocup_ssl_wrapper.proto
     ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
 )
-message(STATUS "Proto Source Dir: ${proto_dir}")
-message(STATUS "Proto Source Files: ${proto_files}")
 
 # Set up destination directories
 catkin_destinations()
@@ -42,13 +53,16 @@ set(proto_gen_python_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_PYTHON_DESTINAT
 file(MAKE_DIRECTORY ${proto_gen_cpp_dir})
 file(MAKE_DIRECTORY ${proto_gen_python_dir})
 set(protogen_include_dirs ${proto_gen_cpp_dir}/../ ${proto_gen_python_dir})
-message(STATUS "Proto Include Dirs: ${protogen_include_dirs}")
 
 # catkin_python_setup()
 
 catkin_package(
-  INCLUDE_DIRS include ${protogen_include_dirs}
-  LIBRARIES roboteam_utils ${PROJECT_NAME}_proto
+  INCLUDE_DIRS 
+    include 
+    ${protogen_include_dirs}
+  LIBRARIES
+    roboteam_utils 
+    ${PROJECT_NAME}_proto
 )
 
 include_directories(
@@ -106,10 +120,78 @@ install(DIRECTORY ${proto_gen_python_dir}/
   FILES_MATCHING PATTERN "*.py"
 )
 
+##########################
+## Constants generation ##
+##########################
 
-add_library(roboteam_utils src/Vector2.cpp src/Position.cpp)
-add_dependencies(roboteam_utils ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(roboteam_utils ${catkin_LIBRARIES})
+add_executable(constants_generator
+    "${PROJECT_SOURCE_DIR}/src/ConstantsGenerator.cpp"
+    )
+
+set(RTT_CONSTANTS_HEADER_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}/constants.h")
+set(RTT_CONSTANTS_SOURCE_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/roboteam_utils/constants.cpp")
+
+# Leaving this here in case we need it later at some point.
+# It used to be needed to get CMake to delete our headers and such when make clean was called
+# But it does it now automatically (as it should!)
+# set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+    # ${RTT_CONSTANTS_HEADER_FILE}
+    # ${RTT_CONSTANTS_SOURCE_FILE}
+    # )
+
+add_custom_command(
+	OUTPUT 
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
+	COMMAND
+        ${PROJECT_SOURCE_DIR}/generate_constants.sh
+    ARGS
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
+	DEPENDS
+        constants_generator
+        "${PROJECT_SOURCE_DIR}/String Constants"
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+	COMMENT "Generating constants file..."
+)
+add_custom_target(generate_constants_t
+	ALL
+    DEPENDS
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        ${RTT_CONSTANTS_HEADER_FILE}
+)
+
+###########################
+## Regular library stuff ##
+###########################
+
+add_library(roboteam_utils
+    src/Vector2.cpp
+    src/Position.cpp
+    src/world_analysis.cpp
+    src/LastWorld.cpp
+    src/LastRef.cpp
+    src/Draw.cpp
+    src/Math.cpp
+    src/Cone.cpp
+    src/normalize.cpp
+    src/TeamRobot.cpp
+    src/Clip.cpp
+    src/Optimization.cpp
+    src/RefLookup.cpp
+    src/Arc.cpp
+    src/Section.cpp
+    ${RTT_CONSTANTS_SOURCE_FILE}
+)
+add_dependencies(roboteam_utils
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    ${catkin_EXPORTED_TARGETS}
+    generate_constants_t
+    )
+target_link_libraries(roboteam_utils
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}_proto
+    )
 
 # Protobuf messages.
 # add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})
@@ -121,7 +203,17 @@ catkin_add_gtest(utils_test
     test/Vector2Test.cpp
     test/PositionTest.cpp
     test/GraphTest.cpp
-    src/Vector2.cpp
-    src/Position.cpp
+    test/OptimizationTest.cpp
+    test/BiMapTest.cpp
+    test/ArcTest.cpp
+    #test/normaliseTest.cpp
 )
-target_link_libraries(utils_test ${catkin_LIBRARIES})
+add_dependencies(utils_test
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+    ${catkin_EXPORTED_TARGETS} 
+    generate_constants_t
+    )
+target_link_libraries(utils_test
+    roboteam_utils
+	${catkin_LIBRARIES}
+	)

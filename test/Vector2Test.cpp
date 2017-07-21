@@ -1,7 +1,8 @@
 #include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
+#include <cmath>
 
-using namespace roboteam_utils;
+using namespace rtt;
 
 TEST(VectorTests, instantiation) {
     Vector2 def;
@@ -66,4 +67,14 @@ TEST(VectorTests, math) {
     
     ASSERT_DOUBLE_EQ(def.dot(tenten), 0);
     ASSERT_DOUBLE_EQ(tenten.dot(fivezero), 50);
+    
+    ASSERT_DOUBLE_EQ(M_PI_4l, tenten.angle());
+    ASSERT_DOUBLE_EQ(0, fivezero.angle());
+    
+    Vector2 proj = fivezero.project(def, tenten);
+    ASSERT_DOUBLE_EQ(2.5, proj.x);
+    ASSERT_DOUBLE_EQ(2.5, proj.y);
+    proj = tenten.project(def, fivezero);
+    ASSERT_DOUBLE_EQ(5, proj.x);
+    ASSERT_DOUBLE_EQ(0, proj.y);
 }

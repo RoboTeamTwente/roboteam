@@ -1,0 +1,41 @@
+{
+    "TOPIC_ROLE_DIRECTIVE": "role_directive",
+    "TOPIC_ROLE_FEEDBACK": "role_feedback",
+    "TOPIC_WORLD_STATE": "world_state",
+    "TOPIC_GEOMETRY": "vision_geometry",
+    "TOPIC_COMMANDS": "robotcommands",
+    "TOPIC_REFEREE": "vision_referee",
+    "TOPIC_DEBUG_POINTS": "view_debug_points",
+    "TOPIC_DEBUG_LINES": "view_debug_lines",
+    "TOPIC_DETECTION": "vision_detection",
+
+    "SERVICE_NAVSIM": "navsim",
+    "SERVICE_WORLD_RESET": "world_reset",
+    "SERVICE_OPPONENT_TRACKER": "tracker",
+
+    "TRACKER_TYPE_SPEED": "Speed",
+    "TRACKER_TYPE_ACCEL": "Acceleration",
+
+    "PARAM_ITERATIONS_PER_SECOND": {"name": "role_iterations_per_second", "type": "int"},
+    "PARAM_NUM_ROLE_NODES": {"name": "num_role_nodes", "type": "int"},
+    "PARAM_OUR_SIDE": {"name": "our_side", "type": "string", "values": ["left", "right"]},
+    "PARAM_OUR_COLOR": {"name": "our_color", "type": "string", "values": ["yellow", "blue"]},
+
+    "PARAM_NORMALIZE_FIELD": {"name": "normalize_field", "type": "bool"},
+
+    "PARAM_KICKING": {"name": "/kickingTheBall", "type": "bool"},
+
+    "NODE_TACTICS": "tactics",
+    "NODE_DO_STRATEGY": "doStrategy",
+    "NODE_KEEPER_TEST": "KeeperTactic",
+    "NODE_KICK_AT_GOAL_TEST": "KickAtGoal",
+    "NODE_DRIBBLE_TEST": "DribbleTest",
+    "NODE_AVOID_ROBOTS_TEST": "AvoidRobotsTest",
+    "NODE_FOLLOW_PATH_TEST": "FollowPathTest",
+    "NODE_GET_BALL_TEST": "GetBallTest",
+    "NODE_GO_TO_POS_TEST": "GoToPosTest",
+    "NODE_KICK_TEST": "KickTest",
+    "NODE_ROTATE_AROUND_POINT_TEST": "RotateAroundPoint",
+    "NODE_STAND_FREE_TEST": "StandFreeTest"
+
+}

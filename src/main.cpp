@@ -257,6 +257,7 @@ struct SerialSendResult {
 };
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
+std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 b::optional<std::string> newSerialFilePath;
 std::string serial_file_path = "/dev/ttyACM0";
 bool serialPortOpen = false;
@@ -524,6 +525,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
         // No mode set!
     } else if (mode == RobotType::GRSIM) {
         grsimCmd.queueGRSimCommand(command);
+        grsimStatusMap[command.id].acks++;
         networkMsgs++;
     } else if (mode == RobotType::GAZEBO) {
         sendGazeboCommands(command);
@@ -706,10 +708,37 @@ int main(int argc, char *argv[]) {
                 }
             }
             if (modes.find(RobotType::GRSIM) != modes.end()) {
+
                 // If there's a robot set to GRSim print the amount of network messages sent
                 std::cout << "---- GRSim ----\n";
                 std::cout << "Network messages sent: " << networkMsgs << "\n";
                 networkMsgs = 0;
+
+
+                // Publish any status info on the robots
+                for (auto &pair : grsimStatusMap) {
+                    int id = pair.first;
+                    roboteam_msgs::RobotSerialStatus &status = pair.second;
+
+                    if (status.start_timeframe == ros::Time(0)) {
+                        // This is a new status message.
+                        // It has been initialized with an id of 0.
+                        // So we need to set it correctly.
+                        status.id = id;
+                    } else {
+                        // This status message is ready to be sent.
+                        status.end_timeframe = ros::Time::now();
+
+                        pubSerialStatus.publish(status);
+                    }
+
+                    // Set the new start time.
+                    status.start_timeframe = ros::Time::now();
+                    // Reset the ack and nack counters.
+                    status.acks = 0;
+                    status.nacks = 0;
+                }
+
 
                 std::cout << "Batching: ";
                 if (grsimCmd.isBatch()) {

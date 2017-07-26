@@ -450,8 +450,9 @@ std::string robotTypeToString(RobotType const t) {
             return "arduino";
         case RobotType::GAZEBO:
             return "gazebo";
+        default:
+            return "undefined";
     }
-
 }
 
 std::map<int, RobotType> robotTypes;

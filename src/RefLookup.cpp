@@ -80,4 +80,18 @@ b::optional<RefState> getFirstState(boost::optional<RefState> previousCmdOpt, Re
     return b::none;
 }
 
+b::optional<RefState> getFirstState() {
+    return getFirstState( LastRef::getPreviousRefCommand()
+                        , LastRef::getState()
+                        );
+}
+
+RefState getExtendedState() {
+    if (auto possibleFirstState = getFirstState()) {
+        return *possibleFirstState;
+    } else {
+        return LastRef::getState();
+    }
+}
+
 }

@@ -16,6 +16,8 @@ extern const std::map<std::string,int> refstagelookup;
 
 bool isTwoState(boost::optional<RefState> previousCmd, RefState currentCmd);
 boost::optional<RefState> getFirstState(boost::optional<RefState> previousCmd, RefState currentCmd);
+boost::optional<RefState> getFirstState();
+RefState getExtendedState();
 
 // boost::optional<std::string> getRefCommandName(int cmd);
 

@@ -556,6 +556,17 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     roboteam_msgs::RobotCommand command = *msg;
 
+    // if (command.id == 8) {
+    //     if (command.kicker) {
+    //         command.chipper = true;
+    //         command.chipper_forced = command.kicker_forced;
+    //         command.chipper_vel = command.kicker_vel;
+    //         command.kicker = false;
+    //         command.kicker_forced = false;
+    //         command.kicker_vel = 0;
+    //     }
+    // }
+
     if (halt) {
         return;
     }

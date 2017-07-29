@@ -607,7 +607,7 @@ int main(int argc, char *argv[]) {
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
     // Publisher for the serial status
-    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1);
+    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
 
     // Creates the callbacks for world and geom
     rtt::WorldAndGeomCallbackCreator wgcc;

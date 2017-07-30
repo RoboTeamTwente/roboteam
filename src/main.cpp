@@ -9,6 +9,8 @@
 #include <vector>
 #include <chrono>
 #include <boost/optional.hpp>
+#include <algorithm>
+#include <string>
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
@@ -574,6 +576,45 @@ void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     sendCommand(command);
 }
 
+void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand> & msgEvent) {
+    auto const & msg = *msgEvent.getMessage();
+
+    auto pubName = msgEvent.getPublisherName();
+
+    int robotLoc = pubName.find_first_of("robot");
+    if (robotLoc != std::string::npos) {
+        b::optional<int> robotID;
+
+        try {
+            auto robotIDLength2 = std::stoi(pubName.substr(robotLoc + 5, 2));
+            robotID = robotIDLength2;
+        } catch (...) {
+            try {
+                auto robotIDLength1 = std::stoi(pubName.substr(robotLoc + 5, 1));
+                robotID = robotIDLength1;
+            } catch (...) {
+                // Neither matched; do nothing.
+                ROS_ERROR("Neither matched!");
+            }
+        }
+
+        if (robotID) {
+            if (*robotID == msg.id) {
+                sendCommand(msg);
+            } else {
+                ROS_ERROR_STREAM("Message sent by robot " << *robotID << " is not the same as ID in message which is " << msg.id << "!");
+            }
+        } else {
+            // Parsing failed; let the message through, probably some test node.
+            ROS_ERROR("Parsing failed!");
+        }
+    } else {
+        // In this case the msg was sent by something else
+        sendCommand(msg);
+        ROS_ERROR("Sent by something else: %s", pubName.c_str());
+    }
+}
+
 bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
     return std::find(args.begin(), args.end(), arg) != args.end();
 }
@@ -600,14 +641,14 @@ int main(int argc, char *argv[]) {
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
     // Publisher and subscriber to get robotcommands and steer gazebo
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
+    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
     pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     // Halt subscriber
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
 
     // Publisher for the serial status
-    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1);
+    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
 
     // Creates the callbacks for world and geom
     rtt::WorldAndGeomCallbackCreator wgcc;

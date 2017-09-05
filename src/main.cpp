@@ -581,7 +581,7 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
 
     auto pubName = msgEvent.getPublisherName();
 
-    int robotLoc = pubName.find_first_of("robot");
+    int robotLoc = pubName.find("robot");
     if (robotLoc != std::string::npos) {
         b::optional<int> robotID;
 
@@ -611,7 +611,6 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
     } else {
         // In this case the msg was sent by something else
         sendCommand(msg);
-        ROS_ERROR("Sent by something else: %s", pubName.c_str());
     }
 }
 

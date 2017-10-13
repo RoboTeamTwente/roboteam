@@ -45,43 +45,6 @@ void processHalt(const std_msgs::Bool::ConstPtr &msg) {
 
 ros::Publisher pub;
 
-
-#ifdef VERIFY_COMMANDS
-
-bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string mode) {
-	if (cmd.id < 0) {
-		ROS_ERROR("RobotHub (%s): Invalid ID number: %d (should be positive)", mode.c_str(), cmd.id);
-		return false;
-	}
-	if (fabs(cmd.x_vel) > 10000) {
-		ROS_ERROR("RobotHub (%s): X velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.x_vel);
-		return false;
-	}
-	if (fabs(cmd.y_vel) > 10000) {
-		ROS_ERROR("RobotHub (%s): Y velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.y_vel);
-		return false;
-	}
-	if (fabs(cmd.w) > 10000) {
-		ROS_ERROR("RobotHub (%s): Rotation velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.w);
-		return false;
-	}
-	if (cmd.x_vel != cmd.x_vel) {
-		ROS_ERROR("RobotHub (%s): X velocity for %d is NAN.", mode.c_str(), cmd.id);
-		return false;
-	}
-	if (cmd.y_vel != cmd.y_vel) {
-		ROS_ERROR("RobotHub (%s): Y velocity for %d is NAN.", mode.c_str(), cmd.id);
-		return false;
-	}
-	if (cmd.w != cmd.w) {
-		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
-		return false;
-	}
-	return true;
-}
-
-#endif
-
 rtt::GRSimCommander grsimCmd(true);
 SlowParam<bool> grSimBatch("grsim/batching", true);
 
@@ -130,90 +93,11 @@ SlowParam<bool> grSimBatch("grsim/batching", true);
 //   robothub immediately evaluates how many robots there are, changes its
 //   threshold, and flushes the buffer.
 
-// void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg) {
-    // grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
-    
-    // command->set_id(msg.id);
-    // command->set_wheelsspeed(false);
-    // command->set_veltangent(msg.x_vel);
-    // command->set_velnormal(msg.y_vel);
-    // command->set_velangular(msg.w);
-
-    // if (msg.kicker) {
-        // command->set_kickspeedx(msg.kicker_vel);
-    // } else {
-        // command->set_kickspeedx(0);
-    // }
-
-    // if (msg.chipper) {
-        // rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
-        // vel = vel.rotate(M_PI/4); // 45 degrees up.
-
-        // command->set_kickspeedx(vel.x);
-        // command->set_kickspeedz(vel.y);
-    // } else {
-        // command->set_kickspeedz(0);
-    // }
-
-    // command->set_spinner(msg.dribbler);
-// }
-
-// For repeated usage in sendGrSimPacket, saves an allocation
-
-// void sendGrSimPacket(grSim_Packet const & packet) {
-    // packet.SerializeToArray(packetBuffer.data(), packetBuffer.size());
-    // udpsocket.writeDatagram(
-            // packetBuffer.data(),
-            // packet.ByteSize(),
-            // QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
-            // );
-// }
-
-// void sendMultipleGRsimCommands(const std::vector<roboteam_msgs::RobotCommand> & msgs) {
-// #ifdef VERIFY_COMMANDS
-    // for (auto const & msg : msgs) {
-        // if (!verifyCommandIntegrity(msg, "grsim")) {
-            // return;
-        // }
-    // }
-// #endif
-
-    // grSim_Packet packet;
-
-    // packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
-    // packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
-
-    // for (auto const & msg : msgs) {
-        // addRobotCommandToPacket(packet, msg);
-    // }
-
-    // sendGrSimPacket(packet);
-// }
-
-// void sendGRsimCommand(const roboteam_msgs::RobotCommand & _msg) {
-// #ifdef VERIFY_COMMANDS
-	// if (!verifyCommandIntegrity(_msg, "grsim")) {
-		// return;
-	// }
-// #endif
-
-    // grSim_Packet packet;
-
-    // packet.mutable_commands()->set_isteamyellow(colorParam() == "yellow");
-    // packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
-
-    // addRobotCommandToPacket(packet, _msg);
-
-    // sendGrSimPacket(packet);
-// }
 
 void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
     // ROS_INFO("received message for Gazebo!");
-#ifdef VERIFY_COMMANDS
-	if (!verifyCommandIntegrity(_msg, "gazebo")) {
-		return;
-	}
-#endif
+
+
     float x_vel = _msg.x_vel;
     float y_vel = _msg.y_vel;
     float w = _msg.w;
@@ -276,12 +160,6 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
     SerialSendResult result;
     result.status = SerialResultStatus::ACK;
-
-#ifdef VERIFY_COMMANDS
-	if (!verifyCommandIntegrity(_msg, "serial")) {
-		return { SerialResultStatus::COMMAND_SANITY_CHECK_FAILED };
-	}
-#endif
 
     if (!serialPortOpen || newSerialFilePath) {
 
@@ -425,7 +303,7 @@ enum class RobotType {
     GRSIM,
     ARDUINO,
     GAZEBO
-} ;
+};
 
 b::optional<RobotType> stringToRobotType(std::string const & t) {
     if (t == "serial") {
@@ -558,17 +436,6 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
     roboteam_msgs::RobotCommand command = *msg;
 
-    // if (command.id == 8) {
-    //     if (command.kicker) {
-    //         command.chipper = true;
-    //         command.chipper_forced = command.kicker_forced;
-    //         command.chipper_vel = command.kicker_vel;
-    //         command.kicker = false;
-    //         command.kicker_forced = false;
-    //         command.kicker_vel = 0;
-    //     }
-    // }
-
     if (halt) {
         return;
     }
@@ -623,11 +490,6 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
-    if (hasArg(args, "--help") || hasArg(args, "-h")) {
-        std::cout << "--help or -h for help.\n";
-        return 0;
-    }
-
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
@@ -648,9 +510,6 @@ int main(int argc, char *argv[]) {
 
     // Publisher for the serial status
     ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
-
-    // Creates the callbacks for world and geom
-    rtt::WorldAndGeomCallbackCreator wgcc;
 
     using namespace std;
     using namespace std::chrono;

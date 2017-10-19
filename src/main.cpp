@@ -1,29 +1,17 @@
 #include <QtNetwork>
 #include <boost/asio.hpp>
-#include <cmath>
 #include <fstream>
 #include <iostream>
-#include <math.h>
 #include <ros/ros.h>
-#include <string>
-#include <vector>
 #include <chrono>
-#include <boost/optional.hpp>
-#include <algorithm>
-#include <string>
+
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/RobotSerialStatus.h"
 #include "roboteam_msgs/World.h"
 #include "roboteam_utils/LastWorld.h"
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/constants.h"
-#include "roboteam_utils/constants.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/grSim_Packet.pb.h"
-#include "roboteam_utils/normalize.h"
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/SlowParam.h"
 #include "std_msgs/Bool.h"
@@ -93,39 +81,6 @@ SlowParam<bool> grSimBatch("grsim/batching", true);
 //   robothub immediately evaluates how many robots there are, changes its
 //   threshold, and flushes the buffer.
 
-
-void sendGazeboCommands(const roboteam_msgs::RobotCommand & _msg) {
-    // ROS_INFO("received message for Gazebo!");
-
-
-    float x_vel = _msg.x_vel;
-    float y_vel = _msg.y_vel;
-    float w = _msg.w;
-    float robot_radius = 0.09;
-    float wheel_radius = 0.03;
-    float theta1 = 0.25 * M_PI;
-    float theta2 = 0.75 * M_PI;
-    float theta3 = 1.25 * M_PI;
-    float theta4 = 1.75 * M_PI;
-    float fr_wheel = (-1/sin(theta1)*x_vel + 1/cos(theta1)*y_vel + robot_radius*w) / wheel_radius;
-    float fl_wheel = (-1/sin(theta2)*x_vel + 1/cos(theta2)*y_vel + robot_radius*w) / wheel_radius;
-    float bl_wheel = (-1/sin(theta3)*x_vel + 1/cos(theta3)*y_vel + robot_radius*w) / wheel_radius;
-    float br_wheel = (-1/sin(theta4)*x_vel + 1/cos(theta4)*y_vel + robot_radius*w) / wheel_radius;
-
-    std::vector<double> inputs = {-fr_wheel, -fl_wheel, -bl_wheel, -br_wheel};
-    std_msgs::Float64MultiArray command;
-
-    command.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    command.layout.dim[0].size = 4;
-    command.layout.dim[0].stride = 1;
-    command.layout.dim[0].label = "speeds";
-
-    command.data.clear();
-    command.data.insert(command.data.end(), inputs.begin(), inputs.end());
-
-    pub.publish(command);
-}
-
 enum class SerialResultStatus {
     ACK,
     NACK,
@@ -144,8 +99,9 @@ struct SerialSendResult {
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
-b::optional<std::string> newSerialFilePath;
-std::string serial_file_path = "/dev/ttyACM0";
+
+std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
+
 bool serialPortOpen = false;
 boost::asio::io_service io;
 boost::asio::serial_port serialPort(io);
@@ -161,20 +117,12 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
     SerialSendResult result;
     result.status = SerialResultStatus::ACK;
 
-    if (!serialPortOpen || newSerialFilePath) {
-
-        if (newSerialFilePath) {
-            if (serialPortOpen) {
-                std::cout << "Closing port " << serial_file_path << " to open " << *newSerialFilePath << "...\n";
-                serialPort.close();
-            }
-
-            serial_file_path = *newSerialFilePath;
-            newSerialFilePath = boost::none;
-        }
-        // Open serial port
-        // TODO: Doublecheck if serial file path changes or smth
-        // std::cout << "Opening serial port " << SERIAL_FILE_PATH << "...\n";
+    // ==============
+    // Check port
+    // ==============
+    // If there is something with the serial port
+    if (!serialPortOpen) {
+        std::cout << "Opening serial port " << serial_file_path << "...\n";
         boost::system::error_code errorCode;
         serialPort.open(serial_file_path, errorCode);
         switch (errorCode.value()) {
@@ -183,31 +131,32 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 std::cout << "Port " << serial_file_path << " opened.\n";
                 break;
             default:
-                std::cerr << " ERROR! Could not open serial port! " << errorCode.value() << "\n";
+                std::cerr << " ERROR! Could not open serial port: " << errorCode.message() << "\n";
                 result.status = SerialResultStatus::CANT_OPEN_PORT;
                 return result;
         }
     }
 
-    // Create message
 
     b::optional<roboteam_msgs::World> worldOpt;
     if (rtt::LastWorld::have_received_first_world()) {
         worldOpt = rtt::LastWorld::get();
     }
 
+    // ================
+    // Create message
+    // ================
     if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
         // Success!
 
         auto bytes = *bytesOpt;
 
         // Uncomment for debug info
-        // std::cout << "Byte size: " << bytes.size() << "\n";
-        // std::cout << "Bytes: \n";
-        // for (uint8_t b : bytes) {
-            // printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
-
-        // }
+        /*std::cout << "Byte size: " << bytes.size() << "\n";
+        std::cout << "Bytes: \n";
+        for (uint8_t b : bytes) {
+            printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
+        }*/
 
         // Write message to it
         // TODO: read/write can throw!
@@ -301,21 +250,13 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 enum class RobotType {
     SERIAL,
     GRSIM,
-    ARDUINO,
-    GAZEBO
 };
 
 b::optional<RobotType> stringToRobotType(std::string const & t) {
-    if (t == "serial") {
-        return RobotType::SERIAL;
-    } else if (t == "proto") {
+    if (t == "serial" || t == "proto") {
         return RobotType::SERIAL;
     } else if (t == "grsim") {
         return RobotType::GRSIM;
-    } else if (t == "arduino") {
-        return RobotType::ARDUINO;
-    } else if (t == "gazebo") {
-        return RobotType::GAZEBO;
     } else {
         return b::none;
     }
@@ -327,10 +268,6 @@ std::string robotTypeToString(RobotType const t) {
             return "serial";
         case RobotType::GRSIM:
             return "grsim";
-        case RobotType::ARDUINO:
-            return "arduino";
-        case RobotType::GAZEBO:
-            return "gazebo";
         default:
             return "undefined";
     }
@@ -398,6 +335,7 @@ std::set<RobotType> getDistinctTypes() {
 }
 
 void sendCommand(roboteam_msgs::RobotCommand command) {
+    // std::cout << "[sendCommand] " << command.id << std::endl;
     auto mode = getMode(command.id);
 
     if (mode == b::none) {
@@ -407,8 +345,6 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
         grsimCmd.queueGRSimCommand(command);
         grsimStatusMap[command.id].acks++;
         networkMsgs++;
-    } else if (mode == RobotType::GAZEBO) {
-        sendGazeboCommands(command);
     } else if (mode == RobotType::SERIAL) {
         auto result = sendSerialCommands(command);
 
@@ -425,25 +361,12 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
                 break;
         }
         prevResultStatus = result.status;
-    } else if (mode == RobotType::ARDUINO) {
-        // Skip this one, not responsible for it
-    } else { // Default to grsim
-        // sendGRsimCommands(command);
     }
-}
-
-
-void processRobotCommand(const roboteam_msgs::RobotCommand::ConstPtr &msg) {
-    roboteam_msgs::RobotCommand command = *msg;
-
-    if (halt) {
-        return;
-    }
-
-    sendCommand(command);
 }
 
 void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand> & msgEvent) {
+    //std::cout << "[processRobotCommandWithIDCheck]" << std::endl;
+
     auto const & msg = *msgEvent.getMessage();
 
     auto pubName = msgEvent.getPublisherName();
@@ -490,6 +413,10 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
+    // ┌──────────────────┐
+    // │  Initialization  │
+    // └──────────────────┘
+
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
@@ -501,9 +428,8 @@ int main(int argc, char *argv[]) {
 
     std::cout << "[RobotHub] Refresh rate: " << roleHz << "hz\n";
 
-    // Publisher and subscriber to get robotcommands and steer gazebo
+    // Publisher and subscriber to get robotcommands
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
-    pub = n.advertise<std_msgs::Float64MultiArray>("gazebo_listener/motorsignals", 1000);
 
     // Halt subscriber
     ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
@@ -518,6 +444,13 @@ int main(int argc, char *argv[]) {
 
     // Get the initial robot types from rosparam
     updateRobotTypes();
+
+
+    // ┌──────────────────┐
+    // │    Main loop     │
+    // └──────────────────┘
+
+    int currIteration = 0;
 
     while (ros::ok()) {
         loop_rate.sleep();
@@ -538,14 +471,16 @@ int main(int argc, char *argv[]) {
         auto timeNow = high_resolution_clock::now();
         auto timeDiff = timeNow - lastStatistics;
 
-        // Every second...
+        // ┌──────────────────┐
+        // │   Every second   │
+        // └──────────────────┘
         if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
             // Get the robot types from rosparam
             updateRobotTypes();
 
             lastStatistics = timeNow;
 
-            std::cout << "-----------------------------------\n";
+            std::cout << "\n═════════╣ " << currIteration++ << " ╠═════════\n";
 
             std::cout << "Halting status: ";
             if (halt) {
@@ -556,16 +491,11 @@ int main(int argc, char *argv[]) {
 
             auto modes = getDistinctTypes();
 
-            // If there is a robot set to serial
+            // ┌──────────────────┐
+            // │      Serial      │
+            // └──────────────────┘
             if (modes.find(RobotType::SERIAL) != modes.end()) {
-                // Check if a new file path was set
                 std::cout << "---- Serial ----\n";
-                std::string possibleNewSerialFilePath = serial_file_path;
-                ros::param::get("serial_file_path", possibleNewSerialFilePath);
-
-                if (possibleNewSerialFilePath != serial_file_path) {
-                    newSerialFilePath = possibleNewSerialFilePath;
-                }
 
                 // Get the percentage of acks and nacks
                 auto total = acks + nacks;
@@ -587,8 +517,8 @@ int main(int argc, char *argv[]) {
                     std::cout << "Current port: " << serial_file_path << "\n";
                     std::cout << "Sent messages the past second: " << total << "\n";
                     std::cout << "Capacity: " << std::floor(total / 360.0) << "%\n";
-                    std::cout << "Acks: " << acks << " (" << ackPercent << ")\n";
-                    std::cout << "Nacks: " << nacks << " (" << nackPercent << ")\n";
+                    std::cout << "Acks    : " << acks << " (" << ackPercent << ")\n";
+                    std::cout << "Nacks   : " << nacks << " (" << nackPercent << ")\n";
                     acks=0;
                     nacks=0;
 
@@ -617,6 +547,9 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
+            // ┌──────────────────┐
+            // │      grSim       │
+            // └──────────────────┘
             if (modes.find(RobotType::GRSIM) != modes.end()) {
 
                 // If there's a robot set to GRSim print the amount of network messages sent

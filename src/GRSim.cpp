@@ -88,6 +88,10 @@ bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string 
 		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
 		return false;
 	}
+	if (cmd.geneva_state < -2 || cmd.geneva_state > 2) {
+		ROS_ERROR("RoboHub (%s): Geneva Drive state of %d is out of bounds.", mode.c_str(), cmd.geneva_state);
+		return false;
+	}
 	return true;
 }
 
@@ -105,7 +109,7 @@ GRSimCommander::GRSimCommander(bool batch) :
         lastBatchTime{Clock::now()},
         efficiencyIndex{},
         numForcedFlushes{} {
-    
+
 }
 
 void GRSimCommander::queueGRSimCommand(const roboteam_msgs::RobotCommand & msg) {
@@ -120,7 +124,7 @@ void GRSimCommander::queueGRSimCommand(const roboteam_msgs::RobotCommand & msg) 
         // If we already received this ID, increase drop count
         if (hasMsgForID(msg.id)) {
             drops++;
-        } 
+        }
 
         if (TRACE) std::cout << "Got message for: " << msg.id << "\n";
 
@@ -177,7 +181,7 @@ void GRSimCommander::flush() {
     if (getMsgsQueued() > 0) {
         sendMultipleGRSimCommands(robotCommands);
     }
-    
+
     // Record efficiency
     efficiency[efficiencyIndex] = getMsgsQueued() / (double) threshold;
     efficiencyIndex = (efficiencyIndex + 1) % efficiency.size();
@@ -315,7 +319,7 @@ void GRSimCommander::setBatch(bool batch) {
 
 void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg) {
     grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
-    
+
     command->set_id(msg.id);
     command->set_wheelsspeed(false);
     command->set_veltangent(msg.x_vel);
@@ -339,6 +343,12 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     }
 
     command->set_spinner(msg.dribbler);
+		// geneva_state is in range [-2,2]
+		// angles in degrees
+		float angles[] = {-45, -22.5, 0, 22.5, 45};
+		// geneva_angle in radians
+		float geneva_angle = 2 * M_PI * angles[msg.geneva_state + 2] / 360;
+		command->set_geneva_angle(geneva_angle);
 }
 
 }

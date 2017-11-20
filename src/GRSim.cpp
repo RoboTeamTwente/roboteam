@@ -345,7 +345,7 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     command->set_spinner(msg.dribbler);
 		// geneva_state is in range [-2,2]
 		// angles in degrees
-		float angles[] = {-45, -22.5, 0, 22.5, 45};
+		float angles[] = {-20, -10, 0, 10, 20};
 		// geneva_angle in radians
 		float geneva_angle = 2 * M_PI * angles[msg.geneva_state + 2] / 360;
 		command->set_geneva_angle(geneva_angle);

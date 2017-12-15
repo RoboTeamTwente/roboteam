@@ -38,7 +38,7 @@ SlowParam<bool> grSimBatch("grsim/batching", true);
 
 // SlowParam<std::string> colorParam("our_color");
 // SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
-// SlowParam<int>         grsim_port("grsim/port", 20011); 
+// SlowParam<int>         grsim_port("grsim/port", 20011);
 
 // Algorithm for efficient GRSim'ing:
 // - Receive msg
@@ -191,7 +191,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        int const returnSize = 2;
+        int const returnSize = 3;
         std::array<uint8_t, returnSize> ackCode;
         ackCode.fill('!');
 
@@ -222,11 +222,14 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // std::cout << "ackCodes: \n";
         //
         // for (int i = 0; i < returnSize; i += 2) {
-            // // uint8_t b = ackCode[i];
+            // uint8_t b = ackCode[i];
             // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
         // }
 
         auto ack = rtt::decodeOldACK(ackCode);
+
+        std::cout << "Robot : " << ack.robotID << "\n";
+        std::cout << "Random  : " << ack.randomValue << "\n";
 
         if (ack.robotACK) {
             result.status = SerialResultStatus::ACK;

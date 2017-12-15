@@ -43,6 +43,7 @@ struct LowLevelRobotCommand {
 struct OldACK {
     int robotID;
     bool robotACK;
+    int randomValue;
 } ;
 
 struct NewACK {

@@ -18,7 +18,6 @@ namespace {
 }
 
 namespace rtt {
-
 /**
  * Command packet format, inspired by the (old?) RoboJackets protocol.
  *
@@ -38,8 +37,8 @@ namespace rtt {
  *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
  *                      kkk: dribbler speed, 0 - 7
  * 7        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
- * 8        nnnnnppp    
- * 9        ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad) 
+ * 8        nnnnnppp
+ * 9        ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad)
  * 10       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
  * 11       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
@@ -75,7 +74,7 @@ namespace rtt {
  *                          Wheel speed is 0 - 127, rounded to the nearest integer (rad / s)
  *                          Wheel direction: 0 is counterclockwise, 1 is clockwise
  * 4        efffffff    Front left. (wheel 1)
- *                      e: wheel direction 
+ *                      e: wheel direction
  *                      f: wheel speed
  * 5        ghhhhhhh    Front right (wheel 4)
  *                      g: wheel direction
@@ -89,7 +88,7 @@ namespace rtt {
  *
  * Optional additions for later:
  *                      If bit for debug is one, extra info is also sent:
- *                      Gyroscopoe info
+ *                      Gyroscope info
  *                      Accelerometer info
  *
  *                      Copy of command packet, possibly only when requested.
@@ -128,7 +127,7 @@ boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool our
  */
 LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, b::optional<roboteam_msgs::World> const & worldOpt) {
     using roboteam_msgs::RobotCommand;
-    
+
     //////////////////////////////
     // Calculate robot velocity //
     //////////////////////////////
@@ -143,7 +142,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     // Calculate robot angle //
     ///////////////////////////
     double rawAng = velocityVec.angle();
-    
+
     // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
     // in the positive domain.
     if (rawAng < 0) {
@@ -171,13 +170,10 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
 
     if (w > PACKET_MAX_W) w = PACKET_MAX_W;
     if (w < 0) w = 0;
-    
+
     //////////////////////////
     // Calculate kick_force //
     //////////////////////////
-    // uint8_t kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL);
-    // uint8_t dribbler_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL);
-    
     uint8_t kick_force = 0;
     uint8_t chip_force = 0;
     bool do_chip = false;
@@ -203,7 +199,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
     /////////////////////////
     // Figure out cam data //
     /////////////////////////
-    
+
     bool cam_data_on = false;
     int32_t cam_robot_vel = 0;
     int32_t cam_ang = 0;
@@ -223,23 +219,23 @@ LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand cons
             cam_robot_vel = camVelocityVec.length();
 
             double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
-            
+
             if (ang < 0) {
                 ang += 2 * M_PI;
             }
 
             cam_ang = ang / (2 * M_PI / 512.0);
-            
+
             if (bot.w > 0) {
                 cam_rot_cclockwise = true;
                 cam_w = bot.w;
             } else if (bot.w < 0) {
                 cam_rot_cclockwise = false;
                 cam_w = -bot.w;
-            } 
+            }
         }
     }
-    
+
     ///////////////////////////////////////
     // Construct low level robot command //
     ///////////////////////////////////////
@@ -392,7 +388,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
     // First bit of moving direction
     // Then bit that designates clockwise rotation or not
     // Last three bits of angular velocity
-    byteArr[3] = static_cast<uint8_t>((ang & 3) << 6) 
+    byteArr[3] = static_cast<uint8_t>((ang & 3) << 6)
                 | static_cast<uint8_t>(rot_cclockwise << 3)
                 | static_cast<uint8_t>((w >> 8) & 7);
     // First two nibbles of angular velocity
@@ -408,7 +404,7 @@ boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t r
                     | static_cast<uint8_t>(forced << 4)
                     | static_cast<uint8_t>(dribble_cclockwise << 3)
                     | static_cast<uint8_t>(dribble_vel & 7);
-    
+
     byteArr[7] = static_cast<uint8_t>(cam_robot_vel >> 5);
 
     byteArr[8] = static_cast<uint8_t>(cam_robot_vel << 3)
@@ -453,6 +449,9 @@ OldACK decodeOldACK(packed_old_ack const & packedAck) {
     // Decode robot ACK
     ack.robotACK = packedAck[1] == '1';
 
+    // Decode random value
+    ack.randomValue = static_cast<int>(packedAck[2]);
+
     return ack;
 }
 
@@ -479,7 +478,7 @@ NewACK decodeNewACK(packed_new_ack const & packedAck) {
     auto decodeWheelDir = [](uint8_t wheelInfo) {
         return static_cast<bool>((wheelInfo >> 7) & 1);
     } ;
-    
+
     auto decodeWheelSpeed = [](uint8_t wheelInfo) {
         return static_cast<int>(wheelInfo & 127);
     } ;
@@ -495,7 +494,7 @@ NewACK decodeNewACK(packed_new_ack const & packedAck) {
 
     ack.brWheelDir = decodeWheelDir(packedAck[7]);
     ack.brWheelSpeed = decodeWheelSpeed(packedAck[7]);
-    
+
     return ack;
 }
 

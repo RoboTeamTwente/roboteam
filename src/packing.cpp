@@ -450,8 +450,11 @@ OldACK decodeOldACK(packed_old_ack const & packedAck) {
     ack.robotACK = packedAck[1] == '1';
 
     // Decode random value
-    ack.randomValue = static_cast<int>(packedAck[2]);
+    ack.randomValue = static_cast<uint8_t>(packedAck[2]);
 
+    for(int i; i < 3; i++) {
+        std::cout << "packedAck[" << i << "] : " << byteToBinary(packedAck[i]) << "\n";
+    }
     return ack;
 }
 
@@ -460,7 +463,7 @@ NewACK decodeNewACK(packed_new_ack const & packedAck) {
 
     // Decode ID
     if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-        ack.robotID = static_cast<int>(packedAck[0] - '9');
+        ack.robotID = static_cast<int>(packedAck[0] - '0');
     } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
         ack.robotID = static_cast<int>(packedAck[0] - 'A');
     } else {

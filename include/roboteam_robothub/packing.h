@@ -43,7 +43,6 @@ struct LowLevelRobotCommand {
 struct OldACK {
     int robotID;
     bool robotACK;
-    int randomValue;
 } ;
 
 struct NewACK {
@@ -66,7 +65,7 @@ struct NewACK {
 } ;
 
 using packed_protocol_message = std::array<uint8_t, 12>;
-using packed_old_ack = std::array<uint8_t, 3>;
+using packed_old_ack = std::array<uint8_t, 2>;
 using packed_new_ack = std::array<uint8_t, 8>;
 
 LowLevelRobotCommand createLowLevelRobotCommand( roboteam_msgs::RobotCommand const & command

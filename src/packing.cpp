@@ -450,9 +450,9 @@ OldACK decodeOldACK(packed_old_ack const & packedAck) {
     ack.robotACK = packedAck[1] == '1';
 
     // Decode random value
-    ack.randomValue = static_cast<uint8_t>(packedAck[2]);
+    // ack.randomValue = static_cast<uint8_t>(packedAck[2]);
 
-    for(int i; i < 3; i++) {
+    for(int i = 0; i < 2; i++) {
         std::cout << "packedAck[" << i << "] : " << byteToBinary(packedAck[i]) << "\n";
     }
     return ack;

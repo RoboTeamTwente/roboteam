@@ -191,7 +191,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        int const returnSize = 3;
+        int const returnSize = 2;
         std::array<uint8_t, returnSize> ackCode;
         ackCode.fill('!');
 
@@ -229,7 +229,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         auto ack = rtt::decodeOldACK(ackCode);
 
         std::cout << "Robot ID : " << ack.robotID << "\n";
-        std::cout << "Random value : " << ack.randomValue << "\n";
+        // std::cout << "Random value : " << ack.randomValue << "\n";
 
         if (ack.robotACK) {
             result.status = SerialResultStatus::ACK;

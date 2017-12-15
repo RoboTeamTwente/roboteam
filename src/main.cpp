@@ -228,8 +228,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         auto ack = rtt::decodeOldACK(ackCode);
 
-        std::cout << "Robot : " << ack.robotID << "\n";
-        std::cout << "Random  : " << ack.randomValue << "\n";
+        std::cout << "Robot ID : " << ack.robotID << "\n";
+        std::cout << "Random value : " << ack.randomValue << "\n";
 
         if (ack.robotACK) {
             result.status = SerialResultStatus::ACK;

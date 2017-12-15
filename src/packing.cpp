@@ -439,7 +439,7 @@ OldACK decodeOldACK(packed_old_ack const & packedAck) {
 
     // Decode ID
     if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-        ack.robotID = static_cast<int>(packedAck[0] - '9');
+        ack.robotID = static_cast<int>(packedAck[0] - '0');
     } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
         ack.robotID = static_cast<int>(packedAck[0] - 'A');
     } else {

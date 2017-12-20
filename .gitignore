@@ -35,3 +35,6 @@ src/constants.cpp
 *.swp
 
 *.pyc
+.idea
+cmake-build-debug
+

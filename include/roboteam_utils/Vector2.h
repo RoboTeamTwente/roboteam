@@ -105,6 +105,12 @@ public:
     Vector2 project(const Vector2& line_a, const Vector2& line_b) const;
 
     /**
+     * \brief Projects this vector onto another vector between two points (vectors, names line_a, line_b).
+     * The result is a vector.
+     */
+    Vector2 project2(const Vector2& line_a, const Vector2& line_b) const;
+
+    /**
      * \brief Checks whether both components of this vector are real (non-NaN) values.
      */
     bool isNotNaN() const;

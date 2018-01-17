@@ -27,7 +27,7 @@ namespace {
 bool halt = false;
 
 void processHalt(const std_msgs::Bool::ConstPtr &msg) {
-    ROS_INFO_STREAM("[RobotHub] [RobotHub] Received a halt: " << (int) msg->data );
+    ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
     halt = msg->data;
 }
 
@@ -122,16 +122,16 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
     // ==============
     // If there is something with the serial port
     if (!serialPortOpen) {
-        ROS_INFO_STREAM("[RobotHub] Opening serial port " << serial_file_path << "...");
+        ROS_INFO_STREAM("Opening serial port " << serial_file_path << "...");
         boost::system::error_code errorCode;
         serialPort.open(serial_file_path, errorCode);
         switch (errorCode.value()) {
             case boost::system::errc::success:
                 serialPortOpen = true;
-                ROS_INFO_STREAM("[RobotHub] Port " << serial_file_path << " opened");
+                ROS_INFO_STREAM("Port " << serial_file_path << " opened");
                 break;
             default:
-                ROS_ERROR_STREAM("[RobotHub] ERROR! Could not open serial port: " << errorCode.message());
+                ROS_ERROR_STREAM("ERROR! Could not open serial port: " << errorCode.message());
                 result.status = SerialResultStatus::CANT_OPEN_PORT;
                 return result;
         }
@@ -152,8 +152,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         auto bytes = *bytesOpt;
 
         // Uncomment for debug info
-        /*ROS_INFO_STREAM("[RobotHub] Byte size: " << bytes.size() );
-        ROS_INFO_STREAM("[RobotHub] Bytes: ");
+        /*ROS_INFO_STREAM("Byte size: " << bytes.size() );
+        ROS_INFO_STREAM("Bytes: ");
         for (uint8_t b : bytes) {
             printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
         }*/
@@ -165,7 +165,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         switch (ec.value()) {
             case boost::asio::error::eof:
-                ROS_ERROR_STREAM("[RobotHub] Connection closed by peer while writing! Closing port and trying to reopen...");
+                ROS_ERROR_STREAM("Connection closed by peer while writing! Closing port and trying to reopen...");
                 result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
                 serialPort.close();
                 serialPortOpen = false;
@@ -176,7 +176,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 break;
             default:
                 // Unknown read error!
-                ROS_ERROR_STREAM("[RobotHub] Unknown write error! Closing the port and trying to reopen...");
+                ROS_ERROR_STREAM("Unknown write error! Closing the port and trying to reopen...");
                 serialPort.close();
                 serialPortOpen = false;
                 result.status = SerialResultStatus::UNKNOWN_WRITE_ERROR;
@@ -199,7 +199,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         switch (ec.value()) {
             case boost::asio::error::eof:
-                ROS_ERROR_STREAM("[RobotHub] Connection closed by peer while reading! Closing port and trying to reopen...");
+                ROS_ERROR_STREAM("Connection closed by peer while reading! Closing port and trying to reopen...");
                 result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
                 serialPort.close();
                 serialPortOpen = false;
@@ -209,7 +209,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 // Peachy!
                 break;
             default:
-                ROS_ERROR_STREAM("[RobotHub] Unknown read error! Closing the port and trying to reopen...");
+                ROS_ERROR_STREAM("Unknown read error! Closing the port and trying to reopen...");
                 serialPort.close();
                 serialPortOpen = false;
                 result.status = SerialResultStatus::UNKNOWN_READ_ERROR;
@@ -218,8 +218,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         }
 
         // Uncomment for debug info
-        // ROS_INFO_STREAM("[RobotHub] AckCode size: " << ackCode.size() );
-        // ROS_INFO_STREAM("[RobotHub] ackCodes: ");
+        // ROS_INFO_STREAM("AckCode size: " << ackCode.size() );
+        // ROS_INFO_STREAM("ackCodes: ");
         //
         // for (int i = 0; i < returnSize; i += 2) {
             // uint8_t b = ackCode[i];
@@ -228,8 +228,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         auto ack = rtt::decodeOldACK(ackCode);
 
-        ROS_INFO_STREAM("[RobotHub] Robot ID : " << ack.robotID );
-        // ROS_INFO_STREAM("[RobotHub] Random value : " << ack.randomValue );
+        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
+        // ROS_INFO_STREAM("Random value : " << ack.randomValue );
 
         if (ack.robotACK) {
             result.status = SerialResultStatus::ACK;
@@ -338,7 +338,7 @@ std::set<RobotType> getDistinctTypes() {
 }
 
 void sendCommand(roboteam_msgs::RobotCommand command) {
-    // ROS_INFO_STREAM("[RobotHub] [sendCommand] " << command.id << std::endl;
+    // ROS_INFO_STREAM("[sendCommand] " << command.id << std::endl;
     auto mode = getMode(command.id);
 
     if (mode == b::none) {
@@ -368,7 +368,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 }
 
 void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand> & msgEvent) {
-    //ROS_INFO_STREAM("[RobotHub] [processRobotCommandWithIDCheck]" << std::endl;
+    //ROS_INFO_STREAM("[processRobotCommandWithIDCheck]" << std::endl;
 
     auto const & msg = *msgEvent.getMessage();
 
@@ -387,7 +387,7 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
                 robotID = robotIDLength1;
             } catch (...) {
                 // Neither matched; do nothing.
-                ROS_ERROR("[RobotHub] Neither matched!");
+                ROS_ERROR("Neither matched!");
             }
         }
 
@@ -395,11 +395,11 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
             if (*robotID == msg.id) {
                 sendCommand(msg);
             } else {
-                ROS_ERROR_STREAM("[RobotHub] Message sent by robot " << *robotID << " is not the same as ID in message which is " << msg.id << "!");
+                ROS_ERROR_STREAM("Message sent by robot " << *robotID << " is not the same as ID in message which is " << msg.id << "!");
             }
         } else {
             // Parsing failed; let the message through, probably some test node.
-            ROS_ERROR("[RobotHub] Parsing failed!");
+            ROS_ERROR("Parsing failed!");
         }
     } else {
         // In this case the msg was sent by something else
@@ -429,7 +429,7 @@ int main(int argc, char *argv[]) {
     ros::param::get("role_iterations_per_second", roleHz);
     ros::Rate loop_rate(roleHz);
 
-    ROS_INFO_STREAM("[RobotHub] Refresh rate: " << roleHz << "hz");
+    ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
     // Publisher and subscriber to get robotcommands
     ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
@@ -483,12 +483,12 @@ int main(int argc, char *argv[]) {
 
             lastStatistics = timeNow;
 
-            ROS_INFO_STREAM("[RobotHub] ==========| " << currIteration++ << " |==========");
+            ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
 
             if (halt) {
-                ROS_INFO_STREAM("[RobotHub] Halting status : !!!HALTING!!!");
+                ROS_INFO_STREAM("Halting status : !!!HALTING!!!");
             } else {
-                ROS_INFO_STREAM("[RobotHub] Halting status : Not halting");
+                ROS_INFO_STREAM("Halting status : Not halting");
             }
 
             auto modes = getDistinctTypes();
@@ -497,7 +497,7 @@ int main(int argc, char *argv[]) {
             // │      Serial      │
             // └──────────────────┘
             if (modes.find(RobotType::SERIAL) != modes.end()) {
-                ROS_INFO_STREAM("[RobotHub] ---- Serial ----");
+                ROS_INFO_STREAM("---- Serial ----");
 
                 // Get the percentage of acks and nacks
                 auto total = acks + nacks;
@@ -511,16 +511,16 @@ int main(int argc, char *argv[]) {
 
                 // If the port failed to open, print a message that we're trying to open it
                 if (prevResultStatus == SerialResultStatus::CANT_OPEN_PORT) {
-                    ROS_INFO_STREAM("[RobotHub] Trying to open port " << serial_file_path << "...");
+                    ROS_INFO_STREAM("Trying to open port " << serial_file_path << "...");
                 } else {
                     // Otherwise everything was fine and dandy.
                     // (Any other errors are handled by the sendSerial function itself by printing)
                     // Print the status.
-                    ROS_INFO_STREAM("[RobotHub] Current port: " << serial_file_path );
-                    ROS_INFO_STREAM("[RobotHub] Sent messages the past second: " << total );
-                    ROS_INFO_STREAM("[RobotHub] Capacity: " << std::floor(total / 360.0) << "%");
-                    ROS_INFO_STREAM("[RobotHub] Acks    : " << acks << " (" << ackPercent << ")");
-                    ROS_INFO_STREAM("[RobotHub] Nacks   : " << nacks << " (" << nackPercent << ")");
+                    ROS_INFO_STREAM("Current port: " << serial_file_path );
+                    ROS_INFO_STREAM("Sent messages the past second: " << total );
+                    ROS_INFO_STREAM("Capacity: " << std::floor(total / 360.0) << "%");
+                    ROS_INFO_STREAM("Acks    : " << acks << " (" << ackPercent << ")");
+                    ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
                     acks=0;
                     nacks=0;
 
@@ -555,8 +555,8 @@ int main(int argc, char *argv[]) {
             if (modes.find(RobotType::GRSIM) != modes.end()) {
 
                 // If there's a robot set to GRSim print the amount of network messages sent
-                ROS_INFO_STREAM("[RobotHub] ---- GRSim ----");
-                ROS_INFO_STREAM("[RobotHub] Network messages sent: " << networkMsgs );
+                ROS_INFO_STREAM("---- GRSim ----");
+                ROS_INFO_STREAM("Network messages sent: " << networkMsgs );
                 networkMsgs = 0;
 
 
@@ -585,14 +585,14 @@ int main(int argc, char *argv[]) {
                 }
 
                 if (grsimCmd.isBatch()) {
-                    ROS_INFO_STREAM("[RobotHub] Batching : yes");
+                    ROS_INFO_STREAM("Batching : yes");
                     rtt::GRSimCommander::Stats stats = grsimCmd.consumeStatistics();
 
-                    ROS_INFO_STREAM("[RobotHub] Average efficiency:       " << std::floor(stats.averageEfficiency * 100) << "%");
-                    ROS_INFO_STREAM("[RobotHub] Number of forced flushes: " << stats.numForcedFlushes);
-                    ROS_INFO_STREAM("[RobotHub] Current threshold:        " << stats.threshold);
+                    ROS_INFO_STREAM("Average efficiency:       " << std::floor(stats.averageEfficiency * 100) << "%");
+                    ROS_INFO_STREAM("Number of forced flushes: " << stats.numForcedFlushes);
+                    ROS_INFO_STREAM("Current threshold:        " << stats.threshold);
                 } else {
-                    ROS_INFO_STREAM("[RobotHub] Batching : no");
+                    ROS_INFO_STREAM("Batching : no");
                 }
             }
         }

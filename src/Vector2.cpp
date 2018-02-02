@@ -62,9 +62,8 @@ Vector2 Vector2::project(const Vector2& lineA, const Vector2& lineB) const {
     return lineA + ab.scale(t);
 }
 
-Vector2 Vector2::project2(const Vector2& lineA, const Vector2& lineB) const {
-    Vector2 ab = lineB - lineA;
-    Vector2 ap = *this; //REMOVED: -lineA
+Vector2 Vector2::project2(const Vector2& ab) const {
+    Vector2 ap = *this;
     double t = ap.dot(ab) / ab.dot(ab);
     return ab.scale(t);
 }

@@ -228,7 +228,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         auto ack = rtt::decodeOldACK(ackCode);
 
-        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
+//        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
         // ROS_INFO_STREAM("Random value : " << ack.randomValue );
 
         if (ack.robotACK) {
@@ -477,7 +477,7 @@ int main(int argc, char *argv[]) {
         // ┌──────────────────┐
         // │   Every second   │
         // └──────────────────┘
-        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+        if (duration_cast<milliseconds>(timeDiff).count() > 100) {
             // Get the robot types from rosparam
             updateRobotTypes();
 

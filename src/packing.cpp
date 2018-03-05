@@ -43,6 +43,24 @@ namespace rtt {
  * 11       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  *  Old packet response format
  *

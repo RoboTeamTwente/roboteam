@@ -131,7 +131,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 ROS_INFO_STREAM("Port " << serial_file_path << " opened");
                 break;
             default:
-                ROS_ERROR_STREAM("ERROR! Could not open serial port: " << errorCode.message());
+                ROS_ERROR_STREAM_THROTTLE(1, "ERROR! Could not open serial port: " << errorCode.message());
+
                 result.status = SerialResultStatus::CANT_OPEN_PORT;
                 return result;
         }

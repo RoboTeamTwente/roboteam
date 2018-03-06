@@ -88,6 +88,13 @@ GeometryFieldSize rotateGeometryFieldSize(GeometryFieldSize& size) {
     size.bottom_left_penalty_arc = rotateArc(size.bottom_left_penalty_arc);
     size.top_right_penalty_arc = rotateArc(size.top_right_penalty_arc);
     size.bottom_right_penalty_arc = rotateArc(size.bottom_right_penalty_arc);
+
+    // adding rectangle box lines
+    size.top_left_penalty_stretch = rotateLine(size.top_left_penalty_stretch);
+    size.bottom_left_penalty_stretch = rotateLine(size.bottom_left_penalty_stretch);
+    size.top_right_penalty_stretch = rotateLine(size.top_right_penalty_stretch);
+    size.bottom_right_penalty_stretch = rotateLine(size.bottom_right_penalty_stretch);
+
     size.center_circle = rotateArc(size.center_circle);
 
     for (auto& line : size.field_lines) {

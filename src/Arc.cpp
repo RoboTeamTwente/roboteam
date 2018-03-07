@@ -54,7 +54,7 @@ bool Arc::pointOnArc(const Vector2& point) const {
 }
 
 boost::optional<Vector2> Arc::checkAndDenormalize(Vector2 vec) const {
-    return vec.angle() >= angleStart && vec.angle() <= angleEnd ?
+    return normalize(angleEnd - angleStart) - normalize(vec.angle() - angleStart) >= 0 ?
             boost::optional<Vector2>(vec + center)
             :
             boost::none;

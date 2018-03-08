@@ -478,7 +478,7 @@ int main(int argc, char *argv[]) {
         // ┌──────────────────┐
         // │   Every second   │
         // └──────────────────┘
-        if (duration_cast<milliseconds>(timeDiff).count() > 100) {
+        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
             // Get the robot types from rosparam
             updateRobotTypes();
 

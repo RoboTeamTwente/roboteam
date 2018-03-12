@@ -14,7 +14,7 @@ Cone::Cone(Vector2 startPoint, Vector2 centerPoint, double distance) {
 	center = centerPoint;
 	radius = distance;
 	if (radius > 0) {
-		angle = 2 * asin((radius) / (center-start).length());
+		angle = 2 * atan((radius) / (center-start).length());
 	} else {
 		ROS_WARN("radius for cone invalid!");
 	}
@@ -22,32 +22,23 @@ Cone::Cone(Vector2 startPoint, Vector2 centerPoint, double distance) {
 	side2 = (center-start).rotate(-0.5*angle);
 }
 
-Cone::Cone(Vector2 startPoint, Vector2 side1, Vector2 side2) {
-	this->start = startPoint;
-	Vector2 tempSide1 = side1.scale(2 / side1.length());
-	Vector2 tempSide2 = side2.scale(2 / side2.length());
-
-	this->angle = cleanAngle(tempSide1.angle() - tempSide2.angle());
-	if (angle > 0) this->center = tempSide2.rotate(0.5*fabs(angle)) + this->start;
-	if (angle < 0) this->center = tempSide1.rotate(0.5*fabs(angle)) + this->start;
-	this->angle = fabs(angle);
-	this->side1 = (center-start).rotate(0.5*angle);
-	this->side2 = (center-start).rotate(-0.5*angle);
-	this->radius = (start+side1 - center).length();
+Cone::Cone(Vector2 startPoint, Vector2 sideA, Vector2 sideB) {
+	start = startPoint;
+	if (sideA.length()>sideB.length()) {
+		side1 = sideA;
+		side2 = sideB.stretchToLength(sideA.length());
+	} else {
+		side1 = sideA.stretchToLength(sideB.length());
+		side2 = sideB;
+	}
+	angle = cleanAngle(side1.angle() - side2.angle());
+	center = side2.rotate(0.5*angle) + start;
+	angle = fabs(angle);
+	radius = (start + side1 - center).length();
 }
 
 bool Cone::IsWithinCone(Vector2 point) const {
-	// ROS_INFO_STREAM("point: " << point.x << " " << point.y);
-	Vector2 vectorToPoint = point-start;
-	Vector2 vectorToCenter = center-start;
-	// ROS_INFO_STREAM("vectorToPoint: " << vectorToPoint.x << " " << vectorToPoint.y);
-	// ROS_INFO_STREAM("vectorToCenter: " << vectorToCenter.x << " " << vectorToCenter.y);
-	// ROS_INFO_STREAM("vectorToPoint angle " << vectorToPoint.angle() << " vectorToCenter angle " << vectorToCenter.angle() << " angle " << angle);
-	if (fabs(cleanAngle(vectorToPoint.angle() - vectorToCenter.angle())) <= 0.5*angle) {
-		return true;
-	} else {
-		return false;
-	}
+	return IsWithinCone(point,0.0);
 }
 
 bool Cone::IsWithinCone(Vector2 point, double marginRadius) const {
@@ -147,6 +138,15 @@ Vector2 Cone::LineIntersection(Vector2 line1Start, Vector2 line1Dir, Vector2 lin
 	float intersectX = (slope1*line1Start.x - slope2*line2Start.x - line1Start.y + line2Start.y) / (slope1 - slope2);
 	float intersectY = slope1 * (intersectX - line1Start.x) + line1Start.y;
 	return Vector2(intersectX, intersectY);
+}
+
+Vector2 Cone::LineIntersection(Vector2 lineStart, Vector2 lineEnd, bool sideA) {
+	if (sideA) {
+		return LineIntersection(start, side1, lineStart, lineEnd - lineStart);
+	} else {
+		return LineIntersection(start, side2, lineStart, lineEnd - lineStart);
+	}
+	
 }
 
 bool Cone::DoConesOverlap(Cone otherCone) const {

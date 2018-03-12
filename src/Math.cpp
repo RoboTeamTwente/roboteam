@@ -85,4 +85,15 @@ double getCounterClockwiseAngle(double a1, double a2) {
 	return result;
 }
 
+double smoothStep(double x) {
+	if (x<0) {
+		return 0;
+	} else if (x>1) {
+		return 1;
+	} else {
+		// x³(6x²-15x+10) -> smooth sigmoid-like function between 0 and 1;
+		return std::pow(x, 3.0)*(6*x*x - 15*x + 10);
+	}
+}
+
 } // rtt

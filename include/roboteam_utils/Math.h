@@ -17,6 +17,7 @@ double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos);
 bool isBetweenAngles(double a1, double a2, double testAngle);
 double getClockwiseAngle(double a1, double a2);
 double getCounterClockwiseAngle(double a1, double a2);
+double smoothStep(double x);
 
 template <typename T> inline constexpr
 int signum(T x, std::false_type is_signed) {

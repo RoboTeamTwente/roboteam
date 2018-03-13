@@ -92,7 +92,7 @@ double smoothStep(double x) {
 		return 1;
 	} else {
 		// x³(6x²-15x+10) -> smooth sigmoid-like function between 0 and 1;
-		return std::pow(x, 3.0)*(6*x*x - 15*x + 10);
+		return x * x * x * (x * (x * 6 - 15) + 10);
 	}
 }
 

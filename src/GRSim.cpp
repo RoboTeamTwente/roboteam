@@ -88,7 +88,7 @@ bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string 
 		ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
 		return false;
 	}
-	if (cmd.geneva_state < -2 || cmd.geneva_state > 2) {
+	if (cmd.geneva_state < 0 || cmd.geneva_state > 5) {
 		ROS_ERROR("RoboHub (%s): Geneva Drive state of %d is out of bounds.", mode.c_str(), cmd.geneva_state);
 		return false;
 	}
@@ -343,12 +343,25 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     }
 
     command->set_spinner(msg.dribbler);
-		// geneva_state is in range [-2,2]
-		// angles in degrees
-		float angles[] = {-20, -10, 0, 10, 20};
-		// geneva_angle in radians
-		float geneva_angle = 2 * M_PI * angles[msg.geneva_state + 2] / 360;
-		command->set_geneva_angle(geneva_angle);
+	
+    // geneva_state of 0 means no change
+    int index = 0;
+    if(msg.geneva_state == 0) {
+        std::string paramName = "robot" + std::to_string(msg.id) + "/genevaState";
+        int genevaState = 0;
+        ros::param::getCached(paramName, genevaState);
+        index = genevaState - 1;
+    } else {
+        index = msg.geneva_state - 1;
+        // Announce the new geneva state via ROS params
+        ros::param::set("robot" + std::to_string(msg.id) + "/genevaState", msg.geneva_state);
+    }
+
+    // angles in degrees
+    float angles[] = {-20, -10, 0, 10, 20};
+    // geneva_angle in radians
+    float geneva_angle = 2 * M_PI * angles[index] / 360;
+    command->set_geneva_angle(geneva_angle);
 }
 
 }

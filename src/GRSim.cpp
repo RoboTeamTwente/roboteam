@@ -327,7 +327,7 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     command->set_velangular(msg.w);
 
     if (msg.kicker) {
-        command->set_kickspeedx(msg.kicker_vel * 1.5);
+        command->set_kickspeedx(msg.kicker_vel);
     } else {
         command->set_kickspeedx(0);
     }

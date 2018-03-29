@@ -15,94 +15,7 @@ namespace b = boost;
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Math.h"
 
-namespace {
-
-}
-
 namespace rtt {
-/**
- * Command packet format, inspired by the (old?) RoboJackets protocol.
- *
- * Note: l and o are skipped because they are hard to discern from badly written 0's and 1's.
- *
- * Byte     Config      Description
- * 0        aaaabbbb    aaaa: Robot ID, bbbb: Robot velocity
- * 1        bbbbbbbb    bbbbbbbb: Robot velocity, 0 - 8191 (mm/s)
- * 2        bccccccc    b: Robot velocity, cccccccc: Moving direction, resolution (2 * pi / 512) (rad)
- * 3        cc00deee    cc: Moving direction, d: Rotation direction, true is counter clockwise
- * 4        eeeeeeee    eeeeeeeeeee: Angular velocity, 0 - 2047 (deg/s)
- * 5        ffffffff    ffffffff: Kick force, 0 - 255
- * 6        rghijkkk    r: whether or not the 8th, 9th, 10th, 11th, and 12th byte are meaningful
- *                      g: whether or not to kick
- *                      h: whether or not to chip
- *                      i: forced or not
- *                      j: counterclockwise dribbler. Counterclockwise means spinning in a way s.t. the ball does not spin toward the robot (i.e. with the robot facing towards the right).
- *                      kkk: dribbler speed, 0 - 7
- * 7        nnnnnnnn    nnnnnnnn: robot velocity as perceived by camera. 0 - 8191 (mm/s)
- * 8        nnnnnppp
- * 9        ppppppqq    ppppppppp: Moving direction as perceived by camera, resolution (2 * pi / 512) (rad)
- * 10       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
- * 11       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
- */
-
-
-
-
-
-
-
-
-
-/**
- *  Old packet response format
- *
- *  Byte    Config      Description
- *  0       aaaaaaaa    Robot ID (ASCII, hexadecimal!)
- *  1       bbbbbbbb    ACK or NACK byte. Either '0' or '1'. (ASCII, hexadecimal)
- */
-
-/**
- * New packet response format, inspired by Hans, Jim & Bob.
- *
- * The first few things (id, ack/nack, battery critical, possibly ball) can possibly be compressed in the first byte.
- * Maybe we can also add a bit to the command packet that turns these things on or off (lean mode)?
- *
- * l and o are skipped because they are hard to discern from 0 and 1 in longhand
- *
- * ASCII size:      7 bytes
- * Compressed size: 5 bytes
- * Lean size:       1 byte (format yet to be determined)
- *
- * Byte     Config      Description
- * 0        aaaaaaaa    a: Robot ID (ASCII, hexadecimal!)
- * 1        bbbbbbbb    b: ACK or NACK byte (whether or not the command was actually
- *                         dispatched from the base station) (ASCII)
- * 2        cccccccc    c: Battery critical indicator (ASCII)
- * 3        dddddddd    d: Ball sensor (0 - 255, or 0-1) (can either be where it sees it, or how sure it is) (ASCII)
- *
- *                      Wheels
- *                          Wheel speed is 0 - 127, rounded to the nearest integer (rad / s)
- *                          Wheel direction: 0 is counterclockwise, 1 is clockwise
- * 4        efffffff    Front left. (wheel 1)
- *                      e: wheel direction
- *                      f: wheel speed
- * 5        ghhhhhhh    Front right (wheel 4)
- *                      g: wheel direction
- *                      h: wheel speed
- * 6        ijjjjjjj    Back left (wheel 2)
- *                      i: wheel direction
- *                      j: wheel speed
- * 7        kmmmmmmm    Back right (wheel 3)
- *                      k: wheel direction
- *                      m: wheel speed
- *
- * Optional additions for later:
- *                      If bit for debug is one, extra info is also sent:
- *                      Gyroscope info
- *                      Accelerometer info
- *
- *                      Copy of command packet, possibly only when requested.
- */
 
     namespace {
 
@@ -139,39 +52,9 @@ namespace rtt {
     LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
                                                     b::optional<roboteam_msgs::World> const &worldOpt) {
 
-        using roboteam_msgs::RobotCommand;
-
-
-
-        // Calculate robot angle
-        double rawAng = velocityVec.angle();
-
-
-
+//        using roboteam_msgs::RobotCommand
 
         /*
-        Normalize to [-180,180):
-        double constrainAngle(double x){
-            x = fmod(x + 180,360);
-            if (x < 0)
-                x += 360;
-            return x - 180;
-        }*/
-
-        float velocity_angular = command.w;
-
-        // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
-        // in the positive domain.
-        if (rawAng < 0) {
-            rawAng += M_PI * 2;
-        }
-
-        int ang = rawAng / (M_PI * 2) * 512;
-
-        if (ang > PACKET_MAX_ANG) {
-            ang = PACKET_MAX_ANG;
-        }
-
         //////////////////////////////////////
         // Calculate w & rotation direction //
         //////////////////////////////////////
@@ -252,46 +135,32 @@ namespace rtt {
                 }
             }
         }
+        */
 
-        ///////////////////////////////////////
-        // Construct low level robot command //
-        ///////////////////////////////////////
+        double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
+        double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
+        double theta = atan(command.y_vel / command.x_vel);
 
+        LowLevelRobotCommand llrc {};
+                                                                                                // Units           Represented values
+        llrc.id                 = command.id;                                                   // [0, 15]         [0, 15]
+        llrc.rho                = (int)floor(rho * 256);                                        // [0, 2047]       [0, 8.191]
+        llrc.theta              = (int)floor(theta * (1024 / M_PI));                            // [-1024, 1023]   [-pi, pi>
+        llrc.driving_reference  = false;                                                        // [0, 1]          {true, false}
+        llrc.use_cam_info       = false;                                                        // [0, 1]          {true, false}
+        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));                   // [-512, 511]     [-8*2pi, 8*2pi]
+        llrc.debug_info         = false;                                                        // [0, 1]          {true, false}
+        llrc.do_kick            = command.kicker;                                               // [0, 1]          {true, false}
+        llrc.do_chip            = command.chipper;                                              // [0, 1]          {true, false}
+        llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;              // [0, 1]          {true, false}
+        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);                    // [0, 255]        [0, 100]%
+        llrc.velocity_dribbler  = 17;//(int)floor(command.dribbler * (100 / 255));              // [0, 255]        [0, 100]%
+        llrc.geneva_drive_state = command.geneva_state - 5;                                     // [0, 7]          [-2, 2]
+        llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
+        llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
+        llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>
 
-//        llcommand.ang = ang;
-//        llcommand.rot_cclockwise = rot_cclockwise;
-//        llcommand.w = w;
-//        llcommand.punt_power = std::max(kick_force, chip_force);
-//        llcommand.do_kick = do_kick;
-//        llcommand.do_chip = do_chip;
-//        llcommand.forced = do_forced;
-//        llcommand.dribble_cclockwise = dribble_cclockwise;
-//        llcommand.dribble_vel = dribble_vel;
-//
-//        llcommand.cam_data_on = cam_data_on;
-//        llcommand.cam_robot_vel = cam_robot_vel;
-//        llcommand.cam_ang = cam_ang;
-//        llcommand.cam_w = cam_w;
-
-        LowLevelRobotCommand llrc;
-
-        llrc.id                 = command.id;
-        llrc.velocity_x         = command.x_vel * 128;
-        llrc.velocity_y         = command.y_vel * 128;
-        llrc.driving_reference  = false;
-        llrc.use_cam_info       = false;
-        llrc.rotation_direction = command.w > 0;
-        llrc.velocity_angular   = command.w;
-        llrc.debug_info         = false;
-        llrc.do_kick            = command.kicker;
-        llrc.do_chip            = command.chipper;
-        llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;
-        llrc.kick_chip_power    = command.kicker ? command.kicker_vel : command.chipper_vel;
-        llrc.velocity_dribbler  = command.dribbler;
-        llrc.geneva_drive_state = command.geneva_state;
-        llrc.cam_position_x     = 0;
-        llrc.cam_position_y     = 0;
-        llrc.cam_rotation       = 0;
+        printf("kick_chip_power: %d\n", llrc.kick_chip_power);
 
         return llrc;
     }
@@ -317,8 +186,8 @@ namespace rtt {
         // inRange(10, -5, 10) -> true; // inRange(-8, -5, 10) -> false;
 
         valuesInRange &= inRange(llrc.id, 0, 15);
-        valuesInRange &= inRange(llrc.velocity_x, -1023, 1024);
-        valuesInRange &= inRange(llrc.velocity_y, -1023, 1024);
+        valuesInRange &= inRange(llrc.rho, 0, 2047);
+        valuesInRange &= inRange(llrc.theta, -1024, 1023);
         valuesInRange &= inRange(llrc.velocity_angular, 0, 511);
         valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
         valuesInRange &= inRange(llrc.velocity_dribbler, 0, 255);
@@ -340,22 +209,21 @@ namespace rtt {
 
         byteArr[0] = static_cast<uint8_t>(  // aaaaabbb
             (0b11111000 & (llrc.id << 3)) |                 //aaaaa000   5 bits; bits  4-0 to 7-3
-            (0b00000111 & (llrc.velocity_x >> 8))           //00000bbb  11 bits; bits 10-8 to 2-0
+            (0b00000111 & (llrc.rho >> 8))                  //00000bbb  11 bits; bits 10-8 to 2-0
         );
 
         byteArr[1] = static_cast<uint8_t>(  // bbbbbbbb
-            llrc.velocity_x                                 //bbbbbbbb  11 bits; bits  7-0 to 7-0
+            llrc.rho                                        //bbbbbbbb  11 bits; bits  7-0 to 7-0
         );
 
         byteArr[2] = static_cast<uint8_t>(  // cccccccc
-            llrc.velocity_y >> 3                            // cccccccc 11 bits; bits 10-8 to 7-0
+            llrc.theta >> 3                                 // cccccccc 11 bits; bits 10-8 to 7-0
         );
 
         byteArr[3] = static_cast<uint8_t>(  // cccde0fg
-            (0b11100000 & (llrc.velocity_y << 5)) |         // ccc00000 11 bits; bits  2-0 to 7-5
+            (0b11100000 & (llrc.theta << 5)) |              // ccc00000 11 bits; bits  2-0 to 7-5
             (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
             (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
-            (0b00000010 & (llrc.rotation_direction << 1)) | // 000000f0  1 bit ; bit     0 to   1
             (0b00000001 & (llrc.velocity_angular >> 8))     // 0000000g  9 bits; bit     8 to   0
         );
 
@@ -486,18 +354,18 @@ namespace rtt {
 } // rtt
 
 bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
-    return
-            lhs.id == rhs.id &&
-            lhs.robot_vel == rhs.robot_vel &&
-            lhs.ang == rhs.ang &&
-            lhs.rot_cclockwise == rhs.rot_cclockwise &&
-            lhs.w == rhs.w &&
-            lhs.punt_power == rhs.punt_power &&
-            lhs.do_kick == rhs.do_kick &&
-            lhs.do_chip == rhs.do_chip &&
-            lhs.forced == rhs.forced &&
-            lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
-            lhs.dribble_vel == rhs.dribble_vel;
+    return false;
+//            lhs.id == rhs.id &&
+//            lhs.robot_vel == rhs.robot_vel &&
+//            lhs.ang == rhs.ang &&
+//            lhs.rot_cclockwise == rhs.rot_cclockwise &&
+//            lhs.w == rhs.w &&
+//            lhs.punt_power == rhs.punt_power &&
+//            lhs.do_kick == rhs.do_kick &&
+//            lhs.do_chip == rhs.do_chip &&
+//            lhs.forced == rhs.forced &&
+//            lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
+//            lhs.dribble_vel == rhs.dribble_vel;
 }
 
 bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {

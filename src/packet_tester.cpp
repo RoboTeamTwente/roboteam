@@ -67,14 +67,22 @@ namespace rtt {
 
         cmdMax.w = 16 * M_PI;       // Translates to velocity_angular = 511
         cmdMax.kicker_vel = 100;    // Translates to kick_chip_power = 255
-
         cmdMax.geneva_state = 4;
 
         LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmdMax);
 
-        std::cout << "\nRobotCommand" << std::endl;
+        std::cout << "\nRobotCommand Max" << std::endl;
         printcmd(cmdMax);
-        std::cout << "\nLowLevelRobotCommand" << std::endl;
+        std::cout << "\nLowLevelRobotCommand Max" << std::endl;
+        printllrc(llrc);
+
+        roboteam_msgs::RobotCommand cmdMin;
+
+        llrc = createLowLevelRobotCommand(cmdMin);
+
+        std::cout << "\nRobotCommand Min" << std::endl;
+        printcmd(cmdMin);
+        std::cout << "\nLowLevelRobotCommand Min" << std::endl;
         printllrc(llrc);
 
     }

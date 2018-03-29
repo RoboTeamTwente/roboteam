@@ -139,7 +139,7 @@ namespace rtt {
 
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
-        double theta = atan(command.y_vel / command.x_vel);
+        double theta = command.x_vel == 0 ? 0 : atan(command.y_vel / command.x_vel);
 
         LowLevelRobotCommand llrc {};
                                                                                                 // Units           Represented values
@@ -148,14 +148,14 @@ namespace rtt {
         llrc.theta              = (int)floor(theta * (1024 / M_PI));                            // [-1024, 1023]   [-pi, pi>
         llrc.driving_reference  = false;                                                        // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                                        // [0, 1]          {true, false}
-        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));                   // [-512, 511]     [-8*2pi, 8*2pi]
+        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));                 // [-512, 511]     [-8*2pi, 8*2pi]
         llrc.debug_info         = false;                                                        // [0, 1]          {true, false}
         llrc.do_kick            = command.kicker;                                               // [0, 1]          {true, false}
         llrc.do_chip            = command.chipper;                                              // [0, 1]          {true, false}
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;              // [0, 1]          {true, false}
         llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);                    // [0, 255]        [0, 100]%
         llrc.velocity_dribbler  = 17;//(int)floor(command.dribbler * (100 / 255));              // [0, 255]        [0, 100]%
-        llrc.geneva_drive_state = command.geneva_state - 5;                                     // [0, 7]          [-2, 2]
+        llrc.geneva_drive_state = command.geneva_state - 3;                                     // [(0)1, 5]       [-2, 2]
         llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>

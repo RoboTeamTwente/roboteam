@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <boost/optional.hpp>
+
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
@@ -42,16 +43,6 @@ namespace rtt {
  * 10       qqqqqqqq    qqqqqqqqqqq: Angular velocity as perceived by the camera, 0 - 2047 (deg/s)
  * 11       qm000000    m: true if rotation direction as perceived by camera is counterclockwise. counterclockwise as seen by the camera from above
  */
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -112,430 +103,394 @@ namespace rtt {
  *                      Copy of command packet, possibly only when requested.
  */
 
-namespace {
+    namespace {
 
-uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax) {
-    if (forceRaw >= max) {
-        return normMax;
-    } else if (forceRaw < 0) {
-        return 0;
-    } else {
-        return forceRaw / max * normMax;
-    }
-}
-
-// Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
-// we can use that
-boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World& world) {
-    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
-    for (const auto& bot : bots) {
-        if (bot.id == id) {
-            return boost::optional<roboteam_msgs::WorldRobot>(bot);
-        }
-    }
-    return boost::none;
-}
-
-} // anonymous namespace
-
-/**
- * Creates a low level robot command, i.e. a command from which you can construct a robot packet
- * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
- * uses this internally to convert a RobotCommand into something workable.
- */
-LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const & command, b::optional<roboteam_msgs::World> const & worldOpt) {
-    using roboteam_msgs::RobotCommand;
-
-    //////////////////////////////
-    // Calculate robot velocity //
-    //////////////////////////////
-    Vector2 velocityVec(command.x_vel, command.y_vel);
-
-    int robot_vel = velocityVec.length() * 1000;
-    if (robot_vel > PACKET_MAX_ROBOT_VEL) {
-        robot_vel = PACKET_MAX_ROBOT_VEL;
-    }
-
-    ///////////////////////////
-    // Calculate robot angle //
-    ///////////////////////////
-    double rawAng = velocityVec.angle();
-
-    // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
-    // in the positive domain.
-    if (rawAng < 0) {
-        rawAng += M_PI * 2;
-    }
-
-    int ang = rawAng / (M_PI * 2) * 512;
-
-    if (ang > PACKET_MAX_ANG) {
-        ang = PACKET_MAX_ANG;
-    }
-
-    //////////////////////////////////////
-    // Calculate w & rotation direction //
-    //////////////////////////////////////
-    // Calculate w & if to rotate clockwise or counter-clockwise
-    // If w is positive it's counter clockwise
-    bool rot_cclockwise = command.w > 0;
-    double rawW = command.w;
-    if (rawW < 0) {
-        rawW = -rawW;
-    }
-    // w is in deg/s
-    int w = rawW / M_PI * 180;
-
-    if (w > PACKET_MAX_W) w = PACKET_MAX_W;
-    if (w < 0) w = 0;
-
-    //////////////////////////
-    // Calculate kick_force //
-    //////////////////////////
-    uint8_t kick_force = 0;
-    uint8_t chip_force = 0;
-    bool do_chip = false;
-    bool do_kick = false;
-    bool do_forced = false;
-
-    if (command.kicker == true) {
-        do_kick = true;
-        kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL, 255);
-        do_forced = command.kicker_forced;
-    } else if (command.chipper == true) {
-        do_chip = true;
-        chip_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL, 255);
-        do_forced = command.chipper_forced;
-    }
-
-    bool dribble_cclockwise = false;
-    uint8_t dribble_vel = 0;
-    if (command.dribbler) {
-        dribble_vel = PACKET_MAX_DRIBBLE_VEL;
-    }
-
-    /////////////////////////
-    // Figure out cam data //
-    /////////////////////////
-
-    bool cam_data_on = false;
-    int32_t cam_robot_vel = 0;
-    int32_t cam_ang = 0;
-    bool cam_rot_cclockwise = 0;
-    int32_t cam_w = 0;
-
-    if (worldOpt) {
-        auto const & world = *worldOpt;
-        auto botOpt = getWorldBot(command.id, true, world);
-
-        if (botOpt) {
-            auto bot = *botOpt;
-
-            cam_data_on = true;
-
-            Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
-            cam_robot_vel = camVelocityVec.length();
-
-            double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
-
-            if (ang < 0) {
-                ang += 2 * M_PI;
-            }
-
-            cam_ang = ang / (2 * M_PI / 512.0);
-
-            if (bot.w > 0) {
-                cam_rot_cclockwise = true;
-                cam_w = bot.w;
-            } else if (bot.w < 0) {
-                cam_rot_cclockwise = false;
-                cam_w = -bot.w;
+        uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax) {
+            if (forceRaw >= max) {
+                return normMax;
+            } else if (forceRaw < 0) {
+                return 0;
+            } else {
+                return forceRaw / max * normMax;
             }
         }
+
+        // Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
+        // we can use that
+        boost::optional<roboteam_msgs::WorldRobot>
+        getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
+            std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
+            for (const auto &bot : bots) {
+                if (bot.id == id) {
+                    return boost::optional<roboteam_msgs::WorldRobot>(bot);
+                }
+            }
+            return boost::none;
+        }
+
+    } // anonymous namespace
+
+    /**
+     * Creates a low level robot command, i.e. a command from which you can construct a robot packet
+     * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
+     * uses this internally to convert a RobotCommand into something workable.
+     */
+    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
+                                                    b::optional<roboteam_msgs::World> const &worldOpt) {
+        using roboteam_msgs::RobotCommand;
+
+        if(command.)
+
+        // Calculate robot angle
+        double rawAng = velocityVec.angle();
+
+        /*
+        Normalize to [-180,180):
+        double constrainAngle(double x){
+            x = fmod(x + 180,360);
+            if (x < 0)
+                x += 360;
+            return x - 180;
+        }*/
+
+        // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
+        // in the positive domain.
+        if (rawAng < 0) {
+            rawAng += M_PI * 2;
+        }
+
+        int ang = rawAng / (M_PI * 2) * 512;
+
+        if (ang > PACKET_MAX_ANG) {
+            ang = PACKET_MAX_ANG;
+        }
+
+        //////////////////////////////////////
+        // Calculate w & rotation direction //
+        //////////////////////////////////////
+        // Calculate w & if to rotate clockwise or counter-clockwise
+        // If w is positive it's counter clockwise
+        bool rot_cclockwise = command.w > 0;
+        double rawW = command.w;
+        if (rawW < 0) {
+            rawW = -rawW;
+        }
+        // w is in deg/s
+        int w = rawW / M_PI * 180;
+
+        if (w > PACKET_MAX_W) w = PACKET_MAX_W;
+        if (w < 0) w = 0;
+
+        //////////////////////////
+        // Calculate kick_force //
+        //////////////////////////
+        uint8_t kick_force = 0;
+        uint8_t chip_force = 0;
+        bool do_chip = false;
+        bool do_kick = false;
+        bool do_forced = false;
+
+        if (command.kicker == true) {
+            do_kick = true;
+            kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL, 255);
+            do_forced = command.kicker_forced;
+        } else if (command.chipper == true) {
+            do_chip = true;
+            chip_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL, 255);
+            do_forced = command.chipper_forced;
+        }
+
+        bool dribble_cclockwise = false;
+        uint8_t dribble_vel = 0;
+        if (command.dribbler) {
+            dribble_vel = PACKET_MAX_DRIBBLE_VEL;
+        }
+
+        /////////////////////////
+        // Figure out cam data //
+        /////////////////////////
+
+        bool cam_data_on = false;
+        int32_t cam_robot_vel = 0;
+        int32_t cam_ang = 0;
+        bool cam_rot_cclockwise = 0;
+        int32_t cam_w = 0;
+
+        if (worldOpt) {
+            auto const &world = *worldOpt;
+            auto botOpt = getWorldBot(command.id, true, world);
+
+            if (botOpt) {
+                auto bot = *botOpt;
+
+                cam_data_on = true;
+
+                Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
+                cam_robot_vel = camVelocityVec.length();
+
+                double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
+
+                if (ang < 0) {
+                    ang += 2 * M_PI;
+                }
+
+                cam_ang = ang / (2 * M_PI / 512.0);
+
+                if (bot.w > 0) {
+                    cam_rot_cclockwise = true;
+                    cam_w = bot.w;
+                } else if (bot.w < 0) {
+                    cam_rot_cclockwise = false;
+                    cam_w = -bot.w;
+                }
+            }
+        }
+
+        ///////////////////////////////////////
+        // Construct low level robot command //
+        ///////////////////////////////////////
+
+        LowLevelRobotCommand llrc;
+        llcommand.ang = ang;
+        llcommand.rot_cclockwise = rot_cclockwise;
+        llcommand.w = w;
+        llcommand.punt_power = std::max(kick_force, chip_force);
+        llcommand.do_kick = do_kick;
+        llcommand.do_chip = do_chip;
+        llcommand.forced = do_forced;
+        llcommand.dribble_cclockwise = dribble_cclockwise;
+        llcommand.dribble_vel = dribble_vel;
+
+        llcommand.cam_data_on = cam_data_on;
+        llcommand.cam_robot_vel = cam_robot_vel;
+        llcommand.cam_ang = cam_ang;
+        llcommand.cam_w = cam_w;
+
+        llrc.id = command.id;
+        llrc.velocity_x = command.x_vel * 256;
+        llrc.velocity_y = command.y_vel * 256;
+        llrc.driving_reference = false;
+        llrc.use_cam_info = false;
+        llrc.rotation_direction = command.w > 0;
+        llrc.velocity_angular = command.w;
+        llrc.debug_info = false;
+        llrc.do_kick = command.kicker;
+        llrc.do_chip = command.chipper;
+        llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced;
+        llrc.kick_chip_power = command.kicker ? command.kicker_vel : command.chipper_vel;
+        llrc.velocity_dribbler = command.dribbler;
+        llrc.geneva_drive_state = command.geneva_state;
+        llrc.cam_position_x = 0;
+        llrc.cam_position_y = 0;
+        llrc.cam_rotation = 0;
+
+        return llrc;
     }
 
-    ///////////////////////////////////////
-    // Construct low level robot command //
-    ///////////////////////////////////////
-
-    LowLevelRobotCommand llcommand;
-    llcommand.id = command.id;
-    llcommand.robot_vel = robot_vel;
-    llcommand.ang = ang;
-    llcommand.rot_cclockwise = rot_cclockwise;
-    llcommand.w = w;
-    llcommand.punt_power = std::max(kick_force, chip_force);
-    llcommand.do_kick = do_kick;
-    llcommand.do_chip = do_chip;
-    llcommand.forced = do_forced;
-    llcommand.dribble_cclockwise = dribble_cclockwise;
-    llcommand.dribble_vel = dribble_vel;
-
-    llcommand.cam_data_on = cam_data_on;
-    llcommand.cam_robot_vel = cam_robot_vel;
-    llcommand.cam_ang = cam_ang;
-    llcommand.cam_w = cam_w;
-
-    // std::cout << "[RobotHub] ------------------------------------------\n";
-    // std::cout << "[RobotHub] About to send the following w to the motor: " << llcommand.w << "\n";
-    // std::cout << "[RobotHub] rot_cclockwise: " << (int) llcommand.rot_cclockwise << "\n";
-
-    return llcommand;
-}
-
-/**
- * TODO: Measure our highest kicking power and use that to scale kick_vel!
- */
-boost::optional<packed_protocol_message> createRobotPacket( roboteam_msgs::RobotCommand const & command
-                                                          , b::optional<roboteam_msgs::World> const & world) {
-    auto llcommand = createLowLevelRobotCommand(command, world);
-
-    return createRobotPacket(
-            llcommand.id,
-            llcommand.robot_vel,
-            llcommand.ang,
-            llcommand.rot_cclockwise,
-            llcommand.w,
-            llcommand.punt_power,
-            llcommand.cam_data_on,
-            llcommand.do_kick,
-            llcommand.do_chip,
-            llcommand.forced,
-            llcommand.dribble_cclockwise,
-            llcommand.dribble_vel,
-            llcommand.cam_robot_vel,
-            llcommand.cam_ang,
-            llcommand.cam_rot_cclockwise,
-            llcommand.cam_w
-            );
-}
-
-boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc) {
-    return createRobotPacket(
-            llrc.id,
-            llrc.robot_vel,
-            llrc.ang,
-            llrc.rot_cclockwise,
-            llrc.w,
-            llrc.punt_power,
-            llrc.cam_data_on,
-            llrc.do_kick,
-            llrc.do_chip,
-            llrc.forced,
-            llrc.dribble_cclockwise,
-            llrc.dribble_vel,
-            llrc.cam_robot_vel,
-            llrc.cam_ang,
-            llrc.cam_rot_cclockwise,
-            llrc.cam_w
-            );
-}
-
-boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
-                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
-                                                         bool do_kick, bool do_chip, bool forced,
-                                                         bool dribble_cclockwise, uint8_t dribble_vel) {
-    return createRobotPacket(
-            id,
-            robot_vel,
-            ang,
-            rot_cclockwise,
-            w,
-            punt_power,
-            false,
-            do_kick,
-            do_chip,
-            forced,
-            dribble_cclockwise,
-            dribble_vel,
-            0,
-            0,
-            false,
-            0
-            );
-}
-
-/**
- * All mentioned ranges are inclusive. If the specified ranges are violated,
- * the function returns boost::none.
- *
- * \param id Must be between 0 and 15
- * \param robot_vel Must be between 0 and 4095 (mm/s)
- * \param ang Moving direction. Must be between 0 and 511. Resolution
- *          is 2*pi/512
- * \param rot_cclockwise True if rotation is counter clockwise
- * \param w Angular velocity. Must be between 0 and 2047
- * \param kick_force Naturally between 0 and 255
- * \param do_kick Whether or not a chip or kick should be done
- * \param chip True if the robot should chip, otherwise a kick will be done
- * \param forced If true robot will not wait until it's close to the ball
- * \param dribble_cclockwise If true dribbler will spin counter clockwise
- * \param dribble_vel Must be between 0 and 7.
- */
-boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
-                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
-                                                         bool cam_data_on,
-                                                         bool do_kick, bool do_chip, bool forced,
-                                                         bool dribble_cclockwise, uint8_t dribble_vel,
-                                                         int32_t cam_robot_vel, int32_t cam_ang,
-                                                         bool cam_rot_cclockwise, int32_t cam_w) {
-    if (!((id >= 0 && id < 16)
-            && (robot_vel >= 0 && robot_vel < 8192)
-            && (ang >= 0 && ang < 512)
-            && (w >= 0 && w < 2048)
-            && (dribble_vel >= 0 && dribble_vel < 8))
-            && (cam_robot_vel >= 0 && cam_robot_vel < 8192)
-            && (cam_ang >= 0 && cam_ang < 512)
-            && (cam_w >= 0 && cam_w < 2048)) {
-        return boost::none;
+    boost::optional<packed_protocol_message> createRobotPacket(
+        roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &world){
+        auto llcommand = createLowLevelRobotCommand(command, world);
+        return createRobotPacket(llcommand);
     }
 
-    packed_protocol_message byteArr;
+    bool inRange(int val, int min, int max){
+        return (min <= val && val <= max);
+    }
 
-    // Static cast truncates to the last 8 bits
-    // is implementation defined though.
+    /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
+    boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
 
-    // First nibble is the robot id
-    // Second nibble are the third nibble of robot velocity
-    byteArr[0] = static_cast<uint8_t>(((id & 15) << 4) | ((robot_vel >> 9) & 15));
-    // First and second nibble of robot velocity
-    byteArr[1] = static_cast<uint8_t>(robot_vel >> 1);
-    // Second to ninth bit of moving direction
-    byteArr[2] = static_cast<uint8_t>(robot_vel & 1) << 7
-                | static_cast<uint8_t>(ang >> 2);
-    // First bit of moving direction
-    // Then bit that designates clockwise rotation or not
-    // Last three bits of angular velocity
-    byteArr[3] = static_cast<uint8_t>((ang & 3) << 6)
-                | static_cast<uint8_t>(rot_cclockwise << 3)
-                | static_cast<uint8_t>((w >> 8) & 7);
-    // First two nibbles of angular velocity
-    byteArr[4] = static_cast<uint8_t>(w);
-    // Just plug in the byte of kick-force
-    byteArr[5] = punt_power;
-    // First the cam data on bit, then
-    // the chip and forced bools, then a bool that designates
-    // a clockwise dribbler, and then three bits to designate dribble velocity
-    byteArr[6] = static_cast<uint8_t>(cam_data_on << 7)
-                    | static_cast<uint8_t>(do_kick << 6)
-                    | static_cast<uint8_t>(do_chip << 5)
-                    | static_cast<uint8_t>(forced << 4)
-                    | static_cast<uint8_t>(dribble_cclockwise << 3)
-                    | static_cast<uint8_t>(dribble_vel & 7);
+        // Holds if all the values of the command are in range
+        bool valuesInRange = true;
 
-    byteArr[7] = static_cast<uint8_t>(cam_robot_vel >> 5);
+        // inRange(val, min, max) is inclusive!;
+        // inRange(-5, -5, 10) -> true; // inRange(14, -5, 10) -> false;
+        // inRange(10, -5, 10) -> true; // inRange(-8, -5, 10) -> false;
 
-    byteArr[8] = static_cast<uint8_t>(cam_robot_vel << 3)
-                | static_cast<uint8_t>(cam_ang >> 6);
+        valuesInRange &= inRange(llrc.id, 0, 15);
+        valuesInRange &= inRange(llrc.velocity_x, -1023, 1024);
+        valuesInRange &= inRange(llrc.velocity_y, -1023, 1024);
+        valuesInRange &= inRange(llrc.velocity_angular, 0, 511);
+        valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
+        valuesInRange &= inRange(llrc.velocity_dribbler, 0, 255);
+        valuesInRange &= inRange(llrc.geneva_drive_state, 0, 7);
+        valuesInRange &= inRange(llrc.cam_position_x, -4096, 4095);
+        valuesInRange &= inRange(llrc.cam_position_y, -4096, 4095);
+        valuesInRange &= inRange(llrc.cam_rotation, -1024, 1023);
 
-    byteArr[9] = static_cast<uint8_t>(cam_ang << 2)
-                | static_cast<uint8_t>(cam_w >> 9);
+        // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
+        if(!valuesInRange){
+            return boost::none;
+        }
 
-    byteArr[10] = static_cast<uint8_t>(cam_w >> 1);
+        //Might still be wrong because certain people can't make their minds up
+        packed_protocol_message byteArr;
 
-    byteArr[11] = static_cast<uint8_t>((cam_w & 1) << 7)
-                | static_cast<uint8_t>(cam_rot_cclockwise << 6);
+        // Static cast truncates to the last 8 bits
+        // is implementation defined though.
 
-    return boost::optional<packed_protocol_message>(byteArr);
-}
+        byteArr[0] = static_cast<uint8_t>(  // aaaaabbb
+            (0b11111000 & (llrc.id << 3)) |                 //aaaaa000   5 bits; bits  4-0 to 7-3
+            (0b00000111 & (llrc.velocity_x >> 8))           //00000bbb  11 bits; bits 10-8 to 2-0
+        );
 
-std::string byteToBinary(uint8_t const & byte) {
-    std::string byteStr = "";
-    for (int i = 0; i < 8; i++) {
-        if ((byte & (1 << i)) == (1 << i)) {
-            byteStr = "1" + byteStr;
+        byteArr[1] = static_cast<uint8_t>(  // bbbbbbbb
+            llrc.velocity_x                                 //bbbbbbbb  11 bits; bits  7-0 to 7-0
+        );
+
+        byteArr[2] = static_cast<uint8_t>(  // cccccccc
+            llrc.velocity_y >> 3                            // cccccccc 11 bits; bits 10-8 to 7-0
+        );
+
+        byteArr[3] = static_cast<uint8_t>(  // cccde0fg
+            (0b11100000 & (llrc.velocity_y << 5)) |         // ccc00000 11 bits; bits  2-0 to 7-5
+            (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
+            (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
+            (0b00000010 & (llrc.rotation_direction << 1)) | // 000000f0  1 bit ; bit     0 to   1
+            (0b00000001 & (llrc.velocity_angular >> 8))     // 0000000g  9 bits; bit     8 to   0
+        );
+
+        byteArr[4] = static_cast<uint8_t>(  // gggggggg
+            llrc.velocity_angular                           // gggggggg  8 bits; bits  7-0 to 7-0
+        );
+
+        byteArr[5] = static_cast<uint8_t>(  // 0000hijk
+            (0b00001000 & (llrc.debug_info << 3)) |         // 0000h000  1 bit ; bit     0 to   3
+            (0b00000100 & (llrc.do_kick << 2)) |            // 00000i00  1 bit ; bit     0 to   2
+            (0b00000010 & (llrc.do_chip << 1)) |            // 000000j0  1 bit ; bit     0 to   1
+            (0b00000001 & (llrc.kick_chip_forced << 2))     // 0000000k  1 bit ; bit     0 to   0
+        );
+
+        byteArr[6] = static_cast<uint8_t>(  // mmmmmmmm
+            llrc.kick_chip_power                            // mmmmmmmm  8 bits; bits  7-0 to 7-0
+        );
+
+        byteArr[7] = static_cast<uint8_t>(  // nnnnnnnn
+            llrc.velocity_dribbler                          // nnnnnnnn  8 bits; bits  7-0 to 7-0
+        );
+
+        byteArr[8] = static_cast<uint8_t>(  // pppqqqqq
+            (0b11100000 & (llrc.geneva_drive_state << 5)) | // ppp00000  3 bits; bits  2-0 to 7-5
+            (0b00011111 & (llrc.cam_position_x >> 8 ))      // 000qqqqq 13 bits; bits 12-8 to 4-0
+        );
+
+        byteArr[9] = static_cast<uint8_t>(  // qqqqqqqq
+            llrc.cam_position_x                             // qqqqqqqq 13 bits; bits  7-0 to 7-0
+        );
+
+        byteArr[10] = static_cast<uint8_t>( // rrrrrrrr
+            llrc.cam_position_y >> 5                        // rrrrrrrr 13 bits; bits 12-5 to 7-0
+        );
+
+        byteArr[11] = static_cast<uint8_t>( // rrrrrsss
+            (0b11111000 & (llrc.cam_position_y << 3)) |     // rrrrr000 13 bits; bits  4-0 to 7-3
+            (0b00000111 & (llrc.cam_rotation >> 8))         // 00000sss 11 bits; bits 10-8 to 2-0
+        );
+
+        byteArr[12] = static_cast<uint8_t>( // ssssssss
+            llrc.cam_rotation                               // ssssssss 11 bits; bits  7-0 to 7-0
+        );
+
+        return boost::optional<packed_protocol_message>(byteArr);
+    }
+
+    std::string byteToBinary(uint8_t const &byte) {
+        std::string byteStr = "";
+        for (int i = 0; i < 8; i++) {
+            if ((byte & (1 << i)) == (1 << i)) {
+                byteStr = "1" + byteStr;
+            } else {
+                byteStr = "0" + byteStr;
+            }
+        }
+
+        return byteStr;
+    }
+
+    OldACK decodeOldACK(packed_old_ack const &packedAck) {
+        OldACK ack;
+
+        // Decode ID
+        if (packedAck[0] >= '0' && packedAck[0] <= '9') {
+            ack.robotID = static_cast<int>(packedAck[0] - '0');
+        } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
+            ack.robotID = static_cast<int>(packedAck[0] - 'A');
         } else {
-            byteStr = "0" + byteStr;
+            ack.robotID = -1;
         }
-    }
 
-    return byteStr;
-}
+        // Decode robot ACK
+        ack.robotACK = packedAck[1] == '1';
 
-OldACK decodeOldACK(packed_old_ack const & packedAck) {
-    OldACK ack;
-
-    // Decode ID
-    if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-        ack.robotID = static_cast<int>(packedAck[0] - '0');
-    } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
-        ack.robotID = static_cast<int>(packedAck[0] - 'A');
-    } else {
-        ack.robotID = -1;
-    }
-
-    // Decode robot ACK
-    ack.robotACK = packedAck[1] == '1';
-
-    // Decode random value
-    // ack.randomValue = static_cast<uint8_t>(packedAck[2]);
+        // Decode random value
+        // ack.randomValue = static_cast<uint8_t>(packedAck[2]);
 
 //    for(int i = 0; i < 2; i++) {
 //        std::cout << "packedAck[" << i << "] : " << byteToBinary(packedAck[i]) << "\n";
 //    }
-    return ack;
-}
-
-NewACK decodeNewACK(packed_new_ack const & packedAck) {
-    NewACK ack;
-
-    // Decode ID
-    if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-        ack.robotID = static_cast<int>(packedAck[0] - '0');
-    } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
-        ack.robotID = static_cast<int>(packedAck[0] - 'A');
-    } else {
-        ack.robotID = -1;
+        return ack;
     }
 
-    // Decode robot ACK info
-    ack.robotACK = packedAck[1] == '1';
+    NewACK decodeNewACK(packed_new_ack const &packedAck) {
+        NewACK ack;
 
-    ack.batteryCritical = packedAck[2] == '1';
+        // Decode ID
+        if (packedAck[0] >= '0' && packedAck[0] <= '9') {
+            ack.robotID = static_cast<int>(packedAck[0] - '0');
+        } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
+            ack.robotID = static_cast<int>(packedAck[0] - 'A');
+        } else {
+            ack.robotID = -1;
+        }
 
-    ack.ballSensor = static_cast<int>(packedAck[3]);
+        // Decode robot ACK info
+        ack.robotACK = packedAck[1] == '1';
 
-    // Decode wheel speeds
-    auto decodeWheelDir = [](uint8_t wheelInfo) {
-        return static_cast<bool>((wheelInfo >> 7) & 1);
-    } ;
+        ack.batteryCritical = packedAck[2] == '1';
 
-    auto decodeWheelSpeed = [](uint8_t wheelInfo) {
-        return static_cast<int>(wheelInfo & 127);
-    } ;
+        ack.ballSensor = static_cast<int>(packedAck[3]);
 
-    ack.flWheelDir = decodeWheelDir(packedAck[4]);
-    ack.flWheelSpeed = decodeWheelSpeed(packedAck[4]);
+        // Decode wheel speeds
+        auto decodeWheelDir = [](uint8_t wheelInfo) {
+            return static_cast<bool>((wheelInfo >> 7) & 1);
+        };
 
-    ack.frWheelDir = decodeWheelDir(packedAck[5]);
-    ack.frWheelSpeed = decodeWheelSpeed(packedAck[5]);
+        auto decodeWheelSpeed = [](uint8_t wheelInfo) {
+            return static_cast<int>(wheelInfo & 127);
+        };
 
-    ack.blWheelDir = decodeWheelDir(packedAck[6]);
-    ack.blWheelSpeed = decodeWheelSpeed(packedAck[6]);
+        ack.flWheelDir = decodeWheelDir(packedAck[4]);
+        ack.flWheelSpeed = decodeWheelSpeed(packedAck[4]);
 
-    ack.brWheelDir = decodeWheelDir(packedAck[7]);
-    ack.brWheelSpeed = decodeWheelSpeed(packedAck[7]);
+        ack.frWheelDir = decodeWheelDir(packedAck[5]);
+        ack.frWheelSpeed = decodeWheelSpeed(packedAck[5]);
 
-    return ack;
-}
+        ack.blWheelDir = decodeWheelDir(packedAck[6]);
+        ack.blWheelSpeed = decodeWheelSpeed(packedAck[6]);
+
+        ack.brWheelDir = decodeWheelDir(packedAck[7]);
+        ack.brWheelSpeed = decodeWheelSpeed(packedAck[7]);
+
+        return ack;
+    }
 
 } // rtt
 
-bool operator==(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs) {
+bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
     return
-        lhs.id == rhs.id &&
-        lhs.robot_vel == rhs.robot_vel &&
-        lhs.ang == rhs.ang &&
-        lhs.rot_cclockwise == rhs.rot_cclockwise &&
-        lhs.w == rhs.w &&
-        lhs.punt_power == rhs.punt_power &&
-        lhs.do_kick == rhs.do_kick &&
-        lhs.do_chip == rhs.do_chip &&
-        lhs.forced == rhs.forced &&
-        lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
-        lhs.dribble_vel == rhs.dribble_vel;
+            lhs.id == rhs.id &&
+            lhs.robot_vel == rhs.robot_vel &&
+            lhs.ang == rhs.ang &&
+            lhs.rot_cclockwise == rhs.rot_cclockwise &&
+            lhs.w == rhs.w &&
+            lhs.punt_power == rhs.punt_power &&
+            lhs.do_kick == rhs.do_kick &&
+            lhs.do_chip == rhs.do_chip &&
+            lhs.forced == rhs.forced &&
+            lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
+            lhs.dribble_vel == rhs.dribble_vel;
 }
 
-bool operator!=(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs) {
+bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
     return !(lhs == rhs);
 }

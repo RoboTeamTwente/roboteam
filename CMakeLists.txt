@@ -116,7 +116,6 @@ add_dependencies(barrage
 catkin_add_gtest(robothub_test
     test/main.cpp
     test/packing_test.cpp
-    test/comm_test.cpp
 
     src/packing.cpp
     )

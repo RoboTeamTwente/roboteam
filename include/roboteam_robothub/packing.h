@@ -12,113 +12,100 @@
 
 namespace roboteam_msgs {
 
-ROS_DECLARE_MESSAGE(RobotCommand);
+    ROS_DECLARE_MESSAGE(RobotCommand);
 
 }
 
 namespace rtt {
 
-struct LowLevelRobotCommand {
-    int id;
-    int robot_vel;
-    int ang;
-    bool rot_cclockwise;
-    int w;
-    // Indicates power for both kicking & chipping
-    uint8_t punt_power;
-    bool cam_data_on;
-    bool do_kick;
-    bool do_chip;
-    bool forced;
-    bool dribble_cclockwise;
-    uint8_t dribble_vel;
+    struct LowLevelRobotCommand{//Description                 Values          Represented values    Units       Bits
+        int id;                 //Robot ID                    [0,15]          [0,15]                -           4
+        int velocity_x;         //Reference x velocity        [-1023,1024]    [-8192,8191]          8mm/s       11
+        int velocity_y;         //Reference y velocity        [-1023,1024]    [-8192,8191]          8mm/s       11
+        bool driving_reference; //Driving reference           [0,1]           {true,false}          -           1
+        bool use_cam_info;      //Use camera information      [0,1]           {true,false}          -           1
+        bool rotation_direction;//Rotating direction          [0,1]           {true,false}          -           1
+        int velocity_angular;   //Reference angular velocity  [0,511]         [0,8*2pi]             0.098rad/s  9
+        bool debug_info;        //Debug information           [0,1]           {true,false}          -           1
+        bool do_kick;           //Kick                        [0,1]           {true,false}          -           1
+        bool do_chip;           //Chip                        [0,1]           {true,false}          -           1
+        bool kick_chip_forced;  //Kick/chip immediately       [0,1]           {true,false}          -           1
+        int kick_chip_power;    //Kick/chip power             [0,255]         [0,100]%              0.39%       8
+        int velocity_dribbler;  //Reference dribbler speed    [0,255]         [0,100]%              0.39%       8
+        int geneva_drive_state; //Geneva drive state          [0,7]           [-2,2]                -           3
+        int cam_position_x;     //x position robot (camera)   [-4096,4095]    [-1024,1023]          2.5mm       13
+        int cam_position_y;     //y position robot (camera)   [-4096,4095]    [-1024,1023]          2.5mm       13
+        int cam_rotation;       //Orientation (camera)        [-1024,1023]    [-pi,pi>              0.00307rad  11
+    };
 
-    // Cam data
-    int32_t cam_robot_vel;
-    int32_t cam_ang;
-    bool cam_rot_cclockwise;
-    int32_t cam_w;
-} ;
+    struct OldACK {
+        int robotID;
+        bool robotACK;
+    };
 
-struct OldACK {
-    int robotID;
-    bool robotACK;
-} ;
+    struct NewACK {
+        int robotID;
+        bool robotACK;
+        bool batteryCritical;
+        int ballSensor;
 
-struct NewACK {
-    int robotID;
-    bool robotACK;
-    bool batteryCritical;
-    int ballSensor;
+        bool flWheelDir;
+        int flWheelSpeed;
 
-    bool flWheelDir;
-    int flWheelSpeed;
+        bool frWheelDir;
+        int frWheelSpeed;
 
-    bool frWheelDir;
-    int frWheelSpeed;
+        bool blWheelDir;
+        int blWheelSpeed;
 
-    bool blWheelDir;
-    int blWheelSpeed;
+        bool brWheelDir;
+        int brWheelSpeed;
+    };
 
-    bool brWheelDir;
-    int brWheelSpeed;
-} ;
+    using packed_protocol_message = std::array<uint8_t, 12>;
+    using packed_old_ack = std::array<uint8_t, 2>;
+    using packed_new_ack = std::array<uint8_t, 8>;
 
-using packed_protocol_message = std::array<uint8_t, 12>;
-using packed_old_ack = std::array<uint8_t, 2>;
-using packed_new_ack = std::array<uint8_t, 8>;
+    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
+                                                    boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
+    );
 
-LowLevelRobotCommand createLowLevelRobotCommand( roboteam_msgs::RobotCommand const & command
-                                               , boost::optional<roboteam_msgs::World> const & worldOpt = boost::none
-                                               );
+    boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 
-boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
+    boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const &command,
+                                                               boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
+    );
 
-boost::optional<packed_protocol_message> createRobotPacket( roboteam_msgs::RobotCommand const & command
-                                                          , boost::optional<roboteam_msgs::World> const & worldOpt = boost::none
-                                                          );
+    OldACK decodeOldACK(packed_old_ack const &packedAck);
 
-boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
-                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
-                                                         bool do_kick, bool do_chip, bool forced,
-                                                         bool dribble_cclockwise, uint8_t dribble_vel);
+    NewACK decodeNewACK(packed_new_ack const &packedAck);
 
-boost::optional<packed_protocol_message> createRobotPacket(int32_t id, int32_t robot_vel, int32_t ang,
-                                                         bool rot_cclockwise, int32_t w, uint8_t punt_power,
-                                                         bool cam_data_on,
-                                                         bool do_kick, bool do_chip, bool forced,
-                                                         bool dribble_cclockwise, uint8_t dribble_vel,
-                                                         int32_t cam_robot_vel, int32_t cam_ang,
-                                                         bool cam_rot_cclockwise, int32_t cam_w);
+    std::string byteToBinary(uint8_t const &byte);
 
-OldACK decodeOldACK(packed_old_ack const & packedAck);
-NewACK decodeNewACK(packed_new_ack const & packedAck);
+    template<unsigned int N>
+    std::string byteArrayToString(std::array<uint8_t, N> bytes) {
+        std::string result = "";
 
-std::string byteToBinary(uint8_t const & byte);
+        for (auto byte : bytes) {
+            result += byteToBinary(byte) + "\n";
+        }
 
-template<unsigned int N>
-std::string byteArrayToString(std::array<uint8_t, N> bytes) {
-    std::string result = "";
-
-    for (auto byte : bytes) {
-        result += byteToBinary(byte) + "\n";
+        return result;
     }
 
-    return result;
-}
+    int const PACKET_MAX_ROBOT_VEL = 8191;
+    int const PACKET_MAX_ANG = 511;
+    int const PACKET_MAX_W = 2047;
+    int const PACKET_MAX_DRIBBLE_VEL = 7;
 
-int const PACKET_MAX_ROBOT_VEL = 8191;
-int const PACKET_MAX_ANG = 511;
-int const PACKET_MAX_W = 2047;
-int const PACKET_MAX_DRIBBLE_VEL = 7;
-
-int const PACKET_MAX_CAM_ROBOT_VEL = 8191;
-int const PACKET_MAX_CAM_ANG = 511;
-int const PACKET_MAX_CAM_W = 2047;
+    int const PACKET_MAX_CAM_ROBOT_VEL = 8191;
+    int const PACKET_MAX_CAM_ANG = 511;
+    int const PACKET_MAX_CAM_W = 2047;
 
 }
 
-bool operator==(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs);
-bool operator!=(const rtt::LowLevelRobotCommand& lhs, const rtt::LowLevelRobotCommand& rhs);
+bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs);
+
+bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs);
 
 #endif // ROBOTHUB_SRC_PACKING_H_

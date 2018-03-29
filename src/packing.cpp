@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <boost/optional.hpp>
+#include <math.h>
 
 namespace b = boost;
 
@@ -137,12 +138,16 @@ namespace rtt {
      */
     LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
                                                     b::optional<roboteam_msgs::World> const &worldOpt) {
+
         using roboteam_msgs::RobotCommand;
 
-        if(command.)
+
 
         // Calculate robot angle
         double rawAng = velocityVec.angle();
+
+
+
 
         /*
         Normalize to [-180,180):
@@ -152,6 +157,8 @@ namespace rtt {
                 x += 360;
             return x - 180;
         }*/
+
+        float velocity_angular = command.w;
 
         // Domain of rawAng == [-pi, +pi]. If it is below zero we must put it
         // in the positive domain.
@@ -250,39 +257,41 @@ namespace rtt {
         // Construct low level robot command //
         ///////////////////////////////////////
 
+
+//        llcommand.ang = ang;
+//        llcommand.rot_cclockwise = rot_cclockwise;
+//        llcommand.w = w;
+//        llcommand.punt_power = std::max(kick_force, chip_force);
+//        llcommand.do_kick = do_kick;
+//        llcommand.do_chip = do_chip;
+//        llcommand.forced = do_forced;
+//        llcommand.dribble_cclockwise = dribble_cclockwise;
+//        llcommand.dribble_vel = dribble_vel;
+//
+//        llcommand.cam_data_on = cam_data_on;
+//        llcommand.cam_robot_vel = cam_robot_vel;
+//        llcommand.cam_ang = cam_ang;
+//        llcommand.cam_w = cam_w;
+
         LowLevelRobotCommand llrc;
-        llcommand.ang = ang;
-        llcommand.rot_cclockwise = rot_cclockwise;
-        llcommand.w = w;
-        llcommand.punt_power = std::max(kick_force, chip_force);
-        llcommand.do_kick = do_kick;
-        llcommand.do_chip = do_chip;
-        llcommand.forced = do_forced;
-        llcommand.dribble_cclockwise = dribble_cclockwise;
-        llcommand.dribble_vel = dribble_vel;
 
-        llcommand.cam_data_on = cam_data_on;
-        llcommand.cam_robot_vel = cam_robot_vel;
-        llcommand.cam_ang = cam_ang;
-        llcommand.cam_w = cam_w;
-
-        llrc.id = command.id;
-        llrc.velocity_x = command.x_vel * 256;
-        llrc.velocity_y = command.y_vel * 256;
-        llrc.driving_reference = false;
-        llrc.use_cam_info = false;
+        llrc.id                 = command.id;
+        llrc.velocity_x         = command.x_vel * 128;
+        llrc.velocity_y         = command.y_vel * 128;
+        llrc.driving_reference  = false;
+        llrc.use_cam_info       = false;
         llrc.rotation_direction = command.w > 0;
-        llrc.velocity_angular = command.w;
-        llrc.debug_info = false;
-        llrc.do_kick = command.kicker;
-        llrc.do_chip = command.chipper;
-        llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced;
-        llrc.kick_chip_power = command.kicker ? command.kicker_vel : command.chipper_vel;
-        llrc.velocity_dribbler = command.dribbler;
+        llrc.velocity_angular   = command.w;
+        llrc.debug_info         = false;
+        llrc.do_kick            = command.kicker;
+        llrc.do_chip            = command.chipper;
+        llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;
+        llrc.kick_chip_power    = command.kicker ? command.kicker_vel : command.chipper_vel;
+        llrc.velocity_dribbler  = command.dribbler;
         llrc.geneva_drive_state = command.geneva_state;
-        llrc.cam_position_x = 0;
-        llrc.cam_position_y = 0;
-        llrc.cam_rotation = 0;
+        llrc.cam_position_x     = 0;
+        llrc.cam_position_y     = 0;
+        llrc.cam_rotation       = 0;
 
         return llrc;
     }

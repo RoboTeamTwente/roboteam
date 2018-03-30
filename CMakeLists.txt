@@ -52,7 +52,7 @@ add_executable(roboteam_robothub
     src/main.cpp
     src/packing.cpp
     src/GRSim.cpp
-    )
+)
 target_link_libraries(roboteam_robothub 
     ${catkin_LIBRARIES} 
     ${QT_LIBRARIES}

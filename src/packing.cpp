@@ -1,4 +1,5 @@
 #include "roboteam_robothub/packing.h"
+#include "roboteam_robothub/packet_tester.h"
 
 #include <array>
 #include <cassert>
@@ -7,6 +8,7 @@
 #include <memory>
 #include <boost/optional.hpp>
 #include <math.h>
+#include <ros/ros.h>
 
 namespace b = boost;
 
@@ -144,7 +146,7 @@ namespace rtt {
         LowLevelRobotCommand llrc {};
                                                                                                 // Units           Represented values
         llrc.id                 = command.id;                                                   // [0, 15]         [0, 15]
-        llrc.rho                = (int)floor(rho * 256);                                        // [0, 2047]       [0, 8.191]
+        llrc.rho                = (int)floor(rho * 250);                                        // [0, 2047]       [0, 8.191]
         llrc.theta              = (int)floor(theta * (1024 / M_PI));                            // [-1024, 1023]   [-pi, pi>
         llrc.driving_reference  = false;                                                        // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                                        // [0, 1]          {true, false}
@@ -154,13 +156,11 @@ namespace rtt {
         llrc.do_chip            = command.chipper;                                              // [0, 1]          {true, false}
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;              // [0, 1]          {true, false}
         llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);                    // [0, 255]        [0, 100]%
-        llrc.velocity_dribbler  = 17;//(int)floor(command.dribbler * (100 / 255));              // [0, 255]        [0, 100]%
-        llrc.geneva_drive_state = command.geneva_state - 3;                                     // [(0)1, 5]       [-2, 2]
+        llrc.velocity_dribbler  = 0;//(int)floor(command.dribbler * (100 / 255));              // [0, 255]        [0, 100]%
+        llrc.geneva_drive_state = 0;//command.geneva_state - 3;                                     // [(0)1, 5]       [-2, 2]
         llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>
-
-        printf("kick_chip_power: %d\n", llrc.kick_chip_power);
 
         return llrc;
     }
@@ -175,15 +175,14 @@ namespace rtt {
         return (min <= val && val <= max);
     }
 
-    /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
-    boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
-
-        // Holds if all the values of the command are in range
-        bool valuesInRange = true;
+    bool validateRobotPacket(LowLevelRobotCommand llrc){
 
         // inRange(val, min, max) is inclusive!;
         // inRange(-5, -5, 10) -> true; // inRange(14, -5, 10) -> false;
         // inRange(10, -5, 10) -> true; // inRange(-8, -5, 10) -> false;
+
+        // Holds if all the values of the command are in range
+        bool valuesInRange = true;
 
         valuesInRange &= inRange(llrc.id, 0, 15);
         valuesInRange &= inRange(llrc.rho, 0, 2047);
@@ -191,13 +190,20 @@ namespace rtt {
         valuesInRange &= inRange(llrc.velocity_angular, 0, 511);
         valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
         valuesInRange &= inRange(llrc.velocity_dribbler, 0, 255);
-        valuesInRange &= inRange(llrc.geneva_drive_state, 0, 7);
+        valuesInRange &= inRange(llrc.geneva_drive_state, 0, 4);
         valuesInRange &= inRange(llrc.cam_position_x, -4096, 4095);
         valuesInRange &= inRange(llrc.cam_position_y, -4096, 4095);
         valuesInRange &= inRange(llrc.cam_rotation, -1024, 1023);
 
+        return valuesInRange;
+    }
+
+    /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
+    boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
+
         // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
-        if(!valuesInRange){
+        if(!validateRobotPacket(llrc)){
+            ROS_WARN_STREAM("LowLevelRobotCommand is not valid");
             return boost::none;
         }
 
@@ -208,8 +214,8 @@ namespace rtt {
         // is implementation defined though.
 
         byteArr[0] = static_cast<uint8_t>(  // aaaaabbb
-            (0b11111000 & (llrc.id << 3)) |                 //aaaaa000   5 bits; bits  4-0 to 7-3
-            (0b00000111 & (llrc.rho >> 8))                  //00000bbb  11 bits; bits 10-8 to 2-0
+            (0b11111000 & (llrc.id << 3))                   //aaaaa000   5 bits; bits  4-0 to 7-3
+          | (0b00000111 & (llrc.rho >> 8))                  //00000bbb  11 bits; bits 10-8 to 2-0
         );
 
         byteArr[1] = static_cast<uint8_t>(  // bbbbbbbb
@@ -353,8 +359,8 @@ namespace rtt {
 
 } // rtt
 
-bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
-    return false;
+//bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
+//    return false;
 //            lhs.id == rhs.id &&
 //            lhs.robot_vel == rhs.robot_vel &&
 //            lhs.ang == rhs.ang &&
@@ -366,8 +372,8 @@ bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCo
 //            lhs.forced == rhs.forced &&
 //            lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
 //            lhs.dribble_vel == rhs.dribble_vel;
-}
-
-bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
-    return !(lhs == rhs);
-}
+//}
+//
+//bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
+//    return !(lhs == rhs);
+//}

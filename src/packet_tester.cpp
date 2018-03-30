@@ -1,5 +1,6 @@
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <boost/optional.hpp>
 namespace bf = boost;
 #include <chrono>
 #include <cstdint>
@@ -18,6 +19,24 @@ namespace bf = boost;
 
 
 namespace rtt {
+
+    void printcmd(roboteam_msgs::RobotCommand cmd){
+
+        std::cout << "    id             : " << cmd.id                  << std::endl;
+        std::cout << "    active         : " << (int)cmd.active         << std::endl;
+        std::cout << "    x_vel          : " << cmd.x_vel               << std::endl;
+        std::cout << "    y_vel          : " << cmd.y_vel               << std::endl;
+        std::cout << "    w              : " << cmd.w                   << std::endl;
+        std::cout << "    dribbler       : " << (int)cmd.dribbler       << std::endl;
+        std::cout << "    kicker         : " << (int)cmd.kicker         << std::endl;
+        std::cout << "    kicker_forced  : " << (int)cmd.kicker_forced  << std::endl;
+        std::cout << "    kicker_vel     : " << cmd.kicker_vel          << std::endl;
+        std::cout << "    chipper        : " << (int)cmd.chipper        << std::endl;
+        std::cout << "    chipper_forced : " << (int)cmd.chipper_forced << std::endl;
+        std::cout << "    chipper_vel    : " << cmd.chipper_vel         << std::endl;
+        std::cout << "    geneva_state   : " << cmd.geneva_state        << std::endl;
+
+    }
 
     void printllrc(LowLevelRobotCommand llrc){
         std::cout << "    id                 : " << llrc.id << std::endl;
@@ -38,22 +57,40 @@ namespace rtt {
         std::cout << "    cam_rotation       : " << llrc.cam_rotation << std::endl;
     }
 
-    void printcmd(roboteam_msgs::RobotCommand cmd){
+    void printbits(packed_protocol_message byteArr){
+        for(int b = 0; b < 12; b++){
 
-        std::cout << "    id             : " << cmd.id                  << std::endl;
-        std::cout << "    active         : " << (int)cmd.active         << std::endl;
-        std::cout << "    x_vel          : " << cmd.x_vel               << std::endl;
-        std::cout << "    y_vel          : " << cmd.y_vel               << std::endl;
-        std::cout << "    w              : " << cmd.w                   << std::endl;
-        std::cout << "    dribbler       : " << (int)cmd.dribbler       << std::endl;
-        std::cout << "    kicker         : " << (int)cmd.kicker         << std::endl;
-        std::cout << "    kicker_forced  : " << (int)cmd.kicker_forced  << std::endl;
-        std::cout << "    kicker_vel     : " << cmd.kicker_vel          << std::endl;
-        std::cout << "    chipper        : " << (int)cmd.chipper        << std::endl;
-        std::cout << "    chipper_forced : " << (int)cmd.chipper_forced << std::endl;
-        std::cout << "    chipper_vel    : " << cmd.chipper_vel         << std::endl;
-        std::cout << "    geneva_state   : " << cmd.geneva_state        << std::endl;
+            std::cout << "    ";
+            uint8_t byte = byteArr[b];
+//            for (int i = 0; i < 8; i++) {
+            for (int i = 7; i >= 0; i--) {
+                if ((byte & (1 << i)) == (1 << i)) {
+                    std::cout << "1";
+                } else {
+                    std::cout << "0";
+                }
+            }
+            std::cout << std::endl;
 
+        }
+    }
+
+    roboteam_msgs::RobotCommand createRobotCommand(int id, bool active, float x_vel, float y_vel, float w, bool dribbler, bool kicker, bool kicker_forced, float kicker_vel, bool chipper, bool chipper_forced, float chipper_vel, int geneva_state){
+        roboteam_msgs::RobotCommand cmd;
+        cmd.id              = id              ;
+        cmd.active          = active          ;
+        cmd.x_vel           = x_vel           ;
+        cmd.y_vel           = y_vel           ;
+        cmd.w               = w               ;
+        cmd.dribbler        = dribbler        ;
+        cmd.kicker          = kicker          ;
+        cmd.kicker_forced   = kicker_forced   ;
+        cmd.kicker_vel      = kicker_vel      ;
+        cmd.chipper         = chipper         ;
+        cmd.chipper_forced  = chipper_forced  ;
+        cmd.chipper_vel     = chipper_vel     ;
+        cmd.geneva_state    = geneva_state    ;
+        return cmd;
     }
 
     void test(){
@@ -85,6 +122,15 @@ namespace rtt {
         std::cout << "\nLowLevelRobotCommand Min" << std::endl;
         printllrc(llrc);
 
+        boost::optional<packed_protocol_message> byteArr = createRobotPacket(llrc);
+
+        if(byteArr) {
+            std::cout << "\nRobotPacket Min" << std::endl;
+            printbits(*byteArr);
+        }
+        else
+            std::cout << "byteArr = null" << std::endl;
+
     }
 
 
@@ -92,7 +138,50 @@ namespace rtt {
 
 int main(int argc, char *argv[]) {
 
+    std::cout << "argc: " << argc << std::endl;
+    for(int i = 1; i < argc; i++){
+        std::cout << argv[i] << " ";
+    }
+    std::cout << std::endl;
+
+    if(argc == 14){
+        std::cout << "Enough arguments to make a RobotCommand. Attempting.." << std::endl;
+        roboteam_msgs::RobotCommand cmd = rtt::createRobotCommand(
+            std::stoi(argv[1]),         //id
+            strcmp(argv[2], "1") == 0,  //active
+            std::stof(argv[3]),         //x_vel
+            std::stof(argv[4]),         //y_vel
+            std::stof(argv[5]),         //w
+            strcmp(argv[6], "1") == 0,  //dribbler
+            strcmp(argv[7], "1") == 0,  //kicker
+            strcmp(argv[8], "1") == 0,  //kicker_forced
+            std::stof(argv[9]),         //kicker_vel
+            strcmp(argv[10], "1") == 0, //chipper
+            strcmp(argv[11], "1") == 0, //chipper_forced
+            std::stof(argv[12]),        //chipper_vel
+            std::stoi(argv[13])         //geneva_state
+        );
+
+        std::cout << "###" << std::endl;
+        rtt::printcmd(cmd);
+
+        std::cout << "###" << std::endl;
+        rtt::LowLevelRobotCommand llrc = rtt::createLowLevelRobotCommand(cmd);
+        rtt:printllrc(llrc);
+
+        std::cout << "###" << std::endl;
+        boost::optional<rtt::packed_protocol_message> byteArr = rtt::createRobotPacket(llrc);
+        if(byteArr) rtt::printbits(*byteArr);
+
+        std::cout << "###" << std::endl;
+    }
+
+
+    return 0;
+
     rtt::test();
+
+
 
     return 0;
 }

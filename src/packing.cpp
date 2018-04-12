@@ -241,7 +241,7 @@ namespace rtt {
             (0b00001000 & (llrc.debug_info << 3)) |         // 0000h000  1 bit ; bit     0 to   3
             (0b00000100 & (llrc.do_kick << 2)) |            // 00000i00  1 bit ; bit     0 to   2
             (0b00000010 & (llrc.do_chip << 1)) |            // 000000j0  1 bit ; bit     0 to   1
-            (0b00000001 & (llrc.kick_chip_forced << 2))     // 0000000k  1 bit ; bit     0 to   0
+            (0b00000001 & (llrc.kick_chip_forced))     // 0000000k  1 bit ; bit     0 to   0
         );
 
         byteArr[6] = static_cast<uint8_t>(  // mmmmmmmm

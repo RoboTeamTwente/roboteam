@@ -152,13 +152,6 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 
         auto bytes = *bytesOpt;
 
-        // Uncomment for debug info
-        /*ROS_INFO_STREAM("Byte size: " << bytes.size() );
-        ROS_INFO_STREAM("Bytes: ");
-        for (uint8_t b : bytes) {
-            printf("%s (%x)\n", rtt::byteToBinary(b).c_str(), b);
-        }*/
-
         // Write message to it
         // TODO: read/write can throw!
         b::system::error_code ec;
@@ -227,18 +220,22 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
             // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
         // }
 
-        auto ack = rtt::decodeOldACK(ackCode);
+        ROS_WARN_STREAM_THROTTLE(1, "Messages not checked for ACK or NACK!");
 
-//        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
-        // ROS_INFO_STREAM("Random value : " << ack.randomValue );
+        return result;
 
-        if (ack.robotACK) {
-            result.status = SerialResultStatus::ACK;
-            return result;
-        } else {
-            result.status = SerialResultStatus::NACK;
-            return result;
-        }
+//        auto ack = rtt::decodeOldACK(ackCode);
+//
+////        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
+//        // ROS_INFO_STREAM("Random value : " << ack.randomValue );
+//
+//        if (ack.robotACK) {
+//            result.status = SerialResultStatus::ACK;
+//            return result;
+//        } else {
+//            result.status = SerialResultStatus::NACK;
+//            return result;
+//        }
 
         // TODO: @Performance this should probably done in such a way that it doesn't
         // block ros::spin()

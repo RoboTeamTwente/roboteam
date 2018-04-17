@@ -133,6 +133,70 @@ namespace rtt {
 
     }
 
+    void test2(){
+
+        union {
+            float v;
+            unsigned char b[4];
+        } thing1, thing2, thing3;
+
+        thing1.v = 1234;
+        thing2.v = 5678;
+        thing3.v = 9012;
+
+        packet_ack x = {
+            0b11111111,
+
+            0b00011111,
+            0b11110000,
+            0b00000001,
+            0b10000000,
+            0b00001100,
+            0b00000001,
+            0b10000000,
+            0b00110000,
+            0b00000110,
+            0b00000000,
+            0b11000001,
+
+            thing1.b[0],
+            thing1.b[1],
+            thing1.b[2],
+            thing1.b[3],
+
+            thing2.b[0],
+            thing2.b[1],
+            thing2.b[2],
+            thing2.b[3],
+
+            thing3.b[0],
+            thing3.b[1],
+            thing3.b[2],
+            thing3.b[3],
+        };
+
+        LowLevelRobotFeedback y = createRobotFeedback(x);
+
+        std::cout << "id " << y.id << std::endl;
+        std::cout << "wheelLeftFront " << y.wheelLeftFront << std::endl;
+        std::cout << "wheelRightFront " << y.wheelRightFront << std::endl;
+        std::cout << "wheelLeftBack " << y.wheelLeftBack << std::endl;
+        std::cout << "wheelRightBack " << y.wheelRightBack << std::endl;
+        std::cout << "genevaDriveState " << y.genevaDriveState << std::endl;
+        std::cout << "batteryState " << y.batteryState << std::endl;
+        std::cout << "position_x " << y.position_x << std::endl;
+        std::cout << "position_y " << y.position_y << std::endl;
+        std::cout << "rho " << y.rho << std::endl;
+        std::cout << "theta " << y.theta << std::endl;
+        std::cout << "rotation " << y.rotation << std::endl;
+        std::cout << "angularVelocity " << y.angularVelocity << std::endl;
+        std::cout << "ballSensor " << y.ballSensor << std::endl;
+
+        std::cout << "acceleration_x " << y.acceleration_x << std::endl;
+        std::cout << "acceleration_y " << y.acceleration_y << std::endl;
+        std::cout << "velocity_angular " << y.velocity_angular << std::endl;
+
+    }
 
 } // rtt
 
@@ -174,6 +238,8 @@ int main(int argc, char *argv[]) {
         if(byteArr) rtt::printbits(*byteArr);
 
         std::cout << "###" << std::endl;
+    } else {
+        rtt::test2();
     }
 
 

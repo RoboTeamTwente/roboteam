@@ -13,6 +13,7 @@
 namespace roboteam_msgs {
 
     ROS_DECLARE_MESSAGE(RobotCommand);
+    ROS_DECLARE_MESSAGE(RobotFeedback);
 
 }
 
@@ -36,47 +37,55 @@ namespace rtt {
         int cam_position_y;     //y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
         int cam_rotation;       //Orientation (camera)        [-1024, 1023]     0.00307rad    [-pi, pi>               11
     };
-    struct OldACK {
-        int robotID;
-        bool robotACK;
-    };
 
-    struct NewACK {
-        int robotID;
-        bool robotACK;
-        bool batteryCritical;
+    // angularVelocity vs angularRate?
+    // local vs global?
+    // Cartesian vs polar?
+    struct LowLevelRobotFeedback {
+        int id;
+
+        bool wheelLeftFront;
+        bool wheelRightFront;
+        bool wheelLeftBack;
+        bool wheelRightBack;
+
+        bool genevaDriveState;
+        bool batteryState;
+
+        int position_x;
+        int position_y;
+
+        int rho;
+        int theta;
+        int rotation;
+
+        int angularVelocity;
         int ballSensor;
 
-        bool flWheelDir;
-        int flWheelSpeed;
-
-        bool frWheelDir;
-        int frWheelSpeed;
-
-        bool blWheelDir;
-        int blWheelSpeed;
-
-        bool brWheelDir;
-        int brWheelSpeed;
+        //extra fields (add 12 Bytes)
+        // Emiel : Is float always 32 bits? If not, conversion might go wrong
+        float acceleration_x;
+        float acceleration_y;
+        float velocity_angular;
     };
 
     using packed_protocol_message = std::array<uint8_t, 12>;
-    using packed_old_ack = std::array<uint8_t, 2>;
-    using packed_new_ack = std::array<uint8_t, 8>;
+    using packet_ack = std::array<uint8_t, 24>;
 
-    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
-                                                    boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
+    // Software => Basestation
+    LowLevelRobotCommand createLowLevelRobotCommand(
+        roboteam_msgs::RobotCommand const &command, boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
     );
 
     boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
-
-    boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const &command,
-                                                               boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
+    boost::optional<packed_protocol_message> createRobotPacket(
+        roboteam_msgs::RobotCommand const &command, boost::optional<roboteam_msgs::World> const &worldOpt = boost::none
     );
 
-    OldACK decodeOldACK(packed_old_ack const &packedAck);
+    // Basestation => Software
+    LowLevelRobotFeedback createRobotFeedback(packet_ack bitsnbytes);
 
-    NewACK decodeNewACK(packed_new_ack const &packedAck);
+    roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 
     std::string byteToBinary(uint8_t const &byte);
 
@@ -101,9 +110,5 @@ namespace rtt {
     int const PACKET_MAX_CAM_W = 2047;
 
 }
-
-bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs);
-
-bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs);
 
 #endif // ROBOTHUB_SRC_PACKING_H_

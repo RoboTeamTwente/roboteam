@@ -13,6 +13,7 @@
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
+#include "roboteam_msgs/RobotFeedback.h"
 #include "roboteam_msgs/World.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Math.h"
@@ -43,7 +44,6 @@ namespace rtt {
             }
             return boost::none;
         }
-
     } // anonymous namespace
 
     /**
@@ -277,85 +277,202 @@ namespace rtt {
         return boost::optional<packed_protocol_message>(byteArr);
     }
 
-    std::string byteToBinary(uint8_t const &byte) {
-        std::string byteStr = "";
-        for (int i = 0; i < 8; i++) {
-            if ((byte & (1 << i)) == (1 << i)) {
-                byteStr = "1" + byteStr;
-            } else {
-                byteStr = "0" + byteStr;
-            }
-        }
 
-        return byteStr;
+
+
+    roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback){
+        roboteam_msgs::RobotFeedback msg;
+
+        msg.id = feedback.id;
+        msg.wheelLeftFront  = feedback.wheelLeftFront ;
+        msg.wheelRightFront = feedback.wheelRightFront;
+        msg.wheelLeftBack   = feedback.wheelLeftBack;
+        msg.wheelRightBack  = feedback.wheelRightBack;
+
+        msg.genevaDriveState = feedback.genevaDriveState;
+        msg.batteryState     = feedback.batteryState;
+
+        msg.position_x = feedback.position_x;
+        msg.position_y = feedback.position_y;
+
+        msg.rho     = feedback.rho;
+        msg.theta   = feedback.theta;
+        msg.rotation= feedback.rotation;
+
+        msg.angularVelocity = feedback.angularVelocity;
+        msg.ballSensor      = feedback.ballSensor;
+
+        msg.acceleration_x = feedback.acceleration_x;
+        msg.acceleration_y = feedback.acceleration_y;
+        msg.velocity_angular = feedback.velocity_angular;
+
+        return msg;
     }
 
-    OldACK decodeOldACK(packed_old_ack const &packedAck) {
-        OldACK ack;
 
-        // Decode ID
-        if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-            ack.robotID = static_cast<int>(packedAck[0] - '0');
-        } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
-            ack.robotID = static_cast<int>(packedAck[0] - 'A');
-        } else {
-            ack.robotID = -1;
-        }
 
-        // Decode robot ACK
-        ack.robotACK = packedAck[1] == '1';
 
-        // Decode random value
-        // ack.randomValue = static_cast<uint8_t>(packedAck[2]);
 
-//    for(int i = 0; i < 2; i++) {
-//        std::cout << "packedAck[" << i << "] : " << byteToBinary(packedAck[i]) << "\n";
+
+
+
+
+/*
+ * For the Robot ACKs we use the following packet definition
+ *
+ *skipping some characters for better readability
+
+		Character   Description                 Values          Represented values    Units       Bits    Comment
+		a           Robot ID                    [0,15]          [0,31]                -              5    -
+		b           Left front wheel state      [0,1]           {true,false}          -              1    Indicates whether the left front wheel functions
+		c           Right front wheel state     [0,1]           {true,false}          -              1    Indicates whether the right front wheel functions
+		d           Left back wheel state       [0,1]           {true,false}          -              1    Indicates whether the left back wheel functions
+		e           Right back wheel state      [0,1]           {true,false}          -              1    Indicates whether the right back wheel functions
+		f           Geneva drive state          [0,1]           {true,false}          -              1    Indicates whether the Geneva drive functions
+		g           Battery state               [0,1]           {true,false}          -              1    States whether the battery is nearing depletion
+		h           x position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
+		k           y position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
+		m           rho            				[-1024,1023]    [?,?]		          	            11    Magnitude of the robot velocity vector
+		o           theta           			[-1024,1023]    [?,?]                               11    Angle of the robot velocity vector
+		p           Orientation                 [-1024,1023]    [-pi,pi>              0.00307rad    11    Angle of the facing direction. 2048 possible angles. Intervals of ~0.00307 rad
+		q           Angular velocity            [-1024,1023]    [?,?]                 0.049rad/s?   11
+		s           Ball sensor                 [0,128]         {?}			          -              7    Can be used to specify where on the dribbler the ball is located. For now a non-zero value represents the presence of the ball
+
+		Extra
+		t           Acceleration x              [0, 4294967295] [0, 32 bit float]     m/s/s         32    -
+		u           Acceleration y              [0, 4294967295] [0, 32 bit float]     m/s/s         32    -
+		v           Angular rate                [0, 4294967295] [0, 32 bit float]     m/s/s         32    raw angular velocity from xsense
+
+
+	===== Packet received from the robot =====
+		Byte      Config
+		 0        aaaaabcd
+		 1        efghhhhh
+		 2        hhhhhhhh
+		 3        kkkkkkkk
+		 4        kkkkkmmm
+		 5        mmmmmmmm
+		 6        oooooooo
+		 7        oooppppp
+		 8        ppppppqq
+		 9        qqqqqqqq
+		10        qsssssss
+
+		Extra
+		11        tttttttt
+		12        tttttttt
+		13        tttttttt
+		14        tttttttt
+		15        uuuuuuuu
+		16        uuuuuuuu
+		17        uuuuuuuu
+		18        uuuuuuuu
+		19        vvvvvvvv
+		20        vvvvvvvv
+		21        vvvvvvvv
+		22        vvvvvvvv
+
+ */
+
+    LowLevelRobotFeedback createRobotFeedback(packet_ack bitsnbytes){
+        struct LowLevelRobotFeedback feedback;
+
+        int offset = 0;
+
+        // 0 aaaaabcd
+        feedback.id = bitsnbytes[offset+0] >> 3;
+        feedback.wheelLeftFront = (bitsnbytes[offset+0] & 4) == 4;
+        feedback.wheelRightFront= (bitsnbytes[offset+0] & 2) == 2;
+        feedback.wheelLeftBack  = (bitsnbytes[offset+0] & 1) == 1;
+
+        // 1 efghhhhh
+        feedback.wheelRightBack     = (bitsnbytes[offset+1] & (1<<7)) == (1<<7);
+        feedback.genevaDriveState   = (bitsnbytes[offset+1] & (1<<6)) == (1<<6);
+        feedback.batteryState       = (bitsnbytes[offset+1] & (1<<5)) == (1<<5);
+        feedback.position_x = (bitsnbytes[offset+1] & 0b00011111) << 8;
+
+        // 2 hhhhhhhh
+        feedback.position_x |= bitsnbytes[offset+2];
+
+        // 3 kkkkkkkk
+        feedback.position_y = bitsnbytes[offset+3] << 5;
+
+        // 4 kkkkkmmm
+        feedback.position_y |= bitsnbytes[offset+4] >> 3;
+        feedback.rho = (bitsnbytes[offset+4] & 0b00000111) << 8;
+
+        // 5 mmmmmmmm
+        feedback.rho |= bitsnbytes[offset+5];
+
+        // 6 oooooooo
+        feedback.theta = bitsnbytes[offset+6] << 3;
+
+        // 7 oooppppp
+        feedback.theta |= bitsnbytes[offset+7] >> 5;
+        feedback.rotation = (bitsnbytes[offset+7] & 0b00011111) << 6;
+
+        // 8 ppppppqq
+        feedback.rotation   |= bitsnbytes[offset+8] >> 2;
+        feedback.angularVelocity = (bitsnbytes[offset+8] & 0b00000011) << 9;
+
+        // 9 qqqqqqqq
+        feedback.angularVelocity |= bitsnbytes[offset+9] << 1;
+
+        // 10 qsssssss
+        feedback.angularVelocity |= (bitsnbytes[offset+10] & 0b10000000) >> 7;
+        feedback.ballSensor = bitsnbytes[offset+10] & 0b01111111;
+
+        union {
+            float v;
+            unsigned char b[4];
+        } f;
+
+        f.b[0] = bitsnbytes[offset+11];
+        f.b[1] = bitsnbytes[offset+12];
+        f.b[2] = bitsnbytes[offset+13];
+        f.b[3] = bitsnbytes[offset+14];
+        feedback.acceleration_x = f.v;
+
+        f.b[0] = bitsnbytes[offset+15];
+        f.b[1] = bitsnbytes[offset+16];
+        f.b[2] = bitsnbytes[offset+17];
+        f.b[3] = bitsnbytes[offset+18];
+        feedback.acceleration_y = f.v;
+
+        f.b[0] = bitsnbytes[offset+19];
+        f.b[1] = bitsnbytes[offset+20];
+        f.b[2] = bitsnbytes[offset+21];
+        f.b[3] = bitsnbytes[offset+22];
+        feedback.velocity_angular = f.v;
+
+        return feedback;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+//    std::string byteToBinary(uint8_t const &byte) {
+//        std::string byteStr = "";
+//        for (int i = 0; i < 8; i++) {
+//            if ((byte & (1 << i)) == (1 << i)) {
+//                byteStr = "1" + byteStr;
+//            } else {
+//                byteStr = "0" + byteStr;
+//            }
+//        }
+//
+//        return byteStr;
 //    }
-        return ack;
-    }
 
-    NewACK decodeNewACK(packed_new_ack const &packedAck) {
-        NewACK ack;
 
-        // Decode ID
-        if (packedAck[0] >= '0' && packedAck[0] <= '9') {
-            ack.robotID = static_cast<int>(packedAck[0] - '0');
-        } else if (packedAck[0] >= 'A' && packedAck[0] <= 'F') {
-            ack.robotID = static_cast<int>(packedAck[0] - 'A');
-        } else {
-            ack.robotID = -1;
-        }
-
-        // Decode robot ACK info
-        ack.robotACK = packedAck[1] == '1';
-
-        ack.batteryCritical = packedAck[2] == '1';
-
-        ack.ballSensor = static_cast<int>(packedAck[3]);
-
-        // Decode wheel speeds
-        auto decodeWheelDir = [](uint8_t wheelInfo) {
-            return static_cast<bool>((wheelInfo >> 7) & 1);
-        };
-
-        auto decodeWheelSpeed = [](uint8_t wheelInfo) {
-            return static_cast<int>(wheelInfo & 127);
-        };
-
-        ack.flWheelDir = decodeWheelDir(packedAck[4]);
-        ack.flWheelSpeed = decodeWheelSpeed(packedAck[4]);
-
-        ack.frWheelDir = decodeWheelDir(packedAck[5]);
-        ack.frWheelSpeed = decodeWheelSpeed(packedAck[5]);
-
-        ack.blWheelDir = decodeWheelDir(packedAck[6]);
-        ack.blWheelSpeed = decodeWheelSpeed(packedAck[6]);
-
-        ack.brWheelDir = decodeWheelDir(packedAck[7]);
-        ack.brWheelSpeed = decodeWheelSpeed(packedAck[7]);
-
-        return ack;
-    }
 
 } // rtt
 

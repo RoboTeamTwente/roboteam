@@ -1,4 +1,5 @@
 #include "roboteam_utils/world_analysis.h"
+#include "roboteam_utils/Math.h"
 #include <boost/range/join.hpp>
 
 namespace rtt {
@@ -24,6 +25,7 @@ boost::optional<roboteam_msgs::WorldRobot> lookup_their_bot(unsigned int id, con
 
 
 bool bot_has_ball(const roboteam_msgs::WorldRobot& bot, const roboteam_msgs::WorldBall& ball) {
+
     Vector2 ball_vec(ball.pos.x, ball.pos.y), bot_vec(bot.pos.x, bot.pos.y);
     Vector2 ball_norm = (ball_vec - bot_vec);
 
@@ -31,7 +33,7 @@ bool bot_has_ball(const roboteam_msgs::WorldRobot& bot, const roboteam_msgs::Wor
     double angle = ball_norm.angle();
 
     // Within 10.5 cm and .2 radians (of center of dribbler)
-    return dist <= .15 && fabs(angle - bot.angle) <= .5;
+    return dist <= .15 && fabs(cleanAngle(angle - bot.angle)) <= .5;
 }
 
 std::vector<roboteam_msgs::WorldRobot> getObstaclesBetweenPoints(const Vector2& bot_pos,

@@ -1,3 +1,8 @@
+/*
+ * RefStates are documented here : https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.proto
+ */
+
+
 #pragma once
 
 #include "roboteam_msgs/RefereeCommand.h"
@@ -111,6 +116,8 @@ class LastRef {
     
     static bool hasReceivedFirstCommand();
     static RefState getState();
+
+    static boost::optional<RefState> getCurrentRefCommand();
     static boost::optional<RefState> getPreviousRefCommand();
 
     static bool waitForFirstRefCommand();

@@ -176,6 +176,10 @@ const std::vector<RefStateTransitionFunction> LastRef::transitions = {
     }
 };
 
+b::optional<RefState> LastRef::getCurrentRefCommand() {
+    return currentRefCommand;
+}
+
 b::optional<RefState> LastRef::getPreviousRefCommand() {
     return previousRefCommand;
 }

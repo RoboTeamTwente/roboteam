@@ -185,7 +185,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        int const returnSize = 2;
+        int const returnSize = 2;	// Will become 24 bytes with the new protocol. 1st byte = ACK/NACK
         std::array<uint8_t, returnSize> ackCode;
         ackCode.fill('!');
 

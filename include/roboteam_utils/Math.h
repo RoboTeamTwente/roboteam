@@ -18,6 +18,7 @@ bool isBetweenAngles(double a1, double a2, double testAngle);
 double getClockwiseAngle(double a1, double a2);
 double getCounterClockwiseAngle(double a1, double a2);
 double smoothStep(double x);
+double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos);
 
 template <typename T> inline constexpr
 int signum(T x, std::false_type is_signed) {

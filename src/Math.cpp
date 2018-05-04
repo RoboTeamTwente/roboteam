@@ -96,4 +96,15 @@ double smoothStep(double x) {
 	}
 }
 
+	/**
+	 * Calculates the shortest distance from a fixed point to any point on a fixed infinite line in Euclidean geometry.
+	 * @param P1 Defines one point on the line
+	 * @param P2 Defines another point on the line
+	 * @param pos The point of which we want to know the distance to the line
+	 * @returns the shortest distance from the point to the line as a double
+	 */
+	double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos){
+		return fabs( (P2.y-P1.y)*pos.x - (P2.x-P1.x)*pos.y + P2.x*P1.y - P2.y*P1.x ) / sqrt( pow(P2.y-P1.y, 2) + pow(P2.x-P1.x, 2) );
+	}
+
 } // rtt

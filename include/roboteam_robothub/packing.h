@@ -70,7 +70,7 @@ namespace rtt {
     };
 
     using packed_protocol_message = std::array<uint8_t, 12>;
-    using packet_ack = std::array<uint8_t, 24>;
+    using packet_ack = std::array<uint8_t, 23>;
 
     // Software => Basestation
     LowLevelRobotCommand createLowLevelRobotCommand(

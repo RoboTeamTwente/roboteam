@@ -1,15 +1,22 @@
 #include <QtNetwork>
 #include <boost/asio.hpp>
+#include <boost/asio/read_until.hpp>
+#include <boost/algorithm/hex.hpp>
+
 #include <fstream>
 #include <iostream>
 #include <ros/ros.h>
 #include <chrono>
+#include <ios>
+#include <string>
 
 namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/RobotSerialStatus.h"
 #include "roboteam_msgs/World.h"
+#include "roboteam_msgs/RobotFeedback.h"
+
 #include "roboteam_utils/LastWorld.h"
 #include "roboteam_utils/grSim_Commands.pb.h"
 #include "roboteam_utils/normalize.h"
@@ -21,6 +28,7 @@ namespace b = boost;
 #include "roboteam_robothub/GRSim.h"
 
 #define VERIFY_COMMANDS
+#define PACKET_SIZE 24
 
 namespace {
 
@@ -101,6 +109,8 @@ std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
 std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
+//std::string serial_file_path = "/dev/ttyACM2";
+//std::string serial_file_path = "/home/emiel/myfifo";
 
 bool serialPortOpen = false;
 boost::asio::io_service io;
@@ -110,6 +120,238 @@ SerialResultStatus prevResultStatus = SerialResultStatus::ACK;
 int acks = 0;
 int nacks = 0;
 int networkMsgs = 0;
+
+
+
+
+
+
+//between 11 and 23 Bytes, ideally
+typedef struct roboAckData{
+	//regular fields: 11 Bytes
+	uint8_t roboID:5;
+	uint8_t wheelLeftFront:1;
+	uint8_t wheelRightFront:1;
+	uint8_t wheelLeftBack:1;
+	uint8_t wheelRightBack:1;
+	uint8_t genevaDriveState:1;
+	uint8_t batteryState:1;
+	int16_t xPosRobot:13;
+	int16_t yPosRobot:13;
+	int16_t rho:11;
+	int16_t theta:11;
+	int16_t orientation:11;
+	int16_t angularVelocity:11;
+	uint8_t ballSensor:7;
+
+	//extra fields (add 12 Bytes)
+	uint32_t xAcceleration;
+	uint32_t yAcceleration;
+	uint32_t angularRate;
+
+} roboAckData;
+
+
+
+
+
+int char2int(char input)
+{
+	if(input >= '0' && input <= '9') return input - '0';
+	if(input >= 'A' && input <= 'F') return input - 'A' + 10;
+	if(input >= 'a' && input <= 'f') return input - 'a' + 10;
+	throw std::invalid_argument("char2int : Invalid input string");
+}
+
+// This function assumes src to be a zero terminated sanitized string with
+// an even number of [0-9a-f] characters, and target to be sufficiently large
+void hex2bin(const char* src, std::array<uint8_t, 23>& target)
+{
+	int i;
+	while(*src && src[1])
+	{
+		target.at(i) = char2int(*src)*16 + char2int(src[1]);
+//		printf("%i : Converted %c%c to %u -> %u\n", i, *src, src[1], char2int(*src)*16 + char2int(src[1]), target.at(i));
+		src += 2;
+		i++;
+	}
+}
+
+
+std::string string_to_hex(const std::string& input)
+{
+	static const char* const lut = "0123456789ABCDEF";
+	size_t len = input.length();
+
+	std::string output;
+	output.reserve(2 * len);
+	for (size_t i = 0; i < len; ++i)
+	{
+		const unsigned char c = input[i];
+		output.push_back(lut[c >> 4]);
+		output.push_back(lut[c & 15]);
+	}
+	return output;
+}
+
+
+
+
+
+void ackPacketToRoboAckData(uint8_t input[23], uint8_t packetlength, roboAckData *output) {
+	//input is now specified as an array of size 23. Note that there are also ACK packets of the length 11.
+	//You need to use packetlength to know which range of the array contains useful information.
+	//The attempt of accessing input[11] to input[22] for a short ACK packet will yield garbage data.
+
+	output->roboID = input[0]>>3; //a
+	output->wheelLeftFront = (input[0]>>2)&1; //b
+	output->wheelRightFront = (input[0]>>1)&1; //c
+	output->wheelLeftBack = (input[0])&1; //d
+
+	output->wheelRightBack = (input[1]>>7)&1; //e
+	output->genevaDriveState = (input[1]>>6)&1; //f
+	output->batteryState = (input[1]>>5)&1;  //g
+	output->xPosRobot = ((input[1]&0b11111)<<8 | input[2]); //h
+
+	output->yPosRobot = ((input[3]<<5) | (input[4]>>3)); //k
+
+	output->rho = (input[4]&0b111)<<8; //m
+
+	output->rho |= input[5]; //m
+
+	output->theta = (input[6]<<3) | (input[7]>>5); //o
+
+	output->orientation = ((input[7]&0b11111)<<6) | (input[8]>>2); //p
+
+	output->angularVelocity = ((input[8]&0b11)<<9) | (input[9]<<1) | ((input[10]>>7)&1); //q
+
+	output->ballSensor = input[10]&0x7f; //s
+
+	if(packetlength < 23)
+		return;
+
+	//extra data
+	output->xAcceleration = (input[11]<<24) | (input[12]<<16) | (input[13]<<8) | input[14]; //t
+	output->yAcceleration = (input[15]<<24) | (input[16]<<16) | (input[17]<<8) | input[18]; //u
+	output->angularRate = (input[19]<<24) | (input[20]<<16) | (input[21]<<8) | input[22]; //v
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void readStuff(){
+	if (!serialPortOpen) {
+		ROS_INFO_STREAM("Opening serial port " << serial_file_path << "...");
+		boost::system::error_code errorCode;
+		serialPort.open(serial_file_path, errorCode);
+		switch (errorCode.value()) {
+			case boost::system::errc::success:
+				serialPortOpen = true;
+				ROS_INFO_STREAM("Port " << serial_file_path << " opened");
+				break;
+			default:
+				ROS_FATAL_STREAM("ERROR! Could not open serial port: " << errorCode.message());
+				return;
+		}
+	}
+	ROS_DEBUG("Port open");
+
+	// Create a buffer to receive the hex in
+	boost::asio::streambuf hexBuffer;
+	// Create an error_code object
+	b::system::error_code ec;
+	// Read bytes into hexBuffer until '\n' appears
+	size_t bytesReceived = boost::asio::read_until(serialPort, hexBuffer, '\n', ec);
+
+	// If an error occured, return
+	if(ec){
+		ROS_WARN_STREAM("An error occured! " << ec.message());
+		return;
+	}
+	// If there is an incorrect number of bytes
+	if(bytesReceived != 49){
+		ROS_WARN_STREAM("Dropping message with incorrect size " << bytesReceived);
+		return;
+	}
+	ROS_DEBUG("Packet correct");
+
+	// Commit the buffer. (emptying?)
+	hexBuffer.commit(bytesReceived);
+	// No idea
+	std::istream is(&hexBuffer);
+	// Create a string to put the hex in
+	std::string hexString;
+	// Put the hex in the string
+	std::getline(is, hexString);
+	// replace \n with \0. Not used atm, but can't hurt
+	hexString[bytesReceived-1] = '\0';
+	ROS_DEBUG("String null-terminated");
+	// Create an array to hold the 23 bytes
+	std::array<uint8_t, 23> byteArray {{}};
+	// Convert the hex string to an uint8_t array. +2 to drop the ACK byte
+	hex2bin(hexString.c_str()+2, byteArray);
+
+	ROS_DEBUG("Packet converted to byte array");
+
+	// === Print the values === //
+	std::cout << "received " << bytesReceived << " bytes " << hexString << std::endl;
+	for(int i = 0; i < 48; i += 2){
+		printf("0x%c%c\t", hexString[i], hexString[i+1]);
+	}
+	printf("\n\t");
+	for(int i = 0; i < 23; i++){
+		printf("%i\t", byteArray.at(i));
+	}
+	printf("\n");
+	// ======================== //
+
+	roboAckData rad;
+	// Convert the uint8_t array to roboAckData
+	ackPacketToRoboAckData(byteArray.data(), 23, &rad);
+	// Convert the uint8_t array to LowLevelRobotFeedback
+	rtt::LowLevelRobotFeedback llrc = rtt::createRobotFeedback(byteArray);
+
+	roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrc);
+
+	// Print the roboAckData, LowLevelRobotFeedback, and RobotFeedback
+	std::cout << "roboID           : " << +rad.roboID  			<< " " << llrc.id 				<< " " << msg.id 				<< std::endl;
+	std::cout << "wheelLeftFront   : " << +rad.wheelLeftFront  	<< " " << llrc.wheelLeftFront   << " " <<(msg.wheelLeftFront  	? "1" : "0") << std::endl;
+	std::cout << "wheelRightFront  : " << +rad.wheelRightFront  << " " << llrc.wheelRightFront  << " " <<(msg.wheelRightFront 	? "1" : "0") << std::endl;
+	std::cout << "wheelLeftBack    : " << +rad.wheelLeftBack  	<< " " << llrc.wheelLeftBack    << " " <<(msg.wheelLeftBack   	? "1" : "0") << std::endl;
+	std::cout << "wheelRightBack   : " << +rad.wheelRightBack  	<< " " << llrc.wheelRightBack   << " " <<(msg.wheelRightBack  	? "1" : "0") << std::endl;
+	std::cout << "genevaDriveState : " << +rad.genevaDriveState << " " << llrc.genevaDriveState << " " <<(msg.genevaDriveState	? "1" : "0") << std::endl;
+	std::cout << "batteryState     : " << +rad.batteryState  	<< " " << llrc.batteryState  	<< " " <<(msg.batteryState  	? "1" : "0") << std::endl;
+	std::cout << "xPosRobot        : " << +rad.xPosRobot  		<< " " << llrc.position_x       << " " << msg.position_x      	<< std::endl;
+	std::cout << "yPosRobot        : " << +rad.yPosRobot  		<< " " << llrc.position_y       << " " << msg.position_y      	<< std::endl;
+	std::cout << "rho              : " << +rad.rho  			<< " " << llrc.rho  			<< " " << msg.rho  				<< std::endl;
+	std::cout << "theta            : " << +rad.theta  			<< " " << llrc.theta  			<< " " << msg.theta  			<< std::endl;
+	std::cout << "orientation      : " << +rad.orientation  	<< " " << llrc.rotation  	    << " " << msg.rotation  	   	<< std::endl;
+	std::cout << "angularVelocity  : " << +rad.angularVelocity  << " " << llrc.angularVelocity  << " " << msg.angularVelocity 	<< std::endl;
+	std::cout << "ballSensor       : " << +rad.ballSensor  		<< " " << llrc.ballSensor  		<< " " << msg.ballSensor  		<< std::endl;
+	std::cout << "xAcceleration    : " << +rad.xAcceleration  	<< " " << llrc.acceleration_x   << " " << msg.acceleration_x  	<< std::endl;
+	std::cout << "yAcceleration    : " << +rad.yAcceleration  	<< " " << llrc.acceleration_y   << " " << msg.acceleration_y  	<< std::endl;
+	std::cout << "angularRate      : " << +rad.angularRate 		<< " " << llrc.velocity_angular << " " << msg.velocity_angular	<< std::endl;
+
+	std::cout << "\n\n" << std::endl;
+
+}
+
 
 // Returns true if ack, false if nack.
 SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
@@ -137,7 +379,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 return result;
         }
     }
-
+	ROS_DEBUG("Port is still open...");
 
     b::optional<roboteam_msgs::World> worldOpt;
     if (rtt::LastWorld::have_received_first_world()) {
@@ -147,7 +389,8 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
     // ================
     // Create message
     // ================
-    if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
+	ROS_DEBUG("Creating message...");
+	if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
         // Success!
 
         auto bytes = *bytesOpt;
@@ -155,8 +398,9 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // Write message to it
         // TODO: read/write can throw!
         b::system::error_code ec;
-        b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()), ec);
-
+		ROS_DEBUG("Writing message...");
+		b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()), ec);
+		ROS_DEBUG("Message written");
         switch (ec.value()) {
             case boost::asio::error::eof:
                 ROS_ERROR_STREAM("Connection closed by peer while writing! Closing port and trying to reopen...");
@@ -166,6 +410,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 return result;
                 break;
             case boost::system::errc::success:
+				ROS_DEBUG("Success!");
                 // Everything's just peachy!
                 break;
             default:
@@ -185,11 +430,12 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
         // _____________ IN HEXADECIMAL ____________
         // _________________________________________
 
-        int const returnSize = 2;	// Will become 24 bytes with the new protocol. 1st byte = ACK/NACK
+        int const returnSize = PACKET_SIZE;	// Will become 24 bytes with the new protocol. 1st byte = ACK/NACK
         std::array<uint8_t, returnSize> ackCode;
         ackCode.fill('!');
-
+		ROS_DEBUG("Reading message...");
         b::asio::read(serialPort, boost::asio::buffer(ackCode.data(), returnSize), ec);
+		ROS_DEBUG("Message read");
 
         switch (ec.value()) {
             case boost::asio::error::eof:
@@ -200,6 +446,7 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 return result;
                 break;
             case boost::system::errc::success:
+				ROS_DEBUG("Success!");
                 // Peachy!
                 break;
             default:
@@ -211,14 +458,14 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
                 break;
         }
 
-        // Uncomment for debug info
-        // ROS_INFO_STREAM("AckCode size: " << ackCode.size() );
-        // ROS_INFO_STREAM("ackCodes: ");
-        //
-        // for (int i = 0; i < returnSize; i += 2) {
-            // uint8_t b = ackCode[i];
-            // printf("%c%c\n", ackCode[i], ackCode[i + 1]);
-        // }
+//         Uncomment for debug info
+         ROS_INFO_STREAM("AckCode size: " << ackCode.size() );
+         ROS_INFO_STREAM("ackCodes: ");
+
+         for (int i = 0; i < returnSize; i += 2) {
+             uint8_t b = ackCode[i];
+             printf("%c%c\n", ackCode[i], ackCode[i + 1]);
+         }
 
         ROS_WARN_STREAM_THROTTLE(1, "Messages not checked for ACK or NACK!");
 
@@ -414,9 +661,11 @@ bool hasArg(std::vector<std::string> const & args, std::string const & arg) {
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
+
     // ┌──────────────────┐
     // │  Initialization  │
     // └──────────────────┘
+
 
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
@@ -425,7 +674,39 @@ int main(int argc, char *argv[]) {
     // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
-    ros::Rate loop_rate(roleHz);
+    ros::Rate loop_rate(30);
+
+	std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
+
+	while (ros::ok()) {
+		loop_rate.sleep();
+		ros::spinOnce();
+
+		auto timeNow = std::chrono::high_resolution_clock::now();
+		auto timeDiff = timeNow - lastStatistics;
+
+		// ┌──────────────────┐
+		// │   Every second   │
+		// └──────────────────┘
+//		if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count() > 100) {
+			ROS_DEBUG("\nTick");
+			lastStatistics = timeNow;
+
+			readStuff();
+
+//		}
+	}
+
+	return 0;
+
+
+
+
+
+
+
+	/*
+
 
     ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
@@ -597,4 +878,5 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
+    */
 }

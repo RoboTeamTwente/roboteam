@@ -145,8 +145,6 @@ namespace rtt {
         thing3.v = 9012;
 
         packet_ack x = {
-            0b11111111,
-
             0b00011111,
             0b11110000,
             0b00000001,

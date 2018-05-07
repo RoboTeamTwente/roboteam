@@ -97,6 +97,7 @@ double smoothStep(double x) {
 }
 
 	/**
+	 * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 	 * Calculates the shortest distance from a fixed point to any point on a fixed infinite line in Euclidean geometry.
 	 * @param P1 Defines one point on the line
 	 * @param P2 Defines another point on the line
@@ -105,6 +106,20 @@ double smoothStep(double x) {
 	 */
 	double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos){
 		return fabs( (P2.y-P1.y)*pos.x - (P2.x-P1.x)*pos.y + P2.x*P1.y - P2.y*P1.x ) / sqrt( pow(P2.y-P1.y, 2) + pow(P2.x-P1.x, 2) );
+	}
+
+	/**
+	 * https://stackoverflow.com/questions/1811549/perpendicular-on-a-line-from-a-given-point
+	 * @param P1 Defines one point on the line
+	 * @param P2 Defines another point on the line
+	 * @param pos The point which we want to project on the line
+	 * @return the projection of pos on the line
+	 */
+	Vector2 projectPointOntoLine(Vector2 P1, Vector2 P2, Vector2 pos){
+		double k = ((P2.y-P1.y) * (pos.x-P1.x) - (P2.x-P1.x) * (pos.y-P1.y)) / (pow(P2.y-P1.y,2) + pow(P2.x-P1.x, 2));
+		float x = pos.x - k * (P2.y-P1.y);
+		float y = pos.y + k * (P2.x-P1.x);
+		return Vector2(x, y);
 	}
 
 } // rtt

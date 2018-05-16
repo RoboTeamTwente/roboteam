@@ -32,20 +32,6 @@ namespace b = boost;
 
 namespace {
 
-bool halt = false;
-
-void processHalt(const std_msgs::Bool::ConstPtr &msg) {
-    ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
-    halt = msg->data;
-}
-
-ros::Publisher pub;
-
-rtt::GRSimCommander grsimCmd(true);
-SlowParam<bool> grSimBatch("grsim/batching", true);
-
-
-
 enum class SerialResultStatus {
 	COMMAND_TO_PACKET_FAILED,
 	CANT_OPEN_PORT,
@@ -56,7 +42,39 @@ enum class SerialResultStatus {
 	ACK,
 	NACK,
 	SUCCESS,
-} ;
+};
+
+enum class Mode {
+	SERIAL,
+	GRSIM,
+	UNDEFINED
+};
+
+// Publisher and subscriber to get robotcommands
+ros::Subscriber subRobotCommands;
+// Halt subscriber
+ros::Subscriber subHalt;
+// Publisher for the robot feedback
+ros::Publisher pubRobotFeedback;
+// Publisher for the serial status
+ros::Publisher pubSerialStatus;
+
+Mode currentMode = Mode::UNDEFINED;
+bool halt = false;
+
+void processHalt(const std_msgs::Bool::ConstPtr &msg) {
+    ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
+    halt = msg->data;
+}
+
+//ros::Publisher pub;
+
+rtt::GRSimCommander grsimCmd(true);
+SlowParam<bool> grSimBatch("grsim/batching", true);
+
+
+
+
 
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
@@ -160,11 +178,10 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	b::system::error_code ec;
 
 	// Read bytes into hexBuffer until '\n' appears
-	ROS_DEBUG("[readPackedRobotFeedback] Reading...");
+	ROS_DEBUG("[readPackedRobotFeedback] Reading feedback...");
 	size_t bytesReceived = boost::asio::read_until(serialPort, hexBuffer, '\n', ec);
-	ROS_DEBUG("[readPackedRobotFeedback] Read");
 
-	// If an error occured, return
+	// Check if an error occured while reading
 	if(ec){
 		ROS_WARN_STREAM("[readPackedRobotFeedback] An error occured! " << ec.message());
 		return SerialResultStatus::UNKNOWN_READ_ERROR;
@@ -187,21 +204,19 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	hexString[bytesReceived-1] = '\0';
 	// Convert the hex string to an uint8_t array. +2 to drop the ACK byte
 	hex2bin(hexString.c_str()+2, byteArray);
-	ROS_DEBUG_STREAM("[readPackedRobotFeedback] hexString converted");
 	// Retrieve the byte that represents ACK or NACK
 	int ackByte = char2int(hexString[0]) * 16 + char2int(hexString[1]);
-	ROS_DEBUG_STREAM("[readPackedRobotFeedback] ACK byte : " << ackByte);
 
 	// === Print the values === //
-	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
-	for(int i = 0; i < 48; i += 2){
-		printf("0x%c%c\t", hexString[i], hexString[i+1]);
-	}
-	printf("\n\t");
-	for(int i = 0; i < 23; i++){
-		printf("%i\t", byteArray.at(i));
-	}
-	printf("\n");
+//	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
+//	for(int i = 0; i < 48; i += 2){
+//		printf("0x%c%c\t", hexString[i], hexString[i+1]);
+//	}
+//	printf("\n\t");
+//	for(int i = 0; i < 23; i++){
+//		printf("%i\t", byteArray.at(i));
+//	}
+//	printf("\n");
 	// ======================== //
 
 	if(ackByte)
@@ -230,29 +245,27 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 		worldOptional = rtt::LastWorld::get();
 	}
 
-	// Turn roboteam_msgs:RobotCommand into bytes
-	ROS_DEBUG("[sendRobotCommand] Creating message...");
+	// Turn roboteam_msgs:RobotCommand into a message
 	boost::optional<rtt::packed_protocol_message> bytesOptional = rtt::createRobotPacket(robotCommand, worldOptional);
 
 	// Check if the message was created successfully
 	if(!bytesOptional){
 		return SerialResultStatus::COMMAND_TO_PACKET_FAILED;
 	}
-	// Get the bytes
+	// Get the bytes from the message
 	rtt::packed_protocol_message ppm = *bytesOptional;
 
 	// Print the bytes in HEX
-	for (int i = 0; i < ppm.size(); i++) {
-		printf("%02x ", ppm.data()[i]);
-	}
-	printf("\n");
+//	for (int i = 0; i < ppm.size(); i++) {
+//		printf("%02x ", ppm.data()[i]);
+//	}
+//	printf("\n");
 
 	// Error code
 	b::system::error_code ec;
 	// Write the bytes to the basestation
-	ROS_DEBUG("[sendRobotCommand] Writing message...");
+	ROS_DEBUG("[sendRobotCommand] Writing command...");
 	b::asio::write(serialPort, boost::asio::buffer(ppm.data(), ppm.size()), ec);
-	ROS_DEBUG("[sendRobotCommand] Message written");
 
 	// Check the error_code
 	switch (ec.value()) {
@@ -278,18 +291,18 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
  * @param robotCommand : The robot command to be sent to the robot
  * @returns SerialResultStatus, e.g. CANT_OPEN_PORT, WRITE_ERROR, ACK, etc
  */
-SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCommand) {
+SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robotCommand) {
 
 	// Check if the serial port is open
 	if(!ensureSerialport()){
-		ROS_ERROR("[sendSerialCommands] Port not open. Can't send command");
+		ROS_ERROR("[processSerialCommand] Port not open. Can't send command");
 		return SerialResultStatus::CANT_OPEN_PORT;
 	}
 
 	// Write the command to the robot
 	SerialResultStatus writeStatus = writeRobotCommand(robotCommand);
 	if(writeStatus != SerialResultStatus::SUCCESS){
-		ROS_ERROR_STREAM("[sendSerialCommands] Error while writing the command to the robot!");
+		ROS_ERROR_STREAM("[processSerialCommand] Error while writing the command to the robot!");
 		return writeStatus;
 	}
 
@@ -307,8 +320,11 @@ SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCo
 	// Convert the LowLevelRobotFeedback to roboteam_msgs::RobotFeedback
 	roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrf);
 
-	rtt::printLowLevelRobotFeedback(llrf);
-	rtt::printRobotFeedback(msg);
+	// Publish the RobotFeedback
+	pubRobotFeedback.publish(msg);
+
+//	rtt::printLowLevelRobotFeedback(llrf);
+//	rtt::printRobotFeedback(msg);
 
 	return readStatus;
 }
@@ -316,127 +332,57 @@ SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCo
 
 
 
-enum class RobotType {
-    SERIAL,
-    GRSIM,
-};
 
-b::optional<RobotType> stringToRobotType(const std::string& type) {
+
+Mode stringToMode(const std::string& type) {
     if (type == "serial") {
-        return RobotType::SERIAL;
+        return Mode::SERIAL;
     } else if (type == "grsim") {
-        return RobotType::GRSIM;
+        return Mode::GRSIM;
     } else {
-        return b::none;
+        return Mode::UNDEFINED;
     }
 }
-std::string robotTypeToString(RobotType type) {
-    switch(type) {
-        case RobotType::SERIAL:
+std::string modeToString(Mode mode) {
+    switch(mode) {
+        case Mode::SERIAL:
             return "serial";
-        case RobotType::GRSIM:
+        case Mode::GRSIM:
             return "grsim";
-        default:
-            return "undefined";
+		case Mode::UNDEFINED:
+			return "grsim";
     }
-}
-
-std::map<int, RobotType> robotTypes;
-
-void updateRobotTypes() {
-    for (int i = 0; i < 16; ++i) {
-        std::string paramName = "robot" + std::to_string(i) + "/robotType";
-        if (ros::param::has(paramName)) {
-            std::string paramRobotType = "";
-            ros::param::get(paramName, paramRobotType);
-
-            if (auto robotTypeOpt = stringToRobotType(paramRobotType)) {
-                robotTypes[i] = *robotTypeOpt;
-            } else {
-                auto robotTypeIt = robotTypes.find(i);
-                if (robotTypeIt != robotTypes.end()) {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
-                            << i
-                            << ": \""
-                            << paramRobotType
-                            << "\". Leaving setting at: "
-                            << robotTypeToString(robotTypes[i])
-                            );
-                } else {
-                    ROS_WARN_STREAM("Unexpected value set for the robot type of robot "
-                            << i
-                            << ": \""
-                            << paramRobotType
-                            << "\". Leaving setting at unset."
-                            );
-                }
-            }
-        } else {
-            // No type detected for robot. That's okay.
-            // But delete the param from the map if it's there
-            auto typeIt = robotTypes.find(i);
-            if (typeIt != robotTypes.end()) {
-                robotTypes.erase(typeIt);
-            }
-        }
-    }
-}
-
-b::optional<RobotType> getMode(int id) {
-    auto const typeIt = robotTypes.find(id);
-
-    if (typeIt != robotTypes.end()) {
-        return typeIt->second;
-    } else {
-        return b::none;
-    }
-}
-
-std::set<RobotType> getDistinctTypes() {
-    std::set<RobotType> types;
-
-    for (auto const & pair : robotTypes) {
-        types.insert(pair.second);
-    }
-
-    return types;
 }
 
 void sendCommand(roboteam_msgs::RobotCommand command) {
-    ROS_INFO_STREAM("[sendCommand] " << command.id);
-    auto mode = getMode(command.id);
 
-    if (mode == b::none) {
-		ROS_WARN_STREAM("[sendCommand] No mode set for robot " << command.id);
-		// We skip this command, it's not meant for us
-        // No mode set!
-    } else if (mode == RobotType::GRSIM) {
-        grsimCmd.queueGRSimCommand(command);
-        grsimStatusMap[command.id].acks++;
-        networkMsgs++;
-    } else if (mode == RobotType::SERIAL) {
-        SerialResultStatus result = sendSerialCommands(command);
-
-        switch (result) {
-            case SerialResultStatus::ACK:
-                acks++;
-                serialStatusMap[command.id].acks++;
-                break;
-            case SerialResultStatus::NACK:
-                nacks++;
-                serialStatusMap[command.id].nacks++;
-                break;
-            default:
-                break;
-        }
-        prevResultStatus = result;
-    }else{
-		ROS_INFO_STREAM("[sendCommand] UNKNOWN! ERROR");
+	if(currentMode == Mode::GRSIM){
+		grsimCmd.queueGRSimCommand(command);
+		grsimStatusMap[command.id].acks++;
+		networkMsgs++;
+	}else
+	if(currentMode == Mode::SERIAL){
+		SerialResultStatus result = processSerialCommand(command);
+		switch (result) {
+			case SerialResultStatus::ACK:
+				acks++;
+				serialStatusMap[command.id].acks++;
+				break;
+			case SerialResultStatus::NACK:
+				nacks++;
+				serialStatusMap[command.id].nacks++;
+				break;
+			default:
+				break;
+		}
+	}else
+	if(currentMode == Mode::UNDEFINED){
+		ROS_INFO_STREAM("[sendCommand] Mode undefined, not sending command");
 	}
+
 }
 
-void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand> & msgEvent) {
-    ROS_INFO_STREAM("[processRobotCommandWithIDCheck]");
+void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand>& msgEvent) {
 
     auto const & msg = *msgEvent.getMessage();
 
@@ -480,20 +426,28 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
-
     // ┌──────────────────┐
     // │  Initialization  │
     // └──────────────────┘
-
 
     // Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
+	// Get the mode of robothub, either "serial" or "grsim"
+	std::string modeStr = "undefined";
+	ros::param::get("robot_output_target", modeStr);
+	currentMode = stringToMode(modeStr);
+	if(currentMode == Mode::UNDEFINED){
+		ROS_WARN_STREAM("Watch out! The current mode '" << modeStr << "' is UNDEFINED. No packets will be sent");
+	}else{
+		ROS_INFO_STREAM("Current mode : " << modeToString(currentMode));
+	}
+
     // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
-    ros::Rate loop_rate(30);
+    ros::Rate loop_rate(roleHz);
 	ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
 	using namespace std;
@@ -518,22 +472,19 @@ int main(int argc, char *argv[]) {
 //	}
 //	return 0;
 
-
-
-
     // Publisher and subscriber to get robotcommands
-    ros::Subscriber subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
+    subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
     // Halt subscriber
-    ros::Subscriber subHalt = n.subscribe("halt", 1, processHalt);
-    // Publisher for the serial status
-    ros::Publisher pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
+    subHalt = n.subscribe("halt", 1, processHalt);
+	// Publisher for the robot feedback
+	pubRobotFeedback = n.advertise<roboteam_msgs::RobotFeedback>("robotfeedback", 100);
+	// Publisher for the serial status
+    pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
 
-
-
-
-
-    // Get the initial robot types from rosparam
-    updateRobotTypes();
+	// Check if the serial port is open
+	if(currentMode == Mode::SERIAL && !ensureSerialport()){
+		ROS_FATAL("Port not open. Can't communicate with the robots");
+	}
 
 
     // ┌──────────────────┐
@@ -564,27 +515,28 @@ int main(int argc, char *argv[]) {
         // ┌──────────────────┐
         // │   Every second   │
         // └──────────────────┘
-        if (duration_cast<milliseconds>(timeDiff).count() > 10000) {
-            // Get the robot types from rosparam
-            updateRobotTypes();
+        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
 
             lastStatistics = timeNow;
 
             ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
 
             if (halt) {
-                ROS_INFO_STREAM("Halting status : !!!HALTING!!!");
+                ROS_WARN_STREAM("Halting status : !!!HALTING!!!");
             } else {
                 ROS_INFO_STREAM("Halting status : Not halting");
             }
 
-            auto modes = getDistinctTypes();
-
             // ┌──────────────────┐
             // │      Serial      │
             // └──────────────────┘
-            if (modes.find(RobotType::SERIAL) != modes.end()) {
-                ROS_INFO_STREAM("---- Serial ----");
+            if (currentMode == Mode::SERIAL) {
+
+				// Check if the serial port is open
+				if(!ensureSerialport()){
+					ROS_FATAL("Port not open. Can't communicate with the robots");
+					continue;
+				}
 
                 // Get the percentage of acks and nacks
                 auto total = acks + nacks;
@@ -596,57 +548,51 @@ int main(int argc, char *argv[]) {
                     nackPercent = 0;
                 }
 
-                // If the port failed to open, print a message that we're trying to open it
-                if (prevResultStatus == SerialResultStatus::CANT_OPEN_PORT) {
-                    ROS_INFO_STREAM("Trying to open port " << serial_file_path << "...");
-                } else {
-                    // Otherwise everything was fine and dandy.
-                    // (Any other errors are handled by the sendSerial function itself by printing)
-                    // Print the status.
-                    ROS_INFO_STREAM("Current port: " << serial_file_path );
-                    ROS_INFO_STREAM("Sent messages the past second: " << total );
-                    ROS_INFO_STREAM("Capacity: " << std::floor(total / 360.0) << "%");
-                    ROS_INFO_STREAM("Acks    : " << acks << " (" << ackPercent << ")");
-                    ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
-                    acks=0;
-                    nacks=0;
+//				ROS_INFO_STREAM("Current port: " << serial_file_path );
+				ROS_INFO_STREAM("Sent messages the past second: " << total );
+				ROS_INFO_STREAM("Capacity: " << std::floor(total / 360.0) << "%");
+				ROS_INFO_STREAM("Acks    : " << acks << " (" << ackPercent << ")");
+				ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
 
-                    // Publish any status info on the robots
-                    for (auto &pair : serialStatusMap) {
-                        int id = pair.first;
-                        roboteam_msgs::RobotSerialStatus &status = pair.second;
+				acks=0;
+				nacks=0;
 
-                        if (status.start_timeframe == ros::Time(0)) {
-                            // This is a new status message.
-                            // It has been initialized with an id of 0.
-                            // So we need to set it correctly.
-                            status.id = id;
-                        } else {
-                            // This status message is ready to be sent.
-                            status.end_timeframe = ros::Time::now();
+				/* Emiel : TODO Check if anything actually listens to roboteam_msgs::RobotSerialStatus
+				// Publish any status info on the robots
+				for (auto &pair : serialStatusMap) {
+					int id = pair.first;
+					roboteam_msgs::RobotSerialStatus &status = pair.second;
 
-                            pubSerialStatus.publish(status);
-                        }
+					if (status.start_timeframe == ros::Time(0)) {
+						// This is a new status message.
+						// It has been initialized with an id of 0.
+						// So we need to set it correctly.
+						status.id = id;
+					} else {
+						// This status message is ready to be sent.
+						status.end_timeframe = ros::Time::now();
 
-                        // Set the new start time.
-                        status.start_timeframe = ros::Time::now();
-                        // Reset the ack and nack counters.
-                        status.acks = 0;
-                        status.nacks = 0;
-                    }
-                }
+						pubSerialStatus.publish(status);
+					}
+
+					// Set the new start time.
+					status.start_timeframe = ros::Time::now();
+					// Reset the ack and nack counters.
+					status.acks = 0;
+					status.nacks = 0;
+				}
+				*/
+
             }
             // ┌──────────────────┐
             // │      grSim       │
             // └──────────────────┘
-            if (modes.find(RobotType::GRSIM) != modes.end()) {
+            if (currentMode == Mode::GRSIM) {
 
-                // If there's a robot set to GRSim print the amount of network messages sent
-                ROS_INFO_STREAM("---- GRSim ----");
                 ROS_INFO_STREAM("Network messages sent: " << networkMsgs );
                 networkMsgs = 0;
 
-
+				/* Emiel : TODO Check if anything actually listens to roboteam_msgs::RobotSerialStatus
                 // Publish any status info on the robots
                 for (auto &pair : grsimStatusMap) {
                     int id = pair.first;
@@ -670,6 +616,7 @@ int main(int argc, char *argv[]) {
                     status.acks = 0;
                     status.nacks = 0;
                 }
+				*/
 
                 if (grsimCmd.isBatch()) {
                     ROS_INFO_STREAM("Batching : yes");

@@ -52,7 +52,7 @@ namespace rtt {
      * uses this internally to convert a RobotCommand into something workable.
      */
     LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &worldOpt) {
-        ROS_DEBUG("[createLowLevelRobotCommand] creating...");
+
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
         double theta = command.x_vel == 0 ? 0 : atan(command.y_vel / command.x_vel);
@@ -75,7 +75,6 @@ namespace rtt {
         llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>
-        ROS_DEBUG("[createLowLevelRobotCommand] created...");
 
         return llrc;
     }

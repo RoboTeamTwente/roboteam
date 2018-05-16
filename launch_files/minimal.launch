@@ -3,23 +3,15 @@
 	<arg name="legacy_packets" default="false" />
 	<param name="use_legacy_packets" type="boolean" value="$(arg legacy_packets)" />
 
-	<arg name="robot_output_target" default="serial" />
-	<arg name="robot_type" default="proto" />
-	
-	<param name="robot0/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot1/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot2/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot3/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot4/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot5/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot6/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot7/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot8/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot9/robotType" type="string" value="$(arg robot_type)" />
-	<param name="robot10/robotType" type="string" value="$(arg robot_type)" />
+	<!-- <arg name="robot_output_target" default="serial" /> -->
+	<param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
+
+	<arg name="robot_output_target" />
+	<param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
 
 	<param name="role_iterations_per_second" type="int" value="60" />
-	<param name="robot_output_target" type="string" value="$(arg robot_output_target)" />
+	
+	
 
 	<node pkg="roboteam_robothub" type="roboteam_robothub" name="robothub" output="screen" />
 

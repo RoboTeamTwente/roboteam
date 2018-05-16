@@ -3,11 +3,6 @@
 #include <boost/asio/read_until.hpp>
 #include <boost/algorithm/hex.hpp>
 
-
-
-
-
-
 #include <fstream>
 #include <iostream>
 #include <ros/ros.h>
@@ -49,50 +44,7 @@ ros::Publisher pub;
 rtt::GRSimCommander grsimCmd(true);
 SlowParam<bool> grSimBatch("grsim/batching", true);
 
-// SlowParam<std::string> colorParam("our_color");
-// SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
-// SlowParam<int>         grsim_port("grsim/port", 20011);
 
-// Algorithm for efficient GRSim'ing:
-// - Receive msg
-// - Put in buffer
-//
-// When is the buffer flushed:
-// - After every ros::spinOnce(), flush buffer
-//      - Probably the cleanest, simplest. Not sure about effectiveness.
-//      - If in one spinonce you receive one robot instruction twice
-//        you drop a packet
-//      - If it takes multiple cycles to get a packet from everyone then this
-//        is a bad solution since it doesn't compress much.
-//      - If we run at the same speed as a rolenode however it seems appropriate
-//      - Maybe with an escape as soon as it drops one packet?
-// - Every 6 messages
-//      - Might drop a packet every once in a while
-//      - Like this the most atm.
-//      - What if there are 2 robots? Need to detect how many there are.
-//      - Reset that every 0.25 seconds?
-// - Every a certain amount of time
-//      - Might drop a packet every once in a while as well
-// - When a packet from every robot is received
-//      - Needs to be reset every 0.25 seconds or smth to account for robots leaving e.d.
-//      - If one rolenode crashes all robots have no instructions for 0.25 secs
-//
-// - Did some tests. With 4 testx's running it seems quite nicely separated, i.e.
-//   0 1 2 3 4 0 1 2 3 4, for some permutation of 0 1 2 3 4.
-//   So the following seems a nice approach. Also, the safety thing will make
-//   sure that for bad permutations or nodes that run faster than others it will
-//   still send packets at a better than worst-case-scenario rate. Did some more
-//   tests with randomly started testx's, still works like a charm.
-//
-// - Every time the buffer has reached the threshold, it will flush.
-// - Every 0.25 (or some other amount) of seconds robothub will check
-//   how many robots it has seen it that time period
-// - That will be its new threshold
-// - As long as all rolenodes run at the same Hz it should work fine
-// - If one crashes the system recovers in 0.25 secs.
-// - Safety: if two (or more/less?) packets are dropped from a specific robot
-//   robothub immediately evaluates how many robots there are, changes its
-//   threshold, and flushes the buffer.
 
 enum class SerialResultStatus {
 	COMMAND_TO_PACKET_FAILED,
@@ -369,18 +321,17 @@ enum class RobotType {
     GRSIM,
 };
 
-b::optional<RobotType> stringToRobotType(std::string const & t) {
-    if (t == "serial" || t == "proto") {
+b::optional<RobotType> stringToRobotType(const std::string& type) {
+    if (type == "serial") {
         return RobotType::SERIAL;
-    } else if (t == "grsim") {
+    } else if (type == "grsim") {
         return RobotType::GRSIM;
     } else {
         return b::none;
     }
 }
-
-std::string robotTypeToString(RobotType const t) {
-    switch(t) {
+std::string robotTypeToString(RobotType type) {
+    switch(type) {
         case RobotType::SERIAL:
             return "serial";
         case RobotType::GRSIM:
@@ -464,7 +415,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
         grsimStatusMap[command.id].acks++;
         networkMsgs++;
     } else if (mode == RobotType::SERIAL) {
-        auto result = sendSerialCommands(command);
+        SerialResultStatus result = sendSerialCommands(command);
 
         switch (result) {
             case SerialResultStatus::ACK:
@@ -737,3 +688,53 @@ int main(int argc, char *argv[]) {
     return 0;
 
 }
+
+
+
+
+
+
+// SlowParam<std::string> colorParam("our_color");
+// SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
+// SlowParam<int>         grsim_port("grsim/port", 20011);
+
+// Algorithm for efficient GRSim'ing:
+// - Receive msg
+// - Put in buffer
+//
+// When is the buffer flushed:
+// - After every ros::spinOnce(), flush buffer
+//      - Probably the cleanest, simplest. Not sure about effectiveness.
+//      - If in one spinonce you receive one robot instruction twice
+//        you drop a packet
+//      - If it takes multiple cycles to get a packet from everyone then this
+//        is a bad solution since it doesn't compress much.
+//      - If we run at the same speed as a rolenode however it seems appropriate
+//      - Maybe with an escape as soon as it drops one packet?
+// - Every 6 messages
+//      - Might drop a packet every once in a while
+//      - Like this the most atm.
+//      - What if there are 2 robots? Need to detect how many there are.
+//      - Reset that every 0.25 seconds?
+// - Every a certain amount of time
+//      - Might drop a packet every once in a while as well
+// - When a packet from every robot is received
+//      - Needs to be reset every 0.25 seconds or smth to account for robots leaving e.d.
+//      - If one rolenode crashes all robots have no instructions for 0.25 secs
+//
+// - Did some tests. With 4 testx's running it seems quite nicely separated, i.e.
+//   0 1 2 3 4 0 1 2 3 4, for some permutation of 0 1 2 3 4.
+//   So the following seems a nice approach. Also, the safety thing will make
+//   sure that for bad permutations or nodes that run faster than others it will
+//   still send packets at a better than worst-case-scenario rate. Did some more
+//   tests with randomly started testx's, still works like a charm.
+//
+// - Every time the buffer has reached the threshold, it will flush.
+// - Every 0.25 (or some other amount) of seconds robothub will check
+//   how many robots it has seen it that time period
+// - That will be its new threshold
+// - As long as all rolenodes run at the same Hz it should work fine
+// - If one crashes the system recovers in 0.25 secs.
+// - Safety: if two (or more/less?) packets are dropped from a specific robot
+//   robothub immediately evaluates how many robots there are, changes its
+//   threshold, and flushes the buffer.

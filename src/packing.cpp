@@ -398,23 +398,23 @@ namespace rtt {
 	void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback){
 		std::cout << "RobotFeedback: " << std::endl;
 
-		std::cout << "id               : " << feedback.id               << std::endl;
-		std::cout << "wheelLeftFront   : " <<(feedback.wheelLeftFront  	? "1" : "0") << std::endl;
-		std::cout << "wheelRightFront  : " <<(feedback.wheelRightFront 	? "1" : "0") << std::endl;
-		std::cout << "wheelLeftBack    : " <<(feedback.wheelLeftBack   	? "1" : "0") << std::endl;
-		std::cout << "wheelRightBack   : " <<(feedback.wheelRightBack  	? "1" : "0") << std::endl;
-		std::cout << "genevaDriveState : " <<(feedback.genevaDriveState	? "1" : "0") << std::endl;
-		std::cout << "batteryState     : " <<(feedback.batteryState     ? "1" : "0") << std::endl;
-		std::cout << "xPosRobot        : " << feedback.position_x       << std::endl;
-		std::cout << "yPosRobot        : " << feedback.position_y      	<< std::endl;
-		std::cout << "rho              : " << feedback.rho              << std::endl;
-		std::cout << "theta            : " << feedback.theta            << std::endl;
-		std::cout << "orientation      : " << feedback.rotation         << std::endl;
-		std::cout << "angularVelocity  : " << feedback.angularVelocity 	<< std::endl;
-		std::cout << "ballSensor       : " << feedback.ballSensor  		<< std::endl;
-		std::cout << "xAcceleration    : " << feedback.acceleration_x  	<< std::endl;
-		std::cout << "yAcceleration    : " << feedback.acceleration_y  	<< std::endl;
-		std::cout << "angularRate      : " << feedback.velocity_angular	<< std::endl;
+		std::cout << "    id               : " << feedback.id               << std::endl;
+		std::cout << "    wheelLeftFront   : " <<(feedback.wheelLeftFront   ? "1" : "0") << std::endl;
+		std::cout << "    wheelRightFront  : " <<(feedback.wheelRightFront  ? "1" : "0") << std::endl;
+		std::cout << "    wheelLeftBack    : " <<(feedback.wheelLeftBack    ? "1" : "0") << std::endl;
+		std::cout << "    wheelRightBack   : " <<(feedback.wheelRightBack   ? "1" : "0") << std::endl;
+		std::cout << "    genevaDriveState : " <<(feedback.genevaDriveState ? "1" : "0") << std::endl;
+		std::cout << "    batteryState     : " <<(feedback.batteryState     ? "1" : "0") << std::endl;
+		std::cout << "    xPosRobot        : " << feedback.position_x       << std::endl;
+		std::cout << "    yPosRobot        : " << feedback.position_y       << std::endl;
+		std::cout << "    rho              : " << feedback.rho              << std::endl;
+		std::cout << "    theta            : " << feedback.theta            << std::endl;
+		std::cout << "    orientation      : " << feedback.rotation         << std::endl;
+		std::cout << "    angularVelocity  : " << feedback.angularVelocity  << std::endl;
+		std::cout << "    ballSensor       : " << feedback.ballSensor       << std::endl;
+		std::cout << "    xAcceleration    : " << feedback.acceleration_x   << std::endl;
+		std::cout << "    yAcceleration    : " << feedback.acceleration_y   << std::endl;
+		std::cout << "    angularRate      : " << feedback.velocity_angular << std::endl;
 
 		std::cout << std::endl;
 	}

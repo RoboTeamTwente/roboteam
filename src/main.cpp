@@ -34,7 +34,6 @@ namespace b = boost;
 #include "roboteam_robothub/packing.h"
 
 #define VERIFY_COMMANDS
-#define PACKET_SIZE 24
 
 namespace {
 
@@ -96,20 +95,17 @@ SlowParam<bool> grSimBatch("grsim/batching", true);
 //   threshold, and flushes the buffer.
 
 enum class SerialResultStatus {
-    ACK,
-    NACK,
-    STRANGE_RESPONSE,
-    CANT_OPEN_PORT,
-    COMMAND_TO_PACKET_FAILED,
-    UNKNOWN_WRITE_ERROR,
-    UNKNOWN_READ_ERROR,
-    CONNECTION_CLOSED_BY_PEER,
-	COMMAND_SANITY_CHECK_FAILED
+	COMMAND_TO_PACKET_FAILED,
+	CANT_OPEN_PORT,
+	CONNECTION_CLOSED_BY_PEER,
+	UNKNOWN_WRITE_ERROR,
+	UNKNOWN_READ_ERROR,
+	STRANGE_RESPONSE,
+	ACK,
+	NACK,
+	SUCCESS,
 } ;
 
-struct SerialSendResult {
-    SerialResultStatus status;
-};
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
@@ -165,27 +161,42 @@ std::string string_to_hex(const std::string& input){
 
 
 
+bool ensureSerialport(){
+	// If the serial port is not open at the moment
+	if (!serialPortOpen) {
+
+		// Open the serial port
+		ROS_INFO_STREAM("[ensureSerialport] Opening serial port " << serial_file_path << "...");
+		boost::system::error_code ec;
+		serialPort.open(serial_file_path, ec);
+
+		// Check the status of the serial port
+		switch (ec.value()) {
+
+			case boost::system::errc::success:
+				ROS_INFO("[ensureSerialport] Port opened");
+				serialPortOpen = true;
+				return true;
+
+			default:
+				ROS_ERROR_STREAM_THROTTLE(1, "[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
+				return false;
+		}
+	}
+	return true;
+}
 
 /**
- * Reads a 49-byte long hex string from the robot, converts it to bytes, and puts it in the 23-byte long byteArray.
+ * Reads a 49-byte long hex string from the robot, drops the newline byte, converts it to bytes, and puts it in the 23-byte long byteArray.
  * @param byteArray - The array where the 23 bytes should be put in
  * @returns SerialResultStatus, e.g. ACK, NACK, UNKNOWN_READ_ERROR, etc
  */
 SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray){
 
-	if (!serialPortOpen) {
-		ROS_INFO_STREAM("Opening serial port " << serial_file_path << "...");
-		boost::system::error_code errorCode;
-		serialPort.open(serial_file_path, errorCode);
-		switch (errorCode.value()) {
-			case boost::system::errc::success:
-				serialPortOpen = true;
-				ROS_INFO_STREAM("Port " << serial_file_path << " opened");
-				break;
-			default:
-				ROS_FATAL_STREAM("ERROR! Could not open serial port: " << errorCode.message());
-				return SerialResultStatus::CANT_OPEN_PORT;
-		}
+	// Check if the serial port is open
+	if(!ensureSerialport()){
+		ROS_ERROR("[readPackedRobotFeedback] Port not open. Can't read feedback");
+		return SerialResultStatus::CANT_OPEN_PORT;
 	}
 
 	// Create a buffer to receive the hex from the robot in
@@ -246,112 +257,101 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 }
 
 /**
- *
- * @param robotCommand
- * @return
+ * Takes a robot command, converts it to bytes, and sends it to the robot
+ * @param robotCommand : The command to be sent to the robot
+ * @returns SerialResultStatus, e.g. UNKNOWN_WRITE_ERROR, SUCCESS, etc
  */
-SerialResultStatus sendRobotCommand(roboteam_msgs::RobotCommand& robotCommand){
+SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCommand){
 
-	return SerialResultStatus::ACK;
+	// Check if the serial port is open
+	if(!ensureSerialport()){
+		ROS_ERROR("[sendRobotCommand] Port not open. Can't write command");
+		return SerialResultStatus::CANT_OPEN_PORT;
+	}
+
+	// Get the latest world state
+	b::optional<roboteam_msgs::World> worldOptional;
+	if (rtt::LastWorld::have_received_first_world()) {
+		worldOptional = rtt::LastWorld::get();
+	}
+
+	// Turn roboteam_msgs:RobotCommand into bytes
+	ROS_DEBUG("[sendRobotCommand] Creating message...");
+	boost::optional<rtt::packed_protocol_message> bytesOptional = rtt::createRobotPacket(robotCommand, worldOptional);
+
+	// Check if the message was created successfully
+	if(!bytesOptional){
+		return SerialResultStatus::COMMAND_TO_PACKET_FAILED;
+	}
+	// Get the bytes
+	rtt::packed_protocol_message ppm = *bytesOptional;
+
+	// Print the bytes in HEX
+	for (int i = 0; i < ppm.size(); i++) {
+		printf("%02x ", ppm.data()[i]);
+	}
+	printf("\n");
+
+	// Error code
+	b::system::error_code ec;
+	// Write the bytes to the basestation
+	ROS_DEBUG("[sendRobotCommand] Writing message...");
+	b::asio::write(serialPort, boost::asio::buffer(ppm.data(), ppm.size()), ec);
+	ROS_DEBUG("[sendRobotCommand] Message written");
+
+	// Check the error_code
+	switch (ec.value()) {
+		case boost::asio::error::eof:
+			ROS_ERROR_STREAM("[sendSerialCommands] Connection closed by peer while writing! Closing port and trying to reopen...");
+			serialPort.close();
+			serialPortOpen = false;
+			return SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
+
+		case boost::system::errc::success:
+			return SerialResultStatus::SUCCESS;
+
+		default:
+			ROS_ERROR_STREAM("[sendRobotCommand] Unknown write error : (" << ec.value() << ")! Closing the port and trying to reopen...");
+			serialPort.close();
+			serialPortOpen = false;
+			return SerialResultStatus::UNKNOWN_WRITE_ERROR;
+	}
 }
 
-SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
+SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCommand) {
 	ROS_DEBUG("[sendSerialCommands]");
-    SerialSendResult result;
-    result.status = SerialResultStatus::ACK;
 
-    // ======== Check Port ========
-	// If the serial port is not open at the moment
-    if (!serialPortOpen) {
-        ROS_INFO_STREAM("Opening serial port " << serial_file_path << "...");
-        boost::system::error_code errorCode;
-        serialPort.open(serial_file_path, errorCode);
-        switch (errorCode.value()) {
-            case boost::system::errc::success:
-                serialPortOpen = true;
-                ROS_INFO_STREAM("Port " << serial_file_path << " opened");
-                break;
-            default:
-                ROS_ERROR_STREAM_THROTTLE(1, "ERROR! Could not open serial port: " << errorCode.message());
+	// Check if the serial port is open
+	if(!ensureSerialport()){
+		ROS_ERROR("[sendSerialCommands] Port not open. Can't send command");
+		return SerialResultStatus::CANT_OPEN_PORT;
+	}
 
-                result.status = SerialResultStatus::CANT_OPEN_PORT;
-                return result;
-        }
-    }
-	// ============================
-	ROS_DEBUG("[sendSerialCommands] Port is still open...");
+	// Write the command to the robot
+	SerialResultStatus writeStatus = writeRobotCommand(robotCommand);
+	if(writeStatus != SerialResultStatus::SUCCESS){
+		ROS_ERROR_STREAM("[sendSerialCommands] Error while writing the command to the robot!");
+		return writeStatus;
+	}
 
-    b::optional<roboteam_msgs::World> worldOpt;
-    if (rtt::LastWorld::have_received_first_world()) {
-        worldOpt = rtt::LastWorld::get();
-    }
+	// Read the feedback from the robot
+	rtt::packed_robot_feedback feedback;
+	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
 
-    // ======== Create message ========
-	ROS_DEBUG("[sendSerialCommands] Creating message...");
-	if (auto bytesOpt = rtt::createRobotPacket(_msg, worldOpt)) {
-        // Get bytes
-        auto bytes = *bytesOpt;
-
-		// Print the bytes in HEX
-		for(int i = 0; i < bytes.size(); i++){
-			printf("%02x ", bytes.data()[i]);
-		}
-		printf("\n");
-
-        // Write message to it
-        b::system::error_code ec;
-		ROS_DEBUG("[sendSerialCommands] Writing message...");
-		// Write the bytes to the basestation
-		b::asio::write(serialPort, boost::asio::buffer(bytes.data(), bytes.size()), ec);
-		ROS_DEBUG("[sendSerialCommands] Message written");
-
-		// Check the error_code
-		switch (ec.value()) {
-            case boost::asio::error::eof:
-                ROS_ERROR_STREAM("[sendSerialCommands] Connection closed by peer while writing! Closing port and trying to reopen...");
-                result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
-                serialPort.close();
-                serialPortOpen = false;
-                return result;
-                break;
-            case boost::system::errc::success:
-                break;
-            default:
-                // Unknown read error!
-                ROS_ERROR_STREAM("[sendSerialCommands] Unknown write error! Closing the port and trying to reopen...");
-                serialPort.close();
-                serialPortOpen = false;
-                result.status = SerialResultStatus::UNKNOWN_WRITE_ERROR;
-                return result;
-                break;
-        }
-
-
-		// Read the feedback from the robot
-		rtt::packed_robot_feedback feedback = {};
-		SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
-
-		if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
-			ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
-			return result;
-		}
-
-		// Convert the rtt::packed_robot_feedback to LowLevelRobotFeedback
-		rtt::LowLevelRobotFeedback llrf = rtt::createRobotFeedback(feedback);
-		// Convert the LowLevelRobotFeedback to roboteam_msgs::RobotFeedback
-		roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrf);
-
-		rtt::printLowLevelRobotFeedback(llrf);
-		rtt::printRobotFeedback(msg);
-
+	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
+		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
 		return result;
+	}
 
+	// Convert the rtt::packed_robot_feedback to LowLevelRobotFeedback
+	rtt::LowLevelRobotFeedback llrf = rtt::createRobotFeedback(feedback);
+	// Convert the LowLevelRobotFeedback to roboteam_msgs::RobotFeedback
+	roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrf);
 
-    } else {
-        // Oh shit.
-        result.status = SerialResultStatus::COMMAND_TO_PACKET_FAILED;
-        return result;
-    }
+	rtt::printLowLevelRobotFeedback(llrf);
+	rtt::printRobotFeedback(msg);
+
+	return result;
 }
 
 enum class RobotType {
@@ -456,7 +456,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
     } else if (mode == RobotType::SERIAL) {
         auto result = sendSerialCommands(command);
 
-        switch (result.status) {
+        switch (result) {
             case SerialResultStatus::ACK:
                 acks++;
                 serialStatusMap[command.id].acks++;
@@ -468,7 +468,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
             default:
                 break;
         }
-        prevResultStatus = result.status;
+        prevResultStatus = result;
     }else{
 		ROS_INFO_STREAM("[sendCommand] UNKNOWN! ERROR");
 	}

@@ -15,7 +15,6 @@ namespace bf = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_robothub/packing.h"
-#include "roboteam_msgs/RobotCommand.h"
 
 
 namespace rtt {
@@ -144,7 +143,7 @@ namespace rtt {
         thing2.v = 5678;
         thing3.v = 9012;
 
-        packet_ack x = {
+        packed_robot_feedback x = {
             0b00011111,
             0b11110000,
             0b00000001,

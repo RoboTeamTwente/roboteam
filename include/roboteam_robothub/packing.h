@@ -69,8 +69,8 @@ namespace rtt {
         float velocity_angular;
     };
 
-    using packed_protocol_message = std::array<uint8_t, 12>;
-    using packet_ack = std::array<uint8_t, 23>;
+    using packed_protocol_message = std::array<uint8_t, 13>;
+    using packed_robot_feedback = std::array<uint8_t, 23>;
 
     // Software => Basestation
     LowLevelRobotCommand createLowLevelRobotCommand(
@@ -83,7 +83,7 @@ namespace rtt {
     );
 
     // Basestation => Software
-    LowLevelRobotFeedback createRobotFeedback(packet_ack bitsnbytes);
+    LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
 
     roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 

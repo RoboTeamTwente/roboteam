@@ -16,6 +16,7 @@
 	<param name="robot7/robotType" type="string" value="$(arg robot_type)" />
 	<param name="robot8/robotType" type="string" value="$(arg robot_type)" />
 	<param name="robot9/robotType" type="string" value="$(arg robot_type)" />
+	<param name="robot10/robotType" type="string" value="$(arg robot_type)" />
 
 	<param name="role_iterations_per_second" type="int" value="60" />
 	<param name="robot_output_target" type="string" value="$(arg robot_output_target)" />

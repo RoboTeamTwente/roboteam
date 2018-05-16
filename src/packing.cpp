@@ -51,94 +51,10 @@ namespace rtt {
      * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
      * uses this internally to convert a RobotCommand into something workable.
      */
-    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command,
-                                                    b::optional<roboteam_msgs::World> const &worldOpt) {
+    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &worldOpt) {
 
-//        using roboteam_msgs::RobotCommand
 
-        /*
-        //////////////////////////////////////
-        // Calculate w & rotation direction //
-        //////////////////////////////////////
-        // Calculate w & if to rotate clockwise or counter-clockwise
-        // If w is positive it's counter clockwise
-        bool rot_cclockwise = command.w > 0;
-        double rawW = command.w;
-        if (rawW < 0) {
-            rawW = -rawW;
-        }
-        // w is in deg/s
-        int w = rawW / M_PI * 180;
-
-        if (w > PACKET_MAX_W) w = PACKET_MAX_W;
-        if (w < 0) w = 0;
-
-        //////////////////////////
-        // Calculate kick_force //
-        //////////////////////////
-        uint8_t kick_force = 0;
-        uint8_t chip_force = 0;
-        bool do_chip = false;
-        bool do_kick = false;
-        bool do_forced = false;
-
-        if (command.kicker == true) {
-            do_kick = true;
-            kick_force = normalizeToByte(command.kicker_vel, RobotCommand::MAX_KICKER_VEL, 255);
-            do_forced = command.kicker_forced;
-        } else if (command.chipper == true) {
-            do_chip = true;
-            chip_force = normalizeToByte(command.chipper_vel, RobotCommand::MAX_CHIPPER_VEL, 255);
-            do_forced = command.chipper_forced;
-        }
-
-        bool dribble_cclockwise = false;
-        uint8_t dribble_vel = 0;
-        if (command.dribbler) {
-            dribble_vel = PACKET_MAX_DRIBBLE_VEL;
-        }
-
-        /////////////////////////
-        // Figure out cam data //
-        /////////////////////////
-
-        bool cam_data_on = false;
-        int32_t cam_robot_vel = 0;
-        int32_t cam_ang = 0;
-        bool cam_rot_cclockwise = 0;
-        int32_t cam_w = 0;
-
-        if (worldOpt) {
-            auto const &world = *worldOpt;
-            auto botOpt = getWorldBot(command.id, true, world);
-
-            if (botOpt) {
-                auto bot = *botOpt;
-
-                cam_data_on = true;
-
-                Vector2 camVelocityVec(bot.vel.x, bot.vel.y);
-                cam_robot_vel = camVelocityVec.length();
-
-                double ang = cleanAngle(camVelocityVec.angle() - bot.angle);
-
-                if (ang < 0) {
-                    ang += 2 * M_PI;
-                }
-
-                cam_ang = ang / (2 * M_PI / 512.0);
-
-                if (bot.w > 0) {
-                    cam_rot_cclockwise = true;
-                    cam_w = bot.w;
-                } else if (bot.w < 0) {
-                    cam_rot_cclockwise = false;
-                    cam_w = -bot.w;
-                }
-            }
-        }
-        */
-
+        ROS_DEBUG("[createLowLevelRobotCommand] creating...");
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
         double theta = command.x_vel == 0 ? 0 : atan(command.y_vel / command.x_vel);
@@ -151,7 +67,7 @@ namespace rtt {
         llrc.driving_reference  = false;                                                        // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                                        // [0, 1]          {true, false}
         llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));                 // [-512, 511]     [-8*2pi, 8*2pi]
-        llrc.debug_info         = false;                                                        // [0, 1]          {true, false}
+        llrc.debug_info         = true;                                                         // [0, 1]          {true, false}
         llrc.do_kick            = command.kicker;                                               // [0, 1]          {true, false}
         llrc.do_chip            = command.chipper;                                              // [0, 1]          {true, false}
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;              // [0, 1]          {true, false}
@@ -161,6 +77,7 @@ namespace rtt {
         llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>
+        ROS_DEBUG("[createLowLevelRobotCommand] created...");
 
         return llrc;
     }
@@ -241,7 +158,7 @@ namespace rtt {
             (0b00001000 & (llrc.debug_info << 3)) |         // 0000h000  1 bit ; bit     0 to   3
             (0b00000100 & (llrc.do_kick << 2)) |            // 00000i00  1 bit ; bit     0 to   2
             (0b00000010 & (llrc.do_chip << 1)) |            // 000000j0  1 bit ; bit     0 to   1
-            (0b00000001 & (llrc.kick_chip_forced))     // 0000000k  1 bit ; bit     0 to   0
+            (0b00000001 & (llrc.kick_chip_forced))     		// 0000000k  1 bit ; bit     0 to   0
         );
 
         byteArr[6] = static_cast<uint8_t>(  // mmmmmmmm
@@ -374,7 +291,12 @@ namespace rtt {
 
  */
 
-    LowLevelRobotFeedback createRobotFeedback(packet_ack bitsnbytes){
+	/**
+	 * Converts the bytes received from the robot into a LowLevelRobotFeedback object
+	 * @param bitsnbytes The bytes from the robot
+	 * @returns a LowLevelRobotFeedback struct
+	 */
+    LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes){
         struct LowLevelRobotFeedback feedback;
 
         int offset = 0;
@@ -427,22 +349,22 @@ namespace rtt {
             unsigned char b[4];
         } f;
 
-        f.b[0] = bitsnbytes[offset+11];
-        f.b[1] = bitsnbytes[offset+12];
-        f.b[2] = bitsnbytes[offset+13];
-        f.b[3] = bitsnbytes[offset+14];
+        f.b[3] = bitsnbytes[offset+11];
+        f.b[2] = bitsnbytes[offset+12];
+        f.b[1] = bitsnbytes[offset+13];
+        f.b[0] = bitsnbytes[offset+14];
         feedback.acceleration_x = f.v;
 
-        f.b[0] = bitsnbytes[offset+15];
-        f.b[1] = bitsnbytes[offset+16];
-        f.b[2] = bitsnbytes[offset+17];
-        f.b[3] = bitsnbytes[offset+18];
+        f.b[3] = bitsnbytes[offset+15];
+        f.b[2] = bitsnbytes[offset+16];
+        f.b[1] = bitsnbytes[offset+17];
+        f.b[0] = bitsnbytes[offset+18];
         feedback.acceleration_y = f.v;
 
-        f.b[0] = bitsnbytes[offset+19];
-        f.b[1] = bitsnbytes[offset+20];
-        f.b[2] = bitsnbytes[offset+21];
-        f.b[3] = bitsnbytes[offset+22];
+        f.b[3] = bitsnbytes[offset+19];
+        f.b[2] = bitsnbytes[offset+20];
+        f.b[1] = bitsnbytes[offset+21];
+        f.b[0] = bitsnbytes[offset+22];
         feedback.velocity_angular = f.v;
 
         return feedback;

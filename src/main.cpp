@@ -134,7 +134,7 @@ int char2int(char input){
 }
 
 // This function assumes src to be a zero terminated sanitized string with an even number of [0-9a-f] characters, and target to be sufficiently large
-void hex2bin(const char* src, std::array<uint8_t, 23>& target){
+void hex2bin(const char* src, rtt::packed_robot_feedback& target){
 	int i;
 	while(*src && src[1])
 	{
@@ -160,7 +160,10 @@ std::string string_to_hex(const std::string& input){
 }
 
 
-
+/**
+ * Ensures that the serial port is open. Attempts to open the serial port if it is closed
+ * @returns true if the port is open, false otherwise
+ */
 bool ensureSerialport(){
 	// If the serial port is not open at the moment
 	if (!serialPortOpen) {
@@ -318,8 +321,12 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 	}
 }
 
+/**
+ * Takes a robot commands, sends it to the robot, receives its feedback
+ * @param robotCommand : The robot command to be sent to the robot
+ * @returns SerialResultStatus, e.g. CANT_OPEN_PORT, WRITE_ERROR, ACK, etc
+ */
 SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCommand) {
-	ROS_DEBUG("[sendSerialCommands]");
 
 	// Check if the serial port is open
 	if(!ensureSerialport()){
@@ -340,7 +347,7 @@ SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCo
 
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
-		return result;
+		return readStatus;
 	}
 
 	// Convert the rtt::packed_robot_feedback to LowLevelRobotFeedback
@@ -351,8 +358,11 @@ SerialResultStatus sendSerialCommands(const roboteam_msgs::RobotCommand& robotCo
 	rtt::printLowLevelRobotFeedback(llrf);
 	rtt::printRobotFeedback(msg);
 
-	return result;
+	return readStatus;
 }
+
+
+
 
 enum class RobotType {
     SERIAL,

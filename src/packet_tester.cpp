@@ -185,7 +185,7 @@ namespace rtt {
         std::cout << "position_y " << y.position_y << std::endl;
         std::cout << "rho " << y.rho << std::endl;
         std::cout << "theta " << y.theta << std::endl;
-        std::cout << "rotation " << y.rotation << std::endl;
+        std::cout << "orientation " << y.orientation << std::endl;
         std::cout << "angularVelocity " << y.angularVelocity << std::endl;
         std::cout << "ballSensor " << y.ballSensor << std::endl;
 

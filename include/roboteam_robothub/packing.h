@@ -37,10 +37,6 @@ namespace rtt {
         int cam_position_y;     //y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
         int cam_rotation;       //Orientation (camera)        [-1024, 1023]     0.00307rad    [-pi, pi>               11
     };
-
-    // angularVelocity vs angularRate?
-    // local vs global?
-    // Cartesian vs polar?
     struct LowLevelRobotFeedback {
         int id;
 
@@ -57,7 +53,7 @@ namespace rtt {
 
         int rho;
         int theta;
-        int rotation;
+        int orientation;
 
         int angularVelocity;
         int ballSensor;
@@ -84,6 +80,8 @@ namespace rtt {
 
     // Basestation => Software
     LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
+	void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf);
+	void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback);
 
     roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 

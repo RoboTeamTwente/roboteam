@@ -130,49 +130,15 @@ int networkMsgs = 0;
 
 
 
-
-
-//between 11 and 23 Bytes, ideally
-typedef struct roboAckData{
-	//regular fields: 11 Bytes
-	uint8_t roboID:5;
-	uint8_t wheelLeftFront:1;
-	uint8_t wheelRightFront:1;
-	uint8_t wheelLeftBack:1;
-	uint8_t wheelRightBack:1;
-	uint8_t genevaDriveState:1;
-	uint8_t batteryState:1;
-	int16_t xPosRobot:13;
-	int16_t yPosRobot:13;
-	int16_t rho:11;
-	int16_t theta:11;
-	int16_t orientation:11;
-	int16_t angularVelocity:11;
-	uint8_t ballSensor:7;
-
-	//extra fields (add 12 Bytes)
-	uint32_t xAcceleration;
-	uint32_t yAcceleration;
-	uint32_t angularRate;
-
-} roboAckData;
-
-
-
-
-
-int char2int(char input)
-{
+int char2int(char input){
 	if(input >= '0' && input <= '9') return input - '0';
 	if(input >= 'A' && input <= 'F') return input - 'A' + 10;
 	if(input >= 'a' && input <= 'f') return input - 'a' + 10;
 	throw std::invalid_argument("char2int : Invalid input string");
 }
 
-// This function assumes src to be a zero terminated sanitized string with
-// an even number of [0-9a-f] characters, and target to be sufficiently large
-void hex2bin(const char* src, std::array<uint8_t, 23>& target)
-{
+// This function assumes src to be a zero terminated sanitized string with an even number of [0-9a-f] characters, and target to be sufficiently large
+void hex2bin(const char* src, std::array<uint8_t, 23>& target){
 	int i;
 	while(*src && src[1])
 	{
@@ -182,9 +148,7 @@ void hex2bin(const char* src, std::array<uint8_t, 23>& target)
 	}
 }
 
-
-std::string string_to_hex(const std::string& input)
-{
+std::string string_to_hex(const std::string& input){
 	static const char* const lut = "0123456789ABCDEF";
 	size_t len = input.length();
 
@@ -202,67 +166,12 @@ std::string string_to_hex(const std::string& input)
 
 
 
-
-void ackPacketToRoboAckData(const uint8_t input[23], uint8_t packetlength, roboAckData *output) {
-	//input is now specified as an array of size 23. Note that there are also ACK packets of the length 11.
-	//You need to use packetlength to know which range of the array contains useful information.
-	//The attempt of accessing input[11] to input[22] for a short ACK packet will yield garbage data.
-
-	output->roboID = input[0]>>3; //a
-	output->wheelLeftFront = (input[0]>>2)&1; //b
-	output->wheelRightFront = (input[0]>>1)&1; //c
-	output->wheelLeftBack = (input[0])&1; //d
-
-	output->wheelRightBack = (input[1]>>7)&1; //e
-	output->genevaDriveState = (input[1]>>6)&1; //f
-	output->batteryState = (input[1]>>5)&1;  //g
-	output->xPosRobot = ((input[1]&0b11111)<<8 | input[2]); //h
-
-	output->yPosRobot = ((input[3]<<5) | (input[4]>>3)); //k
-
-	output->rho = (input[4]&0b111)<<8; //m
-
-	output->rho |= input[5]; //m
-
-	output->theta = (input[6]<<3) | (input[7]>>5); //o
-
-	output->orientation = ((input[7]&0b11111)<<6) | (input[8]>>2); //p
-
-	output->angularVelocity = ((input[8]&0b11)<<9) | (input[9]<<1) | ((input[10]>>7)&1); //q
-
-	output->ballSensor = input[10]&0x7f; //s
-
-	if(packetlength < 23)
-		return;
-
-	//extra data
-	output->xAcceleration = (input[11]<<24) | (input[12]<<16) | (input[13]<<8) | input[14]; //t
-	output->yAcceleration = (input[15]<<24) | (input[16]<<16) | (input[17]<<8) | input[18]; //u
-	output->angularRate = (input[19]<<24) | (input[20]<<16) | (input[21]<<8) | input[22]; //v
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Reads a 49-byte long hex string from the robot, converts it to bytes, and puts it in the 23-byte long byteArray.
+ * @param byteArray - The array where the 23 bytes should be put in
+ * @returns SerialResultStatus, e.g. ACK, NACK, UNKNOWN_READ_ERROR, etc
+ */
 SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray){
-
-	SerialResultStatus status = SerialResultStatus::ACK;
 
 	if (!serialPortOpen) {
 		ROS_INFO_STREAM("Opening serial port " << serial_file_path << "...");
@@ -310,10 +219,12 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	std::getline(is, hexString);
 	// Replace \n with \0. Not used atm, but can't hurt
 	hexString[bytesReceived-1] = '\0';
-	// Retrieve the byte that represents ACK or NACK
-	int ackByte = char2int(byteArray[0]) * 16 + char2int(byteArray[1]);
 	// Convert the hex string to an uint8_t array. +2 to drop the ACK byte
 	hex2bin(hexString.c_str()+2, byteArray);
+	ROS_DEBUG_STREAM("[readPackedRobotFeedback] hexString converted");
+	// Retrieve the byte that represents ACK or NACK
+	int ackByte = char2int(hexString[0]) * 16 + char2int(hexString[1]);
+	ROS_DEBUG_STREAM("[readPackedRobotFeedback] ACK byte : " << ackByte);
 
 	// === Print the values === //
 	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
@@ -327,36 +238,6 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	printf("\n");
 	// ======================== //
 
-//	roboAckData rad;
-//	// Convert the uint8_t array to roboAckData
-//	ackPacketToRoboAckData(byteArray.data(), 23, &rad);
-//	// Convert the uint8_t array to LowLevelRobotFeedback
-//	rtt::LowLevelRobotFeedback llrc = rtt::createRobotFeedback(byteArray);
-//
-//	roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrc);
-//
-//	std::cout << "\n" << std::endl;
-//	// Print the roboAckData, LowLevelRobotFeedback, and RobotFeedback
-//	std::cout << "roboID           : \t" << +rad.roboID  			<< " \t" << llrc.id 				<< " \t" << msg.id 					<< std::endl;
-//	std::cout << "wheelLeftFront   : \t" << +rad.wheelLeftFront  	<< " \t" << llrc.wheelLeftFront   	<< " \t" <<(msg.wheelLeftFront  	? "1" : "0") << std::endl;
-//	std::cout << "wheelRightFront  : \t" << +rad.wheelRightFront  	<< " \t" << llrc.wheelRightFront  	<< " \t" <<(msg.wheelRightFront 	? "1" : "0") << std::endl;
-//	std::cout << "wheelLeftBack    : \t" << +rad.wheelLeftBack  	<< " \t" << llrc.wheelLeftBack    	<< " \t" <<(msg.wheelLeftBack   	? "1" : "0") << std::endl;
-//	std::cout << "wheelRightBack   : \t" << +rad.wheelRightBack  	<< " \t" << llrc.wheelRightBack   	<< " \t" <<(msg.wheelRightBack  	? "1" : "0") << std::endl;
-//	std::cout << "genevaDriveState : \t" << +rad.genevaDriveState 	<< " \t" << llrc.genevaDriveState 	<< " \t" <<(msg.genevaDriveState	? "1" : "0") << std::endl;
-//	std::cout << "batteryState     : \t" << +rad.batteryState  		<< " \t" << llrc.batteryState  		<< " \t" <<(msg.batteryState  		? "1" : "0") << std::endl;
-//	std::cout << "xPosRobot        : \t" << +rad.xPosRobot  		<< " \t" << llrc.position_x       	<< " \t" << msg.position_x      	<< std::endl;
-//	std::cout << "yPosRobot        : \t" << +rad.yPosRobot  		<< " \t" << llrc.position_y       	<< " \t" << msg.position_y      	<< std::endl;
-//	std::cout << "rho              : \t" << +rad.rho  				<< " \t" << llrc.rho  				<< " \t" << msg.rho  				<< std::endl;
-//	std::cout << "theta            : \t" << +rad.theta  			<< " \t" << llrc.theta  			<< " \t" << msg.theta  				<< std::endl;
-//	std::cout << "orientation      : \t" << +rad.orientation  		<< " \t" << llrc.rotation  	    	<< " \t" << msg.rotation  	   		<< std::endl;
-//	std::cout << "angularVelocity  : \t" << +rad.angularVelocity  	<< " \t" << llrc.angularVelocity  	<< " \t" << msg.angularVelocity 	<< std::endl;
-//	std::cout << "ballSensor       : \t" << +rad.ballSensor  		<< " \t" << llrc.ballSensor  		<< " \t" << msg.ballSensor  		<< std::endl;
-//	std::cout << "xAcceleration    : \t" << +rad.xAcceleration  	<< " \t" << llrc.acceleration_x   	<< " \t" << msg.acceleration_x  	<< std::endl;
-//	std::cout << "yAcceleration    : \t" << +rad.yAcceleration  	<< " \t" << llrc.acceleration_y   	<< " \t" << msg.acceleration_y  	<< std::endl;
-//	std::cout << "angularRate      : \t" << +rad.angularRate 		<< " \t" << llrc.velocity_angular 	<< " \t" << msg.velocity_angular	<< std::endl;
-//
-//	std::cout << "\n\n" << std::endl;
-
 	if(ackByte)
 		return SerialResultStatus::ACK;
 	else{
@@ -364,8 +245,16 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	}
 }
 
+/**
+ *
+ * @param robotCommand
+ * @return
+ */
+SerialResultStatus sendRobotCommand(roboteam_msgs::RobotCommand& robotCommand){
 
-// Returns true if ack, false if nack.
+	return SerialResultStatus::ACK;
+}
+
 SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 	ROS_DEBUG("[sendSerialCommands]");
     SerialSendResult result;
@@ -443,110 +332,21 @@ SerialSendResult sendSerialCommands(const roboteam_msgs::RobotCommand& _msg) {
 		SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
 
 		if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
-			ROS_ERROR_STREAM("Something went wrong while reading the feedback fron the robot");
+			ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
 			return result;
 		}
 
-		roboAckData rad;
-		// Convert the uint8_t array to roboAckData
-		ackPacketToRoboAckData(feedback.data(), 23, &rad);
-		// Convert the uint8_t array to LowLevelRobotFeedback
-		rtt::LowLevelRobotFeedback llrc = rtt::createRobotFeedback(feedback);
+		// Convert the rtt::packed_robot_feedback to LowLevelRobotFeedback
+		rtt::LowLevelRobotFeedback llrf = rtt::createRobotFeedback(feedback);
+		// Convert the LowLevelRobotFeedback to roboteam_msgs::RobotFeedback
+		roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrf);
 
-		roboteam_msgs::RobotFeedback msg = rtt::toRobotFeedback(llrc);
-
-		std::cout << "\n" << std::endl;
-		// Print the roboAckData, LowLevelRobotFeedback, and RobotFeedback
-		std::cout << "roboID           : \t" << +rad.roboID  			<< " \t" << llrc.id 				<< " \t" << msg.id 					<< std::endl;
-		std::cout << "wheelLeftFront   : \t" << +rad.wheelLeftFront  	<< " \t" << llrc.wheelLeftFront   	<< " \t" <<(msg.wheelLeftFront  	? "1" : "0") << std::endl;
-		std::cout << "wheelRightFront  : \t" << +rad.wheelRightFront  	<< " \t" << llrc.wheelRightFront  	<< " \t" <<(msg.wheelRightFront 	? "1" : "0") << std::endl;
-		std::cout << "wheelLeftBack    : \t" << +rad.wheelLeftBack  	<< " \t" << llrc.wheelLeftBack    	<< " \t" <<(msg.wheelLeftBack   	? "1" : "0") << std::endl;
-		std::cout << "wheelRightBack   : \t" << +rad.wheelRightBack  	<< " \t" << llrc.wheelRightBack   	<< " \t" <<(msg.wheelRightBack  	? "1" : "0") << std::endl;
-		std::cout << "genevaDriveState : \t" << +rad.genevaDriveState 	<< " \t" << llrc.genevaDriveState 	<< " \t" <<(msg.genevaDriveState	? "1" : "0") << std::endl;
-		std::cout << "batteryState     : \t" << +rad.batteryState  		<< " \t" << llrc.batteryState  		<< " \t" <<(msg.batteryState  		? "1" : "0") << std::endl;
-		std::cout << "xPosRobot        : \t" << +rad.xPosRobot  		<< " \t" << llrc.position_x       	<< " \t" << msg.position_x      	<< std::endl;
-		std::cout << "yPosRobot        : \t" << +rad.yPosRobot  		<< " \t" << llrc.position_y       	<< " \t" << msg.position_y      	<< std::endl;
-		std::cout << "rho              : \t" << +rad.rho  				<< " \t" << llrc.rho  				<< " \t" << msg.rho  				<< std::endl;
-		std::cout << "theta            : \t" << +rad.theta  			<< " \t" << llrc.theta  			<< " \t" << msg.theta  				<< std::endl;
-		std::cout << "orientation      : \t" << +rad.orientation  		<< " \t" << llrc.rotation  	    	<< " \t" << msg.rotation  	   		<< std::endl;
-		std::cout << "angularVelocity  : \t" << +rad.angularVelocity  	<< " \t" << llrc.angularVelocity  	<< " \t" << msg.angularVelocity 	<< std::endl;
-		std::cout << "ballSensor       : \t" << +rad.ballSensor  		<< " \t" << llrc.ballSensor  		<< " \t" << msg.ballSensor  		<< std::endl;
-		std::cout << "xAcceleration    : \t" << +rad.xAcceleration  	<< " \t" << llrc.acceleration_x   	<< " \t" << msg.acceleration_x  	<< std::endl;
-		std::cout << "yAcceleration    : \t" << +rad.yAcceleration  	<< " \t" << llrc.acceleration_y   	<< " \t" << msg.acceleration_y  	<< std::endl;
-		std::cout << "angularRate      : \t" << +rad.angularRate 		<< " \t" << llrc.velocity_angular 	<< " \t" << msg.velocity_angular	<< std::endl;
-
-		std::cout << "\n\n" << std::endl;
-
-
-
-
-
-
-
-
-
-
+		rtt::printLowLevelRobotFeedback(llrf);
+		rtt::printRobotFeedback(msg);
 
 		return result;
 
-        int const returnSize = PACKET_SIZE;	// Will become 24 bytes with the new protocol. 1st byte = ACK/NACK
-        std::array<uint8_t, returnSize> ackCode;
-        ackCode.fill('!');
-		ROS_DEBUG("Reading message...");
-        b::asio::read(serialPort, boost::asio::buffer(ackCode.data(), returnSize), ec);
-		ROS_DEBUG("Message read");
 
-        switch (ec.value()) {
-            case boost::asio::error::eof:
-                ROS_ERROR_STREAM("Connection closed by peer while reading! Closing port and trying to reopen...");
-                result.status = SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
-                serialPort.close();
-                serialPortOpen = false;
-                return result;
-                break;
-            case boost::system::errc::success:
-				ROS_DEBUG("Success!");
-                // Peachy!
-                break;
-            default:
-                ROS_ERROR_STREAM("Unknown read error! Closing the port and trying to reopen...");
-                serialPort.close();
-                serialPortOpen = false;
-                result.status = SerialResultStatus::UNKNOWN_READ_ERROR;
-                return result;
-                break;
-        }
-
-//         Uncomment for debug info
-         ROS_INFO_STREAM("AckCode size: " << ackCode.size() );
-         ROS_INFO_STREAM("ackCodes: ");
-
-         for (int i = 0; i < returnSize; i += 2) {
-             uint8_t b = ackCode[i];
-             printf("%c%c\n", ackCode[i], ackCode[i + 1]);
-         }
-
-        ROS_WARN_STREAM_THROTTLE(1, "Messages not checked for ACK or NACK!");
-
-        return result;
-
-//        auto ack = rtt::decodeOldACK(ackCode);
-//
-////        ROS_INFO_STREAM("Robot ID : " << ack.robotID );
-//        // ROS_INFO_STREAM("Random value : " << ack.randomValue );
-//
-//        if (ack.robotACK) {
-//            result.status = SerialResultStatus::ACK;
-//            return result;
-//        } else {
-//            result.status = SerialResultStatus::NACK;
-//            return result;
-//        }
-
-        // TODO: @Performance this should probably done in such a way that it doesn't
-        // block ros::spin()
-        // Altough it is pretty fast now at 1 packet per ms.
-        // TODO: @Incomplete we do not handle the ACK here. Should probably influence the order or something (round robin?)
     } else {
         // Oh shit.
         result.status = SerialResultStatus::COMMAND_TO_PACKET_FAILED;

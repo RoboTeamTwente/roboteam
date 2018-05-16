@@ -52,8 +52,6 @@ namespace rtt {
      * uses this internally to convert a RobotCommand into something workable.
      */
     LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &worldOpt) {
-
-
         ROS_DEBUG("[createLowLevelRobotCommand] creating...");
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
@@ -82,8 +80,7 @@ namespace rtt {
         return llrc;
     }
 
-    boost::optional<packed_protocol_message> createRobotPacket(
-        roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &world){
+    boost::optional<packed_protocol_message> createRobotPacket(roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &world){
         auto llcommand = createLowLevelRobotCommand(command, world);
         return createRobotPacket(llcommand);
     }
@@ -214,7 +211,7 @@ namespace rtt {
 
         msg.rho     = feedback.rho;
         msg.theta   = feedback.theta;
-        msg.rotation= feedback.rotation;
+        msg.rotation= feedback.orientation;
 
         msg.angularVelocity = feedback.angularVelocity;
         msg.ballSensor      = feedback.ballSensor;
@@ -331,10 +328,10 @@ namespace rtt {
 
         // 7 oooppppp
         feedback.theta |= bitsnbytes[offset+7] >> 5;
-        feedback.rotation = (bitsnbytes[offset+7] & 0b00011111) << 6;
+        feedback.orientation = (bitsnbytes[offset+7] & 0b00011111) << 6;
 
         // 8 ppppppqq
-        feedback.rotation   |= bitsnbytes[offset+8] >> 2;
+        feedback.orientation   |= bitsnbytes[offset+8] >> 2;
         feedback.angularVelocity = (bitsnbytes[offset+8] & 0b00000011) << 9;
 
         // 9 qqqqqqqq
@@ -371,6 +368,56 @@ namespace rtt {
 
     }
 
+
+
+
+	void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf){
+		std::cout << "LowLevelRobotFeedback: " << std::endl;
+
+		std::cout << "    id               : " << llrf.id               << std::endl;
+		std::cout << "    wheelLeftFront   : " << llrf.wheelLeftFront   << std::endl;
+		std::cout << "    wheelRightFront  : " << llrf.wheelRightFront  << std::endl;
+		std::cout << "    wheelLeftBack    : " << llrf.wheelLeftBack    << std::endl;
+		std::cout << "    wheelRightBack   : " << llrf.wheelRightBack   << std::endl;
+		std::cout << "    genevaDriveState : " << llrf.genevaDriveState << std::endl;
+		std::cout << "    batteryState     : " << llrf.batteryState     << std::endl;
+		std::cout << "    position_x       : " << llrf.position_x       << std::endl;
+		std::cout << "    position_y       : " << llrf.position_y       << std::endl;
+		std::cout << "    rho              : " << llrf.rho              << std::endl;
+		std::cout << "    theta            : " << llrf.theta            << std::endl;
+		std::cout << "    orientation      : " << llrf.orientation      << std::endl;
+		std::cout << "    angularVelocity  : " << llrf.angularVelocity  << std::endl;
+		std::cout << "    ballSensor       : " << llrf.ballSensor       << std::endl;
+		std::cout << "    acceleration_x   : " << llrf.acceleration_x   << std::endl;
+		std::cout << "    acceleration_y   : " << llrf.acceleration_y   << std::endl;
+		std::cout << "    velocity_angular : " << llrf.velocity_angular << std::endl;
+
+		std::cout << std::endl;
+	}
+
+	void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback){
+		std::cout << "RobotFeedback: " << std::endl;
+
+		std::cout << "id               : " << feedback.id               << std::endl;
+		std::cout << "wheelLeftFront   : " <<(feedback.wheelLeftFront  	? "1" : "0") << std::endl;
+		std::cout << "wheelRightFront  : " <<(feedback.wheelRightFront 	? "1" : "0") << std::endl;
+		std::cout << "wheelLeftBack    : " <<(feedback.wheelLeftBack   	? "1" : "0") << std::endl;
+		std::cout << "wheelRightBack   : " <<(feedback.wheelRightBack  	? "1" : "0") << std::endl;
+		std::cout << "genevaDriveState : " <<(feedback.genevaDriveState	? "1" : "0") << std::endl;
+		std::cout << "batteryState     : " <<(feedback.batteryState     ? "1" : "0") << std::endl;
+		std::cout << "xPosRobot        : " << feedback.position_x       << std::endl;
+		std::cout << "yPosRobot        : " << feedback.position_y      	<< std::endl;
+		std::cout << "rho              : " << feedback.rho              << std::endl;
+		std::cout << "theta            : " << feedback.theta            << std::endl;
+		std::cout << "orientation      : " << feedback.rotation         << std::endl;
+		std::cout << "angularVelocity  : " << feedback.angularVelocity 	<< std::endl;
+		std::cout << "ballSensor       : " << feedback.ballSensor  		<< std::endl;
+		std::cout << "xAcceleration    : " << feedback.acceleration_x  	<< std::endl;
+		std::cout << "yAcceleration    : " << feedback.acceleration_y  	<< std::endl;
+		std::cout << "angularRate      : " << feedback.velocity_angular	<< std::endl;
+
+		std::cout << std::endl;
+	}
 
 
 

@@ -75,8 +75,6 @@ SlowParam<bool> grSimBatch("grsim/batching", true);
 
 
 
-
-
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
@@ -180,6 +178,7 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	// Read bytes into hexBuffer until '\n' appears
 	ROS_DEBUG("[readPackedRobotFeedback] Reading feedback...");
 	size_t bytesReceived = boost::asio::read_until(serialPort, hexBuffer, '\n', ec);
+	ROS_DEBUG("[readPackedRobotFeedback] Feedback read");
 
 	// Check if an error occured while reading
 	if(ec){
@@ -266,6 +265,7 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 	// Write the bytes to the basestation
 	ROS_DEBUG("[sendRobotCommand] Writing command...");
 	b::asio::write(serialPort, boost::asio::buffer(ppm.data(), ppm.size()), ec);
+	ROS_DEBUG("[readPackedRobotFeedback] Command written");
 
 	// Check the error_code
 	switch (ec.value()) {
@@ -363,6 +363,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 	}else
 	if(currentMode == Mode::SERIAL){
 		SerialResultStatus result = processSerialCommand(command);
+
 		switch (result) {
 			case SerialResultStatus::ACK:
 				acks++;
@@ -385,7 +386,6 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand>& msgEvent) {
 
     auto const & msg = *msgEvent.getMessage();
-
     auto pubName = msgEvent.getPublisherName();
 
     int robotLoc = pubName.find("robot");
@@ -412,7 +412,6 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
                 ROS_ERROR_STREAM("Message sent by robot " << *robotID << " is not the same as ID in message which is " << msg.id << "!");
             }
         } else {
-            // Parsing failed; let the message through, probably some test node.
             ROS_ERROR("Parsing failed!");
         }
     } else {
@@ -447,7 +446,7 @@ int main(int argc, char *argv[]) {
     // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
-    ros::Rate loop_rate(roleHz);
+    ros::Rate loop_rate(200);
 	ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
 	using namespace std;
@@ -455,7 +454,10 @@ int main(int argc, char *argv[]) {
 
 	high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
 
-//	int nTick = 0;
+	int nTick = 0;
+
+	rtt::packed_robot_feedback fb;
+
 //	while (ros::ok()) {
 //		loop_rate.sleep();
 //		ros::spinOnce();
@@ -468,12 +470,12 @@ int main(int argc, char *argv[]) {
 //		// └──────────────────┘
 //		ROS_INFO_STREAM("\nTick " << ++nTick);
 //		lastStatistics = timeNow;
-//		readPackedRobotFeedback();
+//		readPackedRobotFeedback(fb);
 //	}
 //	return 0;
 
     // Publisher and subscriber to get robotcommands
-    subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
+    subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommandWithIDCheck);
     // Halt subscriber
     subHalt = n.subscribe("halt", 1, processHalt);
 	// Publisher for the robot feedback
@@ -484,6 +486,10 @@ int main(int argc, char *argv[]) {
 	// Check if the serial port is open
 	if(currentMode == Mode::SERIAL && !ensureSerialport()){
 		ROS_FATAL("Port not open. Can't communicate with the robots");
+	}
+
+	for(int i = 0; i < 16; i++){
+		serialStatusMap[i] = roboteam_msgs::RobotSerialStatus();
 	}
 
 
@@ -555,24 +561,24 @@ int main(int argc, char *argv[]) {
 				ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
 
 				acks=0;
+				acks=0;
 				nacks=0;
 
-				/* Emiel : TODO Check if anything actually listens to roboteam_msgs::RobotSerialStatus
-				// Publish any status info on the robots
+				std::stringstream ssStatus;
+				ssStatus << std::endl;
+
 				for (auto &pair : serialStatusMap) {
 					int id = pair.first;
-					roboteam_msgs::RobotSerialStatus &status = pair.second;
+					roboteam_msgs::RobotSerialStatus& status = pair.second;
 
-					if (status.start_timeframe == ros::Time(0)) {
-						// This is a new status message.
-						// It has been initialized with an id of 0.
-						// So we need to set it correctly.
-						status.id = id;
-					} else {
-						// This status message is ready to be sent.
-						status.end_timeframe = ros::Time::now();
+					status.id = id;
+					status.end_timeframe = ros::Time::now();
 
-						pubSerialStatus.publish(status);
+					ssStatus << id;
+					if(id < 10) ssStatus << " ";
+					ssStatus << ": " << status.acks << "/" << (status.acks + status.nacks) << " \t";
+					if((id+1) % 4 == 0){
+						ssStatus << std::endl;
 					}
 
 					// Set the new start time.
@@ -581,7 +587,8 @@ int main(int argc, char *argv[]) {
 					status.acks = 0;
 					status.nacks = 0;
 				}
-				*/
+
+				ROS_INFO_STREAM(ssStatus.str());
 
             }
             // ┌──────────────────┐

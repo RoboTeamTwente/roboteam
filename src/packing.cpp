@@ -51,30 +51,44 @@ namespace rtt {
      * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
      * uses this internally to convert a RobotCommand into something workable.
      */
-    LowLevelRobotCommand createLowLevelRobotCommand(roboteam_msgs::RobotCommand const &command, b::optional<roboteam_msgs::World> const &worldOpt) {
+    LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotCommand& command, const b::optional<roboteam_msgs::World>& worldOpt) {
 
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
         double theta = command.x_vel == 0 ? 0 : atan(command.y_vel / command.x_vel);
 
         LowLevelRobotCommand llrc {};
-                                                                                                // Units           Represented values
-        llrc.id                 = command.id;                                                   // [0, 15]         [0, 15]
-        llrc.rho                = (int)floor(rho * 250);                                        // [0, 2047]       [0, 8.191]
-        llrc.theta              = (int)floor(theta * (1024 / M_PI));                            // [-1024, 1023]   [-pi, pi>
-        llrc.driving_reference  = false;                                                        // [0, 1]          {true, false}
-        llrc.use_cam_info       = false;                                                        // [0, 1]          {true, false}
-        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));                 // [-512, 511]     [-8*2pi, 8*2pi]
-        llrc.debug_info         = true;                                                         // [0, 1]          {true, false}
-        llrc.do_kick            = command.kicker;                                               // [0, 1]          {true, false}
-        llrc.do_chip            = command.chipper;                                              // [0, 1]          {true, false}
-        llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced;              // [0, 1]          {true, false}
-        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);                    // [0, 255]        [0, 100]%
-        llrc.velocity_dribbler  = 0;//(int)floor(command.dribbler * (100 / 255));              // [0, 255]        [0, 100]%
-        llrc.geneva_drive_state = 0;//command.geneva_state - 3;                                     // [(0)1, 5]       [-2, 2]
-        llrc.cam_position_x     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
-        llrc.cam_position_y     = 0;                                                            // [-4096, 4095]   [-10.24, 10.23]
-        llrc.cam_rotation       = 0;                                                            // [-1024, 1023]   [-pi, pi>
+                                                                                   // Units           Represented values
+        llrc.id                 = command.id;                                      // [0, 15]         [0, 15]
+        llrc.rho                = (int)floor(rho * 250);                           // [0, 2047]       [0, 8.191]
+        llrc.theta              = (int)floor(theta * (1024 / M_PI));               // [-1024, 1023]   [-pi, pi>
+        llrc.driving_reference  = false;                                           // [0, 1]          {true, false}
+        llrc.use_cam_info       = false;                                           // [0, 1]          {true, false}
+        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));    // [-512, 511]     [-8*2pi, 8*2pi]
+        llrc.debug_info         = true;                                            // [0, 1]          {true, false}
+        llrc.do_kick            = command.kicker;                                  // [0, 1]          {true, false}
+        llrc.do_chip            = command.chipper;                                 // [0, 1]          {true, false}
+        llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
+        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);       // [0, 255]        [0, 100]%
+        llrc.velocity_dribbler  = 0;//(int)floor(command.dribbler * (100 / 255));  // [0, 255]        [0, 100]%
+        llrc.geneva_drive_state = 0;//command.geneva_state - 3;                    // [(0)1, 5]       [-2, 2]
+        llrc.cam_position_x     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
+        llrc.cam_position_y     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
+        llrc.cam_rotation       = 0;                                               // [-1024, 1023]   [-pi, pi>
+
+		if(worldOpt) {
+			try {
+				roboteam_msgs::WorldRobot robot = worldOpt->us.at(command.id);
+				llrc.cam_position_x = (int) (robot.pos.x / 10.24 * 4096);
+				llrc.cam_position_y = (int) (robot.pos.y / 10.24 * 4096);
+				llrc.cam_rotation   = (int) floor(robot.angle / M_PI * 1024);
+				llrc.use_cam_info   = true;
+			}catch(std::out_of_range e){
+				ROS_WARN_STREAM("[createLowLevelRobotCommand] Robot " << command.id << " not present in World! Not adding camera data");
+			}catch(std::exception e){
+				ROS_WARN_STREAM("[createLowLevelRobotCommand] Something went wrong while adding camera data for robot " << command.id << " : " << e.what());
+			}
+		}
 
         return llrc;
     }
@@ -367,8 +381,48 @@ namespace rtt {
 
     }
 
+	void printRobotCommand(const roboteam_msgs::RobotCommand& cmd){
+		std::cout << "RobotCommand: " << std::endl;
 
+		std::cout << "    id             : " << cmd.id                  << std::endl;
+		std::cout << "    active         : " << (int)cmd.active         << std::endl;
+		std::cout << "    x_vel          : " << cmd.x_vel               << std::endl;
+		std::cout << "    y_vel          : " << cmd.y_vel               << std::endl;
+		std::cout << "    w              : " << cmd.w                   << std::endl;
+		std::cout << "    dribbler       : " << (int)cmd.dribbler       << std::endl;
+		std::cout << "    kicker         : " << (int)cmd.kicker         << std::endl;
+		std::cout << "    kicker_forced  : " << (int)cmd.kicker_forced  << std::endl;
+		std::cout << "    kicker_vel     : " << cmd.kicker_vel          << std::endl;
+		std::cout << "    chipper        : " << (int)cmd.chipper        << std::endl;
+		std::cout << "    chipper_forced : " << (int)cmd.chipper_forced << std::endl;
+		std::cout << "    chipper_vel    : " << cmd.chipper_vel         << std::endl;
+		std::cout << "    geneva_state   : " << cmd.geneva_state        << std::endl;
 
+		std::cout << std::endl;
+	}
+
+	void printLowLevelRobotCommand(const LowLevelRobotCommand& llrc){
+		std::cout << "LowLevelRobotCommand: " << std::endl;
+
+		std::cout << "    id                 : " << llrc.id                 << std::endl;
+		std::cout << "    rho                : " << llrc.rho                << std::endl;
+		std::cout << "    theta              : " << llrc.theta              << std::endl;
+		std::cout << "    driving_reference  : " << llrc.driving_reference  << std::endl;
+		std::cout << "    use_cam_info       : " << llrc.use_cam_info       << std::endl;
+		std::cout << "    velocity_angular   : " << llrc.velocity_angular   << std::endl;
+		std::cout << "    debug_info         : " << llrc.debug_info         << std::endl;
+		std::cout << "    do_kick            : " << llrc.do_kick            << std::endl;
+		std::cout << "    do_chip            : " << llrc.do_chip            << std::endl;
+		std::cout << "    kick_chip_forced   : " << llrc.kick_chip_forced   << std::endl;
+		std::cout << "    kick_chip_power    : " << llrc.kick_chip_power    << std::endl;
+		std::cout << "    velocity_dribbler  : " << llrc.velocity_dribbler  << std::endl;
+		std::cout << "    geneva_drive_state : " << llrc.geneva_drive_state << std::endl;
+		std::cout << "    cam_position_x     : " << llrc.cam_position_x     << std::endl;
+		std::cout << "    cam_position_y     : " << llrc.cam_position_y     << std::endl;
+		std::cout << "    cam_rotation       : " << llrc.cam_rotation       << std::endl;
+
+		std::cout << std::endl;
+	}
 
 	void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf){
 		std::cout << "LowLevelRobotFeedback: " << std::endl;

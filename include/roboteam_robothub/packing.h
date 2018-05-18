@@ -67,6 +67,7 @@ namespace rtt {
 
     using packed_protocol_message = std::array<uint8_t, 13>;
     using packed_robot_feedback = std::array<uint8_t, 23>;
+	using boring_ack = std::array<uint8_t, 2>;
 
     // Software => Basestation
     LowLevelRobotCommand createLowLevelRobotCommand(
@@ -80,6 +81,10 @@ namespace rtt {
 
     // Basestation => Software
     LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
+
+	// Printing functions
+	void printRobotCommand(const roboteam_msgs::RobotCommand& cmd);
+	void printLowLevelRobotCommand(const LowLevelRobotCommand& llrc);
 	void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf);
 	void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback);
 

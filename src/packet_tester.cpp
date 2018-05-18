@@ -34,26 +34,6 @@ namespace rtt {
         std::cout << "    chipper_forced : " << (int)cmd.chipper_forced << std::endl;
         std::cout << "    chipper_vel    : " << cmd.chipper_vel         << std::endl;
         std::cout << "    geneva_state   : " << cmd.geneva_state        << std::endl;
-
-    }
-
-    void printllrc(LowLevelRobotCommand llrc){
-        std::cout << "    id                 : " << llrc.id << std::endl;
-        std::cout << "    rho                : " << llrc.rho << std::endl;
-        std::cout << "    theta              : " << llrc.theta << std::endl;
-        std::cout << "    driving_reference  : " << llrc.driving_reference << std::endl;
-        std::cout << "    use_cam_inf        : " << llrc.use_cam_info << std::endl;
-        std::cout << "    velocity_angular   : " << llrc.velocity_angular << std::endl;
-        std::cout << "    debug_info         : " << llrc.debug_info << std::endl;
-        std::cout << "    do_kick            : " << llrc.do_kick << std::endl;
-        std::cout << "    do_chip            : " << llrc.do_chip << std::endl;
-        std::cout << "    kick_chip_forced   : " << llrc.kick_chip_forced << std::endl;
-        std::cout << "    kick_chip_power    : " << llrc.kick_chip_power << std::endl;
-        std::cout << "    velocity_dribbler  : " << llrc.velocity_dribbler << std::endl;
-        std::cout << "    geneva_drive_state : " << llrc.geneva_drive_state << std::endl;
-        std::cout << "    cam_position_x     : " << llrc.cam_position_x << std::endl;
-        std::cout << "    cam_position_y     : " << llrc.cam_position_y << std::endl;
-        std::cout << "    cam_rotation       : " << llrc.cam_rotation << std::endl;
     }
 
     void printbits(packed_protocol_message byteArr){
@@ -110,7 +90,7 @@ namespace rtt {
         std::cout << "\nRobotCommand Max" << std::endl;
         printcmd(cmdMax);
         std::cout << "\nLowLevelRobotCommand Max" << std::endl;
-        printllrc(llrc);
+        rtt::printLowLevelRobotCommand(llrc);
 
         roboteam_msgs::RobotCommand cmdMin;
 
@@ -119,7 +99,7 @@ namespace rtt {
         std::cout << "\nRobotCommand Min" << std::endl;
         printcmd(cmdMin);
         std::cout << "\nLowLevelRobotCommand Min" << std::endl;
-        printllrc(llrc);
+        rtt::printLowLevelRobotCommand(llrc);
 
         boost::optional<packed_protocol_message> byteArr = createRobotPacket(llrc);
 
@@ -172,32 +152,42 @@ namespace rtt {
             thing3.b[3],
         };
 
-        LowLevelRobotFeedback y = createRobotFeedback(x);
-
-        std::cout << "id " << y.id << std::endl;
-        std::cout << "wheelLeftFront " << y.wheelLeftFront << std::endl;
-        std::cout << "wheelRightFront " << y.wheelRightFront << std::endl;
-        std::cout << "wheelLeftBack " << y.wheelLeftBack << std::endl;
-        std::cout << "wheelRightBack " << y.wheelRightBack << std::endl;
-        std::cout << "genevaDriveState " << y.genevaDriveState << std::endl;
-        std::cout << "batteryState " << y.batteryState << std::endl;
-        std::cout << "position_x " << y.position_x << std::endl;
-        std::cout << "position_y " << y.position_y << std::endl;
-        std::cout << "rho " << y.rho << std::endl;
-        std::cout << "theta " << y.theta << std::endl;
-        std::cout << "orientation " << y.orientation << std::endl;
-        std::cout << "angularVelocity " << y.angularVelocity << std::endl;
-        std::cout << "ballSensor " << y.ballSensor << std::endl;
-
-        std::cout << "acceleration_x " << y.acceleration_x << std::endl;
-        std::cout << "acceleration_y " << y.acceleration_y << std::endl;
-        std::cout << "velocity_angular " << y.velocity_angular << std::endl;
+        LowLevelRobotFeedback llrf = createRobotFeedback(x);
+        rtt::printLowLevelRobotFeedback(llrf);
 
     }
 
 } // rtt
 
+void test_cllrc_fakeWorld(){
+	std::cout << "[test_cllrc_fakeWorld]" << std::endl;
+
+	// Create a fake world
+	roboteam_msgs::World world;
+	std::cout << "[test_cllrc_fakeWorld] World created" << std::endl;
+
+	// Create a fake robot
+	roboteam_msgs::WorldRobot robot;
+	// Set positions of robot 0
+	robot.pos.x = 1;
+	robot.pos.y = 1;
+	robot.angle = M_PI / 2;
+	std::cout << "[test_cllrc_fakeWorld] Robot created" << std::endl;
+
+	world.us.push_back(robot);
+	std::cout << "[test_cllrc_fakeWorld] Robot added to world" << std::endl;
+
+	// Create a fake command
+	roboteam_msgs::RobotCommand cmd;
+	cmd.id = 0;
+
+	rtt::LowLevelRobotCommand llrc = rtt::createLowLevelRobotCommand(cmd, world);
+	rtt::printLowLevelRobotCommand(llrc);
+}
+
 int main(int argc, char *argv[]) {
+
+	test_cllrc_fakeWorld();	return 0;
 
     std::cout << "argc: " << argc << std::endl;
     for(int i = 1; i < argc; i++){
@@ -228,7 +218,7 @@ int main(int argc, char *argv[]) {
 
         std::cout << "###" << std::endl;
         rtt::LowLevelRobotCommand llrc = rtt::createLowLevelRobotCommand(cmd);
-        rtt:printllrc(llrc);
+        rtt:printLowLevelRobotCommand(llrc);
 
         std::cout << "###" << std::endl;
         boost::optional<rtt::packed_protocol_message> byteArr = rtt::createRobotPacket(llrc);

@@ -9,6 +9,7 @@
 #include <chrono>
 #include <ios>
 #include <string>
+#include <signal.h>
 
 namespace b = boost;
 
@@ -62,36 +63,45 @@ ros::Publisher pubSerialStatus;
 Mode currentMode = Mode::UNDEFINED;
 bool halt = false;
 
-void processHalt(const std_msgs::Bool::ConstPtr &msg) {
-    ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
-    halt = msg->data;
-}
+
 
 //ros::Publisher pub;
 
 rtt::GRSimCommander grsimCmd(true);
 SlowParam<bool> grSimBatch("grsim/batching", true);
 
-
-
-
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
-std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
-//std::string serial_file_path = "/dev/ttyACM2";
-//std::string serial_file_path = "/home/emiel/myfifo";
 
 bool serialPortOpen = false;
+
+
+std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
+
+// "The core object of boost::asio is io_service. This object is like the brain and the heart of the library."
+// create the I/O service that talks to the serial device
 boost::asio::io_service io;
+
 boost::asio::serial_port serialPort(io);
-SerialResultStatus prevResultStatus = SerialResultStatus::ACK;
+
+
+
+
+
 
 int acks = 0;
 int nacks = 0;
 int networkMsgs = 0;
 
+void processHalt(const std_msgs::Bool::ConstPtr &msg) {
+	ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
+	halt = msg->data;
+}
 
+void sigint(int signal){
+	std::cout << "sigint caught! : " << signal << std::endl;
+}
 
 
 int char2int(char input){
@@ -132,6 +142,8 @@ std::string string_to_hex(const std::string& input){
  * Ensures that the serial port is open. Attempts to open the serial port if it is closed
  * @returns true if the port is open, false otherwise
  */
+// Possible useful documentation
+//		http://www.college-code.com/blog/wp-content/uploads/2008/11/boost_serial_port_demo.cpp
 bool ensureSerialport(){
 	// If the serial port is not open at the moment
 	if (!serialPortOpen) {
@@ -139,6 +151,8 @@ bool ensureSerialport(){
 		// Open the serial port
 		ROS_INFO_STREAM("[ensureSerialport] Opening serial port " << serial_file_path << "...");
 		boost::system::error_code ec;
+
+//		serialPort.get_option(boost::asio::se);
 		serialPort.open(serial_file_path, ec);
 
 		// Check the status of the serial port
@@ -193,6 +207,7 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 
 	// Commit the buffer. (emptying?)
 	hexBuffer.commit(bytesReceived);
+
 	// No idea
 	std::istream is(&hexBuffer);
 	// Create a string to move the hex in the buffer to
@@ -223,6 +238,65 @@ SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray
 	else{
 		return SerialResultStatus::NACK;
 	}
+}
+
+SerialResultStatus readBoringAck(){
+	// Check if the serial port is open
+	if(!ensureSerialport()){
+		ROS_ERROR("[readBoringAck] Port not open. Can't read feedback");
+		return SerialResultStatus::CANT_OPEN_PORT;
+	}
+
+	// Create a buffer to receive the ack in
+	boost::asio::streambuf ackBuffer;
+	// Create an error_code object
+	b::system::error_code ec;
+
+	// Read bytes into buffer until '\n' appears
+	ROS_DEBUG("[readBoringAck] Reading ack...");
+	size_t bytesReceived = boost::asio::read_until(serialPort, ackBuffer, '\n', ec);
+	ROS_DEBUG("[readBoringAck] Ack read");
+
+	// Check if an error occured while reading
+	if(ec){
+		ROS_WARN_STREAM("[readBoringAck] An error occured! " << ec.message());
+		return SerialResultStatus::UNKNOWN_READ_ERROR;
+	}
+	// If there is an incorrect number of bytes
+	if(bytesReceived != 2){
+		ROS_WARN_STREAM("[readBoringAck] Dropping message with incorrect size " << bytesReceived);
+		return SerialResultStatus::STRANGE_RESPONSE;
+	}
+
+	// Commit the buffer. (emptying?)
+	ackBuffer.commit(bytesReceived);
+	// No idea
+	std::istream is(&ackBuffer);
+	// Create a string to move the hex in the buffer to
+	std::string ackString;
+	// Move the hex from the buffer to the string
+	std::getline(is, ackString);
+	// Replace \n with \0. Not used atm, but can't hurt
+	ackString[bytesReceived-1] = '\0';
+
+	if(ackString[0] & 1){
+		return SerialResultStatus::ACK;
+	}else{
+		return SerialResultStatus::NACK;
+	}
+
+	// === Print the values === //
+//	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
+//	for(int i = 0; i < 48; i += 2){
+//		printf("0x%c%c\t", hexString[i], hexString[i+1]);
+//	}
+//	printf("\n\t");
+//	for(int i = 0; i < 23; i++){
+//		printf("%i\t", byteArray.at(i));
+//	}
+//	printf("\n");
+	// ======================== //
+
 }
 
 /**
@@ -308,7 +382,8 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 
 	// Read the feedback from the robot
 	rtt::packed_robot_feedback feedback;
-	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
+//	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
+	SerialResultStatus readStatus = readBoringAck();
 
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
@@ -422,6 +497,55 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
 
 } // anonymous namespace
 
+void sigint2(int signal){
+	std::cout << "sigint caught! : " << signal << std::endl;
+	std::cout << "sigint caught! : " << signal << std::endl;
+	std::cout << "sigint caught! : " << signal << std::endl;
+}
+
+void stressTest(){
+
+	if(!ensureSerialport()) {
+		return;
+	}
+
+	std::cout << "Running stress test..." << std::endl;
+
+	roboteam_msgs::RobotCommand cmd;
+	cmd.id = 10;
+	rtt::packed_robot_feedback fb;
+
+	int counter = 0;
+	int acks = 0;
+
+	auto timeStart = std::chrono::high_resolution_clock::now();
+
+
+	while(counter < 1000){
+		writeRobotCommand(cmd);
+
+		SerialResultStatus s = readPackedRobotFeedback(fb);
+//		SerialResultStatus s = readBoringAck();
+
+
+		if(s == SerialResultStatus::ACK){
+			acks++;
+		}
+		counter++;
+	}
+
+	auto timeEnd = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds = timeEnd - timeStart;
+	auto x = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed_seconds);
+
+	std::cout << "Test complete!" << std::endl;
+	std::cout << "    Duration : " << x.count() << "ms, Hz : " << ((1000*counter)/(double)x.count()) << std::endl;
+	std::cout << "    Total    : " << counter << ", acks : " << acks << ", % : " << (100 * ((double)acks/(double)counter)) << std::endl;
+//	std::cout << "Duration :  " << duration << std::endl;
+
+
+}
+
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
 
@@ -429,7 +553,21 @@ int main(int argc, char *argv[]) {
     // │  Initialization  │
     // └──────────────────┘
 
-    // Create ROS node called robothub and subscribe to topic 'robotcommands'
+	// Bind ctrl+c to custom signal handler
+//	signal(SIGINT, sigint2);
+
+//	struct sigaction sigIntHandler;
+//
+//	sigIntHandler.sa_handler = sigint2;
+//	sigemptyset(&sigIntHandler.sa_mask);
+//	sigIntHandler.sa_flags = 0;
+//
+//	sigaction(SIGINT, &sigIntHandler, NULL);
+//
+
+//	stressTest(); return 0;
+
+	// Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
@@ -446,7 +584,7 @@ int main(int argc, char *argv[]) {
     // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
-    ros::Rate loop_rate(200);
+    ros::Rate loop_rate(80);
 	ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
 	using namespace std;
@@ -475,13 +613,13 @@ int main(int argc, char *argv[]) {
 //	return 0;
 
     // Publisher and subscriber to get robotcommands
-    subRobotCommands = n.subscribe("robotcommands", 100, processRobotCommandWithIDCheck);
+    subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
     // Halt subscriber
     subHalt = n.subscribe("halt", 1, processHalt);
 	// Publisher for the robot feedback
-	pubRobotFeedback = n.advertise<roboteam_msgs::RobotFeedback>("robotfeedback", 100);
+	pubRobotFeedback = n.advertise<roboteam_msgs::RobotFeedback>("robotfeedback", 1000);
 	// Publisher for the serial status
-    pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 100);
+    pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1000);
 
 	// Check if the serial port is open
 	if(currentMode == Mode::SERIAL && !ensureSerialport()){

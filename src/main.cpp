@@ -63,32 +63,20 @@ ros::Publisher pubSerialStatus;
 Mode currentMode = Mode::UNDEFINED;
 bool halt = false;
 
-
-
-//ros::Publisher pub;
-
 rtt::GRSimCommander grsimCmd(true);
 SlowParam<bool> grSimBatch("grsim/batching", true);
 
 std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
 std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
-
 bool serialPortOpen = false;
-
 
 std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
 
 // "The core object of boost::asio is io_service. This object is like the brain and the heart of the library."
 // create the I/O service that talks to the serial device
 boost::asio::io_service io;
-
 boost::asio::serial_port serialPort(io);
-
-
-
-
-
 
 int acks = 0;
 int nacks = 0;
@@ -98,11 +86,6 @@ void processHalt(const std_msgs::Bool::ConstPtr &msg) {
 	ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
 	halt = msg->data;
 }
-
-void sigint(int signal){
-	std::cout << "sigint caught! : " << signal << std::endl;
-}
-
 
 int char2int(char input){
 	if(input >= '0' && input <= '9') return input - '0';
@@ -151,8 +134,6 @@ bool ensureSerialport(){
 		// Open the serial port
 		ROS_INFO_STREAM("[ensureSerialport] Opening serial port " << serial_file_path << "...");
 		boost::system::error_code ec;
-
-//		serialPort.get_option(boost::asio::se);
 		serialPort.open(serial_file_path, ec);
 
 		// Check the status of the serial port
@@ -497,17 +478,10 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
 
 } // anonymous namespace
 
-void sigint2(int signal){
-	std::cout << "sigint caught! : " << signal << std::endl;
-	std::cout << "sigint caught! : " << signal << std::endl;
-	std::cout << "sigint caught! : " << signal << std::endl;
-}
-
 void stressTest(){
 
-	if(!ensureSerialport()) {
+	if(!ensureSerialport())
 		return;
-	}
 
 	std::cout << "Running stress test..." << std::endl;
 
@@ -520,17 +494,14 @@ void stressTest(){
 
 	auto timeStart = std::chrono::high_resolution_clock::now();
 
-
 	while(counter < 1000){
 		writeRobotCommand(cmd);
 
 		SerialResultStatus s = readPackedRobotFeedback(fb);
 //		SerialResultStatus s = readBoringAck();
 
-
-		if(s == SerialResultStatus::ACK){
+		if(s == SerialResultStatus::ACK)
 			acks++;
-		}
 		counter++;
 	}
 
@@ -541,9 +512,25 @@ void stressTest(){
 	std::cout << "Test complete!" << std::endl;
 	std::cout << "    Duration : " << x.count() << "ms, Hz : " << ((1000*counter)/(double)x.count()) << std::endl;
 	std::cout << "    Total    : " << counter << ", acks : " << acks << ", % : " << (100 * ((double)acks/(double)counter)) << std::endl;
-//	std::cout << "Duration :  " << duration << std::endl;
 
+}
 
+void mySigintHandler(int sig){
+	std::cout << "Shutting down..." << std::endl;
+	serialPort.close();
+
+	std::cout << "    Closing serial port..." << std::endl;
+	serialPort.close();
+	while(serialPort.is_open());
+
+	std::cout << "    Stopping io service..." << std::endl;
+	io.stop();
+	while(!io.stopped());
+
+	std::cout << "    Shutting down ros node..." << std::endl;
+	ros::shutdown();
+	while(ros::ok());
+	std::cout << "Shutdown complete" << std::endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -553,23 +540,15 @@ int main(int argc, char *argv[]) {
     // │  Initialization  │
     // └──────────────────┘
 
-	// Bind ctrl+c to custom signal handler
-//	signal(SIGINT, sigint2);
-
-//	struct sigaction sigIntHandler;
-//
-//	sigIntHandler.sa_handler = sigint2;
-//	sigemptyset(&sigIntHandler.sa_mask);
-//	sigIntHandler.sa_flags = 0;
-//
-//	sigaction(SIGINT, &sigIntHandler, NULL);
-//
-
-//	stressTest(); return 0;
+	//	stressTest(); return 0;
 
 	// Create ROS node called robothub and subscribe to topic 'robotcommands'
-    ros::init(argc, argv, "robothub");
+    ros::init(argc, argv, "robothub", ros::init_options::NoSigintHandler);
     ros::NodeHandle n;
+
+	// Bind ctrl+c to custom signal handler
+	// http://wiki.ros.org/roscpp/Overview/Initialization%20and%20Shutdown
+	signal(SIGINT, mySigintHandler);
 
 	// Get the mode of robothub, either "serial" or "grsim"
 	std::string modeStr = "undefined";
@@ -584,7 +563,7 @@ int main(int argc, char *argv[]) {
     // Get the number of iterations per second
     int roleHz = 120;
     ros::param::get("role_iterations_per_second", roleHz);
-    ros::Rate loop_rate(80);
+    ros::Rate loop_rate(roleHz);
 	ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
 	using namespace std;
@@ -626,6 +605,7 @@ int main(int argc, char *argv[]) {
 		ROS_FATAL("Port not open. Can't communicate with the robots");
 	}
 
+	// Initialize the map that holds the serial status of all robots
 	for(int i = 0; i < 16; i++){
 		serialStatusMap[i] = roboteam_msgs::RobotSerialStatus();
 	}

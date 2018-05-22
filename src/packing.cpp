@@ -114,7 +114,7 @@ namespace rtt {
         valuesInRange &= inRange(llrc.id, 0, 15);
         valuesInRange &= inRange(llrc.rho, 0, 2047);
         valuesInRange &= inRange(llrc.theta, -1024, 1023);
-        valuesInRange &= inRange(llrc.velocity_angular, 0, 511);
+        valuesInRange &= inRange(llrc.velocity_angular, -512, 511);
         valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
         valuesInRange &= inRange(llrc.velocity_dribbler, 0, 255);
         valuesInRange &= inRange(llrc.geneva_drive_state, 0, 4);
@@ -131,6 +131,7 @@ namespace rtt {
         // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
         if(!validateRobotPacket(llrc)){
             ROS_WARN_STREAM("LowLevelRobotCommand is not valid");
+            printLowLevelRobotCommand(llrc);
             return boost::none;
         }
 

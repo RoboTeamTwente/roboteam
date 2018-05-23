@@ -69,8 +69,8 @@ namespace rtt {
         llrc.do_kick            = command.kicker;                                  // [0, 1]          {true, false}
         llrc.do_chip            = command.chipper;                                 // [0, 1]          {true, false}
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
-        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);       // [0, 255]        [0, 100]%
-        llrc.velocity_dribbler  = 0;//(int)floor(command.dribbler * (100 / 255));  // [0, 255]        [0, 100]%
+        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 8);           // [0, 255]        [0, 100]%
+        llrc.velocity_dribbler  = command.dribbler ? 255 : 0;                      // [0, 255]        [0, 100]%
         llrc.geneva_drive_state = 0;//command.geneva_state - 3;                    // [(0)1, 5]       [-2, 2]
         llrc.cam_position_x     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]

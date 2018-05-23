@@ -55,13 +55,13 @@ namespace rtt {
 
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);
-        double theta = command.x_vel == 0 ? 0 : atan(command.y_vel / command.x_vel);
+        double theta = atan2(command.y_vel,command.x_vel);
 
         LowLevelRobotCommand llrc {};
                                                                                    // Units           Represented values
         llrc.id                 = command.id;                                      // [0, 15]         [0, 15]
         llrc.rho                = (int)floor(rho * 250);                           // [0, 2047]       [0, 8.191]
-        llrc.theta              = (int)floor(theta * (1024 / M_PI));               // [-1024, 1023]   [-pi, pi>
+        llrc.theta              = (int)floor(theta * 1023.5 / M_PI);               // [-1024, 1023]   [-pi, pi>
         llrc.driving_reference  = false;                                           // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                           // [0, 1]          {true, false}
         llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));    // [-512, 511]     [-8*2pi, 8*2pi]
@@ -69,8 +69,8 @@ namespace rtt {
         llrc.do_kick            = command.kicker;                                  // [0, 1]          {true, false}
         llrc.do_chip            = command.chipper;                                 // [0, 1]          {true, false}
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
-        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 100.0);       // [0, 255]        [0, 100]%
-        llrc.velocity_dribbler  = 0;//(int)floor(command.dribbler * (100 / 255));  // [0, 255]        [0, 100]%
+        llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 8);           // [0, 255]        [0, 100]%
+        llrc.velocity_dribbler  = command.dribbler ? 255 : 0;                      // [0, 255]        [0, 100]%
         llrc.geneva_drive_state = 0;//command.geneva_state - 3;                    // [(0)1, 5]       [-2, 2]
         llrc.cam_position_x     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
@@ -127,11 +127,11 @@ namespace rtt {
 
     /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
     boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
-
+        printLowLevelRobotCommand(llrc);
         // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
         if(!validateRobotPacket(llrc)){
             ROS_WARN_STREAM("LowLevelRobotCommand is not valid");
-            printLowLevelRobotCommand(llrc);
+            
             return boost::none;
         }
 

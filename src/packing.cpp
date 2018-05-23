@@ -84,9 +84,9 @@ namespace rtt {
 				llrc.cam_rotation   = (int) floor(robot.angle / M_PI * 1024);
 				llrc.use_cam_info   = true;
 			}catch(std::out_of_range e){
-				ROS_WARN_STREAM("[createLowLevelRobotCommand] Robot " << command.id << " not present in World! Not adding camera data");
+				ROS_WARN_STREAM_THROTTLE(1, "[createLowLevelRobotCommand] Robot " << command.id << " not present in World! Not adding camera data");
 			}catch(std::exception e){
-				ROS_WARN_STREAM("[createLowLevelRobotCommand] Something went wrong while adding camera data for robot " << command.id << " : " << e.what());
+				ROS_WARN_STREAM_THROTTLE(1, "[createLowLevelRobotCommand] Something went wrong while adding camera data for robot " << command.id << " : " << e.what());
 			}
 		}
 

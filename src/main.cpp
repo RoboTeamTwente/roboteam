@@ -10,6 +10,7 @@
 #include <ios>
 #include <string>
 #include <signal.h>
+#include <bitset>
 
 namespace b = boost;
 
@@ -51,6 +52,14 @@ enum class Mode {
 	UNDEFINED
 };
 
+enum ACK_FLAGS {
+	ACK         = 0b00000001,	// Ack received
+	BATTERY     = 0b00000010,	// Robot battery low!
+	BALL_SENSOR = 0b00000100	// Robot sees ball
+};
+
+// Subscriber to get LastWorld
+ros::Subscriber subWorldState;
 // Publisher and subscriber to get robotcommands
 ros::Subscriber subRobotCommands;
 // Halt subscriber
@@ -59,6 +68,8 @@ ros::Subscriber subHalt;
 ros::Publisher pubRobotFeedback;
 // Publisher for the serial status
 ros::Publisher pubSerialStatus;
+
+boost::optional<roboteam_msgs::World> LastWorld;
 
 Mode currentMode = Mode::UNDEFINED;
 bool halt = false;
@@ -260,11 +271,27 @@ SerialResultStatus readBoringAck(){
 	// Replace \n with \0. Not used atm, but can't hurt
 	ackString[bytesReceived-1] = '\0';
 
-	if(ackString[0] & 1){
-		return SerialResultStatus::ACK;
-	}else{
-		return SerialResultStatus::NACK;
+	char ackByte = ackString[0];
+//	std::bitset<8> x(ackByte);
+//	std::cout << x << std::endl;
+
+
+	// TODO Do something with the battery flag
+	if(ackByte & ACK_FLAGS::BATTERY){
+//		ROS_WARN_STREAM("Low battery detected!");
 	}
+
+	// TODO Do something with the ball sensor flag
+	if(ackByte & ACK_FLAGS::BALL_SENSOR){
+
+	}
+
+	if(ackByte & ACK_FLAGS::ACK)
+		return SerialResultStatus::ACK;
+	else
+		return SerialResultStatus::NACK;
+
+
 
 	// === Print the values === //
 //	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
@@ -293,14 +320,14 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 		return SerialResultStatus::CANT_OPEN_PORT;
 	}
 
-	// Get the latest world state
-	b::optional<roboteam_msgs::World> worldOptional;
-	if (rtt::LastWorld::have_received_first_world()) {
-		worldOptional = rtt::LastWorld::get();
-	}
+//	// Get the latest world state
+//	b::optional<roboteam_msgs::World> worldOptional;
+//	if (rtt::LastWorld::have_received_first_world()) {
+//		worldOptional = rtt::LastWorld::get();
+//	}
 
 	// Turn roboteam_msgs:RobotCommand into a message
-	boost::optional<rtt::packed_protocol_message> bytesOptional = rtt::createRobotPacket(robotCommand, worldOptional);
+	boost::optional<rtt::packed_protocol_message> bytesOptional = rtt::createRobotPacket(robotCommand, LastWorld);
 
 	// Check if the message was created successfully
 	if(!bytesOptional){
@@ -364,8 +391,8 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 	// Read the feedback from the robot
 	rtt::packed_robot_feedback feedback;
 //	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
-	SerialResultStatus readStatus = readBoringAck();
-
+//	SerialResultStatus readStatus = readBoringAck();
+	SerialResultStatus readStatus = SerialResultStatus::ACK;
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
 		return readStatus;
@@ -439,6 +466,10 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 
 }
 
+void processWorldState(const roboteam_msgs::World& world){
+	LastWorld = world;
+}
+
 void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand>& msgEvent) {
 
     auto const & msg = *msgEvent.getMessage();
@@ -483,10 +514,11 @@ void stressTest(){
 	if(!ensureSerialport())
 		return;
 
-	std::cout << "Running stress test..." << std::endl;
+	const int id = 7;
+	std::cout << "Running stress test on robot " << id << " ..." << std::endl;
 
 	roboteam_msgs::RobotCommand cmd;
-	cmd.id = 10;
+	cmd.id = id;
 	rtt::packed_robot_feedback fb;
 
 	int counter = 0;
@@ -494,15 +526,20 @@ void stressTest(){
 
 	auto timeStart = std::chrono::high_resolution_clock::now();
 
-	while(counter < 1000){
+	while(counter < 100000){
 		writeRobotCommand(cmd);
 
-		SerialResultStatus s = readPackedRobotFeedback(fb);
-//		SerialResultStatus s = readBoringAck();
+//		SerialResultStatus s = readPackedRobotFeedback(fb);
+		SerialResultStatus s = readBoringAck();
 
 		if(s == SerialResultStatus::ACK)
 			acks++;
 		counter++;
+
+		if(counter % 10000 == 0){
+			std::cout << counter << "..." << std::endl;
+			fflush(stdout);
+		}
 	}
 
 	auto timeEnd = std::chrono::high_resolution_clock::now();
@@ -516,7 +553,7 @@ void stressTest(){
 }
 
 void mySigintHandler(int sig){
-	std::cout << "Shutting down..." << std::endl;
+	std::cout << "Shutting down...(" << sig << ")" << std::endl;
 	serialPort.close();
 
 	std::cout << "    Closing serial port..." << std::endl;
@@ -540,7 +577,7 @@ int main(int argc, char *argv[]) {
     // │  Initialization  │
     // └──────────────────┘
 
-	//	stressTest(); return 0;
+//		stressTest(); return 0;
 
 	// Create ROS node called robothub and subscribe to topic 'robotcommands'
     ros::init(argc, argv, "robothub", ros::init_options::NoSigintHandler);
@@ -590,6 +627,9 @@ int main(int argc, char *argv[]) {
 //		readPackedRobotFeedback(fb);
 //	}
 //	return 0;
+
+	// Subscriber to get LastWorld
+	subWorldState = n.subscribe("world_state", 1, processWorldState);
 
     // Publisher and subscriber to get robotcommands
     subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);

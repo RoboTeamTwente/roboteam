@@ -307,6 +307,23 @@ SerialResultStatus readBoringAck(){
 
 }
 
+    void printbits(rtt::packed_protocol_message byteArr){
+        for(int b = 0; b < 12; b++){
+
+            std::cout << "    ";
+            uint8_t byte = byteArr[b];
+//            for (int i = 0; i < 8; i++) {
+            for (int i = 7; i >= 0; i--) {
+                if ((byte & (1 << i)) == (1 << i)) {
+                    std::cout << "1";
+                } else {
+                    std::cout << "0";
+                }
+            }
+            std::cout << std::endl;
+        }
+    }
+
 /**
  * Takes a robot command, converts it to bytes, and sends it to the robot
  * @param robotCommand : The command to be sent to the robot
@@ -336,11 +353,13 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 	// Get the bytes from the message
 	rtt::packed_protocol_message ppm = *bytesOptional;
 
+	// printbits(*bytesOptional);
+
 	// Print the bytes in HEX
-//	for (int i = 0; i < ppm.size(); i++) {
-//		printf("%02x ", ppm.data()[i]);
-//	}
-//	printf("\n");
+	// for (int i = 0; i < ppm.size(); i++) {
+	// 	printf("%02x ", ppm.data()[i]);
+	// }
+	// printf("\n");
 
 	// Error code
 	b::system::error_code ec;
@@ -391,8 +410,8 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 	// Read the feedback from the robot
 	rtt::packed_robot_feedback feedback;
 //	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
-//	SerialResultStatus readStatus = readBoringAck();
-	SerialResultStatus readStatus = SerialResultStatus::ACK;
+	SerialResultStatus readStatus = readBoringAck();
+	// SerialResultStatus readStatus = SerialResultStatus::ACK;
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
 		return readStatus;

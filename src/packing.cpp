@@ -78,11 +78,18 @@ namespace rtt {
 
 		if(worldOpt) {
 			try {
-				roboteam_msgs::WorldRobot robot = worldOpt->us.at(command.id);
-				llrc.cam_position_x = (int) (robot.pos.x / 10.24 * 4096);
-				llrc.cam_position_y = (int) (robot.pos.y / 10.24 * 4096);
-				llrc.cam_rotation   = (int) floor(robot.angle / M_PI * 1024);
-				llrc.use_cam_info   = true;
+                boost::optional<roboteam_msgs::WorldRobot> findBot = getWorldBot(command.id, true, *worldOpt);
+                roboteam_msgs::WorldRobot robot;
+                if (findBot) {
+                    robot = *findBot;
+                    llrc.cam_position_x = (int) (robot.pos.x / 10.24 * 4096);
+                    llrc.cam_position_y = (int) (robot.pos.y / 10.24 * 4096);
+                    llrc.cam_rotation   = (int) floor(robot.angle / M_PI * 1024);
+                    llrc.use_cam_info   = true;
+                }
+				// roboteam_msgs::WorldRobot robot = worldOpt->us.at(command.id);
+
+				
 			}catch(std::out_of_range e){
 				ROS_WARN_STREAM_THROTTLE(1, "[createLowLevelRobotCommand] Robot " << command.id << " not present in World! Not adding camera data");
 			}catch(std::exception e){
@@ -158,7 +165,7 @@ namespace rtt {
             (0b11100000 & (llrc.theta << 5)) |              // ccc00000 11 bits; bits  2-0 to 7-5
             (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
             (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
-            (0b00000001 & (llrc.velocity_angular >> 8))     // 0000000g  9 bits; bit     8 to   0
+            (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg  9 bits; bit     8 to   0
         );
 
         byteArr[4] = static_cast<uint8_t>(  // gggggggg

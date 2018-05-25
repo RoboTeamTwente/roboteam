@@ -25,6 +25,7 @@ namespace rtt {
         int theta;              //Velocity angle              [-1024, 1023]     0.00307rad    [-pi, pi>               11
         bool driving_reference; //Driving reference           [0, 1]            -             {true, false}            1
         bool use_cam_info;      //Use camera information      [0, 1]            -             {true, false}            1
+        bool use_angle;         //Go to the newly set angle   [0, 1]            -             {true, false}            1
         int velocity_angular;   //Reference angular velocity  [-512, 511]       0.098rad/s    [-8*2pi, 8*2pi]         10
         bool debug_info;        //Debug information           [0, 1]            -             {true, false}            1
         bool do_kick;           //Kick                        [0, 1]            -             {true, false}            1

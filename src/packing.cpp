@@ -64,6 +64,7 @@ namespace rtt {
         llrc.theta              = (int)floor(theta * 1023.5 / M_PI);               // [-1024, 1023]   [-pi, pi>
         llrc.driving_reference  = false;                                           // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                           // [0, 1]          {true, false}
+        llrc.use_angle          = command.use_angle;                               // [0, 1]          {true, false}
         llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));    // [-512, 511]     [-8*2pi, 8*2pi]
         llrc.debug_info         = true;                                            // [0, 1]          {true, false}
         llrc.do_kick            = command.kicker;                                  // [0, 1]          {true, false}
@@ -134,7 +135,7 @@ namespace rtt {
 
     /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
     boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
-        printLowLevelRobotCommand(llrc);
+        // printLowLevelRobotCommand(llrc);
         // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
         if(!validateRobotPacket(llrc)){
             ROS_WARN_STREAM("LowLevelRobotCommand is not valid");
@@ -161,15 +162,16 @@ namespace rtt {
             llrc.theta >> 3                                 // cccccccc 11 bits; bits 10-8 to 7-0
         );
 
-        byteArr[3] = static_cast<uint8_t>(  // cccde0fg
+        byteArr[3] = static_cast<uint8_t>(  // cccdefgg
             (0b11100000 & (llrc.theta << 5)) |              // ccc00000 11 bits; bits  2-0 to 7-5
             (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
             (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
-            (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg  9 bits; bit     8 to   0
+            (0b00000100 & (llrc.use_angle) << 2) |          // 00000f00  1 bit ; bit     0 to   2
+            (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg 10 bits; bit     8 to   0
         );
 
         byteArr[4] = static_cast<uint8_t>(  // gggggggg
-            llrc.velocity_angular                           // gggggggg  8 bits; bits  7-0 to 7-0
+            llrc.velocity_angular                           // gggggggg 10 bits; bits  7-0 to 7-0
         );
 
         byteArr[5] = static_cast<uint8_t>(  // 0000hijk
@@ -417,6 +419,7 @@ namespace rtt {
 		std::cout << "    theta              : " << llrc.theta              << std::endl;
 		std::cout << "    driving_reference  : " << llrc.driving_reference  << std::endl;
 		std::cout << "    use_cam_info       : " << llrc.use_cam_info       << std::endl;
+        std::cout << "    use_angle          : " << llrc.use_angle          << std::endl;
 		std::cout << "    velocity_angular   : " << llrc.velocity_angular   << std::endl;
 		std::cout << "    debug_info         : " << llrc.debug_info         << std::endl;
 		std::cout << "    do_kick            : " << llrc.do_kick            << std::endl;

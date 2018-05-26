@@ -278,7 +278,7 @@ SerialResultStatus readBoringAck(){
 
 	// TODO Do something with the battery flag
 	if(ackByte & ACK_FLAGS::BATTERY){
-//		ROS_WARN_STREAM("Low battery detected!");
+		ROS_WARN_STREAM_THROTTLE(1, "Low battery detected!");
 	}
 
 	// TODO Do something with the ball sensor flag
@@ -685,7 +685,7 @@ int main(int argc, char *argv[]) {
             roboteam_msgs::RobotCommand command;
             for (int i = 0; i < 16; ++i) {
                 command.id = i;
-
+				command.use_angle = false;
                 sendCommand(command);
             }
         }
@@ -706,8 +706,6 @@ int main(int argc, char *argv[]) {
 
             if (halt) {
                 ROS_WARN_STREAM("Halting status : !!!HALTING!!!");
-            } else {
-                ROS_INFO_STREAM("Halting status : Not halting");
             }
 
             // ┌──────────────────┐
@@ -733,7 +731,7 @@ int main(int argc, char *argv[]) {
 
 //				ROS_INFO_STREAM("Current port: " << serial_file_path );
 				ROS_INFO_STREAM("Sent messages the past second: " << total );
-				ROS_INFO_STREAM("Capacity: " << std::floor(total / 360.0) << "%");
+				ROS_INFO_STREAM("Capacity: " << std::floor(total / (8.0 * 60.0)) << "%");
 				ROS_INFO_STREAM("Acks    : " << acks << " (" << ackPercent << ")");
 				ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
 

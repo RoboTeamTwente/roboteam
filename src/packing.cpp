@@ -1,7 +1,5 @@
 #include "roboteam_robothub/packing.h"
-#include "roboteam_robothub/packet_tester.h"
 
-#include <array>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
@@ -22,20 +20,8 @@ namespace rtt {
 
     namespace {
 
-        uint8_t normalizeToByte(double const forceRaw, double const max, uint8_t normMax) {
-            if (forceRaw >= max) {
-                return normMax;
-            } else if (forceRaw < 0) {
-                return 0;
-            } else {
-                return forceRaw / max * normMax;
-            }
-        }
-
-        // Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils
-        // we can use that
-        boost::optional<roboteam_msgs::WorldRobot>
-        getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
+        // Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils, we can use that
+        boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
             std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
             for (const auto &bot : bots) {
                 if (bot.id == id) {
@@ -72,7 +58,7 @@ namespace rtt {
         llrc.kick_chip_forced   = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
         llrc.kick_chip_power    = (int)floor(kick_chip_power * 255 / 8);           // [0, 255]        [0, 100]%
         llrc.velocity_dribbler  = command.dribbler ? 255 : 0;                      // [0, 255]        [0, 100]%
-        llrc.geneva_drive_state = 0;//command.geneva_state - 3;                    // [(0)1, 5]       [-2, 2]
+        llrc.geneva_drive_state = command.geneva_state;                            // [(0)1, 5]       [-2, 2]
         llrc.cam_position_x     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_position_y     = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
         llrc.cam_rotation       = 0;                                               // [-1024, 1023]   [-pi, pi>
@@ -88,8 +74,6 @@ namespace rtt {
                     llrc.cam_rotation   = (int) floor(robot.angle / M_PI * 1024);
                     llrc.use_cam_info   = true;
                 }
-				// roboteam_msgs::WorldRobot robot = worldOpt->us.at(command.id);
-
 				
 			}catch(std::out_of_range e){
 				ROS_WARN_STREAM_THROTTLE(1, "[createLowLevelRobotCommand] Robot " << command.id << " not present in World! Not adding camera data");
@@ -110,6 +94,11 @@ namespace rtt {
         return (min <= val && val <= max);
     }
 
+	/**
+	 * Checks if the values of the LowLevelRobotCommand are all within the correct range
+	 * @param llrc : The LowLevelRobotCommand to be checked
+	 * @returns true if the LowLevelRobotCommand is correct, false otherwise
+	 */
     bool validateRobotPacket(LowLevelRobotCommand llrc){
 
         // inRange(val, min, max) is inclusive!;
@@ -125,7 +114,7 @@ namespace rtt {
         valuesInRange &= inRange(llrc.velocity_angular, -512, 511);
         valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
         valuesInRange &= inRange(llrc.velocity_dribbler, 0, 255);
-        valuesInRange &= inRange(llrc.geneva_drive_state, 0, 4);
+        valuesInRange &= inRange(llrc.geneva_drive_state, 0, 5);
         valuesInRange &= inRange(llrc.cam_position_x, -4096, 4095);
         valuesInRange &= inRange(llrc.cam_position_y, -4096, 4095);
         valuesInRange &= inRange(llrc.cam_rotation, -1024, 1023);
@@ -134,16 +123,20 @@ namespace rtt {
     }
 
     /* As described in this comment https://roboteamtwente2.slack.com/files/U6CPQLJ6S/F9V330Z2N/packet_proposal.txt */
-    boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
-        // printLowLevelRobotCommand(llrc);
+    /**
+     * Converts a LowLevelRobotCommand into a packet_protocol_message
+     * @param llrc : LowLevelRobotCommand to be converted into a packet_protocol_message
+     * @returns an optional packed_protocol_message, if the LowLevelRobotCommand can be validated
+     */
+	boost::optional<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc){
+
         // Values are automatically limited in the code below, but returning boost::none is a good idea nonetheless.
         if(!validateRobotPacket(llrc)){
             ROS_WARN_STREAM("LowLevelRobotCommand is not valid");
-            
+			printLowLevelRobotCommand(llrc);
             return boost::none;
         }
 
-        //Might still be wrong because certain people can't make their minds up
         packed_protocol_message byteArr;
 
         // Static cast truncates to the last 8 bits
@@ -167,7 +160,7 @@ namespace rtt {
             (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
             (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
             (0b00000100 & (llrc.use_angle) << 2) |          // 00000f00  1 bit ; bit     0 to   2
-            (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg 10 bits; bit     8 to   0
+            (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg 10 bits; bits  8-7 to 1-0
         );
 
         byteArr[4] = static_cast<uint8_t>(  // gggggggg
@@ -214,9 +207,13 @@ namespace rtt {
         return boost::optional<packed_protocol_message>(byteArr);
     }
 
-
-
-
+	/**
+	 * Converts a LowLevelRobotFeedback into a roboteam_msgs::RobotFeedback
+	 * TODO this function might be redundant, because LowLevelRobotFeedback and roboteam_msgs::RobotFeedback have exactly the same values
+	 * TODO consider removing this function, and immediately converting packed_robot_feedback to roboteam_msgs::RobotFeedback
+	 * @param feedback : LowLevelRobotFeedback to be converted
+	 * @returns a roboteam_msgs::RobotFeedback object
+	 */
     roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback){
         roboteam_msgs::RobotFeedback msg;
 
@@ -245,71 +242,6 @@ namespace rtt {
 
         return msg;
     }
-
-
-
-
-
-
-
-
-
-/*
- * For the Robot ACKs we use the following packet definition
- *
- *skipping some characters for better readability
-
-		Character   Description                 Values          Represented values    Units       Bits    Comment
-		a           Robot ID                    [0,15]          [0,31]                -              5    -
-		b           Left front wheel state      [0,1]           {true,false}          -              1    Indicates whether the left front wheel functions
-		c           Right front wheel state     [0,1]           {true,false}          -              1    Indicates whether the right front wheel functions
-		d           Left back wheel state       [0,1]           {true,false}          -              1    Indicates whether the left back wheel functions
-		e           Right back wheel state      [0,1]           {true,false}          -              1    Indicates whether the right back wheel functions
-		f           Geneva drive state          [0,1]           {true,false}          -              1    Indicates whether the Geneva drive functions
-		g           Battery state               [0,1]           {true,false}          -              1    States whether the battery is nearing depletion
-		h           x position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
-		k           y position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
-		m           rho            				[-1024,1023]    [?,?]		          	            11    Magnitude of the robot velocity vector
-		o           theta           			[-1024,1023]    [?,?]                               11    Angle of the robot velocity vector
-		p           Orientation                 [-1024,1023]    [-pi,pi>              0.00307rad    11    Angle of the facing direction. 2048 possible angles. Intervals of ~0.00307 rad
-		q           Angular velocity            [-1024,1023]    [?,?]                 0.049rad/s?   11
-		s           Ball sensor                 [0,128]         {?}			          -              7    Can be used to specify where on the dribbler the ball is located. For now a non-zero value represents the presence of the ball
-
-		Extra
-		t           Acceleration x              [0, 4294967295] [0, 32 bit float]     m/s/s         32    -
-		u           Acceleration y              [0, 4294967295] [0, 32 bit float]     m/s/s         32    -
-		v           Angular rate                [0, 4294967295] [0, 32 bit float]     m/s/s         32    raw angular velocity from xsense
-
-
-	===== Packet received from the robot =====
-		Byte      Config
-		 0        aaaaabcd
-		 1        efghhhhh
-		 2        hhhhhhhh
-		 3        kkkkkkkk
-		 4        kkkkkmmm
-		 5        mmmmmmmm
-		 6        oooooooo
-		 7        oooppppp
-		 8        ppppppqq
-		 9        qqqqqqqq
-		10        qsssssss
-
-		Extra
-		11        tttttttt
-		12        tttttttt
-		13        tttttttt
-		14        tttttttt
-		15        uuuuuuuu
-		16        uuuuuuuu
-		17        uuuuuuuu
-		18        uuuuuuuu
-		19        vvvvvvvv
-		20        vvvvvvvv
-		21        vvvvvvvv
-		22        vvvvvvvv
-
- */
 
 	/**
 	 * Converts the bytes received from the robot into a LowLevelRobotFeedback object
@@ -391,6 +323,8 @@ namespace rtt {
 
     }
 
+
+
 	void printRobotCommand(const roboteam_msgs::RobotCommand& cmd){
 		std::cout << "RobotCommand: " << std::endl;
 
@@ -399,6 +333,7 @@ namespace rtt {
 		std::cout << "    x_vel          : " << cmd.x_vel               << std::endl;
 		std::cout << "    y_vel          : " << cmd.y_vel               << std::endl;
 		std::cout << "    w              : " << cmd.w                   << std::endl;
+		std::cout << "    use_angle      : " << (int)cmd.use_angle      << std::endl;
 		std::cout << "    dribbler       : " << (int)cmd.dribbler       << std::endl;
 		std::cout << "    kicker         : " << (int)cmd.kicker         << std::endl;
 		std::cout << "    kicker_forced  : " << (int)cmd.kicker_forced  << std::endl;
@@ -484,46 +419,5 @@ namespace rtt {
 	}
 
 
-
-
-
-
-
-
-
-
-//    std::string byteToBinary(uint8_t const &byte) {
-//        std::string byteStr = "";
-//        for (int i = 0; i < 8; i++) {
-//            if ((byte & (1 << i)) == (1 << i)) {
-//                byteStr = "1" + byteStr;
-//            } else {
-//                byteStr = "0" + byteStr;
-//            }
-//        }
-//
-//        return byteStr;
-//    }
-
-
-
 } // rtt
 
-//bool operator==(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
-//    return false;
-//            lhs.id == rhs.id &&
-//            lhs.robot_vel == rhs.robot_vel &&
-//            lhs.ang == rhs.ang &&
-//            lhs.rot_cclockwise == rhs.rot_cclockwise &&
-//            lhs.w == rhs.w &&
-//            lhs.punt_power == rhs.punt_power &&
-//            lhs.do_kick == rhs.do_kick &&
-//            lhs.do_chip == rhs.do_chip &&
-//            lhs.forced == rhs.forced &&
-//            lhs.dribble_cclockwise == rhs.dribble_cclockwise &&
-//            lhs.dribble_vel == rhs.dribble_vel;
-//}
-//
-//bool operator!=(const rtt::LowLevelRobotCommand &lhs, const rtt::LowLevelRobotCommand &rhs) {
-//    return !(lhs == rhs);
-//}

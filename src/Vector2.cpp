@@ -89,8 +89,10 @@ Vector2 Vector2::closestPointOnVector(const Vector2& startPoint, const Vector2& 
 }
 
 Vector2 Vector2::stretchToLength(double desiredLength) const {
-    double currentLength = length();
-    double frac = desiredLength / currentLength;
+    if (length() == 0.0) {
+        return { desiredLength, 0 };
+    }
+    double frac = desiredLength / length();
     return { x*frac, y*frac };
 }
 

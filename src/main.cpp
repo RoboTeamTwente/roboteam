@@ -82,7 +82,12 @@ std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
 bool serialPortOpen = false;
 
-std::string serial_file_path = "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00";
+std::string serial_file_path = "No basestation selected!";
+std::string serial_file_paths[3] = {
+	"/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00",
+	"/dev/serial/by-id/usb-STMicroelectronics_Basestation_078-if00",
+	"/dev/serial/by-id/usb-STMicroelectronics_Basestation_080-if00",
+};
 
 // "The core object of boost::asio is io_service. This object is like the brain and the heart of the library."
 // create the I/O service that talks to the serial device
@@ -141,25 +146,31 @@ std::string string_to_hex(const std::string& input){
 bool ensureSerialport(){
 	// If the serial port is not open at the moment
 	if (!serialPortOpen) {
+		for(std::string path : serial_file_paths) {
+			// Open the serial port
+			ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << path << "...");
+			boost::system::error_code ec;
+			serialPort.open(path, ec);
 
-		// Open the serial port
-		ROS_INFO_STREAM("[ensureSerialport] Opening serial port " << serial_file_path << "...");
-		boost::system::error_code ec;
-		serialPort.open(serial_file_path, ec);
+			// Check the status of the serial port
+			switch (ec.value()) {
+				// Port opened
+				case boost::system::errc::success:
+					ROS_INFO("[ensureSerialport] Port opened");
+					serialPortOpen = true;
+					serial_file_path = path;
+					return true;
 
-		// Check the status of the serial port
-		switch (ec.value()) {
-
-			case boost::system::errc::success:
-				ROS_INFO("[ensureSerialport] Port opened");
-				serialPortOpen = true;
-				return true;
-
-			default:
-				ROS_ERROR_STREAM_THROTTLE(1, "[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
-				return false;
+				// Port not opened
+				default:
+					ROS_DEBUG_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
+			}
 		}
+		// No port could be opened
+		ROS_ERROR_STREAM("[ensureSerialPort] No serial port could be opened!");
+		return false;
 	}
+	// Port is already open
 	return true;
 }
 
@@ -411,7 +422,8 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 	rtt::packed_robot_feedback feedback;
 //	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
 	SerialResultStatus readStatus = readBoringAck();
-	// SerialResultStatus readStatus = SerialResultStatus::ACK;
+//  SerialResultStatus readStatus = SerialResultStatus::ACK;
+
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");
 		return readStatus;

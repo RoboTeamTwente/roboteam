@@ -82,6 +82,7 @@ std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
 
 bool serialPortOpen = false;
 
+std::string serial_file_path_param = "none";
 std::string serial_file_path = "No basestation selected!";
 std::string serial_file_paths[3] = {
 	"/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00",
@@ -146,11 +147,14 @@ std::string string_to_hex(const std::string& input){
 bool ensureSerialport(){
 	// If the serial port is not open at the moment
 	if (!serialPortOpen) {
-		for(std::string path : serial_file_paths) {
+
+
+		// If output device given
+		if(serial_file_path_param != "none"){
 			// Open the serial port
-			ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << path << "...");
+			ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << serial_file_path_param << "...");
 			boost::system::error_code ec;
-			serialPort.open(path, ec);
+			serialPort.open(serial_file_path_param, ec);
 
 			// Check the status of the serial port
 			switch (ec.value()) {
@@ -158,14 +162,35 @@ bool ensureSerialport(){
 				case boost::system::errc::success:
 					ROS_INFO("[ensureSerialport] Port opened");
 					serialPortOpen = true;
-					serial_file_path = path;
+					serial_file_path = serial_file_path_param;
 					return true;
-
 				// Port not opened
 				default:
-					ROS_DEBUG_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
+					ROS_WARN_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
+			}
+		}else {
+			for (std::string path : serial_file_paths) {
+				// Open the serial port
+				ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << path << "...");
+				boost::system::error_code ec;
+				serialPort.open(path, ec);
+
+				// Check the status of the serial port
+				switch (ec.value()) {
+					// Port opened
+					case boost::system::errc::success:
+						ROS_INFO("[ensureSerialport] Port opened");
+						serialPortOpen = true;
+						serial_file_path = path;
+						return true;
+
+					// Port not opened
+					default:
+						ROS_DEBUG_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
+				}
 			}
 		}
+
 		// No port could be opened
 		ROS_ERROR_STREAM("[ensureSerialPort] No serial port could be opened!");
 		return false;
@@ -617,6 +642,13 @@ int main(int argc, char *argv[]) {
 	// Bind ctrl+c to custom signal handler
 	// http://wiki.ros.org/roscpp/Overview/Initialization%20and%20Shutdown
 	signal(SIGINT, mySigintHandler);
+
+	// Get output device
+	if(ros::param::has("output_device")){
+		ros::param::get("output_device", serial_file_path_param);
+		if(serial_file_path_param != "none")
+			ROS_INFO_STREAM("Output device given : " << serial_file_path_param);
+	}
 
 	// Get the mode of robothub, either "serial" or "grsim"
 	std::string modeStr = "undefined";

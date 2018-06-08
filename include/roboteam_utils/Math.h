@@ -17,7 +17,7 @@ double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos);
 bool isBetweenAngles(double a1, double a2, double testAngle);
 double getClockwiseAngle(double a1, double a2);
 double getCounterClockwiseAngle(double a1, double a2);
-double smoothStep(double x);
+double smoothStep(const double& x);
 double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos);
 Vector2 projectPointOntoLine(Vector2 P1, Vector2 P2, Vector2 pos);
 

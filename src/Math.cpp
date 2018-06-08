@@ -85,7 +85,7 @@ double getCounterClockwiseAngle(double a1, double a2) {
 	return result;
 }
 
-double smoothStep(double x) {
+double smoothStep(const double& x) {
 	if (x<0) {
 		return 0;
 	} else if (x>1) {

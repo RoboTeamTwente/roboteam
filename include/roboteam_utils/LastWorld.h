@@ -38,7 +38,7 @@ class LastWorld {
      */
     static void callback_geom_data(const roboteam_msgs::GeometryDataConstPtr& geometry);
 
-    static roboteam_msgs::World get();
+    static const roboteam_msgs::World& get();
     static void set(roboteam_msgs::World world);
 
     static roboteam_msgs::GeometryFieldSize get_field();

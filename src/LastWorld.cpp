@@ -20,7 +20,7 @@ void LastWorld::callback_geom_data(const roboteam_msgs::GeometryDataConstPtr& ge
     LastWorld::received_first_geom = true;
 }
 
-roboteam_msgs::World LastWorld::get() {
+const roboteam_msgs::World& LastWorld::get() {
     return LastWorld::lastWorld;
 }
 

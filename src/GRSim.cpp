@@ -326,13 +326,13 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     command->set_velnormal(msg.y_vel);
     command->set_velangular(msg.w);
 
-    if (msg.kicker) {
+    if (msg.kicker || msg.kicker_forced) {
         command->set_kickspeedx(msg.kicker_vel);
     } else {
         command->set_kickspeedx(0);
     }
 
-    if (msg.chipper) {
+    if (msg.chipper || msg.chipper_forced) {
         rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
         vel = vel.rotate(M_PI/4); // 45 degrees up.
 
@@ -358,7 +358,7 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     }
 
     // angles in degrees
-    float angles[] = {-20, -10, 0, 10, 20};
+    float angles[] = {20, 10, 0, -10, -20};
     // geneva_angle in radians
     float geneva_angle = 2 * M_PI * angles[index] / 360;
     command->set_geneva_angle(geneva_angle);

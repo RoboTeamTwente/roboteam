@@ -446,8 +446,8 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 	// Read the feedback from the robot
 	rtt::packed_robot_feedback feedback;
 //	SerialResultStatus readStatus = readPackedRobotFeedback(feedback);
-	SerialResultStatus readStatus = readBoringAck();
-//  SerialResultStatus readStatus = SerialResultStatus::ACK;
+	// SerialResultStatus readStatus = readBoringAck();
+ SerialResultStatus readStatus = SerialResultStatus::ACK;
 
 	if(readStatus != SerialResultStatus::ACK && readStatus != SerialResultStatus::NACK){
 		ROS_ERROR_STREAM("Something went wrong while reading the feedback from the robot");

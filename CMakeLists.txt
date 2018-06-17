@@ -42,6 +42,7 @@ set(proto_files
     ${proto_dir}/messages_robocup_ssl_geometry.proto
     ${proto_dir}/messages_robocup_ssl_geometry_legacy.proto
     ${proto_dir}/messages_robocup_ssl_referee.proto
+    ${proto_dir}/messages_robocup_ssl_game_event.proto
     ${proto_dir}/messages_robocup_ssl_wrapper.proto
     ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
 )

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/optional.hpp>
 #include "Vector2.h"
 #include <limits>
 #include <utility>

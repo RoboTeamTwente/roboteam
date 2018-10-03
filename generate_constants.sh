@@ -17,5 +17,7 @@ fi
 mkdir -p $(dirname $1)
 mkdir -p $(dirname $2)
 
+source /opt/ros/melodic/setup.bash
+
 rosrun roboteam_utils constants_generator header < String\ Constants > $2
 rosrun roboteam_utils constants_generator < String\ Constants > $1

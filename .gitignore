@@ -28,9 +28,6 @@
 *.out
 *.app
 
-# Temporaries
-include/roboteam_utils/constants.h
-src/constants.cpp
 *~
 *.swp
 

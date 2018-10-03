@@ -127,7 +127,7 @@ install(DIRECTORY ${proto_gen_python_dir}/
 
 set(RTT_CONSTANTS_HEADER_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}/constants.h")
 set(RTT_CONSTANTS_SOURCE_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/roboteam_utils/constants.cpp")
-configure_file(src/constants.h ${RTT_CONSTANTS_HEADER_FILE} COPYONLY)
+configure_file(include/roboteam_utils/constants.h ${RTT_CONSTANTS_HEADER_FILE} COPYONLY)
 configure_file(src/constants.cpp ${RTT_CONSTANTS_SOURCE_FILE} COPYONLY)
 
 ###########################

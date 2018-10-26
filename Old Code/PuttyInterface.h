@@ -17,9 +17,9 @@
 #ifdef PUTTY_USART
 #include "usart.h"
 #endif/* PUTTY_USART */
-#ifdef PUTTY_USB
-#include "usbd_cdc_if.h"
-#endif /* PUTTY_USB */
+// #ifdef PUTTY_USB
+// #include "usbd_cdc_if.h"
+// #endif /* PUTTY_USB */
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -35,6 +35,7 @@
 
 // function that will be called when HandlePcInput is done.
 typedef void (*HandleLine)(char * input);
+// Explanation: Basically, make a function for dealing with inputs and assign it to this struct.
 
 typedef struct {
 	uint8_t rec_buf[32];
@@ -43,7 +44,7 @@ typedef struct {
 	HandleLine handle;
 }PuttyInterfaceTypeDef;
 
-char smallStrBuffer[1024];
+char smallStrBuffer[1024]; // Used for the output
 
 /* 	Print string str to the pc
  * 	param:

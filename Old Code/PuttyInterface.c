@@ -7,30 +7,29 @@
 
 #include "../PuttyInterface/PuttyInterface.h"
 
-#if __has_include("stm32f0xx_hal.h")
-#  include "stm32f0xx_hal.h"
-#elif  __has_include("stm32f1xx_hal.h")
-#  include "stm32f1xx_hal.h"
-#elif  __has_include("stm32f3xx_hal.h")
-#  include "stm32f3xx_hal.h"
-#elif  __has_include("stm32f4xx_hal.h")
-#  include "stm32f4xx_hal.h"
-#endif
+// TODO: SIMPLIFY; YOU DON'T NEED ALL THIS
+// #if __has_include("stm32f0xx_hal.h")
+// #  include "stm32f0xx_hal.h"
+// #elif  __has_include("stm32f1xx_hal.h")
+// #  include "stm32f1xx_hal.h"
+// #elif  __has_include("stm32f3xx_hal.h")
+// #  include "stm32f3xx_hal.h"
+// #elif  __has_include("stm32f4xx_hal.h")
+// #  include "stm32f4xx_hal.h"
+// #endif
 
 #include <string.h>
 #include <stdio.h>
 
-char smallStrBuffer[1024];
+// char smallStrBuffer[1024]; // ALready in .h
 uint8_t TxBuf[1024];
 
-#ifdef PUTTY_USB
-bool usb_comm = false;
-#endif
+// #ifdef PUTTY_USB
+// bool usb_comm = false;
+// #endif
 
 // clears the current line, so new text can be put in
 static void ClearLine(){
-	/*char msg[MAX_COMMAND_LENGTH+1] = {'-'};
-	memset(msg+MAX_COMMAND_LENGTH, 0, 1);*/
 	TextOut("\r");
 	for(uint i = 0; i < MAX_COMMAND_LENGTH; i++)
 		TextOut(" ");
@@ -123,12 +122,12 @@ void HexOut(uint8_t data[], uint8_t length){
 	memcpy(TxBuf, data, length);
 	HAL_UART_Transmit_IT(&huartx, TxBuf, length);
 #endif
-#ifdef PUTTY_USB
-	if(usb_comm){
-		CDC_Transmit_FS(data, length);
-		HAL_Delay(1);
-	}
-#endif
+// #ifdef PUTTY_USB
+// 	if(usb_comm){
+// 		CDC_Transmit_FS(data, length);
+// 		HAL_Delay(1);
+// 	}
+// #endif
 }
 
 
@@ -144,9 +143,9 @@ void PuttyInterface_Init(PuttyInterfaceTypeDef* pitd){
 
 void PuttyInterface_Update(PuttyInterfaceTypeDef* pitd){
 	if(pitd->huart_Rx_len){
-#ifdef PUTTY_USB
-		usb_comm = true;
-#endif
+// #ifdef PUTTY_USB
+// 		usb_comm = true;
+// #endif
 		HandlePcInput((char*)&pitd->small_buf, pitd->huart_Rx_len, pitd->handle);
 		pitd->huart_Rx_len = 0;
 #ifdef PUTTY_USART

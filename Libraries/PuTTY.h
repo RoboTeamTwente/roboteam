@@ -49,15 +49,15 @@ typedef struct
 Putty_Struct Putty_Vars = {}; // Create a global struct
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
-// PUBLIC
-void Putty_Printf(char *input); // Like printf, but for putty
+//// PUBLIC
+void Putty_Printf(char *input); // Like printf, but for the putty console
 Putty_Struct* Putty_Init(PuttyInterfaceTypeDef *pitd); // Also returns a pointer to the variable struct
-void Putty_DeInit();
-void Putty_Reset();
-void Putty_UARTCallback(PuttyInterfaceTypeDef *pitd);
+void Putty_DeInit(); // Deinitializer
+void Putty_Reset(); // Reset all values
+void Putty_UARTCallback(PuttyInterfaceTypeDef *pitd); // 
 void Putty_Callback(PuttyInterfaceTypeDef *pitd);
 
-// PRIVATE
+//// PRIVATE
 void Putty_TextOut(char *str);                                                 // Displays the code on the console
 void Putty_HexOut(uint8_t data[], uint8_t length);                             // TODO: No idea really
 void Putty_HandleCommand(char *input);                                         // Executes action depending on input command
@@ -66,11 +66,13 @@ static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus);           /
 static void Putt_ClearLine();                                                  //Clears the current line to that new text can be placed.
 
 ///////////////////////////////////////////////////// FUNCTION IMPLEMENTATIONS (move to .c)
+
 void Putty_printf(char *input)
 {
     sprintf(smallStrBuffer, input); // Copies and turns into string
     TextOut(smallStrBuffer);        // Outputs to console
 }
+
 void Putty_Init(PuttyInterfaceTypeDef *pitd)
 {
     pitd->huart_Rx_len = 0;

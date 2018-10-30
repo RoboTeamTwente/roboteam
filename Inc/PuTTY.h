@@ -9,7 +9,7 @@ Description: PuTTy file for communication with the PC via USART
 Instructions:
 1) Initialize it.
 2) Place the Putty_Callback() function in loop or timer.
-3) Use PuTTy with the right communication port and a baud rate of 
+3) Use PuTTy with the right communication port and a baud rate of 115200.
 
 Extra functions:
 
@@ -17,17 +17,18 @@ GPIO Pins: None
 
 Notes:
 - There was code for USB, but it was never used. If we want to use it, we can just go to last year's repo
-
-Removed all USB capabilities. Seems more of a pain to keep than anything else.
+- Removed all USB capabilities. Seems more of a pain to keep than anything else.
  */
-#ifndef PUTTYINTERFACE_H_
-#define PUTTYINTERFACE_H_
 
 #include <stdbool.h> // Bools
 #include <string.h>  // Strings
 #include <stdio.h>   // General
 
 #include "usart.h"
+
+#ifndef PUTTYINTERFACE_H_
+#define PUTTYINTERFACE_H_
+
 ///////////////////////////////////////////////////// DEFINITIONS
 // Commands to be remember
 #define huartx huart3           // What huart communication is used

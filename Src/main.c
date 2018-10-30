@@ -46,7 +46,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "PuTTY.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -123,6 +123,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
 
   /* USER CODE END WHILE */
 

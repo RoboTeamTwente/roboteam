@@ -39,15 +39,19 @@ typedef struct
     char smallStrBuffer[1024];
     uint8_t TxBuf[1024];
 
+    char small_buf[32];
+
     uint huart_Rx_len; // TODO: What's this?
 
     int errorCode; // Error codes
-} Putty_Vars;
+} Putty_Struct;
+
+Putty_Struct Putty_Vars = {}; // Create a global struct
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 // PUBLIC
-void Putty_Printf(char *input); // Like printf
-void Putty_Init(PuttyInterfaceTypeDef *pitd);
+void Putty_Printf(char *input); // Like printf, but for putty
+Putty_Struct* Putty_Init(PuttyInterfaceTypeDef *pitd); // Also returns a pointer to the variable struct
 void Putty_DeInit();
 void Putty_Reset();
 void Putty_UARTCallback(PuttyInterfaceTypeDef *pitd);
@@ -80,8 +84,8 @@ void Putty_Init(PuttyInterfaceTypeDef *pitd)
 // Note. Add it at HAL_UART_RxCpltCallback()
 void Putty_UARTCallback(PuttyInterfaceTypeDef puttyIn, UART_HandleTypeDef *huart)
 {
-    puttyIn.huart_Rx_len = 1;
-    puttyIn.small_buf[0] = *(huart->pRxBuffPtr - 1);
+    Putty_Vars.huart_Rx_len = 1;
+    Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr - 1);
 }
 
 // Currently in main, but call it in a timer please.
@@ -159,16 +163,6 @@ void TextOut(char *str)
 {
     uint8_t length = strlen(str);
     HexOut((uint8_t *)str, length);
-}
-
-void PuttyInterface_Init(PuttyInterfaceTypeDef *pitd)
-{
-    pitd->huart_Rx_len = 0;
-    char *startmessage = "----------PuttyInterface_Init-----------\n\r";
-    uprintf(startmessage);
-#ifdef PUTTY_USART
-    HAL_UART_Receive_IT(&huartx, pitd->rec_buf, 1);
-#endif
 }
 
 static void HandlePcInput(char *input, size_t n_chars, HandleLine func)

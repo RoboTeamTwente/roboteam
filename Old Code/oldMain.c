@@ -439,9 +439,9 @@ void HandleCommand(char* input){
 
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	// if(huart->Instance == huart3.Instance){//input from the PC
-		// puttystruct.huart_Rx_len = 1;
-		// puttystruct.small_buf[0] = *(huart->pRxBuffPtr-1);
+	if(huart->Instance == huart3.Instance){//input from the PC
+		puttystruct.huart_Rx_len = 1;
+		puttystruct.small_buf[0] = *(huart->pRxBuffPtr-1);
 	}else if(huart->Instance == huartMT.Instance){// Input from the Xsens
 		MT_UART_RxCpltCallback();
 	}

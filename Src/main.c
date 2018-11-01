@@ -196,8 +196,9 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == huart3.Instance){//input from the PC
-		puttystruct.huart_Rx_len = 1;
-		puttystruct.small_buf[0] = *(huart->pRxBuffPtr-1);
+		Putty_Vars.huart_Rx_len = 1;
+		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+  }
 }
 /* USER CODE END 4 */
 

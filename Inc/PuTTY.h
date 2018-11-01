@@ -36,7 +36,7 @@ typedef struct
     char small_buf[32];        // Buffer for use in HandlePCInput
     char smallStrBuffer[1024]; // Used in the Putty_Printf
     uint8_t TxBuf[1024];       // Transimission buffer
-    uint huart_Rx_len;         // Length of received data
+    unsigned int huart_Rx_len;         // Length of received data
     Putty_Enum errorCode;      // Error codes
 } Putty_VarStruct;
 

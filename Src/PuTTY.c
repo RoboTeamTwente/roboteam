@@ -15,6 +15,9 @@
 
 #include "usart.h"
 #include "PuTTY.h"
+#include <stdint.h>
+#include "main.h"
+#include "gpio.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 // Commands to be remember
@@ -109,29 +112,30 @@ static void Putty_HexOut(uint8_t data[], uint8_t length)
 static void Putty_HandleCommand(char *input)
 {
     //// TODO: It is potentially easier to just type a number and have them in order of testing
-    // int inputNumber = *input - '0'; // Converts char input into int number.
-    // switch (inputNumber)
-    // {
-    // // Auto-testing
-    // case 0:
-    //     break;
-    // // Geneva
-    // case 1:
-    // 	   geneva_SetPosition(2 + strtol(input + 2, NULL, 10));
-    //     break;
-    // // Kick/Chip
-    // case 2:
-    //     break;
-    // // Dribble
-    // case 3:
-    //     break;
-    // // Wheels
-    // case 4:
-    //     break;
-    // // Ball sensor
-    // case 5:
-    //     break;
-    // }
+    int inputNumber = *input - '0'; // Converts char input into int number.
+    switch (inputNumber)
+    {
+    // Auto-testing
+    case 0:
+        HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, 1);
+        break;
+    // Geneva
+    case 1:
+    	// geneva_SetPosition(2 + strtol(input + 2, NULL, 10));
+        break;
+    // Kick/Chip
+    case 2:
+        break;
+    // Dribble
+    case 3:
+        break;
+    // Wheels
+    case 4:
+        break;
+    // Ball sensor
+    case 5:
+        break;
+    }
 
     // if (strcmp(input, "mt start") == 0)
     // {
@@ -355,7 +359,7 @@ static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus)
 static void Putty_ClearLine()
 {
     Putty_TextOut("\r"); // Inputs "return" (i.e. take the cursor to the beginning of the line)
-    for (uint i = 0; i < MAX_COMMAND_LENGTH; i++)
+    for (unsigned int i = 0; i < MAX_COMMAND_LENGTH; i++)
         Putty_TextOut(" "); // Input spacing (no idea why)
     Putty_TextOut("\r");    // Inputs return again
 }

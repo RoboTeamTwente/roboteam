@@ -22,6 +22,7 @@ Notes:
 
 #ifndef PUTTYINTERFACE_H_
 #define PUTTYINTERFACE_H_
+#include "stdint.h" // Includes the uint8_t and others
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs

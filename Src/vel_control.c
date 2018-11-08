@@ -26,7 +26,7 @@ uint start_time;
 
 static void body2Wheels(float input[2], float output[4]);
 
-static void polar2Local(float input[3], float output[2], float  yaw);
+static void global2Local(float input[3], float output[2], float  yaw);
 
 static float anglePID(float ref, float state, float K[3]);
 
@@ -44,23 +44,32 @@ int vel_control_Init(){
 	return 0;
 }
 
-void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[2]){
+void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[3]){
 	float angleK[3] = {0,0,0};//kp,ki,kp
 	float wheelK[3] = {0,0,0};//kp,ki,kp
 	float velLocalRef[2] = {0};
 
-	float angleComp = anglePID(vel_ref[2], xsensData[2], angleK);// angle control
+	//For dry testing
+	//xsensData[body_w] = MT_GetAngles()[2]/180*M_PI;
+	//vel_ref[body_x] = 0;
+	//vel_ref[body_y] = 0;
+	//vel_ref[body_w] = 0*M_PI;
+	//xsensData[body_x] = 0;
+	//xsensData[body_y] = 0;
+	//xsensData[body_w] = 0*M_PI;
 
-	polar2Local(vel_ref, velLocalRef, xsensData[2]); //transfer global to local
+	float angleComp = anglePID(vel_ref[body_w], xsensData[body_w], angleK);// angle control
+
+	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
 
 	float Adjuster[2] = {0};
 	doublePID(velLocalRef, xsensData, wheelK, Adjuster);
-	Adjuster[0] += velLocalRef[0];
-	Adjuster[1]	+= velLocalRef[1];
+	Adjuster[body_x] += velLocalRef[body_x];
+	Adjuster[body_y]	+= velLocalRef[body_y];
 
 	body2Wheels(Adjuster, wheel_ref);
 
-	for (int i = 0; i <= 4; ++i){
+	for (int i = 0; i < 4; ++i){
 		wheel_ref[i] += angleComp;
 	}
 
@@ -82,9 +91,9 @@ static void body2Wheels(float input[2], float output[4]){
 	output[wheels_LF] = -(-1/s*input[body_x] + 1/c*input[body_y])*r/4;
 }
 
-static void polar2Local(float input[2], float output[2], float  yaw){
-	float globalXVel = cos(input[1])*input[0];
-	float globalYVel = sin(input[1])*input[0];
+static void global2Local(float input[2], float output[2], float  yaw){
+	float globalXVel = input[body_x];//cos(input[1])*input[0];
+	float globalYVel = input[body_y];//sin(input[1])*input[0];
 	output[body_x] = cos(yaw)*globalXVel-sin(yaw)*globalYVel;
 	output[body_y] = sin(yaw)*globalXVel+cos(yaw)*globalYVel;
 }
@@ -93,9 +102,9 @@ static float anglePID(float ref, float state, float K[3]){
 	static float prev_e = 0;
 	static float I = 0;
 	float err = constrainAngle(ref - state);
-	float P = K[0]*err;
-	I += K[1]*err*TIME_DIFF;
-	float D = (K[2]*(err-prev_e))/TIME_DIFF;
+	float P = K[kP]*err;
+	I += K[kI]*err*TIME_DIFF;
+	float D = (K[kD]*(err-prev_e))/TIME_DIFF;
 	prev_e = err;
 	float Adjuster = P + I + D;
 	return Adjuster;
@@ -109,9 +118,9 @@ static void doublePID(float ref[2], float state[3], float K[3], float Adjuster[2
 		float err[2] = {0};
 		for (int i = 0; i<2; ++i){
 			err[i] = ref[i] - state[i];
-			P[i] = K[0]*err[i];
-			I[i] += K[1]*err[i]*TIME_DIFF;
-			D[i] = (K[2]*(err[i]-prev_e[i]))/TIME_DIFF;
+			P[i] = K[kP]*err[i];
+			I[i] += K[kI]*err[i]*TIME_DIFF;
+			D[i] = (K[kD]*(err[i]-prev_e[i]))/TIME_DIFF;
 			prev_e[i] = err[i];
 			Adjuster[i] = P[i] + I[i] + D[i];
 		}

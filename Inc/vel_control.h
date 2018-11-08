@@ -47,6 +47,12 @@ typedef enum {
 	wheels_LF,
 }wheel_names;
 
+typedef enum {
+	kP,
+	kI,
+	kD,
+}kPID;
+
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC

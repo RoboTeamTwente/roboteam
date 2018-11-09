@@ -25,6 +25,7 @@ Still need to add the right specs
 
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
+#include <stdbool.h>
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs

@@ -5,14 +5,11 @@
  *      Author: kjhertenberg
  */
 
-#include "geneva.h"
+#include "Geneva.h"
 
 
 ///////////////////////////////////////////////////// DEFINITIONS
-// Basically set constants
-#define USE_SENSOR 0			// use the geneva sensor or always move to the edge
 #define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
-#define GENEVA_CAL_SENS_CNT 1400	// the amount of counts from the sensor to the center
 #define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
 #define GENEVA_MAX_ALLOWED_OFFSET 0.2*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in positon
 
@@ -21,6 +18,8 @@ geneva_states geneva_state = geneva_idle;	// current state of the geneva system
 uint geneva_cnt;							// last measured encoder count
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
+
+static void calibrate();
 
 /*	to be called when the edge is detected
  * param:	the current distance to the middle positon
@@ -46,6 +45,31 @@ void geneva_Deinit(){
 	HAL_TIM_Base_Start(&htim2);		// stop encoder
 	pid_Deinit(&Geneva_pid);		// stop the pid controller
 	geneva_state = geneva_idle;		// go to idle state
+}
+
+void geneva_Callback(float genevaRef){
+	float genevaK[3] = {0,0,0};//kp,ki,kp
+
+
+	static bool isCalibrated = false;
+	if (!isCalibrated){
+		calibrate();
+		isCalibrated = true;
+	}
+
+
+	static int currentRef = 0;
+	static float ref = 0;
+	if (genevaRef != currentRef){
+		ref = setRef(genevaRef);
+		currentRef = genevaRef;
+	}
+
+	float genevaState = getState();
+	float adjust = singlePID(ref, genevaState, genevaK);
+	adjust = scaleAndLimit(adjust);
+
+	//set motor
 }
 
 void geneva_Update(){

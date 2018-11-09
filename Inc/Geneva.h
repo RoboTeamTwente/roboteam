@@ -27,6 +27,7 @@ Still need to add the right specs
 #define GENEVA_GENEVA_H_
 #include <stdbool.h>
 #include <stdlib.h>
+#include "gpio.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
@@ -52,9 +53,18 @@ typedef struct PIDconstants {
 	float kD;
 }PIDconstants;
 
-struct PIDconstants genevaK = {0};
-unsigned int geneva_cnt;							// last measured encoder count
+// Pin/timer variables
+TIM_HandleTypeDef* actuator;
+uint32_t actuator_channel;
+uint16_t dir[2];					// pin number of channel A and B respectively
+GPIO_TypeDef * dir_Port[2];			// GPIO Port of channel A and B respectively
+
+//Geneva variables
+uint geneva_cnt;							// last measured encoder count
 geneva_states geneva_state;	// current state of the geneva system
+
+//PIDConstant
+struct PIDconstants genevaK = {0};
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC

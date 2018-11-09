@@ -7,14 +7,14 @@
 
 #include "Geneva.h"
 #include "tim.h"
-#include "gpio.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 #define TIME_DIFF 0.01F // time difference due to 100Hz
 #define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
 #define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
 #define GENEVA_MAX_ALLOWED_OFFSET 0.2*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in positon
-
+#define SWITCH_OFF_TRESHOLD 200
+#define MAX_DUTY_CYCLE_INVERSE_FRACTION 4
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -32,15 +32,25 @@ static float singlePID(float ref, float state, struct PIDconstants K);
 
 static void setoutput(float PWM);
 
+static int32_t ClipInt(int32_t input, int32_t min, int32_t max);//keeps the input between min and max values
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 	geneva_cnt  = HAL_GetTick();	// store the start time
+	//PID constants
 	genevaK.kP = 50.0F;//kp
 	genevaK.kI = 4.0F;//ki
 	genevaK.kD = 0.7F;//kd
+	//Pin/time variables
+	actuator = &htim10;
+	actuator_channel = TIM_CHANNEL_1;
+	dir[0] = Geneva_dir_B_Pin;
+	dir[1] = Geneva_dir_A_Pin;
+	dir_Port[0] = Geneva_dir_B_GPIO_Port;
+	dir_Port[1] = Geneva_dir_A_GPIO_Port;
 }
 
 void geneva_Deinit(){
@@ -123,8 +133,23 @@ static float singlePID(float ref, float state, struct PIDconstants K){
 	return PIDvalue;
  }
 
-static void setoutput(float PWM){
-	return;
+static void setoutput(float pwm){
+	if(pwm < -SWITCH_OFF_TRESHOLD){
+		HAL_GPIO_WritePin(dir_Port[0], dir[0], 1);
+		HAL_GPIO_WritePin(dir_Port[1], dir[1], 0);
+	}else if(pwm > SWITCH_OFF_TRESHOLD){
+		HAL_GPIO_WritePin(dir_Port[0], dir[0], 0);
+		HAL_GPIO_WritePin(dir_Port[1], dir[1], 1);
+	}else{
+		HAL_GPIO_WritePin(dir_Port[0], dir[0], 0);
+		HAL_GPIO_WritePin(dir_Port[1], dir[1], 0);
+	}
+	pwm = abs(pwm);
+	pwm = ClipInt(pwm, 0, actuator->Init.Period/MAX_DUTY_CYCLE_INVERSE_FRACTION);// Power limited by having maximum duty cycle
+	__HAL_TIM_SET_COMPARE(actuator, actuator_channel, pwm);
 }
 
+static int32_t ClipInt(int32_t input, int32_t min, int32_t max){
+	return (input > max) ? max : (input < min) ? min : input;
+}
 

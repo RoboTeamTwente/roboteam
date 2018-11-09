@@ -13,131 +13,63 @@
 #define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
 #define GENEVA_MAX_ALLOWED_OFFSET 0.2*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in positon
 
-geneva_states geneva_state = geneva_idle;	// current state of the geneva system
+geneva_states geneva_state = geneva_setup;	// current state of the geneva system
 
 uint geneva_cnt;							// last measured encoder count
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-static void calibrate();
-
-/*	to be called when the edge is detected
- * param:	the current distance to the middle positon
- */
+//Is called when we find the edge and calibrates the encoders values based on the position
 static void geneva_EdgeCallback(int edge_cnt);
 
-/*	check if the geneva drive got stuck and responds appropriatly
- *	param:
- *		dir: direction to go if we got stuck
- */
+//checks if we found the edge
 static inline void CheckIfStuck(int8_t dir);
+
+static void geneva_Control();
+
+static float geneva_SetRef(geneva_positions position);
+
+static float getState();
+
+static float singlePID(float ref, float state, float K[3]);
+
+static float scaleAndLimit(float controlValue)
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
-	pid_Init(&Geneva_pid);			// initialize the pid controller
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 	geneva_cnt  = HAL_GetTick();	// store the start time
 }
 
 void geneva_Deinit(){
 	HAL_TIM_Base_Start(&htim2);		// stop encoder
-	pid_Deinit(&Geneva_pid);		// stop the pid controller
 	geneva_state = geneva_idle;		// go to idle state
 }
 
-void geneva_Callback(float genevaRef){
+void geneva_Callback(int genevaStateRef){
 	float genevaK[3] = {0,0,0};//kp,ki,kp
+	static float genevaRef = 0;
+	static int currentStateRef = 3; //impossible state to kick-start
 
-
-	static bool isCalibrated = false;
-	if (!isCalibrated){
-		calibrate();
-		isCalibrated = true;
-	}
-
-
-	static int currentRef = 0;
-	static float ref = 0;
-	if (genevaRef != currentRef){
-		ref = setRef(genevaRef);
-		currentRef = genevaRef;
-	}
-
-	float genevaState = getState();
-	float adjust = singlePID(ref, genevaState, genevaK);
-	adjust = scaleAndLimit(adjust);
-
-	//set motor
-}
-
-void geneva_Update(){
 	switch(geneva_state){
-	case geneva_idle:
-		break;
-	case geneva_setup:								// While in setup, slowly move towards the sensor/edge
-		Geneva_pid.ref = (HAL_GetTick() - geneva_cnt)*1;	// if sensor is not seen yet, move to the right at 1 count per millisecond
-		CheckIfStuck(1);
-		break;
-	case geneva_returning:					// while returning move to the middle position
-		if(geneva_GetPosition() == geneva_middle){
-			geneva_state = geneva_running;
-		}else{
-			geneva_SetPosition(geneva_middle);
-		}
-		break;
-	case geneva_running:					// wait for external sources to set a new ref
-		break;
+		case geneva_idle:
+			return;
+		case geneva_setup:								// While in setup, slowly move towards the sensor/edge
+			genevaRef = (HAL_GetTick() - geneva_cnt)*1;	// if sensor is not seen yet, move to the right at 1 count per millisecond
+			CheckIfStuck(1);
+			break;
+		case geneva_running:					// wait for external sources to set a new ref
+			if (genevaStateRef != currentStateRef){
+				genevaRef = geneva_SetRef(genevaStateRef);
+				currentStateRef = genevaStateRef;
+			}
+			break;
 	}
-}
 
-void geneva_Control(){
-	if(geneva_idle != geneva_state){
-		pid_Control(geneva_Encodervalue(), &Geneva_pid);
-	}
-}
+	geneva_Control(genevaRef, genevaK);
 
-int geneva_Encodervalue(){
-	return (int32_t)__HAL_TIM_GetCounter(&htim2);
-}
-
-void geneva_SetState(geneva_states state){
-	geneva_state = state;
-}
-
-geneva_states geneva_GetState(){
-	return geneva_state;
-}
-
-geneva_positions geneva_SetPosition(geneva_positions position){
-	switch(position){
-	case geneva_rightright:
-		Geneva_pid.ref = 2 * GENEVA_POSITION_DIF_CNT;
-		break;
-	case geneva_right:
-		Geneva_pid.ref = 1 * GENEVA_POSITION_DIF_CNT;
-		break;
-	case geneva_middle:
-		Geneva_pid.ref = 0 * GENEVA_POSITION_DIF_CNT;
-		break;
-	case geneva_left:
-		Geneva_pid.ref = -1 * GENEVA_POSITION_DIF_CNT;
-		break;
-	case geneva_leftleft:
-		Geneva_pid.ref = -2 * GENEVA_POSITION_DIF_CNT;
-		break;
-	case geneva_none:
-		break;
-	}
-	return geneva_GetPosition();
-}
-
-geneva_positions geneva_GetPosition(){
-	if((geneva_Encodervalue() % GENEVA_POSITION_DIF_CNT) > GENEVA_MAX_ALLOWED_OFFSET){
-		return geneva_none;
-	}
-	return 2 + (geneva_Encodervalue()/GENEVA_POSITION_DIF_CNT);
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -145,8 +77,7 @@ geneva_positions geneva_GetPosition(){
 static void geneva_EdgeCallback(int edge_cnt){
 	uprintf("ran into edge.\n\r");
 	__HAL_TIM_SET_COUNTER(&htim2, edge_cnt);
-	Geneva_pid.ref = 0;
-	geneva_state = geneva_returning;
+	geneva_state = geneva_running;
 }
 
 static inline void CheckIfStuck(int8_t dir){
@@ -160,7 +91,45 @@ static inline void CheckIfStuck(int8_t dir){
 	}
 }
 
+static void geneva_Control(float ref, float K[3]){
 
+	float state = getState();
+	float controlValue = singlePID(ref, state, K);
+	float PWM = scaleAndLimit(controlValue);
 
+	//set motor
+
+	//pid_Control(geneva_Encodervalue(), &Geneva_pid);
+}
+
+static float geneva_SetRef(geneva_positions position){
+	switch(position){
+	case geneva_rightright:
+		return 2 * GENEVA_POSITION_DIF_CNT;
+	case geneva_right:
+		return 1 * GENEVA_POSITION_DIF_CNT;
+	case geneva_middle:
+		return 0 * GENEVA_POSITION_DIF_CNT;
+	case geneva_left:
+		return -1 * GENEVA_POSITION_DIF_CNT;
+	case geneva_leftleft:
+		return -2 * GENEVA_POSITION_DIF_CNT;
+	case geneva_none:
+		break;
+	}
+	return 0;
+}
+
+static float getState(){
+	return 0;
+}
+
+static float singlePID(float ref, float state, float K[3]){
+	 return 0;
+ }
+
+static float scaleAndLimit(float controlValue){
+	return 0;
+}
 
 

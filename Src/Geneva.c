@@ -25,15 +25,13 @@ static void geneva_EdgeCallback(int edge_cnt);
 //checks if we found the edge
 static inline void CheckIfStuck(int8_t dir);
 
-static void geneva_Control();
-
-static float geneva_SetRef(geneva_positions position);
-
-static float getState();
+static int geneva_SetRef(geneva_positions position);
 
 static float singlePID(float ref, float state, float K[3]);
 
-static float scaleAndLimit(float controlValue)
+static float scaleAndLimit(float controlValue);
+
+static void setoutput(float PWM);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -50,7 +48,7 @@ void geneva_Deinit(){
 
 void geneva_Callback(int genevaStateRef){
 	float genevaK[3] = {0,0,0};//kp,ki,kp
-	static float genevaRef = 0;
+	static int genevaRef = 0;
 	static int currentStateRef = 3; //impossible state to kick-start
 
 	switch(geneva_state){
@@ -68,8 +66,10 @@ void geneva_Callback(int genevaStateRef){
 			break;
 	}
 
-	geneva_Control(genevaRef, genevaK);
-
+	int state = (int32_t)__HAL_TIM_GetCounter(&htim2);
+	float controlValue = singlePID(genevaRef, state, genevaK);
+	float PWM = scaleAndLimit(controlValue);
+	setoutput(PWM);
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -81,7 +81,7 @@ static void geneva_EdgeCallback(int edge_cnt){
 }
 
 static inline void CheckIfStuck(int8_t dir){
-	static uint tick = 0xFFFF;			//
+	static uint tick = 0xFFFF;
 	static int enc;
 	if(geneva_Encodervalue() != enc){
 		enc = geneva_Encodervalue();
@@ -91,18 +91,7 @@ static inline void CheckIfStuck(int8_t dir){
 	}
 }
 
-static void geneva_Control(float ref, float K[3]){
-
-	float state = getState();
-	float controlValue = singlePID(ref, state, K);
-	float PWM = scaleAndLimit(controlValue);
-
-	//set motor
-
-	//pid_Control(geneva_Encodervalue(), &Geneva_pid);
-}
-
-static float geneva_SetRef(geneva_positions position){
+static int geneva_SetRef(geneva_positions position){
 	switch(position){
 	case geneva_rightright:
 		return 2 * GENEVA_POSITION_DIF_CNT;
@@ -120,16 +109,24 @@ static float geneva_SetRef(geneva_positions position){
 	return 0;
 }
 
-static float getState(){
-	return 0;
-}
-
-static float singlePID(float ref, float state, float K[3]){
-	 return 0;
+static float singlePID(int ref, int state, float K[3]){
+	static float prev_e = 0;
+	static float I = 0;
+	float err = constrainAngle(ref - state);
+	float P = K[kP]*err;
+	I += K[kI]*err*TIME_DIFF;
+	float D = (K[kD]*(err-prev_e))/TIME_DIFF;
+	prev_e = err;
+	float PIDvalue = P + I + D;
+	return PIDvalue;
  }
 
 static float scaleAndLimit(float controlValue){
 	return 0;
+}
+
+static void setoutput(float PWM){
+	return;
 }
 
 

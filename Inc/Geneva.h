@@ -45,6 +45,12 @@ typedef enum{
 	geneva_none			// While rotating
 }geneva_positions;
 
+typedef enum {
+	kP,
+	kI,
+	kD,
+}kPID;
+
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
 

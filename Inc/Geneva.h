@@ -26,6 +26,7 @@ Still need to add the right specs
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
 #include <stdbool.h>
+#include <stdlib.h>
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
@@ -45,11 +46,15 @@ typedef enum{
 	geneva_none			// While rotating
 }geneva_positions;
 
-typedef enum {
-	kP,
-	kI,
-	kD,
-}kPID;
+typedef struct PIDconstants {
+	float kP;
+	float kI;
+	float kD;
+}PIDconstants;
+
+struct PIDconstants genevaK = {0};
+unsigned int geneva_cnt;							// last measured encoder count
+geneva_states geneva_state;	// current state of the geneva system
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC

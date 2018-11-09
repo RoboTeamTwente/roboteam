@@ -6,16 +6,15 @@
  */
 
 #include "Geneva.h"
-
+#include "tim.h"
+#include "gpio.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
+#define TIME_DIFF 0.01F // time difference due to 100Hz
 #define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
 #define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
 #define GENEVA_MAX_ALLOWED_OFFSET 0.2*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in positon
 
-geneva_states geneva_state = geneva_setup;	// current state of the geneva system
-
-uint geneva_cnt;							// last measured encoder count
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -25,11 +24,11 @@ static void geneva_EdgeCallback(int edge_cnt);
 //checks if we found the edge
 static inline void CheckIfStuck(int8_t dir);
 
+//sets the ref value based on the geneva state
 static int geneva_SetRef(geneva_positions position);
 
-static float singlePID(float ref, float state, float K[3]);
-
-static float scaleAndLimit(float controlValue);
+//PID function
+static float singlePID(float ref, float state, struct PIDconstants K);
 
 static void setoutput(float PWM);
 
@@ -39,6 +38,9 @@ void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 	geneva_cnt  = HAL_GetTick();	// store the start time
+	genevaK.kP = 50.0F;//kp
+	genevaK.kI = 4.0F;//ki
+	genevaK.kD = 0.7F;//kd
 }
 
 void geneva_Deinit(){
@@ -47,7 +49,6 @@ void geneva_Deinit(){
 }
 
 void geneva_Callback(int genevaStateRef){
-	float genevaK[3] = {0,0,0};//kp,ki,kp
 	static int genevaRef = 0;
 	static int currentStateRef = 3; //impossible state to kick-start
 
@@ -68,14 +69,12 @@ void geneva_Callback(int genevaStateRef){
 
 	int state = (int32_t)__HAL_TIM_GetCounter(&htim2);
 	float controlValue = singlePID(genevaRef, state, genevaK);
-	float PWM = scaleAndLimit(controlValue);
-	setoutput(PWM);
+	setoutput(controlValue);
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void geneva_EdgeCallback(int edge_cnt){
-	uprintf("ran into edge.\n\r");
 	__HAL_TIM_SET_COUNTER(&htim2, edge_cnt);
 	geneva_state = geneva_running;
 }
@@ -83,8 +82,9 @@ static void geneva_EdgeCallback(int edge_cnt){
 static inline void CheckIfStuck(int8_t dir){
 	static uint tick = 0xFFFF;
 	static int enc;
-	if(geneva_Encodervalue() != enc){
-		enc = geneva_Encodervalue();
+	int geneva_Encodervalue = (int32_t)__HAL_TIM_GetCounter(&htim2);
+	if(geneva_Encodervalue != enc){
+		enc = geneva_Encodervalue;
 		tick = HAL_GetTick();
 	}else if(tick + 70 < HAL_GetTick()){
 		geneva_EdgeCallback(dir*GENEVA_CAL_EDGE_CNT);
@@ -109,21 +109,19 @@ static int geneva_SetRef(geneva_positions position){
 	return 0;
 }
 
-static float singlePID(int ref, int state, float K[3]){
+static float singlePID(float ref, float state, struct PIDconstants K){
 	static float prev_e = 0;
 	static float I = 0;
-	float err = constrainAngle(ref - state);
-	float P = K[kP]*err;
-	I += K[kI]*err*TIME_DIFF;
-	float D = (K[kD]*(err-prev_e))/TIME_DIFF;
+	float err = ref - state;
+	float P = K.kP*err;
+	if(abs(err)>(GENEVA_MAX_ALLOWED_OFFSET*0.5)){
+		I += K.kI*err*TIME_DIFF;
+	}
+	float D = (K.kD*(err-prev_e))/TIME_DIFF;
 	prev_e = err;
 	float PIDvalue = P + I + D;
 	return PIDvalue;
  }
-
-static float scaleAndLimit(float controlValue){
-	return 0;
-}
 
 static void setoutput(float PWM){
 	return;

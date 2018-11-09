@@ -6,9 +6,10 @@
  */
 
 #include "geneva.h"
-#include "pid/pid.h"
-#include "../PuttyInterface/PuttyInterface.h"
 
+
+///////////////////////////////////////////////////// DEFINITIONS
+// Basically set constants
 #define USE_SENSOR 0			// use the geneva sensor or always move to the edge
 #define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
 #define GENEVA_CAL_SENS_CNT 1400	// the amount of counts from the sensor to the center
@@ -19,49 +20,21 @@ geneva_states geneva_state = geneva_idle;	// current state of the geneva system
 
 uint geneva_cnt;							// last measured encoder count
 
-//declare de pid controller
-PID_controller_HandleTypeDef Geneva_pid = {
-		.pid = {0,0,0},
-		.K_terms = {50.0F, 4.0F, 0.7F},
-		.ref = 0.0F,
-		.timestep = 0.0F,
-		.actuator = &htim10,
-		.actuator_channel = TIM_CHANNEL_1,
-		.CallbackTimer = &htim6,
-		.CLK_FREQUENCY = 48000000.0F,
-		.current_pwm = 0,
-		.dir[0] = Geneva_dir_B_Pin,
-		.dir[1] = Geneva_dir_A_Pin,
-		.dir_Port[0] = Geneva_dir_B_GPIO_Port,
-		.dir_Port[1] = Geneva_dir_A_GPIO_Port,
-};
+///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-/*--------------static functions---------------*/
 /*	to be called when the edge is detected
  * param:	the current distance to the middle positon
  */
-static void geneva_EdgeCallback(int edge_cnt){
-	uprintf("ran into edge.\n\r");
-	__HAL_TIM_SET_COUNTER(&htim2, edge_cnt);
-	Geneva_pid.ref = 0;
-	geneva_state = geneva_returning;
-}
+static void geneva_EdgeCallback(int edge_cnt);
 
 /*	check if the geneva drive got stuck and responds appropriatly
  *	param:
  *		dir: direction to go if we got stuck
  */
-static inline void CheckIfStuck(int8_t dir){
-	static uint tick = 0xFFFF;			//
-	static int enc;
-	if(geneva_Encodervalue() != enc){
-		enc = geneva_Encodervalue();
-		tick = HAL_GetTick();
-	}else if(tick + 70 < HAL_GetTick()){
-		geneva_EdgeCallback(dir*GENEVA_CAL_EDGE_CNT);
-	}
-}
-/*---------------public functions-------------------*/
+static inline void CheckIfStuck(int8_t dir);
+
+///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
+
 void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
 	pid_Init(&Geneva_pid);			// initialize the pid controller
@@ -142,3 +115,28 @@ geneva_positions geneva_GetPosition(){
 	}
 	return 2 + (geneva_Encodervalue()/GENEVA_POSITION_DIF_CNT);
 }
+
+///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
+
+static void geneva_EdgeCallback(int edge_cnt){
+	uprintf("ran into edge.\n\r");
+	__HAL_TIM_SET_COUNTER(&htim2, edge_cnt);
+	Geneva_pid.ref = 0;
+	geneva_state = geneva_returning;
+}
+
+static inline void CheckIfStuck(int8_t dir){
+	static uint tick = 0xFFFF;			//
+	static int enc;
+	if(geneva_Encodervalue() != enc){
+		enc = geneva_Encodervalue();
+		tick = HAL_GetTick();
+	}else if(tick + 70 < HAL_GetTick()){
+		geneva_EdgeCallback(dir*GENEVA_CAL_EDGE_CNT);
+	}
+}
+
+
+
+
+

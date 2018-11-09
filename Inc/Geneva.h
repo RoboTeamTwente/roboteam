@@ -4,10 +4,30 @@
  *  Created on: Nov 9, 2018
  *      Author: kjhertenberg
  */
+/*
+Description: Determines the wanted wheel speed, based on received data
+
+Instructions:
+1) Initialize
+2) Receives data of it's state
+3) Combine data, not in here yet
+4) Transform data to right frame and units
+5) Apply control functions
+6) Scale and limit the outgoing signal
+
+Extra functions:
+
+GPIO Pins: None
+
+Notes:
+Still need to add the right specs
+*/
 
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
 
+///////////////////////////////////////////////////// VARIABLE STRUCT
+//// Structs
 
 typedef enum{
 	geneva_idle,		// in idle it will do nothing
@@ -24,6 +44,9 @@ typedef enum{
 	geneva_rightright,
 	geneva_none			// While rotating
 }geneva_positions;
+
+///////////////////////////////////////////////////// FUNCTION PROTOTYPES
+//// PUBLIC
 
 void geneva_Init();
 

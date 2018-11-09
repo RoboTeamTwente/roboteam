@@ -29,10 +29,6 @@ Still need to add the right specs
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
-typedef enum {
-	DO_succes,
-	DO_error
-}DO_States;
 
 typedef enum {
 	body_x,
@@ -47,17 +43,21 @@ typedef enum {
 	wheels_LF,
 }wheel_names;
 
-typedef enum {
-	kP,
-	kI,
-	kD,
-}kPID;
+typedef struct PIDconstants {
+	float kP;
+	float kI;
+	float kD;
+}PIDconstants;
+
+struct PIDconstants angleK = {0};
+struct PIDconstants wheelK = {0};
 
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
 
 int vel_control_Init();
+
 void vel_control_Callback(float wheel_ref[4], float Xsensdata[3], float vel_ref[3]);
 
 #endif /* DO_DO_H_ */

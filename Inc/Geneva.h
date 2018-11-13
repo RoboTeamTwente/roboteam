@@ -5,36 +5,58 @@
  *      Author: kjhertenberg
  */
 /*
-Description: Determines the wanted wheel speed, based on received data
+Description: controls the geneva drive
 
 Instructions:
 1) Initialize
-2) Receives data of it's state
-3) Combine data, not in here yet
-4) Transform data to right frame and units
-5) Apply control functions
-6) Scale and limit the outgoing signal
+2) it will calibrate
+3) update the ref in main
+4) apply PID control
+5) set output
 
 Extra functions:
 
-GPIO Pins: None
+GPIO Pins:
+Geneva_dir_B_Pin; // pin number of channel B
+Geneva_dir_A_Pin;// pin number of channel A
+Geneva_dir_B_GPIO_Port; // GPIO Port of channel B
+Geneva_dir_A_GPIO_Port; // GPIO Port of channel A
 
 Notes:
-Still need to add the right specs
+Some code in here that i am unsure about if it's necessary
 */
+
 
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
+
+#  if __has_include("stm32f0xx_hal.h")
+#    include "stm32f0xx_hal.h"
+#  elif  __has_include("stm32f3xx_hal.h")
+#    include "stm32f3xx_hal.h"
+#  elif  __has_include("stm32f4xx_hal.h")
+#    include "stm32f4xx_hal.h"
+#  endif
+
+#include "tim.h"
+#include "gpio.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
-#include "gpio.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 
+typedef struct{
+	float Kp;
+	float Ki;
+	float Kd;
+}PIDconstants;// holds the control factors
+
 typedef enum{
-	geneva_idle,		// We are not doing anything
+	geneva_idle,		// in idle it will do nothing
 	geneva_setup,		// at startup it will try to find the edge sensor
+	geneva_returning,	// when moving back to the initial/zero position
 	geneva_running		// when being operational
 }geneva_states;
 
@@ -47,24 +69,23 @@ typedef enum{
 	geneva_none			// While rotating
 }geneva_positions;
 
-typedef struct PIDconstants {
-	float kP;
-	float kI;
-	float kD;
-}PIDconstants;
+typedef struct{
+	PIDconstants K_terms;
+	float ref;
+	float timestep;
+	TIM_HandleTypeDef* actuator;
+	uint32_t actuator_channel;
+	TIM_HandleTypeDef* CallbackTimer;
+	float CLK_FREQUENCY;
+	int16_t current_pwm;
+	uint16_t dir[2];					// pin number of channel A and B respectively
+	GPIO_TypeDef * dir_Port[2];			// GPIO Port of channel A and B respectively
+	uint16_t max_pwm;
+}PID_controller_HandleTypeDef;
 
-// Pin/timer variables
-TIM_HandleTypeDef* actuator;
-uint32_t actuator_channel;
-uint16_t dir[2];					// pin number of channel A and B respectively
-GPIO_TypeDef * dir_Port[2];			// GPIO Port of channel A and B respectively
-
-//Geneva variables
+PID_controller_HandleTypeDef Geneva_pid;
 uint geneva_cnt;							// last measured encoder count
-geneva_states geneva_state;	// current state of the geneva system
-
-//PIDConstant
-struct PIDconstants genevaK = {0};
+geneva_states geneva_state = geneva_idle;	// current state of the geneva system
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
@@ -73,6 +94,25 @@ void geneva_Init();
 
 void geneva_Deinit();
 
-void geneva_Callback(int genevaStateRef);
+/*	this function calls its pid controller and should be called with a specific time
+ *
+ */
+void geneva_Callback();
+
+/*	for debugging, sets the current geneva state
+ *
+ */
+void geneva_SetState(geneva_states state);
+
+
+/*	Set the position to one of the values of geneva_positions
+ *
+ */
+void geneva_SetPosition(geneva_positions position);
+
+/*	returns the current positions
+ * 	from -2 to 2
+ */
+geneva_positions geneva_GetPosition();
 
 #endif /* GENEVA_GENEVA_H_ */

@@ -13,10 +13,10 @@
 ///////////////////////////////////////////////////// DEFINITIONS
 // Basically set constants
 #define TIME_DIFF 0.01F // time difference due to 100Hz
-#define R 0.0775F 	// robot radius (m) (from center to wheel contact point)
-#define r 0.0275F 	// wheel radius (m)
-#define c 0.5F		// cosine of 60 degrees (wheel angle is at 60 degrees)
-#define s 0.866F	// sine of 60 degrees
+#define rad_robot 0.0775F 	// robot radius (m) (from center to wheel contact point)
+#define rad_wheel 0.0275F 	// wheel radius (m)
+#define cos60 0.5F		// cosine of 60 degrees (wheel angle is at 60 degrees)
+#define sin60 0.866F	// sine of 60 degrees
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -26,13 +26,10 @@ static void body2Wheels(float input[2], float output[4]);
 //transfer global coordinate frame to local coordinate frame
 static void global2Local(float input[3], float output[2], float  yaw);
 
-//PID for the angle specifically, (since it's rotation the coordinates are non-euclidean)
-static float anglePID(float ref, float state, struct PIDconstants K);
+//PID
+static float PID(float err, struct PIDconstants K);
 
-//PID for 2 index arrays
-static void doublePID(float PIDvalue[2], float ref[2], float state[3], struct PIDconstants K);
-
-//function to prevent asking for impossible stuff
+//scales and limit the signal
 static void scaleAndLimit(float wheel_ref[4]);
 
 //Scales the angle to the range Pi to -Pi in radians
@@ -42,6 +39,7 @@ static float constrainAngle(float x);
 
 int vel_control_Init(){
 	HAL_TIM_Base_Start_IT(&htim7);
+	//TODO: add control values based on tests
 	angleK.kP = 0;//kp
 	angleK.kI = 0;//ki
 	angleK.kD = 0;//kd
@@ -63,16 +61,15 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 	xsensData[body_w] = 0*M_PI;
 	*/
 
-	float angleComp = anglePID(vel_ref[body_w], xsensData[body_w], angleK);// angle control
+	float angleErr = constrainAngle((vel_ref[body_w] - xsensData[body_w]));//constrain it to one circle turn
+	float angleComp = PID(angleErr, angleK);// angle PID control
 	float velLocalRef[2] = {0};
 	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
 
-	float PIDoutput[2] = {0};
-	doublePID(PIDoutput, velLocalRef, xsensData, wheelK); //xy velocity control
-	PIDoutput[body_x] += velLocalRef[body_x]; //error compensation plus requested velocity
-	PIDoutput[body_y] += velLocalRef[body_y];
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), angleK);; //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), angleK);;
 
-	body2Wheels(wheel_ref, PIDoutput); //translate velocity to wheel speed
+	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 
 	for (int i = 0; i < 4; ++i){
 		wheel_ref[i] += angleComp; //add necessary rotation value
@@ -92,24 +89,22 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 
 static void body2Wheels(float output[4], float input[2]){
 	//mixing matrix
-	output[wheels_RF] = -(1/s*input[body_x] + 1/c*input[body_y])*r/4;
-	output[wheels_RB] = -(1/s*input[body_x] - 1/c*input[body_y])*r/4;
-	output[wheels_LB] = -(-1/s*input[body_x] - 1/c*input[body_y])*r/4;
-	output[wheels_LF] = -(-1/s*input[body_x] + 1/c*input[body_y])*r/4;
+	output[wheels_RF] = -(1/sin60*input[body_x] + 1/cos60*input[body_y])*rad_wheel/4;
+	output[wheels_RB] = -(1/sin60*input[body_x] - 1/cos60*input[body_y])*rad_wheel/4;
+	output[wheels_LB] = -(-1/sin60*input[body_x] - 1/cos60*input[body_y])*rad_wheel/4;
+	output[wheels_LF] = -(-1/sin60*input[body_x] + 1/cos60*input[body_y])*rad_wheel/4;
 }
 
 static void global2Local(float input[2], float output[2], float  yaw){
 	//trigonometry
-	float globalXVel = input[body_x];//cos(input[1])*input[0];
-	float globalYVel = input[body_y];//sin(input[1])*input[0];
-	output[body_x] = cos(yaw)*globalXVel-sin(yaw)*globalYVel;
-	output[body_y] = sin(yaw)*globalXVel+cos(yaw)*globalYVel;
+	output[body_x] = cos(yaw)*input[body_x]-sin(yaw)*input[body_y];
+	output[body_y] = sin(yaw)*input[body_x]+cos(yaw)*input[body_y];
 }
 
-static float anglePID(float ref, float state, struct PIDconstants K){
+//TODO:Move to utils and implement it also in other files
+static float PID(float err, struct PIDconstants K){
 	static float prev_e = 0;
 	static float I = 0;
-	float err = constrainAngle(ref - state); //constrain it to one circle turn
 	float P = K.kP*err;
 	I += K.kI*err*TIME_DIFF;
 	float D = (K.kD*(err-prev_e))/TIME_DIFF;
@@ -118,25 +113,8 @@ static float anglePID(float ref, float state, struct PIDconstants K){
 	return PIDvalue;
 }
 
-// PID for a 2 index array
-static void doublePID(float PIDvalue[2], float ref[2], float state[3], struct PIDconstants K){
-		static float prev_e[2] = {0};
-		float P[2] = {0};
-		static float I[2] = {0};
-		float D[2] = {0};
-		float err[2] = {0};
-		for (int i = 0; i<2; ++i){
-			err[i] = ref[i] - state[i];
-			P[i] = K.kP*err[i];
-			I[i] += K.kI*err[i]*TIME_DIFF;
-			D[i] = (K.kD*(err[i]-prev_e[i]))/TIME_DIFF;
-			prev_e[i] = err[i];
-			PIDvalue[i] = P[i] + I[i] + D[i];
-		}
-}
-
 static void scaleAndLimit(float wheel_ref[4]){
-	//add some limitation stuff here
+	//TODO: add some limitation stuff here
 }
 
 //Scales the angle to the range Pi to -Pi in radians

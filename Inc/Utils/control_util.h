@@ -29,8 +29,8 @@ typedef struct {
 	float timeDiff;
 }PIDvariables;
 
-
-float PID(float err, PIDvariables K){
+//PID control, static to not have multiple implmentation error
+static float PID(float err, PIDvariables K){
 	static float I = 0;
 	float P = K.kP*err;
 	I += K.kI*err*K.timeDiff;

@@ -26,9 +26,6 @@ static void body2Wheels(float input[2], float output[4]);
 //transfer global coordinate frame to local coordinate frame
 static void global2Local(float input[3], float output[2], float  yaw);
 
-//PID
-static float PID(float err, struct PIDconstants K);
-
 //scales and limit the signal
 static void scaleAndLimit(float wheel_ref[4]);
 
@@ -43,9 +40,13 @@ int vel_control_Init(){
 	angleK.kP = 0;//kp
 	angleK.kI = 0;//ki
 	angleK.kD = 0;//kd
+	angleK.prev_e = 0;//always starts as zero
+	angleK.timeDiff = TIME_DIFF;//
 	wheelK.kP = 0;//kp
 	wheelK.kI = 0;//ki
 	wheelK.kD = 0;//kd
+	wheelK.prev_e = 0;//always starts as zero
+	angleK.timeDiff = TIME_DIFF;
 	return 0;
 }
 
@@ -99,18 +100,6 @@ static void global2Local(float input[2], float output[2], float  yaw){
 	//trigonometry
 	output[body_x] = cos(yaw)*input[body_x]-sin(yaw)*input[body_y];
 	output[body_y] = sin(yaw)*input[body_x]+cos(yaw)*input[body_y];
-}
-
-//TODO:Move to utils and implement it also in other files
-static float PID(float err, struct PIDconstants K){
-	static float prev_e = 0;
-	static float I = 0;
-	float P = K.kP*err;
-	I += K.kI*err*TIME_DIFF;
-	float D = (K.kD*(err-prev_e))/TIME_DIFF;
-	prev_e = err;
-	float PIDvalue = P + I + D;
-	return PIDvalue;
 }
 
 static void scaleAndLimit(float wheel_ref[4]){

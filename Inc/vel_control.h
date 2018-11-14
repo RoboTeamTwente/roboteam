@@ -26,31 +26,13 @@ Still need to add the right specs
 #ifndef CONTROL_H_
 #define CONTROL_H_
 #include <stdbool.h>
+#include "Utils/control_util.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 
-typedef enum {
-	body_x,
-	body_y,
-	body_w,
-}body_handles;
-
-typedef enum {
-	wheels_RF,
-	wheels_RB,
-	wheels_LB,
-	wheels_LF,
-}wheel_names;
-
-typedef struct PIDconstants {
-	float kP;
-	float kI;
-	float kD;
-}PIDconstants;
-
-struct PIDconstants angleK = {0};
-struct PIDconstants wheelK = {0};
+PIDvariables angleK;
+PIDvariables wheelK;
 
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES

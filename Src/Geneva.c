@@ -51,10 +51,6 @@ void geneva_Init(){
 	Geneva_pid.actuator_channel = TIM_CHANNEL_1;
 	Geneva_pid.CallbackTimer = &htim6;
 	Geneva_pid.CLK_FREQUENCY = 48000000.0F;
-	Geneva_pid.dir[0] = Geneva_dir_B_Pin; // pin number of channel B
-	Geneva_pid.dir[1] = Geneva_dir_A_Pin;// pin number of channel A
-	Geneva_pid.dir_Port[0] = Geneva_dir_B_GPIO_Port; // GPIO Port of channel B
-	Geneva_pid.dir_Port[1] = Geneva_dir_A_GPIO_Port; // GPIO Port of channel A
 	Geneva_pid.max_pwm = Geneva_pid.actuator->Init.Period;
 	HAL_TIM_PWM_Start(Geneva_pid.actuator,TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(Geneva_pid.CallbackTimer);
@@ -174,14 +170,14 @@ static int32_t ClipFloat(float input, float min, float max){
 // directly set the current output, if the pid control loop is running, this will not have much effect
 static void pid_SetOutput(int pwm, PID_controller_HandleTypeDef* pc){
 	if(pwm < -SWITCH_OFF_TRESHOLD){
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 1);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 0);
+		set_pin(Geneva_DIR_B_pin, 1);
+		set_pin(Geneva_DIR_A_pin, 0);
 	}else if(pwm > SWITCH_OFF_TRESHOLD){
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 0);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 1);
+		set_pin(Geneva_DIR_B_pin, 0);
+		set_pin(Geneva_DIR_A_pin, 1);
 	}else{
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 0);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 0);
+		set_pin(Geneva_DIR_B_pin, 0);
+		set_pin(Geneva_DIR_A_pin, 0);
 	}
 	pwm = abs(pwm);
 	pwm = ClipInt(pwm, 0, pc->actuator->Init.Period/MAX_DUTY_CYCLE_INVERSE_FRACTION);// Power limited by having maximum duty cycle, legacy not sure if necessary

@@ -29,7 +29,7 @@ typedef struct {
 	float timeDiff;
 }PIDvariables;
 
-//PID control, static to not have multiple implmentation error
+//PID control, static to not have multiple implementation error
 static float PID(float err, PIDvariables K){
 	static float I = 0;
 	float P = K.kP*err;

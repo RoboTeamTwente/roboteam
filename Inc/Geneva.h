@@ -39,8 +39,8 @@ Some code in here that i am unsure about if it's necessary
 #  endif
 
 #include "tim.h"
-#include "gpio.h"
 #include "Utils/control_util.h"
+#include "Utils/gpio_util.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -72,8 +72,6 @@ typedef struct{
 	TIM_HandleTypeDef* CallbackTimer;
 	float CLK_FREQUENCY;
 	int16_t current_pwm;
-	uint16_t dir[2];					// pin number of channel A and B respectively
-	GPIO_TypeDef * dir_Port[2];			// GPIO Port of channel A and B respectively
 	uint16_t max_pwm;
 }PID_controller_HandleTypeDef;
 

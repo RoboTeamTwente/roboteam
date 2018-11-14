@@ -5,7 +5,7 @@
  *      Author: kjhertenberg
  */
 
-#include "geneva.h"
+#include "Geneva.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -44,8 +44,6 @@ static int geneva_Encodervalue();
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
-	static uint8_t n_motors = 0;
-	n_motors++;	//for every motor geneva is initialized
 	//initialize Pid values that have to stay initialized/declared
 	Geneva_pid.K_terms.Kp = 50.0F; //kp
 	Geneva_pid.K_terms.Ki = 4.0F; //ki
@@ -62,8 +60,8 @@ void geneva_Init(){
 	Geneva_pid.max_pwm = Geneva_pid.actuator->Init.Period;
 	HAL_TIM_PWM_Start(Geneva_pid.actuator,TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(Geneva_pid.CallbackTimer);
-	Geneva_pid.timestep = (((float)n_motors*(float)Geneva_pid.CallbackTimer->Init.Period))/(Geneva_pid.CLK_FREQUENCY/((float)(Geneva_pid.CallbackTimer->Init.Prescaler + 1)));
-	__HAL_TIM_SET_AUTORELOAD(Geneva_pid.CallbackTimer, __HAL_TIM_GET_AUTORELOAD(Geneva_pid.CallbackTimer)/ n_motors);
+	Geneva_pid.timestep = (((float)Geneva_pid.CallbackTimer->Init.Period))/(Geneva_pid.CLK_FREQUENCY/((float)(Geneva_pid.CallbackTimer->Init.Prescaler + 1)));
+	__HAL_TIM_SET_AUTORELOAD(Geneva_pid.CallbackTimer, __HAL_TIM_GET_AUTORELOAD(Geneva_pid.CallbackTimer));
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 	geneva_cnt  = HAL_GetTick();	// store the start time
 }

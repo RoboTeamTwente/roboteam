@@ -67,7 +67,6 @@ GPIO_Pin LED4_pin			= { LD4_GPIO_Port			, LD4_Pin			};
 GPIO_Pin LED5_pin			= { LD5_GPIO_Port			, LD5_Pin			};
 GPIO_Pin LED6_pin			= { LD6_GPIO_Port			, LD6_Pin			};
 
-
 // ID select
 GPIO_Pin ID0_pin			= { ID0_GPIO_Port			, ID0_Pin			};
 GPIO_Pin ID1_pin			= { ID1_GPIO_Port			, ID1_Pin			};
@@ -77,6 +76,8 @@ GPIO_Pin ID3_pin			= { ID3_GPIO_Port			, ID3_Pin			};
 // Frequency select
 GPIO_Pin FRQ_sel			= { SW_freq_GPIO_Port		, SW_freq_Pin		};
 
+// Xsens 
+GPIO_Pin Xsens_enable_pin			= {XSENS_nRST_GPIO_Port		, XSENS_nRST_Pin	};
 
 // Utility functions
 

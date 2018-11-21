@@ -46,7 +46,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "MTi.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -117,15 +117,22 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
+  /////////////////////////////////////////// INIT FUNCTIONS
+  MTi_Init(&MTi, 6, XFP_General);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    uint16_t error_code = 0;
+
+    // update MTi
+    // TODO: move this to a dedicated timer
+    if((error_code = MTi_Update(&MTi)) != 0) uprintf("MTi: Failed: %u",error_code);
 
   /* USER CODE END WHILE */
-
   /* USER CODE BEGIN 3 */
 
   }
@@ -192,6 +199,12 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+///////////////////////////////////////////// CALLBACK FUNCTIONS
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart->Instance == huartMTi.Instance){// Input from the Xsens
+		MTi_UART_RxCpltCallback(&MTi);
+	}
+}
 
 /* USER CODE END 4 */
 

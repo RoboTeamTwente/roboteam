@@ -45,6 +45,7 @@ void geneva_Init(){
 	Geneva_pid.PIDvar.kP = 50.0F; //kp
 	Geneva_pid.PIDvar.kI = 4.0F; //ki
 	Geneva_pid.PIDvar.kD = 0.7F; //kd
+	Geneva_pid.PIDvar.I = 0; //always starts at zero
 	Geneva_pid.PIDvar.prev_e = 0; //Always start at zero
 	Geneva_pid.ref = 0.0F;
 	Geneva_pid.actuator = &htim10;
@@ -88,9 +89,9 @@ void geneva_Callback(){
 	if(geneva_idle != geneva_state){
 		float state = geneva_Encodervalue();
 		float err = Geneva_pid.ref- state;
-		if(abs(err)>GENEVA_MAX_ALLOWED_OFFSET*0.5){ //prevents the integrate control from oscillating around zero, and heating the driver
+		if(abs(err)>GENEVA_MAX_ALLOWED_OFFSET){ //prevents the integrate control from oscillating around zero, and heating the driver
 			float PIDoutput = PID(err, Geneva_pid.PIDvar); //PID from control_util.h
-			PIDoutput = ClipFloat(PIDoutput, -4 * Geneva_pid.max_pwm, 4 * Geneva_pid.max_pwm); //Limit the PID output, legacy, not sure if necessary
+			PIDoutput = ClipFloat(PIDoutput, Geneva_pid.max_pwm, Geneva_pid.max_pwm); //Limit the PID output, legacy, not sure if necessary
 			pid_SetOutput(PIDoutput, &Geneva_pid); //send signal to the motor
 		}
 	}

@@ -40,11 +40,13 @@ int vel_control_Init(){
 	angleK.kP = 0;//kp
 	angleK.kI = 0;//ki
 	angleK.kD = 0;//kd
+	angleK.I = 0;//always starts as zero
 	angleK.prev_e = 0;//always starts as zero
 	angleK.timeDiff = TIME_DIFF;//
 	wheelK.kP = 0;//kp
 	wheelK.kI = 0;//ki
 	wheelK.kD = 0;//kd
+	wheelK.I = 0;//always starts as zero
 	wheelK.prev_e = 0;//always starts as zero
 	angleK.timeDiff = TIME_DIFF;
 	return 0;
@@ -68,8 +70,8 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
 
 	// PID control from control_util.h
-	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), angleK);; //error compensation plus requested velocity
-	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), angleK);;
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), angleK); //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), angleK);
 
 	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 

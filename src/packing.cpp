@@ -51,7 +51,11 @@ namespace rtt {
         llrc.driving_reference  = false;                                           // [0, 1]          {true, false}
         llrc.use_cam_info       = false;                                           // [0, 1]          {true, false}
         llrc.use_angle          = command.use_angle;                               // [0, 1]          {true, false}
-        llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));    // [-512, 511]     [-8*2pi, 8*2pi]
+        if(command.use_angle){
+            llrc.velocity_angular   = (int)floor(command.w * (511 / M_PI));        // [-512, 511]     [-pi, pi]
+        }else{
+            llrc.velocity_angular   = (int)floor(command.w * (511 / (8 * 2*M_PI)));// [-512, 511]     [-8*2pi, 8*2pi]
+        }
         llrc.debug_info         = true;                                            // [0, 1]          {true, false}
         llrc.do_kick            = command.kicker;                                  // [0, 1]          {true, false}
         llrc.do_chip            = command.chipper;                                 // [0, 1]          {true, false}

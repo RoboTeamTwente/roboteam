@@ -363,6 +363,7 @@ void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand 
     // geneva_angle in radians
     float geneva_angle = 2 * M_PI * angles[index] / 360;
     command->set_geneva_angle(geneva_angle);
+    command->set_use_angle(msg.use_angle);
 }
 
 }

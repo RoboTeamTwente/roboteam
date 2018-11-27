@@ -32,11 +32,11 @@ typedef struct {
 
 //PID control, static to not have multiple implementation error
 inline float PID(float err, PIDvariables* K){
-	float P = K.kP*err;
-	K.I += K.kI*err*K.timeDiff;
-	float D = (K.kD*(err-K.prev_e))/K.timeDiff;
-	K.prev_e = err;
-	float PIDvalue = P + K.I + D;
+	float P = K->kP*err;
+	K->I += K->kI*err*K->timeDiff;
+	float D = (K->kD*(err-K->prev_e))/K->timeDiff;
+	K->prev_e = err;
+	float PIDvalue = P + K->I + D;
 	return PIDvalue;
 }
 

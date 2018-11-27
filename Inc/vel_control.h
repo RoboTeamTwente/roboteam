@@ -25,14 +25,39 @@ Still need to add the right specs
 
 #ifndef CONTROL_H_
 #define CONTROL_H_
+#define TIME_DIFF 0.01F // time difference due to 100Hz
 #include <stdbool.h>
 #include "Utils/control_util.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 
-PIDvariables angleK;
-PIDvariables velK;
+	//TODO: add control values based on tests
+PIDvariables angleK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
+PIDvariables velxK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
+PIDvariables velyK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
+
 
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES

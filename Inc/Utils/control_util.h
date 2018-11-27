@@ -25,18 +25,18 @@ typedef struct {
 	float kP;
 	float kI;
 	float kD;
+	float I;
 	float prev_e;
 	float timeDiff;
 }PIDvariables;
 
-
-float PID(float err, PIDvariables K){
-	static float I = 0;
-	float P = K.kP*err;
-	I += K.kI*err*K.timeDiff;
-	float D = (K.kD*(err-K.prev_e))/K.timeDiff;
-	K.prev_e = err;
-	float PIDvalue = P + I + D;
+//PID control, static to not have multiple implementation error
+inline float PID(float err, PIDvariables* K){
+	float P = K->kP*err;
+	K->I += K->kI*err*K->timeDiff;
+	float D = (K->kD*(err-K->prev_e))/K->timeDiff;
+	K->prev_e = err;
+	float PIDvalue = P + K->I + D;
 	return PIDvalue;
 }
 

@@ -90,7 +90,7 @@ void geneva_Callback(){
 		float state = geneva_Encodervalue();
 		float err = Geneva_pid.ref- state;
 		if(abs(err)>GENEVA_MAX_ALLOWED_OFFSET){ //prevents the integrate control from oscillating around zero, and heating the driver
-			float PIDoutput = PID(err, Geneva_pid.PIDvar); //PID from control_util.h
+			float PIDoutput = PID(err, &Geneva_pid.PIDvar); //PID from control_util.h
 			PIDoutput = ClipFloat(PIDoutput, Geneva_pid.max_pwm, Geneva_pid.max_pwm); //Limit the PID output, legacy, not sure if necessary
 			pid_SetOutput(PIDoutput, &Geneva_pid); //send signal to the motor
 		}

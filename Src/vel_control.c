@@ -43,12 +43,12 @@ int vel_control_Init(){
 	angleK.I = 0;//always starts as zero
 	angleK.prev_e = 0;//always starts as zero
 	angleK.timeDiff = TIME_DIFF;//
-	wheelK.kP = 0;//kp
-	wheelK.kI = 0;//ki
-	wheelK.kD = 0;//kd
-	wheelK.I = 0;//always starts as zero
-	wheelK.prev_e = 0;//always starts as zero
-	angleK.timeDiff = TIME_DIFF;
+	velK.kP = 0;//kp
+	velK.kI = 0;//ki
+	velK.kD = 0;//kd
+	velK.I = 0;//always starts as zero
+	velK.prev_e = 0;//always starts as zero
+	velK.timeDiff = TIME_DIFF;
 	return 0;
 }
 
@@ -65,13 +65,13 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 	*/
 
 	float angleErr = constrainAngle((vel_ref[body_w] - xsensData[body_w]));//constrain it to one circle turn
-	float angleComp = PID(angleErr, angleK);// PID control from control_util.h
+	float angleComp = PID(angleErr, &angleK);// PID control from control_util.h
 	float velLocalRef[2] = {0};
 	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
 
 	// PID control from control_util.h
-	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), angleK); //error compensation plus requested velocity
-	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), angleK);
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), &velK); //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), &velK);
 
 	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 

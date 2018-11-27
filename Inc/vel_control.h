@@ -32,7 +32,7 @@ Still need to add the right specs
 //// Structs
 
 PIDvariables angleK;
-PIDvariables wheelK;
+PIDvariables velK;
 
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES

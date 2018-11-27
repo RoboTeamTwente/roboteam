@@ -217,16 +217,19 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="robot3.fr.ac6.managedbuild.target.gnu.cross.exe.553845514" name="Executable" projectType="fr.ac6.managedbuild.target.gnu.cross.exe"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869;fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1973798156;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1400750316">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration artifactName="${ProjName}" configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="robot3"/>
 		</configuration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869;fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1973798156;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1400750316">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.52899850;fr.ac6.managedbuild.config.gnu.cross.exe.release.52899850.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1973798156;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1400750316">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

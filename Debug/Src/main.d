@@ -35,7 +35,9 @@ Src/main.o: ../Src/main.c \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/spi.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/tim.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/usart.h \
- C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/gpio.h
+ C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/gpio.h \
+ C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/KickChip.h \
+ C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/gpio_util.h
 
 C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/main.h:
 
@@ -110,3 +112,7 @@ C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/tim.h:
 C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/usart.h:
 
 C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/gpio.h:
+
+C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/KickChip.h:
+
+C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/gpio_util.h:

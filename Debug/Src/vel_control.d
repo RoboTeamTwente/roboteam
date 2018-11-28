@@ -1,7 +1,6 @@
 Src/vel_control.o: ../Src/vel_control.c \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/vel_control.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/control_util.h \
- C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/control_util.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/tim.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/stm32f4xx_hal_conf.h \
@@ -36,8 +35,6 @@ Src/vel_control.o: ../Src/vel_control.c \
  C:/RoboTeam/CODE/roboteam_microcontroller3.0/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
 C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/vel_control.h:
-
-C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/control_util.h:
 
 C:/RoboTeam/CODE/roboteam_microcontroller3.0/Inc/Utils/control_util.h:
 

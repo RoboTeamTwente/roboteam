@@ -200,7 +200,7 @@ void SystemClock_Config(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == kicktim.Instance){
-		kick_Callback();
+		kick_Callback(&kick);
 	}
 }
 /* USER CODE END 4 */

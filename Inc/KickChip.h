@@ -43,13 +43,14 @@ typedef struct kickchip{
 
 kickchip kick;
 
-// set init values for the gpio ports and initiate timer
+//  set init values for the gpio ports and initiate timer
 void kick_Init(kickchip* kick);
-// de-activate kicker circuit
+//  de-activate kicker circuit
 void kick_DeInit(kickchip* kick);
-// shoot or chip the ball, given a certain strength
-void kick_Shoot(kickchip* kick, int percentage, bool kick);
+//  shoot or chip the ball, given a certain strength
+kick_states kick_Shoot(kickchip* kick, int percentage, bool kick_chip);
 //  timer callback function controlling the states
 void kick_Callback(kickchip* kick);
-
+//  handle kick command
+void Kick_handle_command(kickchip *kick, char* input, int len);
 #endif

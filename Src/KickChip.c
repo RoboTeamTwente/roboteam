@@ -32,8 +32,9 @@ void kick_DeInit(kickchip *kick){
  */
 kick_states kick_Shoot(kickchip *kick, int percentage, bool kick_chip){
     // check if output is in range
-    if (percentage < 1) return kick->Kstate = kick_Ready;
-    else if (percentage > 100){
+    if (percentage < 1) {
+        return kick->Kstate = kick_Ready;   // kicking is not worth it
+    } else if (percentage > 100){
         percentage = 100;
     }
 
@@ -71,7 +72,7 @@ void kick_Callback(kickchip *kick){
         Callback_time = 100 * Timestep;    // Set timer to 100ms
     }
     else if (kick->Kstate == kick_Charging){
-        if (!read_pin(Charge_done_pin)){ // If kick_Charging is done
+        if (!read_pin(Charge_done_pin)){ // stay in charging if not done yet
             set_pin(Charge_pin, GPIO_PIN_RESET); // Turn kick_Charging off
             kick->Kstate = kick_Ready;           // Go to kick_Ready state
             kick->Charge = false;
@@ -92,4 +93,17 @@ void kick_Callback(kickchip *kick){
 void kick_Stateprint()
 {
     //	uprintf("Block = [%d]\n\r", kick_state);
+}
+
+void Kick_handle_command(kickchip *kick, char* input, int len){
+    if(!memcmp(input, "kick" , strlen("kick"))){
+        // kick
+        int percentage = strtol(input + 1 + strlen("kick"), NULL, 10);
+		kick_Shoot(kick, percentage ,KICK);
+	}
+    else if(!memcmp(input, "chip" , strlen("chip"))){
+        // chip
+        int percentage = strtol(input + 1 + strlen("chip"), NULL, 10);
+		kick_Shoot(kick, percentage, CHIP);
+    }
 }

@@ -36,7 +36,7 @@ inline float PID(float err, PIDvariables* K){
 	K->I += K->kI*err*K->timeDiff;
 	float D = (K->kD*(err-K->prev_e))/K->timeDiff;
 	K->prev_e = err;
-	float PIDvalue = P + K->I + D;
+	float PIDvalue = P + K->I - D;
 	return PIDvalue;
 }
 

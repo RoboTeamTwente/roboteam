@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include "tim.h"
 #include "KickChip.h"
+#include <string.h>
+#include <stdlib.h>
 
 #define Timestep 20
 

@@ -12,7 +12,6 @@
 
 ///////////////////////////////////////////////////// DEFINITIONS
 // Basically set constants
-#define TIME_DIFF 0.01F // time difference due to 100Hz
 #define rad_robot 0.0775F 	// robot radius (m) (from center to wheel contact point)
 #define rad_wheel 0.0275F 	// wheel radius (m)
 #define cos60 0.5F		// cosine of 60 degrees (wheel angle is at 60 degrees)
@@ -26,9 +25,6 @@ static void body2Wheels(float input[2], float output[4]);
 //transfer global coordinate frame to local coordinate frame
 static void global2Local(float input[3], float output[2], float  yaw);
 
-//PID
-static float PID(float err, struct PIDconstants K);
-
 //scales and limit the signal
 static void scaleAndLimit(float wheel_ref[4]);
 
@@ -39,13 +35,6 @@ static float constrainAngle(float x);
 
 int vel_control_Init(){
 	HAL_TIM_Base_Start_IT(&htim7);
-	//TODO: add control values based on tests
-	angleK.kP = 0;//kp
-	angleK.kI = 0;//ki
-	angleK.kD = 0;//kd
-	wheelK.kP = 0;//kp
-	wheelK.kI = 0;//ki
-	wheelK.kD = 0;//kd
 	return 0;
 }
 
@@ -62,12 +51,13 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 	*/
 
 	float angleErr = constrainAngle((vel_ref[body_w] - xsensData[body_w]));//constrain it to one circle turn
-	float angleComp = PID(angleErr, angleK);// angle PID control
+	float angleComp = PID(angleErr, &angleK);// PID control from control_util.h
 	float velLocalRef[2] = {0};
 	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
 
-	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), angleK);; //error compensation plus requested velocity
-	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), angleK);;
+	// PID control from control_util.h
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), &velxK); //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), &velyK);
 
 	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 
@@ -99,18 +89,6 @@ static void global2Local(float input[2], float output[2], float  yaw){
 	//trigonometry
 	output[body_x] = cos(yaw)*input[body_x]-sin(yaw)*input[body_y];
 	output[body_y] = sin(yaw)*input[body_x]+cos(yaw)*input[body_y];
-}
-
-//TODO:Move to utils and implement it also in other files
-static float PID(float err, struct PIDconstants K){
-	static float prev_e = 0;
-	static float I = 0;
-	float P = K.kP*err;
-	I += K.kI*err*TIME_DIFF;
-	float D = (K.kD*(err-prev_e))/TIME_DIFF;
-	prev_e = err;
-	float PIDvalue = P + I + D;
-	return PIDvalue;
 }
 
 static void scaleAndLimit(float wheel_ref[4]){

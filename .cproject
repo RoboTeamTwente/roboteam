@@ -231,6 +231,7 @@
 			<resource resourceType="PROJECT" workspacePath="robot3"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869;fr.ac6.managedbuild.config.gnu.cross.exe.debug.1091355869.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1973798156;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1400750316">
@@ -240,5 +241,4 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

@@ -39,19 +39,14 @@ Some code in here that i am unsure about if it's necessary
 #  endif
 
 #include "tim.h"
-#include "gpio.h"
+#include "Utils/control_util.h"
+#include "Utils/gpio_util.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
-
-typedef struct{
-	float Kp;
-	float Ki;
-	float Kd;
-}PIDconstants;// holds the control factors
 
 typedef enum{
 	geneva_idle,		// in idle it will do nothing
@@ -70,16 +65,13 @@ typedef enum{
 }geneva_positions;
 
 typedef struct{
-	PIDconstants K_terms;
+	PIDvariables PIDvar;//struct from control_util.h
 	float ref;
-	float timestep;
 	TIM_HandleTypeDef* actuator;
 	uint32_t actuator_channel;
 	TIM_HandleTypeDef* CallbackTimer;
 	float CLK_FREQUENCY;
 	int16_t current_pwm;
-	uint16_t dir[2];					// pin number of channel A and B respectively
-	GPIO_TypeDef * dir_Port[2];			// GPIO Port of channel A and B respectively
 	uint16_t max_pwm;
 }PID_controller_HandleTypeDef;
 

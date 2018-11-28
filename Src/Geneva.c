@@ -35,9 +35,6 @@ static int32_t ClipFloat(float input, float min, float max);
 // directly set the current output, if the pid control loop is running, this will not have much effect
 static void pid_SetOutput(int pwm, PID_controller_HandleTypeDef* pc);
 
-// controls the output, to be called on a regular schedule
-static int singlePID(float ref, float state, PIDconstants K, float timestep);
-
 // gives the raw encoder data
 static int geneva_Encodervalue();
 
@@ -45,22 +42,20 @@ static int geneva_Encodervalue();
 void geneva_Init(){
 	geneva_state = geneva_setup;	// go to setup
 	//initialize Pid values that have to stay initialized/declared
-	Geneva_pid.K_terms.Kp = 50.0F; //kp
-	Geneva_pid.K_terms.Ki = 4.0F; //ki
-	Geneva_pid.K_terms.Kd = 0.7F; //kd
+	Geneva_pid.PIDvar.kP = 50.0F; //kp
+	Geneva_pid.PIDvar.kI = 4.0F; //ki
+	Geneva_pid.PIDvar.kD = 0.7F; //kd
+	Geneva_pid.PIDvar.I = 0; //always starts at zero
+	Geneva_pid.PIDvar.prev_e = 0; //Always start at zero
 	Geneva_pid.ref = 0.0F;
 	Geneva_pid.actuator = &htim10;
 	Geneva_pid.actuator_channel = TIM_CHANNEL_1;
 	Geneva_pid.CallbackTimer = &htim6;
 	Geneva_pid.CLK_FREQUENCY = 48000000.0F;
-	Geneva_pid.dir[0] = Geneva_dir_B_Pin; // pin number of channel B
-	Geneva_pid.dir[1] = Geneva_dir_A_Pin;// pin number of channel A
-	Geneva_pid.dir_Port[0] = Geneva_dir_B_GPIO_Port; // GPIO Port of channel B
-	Geneva_pid.dir_Port[1] = Geneva_dir_A_GPIO_Port; // GPIO Port of channel A
 	Geneva_pid.max_pwm = Geneva_pid.actuator->Init.Period;
 	HAL_TIM_PWM_Start(Geneva_pid.actuator,TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(Geneva_pid.CallbackTimer);
-	Geneva_pid.timestep = (((float)Geneva_pid.CallbackTimer->Init.Period))/(Geneva_pid.CLK_FREQUENCY/((float)(Geneva_pid.CallbackTimer->Init.Prescaler + 1)));
+	Geneva_pid.PIDvar.timeDiff = (((float)Geneva_pid.CallbackTimer->Init.Period))/(Geneva_pid.CLK_FREQUENCY/((float)(Geneva_pid.CallbackTimer->Init.Prescaler + 1)));
 	__HAL_TIM_SET_AUTORELOAD(Geneva_pid.CallbackTimer, __HAL_TIM_GET_AUTORELOAD(Geneva_pid.CallbackTimer));
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 	geneva_cnt  = HAL_GetTick();	// store the start time
@@ -93,9 +88,12 @@ void geneva_Callback(){
 		}
 	if(geneva_idle != geneva_state){
 		float state = geneva_Encodervalue();
-		int PIDoutput = singlePID(Geneva_pid.ref, state, Geneva_pid.K_terms, Geneva_pid.timestep);
-		PIDoutput = ClipFloat(PIDoutput, -4 * Geneva_pid.max_pwm, 4 * Geneva_pid.max_pwm); //Limit the PID output, legacy, not sure if necessary
-		pid_SetOutput(PIDoutput, &Geneva_pid); //send signal to the motor
+		float err = Geneva_pid.ref- state;
+		if(abs(err)>GENEVA_MAX_ALLOWED_OFFSET){ //prevents the integrate control from oscillating around zero, and heating the driver
+			float PIDoutput = PID(err, &Geneva_pid.PIDvar); //PID from control_util.h
+			PIDoutput = ClipFloat(PIDoutput, Geneva_pid.max_pwm, Geneva_pid.max_pwm); //Limit the PID output, legacy, not sure if necessary
+			pid_SetOutput(PIDoutput, &Geneva_pid); //send signal to the motor
+		}
 	}
 }
 
@@ -166,22 +164,6 @@ static void CheckIfStuck(int8_t dir){
 	}
 }
 
-//Applies the PID control
-static int singlePID(float ref, float state, PIDconstants K, float timestep){
-	static float prev_e = 0;
-	static float I = 0;
-	float err = ref - state;
-	float P  = K.Kp*err;
-	if(abs(err)>GENEVA_MAX_ALLOWED_OFFSET*0.5){
-		//prevents the integrate control from oscillating around zero, and heating the driver
-		I += K.Ki*err*timestep;
-	}
-	float D = (K.Kd*(err-prev_e))/timestep;
-	prev_e = err;
-	int PIDvalue = (P + I + D);
-	return PIDvalue;
-}
-
 static int32_t ClipFloat(float input, float min, float max){
 	return (input > max) ? max : (input < min) ? min : input;
 }
@@ -189,14 +171,14 @@ static int32_t ClipFloat(float input, float min, float max){
 // directly set the current output, if the pid control loop is running, this will not have much effect
 static void pid_SetOutput(int pwm, PID_controller_HandleTypeDef* pc){
 	if(pwm < -SWITCH_OFF_TRESHOLD){
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 1);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 0);
+		set_pin(Geneva_DIR_B_pin, 1);
+		set_pin(Geneva_DIR_A_pin, 0);
 	}else if(pwm > SWITCH_OFF_TRESHOLD){
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 0);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 1);
+		set_pin(Geneva_DIR_B_pin, 0);
+		set_pin(Geneva_DIR_A_pin, 1);
 	}else{
-		HAL_GPIO_WritePin(pc->dir_Port[0], pc->dir[0], 0);
-		HAL_GPIO_WritePin(pc->dir_Port[1], pc->dir[1], 0);
+		set_pin(Geneva_DIR_B_pin, 0);
+		set_pin(Geneva_DIR_A_pin, 0);
 	}
 	pwm = abs(pwm);
 	pwm = ClipInt(pwm, 0, pc->actuator->Init.Period/MAX_DUTY_CYCLE_INVERSE_FRACTION);// Power limited by having maximum duty cycle, legacy not sure if necessary

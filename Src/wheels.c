@@ -20,15 +20,15 @@
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-void SetPWM(float pwm[4]);
+static void SetPWM(float pwm[4]);
 
-void SetDir(bool direction[4]);
+static void SetDir(bool direction[4]);
 
-void getEncoderData(int encoderdata[4]);
+static void getEncoderData(int encoderdata[4]);
 
-float deriveEncoder(int encoderData[4]);
+static float deriveEncoder(int encoderData[4]);
 
-void limitScale();
+static void limitScale();
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -103,7 +103,7 @@ void wheelsCallback(float wheelref[4]){
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
-void limitScale(float output[4], float pwm[4], float direction[4]){
+static void limitScale(float output[4], float pwm[4], float direction[4]){
 
 	//Scale
 	float gearratio = 2.5;
@@ -131,26 +131,26 @@ void limitScale(float output[4], float pwm[4], float direction[4]){
 	}
 }
 
-void getEncoderData(int encoderData[4]){
+static void getEncoderData(int encoderData[4]){
 	encoderData[wheels_RF] = __HAL_TIM_GET_COUNTER(&htim1);
 	encoderData[wheels_RB] = __HAL_TIM_GET_COUNTER(&htim8);
 	encoderData[wheels_LB] = -__HAL_TIM_GET_COUNTER(&htim3); //  TODO: minus due to inverted routing (old robot)
 	encoderData[wheels_LF] = __HAL_TIM_GET_COUNTER(&htim4);
 }
 
-float deriveEncoder(int encoderData, int prev_encoderData){
+static float deriveEncoder(int encoderData, int prev_encoderData){
 	float wheel_speed = (encoderData-prev_encoderData)/TIME_DIFF;
 	return wheel_speed;
 }
 
-void SetPWM(float pwm[4]){
+static void SetPWM(float pwm[4]){
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, pwm[0]);
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, pwm[1]);
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, pwm[2]);
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, pwm[3]);
 }
 
-void SetDir(bool direction[4]){
+static void SetDir(bool direction[4]){
 		HAL_GPIO_WritePin(FR_RF_GPIO_Port,FR_RF_Pin, direction[0]);
 		HAL_GPIO_WritePin(FR_RB_GPIO_Port,FR_RB_Pin, direction[1]);
 		HAL_GPIO_WritePin(FR_LB_GPIO_Port,FR_LB_Pin, direction[2]);

@@ -57,8 +57,16 @@ PIDvariables velyK = {
 		.prev_e = 0,//always starts as zero
 		.timeDiff = TIME_DIFF
 };
+PIDvariables velwK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
 
-
+PIDvariables velK = {velxK, velyK, velwK};
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC

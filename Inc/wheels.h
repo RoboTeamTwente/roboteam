@@ -69,7 +69,6 @@ PIDvariables LFK = {
 		.timeDiff = TIME_DIFF
 };
 
-PIDvariables wheelsK[4] = {RFK, RBK, LBK, LFK};
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC

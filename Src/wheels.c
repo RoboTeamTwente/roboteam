@@ -20,13 +20,13 @@
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-static void SetPWM(float pwm[4]);
+static void SetPWM(int pwm[4]);
 
 static void SetDir(bool direction[4]);
 
 static void getEncoderData(int encoderdata[4]);
 
-static float deriveEncoder(int encoderData[4]);
+static float deriveEncoder(int encoderData, int prev_encoderData);
 
 static void limitScale();
 
@@ -61,6 +61,7 @@ void deinit(){
 void wheelsCallback(float wheelref[4]){
 
 	//TODO: add braking for rapid switching direction
+	//TODO: Add slipping case
 	/* dry testing
 	wheelref[0] = 0;
 	wheelref[1] = 0;
@@ -68,37 +69,39 @@ void wheelsCallback(float wheelref[4]){
 	wheelref[3] = 0;
 	*/
 	static bool direction[4] = {0}; // 0 is counter clock-wise TODO:confirm
-	static int prev_encoderData[4] = {0};
+	static int prev_state[4] = {0};
+	int state[4] = {0};
+	int output[4] = {0};
+	int pwm[4] = {0};
+	float err[4] = {0};
+	float wheelspeed[4] = {0};
 	switch(wheels_state){
-	default:
-		break;
-	case wheels_ready:
-		int encoderData[4] = {0};
-		int output[4] = {0};
-		int pwm[4] = {0};
-		float err = 0;
-		float wheelspeed[4] = {0};
-		float pIDValues[4] = {0};
+		default:
+			break;
+		case wheels_ready:
 
-		//get encoder data
-		getEncoderData(encoderData);
+			//get encoder data
+			getEncoderData(state);
 
-		//derive wheelspeed
-		for(int i = wheels_RF; i <= wheels_LF; i++){
-			wheelspeed[i] = deriveEncoder(encoderData[i], prev_encoderData[i]);
-			err = wheelref[i]-wheelspeed[i];
-			pIDValues[i] = PID(err, wheelsK[i]);
+			//derive wheelspeed
+			for(int i = wheels_RF; i <= wheels_LF; i++){
+				wheelspeed[i] = deriveEncoder(state[i], prev_state[i]);
+				err[i] = wheelref[i]-wheelspeed[i];
+				prev_state[i] = state[i];
+			}
+
+			//combine reference and PID
+			output[wheels_RF] = wheelref[wheels_RF] + PID(err[wheels_RF], &RFK);
+			output[wheels_RB] = wheelref[wheels_RB] + PID(err[wheels_RB], &RBK);
+			output[wheels_LB] = wheelref[wheels_LB] + PID(err[wheels_LB], &LBK);
+			output[wheels_LF] = wheelref[wheels_LF] + PID(err[wheels_LF], &LFK);
+
+
+			limitScale(output, pwm, direction);
+			SetDir(direction);
+			SetPWM(pwm);
+			break;
 		}
-
-		prev_encoderData = encoderData;
-
-		//combine reference and PID
-		output = wheelref + pIDValues;
-
-		limitScale(output, pwm, direction);
-		SetDir(direction);
-		SetPWM(pwm);
-	}
 	return;
 }
 
@@ -111,7 +114,9 @@ static void limitScale(float output[4], float pwm[4], float direction[4]){
 	int sconstant = 374;//RPM/V see datasheet
 	float wconstant = 60/(2*M_PI*sconstant); // RPM/V to V/w
 	float K = (wconstant*MAX_PWM/max_voltage)*gearratio; //(V/W)*(pwm/voltage)
-
+	for(int i = wheels_RF; i <= wheels_LF; i++){
+		output[i] = K*output[i];
+	}
 	//Limit
 	for(int i = wheels_RF; i <= wheels_LF; i++){
 		if(output[i] <= -1.0F){
@@ -143,7 +148,7 @@ static float deriveEncoder(int encoderData, int prev_encoderData){
 	return wheel_speed;
 }
 
-static void SetPWM(float pwm[4]){
+static void SetPWM(int pwm[4]){
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, pwm[0]);
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, pwm[1]);
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, pwm[2]);

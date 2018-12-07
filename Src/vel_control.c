@@ -56,9 +56,9 @@ void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], 
 	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
 
 	// PID control from control_util.h
-	velLocalRef[body_x] += PID((velLocalRef[body_x]-State[body_x]), velK[0]); //error compensation plus requested velocity
-	velLocalRef[body_y] += PID((velLocalRef[body_y]-State[body_y]), velK[1]);
-	velLocalRef[body_w] += PID((velLocalRef[body_w]-State[body_w]), velK[2]);
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-State[body_x]), &velxK); //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-State[body_y]), &velyK);
+	velLocalRef[body_w] += PID((velLocalRef[body_w]-State[body_w]), &velwK);
 
 	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 

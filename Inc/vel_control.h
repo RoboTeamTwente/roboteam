@@ -66,14 +66,13 @@ PIDvariables velwK = {
 		.timeDiff = TIME_DIFF
 };
 
-PIDvariables velK = {velxK, velyK, velwK};
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
 
 int vel_control_Init();
 
-void vel_control_Callback(float wheel_ref[4], float Xsensdata[3], float vel_ref[3]);
+void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], float yaw);
 
 #endif /* DO_DO_H_ */
 

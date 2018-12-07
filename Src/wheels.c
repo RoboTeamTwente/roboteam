@@ -6,21 +6,27 @@
  */
 
 #include "wheels.h"
-
+#include <stdio.h>
+#include <math.h>
 #include "tim.h"
+
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
 
+#define PWM_CUTOFF 3.0F			// arbitrary treshold below PWM_ROUNDUP
+#define PWM_ROUNDUP 3.1F 		// below this value the motor driver is unreliable
+
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-void setOutput(int output[4]);
+void SetPWM(float pwm[4]);
+
+void SetDir(bool direction[4]);
 
 void getEncoderData(int encoderdata[4]);
 
-
-void deriveEncoder();
+float deriveEncoder(int encoderData[4]);
 
 void limitScale();
 
@@ -53,54 +59,74 @@ void deinit(){
 }
 
 void wheelsCallback(float wheelref[4]){
-	bool reverse[4] = {0};
+
+	//TODO: add braking for rapid switching direction
+	/* dry testing
 	wheelref[0] = 0;
 	wheelref[1] = 0;
 	wheelref[2] = 0;
 	wheelref[3] = 0;
+	*/
+	static bool direction[4] = {0}; // 0 is counter clock-wise TODO:confirm
+	static int prev_encoderData[4] = {0};
 	switch(wheels_state){
-	case wheels_uninitialized:
-	//		uprintf("ERROR wheels_uninitialized\n\r");
-			return;
+	default:
+		break;
 	case wheels_ready:
 		int encoderData[4] = {0};
 		int output[4] = {0};
+		int pwm[4] = {0};
+		float err = 0;
+		float wheelspeed[4] = {0};
+		float pIDValues[4] = {0};
 
 		//get encoder data
 		getEncoderData(encoderData);
 
 		//derive wheelspeed
+		for(int i = wheels_RF; i <= wheels_LF; i++){
+			wheelspeed[i] = deriveEncoder(encoderData[i], prev_encoderData[i]);
+			err = wheelref[i]-wheelspeed[i];
+			pIDValues[i] = PID(err, wheelsK[i]);
+		}
 
-		//PID
+		prev_encoderData = encoderData;
 
 		//combine reference and PID
+		output = wheelref + pIDValues;
 
-		limitScale(wheelref, output, reverse);
-
-		SetDir(reverse);
-		SetPWM(output);
-		return;
+		limitScale(output, pwm, direction);
+		SetDir(direction);
+		SetPWM(pwm);
 	}
 	return;
 }
 
-
-
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
-void limitScale(float wheelref[4], float output[4], float reverse[4]){
+void limitScale(float output[4], float pwm[4], float direction[4]){
+
+	//Scale
+	float gearratio = 2.5;
+	int max_voltage = 12;//see datasheet
+	int sconstant = 374;//RPM/V see datasheet
+	float wconstant = 60/(2*M_PI*sconstant); // RPM/V to V/w
+	float K = (wconstant*MAX_PWM/max_voltage)*gearratio; //(V/W)*(pwm/voltage)
+
+	//Limit
 	for(int i = wheels_RF; i <= wheels_LF; i++){
-		if(wheelref[i] <= -1.0F){
-			output[i] = -wheelref[i];
-			reverse[i] = 1;
-		}else if(wheelref[i] >= 1.0F){
-			reverse[i] = 0;
+		if(output[i] <= -1.0F){
+			pwm[i] = -output[i];
+			direction[i] = 1;
+		}else if(output[i] >= 1.0F){
+			pwm[i] = output[i];
+			direction[i] = 0;
 		}
-		if(wheelref[i] < 3){
-			output[i] = 0.0F;
-		}else if(wheelref[i] < 3.1){
-			output[i] = 3.1;
-		}else if(wheelref[i] > 100){
-			output[i] = 100;
+		if(pwm[i] < PWM_CUTOFF){
+			pwm[i] = 0.0F;
+		}else if(pwm[i] < PWM_ROUNDUP){
+			pwm[i] = PWM_ROUNDUP;
+		}else if(pwm[i] > MAX_PWM){
+			pwm[i] = MAX_PWM;
 		}
 	}
 }
@@ -112,23 +138,21 @@ void getEncoderData(int encoderData[4]){
 	encoderData[wheels_LF] = __HAL_TIM_GET_COUNTER(&htim4);
 }
 
-
-
-/*	Set Pwm for one wheel
- *
- */
-static inline void SetPWM(float power[4]){
-	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, power[0] / 100 * MAX_PWM);
-	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, power[1] / 100 * MAX_PWM);
-	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, power[2] / 100 * MAX_PWM);
-	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, power[3] / 100 * MAX_PWM);
+float deriveEncoder(int encoderData, int prev_encoderData){
+	float wheel_speed = (encoderData-prev_encoderData)/TIME_DIFF;
+	return wheel_speed;
 }
-/*	Set direction for one wheel
- *
- */
-static inline void SetDir(bool reverse[4]){
-		HAL_GPIO_WritePin(FR_RF_GPIO_Port,FR_RF_Pin, reverse[0]);
-		HAL_GPIO_WritePin(FR_RB_GPIO_Port,FR_RB_Pin, reverse[1]);
-		HAL_GPIO_WritePin(FR_LB_GPIO_Port,FR_LB_Pin, reverse[2]);
-		HAL_GPIO_WritePin(FR_LF_GPIO_Port,FR_LF_Pin, reverse[3]);
+
+void SetPWM(float pwm[4]){
+	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, pwm[0]);
+	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, pwm[1]);
+	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, pwm[2]);
+	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, pwm[3]);
+}
+
+void SetDir(bool direction[4]){
+		HAL_GPIO_WritePin(FR_RF_GPIO_Port,FR_RF_Pin, direction[0]);
+		HAL_GPIO_WritePin(FR_RB_GPIO_Port,FR_RB_Pin, direction[1]);
+		HAL_GPIO_WritePin(FR_LB_GPIO_Port,FR_LB_Pin, direction[2]);
+		HAL_GPIO_WritePin(FR_LF_GPIO_Port,FR_LF_Pin, direction[3]);
 }

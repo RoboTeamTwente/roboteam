@@ -20,8 +20,7 @@ Notes:
 
 #ifndef WHEELS_H_
 #define WHEELS_H_
-
-
+#define TIME_DIFF 0.01F // time difference due to 100Hz
 #include <stdbool.h>
 #include "Utils/control_util.h"
 
@@ -37,18 +36,48 @@ typedef enum {
 
 int wheels_state = wheels_uninitialized;
 
-PIDvariables wheelsK = {
+//TODO: add control values based on tests
+PIDvariables RFK = {
 		.kP = 0,//kp
 		.kI = 0,//ki
 		.kD = 0,//kd
 		.I = 0,//always starts as zero
 		.prev_e = 0,//always starts as zero
-		.timeDiff = 0.1
+		.timeDiff = TIME_DIFF
+};PIDvariables RBK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
 };
+PIDvariables LBK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
+PIDvariables LFK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};
+
+PIDvariables wheelsK[4] = {RFK, RBK, LBK, LFK};
 
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
 
+void init();
 
+void deinit();
+
+void wheelsCallback(float wheelref[4]);
 
 #endif /* WHEELS_H_ */

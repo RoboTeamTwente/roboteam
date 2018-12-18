@@ -46,7 +46,11 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
+<<<<<<< HEAD
 #include "MTi.h"
+=======
+#include "PuTTY.h"
+>>>>>>> PuTTy-Branch
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -116,6 +120,7 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
+  Putty_Init();
 
   /////////////////////////////////////////// INIT FUNCTIONS
   MTi_Init(&MTi, 6, XFP_General);
@@ -132,9 +137,10 @@ int main(void)
     // TODO: move this to a dedicated timer
     if((error_code = MTi_Update(&MTi)) != 0) uprintf("MTi: Failed: %u",error_code);
 
+
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
-
+  Putty_Callback();
   }
   /* USER CODE END 3 */
 
@@ -199,6 +205,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+<<<<<<< HEAD
 ///////////////////////////////////////////// CALLBACK FUNCTIONS
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == huartMTi.Instance){// Input from the Xsens
@@ -206,6 +213,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	}
 }
 
+=======
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart->Instance == huart3.Instance){//input from the PC
+		Putty_Vars.huart_Rx_len = 1;
+		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+  }
+}
+>>>>>>> PuTTy-Branch
 /* USER CODE END 4 */
 
 /**

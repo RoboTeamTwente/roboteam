@@ -46,11 +46,8 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-<<<<<<< HEAD
 #include "MTi.h"
-=======
 #include "PuTTY.h"
->>>>>>> PuTTy-Branch
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -208,19 +205,18 @@ void SystemClock_Config(void)
 <<<<<<< HEAD
 ///////////////////////////////////////////// CALLBACK FUNCTIONS
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == huartMTi.Instance){// Input from the Xsens
-		MTi_UART_RxCpltCallback(&MTi);
-	}
-}
-
-=======
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == huart3.Instance){//input from the PC
-		Putty_Vars.huart_Rx_len = 1;
-		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+	switch(huart->Instance){
+    case huartMTi.Instance:
+      MTi_UART_RxCpltCallback(&MTi);
+      break;
+    case huart3.Instance
+		  Putty_Vars.huart_Rx_len = 1;
+		  Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+      break;
+    default:
+      break;
   }
 }
->>>>>>> PuTTy-Branch
 /* USER CODE END 4 */
 
 /**

@@ -496,9 +496,17 @@ std::string modeToString(Mode mode) {
 void sendCommand(roboteam_msgs::RobotCommand command) {
 
 	if(currentMode == Mode::GRSIM){
-		grsimCmd.queueGRSimCommand(command);
-		grsimStatusMap[command.id].acks++;
-		networkMsgs++;
+		rtt::LowLevelRobotCommand llrc= rtt::createLowLevelRobotCommand(command,LastWorld);
+		if(rtt::validateRobotPacket(llrc)) {
+			//send the command
+			grsimCmd.queueGRSimCommand(command);
+			grsimStatusMap[command.id].acks++;
+			networkMsgs++;
+		}
+		else{
+			ROS_WARN_STREAM("LowLevelRobotCommand is not valid for our robots, no command is being sent to GrSim!");
+			printLowLevelRobotCommand(llrc);
+		}
 	}else
 	if(currentMode == Mode::SERIAL){
 		SerialResultStatus result = processSerialCommand(command);

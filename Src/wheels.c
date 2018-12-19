@@ -17,6 +17,12 @@
 #define PWM_CUTOFF 3.0F			// arbitrary treshold below PWM_ROUNDUP
 #define PWM_ROUNDUP 3.1F 		// below this value the motor driver is unreliable
 
+float gearratio = 2.5;
+int max_voltage = 12;//see datasheet
+int sconstant = 374;//RPM/V see datasheet
+float wconstant = 60/(2*M_PI*sconstant); // RPM/V to V/w
+float PWM2Omega = (wconstant*MAX_PWM/max_voltage)*gearratio; //(V/W)*(pwm/voltage)
+
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -109,13 +115,8 @@ void wheelsCallback(float wheelref[4]){
 static void limitScale(float output[4], float pwm[4], float direction[4]){
 
 	//Scale
-	float gearratio = 2.5;
-	int max_voltage = 12;//see datasheet
-	int sconstant = 374;//RPM/V see datasheet
-	float wconstant = 60/(2*M_PI*sconstant); // RPM/V to V/w
-	float K = (wconstant*MAX_PWM/max_voltage)*gearratio; //(V/W)*(pwm/voltage)
 	for(int i = wheels_RF; i <= wheels_LF; i++){
-		output[i] = K*output[i];
+		output[i] = PWM2Omega*output[i];
 	}
 	//Limit
 	for(int i = wheels_RF; i <= wheels_LF; i++){
@@ -125,6 +126,9 @@ static void limitScale(float output[4], float pwm[4], float direction[4]){
 		}else if(output[i] >= 1.0F){
 			pwm[i] = output[i];
 			direction[i] = 0;
+		}
+		else {
+			pwm[i] = 0.0F;
 		}
 		if(pwm[i] < PWM_CUTOFF){
 			pwm[i] = 0.0F;

@@ -38,7 +38,7 @@ int vel_control_Init(){
 	return 0;
 }
 
-void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], float yaw){
+void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], float yawref){
 
 	/*For dry testing
 	State[body_w] = MT_GetAngles()[2]/180*M_PI;
@@ -50,7 +50,7 @@ void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], 
 	State[body_w] = 0*M_PI;
 	*/
 
-	float angleErr = constrainAngle((yaw - State[body_w]));//constrain it to one circle turn
+	float angleErr = constrainAngle((yawref - State[body_w]));//constrain it to one circle turn
 	float angleComp = PID(angleErr, &angleK);// PID control from control_util.h
 	float velLocalRef[3] = {0};
 	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
@@ -68,11 +68,6 @@ void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], 
 
 	scaleAndLimit(wheel_ref);
 
-	//TODO:
-	//combine xsens with encoder?
-	//what in the case if a wheel is slipping?
-	//individual wheel check?
-
 	return;
 }
 
@@ -81,10 +76,13 @@ void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], 
 static void body2Wheels(float wheelspeed[4], float velocity[3]){
 	//mixing matrix
 	//TODO check minuses
-	wheelspeed[wheels_RF] = -(1/sin60*velocity[body_x] + 1/cos60*velocity[body_y]+1/rad_robot*velocity[body_w])/rad_wheel;
-	wheelspeed[wheels_RB] = -(1/sin60*velocity[body_x] - 1/cos60*velocity[body_y]+1/rad_robot*velocity[body_w])/rad_wheel;
-	wheelspeed[wheels_LB] = -(-1/sin60*velocity[body_x] - 1/cos60*velocity[body_y]+1/rad_robot*velocity[body_w])/rad_wheel;
-	wheelspeed[wheels_LF] = -(-1/sin60*velocity[body_x] + 1/cos60*velocity[body_y]+1/rad_robot*velocity[body_w])/rad_wheel;
+	float velx2wheel = 1/(sin60*velocity[body_x]*rad_wheel);
+	float vely2wheel = 1/(cos60*velocity[body_y]*rad_wheel);
+	float rot2wheel = 1/(rad_robot*velocity[body_w]*rad_wheel);
+	wheelspeed[wheels_RF] = -(velx2wheel + vely2wheel + rot2wheel);
+	wheelspeed[wheels_RB] = -(velx2wheel - vely2wheel + rot2wheel);
+	wheelspeed[wheels_LB] = -(-velx2wheel - vely2wheel + rot2wheel);
+	wheelspeed[wheels_LF] = -(-velx2wheel + vely2wheel + rot2wheel);
 }
 
 static void global2Local(float global[3], float local[3], float  yaw){

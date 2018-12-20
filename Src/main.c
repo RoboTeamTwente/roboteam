@@ -47,6 +47,7 @@
 
 /* USER CODE BEGIN Includes */
 
+#include "KickChip.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -116,13 +117,15 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-
+  kick_Init(&kick);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+
 
   /* USER CODE END WHILE */
 
@@ -193,6 +196,13 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
+	if(htim->Instance == kicktim.Instance){
+		kick_Callback(&kick);
+	}
+}
 /* USER CODE END 4 */
 
 /**

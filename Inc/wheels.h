@@ -1,39 +1,50 @@
 /*
- * control.h
+ * wheels.h
  *
- *  Created on: Nov 6, 2018
+ *  Created on: Dec 4, 2018
  *      Author: kjhertenberg
  */
-/*
-Description: Determines the wanted wheel speed, based on received data
+
+/*Description:
 
 Instructions:
-1) Initialize
-2) Receives data of it's state
-3) Combine data, not in here yet
-4) Transform data to right frame and units
-5) Apply control functions
-6) Scale and limit the outgoing signal
+1)
 
 Extra functions:
 
-GPIO Pins: None
-
 Notes:
-Still need to add the right specs
+
+
 */
 
-#ifndef CONTROL_H_
-#define CONTROL_H_
+
+#ifndef WHEELS_H_
+#define WHEELS_H_
 #define TIME_DIFF 0.01F // time difference due to 100Hz
 #include <stdbool.h>
 #include "Utils/control_util.h"
 
+
+
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 
-	//TODO: add control values based on tests
-PIDvariables angleK = {
+typedef enum {
+	wheels_uninitialized,
+	wheels_ready
+}wheels_states;// keeps track of the state of this system
+
+int wheels_state = wheels_uninitialized;
+
+//TODO: add control values based on tests
+PIDvariables RFK = {
+		.kP = 0,//kp
+		.kI = 0,//ki
+		.kD = 0,//kd
+		.I = 0,//always starts as zero
+		.prev_e = 0,//always starts as zero
+		.timeDiff = TIME_DIFF
+};PIDvariables RBK = {
 		.kP = 0,//kp
 		.kI = 0,//ki
 		.kD = 0,//kd
@@ -41,7 +52,7 @@ PIDvariables angleK = {
 		.prev_e = 0,//always starts as zero
 		.timeDiff = TIME_DIFF
 };
-PIDvariables velxK = {
+PIDvariables LBK = {
 		.kP = 0,//kp
 		.kI = 0,//ki
 		.kD = 0,//kd
@@ -49,15 +60,7 @@ PIDvariables velxK = {
 		.prev_e = 0,//always starts as zero
 		.timeDiff = TIME_DIFF
 };
-PIDvariables velyK = {
-		.kP = 0,//kp
-		.kI = 0,//ki
-		.kD = 0,//kd
-		.I = 0,//always starts as zero
-		.prev_e = 0,//always starts as zero
-		.timeDiff = TIME_DIFF
-};
-PIDvariables velwK = {
+PIDvariables LFK = {
 		.kP = 0,//kp
 		.kI = 0,//ki
 		.kD = 0,//kd
@@ -70,9 +73,10 @@ PIDvariables velwK = {
 ///////////////////////////////////////////////////// FUNCTION PROTOTYPES
 //// PUBLIC
 
-int vel_control_Init();
+void init();
 
-void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], float yaw);
+void deinit();
 
-#endif /* DO_DO_H_ */
+void wheelsCallback(float wheelref[4]);
 
+#endif /* WHEELS_H_ */

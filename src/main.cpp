@@ -504,7 +504,7 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 			networkMsgs++;
 		}
 		else{
-			ROS_WARN_STREAM("LowLevelRobotCommand is not valid for our robots, no command is being sent to GrSim!");
+			ROS_ERROR_STREAM("LowLevelRobotCommand is not valid for our robots, no command is being sent to GrSim!");
 			printLowLevelRobotCommand(llrc);
 		}
 	}else

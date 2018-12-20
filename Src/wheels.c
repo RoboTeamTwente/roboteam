@@ -17,11 +17,11 @@
 #define PWM_CUTOFF 3.0F			// arbitrary treshold below PWM_ROUNDUP
 #define PWM_ROUNDUP 3.1F 		// below this value the motor driver is unreliable
 
-float gearratio = 2.5;
-int max_voltage = 12;//see datasheet
-int sconstant = 374;//RPM/V see datasheet
-float wconstant = 60/(2*M_PI*sconstant); // RPM/V to V/w
-float PWM2Omega = (wconstant*MAX_PWM/max_voltage)*gearratio; //(V/W)*(pwm/voltage)
+#define gearratio 2.5f
+#define max_voltage 12//see datasheet
+#define sconstant 374//RPM/V see datasheet
+#define wconstant (float)60/(2*M_PI*(float)sconstant) // RPM/V to V/w
+#define PWM2Omega (float)(wconstant*MAX_PWM/max_voltage)*gearratio //(V/W)*(pwm/voltage)
 
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS

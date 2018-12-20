@@ -47,7 +47,8 @@ typedef enum Xsens_Status{
 	Xsens_Failed_DeInit,
 	Xsens_Failed_Update,
 	Xsens_Failed_Decode,
-	Xsens_Failed_Receive
+	Xsens_Failed_Receive,
+	Xsens_Failed_Debug
 }Xsens_Status;
 
 // Xsens state enum
@@ -105,11 +106,7 @@ struct MTi_data_struct MTi;
 
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 // possible IDs are described in xbusmessage.h
-MTi_data_tuple data_configurations[]={
-	{.ID = XDI_PacketCounter	, .frequency = 100	, .data = &MTi.packetcounter},
-	{.ID = XDI_FreeAcceleration	, .frequency = 100	, .data = MTi.acc			},
-	{.ID = XDI_StatusWord		, .frequency = 10	, .data = &MTi.statusword	},
-	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi.angles		}};
+extern MTi_data_tuple data_configurations[];
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DEFINITIONS
 

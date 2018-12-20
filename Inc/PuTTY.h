@@ -47,7 +47,7 @@ Putty_VarStruct Putty_Vars; // Global struct with all variables
 //// PUBLIC
 Putty_Enum Putty_Init();              // Also returns a pointer to the variable struct
 Putty_Enum Putty_GetErrorCode();      // Returns the error code
-Putty_Enum Putty_printf(char *input); // Like printf, but for the putty console
+Putty_Enum Putty_printf(char* format, ...); // Like printf, but for the putty console
 Putty_Enum Putty_DeInit();            // Deinitializer
 Putty_Enum Putty_Reset();             // Reset all values
 Putty_Enum Putty_Callback();          // Add it to a timer (or to the main loop)

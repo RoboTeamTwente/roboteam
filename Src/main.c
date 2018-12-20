@@ -117,9 +117,8 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-  Putty_Init();
-
   /////////////////////////////////////////// INIT FUNCTIONS
+  Putty_Init();
   MTi_Init(&MTi, 6, XFP_General);
 
   /* USER CODE END 2 */
@@ -132,7 +131,7 @@ int main(void)
 
     // update MTi
     // TODO: move this to a dedicated timer
-    if((error_code = MTi_Update(&MTi)) != 0) uprintf("MTi: Failed: %u",error_code);
+    if((error_code = MTi_Update(&MTi)) != 0) Putty_printf("MTi: Failed: %u",error_code);
 
 
   /* USER CODE END WHILE */
@@ -202,20 +201,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-<<<<<<< HEAD
 ///////////////////////////////////////////// CALLBACK FUNCTIONS
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	switch(huart->Instance){
-    case huartMTi.Instance:
-      MTi_UART_RxCpltCallback(&MTi);
-      break;
-    case huart3.Instance
-		  Putty_Vars.huart_Rx_len = 1;
-		  Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
-      break;
-    default:
-      break;
-  }
+	if(huart->Instance == huartMTi.Instance){
+		MTi_UART_RxCpltCallback(&MTi);
+	}else if(huart->Instance == huart3.Instance){
+		Putty_Vars.huart_Rx_len = 1;
+		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+	}
 }
 /* USER CODE END 4 */
 

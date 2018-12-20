@@ -78,7 +78,7 @@ extern GPIO_Pin ID3_pin;
 extern GPIO_Pin FRQ_sel;
 
 // Xsens 
-GPIO_Pin Xsens_enable_pin			= {XSENS_nRST_GPIO_Port		, XSENS_nRST_Pin	};
+extern GPIO_Pin Xsens_enable_pin;
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 

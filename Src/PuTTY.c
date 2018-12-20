@@ -1,6 +1,7 @@
 #include <stdbool.h> // Bools
 #include <string.h>  // Strings
 #include <stdio.h>   // General
+#include <stdarg.h>  // for formatting in putty_printf
 
 // // Files for extra commands
 // #include "userIO/userIO.h"
@@ -13,8 +14,8 @@
 // #include "wireless/wireless.h"
 // #include "dribbler/dribbler.h"
 
-#include "usart.h"
 #include "PuTTY.h"
+#include "usart.h"
 #include <stdint.h>
 #include "main.h"
 #include "gpio.h"
@@ -54,10 +55,16 @@ Putty_Enum Putty_GetErrorCode()
     return Putty_Vars.errorCode;
 }
 
-Putty_Enum Putty_printf(char *input)
+Putty_Enum Putty_printf(char *format, ...)
 {
-    sprintf(Putty_Vars.smallStrBuffer, input); // Copies and turns into string
-    Putty_TextOut(Putty_Vars.smallStrBuffer);  // Outputs to console
+	//format string
+	va_list aptr;
+	va_start(aptr, format); // give starting point of additional arguments
+    vsprintf(Putty_Vars.smallStrBuffer, format, aptr); // Copies and turns into string
+    va_end(aptr); // close list
+
+    // output string
+    Putty_TextOut(Putty_Vars.smallStrBuffer);
     return Putty_Vars.errorCode = NoErrors;
 }
 
@@ -137,7 +144,7 @@ static void Putty_HandleCommand(char *input)
         break;
     }
 
-    // if (strcmp(input, "mt start") == 0)
+    /*// if (strcmp(input, "mt start") == 0)
     // {
     //     uprintf("Starting device MTi\n\r");
     //     if (MT_succes == MT_Init())
@@ -264,7 +271,7 @@ static void Putty_HandleCommand(char *input)
     //     uprintf("going to keyboard control\r\npress escape to stop\n\r");
     //     keyboard_control = true;
     //     wheels_testing = true;
-    // }
+    // } */
 }
 
 static void Putty_HandlePcInput(char *input, size_t n_chars)

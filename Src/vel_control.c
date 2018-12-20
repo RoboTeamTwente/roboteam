@@ -38,26 +38,27 @@ int vel_control_Init(){
 	return 0;
 }
 
-void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[3]){
+void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], float yawref){
 
 	/*For dry testing
-	xsensData[body_w] = MT_GetAngles()[2]/180*M_PI;
+	State[body_w] = MT_GetAngles()[2]/180*M_PI;
 	vel_ref[body_x] = 0;
 	vel_ref[body_y] = 0;
 	vel_ref[body_w] = 0*M_PI;
-	xsensData[body_x] = 0;
-	xsensData[body_y] = 0;
-	xsensData[body_w] = 0*M_PI;
+	State[body_x] = 0;
+	State[body_y] = 0;
+	State[body_w] = 0*M_PI;
 	*/
 
-	float angleErr = constrainAngle((vel_ref[body_w] - xsensData[body_w]));//constrain it to one circle turn
+	float angleErr = constrainAngle((yawref - State[body_w]));//constrain it to one circle turn
 	float angleComp = PID(angleErr, &angleK);// PID control from control_util.h
-	float velLocalRef[2] = {0};
-	global2Local(vel_ref, velLocalRef, xsensData[body_w]); //transfer global to local
+	float velLocalRef[3] = {0};
+	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
 
 	// PID control from control_util.h
-	velLocalRef[body_x] += PID((velLocalRef[body_x]-xsensData[body_x]), &velxK); //error compensation plus requested velocity
-	velLocalRef[body_y] += PID((velLocalRef[body_y]-xsensData[body_y]), &velyK);
+	velLocalRef[body_x] += PID((velLocalRef[body_x]-State[body_x]), &velxK); //error compensation plus requested velocity
+	velLocalRef[body_y] += PID((velLocalRef[body_y]-State[body_y]), &velyK);
+	velLocalRef[body_w] += PID((velLocalRef[body_w]-State[body_w]), &velwK);
 
 	body2Wheels(wheel_ref, velLocalRef); //translate velocity to wheel speed
 
@@ -67,28 +68,27 @@ void vel_control_Callback(float wheel_ref[4], float xsensData[3], float vel_ref[
 
 	scaleAndLimit(wheel_ref);
 
-	//TODO:
-	//combine xsens with encoder?
-	//what in the case if a wheel is slipping?
-	//individual wheel check?
-
 	return;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-static void body2Wheels(float output[4], float input[2]){
+static void body2Wheels(float wheelspeed[4], float velocity[3]){
 	//mixing matrix
-	output[wheels_RF] = -(1/sin60*input[body_x] + 1/cos60*input[body_y])*rad_wheel/4;
-	output[wheels_RB] = -(1/sin60*input[body_x] - 1/cos60*input[body_y])*rad_wheel/4;
-	output[wheels_LB] = -(-1/sin60*input[body_x] - 1/cos60*input[body_y])*rad_wheel/4;
-	output[wheels_LF] = -(-1/sin60*input[body_x] + 1/cos60*input[body_y])*rad_wheel/4;
+	//TODO check minuses
+	float velx2wheel = 1/(sin60*velocity[body_x]*rad_wheel);
+	float vely2wheel = 1/(cos60*velocity[body_y]*rad_wheel);
+	float rot2wheel = 1/(rad_robot*velocity[body_w]*rad_wheel);
+	wheelspeed[wheels_RF] = -(velx2wheel + vely2wheel + rot2wheel);
+	wheelspeed[wheels_RB] = -(velx2wheel - vely2wheel + rot2wheel);
+	wheelspeed[wheels_LB] = -(-velx2wheel - vely2wheel + rot2wheel);
+	wheelspeed[wheels_LF] = -(-velx2wheel + vely2wheel + rot2wheel);
 }
 
-static void global2Local(float input[2], float output[2], float  yaw){
+static void global2Local(float global[3], float local[3], float  yaw){
 	//trigonometry
-	output[body_x] = cos(yaw)*input[body_x]-sin(yaw)*input[body_y];
-	output[body_y] = sin(yaw)*input[body_x]+cos(yaw)*input[body_y];
+	local[body_x] = cos(yaw)*global[body_x]-sin(yaw)*global[body_y];
+	local[body_y] = sin(yaw)*global[body_x]+cos(yaw)*global[body_y];
 }
 
 static void scaleAndLimit(float wheel_ref[4]){

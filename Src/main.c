@@ -48,6 +48,8 @@
 /* USER CODE BEGIN Includes */
 #include "MTi.h"
 #include "PuTTY.h"
+#include "KickChip.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -120,6 +122,7 @@ int main(void)
   /////////////////////////////////////////// INIT FUNCTIONS
   Putty_Init();
   MTi_Init(&MTi, 6, XFP_General);
+  kick_Init(&kick);
 
   /* USER CODE END 2 */
 
@@ -208,6 +211,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	}else if(huart->Instance == huart3.Instance){
 		Putty_Vars.huart_Rx_len = 1;
 		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
+  }
+} 
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
+	if(htim->Instance == kicktim.Instance){
+		kick_Callback(&kick);
 	}
 }
 /* USER CODE END 4 */

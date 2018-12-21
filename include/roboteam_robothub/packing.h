@@ -89,6 +89,7 @@ namespace rtt {
 	void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf);
 	void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback);
 
+	bool validateRobotPacket(LowLevelRobotCommand llrc);
     roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 
     std::string byteToBinary(uint8_t const &byte);

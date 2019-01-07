@@ -23,7 +23,7 @@ Notes:
 #ifndef PUTTYINTERFACE_H_
 #define PUTTYINTERFACE_H_
 #include "stdint.h" // Includes the uint8_t and others
-
+#include <stdarg.h>  // for formatting in putty_printf
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 typedef enum

@@ -10,6 +10,7 @@
 #include "xbusutility.h"
 #include "xsdeviceid.h"
 #include "gpio_util.h"
+#include "tim.h"
 
 #define TIME_OUT 1000U
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
@@ -27,10 +28,12 @@ static void XBP_deallocateBuffer(void const* buffer);
 
 // Uart interface handlers
 static Xsens_Status MTi_BuildConfig(MTi_data* MTi, enum XsDataIdentifier XDI, uint16_t frequency, bool complete);
-static void SendXbusMessage(MTi_data* MTi, struct XbusMessage XbusMessage);
+static HAL_StatusTypeDef SendXbusMessage(MTi_data* MTi, struct XbusMessage XbusMessage);
 static Xsens_Status processAck(MTi_data* MTi);
+static Xsens_Status MTi_ReqConfig(MTi_data* MTi);
 static inline void ErrorHandler(struct XbusMessage const* message);
 static Xsens_Status Decode_Packet(MTi_data* MTi);
+static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID);
 
 // Calibration functions
 static Xsens_Status MTi_NoRotation(MTi_data* MTi, uint16_t seconds);
@@ -43,6 +46,7 @@ static Xsens_Status MTi_GoToMeasure(MTi_data* MTi);
 
 // Debug functions
 static Xsens_Status PrintOutputConfig(struct XbusMessage* message);
+static inline void MTi_printf(char* format, ...);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -51,8 +55,8 @@ Xsens_Status MTi_Init(MTi_data* MTi, uint16_t calibrate_time, enum XsFilterProfi
 	MTi->RX_state = Xsens_receive_5;
 	MTi->cplt_mess_stored_flag = 0;
 	MTi->ReceivedMessageStorage = malloc(MAX_RAW_MESSAGE_SIZE);    // Reserve memory to store the longest possible message
-	
-    // set the MTi in reset state
+	HAL_TIM_Base_Start_IT(&htim7);
+	// set the MTi in reset state
     set_pin(Xsens_enable_pin, 0);
 	
     // Create a structure to contain the callback functions
@@ -63,36 +67,64 @@ Xsens_Status MTi_Init(MTi_data* MTi, uint16_t calibrate_time, enum XsFilterProfi
 	};
 	MTi->XBParser = XbusParser_create(&XBP_callback);
     if(MTi->XBParser == NULL){
+		MTi_printf("failed create Xparser");
 		return Xsens_Failed_Init;
 	}
 
     // start MTi operation of specific sensors and their update frequencies
 	set_pin(Xsens_enable_pin, 1);
 	// TODO: Make this while loop not blocking
-	while(MTi->Xstate != Xsens_Config)  HAL_Delay(10); // Wait till MTi is ready
-	Putty_printf("started MTi Operation\n\r");
-
+	if(WaitForAck(MTi,XMID_WakeUp)){
+		MTi_printf("failed wakeup");
+		return Xsens_Failed_Init;
+	}
+	MTi_printf("started MTi Operation");
+	// assure config state
+	MTi_GoToConfig(MTi);
+	if(WaitForAck(MTi,XMID_GoToConfigAck)){
+		MTi_printf("failed go to config");
+		return Xsens_Failed_Init;
+	}
 	// set measurement configurations
 	MTi->data_configurations = data_configurations;
-	MTi->configuration_total = sizeof data_configurations / sizeof *data_configurations;
+	MTi->configuration_total = sizeof(data_configurations)/sizeof(MTi_data_tuple);
 
-	for(int i = 0; i < MTi->configuration_total-1; i++){
-		MTi_data_tuple conf = MTi->data_configurations[i];
+	for(int i = 0; i < MTi->configuration_total; i++){
+		MTi_data_tuple conf = data_configurations[i];
 		bool last = i == (MTi->configuration_total-1);
 		MTi_BuildConfig(MTi, conf.ID, conf.frequency, last);
 	}
-	
+	if(WaitForAck(MTi,XMID_ReqOutputConfigurationAck)){
+		MTi_printf("config ack failed");
+	}
 	// set filter profile defined in XsFilterProfile
 	// 0 = general, 1 = high magnetic dep, 2 = dynamic
 	// 3 = assumes stable magnetic field, 4 = high dynamic magnetic field (unreferenced heading)
-	MTi_SetFilterProfile(MTi, filter_type);
+	if(MTi_SetFilterProfile(MTi, filter_type)){
+		MTi_printf("failed SetFilter");
+		return Xsens_Failed_Init;
+	}
 
 	// set MTi to measure state
-	if(MTi_GoToMeasure(MTi)) return Xsens_Failed_Init;
+	if(MTi_GoToMeasure(MTi)){
+		MTi_printf("failed go to measure");
+		return Xsens_Failed_Init;
+	}
 	HAL_Delay(50);
-	// calibrate rotation sensor for STAND_STILL seconds
-	if(MTi_NoRotation(MTi,calibrate_time)) return Xsens_Failed_Init;
+	// calibrate rotation sensor for calibrate_time seconds
+	if(MTi_NoRotation(MTi,calibrate_time)){
+		MTi_printf("failed set no rotation");
+ 		return Xsens_Failed_Init;
+	}
 	//MT_UseIcc();
+	if(MTi_UseIcc(MTi) == Xsens_OK) {
+		MTi->started_icc = true;
+		MTi_printf("ICC started");
+	}
+	else {
+		MTi_printf("ICC failed");
+		return Xsens_Failed_Update;
+	}
 	return Xsens_OK;
 }
 
@@ -116,7 +148,7 @@ Xsens_Status MTi_Update(MTi_data* MTi){
 		MTi->HAL_UART_ErrorCallback_flag = 0;
 		ret =  Xsens_Failed_Receive;
 	}
-	if(MTi->RxCpltCallback_flag != 0){
+	if(MTi->RxCpltCallback_flag){
 		MTi->RxCpltCallback_flag = 0;
 		if(MTi->cplt_mess_stored_flag){	// received a full packet
 			MTi->cplt_mess_stored_flag = 0;
@@ -150,19 +182,6 @@ Xsens_Status MTi_Update(MTi_data* MTi){
 			}
 		}
 	}
-	// set In-run Compas Calibration if not set before
-	if(MTi->statusword & 0b00011000){
-			//Putty_printf("calibrating Xsens.\n\r");
-		}else if(MTi->started_icc == false){
-			if(MTi_UseIcc(MTi) == Xsens_OK) {
-				MTi->started_icc = true;
-				Putty_printf("MTi: ICC started.\n\r");
-			}
-			else {
-				Putty_printf("MTi: ICC failed.\n\r");
-				return Xsens_Failed_Update;
-			}
-		}
 	return ret;
 }
 
@@ -227,37 +246,45 @@ static Xsens_Status Decode_Packet(MTi_data* MTi){
 	// loop through all requested data/measurements
 	// NOTE: not every value has to be in every packet
 	for(int i = 0; i < MTi->configuration_total-1; i++){
-		MTi_data_tuple conf = MTi->data_configurations[i];
+		MTi_data_tuple conf = data_configurations[i];
 		XbusMessage_getDataItem(conf.data, conf.ID, message);
 	}
 	return Xsens_OK;
 }
 
-static void SendXbusMessage(MTi_data* MTi, struct XbusMessage XbusMessage){
+static HAL_StatusTypeDef  SendXbusMessage(MTi_data* MTi, struct XbusMessage XbusMessage){
 	size_t XbusMes_size =  XbusMessage_format(MTi->raw, (struct XbusMessage const*)&XbusMessage, XLLF_Uart);
-	HAL_UART_Transmit/*_IT*/(&huartMTi, MTi->raw, XbusMes_size, 100);
+	bool UART_status = false;
+	uint32_t cnt = 0;
+	do{
+		UART_status = HAL_UART_Transmit/*_IT*/(&huartMTi, MTi->raw, XbusMes_size, 100);
+		cnt++;
+	}while( UART_status && cnt < 20 );
+	return UART_status;
 }
 
 static Xsens_Status MTi_GoToConfig(MTi_data* MTi){
 	struct XbusMessage mess = {XMID_GoToConfig};
 	SendXbusMessage(MTi,mess);
-	MTi->expect_ack = XMID_GoToConfigAck;
-	return Xsens_OK;
+	return WaitForAck(MTi,XMID_GoToConfigAck);
+}
 
+static Xsens_Status MTi_ReqConfig(MTi_data* MTi){
+	struct XbusMessage mess = {XMID_ReqOutputConfiguration};
+	SendXbusMessage(MTi,mess);
+	return WaitForAck(MTi,XMID_ReqOutputConfigurationAck);
 }
 
 static Xsens_Status MTi_GoToMeasure(MTi_data* MTi){
 	struct XbusMessage mess = {XMID_GoToMeasurement};
 	SendXbusMessage(MTi,mess);
-	MTi->expect_ack = XMID_GoToMeasurementAck;
-	return Xsens_OK;
+	return WaitForAck(MTi,XMID_GoToMeasurementAck);
 }
 
 static Xsens_Status MTi_UseIcc(MTi_data* MTi){
 	struct XbusMessage mess = {XMID_IccCommand, 1, XsIcc_Start};
 	SendXbusMessage(MTi,mess);
-	MTi->expect_ack = XMID_IccCommandAck;
-	return Xsens_OK;
+	return WaitForAck(MTi,XMID_IccCommandAck);
 }
 
 static Xsens_Status MTi_SetFilterProfile(MTi_data* MTi, enum XsFilterProfile filter){
@@ -265,8 +292,7 @@ static Xsens_Status MTi_SetFilterProfile(MTi_data* MTi, enum XsFilterProfile fil
 	XbusUtility_writeU16(data,  filter);
 	struct XbusMessage mess = {XMID_SetFilterProfile, 2, data};
 	SendXbusMessage(MTi,mess);
-	MTi->expect_ack = XMID_SetFilterProfileAck;
-	return Xsens_OK;
+	return WaitForAck(MTi,XMID_SetFilterProfileAck);
 }
 
 static Xsens_Status MTi_NoRotation(MTi_data* MTi, uint16_t seconds){
@@ -274,47 +300,35 @@ static Xsens_Status MTi_NoRotation(MTi_data* MTi, uint16_t seconds){
 	XbusUtility_writeU16(data, seconds);
 	struct XbusMessage mess = {XMID_SetNoRotation, 2 , (void*)data};
 	SendXbusMessage(MTi, mess);
-	MTi->expect_ack = XMID_SetNoRotationAck;
-	return Xsens_OK;
+	return WaitForAck(MTi,XMID_SetNoRotationAck);
 }
 
 static Xsens_Status processAck(MTi_data* MTi){
 	enum XsMessageId XMID = MTi->ReceivedMessageStorage->mid;
-	static uint16_t counter = 0;
-	Xsens_Status ret = Xsens_OK;
-	if (MTi->expect_ack != XMID){
-		Putty_printf("MTi:received different ack, expected: %u, received: %u", MTi->expect_ack, XMID);
-	}
 	// process ack
 	switch (XMID){
 	case XMID_SetNoRotationAck: 	
-		if (MT_DEBUG) Putty_printf("SetNoRotationAck.\n\r");
-		MTi->expect_ack = 0;
+		if (MT_DEBUG) MTi_printf("SetNoRotationAck");
 		break;
 	case XMID_ReqFilterProfileAck:	
-		if (MT_DEBUG) Putty_printf("Req/Set FilterProfileAck.\n\r"); // request and set share the same value
-		MTi->expect_ack = 0;
+		if (MT_DEBUG) MTi_printf("Req/Set FilterProfileAck"); // request and set share the same value
 		break;
 	case XMID_IccCommandAck:		
-		if (MT_DEBUG) Putty_printf("IccCommandAck.\n\r");
-		MTi->expect_ack = 0;
+		if (MT_DEBUG) MTi_printf("IccCommandAck");
 		break;
 	case XMID_GoToConfigAck:		
-		if (MT_DEBUG) Putty_printf("In config state.\n\r");
+		if (MT_DEBUG) MTi_printf("In config state");
 		MTi->Xstate = Xsens_Config;
-		MTi->expect_ack = 0;
 		break;
 	case XMID_GoToMeasurementAck:
-		if(MT_DEBUG) Putty_printf("In measurement state.\n\r");
+		if(MT_DEBUG) MTi_printf("In measurement state");
 		MTi->Xstate = Xsens_Measure;
-		MTi->expect_ack = 0;
 		break;
 	case XMID_WakeUp:
-		if(MT_DEBUG) Putty_printf("MTi: woke up.\n\r");
+		if(MT_DEBUG) MTi_printf("woke up");
 		// send Ack back to MTi to confirm
 		struct XbusMessage XbusMes = { XMID_WakeUpAck};
 		SendXbusMessage(MTi, XbusMes);
-		MTi->expect_ack = 0;
 		// go to config state
 		MTi->Xstate = Xsens_Config;
 		break;
@@ -322,25 +336,10 @@ static Xsens_Status processAck(MTi_data* MTi){
 		PrintOutputConfig(MTi->ReceivedMessageStorage);
 		break;
 	default:
-		Putty_printf("MTi: received an uknown message of type: %u\n\r", XMID);
+		MTi_printf("received an uknown message of type: %u", XMID);
 		break;
 	}
-
-	// if not 0 missed the ack
-	if (MTi->expect_ack != 0){
-		if (counter == 20){
-			ret = Xsens_Failed_Config;
-		}
-		else{
-			counter++;
-			ret = Xsens_Wait_For_Ack;
-		}
-	}
-	else{
-		counter = 0;
-		ret = Xsens_OK;
-	}
-	return ret;
+	return Xsens_OK;
 }
 
 static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
@@ -389,5 +388,27 @@ static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
 static inline void ErrorHandler(struct XbusMessage const* message){
 	if (!message)
 		return;
-	Putty_printf("ERROR: %02x\n\r", *(uint8_t *)(message->data));
+	Putty_printf("MTi: ERROR: %02x", *(uint8_t *)(message->data));
+}
+
+static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
+	HAL_UART_Receive_IT(&huartMTi,(uint8_t *)MTi->aRxBuffer, 5);
+	bool timedout = false;
+	uint32_t cnt = 0;
+	while(MTi->ReceivedMessageStorage->mid != XMID && !timedout){
+		HAL_Delay(10);
+		//timedout = 200 < cnt++;
+	}
+	return timedout ? Xsens_Failed_Receive : Xsens_OK;
+}
+
+static inline void MTi_printf(char* format, ...){
+	if(MT_DEBUG){
+		char mes[100];
+		va_list aptr;
+		va_start(aptr, format); // give starting point of additional arguments
+	    vsprintf(mes, format, aptr); // Copies and turns into string
+	    va_end(aptr); // close list
+	    Putty_printf("MTi: %s\n\r", mes);
+	}
 }

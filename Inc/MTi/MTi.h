@@ -79,7 +79,7 @@ typedef struct data_tuple{
 ///////////////////////////////////////////////////// MAIN DATA STRUCT
 typedef struct MTi_data_struct{
 	uint8_t aRxBuffer[MAX_RAW_MESSAGE_SIZE];		// receive buffer for the uart interface
-	MTi_data_tuple* data_configurations;				// pointer to an array of things to measure
+	MTi_data_tuple* data_configurations;			// pointer to an array of things to measure
 	uint8_t configuration_total;					// counter for keeping the total of data configurations
 	// UART
 	uint8_t RxCpltCallback_flag;					// flag set when a new packet has been received over uart 
@@ -89,7 +89,6 @@ typedef struct MTi_data_struct{
 	struct XbusParser * XBParser;					// struct for managing the packets between the MTi
 	uint8_t cplt_mess_stored_flag;					// When XBP_Handlemessage is called, this value is set true
 	struct XbusMessage* ReceivedMessageStorage;		// encoded packet pointer (size of MAX_RAW_MESSAGE_SIZE) allocated in MT_init
-	uint32_t expect_ack;						// Stores the last special message that still needs to receive an ack
 	uint32_t MT_Data_succerr[2];					// stores the amount of times it succeeded and failed
 	// data
 	float angles[3];								// euler angles received 
@@ -104,9 +103,6 @@ typedef struct MTi_data_struct{
 
 struct MTi_data_struct MTi;
 
-///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
-// possible IDs are described in xbusmessage.h
-extern MTi_data_tuple data_configurations[];
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DEFINITIONS
 

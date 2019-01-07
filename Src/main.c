@@ -56,7 +56,8 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+uint32_t prev_tick;
+uint16_t MTi_error_code;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,7 +122,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /////////////////////////////////////////// INIT FUNCTIONS
   Putty_Init();
-  MTi_Init(&MTi, 6, XFP_General);
+  if((MTi_error_code = MTi_Init(&MTi, 6, XFP_Dynamic))){
+	  Putty_printf("MTi: Failed INIT: %u\n\r",MTi_error_code);
+  }
   kick_Init(&kick);
 
   /* USER CODE END 2 */
@@ -130,12 +133,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    uint16_t error_code = 0;
-
-    // update MTi
-    // TODO: move this to a dedicated timer
-    if((error_code = MTi_Update(&MTi)) != 0) Putty_printf("MTi: Failed: %u",error_code);
-
+    if(!MTi_error_code){
+    	if(HAL_GetTick() > prev_tick + 1000){
+			prev_tick = HAL_GetTick();
+			Putty_printf("acc: x:%f y:%f yaw:%f\n\r", MTi.acc[0], MTi.acc[1], MTi.acc[2]);
+			Putty_printf("rot: x:%f y:%f yaw:%f\n\r", MTi.angles[0], MTi.angles[1], MTi.angles[2]);
+		}
+    }
 
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
@@ -217,6 +221,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == kicktim.Instance){
 		kick_Callback(&kick);
+	}
+	if(htim->Instance == htim7.Instance){
+		MTi_error_code = MTi_Update(&MTi);
 	}
 }
 /* USER CODE END 4 */

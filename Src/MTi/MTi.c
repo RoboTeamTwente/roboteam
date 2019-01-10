@@ -15,10 +15,10 @@
 #define TIME_OUT 1000U
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 MTi_data_tuple data_configurations[]={
-	{.ID = XDI_PacketCounter	, .frequency = 10	, .data = &MTi.packetcounter},
-	{.ID = XDI_FreeAcceleration	, .frequency = 10	, .data = MTi.acc			},
-	{.ID = XDI_StatusWord		, .frequency = 1	, .data = &MTi.statusword	},
-	{.ID = XDI_EulerAngles		, .frequency = 10	, .data = MTi.angles		}};
+	{.ID = XDI_PacketCounter	, .frequency = 100	, .data = &MTi.packetcounter},
+	{.ID = XDI_FreeAcceleration	, .frequency = 100	, .data = MTi.acc			},
+	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi.angles		},
+	{.ID = XDI_StatusWord		, .frequency = 10	, .data = &MTi.statusword	}};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLERATIONS
 // Xbus functions
@@ -244,7 +244,7 @@ static Xsens_Status Decode_Packet(MTi_data* MTi){
 	
 	// loop through all requested data/measurements
 	// NOTE: not every value has to be in every packet
-	for(int i = 0; i < MTi->configuration_total-1; i++){
+	for(int i = 0; i < MTi->configuration_total; i++){
 		MTi_data_tuple conf = data_configurations[i];
 		XbusMessage_getDataItem(conf.data, conf.ID, message);
 	}
@@ -387,7 +387,7 @@ static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
 static inline void ErrorHandler(struct XbusMessage const* message){
 	if (!message)
 		return;
-	Putty_printf("MTi: ERROR: %02x", *(uint8_t *)(message->data));
+	//Putty_printf("MTi: ERROR: %02x", *(uint8_t *)(message->data));
 }
 
 static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){

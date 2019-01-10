@@ -36,7 +36,7 @@
 #include "stm32f4xx_it.h"
 
 /* USER CODE BEGIN 0 */
-#include "Putty.h"
+#include "PuTTY.h"
 void printErrorMsg(const char* errMsg){
 	//while(*errMsg != '\0'){
 		//ITM_SendChar(*errMsg);

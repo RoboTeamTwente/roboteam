@@ -15,10 +15,10 @@
 #define TIME_OUT 1000U
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 MTi_data_tuple data_configurations[]={
-	{.ID = XDI_PacketCounter	, .frequency = 100	, .data = &MTi.packetcounter},
-	{.ID = XDI_FreeAcceleration	, .frequency = 100	, .data = MTi.acc			},
-	{.ID = XDI_StatusWord		, .frequency = 10	, .data = &MTi.statusword	},
-	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi.angles		}};
+	{.ID = XDI_PacketCounter	, .frequency = 10	, .data = &MTi.packetcounter},
+	{.ID = XDI_FreeAcceleration	, .frequency = 10	, .data = MTi.acc			},
+	{.ID = XDI_StatusWord		, .frequency = 1	, .data = &MTi.statusword	},
+	{.ID = XDI_EulerAngles		, .frequency = 10	, .data = MTi.angles		}};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLERATIONS
 // Xbus functions
@@ -94,6 +94,7 @@ Xsens_Status MTi_Init(MTi_data* MTi, uint16_t calibrate_time, enum XsFilterProfi
 		bool last = i == (MTi->configuration_total-1);
 		MTi_BuildConfig(MTi, conf.ID, conf.frequency, last);
 	}
+
 	if(WaitForAck(MTi,XMID_ReqOutputConfigurationAck)){
 		MTi_printf("config ack failed");
 	}
@@ -104,7 +105,6 @@ Xsens_Status MTi_Init(MTi_data* MTi, uint16_t calibrate_time, enum XsFilterProfi
 		MTi_printf("failed SetFilter");
 		return Xsens_Failed_Init;
 	}
-
 	// set MTi to measure state
 	if(MTi_GoToMeasure(MTi)){
 		MTi_printf("failed go to measure");
@@ -242,7 +242,6 @@ static Xsens_Status Decode_Packet(MTi_data* MTi){
 	struct XbusMessage const* message = MTi->ReceivedMessageStorage;
 	if (!message) return Xsens_Failed_Decode;
 	
-
 	// loop through all requested data/measurements
 	// NOTE: not every value has to be in every packet
 	for(int i = 0; i < MTi->configuration_total-1; i++){

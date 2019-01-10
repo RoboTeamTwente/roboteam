@@ -136,8 +136,8 @@ int main(void)
     if(!MTi_error_code){
     	if(HAL_GetTick() > prev_tick + 1000){
 			prev_tick = HAL_GetTick();
-			Putty_printf("acc: x:%f y:%f yaw:%f\n\r", MTi.acc[0], MTi.acc[1], MTi.acc[2]);
-			Putty_printf("rot: x:%f y:%f yaw:%f\n\r", MTi.angles[0], MTi.angles[1], MTi.angles[2]);
+			Putty_printf("acc: x:%.3f y:%.3f z:%.3f\n\r", MTi.acc[0], MTi.acc[1], MTi.acc[2]);
+			Putty_printf("rot: roll:%.3f pitch:%.3f yaw:%.3f\n\r", MTi.angles[0], MTi.angles[1], MTi.angles[2]);
 		}
     }
 

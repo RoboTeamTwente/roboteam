@@ -222,6 +222,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == kicktim.Instance){
 		kick_Callback(&kick);
 	}
+	//TODO: Fix timer hertz to =>400.
 	if(htim->Instance == htim7.Instance){
 		MTi_error_code = MTi_Update(&MTi);
 	}

@@ -77,6 +77,8 @@ extern GPIO_Pin ID3_pin;
 // Frequency select
 extern GPIO_Pin FRQ_sel;
 
+// Xsens 
+extern GPIO_Pin Xsens_enable_pin;
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 

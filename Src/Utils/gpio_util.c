@@ -66,3 +66,6 @@ GPIO_Pin ID3_pin			= { ID3_GPIO_Port			, ID3_Pin			};
 
 // Frequency select
 GPIO_Pin FRQ_sel			= { SW_freq_GPIO_Port		, SW_freq_Pin		};
+
+// Xsens
+GPIO_Pin Xsens_enable_pin 	= {XSENS_nRST_GPIO_Port		, XSENS_nRST_Pin	};

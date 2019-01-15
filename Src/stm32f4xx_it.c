@@ -36,7 +36,60 @@
 #include "stm32f4xx_it.h"
 
 /* USER CODE BEGIN 0 */
+#include "PuTTY.h"
+void printErrorMsg(const char* errMsg){
+	//while(*errMsg != '\0'){
+		//ITM_SendChar(*errMsg);
+		//++errMsg;
+	//}
+	//Putty_printf(errMsg);
+}
 
+enum { r0, r1, r2, r3, r12, lr, pc, psr};
+void stackDump(uint32_t stack[]){
+	static char msg[80];
+	static unsigned int val[8];
+	val[r0] = stack[r0];
+	val[r1] = stack[r1];
+	val[r2] = stack[r2];
+	val[r3] = stack[r3];
+	val[r12] = stack[r12];
+	val[lr] = stack[lr];
+	val[pc] = stack[pc];
+	val[psr] = stack[psr];
+
+	sprintf(msg, "r0  = 0x%08x\n", val[r0]);
+	printErrorMsg(msg);
+	sprintf(msg, "r1  = 0x%08x\n", val[r1]);
+	printErrorMsg(msg);
+	sprintf(msg, "r2  = 0x%08x\n", val[r2]);
+	printErrorMsg(msg);
+	sprintf(msg, "r3  = 0x%08x\n", val[r3]);
+	printErrorMsg(msg);
+	sprintf(msg, "r12 = 0x%08x\n", val[r12]);
+	printErrorMsg(msg);
+	sprintf(msg, "lr  = 0x%08x\n", val[lr]);
+	printErrorMsg(msg);
+	sprintf(msg, "pc  = 0x%08x\n", val[pc]);
+	printErrorMsg(msg);
+	sprintf(msg, "psr = 0x%08x\n", val[psr]);
+	printErrorMsg(msg);
+}
+
+void Hard_Fault_Handler(uint32_t stack[]){
+	char msg[80];
+	printErrorMsg("in HardFault Handler\n");
+	sprintf(msg,"Hard Fault status Reg = 0x%08x\n",SCB->HFSR);
+	printErrorMsg(msg);
+	if(SCB->HFSR & (1<<30)){
+		printErrorMsg("Forced Hard Fault\n");
+		sprintf(msg,"Conf Fault Status Reg = 0x%08x\n", SCB->CFSR);
+		printErrorMsg(msg);
+	}
+	stackDump(stack);
+	__ASM volatile("BKPT #01");
+	while(1);
+}
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -72,6 +125,13 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
+	__ASM volatile("BKPT #01");
+	__asm(	"TST 	lr, #4				\n"
+			"ITE 	EQ					\n"
+			"MRSEQ 	r0, MSP				\n"
+			"MRSNE 	r0, PSP				\n"
+			//"B 		Hard_Fault_Handler	\n"
+	);
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)

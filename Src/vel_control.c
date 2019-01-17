@@ -76,9 +76,9 @@ void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], 
 static void body2Wheels(float wheelspeed[4], float velocity[3]){
 	//mixing matrix
 	//TODO check minuses
-	float velx2wheel = 1/(sin60*velocity[body_x]*rad_wheel);
-	float vely2wheel = 1/(cos60*velocity[body_y]*rad_wheel);
-	float rot2wheel = 1/(rad_robot*velocity[body_w]*rad_wheel);
+	float velx2wheel = sin60*velocity[body_x]/rad_wheel;
+	float vely2wheel = cos60*velocity[body_y]/rad_wheel;
+	float rot2wheel = rad_robot*velocity[body_w]/rad_wheel;
 	wheelspeed[wheels_RF] = -(velx2wheel + vely2wheel + rot2wheel);
 	wheelspeed[wheels_RB] = -(velx2wheel - vely2wheel + rot2wheel);
 	wheelspeed[wheels_LB] = -(-velx2wheel - vely2wheel + rot2wheel);

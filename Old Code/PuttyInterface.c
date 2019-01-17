@@ -43,7 +43,7 @@ static void ClearLine(){
 // modulus is the value at which it wraps
 static uint8_t wrap(uint8_t val, int8_t dif, uint8_t modulus)
 {
-	dif %= modulus;
+	dif %= modulus
 	if(dif < 0)
 		dif += modulus;
 	dif += (val);

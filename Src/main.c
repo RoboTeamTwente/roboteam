@@ -46,18 +46,15 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include "MTi.h"
-#include "PuTTY.h"
-#include "KickChip.h"
 
+#include "KickChip.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint32_t prev_tick;
-uint16_t MTi_error_code;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,30 +117,20 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-  /////////////////////////////////////////// INIT FUNCTIONS
-  Putty_Init();
-  if((MTi_error_code = MTi_Init(&MTi, 6, XFP_Dynamic))){
-	  Putty_printf("MTi: Failed INIT: %u\n\r",MTi_error_code);
-  }
   kick_Init(&kick);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if(!MTi_error_code){
-    	if(HAL_GetTick() > prev_tick + 1000){
-			prev_tick = HAL_GetTick();
-			Putty_printf("acc: x:%.3f y:%.3f z:%.3f\n\r", MTi.acc[0], MTi.acc[1], MTi.acc[2]);
-			Putty_printf("rot: roll:%.3f pitch:%.3f yaw:%.3f\n\r", MTi.angles[0], MTi.angles[1], MTi.angles[2]);
-		}
-    }
+
+
 
   /* USER CODE END WHILE */
+
   /* USER CODE BEGIN 3 */
-  Putty_Callback();
+
   }
   /* USER CODE END 3 */
 
@@ -208,23 +195,12 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-///////////////////////////////////////////// CALLBACK FUNCTIONS
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == huartMTi.Instance){
-		MTi_UART_RxCpltCallback(&MTi);
-	}else if(huart->Instance == huart3.Instance){
-		Putty_Vars.huart_Rx_len = 1;
-		Putty_Vars.small_buf[0] = *(huart->pRxBuffPtr-1);
-  }
-} 
+
+
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == kicktim.Instance){
 		kick_Callback(&kick);
-	}
-	//TODO: Fix timer hertz to =>400.
-	if(htim->Instance == htim7.Instance){
-		MTi_error_code = MTi_Update(&MTi);
 	}
 }
 /* USER CODE END 4 */

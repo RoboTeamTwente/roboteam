@@ -26,9 +26,9 @@ namespace b = boost;
 #include "std_msgs/Bool.h"
 #include "std_msgs/Float64MultiArray.h"
 
-#include "roboteam_robothub/GRSim.h"
+#include "GRSim.h"
 
-#include "roboteam_robothub/packing.h"
+#include "packing.h"
 
 #define VERIFY_COMMANDS
 

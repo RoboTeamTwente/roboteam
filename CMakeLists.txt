@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(roboteam_robothub)
 
+
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
@@ -18,6 +22,8 @@ find_package(catkin REQUIRED COMPONENTS
   rostest
   roboteam_utils
 )
+
+
 
 # This part actually makes sure the network interface
 # of Qt4 is included! So while rqt uses Qt5, for our
@@ -56,10 +62,13 @@ target_compile_options(robothub_tests PUBLIC --coverage)
 target_link_libraries(roboteam_robothub 
     ${catkin_LIBRARIES} 
     ${QT_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
     )
 
 target_link_libraries(robothub_tests
         ${catkin_LIBRARIES}
+        ${QT_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
         gcov)
 
 add_dependencies(roboteam_robothub 

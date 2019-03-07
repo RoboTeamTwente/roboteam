@@ -1,4 +1,4 @@
-#include "roboteam_robothub/packing.h"
+#include "packing.h"
 
 #include <cassert>
 #include <cstdint>

@@ -1,7 +1,7 @@
 #include <roboteam_msgs/RobotCommand.h>
 
 #include <numeric>
-#include "roboteam_robothub/GRSim.h"
+#include "GRSim.h"
 #include "roboteam_utils/Vector2.h"
 
 namespace b = boost;

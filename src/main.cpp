@@ -58,15 +58,10 @@ enum ACK_FLAGS {
 	BALL_SENSOR = 0b00000100	// Robot sees ball
 };
 
-// Subscriber to get LastWorld
 ros::Subscriber subWorldState;
-// Publisher and subscriber to get robotcommands
 ros::Subscriber subRobotCommands;
-// Halt subscriber
 ros::Subscriber subHalt;
-// Publisher for the robot feedback
 ros::Publisher pubRobotFeedback;
-// Publisher for the serial status
 ros::Publisher pubSerialStatus;
 
 boost::optional<roboteam_msgs::World> LastWorld;
@@ -573,49 +568,6 @@ void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::Robot
 
 } // anonymous namespace
 
-void stressTest(){
-
-	if(!ensureSerialport())
-		return;
-
-	const int id = 7;
-	std::cout << "Running stress test on robot " << id << " ..." << std::endl;
-
-	roboteam_msgs::RobotCommand cmd;
-	cmd.id = id;
-	rtt::packed_robot_feedback fb;
-
-	int counter = 0;
-	int acks = 0;
-
-	auto timeStart = std::chrono::high_resolution_clock::now();
-
-	while(counter < 100000){
-		writeRobotCommand(cmd);
-
-//		SerialResultStatus s = readPackedRobotFeedback(fb);
-		SerialResultStatus s = readBoringAck();
-
-		if(s == SerialResultStatus::ACK)
-			acks++;
-		counter++;
-
-		if(counter % 10000 == 0){
-			std::cout << counter << "..." << std::endl;
-			fflush(stdout);
-		}
-	}
-
-	auto timeEnd = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed_seconds = timeEnd - timeStart;
-	auto x = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed_seconds);
-
-	std::cout << "Test complete!" << std::endl;
-	std::cout << "    Duration : " << x.count() << "ms, Hz : " << ((1000*counter)/(double)x.count()) << std::endl;
-	std::cout << "    Total    : " << counter << ", acks : " << acks << ", % : " << (100 * ((double)acks/(double)counter)) << std::endl;
-
-}
-
 void mySigintHandler(int sig){
 	std::cout << "Shutting down...(" << sig << ")" << std::endl;
 	serialPort.close();
@@ -682,22 +634,6 @@ int main(int argc, char *argv[]) {
 	int nTick = 0;
 
 	rtt::packed_robot_feedback fb;
-
-//	while (ros::ok()) {
-//		loop_rate.sleep();
-//		ros::spinOnce();
-//
-//		auto timeNow = std::chrono::high_resolution_clock::now();
-//		auto timeDiff = timeNow - lastStatistics;
-//
-//		// ┌──────────────────┐
-//		// │   Every second   │
-//		// └──────────────────┘
-//		ROS_INFO_STREAM("\nTick " << ++nTick);
-//		lastStatistics = timeNow;
-//		readPackedRobotFeedback(fb);
-//	}
-//	return 0;
 
 	// Subscriber to get LastWorld
 	subWorldState = n.subscribe("world_state", 1, processWorldState);

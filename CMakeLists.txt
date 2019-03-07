@@ -12,7 +12,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "-g -std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++14 ${CMAKE_CXX_FLAGS} -g3 -O0 -Wall --coverage")
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -22,8 +22,6 @@ find_package(catkin REQUIRED COMPONENTS
   rostest
   roboteam_utils
 )
-
-
 
 # This part actually makes sure the network interface
 # of Qt4 is included! So while rqt uses Qt5, for our
@@ -75,7 +73,6 @@ add_dependencies(roboteam_robothub
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     ${catkin_EXPORTED_TARGETS}
     )
-
 
 include(CodeCoverage)
 APPEND_COVERAGE_COMPILER_FLAGS()

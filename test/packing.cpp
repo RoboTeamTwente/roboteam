@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+#include "../src/packing.h"
 
 TEST(packingTest, it_packs) {
     ASSERT_TRUE(true);

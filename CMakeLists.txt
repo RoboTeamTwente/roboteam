@@ -26,23 +26,10 @@ set(QT_USE_QTNETWORK TRUE)
 find_package(Qt REQUIRED)
 include(${QT_USE_FILE})
 
-#find_package(Protobuf REQUIRED)
-#include_directories(${PROTOBUF_INCLUDE_DIRS})
-
-#protobuf_generate_cpp(PROTO_CPP PROTO_H
-#    src/proto/grSim_Replacement.proto
-#    src/proto/grSim_Commands.proto
-#    src/proto/grSim_Packet.proto
-#)
-
 include_directories(
   "include"
   ${catkin_INCLUDE_DIRS}
 )
-
-#find_package(message_generation)
-
-#generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
@@ -53,6 +40,7 @@ add_executable(roboteam_robothub
     src/packing.cpp
     src/GRSim.cpp
 )
+
 target_link_libraries(roboteam_robothub 
     ${catkin_LIBRARIES} 
     ${QT_LIBRARIES}
@@ -60,17 +48,5 @@ target_link_libraries(roboteam_robothub
 add_dependencies(roboteam_robothub 
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     ${catkin_EXPORTED_TARGETS}
-    )
-
-add_executable(packet_tester
-    src/packet_tester.cpp
-    src/packing.cpp
-    )
-target_link_libraries(packet_tester
-    ${catkin_LIBRARIES}
-    )
-add_dependencies(packet_tester
-    ${catkin_EXPORTED_TARGETS}
-    ${${PROJECT_NAME}_EXPORTED_TARGETS}
     )
 

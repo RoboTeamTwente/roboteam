@@ -134,67 +134,6 @@ std::string string_to_hex(const std::string& input){
 
 
 /**
- * Ensures that the serial port is open. Attempts to open the serial port if it is closed
- * @returns true if the port is open, false otherwise
- */
-// Possible useful documentation
-//		http://www.college-code.com/blog/wp-content/uploads/2008/11/boost_serial_port_demo.cpp
-bool ensureSerialport(){
-	// If the serial port is not open at the moment
-	if (!serialPortOpen) {
-
-
-		// If output device given
-		if(serial_file_path_param != "none"){
-			// Open the serial port
-			ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << serial_file_path_param << "...");
-			boost::system::error_code ec;
-			serialPort.open(serial_file_path_param, ec);
-
-			// Check the status of the serial port
-			switch (ec.value()) {
-				// Port opened
-				case boost::system::errc::success:
-					ROS_INFO("[ensureSerialport] Port opened");
-					serialPortOpen = true;
-					serial_file_path = serial_file_path_param;
-					return true;
-				// Port not opened
-				default:
-					ROS_WARN_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
-			}
-		}else {
-			for (std::string path : serial_file_paths) {
-				// Open the serial port
-				ROS_INFO_STREAM("[ensureSerialport] Trying to open serial port " << path << "...");
-				boost::system::error_code ec;
-				serialPort.open(path, ec);
-
-				// Check the status of the serial port
-				switch (ec.value()) {
-					// Port opened
-					case boost::system::errc::success:
-						ROS_INFO("[ensureSerialport] Port opened");
-						serialPortOpen = true;
-						serial_file_path = path;
-						return true;
-
-					// Port not opened
-					default:
-						ROS_DEBUG_STREAM("[ensureSerialport] Error while opening serial port : (" << ec.value() << ") " << ec.message());
-				}
-			}
-		}
-
-		// No port could be opened
-		ROS_ERROR_STREAM("[ensureSerialPort] No serial port could be opened!");
-		return false;
-	}
-	// Port is already open
-	return true;
-}
-
-/**
  * Reads a 49-byte long hex string from the robot, drops the newline byte, converts it to bytes, and puts it in the 23-byte long byteArray.
  * @param byteArray - The array where the 23 bytes should be put in
  * @returns SerialResultStatus, e.g. ACK, NACK, UNKNOWN_READ_ERROR, etc

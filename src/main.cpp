@@ -1,8 +1,3 @@
-#include <QtNetwork>
-#include <boost/asio.hpp>
-#include <boost/asio/read_until.hpp>
-#include <boost/algorithm/hex.hpp>
-
 #include <fstream>
 #include <iostream>
 #include <ros/ros.h>
@@ -11,8 +6,6 @@
 #include <string>
 #include <signal.h>
 #include <bitset>
-
-namespace b = boost;
 
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/RobotSerialStatus.h"
@@ -26,11 +19,10 @@ namespace b = boost;
 #include "std_msgs/Bool.h"
 #include "std_msgs/Float64MultiArray.h"
 
+#include "utilities.h"
+#include "SerialDeviceManager.h"
 #include "GRSim.h"
-
 #include "packing.h"
-
-#define VERIFY_COMMANDS
 
 namespace {
 
@@ -60,22 +52,14 @@ enum ACK_FLAGS {
 
 ros::Subscriber subWorldState;
 ros::Subscriber subRobotCommands;
-ros::Subscriber subHalt;
 ros::Publisher pubRobotFeedback;
-ros::Publisher pubSerialStatus;
 
-boost::optional<roboteam_msgs::World> LastWorld;
+std::shared_ptr<roboteam_msgs::World> LastWorld;
 
 Mode currentMode = Mode::UNDEFINED;
-bool halt = false;
 
 rtt::GRSimCommander grsimCmd(true);
 SlowParam<bool> grSimBatch("grsim/batching", true);
-
-std::map<int, roboteam_msgs::RobotSerialStatus> serialStatusMap;
-std::map<int, roboteam_msgs::RobotSerialStatus> grsimStatusMap;
-
-bool serialPortOpen = false;
 
 std::string serial_file_path_param = "none";
 std::string serial_file_path = "No basestation selected!";
@@ -85,214 +69,12 @@ std::string serial_file_paths[3] = {
 	"/dev/serial/by-id/usb-STMicroelectronics_Basestation_080-if00",
 };
 
-// "The core object of boost::asio is io_service. This object is like the brain and the heart of the library."
-// create the I/O service that talks to the serial device
-boost::asio::io_service io;
-boost::asio::serial_port serialPort(io);
-
 int acks = 0;
 int nacks = 0;
 int networkMsgs = 0;
 
-void processHalt(const std_msgs::Bool::ConstPtr &msg) {
-	ROS_INFO_STREAM("Received a halt: " << (int) msg->data );
-	halt = msg->data;
-}
-
-int char2int(char input){
-	if(input >= '0' && input <= '9') return input - '0';
-	if(input >= 'A' && input <= 'F') return input - 'A' + 10;
-	if(input >= 'a' && input <= 'f') return input - 'a' + 10;
-	throw std::invalid_argument("char2int : Invalid input string");
-}
-
-// This function assumes src to be a zero terminated sanitized string with an even number of [0-9a-f] characters, and target to be sufficiently large
-void hex2bin(const char* src, rtt::packed_robot_feedback& target){
-	int i;
-	while(*src && src[1])
-	{
-		target.at(i) = char2int(*src)*16 + char2int(src[1]);
-		src += 2;
-		i++;
-	}
-}
-
-std::string string_to_hex(const std::string& input){
-	static const char* const lut = "0123456789ABCDEF";
-	size_t len = input.length();
-
-	std::string output;
-	output.reserve(2 * len);
-	for (size_t i = 0; i < len; ++i)
-	{
-		const unsigned char c = input[i];
-		output.push_back(lut[c >> 4]);
-		output.push_back(lut[c & 15]);
-	}
-	return output;
-}
-
-
-/**
- * Reads a 49-byte long hex string from the robot, drops the newline byte, converts it to bytes, and puts it in the 23-byte long byteArray.
- * @param byteArray - The array where the 23 bytes should be put in
- * @returns SerialResultStatus, e.g. ACK, NACK, UNKNOWN_READ_ERROR, etc
- */
-SerialResultStatus readPackedRobotFeedback(rtt::packed_robot_feedback& byteArray){
-
-	// Check if the serial port is open
-	if(!ensureSerialport()){
-		ROS_ERROR("[readPackedRobotFeedback] Port not open. Can't read feedback");
-		return SerialResultStatus::CANT_OPEN_PORT;
-	}
-
-	// Create a buffer to receive the hex from the robot in
-	boost::asio::streambuf hexBuffer;
-	// Create an error_code object
-	b::system::error_code ec;
-
-	// Read bytes into hexBuffer until '\n' appears
-	ROS_DEBUG("[readPackedRobotFeedback] Reading feedback...");
-	size_t bytesReceived = boost::asio::read_until(serialPort, hexBuffer, '\n', ec);
-	ROS_DEBUG("[readPackedRobotFeedback] Feedback read");
-
-	// Check if an error occured while reading
-	if(ec){
-		ROS_WARN_STREAM("[readPackedRobotFeedback] An error occured! " << ec.message());
-		return SerialResultStatus::UNKNOWN_READ_ERROR;
-	}
-	// If there is an incorrect number of bytes
-	if(bytesReceived != 49){
-		ROS_WARN_STREAM("[readPackedRobotFeedback] Dropping message with incorrect size " << bytesReceived);
-		return SerialResultStatus::STRANGE_RESPONSE;
-	}
-
-	// Commit the buffer. (emptying?)
-	hexBuffer.commit(bytesReceived);
-
-	// No idea
-	std::istream is(&hexBuffer);
-	// Create a string to move the hex in the buffer to
-	std::string hexString;
-	// Move the hex from the buffer to the string
-	std::getline(is, hexString);
-	// Replace \n with \0. Not used atm, but can't hurt
-	hexString[bytesReceived-1] = '\0';
-	// Convert the hex string to an uint8_t array. +2 to drop the ACK byte
-	hex2bin(hexString.c_str()+2, byteArray);
-	// Retrieve the byte that represents ACK or NACK
-	int ackByte = char2int(hexString[0]) * 16 + char2int(hexString[1]);
-
-	// === Print the values === //
-//	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
-//	for(int i = 0; i < 48; i += 2){
-//		printf("0x%c%c\t", hexString[i], hexString[i+1]);
-//	}
-//	printf("\n\t");
-//	for(int i = 0; i < 23; i++){
-//		printf("%i\t", byteArray.at(i));
-//	}
-//	printf("\n");
-	// ======================== //
-
-	if(ackByte)
-		return SerialResultStatus::ACK;
-	else{
-		return SerialResultStatus::NACK;
-	}
-}
-
-SerialResultStatus readBoringAck(){
-	// Check if the serial port is open
-	if(!ensureSerialport()){
-		ROS_ERROR("[readBoringAck] Port not open. Can't read feedback");
-		return SerialResultStatus::CANT_OPEN_PORT;
-	}
-
-	// Create a buffer to receive the ack in
-	boost::asio::streambuf ackBuffer;
-	// Create an error_code object
-	b::system::error_code ec;
-
-	// Read bytes into buffer until '\n' appears
-	ROS_DEBUG("[readBoringAck] Reading ack...");
-	size_t bytesReceived = boost::asio::read_until(serialPort, ackBuffer, '\n', ec);
-	ROS_DEBUG("[readBoringAck] Ack read");
-
-	// Check if an error occured while reading
-	if(ec){
-		ROS_WARN_STREAM("[readBoringAck] An error occured! " << ec.message());
-		return SerialResultStatus::UNKNOWN_READ_ERROR;
-	}
-	// If there is an incorrect number of bytes
-	if(bytesReceived != 2){
-		ROS_WARN_STREAM("[readBoringAck] Dropping message with incorrect size " << bytesReceived);
-		return SerialResultStatus::STRANGE_RESPONSE;
-	}
-
-	// Commit the buffer. (emptying?)
-	ackBuffer.commit(bytesReceived);
-	// No idea
-	std::istream is(&ackBuffer);
-	// Create a string to move the hex in the buffer to
-	std::string ackString;
-	// Move the hex from the buffer to the string
-	std::getline(is, ackString);
-	// Replace \n with \0. Not used atm, but can't hurt
-	ackString[bytesReceived-1] = '\0';
-
-	char ackByte = ackString[0];
-//	std::bitset<8> x(ackByte);
-//	std::cout << x << std::endl;
-
-
-	// TODO Do something with the battery flag
-	if(ackByte & ACK_FLAGS::BATTERY){
-		ROS_WARN_STREAM_THROTTLE(1, "Low battery detected!");
-	}
-
-	// TODO Do something with the ball sensor flag
-	if(ackByte & ACK_FLAGS::BALL_SENSOR){
-
-	}
-
-	if(ackByte & ACK_FLAGS::ACK)
-		return SerialResultStatus::ACK;
-	else
-		return SerialResultStatus::NACK;
-
-
-
-	// === Print the values === //
-//	std::cout << (ackByte ? "ACK" : "NACK") << " received " << bytesReceived << " bytes " << hexString << std::endl;
-//	for(int i = 0; i < 48; i += 2){
-//		printf("0x%c%c\t", hexString[i], hexString[i+1]);
-//	}
-//	printf("\n\t");
-//	for(int i = 0; i < 23; i++){
-//		printf("%i\t", byteArray.at(i));
-//	}
-//	printf("\n");
-	// ======================== //
-
-}
-
-    void printbits(rtt::packed_protocol_message byteArr){
-        for(int b = 0; b < 12; b++){
-
-            std::cout << "    ";
-            uint8_t byte = byteArr[b];
-//            for (int i = 0; i < 8; i++) {
-            for (int i = 7; i >= 0; i--) {
-                if ((byte & (1 << i)) == (1 << i)) {
-                    std::cout << "1";
-                } else {
-                    std::cout << "0";
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
+namespace hub = ::rtt::robothub;
+namespace utils = ::rtt::robothub::utils;
 
 /**
  * Takes a robot command, converts it to bytes, and sends it to the robot
@@ -300,18 +82,6 @@ SerialResultStatus readBoringAck(){
  * @returns SerialResultStatus, e.g. UNKNOWN_WRITE_ERROR, SUCCESS, etc
  */
 SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCommand){
-
-	// Check if the serial port is open
-	if(!ensureSerialport()){
-		ROS_ERROR("[sendRobotCommand] Port not open. Can't write command");
-		return SerialResultStatus::CANT_OPEN_PORT;
-	}
-
-//	// Get the latest world state
-//	b::optional<roboteam_msgs::World> worldOptional;
-//	if (rtt::LastWorld::have_received_first_world()) {
-//		worldOptional = rtt::LastWorld::get();
-//	}
 
 	// Turn roboteam_msgs:RobotCommand into a message
 	boost::optional<rtt::packed_protocol_message> bytesOptional = rtt::createRobotPacket(robotCommand, LastWorld);
@@ -323,38 +93,8 @@ SerialResultStatus writeRobotCommand(const roboteam_msgs::RobotCommand& robotCom
 	// Get the bytes from the message
 	rtt::packed_protocol_message ppm = *bytesOptional;
 
-	// printbits(*bytesOptional);
-
-	// Print the bytes in HEX
-	// for (int i = 0; i < ppm.size(); i++) {
-	// 	printf("%02x ", ppm.data()[i]);
-	// }
-	// printf("\n");
-
-	// Error code
-	b::system::error_code ec;
-	// Write the bytes to the basestation
-	ROS_DEBUG("[sendRobotCommand] Writing command...");
-	b::asio::write(serialPort, boost::asio::buffer(ppm.data(), ppm.size()), ec);
-	ROS_DEBUG("[readPackedRobotFeedback] Command written");
-
-	// Check the error_code
-	switch (ec.value()) {
-		case boost::asio::error::eof:
-			ROS_ERROR_STREAM("[sendSerialCommands] Connection closed by peer while writing! Closing port and trying to reopen...");
-			serialPort.close();
-			serialPortOpen = false;
-			return SerialResultStatus::CONNECTION_CLOSED_BY_PEER;
-
-		case boost::system::errc::success:
-			return SerialResultStatus::SUCCESS;
-
-		default:
-			ROS_ERROR_STREAM("[sendRobotCommand] Unknown write error : (" << ec.value() << ")! Closing the port and trying to reopen...");
-			serialPort.close();
-			serialPortOpen = false;
-			return SerialResultStatus::UNKNOWN_WRITE_ERROR;
-	}
+    hub::SerialDeviceManager sdm;
+    sdm.writeToDevice(ppm)
 }
 
 /**
@@ -403,32 +143,7 @@ SerialResultStatus processSerialCommand(const roboteam_msgs::RobotCommand& robot
 }
 
 
-
-
-
-
-Mode stringToMode(const std::string& type) {
-    if (type == "serial") {
-        return Mode::SERIAL;
-    } else if (type == "grsim") {
-        return Mode::GRSIM;
-    } else {
-        return Mode::UNDEFINED;
-    }
-}
-std::string modeToString(Mode mode) {
-    switch(mode) {
-        case Mode::SERIAL:
-            return "serial";
-        case Mode::GRSIM:
-            return "grsim";
-		case Mode::UNDEFINED:
-			return "grsim";
-    }
-}
-
 void sendCommand(roboteam_msgs::RobotCommand command) {
-
 	if(currentMode == Mode::GRSIM){
 		rtt::LowLevelRobotCommand llrc= rtt::createLowLevelRobotCommand(command,LastWorld);
 		if(rtt::validateRobotPacket(llrc)) {
@@ -465,84 +180,21 @@ void sendCommand(roboteam_msgs::RobotCommand command) {
 }
 
 void processWorldState(const roboteam_msgs::World& world){
-	LastWorld = world;
+	LastWorld = std::make_shared<roboteam_msgs::World>(world);
 }
 
-void processRobotCommandWithIDCheck(const ros::MessageEvent<roboteam_msgs::RobotCommand>& msgEvent) {
-
-    auto const & msg = *msgEvent.getMessage();
-    auto pubName = msgEvent.getPublisherName();
-
-    int robotLoc = pubName.find("robot");
-    if (robotLoc != std::string::npos) {
-        b::optional<int> robotID;
-
-        try {
-            auto robotIDLength2 = std::stoi(pubName.substr(robotLoc + 5, 2));
-            robotID = robotIDLength2;
-        } catch (...) {
-            try {
-                auto robotIDLength1 = std::stoi(pubName.substr(robotLoc + 5, 1));
-                robotID = robotIDLength1;
-            } catch (...) {
-                // Neither matched; do nothing.
-                ROS_ERROR("Neither matched!");
-            }
-        }
-
-        if (robotID) {
-            if (*robotID == msg.id) {
-                sendCommand(msg);
-            } else {
-                ROS_ERROR_STREAM("Message sent by robot " << *robotID << " is not the same as ID in message which is " << msg.id << "!");
-            }
-        } else {
-            ROS_ERROR("Parsing failed!");
-        }
-    } else {
-        // In this case the msg was sent by something else
-        sendCommand(msg);
-    }
+void processRobotCommand(const roboteam_msgs::RobotCommand& cmd) {
+	sendCommand(cmd);
 }
 
 } // anonymous namespace
 
-void mySigintHandler(int sig){
-	std::cout << "Shutting down...(" << sig << ")" << std::endl;
-	serialPort.close();
-
-	std::cout << "    Closing serial port..." << std::endl;
-	serialPort.close();
-	while(serialPort.is_open());
-
-	std::cout << "    Stopping io service..." << std::endl;
-	io.stop();
-	while(!io.stopped());
-
-	std::cout << "    Shutting down ros node..." << std::endl;
-	ros::shutdown();
-	while(ros::ok());
-	std::cout << "Shutdown complete" << std::endl;
-}
-
 int main(int argc, char *argv[]) {
     std::vector<std::string> args(argv, argv + argc);
-
-    // ┌──────────────────┐
-    // │  Initialization  │
-    // └──────────────────┘
-
-//		stressTest(); return 0;
-
-	// Create ROS node called robothub and subscribe to topic 'robotcommands'
-    ros::init(argc, argv, "robothub", ros::init_options::NoSigintHandler);
+    ros::init(argc, argv, "robothub");
     ros::NodeHandle n;
 
-	// Bind ctrl+c to custom signal handler
-	// http://wiki.ros.org/roscpp/Overview/Initialization%20and%20Shutdown
-	signal(SIGINT, mySigintHandler);
-
-	// Get output device
+	// Get output device from the ROS parameter server
 	if(ros::param::has("output_device")){
 		ros::param::get("output_device", serial_file_path_param);
 		if(serial_file_path_param != "none")
@@ -552,12 +204,9 @@ int main(int argc, char *argv[]) {
 	// Get the mode of robothub, either "serial" or "grsim"
 	std::string modeStr = "undefined";
 	ros::param::get("robot_output_target", modeStr);
-	currentMode = stringToMode(modeStr);
-	if(currentMode == Mode::UNDEFINED){
-		ROS_WARN_STREAM("Watch out! The current mode '" << modeStr << "' is UNDEFINED. No packets will be sent");
-	}else{
-		ROS_INFO_STREAM("Current mode : " << modeToString(currentMode));
-	}
+	currentMode = rtt::robothub::utils::stringToMode(modeStr);
+	ROS_INFO_STREAM("Current mode : " << rtt::robothub::utils::modeToString(currentMode));
+
 
     // Get the number of iterations per second
     int roleHz = 120;
@@ -565,26 +214,15 @@ int main(int argc, char *argv[]) {
     ros::Rate loop_rate(roleHz);
 	ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
 
-	using namespace std;
-	using namespace std::chrono;
-
-	high_resolution_clock::time_point lastStatistics = high_resolution_clock::now();
+	std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
 
 	int nTick = 0;
 
 	rtt::packed_robot_feedback fb;
 
-	// Subscriber to get LastWorld
 	subWorldState = n.subscribe("world_state", 1, processWorldState);
-
-    // Publisher and subscriber to get robotcommands
-    subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommandWithIDCheck);
-    // Halt subscriber
-    subHalt = n.subscribe("halt", 1, processHalt);
-	// Publisher for the robot feedback
+    subRobotCommands = n.subscribe("robotcommands", 1000, processRobotCommand);
 	pubRobotFeedback = n.advertise<roboteam_msgs::RobotFeedback>("robotfeedback", 1000);
-	// Publisher for the serial status
-    pubSerialStatus = n.advertise<roboteam_msgs::RobotSerialStatus>("robot_serial_status", 1000);
 
 	// Check if the serial port is open
 	if(currentMode == Mode::SERIAL && !ensureSerialport()){
@@ -596,48 +234,27 @@ int main(int argc, char *argv[]) {
 		serialStatusMap[i] = roboteam_msgs::RobotSerialStatus();
 	}
 
-
-    // ┌──────────────────┐
-    // │    Main loop     │
-    // └──────────────────┘
-
     int currIteration = 0;
 
     while (ros::ok()) {
         loop_rate.sleep();
         ros::spinOnce();
 
-        // Stop all robots if needed!
-        if (halt) {
-            roboteam_msgs::RobotCommand command;
-            for (int i = 0; i < 16; ++i) {
-                command.id = i;
-				command.use_angle = false;
-                sendCommand(command);
-            }
-        }
+
 
         grsimCmd.setBatch(grSimBatch());
 
-        auto timeNow = high_resolution_clock::now();
+        auto timeNow = std::chrono::high_resolution_clock::now();
         auto timeDiff = timeNow - lastStatistics;
 
-        // ┌──────────────────┐
-        // │   Every second   │
-        // └──────────────────┘
-        if (duration_cast<milliseconds>(timeDiff).count() > 1000) {
+
+        if (std::chrono::duration_cast<milliseconds>(timeDiff).count() > 1000) {
 
             lastStatistics = timeNow;
 
             ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
 
-            if (halt) {
-                ROS_WARN_STREAM("Halting status : !!!HALTING!!!");
-            }
 
-            // ┌──────────────────┐
-            // │      Serial      │
-            // └──────────────────┘
             if (currentMode == Mode::SERIAL) {
 
 				// Check if the serial port is open
@@ -693,40 +310,11 @@ int main(int argc, char *argv[]) {
 				ROS_INFO_STREAM(ssStatus.str());
 
             }
-            // ┌──────────────────┐
-            // │      grSim       │
-            // └──────────────────┘
-            if (currentMode == Mode::GRSIM) {
 
+
+            if (currentMode == Mode::GRSIM) {
                 ROS_INFO_STREAM("Network messages sent: " << networkMsgs );
                 networkMsgs = 0;
-
-				/* Emiel : TODO Check if anything actually listens to roboteam_msgs::RobotSerialStatus
-                // Publish any status info on the robots
-                for (auto &pair : grsimStatusMap) {
-                    int id = pair.first;
-                    roboteam_msgs::RobotSerialStatus &status = pair.second;
-
-                    if (status.start_timeframe == ros::Time(0)) {
-                        // This is a new status message.
-                        // It has been initialized with an id of 0.
-                        // So we need to set it correctly.
-                        status.id = id;
-                    } else {
-                        // This status message is ready to be sent.
-                        status.end_timeframe = ros::Time::now();
-
-                        pubSerialStatus.publish(status);
-                    }
-
-                    // Set the new start time.
-                    status.start_timeframe = ros::Time::now();
-                    // Reset the ack and nack counters.
-                    status.acks = 0;
-                    status.nacks = 0;
-                }
-				*/
-
                 if (grsimCmd.isBatch()) {
                     ROS_INFO_STREAM("Batching : yes");
                     rtt::GRSimCommander::Stats stats = grsimCmd.consumeStatistics();
@@ -744,53 +332,3 @@ int main(int argc, char *argv[]) {
     return 0;
 
 }
-
-
-
-
-
-
-// SlowParam<std::string> colorParam("our_color");
-// SlowParam<std::string> grsim_ip("grsim/ip", "127.0.0.1");
-// SlowParam<int>         grsim_port("grsim/port", 20011);
-
-// Algorithm for efficient GRSim'ing:
-// - Receive msg
-// - Put in buffer
-//
-// When is the buffer flushed:
-// - After every ros::spinOnce(), flush buffer
-//      - Probably the cleanest, simplest. Not sure about effectiveness.
-//      - If in one spinonce you receive one robot instruction twice
-//        you drop a packet
-//      - If it takes multiple cycles to get a packet from everyone then this
-//        is a bad solution since it doesn't compress much.
-//      - If we run at the same speed as a rolenode however it seems appropriate
-//      - Maybe with an escape as soon as it drops one packet?
-// - Every 6 messages
-//      - Might drop a packet every once in a while
-//      - Like this the most atm.
-//      - What if there are 2 robots? Need to detect how many there are.
-//      - Reset that every 0.25 seconds?
-// - Every a certain amount of time
-//      - Might drop a packet every once in a while as well
-// - When a packet from every robot is received
-//      - Needs to be reset every 0.25 seconds or smth to account for robots leaving e.d.
-//      - If one rolenode crashes all robots have no instructions for 0.25 secs
-//
-// - Did some tests. With 4 testx's running it seems quite nicely separated, i.e.
-//   0 1 2 3 4 0 1 2 3 4, for some permutation of 0 1 2 3 4.
-//   So the following seems a nice approach. Also, the safety thing will make
-//   sure that for bad permutations or nodes that run faster than others it will
-//   still send packets at a better than worst-case-scenario rate. Did some more
-//   tests with randomly started testx's, still works like a charm.
-//
-// - Every time the buffer has reached the threshold, it will flush.
-// - Every 0.25 (or some other amount) of seconds robothub will check
-//   how many robots it has seen it that time period
-// - That will be its new threshold
-// - As long as all rolenodes run at the same Hz it should work fine
-// - If one crashes the system recovers in 0.25 secs.
-// - Safety: if two (or more/less?) packets are dropped from a specific robot
-//   robothub immediately evaluates how many robots there are, changes its
-//   threshold, and flushes the buffer.

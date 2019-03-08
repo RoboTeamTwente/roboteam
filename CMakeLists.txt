@@ -44,7 +44,8 @@ set(SRCS
     src/packing.cpp
     src/GRSim.cpp
     src/SerialDeviceManager.cpp
-    src/SerialDeviceManager.h)
+    src/SerialDeviceManager.h
+        src/utilities.h)
 
 add_executable(roboteam_robothub
     src/main.cpp

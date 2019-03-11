@@ -18,26 +18,12 @@ namespace b = boost;
 
 namespace rtt {
 
-    namespace {
-
-        // Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils, we can use that
-        boost::optional<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
-            std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
-            for (const auto &bot : bots) {
-                if (bot.id == id) {
-                    return boost::optional<roboteam_msgs::WorldRobot>(bot);
-                }
-            }
-            return boost::none;
-        }
-    } // anonymous namespace
-
     /**
      * Creates a low level robot command, i.e. a command from which you can construct a robot packet
      * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
      * uses this internally to convert a RobotCommand into something workable.
      */
-    LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotCommand& command, const b::optional<roboteam_msgs::World>& worldOpt) {
+    LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotCommand& command, const std::shared_ptr<roboteam_msgs::World>& worldOpt) {
 
         double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
         double rho = sqrt(command.x_vel * command.x_vel + command.y_vel * command.y_vel);

@@ -13,8 +13,13 @@ namespace rtt {
 namespace robothub {
 namespace utils {
 
-int char2int(char input)
-{
+enum class Mode {
+    SERIAL,
+    GRSIM,
+    UNDEFINED
+};
+
+int char2int(char input) {
     if (input>='0' && input<='9') return input-'0';
     if (input>='A' && input<='F') return input-'A'+10;
     if (input>='a' && input<='f') return input-'a'+10;
@@ -22,8 +27,7 @@ int char2int(char input)
 }
 
 // This function assumes src to be a zero terminated sanitized string with an even number of [0-9a-f] characters, and target to be sufficiently large
-void hex2bin(const char* src, rtt::packed_robot_feedback& target)
-{
+void hex2bin(const char* src, rtt::packed_robot_feedback& target) {
     int i;
     while (*src && src[1]) {
         target.at(i) = char2int(*src)*16+char2int(src[1]);
@@ -32,8 +36,7 @@ void hex2bin(const char* src, rtt::packed_robot_feedback& target)
     }
 }
 
-Mode stringToMode(const std::string& type)
-{
+Mode stringToMode(const std::string& type) {
     if (type=="serial") {
         return Mode::SERIAL;
     }
@@ -45,8 +48,7 @@ Mode stringToMode(const std::string& type)
     }
 }
 
-std::string modeToString(Mode mode)
-{
+std::string modeToString(Mode mode) {
     switch (mode) {
     case Mode::SERIAL:return "serial";
     case Mode::GRSIM:return "grsim";
@@ -54,8 +56,18 @@ std::string modeToString(Mode mode)
     }
 }
 
-void printbits(rtt::packed_protocol_message byteArr)
-{
+// Copy of getWorldBot() because I don't want to pull in tactics as a dependency. If this function is moved to utils, we can use that
+std::shared_ptr<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
+    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
+    for (const auto &bot : bots) {
+        if (bot.id == id) {
+            return std::make_shared<roboteam_msgs::WorldRobot>(bot);
+        }
+    }
+    return nullptr;
+}
+
+void printbits(rtt::packed_protocol_message byteArr) {
     for (int b = 0; b<12; b++) {
 
         std::cout << "    ";
@@ -64,8 +76,7 @@ void printbits(rtt::packed_protocol_message byteArr)
         for (int i = 7; i>=0; i--) {
             if ((byte & (1 << i))==(1 << i)) {
                 std::cout << "1";
-            }
-            else {
+            } else {
                 std::cout << "0";
             }
         }
@@ -73,8 +84,8 @@ void printbits(rtt::packed_protocol_message byteArr)
     }
 }
 
-}
-}
-}
+} // utils
+} // robothub
+} // rtt
 
 #endif //ROBOTEAM_ROBOTHUB_UTILITIES_H

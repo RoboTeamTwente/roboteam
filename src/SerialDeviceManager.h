@@ -13,6 +13,7 @@ namespace robothub {
 
 class SerialDeviceManager {
 public:
+    explicit SerialDeviceManager() = default;
     explicit SerialDeviceManager(const std::string &deviceName);
     bool EnsureDeviceOpen();
     bool readDevice();
@@ -21,8 +22,6 @@ public:
     ~SerialDeviceManager();
 
 private:
-    bool serialPortOpen = false;
-
     std::fstream f;
     std::string deviceName;
 };

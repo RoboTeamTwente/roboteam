@@ -18,12 +18,21 @@ public:
     bool EnsureDeviceOpen();
     bool readDevice();
     bool closeDevice();
-    bool writeToDevice(rtt::packed_protocol_message packet);
+    bool writeToDevice(packed_protocol_message packet);
     ~SerialDeviceManager();
 
 private:
     std::fstream f;
     std::string deviceName;
+
+    std::string StandardDeviceNames[3] = {
+            "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00",
+            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_078-if00",
+            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_080-if00",
+    };
+
+    std::string serial_file_path_param = "none";
+    std::string serial_file_path = "No basestation selected!";
 };
 
 }

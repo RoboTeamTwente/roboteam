@@ -56,7 +56,7 @@ bool SerialDeviceManager::readDevice() {
 /*
  * Write an array to the serial device
  */
-bool SerialDeviceManager::writeToDevice(rtt::packed_protocol_message packet) {
+bool SerialDeviceManager::writeToDevice(packed_protocol_message packet) {
     if (this->EnsureDeviceOpen()) {
         f.write(reinterpret_cast<char*>(packet.data()), packet.size());
         return f.good();

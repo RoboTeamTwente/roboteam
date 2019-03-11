@@ -3,6 +3,7 @@
 //
 
 #include "SerialDeviceManager.h"
+#include "utilities.h"
 #include <ros/ros.h>
 #include <iostream>
 #include <fstream>
@@ -18,16 +19,15 @@ SerialDeviceManager::SerialDeviceManager(const std::string& deviceName) : device
  * Return false if it fails.
  */
 bool SerialDeviceManager::EnsureDeviceOpen() {
-    ROS_INFO("[EnsureDeviceOpen] Opening serial device %s",  deviceName.c_str());
-
     if (!f.is_open()) {
-        f.open(deviceName, std::fstream::binary | std::fstream::in | std::fstream::out);
+        ROS_INFO("[EnsureDeviceOpen] Opening serial device %s", deviceName.c_str());
+        f.open(deviceName, std::fstream::binary | std::fstream::app);
         if (f.fail()) {
             ROS_ERROR("[EnsureDeviceOpen] Failed to open Serial Device: %s", deviceName.c_str());
             return false;
         }
+        ROS_INFO("[EnsureDeviceOpen] Serial device opened: %s", deviceName.c_str());
     }
-    ROS_INFO("[EnsureDeviceOpen] Serial device opened: %s", deviceName.c_str());
     return true;
 }
 
@@ -46,9 +46,14 @@ bool SerialDeviceManager::readDevice() {
         size = endOfData - beginOfData;
 
         // create a data * to store the data
-        char * data = new char();
+        char * data = new char[size];
         f.read(data, size);
-        return f.good();
+        const char * data2 = data;
+
+        std::string dataStr(data2);
+
+        std::cout << "retrieved: " <<  dataStr << std::endl;
+        return true;
     }
     return false;
 }
@@ -56,11 +61,15 @@ bool SerialDeviceManager::readDevice() {
 /*
  * Write an array to the serial device
  */
-bool SerialDeviceManager::writeToDevice(packed_protocol_message packet) {
+bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
     if (this->EnsureDeviceOpen()) {
-        f.write(reinterpret_cast<char*>(packet.data()), packet.size());
-        return f.good();
+
+        f.clear();
+        f.write((const char*) packet.data(), packet.size());
+        f.flush();
+        return true;
     }
+    ROS_ERROR("[writeToDevice] the device is closed!");
     return false;
 }
 

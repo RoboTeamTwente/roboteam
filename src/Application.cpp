@@ -22,6 +22,9 @@ Application::Application() {
 
 /// Get the mode of robothub, either "serial" or "grsim" or "undefined"
 utils::Mode Application::getMode() {
+
+    return utils::Mode::SERIAL;
+
     if (mode == utils::Mode::UNDEFINED) {
         std::string modeStr = "undefined";
         ros::param::get("robot_output_target", modeStr);
@@ -34,7 +37,15 @@ utils::Mode Application::getMode() {
 
 /// Get output device from the ROS parameter server
 std::string Application::getSerialDevice() {
-    std::string deviceName = "none";
+    std::string serial_file_paths[3] = {
+            "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00",
+            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_078-if00",
+            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_080-if00",
+    };
+
+    return serial_file_paths[1];
+
+    std::string deviceName = serial_file_paths[1];
     if(ros::param::has("output_device")) {
         ros::param::get("output_device", deviceName);
     }
@@ -60,7 +71,7 @@ void Application::subscribeToROSTopics(){
 
 /// get Tick rate from ROS parameter server
 int Application::getTickRate() {
-    int roleHz = 120;
+    int roleHz = 60;
     if(ros::param::has("grsim/role_iterations_per_second")) {
         ros::param::get("role_iterations_per_second", roleHz);
     }
@@ -154,7 +165,11 @@ void Application::processRobotCommand(const roboteam_msgs::RobotCommand& cmd) {
         return;
     }
 
+    ROS_INFO("[processRobotCommand] processing robotcommand");
+
     if (getMode() == utils::Mode::SERIAL) {
+        ROS_INFO("attempt serial sending");
+
         sendSerialCommand(llrc);
     } else {
         sendGrSimCommand(cmd);
@@ -168,6 +183,8 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
     // convert the LLRC to a bytestream which we can send
     std::shared_ptr<packed_protocol_message> bytestream = createRobotPacket(llrc);
 
+
+
     // Check if the message was created successfully
     if(!bytestream){
         ROS_ERROR("[sendSerialCommand] The message was not created succesfully!");
@@ -175,7 +192,11 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
     }
 
     packed_protocol_message packet = *bytestream;
+    ROS_INFO("[bytestream] this should be the packet:");
+
     device->writeToDevice(packet);
+    utils::printbits(packet);
+
 }
 
 /// send a GRSim command from a given robotcommand

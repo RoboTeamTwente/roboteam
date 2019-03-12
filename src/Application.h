@@ -47,6 +47,7 @@ private:
     void sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand);
 
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
+    void printStatistics();
 };
 
 } // robothub

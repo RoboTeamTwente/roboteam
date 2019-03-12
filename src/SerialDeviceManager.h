@@ -17,9 +17,8 @@ public:
     explicit SerialDeviceManager(const std::string &deviceName);
     bool EnsureDeviceOpen();
     bool readDevice();
-    bool closeDevice();
     bool writeToDevice(packed_protocol_message packet);
-    ~SerialDeviceManager();
+
 
 private:
     std::fstream f;

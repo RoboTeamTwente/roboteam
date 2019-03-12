@@ -20,13 +20,11 @@ SerialDeviceManager::SerialDeviceManager(const std::string& deviceName) : device
  */
 bool SerialDeviceManager::EnsureDeviceOpen() {
     if (!f.is_open()) {
-        ROS_INFO("[EnsureDeviceOpen] Opening serial device %s", deviceName.c_str());
         f.open(deviceName, std::fstream::binary | std::fstream::app);
         if (f.fail()) {
             ROS_ERROR("[EnsureDeviceOpen] Failed to open Serial Device: %s", deviceName.c_str());
             return false;
         }
-        ROS_INFO("[EnsureDeviceOpen] Serial device opened: %s", deviceName.c_str());
     }
     return true;
 }
@@ -63,26 +61,11 @@ bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
     if (this->EnsureDeviceOpen()) {
         f.clear();
         f.write((const char*) packet.data(), packet.size());
-        f.flush();
+        f.close();
         return f.good();
     }
     ROS_ERROR("[writeToDevice] the device is closed!");
     return false;
-}
-
-/*
- * Close the serial device
- */
-bool SerialDeviceManager::closeDevice() {
-    f.close();
-    return !f.is_open();
-}
-
-/*
- * Close the serial device upon destruction
- */
-SerialDeviceManager::~SerialDeviceManager() {
-    this->closeDevice();
 }
 
 

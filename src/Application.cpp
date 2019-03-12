@@ -14,6 +14,9 @@ namespace robothub {
 Application::Application() {
     subscribeToROSTopics();
 
+    // if you want to force a mode, set it here already
+    mode = utils::Mode::SERIAL;
+
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
     if (getMode() == utils::Mode::SERIAL) {
@@ -36,7 +39,7 @@ utils::Mode Application::getMode() {
 // if there is no serial device from ROS then auto select one
 // then always just open basestation 78, which is the default (no jumper needed)
 std::string Application::getSerialDevice() {
-    std::string deviceName = "";
+    std::string deviceName;
 
     if(ros::param::has("output_device")) {
         ros::param::get("output_device", deviceName);
@@ -64,49 +67,44 @@ bool Application::getBatchingVariable() {
 /// subscribe to ROS topics
 void Application::subscribeToROSTopics(){
     subWorldState = n.subscribe("world_state", 1, &Application::processWorldState, this);
-    subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this);
+    subRobotCommands = n.subscribe("robotcommands", 32, &Application::processRobotCommand, this);
 }
+
 
 void Application::loop(){
     ros::Rate rate(TICK_RATE);
-
     std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
-
     int nTick = 0;
     packed_robot_feedback fb;
     int currIteration = 0;
-
     while (ros::ok()) {
         rate.sleep();
         ros::spinOnce();
-
         grsimCommander->setBatch(getBatchingVariable());
-
         auto timeNow = std::chrono::high_resolution_clock::now();
         auto timeDiff = timeNow-lastStatistics;
-
         if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {
-
             lastStatistics = timeNow;
-
             ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
-
-            // print in a nicely formatted way
-            const int amountOfColumns = 4;
-            for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i+=amountOfColumns) {
-                for (int j = 0; j < amountOfColumns; j++) {
-                    const int robotId = i+j;
-                    if (robotId < MAX_AMOUNT_OF_ROBOTS) {
-                        std::cout << robotId << ": " << robotTicks[robotId] << "\t";
-                        robotTicks[robotId] = 0;
-                    }
-                }
-                std::cout << std::endl;
-            }
+            printStatistics();
         }
     }
 }
 
+/// print robot ticks in a nicely formatted way
+void Application::printStatistics() {
+    const int amountOfColumns = 4;
+    for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i+=amountOfColumns) {
+        for (int j = 0; j < amountOfColumns; j++) {
+            const int robotId = i+j;
+            if (robotId < MAX_AMOUNT_OF_ROBOTS) {
+                std::cout << robotId << ": " << robotTicks[robotId] << "\t";
+                robotTicks[robotId] = 0;
+            }
+        }
+        std::cout << std::endl;
+    }
+}
 
 void Application::processWorldState(const roboteam_msgs::World& world){
     LastWorld = std::make_shared<roboteam_msgs::World>(world);
@@ -123,7 +121,6 @@ void Application::processRobotCommand(const roboteam_msgs::RobotCommand& cmd) {
     }
 
     robotTicks[cmd.id]++;
-
     if (getMode() == utils::Mode::SERIAL) {
         sendSerialCommand(llrc);
     } else {
@@ -142,7 +139,6 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
         ROS_ERROR("[sendSerialCommand] The message was not created succesfully!");
         return;
     }
-
     packed_protocol_message packet = *bytestream;
     device->writeToDevice(packet);
 }

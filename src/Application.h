@@ -9,6 +9,7 @@
 #include <ros/subscriber.h>
 #include <ros/node_handle.h>
 #include "utilities.h"
+#include "constants.h"
 
 namespace rtt {
 namespace robothub {
@@ -32,7 +33,6 @@ private:
     utils::Mode getMode();
     std::string getSerialDevice();
     bool getBatchingVariable();
-    int getTickRate();
 
     // ROS callback functions
     std::shared_ptr<roboteam_msgs::World> LastWorld;
@@ -46,7 +46,7 @@ private:
     void sendSerialCommand(LowLevelRobotCommand llrc);
     void sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand);
 
-    int robotTicks[16];
+    int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
 };
 
 } // robothub

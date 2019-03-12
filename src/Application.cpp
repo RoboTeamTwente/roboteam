@@ -23,34 +23,31 @@ Application::Application() {
 
 /// Get the mode of robothub, either "serial" or "grsim" or "undefined"
 utils::Mode Application::getMode() {
-
-    return utils::Mode::SERIAL;
-
     if (mode == utils::Mode::UNDEFINED) {
         std::string modeStr = "undefined";
         ros::param::get("robot_output_target", modeStr);
-        utils::Mode currentMode = rtt::robothub::utils::stringToMode(modeStr);
-        ROS_INFO_STREAM("Current mode : " << utils::modeToString(currentMode));
-        return currentMode;
+        mode = rtt::robothub::utils::stringToMode(modeStr);
+        ROS_INFO_STREAM("Current mode : " << utils::modeToString(mode));
     }
     return mode;
 }
 
 /// Get output device from the ROS parameter server
+// if there is no serial device from ROS then auto select one
+// then always just open basestation 78, which is the default (no jumper needed)
 std::string Application::getSerialDevice() {
-    std::string serial_file_paths[3] = {
-            "/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_ComPort_00000000001A-if00",
-            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_078-if00",
-            "/dev/serial/by-id/usb-STMicroelectronics_Basestation_080-if00",
-    };
+    std::string deviceName = "";
 
-    return serial_file_paths[1];
-
-    std::string deviceName = serial_file_paths[1];
     if(ros::param::has("output_device")) {
         ros::param::get("output_device", deviceName);
+        if (deviceName != "none") {
+            ROS_INFO_STREAM("[getSerialDevice] Looking for serial device defined by ROS parameter: " << deviceName);
+            return deviceName;
+        }
     }
-    ROS_INFO_STREAM("[getSerialDevice] Looking for serial device: " << deviceName);
+
+    deviceName = "/dev/serial/by-id/usb-STMicroelectronics_Basestation_078-if00";
+    ROS_INFO_STREAM("[getSerialDevice] No serial device name given in ROS. Assuming basestation " << deviceName);
     return deviceName;
 }
 
@@ -94,11 +91,18 @@ void Application::loop(){
 
             ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
 
-            for (int i = 0; i < 8; i++) {
-                std::cout << i << ":  " << robotTicks[i] << std::endl;
-                robotTicks[i] = 0;
+            // print in a nicely formatted way
+            const int amountOfColumns = 4;
+            for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i+=amountOfColumns) {
+                for (int j = 0; j < amountOfColumns; j++) {
+                    const int robotId = i+j;
+                    if (robotId < MAX_AMOUNT_OF_ROBOTS) {
+                        std::cout << robotId << ": " << robotTicks[robotId] << "\t";
+                        robotTicks[robotId] = 0;
+                    }
+                }
+                std::cout << std::endl;
             }
-
         }
     }
 }

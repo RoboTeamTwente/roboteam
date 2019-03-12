@@ -6,6 +6,7 @@
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/RobotFeedback.h"
 #include "packing.h"
+#include "constants.h"
 
 namespace rtt {
 namespace robothub {
@@ -69,18 +70,8 @@ void Application::subscribeToROSTopics(){
     subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this);
 }
 
-/// get Tick rate from ROS parameter server
-int Application::getTickRate() {
-    int roleHz = 60;
-    if(ros::param::has("grsim/role_iterations_per_second")) {
-        ros::param::get("role_iterations_per_second", roleHz);
-    }
-    ROS_INFO_STREAM("Refresh rate: " << roleHz << "hz");
-    return roleHz;
-}
-
 void Application::loop(){
-    ros::Rate rate(getTickRate());
+    ros::Rate rate(TICK_RATE);
 
     std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
 
@@ -103,49 +94,11 @@ void Application::loop(){
 
             ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
 
-            if (mode== utils::Mode::SERIAL) {
-
-
-//                // Get the percentage of acks and nacks
-//                auto total = acks+nacks;
-//                auto ackPercent = static_cast<int>((acks/(double) total)*100);
-//                auto nackPercent = static_cast<int>((nacks/(double) total)*100);
-//
-//                if (total==0) {
-//                    ackPercent = 0;
-//                    nackPercent = 0;
-//                }
-//
-////				ROS_INFO_STREAM("Current port: " << serial_file_path );
-//                ROS_INFO_STREAM("Sent messages the past second: " << total);
-//                ROS_INFO_STREAM("Capacity: " << std::floor(total/(8.0*60.0)) << "%");
-//                ROS_INFO_STREAM("Acks    : " << acks << " (" << ackPercent << ")");
-//                ROS_INFO_STREAM("Nacks   : " << nacks << " (" << nackPercent << ")");
-//
-//                acks = 0;
-//                acks = 0;
-//                nacks = 0;
-//
-//                std::stringstream ssStatus;
-//                ssStatus << std::endl;
-
+            for (int i = 0; i < 8; i++) {
+                std::cout << i << ":  " << robotTicks[i] << std::endl;
+                robotTicks[i] = 0;
             }
 
-            if (mode == utils::Mode::GRSIM) {
-//                ROS_INFO_STREAM("Network messages sent: " << networkMsgs);
-//                networkMsgs = 0;
-//                if (grsimCommander.isBatch()) {
-//                    ROS_INFO_STREAM("Batching : yes");
-//                    rtt::GRSimCommander::Stats stats = grsimCommander.consumeStatistics();
-//
-//                    ROS_INFO_STREAM("Average efficiency:       " << std::floor(stats.averageEfficiency*100) << "%");
-//                    ROS_INFO_STREAM("Number of forced flushes: " << stats.numForcedFlushes);
-//                    ROS_INFO_STREAM("Current threshold:        " << stats.threshold);
-//                }
-//                else {
-//                    ROS_INFO_STREAM("Batching : no");
-//                }
-            }
         }
     }
 }
@@ -160,30 +113,25 @@ void Application::processRobotCommand(const roboteam_msgs::RobotCommand& cmd) {
 
     // check if the command is valid, otherwise don't send anything
     if(!validateRobotPacket(llrc)) {
-        ROS_ERROR_STREAM("[processRobotCommand] LowLevelRobotCommand is not valid for our robots, no command is being sent to GrSim!");
+        ROS_ERROR_STREAM("[processRobotCommand] LowLevelRobotCommand is not valid for our robots, no command is being sent!");
         printLowLevelRobotCommand(llrc);
         return;
     }
 
-    ROS_INFO("[processRobotCommand] processing robotcommand");
+    robotTicks[cmd.id]++;
 
     if (getMode() == utils::Mode::SERIAL) {
-        ROS_INFO("attempt serial sending");
-
         sendSerialCommand(llrc);
     } else {
         sendGrSimCommand(cmd);
     }
 }
 
-
 /// send a serial command from a given robotcommand
 void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
 
     // convert the LLRC to a bytestream which we can send
     std::shared_ptr<packed_protocol_message> bytestream = createRobotPacket(llrc);
-
-
 
     // Check if the message was created successfully
     if(!bytestream){
@@ -192,11 +140,7 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
     }
 
     packed_protocol_message packet = *bytestream;
-    ROS_INFO("[bytestream] this should be the packet:");
-
     device->writeToDevice(packet);
-    utils::printbits(packet);
-
 }
 
 /// send a GRSim command from a given robotcommand

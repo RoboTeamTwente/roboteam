@@ -24,7 +24,6 @@ public:
 private:
     std::fstream f;
     std::string deviceName;
-    packed_protocol_message pkg;
 };
 
 }

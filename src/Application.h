@@ -45,9 +45,11 @@ private:
 
     void sendSerialCommand(LowLevelRobotCommand llrc);
     void sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand);
+
+    int robotTicks[16];
 };
 
-}
-}
+} // robothub
+} // rtt
 
 #endif //ROBOTEAM_ROBOTHUB_APPLICATION_H

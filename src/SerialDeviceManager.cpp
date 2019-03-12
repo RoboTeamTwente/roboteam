@@ -51,9 +51,7 @@ bool SerialDeviceManager::readDevice() {
         const char * data2 = data;
 
         std::string dataStr(data2);
-
-        std::cout << "retrieved: " <<  dataStr << std::endl;
-        return true;
+        return f.good();
     }
     return false;
 }
@@ -63,11 +61,10 @@ bool SerialDeviceManager::readDevice() {
  */
 bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
     if (this->EnsureDeviceOpen()) {
-
         f.clear();
         f.write((const char*) packet.data(), packet.size());
         f.flush();
-        return true;
+        return f.good();
     }
     ROS_ERROR("[writeToDevice] the device is closed!");
     return false;

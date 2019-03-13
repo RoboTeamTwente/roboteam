@@ -48,6 +48,8 @@ private:
 
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
     void printStatistics();
+
+    bool batching = false;
 };
 
 } // robothub

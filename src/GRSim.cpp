@@ -6,8 +6,6 @@
 #include "roboteam_msgs/RobotCommand.h"
 #include "roboteam_msgs/RobotFeedback.h"
 
-namespace b = boost;
-
 #define VERIFY_COMMANDS
 
 namespace rtt {

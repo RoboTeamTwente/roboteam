@@ -236,8 +236,7 @@ roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback)
  * @param bitsnbytes The bytes from the robot
  * @returns a LowLevelRobotFeedback struct
  */
-LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes)
-{
+LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes) {
     struct LowLevelRobotFeedback feedback;
 
     int offset = 0;

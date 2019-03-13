@@ -23,6 +23,7 @@ public:
 private:
     std::fstream f;
     std::string deviceName;
+    bool iswriting = false;
 };
 
 }

@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <boost/optional.hpp>
 #include <ros/message_forward.h>
 #include "roboteam_msgs/World.h"
 

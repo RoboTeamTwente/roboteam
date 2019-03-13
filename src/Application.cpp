@@ -13,6 +13,7 @@ namespace robothub {
 
 Application::Application() {
     subscribeToROSTopics();
+    batching = getBatchingVariable();
 
     // if you want to force a mode, set it here already
     mode = utils::Mode::SERIAL;
@@ -66,21 +67,22 @@ bool Application::getBatchingVariable() {
 
 /// subscribe to ROS topics
 void Application::subscribeToROSTopics(){
-    subWorldState = n.subscribe("world_state", 1, &Application::processWorldState, this);
-    subRobotCommands = n.subscribe("robotcommands", 32, &Application::processRobotCommand, this);
+    subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
+    subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this,  ros::TransportHints().tcpNoDelay());
 }
 
 
 void Application::loop(){
     ros::Rate rate(TICK_RATE);
     std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
-    int nTick = 0;
-    packed_robot_feedback fb;
+
+    grsimCommander->setBatch(batching);
+
+
     int currIteration = 0;
     while (ros::ok()) {
         rate.sleep();
         ros::spinOnce();
-        grsimCommander->setBatch(getBatchingVariable());
         auto timeNow = std::chrono::high_resolution_clock::now();
         auto timeDiff = timeNow-lastStatistics;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {

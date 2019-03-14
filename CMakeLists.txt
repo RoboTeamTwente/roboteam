@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "\
 -Wsign-compare \
 -g \
 "
-)
+        )
 
 #####################################
 ## Protobuf conversion & compiling ##
@@ -35,17 +35,17 @@ set(CMAKE_CXX_FLAGS "\
 
 set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
 set(proto_files
-    ${proto_dir}/grSim_Replacement.proto
-    ${proto_dir}/grSim_Commands.proto
-    ${proto_dir}/grSim_Packet.proto
-    ${proto_dir}/messages_robocup_ssl_detection.proto
-    ${proto_dir}/messages_robocup_ssl_geometry.proto
-    ${proto_dir}/messages_robocup_ssl_geometry_legacy.proto
-    ${proto_dir}/messages_robocup_ssl_referee.proto
-    ${proto_dir}/messages_robocup_ssl_game_event.proto
-    ${proto_dir}/messages_robocup_ssl_wrapper.proto
-    ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
-)
+        ${proto_dir}/grSim_Replacement.proto
+        ${proto_dir}/grSim_Commands.proto
+        ${proto_dir}/grSim_Packet.proto
+        ${proto_dir}/messages_robocup_ssl_detection.proto
+        ${proto_dir}/messages_robocup_ssl_geometry.proto
+        ${proto_dir}/messages_robocup_ssl_geometry_legacy.proto
+        ${proto_dir}/messages_robocup_ssl_referee.proto
+        ${proto_dir}/messages_robocup_ssl_game_event.proto
+        ${proto_dir}/messages_robocup_ssl_wrapper.proto
+        ${proto_dir}/messages_robocup_ssl_wrapper_legacy.proto
+        )
 
 # Set up destination directories
 catkin_destinations()
@@ -58,36 +58,36 @@ set(protogen_include_dirs ${proto_gen_cpp_dir}/../ ${proto_gen_python_dir})
 # catkin_python_setup()
 
 catkin_package(
-  INCLUDE_DIRS 
-    include 
-    ${protogen_include_dirs}
-  LIBRARIES
-    roboteam_utils 
-    ${PROJECT_NAME}_proto
+        INCLUDE_DIRS
+        include
+        ${protogen_include_dirs}
+        LIBRARIES
+        roboteam_utils
+        ${PROJECT_NAME}_proto
 )
 
 include_directories(
-    ${catkin_INCLUDE_DIRS}
-    include
-    ${PROTOBUF_INCLUDE_DIR}
-    ${PROTOBUF_INCLUDE_DIR}/../../
+        ${catkin_INCLUDE_DIRS}
+        include
+        ${PROTOBUF_INCLUDE_DIR}
+        ${PROTOBUF_INCLUDE_DIR}/../../
 )
 
 # Create lists of files to be generated.
 set(proto_gen_cpp_files "")
 set(proto_gen_python_files "")
-foreach(proto_file ${proto_files})
+foreach (proto_file ${proto_files})
     get_filename_component(proto_name ${proto_file} NAME_WE)
     list(APPEND proto_gen_cpp_files ${proto_gen_cpp_dir}/${proto_name}.pb.h ${proto_gen_cpp_dir}/${proto_name}.pb.cc)
     list(APPEND proto_gen_python_files ${proto_gen_python_dir}/${proto_name}_pb2.py)
-endforeach(proto_file ${proto_files})
+endforeach (proto_file ${proto_files})
 
 # Run protoc and generate language-specific headers.
 add_custom_command(
-    OUTPUT ${proto_gen_cpp_files} ${proto_gen_python_files}
-    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --proto_path=${proto_dir} --cpp_out=${proto_gen_cpp_dir} --python_out=${proto_gen_python_dir} ${proto_files}
-    DEPENDS ${PROTOBUF_PROTOC_EXECUTABLE} ${proto_files}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        OUTPUT ${proto_gen_cpp_files} ${proto_gen_python_files}
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --proto_path=${proto_dir} --cpp_out=${proto_gen_cpp_dir} --python_out=${proto_gen_python_dir} ${proto_files}
+        DEPENDS ${PROTOBUF_PROTOC_EXECUTABLE} ${proto_files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 set_source_files_properties(${proto_gen_cpp_files} PROPERTIES GENERATED TRUE)
@@ -97,8 +97,8 @@ set_source_files_properties(${proto_gen_python_files} PROPERTIES GENERATED TRUE)
 file(APPEND ${proto_gen_python_dir}/__init__.py "")
 
 add_custom_target(${PROJECT_NAME}_generate_headers
-    DEPENDS ${proto_gen_cpp_files} ${proto_gen_python_files}
-)
+        DEPENDS ${proto_gen_cpp_files} ${proto_gen_python_files}
+        )
 
 # Create proto library for linking.
 add_library(${PROJECT_NAME}_proto ${proto_gen_cpp_files})
@@ -106,93 +106,61 @@ target_link_libraries(${PROJECT_NAME}_proto ${PROTOBUF_LIBRARY})
 add_dependencies(${PROJECT_NAME}_proto ${PROJECT_NAME}_generate_headers)
 
 install(TARGETS ${PROJECT_NAME}_proto
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )
 
 install(DIRECTORY ${proto_gen_cpp_dir}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-)
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+        FILES_MATCHING PATTERN "*.h"
+        )
 
 install(DIRECTORY ${proto_gen_python_dir}/
-  DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}
-  FILES_MATCHING PATTERN "*.py"
-)
+        DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}
+        FILES_MATCHING PATTERN "*.py"
+        )
 
 ##########################
 ## Constants generation ##
 ##########################
 
-add_executable(constants_generator
-    "${PROJECT_SOURCE_DIR}/src/ConstantsGenerator.cpp"
-    )
-
 set(RTT_CONSTANTS_HEADER_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_INCLUDE_DESTINATION}/constants.h")
 set(RTT_CONSTANTS_SOURCE_FILE "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_LIB_DESTINATION}/roboteam_utils/constants.cpp")
-
-# Leaving this here in case we need it later at some point.
-# It used to be needed to get CMake to delete our headers and such when make clean was called
-# But it does it now automatically (as it should!)
-# set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-    # ${RTT_CONSTANTS_HEADER_FILE}
-    # ${RTT_CONSTANTS_SOURCE_FILE}
-    # )
-
-add_custom_command(
-	OUTPUT 
-        ${RTT_CONSTANTS_SOURCE_FILE}
-        ${RTT_CONSTANTS_HEADER_FILE}
-	COMMAND
-        ${PROJECT_SOURCE_DIR}/generate_constants.sh
-    ARGS
-        ${RTT_CONSTANTS_SOURCE_FILE}
-        ${RTT_CONSTANTS_HEADER_FILE}
-	DEPENDS
-        constants_generator
-        "${PROJECT_SOURCE_DIR}/String Constants"
-	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-	COMMENT "Generating constants file..."
-)
-add_custom_target(generate_constants_t
-	ALL
-    DEPENDS
-        ${RTT_CONSTANTS_SOURCE_FILE}
-        ${RTT_CONSTANTS_HEADER_FILE}
-)
+configure_file(include/roboteam_utils/constants.h ${RTT_CONSTANTS_HEADER_FILE} COPYONLY)
+configure_file(src/constants.cpp ${RTT_CONSTANTS_SOURCE_FILE} COPYONLY)
 
 ###########################
 ## Regular library stuff ##
 ###########################
 
 add_library(roboteam_utils
-    src/Vector2.cpp
-    src/Position.cpp
-    src/world_analysis.cpp
-    src/LastWorld.cpp
-    src/LastRef.cpp
-    src/Draw.cpp
-    src/Math.cpp
-    src/Cone.cpp
-    src/normalize.cpp
-    src/TeamRobot.cpp
-    src/Clip.cpp
-    src/Optimization.cpp
-    src/RefLookup.cpp
-    src/Arc.cpp
-    src/Section.cpp
-    ${RTT_CONSTANTS_SOURCE_FILE}
-)
+        src/Vector2.cpp
+        src/Angle.cpp
+        src/Position.cpp
+        src/world_analysis.cpp
+        src/LastWorld.cpp
+        src/LastRef.cpp
+        src/Draw.cpp
+        src/Math.cpp
+        src/Cone.cpp
+        src/normalize.cpp
+        src/TeamRobot.cpp
+        src/Clip.cpp
+        src/Optimization.cpp
+        src/RefLookup.cpp
+        src/Arc.cpp
+        src/Section.cpp
+        ${RTT_CONSTANTS_SOURCE_FILE}
+        )
 add_dependencies(roboteam_utils
-    ${${PROJECT_NAME}_EXPORTED_TARGETS}
-    ${catkin_EXPORTED_TARGETS}
-    generate_constants_t
-    )
+        ${${PROJECT_NAME}_EXPORTED_TARGETS}
+        ${catkin_EXPORTED_TARGETS}
+        )
 target_link_libraries(roboteam_utils
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}_proto
-    )
+        ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_proto
+        )
 
 # Protobuf messages.
 # add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})
@@ -200,21 +168,20 @@ target_link_libraries(roboteam_utils
 # target_link_libraries(roboteam_utils_proto ${catkin_LIBRARIES} ${PROTOBUF_LIBRARIES} ${PROTOBUF_LIBRARY})
 
 catkin_add_gtest(utils_test
-    test/main.cpp
-    test/Vector2Test.cpp
-    test/PositionTest.cpp
-    test/GraphTest.cpp
-    test/OptimizationTest.cpp
-    test/BiMapTest.cpp
-    test/ArcTest.cpp
-    #test/normaliseTest.cpp
-)
+        test/main.cpp
+        test/Vector2Test.cpp
+        test/PositionTest.cpp
+        test/GraphTest.cpp
+        test/OptimizationTest.cpp
+        test/BiMapTest.cpp
+        test/ArcTest.cpp
+        #test/normaliseTest.cpp
+        )
 add_dependencies(utils_test
-    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-    ${catkin_EXPORTED_TARGETS} 
-    generate_constants_t
-    )
+        ${${PROJECT_NAME}_EXPORTED_TARGETS}
+        ${catkin_EXPORTED_TARGETS}
+        )
 target_link_libraries(utils_test
-    roboteam_utils
-	${catkin_LIBRARIES}
-	)
+        roboteam_utils
+        ${catkin_LIBRARIES}
+        )

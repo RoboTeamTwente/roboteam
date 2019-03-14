@@ -4,7 +4,7 @@
 
 namespace rtt {
     
-Arc::Arc() : Arc(ZERO_VECTOR, 1.0) {}
+Arc::Arc() : Arc(Vector2(), 1.0) {}
 
 Arc::Arc(Vector2 center, double radius) : Arc(center, radius, 0, ARC_MAX) {}
 

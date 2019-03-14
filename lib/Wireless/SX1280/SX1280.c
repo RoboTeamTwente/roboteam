@@ -1,10 +1,7 @@
 
 #include "SX1280.h"
 #include "SX1280_Constants.h"
-#include "Utils/gpio_util.h"
 #include "string.h" // to use memcpy properly
-#include "packing.h"
-#include "../../Putty.h"
 
 void SX1280Setup(SX1280* SX){
 
@@ -37,27 +34,27 @@ uint8_t getStatus(SX1280* SX){
     SendData(SX,1);
 
     if ((SX->RXbuf[0] & 0x01) == 1) { // check bit 0
-    	Putty_printf("SX_BUSY\n\r");
+    	TextOut("SX_BUSY\n\r");
     }
     else {
     	switch (SX->RXbuf[0] & 0x1C) { // check bits 4:2
 			case 0x1: // command has been terminated correctly
-				Putty_printf("SX_CMD_GOOD\n\r");
+				TextOut("SX_CMD_GOOD\n\r");
 				break;
 			case 0x2: // packet has been successfully received and data can be retrieved
-				Putty_printf("SX_DATA_IN\n\r");
+				TextOut("SX_DATA_IN\n\r");
 				break;
 			case 0x3: // command timeout, host should resend command
-				Putty_printf("SX_CMD_TIMOUT\n\r");
+				TextOut("SX_CMD_TIMOUT\n\r");
 				break;
 			case 0x4: // command was wrong (opcode or # of params)
-				Putty_printf("SX_CMD_ERR\n\r");
+				TextOut("SX_CMD_ERR\n\r");
 				break;
 			case 0x5: // command execution failure
-				Putty_printf("SX_CMD_FAIL\n\r");
+				TextOut("SX_CMD_FAIL\n\r");
 				break;
 			case 0x6: // packet transmission completed
-				Putty_printf("SX_CMD_SENT\n\r");
+				TextOut("SX_CMD_SENT\n\r");
 				break;
     	}
     }

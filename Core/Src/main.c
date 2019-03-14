@@ -41,10 +41,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
+#include "TextOut.h"
+#include <stdbool.h>
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -616,9 +618,34 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+
+/*
+ * create a struct that keeps track of all buffered messages and if they are new or not.
+ *  when it is send isNew should be set to false.
+ */
+struct msgsBufferStatus {
+	uint8_t msg[13]; // packet size in bytes
+	bool isNew = false;
+} msgsBuff[16];
+
+// global variables
+int sendToId = 0;
+bool isTransmitting = false;
+
+// callback for Interrupts from SX1280
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
-		//Wireless do something
+		// get the message for the current ID
+		struct msgsBufferStatus * msg = msgsBuff[sendToId];
+
+		// determine if we should send this message
+		if (msg->isNew) {
+			//send the message
+		}
+
+		uint8_t * usbData = UserRxBufferFS[0];
+		uint8_t usbDataRobotId = usbData[0] >> 3;
+		sendToId++;
 	}
 }
 /* USER CODE END 4 */

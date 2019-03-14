@@ -2,13 +2,11 @@
 #ifndef __SX1280_CONSTANTS_H
 #define __SX1280_CONSTANTS_H
 
-#include "Utils/gpio_util.h"
-#include "spi.h"
+#include "main.h"
 
 #define PLL_STEP 2^18/(52000000)	// step/Hz
 
 #define FEEDBACK_HEADER	0xCCCCCCCC
-
 // ----------------------------------- Generic Codes
 
 // taken from https://www.semtech.com/uploads/documents/DS_SX1280-1_V2.2.pdf

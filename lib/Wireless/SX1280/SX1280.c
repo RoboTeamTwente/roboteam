@@ -340,7 +340,7 @@ void modifyRegister(SX1280* SX, uint16_t address, uint8_t mask, uint8_t set_valu
 	writeRegister(SX, address, &data, 1);
 }
 
-void writeBuffer(SX1280* SX, uint32_t header, feedbackData* data, uint8_t Nbytes){
+void writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
     while(SX->SPI_used){}
@@ -349,7 +349,7 @@ void writeBuffer(SX1280* SX, uint32_t header, feedbackData* data, uint8_t Nbytes
     *ptr++ = WRITE_BUF;
     *ptr++ = SX->SX_settings->TXoffset;
     memcpy(ptr,&header,4);  // put header in front
-    feedbackDataToPacket (data, ptr);
+    memcpy(ptr+4, data, Nbytes);
     SendData_DMA(SX, 2 + 4 + Nbytes);
 }
 

@@ -41,9 +41,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
-#include "TextOut.h"
 #include <stdbool.h>
-
+#include "Wireless/Wireless.h"
+#include "TextOut/TextOut.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -632,7 +632,7 @@ static void MX_GPIO_Init(void)
  */
 struct msgsBufferStatus {
 	uint8_t msg[13]; // packet size in bytes
-	bool isNew = false;
+	bool isNew;
 } msgsBuff[16];
 
 // global variables
@@ -643,15 +643,20 @@ bool isTransmitting = false;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
 		// get the message for the current ID
-		struct msgsBufferStatus * msg = msgsBuff[sendToId];
+		struct msgsBufferStatus msgWithStatus = msgsBuff[sendToId];
 
 		// determine if we should send this message
-		if (msg->isNew) {
+		if (msgWithStatus.isNew) {
 			//send the message
+
+			uint32_t syncword = robot_syncWord[sendToId];
+			uint8_t * message = msgWithStatus.msg;
+
+			//writeBuffer(sx, syncword, * message, sizeof(* message));
 		}
 
-		uint8_t * usbData = UserRxBufferFS[0];
-		uint8_t usbDataRobotId = usbData[0] >> 3;
+		// uint8_t * usbData = UserRxBufferFS[0];
+		// uint8_t usbDataRobotId = usbData[0] >> 3;
 		sendToId++;
 	}
 }

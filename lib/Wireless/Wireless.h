@@ -12,23 +12,22 @@
 
 #include <stdbool.h>
 #include "SX1280/SX1280_Constants.h"
-#include "packing.h"
 #include "SX1280/SX1280.h"
 
-#define WirelessSpi &hspi2
+#define WirelessSpi &hspi3
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)
+#define RECEIVEPKTLEN 13 //amount of bytes for a packet sent to the robot
 
-SX1280* SX; // pointer to the datastruct
-feedbackData* Bot_to_PC; // pointer to feedback data struct
-receivedData* PC_to_Bot; // pointer to received data struct
+SX1280 * SX; // pointer to the datastruct
+uint8_t * Bot_to_PC; // pointer to feedback data struct
+uint8_t * PC_to_Bot; // pointer to received data struct
 
 // Public Functions
 void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID);
-void SendPacket(SX1280* SX, feedbackData* data, uint8_t Nbytes);
+void SendPacket(SX1280* SX, uint8_t* data, uint8_t Nbytes);
 void ReceivePacket(SX1280* SX);
-void Wireless_IRQ_Handler(SX1280* SX, feedbackData* data, uint8_t Nbytes);
-void Wireless_DMA_Handler(SX1280* SX, receivedData* output);
-
+void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes);
+void Wireless_DMA_Handler(SX1280* SX, uint8_t * output);
 
 #endif /* WIRELESS_WIRELESS_H_ */

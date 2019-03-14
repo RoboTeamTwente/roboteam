@@ -7,9 +7,8 @@
 
 #include "Wireless.h"
 #include "SX1280/SX1280_Constants.h"
-#include "Utils/gpio_util.h"
+#include "gpio_util.h"
 #include "SX1280/SX1280.h"
-
 #include <stdbool.h>
 
 // make buffers
@@ -47,10 +46,9 @@ void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID){
 
     // set connections
     SX->SPI = WirelessSpi;
-    SX->busy_pin = SX_Busy_pin;
-    SX->CS_pin = CS_pin;
+    SX->busy_pin = SX_BUSY;
     set_pin(SX->CS_pin, HIGH);
-    SX->IRQ_pin = SX_IRQ_pin;
+    SX->IRQ_pin = SX_IRQ;
 
     // set buffer locations
     SX->RXbuf = RX_buffer;
@@ -73,13 +71,13 @@ void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID){
 };
 
 
-void SendAutoPacket(SX1280* SX, feedbackData* data, uint8_t Nbytes){
-    
+void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
+
     writeBuffer(SX, FEEDBACK_HEADER, data, Nbytes);
     setAutoTX(SX, AUTO_TX_TIME);
 };
 
-void SendPacket(SX1280* SX, feedbackData* data, uint8_t Nbytes){
+void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     clearIRQ(SX,ALL);
     writeBuffer(SX, FEEDBACK_HEADER, data, Nbytes);
     setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
@@ -93,11 +91,11 @@ void ReceivePacket(SX1280* SX){
 };
 
 // -------------------------------------------- Handlers
-void Wireless_IRQ_Handler(SX1280* SX, feedbackData* data, uint8_t Nbytes){
+void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);
     SX->irqStatus = irq;
     clearIRQ(SX,ALL);
-    
+
     // process interrupts
     if(irq && TX_DONE){
         setRX(SX, SX->SX_settings->periodBase, 0);   // go back in RX state
@@ -129,9 +127,9 @@ void Wireless_IRQ_Handler(SX1280* SX, feedbackData* data, uint8_t Nbytes){
     }
 };
 
-void Wireless_DMA_Handler(SX1280* SX, receivedData* output){
+void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
     DMA_Callback(SX);
-    
+
     if(SX->expect_packet){
         SX->expect_packet = false;
         packetToReceivedData(SX->RXbuf+2, output);

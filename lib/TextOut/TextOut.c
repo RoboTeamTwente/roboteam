@@ -23,9 +23,9 @@ void TextOut(char *str){
 
 void HexOut(uint8_t data[], uint8_t length){
 	USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
-	HAL_GPIO_WritePin(LD0_GPIO_Port,LD0_Pin, 0);
+	writePin(LD_3, 0);
 	while(hcdc->TxState != 0);
-	HAL_GPIO_WritePin(LD0_GPIO_Port,LD0_Pin, 1);
+	writePin(LD_3, 1);
 	memcpy(TxBuffer, data, length);
 	CDC_Transmit_FS(TxBuffer, length);
 }

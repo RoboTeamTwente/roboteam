@@ -11,9 +11,8 @@
 #define __SX1280_H
 
 #include "SX1280_Constants.h"
-#include "packing.h"
-#include "spi.h"
 #include "stdbool.h"
+#include "gpio_util.h"
 
 ////////////////////////////////////// Structs
 typedef struct _SX1280_Settings{
@@ -124,7 +123,7 @@ static uint32_t robot_syncWord[] = {
 void SX1280Setup(SX1280* SX);
 
 // runtime functions
-void writeBuffer(SX1280* SX, uint32_t header, feedbackData* data, uint8_t Nbytes);
+void writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes);
 void readBuffer(SX1280* SX, uint8_t Nbytes);
 uint8_t getStatus(SX1280* SX);
 

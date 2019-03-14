@@ -82,6 +82,7 @@ void Error_Handler(void);
 #define APB2 216
 #define USER_Btn_Pin GPIO_PIN_13
 #define USER_Btn_GPIO_Port GPIOC
+#define USER_Btn_EXTI_IRQn EXTI15_10_IRQn
 #define SX_RST_Pin GPIO_PIN_6
 #define SX_RST_GPIO_Port GPIOF
 #define SX_BUSY_Pin GPIO_PIN_7
@@ -126,6 +127,7 @@ void Error_Handler(void);
 #define TCK_GPIO_Port GPIOA
 #define SX_IRQ_Pin GPIO_PIN_2
 #define SX_IRQ_GPIO_Port GPIOD
+#define SX_IRQ_EXTI_IRQn EXTI2_IRQn
 #define RMII_TX_EN_Pin GPIO_PIN_11
 #define RMII_TX_EN_GPIO_Port GPIOG
 #define RMII_TXD0_Pin GPIO_PIN_13

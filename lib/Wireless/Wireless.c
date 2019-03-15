@@ -100,6 +100,8 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq && TX_DONE){
         setRX(SX, SX->SX_settings->periodBase, 0);   // go back in RX state
         SendAutoPacket(SX,data,Nbytes);
+        TextOut("I transmitted!!");
+        isTransmitting = false;
     }
 
     if(irq && RX_DONE){

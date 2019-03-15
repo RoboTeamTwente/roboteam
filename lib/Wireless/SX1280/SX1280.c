@@ -1,7 +1,5 @@
 
 #include "SX1280.h"
-#include "SX1280_Constants.h"
-#include "string.h" // to use memcpy properly
 
 void SX1280Setup(SX1280* SX){
 

@@ -11,6 +11,7 @@
 #include "TextOut.h"
 #include "usbd_cdc.h"
 #include "usb_device.h"
+#include "gpio_util.h"
 
 uint8_t TxBuffer[1024];
 char smallStrBuffer[1024];
@@ -23,9 +24,9 @@ void TextOut(char *str){
 
 void HexOut(uint8_t data[], uint8_t length){
 	USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
-	writePin(LD_3, 0);
+//	set_pin(LD_3, LOW);
 	while(hcdc->TxState != 0);
-	writePin(LD_3, 1);
+//	set_pin(LD_3, HIGH);
 	memcpy(TxBuffer, data, length);
 	CDC_Transmit_FS(TxBuffer, length);
 }

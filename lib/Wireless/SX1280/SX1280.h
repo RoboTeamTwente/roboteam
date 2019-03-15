@@ -13,6 +13,7 @@
 #include "SX1280_Constants.h"
 #include "stdbool.h"
 #include "gpio_util.h"
+#include "string.h" // to use memcpy properly
 
 ////////////////////////////////////// Structs
 typedef struct _SX1280_Settings{

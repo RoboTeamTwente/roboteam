@@ -41,9 +41,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
-#include <stdbool.h>
 #include "Wireless/Wireless.h"
 #include "TextOut/TextOut.h"
+#include "TextOut/TextOut.c"
+#include "msg_buff.h"
+#include "Wireless/SX1280/SX1280.c" //TODO include header instead
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -152,9 +154,22 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+ // int i = 0;
   while (1)
   {
     /* USER CODE END WHILE */
+
+	  // alternating led to see if the code is still running
+//	 if (i < 1000000) {
+//		  set_pin(LD_3, HIGH);
+//		  i++;
+//	 } else if (i < 2000000) {
+//		  set_pin(LD_3, LOW);
+//		  i++;
+//	 } else {
+//		 i = 0;
+//	 }
 
     /* USER CODE BEGIN 3 */
   }
@@ -625,39 +640,32 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
-/*
- * create a struct that keeps track of all buffered messages and if they are new or not.
- *  when it is send isNew should be set to false.
- */
-struct msgsBufferStatus {
-	uint8_t msg[13]; // packet size in bytes
-	bool isNew;
-} msgsBuff[16];
-
 // global variables
 int sendToId = 0;
 bool isTransmitting = false;
 
+bool on = false;
 // callback for Interrupts from SX1280
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
-		// get the message for the current ID
-		struct msgsBufferStatus msgWithStatus = msgsBuff[sendToId];
 
 		// determine if we should send this message
-		if (msgWithStatus.isNew) {
-			//send the message
-
+		if (!isTransmitting && msgBuff[sendToId].isNew) {
+			isTransmitting = true;
+			msgBuff[sendToId].isNew = false;
 			uint32_t syncword = robot_syncWord[sendToId];
-			uint8_t * message = msgWithStatus.msg;
-
-			//writeBuffer(sx, syncword, * message, sizeof(* message));
+			writeBuffer(SX, syncword, msgBuff[sendToId].msg, sizeof(* msgBuff[sendToId].msg));
 		}
 
-		// uint8_t * usbData = UserRxBufferFS[0];
-		// uint8_t usbDataRobotId = usbData[0] >> 3;
-		sendToId++;
+
+
+		// increment id
+		if (sendToId < 16) {
+			sendToId++;
+		} else {
+			 on = !on;
+			sendToId = 0;
+		}
 	}
 }
 /* USER CODE END 4 */

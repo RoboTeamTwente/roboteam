@@ -298,24 +298,29 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 
   // this is the USB callback
   // store the latest data in usbData and usbLength
-  if(*Len != 0){
-	  memcpy(((uint8_t*)usbData) + usbLength, Buf, *Len);
-	  usbLength += *Len;
-  }
 
   // if the length is correct, store the data in the buffer
-  if (usbLength >= 13) {
+  if (* Len == 13) {
 	  // determine the robot id
-	  uint8_t usbDataRobotId = usbData[0] >> 3;
+	  uint8_t usbDataRobotId = Buf[0] >> 3;
 
 	  // check if the usb data robot id is legal
-	  if (usbDataRobotId <= 16) {
+	  if (usbDataRobotId < 16) {
+
+		  if (usbDataRobotId == 4) {
+		    toggle_pin(LD_2);
+		  }
 
 		  // put the message in the buffer
-		  memcpy(msgBuff[usbDataRobotId].msg, usbData[0], 13);
+		  memcpy(msgBuff[usbDataRobotId].msg, Buf, 13);
 		  msgBuff[usbDataRobotId].isNew = true;
+
+
 	  }
   }
+
+
+
 
   return (USBD_OK);
   /* USER CODE END 6 */

@@ -1,8 +1,10 @@
 
 #include "SX1280.h"
+#include "gpio_util.h"
 
 void SX1280Setup(SX1280* SX){
 
+	set_pin(SX_RST, HIGH);
     // enable SPI on SX1280
     getStatus(SX);
 
@@ -32,7 +34,7 @@ uint8_t getStatus(SX1280* SX){
     SendData(SX,1);
 
     if ((SX->RXbuf[0] & 0x01) == 1) { // check bit 0
-    	TextOut("SX_BUSY\n\r");
+    	// TextOut("SX_BUSY\n\r");
     }
     else {
     	switch (SX->RXbuf[0] & 0x1C) { // check bits 4:2
@@ -284,7 +286,7 @@ uint16_t getIRQ(SX1280* SX){
     *ptr++ = GET_IRQ_STATUS;
     memset(ptr,0,3);
     SendData(SX,4);
-    return SX->irqStatus = (SX->RXbuf[2] <<8) & SX->RXbuf[3];
+    return SX->irqStatus = (SX->RXbuf[2] <<8) | SX->RXbuf[3];
 }
 
 void clearIRQ(SX1280* SX, uint16_t mask){
@@ -341,7 +343,9 @@ void modifyRegister(SX1280* SX, uint16_t address, uint8_t mask, uint8_t set_valu
 void writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
+
     while(SX->SPI_used){}
+
     SX->SPI_used = true;
     // make command
     *ptr++ = WRITE_BUF;
@@ -377,6 +381,7 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
 }
 
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
+
 	HAL_StatusTypeDef ret;
 	// wait till ready
     while(SX->SPI->State != HAL_SPI_STATE_READY){}

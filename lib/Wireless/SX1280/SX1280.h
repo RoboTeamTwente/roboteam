@@ -12,6 +12,7 @@
 
 #include "SX1280_Constants.h"
 #include "stdbool.h"
+#include "stm32f7xx_hal.h"
 #include "gpio_util.h"
 #include "string.h" // to use memcpy properly
 

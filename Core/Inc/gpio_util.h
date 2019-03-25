@@ -25,6 +25,7 @@ extern GPIO_Pin SX_IRQ;
 extern GPIO_Pin SX_RST;
 extern GPIO_Pin SX_BUSY;
 extern GPIO_Pin LD_3;
+extern GPIO_Pin LD_2;
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 

@@ -10,6 +10,7 @@
 #include "gpio_util.h"
 #include "SX1280/SX1280.h"
 #include <stdbool.h>
+#include "msg_buff.h"
 
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
@@ -32,11 +33,8 @@ SX1280_Settings set = {
     };
 SX1280_Packet_Status PacketStat;
 
-SX1280 SX1280_struct;       // create an instance of the general struct
-
-void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID){
-
-	SX = &SX1280_struct;// pointer to the global struct
+SX1280 * Wireless_Init(uint8_t channel, SPI_HandleTypeDef * WirelessSpi){
+	SX1280 * SX = &SX1280_struct;// pointer to the global struct
 
     SX->SPI_used = false;
 
@@ -57,7 +55,7 @@ void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID){
     // link settings
     SX->SX_settings = &set;
     SX->SX_settings->channel = channel;
-    SX->SX_settings->syncWords[0] = robot_syncWord[RobotID];
+//    SX->SX_settings->syncWords[0] = robot_syncWord[RobotID];
     SX->Packet_status = &PacketStat;
 
     SX1280Setup(SX);
@@ -68,6 +66,8 @@ void Wireless_Init(SX1280* SX, uint8_t channel, uint8_t RobotID){
     clearIRQ(SX,ALL);
 
     getStatus(SX);
+
+    return SX;
 };
 
 
@@ -97,35 +97,37 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     clearIRQ(SX,ALL);
 
     // process interrupts
-    if(irq && TX_DONE){
-        setRX(SX, SX->SX_settings->periodBase, 0);   // go back in RX state
-        SendAutoPacket(SX,data,Nbytes);
-        TextOut("I transmitted!!");
-        isTransmitting = false;
+    if(irq & TX_DONE){
+      //  setRX(SX, SX->SX_settings->periodBase, 0);   // go back in RX state
+      //  SendAutoPacket(SX,data,Nbytes);
+     //   TextOut("I transmitted!!");
+
+    	 toggle_pin(LD_3);
+         isTransmitting = false;
     }
 
-    if(irq && RX_DONE){
-    	ReceivePacket(SX);
+    if(irq & RX_DONE){
+    //	ReceivePacket(SX);
     }
 
-    if(irq && SYNCWORD_VALID) {
-    	Putty_printf("SX_SYNC_VALID\n\r");
+    if(irq & SYNCWORD_VALID) {
+    //	TextOut("SX_SYNC_VALID\n\r");
     }
 
-    if(irq && SYNCWORD_ERROR) {
-    	Putty_printf("SX_SYNC_ERROR\n\r");
+    if(irq & SYNCWORD_ERROR) {
+    //	TextOut("SX_SYNC_ERROR\n\r");
     }
 
-    if(irq && CRC_ERROR) {
-    	Putty_printf("SX_CRC_ERROR\n\r");
+    if(irq & CRC_ERROR) {
+    //	TextOut("SX_CRC_ERROR\n\r");
     }
 
-    if(irq && RXTX_TIMEOUT) {
-    	Putty_printf("SX_RXTX_TIMEOUT\n\r");
+    if(irq & RXTX_TIMEOUT) {
+    //	TextOut("SX_RXTX_TIMEOUT\n\r");
     }
 
-    if(irq && PREAMBLE_DETECTED) {
-    	Putty_printf("SX_PREAMBLE\n\r");
+    if(irq & PREAMBLE_DETECTED) {
+    //	TextOut("SX_PREAMBLE\n\r");
     }
 };
 
@@ -134,7 +136,5 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
 
     if(SX->expect_packet){
         SX->expect_packet = false;
-        packetToReceivedData(SX->RXbuf+2, output);
-        SX->new_data = true;
     }
 }

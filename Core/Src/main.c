@@ -42,6 +42,8 @@
 #include "main.h"
 #include "usb_device.h"
 #include "Wireless/Wireless.h"
+#include "Wireless/Wireless.c"
+
 #include "TextOut/TextOut.h"
 #include "TextOut/TextOut.c"
 #include "msg_buff.h"
@@ -149,27 +151,29 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim1);
+  HAL_Delay(1000);
+  SX = Wireless_Init(1, &hspi3);
+  HAL_TIM_Base_Start_IT(&htim1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
- // int i = 0;
+  int i = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
 	  // alternating led to see if the code is still running
-//	 if (i < 1000000) {
-//		  set_pin(LD_3, HIGH);
-//		  i++;
-//	 } else if (i < 2000000) {
-//		  set_pin(LD_3, LOW);
-//		  i++;
-//	 } else {
-//		 i = 0;
-//	 }
+	 if (i < 1000000) {
+		  set_pin(LD_3, HIGH);
+		  i++;
+	 } else if (i < 2000000) {
+		  set_pin(LD_3, LOW);
+		  i++;
+	 } else {
+		 i = 0;
+	 }
 
     /* USER CODE BEGIN 3 */
   }
@@ -642,11 +646,26 @@ static void MX_GPIO_Init(void)
 
 // global variables
 int sendToId = 0;
-bool isTransmitting = false;
 
-bool on = false;
+bool on = true;
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
+	if(hspi->Instance == SX->SPI->Instance) {
+		Wireless_DMA_Handler(SX, PC_to_Bot);
+	}
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+
+
+	if (GPIO_Pin == SX_IRQ_Pin) {
+		Wireless_IRQ_Handler(SX, 0, 0);
+	}
+}
+
 // callback for Interrupts from SX1280
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
+
+
 	if(htim->Instance == htim1.Instance){
 
 		// determine if we should send this message
@@ -654,16 +673,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 			isTransmitting = true;
 			msgBuff[sendToId].isNew = false;
 			uint32_t syncword = robot_syncWord[sendToId];
-			writeBuffer(SX, syncword, msgBuff[sendToId].msg, sizeof(* msgBuff[sendToId].msg));
+			writeBuffer(SX, syncword, msgBuff[sendToId].msg, 13);
 		}
 
-
-
 		// increment id
-		if (sendToId < 16) {
+		if (sendToId < 15) {
 			sendToId++;
 		} else {
-			 on = !on;
+		//	set_pin(LD_3, on);
+			on = !on;
 			sendToId = 0;
 		}
 	}

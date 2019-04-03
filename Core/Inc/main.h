@@ -125,6 +125,8 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define SPI3_CS_Pin GPIO_PIN_15
+#define SPI3_CS_GPIO_Port GPIOA
 #define SX_IRQ_Pin GPIO_PIN_2
 #define SX_IRQ_GPIO_Port GPIOD
 #define SX_IRQ_EXTI_IRQn EXTI2_IRQn

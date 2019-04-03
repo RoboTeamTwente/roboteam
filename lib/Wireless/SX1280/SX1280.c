@@ -3,25 +3,57 @@
 #include "gpio_util.h"
 
 void SX1280Setup(SX1280* SX){
+	SX1280WakeUp(SX);
 
-	set_pin(SX_RST, HIGH);
-    // enable SPI on SX1280
-    getStatus(SX);
+    setPacketType(SX, SX->SX_settings->packettype); // packet type is set first!
 
-    setPacketType(SX, SX->SX_settings->PacketParam[3]); // packet type is set first!
+//    char msg[10];
+//    //TextOut("getPacketType ");
+//    //TextOut(itoa(getPacketType(SX), msg, 16)); //
+//    //TextOut("\n\r");
 
     setChannel(SX, SX->SX_settings->channel); // calls setRFFrequency() with freq=(channel+2400)*1000000
     //setRFFrequency(SX, SX->SX_settings->frequency);
 
-    setBufferBase(SX, *SX->TXbuf, *SX->RXbuf);
+    setBufferBase(SX, 0x80, 0x00);
+
     setModulationParam(SX);
     setPacketParam(SX);
+
+    setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
     setSyncSensitivity (SX, SX->SX_settings->syncWordSensitivity);
     setSyncWordTolerance(SX, 5);
     setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
 
-    setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
+    setDIOIRQParams(SX);
+
+    setStandby(SX, 1); // set standby xosc after everything
+
+    //setTX(SX, 0, 0);
+    setFS(SX);
+
+    getStatus(SX);
+}
+
+void SX1280WakeUp(SX1280* SX) {
+	set_pin(SX_RST, LOW);
+	HAL_Delay(1);
+	set_pin(SX_RST, HIGH);
+	HAL_Delay(1);
+
+    while(SX->SPI_used){}
+    SX->SPI_used = true;
+    // send command
+    SX->TXbuf[0] = GET_STATUS;
+    SX->TXbuf[1] = 0;
+    set_pin(SX->CS_pin, LOW);
+    HAL_SPI_TransmitReceive(SX->SPI, SX->TXbuf, SX->RXbuf, 2, 100);
+    set_pin(SX->CS_pin, HIGH);
+    SX->SPI_used = false;
+    while(read_pin(SX->busy_pin)) {}
+    //TextOut("SX_WOKE\n\r");
+    setStandby(SX, 0);
 }
 
 // -------------------------------------------- Device Setup
@@ -31,35 +63,47 @@ uint8_t getStatus(SX1280* SX){
     SX->SPI_used = true;
     // send command
     SX->TXbuf[0] = GET_STATUS;
-    SendData(SX,1);
+    SX->TXbuf[1] = 0;
+    SendData(SX,2);
 
-    if ((SX->RXbuf[0] & 0x01) == 1) { // check bit 0
-    	// TextOut("SX_BUSY\n\r");
+    char status[100];
+	sprintf (status, "SX_GETSTATUS %X\n\r", SX->RXbuf[0]);
+	//TextOut(status);
+
+//    if ((SX->RXbuf[0] & 0x01) == 1) { // check bit 0
+    if (read_pin(SX->busy_pin) == 1) {
+    	//TextOut("busy pin is high\n\r");
     }
+//    	set_pin(LD_2, HIGH);
+//    	 //TextOut("SX_BUSY\n\r");
+//    	//else //TextOut("SX_BUSY_BUT_IS_IT?\n\r");
+//    }
     else {
-    	switch (SX->RXbuf[0] & 0x1C) { // check bits 4:2
+    	switch (SX->RXbuf[0]>>2 & 0x7) { // check bits 4:2
 			case 0x1: // command has been terminated correctly
-				TextOut("SX_CMD_GOOD\n\r");
+				//TextOut("SX_CMD_GOOD\n\r");
 				break;
 			case 0x2: // packet has been successfully received and data can be retrieved
-				TextOut("SX_DATA_IN\n\r");
+				//TextOut("SX_DATA_IN\n\r");
 				break;
 			case 0x3: // command timeout, host should resend command
-				TextOut("SX_CMD_TIMOUT\n\r");
+				//TextOut("SX_CMD_TIMOUT\n\r");
 				break;
 			case 0x4: // command was wrong (opcode or # of params)
-				TextOut("SX_CMD_ERR\n\r");
+				//TextOut("SX_CMD_ERR\n\r");
 				break;
 			case 0x5: // command execution failure
-				TextOut("SX_CMD_FAIL\n\r");
+				toggle_pin(LD_3);
+				//TextOut("SX_CMD_FAIL\n\r");
 				break;
 			case 0x6: // packet transmission completed
-				TextOut("SX_CMD_SENT\n\r");
+				toggle_pin(LD_2);
+				//TextOut("SX_CMD_SENT\n\r");
 				break;
     	}
     }
 
-    return SX->RXbuf[0];
+    return SX->SX1280_status = SX->RXbuf[0];
 }
 
 void setSleep(SX1280* SX, uint8_t config){
@@ -92,6 +136,8 @@ void setFS(SX1280* SX){
 }
 
 void setTX(SX1280* SX, uint8_t base, uint16_t count){
+	getIRQ(SX);
+	clearIRQ(SX, ALL);
     // wait till send complete
     while(SX->SPI_used){}
     SX->SPI_used = true;
@@ -100,10 +146,19 @@ void setTX(SX1280* SX, uint8_t base, uint16_t count){
     SX->TXbuf[1] = base;
     SX->TXbuf[2] = count >> 8;
     SX->TXbuf[3] = count & 0xFF;
-    SendData(SX,4);
+
+    if (SendData(SX,4)) {}//TextOut("setTX SendData completed\n\r");
+    else {
+    	char msg[100];
+    	sprintf (msg, "setTX rxbuf[0] is %X\n\r", (SX->RXbuf[0]));
+        //TextOut(msg);
+    }
+    getIRQ(SX);
 }
 
 void setRX(SX1280* SX, uint8_t base, uint16_t count){
+	getIRQ(SX);
+	clearIRQ(SX, ALL);
     // wait till send complete
     while(SX->SPI_used){}
     SX->SPI_used = true;
@@ -112,7 +167,13 @@ void setRX(SX1280* SX, uint8_t base, uint16_t count){
     SX->TXbuf[1] = base;
     SX->TXbuf[2] = count >> 8;
     SX->TXbuf[3] = count & 0xFF;
-    SendData(SX,4);
+    if (SendData(SX,4)) {}//TextOut("setRX SendData completed\n\r");
+    else {
+    	char msg[100];
+    	sprintf (msg, "setRX rxbuf[0] is %X\n\r", (SX->RXbuf[0]>>2 & 0x7));
+        //TextOut(msg);
+    }
+    getIRQ(SX);
 }
 void setRXDuty(SX1280* SX, uint8_t base, uint16_t rxcount, uint16_t sleepcount){
     // wait till send complete
@@ -156,6 +217,7 @@ void setRFFrequency(SX1280* SX, uint32_t frequency){
     // make command
     *ptr++ = SET_RF_F;
     // set frequency
+    frequency = (uint32_t)((double)frequency*PLL_STEP);
     *ptr++ = (frequency >> 16) & 0xFF;
     *ptr++ = (frequency >> 8 ) & 0xFF;
     *ptr++ = (frequency      ) & 0xFF;
@@ -168,8 +230,7 @@ void setChannel(SX1280* SX, uint8_t channel) {
 	uint32_t frequency = channel;
 	frequency = (frequency + 2400)*1000000;
 
-	if (frequency != SX->SX_settings->frequency)
-		setRFFrequency(SX, frequency);
+	setRFFrequency(SX, frequency);
 }
 
 void setPacketType(SX1280* SX, uint8_t type){
@@ -182,16 +243,16 @@ void setPacketType(SX1280* SX, uint8_t type){
     SendData(SX,2);
 }
 
-uint8_t getPacketType(SX1280* SX, uint8_t type){
+uint8_t getPacketType(SX1280* SX){
     // wait till send complete
     while(SX->SPI_used){}
     SX->SPI_used = true;
     // make command
-    SX->TXbuf[0] = SET_PACKET;
+    SX->TXbuf[0] = GET_PACKET;
     SX->TXbuf[1] = 0;
     SX->TXbuf[2] = 0;
     SendData(SX,3);
-    return SX->RXbuf[3];
+    return SX->RXbuf[2];
 }
 
 void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime){
@@ -203,6 +264,16 @@ void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime){
     SX->TXbuf[1] = power;
     SX->TXbuf[2] = rampTime;
     SendData(SX,3);
+}
+
+void setRegulatorMode(SX1280* SX, uint8_t mode) {
+    // wait till send complete
+    while(SX->SPI_used){}
+    SX->SPI_used = true;
+    // make command
+    SX->TXbuf[0] = SET_REGULATOR_MODE;
+    SX->TXbuf[1] = mode;
+    SendData(SX,2);
 }
 
 void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address){
@@ -233,7 +304,7 @@ void setPacketParam(SX1280* SX){
     while(SX->SPI_used){}
     SX->SPI_used = true;
     // make command
-    *ptr++ = SET_MOD_PARAM;
+    *ptr++ = SET_PACKET_PARAM;
     memcpy(ptr,SX->SX_settings->PacketParam,7);
     SendData(SX,8);
 }
@@ -274,7 +345,8 @@ void setDIOIRQParams(SX1280* SX){
     // make command
     *ptr++ = SET_DIO_IRQ_PARAM;
     memcpy(ptr,SX->SX_settings->DIOIRQ,8);
-    SendData(SX,9);
+    if (SendData(SX,9)) {}//TextOut("DIOIRQ succ\n\r");
+    else {}//TextOut("DIOIRQ fucc\n\r");
 }
 
 uint16_t getIRQ(SX1280* SX){
@@ -286,6 +358,10 @@ uint16_t getIRQ(SX1280* SX){
     *ptr++ = GET_IRQ_STATUS;
     memset(ptr,0,3);
     SendData(SX,4);
+	char msg[10];
+	//TextOut("getIRQ ");
+	//TextOut(itoa(((SX->RXbuf[2] <<8) | SX->RXbuf[3]), msg, 10));
+	//TextOut("\n\r");
     return SX->irqStatus = (SX->RXbuf[2] <<8) | SX->RXbuf[3];
 }
 
@@ -369,6 +445,7 @@ void readBuffer(SX1280* SX, uint8_t Nbytes){
 
 // -------------------------------------------- Send / Receive
 bool SendData(SX1280* SX, uint8_t Nbytes){
+	while(read_pin(SX->busy_pin)) {}
     HAL_StatusTypeDef ret;
     // wait till ready
     while(SX->SPI->State != HAL_SPI_STATE_READY){}
@@ -377,11 +454,18 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
     ret = HAL_SPI_TransmitReceive(SX->SPI, SX->TXbuf, SX->RXbuf, Nbytes, 100);
     set_pin(SX->CS_pin, HIGH);
     SX->SPI_used = false;
-    return ret == HAL_OK;
+    while(read_pin(SX->busy_pin)) {}
+    SX->TXbuf[0] = GET_STATUS;
+    SX->TXbuf[1] = 0;
+    set_pin(SX->CS_pin, LOW);
+    HAL_SPI_TransmitReceive(SX->SPI, SX->TXbuf, SX->RXbuf, 2, 100);
+    set_pin(SX->CS_pin, HIGH);
+    SX->SX1280_status = SX->RXbuf[0];
+    return (ret == HAL_OK && (SX->RXbuf[0]>>2 & 0x7) == 0x01);
 }
 
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
-
+	while(read_pin(SX->busy_pin)) {}
 	HAL_StatusTypeDef ret;
 	// wait till ready
     while(SX->SPI->State != HAL_SPI_STATE_READY){}
@@ -391,9 +475,10 @@ bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
     return ret == HAL_OK;
 }
 
-void DMA_Callback(SX1280* SX){
+bool DMA_Callback(SX1280* SX){
     set_pin(SX->CS_pin, HIGH);
     SX->SPI_used = false;
+	return (SX->RXbuf[0]>>2 & 0x7) == 0x01;
 }
 
 // -------------------------------------------- Synchronization

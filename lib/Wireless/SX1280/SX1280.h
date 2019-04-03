@@ -20,6 +20,7 @@
 typedef struct _SX1280_Settings{
 	uint32_t frequency;
 	uint8_t channel;
+	uint8_t packettype;
 	uint8_t payloadLengh;
 	uint8_t variableLength;
 	uint8_t txPower;
@@ -123,6 +124,7 @@ static uint32_t robot_syncWord[] = {
 
 ////////////////////////////////////// public functions
 void SX1280Setup(SX1280* SX);
+void SX1280WakeUp(SX1280* SX);
 
 // runtime functions
 void writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes);
@@ -141,9 +143,10 @@ void setRFFrequency(SX1280* SX, uint32_t frequency);
 void setModulationParam(SX1280* SX);
 void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address);
 void setPacketType(SX1280* SX, uint8_t type);
-uint8_t getPacketType(SX1280* SX, uint8_t type);
+uint8_t getPacketType(SX1280* SX);
 void setPacketParam(SX1280* SX);
 void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> -18 - 13 dBm, ramptime (us)
+void setRegulatorMode(SX1280* SX, uint8_t mode);
 
 void setSyncSensitivity (SX1280* SX, uint8_t syncWordSensitivity);
 bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
@@ -154,6 +157,7 @@ void setChannel(SX1280* SX, uint8_t new_channel);
 //setAddress(); //(robotID)
 
 // state functions
+void setStandby(SX1280* SX, uint8_t config);
 void setSleep(SX1280* SX, uint8_t config);
 void setRX(SX1280* SX, uint8_t base, uint16_t count);
 void setFS(SX1280* SX);
@@ -170,5 +174,5 @@ void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes);
 // Send/Receive data
 bool SendData(SX1280* SX, uint8_t Nbytes);
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes);
-void DMA_Callback(SX1280* SX);
+bool DMA_Callback(SX1280* SX);
 #endif // __SX1280_H

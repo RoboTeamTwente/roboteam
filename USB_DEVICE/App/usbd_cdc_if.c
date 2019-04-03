@@ -307,8 +307,8 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	  // check if the usb data robot id is legal
 	  if (usbDataRobotId < 16) {
 
-		  if (usbDataRobotId == 4) {
-		    toggle_pin(LD_2);
+		  if (usbDataRobotId == 0) {
+		    //toggle_pin(LD_3);
 		  }
 
 		  // put the message in the buffer

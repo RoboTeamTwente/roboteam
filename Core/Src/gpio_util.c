@@ -11,5 +11,6 @@
 GPIO_Pin SX_IRQ 			= { SX_IRQ_GPIO_Port			, SX_IRQ_Pin			};
 GPIO_Pin SX_RST				= { SX_RST_GPIO_Port			, SX_RST_Pin			};
 GPIO_Pin SX_BUSY 			= { SX_BUSY_GPIO_Port			, SX_BUSY_Pin			};
+GPIO_Pin SPI3_CS 			= { SPI3_CS_GPIO_Port			, SPI3_CS_Pin			};
 GPIO_Pin LD_3 				= { LD3_GPIO_Port			, LD3_Pin			};
 GPIO_Pin LD_2 				= { LD2_GPIO_Port			, LD2_Pin			};

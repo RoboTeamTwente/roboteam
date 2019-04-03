@@ -25,8 +25,10 @@ void TextOut(char *str){
 void HexOut(uint8_t data[], uint8_t length){
 	USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
 //	set_pin(LD_3, LOW);
-	while(hcdc->TxState != 0);
-//	set_pin(LD_3, HIGH);
-	memcpy(TxBuffer, data, length);
-	CDC_Transmit_FS(TxBuffer, length);
+	if (hUsbDeviceFS.dev_state == 3 || hUsbDeviceFS.dev_state == 4) {
+		while(hcdc->TxState != 0);
+	//	set_pin(LD_3, HIGH);
+		memcpy(TxBuffer, data, length);
+		CDC_Transmit_FS(TxBuffer, length);
+	}
 }

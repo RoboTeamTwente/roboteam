@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-#define PLL_STEP 2^18/(52000000)	// step/Hz
+#define PLL_STEP ((double)(2^18)/(52000000))	// step/Hz
 
 #define FEEDBACK_HEADER	0xCCCCCCCC
 // ----------------------------------- Generic Codes
@@ -43,6 +43,7 @@
 #define SET_AUTO_TX			0x98		// time	after receive				-
 #define SET_PERF_COUNTER	0x9C		// Perf Counter Mode				-
 
+#define SET_REGULATOR_MODE	0x96		// Regulator mode (0 only LDO)
 
 // ----------------------------------- FLRC specific codes
 

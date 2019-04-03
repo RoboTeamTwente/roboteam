@@ -11,6 +11,8 @@
 #include "SX1280/SX1280.h"
 #include <stdbool.h>
 #include "msg_buff.h"
+#include "../TextOut/TextOut.h"
+
 
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
@@ -19,8 +21,9 @@ uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 // init structs
 SX1280_Settings set = {
         .frequency = 2400000000,
-        .txPower = 31,
-        .TX_ramp_time = RADIO_RAMP_06_US,
+        .txPower = 13,
+		.packettype = PACKET_TYPE_FLRC,
+        .TX_ramp_time = RADIO_RAMP_20_US,
 		.periodBase = BASE_62_us,
         .periodBaseCount = 24,
 		.syncWords = {0, 0, 0},
@@ -29,7 +32,7 @@ SX1280_Settings set = {
         .RXoffset = 0,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_1_0, BT_0_5},
         .PacketParam = {PREAMBLE_LENGTH_8_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, RECEIVEPKTLEN, CRC_1_BYTE, NO_WHITENING},
-        .DIOIRQ = {TX_DONE|RX_DONE, TX_DONE|RX_DONE, NONE, NONE}
+        .DIOIRQ = {TX_DONE|RX_DONE|RXTX_TIMEOUT, TX_DONE|RX_DONE|RXTX_TIMEOUT, NONE, NONE}
     };
 SX1280_Packet_Status PacketStat;
 
@@ -44,6 +47,7 @@ SX1280 * Wireless_Init(uint8_t channel, SPI_HandleTypeDef * WirelessSpi){
 
     // set connections
     SX->SPI = WirelessSpi;
+    SX->CS_pin = SPI3_CS;
     SX->busy_pin = SX_BUSY;
     set_pin(SX->CS_pin, HIGH);
     SX->IRQ_pin = SX_IRQ;
@@ -61,11 +65,19 @@ SX1280 * Wireless_Init(uint8_t channel, SPI_HandleTypeDef * WirelessSpi){
     SX1280Setup(SX);
 
     setAutoFS(SX,true);
-    setRX(SX, SX->SX_settings->periodBase, 0);
+    getIRQ(SX);
+    clearIRQ(SX, ALL);
+    //setRX(SX, SX->SX_settings->periodBase, 0);
+    //setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
+    //setFS(SX);
 
-    clearIRQ(SX,ALL);
+    //clearIRQ(SX,ALL);
 
     getStatus(SX);
+
+    if (read_pin(SX->busy_pin) == 1) {
+    	////TextOut("busy pin is high\n\r");
+    }
 
     return SX;
 };
@@ -100,34 +112,35 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & TX_DONE){
       //  setRX(SX, SX->SX_settings->periodBase, 0);   // go back in RX state
       //  SendAutoPacket(SX,data,Nbytes);
-     //   TextOut("I transmitted!!");
-
-    	 toggle_pin(LD_3);
-         isTransmitting = false;
+    	//TextOut("I transmitted!!\n\r");
+    	//toggle_pin(LD_3);
+    	isTransmitting = false;
     }
 
     if(irq & RX_DONE){
+    	//TextOut("I received?\n\r");
     //	ReceivePacket(SX);
     }
 
     if(irq & SYNCWORD_VALID) {
-    //	TextOut("SX_SYNC_VALID\n\r");
+    //	//TextOut("SX_SYNC_VALID\n\r");
     }
 
     if(irq & SYNCWORD_ERROR) {
-    //	TextOut("SX_SYNC_ERROR\n\r");
+    //	//TextOut("SX_SYNC_ERROR\n\r");
     }
 
     if(irq & CRC_ERROR) {
-    //	TextOut("SX_CRC_ERROR\n\r");
+    //	//TextOut("SX_CRC_ERROR\n\r");
     }
 
     if(irq & RXTX_TIMEOUT) {
-    //	TextOut("SX_RXTX_TIMEOUT\n\r");
+    	isTransmitting = false;
+    //	//TextOut("SX_RXTX_TIMEOUT\n\r");
     }
 
     if(irq & PREAMBLE_DETECTED) {
-    //	TextOut("SX_PREAMBLE\n\r");
+    //	//TextOut("SX_PREAMBLE\n\r");
     }
 };
 

@@ -41,6 +41,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "Wireless/Wireless.h"
 #include "Wireless/Wireless.c"
 
@@ -48,9 +51,6 @@
 #include "TextOut/TextOut.c"
 #include "msg_buff.h"
 #include "Wireless/SX1280/SX1280.c" //TODO include header instead
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -154,29 +154,30 @@ int main(void)
   HAL_Delay(1000);
   SX = Wireless_Init(1, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
   int i = 0;
   while (1)
   {
-    /* USER CODE END WHILE */
-
-	  // alternating led to see if the code is still running
+	 // alternating led to see if the code is still running
 	 if (i < 1000000) {
-		  set_pin(LD_3, HIGH);
+		  //set_pin(LD_3, HIGH);
 		  i++;
+		  //HAL_Delay(1);
 	 } else if (i < 2000000) {
-		  set_pin(LD_3, LOW);
+		  //set_pin(LD_3, LOW);
+		  //HAL_Delay(1);
 		  i++;
 	 } else {
 		 i = 0;
 	 }
+  }
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
   /* USER CODE END 3 */
 }
 
@@ -395,7 +396,7 @@ static void MX_SPI3_Init(void)
   hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi3.Init.NSS = SPI_NSS_HARD_OUTPUT;
+  hspi3.Init.NSS = SPI_NSS_SOFT;
   hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
@@ -530,7 +531,7 @@ static void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-
+  //set_pin(LD_2, HIGH);
   /* USER CODE END USART3_Init 2 */
 
 }
@@ -588,6 +589,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SPI3_CS_GPIO_Port, SPI3_CS_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : USER_Btn_Pin */
   GPIO_InitStruct.Pin = USER_Btn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -627,6 +631,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_OverCurrent_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : SPI3_CS_Pin */
+  GPIO_InitStruct.Pin = SPI3_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SPI3_CS_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : SX_IRQ_Pin */
   GPIO_InitStruct.Pin = SX_IRQ_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -648,16 +659,16 @@ static void MX_GPIO_Init(void)
 int sendToId = 0;
 
 bool on = true;
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
+		//TextOut("SX_DMA_HANDLER\n\r");
 		Wireless_DMA_Handler(SX, PC_to_Bot);
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-
-
 	if (GPIO_Pin == SX_IRQ_Pin) {
+		//TextOut("SX_IRQ_HANDLER\n\r");
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}
 }
@@ -674,14 +685,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 			msgBuff[sendToId].isNew = false;
 			uint32_t syncword = robot_syncWord[sendToId];
 			writeBuffer(SX, syncword, msgBuff[sendToId].msg, 13);
+			setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
+			//setRX(SX, SX->SX_settings->periodBase, 0);
 		}
 
 		// increment id
 		if (sendToId < 15) {
 			sendToId++;
 		} else {
-		//	set_pin(LD_3, on);
-			on = !on;
+//			//set_pin(LD_2, on);
+//			on = !on;
 			sendToId = 0;
 		}
 	}

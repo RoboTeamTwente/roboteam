@@ -7,5 +7,5 @@
 #define MIN_ROBOT_ID 0
 #define MAX_ROBOT_ID 15
 
-#define TICK_RATE 120
+#define TICK_RATE 60
 

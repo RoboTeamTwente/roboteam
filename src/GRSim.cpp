@@ -325,29 +325,18 @@ void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand c
     command->set_spinner(msg.dribbler);
     command->set_use_angle(msg.use_angle);
 
-    // geneva_state of 0 means no change
-//    int index = 0;
-//    if (msg.geneva_state==0) {
-//        std::string paramName = "robot"+std::to_string(msg.id)+"/genevaState";
-//        int genevaState = 0;
-//        ros::param::getCached(paramName, genevaState);
-//        index = genevaState-1;
-//    }
-//    else {
-//        index = msg.geneva_state-1;
-//        // Announce the new geneva state via ROS params
-//        ros::param::set("robot"+std::to_string(msg.id)+"/genevaState", msg.geneva_state);
-//    }
-//
-//    std::cout << "geneva state " << msg.geneva_state << std::endl;
-//    std::cout << "index " << index << std::endl;
-//
-//    // angles in degrees
-       float angles[] = {20, 10, 0, -10, -20};
-//    // geneva_angle in radians
-   float geneva_angle = 2*M_PI*angles[msg.geneva_state - 1]/360;
- command->set_geneva_angle(geneva_angle);
-//    std::cout << "setting geneva angle to " << geneva_angle << " radians" << std::endl;
+    // if no genevastate was given we set it to 3;
+    int genevaState = 3;
+    if (msg.geneva_state != 0) {
+        genevaState = msg.geneva_state-1;
+    }
+    // angles in degrees
+    float angles[] = {20, 10, 0, -10, -20};
+
+    // geneva_angle in radians
+    float geneva_angle = 2*M_PI*angles[ msg.geneva_state-1]/360;
+
+    command->set_geneva_angle(geneva_angle);
 }
 
 } // robothub

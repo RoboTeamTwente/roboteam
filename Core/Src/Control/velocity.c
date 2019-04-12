@@ -18,25 +18,26 @@ static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-//transfer body velocity to necessary wheel speed
+//Transfer body velocity to necessary wheel speed
 static void body2Wheels(float wheelspeed[4], float velocity[3]);
 
-//transfer global coordinate frame to local coordinate frame
+//Transfer global coordinate frame to local coordinate frame
 static void global2Local(float input[3], float output[2], float  yaw);
 
-void translationVelControl(float State[3], float vel_ref[3], bool use_global_ref, float translationalRef[4]);
+//Determine the desired wheel speed given the desired velocities
+static void translationVelControl(float State[3], float vel_ref[3], float translationalRef[4]);
 
-float angleControl(float angleRef, float angle);
+//Determine the desired wheel speed given the desired angle
+static float angleControl(float angleRef, float angle);
 
-static void initPID(body_handles body, float kP, float kI, float kD);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int velocity_Init(){
 	velc_state = on;
-	initPID(body_x, 1.0, 0.0, 0.0);
-	initPID(body_y, 2.0, 0.0, 0.0);
-	initPID(body_w, 20.0, 1.5, 0.0);
+	initPID(velK[body_x], 1.0, 0.0, 0.0);
+	initPID(velK[body_y], 2.0, 0.0, 0.0);
+	initPID(velK[body_w], 20.0, 1.5, 0.0);
 	return 0;
 }
 
@@ -78,34 +79,6 @@ void velocity_SetState(float input[3]){
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-void translationVelControl(float State[3], float vel_ref[3], float translationalRef[4]){
-	float velLocalRef[3] = {0, 0, 0};
-	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
-
-	// Manually adjusting velocity command
-	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)
-	velLocalRef[body_x] = 1.063 * velLocalRef[body_x];
-	velLocalRef[body_y] = 1.308 * velLocalRef[body_y];
-
-	// Local control
-	float velxErr = (velLocalRef[body_x] - State[body_x]);
-	float velyErr = (velLocalRef[body_y] - State[body_y]);
-	velLocalRef[body_x] += PID(velxErr, velK[body_x]);
-	velLocalRef[body_y] += PID(velyErr, velK[body_y]);
-
-	body2Wheels(translationalRef, velLocalRef); //translate velocity to wheel speed
-}
-
-float angleControl(float angleRef, float angle){
-	float angleErr = constrainAngle(angleRef - angle);//constrain it to one circle turn
-	if (fabs(angleErr) < YAW_MARGIN) { // reset the I to zero everytime the target has been reached
-		angleErr = 0;
-		velK[body_w].I = 0;
-	}
-	return PID(angleErr, velK[body_w]);// PID control from control_util.h
-}
-
-
 static void body2Wheels(float wheelspeed[4], float velocity[3]){
 	//mixing matrix
 	float velx2wheel = (velocity[body_x]*sin60/rad_wheel);
@@ -124,11 +97,33 @@ static void global2Local(float global[3], float local[3], float  yaw){
 	local[body_w] = global[body_w];
 }
 
-static void initPID(body_handles body, float kP, float kI, float kD){
-	velK[body] = PIDdefault;
-	velK[body].kP = kP;
-	velK[body].kI = kI;
-	velK[body].kD = kD;
+static void translationVelControl(float State[3], float vel_ref[3], float translationalRef[4]){
+	float velLocalRef[3] = {0, 0, 0};
+	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
+
+	// Manually adjusting velocity command
+	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)
+	velLocalRef[body_x] = 1.063 * velLocalRef[body_x];
+	velLocalRef[body_y] = 1.308 * velLocalRef[body_y];
+
+	// Local control
+	float velxErr = (velLocalRef[body_x] - State[body_x]);
+	float velyErr = (velLocalRef[body_y] - State[body_y]);
+	velLocalRef[body_x] += PID(velxErr, velK[body_x]);
+	velLocalRef[body_y] += PID(velyErr, velK[body_y]);
+
+	body2Wheels(translationalRef, velLocalRef); //translate velocity to wheel speed
 }
+
+static float angleControl(float angleRef, float angle){
+	float angleErr = constrainAngle(angleRef - angle);//constrain it to one circle turn
+	if (fabs(angleErr) < YAW_MARGIN) { // reset the I to zero everytime the target has been reached
+		angleErr = 0;
+		velK[body_w].I = 0;
+	}
+	return PID(angleErr, velK[body_w]);// PID control from control_util.h
+}
+
+
 
 

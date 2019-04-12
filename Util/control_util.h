@@ -97,6 +97,14 @@ typedef struct PIDstruct PIDvariables;
 
 ///////////////////////////////////////////////////// FUNCTIONS
 
+//Initializes the PID values
+inline void initPID(PIDvariables PID, float kP, float kI, float kD) {
+	PID = PIDdefault;
+	PID.kP = kP;
+	PID.kI = kI;
+	PID.kD = kD;
+}
+
 //PID control, inline to not have multiple implementation error
 inline float PID(float err, PIDvariables* K){
 	float P = K->kP*err;

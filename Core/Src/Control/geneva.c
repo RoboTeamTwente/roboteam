@@ -17,13 +17,14 @@ static PIDvariables genevaK = PIDdefault;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
+//Sets the encoder value to be zero at the edge of the robot
 static void CheckIfStuck();
 
+//Reads out the value of the encoder
 static int geneva_Encodervalue();
 
-static void initPID(float kP, float kI, float kD);
-
-static void setoutput(float pwm);
+//Sets the PWM and direction for the Geneva motor
+static void setOutput(float pwm);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -31,7 +32,7 @@ static void setoutput(float pwm);
 
 void geneva_Init(){
 	geneva_state = setup;	// go to setup
-	initPID(50.0, 4.0, 0.7);		// initialize the pid controller
+	initPID(genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 }
 
@@ -56,7 +57,7 @@ void geneva_Update(){
 			pwm = 0;
 		}
 		//TODO: Scale function
-		setoutput(pwm);
+		setOutput(pwm);
 		break;
 	}
 }
@@ -97,13 +98,6 @@ int geneva_GetPWM() {
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-static void initPID(float kP, float kI, float kD) {
-		genevaK = PIDdefault;
-		genevaK.kP = kP;
-		genevaK.kI = kI;
-		genevaK.kD = kD;
-}
-
 static void CheckIfStuck(){
 	static uint tick = 0xFFFF;			//
 	static int enc;
@@ -117,12 +111,11 @@ static void CheckIfStuck(){
 	}
 }
 
-
 static int geneva_Encodervalue(){
 	return (int32_t)__HAL_TIM_GetCounter(&htim2);
 }
 
-static void setoutput(float pwm){
+static void setOutput(float pwm){
 	if(pwm < 0){
 		HAL_GPIO_WritePin(Geneva_dir_B_GPIO_Port, Geneva_dir_B_Pin, 1);
 		HAL_GPIO_WritePin(Geneva_dir_A_GPIO_Port, Geneva_dir_A_Pin, 0);

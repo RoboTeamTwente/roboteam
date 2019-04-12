@@ -24,20 +24,31 @@ static float wheelref[4] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-static void SetPWM();
-static void SetDir();
+//Reads out the value of the wheel encoders
 static void getEncoderData(short int encoderdata[4]);
+
+//Resets the encoder
 static void ResetEncoder();
+
+//Computes the speed of the wheels in rad/s using the encoder values
 static void computeWheelSpeed();
-static void limitScale(wheel_names wheel);
-static void initPID(float kP, float kI, float kD);
+
+//Clamps the PWM
+static void limitScale();
+
+//Set the PWM for the wheels
+static void SetPWM();
+
+//Sets the direction of the wheels
+static void SetDir();
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-// Initialize wheels
 int wheels_Init(){
 	wheels_state = on;
-	initPID(5.0, 0.0, 0.0);
+	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+		initPID(wheelsK[wheel], 5.0, 0.0, 0.0);
+	}
 	HAL_TIM_Base_Start(&htim1); //RF
 	HAL_TIM_Base_Start(&htim8); //RB
 	HAL_TIM_Base_Start(&htim3); //LB
@@ -50,7 +61,6 @@ int wheels_Init(){
 	return 0;
 }
 
-// Deinitialize wheels
 int wheels_Deinit(){
 	wheels_state = off;
 	HAL_TIM_Base_Stop(&htim1); //RF
@@ -71,16 +81,14 @@ int wheels_Deinit(){
 	return 0;
 }
 
-// Set the desired rotations per second for every wheel
 void wheels_Update(){
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 			float err = wheelref[wheel]-wheelspeed[wheel];
 			pwm[wheel] = OMEGAtoPWM*(wheelref[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
-			limitScale(wheel);
 		}
-
+		limitScale();
 		SetDir();
 		SetPWM();
 	}
@@ -92,49 +100,16 @@ void wheels_SetRef(float input[4]){
 	}
 }
 
-// Get the current wheel speed in radians per second
 float wheels_GetState(wheel_names wheel) {
 	return wheelspeed[wheel];
 }
 
-// Get the current PWM that is sent to the wheels
 int wheels_GetPWM(wheel_names wheel) {
 	return pwm[wheel];
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-// Set PID values
-static void initPID(float kP, float kI, float kD) {
-
-	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		wheelsK[wheel] = PIDdefault;
-		wheelsK[wheel].kP = kP;
-		wheelsK[wheel].kI = kI;
-		wheelsK[wheel].kD = kD;
-	}
-}
-
-// Limit or scale the PWM such that it can be passed to the motors
-static void limitScale(wheel_names wheel){
-		// Determine direction
-	if(pwm[wheel] <= -1.0F){
-		pwm[wheel] *= -1;
-		direction[wheel] = 0; // turn anti-clockwise
-	} else if(pwm[wheel] >= 1.0F){
-		direction[wheel] = 1; // turn clockwise
-	} else {
-		pwm[wheel] = 0; // the motor does not brake if pwm 0 is sent
-	}
-	// Limit PWM
-	if(pwm[wheel] < PWM_CUTOFF){
-		pwm[wheel] = 0.0F;
-	} else if(pwm[wheel] > MAX_PWM){
-		pwm[wheel] = MAX_PWM;
-	}
-}
-
-// Get the current encoder data for all wheels
 static void getEncoderData(short int encoderdata[4]){
 	// NOTE: RF and RB are swapped to match with wheel reference
 	encoderdata[wheels_RF] = __HAL_TIM_GET_COUNTER(&htim8);
@@ -143,7 +118,6 @@ static void getEncoderData(short int encoderdata[4]){
 	encoderdata[wheels_LF] = __HAL_TIM_GET_COUNTER(&htim4);
 }
 
-// Set motor encoder to zero
 static void ResetEncoder() {
 	// NOTE: RF and RB are swapped to match with wheel reference
 		__HAL_TIM_SET_COUNTER(&htim8, 0);
@@ -152,7 +126,6 @@ static void ResetEncoder() {
 		__HAL_TIM_SET_COUNTER(&htim4, 0);
 }
 
-// Compute wheel speed for a certain wheel in radians per second
 static void computeWheelSpeed(){
 	short int encoderData[4]= {0};
 	getEncoderData(encoderData);
@@ -162,7 +135,26 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
-// Set PWM to the motor
+static void limitScale(){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+		// Determine direction
+		if(pwm[wheel] <= -1.0F){
+			pwm[wheel] *= -1;
+			direction[wheel] = 0; // turn anti-clockwise
+		} else if(pwm[wheel] >= 1.0F){
+			direction[wheel] = 1; // turn clockwise
+		} else {
+			pwm[wheel] = 0; // the motor does not brake if pwm 0 is sent
+		}
+		// Limit PWM
+		if(pwm[wheel] < PWM_CUTOFF){
+			pwm[wheel] = 0.0F;
+		} else if(pwm[wheel] > MAX_PWM){
+			pwm[wheel] = MAX_PWM;
+		}
+	}
+}
+
 static void SetPWM(){
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, MAX_PWM-pwm[wheels_RF]);
 	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, MAX_PWM-pwm[wheels_RB]);
@@ -170,7 +162,6 @@ static void SetPWM(){
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, MAX_PWM-pwm[wheels_LF]);
 }
 
-// Set direction to the motor
 static void SetDir(){
 	HAL_GPIO_WritePin(FR_RF_GPIO_Port,FR_RF_Pin, direction[wheels_RF]);
 	HAL_GPIO_WritePin(FR_RB_GPIO_Port,FR_RB_Pin, direction[wheels_RB]);

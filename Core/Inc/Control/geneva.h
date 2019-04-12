@@ -22,10 +22,15 @@
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void geneva_Init();
+
 void geneva_Deinit();
+
 void geneva_Update();
+
 geneva_positions geneva_SetRef(geneva_positions position);
+
 geneva_positions geneva_GetState();
+
 int geneva_GetPWM();
 
 #endif /* GENEVA_GENEVA_H_ */

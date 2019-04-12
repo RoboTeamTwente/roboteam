@@ -6,8 +6,8 @@
  */
 
 
-#include "Kalman.h"
-#include "KalmanV.h"
+#include <State/kalman.h>
+#include <State/kalmanVariables.h>
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 

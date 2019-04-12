@@ -22,9 +22,9 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-int stateInit();
-int stateDeInit();
-void estimateState(float State[3], float xsensData[3], bool visionAvailable);
-void getState(float output[4]);
+int state_Init();
+int state_Deinit();
+void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable);
+void state_GetState(float output[4]);
 
 #endif /* DO_STATEESTIMATION_H_ */

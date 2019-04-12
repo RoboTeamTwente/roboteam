@@ -18,7 +18,7 @@ static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-//Transfer body velocity to necessary wheel speed
+//Transforms body velocity to wheel speed
 static void body2Wheels(float wheelspeed[4], float velocity[3]);
 
 //Transfer global coordinate frame to local coordinate frame

@@ -5,8 +5,8 @@
  *      Author: simen
  */
 
+#include <State/kalman.h>
 #include "stateEstimation.h"
-#include "Kalman.h"
 #include "../Util/control_util.h"
 
 ///////////////////////////////////////////////////// VARIABLES
@@ -15,23 +15,24 @@ static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
+//Transforms wheel speed to body velocity
 static void wheels2Body(float wheelSpeeds[4], float output[3]);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-int stateInit(){
+int state_Init(){
 	kalman_Init();
 	yawCalibrationInit();
 	return 0;
 }
 
-int stateDeInit(){
+int state_Deinit(){
 	kalman_Deinit();
 	yawCalibrationDeinit();
 	return 0;
 }
 
-void estimateState(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable) {
+void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable) {
 
 	float acc[2] = {0.0f};
 	acc[body_x] = xsensData[body_x];
@@ -42,16 +43,16 @@ void estimateState(float xsensData[3], float wheelSpeeds[4], float visionYaw, bo
 
 	kalman_CalculateK();
 	kalman_Update(acc, vel);
-	float Kstate[4] = {0.0f};
-	getKalmanState(Kstate);
-	state[body_x] = Kstate[0];
-	state[body_y] = Kstate[2];
+	float kalman_State[4] = {0.0f};
+	kalman_GetState(kalman_State);
+	state[body_x] = kalman_State[0];
+	state[body_y] = kalman_State[2];
 
 	calibrateXsens(xsensData, visionYaw, visionAvailable);
 	state[body_w] = xsensData[body_w];
 }
 
-void getState(float output[4]){
+void state_GetState(float output[4]){
 	for (int i=0; i<4; i++){
 		output[i] = state[i];
 	}
@@ -59,7 +60,6 @@ void getState(float output[4]){
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-//multiplies a 3*4 matrix by a vector of 4 elements.
 static void wheels2Body(float wheelSpeeds[4], float output[3]){
 	//Applying transpose(M_inv) matrix to go from wheel angular velocity to body velocity (assuming no slip)
 	output[body_x] = (wheelSpeeds[wheels_RF] + wheelSpeeds[wheels_RB] - wheelSpeeds[wheels_LB] - wheelSpeeds[wheels_LF])/sin60 * rad_wheel/4;

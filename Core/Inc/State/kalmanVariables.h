@@ -16,8 +16,8 @@
  *
 */
 
-#ifndef KALMAN_KALMANV_H_
-#define KALMAN_KALMANV_H_
+#ifndef KALMAN_KALMANVARIABLES_H_
+#define KALMAN_KALMANVARIABLES_H_
 ///////////////////////////////////////////////////// DEFINITIONS
 
 #define STATE 4

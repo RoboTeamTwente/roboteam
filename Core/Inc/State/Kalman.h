@@ -21,11 +21,11 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-void kalmanInit();
-void kalmanDeinit();
-void KalmanState(float acc[2], float vel[2]);
-void KalmanK();
-void getKState(float state[4]);
-void getKGain(float gain[4][4]);
-void getP(float P[16]);
+void kalman_Init();
+void kalman_Deinit();
+void kalman_Update(float acc[2], float vel[2]);
+void kalman_CalculateK();
+void kalman_GetState(float state[4]);
+void kalman_GetGain(float gain[4][4]);
+void kalman_GetP(float P[16]);
 #endif /* KALMAN_KALMAN_H_*/

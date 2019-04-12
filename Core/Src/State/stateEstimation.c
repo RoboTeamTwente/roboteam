@@ -20,13 +20,13 @@ static void wheels2Body(float wheelSpeeds[4], float output[3]);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int stateInit(){
-	kalmanInit();
+	kalman_Init();
 	yawCalibrationInit();
 	return 0;
 }
 
 int stateDeInit(){
-	kalmanDeinit();
+	kalman_Deinit();
 	yawCalibrationDeinit();
 	return 0;
 }
@@ -40,8 +40,8 @@ void estimateState(float xsensData[3], float wheelSpeeds[4], float visionYaw, bo
 	float vel[2]= {0.0f};
 	wheels2Body(wheelSpeeds, vel);
 
-	KalmanK();
-	KalmanState(acc, vel);
+	kalman_CalculateK();
+	kalman_Update(acc, vel);
 	float Kstate[4] = {0.0f};
 	getKalmanState(Kstate);
 	state[body_x] = Kstate[0];

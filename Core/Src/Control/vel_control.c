@@ -14,7 +14,11 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
+static PID_states velc_state = off;
 static PIDvariables velK[3];
+static float ref[3] = {0.0f};
+static float wheel_ref[4] = {0.0f};
+static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -33,6 +37,7 @@ static void initPID(body_handles body, float kP, float kI, float kD);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int vel_control_Init(){
+	velc_state = on;
 	initPID(body_x, 1.0, 0.0, 0.0);
 	initPID(body_y, 2.0, 0.0, 0.0);
 	initPID(body_w, 20.0, 1.5, 0.0);
@@ -40,29 +45,47 @@ int vel_control_Init(){
 }
 
 int vel_control_DeInit(){
-
+	velc_state = off;
 	return 0;
 }
 
 
-void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], bool use_global_ref){
+void vel_control_Callback(){
+	if (velc_state == on){
+		float translationalRef[4] = {0.0f};
+		translationVelControl(state, ref, translationalRef);
 
-	float translationalRef[4] = {0.0f};
-	translationVelControl(State, vel_ref, use_global_ref, translationalRef);
+		float angularRef = angleControl(ref[body_w], state[body_w]);
 
-	float angularRef = angleControl(vel_ref[body_w], State[body_w]);
-
-	for (int i=0; i<4; ++i) {
-		wheel_ref[i] = translationalRef[i] + angularRef;
+		for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
+			wheel_ref[wheel] = translationalRef[wheel] + angularRef;
+		}
 	}
+}
+
+void setRef(float input[3]){
+	ref[body_x] = input[body_x];
+	ref[body_y] = input[body_y];
+	ref[body_w] = input[body_w];
+}
+
+void getwheelRef(float output[4]){
+	for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
+		output[wheel] = wheel_ref[wheel];
+	}
+}
+
+void setState(float input[3]){
+	state[body_x] = input[body_x];
+	state[body_y] = input[body_y];
+	state[body_w] = input[body_w];
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-void translationVelControl(float State[3], float vel_ref[3], bool use_global_ref, float translationalRef[4]){
+void translationVelControl(float State[3], float vel_ref[3], float translationalRef[4]){
 	float velLocalRef[3] = {0, 0, 0};
-	use_global_ref = true;
-	global2Local(vel_ref, velLocalRef, use_global_ref ? State[body_w] : 0); //transfer global to local
+	global2Local(vel_ref, velLocalRef, State[body_w]); //transfer global to local
 
 	// Manually adjusting velocity command
 	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)

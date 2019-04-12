@@ -23,10 +23,7 @@
 
 ///////////////////////////////////////////////////// STRUCTS
 
-typedef enum {
-	wheels_uninitialized,
-	wheels_ready
-}wheels_states;// keeps track of the state of this system
+
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
@@ -35,6 +32,8 @@ int wheelsInit();
 int wheelsDeInit();
 
 void setWheelSpeed(float wheelref[4]);
+
+void setWheelRef(float input[4]);
 
 float getWheelSpeed(wheel_names wheel);
 

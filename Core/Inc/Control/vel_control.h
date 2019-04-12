@@ -36,6 +36,12 @@ int vel_control_Init();
 
 int vel_control_DeInit();
 
-void vel_control_Callback(float wheel_ref[4], float State[3], float vel_ref[3], bool use_global_ref);
+void vel_control_Callback();
+
+void setRef(float input[3]);
+
+void getwheelRef(float output[4]);
+
+void setState(float input[3]);
 
 #endif /* DO_VEL_CONTROL_H_ */

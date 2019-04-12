@@ -19,11 +19,12 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static int wheels_state = wheels_uninitialized;
+static PID_states wheels_state = off;
 static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelspeed[4] = {0};
 static PIDvariables wheelsK[4];
+static float wheelref[4] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -39,8 +40,8 @@ static void initPID(float kP, float kI, float kD);
 
 // Initialize wheels
 int wheelsInit(){
+	wheels_state = on;
 	initPID(5.0, 0.0, 0.0);
-	wheels_state = wheels_ready;
 	HAL_TIM_Base_Start(&htim1); //RF
 	HAL_TIM_Base_Start(&htim8); //RB
 	HAL_TIM_Base_Start(&htim3); //LB
@@ -55,7 +56,7 @@ int wheelsInit(){
 
 // Deinitialize wheels
 int wheelsDeInit(){
-	wheels_state = wheels_uninitialized;
+	wheels_state = off;
 	HAL_TIM_Base_Stop(&htim1); //RF
 	HAL_TIM_Base_Stop(&htim8); //RB
 	HAL_TIM_Base_Stop(&htim3); //LB
@@ -75,8 +76,8 @@ int wheelsDeInit(){
 }
 
 // Set the desired rotations per second for every wheel
-void setWheelSpeed(float wheelref[4]){
-	if (wheels_state == wheels_ready) {
+void setWheelSpeed(){
+	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 			float err = wheelref[wheel]-wheelspeed[wheel];
@@ -86,6 +87,12 @@ void setWheelSpeed(float wheelref[4]){
 
 		SetDir();
 		SetPWM();
+	}
+}
+
+void setWheelRef(float input[4]){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+		wheelref[wheel] = input[wheel];
 	}
 }
 

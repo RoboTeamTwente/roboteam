@@ -63,6 +63,21 @@ typedef enum {
 	wheels_LF,
 }wheel_names;
 
+typedef enum{
+	geneva_leftleft,
+	geneva_left,
+	geneva_middle,
+	geneva_right,
+	geneva_rightright,
+	geneva_none			// While rotating
+}geneva_positions;
+
+typedef enum {
+	off,
+	setup,
+	on
+}PID_states;// keeps track of the state of this system
+
 struct PIDstruct{
 	float kP;
 	float kI;

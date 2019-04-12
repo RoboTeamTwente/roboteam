@@ -16,8 +16,9 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
-geneva_states geneva_state = geneva_idle;	// current state of the geneva system
-int genevaRef = 0.0f;
+static PID_states geneva_state = off;	// current state of the geneva system
+static float genevaRef = 0.0f;
+static float pwm = 0.0f;
 static PIDvariables genevaK = PIDdefault;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
@@ -35,27 +36,26 @@ static void setoutput(float pwm);
 //TODO: Fix PID channel and timer
 
 void geneva_Init(){
-	geneva_state = geneva_setup;	// go to setup
+	geneva_state = setup;	// go to setup
 	initPID(50.0, 4.0, 0.7);		// initialize the pid controller
 	HAL_TIM_Base_Start(&htim2);		// start the encoder
 }
 
 void geneva_Deinit(){
 	HAL_TIM_Base_Start(&htim2);		// stop encoder
-	geneva_state = geneva_idle;		// go to idle state
+	geneva_state = off;		// go to idle state
 }
 
 void geneva_Update(){
 	switch(geneva_state){
-	case geneva_idle:
+	case off:
 		break;
-	case geneva_setup:								// While in setup, slowly move towards the sensor/edge
+	case setup:								// While in setup, slowly move towards the sensor/edge
 		genevaRef = HAL_GetTick();	// if sensor is not seen yet, move to the right at 1 count per millisecond
 		CheckIfStuck();
 		break;
-	case geneva_running:					// wait for external sources to set a new ref
+	case on:					// wait for external sources to set a new ref
 		float err = genevaRef - geneva_Encodervalue();
-		float pwm = 0.0f;
 		if (abs(err)>75){
 			pwm = PID(err, genevaK);
 		} else {
@@ -98,6 +98,10 @@ geneva_positions geneva_GetPosition(){
 	return 2 + (geneva_Encodervalue()/GENEVA_POSITION_DIF_CNT);
 }
 
+int getPWM() {
+	return pwm;
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void initPID(float kP, float kI, float kD) {
@@ -116,7 +120,7 @@ static void CheckIfStuck(){
 	}else if(tick + 70 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(&htim2, GENEVA_CAL_EDGE_CNT);
 		genevaRef = 0;
-		geneva_state = geneva_running;
+		geneva_state = on;
 	}
 }
 

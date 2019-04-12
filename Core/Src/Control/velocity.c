@@ -5,12 +5,8 @@
  *      Author: simen
  */
 
-#include "vel_control.h"
+#include <Control/velocity.h>
 #include "stdbool.h"
-
-///////////////////////////////////////////////////// DEFINITIONS
-
-
 
 ///////////////////////////////////////////////////// VARIABLES
 
@@ -36,7 +32,7 @@ static void initPID(body_handles body, float kP, float kI, float kD);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-int vel_control_Init(){
+int velocity_Init(){
 	velc_state = on;
 	initPID(body_x, 1.0, 0.0, 0.0);
 	initPID(body_y, 2.0, 0.0, 0.0);
@@ -44,13 +40,12 @@ int vel_control_Init(){
 	return 0;
 }
 
-int vel_control_DeInit(){
+int velocity_DeInit(){
 	velc_state = off;
 	return 0;
 }
 
-
-void vel_control_Callback(){
+void velocity_Update(){
 	if (velc_state == on){
 		float translationalRef[4] = {0.0f};
 		translationVelControl(state, ref, translationalRef);
@@ -63,19 +58,19 @@ void vel_control_Callback(){
 	}
 }
 
-void setRef(float input[3]){
+void velocity_setRef(float input[3]){
 	ref[body_x] = input[body_x];
 	ref[body_y] = input[body_y];
 	ref[body_w] = input[body_w];
 }
 
-void getwheelRef(float output[4]){
+void velocity_GetWheelRef(float output[4]){
 	for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
 		output[wheel] = wheel_ref[wheel];
 	}
 }
 
-void setState(float input[3]){
+void velocity_SetState(float input[3]){
 	state[body_x] = input[body_x];
 	state[body_y] = input[body_y];
 	state[body_w] = input[body_w];

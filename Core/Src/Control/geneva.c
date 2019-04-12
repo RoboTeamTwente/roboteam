@@ -8,12 +8,6 @@
 #include "geneva.h"
 #include "../Util/control_util.h"
 
-///////////////////////////////////////////////////// DEFINITIONS
-
-#define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
-#define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
-#define GENEVA_MAX_ALLOWED_OFFSET 0.2*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in positon
-
 ///////////////////////////////////////////////////// VARIABLES
 
 static PID_states geneva_state = off;	// current state of the geneva system
@@ -56,7 +50,7 @@ void geneva_Update(){
 		break;
 	case on:					// wait for external sources to set a new ref
 		float err = genevaRef - geneva_Encodervalue();
-		if (abs(err)>75){
+		if (abs(err)>GENEVA_MAX_ALLOWED_OFFSET){
 			pwm = PID(err, genevaK);
 		} else {
 			pwm = 0;
@@ -67,7 +61,7 @@ void geneva_Update(){
 	}
 }
 
-geneva_positions geneva_SetPosition(geneva_positions position){
+geneva_positions geneva_SetRef(geneva_positions position){
 	switch(position){
 	case geneva_rightright:
 		genevaRef = 2 * GENEVA_POSITION_DIF_CNT;
@@ -90,15 +84,14 @@ geneva_positions geneva_SetPosition(geneva_positions position){
 	return geneva_GetPosition();
 }
 
-
-geneva_positions geneva_GetPosition(){
+geneva_positions geneva_GetState(){
 	if((geneva_Encodervalue() % GENEVA_POSITION_DIF_CNT) > GENEVA_MAX_ALLOWED_OFFSET){
 		return geneva_none;
 	}
 	return 2 + (geneva_Encodervalue()/GENEVA_POSITION_DIF_CNT);
 }
 
-int getPWM() {
+int geneva_GetPWM() {
 	return pwm;
 }
 

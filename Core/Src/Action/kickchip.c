@@ -1,7 +1,8 @@
+#include <Action/kickchip.h>
+
 #include "gpio.h"
 #include <stdbool.h>
 #include "tim.h"
-#include "kickchip.h"
 #include "../PuttyInterface/PuttyInterface.h"
 
 #define Timestep 20

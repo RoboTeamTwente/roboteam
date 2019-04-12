@@ -36,7 +36,7 @@
 #define PWM_CUTOFF 100.0F // arbitrary treshold to avoid motor shutdown
 #define GEAR_RATIO 2.5F // gear ratio between motor and wheel
 #define MAX_PWM 2400 // defined in CubeMX
-#define PWM_LIMIT 2400 // should be equal to MAX_PWM by default
+#define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
 #define MAX_VOLTAGE 12 // see datasheet
 #define SPEED_CONSTANT (2*M_PI/60.0 * 374.0) //[(rad/s)/V] see datasheet
 #define PULSES_PER_ROTATION (float)4*1024 // number of pulses of the encoder per rotation of the motor (see datasheet)
@@ -47,6 +47,12 @@
 // Control
 #define YAW_MARGIN (2.0F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
+
+//GENEVA
+#define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
+#define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
+#define GENEVA_MAX_ALLOWED_OFFSET 0.1*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in position
+
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -76,7 +82,7 @@ typedef enum {
 	off,
 	setup,
 	on
-}PID_states;// keeps track of the state of this system
+}PID_states;// keeps track of the state of the system
 
 struct PIDstruct{
 	float kP;

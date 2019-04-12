@@ -13,10 +13,6 @@
 #include "../Util/gpio_util.h"
 
 
-///////////////////////////////////////////////////// DEFINITIONS
-
-
-
 ///////////////////////////////////////////////////// VARIABLES
 
 static PID_states wheels_state = off;
@@ -39,7 +35,7 @@ static void initPID(float kP, float kI, float kD);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 // Initialize wheels
-int wheelsInit(){
+int wheels_Init(){
 	wheels_state = on;
 	initPID(5.0, 0.0, 0.0);
 	HAL_TIM_Base_Start(&htim1); //RF
@@ -55,7 +51,7 @@ int wheelsInit(){
 }
 
 // Deinitialize wheels
-int wheelsDeInit(){
+int wheels_Deinit(){
 	wheels_state = off;
 	HAL_TIM_Base_Stop(&htim1); //RF
 	HAL_TIM_Base_Stop(&htim8); //RB
@@ -76,7 +72,7 @@ int wheelsDeInit(){
 }
 
 // Set the desired rotations per second for every wheel
-void setWheelSpeed(){
+void wheels_Update(){
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
@@ -90,19 +86,19 @@ void setWheelSpeed(){
 	}
 }
 
-void setWheelRef(float input[4]){
+void wheels_SetRef(float input[4]){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		wheelref[wheel] = input[wheel];
 	}
 }
 
 // Get the current wheel speed in radians per second
-float getWheelSpeed(wheel_names wheel) {
+float wheels_GetState(wheel_names wheel) {
 	return wheelspeed[wheel];
 }
 
 // Get the current PWM that is sent to the wheels
-int getPWM(wheel_names wheel) {
+int wheels_GetPWM(wheel_names wheel) {
 	return pwm[wheel];
 }
 

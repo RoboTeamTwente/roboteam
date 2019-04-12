@@ -21,22 +21,18 @@
 #include <stdbool.h>
 #include "../Util/control_util.h"
 
-///////////////////////////////////////////////////// STRUCTS
-
-
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-int wheelsInit();
+int wheels_Init();
 
-int wheelsDeInit();
+int wheels_Deinit();
 
-void setWheelSpeed(float wheelref[4]);
+void wheels_Update();
 
-void setWheelRef(float input[4]);
+void wheels_setRef(float input[4]);
 
-float getWheelSpeed(wheel_names wheel);
+float wheels_GetState(wheel_names wheel);
 
-int getPWM(wheel_names wheel);
+int wheels_GetPWM(wheel_names wheel);
 
 #endif /* WHEELS_H_ */

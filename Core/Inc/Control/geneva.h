@@ -19,18 +19,13 @@
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
 
-
-///////////////////////////////////////////////////// STRUCTS
-
-
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void geneva_Init();
 void geneva_Deinit();
 void geneva_Update();
-geneva_positions geneva_SetPosition(geneva_positions position);
-geneva_positions geneva_GetPosition();
-int getPWM();
+geneva_positions geneva_SetRef(geneva_positions position);
+geneva_positions geneva_GetState();
+int geneva_GetPWM();
 
 #endif /* GENEVA_GENEVA_H_ */

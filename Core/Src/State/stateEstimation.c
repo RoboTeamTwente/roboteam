@@ -22,13 +22,11 @@ static void wheels2Body(float wheelSpeeds[4], float output[3]);
 
 int state_Init(){
 	kalman_Init();
-	yawCalibrationInit();
 	return 0;
 }
 
 int state_Deinit(){
 	kalman_Deinit();
-	yawCalibrationDeinit();
 	return 0;
 }
 
@@ -43,13 +41,16 @@ void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, boo
 
 	kalman_CalculateK();
 	kalman_Update(acc, vel);
+
 	float kalman_State[4] = {0.0f};
 	kalman_GetState(kalman_State);
+
+	yaw_Calibrate(xsensData[body_w], visionYaw, visionAvailable);
+	float calibratedYaw = yaw_GetCalibratedYaw();
+
 	state[body_x] = kalman_State[0];
 	state[body_y] = kalman_State[2];
-
-	calibrateXsens(xsensData, visionYaw, visionAvailable);
-	state[body_w] = xsensData[body_w];
+	state[body_w] = calibratedYaw;
 }
 
 void state_GetState(float output[4]){

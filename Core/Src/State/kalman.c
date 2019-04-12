@@ -34,8 +34,6 @@ void kalman_Init(){
 }
 
 void kalman_Deinit(){
-	transMatrix(aH, aHt, OBSERVE, STATE);
-	transMatrix(aF, aFt, STATE, STATE);
 }
 
 void Kalman_Update(float accel[2], float vel[2]){

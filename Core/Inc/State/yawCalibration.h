@@ -11,6 +11,8 @@
 #include "stdbool.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
-void calibrateXsens(float xsensData[3], float visionYaw);
+
+void yaw_Calibrate(float xsensYaw, float visionYaw);
+float yaw_GetCalibratedYaw();
 
 #endif /* YAWCALIBRATION_H_ */

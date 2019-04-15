@@ -1,14 +1,5 @@
-/*
- * yawCalibration.c
- *
- *  Created on: Jan 8, 2019
- *      Author: simen
- */
 
-#include "yawCalibration.h"
-#include "stdbool.h"
-#include <math.h>
-#include "../Util/control_util.h"
+#include "../Inc/State/yawCalibration.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -63,7 +54,6 @@ void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
 		sumVisionVec[1] = 0.0f;
 	}
 
-	bufferYaw(xsensYaw);
 	prevVisionYaw = visionYaw;
 	calibratedYaw = constrainAngle(xsensYaw + yawOffset);
 }

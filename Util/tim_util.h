@@ -40,6 +40,7 @@ typedef struct PWM_struct{
 #define ENC_LB 		&htim3
 #define ENC_RB 		&htim4
 #define ENC_LF 		&htim5
+#define ENC_KC 		&htim6
 
 extern PWM_struct PWM_RF;
 extern PWM_struct PWM_RB;
@@ -47,18 +48,19 @@ extern PWM_struct PWM_LF;
 extern PWM_struct PWM_LB;
 extern PWM_struct PWM_Geneva;
 extern PWM_struct PWM_Buzzer;
+extern PWM_struct PWM_Dribbler;
 
 
 
-inline void startPWM(PWM_struct PWM){
+inline void start_PWM(PWM_struct PWM){
 	HAL_TIM_PWM_Start(PWM.TIM, PWM.Channel);
 }
 
-inline void stopPWM(PWM_struct PWM){
+inline void stop_PWM(PWM_struct PWM){
 	HAL_TIM_PWM_Stop(PWM.TIM, PWM.Channel);
 }
 
-inline void setPWM(PWM_struct PWM, uint32_t Value){
+inline void set_PWM(PWM_struct PWM, uint32_t Value){
 	__HAL_TIM_SET_COMPARE(PWM.TIM , PWM.Channel, Value);
 }
 

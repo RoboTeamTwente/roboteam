@@ -1,9 +1,3 @@
-/*
- * vel_control.h
- *
- *  Created on: Jan 23, 2019
- *      Author: simen
- */
 
 /* Description:
  *
@@ -20,7 +14,8 @@
 #define DO_VELOCITY_H_
 
 #include "../Util/control_util.h"
-#include "stdbool.h"
+#include "../Util/gpio_util.h"
+#include "../Util/tim_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

@@ -1,9 +1,3 @@
-/*
- * wheels.h
- *
- *  Created on: Dec 4, 2018
- *      Author: kjhertenberg
- */
 
 /* Description:
  *
@@ -18,8 +12,10 @@
 
 #ifndef WHEELS_H_
 #define WHEELS_H_
-#include <stdbool.h>
+
 #include "../Util/control_util.h"
+#include "../Util/gpio_util.h"
+#include "../Util/tim_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

@@ -1,26 +1,17 @@
-/*
- * wheels.c
- *
- *  Created on: Dec 4, 2018
- *      Author: kjhertenberg
- */
 
-//TODO: check includes
-#include "wheels.h"
-#include <stdio.h>
-#include <math.h>
-#include "tim_util.h"
-#include "../Util/gpio_util.h"
+#include "../Inc/Control/wheels.h"
 
+///////////////////////////////////////////////////// STRUCTS
+
+static PID_states wheels_state = off;
+static PIDvariables wheelsK[4];
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static PID_states wheels_state = off;
 static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
-static float wheelspeed[4] = {0};
-static PIDvariables wheelsK[4];
-static float wheelref[4] = {0.0f};
+static float wheelSpeed[4] = {0};
+static float wheelRef[4] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -44,34 +35,36 @@ static void SetDir();
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
+//TODO: Fix/check timers, channels and PINS
+
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 		initPID(wheelsK[wheel], 5.0, 0.0, 0.0);
 	}
-	HAL_TIM_Base_Start(&htim1); //RF
-	HAL_TIM_Base_Start(&htim8); //RB
-	HAL_TIM_Base_Start(&htim3); //LB
-	HAL_TIM_Base_Start(&htim4); //LF
+	HAL_TIM_Base_Start(ENC_RF); //RF
+	HAL_TIM_Base_Start(ENC_RB); //RB
+	HAL_TIM_Base_Start(ENC_LB); //LB
+	HAL_TIM_Base_Start(ENC_LF); //LF
 	HAL_TIM_Base_Start(&htim5); //TIME
-	HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_2); //RF
-	HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_1); //RB
-	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1); //LB
-	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2); //LF
+	start_PWM(PWM_RF); //RF
+	start_PWM(PWM_RB); //RB
+	start_PWM(PWM_LB); //LB
+	start_PWM(PWM_LF); //LF
 	return 0;
 }
 
 int wheels_Deinit(){
 	wheels_state = off;
-	HAL_TIM_Base_Stop(&htim1); //RF
-	HAL_TIM_Base_Stop(&htim8); //RB
-	HAL_TIM_Base_Stop(&htim3); //LB
-	HAL_TIM_Base_Stop(&htim4); //LF
+	HAL_TIM_Base_Stop(ENC_RF); //RF
+	HAL_TIM_Base_Stop(ENC_RB); //RB
+	HAL_TIM_Base_Stop(ENC_LB); //LB
+	HAL_TIM_Base_Stop(ENC_LF); //LF
 	HAL_TIM_Base_Stop(&htim5); //TIME
-//	HAL_TIM_PWM_Stop(&htim9, TIM_CHANNEL_2); //RF
-//	HAL_TIM_PWM_Stop(&htim9, TIM_CHANNEL_1); //RB
-//	HAL_TIM_PWM_Stop(&htim12, TIM_CHANNEL_1); //LB
-//	HAL_TIM_PWM_Stop(&htim12, TIM_CHANNEL_2); //LF
+	stop_PWM(PWM_RF); //RF
+	stop_PWM(PWM_RB); //RB
+	stop_PWM(PWM_LB); //LB
+	stop_PWM(PWM_LF); //LF
 
 	//TODO: Fix this huge stopping hack
 	for (int i=0; i<4; i++) {
@@ -85,8 +78,8 @@ void wheels_Update(){
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-			float err = wheelref[wheel]-wheelspeed[wheel];
-			pwm[wheel] = OMEGAtoPWM*(wheelref[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			float err = wheelRef[wheel]-wheelSpeed[wheel];
+			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 		}
 		limitScale();
 		SetDir();
@@ -96,12 +89,12 @@ void wheels_Update(){
 
 void wheels_SetRef(float input[4]){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		wheelref[wheel] = input[wheel];
+		wheelRef[wheel] = input[wheel];
 	}
 }
 
 float wheels_GetState(wheel_names wheel) {
-	return wheelspeed[wheel];
+	return wheelSpeed[wheel];
 }
 
 int wheels_GetPWM(wheel_names wheel) {
@@ -112,25 +105,25 @@ int wheels_GetPWM(wheel_names wheel) {
 
 static void getEncoderData(short int encoderdata[4]){
 	// NOTE: RF and RB are swapped to match with wheel reference
-	encoderdata[wheels_RF] = __HAL_TIM_GET_COUNTER(&htim8);
-	encoderdata[wheels_RB] = __HAL_TIM_GET_COUNTER(&htim1);
-	encoderdata[wheels_LB] = __HAL_TIM_GET_COUNTER(&htim3);
-	encoderdata[wheels_LF] = __HAL_TIM_GET_COUNTER(&htim4);
+	encoderdata[wheels_RF] = __HAL_TIM_GET_COUNTER(ENC_RF);
+	encoderdata[wheels_RB] = __HAL_TIM_GET_COUNTER(ENC_RB);
+	encoderdata[wheels_LB] = __HAL_TIM_GET_COUNTER(ENC_LB);
+	encoderdata[wheels_LF] = __HAL_TIM_GET_COUNTER(ENC_LF);
 }
 
 static void ResetEncoder() {
 	// NOTE: RF and RB are swapped to match with wheel reference
-		__HAL_TIM_SET_COUNTER(&htim8, 0);
-		__HAL_TIM_SET_COUNTER(&htim1, 0);
-		__HAL_TIM_SET_COUNTER(&htim3, 0);
-		__HAL_TIM_SET_COUNTER(&htim4, 0);
+		__HAL_TIM_SET_COUNTER(ENC_RF, 0);
+		__HAL_TIM_SET_COUNTER(ENC_RB, 0);
+		__HAL_TIM_SET_COUNTER(ENC_LB, 0);
+		__HAL_TIM_SET_COUNTER(ENC_LF, 0);
 }
 
 static void computeWheelSpeed(){
 	short int encoderData[4]= {0};
 	getEncoderData(encoderData);
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		wheelspeed[wheel] = -1 * ENCODERtoOMEGA * encoderData[wheel]; // We define clockwise as positive, therefore we have a minus sign here
+		wheelSpeed[wheel] = -1 * ENCODERtoOMEGA * encoderData[wheel]; // We define clockwise as positive, therefore we have a minus sign here
 	}
 	ResetEncoder();
 }
@@ -156,15 +149,15 @@ static void limitScale(){
 }
 
 static void SetPWM(){
-	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_2, MAX_PWM-pwm[wheels_RF]);
-	__HAL_TIM_SET_COMPARE(&htim9 , TIM_CHANNEL_1, MAX_PWM-pwm[wheels_RB]);
-	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, MAX_PWM-pwm[wheels_LB]);
-	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, MAX_PWM-pwm[wheels_LF]);
+	set_PWM(PWM_RF, MAX_PWM-pwm[wheels_RF]);
+	set_PWM(PWM_RB, MAX_PWM-pwm[wheels_RB]);
+	set_PWM(PWM_LB, MAX_PWM-pwm[wheels_LB]);
+	set_PWM(PWM_LF, MAX_PWM-pwm[wheels_LF]);
 }
 
 static void SetDir(){
-	HAL_GPIO_WritePin(FR_RF_GPIO_Port,FR_RF_Pin, direction[wheels_RF]);
-	HAL_GPIO_WritePin(FR_RB_GPIO_Port,FR_RB_Pin, direction[wheels_RB]);
-	HAL_GPIO_WritePin(FR_LB_GPIO_Port,FR_LB_Pin, direction[wheels_LB]);
-	HAL_GPIO_WritePin(FR_LF_GPIO_Port,FR_LF_Pin, direction[wheels_LF]);
+	set_Pin(RF_DIR_pin, direction[wheels_RF]);
+	set_Pin(RB_DIR_pin, direction[wheels_RB]);
+	set_Pin(LB_DIR_pin, direction[wheels_LB]);
+	set_Pin(LF_DIR_pin, direction[wheels_LF]);
 }

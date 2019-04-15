@@ -1,9 +1,3 @@
-/*
- * dribbler.h
- *
- *  Created on: May 23, 2018
- *      Author: Leon
- */
 
 /* Description:
  *
@@ -18,6 +12,10 @@
 
 #ifndef DRIBBLER_DRIBBLER_H_
 #define DRIBBLER_DRIBBLER_H_
+
+#include "../Util/control_util.h"
+#include "../Util/gpio_util.h"
+#include "../Util/tim_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

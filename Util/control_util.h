@@ -20,6 +20,7 @@
 #define UTILS_CONTROL_UTIL_H_
 
 #include <math.h>
+#include <stdbool.h>
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -98,7 +99,7 @@ typedef struct PIDstruct PIDvariables;
 ///////////////////////////////////////////////////// FUNCTIONS
 
 //Initializes the PID values
-inline void initPID(PIDvariables PID, float kP, float kI, float kD) {
+static void initPID(PIDvariables PID, float kP, float kI, float kD) {
 	PID = PIDdefault;
 	PID.kP = kP;
 	PID.kI = kI;

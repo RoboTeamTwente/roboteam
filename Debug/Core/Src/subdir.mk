@@ -7,22 +7,19 @@ C_SRCS += \
 ../Core/Src/main.c \
 ../Core/Src/stm32f7xx_hal_msp.c \
 ../Core/Src/stm32f7xx_it.c \
-../Core/Src/system_stm32f7xx.c \
-../Core/Src/wheels.c 
+../Core/Src/system_stm32f7xx.c 
 
 OBJS += \
 ./Core/Src/main.o \
 ./Core/Src/stm32f7xx_hal_msp.o \
 ./Core/Src/stm32f7xx_it.o \
-./Core/Src/system_stm32f7xx.o \
-./Core/Src/wheels.o 
+./Core/Src/system_stm32f7xx.o 
 
 C_DEPS += \
 ./Core/Src/main.d \
 ./Core/Src/stm32f7xx_hal_msp.d \
 ./Core/Src/stm32f7xx_it.d \
-./Core/Src/system_stm32f7xx.d \
-./Core/Src/wheels.d 
+./Core/Src/system_stm32f7xx.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -13,6 +13,9 @@ RM := rm -rf
 -include Lib/MTi/xbus/subdir.mk
 -include Lib/subdir.mk
 -include Drivers/STM32F7xx_HAL_Driver/Src/subdir.mk
+-include Core/Src/State/subdir.mk
+-include Core/Src/Control/subdir.mk
+-include Core/Src/Action/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
 -include objects.mk

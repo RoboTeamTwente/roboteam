@@ -1,33 +1,43 @@
 
+/* Description:
+ *
+ * Instructions:
+ * 1)
+ *
+ * Extra functions:
+ *
+ * Notes:
+ *
+*/
+
 #ifndef __kickchip_H
 #define __kickchip_H
 
-#include "gpio.h"
+#include "../Util/gpio_util.h"
+#include "../Util/tim_util.h"
 
-#define KICK true
-#define CHIP false
-// possible states where the kicker can be 
+///////////////////////////////////////////////////// STRUCTS
+
 typedef enum{
-	kick_Ready,		// ready for kicking
-	kick_Kicking,	// currently kicking/chipping
-	kick_Charging,	// charging, it cannot kick at this moment
-	kick_Idle		// the kicker circuit is not active
+	On,
+	charge,
+	kick,
+	chip,
+	Off
 }kick_states;
 
-// kick and chip ports
-typedef struct KICK_ports{
-	GPIO_TypeDef * PORT;
-	uint16_t PIN;
-} KICK_ports;
+///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-// set init values for the gpio ports and initiate timer
 void kick_Init();
-// de-activate kicker circuit
+
 void kick_DeInit();
-// shoot or chip the ball, given a certain strength
-void kick_Shoot(int percentage, bool kick);
-//  timer callback function controlling the states
+
 void kick_Callback();
-// utility function for printing the state
-void kick_Stateprint();
+
+void kick_Shoot();
+
+void kick_Chip();
+
+void kick_SetPer(int input);
+
 #endif /* __kickchip_H */

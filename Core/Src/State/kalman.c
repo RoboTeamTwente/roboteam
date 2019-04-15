@@ -1,10 +1,3 @@
-/*
- * Kalman.c
- *
- *  Created on: Feb 19, 2019
- *      Author: kjhertenberg
- */
-
 
 #include <State/kalman.h>
 #include <State/kalmanVariables.h>

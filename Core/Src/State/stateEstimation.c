@@ -1,13 +1,5 @@
-/*
- * stateEstimation.c
- *
- *  Created on: Jan 25, 2019
- *      Author: simen
- */
 
-#include <State/kalman.h>
-#include "stateEstimation.h"
-#include "../Util/control_util.h"
+#include "../Inc/State/stateEstimation.h"
 
 ///////////////////////////////////////////////////// VARIABLES
 

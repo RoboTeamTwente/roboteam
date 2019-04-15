@@ -1,19 +1,12 @@
-/*
- * vel_control.c
- *
- *  Created on: Jan 23, 2019
- *      Author: simen
- */
 
-#include <Control/velocity.h>
-#include "stdbool.h"
+#include "../Inc/Control/velocity.h"
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static PID_states velc_state = off;
+static PID_states velState = off;
 static PIDvariables velK[3];
 static float ref[3] = {0.0f};
-static float wheel_ref[4] = {0.0f};
+static float wheelRef[4] = {0.0f};
 static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
@@ -34,7 +27,7 @@ static float angleControl(float angleRef, float angle);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int velocity_Init(){
-	velc_state = on;
+	velState = on;
 	initPID(velK[body_x], 1.0, 0.0, 0.0);
 	initPID(velK[body_y], 2.0, 0.0, 0.0);
 	initPID(velK[body_w], 20.0, 1.5, 0.0);
@@ -42,19 +35,19 @@ int velocity_Init(){
 }
 
 int velocity_DeInit(){
-	velc_state = off;
+	velState = off;
 	return 0;
 }
 
 void velocity_Update(){
-	if (velc_state == on){
+	if (velState == on){
 		float translationalRef[4] = {0.0f};
 		translationVelControl(state, ref, translationalRef);
 
 		float angularRef = angleControl(ref[body_w], state[body_w]);
 
 		for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
-			wheel_ref[wheel] = translationalRef[wheel] + angularRef;
+			wheelRef[wheel] = translationalRef[wheel] + angularRef;
 		}
 	}
 }
@@ -67,7 +60,7 @@ void velocity_setRef(float input[3]){
 
 void velocity_GetWheelRef(float output[4]){
 	for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
-		output[wheel] = wheel_ref[wheel];
+		output[wheel] = wheelRef[wheel];
 	}
 }
 
@@ -109,8 +102,8 @@ static void translationVelControl(float State[3], float vel_ref[3], float transl
 	// Local control
 	float velxErr = (velLocalRef[body_x] - State[body_x]);
 	float velyErr = (velLocalRef[body_y] - State[body_y]);
-	velLocalRef[body_x] += PID(velxErr, velK[body_x]);
-	velLocalRef[body_y] += PID(velyErr, velK[body_y]);
+	velLocalRef[body_x] += PID(velxErr, &velK[body_x]);
+	velLocalRef[body_y] += PID(velyErr, &velK[body_y]);
 
 	body2Wheels(translationalRef, velLocalRef); //translate velocity to wheel speed
 }
@@ -121,7 +114,7 @@ static float angleControl(float angleRef, float angle){
 		angleErr = 0;
 		velK[body_w].I = 0;
 	}
-	return PID(angleErr, velK[body_w]);// PID control from control_util.h
+	return PID(angleErr, &velK[body_w]);// PID control from control_util.h
 }
 
 

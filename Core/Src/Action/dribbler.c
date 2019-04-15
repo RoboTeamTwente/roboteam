@@ -1,23 +1,17 @@
-/*
- * dribbler.c
- *
- *  Created on: May 23, 2018
- *      Author: Leon
- */
 
-#include <Action/dribbler.h>
-
-#include "tim.h"
+#include "../Inc/Action/dribbler.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
+//TODO: Fix/check timers, channels and PINS
+
 void dribbler_Init(){
-	HAL_TIM_PWM_Start(&htim11, TIM_CHANNEL_1);
+	start_PWM(PWM_Dribbler);
 	dribbler_SetSpeed(0);
 }
 
 void dribbler_Deinit(){
-	HAL_TIM_PWM_Stop(&htim11, TIM_CHANNEL_1);
+	stop_PWM(PWM_Dribbler);
 }
 
 void dribbler_SetSpeed(int speed){
@@ -26,5 +20,5 @@ void dribbler_SetSpeed(int speed){
 	}else if(speed < 0){
 		speed = 0;
 	}
-	__HAL_TIM_SET_COMPARE(&htim11, TIM_CHANNEL_1, (7 - speed) * (MAX_PWM / 7));
+	set_PWM(PWM_Dribbler, (7 - speed) * (MAX_PWM / 7));
 }

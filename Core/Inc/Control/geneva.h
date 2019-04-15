@@ -1,9 +1,3 @@
-/*
- * geneva.h
- *
- *  Created on: Mar 27, 2018
- *      Author: Leon
- */
 
 /* Description:
  *
@@ -19,6 +13,10 @@
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
 
+#include "../Util/control_util.h"
+#include "../Util/gpio_util.h"
+#include "../Util/tim_util.h"
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void geneva_Init();
@@ -27,7 +25,7 @@ void geneva_Deinit();
 
 void geneva_Update();
 
-geneva_positions geneva_SetRef(geneva_positions position);
+void geneva_SetRef(geneva_positions position);
 
 geneva_positions geneva_GetState();
 

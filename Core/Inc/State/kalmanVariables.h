@@ -1,9 +1,3 @@
-/*
- * KalmanV.h
- *
- *  Created on: Feb 19, 2019
- *      Author: kjhertenberg
- */
 
 /* Description:
  *
@@ -31,6 +25,7 @@
 #define RAND_VAR 0.5F // variance in the random force
 
 ///////////////////////////////////////////////////// VARIABLES
+
 //create arrays
 float aF[STATE*STATE] = {
 		1, TIMESTEP, 0, 0,

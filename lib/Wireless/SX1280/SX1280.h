@@ -19,7 +19,7 @@
 ////////////////////////////////////// Structs
 typedef struct _SX1280_Settings{
 	uint32_t frequency;
-	uint8_t channel;
+	float channel;
 	uint8_t packettype;
 	uint8_t payloadLengh;
 	uint8_t variableLength;
@@ -110,24 +110,14 @@ abcde	0abc deab cdea bcde		abcd e1ab cdea bcde		hex
 11111	0111 1111 1111 1111		1111 1111 1111 1111		CFFF FFFF
 */
 
-static uint32_t robot_syncWord[] = {
-0x00000400, 0x04210C21, 0x08421442, 0x0CC31CC3,
-0x10842484, 0x14A52CA5, 0x18C634C6, 0x1CD73CD7,
-0x21084508, 0x25294D29, 0x298A554A, 0x2D6D5D6D,
-0x318C658C, 0x35AD6DAD, 0x39CE75CE, 0x3DEF7DEF,
-
-0x82108610, 0x86318E31, 0x8A529652, 0x8ED39ED3,
-0x9294A694, 0x96B5AEB5, 0x9AD6B6D6, 0x9EE7BEE7,
-0xB318C718, 0xB739CF39, 0xBB9AD75A, 0xBF7DDF7D,
-0xC39CE79C, 0xC7BDEFBD, 0xCBDEF7DE, 0xCFFFFFFF
-};
+extern uint32_t robot_syncWord[];
 
 ////////////////////////////////////// public functions
 void SX1280Setup(SX1280* SX);
 void SX1280WakeUp(SX1280* SX);
 
 // runtime functions
-void writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes);
+bool writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes);
 void readBuffer(SX1280* SX, uint8_t Nbytes);
 uint8_t getStatus(SX1280* SX);
 
@@ -153,7 +143,7 @@ bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);
 
-void setChannel(SX1280* SX, uint8_t new_channel);
+void setChannel(SX1280* SX, float new_channel);
 //setAddress(); //(robotID)
 
 // state functions

@@ -4,7 +4,9 @@
 
 #include "main.h"
 
-#define PLL_STEP ((double)(2^18)/(52000000))	// step/Hz
+#define PLL_STEP (double)0.00504123076	// because compiler doesn't like the version below
+//#define PLL_STEP ((double)(2^18)/(52000000))	// step/Hz
+
 
 #define FEEDBACK_HEADER	0xCCCCCCCC
 // ----------------------------------- Generic Codes

@@ -45,12 +45,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Wireless/Wireless.h"
-#include "Wireless/Wireless.c"
+#include "Wireless/SX1280/SX1280.h"
 
 #include "TextOut/TextOut.h"
-#include "TextOut/TextOut.c"
 #include "msg_buff.h"
-#include "Wireless/SX1280/SX1280.c" //TODO include header instead
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -152,7 +150,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
-  SX = Wireless_Init(1, &hspi3);
+  SX = Wireless_Init(10.5, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
 
   /* USER CODE END 2 */
@@ -164,13 +162,13 @@ int main(void)
   {
 	 // alternating led to see if the code is still running
 	 if (i < 1000000) {
-		  //set_pin(LD_3, HIGH);
 		  i++;
-		  //HAL_Delay(1);
+//		  HAL_Delay(1);
+		  set_pin(LD_3, HIGH);
 	 } else if (i < 2000000) {
-		  //set_pin(LD_3, LOW);
-		  //HAL_Delay(1);
+//		  HAL_Delay(1);
 		  i++;
+		  set_pin(LD_3, LOW);
 	 } else {
 		 i = 0;
 	 }
@@ -645,7 +643,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(SX_IRQ_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
@@ -661,32 +659,31 @@ int sendToId = 0;
 bool on = true;
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
-		//TextOut("SX_DMA_HANDLER\n\r");
+//		TextOut("SX_DMA_HANDLER\n\r");
 		Wireless_DMA_Handler(SX, PC_to_Bot);
+//		set_pin(LD_3, LOW);
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_Pin) {
-		//TextOut("SX_IRQ_HANDLER\n\r");
+		TextOut("SX_IRQ_HANDLER\n\r");
+//		set_pin(LD_3, HIGH);
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}
 }
 
 // callback for Interrupts from SX1280
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
-
-
 	if(htim->Instance == htim1.Instance){
-
 		// determine if we should send this message
 		if (!isTransmitting && msgBuff[sendToId].isNew) {
 			isTransmitting = true;
 			msgBuff[sendToId].isNew = false;
 			uint32_t syncword = robot_syncWord[sendToId];
+//			set_pin(LD_3, HIGH);
 			writeBuffer(SX, syncword, msgBuff[sendToId].msg, 13);
 			setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
-			//setRX(SX, SX->SX_settings->periodBase, 0);
 		}
 
 		// increment id

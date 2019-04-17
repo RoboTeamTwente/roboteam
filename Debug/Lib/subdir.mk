@@ -4,13 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Lib/PuTTY.c 
+../Lib/PuTTY.c \
+../Lib/kalman.c \
+../Lib/yawCalibration.c 
 
 OBJS += \
-./Lib/PuTTY.o 
+./Lib/PuTTY.o \
+./Lib/kalman.o \
+./Lib/yawCalibration.o 
 
 C_DEPS += \
-./Lib/PuTTY.d 
+./Lib/PuTTY.d \
+./Lib/kalman.d \
+./Lib/yawCalibration.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -1,8 +1,9 @@
 
-/* Description:
+/* Description: Makes the robot chip or kick
  *
  * Instructions:
- * 1)
+ * 1) First the robot's needs to charge
+ * 2) when that has happend the kick or chip command can be executed
  *
  * Extra functions:
  *

@@ -1,8 +1,8 @@
 
-/* Description:
+/* Description: Kalman filter variables
  *
  * Instructions:
- * 1)
+ * 1) Initializes the necessary arrays and variables for the Kalman filter
  *
  * Extra functions:
  *

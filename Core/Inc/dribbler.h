@@ -1,8 +1,8 @@
 
-/* Description:
+/* Description: Makes the dribbler spin
  *
  * Instructions:
- * 1)
+ * 1) set speed (1(off)-7(max))
  *
  * Extra functions:
  *

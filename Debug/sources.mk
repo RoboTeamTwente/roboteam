@@ -15,9 +15,6 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Core/Src/Action \
-Core/Src/Control \
-Core/Src/State \
 Core/Src \
 Drivers/STM32F7xx_HAL_Driver/Src \
 Lib/MTi/xbus \

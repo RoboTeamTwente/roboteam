@@ -1,8 +1,11 @@
 
-/* Description:
+/* Description: Kalman filter
  *
  * Instructions:
- * 1)
+ * 1) See the wikipedia page on kalman filters
+ * 2) Takes data from different sensors, combines them and smoothes
+ * 3) First calculate K and P which after a certain iterations should be constant
+ * 4) Then use K to filter the sensor data
  *
  * Extra functions:
  *

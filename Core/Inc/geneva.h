@@ -1,8 +1,10 @@
 
-/* Description:
+/* Description: Controls the position of the Geneva
  *
  * Instructions:
- * 1)
+ * 1) First the ref position is moved till we hit the edge, to calibrate the encoder
+ * 2) The controller is constantly run
+ * 3) The position is set with a function
  *
  * Extra functions:
  *

@@ -1,8 +1,9 @@
 
-#include "../Inc/Action/kickchip.h"
+#include "../Inc/kickchip.h"
 #include <stdbool.h>
 
 //TODO: Check if this works
+//TODO: current set-up would only chip or kick if charged, but does not let know when it does that.
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -18,18 +19,18 @@ static int percentage = 0;
 void kick_Init(){
 	charged = false;
 	kickState = charge;
-	set_Pin(Kick_pin,GPIO_PIN_RESET);		// Kick off
-	set_Pin(Chip_pin, GPIO_PIN_RESET);		// Chip off
-	set_Pin(Charge_pin, GPIO_PIN_SET);		// kick_Charging on
+	set_Pin(Kick_pin,0);		// Kick off
+	set_Pin(Chip_pin, 0);		// Chip off
+	set_Pin(Charge_pin, 1);		// kick_Charging on
 	HAL_TIM_Base_Start(ENC_KC);
 }
 
 void kick_DeInit(){
 	kickState = Off;
 	charged = false;
-	set_Pin(Kick_pin, GPIO_PIN_RESET);		// Kick off
-	set_Pin(Chip_pin, GPIO_PIN_RESET);		// Chip off
-	set_Pin(Charge_pin, GPIO_PIN_RESET);	// kick_Charging off
+	set_Pin(Kick_pin, 0);		// Kick off
+	set_Pin(Chip_pin, 0);		// Chip off
+	set_Pin(Charge_pin, 0);	// kick_Charging off
 	HAL_TIM_Base_Stop(ENC_KC);
 }
 
@@ -100,6 +101,10 @@ void kick_Chip()
 		kickState = charge;
 		charged = false;
 	}
+}
+
+void kick_SetState(kick_states input){
+	kickState = input;
 }
 
 void kick_SetPer(int input){

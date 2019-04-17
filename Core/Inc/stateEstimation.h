@@ -1,8 +1,10 @@
 
-/* Description:
+/* Description: Estimates the state
  *
  * Instructions:
- * 1)
+ * 1) Takes all the data received/gathered by the robot
+ * 2) Uses the kalman filter and yawcalibration to filter the data
+ * 3) creates an up to date state estimation
  *
  * Extra functions:
  *
@@ -13,8 +15,8 @@
 #ifndef DO_STATEESTIMATION_H_
 #define DO_STATEESTIMATION_H_
 
-#include "../Inc/State/yawCalibration.h"
-#include "../Inc/State/kalman.h"
+#include "../Lib/yawCalibration.h"
+#include "../Lib/kalman.h"
 #include "../Util/control_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS

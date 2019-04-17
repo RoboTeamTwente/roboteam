@@ -1,8 +1,9 @@
 
-/* Description:
+/* Description: Velocity control
  *
  * Instructions:
- * 1)
+ * 1) Feedforwards the expected desired wheel velocity based on the reference velocity
+ * 2) Adds a PID feedback to that signal based on the actual velocity
  *
  * Extra functions:
  *

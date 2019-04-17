@@ -48,7 +48,7 @@ extern PWM_struct PWM_LF;
 extern PWM_struct PWM_LB;
 extern PWM_struct PWM_Geneva;
 extern PWM_struct PWM_Buzzer;
-extern PWM_struct PWM_Dribbler;
+//extern PWM_struct PWM_Dribbler;
 
 
 

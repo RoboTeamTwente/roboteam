@@ -1,8 +1,9 @@
 
-/* Description:
+/* Description: wheel velocity controls
  *
  * Instructions:
- * 1)
+ * 1) Feedforwards the PWM of the motors based on the desired wheel velocity
+ * 2) Changes that signal using a PID and the actual wheel velocity
  *
  * Extra functions:
  *

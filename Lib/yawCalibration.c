@@ -1,5 +1,5 @@
 
-#include "../Inc/State/yawCalibration.h"
+#include "yawCalibration.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 

@@ -1,3 +1,4 @@
+"Core/Src/Wireless.o"
 "Core/Src/main.o"
 "Core/Src/stm32f7xx_hal_msp.o"
 "Core/Src/stm32f7xx_it.o"
@@ -26,6 +27,7 @@
 "Lib/MTi/xbus/xbusutility.o"
 "Lib/MTi/xbus/xsdeviceid.o"
 "Lib/PuTTY.o"
+"Lib/SX1280/SX1280.o"
 "Util/gpio_util.o"
 "Util/tim_util.o"
 "startup/startup_stm32f767xx.o"

@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include startup/subdir.mk
 -include Util/subdir.mk
+-include Lib/SX1280/subdir.mk
 -include Lib/MTi/xbus/subdir.mk
 -include Lib/subdir.mk
 -include Drivers/STM32F7xx_HAL_Driver/Src/subdir.mk
@@ -31,13 +32,13 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: robot3.0.elf
+all: robot3.elf
 
 # Tool invocations
-robot3.0.elf: $(OBJS) $(USER_OBJS) ../STM32F767ZITx_FLASH.ld
+robot3.elf: $(OBJS) $(USER_OBJS) ../STM32F767ZITx_FLASH.ld
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU GCC Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F767ZITx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "robot3.0.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
+	arm-none-eabi-gcc -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -specs=nosys.specs -specs=nano.specs -T"../STM32F767ZITx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "robot3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
@@ -49,8 +50,8 @@ clean:
 
 post-build:
 	-@echo 'Generating hex and Printing size information:'
-	arm-none-eabi-objcopy -O ihex "robot3.0.elf" "robot3.0.hex"
-	arm-none-eabi-size "robot3.0.elf"
+	arm-none-eabi-objcopy -O ihex "robot3.elf" "robot3.hex"
+	arm-none-eabi-size "robot3.elf"
 	-@echo ' '
 
 .PHONY: all clean dependents

@@ -19,6 +19,7 @@ Core/Src \
 Drivers/STM32F7xx_HAL_Driver/Src \
 Lib/MTi/xbus \
 Lib \
+Lib/SX1280 \
 Util \
 startup \
 

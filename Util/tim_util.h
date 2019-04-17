@@ -16,7 +16,7 @@ extern TIM_HandleTypeDef htim2;		// encoder Geneva
 extern TIM_HandleTypeDef htim3;		// encoder LB
 extern TIM_HandleTypeDef htim4;		// encoder RB
 extern TIM_HandleTypeDef htim5;		// encoder LF
-extern TIM_HandleTypeDef htim6;		// internal timer (not used ATM)
+extern TIM_HandleTypeDef htim6;		// KickChipping
 extern TIM_HandleTypeDef htim7;		// internal timer (not used ATM)
 extern TIM_HandleTypeDef htim8;		// PWM (CH1: RB, CH2: RF, CH3: Dribbler, CH4: Geneva)
 extern TIM_HandleTypeDef htim9;		// PWM (CH1: LF, CH2: LB)
@@ -40,7 +40,7 @@ typedef struct PWM_struct{
 #define ENC_LB 		&htim3
 #define ENC_RB 		&htim4
 #define ENC_LF 		&htim5
-#define ENC_KC 		&htim6
+#define TIM_KC		&htim6
 
 extern PWM_struct PWM_RF;
 extern PWM_struct PWM_RB;
@@ -48,7 +48,7 @@ extern PWM_struct PWM_LF;
 extern PWM_struct PWM_LB;
 extern PWM_struct PWM_Geneva;
 extern PWM_struct PWM_Buzzer;
-//extern PWM_struct PWM_Dribbler;
+extern PWM_struct PWM_Dribbler;
 
 
 

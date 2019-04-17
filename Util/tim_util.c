@@ -13,5 +13,5 @@ PWM_struct PWM_RB		= { &htim8 , TIM_CHANNEL_1};
 PWM_struct PWM_LF		= { &htim9 , TIM_CHANNEL_1};
 PWM_struct PWM_LB		= { &htim9 , TIM_CHANNEL_2};
 PWM_struct PWM_Geneva	= { &htim8 , TIM_CHANNEL_4};
-PWM_struct PWM_Buzzer	= { &htim8 , TIM_CHANNEL_3};
-//PWM_struct PWM_Dribbler	= { &htim11 , TIM_CHANNEL_1};
+PWM_struct PWM_Buzzer	= { &htim10 , TIM_CHANNEL_1};
+PWM_struct PWM_Dribbler	= { &htim8 , TIM_CHANNEL_3};

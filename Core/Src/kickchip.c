@@ -22,7 +22,7 @@ void kick_Init(){
 	set_Pin(Kick_pin,0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
 	set_Pin(Charge_pin, 1);		// kick_Charging on
-	HAL_TIM_Base_Start(ENC_KC);
+	HAL_TIM_Base_Start(TIM_KC);
 }
 
 void kick_DeInit(){
@@ -31,7 +31,7 @@ void kick_DeInit(){
 	set_Pin(Kick_pin, 0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
 	set_Pin(Charge_pin, 0);	// kick_Charging off
-	HAL_TIM_Base_Stop(ENC_KC);
+	HAL_TIM_Base_Stop(TIM_KC);
 }
 
 //TODO: why does kickState behave so weird

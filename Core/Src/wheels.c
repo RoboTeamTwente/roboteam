@@ -46,7 +46,6 @@ int wheels_Init(){
 	HAL_TIM_Base_Start(ENC_RB); //RB
 	HAL_TIM_Base_Start(ENC_LB); //LB
 	HAL_TIM_Base_Start(ENC_LF); //LF
-	HAL_TIM_Base_Start(&htim5); //TIME
 	start_PWM(PWM_RF); //RF
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
@@ -60,7 +59,6 @@ int wheels_Deinit(){
 	HAL_TIM_Base_Stop(ENC_RB); //RB
 	HAL_TIM_Base_Stop(ENC_LB); //LB
 	HAL_TIM_Base_Stop(ENC_LF); //LF
-	HAL_TIM_Base_Stop(&htim5); //TIME
 	stop_PWM(PWM_RF); //RF
 	stop_PWM(PWM_RB); //RB
 	stop_PWM(PWM_LB); //LB

@@ -68,6 +68,9 @@ void kick_Callback()
 		}
 		break;
 	case Off:
+		set_Pin(Kick_pin, 0);		// Kick off
+		set_Pin(Chip_pin, 0);		// Chip off
+		set_Pin(Charge_pin, 0);	// kick_Charging off
 		break;
 	}
 }
@@ -105,6 +108,10 @@ void kick_Chip()
 
 void kick_SetState(kick_states input){
 	kickState = input;
+}
+
+kick_states kick_GetState(){
+	return kickState;
 }
 
 void kick_SetPer(int input){

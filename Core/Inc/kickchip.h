@@ -39,6 +39,10 @@ void kick_Shoot();
 
 void kick_Chip();
 
+kick_states kick_GetState();
+
+void kick_SetState(kick_states input);
+
 void kick_SetPer(int input);
 
 #endif /* __kickchip_H */

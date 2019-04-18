@@ -27,9 +27,9 @@ void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
 	static float sumVisionVec[2] = {0.0f};
 	static float prevVisionYaw = 0.0f;
 
-	if (visionYaw == prevVisionYaw) {
-		visionYaw += MT_GetGyro()[2] * TIME_DIFF;
-	}
+	//if (visionYaw == prevVisionYaw) {
+	//	visionYaw += MT_GetGyro()[2] * TIME_DIFF;
+	//}
 
 	if (isCalibrationNeeded(visionYaw, xsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
 		if (restCounter > restDuration) {

@@ -47,6 +47,7 @@
 #include "tim_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
+#include "kickchip.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -189,7 +190,8 @@ int main(void)
 
 
   Putty_Init();
-  init();
+  wheels_Init();
+  //kick_Init();
 
   /* USER CODE END 2 */
 
@@ -199,7 +201,8 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-
+	  //kick_Callback();
+	  Putty_printf("/f /n/r", 1);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

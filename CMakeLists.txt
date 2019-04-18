@@ -138,7 +138,6 @@ add_library(roboteam_utils
         src/Vector2.cpp
         src/Angle.cpp
         src/Position.cpp
-        src/world_analysis.cpp
         src/LastWorld.cpp
         src/LastRef.cpp
         src/Draw.cpp

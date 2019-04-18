@@ -139,7 +139,6 @@ add_library(roboteam_utils
         src/Angle.cpp
         src/Position.cpp
         src/LastWorld.cpp
-        src/Draw.cpp
         src/Math.cpp
         src/Cone.cpp
         src/normalize.cpp

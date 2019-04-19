@@ -80,7 +80,7 @@ class Vector2 {
 	     *     - The angle of the zero vector is undefined.
 	     */
 
-	    double angle() const;
+        double angle() const;
 
         rtt::Angle toAngle() const;
 
@@ -116,7 +116,10 @@ class Vector2 {
          * \brief Checks whether both components of this vector are real (non-NaN) values.
          */
         bool isNotNaN() const;
-
+        /*
+         * \brief calculates the cross product
+         */
+        double cross(const Vector2 &other);
         /**
          * Does the exact same as project... (?)
          */

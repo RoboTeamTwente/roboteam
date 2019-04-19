@@ -150,7 +150,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
-  SX = Wireless_Init(10.5, &hspi3);
+  SX = Wireless_Init(1.3f, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
 
   /* USER CODE END 2 */
@@ -158,17 +158,19 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int i = 0;
+//  uint8_t buf[13] = {0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB};
   while (1)
   {
 	 // alternating led to see if the code is still running
 	 if (i < 1000000) {
 		  i++;
-//		  HAL_Delay(1);
-		  set_pin(LD_3, HIGH);
+		  HAL_Delay(1);
+//		  SendPacket(SX, 0x39CE75CE, buf, 13);
+//		  set_pin(LD_3, HIGH);
 	 } else if (i < 2000000) {
-//		  HAL_Delay(1);
+		  HAL_Delay(1);
 		  i++;
-		  set_pin(LD_3, LOW);
+//		  set_pin(LD_3, LOW);
 	 } else {
 		 i = 0;
 	 }
@@ -401,7 +403,7 @@ static void MX_SPI3_Init(void)
   hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi3.Init.CRCPolynomial = 7;
   hspi3.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi3.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  hspi3.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
   if (HAL_SPI_Init(&hspi3) != HAL_OK)
   {
     Error_Handler();
@@ -545,10 +547,10 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
@@ -643,7 +645,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(SX_IRQ_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
@@ -661,14 +663,12 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
 //		TextOut("SX_DMA_HANDLER\n\r");
 		Wireless_DMA_Handler(SX, PC_to_Bot);
-//		set_pin(LD_3, LOW);
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == SX_IRQ_Pin) {
-		TextOut("SX_IRQ_HANDLER\n\r");
-//		set_pin(LD_3, HIGH);
+	if (GPIO_Pin == SX_IRQ.PIN) {
+//		TextOut("SX_IRQ_HANDLER\n\r");
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}
 }
@@ -681,9 +681,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 			isTransmitting = true;
 			msgBuff[sendToId].isNew = false;
 			uint32_t syncword = robot_syncWord[sendToId];
-//			set_pin(LD_3, HIGH);
+			char status[100];
+			sprintf (status, "syncword %X, sendtoid %d\n\r", syncword, sendToId);
+			TextOut(status);
 			writeBuffer(SX, syncword, msgBuff[sendToId].msg, 13);
-			setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
+			set_pin(LD_2, HIGH);
+//			setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
 		}
 
 		// increment id

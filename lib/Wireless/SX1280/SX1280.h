@@ -143,16 +143,19 @@ bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);
 
+void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2);
+void setCrcPoly(SX1280* SX, uint16_t poly);
+
 void setChannel(SX1280* SX, float new_channel);
 //setAddress(); //(robotID)
 
 // state functions
 void setStandby(SX1280* SX, uint8_t config);
 void setSleep(SX1280* SX, uint8_t config);
-void setRX(SX1280* SX, uint8_t base, uint16_t count);
-void setFS(SX1280* SX);
+bool setRX(SX1280* SX, uint8_t base, uint16_t count);
+bool setFS(SX1280* SX);
 void setAutoFS(SX1280* SX, bool enable);
-void setTX(SX1280* SX, uint8_t base, uint16_t count);
+bool setTX(SX1280* SX, uint8_t base, uint16_t count);
 void setAutoTX(SX1280* SX, uint16_t wait_time);
 
 // register specific
@@ -164,5 +167,5 @@ void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes);
 // Send/Receive data
 bool SendData(SX1280* SX, uint8_t Nbytes);
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes);
-bool DMA_Callback(SX1280* SX);
+void DMA_Callback(SX1280* SX);
 #endif // __SX1280_H

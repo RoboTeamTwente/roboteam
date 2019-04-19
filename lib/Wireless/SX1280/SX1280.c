@@ -33,8 +33,13 @@ void SX1280Setup(SX1280* SX){
     setPacketParam(SX);
 
     setSyncSensitivity (SX, SX->SX_settings->syncWordSensitivity);
-    setSyncWordTolerance(SX, 5);
+    setSyncWordTolerance(SX, 2);
     setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
+
+//    setCrcPoly(SX, 0x0123); // i think  = x8 + x5 + x + 1
+    // 0x7 = polynomial of P8(x) = x8 + x2 + x + 1
+    // 0x1021 = polynomial of P16(x) = x16 + x12 + x5 + 1
+//    setCrcSeed(SX, 0x45, 0x67); // seed
 
     setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
@@ -126,16 +131,16 @@ void setStandby(SX1280* SX, uint8_t config){
     SendData(SX,2);
 }
 
-void setFS(SX1280* SX){
+bool setFS(SX1280* SX){
     // wait till send complete
     while(SX->SPI_used){}
     SX->SPI_used = true;
     // make command
     SX->TXbuf[0] = SET_FS;
-    SendData(SX,1);
+    return SendData(SX,1);
 }
 
-void setTX(SX1280* SX, uint8_t base, uint16_t count){
+bool setTX(SX1280* SX, uint8_t base, uint16_t count){
     // wait till send complete
 	// wait for SPI used from DMA, then clearIRQ, then occupy SPI for setTX
     while(SX->SPI_used){}
@@ -147,19 +152,10 @@ void setTX(SX1280* SX, uint8_t base, uint16_t count){
     SX->TXbuf[1] = base;
     SX->TXbuf[2] = count >> 8;
     SX->TXbuf[3] = count & 0xFF;
-    if (SendData(SX,4)) {
-    	set_pin(LD_2, HIGH);
-//    	TextOut("setTX SendData completed\n\r");
-    }
-    else {
-    	set_pin(LD_2, LOW);
-//    	char msg[100];
-//    	sprintf (msg, "setTX rxbuf[0] is %X\n\r", (SX->RXbuf[0]));
-//        TextOut(msg);
-    }
+    return SendData(SX,4);
 }
 
-void setRX(SX1280* SX, uint8_t base, uint16_t count){
+bool setRX(SX1280* SX, uint8_t base, uint16_t count){
 	clearIRQ(SX, ALL);
     // wait till send complete
     while(SX->SPI_used){}
@@ -169,13 +165,7 @@ void setRX(SX1280* SX, uint8_t base, uint16_t count){
     SX->TXbuf[1] = base;
     SX->TXbuf[2] = count >> 8;
     SX->TXbuf[3] = count & 0xFF;
-    if (SendData(SX,4)) {}//TextOut("setRX SendData completed\n\r");
-    else {
-    	char msg[100];
-    	sprintf (msg, "setRX rxbuf[0] is %X\n\r", (SX->RXbuf[0]>>2 & 0x7));
-        //TextOut(msg);
-    }
-    getIRQ(SX);
+    return SendData(SX,4);
 }
 void setRXDuty(SX1280* SX, uint8_t base, uint16_t rxcount, uint16_t sleepcount){
     // wait till send complete
@@ -343,6 +333,7 @@ void getPacketStatus(SX1280* SX){
 void setDIOIRQParams(SX1280* SX){
 	uint16_t tmp[4] ={0};
 	for(int i = 0; i<4; i++){
+		// reverse IRQ mask cuz it stores them flipped in memory
 		tmp[i] = __REV16(SX->SX_settings->DIOIRQ[i]);
 	}
 	uint8_t* ptr = SX->TXbuf;
@@ -352,8 +343,7 @@ void setDIOIRQParams(SX1280* SX){
     // make command
     *ptr++ = SET_DIO_IRQ_PARAM;
     memcpy(ptr,&tmp,8);
-    if (SendData(SX,9)) {}//TextOut("DIOIRQ succ\n\r");
-    else {}//TextOut("DIOIRQ fucc\n\r");
+    SendData(SX,9);
 }
 
 uint16_t getIRQ(SX1280* SX){
@@ -367,9 +357,9 @@ uint16_t getIRQ(SX1280* SX){
     SendData(SX,4);
 	char msg[10];
 	TextOut("getIRQ ");
-	TextOut(itoa(((SX->RXbuf[2] <<8) | SX->RXbuf[3]), msg, 10));
+	TextOut(itoa(((SX->RXbuf[2] << 8) | SX->RXbuf[3]), msg, 10));
 	TextOut("\n\r");
-    return SX->irqStatus = (SX->RXbuf[2] <<8) | SX->RXbuf[3];
+    return SX->irqStatus = (SX->RXbuf[2] << 8) | SX->RXbuf[3];
 }
 
 void clearIRQ(SX1280* SX, uint16_t mask){
@@ -443,7 +433,7 @@ void readBuffer(SX1280* SX, uint8_t Nbytes){
     SX->SPI_used = true;
     // make command
     *ptr++ = READ_BUF;
-    *ptr++ = SX->SX_settings->RXoffset;
+    *ptr++ = SX->RXbufferoffset;
     memset(ptr, 0, Nbytes + 1);
     SendData_DMA(SX, Nbytes + 3);
 }
@@ -486,11 +476,11 @@ bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
     return ret == HAL_OK;
 }
 
-bool DMA_Callback(SX1280* SX){
+void DMA_Callback(SX1280* SX){
     set_pin(SX->CS_pin, HIGH);
     SX->SPI_used = false;
     SX->SX1280_status = SX->RXbuf[0]; // store sx status
-	return (SX->RXbuf[0]>>2 & 0x7) == 0x01;
+//	return (SX->RXbuf[0]>>2 & 0x7) == 0x01;
 }
 
 // -------------------------------------------- Synchronization
@@ -500,17 +490,25 @@ void setSyncSensitivity (SX1280* SX, uint8_t syncWordSensitivity) {
 }
 
 bool setSyncWords (SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3) {
-	uint32_t rev_syncWord = __REV(syncWord_1);
-	if (!writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
-		return false;
+	uint32_t rev_syncWord;
 
-	rev_syncWord = __REV(syncWord_2);
-	if (!writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
+	if (syncWord_1 != 0) {
+		rev_syncWord = __REV(syncWord_1);
+		if (!writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
 			return false;
+	}
 
-	rev_syncWord = __REV(syncWord_3);
-	if (!writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
-		return false;
+	if (syncWord_2 != 0) {
+		rev_syncWord = __REV(syncWord_2);
+		if (!writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
+				return false;
+	}
+
+	if (syncWord_3 != 0) {
+		rev_syncWord = __REV(syncWord_3);
+		if (!writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
+			return false;
+	}
 
 	return true;
 }
@@ -527,3 +525,14 @@ void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance) {
 //
 //	return true;
 //}
+
+void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2){
+	writeRegister(SX, CRC_INIT_MSB, &seed1, 1);
+	writeRegister(SX, CRC_INIT_LSB, &seed2, 1);
+}
+void setCrcPoly(SX1280* SX, uint16_t poly){
+	uint16_t poly_lsb = poly & 0xFF;
+	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
+	poly = poly>>8;
+	writeRegister(SX, CRC_POLY_MSB, &poly, 1);
+}

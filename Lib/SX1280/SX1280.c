@@ -33,8 +33,13 @@ void SX1280Setup(SX1280* SX){
     setPacketParam(SX);
 
     setSyncSensitivity (SX, SX->SX_settings->syncWordSensitivity);
-    setSyncWordTolerance(SX, 5);
+    setSyncWordTolerance(SX, 2);
     setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
+
+//    setCrcPoly(SX, 0x0123); // i think  = x8 + x5 + x + 1
+    // 0x7 = polynomial of P8(x) = x8 + x2 + x + 1
+    // 0x1021 = polynomial of P16(x) = x16 + x12 + x5 + 1
+//    setCrcSeed(SX, 0x45, 0x67); // seed of 0
 
     setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
@@ -413,7 +418,7 @@ bool writeBuffer(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     *ptr++ = WRITE_BUF;
     *ptr++ = SX->SX_settings->TXoffset;
     memcpy(ptr, data, Nbytes);
-    return SendData_DMA(SX, Nbytes);
+    return SendData_DMA(SX, 2+Nbytes);
 }
 
 void readBuffer(SX1280* SX, uint8_t Nbytes){
@@ -480,22 +485,38 @@ void setSyncSensitivity (SX1280* SX, uint8_t syncWordSensitivity) {
 }
 
 bool setSyncWords (SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3) {
-	uint32_t rev_syncWord = __REV(syncWord_1);
-	if (!writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
-		return false;
+	uint32_t rev_syncWord;
 
-	rev_syncWord = __REV(syncWord_2);
-	if (!writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
+	if (syncWord_1 != 0) {
+		rev_syncWord = __REV(syncWord_1);
+		if (!writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
 			return false;
+	}
 
-	rev_syncWord = __REV(syncWord_3);
-	if (!writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
-		return false;
+	if (syncWord_2 != 0) {
+		rev_syncWord = __REV(syncWord_2);
+		if (!writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
+				return false;
+	}
 
-	return true;
+	if (syncWord_3 != 0) {
+		rev_syncWord = __REV(syncWord_3);
+		if (!writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
+			return false;
+	}	return true;
 }
 
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance) {
 	modifyRegister(SX, SYNC_TOL, 0x0F, syncWordTolerance & 0x0F);
 }
 
+void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2){
+	writeRegister(SX, CRC_INIT_MSB, &seed1, 1);
+	writeRegister(SX, CRC_INIT_LSB, &seed2, 1);
+}
+void setCrcPoly(SX1280* SX, uint16_t poly){
+	uint16_t poly_lsb = poly & 0xFF;
+	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
+	poly = poly>>8;
+	writeRegister(SX, CRC_POLY_MSB, &poly, 1);
+}

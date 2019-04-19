@@ -206,20 +206,22 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   Putty_Init();
-  SX = Wireless_Init(10.5f, COMM_SPI);
-  uint8_t buf[13] = {0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB};
+  SX = Wireless_Init(1.3f, COMM_SPI);
+//  uint8_t buf[13] = {0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB};
+  uint8_t buf[13] = {0xAB,0xCD,0xEF,0x12,0x34,0x56,0x78,0x90,0xFF,0xFF,0xFF,0xFF,0xFF};
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i;
+  int i=0;
+//  setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
   while (1)
   {
-	  if (HAL_GetTick() >  i + 1000) {
+	  if (HAL_GetTick() >  i + 500) {
 		  i = HAL_GetTick();
-		  SendPacket(SX, 0x04210C21, buf, 13);
-		  Putty_printf("Send Message\n\r");
+		  SendPacket(SX, 0x39CE75CE, buf, 13);
+//		  Putty_printf("Send Message\n\r");
 		  toggle_pin(LED0_pin);
 	  }
     /* USER CODE END WHILE */

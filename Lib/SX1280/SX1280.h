@@ -144,6 +144,9 @@ bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);
 
+void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2);
+void setCrcPoly(SX1280* SX, uint16_t poly);
+
 void setChannel(SX1280* SX, float new_channel);
 //setAddress(); //(robotID)
 

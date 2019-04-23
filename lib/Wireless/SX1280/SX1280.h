@@ -27,7 +27,7 @@ typedef struct _SX1280_Settings{
 	uint8_t TX_ramp_time;
 	uint8_t syncWordEnable;
 	uint32_t syncWords[3];
-	uint8_t syncWordSensitivity;
+	uint8_t syncSensitivity;
 	uint8_t TXoffset;
 	uint8_t RXoffset;
 	uint8_t ModParam[3];
@@ -117,7 +117,7 @@ void SX1280Setup(SX1280* SX);
 void SX1280WakeUp(SX1280* SX);
 
 // runtime functions
-bool writeBuffer(SX1280* SX, uint32_t header, uint8_t * data, uint8_t Nbytes);
+bool writeBuffer(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void readBuffer(SX1280* SX, uint8_t Nbytes);
 uint8_t getStatus(SX1280* SX);
 
@@ -138,7 +138,7 @@ void setPacketParam(SX1280* SX);
 void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> -18 - 13 dBm, ramptime (us)
 void setRegulatorMode(SX1280* SX, uint8_t mode);
 
-void setSyncSensitivity (SX1280* SX, uint8_t syncWordSensitivity);
+void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity);
 bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);

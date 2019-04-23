@@ -48,4 +48,13 @@ inline void toggle_pin(GPIO_Pin p)
 	HAL_GPIO_TogglePin(p.PORT, p.PIN);
 }
 
+inline uint16_t get_Id(){
+	uint16_t ID = 15;
+//	ID |= read_pin(ID0_pin) <<3;
+//	ID |= read_pin(ID1_pin) <<2;
+//	ID |= read_pin(ID2_pin) <<1;
+//	ID |= read_pin(ID3_pin);
+	return ID;
+}
+
 #endif /* UTILS_GPIO_UTIL_H_ */

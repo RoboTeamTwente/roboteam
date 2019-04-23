@@ -50,7 +50,6 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
-	SetPWM(MAX_PWM); //turns them off
 	return 0;
 }
 

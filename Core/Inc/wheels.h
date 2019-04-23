@@ -26,7 +26,7 @@ int wheels_Deinit();
 
 void wheels_Update();
 
-void wheels_setRef(float input[4]);
+void wheels_SetRef(float input[4]);
 
 float wheels_GetState(wheel_names wheel);
 

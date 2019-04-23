@@ -9,7 +9,7 @@ static PIDvariables genevaK;
 ///////////////////////////////////////////////////// VARIABLES
 
 static float genevaRef = 0.0f;
-static float pwm = 0.0f;
+static int pwm = 0;
 static int direction[2] = {0};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
@@ -36,35 +36,40 @@ static void setOutput();
 
 void geneva_Init(){
 	genevaState = setup;	// go to setup
-	initPID(&genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
+	//initPID(&genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
+	initPID(&genevaK, 3.0, 0.0, 0.0);
 	HAL_TIM_Base_Start(ENC_GENEVA);		// start the encoder
+	start_PWM(PWM_Geneva);
 }
 
 void geneva_Deinit(){
 	HAL_TIM_Base_Stop(ENC_GENEVA);		// stop encoder
+	stop_PWM(PWM_Geneva);
 	genevaState = off;		// go to idle state
 }
 
 void geneva_Update(){
 	switch(genevaState){
 	case off:
+		return;
 		break;
 	case setup:								// While in setup, slowly move towards the sensor/edge
 		genevaRef = HAL_GetTick();	// if sensor is not seen yet, move to the right at 1 count per millisecond
 		CheckIfStuck();
 		break;
-	case on: ;				// wait for external sources to set a new ref // semicolon is an empty statement for C grammar does not allow a label directly after a :
-		float err = genevaRef - geneva_Encodervalue();
-		if (fabs(err)>GENEVA_MAX_ALLOWED_OFFSET){
-			pwm = PID(err, &genevaK);
-		} else {
-			pwm = 0;
-		}
-		limitScale();
-		setDir();
-		setOutput();
+	case on: 				// wait for external sources to set a new ref // semicolon is an empty statement for C grammar does not allow a label directly after a :
 		break;
 	}
+
+	float err = genevaRef - geneva_Encodervalue();
+	if (fabs(err)>GENEVA_MAX_ALLOWED_OFFSET){
+		pwm = PID(err, &genevaK);
+	} else {
+		pwm = 0;
+	}
+	limitScale();
+	setDir();
+	setOutput();
 }
 
 void geneva_SetRef(geneva_positions position){
@@ -110,7 +115,7 @@ static void CheckIfStuck(){
 		tick = HAL_GetTick();
 	}else if(tick + 70 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
-		genevaRef = 0;
+		genevaRef = 2;
 		genevaState = on;
 	}
 }
@@ -135,8 +140,8 @@ static void limitScale(){
 	// Limit PWM //TODO: figure out MAX_PWM from old code
 	if(pwm < PWM_CUTOFF){
 		pwm = 0.0F;
-	} else if(pwm > MAX_PWM){
-		pwm = MAX_PWM;
+	} else if(pwm > 2400){
+		pwm = 2400;
 	}
 }
 

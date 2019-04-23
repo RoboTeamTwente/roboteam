@@ -48,6 +48,9 @@
 #include "PuTTY.h"
 #include "wheels.h"
 #include "kickchip.h"
+#include "velocity.h"
+#include "stateEstimation.h"
+#include "geneva.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -191,18 +194,28 @@ int main(void)
 
   Putty_Init();
   wheels_Init();
+  velocity_Init();
+  state_Init();
+  geneva_Init();
   //kick_Init();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint printtime = 0;
   while (1)
   {
+	  geneva_Update();
+
+	  if (HAL_GetTick() - printtime > 50) {
+		  Putty_printf("geneva pwm: %d \n\r", geneva_GetPWM());
+		  Putty_printf("geneva state: %d \n\r", geneva_GetState());
+		  printtime = HAL_GetTick();
+	  }
 
     /* USER CODE END WHILE */
-	  //kick_Callback();
-	  Putty_printf("/f /n/r", 1);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -773,7 +786,7 @@ static void MX_TIM8_Init(void)
   htim8.Instance = TIM8;
   htim8.Init.Prescaler = APB-1;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = 0;
+  htim8.Init.Period = MAX_PWM;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -852,9 +865,9 @@ static void MX_TIM9_Init(void)
 
   /* USER CODE END TIM9_Init 1 */
   htim9.Instance = TIM9;
-  htim9.Init.Prescaler = APB-1;
+  htim9.Init.Prescaler = (APB-1)/(4.5);
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim9.Init.Period = 0;
+  htim9.Init.Period = MAX_PWM;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim9) != HAL_OK)

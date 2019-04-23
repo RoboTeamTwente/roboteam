@@ -81,6 +81,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define APB 216
+#define MAX_PWM 2400
 #define Charge_done_Pin GPIO_PIN_2
 #define Charge_done_GPIO_Port GPIOE
 #define LF_Locked_Pin GPIO_PIN_3

@@ -25,7 +25,7 @@ SX1280_Settings set = {
         .TX_ramp_time = RADIO_RAMP_20_US,
 		.periodBase = BASE_62_us,
         .periodBaseCount = 24,
-		.syncWords = {0x08421442, 0x04210C21, 0x0CC31CC3},
+		.syncWords = {0x0, 0x0, 0x0},
         .syncSensitivity = 1,
         .TXoffset = 128,
         .RXoffset = 0,
@@ -65,7 +65,7 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
     SX1280Setup(SX);
     setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
     setAutoFS(SX,false);
-    setFS(SX);
+    //setFS(SX);
 
 //    bool succes = setFS(SX);
 //    set_pin(LED1_pin, !succes);	// notify if something has gone wrong with wireless
@@ -115,9 +115,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     getPacketStatus(SX);
 	char msg[20];
 	sprintf(msg, "rssi: %d\n\r", SX->Packet_status->RSSISync);
-	Putty_printf(msg);
+	//Putty_printf(msg);
 	sprintf(msg, "errors: %d\n\r", SX->Packet_status->errors);
-	Putty_printf(msg);
+	//Putty_printf(msg);
     clearIRQ(SX,ALL);
 
     if (SX->Packet_status->RSSISync > 180) return; // leave if rssi too low
@@ -129,7 +129,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 
     if(irq & RX_DONE){
     	ReceivePacket(SX);
-    	Putty_printf("receiving...\n\r");
+    	//Putty_printf("receiving...\n\r");
     }
 
     if(irq & SYNCWORD_VALID) {
@@ -154,5 +154,7 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
 		toggle_pin(LED3_pin);
 		SX->expect_packet = false;
 		setRX(SX, SX->SX_settings->periodBase, 0x0);
+	}else{
+		Putty_printf("I commit seppuku\n\r");
 	}
 }

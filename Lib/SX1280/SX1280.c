@@ -29,7 +29,7 @@ void SX1280Setup(SX1280* SX){
     setPacketParam(SX);
 
     setSyncSensitivity (SX, SX->SX_settings->syncSensitivity);
-    setSyncWordTolerance(SX, 2);
+    setSyncWordTolerance(SX, 3);
 
     setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
@@ -335,9 +335,9 @@ uint16_t getIRQ(SX1280* SX){
     memset(ptr,0,3);
     SendData(SX,4);
 	char msg[10];
-	Putty_printf("getIRQ ");
-	Putty_printf(itoa(((SX->RXbuf[2] << 8) | SX->RXbuf[3]), msg, 10));
-	Putty_printf("\n\r");
+	//Putty_printf("getIRQ ");
+	//Putty_printf(itoa(((SX->RXbuf[2] << 8) | SX->RXbuf[3]), msg, 10));
+	//Putty_printf("\n\r");
     return SX->irqStatus = (SX->RXbuf[2] << 8) | SX->RXbuf[3];
 }
 
@@ -438,7 +438,12 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
     SX->SPI_used = false;
     SX->SX1280_status = SX->RXbuf[0];
     // return SPI status and SX status==command processed successfully
-    return (ret == HAL_OK && (SX->RXbuf[0]>>2 & 0x7) == 0x01);
+    uint8_t status = SX->RXbuf[0]>>2 & 0x7;
+    bool ret_bool = false;
+    ret_bool |= status == 0x3;
+    ret_bool |= status == 0x4;
+    ret_bool |= status == 0x5;
+    return (ret == HAL_OK && !ret_bool);
 }
 
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes){

@@ -102,29 +102,29 @@ extern GPIO_Pin SX_BUSY_pin;
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 
 // Set a GPIO Pin
-inline void set_pin(GPIO_Pin p, bool value)
+static inline void set_pin(GPIO_Pin p, bool value)
 {
 	HAL_GPIO_WritePin(p.PORT, p.PIN, value);
 }
 
 // Read a GPIO Pin
-inline GPIO_PinState read_pin(GPIO_Pin p)
+static inline GPIO_PinState read_pin(GPIO_Pin p)
 {
 	return HAL_GPIO_ReadPin(p.PORT, p.PIN);
 }
 
 // Toggle a GPIO Pin
-inline void toggle_pin(GPIO_Pin p)
+static inline void toggle_pin(GPIO_Pin p)
 {
 	HAL_GPIO_TogglePin(p.PORT, p.PIN);
 }
 
-inline uint16_t get_Id(){
+static inline uint16_t get_Id(){
 	uint16_t ID = 0;
-	ID |= read_pin(ID0_pin) <<3;
-	ID |= read_pin(ID1_pin) <<2;
-	ID |= read_pin(ID2_pin) <<1;
-	ID |= read_pin(ID3_pin);
+	ID |= !read_pin(ID0_pin) <<3;
+	ID |= !read_pin(ID1_pin) <<2;
+	ID |= !read_pin(ID2_pin) <<1;
+	ID |= !read_pin(ID3_pin);
 	return ID;
 }
 

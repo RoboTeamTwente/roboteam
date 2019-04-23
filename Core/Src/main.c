@@ -100,6 +100,8 @@ DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
 SX1280* SX;
+int counter = 0;
+int strength = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -134,6 +136,8 @@ static void MX_TIM14_Init(void);
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
 		Wireless_DMA_Handler(SX, PC_to_Bot);
+		counter++;
+		strength+= SX->Packet_status->RSSISync;
 	}
 }
 
@@ -207,6 +211,11 @@ int main(void)
 
   Putty_Init();
   SX = Wireless_Init(1.3f, COMM_SPI);
+  uint16_t ID = get_Id();
+  Putty_printf("ID: %u\n\r",ID);
+  if(!setSyncWords(SX,robot_syncWord[ID],0x0,0x0)){
+	  Putty_printf("failed setting Sync\n\r");
+  }
 //  uint8_t buf[13] = {0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB};
 //  uint8_t buf[13] = {0xAB,0xCD,0xEF,0x12,0x34,0x56,0x78,0x90,0xFF,0xFF,0xFF,0xFF,0xFF};
 
@@ -218,10 +227,13 @@ int main(void)
   setRX(SX, SX->SX_settings->periodBase, 0x0);
   while (1)
   {
-	  if (HAL_GetTick() >  i + 500) {
+	  if (HAL_GetTick() >  i + 1000) {
 		  i = HAL_GetTick();
-//		  SendPacket(SX, 0x39CE75CE, buf, 13);
-//		  Putty_printf("Send Message\n\r");
+
+		  Putty_printf("MSGs/s %d:\n\r", counter);
+		  Putty_printf("strength %d \n\r", strength/counter);
+		  strength = 0;
+		  counter = 0;
 		  toggle_pin(LED0_pin);
 	  }
     /* USER CODE END WHILE */
@@ -1296,10 +1308,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }

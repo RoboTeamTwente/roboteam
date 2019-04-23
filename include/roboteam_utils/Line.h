@@ -26,7 +26,7 @@ class LineBase {
         std::pair<double, double> coefficients() const;
 
         bool isVertical() const;
-        bool isParallel(const LineBase &line);
+        bool isParallel(const LineBase &line) const;
         bool isPoint() const;
 
         virtual double distanceToLine(const Vector2 &point) const = 0;
@@ -47,6 +47,8 @@ class Line : public LineBase {
         Vector2 project(const Vector2 &point) const override;
         std::shared_ptr<Vector2> intersects(const Line& line) const override;
         std::shared_ptr<Vector2> intersects(const LineSegment& line) const override;
+        bool doesIntersect(const Line& line) const override;
+        bool doesIntersect(const LineSegment& line) const override;
 
 };
 class LineSegment : public LineBase {
@@ -58,6 +60,8 @@ class LineSegment : public LineBase {
         Vector2 project(const Vector2 &point) const override;
         std::shared_ptr<Vector2> intersects(const Line& line) const override;
         std::shared_ptr<Vector2> intersects(const LineSegment& line) const override;
+        bool doesIntersect(const Line& line) const override;
+        bool doesIntersect(const LineSegment& line) const override;
 };
 }
 

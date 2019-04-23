@@ -99,11 +99,15 @@ typedef struct PIDstruct PIDvariables;
 ///////////////////////////////////////////////////// FUNCTIONS
 
 //Initializes the PID values
-static void initPID(PIDvariables PID, float kP, float kI, float kD) {
-	PID = PIDdefault;
-	PID.kP = kP;
-	PID.kI = kI;
-	PID.kD = kD;
+static void initPID(PIDvariables* PID, float kP, float kI, float kD) {
+	//PID = PIDdefault;
+	PID->kP = kP;
+	PID->kI = kI;
+	PID->kD = kD;
+
+	PID->I = PIDdefault.I;
+	PID->prev_e = PIDdefault.prev_e;
+	PID->timeDiff = PIDdefault.timeDiff;
 }
 
 //PID control, inline to not have multiple implementation error

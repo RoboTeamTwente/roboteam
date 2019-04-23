@@ -135,7 +135,7 @@ static void limitScale(){
 	// Limit PWM //TODO: figure out MAX_PWM from old code
 	if(pwm < PWM_CUTOFF){
 		pwm = 0.0F;
-	} else if(pwm > MAX_PWM){
+	} else if(pwm > 100){
 		pwm = MAX_PWM;
 	}
 }

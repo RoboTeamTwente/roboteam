@@ -27,7 +27,7 @@ typedef struct _SX1280_Settings{
 	uint8_t TX_ramp_time;
 	uint8_t syncWordEnable;
 	uint32_t syncWords[3];
-	uint8_t syncWordSensitivity;
+	uint8_t syncSensitivity;
 	uint8_t TXoffset;
 	uint8_t RXoffset;
 	uint8_t ModParam[3];
@@ -91,7 +91,6 @@ abcde	0abc deab cdea bcde		abcd e1ab cdea bcde		hex
 01101	0011 0101 1010 1101		0110 1101 1010 1101		35AD 6DAD
 01110	0011 1001 1100 1110		0111 0101 1100 1110		39CE 75CE
 01111	0011 1101 1110 1111		0111 1101 1110 1111		3DEF 7DEF
-
 abcde	0abc deab cdea bcde		abcd e1ab cdea bcde		hex
 10000	0100 0010 0001 0000 	1000 0110 0001 0000		8210 8610
 10001	0100 0110 0011 0001		1000 1110 0011 0001		8631 8E31
@@ -139,7 +138,7 @@ void setPacketParam(SX1280* SX);
 void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> -18 - 13 dBm, ramptime (us)
 void setRegulatorMode(SX1280* SX, uint8_t mode);
 
-void setSyncSensitivity (SX1280* SX, uint8_t syncWordSensitivity);
+void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity);
 bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);
@@ -168,5 +167,5 @@ void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes);
 // Send/Receive data
 bool SendData(SX1280* SX, uint8_t Nbytes);
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes);
-bool DMA_Callback(SX1280* SX);
+void DMA_Callback(SX1280* SX);
 #endif // __SX1280_H

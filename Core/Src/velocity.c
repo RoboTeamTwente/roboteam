@@ -28,9 +28,9 @@ static float angleControl(float angleRef, float angle);
 
 int velocity_Init(){
 	velState = on;
-	initPID(velK[body_x], 1.0, 0.0, 0.0);
-	initPID(velK[body_y], 2.0, 0.0, 0.0);
-	initPID(velK[body_w], 20.0, 1.5, 0.0);
+	initPID(&velK[body_x], 1.0, 0.0, 0.0);
+	initPID(&velK[body_y], 2.0, 0.0, 0.0);
+	initPID(&velK[body_w], 20.0, 1.5, 0.0);
 	return 0;
 }
 
@@ -46,20 +46,20 @@ void velocity_Update(){
 
 		float angularRef = angleControl(ref[body_w], state[body_w]);
 
-		for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
+		for (wheel_names wheel=wheels_RF; wheel<=wheels_LF; wheel++){
 			wheelRef[wheel] = translationalRef[wheel] + angularRef;
 		}
 	}
 }
 
-void velocity_setRef(float input[3]){
+void velocity_SetRef(float input[3]){
 	ref[body_x] = input[body_x];
 	ref[body_y] = input[body_y];
 	ref[body_w] = input[body_w];
 }
 
 void velocity_GetWheelRef(float output[4]){
-	for (wheel_names wheel=wheels_RF; wheel<wheels_LF; wheel++){
+	for (wheel_names wheel=wheels_RF; wheel<=wheels_LF; wheel++){
 		output[wheel] = wheelRef[wheel];
 	}
 }

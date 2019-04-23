@@ -36,7 +36,7 @@ static void setOutput();
 
 void geneva_Init(){
 	genevaState = setup;	// go to setup
-	initPID(genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
+	initPID(&genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
 	HAL_TIM_Base_Start(ENC_GENEVA);		// start the encoder
 }
 
@@ -135,7 +135,7 @@ static void limitScale(){
 	// Limit PWM //TODO: figure out MAX_PWM from old code
 	if(pwm < PWM_CUTOFF){
 		pwm = 0.0F;
-	} else if(pwm > 100){
+	} else if(pwm > MAX_PWM){
 		pwm = MAX_PWM;
 	}
 }

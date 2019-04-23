@@ -45,8 +45,8 @@ void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, boo
 	state[body_w] = calibratedYaw;
 }
 
-void state_GetState(float output[4]){
-	for (int i=0; i<4; i++){
+void state_GetState(float output[3]){
+	for (body_handles i=body_x; i<=body_w; i++){
 		output[i] = state[i];
 	}
 }

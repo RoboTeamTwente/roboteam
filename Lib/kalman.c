@@ -29,22 +29,23 @@ void kalman_Init(){
 void kalman_Deinit(){
 }
 
-void Kalman_Update(float accel[2], float vel[2]){
+void kalman_Update(float acc[2], float vel[2]){
 
 	// Predict
 	//	for (int i = 0; i < STATE; i++) {
 	//		aU[i] = controlInput[i];
 	//	}
 		az[0] = vel[0];
-		az[1] = accel[0];
+		az[1] = acc[0];
 		az[2] = vel[1];
-		az[3] = accel[1];
+		az[3] = acc[1];
 
 		multiplyMatrix(aF, aXold, aFX, STATE, 1, STATE);
 		multiplyMatrix(aB, aU, aBU, STATE, 1, STATE);
 		addMatrix(aFX, aBU, aXcurrent, STATE);
 
 		// Get measurement
+		//TODO: Get measurement using MTi
 
 		// Process data
 		multiplyMatrix(aH, aXcurrent, aHX, OBSERVE, 1, STATE);

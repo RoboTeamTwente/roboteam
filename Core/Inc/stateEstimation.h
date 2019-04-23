@@ -27,6 +27,6 @@ int state_Deinit();
 
 void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable);
 
-void state_GetState(float output[4]);
+void state_GetState(float output[3]);
 
 #endif /* DO_STATEESTIMATION_H_ */

@@ -49,9 +49,17 @@
 #define YAW_MARGIN (2.0F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
 
-//GENEVA
-#define GENEVA_CAL_EDGE_CNT 4100	// the amount of counts from an edge to the center
+// Geneva
+#define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
 
+// KickChip
+//TODO: check if it actually is in units of milliseconds
+#define KICK_TIME 4 // number of milliseconds per percent of kicking power
+#define CHIP_TIME 6 // number of milliseconds per percent of chipping power
+#define READY_CALLBACK_TIME 10000 // number of milliseconds till the next callback when kickState is Ready
+#define CHARGING_CALLBACK_TIME 1000 // number of milliseconds till the next callback when kickState is Charging
+#define KICKING_CALLBACK_TIME 1000 // number of milliseconds till the next callback when kickState is Kicking
+#define OFF_CALLBACK_TIME 10000 // number of milliseconds till the next callback when kickState is Off
 
 ///////////////////////////////////////////////////// STRUCTS
 

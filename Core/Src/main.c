@@ -209,7 +209,7 @@ int main(void)
 	  if (HAL_GetTick() - printtime > 10000) {
 		  //kick_SetState(kick);
 		  kick_SetPower(100);
-		  kick_Shoot(true);
+		  kick_Shoot(false);
 		  printtime = HAL_GetTick();
 	  }
 

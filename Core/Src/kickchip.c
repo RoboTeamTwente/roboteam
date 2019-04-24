@@ -1,7 +1,5 @@
 
 #include "../Inc/kickchip.h"
-#include <stdbool.h>
-#include "PuTTY.h"
 
 //TODO: current set-up would only chip or kick if charged, but does not let know when it does that.
 
@@ -11,10 +9,8 @@ static kick_states kickState = kick_Off;
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static bool charged = false;
-static int power = 0; // percentage of maximum kicking power
-
-void kick_Shoot(bool kick);
+static bool charged = false;	// true if the capacitor is fully charged
+static int power = 0; 			// percentage of maximum kicking power
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -33,11 +29,11 @@ void kick_Init(){
 }
 
 void kick_DeInit(){
-	kickState = kick_Off;
 	charged = false;
+	kickState = kick_Off;
 	set_Pin(Kick_pin, 0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
-	set_Pin(Charge_pin, 0);	// kick_Charging off
+	set_Pin(Charge_pin, 0);		// kick_Charging off
 	HAL_TIM_Base_Stop(TIM_KC);
 }
 
@@ -45,10 +41,8 @@ void kick_Callback()
 {
 	Putty_printf("kick state: %d \n\r", kickState);
 
-	int callbackTime = 0;
 	switch(kickState){
 	case kick_Ready:
-		callbackTime = 10000;
 		set_Pin(Charge_pin, 1);
 		charged = !charged;
 		break;
@@ -64,22 +58,19 @@ void kick_Callback()
 			set_Pin(Charge_pin, 1);
 			charged = false;
 		}
-		callbackTime = 100;
 		break;
 	case kick_Kicking:
 		set_Pin(Kick_pin, 0);		// Kick off
 		set_Pin(Chip_pin, 0);		// Chip off
 		kickState = kick_Charging;
-		callbackTime = 100;
 		break;
 	case kick_Off:
 		set_Pin(Kick_pin, 0);		// Kick off
 		set_Pin(Chip_pin, 0);		// Chip off
 		set_Pin(Charge_pin, 0);		// kick_Charging off
-		callbackTime = 1000;
 		break;
 	}
-	resetTimer(callbackTime);
+	resetTimer(callbackTimes[kickState]);
 }
 
 kick_states kick_GetState(){
@@ -96,16 +87,16 @@ void kick_SetPower(int input){
 	}
 }
 
-void kick_Shoot(bool kick)
+void kick_Shoot(bool doChip)
 {
 	if(kickState == kick_Ready && charged)
 	{
 		Putty_printf("kicking! power = %d \n\r", power);
-		kickState = kick_Kicking;								// Block kick_Charging
-		set_Pin(Charge_pin, 0); 						// Disable kick_Charging
-		set_Pin(kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
+		kickState = kick_Kicking;
+		set_Pin(Charge_pin, 0); 								// Disable kick_Charging
+		set_Pin(doChip ? Chip_pin : Kick_pin, 1); 				// Kick/Chip on
 
-		resetTimer(power * (kick ? 4 : 6));
+		resetTimer(power * (doChip ? CHIP_TIME : KICK_TIME));
 	}
 }
 

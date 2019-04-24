@@ -16,6 +16,9 @@
 
 #include "../Util/gpio_util.h"
 #include "../Util/tim_util.h"
+#include "../Util/control_util.h"
+#include <stdbool.h>
+#include "PuTTY.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -26,6 +29,10 @@ typedef enum{
 	kick_Off
 }kick_states;
 
+///////////////////////////////////////////////////// VARIABLES
+
+const int callbackTimes[4] = {READY_CALLBACK_TIME, CHARGING_CALLBACK_TIME, KICKING_CALLBACK_TIME, OFF_CALLBACK_TIME};
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void kick_Init();
@@ -34,7 +41,7 @@ void kick_DeInit();
 
 void kick_Callback();
 
-void kick_Shoot(bool kick);
+void kick_Shoot(bool doChip);
 
 kick_states kick_GetState();
 

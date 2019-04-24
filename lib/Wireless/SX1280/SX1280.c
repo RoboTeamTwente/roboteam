@@ -20,29 +20,29 @@ void SX1280Setup(SX1280* SX){
     setPacketType(SX, SX->SX_settings->packettype); // packet type is set first!
 
     setChannel(SX, SX->SX_settings->channel); // calls setRFFrequency() with freq=(channel+2400)*1000000
-//    setRFFrequency(SX, SX->SX_settings->frequency);
 
-    setBufferBase(SX, 0x80, 0x00);
+    setBufferBase(SX, SX->SX_settings->TXoffset, SX->SX_settings->RXoffset);
 
     setModulationParam(SX);
+
     setPacketParam(SX);
 
     setSyncSensitivity (SX, SX->SX_settings->syncSensitivity);
-    setSyncWordTolerance(SX, 2);
+
+    setSyncWordTolerance(SX, SX->SX_settings->syncWordTolerance);
 
     setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
     setDIOIRQParams(SX); // IRQ masks are stored in reverse, so reverse again
-
-//    setStandby(SX, 1); // set standby xosc after everything
 }
 
 void SX1280WakeUp(SX1280* SX) {
-	set_pin(SX_RST, LOW);
+	// reset the device
+	set_pin(SX->RST_pin, LOW);
 	HAL_Delay(1);
-	set_pin(SX_RST, HIGH);
+	set_pin(SX->RST_pin, HIGH);
 	HAL_Delay(1);
-
+	// trigger SPI interface
     while(SX->SPI_used){}
     SX->SPI_used = true;
     // send command
@@ -52,8 +52,7 @@ void SX1280WakeUp(SX1280* SX) {
     HAL_SPI_TransmitReceive(SX->SPI, SX->TXbuf, SX->RXbuf, 2, 100);
     set_pin(SX->CS_pin, HIGH);
     SX->SPI_used = false;
-    while(read_pin(SX->busy_pin)) {}
-    //TextOut("SX_WOKE\n\r");
+    while(read_pin(SX->BUSY_pin)) {}
     setStandby(SX, 0);
 }
 
@@ -66,28 +65,6 @@ uint8_t getStatus(SX1280* SX){
     SX->TXbuf[0] = GET_STATUS;
     SX->TXbuf[1] = 0;
     SendData(SX,2);
-    // check bits 4:2 for status values and report
-	switch (SX->RXbuf[0]>>2 & 0x7) {
-		case 0x1: // command has been terminated correctly
-			TextOut("SX_CMD_GOOD\n\r");
-			break;
-		case 0x2: // packet has been successfully received and data can be retrieved
-			TextOut("SX_DATA_IN\n\r");
-			break;
-		case 0x3: // command timeout, host should resend command
-			TextOut("SX_CMD_TIMOUT\n\r");
-			break;
-		case 0x4: // command was wrong (opcode or # of params)
-			TextOut("SX_CMD_ERR\n\r");
-			break;
-		case 0x5: // command execution failure
-			TextOut("SX_CMD_FAIL\n\r");
-			break;
-		case 0x6: // packet transmission completed
-			TextOut("SX_TX_SUCCESS\n\r");
-			break;
-	}
-
     return SX->SX1280_status = SX->RXbuf[0];
 }
 
@@ -192,15 +169,12 @@ void setRFFrequency(SX1280* SX, uint32_t frequency){
     *ptr++ = (frequency >> 16) & 0xFF;
     *ptr++ = (frequency >> 8 ) & 0xFF;
     *ptr++ = (frequency      ) & 0xFF;
-
     SendData(SX,4);
 }
 
 void setChannel(SX1280* SX, float channel) {
 	SX->SX_settings->channel = channel;
-
 	uint32_t frequency = (channel + 2400)*1000000;
-
 	setRFFrequency(SX, frequency);
 }
 
@@ -290,7 +264,7 @@ void getRXBufferStatus(SX1280* SX){
     *ptr++ = GET_RX_BUF_STATUS;
     memset(ptr,0,3);
     SendData(SX,4);
-    SX->payloadLengh = SX->RXbuf[2];
+    SX->payloadLength = SX->RXbuf[2];
     SX->RXbufferoffset = SX->RXbuf[3];
 }
 
@@ -333,10 +307,6 @@ uint16_t getIRQ(SX1280* SX){
     *ptr++ = GET_IRQ_STATUS;
     memset(ptr,0,3);
     SendData(SX,4);
-//	char msg[10];
-//	TextOut("getIRQ ");
-//	TextOut(itoa(((SX->RXbuf[2] << 8) | SX->RXbuf[3]), msg, 10));
-//	TextOut("\n\r");
     return SX->irqStatus = (SX->RXbuf[2] << 8) | SX->RXbuf[3];
 }
 
@@ -381,13 +351,10 @@ void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes){
 }
 
 void modifyRegister(SX1280* SX, uint16_t address, uint8_t mask, uint8_t set_value) {
-
 	uint8_t data;
 	readRegister(SX, address, &data, 1);
-
 	data &= ~mask;
 	data |= set_value;
-
 	writeRegister(SX, address, &data, 1);
 }
 
@@ -417,7 +384,7 @@ void readBuffer(SX1280* SX, uint8_t Nbytes){
 
 // -------------------------------------------- Send / Receive
 bool SendData(SX1280* SX, uint8_t Nbytes){
-	while(read_pin(SX->busy_pin)) {}
+	while(read_pin(SX->BUSY_pin)) {}
     HAL_StatusTypeDef ret;
     // wait till ready
     while(SX->SPI->State != HAL_SPI_STATE_READY){}
@@ -426,7 +393,7 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
     HAL_SPI_TransmitReceive(SX->SPI, SX->TXbuf, SX->RXbuf, Nbytes, 100);
     set_pin(SX->CS_pin, HIGH);
     // wait for SX to process command
-    while(read_pin(SX->busy_pin)) {}
+    while(read_pin(SX->BUSY_pin)) {}
     // check status of the processed command
     while(SX->SPI->State != HAL_SPI_STATE_READY){}
     SX->TXbuf[0] = GET_STATUS;
@@ -437,11 +404,16 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
     SX->SPI_used = false;
     SX->SX1280_status = SX->RXbuf[0];
     // return SPI status and SX status==command processed successfully
-    return ((ret == HAL_OK) && ((SX->RXbuf[0]>>2 & 0x7) != 0x03 || (SX->RXbuf[0]>>2 & 0x7) != 0x04 || (SX->RXbuf[0]>>2 & 0x7) != 0x05));
+    uint8_t status = SX->RXbuf[0]>>2 & 0x7;
+    bool ret_bool = false;
+    ret_bool |= status == 0x3; // if status is 3||4||5
+    ret_bool |= status == 0x4; // then something went wrong
+    ret_bool |= status == 0x5;
+    return (ret == HAL_OK && !ret_bool);
 }
 
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
-	while(read_pin(SX->busy_pin)) {}
+	while(read_pin(SX->BUSY_pin)) {}
 	HAL_StatusTypeDef ret;
 	// wait till ready
     while(SX->SPI->State != HAL_SPI_STATE_READY){}
@@ -465,26 +437,24 @@ void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity) {
 
 bool setSyncWords (SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3) {
 	uint32_t rev_syncWord;
-
+	bool success = false;
+	// pass 0x00 as syncword to not overwrite stored value
 	if (syncWord_1 != 0) {
 		rev_syncWord = __REV(syncWord_1);
-		if (!writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
-			return false;
+		if (writeRegister(SX, SYNCWORD1, &rev_syncWord, 4))
+			success = true;
 	}
-
 	if (syncWord_2 != 0) {
 		rev_syncWord = __REV(syncWord_2);
-		if (!writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
-				return false;
+		if (writeRegister(SX, SYNCWORD2, &rev_syncWord, 4))
+			success = true;
 	}
-
 	if (syncWord_3 != 0) {
 		rev_syncWord = __REV(syncWord_3);
-		if (!writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
-			return false;
+		if (writeRegister(SX, SYNCWORD3, &rev_syncWord, 4))
+			success = true;
 	}
-
-	return true;
+	return success;
 }
 
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance) {
@@ -493,20 +463,17 @@ void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance) {
 
 //bool setSyncWord_1 (SX1280* SX, uint32_t word_1) {
 //	word_1 = __REV(word_1);
-//
 //	if (!writeRegister(SX, SYNCWORD1, 4, &word_1))
 //		return false;
-//
 //	return true;
 //}
-
-void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2){
-	writeRegister(SX, CRC_INIT_MSB, &seed1, 1);
-	writeRegister(SX, CRC_INIT_LSB, &seed2, 1);
-}
-void setCrcPoly(SX1280* SX, uint16_t poly){
-	uint16_t poly_lsb = poly & 0xFF;
-	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
-	poly = poly>>8;
-	writeRegister(SX, CRC_POLY_MSB, &poly, 1);
-}
+//void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2){
+//	writeRegister(SX, CRC_INIT_MSB, &seed1, 1);
+//	writeRegister(SX, CRC_INIT_LSB, &seed2, 1);
+//}
+//void setCrcPoly(SX1280* SX, uint16_t poly){
+//	uint16_t poly_lsb = poly & 0xFF;
+//	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
+//	poly = poly>>8;
+//	writeRegister(SX, CRC_POLY_MSB, &poly, 1);
+//}

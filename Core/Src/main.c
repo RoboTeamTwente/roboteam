@@ -152,10 +152,13 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
-  get_Id();
   SX = Wireless_Init(1.3f, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
 
+	// start the pingpong operation with sendToId=0 and buf[]={0x00};
+	SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
+	setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+	SendPacket(SX, buf, 13);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -658,8 +661,9 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 // global variables
-int sendToId = 0;
-bool on = true;
+//int sendToId = 0;
+//uint8_t buf[13] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
@@ -674,37 +678,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 
 // callback for Interrupts from SX1280
-uint8_t buf[13] = {0xAB,0xCD,0xEF,0x12,0x34,0x56,0x78,0x90,0xFF,0xFF,0xFF,0xFF,0xFF};
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
 		// determine if we should send this message
-		if (!isTransmitting ) { //&& msgBuff[sendToId].isNew
+		if (!isTransmitting) { //&& msgBuff[sendToId].isNew
 			isTransmitting = true;
-			msgBuff[sendToId].isNew = false;
-//			uint32_t syncword = robot_syncWord[sendToId];
-//			SX->SX_settings->syncWords[0] = robot_syncWord[sendToId]; // id we sent, id 1, id 3
-//			SX->SX_settings->syncWords[1] = robot_syncWord[(sendToId+1) % 15];
-			SX->SX_settings->syncWords[2] = robot_syncWord[sendToId];
-			if (!setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2])){
-				TextOut("failed set sync word\n\r");
-			}
-//			char status[100];
-//			sprintf (status, "syncword %X, sendtoid %d\n\r", robot_syncWord[sendToId], sendToId);
-//			TextOut(status);
-			toggle_pin(LD_2);
-			SendPacket(SX, buf, 13);
+//			msgBuff[sendToId].isNew = false;
 		}
-
 		// increment id
 		if (sendToId < 15) {
 			sendToId++;
-		} else {
-//			on = !on;
+		}else {
 			sendToId = 0;
 		}
 	}
 }
+
 /* USER CODE END 4 */
+
 
 /**
   * @brief  This function is executed in case of error occurrence.

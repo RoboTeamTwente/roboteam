@@ -21,12 +21,13 @@ typedef struct _SX1280_Settings{
 	uint32_t frequency;
 	float channel;
 	uint8_t packettype;
-	uint8_t payloadLengh;
+	uint8_t payloadLength;
 	uint8_t variableLength;
 	uint8_t txPower;
 	uint8_t TX_ramp_time;
-	uint8_t syncWordEnable;
+	uint8_t syncWordEnable; // not used
 	uint32_t syncWords[3];
+	uint8_t syncWordTolerance;
 	uint8_t syncSensitivity;
 	uint8_t TXoffset;
 	uint8_t RXoffset;
@@ -53,7 +54,7 @@ typedef struct _SX1280{
 	uint8_t* TXbuf;			// pointer to transmit buffer
 	uint8_t* RXbuf;			// pointer to receive buffer
 
-	uint8_t payloadLengh;	// length of received packet
+	uint8_t payloadLength;	// length of received packet
 	uint8_t RXbufferoffset;	// start location of received packet
 	uint16_t irqStatus;		// last received irq status
 
@@ -65,9 +66,10 @@ typedef struct _SX1280{
 	bool SPI_used;			// guard to limit one function to use spi
 
 	// wiring
-	GPIO_Pin busy_pin;
+	GPIO_Pin BUSY_pin;
 	GPIO_Pin CS_pin;
 	GPIO_Pin IRQ_pin;
+	GPIO_Pin RST_pin;
 } SX1280;
 
 
@@ -139,15 +141,15 @@ void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> 
 void setRegulatorMode(SX1280* SX, uint8_t mode);
 
 void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity);
+
 bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
 void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
 //bool setSyncWord_1(SX1280* SX, uint32_t word);
 
-void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2);
-void setCrcPoly(SX1280* SX, uint16_t poly);
+//void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2);
+//void setCrcPoly(SX1280* SX, uint16_t poly);
 
 void setChannel(SX1280* SX, float new_channel);
-//setAddress(); //(robotID)
 
 // state functions
 void setStandby(SX1280* SX, uint8_t config);

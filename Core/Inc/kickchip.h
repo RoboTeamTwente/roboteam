@@ -29,10 +29,6 @@ typedef enum{
 	kick_Off
 }kick_states;
 
-///////////////////////////////////////////////////// VARIABLES
-
-const int callbackTimes[4] = {READY_CALLBACK_TIME, CHARGING_CALLBACK_TIME, KICKING_CALLBACK_TIME, OFF_CALLBACK_TIME};
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void kick_Init();

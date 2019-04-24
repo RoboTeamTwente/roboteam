@@ -11,6 +11,7 @@ static kick_states kickState = kick_Off;
 
 static bool charged = false;	// true if the capacitor is fully charged
 static int power = 0; 			// percentage of maximum kicking power
+const int callbackTimes[4] = {READY_CALLBACK_TIME, CHARGING_CALLBACK_TIME, KICKING_CALLBACK_TIME, OFF_CALLBACK_TIME};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 

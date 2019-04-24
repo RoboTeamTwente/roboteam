@@ -29,7 +29,7 @@ void geneva_Update();
 
 void geneva_SetRef(geneva_positions position);
 
-geneva_positions geneva_GetState();
+int geneva_GetEncoder();
 
 int geneva_GetPWM();
 

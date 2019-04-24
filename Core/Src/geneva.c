@@ -31,13 +31,9 @@ static void setOutput();
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-//TODO: Fix/check timers, channels and PINS
-//TODO: Fix PID channel and timer
-
 void geneva_Init(){
 	genevaState = setup;	// go to setup
-	//initPID(&genevaK, 50.0, 4.0, 0.7);		// initialize the pid controller
-	initPID(&genevaK, 3.0, 0.0, 0.0);
+	initPID(&genevaK, 10.0, 0.0, 0.0);
 	HAL_TIM_Base_Start(ENC_GENEVA);		// start the encoder
 	start_PWM(PWM_Geneva);
 }
@@ -57,16 +53,12 @@ void geneva_Update(){
 		genevaRef = HAL_GetTick();	// if sensor is not seen yet, move to the right at 1 count per millisecond
 		CheckIfStuck();
 		break;
-	case on: 				// wait for external sources to set a new ref // semicolon is an empty statement for C grammar does not allow a label directly after a :
+	case on: 				// wait for external sources to set a new ref
 		break;
 	}
 
 	float err = genevaRef - geneva_Encodervalue();
-	if (fabs(err)>GENEVA_MAX_ALLOWED_OFFSET){
-		pwm = PID(err, &genevaK);
-	} else {
-		pwm = 0;
-	}
+	pwm = PID(err, &genevaK);
 	limitScale();
 	setDir();
 	setOutput();
@@ -75,30 +67,27 @@ void geneva_Update(){
 void geneva_SetRef(geneva_positions position){
 	switch(position){
 	case geneva_rightright:
-		genevaRef = 2.0 * GENEVA_POSITION_DIF_CNT;
+		genevaRef = 3690;
 		break;
 	case geneva_right:
-		genevaRef = 1.0 * GENEVA_POSITION_DIF_CNT;
+		genevaRef = 2850;
 		break;
 	case geneva_middle:
-		genevaRef = 0.0 * GENEVA_POSITION_DIF_CNT;
+		genevaRef = 1995;
 		break;
 	case geneva_left:
-		genevaRef = -1.0 * GENEVA_POSITION_DIF_CNT;
+		genevaRef = 1160;
 		break;
 	case geneva_leftleft:
-		genevaRef = -2.0 * GENEVA_POSITION_DIF_CNT;
+		genevaRef = 315;
 		break;
 	case geneva_none:
 		break;
 	}
 }
 
-geneva_positions geneva_GetState(){
-	if((geneva_Encodervalue() % GENEVA_POSITION_DIF_CNT) > GENEVA_MAX_ALLOWED_OFFSET){
-		return geneva_none;
-	}
-	return 2 + (geneva_Encodervalue()/GENEVA_POSITION_DIF_CNT);
+int geneva_GetEncoder(){
+	return geneva_Encodervalue();
 }
 
 int geneva_GetPWM() {
@@ -115,7 +104,7 @@ static void CheckIfStuck(){
 		tick = HAL_GetTick();
 	}else if(tick + 70 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
-		genevaRef = 2;
+		geneva_SetRef(geneva_middle);
 		genevaState = on;
 	}
 }
@@ -137,11 +126,11 @@ static void limitScale(){
 		direction[0] = 0;
 		direction[1] = 0;
 	}
-	// Limit PWM //TODO: figure out MAX_PWM from old code
+	// Limit PWM
 	if(pwm < PWM_CUTOFF){
 		pwm = 0.0F;
-	} else if(pwm > 2400){
-		pwm = 2400;
+	} else if(pwm > MAX_PWM){
+		pwm = MAX_PWM;
 	}
 }
 

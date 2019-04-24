@@ -206,11 +206,11 @@ int main(void)
   uint printtime = 0;
   while (1)
   {
-	  geneva_Update();
 
-	  if (HAL_GetTick() - printtime > 50) {
+	  if (HAL_GetTick() - printtime > 10) {
+		  geneva_Update();
 		  Putty_printf("geneva pwm: %d \n\r", geneva_GetPWM());
-		  Putty_printf("geneva state: %d \n\r", geneva_GetState());
+		  Putty_printf("geneva state: %d \n\r", geneva_GetEncoder());
 		  printtime = HAL_GetTick();
 	  }
 
@@ -513,10 +513,10 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0xFFFF;
+  htim2.Init.Period = 0xffff;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;

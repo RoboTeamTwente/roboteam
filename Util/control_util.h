@@ -50,9 +50,7 @@
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
 
 //GENEVA
-#define GENEVA_CAL_EDGE_CNT 1980	// the amount of counts from an edge to the center
-#define GENEVA_POSITION_DIF_CNT 810	// amount of counts between each of the five geneva positions
-#define GENEVA_MAX_ALLOWED_OFFSET 0.1*GENEVA_POSITION_DIF_CNT	// maximum range where the geneva drive is considered in position
+#define GENEVA_CAL_EDGE_CNT 4100	// the amount of counts from an edge to the center
 
 
 ///////////////////////////////////////////////////// STRUCTS

@@ -207,4 +207,22 @@ bool LineSegment::doesIntersect(const LineSegment &line) const {
     }
     return false;
 }
+
+// same as normal intersect, but always returns false if the lines are parallel
+// intersection points of non-parallel lines are called non-simple (hence the name)
+bool LineSegment::nonSimpleDoesIntersect(const LineSegment &line) const{
+    Vector2 p=start,q=line.start,r=direction(),s=line.direction();
+    double denom=r.cross(s);
+    double numer=(q-p).cross(r);
+    if (denom!=0){
+        double u= numer/denom;
+        if (!(u<0||u>1)){
+            double t=(q-p).cross(s)/denom;
+            if (!(t<0||t>1)){
+                return true;
+            }
+        }
+    }
+    return false;
+}
 }

@@ -31,12 +31,12 @@ class LineBase {
 
         virtual double distanceToLine(const Vector2 &point) const = 0;
         virtual bool isOnLine(const Vector2 &point) const = 0;
-        virtual Vector2 project(const Vector2 &point) const =0;
+        virtual Vector2 project(const Vector2 &point) const = 0;
 
-        virtual std::shared_ptr<Vector2> intersects(const Line& line) const =0;
-        virtual std::shared_ptr<Vector2> intersects(const LineSegment& line) const =0;
-        virtual bool doesIntersect(const Line& line) const=0;
-        virtual bool doesIntersect(const LineSegment& line) const =0;
+        virtual std::shared_ptr<Vector2> intersects(const Line &line) const = 0;
+        virtual std::shared_ptr<Vector2> intersects(const LineSegment &line) const = 0;
+        virtual bool doesIntersect(const Line &line) const = 0;
+        virtual bool doesIntersect(const LineSegment &line) const = 0;
 };
 class Line : public LineBase {
     public:
@@ -45,10 +45,10 @@ class Line : public LineBase {
         double distanceToLine(const Vector2 &point) const override;
         bool isOnLine(const Vector2 &point) const override;
         Vector2 project(const Vector2 &point) const override;
-        std::shared_ptr<Vector2> intersects(const Line& line) const override;
-        std::shared_ptr<Vector2> intersects(const LineSegment& line) const override;
-        bool doesIntersect(const Line& line) const override;
-        bool doesIntersect(const LineSegment& line) const override;
+        std::shared_ptr<Vector2> intersects(const Line &line) const override;
+        std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
+        bool doesIntersect(const Line &line) const override;
+        bool doesIntersect(const LineSegment &line) const override;
 
 };
 class LineSegment : public LineBase {
@@ -58,10 +58,11 @@ class LineSegment : public LineBase {
         double distanceToLine(const Vector2 &point) const override;
         bool isOnLine(const Vector2 &point) const override;
         Vector2 project(const Vector2 &point) const override;
-        std::shared_ptr<Vector2> intersects(const Line& line) const override;
-        std::shared_ptr<Vector2> intersects(const LineSegment& line) const override;
-        bool doesIntersect(const Line& line) const override;
-        bool doesIntersect(const LineSegment& line) const override;
+        std::shared_ptr<Vector2> intersects(const Line &line) const override;
+        std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
+        bool doesIntersect(const Line &line) const override;
+        bool doesIntersect(const LineSegment &line) const override;
+        bool nonSimpleDoesIntersect(const LineSegment &line) const;
 };
 }
 

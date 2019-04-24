@@ -197,7 +197,7 @@ int main(void)
   velocity_Init();
   state_Init();
   geneva_Init();
-  //kick_Init();
+  kick_Init();
 
   /* USER CODE END 2 */
 
@@ -206,11 +206,10 @@ int main(void)
   uint printtime = 0;
   while (1)
   {
-
-	  if (HAL_GetTick() - printtime > 10) {
-		  geneva_Update();
-		  Putty_printf("geneva pwm: %d \n\r", geneva_GetPWM());
-		  Putty_printf("geneva state: %d \n\r", geneva_GetEncoder());
+	  if (HAL_GetTick() - printtime > 10000) {
+		  //kick_SetState(kick);
+		  kick_SetPower(100);
+		  kick_Shoot(true);
 		  printtime = HAL_GetTick();
 	  }
 
@@ -706,7 +705,7 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = APB-1;
+  htim6.Init.Prescaler = 2400;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 0;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1289,7 +1288,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == htim6.Instance){
+		kick_Callback();
+	}
+}
 /* USER CODE END 4 */
 
 /**

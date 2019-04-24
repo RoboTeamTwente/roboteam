@@ -20,11 +20,10 @@
 ///////////////////////////////////////////////////// STRUCTS
 
 typedef enum{
-	On,
-	charge,
-	kick,
-	chip,
-	Off
+	kick_Ready,
+	kick_Charging,
+	kick_Kicking,
+	kick_Off
 }kick_states;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
@@ -35,14 +34,10 @@ void kick_DeInit();
 
 void kick_Callback();
 
-void kick_Shoot();
-
-void kick_Chip();
+void kick_Shoot(bool kick);
 
 kick_states kick_GetState();
 
-void kick_SetState(kick_states input);
-
-void kick_SetPer(int input);
+void kick_SetPower(int input);
 
 #endif /* __kickchip_H */

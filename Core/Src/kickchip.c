@@ -1,32 +1,39 @@
 
 #include "../Inc/kickchip.h"
 #include <stdbool.h>
+#include "PuTTY.h"
 
-//TODO: Check if this works
 //TODO: current set-up would only chip or kick if charged, but does not let know when it does that.
 
 ///////////////////////////////////////////////////// STRUCTS
 
-kick_states kickState = Off;
+static kick_states kickState = kick_Off;
 
 ///////////////////////////////////////////////////// VARIABLES
 
 static bool charged = false;
-static int percentage = 0;
+static int power = 0; // percentage of maximum kicking power
+
+void kick_Shoot(bool kick);
+
+///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
+
+// Stops and starts the timer for a certain period of time
+void resetTimer(int timePeriod);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 void kick_Init(){
 	charged = false;
-	kickState = charge;
+	kickState = kick_Charging;
 	set_Pin(Kick_pin,0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
 	set_Pin(Charge_pin, 1);		// kick_Charging on
-	HAL_TIM_Base_Start(TIM_KC);
+	kick_Callback(); 			// go to callback for the first time
 }
 
 void kick_DeInit(){
-	kickState = Off;
+	kickState = kick_Off;
 	charged = false;
 	set_Pin(Kick_pin, 0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
@@ -34,17 +41,22 @@ void kick_DeInit(){
 	HAL_TIM_Base_Stop(TIM_KC);
 }
 
-//TODO: why does kickState behave so weird
 void kick_Callback()
 {
+	Putty_printf("kick state: %d \n\r", kickState);
+
+	int callbackTime = 0;
 	switch(kickState){
-	case On:
+	case kick_Ready:
+		callbackTime = 10000;
+		set_Pin(Charge_pin, 1);
+		charged = !charged;
 		break;
-	case charge:
-		if(read_Pin(Charge_done_pin)){
+	case kick_Charging:
+		if(!read_Pin(Charge_done_pin)){
 			set_Pin(Charge_pin, 0);
 			charged = true;
-			kickState = On;
+			kickState = kick_Ready;
 		}
 		else {
 			set_Pin(Kick_pin, 0);
@@ -52,69 +64,59 @@ void kick_Callback()
 			set_Pin(Charge_pin, 1);
 			charged = false;
 		}
+		callbackTime = 100;
 		break;
-	case kick:
-		if (charged){
-			kick_Shoot();
-		} else {
-			kickState = charge;
-		}
-		break;
-	case chip:
-		if (charged){
-			kick_Chip();
-		} else {
-			kickState = charge;
-		}
-		break;
-	case Off:
+	case kick_Kicking:
 		set_Pin(Kick_pin, 0);		// Kick off
 		set_Pin(Chip_pin, 0);		// Chip off
-		set_Pin(Charge_pin, 0);	// kick_Charging off
+		kickState = kick_Charging;
+		callbackTime = 100;
+		break;
+	case kick_Off:
+		set_Pin(Kick_pin, 0);		// Kick off
+		set_Pin(Chip_pin, 0);		// Chip off
+		set_Pin(Charge_pin, 0);		// kick_Charging off
+		callbackTime = 1000;
 		break;
 	}
-}
-
-
-void kick_Shoot()
-{
-	if(percentage < 1){
-		percentage = 1;
-	}else if(percentage > 100){
-		percentage = 100;
-	}
-	if(charged) {
-		set_Pin(Kick_pin, 1);
-	} else {
-		kickState = charge;
-		charged = false;
-	}
-}
-
-void kick_Chip()
-{
-	if(percentage < 1){
-		percentage = 1;
-	}else if(percentage > 100){
-		percentage = 100;
-	}
-	if(charged) {
-		set_Pin(Chip_pin, 1);
-	} else {
-		kickState = charge;
-		charged = false;
-	}
-}
-
-void kick_SetState(kick_states input){
-	kickState = input;
+	resetTimer(callbackTime);
 }
 
 kick_states kick_GetState(){
 	return kickState;
 }
 
-void kick_SetPer(int input){
-	percentage = input;
+void kick_SetPower(int input){
+	if(input < 1){
+		power = 1;
+	}else if(input > 100){
+		power = 100;
+	}else {
+		power = input;
+	}
+}
+
+void kick_Shoot(bool kick)
+{
+	if(kickState == kick_Ready && charged)
+	{
+		Putty_printf("kicking! power = %d \n\r", power);
+		kickState = kick_Kicking;								// Block kick_Charging
+		set_Pin(Charge_pin, 0); 						// Disable kick_Charging
+		set_Pin(kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
+
+		resetTimer(power * (kick ? 4 : 6));
+	}
+}
+
+///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
+
+void resetTimer(int timePeriod)
+{
+	HAL_TIM_Base_Stop(TIM_KC);							// Stop timer
+	__HAL_TIM_SET_COUNTER(TIM_KC, 0);      				// Reset timer
+	__HAL_TIM_CLEAR_IT(TIM_KC, TIM_IT_UPDATE);			// Clear timer
+	__HAL_TIM_SET_AUTORELOAD(TIM_KC, timePeriod);		// Set callback time to defined value
+	HAL_TIM_Base_Start_IT(TIM_KC);						// Start timer
 }
 

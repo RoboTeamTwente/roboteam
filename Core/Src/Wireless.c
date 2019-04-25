@@ -20,19 +20,20 @@ uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 // init structs
 SX1280_Settings set = {
         .frequency = 2400000000,
-        .txPower = 31, //0x1F = 13dBm, P(dBm)=(-18)+txPower
+        .txPower = 31, // -18 + txPower = transmit power in dBm (13dBm max)
 		.packettype = PACKET_TYPE_FLRC,
         .TX_ramp_time = RADIO_RAMP_20_US,
 		.periodBase = BASE_62_us,
         .periodBaseCount = 24,
 		.syncWords = {0x0, 0x0, 0x0},
-        .syncSensitivity = 1,
-        .TXoffset = 128,
-        .RXoffset = 0,
+		.syncWordTolerance = 2, // accepted wrong bits in a detected syncword
+        .syncSensitivity = 1, // high sensitivity mode
+        .TXoffset = 0x80,
+        .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_1_0, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_16_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_2_BYTE, NO_WHITENING},
+        .PacketParam = {PREAMBLE_LENGTH_16_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_1_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|RXTX_TIMEOUT), (TX_DONE|RX_DONE|RXTX_TIMEOUT), NONE, NONE}
-    };
+};
 SX1280_Packet_Status PacketStat;
 
 SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
@@ -40,15 +41,15 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
 
     SX->SPI_used = false;
 
-    SX->payloadLengh = 0;
+    SX->payloadLength = 0;
 	SX->RXbufferoffset = 0; // received location of the data buffer in SX1280
 	SX->irqStatus = 0;      // last received IRQ status
 
     // set connections
     SX->SPI = WirelessSpi;
     SX->CS_pin = SX_NSS_pin;
-    SX->busy_pin = SX_BUSY_pin;
     set_pin(SX->CS_pin, HIGH);
+    SX->BUSY_pin = SX_BUSY_pin;
     SX->IRQ_pin = SX_IRQ_pin;
     SX->RST_pin = SX_RST_pin;
 
@@ -59,17 +60,11 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
     // link settings
     SX->SX_settings = &set;
     SX->SX_settings->channel = channel;
-//    SX->SX_settings->syncWords[0] = robot_syncWord[RobotID];
     SX->Packet_status = &PacketStat;
 
-    SX1280Setup(SX);
-    setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
-    setAutoFS(SX,false);
-    //setFS(SX);
+    SX1280Setup(SX); // SX1280 init procedure
 
-//    bool succes = setFS(SX);
-//    set_pin(LED1_pin, !succes);	// notify if something has gone wrong with wireless
-    Putty_printf("SX started\n\r");
+    setAutoFS(SX,false); // to go or not to go FS after TX or RX
 
     return SX;
 };
@@ -80,31 +75,16 @@ void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     setAutoTX(SX, AUTO_TX_TIME);
 };
 
-void SendPacket(SX1280* SX,uint32_t header, uint8_t * data, uint8_t Nbytes){
-    clearIRQ(SX,ALL);
-    uint8_t buf[13] = {0};
-    uint8_t* ptr = buf;
-//    if(header){
-//    	// add room for Sync word in case it is requested
-////    	header = __REV(header);
-//		memcpy(ptr,&header,4);
-//		Nbytes = Nbytes+4;
-//		ptr = ptr+4;
-//    }
-    memcpy(ptr,data,Nbytes);
+void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
+	clearIRQ(SX,ALL);
     writeBuffer(SX, data, Nbytes);
-	  Putty_printf ("sending message: ");
-	  for (int i=0; i<13; i++){
-		  Putty_printf("%X", SX->TXbuf[2+i]);
-	  }
-	  Putty_printf("\n\r");
     setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
 }
 
 void ReceivePacket(SX1280* SX){
-    clearIRQ(SX,ALL);
+	clearIRQ(SX,ALL);
     getRXBufferStatus(SX);
-    readBuffer(SX, SX->payloadLengh);
+    readBuffer(SX, SX->payloadLength);
     SX->expect_packet = true;
 };
 
@@ -113,23 +93,33 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);
     SX->irqStatus = irq;
     getPacketStatus(SX);
-	char msg[20];
-	sprintf(msg, "rssi: %d\n\r", SX->Packet_status->RSSISync);
-	//Putty_printf(msg);
-	sprintf(msg, "errors: %d\n\r", SX->Packet_status->errors);
-	//Putty_printf(msg);
+//	char msg[20];
+//	sprintf(msg, "rssi: %d\n\r", SX->Packet_status->RSSISync);
+//	Putty_printf(msg);
+//	sprintf(msg, "errors: %d\n\r", SX->Packet_status->errors);
+//	Putty_printf(msg);
     clearIRQ(SX,ALL);
-
-    if (SX->Packet_status->RSSISync > 180) return; // leave if rssi too low
 
     // process interrupts
     if(irq & TX_DONE){
-    	Putty_printf("TX_DONE...\n\r");
+//    	Putty_printf("TX_DONE...\n\r");
+//    	toggle_pin(LED3_pin);
+//    	if transmitted, switch to receive mode
+//    	SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
+//    	setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+//    	setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
     }
 
     if(irq & RX_DONE){
-    	ReceivePacket(SX);
-    	//Putty_printf("receiving...\n\r");
+//    	Putty_printf("RX_DONE...\n\r");
+    	toggle_pin(LED2_pin);
+    	// if signal is strong, then receive packet; otherwise wait for packets
+    	if (SX->Packet_status->RSSISync < 180) {
+    		ReceivePacket(SX);
+    	}else{
+//    		 not necessary to force setRX() here since configured in Rx Continuous mode
+//    		setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
+    	}
     }
 
     if(irq & SYNCWORD_VALID) {
@@ -142,6 +132,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     }
 
     if(irq & RXTX_TIMEOUT) {
+//    	SX->SX_settings->syncWords[0] = robot_syncWord[31];
+//		setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
+//		SendPacket(SX, buf, 13);
     }
 
     if(irq & PREAMBLE_DETECTED) {
@@ -151,10 +144,13 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
-		toggle_pin(LED3_pin);
 		SX->expect_packet = false;
-		setRX(SX, SX->SX_settings->periodBase, 0x0);
-	}else{
-		Putty_printf("I commit seppuku\n\r");
+    	char packet[30];
+    	Putty_printf("received packet: ");
+    	for (int i=0; i<13; i++) {
+    		sprintf(packet, "%X", SX->RXbuf[3+i]);
+    		Putty_printf(packet);
+    	}
+    	Putty_printf("\n\r");
 	}
 }

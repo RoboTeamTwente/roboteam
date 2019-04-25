@@ -26,7 +26,7 @@ uint8_t * PC_to_Bot; // pointer to received data struct
 
 // Public Functions
 SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi);
-void SendPacket(SX1280* SX, uint32_t header, uint8_t* data, uint8_t Nbytes);
+void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void ReceivePacket(SX1280* SX);
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void Wireless_DMA_Handler(SX1280* SX, uint8_t * output);

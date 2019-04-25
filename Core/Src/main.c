@@ -213,18 +213,17 @@ int main(void)
   SX = Wireless_Init(1.3f, COMM_SPI);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
-  if(!setSyncWords(SX,robot_syncWord[ID],0x0,0x0)){
-	  Putty_printf("failed setting Sync\n\r");
-  }
-//  uint8_t buf[13] = {0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB,0xCD,0xAB};
-//  uint8_t buf[13] = {0xAB,0xCD,0xEF,0x12,0x34,0x56,0x78,0x90,0xFF,0xFF,0xFF,0xFF,0xFF};
+
+  // start the pingpong operation
+  SX->SX_settings->syncWords[0] = robot_syncWord[ID];
+  setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+  setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int i=0;
-  setRX(SX, SX->SX_settings->periodBase, 0x0);
   while (1)
   {
 	  if (HAL_GetTick() >  i + 1000) {

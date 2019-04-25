@@ -71,10 +71,6 @@ bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
         }
     }
     return 1;
-
-    ROS_ERROR("[writeToDevice] the device is closed!");
-
-    return false;
 }
 
 

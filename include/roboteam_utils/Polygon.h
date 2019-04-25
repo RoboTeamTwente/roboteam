@@ -7,9 +7,9 @@
 #include "Vector2.h"
 #include "Line.h"
 namespace rtt {
-class newPolygon {
+class Polygon {
     public:
-        newPolygon(std::vector<Vector2> vertices);
+        Polygon(std::vector<Vector2> vertices);
 
         std::vector<Vector2> vertices;
 

@@ -4,10 +4,10 @@
 
 #include "../include/roboteam_utils/Polygon.h"
 namespace rtt{
-int newPolygon::amountOfVertices() const {
+int Polygon::amountOfVertices() const {
     return vertices.size();
 }
-std::vector<LineSegment> newPolygon::getBoundary() const {
+std::vector<LineSegment> Polygon::getBoundary() const {
     std::vector<LineSegment> boundary;
     int n=vertices.size();
     for (int i=0; i<n;i++){
@@ -15,7 +15,7 @@ std::vector<LineSegment> newPolygon::getBoundary() const {
     }
     return boundary;
 }
-double newPolygon::perimeterLength() const {
+double Polygon::perimeterLength() const {
     double totalLength=0;
     int n=vertices.size();
     for (int i=0; i<n;i++){
@@ -27,7 +27,7 @@ double newPolygon::perimeterLength() const {
 
 //https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
 // this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
-bool newPolygon::isConvex() const {
+bool Polygon::isConvex() const {
     if (amountOfVertices()<4) return true;// triangles are always convex
     bool sign=false;
     int n=vertices.size();
@@ -47,7 +47,7 @@ bool newPolygon::isConvex() const {
 // there are multiple possible algorithms, see
 //https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
 // this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
-bool newPolygon::isSimple() const {
+bool Polygon::isSimple() const {
     // we loop over every unique pair
     std::vector<LineSegment> lines;
     for (auto first=vertices.begin()+1; first!=vertices.end(); ++first){
@@ -68,7 +68,7 @@ bool newPolygon::isSimple() const {
     return true;
 }
 //https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
-bool newPolygon::contains(const Vector2 &point) const {
+bool Polygon::contains(const Vector2 &point) const {
     int i, j, c = 0;
     int n=amountOfVertices();
     for (i = 0, j = n-1; i < n; j = i++) {
@@ -79,7 +79,7 @@ bool newPolygon::contains(const Vector2 &point) const {
     return c;
 }
 
-bool newPolygon::doesIntersect(const LineSegment &line) const {
+bool Polygon::doesIntersect(const LineSegment &line) const {
     int n=vertices.size();
     for (int i=0; i<n;i++){
         LineSegment segment(vertices[i],vertices[(i+1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
@@ -89,7 +89,7 @@ bool newPolygon::doesIntersect(const LineSegment &line) const {
     }
     return false;
 }
-bool newPolygon::isOnBoundary(const Vector2 &point) const {
+bool Polygon::isOnBoundary(const Vector2 &point) const {
     int n=vertices.size();
     for (int i=0; i<n;i++){
         LineSegment segment(vertices[i],vertices[(i+1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
@@ -99,7 +99,7 @@ bool newPolygon::isOnBoundary(const Vector2 &point) const {
     }
     return false;
 }
-std::vector<Vector2> newPolygon::intersections(const LineSegment &line) const {
+std::vector<Vector2> Polygon::intersections(const LineSegment &line) const {
     std::vector<Vector2> intersections;
     int n=vertices.size();
     for (int i=0; i<n;i++){
@@ -117,7 +117,7 @@ std::vector<Vector2> newPolygon::intersections(const LineSegment &line) const {
 }
 //https://en.wikipedia.org/wiki/Shoelace_formula
 // only works for simple polygons
-double newPolygon::area() const {
+double Polygon::area() const {
     int n=vertices.size();
     double sum=0;
     for (int i=0;i<n;i++){

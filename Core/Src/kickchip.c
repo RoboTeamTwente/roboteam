@@ -3,6 +3,16 @@
 
 //TODO: current set-up would only chip or kick if charged, but does not let know when it does that.
 
+/*
+ * 		DESCRIPTION:
+ * --------------------------------------------------
+ * As opposed to other functionalities, kickchip uses a callback() instead of an update(). This is because kickchip
+ * only needs to update when kicking is needed, while for example the velocity control needs to ran constantly.
+ * The timer for the callback is set internally. The time after which another callback should be made differs per kickState.
+ * While charging and kicking, updating has to be done frequently and while the robot is ready to kick, updating can be done
+ * less frequent.
+ */
+
 ///////////////////////////////////////////////////// STRUCTS
 
 static kick_states kickState = kick_Off;

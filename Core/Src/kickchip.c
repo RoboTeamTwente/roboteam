@@ -49,8 +49,6 @@ void kick_DeInit(){
 
 void kick_Callback()
 {
-	Putty_printf("kick state: %d \n\r", kickState);
-
 	int callbackTime = 0;
 	switch(kickState){
 	case kick_Ready:
@@ -106,7 +104,7 @@ void kick_Shoot(bool doChip)
 {
 	if(kickState == kick_Ready)
 	{
-		Putty_printf("kicking! power = %d \n\r", power);
+		//Putty_printf("kicking! power = %d \n\r", power);
 		kickState = kick_Kicking;
 		set_Pin(Charge_pin, 0); 								// Disable kick_Charging
 		set_Pin(doChip ? Chip_pin : Kick_pin, 1); 				// Kick/Chip on

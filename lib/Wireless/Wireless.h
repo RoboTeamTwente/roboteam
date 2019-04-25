@@ -24,10 +24,6 @@ SX1280 * SX; // pointer to the datastruct
 uint8_t * Bot_to_PC; // pointer to feedback data struct
 uint8_t * PC_to_Bot; // pointer to received data struct
 
-// global variables, temporary for testing
-static int sendToId = 0;
-static uint8_t buf[13] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-
 // Public Functions
 SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi);
 void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes);

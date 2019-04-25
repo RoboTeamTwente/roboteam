@@ -106,23 +106,14 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 //    	TextOut("SX_IRQ TX_DONE\n\r");
     	isTransmitting = false;
     	toggle_pin(LD_3);
-    	// if transmitted, switch to receive mode
-		SX->SX_settings->syncWords[0] = robot_syncWord[31];
-		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    	setRX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount); // look for messages from robot until timeout
     }
 
     if(irq & RX_DONE){
 //    	TextOut("SX_IRQ RX_DONE\n\r");
-    	toggle_pin(LD_2);
+//    	toggle_pin(LD_2);
     	// if signal is strong, then receive packet; otherwise SendPacket() without changes
     	if (SX->Packet_status->RSSISync < 180) {
-    		ReceivePacket(SX);
-    	}else{
-//    		TextOut("ignoring noise\n\r");
-    		SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
-    		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    		SendPacket(SX, buf, 13);
+//    		ReceivePacket(SX);
     	}
     }
 
@@ -139,12 +130,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     }
 
     if(irq & RXTX_TIMEOUT) {
-    	// did not receive packet from robot, continue sending messages
+    	// did not receive packet from robot
     	isTransmitting = false;
 //    	TextOut("SX_IRQ RXTX_TIMEOUT\n\r");
-		SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
-		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    	SendPacket(SX, buf, 13);
     }
 
     if(irq & PREAMBLE_DETECTED) {
@@ -157,15 +145,15 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
     if(SX->expect_packet){ // expecting incoming packet in the buffer
     	SX->expect_packet = false;
 //    	TextOut("received packet: ");
-    	for (int i=0; i<13; i++) {
+//    	for (int i=0; i<13; i++) {
 //    		TextOut(SX->RXbuf[3+i]);
-    		buf[i] = SX->RXbuf[3+i] + 1; // store received message+1 in buf[] and then send it back to BS
-    	}
+//    		buf[i] = SX->RXbuf[3+i] + 1; // store received message+1 in buf[] and then send it back to BS
+//    	}
 //    	TextOut("\n\r");
 
         // SendPacket() with new buf[]
-		SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
-		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-        SendPacket(SX, buf, 13);
+//		SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
+//		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+//        SendPacket(SX, buf, 13);
     }
 }

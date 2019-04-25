@@ -155,10 +155,6 @@ int main(void)
   SX = Wireless_Init(1.3f, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
 
-	// start the pingpong operation with sendToId=0 and buf[]={0x00};
-	SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
-	setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-	SendPacket(SX, buf, 13);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -661,9 +657,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 // global variables
-//int sendToId = 0;
-//uint8_t buf[13] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-
+int sendToId = 0;
+uint8_t buf[13] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
@@ -681,9 +676,21 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
 		// determine if we should send this message
-		if (!isTransmitting) { //&& msgBuff[sendToId].isNew
+		if (!isTransmitting && msgBuff[sendToId].isNew) {
 			isTransmitting = true;
-//			msgBuff[sendToId].isNew = false;
+			msgBuff[sendToId].isNew = false;
+
+			SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
+			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+			char numbers[26];
+			TextOut("sending packet: ");
+			for (int i=0,j=0; i<26; i++, j++) {
+				sprintf(&numbers[i], "%X", msgBuff[sendToId].msg[j]);
+				i++;
+			}
+			TextOut(numbers);
+			TextOut("\n\r");
+			SendPacket(SX, msgBuff[sendToId].msg, 13);
 		}
 		// increment id
 		if (sendToId < 15) {
@@ -691,6 +698,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 		}else {
 			sendToId = 0;
 		}
+
 	}
 }
 

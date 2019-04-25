@@ -1,40 +1,31 @@
-#ifndef POLYGON_H_
-#define POLYGON_H_
+//
+// Created by rolf on 24-4-19.
+//
 
-#include <vector>
-
+#ifndef ROBOTEAM_UTILS_POLYGON_H
+#define ROBOTEAM_UTILS_POLYGON_H
+#include "Vector2.h"
+#include "Line.h"
 namespace rtt {
-    
-class Polygon {
+class newPolygon {
     public:
-    Polygon() {}
-    Polygon(std::vector<Vector2> vertices, bool seal = true) : vertices(vertices), sealed(seal) {}
-    
-    void add_vertex(const Vector2&);
-    void seal();
-    bool is_sealed() const;
-    
-    bool is_valid() const;
-    bool is_convex() const;
-    bool is_simple() const;
-    bool contains(const Vector2&) const;
-    bool intersects(const Vector2&, const Vector2&) const;
-    Vector2 centroid() const;
-    
-    Vector2 operator[](int idx) { return vertices[idx]; }
-    
-    private:
-    std::vector<Vector2> vertices;
-    bool sealed;
-    bool convex, simple;
-    
-    bool calc_convex() const;
-    bool calc_simple() const;
-    
-    bool ccw(int) const;
-    bool intersect(int, int) const;
-};  
+        newPolygon(std::vector<Vector2> vertices);
 
+        std::vector<Vector2> vertices;
+
+        int amountOfVertices() const;
+        std::vector<LineSegment> getBoundary() const;
+        double perimeterLength() const;
+        bool isConvex() const;
+        bool isSimple() const;
+        bool isValid() const;
+        bool contains(const Vector2& point) const;
+        bool isOnBoundary(const Vector2& point) const;
+        bool doesIntersect(const LineSegment& line) const;
+        std::vector<Vector2> intersections(const LineSegment& line) const;
+        double area() const;
+
+
+};
 }
-
-#endif
+#endif //ROBOTEAM_UTILS_POLYGON_H

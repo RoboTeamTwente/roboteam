@@ -1,123 +1,127 @@
-#include "roboteam_utils/Polygon.h"
-#include <exception>
-#include <queue>
-#include <boost/intrusive/sg_set.hpp>
+//
+// Created by rolf on 24-4-19.
+//
 
-namespace rtt {
-    
-bool Polygon::add_vertex(const Vector2& vec) {
-    if (sealed || !can_add(vec)) {
-        return false;
+#include "../include/roboteam_utils/Polygon.h"
+namespace rtt{
+int newPolygon::amountOfVertices() const {
+    return vertices.size();
+}
+std::vector<LineSegment> newPolygon::getBoundary() const {
+    std::vector<LineSegment> boundary;
+    int n=vertices.size();
+    for (int i=0; i<n;i++){
+        boundary.push_back(LineSegment(vertices[i],vertices[(i+1)%n])); // maybe there is a nice way to do this 'circular' access with iterators?
     }
-    vertices.push_back(vec);
-    return true;
-}    
-
-void Polygon::seal() {
-    sealed = true;
-    convex = calc_convex();
-    simple = calc_simple();
+    return boundary;
 }
+double newPolygon::perimeterLength() const {
+    double totalLength=0;
+    int n=vertices.size();
+    for (int i=0; i<n;i++){
+        totalLength+=(vertices[i]-vertices[(i+1)%n]).length();// maybe there is a nice way to do this 'circular' access with iterators?
 
-bool Polygon::is_valid() {
-    return vertices.size() > 2; // A polygon must at least be a triangle
-}
-
-bool Polygon::is_sealed() {
-    return sealed;
-}
-
-bool Polygon::is_convex() {
-    return sealed ? convex : calc_convex();
-}
-
-bool Polygon::is_simple() {
-    return sealed ? simple : calc_simple();
-}
-
-bool Polygon::contains(const Vector2& vec) {
-    //TODO
-}
-
-bool Polygon::intersects(const Vector2& a, const Vector2& b) {
-    //TODO
-}
-
-Vector2 Polygon::centroid() {
-    // See https://en.wikipedia.org/wiki/Centroid#Centroid_of_polygon
-    if (!is_simple()) {
-        throw std::domain_error("Cannot calculate centroid for complex polygons.");
     }
-    std::vector<double> multiplicands; // used in multiple calculations below
-    for (int i = 0; i < vertices.size(); i++) {
-        int next_i = (i+1) % vertices.size(); //loop back at the end
-        multiplicands[i] = vertices[i].x * vertices[next_i].y - vertices[next_i].x * vertices[i].y;
-    }
-    
-    double area = 0.0;
-    for (double d : multiplicands) area += d;
-    area = 1.0 / (area * 3.0); // actually area /= 2, but we need 1 / (6*area) multiple times later.
-    
-    double cx = 0.0, cy = 0.0;
-    for (int i = 0; i < vertices.size(); i++) {
-        int next_i = (i+1) % vertices.size(); //loop back at the end
-        cx += (vertices[i].x + vertices[next_i].x) * multiplicands[i];
-        cy += (vertices[i].y + vertices[next_i].y) * multiplicands[i];
-    }
-    
-    cx *= area;
-    cy *= area;
-    
-    return Vector2(cx, cy);    
+    return totalLength;
 }
 
-bool Polygon::calc_convex() {
-    //TODO
-    if (!is_valid()) {
-        return false;
-    }
-    int sign = 0;
-    for (int i = 0; i < vertices.size(); i++) {
-        int next = (i+1) % vertices.size();
-        int nextnext = (i+2) % vertices.size();
-        double dx1 = vertices[next].x - vertices[i].x;
-        double dx2 = vertices[nextnext].x - vertices[next].x;
-        double dy1 = vertices[next].y - vertices[i].y;
-        double dy2 = vertices[nextnext].y - vertices[next].y;
-        double zcross = dx1 * dy2 - dy1 * dx2;
-        int cur_sign = zcross > 0 ? 1 : zcross < 0 ? -1 : 0;
-        if (i == 0 || sign == 0) {
-            sign = cur_sign;
-        } else if (cur_sign != 0 && sign != cur_sign) {
+//https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
+// this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
+bool newPolygon::isConvex() const {
+    if (amountOfVertices()<4) return true;// triangles are always convex
+    bool sign=false;
+    int n=vertices.size();
+    for (int i=0;i<n;i++){
+        Vector2 d1=vertices[(i+2)%n]-vertices[(i+1)%n];
+        Vector2 d2=vertices[i]-vertices[(i+1)%n];
+        double cross=d1.cross(d2);
+        if (i==0){
+            sign=cross>0;
+        }
+        else if(sign!=(cross>0)){
             return false;
         }
     }
     return true;
 }
-
-bool Polygon::ccw(int i) {
-    int next = (i+1) % vertices.size();
-    int nextnext = (i+2) % vertices.size();
-    double dx1 = vertices[next].x - vertices[i].x;
-    double dx2 = vertices[nextnext].x - vertices[next].x;
-    double dy1 = vertices[next].y - vertices[i].y;
-    double dy2 = vertices[nextnext].y - vertices[next].y;
-    return dy1 * dx2 < dy2 * dx1;
-}
-
-bool Polygon::intersect(int i, int j) {
-    int s1 = i > 0 ? i - 1 : vertices.size() - 1;
-    int s2 = j > 0 ? j - 1 : vertices.size() - 1;
-    
-    
-}
-
-bool Polygon::calc_simple() {
-    //Bentley-Ottmann algorithm
-    if (!is_valid()) {
-        return false;
+// there are multiple possible algorithms, see
+//https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
+// this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
+bool newPolygon::isSimple() const {
+    // we loop over every unique pair
+    std::vector<LineSegment> lines;
+    for (auto first=vertices.begin()+1; first!=vertices.end(); ++first){
+        LineSegment boundarySegment;
+        if (first==vertices.end()) {
+            boundarySegment=LineSegment(*first,vertices[0]);
+        }
+        else{
+            boundarySegment=LineSegment(*first, *(first - 1));
+        }
+        for (auto line :lines){
+            if(boundarySegment.nonSimpleDoesIntersect(line)){
+                return false;
+            }
+        }
+        lines.push_back(boundarySegment);
     }
-    
+    return true;
+}
+//https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+bool newPolygon::contains(const Vector2 &point) const {
+    int i, j, c = 0;
+    int n=amountOfVertices();
+    for (i = 0, j = n-1; i < n; j = i++) {
+        if ( ((vertices[i].y>point.y) != (vertices[j].y>point.y)) &&
+                (point.x < (vertices[j].x-vertices[i].x) * (point.y-vertices[i].y) / (vertices[j].y-vertices[i].y) + vertices[i].x) )
+            c = !c;
+    }
+    return c;
 }
 
+bool newPolygon::doesIntersect(const LineSegment &line) const {
+    int n=vertices.size();
+    for (int i=0; i<n;i++){
+        LineSegment segment(vertices[i],vertices[(i+1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
+        if (line.doesIntersect(segment)){
+            return true;
+        }
+    }
+    return false;
 }
+bool newPolygon::isOnBoundary(const Vector2 &point) const {
+    int n=vertices.size();
+    for (int i=0; i<n;i++){
+        LineSegment segment(vertices[i],vertices[(i+1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
+        if (segment.isOnLine(point)){
+            return true;
+        }
+    }
+    return false;
+}
+std::vector<Vector2> newPolygon::intersections(const LineSegment &line) const {
+    std::vector<Vector2> intersections;
+    int n=vertices.size();
+    for (int i=0; i<n;i++){
+        LineSegment segment(vertices[i],vertices[(i+1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
+        auto intersect=line.nonSimpleIntersects(segment);
+        if (intersect){
+            intersections.push_back(*intersect);
+        }
+        // check the vertices explicitly (so we don't double count if we do line intersection)
+        if (line.isOnLine(vertices[i])){
+            intersections.push_back(vertices[i]);
+        }
+    }
+    return intersections;
+}
+//https://en.wikipedia.org/wiki/Shoelace_formula
+double newPolygon::area() const {
+    int n=vertices.size();
+    double sum=0;
+    for (int i=0;i<n;i++){
+        sum+=vertices[i].cross(vertices[(i+1)%n]);
+    }
+    return 0.5*abs(sum);
+}
+}//rtt

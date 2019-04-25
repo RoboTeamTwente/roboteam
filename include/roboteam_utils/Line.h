@@ -40,6 +40,7 @@ class LineBase {
 };
 class Line : public LineBase {
     public:
+        constexpr Line() : LineBase(){};
         constexpr Line(const Vector2 &_start, const Vector2 &_end)
                 :LineBase(_start, _end) { };
         double distanceToLine(const Vector2 &point) const override;
@@ -53,6 +54,7 @@ class Line : public LineBase {
 };
 class LineSegment : public LineBase {
     public:
+        constexpr LineSegment() : LineBase(){};
         constexpr LineSegment(const Vector2 &_start, const Vector2 &_end)
                 :LineBase(_start, _end) { };
         double distanceToLine(const Vector2 &point) const override;
@@ -63,6 +65,8 @@ class LineSegment : public LineBase {
         bool doesIntersect(const Line &line) const override;
         bool doesIntersect(const LineSegment &line) const override;
         bool nonSimpleDoesIntersect(const LineSegment &line) const;
+        std::shared_ptr<Vector2> nonSimpleIntersects(const LineSegment &line) const;
+
 };
 }
 

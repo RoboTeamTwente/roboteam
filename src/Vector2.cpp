@@ -119,7 +119,7 @@ Vector2 Vector2::stretchToLength(double desiredLength) const {
     return {x*frac, y*frac};
 }
 
-double Vector2::cross(const Vector2 &other) {
+double Vector2::cross(const Vector2 &other) const{
     return this->x*other.y-this->y*other.x;
 }
 bool Vector2::operator==(const Vector2 &other) const {

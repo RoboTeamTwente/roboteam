@@ -88,16 +88,16 @@ void shoot_SetPower(int input){
 	}
 }
 
-void shoot_Shoot(bool doChip)
+void shoot_Shoot(shoot_types type)
 {
 	if(shootState == shoot_Ready)
 	{
 		//Putty_printf("shooting! power = %d \n\r", power);
 		shootState = shoot_Shooting;
 		set_Pin(Charge_pin, 0); 								// Disable shoot_Charging
-		set_Pin(doChip ? Chip_pin : Kick_pin, 1); 				// Kick/Chip on
+		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
 
-		resetTimer(power * (doChip ? CHIP_TIME : KICK_TIME));
+		resetTimer(power * (type == shoot_Kick ? KICK_TIME : CHIP_TIME));
 	}
 }
 

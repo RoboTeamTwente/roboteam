@@ -33,6 +33,11 @@ typedef enum{
 	shoot_Off
 }shoot_states;
 
+typedef enum{
+	shoot_Kick,
+	shoot_Chip
+}shoot_types;
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void shoot_Init();
@@ -41,7 +46,7 @@ void shoot_DeInit();
 
 void shoot_Callback();
 
-void shoot_Shoot(bool doChip);
+void shoot_Shoot(shoot_types type);
 
 shoot_states shoot_GetState();
 

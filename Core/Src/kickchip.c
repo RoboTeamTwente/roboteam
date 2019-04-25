@@ -12,8 +12,6 @@ static kick_states kickState = kick_Off;
 static bool charged = false;	// true if the capacitor is fully charged
 static int power = 0; 			// percentage of maximum kicking power
 
-
-static int count = 0;
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 // Stops and starts the timer for a certain period of time
@@ -49,7 +47,6 @@ void kick_Callback()
 		charged = !charged;
 		set_Pin(Charge_pin, !charged);
 		callbackTime = TIMER_FREQ/READY_CALLBACK_FREQ;
-		count++;
 		break;
 	case kick_Charging:
 		if(!read_Pin(Charge_done_pin)){
@@ -70,8 +67,6 @@ void kick_Callback()
 		set_Pin(Chip_pin, 0);		// Chip off
 		kickState = kick_Charging;
 		callbackTime = TIMER_FREQ/KICKING_CALLBACK_FREQ;
-		Putty_printf("count: %d\n\r", count);
-		count = 0;
 		break;
 	case kick_Off:
 		set_Pin(Kick_pin, 0);		// Kick off

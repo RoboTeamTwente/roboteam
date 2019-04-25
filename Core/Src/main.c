@@ -205,15 +205,40 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint printtime = 0;
   while (1)
   {
-	  if (HAL_GetTick() - printtime == 3000) {
-		  dribbler_SetSpeed(2);
-	  } else if (HAL_GetTick() - printtime > 4000) {
-		  dribbler_SetSpeed(0);
-		  printtime = HAL_GetTick();
+	  /*
+	   * Check for empty battery
+	   */
+	  if (!read_Pin(Bat_pin)) {
+		  // TODO: DeInit everything
+		  Putty_printf("battery empty\n\r");
 	  }
+
+
+	  /*
+	   * Check for wireless data
+	   */
+	  bool receivedWirelessData = false;
+	  bool testWheels = false;
+	  if (receivedWirelessData) {
+		  // TODO: implement wireless data
+	  }
+	  else if (testWheels) {
+		  // TODO: add wheels testing
+	  }
+
+
+	  /*
+	   * Run all updates
+	   */
+	  geneva_Update();
+	  Putty_Callback();
+
+	  /*
+	   * Print stuff on PuTTY for debugging
+	   */
+
 
     /* USER CODE END WHILE */
 

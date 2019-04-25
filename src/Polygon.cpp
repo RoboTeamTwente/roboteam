@@ -116,6 +116,7 @@ std::vector<Vector2> newPolygon::intersections(const LineSegment &line) const {
     return intersections;
 }
 //https://en.wikipedia.org/wiki/Shoelace_formula
+// only works for simple polygons
 double newPolygon::area() const {
     int n=vertices.size();
     double sum=0;

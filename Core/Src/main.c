@@ -210,7 +210,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   Putty_Init();
-  SX = Wireless_Init(1.3f, COMM_SPI);
+  SX = Wireless_Init(100, COMM_SPI);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
 
@@ -229,10 +229,13 @@ int main(void)
 	  if (HAL_GetTick() >  i + 1000) {
 		  i = HAL_GetTick();
 
-		  Putty_printf("MSGs/s %d:\n\r", counter);
-		  Putty_printf("strength %d \n\r", strength/counter);
-		  strength = 0;
-		  counter = 0;
+		  if (counter != 0) {
+			  Putty_printf("MSGs/s %d:\n\r", counter);
+			  Putty_printf("strength %d \n\r", strength/counter);
+			  printRoboData(Robot_Data, PC_to_Bot);
+			  strength = 0;
+			  counter = 0;
+		  }
 		  toggle_pin(LED0_pin);
 	  }
     /* USER CODE END WHILE */
@@ -1143,16 +1146,16 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
   /* DMA2_Stream1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 
 }

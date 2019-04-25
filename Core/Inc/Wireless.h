@@ -14,6 +14,7 @@
 #include "SX1280/SX1280_Constants.h"
 #include "SX1280/SX1280.h"
 #include "main.h"
+#include "packing.h"
 
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)
@@ -22,7 +23,8 @@
 SX1280 SX1280_struct;
 SX1280 * SX; // pointer to the datastruct
 uint8_t * Bot_to_PC; // pointer to feedback data struct
-uint8_t * PC_to_Bot; // pointer to received data struct
+uint8_t PC_to_Bot[ROBOPKTLEN]; // pointer to received data struct
+roboData * Robot_Data; // pointer to parsed received message
 
 // Public Functions
 SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi);

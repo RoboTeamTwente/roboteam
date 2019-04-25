@@ -47,10 +47,11 @@
 #include "tim_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
-#include "kickchip.h"
 #include "velocity.h"
 #include "stateEstimation.h"
 #include "geneva.h"
+#include "dribbler.h"
+#include "shoot.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -197,7 +198,8 @@ int main(void)
   velocity_Init();
   state_Init();
   geneva_Init();
-  kick_Init();
+  shoot_Init();
+  dribbler_Init();
 
   /* USER CODE END 2 */
 
@@ -206,9 +208,10 @@ int main(void)
   uint printtime = 0;
   while (1)
   {
-	  if (HAL_GetTick() - printtime > 4000) {
-		  kick_SetPower(50);
-		  kick_Shoot(false);
+	  if (HAL_GetTick() - printtime == 3000) {
+		  dribbler_SetSpeed(2);
+	  } else if (HAL_GetTick() - printtime > 4000) {
+		  dribbler_SetSpeed(0);
 		  printtime = HAL_GetTick();
 	  }
 
@@ -1290,7 +1293,7 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		kick_Callback();
+		shoot_Callback();
 	}
 }
 /* USER CODE END 4 */

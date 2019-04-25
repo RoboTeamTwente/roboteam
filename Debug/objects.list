@@ -1,7 +1,7 @@
 "Core/Src/dribbler.o"
 "Core/Src/geneva.o"
-"Core/Src/kickchip.o"
 "Core/Src/main.o"
+"Core/Src/shoot.o"
 "Core/Src/stateEstimation.o"
 "Core/Src/stm32f7xx_hal_msp.o"
 "Core/Src/stm32f7xx_it.o"

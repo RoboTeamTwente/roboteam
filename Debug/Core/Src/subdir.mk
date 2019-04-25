@@ -6,8 +6,8 @@
 C_SRCS += \
 ../Core/Src/dribbler.c \
 ../Core/Src/geneva.c \
-../Core/Src/kickchip.c \
 ../Core/Src/main.c \
+../Core/Src/shoot.c \
 ../Core/Src/stateEstimation.c \
 ../Core/Src/stm32f7xx_hal_msp.c \
 ../Core/Src/stm32f7xx_it.c \
@@ -18,8 +18,8 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/dribbler.o \
 ./Core/Src/geneva.o \
-./Core/Src/kickchip.o \
 ./Core/Src/main.o \
+./Core/Src/shoot.o \
 ./Core/Src/stateEstimation.o \
 ./Core/Src/stm32f7xx_hal_msp.o \
 ./Core/Src/stm32f7xx_it.o \
@@ -30,8 +30,8 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/dribbler.d \
 ./Core/Src/geneva.d \
-./Core/Src/kickchip.d \
 ./Core/Src/main.d \
+./Core/Src/shoot.d \
 ./Core/Src/stateEstimation.d \
 ./Core/Src/stm32f7xx_hal_msp.d \
 ./Core/Src/stm32f7xx_it.d \

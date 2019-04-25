@@ -133,6 +133,8 @@ void Error_Handler(void);
 #define LD1_GPIO_Port GPIOG
 #define LD0_Pin GPIO_PIN_1
 #define LD0_GPIO_Port GPIOG
+#define SPI4_NSS_Pin GPIO_PIN_11
+#define SPI4_NSS_GPIO_Port GPIOE
 #define SPI4_RST_Pin GPIO_PIN_15
 #define SPI4_RST_GPIO_Port GPIOE
 #define SPI4_BUSY_Pin GPIO_PIN_10

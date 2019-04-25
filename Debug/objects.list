@@ -1,3 +1,4 @@
+"Core/Src/Wireless.o"
 "Core/Src/dribbler.o"
 "Core/Src/geneva.o"
 "Core/Src/main.o"
@@ -33,6 +34,7 @@
 "Lib/PuTTY.o"
 "Lib/kalman.o"
 "Lib/yawCalibration.o"
+"Lib/SX1280/SX1280.o"
 "Util/gpio_util.o"
 "Util/tim_util.o"
 "startup/startup_stm32f767xx.o"

@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include startup/subdir.mk
 -include Util/subdir.mk
+-include Lib/SX1280/subdir.mk
 -include Lib/MTi/xbus/subdir.mk
 -include Lib/subdir.mk
 -include Drivers/STM32F7xx_HAL_Driver/Src/subdir.mk

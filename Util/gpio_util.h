@@ -11,6 +11,10 @@
 #include "stdbool.h"
 #include "stm32f7xx_hal.h"
 
+
+#define LOW 0
+#define HIGH 1
+
 // abstract a GPIO pin combination to a struct
 typedef struct GPIO_Pin{
 	GPIO_TypeDef * PORT;
@@ -88,6 +92,12 @@ extern GPIO_Pin FRQ_sel;
 extern GPIO_Pin MTi_RST_pin;
 extern GPIO_Pin MTi_IRQ_pin;
 
+// Wireless
+extern GPIO_Pin SX_IRQ_pin;
+extern GPIO_Pin SX_RST_pin;
+extern GPIO_Pin SX_NSS_pin;
+extern GPIO_Pin SX_BUSY_pin;
+
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 
@@ -109,12 +119,12 @@ inline void toggle_Pin(GPIO_Pin p)
 	HAL_GPIO_TogglePin(p.PORT, p.PIN);
 }
 
-inline uint16_t get_Id(){
+static inline uint16_t get_Id(){
 	uint16_t ID = 0;
-	ID |= read_Pin(ID0_pin) <<3;
-	ID |= read_Pin(ID1_pin) <<2;
-	ID |= read_Pin(ID2_pin) <<1;
-	ID |= read_Pin(ID3_pin);
+	ID |= !read_Pin(ID0_pin) <<3;
+	ID |= !read_Pin(ID1_pin) <<2;
+	ID |= !read_Pin(ID2_pin) <<1;
+	ID |= !read_Pin(ID3_pin);
 	return ID;
 }
 

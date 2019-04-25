@@ -45,6 +45,7 @@
 /* USER CODE BEGIN Includes */
 #include "gpio_util.h"
 #include "tim_util.h"
+#include "peripheral_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
 #include "velocity.h"
@@ -52,6 +53,7 @@
 #include "geneva.h"
 #include "dribbler.h"
 #include "shoot.h"
+#include "Wireless.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -81,6 +83,7 @@ SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi4;
 DMA_HandleTypeDef hdma_spi1_rx;
 DMA_HandleTypeDef hdma_spi4_rx;
+DMA_HandleTypeDef hdma_spi4_tx;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -101,7 +104,9 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
-
+SX1280* SX;
+int counter = 0;
+int strength = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -133,6 +138,19 @@ static void MX_TIM14_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+	if(hspi->Instance == SX->SPI->Instance) {
+		Wireless_DMA_Handler(SX, PC_to_Bot);
+		counter++;
+		strength+= SX->Packet_status->RSSISync;
+	}
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == SX_IRQ_pin.PIN) {
+		Wireless_IRQ_Handler(SX, 0, 0);
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -200,11 +218,21 @@ int main(void)
   geneva_Init();
   shoot_Init();
   dribbler_Init();
+  
+  SX = Wireless_Init(1.3f, COMM_SPI);
+  uint16_t ID = get_Id();
+  Putty_printf("ID: %u\n\r",ID);
+
+  // start the pingpong operation
+  SX->SX_settings->syncWords[0] = robot_syncWord[ID];
+  setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+  setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int i=0;
   while (1)
   {
 	  /*
@@ -219,6 +247,15 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
+	  if (HAL_GetTick() >  i + 1000) {
+		  i = HAL_GetTick();
+
+		  Putty_printf("MSGs/s %d:\n\r", counter);
+		  Putty_printf("strength %d \n\r", strength/counter);
+		  strength = 0;
+		  counter = 0;
+		  toggle_Pin(LED0_pin);
+	  }
 	  bool receivedWirelessData = false;
 	  bool testWheels = false;
 	  if (receivedWirelessData) {
@@ -449,8 +486,8 @@ static void MX_SPI4_Init(void)
   hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi4.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi4.Init.NSS = SPI_NSS_SOFT;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -1150,6 +1187,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+  /* DMA2_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
@@ -1179,8 +1219,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LF_FR_Pin|SPI4_RST_Pin|Chip_Pin|Kick_Pin, GPIO_PIN_RESET);
-
+  HAL_GPIO_WritePin(GPIOE, LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
+                          |Kick_Pin, GPIO_PIN_RESET);
+                          
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LB_FR_GPIO_Port, LB_FR_Pin, GPIO_PIN_RESET);
 
@@ -1207,7 +1248,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LF_FR_Pin SPI4_RST_Pin Chip_Pin Kick_Pin */
-  GPIO_InitStruct.Pin = LF_FR_Pin|SPI4_RST_Pin|Chip_Pin|Kick_Pin;
+  GPIO_InitStruct.Pin = LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
+                          |Kick_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1306,10 +1348,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }

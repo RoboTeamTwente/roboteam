@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/Wireless.c \
 ../Core/Src/dribbler.c \
 ../Core/Src/geneva.c \
 ../Core/Src/main.c \
@@ -16,6 +17,7 @@ C_SRCS += \
 ../Core/Src/wheels.c 
 
 OBJS += \
+./Core/Src/Wireless.o \
 ./Core/Src/dribbler.o \
 ./Core/Src/geneva.o \
 ./Core/Src/main.o \
@@ -28,6 +30,7 @@ OBJS += \
 ./Core/Src/wheels.o 
 
 C_DEPS += \
+./Core/Src/Wireless.d \
 ./Core/Src/dribbler.d \
 ./Core/Src/geneva.d \
 ./Core/Src/main.d \
@@ -45,7 +48,7 @@ Core/Src/%.o: ../Core/Src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
 	@echo $(PWD)
-	arm-none-eabi-gcc -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -DUSE_HAL_DRIVER -DSTM32F767xx '-D__weak=__attribute__((weak))' '-D__packed="__attribute__((__packed__))"' -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Core/Inc" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Util" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Lib" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/STM32F7xx_HAL_Driver/Inc" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Device/ST/STM32F7xx/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 '-D__weak=__attribute__((weak))' '-D__packed=__attribute__((__packed__))' -DUSE_HAL_DRIVER -DSTM32F767xx -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Core/Inc" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Util" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Lib" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/STM32F7xx_HAL_Driver/Inc" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Device/ST/STM32F7xx/Include" -I"/home/simen/roboteamtwente/workspace/src/roboteam_microcontroller3.0/Drivers/CMSIS/Include"  -Og -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

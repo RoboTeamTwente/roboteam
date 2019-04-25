@@ -3,8 +3,6 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
-//TODO: Fix/check timers, channels and PINS
-
 void dribbler_Init(){
 	start_PWM(PWM_Dribbler);
 	dribbler_SetSpeed(0);

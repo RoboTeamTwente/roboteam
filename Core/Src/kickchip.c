@@ -11,8 +11,9 @@ static kick_states kickState = kick_Off;
 
 static bool charged = false;	// true if the capacitor is fully charged
 static int power = 0; 			// percentage of maximum kicking power
-const int callbackTimes[4] = {READY_CALLBACK_TIME, CHARGING_CALLBACK_TIME, KICKING_CALLBACK_TIME, OFF_CALLBACK_TIME};
 
+
+static int count = 0;
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 // Stops and starts the timer for a certain period of time
@@ -42,10 +43,13 @@ void kick_Callback()
 {
 	Putty_printf("kick state: %d \n\r", kickState);
 
+	int callbackTime = 0;
 	switch(kickState){
 	case kick_Ready:
-		set_Pin(Charge_pin, 1);
 		charged = !charged;
+		set_Pin(Charge_pin, !charged);
+		callbackTime = TIMER_FREQ/READY_CALLBACK_FREQ;
+		count++;
 		break;
 	case kick_Charging:
 		if(!read_Pin(Charge_done_pin)){
@@ -59,19 +63,24 @@ void kick_Callback()
 			set_Pin(Charge_pin, 1);
 			charged = false;
 		}
+		callbackTime = TIMER_FREQ/CHARGING_CALLBACK_FREQ;
 		break;
 	case kick_Kicking:
 		set_Pin(Kick_pin, 0);		// Kick off
 		set_Pin(Chip_pin, 0);		// Chip off
 		kickState = kick_Charging;
+		callbackTime = TIMER_FREQ/KICKING_CALLBACK_FREQ;
+		Putty_printf("count: %d\n\r", count);
+		count = 0;
 		break;
 	case kick_Off:
 		set_Pin(Kick_pin, 0);		// Kick off
 		set_Pin(Chip_pin, 0);		// Chip off
 		set_Pin(Charge_pin, 0);		// kick_Charging off
+		callbackTime = TIMER_FREQ/OFF_CALLBACK_FREQ;
 		break;
 	}
-	resetTimer(callbackTimes[kickState]);
+	resetTimer(callbackTime);
 }
 
 kick_states kick_GetState(){
@@ -90,7 +99,7 @@ void kick_SetPower(int input){
 
 void kick_Shoot(bool doChip)
 {
-	if(kickState == kick_Ready && charged)
+	if(kickState == kick_Ready)
 	{
 		Putty_printf("kicking! power = %d \n\r", power);
 		kickState = kick_Kicking;
@@ -106,8 +115,8 @@ void kick_Shoot(bool doChip)
 void resetTimer(int timePeriod)
 {
 	HAL_TIM_Base_Stop(TIM_KC);							// Stop timer
-	__HAL_TIM_SET_COUNTER(TIM_KC, 0);      				// Reset timer
 	__HAL_TIM_CLEAR_IT(TIM_KC, TIM_IT_UPDATE);			// Clear timer
+	__HAL_TIM_SET_COUNTER(TIM_KC, 0);      				// Reset timer
 	__HAL_TIM_SET_AUTORELOAD(TIM_KC, timePeriod);		// Set callback time to defined value
 	HAL_TIM_Base_Start_IT(TIM_KC);						// Start timer
 }

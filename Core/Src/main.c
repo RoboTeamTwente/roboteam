@@ -206,9 +206,8 @@ int main(void)
   uint printtime = 0;
   while (1)
   {
-	  if (HAL_GetTick() - printtime > 10000) {
-		  //kick_SetState(kick);
-		  kick_SetPower(100);
+	  if (HAL_GetTick() - printtime > 4000) {
+		  kick_SetPower(50);
 		  kick_Shoot(false);
 		  printtime = HAL_GetTick();
 	  }
@@ -705,7 +704,7 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 2400;
+  htim6.Init.Prescaler = APB*100;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 0;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

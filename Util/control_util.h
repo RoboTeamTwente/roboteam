@@ -25,7 +25,7 @@
 ///////////////////////////////////////////////////// DEFINITIONS
 
 // System
-#define TIME_DIFF 0.01F // time difference due to 100Hz frequency
+#define TIME_DIFF 0.01F 		// time difference due to 100Hz frequency
 
 // Robot
 #define rad_robot 0.081F 	// robot radius (m) (from center to wheel contact point)
@@ -53,13 +53,14 @@
 #define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
 
 // KickChip
-//TODO: check if it actually is in units of milliseconds
-#define KICK_TIME 4 // number of milliseconds per percent of kicking power
-#define CHIP_TIME 6 // number of milliseconds per percent of chipping power
-#define READY_CALLBACK_TIME 10000 // number of milliseconds till the next callback when kickState is Ready
-#define CHARGING_CALLBACK_TIME 1000 // number of milliseconds till the next callback when kickState is Charging
-#define KICKING_CALLBACK_TIME 1000 // number of milliseconds till the next callback when kickState is Kicking
-#define OFF_CALLBACK_TIME 10000 // number of milliseconds till the next callback when kickState is Off
+//TODO: Tune KICK_TIME and CHIP_TIME to match with maximum and minimum kicking power
+#define KICK_TIME 2000 				// time period of kicking per percent of kicking power
+#define CHIP_TIME 3000 				// time period of chipping per percent of chipping power
+#define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)
+#define READY_CALLBACK_FREQ 1 		// frequency [Hz] of callback when kickState is Ready
+#define CHARGING_CALLBACK_FREQ 10 	// frequency [Hz] of callback when kickState is Charging
+#define KICKING_CALLBACK_FREQ 10 	// frequency [Hz] of callback when kickState is Kicking
+#define OFF_CALLBACK_FREQ 1 		// frequency [Hz] of callback when kickState is Off
 
 ///////////////////////////////////////////////////// STRUCTS
 

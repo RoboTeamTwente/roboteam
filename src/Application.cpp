@@ -16,7 +16,7 @@ Application::Application() {
     batching = getBatchingVariable();
 
     // if you want to force a mode, set it here already
-    mode = utils::Mode::GRSIM;
+    mode = utils::Mode::SERIAL;
 
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();

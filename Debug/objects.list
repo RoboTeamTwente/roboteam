@@ -33,6 +33,7 @@
 "Lib/MTi/xbus/xsdeviceid.o"
 "Lib/PuTTY.o"
 "Lib/kalman.o"
+"Lib/packing.o"
 "Lib/yawCalibration.o"
 "Lib/SX1280/SX1280.o"
 "Util/gpio_util.o"

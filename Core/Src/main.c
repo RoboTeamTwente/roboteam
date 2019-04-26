@@ -219,7 +219,7 @@ int main(void)
   shoot_Init();
   dribbler_Init();
   
-  SX = Wireless_Init(1.3f, COMM_SPI);
+  SX = Wireless_Init(100, COMM_SPI);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
 
@@ -250,10 +250,13 @@ int main(void)
 	  if (HAL_GetTick() >  i + 1000) {
 		  i = HAL_GetTick();
 
-		  Putty_printf("MSGs/s %d:\n\r", counter);
-		  Putty_printf("strength %d \n\r", strength/counter);
-		  strength = 0;
-		  counter = 0;
+		  if (counter != 0) {
+			  Putty_printf("MSGs/s %d:\n\r", counter);
+			  Putty_printf("strength %d \n\r", strength/counter);
+			  printRoboData(Robot_Data, PC_to_Bot);
+			  strength = 0;
+			  counter = 0;
+		  }
 		  toggle_Pin(LED0_pin);
 	  }
 	  bool receivedWirelessData = false;

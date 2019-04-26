@@ -6,16 +6,19 @@
 C_SRCS += \
 ../Lib/PuTTY.c \
 ../Lib/kalman.c \
+../Lib/packing.c \
 ../Lib/yawCalibration.c 
 
 OBJS += \
 ./Lib/PuTTY.o \
 ./Lib/kalman.o \
+./Lib/packing.o \
 ./Lib/yawCalibration.o 
 
 C_DEPS += \
 ./Lib/PuTTY.d \
 ./Lib/kalman.d \
+./Lib/packing.d \
 ./Lib/yawCalibration.d 
 
 

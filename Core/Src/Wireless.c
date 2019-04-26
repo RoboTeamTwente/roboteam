@@ -11,7 +11,7 @@
 #include "SX1280/SX1280.h"
 #include <stdbool.h>
 #include "PuTTY.h"
-
+#include "packing.h"
 
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
@@ -145,12 +145,16 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
 		SX->expect_packet = false;
-    	char packet[30];
-    	Putty_printf("received packet: ");
-    	for (int i=0; i<13; i++) {
-    		sprintf(packet, "%X", SX->RXbuf[3+i]);
-    		Putty_printf(packet);
-    	}
-    	Putty_printf("\n\r");
+		for (int i=0; i<13; i++) {
+			PC_to_Bot[i] = SX->RXbuf[3+i];
+		}
+		packetToRoboData(PC_to_Bot, Robot_Data);
+//    	char packet[30];
+//    	Putty_printf("received packet: ");
+//    	for (int i=0; i<13; i++) {
+//    		sprintf(packet, "%X", SX->RXbuf[3+i]);
+//    		Putty_printf(packet);
+//    	}
+//    	Putty_printf("\n\r");
 	}
 }

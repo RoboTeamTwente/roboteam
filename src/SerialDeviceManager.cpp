@@ -75,4 +75,5 @@ bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
 
 
 } // robothub
+
 } // rtt

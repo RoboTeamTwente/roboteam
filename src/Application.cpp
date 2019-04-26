@@ -16,7 +16,7 @@ Application::Application() {
     batching = getBatchingVariable();
 
     // if you want to force a mode, set it here already
-    mode = utils::Mode::SERIAL;
+    mode = utils::Mode::GRSIM;
 
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
@@ -50,7 +50,7 @@ std::string Application::getSerialDevice() {
         }
     }
 
-    deviceName = "usb-RTT_BaseStation_00000000001A-if00";
+    deviceName = "/dev/serial/by-id/usb-RTT_BaseStation_00000000001A-if00";
     ROS_INFO_STREAM("[getSerialDevice] No serial device name given in ROS. Assuming basestation " << deviceName);
     return deviceName;
 }

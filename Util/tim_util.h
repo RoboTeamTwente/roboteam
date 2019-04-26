@@ -40,7 +40,9 @@ typedef struct PWM_struct{
 #define ENC_LB 		&htim3
 #define ENC_RB 		&htim4
 #define ENC_LF 		&htim5
-#define TIM_KC		&htim6
+#define TIM_SHOOT	&htim6
+#define TIM_CONTROL &htim7
+
 
 extern PWM_struct PWM_RF;
 extern PWM_struct PWM_RB;

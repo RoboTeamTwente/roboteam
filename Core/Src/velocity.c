@@ -31,12 +31,13 @@ int velocity_Init(){
 	initPID(&velK[body_x], 1.0, 0.0, 0.0);
 	initPID(&velK[body_y], 2.0, 0.0, 0.0);
 	initPID(&velK[body_w], 20.0, 1.5, 0.0);
-	HAL_TIM_Base_Start_IT(&htim7);
+	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
 }
 
 int velocity_DeInit(){
 	velState = off;
+	HAL_TIM_Base_Stop_IT(TIM_CONTROL);
 	return 0;
 }
 

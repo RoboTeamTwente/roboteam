@@ -184,6 +184,7 @@ void processWirelessData(roboData *input) {
 	receivedData.visionYaw = input->cam_rotation * CONVERT_VISION_YAW;
 }
 
+// Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
 	velocity_SetRef(receivedData->velocityRef);
 	geneva_SetRef(receivedData->genevaRef);
@@ -197,6 +198,7 @@ void executeCommands(ReceivedData* receivedData) {
 	}
 }
 
+// Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
@@ -308,7 +310,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint printTime = 0;
   while (1)
   {
 	  /*
@@ -317,6 +318,15 @@ int main(void)
 	  if (!read_Pin(Bat_pin)) {
 		  // TODO: DeInit everything
 		  Putty_printf("battery empty\n\r");
+		  set_Pin(LED4_pin, 1);
+		  Putty_DeInit();
+		  wheels_DeInit();
+		  velocity_DeInit();
+		  state_DeInit();
+		  geneva_DeInit();
+		  shoot_DeInit();
+		  dribbler_DeInit();
+		  //TODO: wireless DeInit() ?
 	  }
 
 
@@ -324,14 +334,10 @@ int main(void)
 	   * Check for wireless data
 	   */
 	  bool receivedWirelessData = true;
-	  bool testWheels = false;
 	  if (receivedWirelessData) {
 		  lastPackageTime = HAL_GetTick();
 		  processWirelessData(Robot_Data);
 		  executeCommands(&receivedData);
-	  }
-	  else if (testWheels) {
-		  // TODO: add wheels testing
 	  }
 	  else if (HAL_GetTick() > lastPackageTime + CONNECTION_LOST_AFTER) {
 		  // Wireless connection is lost
@@ -348,6 +354,7 @@ int main(void)
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
+	  static uint printTime = 0;
 	  if (HAL_GetTick() >  printTime + 500) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);

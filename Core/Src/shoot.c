@@ -32,7 +32,7 @@ void shoot_DeInit(){
 	set_Pin(Kick_pin, 0);		// Kick off
 	set_Pin(Chip_pin, 0);		// Chip off
 	set_Pin(Charge_pin, 0);		// shoot_Charging off
-	HAL_TIM_Base_Stop(TIM_KC);
+	HAL_TIM_Base_Stop(TIM_SHOOT);
 }
 
 void shoot_Callback()
@@ -105,10 +105,10 @@ void shoot_Shoot(shoot_types type)
 
 void resetTimer(int timePeriod)
 {
-	HAL_TIM_Base_Stop(TIM_KC);							// Stop timer
-	__HAL_TIM_CLEAR_IT(TIM_KC, TIM_IT_UPDATE);			// Clear timer
-	__HAL_TIM_SET_COUNTER(TIM_KC, 0);      				// Reset timer
-	__HAL_TIM_SET_AUTORELOAD(TIM_KC, timePeriod);		// Set callback time to defined value
-	HAL_TIM_Base_Start_IT(TIM_KC);						// Start timer
+	HAL_TIM_Base_Stop(TIM_SHOOT);							// Stop timer
+	__HAL_TIM_CLEAR_IT(TIM_SHOOT, TIM_IT_UPDATE);			// Clear timer
+	__HAL_TIM_SET_COUNTER(TIM_SHOOT, 0);      				// Reset timer
+	__HAL_TIM_SET_AUTORELOAD(TIM_SHOOT, timePeriod);		// Set callback time to defined value
+	HAL_TIM_Base_Start_IT(TIM_SHOOT);						// Start timer
 }
 

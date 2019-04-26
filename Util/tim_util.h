@@ -17,7 +17,7 @@ extern TIM_HandleTypeDef htim3;		// encoder LB
 extern TIM_HandleTypeDef htim4;		// encoder RB
 extern TIM_HandleTypeDef htim5;		// encoder LF
 extern TIM_HandleTypeDef htim6;		// KickChipping
-extern TIM_HandleTypeDef htim7;		// internal timer (not used ATM)
+extern TIM_HandleTypeDef htim7;		// Control
 extern TIM_HandleTypeDef htim8;		// PWM (CH1: RB, CH2: RF, CH3: Dribbler, CH4: Geneva)
 extern TIM_HandleTypeDef htim9;		// PWM (CH1: LF, CH2: LB)
 extern TIM_HandleTypeDef htim10;	// PWM (Buzzer)

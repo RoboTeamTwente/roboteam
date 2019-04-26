@@ -91,13 +91,21 @@ void wheels_SetRef(float input[4]){
 	}
 }
 
-float wheels_GetState(wheel_names wheel) {
-	return wheelSpeed[wheel];
+float* wheels_GetState() {
+	return wheelSpeed;
 }
+//float wheels_GetState(wheel_names wheel) {
+//	return wheelSpeed[wheel];
+//}
 
-int wheels_GetPWM(wheel_names wheel) {
-	return pwm[wheel];
+void wheels_GetPWM(int wheelPWM[4]) {
+	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+		wheelPWM[wheel] = pwm[wheel];
+	}
 }
+//int wheels_GetPWM(wheel_names wheel) {
+//	return pwm[wheel];
+//}
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 

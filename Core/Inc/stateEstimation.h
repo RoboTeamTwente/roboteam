@@ -19,14 +19,25 @@
 #include "../Lib/kalman.h"
 #include "../Util/control_util.h"
 
+///////////////////////////////////////////////////// STRUCTS
+
+typedef struct StateInfo {
+	float visionYaw;
+	bool visionAvailable;
+	float* xsensAcc;
+	float xsensYaw;
+	float* wheelSpeeds;
+} StateInfo;
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 int state_Init();
 
 int state_Deinit();
 
-void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable);
+void state_Update(StateInfo* input);
 
-void state_GetState(float output[3]);
+float* state_GetState();
+//void state_GetState(float output[3]);
 
 #endif /* DO_STATEESTIMATION_H_ */

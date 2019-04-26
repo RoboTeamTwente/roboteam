@@ -22,22 +22,17 @@ int state_Deinit(){
 	return 0;
 }
 
-void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, bool visionAvailable) {
-
-	float acc[2] = {0.0f};
-	acc[body_x] = xsensData[body_x];
-	acc[body_y] = xsensData[body_y];
-
-	float vel[2]= {0.0f};
-	wheels2Body(wheelSpeeds, vel);
+void state_Update(StateInfo* input) {
+	float vel[2] = {0.0f};
+	wheels2Body(input->wheelSpeeds, vel);
 
 	kalman_CalculateK();
-	kalman_Update(acc, vel);
+	kalman_Update(input->xsensAcc, vel);
 
 	float kalman_State[4] = {0.0f};
 	kalman_GetState(kalman_State);
 
-	yaw_Calibrate(xsensData[body_w], visionYaw, visionAvailable);
+	yaw_Calibrate(input->xsensYaw, input->visionYaw, input->visionAvailable);
 	float calibratedYaw = yaw_GetCalibratedYaw();
 
 	state[body_x] = kalman_State[0];
@@ -45,11 +40,14 @@ void state_Update(float xsensData[3], float wheelSpeeds[4], float visionYaw, boo
 	state[body_w] = calibratedYaw;
 }
 
-void state_GetState(float output[3]){
-	for (body_handles i=body_x; i<=body_w; i++){
-		output[i] = state[i];
-	}
+float* state_GetState() {
+	return state;
 }
+//void state_GetState(float output[3]){
+//	for (body_handles i=body_x; i<=body_w; i++){
+//		output[i] = state[i];
+//	}
+//}
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 

@@ -28,8 +28,10 @@ void wheels_Update();
 
 void wheels_SetRef(float input[4]);
 
-float wheels_GetState(wheel_names wheel);
+float* wheels_GetState();
+//float wheels_GetState(wheel_names wheel);
 
-int wheels_GetPWM(wheel_names wheel);
+void wheels_GetPWM(int wheelPWM[4]);
+//int wheels_GetPWM(wheel_names wheel);
 
 #endif /* WHEELS_H_ */

@@ -31,6 +31,7 @@ int velocity_Init(){
 	initPID(&velK[body_x], 1.0, 0.0, 0.0);
 	initPID(&velK[body_y], 2.0, 0.0, 0.0);
 	initPID(&velK[body_w], 20.0, 1.5, 0.0);
+	HAL_TIM_Base_Start_IT(&htim7);
 	return 0;
 }
 
@@ -58,11 +59,14 @@ void velocity_SetRef(float input[3]){
 	velRef[body_w] = input[body_w];
 }
 
-void velocity_GetWheelRef(float output[4]){
-	for (wheel_names wheel=wheels_RF; wheel<=wheels_LF; wheel++){
-		output[wheel] = wheelRef[wheel];
-	}
+float* velocity_GetWheelRef() {
+	return wheelRef;
 }
+//void velocity_GetWheelRef(float output[4]){
+//	for (wheel_names wheel=wheels_RF; wheel<=wheels_LF; wheel++){
+//		output[wheel] = wheelRef[wheel];
+//	}
+//}
 
 void velocity_SetState(float input[3]){
 	state[body_x] = input[body_x];

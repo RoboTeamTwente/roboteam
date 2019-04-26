@@ -15,6 +15,14 @@
 #define SHORTACKPKTLEN 11 //amount of bytes of an ACK packet sent by the robot without using the extra/debug fields
 #define FULLACKPKTLEN 23 //ACK packet with debug fields
 
+// Conversion constants
+#define CONVERT_RHO 			0.004f
+#define CONVERT_THETA 			0.00307f
+#define CONVERT_YAW_REF 		0.00614f
+#define CONVERT_SHOOTING_POWER 	0.39f
+#define CONVERT_DRIBBLE_SPEED 	0.39f
+#define CONVERT_VISION_YAW 		0.00307f
+
 /*
  * A data struct which is easy to work with
  * when accessing variables.

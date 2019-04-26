@@ -28,7 +28,8 @@ void velocity_Update();
 
 void velocity_SetRef(float input[3]);
 
-void velocity_GetWheelRef(float output[4]);
+float* velocity_GetWheelRef();
+//void velocity_GetWheelRef(float output[4]);
 
 void velocity_SetState(float input[3]);
 

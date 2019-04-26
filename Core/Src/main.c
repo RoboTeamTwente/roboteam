@@ -104,9 +104,16 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
+#define CONNECTION_LOST_AFTER 250 // ms
+uint lastPackageTime = 0;
+
 SX1280* SX;
 int counter = 0;
 int strength = 0;
+
+ReceivedData receivedData = {NULL, 0.0f, false, 0.0f, 0, 0, 0, false, false};
+float velocityRef[3] = {0, 0, 0};
+StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -149,6 +156,75 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
 		Wireless_IRQ_Handler(SX, 0, 0);
+	}
+}
+
+// Convert the raw data that is received over the wireless to data that can be used.
+// The result is saved in the receivedData struct.
+void processWirelessData(roboData *input) {
+	// Velocity
+	velocityRef[body_x] = (input->rho * CONVERT_RHO) * cosf(input->theta * CONVERT_THETA);
+	velocityRef[body_y] = (input->rho * CONVERT_RHO) * sinf(input->theta * CONVERT_THETA);
+	velocityRef[body_w] = input->velocity_angular * CONVERT_YAW_REF;
+	receivedData.velocityRef = velocityRef;
+
+	// Geneva
+	receivedData.genevaRef = input->geneva_drive_state + 2;
+
+	// Dribbler
+	receivedData.dribblerRef = input->velocity_dribbler * CONVERT_DRIBBLE_SPEED;
+
+	// Shoot
+	receivedData.shootPower = input->kick_chip_power * CONVERT_SHOOTING_POWER;
+	receivedData.do_kick = input->do_kick;
+	receivedData.do_chip = input->do_chip;
+
+	// Vision data
+	receivedData.visionAvailable = input->use_cam_info;
+	receivedData.visionYaw = input->cam_rotation * CONVERT_VISION_YAW;
+}
+
+void executeCommands(ReceivedData* receivedData) {
+	velocity_SetRef(receivedData->velocityRef);
+	geneva_SetRef(receivedData->genevaRef);
+	dribbler_SetSpeed(receivedData->dribblerRef);
+	shoot_SetPower(receivedData->shootPower);
+
+	if (receivedData->do_kick) {
+		shoot_Shoot(shoot_Kick);
+	} else if (receivedData->do_chip) {
+		shoot_Shoot(shoot_Chip);
+	}
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == htim6.Instance){
+		/*
+		* Interrupt to check how shooting is going
+		*/
+		shoot_Callback();
+	}
+	else if(htim->Instance == htim7.Instance) {
+		/*
+		 * Interrupt to execute the control part
+		 */
+
+		// State estimation
+		stateInfo.visionAvailable = receivedData.visionAvailable;
+		stateInfo.visionYaw = receivedData.visionYaw;
+		stateInfo.wheelSpeeds = wheels_GetState();
+		stateInfo.xsensAcc = NULL; // TODO: add xsens getter
+		stateInfo.xsensYaw = 0.0f; // TODO: add xsens getter
+		state_Update(&stateInfo);
+
+		// Velocity control
+		velocity_SetState(state_GetState());
+		velocity_Update();
+
+		// Wheel control
+		wheels_SetRef(velocity_GetWheelRef());
+		wheels_Update();
 	}
 }
 
@@ -232,7 +308,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i=0;
+  uint printTime = 0;
   while (1)
   {
 	  /*
@@ -247,37 +323,38 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  if (HAL_GetTick() >  i + 1000) {
-		  i = HAL_GetTick();
-
-		  if (counter != 0) {
-			  Putty_printf("MSGs/s %d:\n\r", counter);
-			  Putty_printf("strength %d \n\r", strength/counter);
-			  printRoboData(Robot_Data, PC_to_Bot);
-			  strength = 0;
-			  counter = 0;
-		  }
-		  toggle_Pin(LED0_pin);
-	  }
-	  bool receivedWirelessData = false;
+	  bool receivedWirelessData = true;
 	  bool testWheels = false;
 	  if (receivedWirelessData) {
-		  // TODO: implement wireless data
+		  lastPackageTime = HAL_GetTick();
+		  processWirelessData(Robot_Data);
+		  executeCommands(&receivedData);
 	  }
 	  else if (testWheels) {
 		  // TODO: add wheels testing
 	  }
+	  else if (HAL_GetTick() > lastPackageTime + CONNECTION_LOST_AFTER) {
+		  // Wireless connection is lost
+		  // TODO: act accordingly
+	  }
 
 
 	  /*
-	   * Run all updates
+	   * Run updates
 	   */
 	  geneva_Update();
-	  Putty_Callback();
+
 
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
+	  if (HAL_GetTick() >  printTime + 500) {
+		  printTime = HAL_GetTick();
+		  toggle_Pin(LED0_pin);
+
+		  Putty_printf("velocity ref:   {%f, %f}\n\r", receivedData.velocityRef[body_x], receivedData.velocityRef[body_y]);
+		  Putty_printf("velocity state: {%f, %f}\n\r", state_GetState()[body_x], state_GetState()[body_y]);
+	  }
 
 
     /* USER CODE END WHILE */
@@ -812,7 +889,7 @@ static void MX_TIM7_Init(void)
   htim7.Instance = TIM7;
   htim7.Init.Prescaler = APB-1;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 0;
+  htim7.Init.Period = 10000;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
@@ -1188,16 +1265,16 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
   /* DMA2_Stream1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 
 }
@@ -1224,7 +1301,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
                           |Kick_Pin, GPIO_PIN_RESET);
-                          
+
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LB_FR_GPIO_Port, LB_FR_Pin, GPIO_PIN_RESET);
 
@@ -1250,7 +1327,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LF_FR_Pin SPI4_RST_Pin Chip_Pin Kick_Pin */
+  /*Configure GPIO pins : LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin Chip_Pin 
+                           Kick_Pin */
   GPIO_InitStruct.Pin = LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
                           |Kick_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1360,12 +1438,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	if(htim->Instance == htim6.Instance){
-		shoot_Callback();
-	}
-}
 /* USER CODE END 4 */
 
 /**

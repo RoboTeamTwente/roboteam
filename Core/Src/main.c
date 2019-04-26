@@ -326,7 +326,7 @@ int main(void)
 		  geneva_DeInit();
 		  shoot_DeInit();
 		  dribbler_DeInit();
-		  //TODO: wireless DeInit() ?
+		  //TODO: wireless Deinit() ?
 	  }
 
 

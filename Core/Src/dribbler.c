@@ -8,7 +8,7 @@ void dribbler_Init(){
 	dribbler_SetSpeed(0);
 }
 
-void dribbler_Deinit(){
+void dribbler_DeInit(){
 	stop_PWM(PWM_Dribbler);
 }
 

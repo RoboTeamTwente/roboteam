@@ -22,7 +22,7 @@
 
 int wheels_Init();
 
-int wheels_Deinit();
+int wheels_DeInit();
 
 void wheels_Update();
 

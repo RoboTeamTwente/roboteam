@@ -33,7 +33,7 @@ typedef struct StateInfo {
 
 int state_Init();
 
-int state_Deinit();
+int state_DeInit();
 
 void state_Update(StateInfo* input);
 

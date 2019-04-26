@@ -21,7 +21,7 @@
 
 void dribbler_Init();
 
-void dribbler_Deinit();
+void dribbler_DeInit();
 
 void dribbler_SetSpeed(int speed);
 

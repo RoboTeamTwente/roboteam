@@ -17,8 +17,8 @@ int state_Init(){
 	return 0;
 }
 
-int state_Deinit(){
-	kalman_Deinit();
+int state_DeInit(){
+	kalman_DeInit();
 	return 0;
 }
 

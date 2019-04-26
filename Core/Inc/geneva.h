@@ -23,7 +23,7 @@
 
 void geneva_Init();
 
-void geneva_Deinit();
+void geneva_DeInit();
 
 void geneva_Update();
 

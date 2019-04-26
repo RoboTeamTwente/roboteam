@@ -20,7 +20,7 @@
 
 void kalman_Init();
 
-void kalman_Deinit();
+void kalman_DeInit();
 
 void kalman_Update(float acc[2], float vel[2]);
 

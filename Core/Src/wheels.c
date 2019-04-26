@@ -53,7 +53,7 @@ int wheels_Init(){
 	return 0;
 }
 
-int wheels_Deinit(){
+int wheels_DeInit(){
 	wheels_state = off;
 	HAL_TIM_Base_Stop(ENC_RF); //RF
 	HAL_TIM_Base_Stop(ENC_RB); //RB

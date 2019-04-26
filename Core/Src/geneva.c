@@ -38,7 +38,7 @@ void geneva_Init(){
 	start_PWM(PWM_Geneva);
 }
 
-void geneva_Deinit(){
+void geneva_DeInit(){
 	HAL_TIM_Base_Stop(ENC_GENEVA);		// stop encoder
 	stop_PWM(PWM_Geneva);
 	genevaState = off;		// go to idle state

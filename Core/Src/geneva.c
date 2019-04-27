@@ -56,7 +56,6 @@ void geneva_Update(){
 	case on: 				// wait for external sources to set a new ref
 		break;
 	}
-
 	float err = genevaRef - geneva_Encodervalue();
 	pwm = PID(err, &genevaK);
 	limitScale();
@@ -67,19 +66,19 @@ void geneva_Update(){
 void geneva_SetRef(geneva_positions position){
 	switch(position){
 	case geneva_rightright:
-		genevaRef = 3690;
+		genevaRef = 3925;
 		break;
 	case geneva_right:
-		genevaRef = 2850;
+		genevaRef = 3420;
 		break;
 	case geneva_middle:
-		genevaRef = 1995;
+		genevaRef = 2935;
 		break;
 	case geneva_left:
-		genevaRef = 1160;
+		genevaRef = 2425;
 		break;
 	case geneva_leftleft:
-		genevaRef = 315;
+		genevaRef = 1935;
 		break;
 	case geneva_none:
 		break;

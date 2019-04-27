@@ -235,7 +235,8 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
 	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-	Putty_printf("\n\r");
+	Putty_printf("Geneva encoder: \n\r");
+	Putty_printf("  geneva: %i \n\r", geneva_GetEncoder());
 }
 
 /* USER CODE END 0 */
@@ -364,8 +365,8 @@ int main(void)
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 
-		  printReceivedData(&receivedData);
-//		  printRobotStateData(&stateInfo);
+//		  printReceivedData(&receivedData);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

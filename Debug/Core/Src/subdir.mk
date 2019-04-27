@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/Wireless.c \
+../Core/Src/buzzer.c \
 ../Core/Src/dribbler.c \
 ../Core/Src/geneva.c \
 ../Core/Src/main.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/Wireless.o \
+./Core/Src/buzzer.o \
 ./Core/Src/dribbler.o \
 ./Core/Src/geneva.o \
 ./Core/Src/main.o \
@@ -31,6 +33,7 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/Wireless.d \
+./Core/Src/buzzer.d \
 ./Core/Src/dribbler.d \
 ./Core/Src/geneva.d \
 ./Core/Src/main.d \

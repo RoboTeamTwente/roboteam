@@ -1,4 +1,5 @@
 "Core/Src/Wireless.o"
+"Core/Src/buzzer.o"
 "Core/Src/dribbler.o"
 "Core/Src/geneva.o"
 "Core/Src/main.o"

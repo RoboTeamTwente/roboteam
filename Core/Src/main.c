@@ -105,9 +105,6 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
-#define CONNECTION_LOST_AFTER 250 // ms
-uint lastPackageTime = 0;
-
 SX1280* SX;
 int counter = 0;
 int strength = 0;
@@ -374,12 +371,8 @@ int main(void)
 	   */
 	  bool receivedWirelessData = true;
 	  if (receivedWirelessData) {
-		  lastPackageTime = HAL_GetTick();
 		  processWirelessData(Robot_Data);
 		  executeCommands(&receivedData);
-	  }
-	  else if (HAL_GetTick() > lastPackageTime + CONNECTION_LOST_AFTER) {
-		  // Wireless connection is lost
 	  }
 
 

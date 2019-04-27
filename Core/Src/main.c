@@ -175,16 +175,9 @@ void executeCommands(ReceivedData* receivedData) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		/*
-		* Interrupt to check how shooting is going
-		*/
 		shoot_Callback();
 	}
 	else if(htim->Instance == htim7.Instance) {
-		/*
-		 * Interrupt to execute the control part
-		 */
-
 		// State estimation
 		stateInfo.visionAvailable = receivedData.visionAvailable;
 		stateInfo.visionYaw = receivedData.visionYaw;
@@ -201,6 +194,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		wheels_SetRef(stateControl_GetWheelRef());
 		wheels_Update();
 	}
+	else if (htim->Instance == htim11.Instance) {
+		geneva_Update();
+	}
 }
 
 void printReceivedData(ReceivedData* receivedData) {
@@ -210,33 +206,44 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
 	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
 	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
-	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
-	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
-	Putty_printf("kick: %u\n\r",receivedData->do_kick);
-	Putty_printf("chip: %u\n\r",receivedData->do_chip);
-	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
-	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
-	Putty_printf("\n\r");
+//	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
+//	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
+//	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
+//	Putty_printf("kick: %u\n\r",receivedData->do_kick);
+//	Putty_printf("chip: %u\n\r",receivedData->do_chip);
+//	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
+//	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
+//	Putty_printf("\n\r");
 }
 
 void printRobotStateData(StateInfo* stateInfo) {
-	Putty_printf("\n\r");
-	Putty_printf("-------Robot state data--------\n\r");
-	Putty_printf("velocity (Kalman):\n\r");
-	Putty_printf("  x: %f m/s\n\r", state_GetState()[body_x]);
-	Putty_printf("  y: %f m/s\n\r", state_GetState()[body_y]);
-	Putty_printf("acceleration (xsens):\n\r");
-	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
-	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
-	Putty_printf("yaw (calibrated): %f rad\n\r", state_GetState()[body_w]);
-	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
+//	Putty_printf("\n\r");
+//	Putty_printf("-------Robot state data--------\n\r");
+//	Putty_printf("velocity (Kalman):\n\r");
+//	Putty_printf("  x: %f m/s\n\r", state_GetState()[body_x]);
+//	Putty_printf("  y: %f m/s\n\r", state_GetState()[body_y]);
+//	Putty_printf("acceleration (xsens):\n\r");
+//	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
+//	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
+//	Putty_printf("yaw (calibrated): %f rad\n\r", state_GetState()[body_w]);
+//	Putty_printf("wheel refs:\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
+//	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
+//	Putty_printf("wheel speeds (encoders):\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-	Putty_printf("Geneva encoder: \n\r");
-	Putty_printf("  geneva: %i \n\r", geneva_GetEncoder());
+//	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+//	Putty_printf("wheel pwm:\n\r");
+//	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
+//	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
+	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
+//	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+//	Putty_printf("Geneva: \n\r");
+//	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
+//	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 }
 
 /* USER CODE END 0 */
@@ -361,11 +368,11 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() >  printTime + 100) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 
-//		  printReceivedData(&receivedData);
+		  printReceivedData(&receivedData);
 		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
@@ -620,7 +627,7 @@ static void MX_TIM1_Init(void)
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
@@ -719,15 +726,15 @@ static void MX_TIM3_Init(void)
   htim3.Init.Period = 0xFFFF;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = ENCODER_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = ENCODER_FILTER;
   if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -768,15 +775,15 @@ static void MX_TIM4_Init(void)
   htim4.Init.Period = 0xFFFF;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = ENCODER_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = ENCODER_FILTER;
   if (HAL_TIM_Encoder_Init(&htim4, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -817,15 +824,15 @@ static void MX_TIM5_Init(void)
   htim5.Init.Period = 0xFFFF;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = ENCODER_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = ENCODER_FILTER;
   if (HAL_TIM_Encoder_Init(&htim5, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -938,7 +945,7 @@ static void MX_TIM8_Init(void)
 
   /* USER CODE END TIM8_Init 1 */
   htim8.Instance = TIM8;
-  htim8.Init.Prescaler = APB-1;
+  htim8.Init.Prescaler = 3;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim8.Init.Period = MAX_PWM;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -957,7 +964,7 @@ static void MX_TIM8_Init(void)
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_SET;
@@ -970,6 +977,7 @@ static void MX_TIM8_Init(void)
   {
     Error_Handler();
   }
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
@@ -1019,7 +1027,7 @@ static void MX_TIM9_Init(void)
 
   /* USER CODE END TIM9_Init 1 */
   htim9.Instance = TIM9;
-  htim9.Init.Prescaler = (APB-1)/(4.5);
+  htim9.Init.Prescaler = 3;
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim9.Init.Period = MAX_PWM;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -1030,7 +1038,7 @@ static void MX_TIM9_Init(void)
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim9, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
@@ -1111,7 +1119,7 @@ static void MX_TIM11_Init(void)
   htim11.Instance = TIM11;
   htim11.Init.Prescaler = APB-1;
   htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim11.Init.Period = 0;
+  htim11.Init.Period = 10000;
   htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim11) != HAL_OK)

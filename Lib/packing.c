@@ -206,7 +206,7 @@ void processWirelessData(roboData* input, ReceivedData* receivedData) {
 	receivedData->stateRef = stateRef;
 
 	// Geneva
-	receivedData->genevaRef = input->geneva_drive_state + 2;
+	receivedData->genevaRef = input->geneva_drive_state;
 
 	// Dribbler
 	receivedData->dribblerRef = input->velocity_dribbler * CONVERT_DRIBBLE_SPEED;

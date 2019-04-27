@@ -36,7 +36,7 @@
 // Wheels
 #define PWM_CUTOFF 100.0F // arbitrary treshold to avoid motor shutdown
 #define GEAR_RATIO 2.5F // gear ratio between motor and wheel
-#define MAX_PWM 2400 // defined in CubeMX
+#define MAX_PWM 3000 // defined in CubeMX
 #define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
 #define MAX_VOLTAGE 12 // see datasheet
 #define SPEED_CONSTANT (2*M_PI/60.0 * 374.0) //[(rad/s)/V] see datasheet

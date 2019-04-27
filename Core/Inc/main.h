@@ -81,7 +81,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define APB 216
-#define MAX_PWM 2400
+#define MAX_PWM 3000
 #define ENCODER_FILTER 15
 #define Charge_done_Pin GPIO_PIN_2
 #define Charge_done_GPIO_Port GPIOE

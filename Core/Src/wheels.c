@@ -80,6 +80,7 @@ void wheels_Update(){
 			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 		}
 		limitScale();
+
 		SetDir();
 		SetPWM();
 	}
@@ -94,18 +95,11 @@ void wheels_SetRef(float input[4]){
 float* wheels_GetState() {
 	return wheelSpeed;
 }
-//float wheels_GetState(wheel_names wheel) {
-//	return wheelSpeed[wheel];
-//}
 
-void wheels_GetPWM(int wheelPWM[4]) {
-	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		wheelPWM[wheel] = pwm[wheel];
-	}
+int* wheels_GetPWM() {
+	return pwm;
 }
-//int wheels_GetPWM(wheel_names wheel) {
-//	return pwm[wheel];
-//}
+
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
@@ -155,10 +149,10 @@ static void limitScale(){
 }
 
 static void SetPWM(){
-	set_PWM(PWM_RF, MAX_PWM-pwm[wheels_RF]);
-	set_PWM(PWM_RB, MAX_PWM-pwm[wheels_RB]);
-	set_PWM(PWM_LB, MAX_PWM-pwm[wheels_LB]);
-	set_PWM(PWM_LF, MAX_PWM-pwm[wheels_LF]);
+	set_PWM(PWM_RF, pwm[wheels_RF]);
+	set_PWM(PWM_RB, pwm[wheels_RB]);
+	set_PWM(PWM_LB, pwm[wheels_LB]);
+	set_PWM(PWM_LF, pwm[wheels_LF]);
 }
 
 static void SetDir(){

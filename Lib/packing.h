@@ -84,6 +84,7 @@ void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackData
 
 void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
 void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output);
+void makeEmptyRoboData(roboData *output);
 void roboAckDataToPacket(roboAckData *input, uint8_t output[FULLACKPKTLEN]);
 void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);
 

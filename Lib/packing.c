@@ -193,6 +193,47 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output) {
 
 }
 
+/*
+ * Create an empty roboData structure for when the connection is lost.
+ */
+void makeEmptyRoboData(roboData *output) {
+	/*
+	output[0] aaaaabbb
+	output[1] bbbbbbbb
+	output[2] cccccccc
+	output[3] cccdefgg
+	output[4] gggggggg
+	output[5] 0000hijk
+	output[6] mmmmmmmm
+	output[7] nnnnnnnn
+	output[8] pppqqqqq
+	output[9] qqqqqqqq
+	output[10] rrrrrrrr
+	output[11] rrrrrsss
+	output[12] ssssssss
+	 */
+
+//	Putty_printf("ptrd: "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"\r\n", BYTE_TO_BINARY(input[3]), BYTE_TO_BINARY(input[4]));
+
+	output->id = 0; //a
+	output->rho = 0; //b
+	output->theta = 0; //c
+	output->driving_reference = 0; //d
+	output->use_cam_info = 0; //e
+	output->use_angle	= 0; //f
+	output->velocity_angular = 0; //g
+	output->debug_info = 0; //h
+	output->do_kick = 0; //i
+	output->do_chip = 0; //j
+	output->kick_chip_forced = 0; //k
+	output->kick_chip_power = 0; //m
+	output->velocity_dribbler = 0; //n
+	output->geneva_drive_state = 0; //p
+	output->cam_position_x = 0; //q
+	output->cam_position_y = 0; //r
+	output->cam_rotation = 0; //s
+}
+
 
 /*
  * For the Robot ACKs we use the following packet definition

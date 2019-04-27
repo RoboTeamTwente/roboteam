@@ -10,6 +10,8 @@
 #define PACKING_H_
 
 #include <inttypes.h>
+#include <stdbool.h>
+#include "../Util/control_util.h"
 
 #define ROBOPKTLEN 13 //amount of bytes for a packet sent to the robot
 #define SHORTACKPKTLEN 11 //amount of bytes of an ACK packet sent by the robot without using the extra/debug fields
@@ -22,6 +24,19 @@
 #define CONVERT_SHOOTING_POWER 	0.39f
 #define CONVERT_DRIBBLE_SPEED 	0.39f
 #define CONVERT_VISION_YAW 		0.00307f
+
+///////////////////////////////////////////////////// STRUCTS
+
+typedef struct ReceivedData {
+	float* stateRef;
+	bool visionAvailable;
+	float visionYaw;
+	int genevaRef;
+	int dribblerRef;
+	int shootPower;
+	bool do_kick;
+	bool do_chip;
+} ReceivedData;
 
 /*
  * A data struct which is easy to work with
@@ -84,6 +99,7 @@ void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackData
 
 void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
 void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output);
+void processWirelessData(roboData* input, ReceivedData* receivedData);
 void makeEmptyRoboData(roboData *output);
 void roboAckDataToPacket(roboAckData *input, uint8_t output[FULLACKPKTLEN]);
 void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);

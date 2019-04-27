@@ -20,20 +20,6 @@
 #define AUTO_TX_TIME 120 // (us)
 #define RECEIVEPKTLEN 13 //amount of bytes for a packet sent to the robot
 
-///////////////////////////////////////////////////// STRUCTS
-
-typedef struct ReceivedData {
-	float* velocityRef;
-	float yawRef;
-	bool visionAvailable;
-	float visionYaw;
-	int genevaRef;
-	int dribblerRef;
-	int shootPower;
-	bool do_kick;
-	bool do_chip;
-} ReceivedData;
-
 ///////////////////////////////////////////////////// VARIABLES
 
 SX1280 SX1280_struct;

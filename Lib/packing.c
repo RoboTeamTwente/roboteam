@@ -194,6 +194,34 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output) {
 }
 
 /*
+ * Convert the raw data that is received over the wireless to data that can be used.
+ * The result is saved in the receivedData struct.
+ */
+void processWirelessData(roboData* input, ReceivedData* receivedData) {
+	// State
+	static float stateRef[3] = {0, 0, 0};
+	stateRef[body_x] = (input->rho * CONVERT_RHO) * cosf(input->theta * CONVERT_THETA);
+	stateRef[body_y] = (input->rho * CONVERT_RHO) * sinf(input->theta * CONVERT_THETA);
+	stateRef[body_w] = input->velocity_angular * CONVERT_YAW_REF;
+	receivedData->stateRef = stateRef;
+
+	// Geneva
+	receivedData->genevaRef = input->geneva_drive_state + 2;
+
+	// Dribbler
+	receivedData->dribblerRef = input->velocity_dribbler * CONVERT_DRIBBLE_SPEED;
+
+	// Shoot
+	receivedData->shootPower = input->kick_chip_power * CONVERT_SHOOTING_POWER;
+	receivedData->do_kick = input->do_kick;
+	receivedData->do_chip = input->do_chip;
+
+	// Vision data
+	receivedData->visionAvailable = input->use_cam_info;
+	receivedData->visionYaw = input->cam_rotation * CONVERT_VISION_YAW;
+}
+
+/*
  * Create an empty roboData structure for when the connection is lost.
  */
 void makeEmptyRoboData(roboData *output) {

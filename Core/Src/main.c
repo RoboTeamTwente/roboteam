@@ -48,7 +48,7 @@
 #include "peripheral_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
-#include "velocity.h"
+#include "stateControl.h"
 #include "stateEstimation.h"
 #include "geneva.h"
 #include "dribbler.h"
@@ -109,8 +109,7 @@ SX1280* SX;
 int counter = 0;
 int strength = 0;
 
-ReceivedData receivedData = {NULL, 0.0f, false, 0.0f, 0, 0, 0, false, false};
-float velocityRef[3] = {0, 0, 0};
+ReceivedData receivedData = {NULL, false, 0.0f, 0, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
 
 /* USER CODE END PV */
@@ -158,34 +157,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 }
 
-// Convert the raw data that is received over the wireless to data that can be used.
-// The result is saved in the receivedData struct.
-void processWirelessData(roboData *input) {
-	// Velocity
-	velocityRef[body_x] = (input->rho * CONVERT_RHO) * cosf(input->theta * CONVERT_THETA);
-	velocityRef[body_y] = (input->rho * CONVERT_RHO) * sinf(input->theta * CONVERT_THETA);
-	velocityRef[body_w] = input->velocity_angular * CONVERT_YAW_REF;
-	receivedData.velocityRef = velocityRef;
-
-	// Geneva
-	receivedData.genevaRef = input->geneva_drive_state + 2;
-
-	// Dribbler
-	receivedData.dribblerRef = input->velocity_dribbler * CONVERT_DRIBBLE_SPEED;
-
-	// Shoot
-	receivedData.shootPower = input->kick_chip_power * CONVERT_SHOOTING_POWER;
-	receivedData.do_kick = input->do_kick;
-	receivedData.do_chip = input->do_chip;
-
-	// Vision data
-	receivedData.visionAvailable = input->use_cam_info;
-	receivedData.visionYaw = input->cam_rotation * CONVERT_VISION_YAW;
-}
-
 // Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
-	velocity_SetRef(receivedData->velocityRef);
+	stateControl_SetRef(receivedData->stateRef);
 	geneva_SetRef(receivedData->genevaRef);
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
@@ -219,12 +193,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.xsensYaw = 0.0f; // TODO: add xsens getter
 		state_Update(&stateInfo);
 
-		// Velocity control
-		velocity_SetState(state_GetState());
-		velocity_Update();
+		// State control
+		stateControl_SetState(state_GetState());
+		stateControl_Update();
 
 		// Wheel control
-		wheels_SetRef(velocity_GetWheelRef());
+		wheels_SetRef(stateControl_GetWheelRef());
 		wheels_Update();
 	}
 }
@@ -233,9 +207,9 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("\n\r");
 	Putty_printf("-----Received robot data-------\n\r");
 	Putty_printf("velocity:\n\r");
-	Putty_printf("  x: %f\n\r", receivedData->velocityRef[body_x]);
-	Putty_printf("  y: %f\n\r", receivedData->velocityRef[body_y]);
-	Putty_printf("yaw: %f\n\r", receivedData->velocityRef[body_w]);
+	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
+	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
+	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
 	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
 	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
 	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
@@ -325,7 +299,7 @@ int main(void)
 
   Putty_Init();
   wheels_Init();
-  velocity_Init();
+  stateControl_Init();
   state_Init();
   geneva_Init();
   shoot_Init();
@@ -356,7 +330,7 @@ int main(void)
 		  set_Pin(LED4_pin, 1);
 		  Putty_DeInit();
 		  wheels_DeInit();
-		  velocity_DeInit();
+		  stateControl_DeInit();
 		  state_DeInit();
 		  geneva_DeInit();
 		  shoot_DeInit();
@@ -371,7 +345,7 @@ int main(void)
 	   */
 	  bool receivedWirelessData = true;
 	  if (receivedWirelessData) {
-		  processWirelessData(Robot_Data);
+		  processWirelessData(Robot_Data, &receivedData);
 		  executeCommands(&receivedData);
 	  }
 

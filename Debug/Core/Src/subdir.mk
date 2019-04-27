@@ -10,11 +10,11 @@ C_SRCS += \
 ../Core/Src/geneva.c \
 ../Core/Src/main.c \
 ../Core/Src/shoot.c \
+../Core/Src/stateControl.c \
 ../Core/Src/stateEstimation.c \
 ../Core/Src/stm32f7xx_hal_msp.c \
 ../Core/Src/stm32f7xx_it.c \
 ../Core/Src/system_stm32f7xx.c \
-../Core/Src/velocity.c \
 ../Core/Src/wheels.c 
 
 OBJS += \
@@ -24,11 +24,11 @@ OBJS += \
 ./Core/Src/geneva.o \
 ./Core/Src/main.o \
 ./Core/Src/shoot.o \
+./Core/Src/stateControl.o \
 ./Core/Src/stateEstimation.o \
 ./Core/Src/stm32f7xx_hal_msp.o \
 ./Core/Src/stm32f7xx_it.o \
 ./Core/Src/system_stm32f7xx.o \
-./Core/Src/velocity.o \
 ./Core/Src/wheels.o 
 
 C_DEPS += \
@@ -38,11 +38,11 @@ C_DEPS += \
 ./Core/Src/geneva.d \
 ./Core/Src/main.d \
 ./Core/Src/shoot.d \
+./Core/Src/stateControl.d \
 ./Core/Src/stateEstimation.d \
 ./Core/Src/stm32f7xx_hal_msp.d \
 ./Core/Src/stm32f7xx_it.d \
 ./Core/Src/system_stm32f7xx.d \
-./Core/Src/velocity.d \
 ./Core/Src/wheels.d 
 
 

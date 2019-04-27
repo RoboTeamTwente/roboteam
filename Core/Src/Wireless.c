@@ -135,7 +135,6 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 //    	SX->SX_settings->syncWords[0] = robot_syncWord[31];
 //		setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
 //		SendPacket(SX, buf, 13);
-    	set_Pin(LED6_pin, 1);
     	setRX(SX, SX->SX_settings->periodBase, 4000);
     	makeEmptyRoboData(Robot_Data);
     }

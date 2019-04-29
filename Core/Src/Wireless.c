@@ -88,6 +88,11 @@ void ReceivePacket(SX1280* SX){
     SX->expect_packet = true;
 };
 
+bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
+bool checkWirelessConnection() {
+	return isWirelessConnected;
+}
+
 // -------------------------------------------- Handlers
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);

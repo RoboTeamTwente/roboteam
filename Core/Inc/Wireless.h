@@ -27,7 +27,6 @@ SX1280 * SX; // pointer to the datastruct
 uint8_t * Bot_to_PC; // pointer to feedback data struct
 uint8_t PC_to_Bot[ROBOPKTLEN]; // pointer to received data struct
 roboData * Robot_Data; // pointer to parsed received message
-static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
@@ -36,5 +35,6 @@ void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void ReceivePacket(SX1280* SX);
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void Wireless_DMA_Handler(SX1280* SX, uint8_t * output);
+bool checkWirelessConnection();
 
 #endif /* WIRELESS_WIRELESS_H_ */

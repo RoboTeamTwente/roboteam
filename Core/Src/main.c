@@ -330,7 +330,7 @@ int main(void)
 
 
   Putty_Init();
-  wheels_Init();
+  //wheels_Init();
   stateControl_Init();
   stateEstimation_Init();
   geneva_Init();

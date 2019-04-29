@@ -52,7 +52,7 @@ void geneva_Update(){
 		return;
 		break;
 	case setup:								// While in setup, slowly move towards the sensor/edge
-		genevaRef = HAL_GetTick();	// if sensor is not seen yet, move to the right at 1 count per millisecond
+		genevaRef = 70000;	// if sensor is not seen yet, move to the right (70000 is above the max possible value)
 		CheckIfStuck();
 		break;
 	case on: 				// wait for external sources to set a new ref
@@ -68,19 +68,19 @@ void geneva_Update(){
 void geneva_SetRef(geneva_positions position){
 	switch(position){
 	case geneva_rightright:
-		genevaRef = 3925;
+		genevaRef = 3880;
 		break;
 	case geneva_right:
-		genevaRef = 3420;
+		genevaRef = 3385;
 		break;
 	case geneva_middle:
-		genevaRef = 2935;
+		genevaRef = 2890;
 		break;
 	case geneva_left:
-		genevaRef = 2425;
+		genevaRef = 2395;
 		break;
 	case geneva_leftleft:
-		genevaRef = 1935;
+		genevaRef = 1900;
 		break;
 	case geneva_none:
 		break;
@@ -103,7 +103,7 @@ static void CheckIfStuck(){
 	if(geneva_Encodervalue() != enc){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
-	}else if(tick + 70 < HAL_GetTick()){
+	}else if(tick + 500 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
 		geneva_SetRef(geneva_middle);
 		genevaState = on;

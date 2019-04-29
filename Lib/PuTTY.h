@@ -10,6 +10,12 @@
 
 #include "stdint.h" // Includes the uint8_t and others
 #include <stdarg.h>  // for formatting in putty_printf
+
+#include "../Core/Inc/dribbler.h"
+#include "../Core/Inc/geneva.h"
+#include "../Core/Inc/shoot.h"
+#include "../Core/Inc/wheels.h"
+
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs
 typedef enum

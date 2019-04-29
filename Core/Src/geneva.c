@@ -91,7 +91,7 @@ int geneva_GetEncoder(){
 	return geneva_Encodervalue();
 }
 
-int geneva_GetPWM() {
+int geneva_GetPWM(){
 	return pwm;
 }
 

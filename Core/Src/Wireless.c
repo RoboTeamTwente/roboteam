@@ -112,6 +112,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 
     if(irq & RX_DONE){
 //    	Putty_printf("RX_DONE...\n\r");
+    	isWirelessConnected = true;
     	toggle_Pin(LED2_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 180) {
@@ -135,8 +136,8 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 //    	SX->SX_settings->syncWords[0] = robot_syncWord[31];
 //		setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
 //		SendPacket(SX, buf, 13);
+    	isWirelessConnected = false;
     	setRX(SX, SX->SX_settings->periodBase, 4000);
-    	makeEmptyRoboData(Robot_Data);
     }
 
     if(irq & PREAMBLE_DETECTED) {

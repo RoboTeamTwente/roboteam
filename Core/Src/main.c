@@ -55,6 +55,9 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
+
+#include "time.h"
+#include <unistd.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,6 +114,7 @@ int strength = 0;
 
 ReceivedData receivedData = {NULL, false, 0.0f, 0, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
+bool halt = true;
 
 /* USER CODE END PV */
 
@@ -171,11 +175,24 @@ void executeCommands(ReceivedData* receivedData) {
 	}
 }
 
+void clearReceivedData(ReceivedData* receivedData) {
+	receivedData->do_chip = false;
+	receivedData->do_kick = false;
+	receivedData->dribblerRef = 0;
+	receivedData->genevaRef = geneva_middle;
+	receivedData->shootPower = 0;
+	receivedData->stateRef[body_x] = 0.0f;
+	receivedData->stateRef[body_y] = 0.0f;
+	receivedData->stateRef[body_w] = 0.0f;
+	receivedData->visionAvailable = false;
+	receivedData->visionYaw = 0.0f;
+}
+
 // Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		shoot_Callback();
+		geneva_Update();
 	}
 	else if(htim->Instance == htim7.Instance) {
 		// State estimation
@@ -184,18 +201,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.wheelSpeeds = wheels_GetState();
 		stateInfo.xsensAcc = NULL; // TODO: add xsens getter
 		stateInfo.xsensYaw = 0.0f; // TODO: add xsens getter
-		state_Update(&stateInfo);
+		stateEstimation_Update(&stateInfo);
 
 		// State control
-		stateControl_SetState(state_GetState());
+		stateControl_SetState(stateEstimation_GetState());
 		stateControl_Update();
 
-		// Wheel control
-		wheels_SetRef(stateControl_GetWheelRef());
+		if (halt) {
+			float emptyRef[4] = {0, 0, 0, 0};
+			wheels_SetRef(emptyRef);
+		}
+		else {
+			// Wheel control
+			wheels_SetRef(stateControl_GetWheelRef());
+		}
+
 		wheels_Update();
 	}
 	else if (htim->Instance == htim11.Instance) {
-		geneva_Update();
+		shoot_Callback();
 	}
 }
 
@@ -206,44 +230,44 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
 	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
 	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-//	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
-//	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
-//	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
-//	Putty_printf("kick: %u\n\r",receivedData->do_kick);
-//	Putty_printf("chip: %u\n\r",receivedData->do_chip);
-//	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
-//	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
-//	Putty_printf("\n\r");
+	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
+	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
+	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
+	Putty_printf("kick: %u\n\r",receivedData->do_kick);
+	Putty_printf("chip: %u\n\r",receivedData->do_chip);
+	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
+	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
+	Putty_printf("\n\r");
 }
 
 void printRobotStateData(StateInfo* stateInfo) {
-//	Putty_printf("\n\r");
-//	Putty_printf("-------Robot state data--------\n\r");
-//	Putty_printf("velocity (Kalman):\n\r");
-//	Putty_printf("  x: %f m/s\n\r", state_GetState()[body_x]);
-//	Putty_printf("  y: %f m/s\n\r", state_GetState()[body_y]);
-//	Putty_printf("acceleration (xsens):\n\r");
-//	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
-//	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
-//	Putty_printf("yaw (calibrated): %f rad\n\r", state_GetState()[body_w]);
-//	Putty_printf("wheel refs:\n\r");
-//	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-//	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
+	Putty_printf("\n\r");
+	Putty_printf("-------Robot state data--------\n\r");
+	Putty_printf("velocity (Kalman):\n\r");
+	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
+	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
+	Putty_printf("acceleration (xsens):\n\r");
+	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
+	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
+	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+	Putty_printf("wheel refs:\n\r");
+	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-//	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-//	Putty_printf("wheel speeds (encoders):\n\r");
-//	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-//	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
+	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
+	Putty_printf("wheel speeds (encoders):\n\r");
+	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-//	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-//	Putty_printf("wheel pwm:\n\r");
-//	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-//	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
+	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+	Putty_printf("wheel pwm:\n\r");
+	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
+	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-//	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
-//	Putty_printf("Geneva: \n\r");
-//	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
-//	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
+	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	Putty_printf("Geneva: \n\r");
+	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
+	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 }
 
 /* USER CODE END 0 */
@@ -308,7 +332,7 @@ int main(void)
   Putty_Init();
   //wheels_Init();
   stateControl_Init();
-  state_Init();
+  stateEstimation_Init();
   geneva_Init();
   shoot_Init();
   dribbler_Init();
@@ -339,7 +363,7 @@ int main(void)
 		  Putty_DeInit();
 		  wheels_DeInit();
 		  stateControl_DeInit();
-		  state_DeInit();
+		  stateEstimation_DeInit();
 		  geneva_DeInit();
 		  shoot_DeInit();
 		  dribbler_DeInit();
@@ -351,17 +375,14 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  bool receivedWirelessData = true;
-	  if (receivedWirelessData) {
+	  if (isWirelessConnected) {
 		  processWirelessData(Robot_Data, &receivedData);
 		  executeCommands(&receivedData);
+		  halt = false;
+	  } else {
+		  halt = true;
+		  clearReceivedData(&receivedData);
 	  }
-
-
-	  /*
-	   * Run updates
-	   */
-	  geneva_Update();
 
 
 	  /*
@@ -372,8 +393,8 @@ int main(void)
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 
-		  printReceivedData(&receivedData);
-		  printRobotStateData(&stateInfo);
+		  //printReceivedData(&receivedData);
+		  //printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 
@@ -867,9 +888,9 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = APB*100;
+  htim6.Init.Prescaler = APB-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 0;
+  htim6.Init.Period = 10000;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -1117,9 +1138,9 @@ static void MX_TIM11_Init(void)
 
   /* USER CODE END TIM11_Init 1 */
   htim11.Instance = TIM11;
-  htim11.Init.Prescaler = APB-1;
+  htim11.Init.Prescaler = APB*100;
   htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim11.Init.Period = 10000;
+  htim11.Init.Period = 0;
   htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
@@ -1152,7 +1173,7 @@ static void MX_TIM12_Init(void)
   htim12.Instance = TIM12;
   htim12.Init.Prescaler = APB-1;
   htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim12.Init.Period = 0;
+  htim12.Init.Period = 10000;
   htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim12) != HAL_OK)

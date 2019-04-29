@@ -31,13 +31,12 @@ typedef struct StateInfo {
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-int state_Init();
+int stateEstimation_Init();
 
-int state_DeInit();
+int stateEstimation_DeInit();
 
-void state_Update(StateInfo* input);
+void stateEstimation_Update(StateInfo* input);
 
-float* state_GetState();
-//void state_GetState(float output[3]);
+float* stateEstimation_GetState();
 
 #endif /* DO_STATEESTIMATION_H_ */

@@ -16,12 +16,12 @@ extern TIM_HandleTypeDef htim2;		// encoder Geneva
 extern TIM_HandleTypeDef htim3;		// encoder LB
 extern TIM_HandleTypeDef htim4;		// encoder RB
 extern TIM_HandleTypeDef htim5;		// encoder LF
-extern TIM_HandleTypeDef htim6;		// KickChipping
+extern TIM_HandleTypeDef htim6;		// Geneva
 extern TIM_HandleTypeDef htim7;		// Control
 extern TIM_HandleTypeDef htim8;		// PWM (CH1: RB, CH2: RF, CH3: Dribbler, CH4: Geneva)
 extern TIM_HandleTypeDef htim9;		// PWM (CH1: LF, CH2: LB)
 extern TIM_HandleTypeDef htim10;	// PWM (Buzzer)
-extern TIM_HandleTypeDef htim11;	// Geneva
+extern TIM_HandleTypeDef htim11;	// KickChipping
 extern TIM_HandleTypeDef htim12;	// internal timer (not used ATM)
 extern TIM_HandleTypeDef htim13;	// internal timer (not used ATM)
 extern TIM_HandleTypeDef htim14;	// internal timer (not used ATM)
@@ -40,9 +40,9 @@ typedef struct PWM_struct{
 #define ENC_LB 		&htim3
 #define ENC_RB 		&htim4
 #define ENC_LF 		&htim5
-#define TIM_SHOOT	&htim6
+#define TIM_SHOOT	&htim11
 #define TIM_CONTROL &htim7
-#define TIM_GENEVA  &htim11
+#define TIM_GENEVA  &htim6
 
 
 extern PWM_struct PWM_RF;

@@ -6,7 +6,7 @@
 static PID_states status = off;
 static PIDvariables stateK[3];
 static float stateRef[3] = {0.0f};
-static float wheelRef[4] = {0.0f};
+static float wheelRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 static float state[3] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS

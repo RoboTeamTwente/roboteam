@@ -12,17 +12,17 @@ static void wheels2Body(float wheelSpeeds[4], float output[3]);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-int state_Init(){
+int stateEstimation_Init(){
 	kalman_Init();
 	return 0;
 }
 
-int state_DeInit(){
+int stateEstimation_DeInit(){
 	kalman_DeInit();
 	return 0;
 }
 
-void state_Update(StateInfo* input) {
+void stateEstimation_Update(StateInfo* input) {
 	float vel[2] = {0.0f};
 	wheels2Body(input->wheelSpeeds, vel);
 
@@ -40,14 +40,9 @@ void state_Update(StateInfo* input) {
 	state[body_w] = calibratedYaw;
 }
 
-float* state_GetState() {
+float* stateEstimation_GetState() {
 	return state;
 }
-//void state_GetState(float output[3]){
-//	for (body_handles i=body_x; i<=body_w; i++){
-//		output[i] = state[i];
-//	}
-//}
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 

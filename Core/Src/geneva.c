@@ -35,13 +35,13 @@ void geneva_Init(){
 	genevaState = setup;	// go to setup
 	initPID(&genevaK, 10.0, 0.0, 0.0);
 	HAL_TIM_Base_Start(ENC_GENEVA);		// start the encoder
-	//HAL_TIM_Base_Start(TIM_GENEVA);
+	HAL_TIM_Base_Start_IT(TIM_GENEVA);
 	start_PWM(PWM_Geneva);
 }
 
 void geneva_DeInit(){
 	HAL_TIM_Base_Stop(ENC_GENEVA);		// stop encoder
-	//HAL_TIM_Base_Stop(TIM_GENEVA);
+	HAL_TIM_Base_Stop_IT(TIM_GENEVA);
 	stop_PWM(PWM_Geneva);
 	genevaState = off;		// go to idle state
 }

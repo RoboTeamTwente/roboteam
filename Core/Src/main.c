@@ -112,7 +112,7 @@ SX1280* SX;
 int counter = 0;
 int strength = 0;
 
-ReceivedData receivedData = {NULL, false, 0.0f, 0, 0, 0, false, false};
+ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
 bool halt = true;
 
@@ -149,7 +149,7 @@ static void MX_TIM14_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
-		Wireless_DMA_Handler(SX, PC_to_Bot);
+		Wireless_DMA_Handler(SX, PC_to_Bot, &receivedData);
 		counter++;
 		strength+= SX->Packet_status->RSSISync;
 	}
@@ -208,7 +208,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateControl_Update();
 
 		if (halt) {
-			float emptyRef[4] = {0, 0, 0, 0};
+			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 			wheels_SetRef(emptyRef);
 		}
 		else {
@@ -243,6 +243,7 @@ void printReceivedData(ReceivedData* receivedData) {
 void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
+	Putty_printf("halt? %u\n\r", halt);
 	Putty_printf("velocity (Kalman):\n\r");
 	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
 	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
@@ -330,7 +331,7 @@ int main(void)
 
 
   Putty_Init();
-  //wheels_Init();
+  wheels_Init();
   stateControl_Init();
   stateEstimation_Init();
   geneva_Init();
@@ -376,7 +377,6 @@ int main(void)
 	   * Check for wireless data
 	   */
 	  if (checkWirelessConnection()) {
-		  processWirelessData(Robot_Data, &receivedData);
 		  executeCommands(&receivedData);
 		  halt = false;
 	  } else {
@@ -385,16 +385,18 @@ int main(void)
 	  }
 
 
+	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
+
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 100) {
+	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 
 		  //printReceivedData(&receivedData);
-		  //printRobotStateData(&stateInfo);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

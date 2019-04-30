@@ -148,7 +148,7 @@ void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]) {
  * Create a roboData structure from a given Bytearray.
  * This is used by the robot to convert a received nRF packet into a struct with named variables.
  */
-void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output) {
+void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	/*
 	output[0] aaaaabbb
 	output[1] bbbbbbbb
@@ -167,58 +167,57 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output) {
 
 //	Putty_printf("ptrd: "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"\r\n", BYTE_TO_BINARY(input[3]), BYTE_TO_BINARY(input[4]));
 
-	output->id = input[0]>>3; //a
-	output->rho = (input[0]&0b111)<<8; //b
-	output->rho |= input[1]; //b
-	output->theta = input[2]<<3; //c
-	output->theta |= (input[3]>>5)&0b111; //c
-	output->driving_reference = (input[3]>>4)&1; //d
-	output->use_cam_info = (input[3]>>3)&1; //e
-	output->use_angle	= (input[3]>>2)&1; //f
-	output->velocity_angular = (input[3]&0b11) << 8; //g
-	output->velocity_angular |= input[4]; //g
-	output->debug_info = (input[5]>>3)&1; //h
-	output->do_kick = (input[5]>>2)&1; //i
-	output->do_chip = (input[5]>>1)&1; //j
-	output->kick_chip_forced = input[5]&1; //k
-	output->kick_chip_power = input[6]; //m
-	output->velocity_dribbler = input[7]; //n
-	output->geneva_drive_state = (input[8]>>5)&0b111; //p
-	output->cam_position_x = (input[8]&0b11111)<<8; //q
-	output->cam_position_x |= input[9]; //q
-	output->cam_position_y = input[10] << 5; //r
-	output->cam_position_y |= (input[11]>>3)&0b11111; //r
-	output->cam_rotation = (input[11]&0b111) << 8; //s
-	output->cam_rotation |= input[12]; //s
+	/*
+	 * Read data from packet
+	 */
+	uint8_t id = input[0]>>3; //a
+	uint16_t rho = (input[0]&0b111)<<8; //b
+	rho |= input[1]; //b
+	int16_t theta = input[2]<<3; //c
+	theta |= (input[3]>>5)&0b111; //c
+	uint8_t driving_reference = (input[3]>>4)&1; //d
+	uint8_t use_cam_info = (input[3]>>3)&1; //e
+	uint8_t use_angle	= (input[3]>>2)&1; //f
+	int16_t velocity_angular = (input[3]&0b11) << 8; //g
+	velocity_angular |= input[4]; //g
+	uint8_t debug_info = (input[5]>>3)&1; //h
+	uint8_t do_kick = (input[5]>>2)&1; //i
+	uint8_t do_chip = (input[5]>>1)&1; //j
+	uint8_t kick_chip_forced = input[5]&1; //k
+	uint8_t kick_chip_power = input[6]; //m
+	uint8_t velocity_dribbler = input[7]; //n
+	uint8_t geneva_drive_state = (input[8]>>5)&0b111; //p
+	int16_t cam_position_x = (input[8]&0b11111)<<8; //q
+	cam_position_x |= input[9]; //q
+	int16_t cam_position_y = input[10] << 5; //r
+	cam_position_y |= (input[11]>>3)&0b11111; //r
+	int16_t cam_rotation = (input[11]&0b111) << 8; //s
+	cam_rotation |= input[12]; //s
 
-}
-
-/*
- * Convert the raw data that is received over the wireless to data that can be used.
- * The result is saved in the receivedData struct.
- */
-void processWirelessData(roboData* input, ReceivedData* receivedData) {
+	/*
+	 * Convert data to useful units
+	 */
 	// State
-	static float stateRef[3] = {0, 0, 0};
-	stateRef[body_x] = (input->rho * CONVERT_RHO) * cosf(input->theta * CONVERT_THETA);
-	stateRef[body_y] = (input->rho * CONVERT_RHO) * sinf(input->theta * CONVERT_THETA);
-	stateRef[body_w] = input->velocity_angular * CONVERT_YAW_REF;
-	receivedData->stateRef = stateRef;
+	//static float stateRef[3] = {0, 0, 0};
+	receivedData->stateRef[body_x] = (rho * CONVERT_RHO) * cosf(theta * CONVERT_THETA);
+	receivedData->stateRef[body_y] = (rho * CONVERT_RHO) * sinf(theta * CONVERT_THETA);
+	receivedData->stateRef[body_w] = velocity_angular * CONVERT_YAW_REF;
+	//receivedData->stateRef = stateRef;
 
 	// Geneva
-	receivedData->genevaRef = input->geneva_drive_state;
+	receivedData->genevaRef = geneva_drive_state;
 
 	// Dribbler
-	receivedData->dribblerRef = input->velocity_dribbler * CONVERT_DRIBBLE_SPEED;
+	receivedData->dribblerRef = velocity_dribbler * CONVERT_DRIBBLE_SPEED;
 
 	// Shoot
-	receivedData->shootPower = input->kick_chip_power * CONVERT_SHOOTING_POWER;
-	receivedData->do_kick = input->do_kick;
-	receivedData->do_chip = input->do_chip;
+	receivedData->shootPower = kick_chip_power * CONVERT_SHOOTING_POWER;
+	receivedData->do_kick = do_kick;
+	receivedData->do_chip = do_chip;
 
 	// Vision data
-	receivedData->visionAvailable = input->use_cam_info;
-	receivedData->visionYaw = input->cam_rotation * CONVERT_VISION_YAW;
+	receivedData->visionAvailable = use_cam_info;
+	receivedData->visionYaw = cam_rotation * CONVERT_VISION_YAW;
 }
 
 

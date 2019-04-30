@@ -27,8 +27,8 @@ static float angleControl(float angleRef, float angle);
 
 int stateControl_Init(){
 	status = on;
-	initPID(&stateK[body_x], 1.0, 0.0, 0.0);
-	initPID(&stateK[body_y], 2.0, 0.0, 0.0);
+	initPID(&stateK[body_x], 0.5, 0.0, 0.0);
+	initPID(&stateK[body_y], 0.5, 0.0, 0.0);
 	initPID(&stateK[body_w], 20.0, 1.5, 0.0);
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
@@ -99,8 +99,8 @@ static void translationVelControl(float state[3], float stateRef[3], float trans
 	stateLocalRef[body_y] = 1.308 * stateLocalRef[body_y];
 
 	// Local control
-	float velxErr = (stateLocalRef[body_x] - state[body_x]);
-	float velyErr = (stateLocalRef[body_y] - state[body_y]);
+	float velxErr = (state[body_x] - stateLocalRef[body_x]);
+	float velyErr = (state[body_y] - stateLocalRef[body_y]);
 	stateLocalRef[body_x] += PID(velxErr, &stateK[body_x]);
 	stateLocalRef[body_y] += PID(velyErr, &stateK[body_y]);
 

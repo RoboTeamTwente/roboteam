@@ -121,10 +121,11 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	toggle_Pin(LED2_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 180) {
+    		//Putty_printf("noise: %d\n\r", SX->Packet_status->RSSISync);
     		ReceivePacket(SX);
     	}else{
 //    		 not necessary to force setRX() here since configured in Rx Continuous mode
-//    		setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
+    		setRX(SX, SX->SX_settings->periodBase, 4000);
     	}
     }
 
@@ -149,14 +150,14 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     }
 };
 
-void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
+void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedData){
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
 		SX->expect_packet = false;
 		for (int i=0; i<13; i++) {
 			PC_to_Bot[i] = SX->RXbuf[3+i];
 		}
-		packetToRoboData(PC_to_Bot, Robot_Data);
+		packetToRoboData(PC_to_Bot, receivedData);
 		setRX(SX, SX->SX_settings->periodBase, 4000);
 //    	char packet[30];
 //    	Putty_printf("received packet: ");

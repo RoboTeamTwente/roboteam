@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////// STRUCTS
 
 typedef struct ReceivedData {
-	float* stateRef;
+	float stateRef[3];
 	bool visionAvailable;
 	float visionYaw;
 	int genevaRef;
@@ -98,9 +98,7 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]);
 void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength);
 
 void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
-void packetToRoboData(uint8_t input[ROBOPKTLEN], roboData *output);
-void processWirelessData(roboData* input, ReceivedData* receivedData);
-void makeEmptyRoboData(roboData *output);
+void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
 void roboAckDataToPacket(roboAckData *input, uint8_t output[FULLACKPKTLEN]);
 void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);
 

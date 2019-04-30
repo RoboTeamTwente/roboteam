@@ -112,7 +112,7 @@ SX1280* SX;
 int counter = 0;
 int strength = 0;
 
-ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, 0, false, false};
+ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
 bool halt = true;
 
@@ -152,6 +152,12 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 		Wireless_DMA_Handler(SX, PC_to_Bot, &receivedData);
 		counter++;
 		strength+= SX->Packet_status->RSSISync;
+	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart->Instance == UART_PC->Instance){
+		Putty_UARTCallback(huart);
 	}
 }
 
@@ -372,7 +378,7 @@ int main(void)
 		  //TODO: wireless DeInit() ?
 	  }
 
-
+	  Putty_Callback();
 	  /*
 	   * Check for wireless data
 	   */

@@ -73,7 +73,7 @@ Putty_Enum Putty_Reset()
     return Putty_Vars.errorCode = NoErrors;
 }
 
-// Currently in main, but call it in a timer please.
+
 // Note. Used to be called PuttyInterface_Update
 Putty_Enum Putty_Callback()
 {
@@ -111,7 +111,28 @@ static void Putty_HexOut(uint8_t data[], uint8_t length)
 // Performs an action on the robot depending on the input.
 static void Putty_HandleCommand(char *input)
 {
-
+	if(!strcmp(input, "geneva get")){
+		Putty_printf("Geneva encoder = %i\n\r", geneva_GetEncoder());
+	} else if(!memcmp(input, "geneva set" , strlen("geneva set"))){
+		geneva_SetRef(strtol(input + 1 + strlen("geneva set"), NULL, 10));
+	}else if(!memcmp(input, "kick", strlen("kick"))){
+		shoot_Shoot(shoot_Kick);
+	}else if(!memcmp(input, "chip", strlen("chip"))){
+		shoot_Shoot(shoot_Chip);
+	}else if(!memcmp(input, "shoot power", strlen("shoot power"))){
+		shoot_SetPower(strtol(input + 1 + strlen("shoot power"), NULL, 10));
+	}else if(!strcmp(input, "shoot state")){
+		Putty_printf("Shoot state = %i\n\r", shoot_GetState());
+	}else if(!memcmp(input, "dribble", strlen("dribble"))){
+		dribbler_SetSpeed(strtol(input + 1 + strlen("dribble"), NULL, 10));
+	}else if(!memcmp(input, "wheels", strlen("wheels"))){
+		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
+		float wheelref[4] = {wheel, wheel, wheel, wheel};
+		wheels_SetRef(wheelref);
+	}else if(!strcmp(input, "make robots")){
+		Putty_printf("No U!");
+	}
+	return;
 }
 
 static void Putty_HandlePcInput(char *input, size_t n_chars)
@@ -206,7 +227,8 @@ static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus)
 static void Putty_ClearLine()
 {
     Putty_TextOut("\r"); // Inputs "return" (i.e. take the cursor to the beginning of the line)
-    for (unsigned int i = 0; i < MAX_COMMAND_LENGTH; i++)
+    for (unsigned int i = 0; i < MAX_COMMAND_LENGTH; i++){
         Putty_TextOut(" "); // Input spacing (no idea why)
+    }
     Putty_TextOut("\r");    // Inputs return again
 }

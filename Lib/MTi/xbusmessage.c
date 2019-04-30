@@ -15,9 +15,9 @@
  * under the License.
  */
 
-#include "xbusmessage.h"
-#include "xbusdef.h"
-#include "xbusutility.h"
+#include <MTi/xbusdef.h>
+#include <MTi/xbusmessage.h>
+#include <MTi/xbusutility.h>
 
 /*!
  * \brief Calculate the number of bytes needed for \a message payload.

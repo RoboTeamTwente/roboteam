@@ -18,9 +18,9 @@
 #ifndef __XBUSPARSER_H
 #define __XBUSPARSER_H
 
+#include <MTi/xbusmessage.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "xbusmessage.h"
 
 #ifdef __cplusplus
 extern "C" {

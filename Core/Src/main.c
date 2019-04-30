@@ -49,6 +49,7 @@
 #include "PuTTY.h"
 #include "wheels.h"
 #include "Wireless.h"
+#include "MTi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +78,7 @@ DMA_HandleTypeDef hdma_quadspi;
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi4;
 DMA_HandleTypeDef hdma_spi1_rx;
+DMA_HandleTypeDef hdma_spi1_tx;
 DMA_HandleTypeDef hdma_spi4_rx;
 DMA_HandleTypeDef hdma_spi4_tx;
 
@@ -100,6 +102,7 @@ DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
 SX1280* SX;
+MTi_data* MTi;
 int counter = 0;
 int strength = 0;
 /* USER CODE END PV */
@@ -138,12 +141,16 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 		Wireless_DMA_Handler(SX, PC_to_Bot);
 		counter++;
 		strength+= SX->Packet_status->RSSISync;
+	}else if(hspi->Instance == MTi->SPI->Instance){
+		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
 		Wireless_IRQ_Handler(SX, 0, 0);
+	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
+		MTi_IRQ_Handler(MTi);
 	}
 }
 
@@ -211,6 +218,7 @@ int main(void)
 
   Putty_Init();
   SX = Wireless_Init(1.3f, COMM_SPI);
+  MTi = MTi_Init(6,XFP_General);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
   if(!setSyncWords(SX,robot_syncWord[ID],0x0,0x0)){
@@ -403,16 +411,16 @@ static void MX_SPI1_Init(void)
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 7;
   hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
   if (HAL_SPI_Init(&hspi1) != HAL_OK)
   {
     Error_Handler();
@@ -1155,6 +1163,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+  /* DMA2_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream5_IRQn);
 
 }
 
@@ -1192,10 +1203,13 @@ static void MX_GPIO_Init(void)
                           |LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_FR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_FR_Pin|SPI1_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, Geneva_DIRA_Pin|Geneva_DIRB_Pin|XSENS_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, Geneva_DIRA_Pin|Geneva_DIRB_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(XSENS_RST_GPIO_Port, XSENS_RST_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, BS_RST_Pin|Charge_Pin, GPIO_PIN_RESET);
@@ -1281,8 +1295,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Geneva_cal_sensor_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Geneva_DIRA_Pin Geneva_DIRB_Pin XSENS_RST_Pin */
-  GPIO_InitStruct.Pin = Geneva_DIRA_Pin|Geneva_DIRB_Pin|XSENS_RST_Pin;
+  /*Configure GPIO pins : Geneva_DIRA_Pin Geneva_DIRB_Pin */
+  GPIO_InitStruct.Pin = Geneva_DIRA_Pin|Geneva_DIRB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1293,6 +1307,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(XSENS_IRQ_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : XSENS_RST_Pin */
+  GPIO_InitStruct.Pin = XSENS_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(XSENS_RST_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SPI1_NSS_Pin */
+  GPIO_InitStruct.Pin = SPI1_NSS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(SPI1_NSS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : QUADSPI_IRQ_Pin */
   GPIO_InitStruct.Pin = QUADSPI_IRQ_Pin;
@@ -1308,10 +1336,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 2, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 4, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 2, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 3, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }

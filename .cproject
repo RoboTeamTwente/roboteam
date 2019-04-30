@@ -44,12 +44,17 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" />
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F7xx/Include" />
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
+									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
+									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
+									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
+									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
+									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1924863888" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
-									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))" />
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER" />
 									<listOptionValue builtIn="false" value="STM32F767xx" />
+									<listOptionValue builtIn="false" value="__weak=&quot;__attribute__((weak))&quot;" />
+									<listOptionValue builtIn="false" value="__packed=&quot;__attribute__((__packed__))&quot;" />
 								</option>
 								<option id="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other.1507526838" superClass="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0" valueType="string" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.438826351" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c" />
@@ -66,10 +71,10 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.615037658" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
-									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))" />
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER" />
 									<listOptionValue builtIn="false" value="STM32F767xx" />
+									<listOptionValue builtIn="false" value="__weak=&quot;__attribute__((weak))&quot;" />
+									<listOptionValue builtIn="false" value="__packed=&quot;__attribute__((__packed__))&quot;" />
 								</option>
 								<option id="fr.ac6.managedbuild.gnu.cpp.compiler.option.misc.other.224955040" name="Other flags" superClass="fr.ac6.managedbuild.gnu.cpp.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0" valueType="string" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.2099693287" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp" />
@@ -79,7 +84,7 @@
 								<option id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.script.368838881" name="Linker Script (-T)" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker.script" useByScannerDiscovery="false" value="../STM32F767ZITx_FLASH.ld" valueType="string" />
 								<option id="gnu.c.link.option.libs.1909912667" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" />
 								<option id="gnu.c.link.option.paths.394227711" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" />
-								<option id="gnu.c.link.option.ldflags.868565289" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="-specs=nosys.specs -specs=nano.specs" valueType="string" />
+								<option id="gnu.c.link.option.ldflags.868565289" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="-specs=nosys.specs -specs=nano.specs -u _printf_float" valueType="string" />
 								<option id="gnu.c.link.option.other.1876279415" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" useByScannerDiscovery="false" />
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1561704835" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)" />
@@ -161,10 +166,10 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1924863888" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
-									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))" />
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER" />
 									<listOptionValue builtIn="false" value="STM32F767xx" />
+									<listOptionValue builtIn="false" value="__weak=&quot;__attribute__((weak))&quot;" />
+									<listOptionValue builtIn="false" value="__packed=&quot;__attribute__((__packed__))&quot;" />
 								</option>
 								<option id="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other.1507526838" superClass="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0" valueType="string" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.438826351" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c" />
@@ -181,10 +186,10 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include" />
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.symbols.1502806216" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))" />
-									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))" />
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER" />
 									<listOptionValue builtIn="false" value="STM32F767xx" />
+									<listOptionValue builtIn="false" value="__weak=&quot;__attribute__((weak))&quot;" />
+									<listOptionValue builtIn="false" value="__packed=&quot;__attribute__((__packed__))&quot;" />
 								</option>
 								<option id="fr.ac6.managedbuild.gnu.cpp.compiler.option.misc.other.224955040" name="Other flags" superClass="fr.ac6.managedbuild.gnu.cpp.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0" valueType="string" />
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp.2099693287" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.input.cpp" />
@@ -237,12 +242,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="robot3.0.fr.ac6.managedbuild.target.gnu.cross.exe.1332081601" name="Executable" projectType="fr.ac6.managedbuild.target.gnu.cross.exe" />
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="" />
-		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1396391450;fr.ac6.managedbuild.config.gnu.cross.exe.debug.1396391450.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.351958162;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.438826351">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="" />
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders" />
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
@@ -252,4 +251,7 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets" />
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings" />
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="" />
+	</storageModule>
 </cproject>

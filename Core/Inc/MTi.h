@@ -95,6 +95,7 @@ typedef struct MTi_data_struct{
 	// data
 	float angles[3];								// euler angles received
 	float acc[3];									// acceleration of the robot on all axes
+	float gyr[3];									// gyroscope of the robot on all axes
 	uint16_t packetcounter;							// stores the packet ID
 	// states
 	bool started_icc;								// bool to define if the in-run compas calibration is running

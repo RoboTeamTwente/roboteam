@@ -137,6 +137,8 @@ static void MX_TIM14_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+
+
 	if(hspi->Instance == SX->SPI->Instance) {
 		Wireless_DMA_Handler(SX, PC_to_Bot);
 		counter++;
@@ -218,7 +220,7 @@ int main(void)
 
   Putty_Init();
   SX = Wireless_Init(1.3f, COMM_SPI);
-  MTi = MTi_Init(6,XFP_General);
+  MTi = MTi_Init(6,XFP_VRU_general);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
   if(!setSyncWords(SX,robot_syncWord[ID],0x0,0x0)){
@@ -235,6 +237,14 @@ int main(void)
   setRX(SX, SX->SX_settings->periodBase, 0x0);
   while (1)
   {
+//	  static float sum = 0.0;
+//	  static int count = 0;
+//	  if (HAL_GetTick() < 6000) {
+//		  sum += MTi->gyr[2];
+//		  count++;
+//	  } else if (HAL_GetTick() == 6000) {
+//
+//	  }
 	  if (HAL_GetTick() >  i + 1000) {
 		  i = HAL_GetTick();
 
@@ -243,7 +253,16 @@ int main(void)
 		  strength = 0;
 		  counter = 0;
 		  toggle_pin(LED0_pin);
+
+		  Putty_printf("acc: {%f, %f, %f}\n\r",MTi->acc[0],MTi->acc[1],MTi->acc[2]);
+		  Putty_printf("yaw: %f\n\r", MTi->angles[2]);
+		  //Putty_printf("gyr: {%f, %f, %f}\n\r",MTi->gyr[0],MTi->gyr[1],MTi->gyr[2]);
+		  Putty_printf("packet counter: %d\n\r", MTi->packetcounter);
+		  Putty_printf("status word: %d\n\r", MTi->statusword);
 	  }
+	  //if (read_pin(MTi_IRQ_pin)) {
+		//  MTi_IRQ_Handler(MTi);
+	  //}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -1152,19 +1171,19 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
   /* DMA2_Stream1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
   /* DMA2_Stream5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream5_IRQn);
 
 }

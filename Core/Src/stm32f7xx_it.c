@@ -62,7 +62,20 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+void Hard_Fault_Handler(uint32_t stack[]){
+	char msg[80];
+	//printErrorMsg("in HardFault Handler\n");
+	sprintf(msg,"Hard Fault status Reg = 0x%08x\n\0",SCB->HFSR);
+	//printErrorMsg(msg);
+	if(SCB->HFSR & (1<<30)){
+		//printErrorMsg("Forced Hard Fault\n");
+		sprintf(msg,"Conf Fault Status Reg = 0x%08x\n\0", SCB->CFSR);
+		//printErrorMsg(msg);
+	}
+	//stackDump(stack);
+	__ASM volatile("BKPT #01");
+	while(1);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,7 +122,13 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	__ASM volatile("BKPT #01");
+	__asm(	"TST 	lr, #4				\n"
+			"ITE 	EQ					\n"
+			"MRSEQ 	r0, MSP				\n"
+			"MRSNE 	r0, PSP				\n"
+			"B 		Hard_Fault_Handler	\n"
+	);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {

@@ -10,6 +10,7 @@
  * Extra functions:
  *
  * Notes:
+ * Don't use pointers with Kalman it fucks shit up
  *
 */
 

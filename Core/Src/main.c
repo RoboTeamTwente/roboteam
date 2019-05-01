@@ -414,7 +414,7 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 
 		  //printReceivedData(&receivedData);
-		  //printRobotStateData(&stateInfo);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

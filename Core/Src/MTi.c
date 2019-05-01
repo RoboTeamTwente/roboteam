@@ -92,7 +92,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
     set_Pin(MTi->CS_pin, true);
     HAL_Delay(1);
 	set_Pin(MTi_RST_pin, true);
-	HAL_Delay(1);
+	//HAL_Delay(1);
 
 	if(WaitForAck(MTi,XMID_WakeUp)){
 		MTi_printf("failed go to config");
@@ -163,7 +163,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 		return NULL;
 	}
 	MTi->init_phase = false;
-	HAL_Delay(1);
+	HAL_Delay(100);
 	// calibrate rotation sensor for calibrate_time seconds
 	if(MTi_NoRotation(MTi,calibrate_time)){
 		MTi_printf("failed set no rotation");
@@ -503,8 +503,8 @@ static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	bool timedout = false;
 	uint32_t cnt = 0;
 	while(MTi->LastAck != XMID && !timedout){
-		HAL_Delay(100);
-		timedout = 200 < cnt++;
+//		HAL_Delay(10);
+//		timedout = 200 < cnt++;
 	}
 	return timedout ? Xsens_Failed_Receive : Xsens_OK;
 }

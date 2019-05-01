@@ -205,7 +205,7 @@ void clearReceivedData(ReceivedData* receivedData) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		geneva_Update();
+		//geneva_Update();
 	}
 	else if(htim->Instance == htim7.Instance) {
 		// State estimation
@@ -267,21 +267,21 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-//	Putty_printf("wheel refs:\n\r");
-//	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-//	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
-//	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-//	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-//	Putty_printf("wheel speeds (encoders):\n\r");
-//	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-//	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
-//	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-//	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-//	Putty_printf("wheel pwm:\n\r");
-//	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-//	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-//	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-//	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	Putty_printf("wheel refs:\n\r");
+	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
+	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
+	Putty_printf("wheel speeds (encoders):\n\r");
+	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
+	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+	Putty_printf("wheel pwm:\n\r");
+	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
+	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
+	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
+	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
 //	Putty_printf("Geneva: \n\r");
 //	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 //	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
@@ -350,7 +350,7 @@ int main(void)
   wheels_Init();
   stateControl_Init();
   stateEstimation_Init();
-  geneva_Init();
+  //geneva_Init();
   shoot_Init();
   dribbler_Init();
   buzzer_Init();
@@ -374,21 +374,21 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-	  if (!read_Pin(Bat_pin)) {
-		  // TODO: DeInit everything
-		  Putty_printf("battery empty\n\r");
-		  set_Pin(LED4_pin, 1);
-		  Putty_DeInit();
-		  wheels_DeInit();
-		  stateControl_DeInit();
-		  stateEstimation_DeInit();
-		  geneva_DeInit();
-		  shoot_DeInit();
-		  dribbler_DeInit();
-		  buzzer_DeInit();
-		  MTi_DeInit(MTi);
-		  //TODO: wireless DeInit() ?
-	  }
+	  //TODO: Fix battery pin with electronics
+//	  if (read_Pin(Bat_pin)) {
+//		  Putty_printf("battery empty\n\r");
+//		  set_Pin(LED4_pin, 1);
+//		  Putty_DeInit();
+//		  wheels_DeInit();
+//		  stateControl_DeInit();
+//		  stateEstimation_DeInit();
+//		  geneva_DeInit();
+//		  shoot_DeInit();
+//		  dribbler_DeInit();
+//		  buzzer_DeInit();
+//		  MTi_DeInit(MTi);
+//		  //TODO: wireless DeInit() ?
+//	  }
 
 	  Putty_Callback();
 	  /*
@@ -411,12 +411,20 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() >  printTime + 100) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
+//			Putty_printf("----->FROM BASESTATION----->\n\r");
+//			char msg[40];
+//			for(int i=0, j=0; j<ROBOPKTLEN; i++, j++) {
+//				sprintf(&msg[i], "%02X  ", PC_to_Bot[j]);
+//				i += 2;
+//			}
+//			Putty_printf(msg);
+//			Putty_printf("\n\r");
 
 		  //printReceivedData(&receivedData);
-		  printRobotStateData(&stateInfo);
+		  //printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

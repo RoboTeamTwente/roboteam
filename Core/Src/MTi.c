@@ -27,8 +27,8 @@ MTi_data_tuple data_configurations[]={
 	{.ID = XDI_PacketCounter	, .frequency = 100	, .data = &MTi_struct.packetcounter	},
 	{.ID = XDI_FreeAcceleration	, .frequency = 100	, .data = MTi_struct.acc			},
 	{.ID = XDI_StatusWord		, .frequency = 10	, .data = &MTi_struct.statusword	},
-	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi_struct.angles			}
-	//{.ID = XDI_RateOfTurn		, .frequency = 100	, .data = MTi_struct.gyr			}
+	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi_struct.angles			},
+	{.ID = XDI_RateOfTurn		, .frequency = 100	, .data = MTi_struct.gyr			}
 	};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLERATIONS
@@ -138,7 +138,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 
 	for(int i = 0; i < MTi->configuration_total; i++){
 		MTi_data_tuple conf = data_configurations[i];
-		bool last = i == (MTi->configuration_total-1);
+		bool last = (i == (MTi->configuration_total-1));
 		MTi_BuildConfig(MTi, conf.ID, conf.frequency, last);
 	}
 
@@ -199,7 +199,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	MTi_printf("settings: %u", rxbuf[5]);
 
 	HAL_Delay(1);
-	//HAL_Delay(100);
 	if(MTi_UseIcc(MTi) == Xsens_OK) {
 		MTi->started_icc = true;
 		MTi_printf("ICC started");
@@ -504,8 +503,8 @@ static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	bool timedout = false;
 	uint32_t cnt = 0;
 	while(MTi->LastAck != XMID && !timedout){
-		//HAL_Delay(10);
-		//timedout = 200 < cnt++;
+		HAL_Delay(100);
+		timedout = 200 < cnt++;
 	}
 	return timedout ? Xsens_Failed_Receive : Xsens_OK;
 }

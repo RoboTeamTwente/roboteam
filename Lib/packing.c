@@ -165,6 +165,7 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	output[12] ssssssss
 	 */
 
+
 //	Putty_printf("ptrd: "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"\r\n", BYTE_TO_BINARY(input[3]), BYTE_TO_BINARY(input[4]));
 
 	/*
@@ -193,6 +194,8 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	cam_position_y |= (input[11]>>3)&0b11111; //r
 	int16_t cam_rotation = (input[11]&0b111) << 8; //s
 	cam_rotation |= input[12]; //s
+
+
 
 	/*
 	 * Convert data to useful units

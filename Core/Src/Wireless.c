@@ -31,7 +31,7 @@ SX1280_Settings set = {
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_1_0, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_16_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_1_BYTE, NO_WHITENING},
+        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|RXTX_TIMEOUT), (TX_DONE|RX_DONE|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -120,7 +120,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	isWirelessConnected = true;
     	toggle_Pin(LED2_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
-    	if (SX->Packet_status->RSSISync < 180) {
+    	if (SX->Packet_status->RSSISync < 160) {
     		//Putty_printf("noise: %d\n\r", SX->Packet_status->RSSISync);
     		ReceivePacket(SX);
     	}else{

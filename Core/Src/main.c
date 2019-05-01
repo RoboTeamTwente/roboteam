@@ -113,7 +113,7 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
-StateInfo stateInfo = {0.0f, false, NULL, 0.0f, NULL};
+StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
 bool halt = true;
 
 /* USER CODE END PV */
@@ -204,8 +204,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		// State estimation
 		stateInfo.visionAvailable = receivedData.visionAvailable;
 		stateInfo.visionYaw = receivedData.visionYaw;
-		stateInfo.wheelSpeeds = wheels_GetState();
-		stateInfo.xsensAcc = NULL; // TODO: add xsens getter
+		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+		}
+		stateInfo.xsensAcc[body_x] = 0.0; // TODO: add xsens getter
+		stateInfo.xsensAcc[body_y] = 0.0; // TODO: add xsens getter
 		stateInfo.xsensYaw = 0.0f; // TODO: add xsens getter
 		stateEstimation_Update(&stateInfo);
 
@@ -402,7 +405,7 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 
 		  //printReceivedData(&receivedData);
-		  printRobotStateData(&stateInfo);
+		  //printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

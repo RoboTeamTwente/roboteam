@@ -24,9 +24,9 @@
 typedef struct StateInfo {
 	float visionYaw;
 	bool visionAvailable;
-	float* xsensAcc;
+	float xsensAcc[2];
 	float xsensYaw;
-	float* wheelSpeeds;
+	float wheelSpeeds[4];
 } StateInfo;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS

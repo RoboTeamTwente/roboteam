@@ -63,6 +63,20 @@
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 
+void Hard_Fault_Handler(uint32_t stack[]){
+	char msg[80];
+	//printErrorMsg("in HardFault Handler\n");
+	sprintf(msg,"Hard Fault status Reg = 0x%08x\n\0",SCB->HFSR);
+	//printErrorMsg(msg);
+	if(SCB->HFSR & (1<<30)){
+		//printErrorMsg("Forced Hard Fault\n");
+		sprintf(msg,"Conf Fault Status Reg = 0x%08x\n\0", SCB->CFSR);
+		//printErrorMsg(msg);
+	}
+	//stackDump(stack);
+	__ASM volatile("BKPT #01");
+	while(1);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -76,6 +90,7 @@ extern I2C_HandleTypeDef hi2c1;
 extern DMA_HandleTypeDef hdma_quadspi;
 extern QSPI_HandleTypeDef hqspi;
 extern DMA_HandleTypeDef hdma_spi1_rx;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 extern DMA_HandleTypeDef hdma_spi4_rx;
 extern DMA_HandleTypeDef hdma_spi4_tx;
 extern SPI_HandleTypeDef hspi1;
@@ -113,7 +128,13 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	__ASM volatile("BKPT #01");
+	__asm(	"TST 	lr, #4				\n"
+			"ITE 	EQ					\n"
+			"MRSEQ 	r0, MSP				\n"
+			"MRSNE 	r0, PSP				\n"
+			"B 		Hard_Fault_Handler	\n"
+	);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -358,6 +379,7 @@ void UART5_IRQHandler(void)
 }
 
 /**
+
   * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
   */
 void TIM6_DAC_IRQHandler(void)
@@ -439,6 +461,20 @@ void DMA2_Stream3_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream3_IRQn 1 */
 
   /* USER CODE END DMA2_Stream3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream5 global interrupt.
+  */
+void DMA2_Stream5_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream5_IRQn 0 */
+
+  /* USER CODE END DMA2_Stream5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
+  /* USER CODE BEGIN DMA2_Stream5_IRQn 1 */
+
+  /* USER CODE END DMA2_Stream5_IRQn 1 */
 }
 
 /**

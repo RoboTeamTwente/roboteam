@@ -79,6 +79,7 @@ GPIO_Pin FRQ_sel			= { SW_Freq_GPIO_Port		, SW_Freq_Pin		};
 // MTi
 GPIO_Pin MTi_RST_pin 		= { XSENS_RST_GPIO_Port		, XSENS_RST_Pin		};
 GPIO_Pin MTi_IRQ_pin 		= { XSENS_IRQ_GPIO_Port		, XSENS_IRQ_Pin		};
+GPIO_Pin MTi_NSS_pin		= { SPI1_NSS_GPIO_Port		, SPI1_NSS_Pin		};
 
 // Wireless
 GPIO_Pin SX_IRQ_pin			= { SPI4_IRQ_GPIO_Port 		, SPI4_IRQ_Pin		};

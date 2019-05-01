@@ -15,7 +15,7 @@
  * under the License.
  */
 
-#include "xsdeviceid.h"
+#include <MTi/xsdeviceid.h>
 
 /*!
  * \brief Return true if device ID corresponds to a MTi-1 series device.

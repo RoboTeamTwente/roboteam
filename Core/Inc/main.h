@@ -185,6 +185,8 @@ void Error_Handler(void);
 #define XSENS_IRQ_EXTI_IRQn EXTI9_5_IRQn
 #define XSENS_RST_Pin GPIO_PIN_6
 #define XSENS_RST_GPIO_Port GPIOD
+#define SPI1_NSS_Pin GPIO_PIN_10
+#define SPI1_NSS_GPIO_Port GPIOG
 #define QUADSPI_IRQ_Pin GPIO_PIN_14
 #define QUADSPI_IRQ_GPIO_Port GPIOG
 #define QUADSPI_IRQ_EXTI_IRQn EXTI15_10_IRQn

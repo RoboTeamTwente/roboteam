@@ -15,7 +15,7 @@
  * under the License.
  */
 
-#include "xbusutility.h"
+#include <MTi/xbusutility.h>
 
 /*!
  * \name Xbus message reading utility functions.

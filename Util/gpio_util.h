@@ -91,6 +91,7 @@ extern GPIO_Pin FRQ_sel;
 // MTi
 extern GPIO_Pin MTi_RST_pin;
 extern GPIO_Pin MTi_IRQ_pin;
+extern GPIO_Pin MTi_NSS_pin;
 
 // Wireless
 extern GPIO_Pin SX_IRQ_pin;

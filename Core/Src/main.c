@@ -216,7 +216,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		stateInfo.xsensYaw = MTi->angles[2];
+		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
 		stateEstimation_Update(&stateInfo);
 
 		// State control
@@ -267,24 +267,24 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-	Putty_printf("wheel refs:\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-	Putty_printf("wheel pwm:\n\r");
-	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
-	Putty_printf("Geneva: \n\r");
-	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
-	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
+//	Putty_printf("wheel refs:\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
+//	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
+//	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
+//	Putty_printf("wheel speeds (encoders):\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
+//	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
+//	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+//	Putty_printf("wheel pwm:\n\r");
+//	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
+//	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
+//	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
+//	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+//	Putty_printf("Geneva: \n\r");
+//	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
+//	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 }
 
 /* USER CODE END 0 */
@@ -394,6 +394,8 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
+	  //receivedData.stateRef[body_x] = 0.0;
+	  //receivedData.stateRef[body_y] = 0.0;
 	  if (checkWirelessConnection()) { // TODO: make a real function for this
 		  executeCommands(&receivedData);
 		  halt = false;
@@ -414,9 +416,7 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 
 		  //printReceivedData(&receivedData);
-		  //printRobotStateData(&stateInfo);
-		  Putty_printf("status word: %d\n\r", MTi->statusword);
-		  Putty_printf("yaw: %f\n\r", MTi->angles[2]);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

@@ -214,9 +214,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
 		}
-		stateInfo.xsensAcc[body_x] = 0.0; // TODO: add xsens getter
-		stateInfo.xsensAcc[body_y] = 0.0; // TODO: add xsens getter
-		stateInfo.xsensYaw = 0.0f; // TODO: add xsens getter
+		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+		stateInfo.xsensYaw = MTi->angles[2];
 		stateEstimation_Update(&stateInfo);
 
 		// State control
@@ -386,6 +386,7 @@ int main(void)
 		  shoot_DeInit();
 		  dribbler_DeInit();
 		  buzzer_DeInit();
+		  MTi_DeInit(MTi);
 		  //TODO: wireless DeInit() ?
 	  }
 
@@ -393,7 +394,7 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  if (checkWirelessConnection()) {
+	  if (checkWirelessConnection()) { // TODO: make a real function for this
 		  executeCommands(&receivedData);
 		  halt = false;
 	  } else {

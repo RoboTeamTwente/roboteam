@@ -99,7 +99,11 @@ struct PIDstruct{
 	float I;
 	float prev_e;
 	float timeDiff;
-}static PIDdefault = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, TIME_DIFF};
+	float minOutput;
+	float maxOutput;
+	float ramp;
+	float prev_PID
+}static PIDdefault = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, TIME_DIFF, -1000000, 1000000, 1000000, 0};
 
 typedef struct PIDstruct PIDvariables;
 
@@ -115,7 +119,33 @@ static void initPID(PIDvariables* PID, float kP, float kI, float kD) {
 	PID->I = PIDdefault.I;
 	PID->prev_e = PIDdefault.prev_e;
 	PID->timeDiff = PIDdefault.timeDiff;
+	PID->minOutput = PIDdefault.minOutput;
+	PID->maxOutput = PIDdefault.maxOutput;
+	PID->ramp = PIDdefault.ramp;
+	PID->prev_PID = PIDdefault.prev_PID;
 }
+
+//clamps the input
+//inline float clamp(float input, float min, float max){
+//	if (input<min){
+//		return min;
+//	} else if (input>max) {
+//		return max;
+//	} else {
+//		return input;
+//	}
+//}
+
+//limits the change in PID value
+//inline float ramp(float new_PID, float ramp, float prev_PID){
+//	if (new_PID-prev_PID>ramp){
+//		return (prev_PID+ramp);
+//	} else if (new_PID-prev_PID<-ramp){
+//		return (prev_PID-ramp);
+//	} else {
+//		return new_PID;
+//	}
+//}
 
 //PID control, inline to not have multiple implementation error
 inline float PID(float err, PIDvariables* K){
@@ -125,6 +155,9 @@ inline float PID(float err, PIDvariables* K){
 	float D = K->kD*((err-K->prev_e)/K->timeDiff);
 	K->prev_e = err;
 	float PIDvalue = P + I + D;
+//	PIDvalue = ramp(PIDvalue, K->ramp, K->prev_PID);
+//	PIDvalue = clamp(PIDvalue, K->minOutput, K->maxOutput);
+	K->prev_PID = PIDvalue;
 	return PIDvalue;
 }
 

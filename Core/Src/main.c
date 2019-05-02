@@ -205,9 +205,70 @@ void clearReceivedData(ReceivedData* receivedData) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		//geneva_Update();
+		geneva_Update();
 	}
 	else if(htim->Instance == htim7.Instance) {
+		// SQUARE WITH 90 DEGREES TURNS AT SIDES
+	  	float velocityRef[3];
+		velocityRef[0] = 0.0;
+		velocityRef[1] = 0.0;
+		velocityRef[2] = 0.0*M_PI;
+		halt = false;
+		static uint velTimer;
+		int reps = 1;
+		static int count = 0;
+		float v = 0.5;
+		int t = 1500;
+		if (HAL_GetTick() < 7000) {
+			velTimer = HAL_GetTick();
+		} else if (HAL_GetTick() - velTimer < t) {
+			velocityRef[body_x] = v;
+			velocityRef[body_y] = 0.0;
+			velocityRef[body_w] = 0.0;
+		} else if (HAL_GetTick() - velTimer < 2*t) {
+			velocityRef[body_x] = v;
+			velocityRef[body_y] = 0.0;
+			velocityRef[body_w] = 0.5*M_PI;
+		} else if (HAL_GetTick() - velTimer < 3*t) {
+			velocityRef[body_x] = 0.0;
+			velocityRef[body_y] = v;
+			velocityRef[body_w] = 0.0;
+		} else if (HAL_GetTick() - velTimer < 4*t) {
+			velocityRef[body_x] = 0.0;
+			velocityRef[body_y] = v;
+			velocityRef[body_w] = 0.5*M_PI;
+		} else if (HAL_GetTick() - velTimer < 5*t) {
+			velocityRef[body_x] = -v;
+			velocityRef[body_y] = 0.0;
+			velocityRef[body_w] = 0.0;
+		} else if (HAL_GetTick() - velTimer < 6*t) {
+			velocityRef[body_x] = -v;
+			velocityRef[body_y] = 0.0;
+			velocityRef[body_w] = 0.5*M_PI;
+		} else if (HAL_GetTick() - velTimer < 7*t) {
+			velocityRef[body_x] = 0.0;
+			velocityRef[body_y] = -v;
+			velocityRef[body_w] = 0.0;
+		} else if (HAL_GetTick() - velTimer < 8*t) {
+			velocityRef[body_x] = 0.0;
+			velocityRef[body_y] = -v;
+			velocityRef[body_w] = 0.5*M_PI;
+		} else if (count < reps-1) {
+			velTimer = HAL_GetTick();
+			count++;
+		} else {
+			velocityRef[body_x] = 0.0;
+			velocityRef[body_y] = 0.0;
+			velocityRef[body_w] = 0.0;
+		}
+
+
+		receivedData.stateRef[body_x] = velocityRef[body_x];
+		receivedData.stateRef[body_y] = velocityRef[body_y];
+		receivedData.stateRef[body_w] = velocityRef[body_w];
+		stateControl_SetRef(velocityRef);
+
+
 		// State estimation
 		stateInfo.visionAvailable = receivedData.visionAvailable;
 		stateInfo.visionYaw = receivedData.visionYaw;
@@ -240,51 +301,64 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 void printReceivedData(ReceivedData* receivedData) {
-	Putty_printf("\n\r");
-	Putty_printf("-----Received robot data-------\n\r");
-	Putty_printf("velocity:\n\r");
-	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
-	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
-	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
-	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
-	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
-	Putty_printf("kick: %u\n\r",receivedData->do_kick);
-	Putty_printf("chip: %u\n\r",receivedData->do_chip);
-	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
-	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
-	Putty_printf("\n\r");
+//	Putty_printf("\n\r");
+//	Putty_printf("-----Received robot data-------\n\r");
+//	Putty_printf("velocity:\n\r");
+	Putty_printf("xr: %f\n\r", receivedData->stateRef[body_x]);
+	Putty_printf("yr: %f\n\r", receivedData->stateRef[body_y]);
+//	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
+//	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
+//	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
+//	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
+//	Putty_printf("kick: %u\n\r",receivedData->do_kick);
+//	Putty_printf("chip: %u\n\r",receivedData->do_chip);
+//	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
+//	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
+//	Putty_printf("\n\r");
 }
 
 void printRobotStateData(StateInfo* stateInfo) {
-	Putty_printf("\n\r");
-	Putty_printf("-------Robot state data--------\n\r");
-	Putty_printf("halt? %u\n\r", halt);
-	Putty_printf("velocity (Kalman):\n\r");
-	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
-	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
-	Putty_printf("acceleration (xsens):\n\r");
-	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
-	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
-	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-	Putty_printf("wheel refs:\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
-	Putty_printf("wheel pwm:\n\r");
-	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+//	Putty_printf("\n\r");
+//	Putty_printf("-------Robot state data--------\n\r");
+//	Putty_printf("halt? %u\n\r", halt);
+//	Putty_printf("velocity (Kalman):\n\r");
+	Putty_printf("xs: %f m/s\n\r", stateEstimation_GetState()[body_x]);
+	Putty_printf("ys: %f m/s\n\r", stateEstimation_GetState()[body_y]);
+//	Putty_printf("acceleration (xsens):\n\r");
+//	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
+//	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
+//	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+//	Putty_printf("wheel refs:\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
+//	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
+//	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
+//	Putty_printf("wheel speeds (encoders):\n\r");
+//	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
+//	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
+//	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
+//	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+//	Putty_printf("wheel pwm:\n\r");
+//	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
+//	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
+//	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
+//	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
 //	Putty_printf("Geneva: \n\r");
 //	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 //	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
+}
+
+void printBaseStation() {
+	Putty_printf("----->FROM BASESTATION----->\n\r");
+	char msg[40];
+	for(int i=0, j=0; j<ROBOPKTLEN; i++, j++) {
+		sprintf(&msg[i], "%02X  ", PC_to_Bot[j]);
+		i += 2;
+	}
+	Putty_printf("packet_counter: %d\n\r",counter);
+	counter = 0;
+	Putty_printf(msg);
+	Putty_printf("\n\r");
 }
 
 /* USER CODE END 0 */
@@ -350,7 +424,7 @@ int main(void)
   wheels_Init();
   stateControl_Init();
   stateEstimation_Init();
-  //geneva_Init();
+  geneva_Init();
   shoot_Init();
   dribbler_Init();
   buzzer_Init();
@@ -363,7 +437,7 @@ int main(void)
   // start the pingpong operation
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-  setRX(SX, SX->SX_settings->periodBase, 4000);
+  setRX(SX, SX->SX_settings->periodBase, 8000);
 
   /* USER CODE END 2 */
 
@@ -394,8 +468,6 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  //receivedData.stateRef[body_x] = 0.0;
-	  //receivedData.stateRef[body_y] = 0.0;
 	  if (checkWirelessConnection()) { // TODO: make a real function for this
 		  executeCommands(&receivedData);
 		  halt = false;
@@ -404,27 +476,18 @@ int main(void)
 		  clearReceivedData(&receivedData);
 	  }
 
-
 	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 100) {
+	  if (HAL_GetTick() >  printTime + 50) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-//			Putty_printf("----->FROM BASESTATION----->\n\r");
-//			char msg[40];
-//			for(int i=0, j=0; j<ROBOPKTLEN; i++, j++) {
-//				sprintf(&msg[i], "%02X  ", PC_to_Bot[j]);
-//				i += 2;
-//			}
-//			Putty_printf(msg);
-//			Putty_printf("\n\r");
-
-		  //printReceivedData(&receivedData);
-		  //printRobotStateData(&stateInfo);
+		  //printBaseStationData();
+		  printReceivedData(&receivedData);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

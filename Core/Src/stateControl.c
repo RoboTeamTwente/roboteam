@@ -27,8 +27,8 @@ static float angleControl(float angleRef, float angle);
 
 int stateControl_Init(){
 	status = on;
-	initPID(&stateK[body_x], 0.5, 0.0, 0.0);
-	initPID(&stateK[body_y], 0.5, 0.0, 0.0);
+	initPID(&stateK[body_x], 0.1, 0.0, 0.0);
+	initPID(&stateK[body_y], 0.4, 0.0, 0.0);
 	initPID(&stateK[body_w], 20.0, 1.5, 0.0);
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
@@ -71,11 +71,11 @@ void stateControl_SetState(float input[3]){
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-static void body2Wheels(float wheelSpeed[4], float state[3]){
+static void body2Wheels(float wheelSpeed[4], float vel[3]){
 	//mixing matrix
-	float velx2wheel = (state[body_x]*sin60/rad_wheel);
-	float vely2wheel = (state[body_y]*cos60/rad_wheel);
-	//float rot2wheel =  (rad_robot*state[body_w]/rad_wheel);
+	float velx2wheel = (vel[body_x]*sin60/rad_wheel);
+	float vely2wheel = (vel[body_y]*cos60/rad_wheel);
+	//float rot2wheel =  (rad_robot*vel[body_w]/rad_wheel);
 	wheelSpeed[wheels_RF] = (velx2wheel + vely2wheel);
 	wheelSpeed[wheels_RB] = (velx2wheel - vely2wheel);
 	wheelSpeed[wheels_LB] = (-velx2wheel - vely2wheel);
@@ -99,8 +99,8 @@ static void translationVelControl(float state[3], float stateRef[3], float trans
 	stateLocalRef[body_y] = 1.308 * stateLocalRef[body_y];
 
 	// Local control
-	float velxErr = (state[body_x] - stateLocalRef[body_x]);
-	float velyErr = (state[body_y] - stateLocalRef[body_y]);
+	float velxErr = (stateLocalRef[body_x] - state[body_x]);
+	float velyErr = (stateLocalRef[body_y] - state[body_y]);
 	stateLocalRef[body_x] += PID(velxErr, &stateK[body_x]);
 	stateLocalRef[body_y] += PID(velyErr, &stateK[body_y]);
 

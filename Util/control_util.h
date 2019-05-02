@@ -54,8 +54,8 @@
 
 // Shoot
 //TODO: Tune KICK_TIME and CHIP_TIME to match with maximum and minimum shooting power
-#define KICK_TIME 2000 				// time period of kicking per percent of kicking power
-#define CHIP_TIME 3000 				// time period of chipping per percent of chipping power
+#define KICK_TIME 20 				// time period of kicking per percent of kicking power
+#define CHIP_TIME 30 				// time period of chipping per percent of chipping power
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)
 #define READY_CALLBACK_FREQ 1 		// frequency [Hz] of callback when shootState is Ready
 #define CHARGING_CALLBACK_FREQ 10 	// frequency [Hz] of callback when shootState is Charging

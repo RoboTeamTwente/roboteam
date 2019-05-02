@@ -8,7 +8,7 @@ static shoot_states shootState = shoot_Off;
 ///////////////////////////////////////////////////// VARIABLES
 
 static bool charged = false;	// true if the capacitor is fully charged
-static int power = 0; 			// percentage of maximum shooting power
+static int power = 100; 			// percentage of maximum shooting power
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -97,7 +97,7 @@ void shoot_Shoot(shoot_types type)
 		set_Pin(Charge_pin, 0); 								// Disable shoot_Charging
 		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
 
-		resetTimer(power * (type == shoot_Kick ? KICK_TIME : CHIP_TIME));
+		resetTimer(power * ((type == shoot_Kick) ? KICK_TIME : CHIP_TIME));
 	}
 }
 

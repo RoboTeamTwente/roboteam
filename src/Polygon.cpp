@@ -165,6 +165,10 @@ double Polygon::doubleSignedArea() const {
 //https://en.wikipedia.org/wiki/Centroid
 // only works for simple polygons
 Vector2 Polygon::centroid() const {
+    // for triangles we can use a faster and simpler formula
+    if (amountOfVertices()<4){
+        return verticeCentroid();
+    }
     double signedAreaTwice=doubleSignedArea();
     //calculation can still make sense in a geometric sense but this should probably raise a warning
     if (signedAreaTwice==0){
@@ -176,6 +180,15 @@ Vector2 Polygon::centroid() const {
         sum += (vertices[i]+vertices[(i+1)%n])*vertices[i].cross(vertices[(i + 1)%n]);
     }
     return sum/=(3*signedAreaTwice);
+}
+// the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
+Vector2 Polygon::verticeCentroid() const{
+    int n = vertices.size();
+    Vector2 sum={0,0};
+    for (int i = 0; i < n; ++ i) {
+        sum+=vertices[i];
+    }
+    return sum/=n;
 }
 
 }//rtt

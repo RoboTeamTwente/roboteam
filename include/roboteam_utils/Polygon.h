@@ -14,6 +14,7 @@ class Polygon {
         Polygon(const std::vector<Vector2> &vertices);
         void move(const Vector2 &moveBy);
         Vector2 centroid() const;
+        Vector2 verticeCentroid() const;
 
         Vector2 operator[](int id) const;
         int amountOfVertices() const;

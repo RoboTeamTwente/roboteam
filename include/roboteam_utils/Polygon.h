@@ -27,7 +27,7 @@ class Polygon {
         bool doesIntersect(const LineSegment& line) const;
         std::vector<Vector2> intersections(const LineSegment& line) const;
         double area() const;
-        double signedArea() const;
+        double doubleSignedArea() const;
 
 
 };

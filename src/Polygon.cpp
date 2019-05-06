@@ -106,7 +106,7 @@ bool Polygon::contains(const Vector2 &point) const {
     }
     return c;
 }
-br
+
 bool Polygon::doesIntersect(const LineSegment &line) const {
     int n = vertices.size();
     for (int i = 0; i < n; i ++) {
@@ -163,6 +163,7 @@ double Polygon::doubleSignedArea() const {
 }
 
 //https://en.wikipedia.org/wiki/Centroid
+// only works for simple polygons
 Vector2 Polygon::centroid() const {
     double signedAreaTwice=doubleSignedArea();
     //calculation can still make sense in a geometric sense but this should probably raise a warning

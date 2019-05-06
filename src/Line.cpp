@@ -216,9 +216,9 @@ bool LineSegment::nonSimpleDoesIntersect(const LineSegment &line) const{
     double numer=(q-p).cross(r);
     if (denom!=0){
         double u= numer/denom;
-        if (!(u<0||u>1)){
+        if (!(u<=0||u>=1)){
             double t=(q-p).cross(s)/denom;
-            if (!(t<0||t>1)){
+            if (!(t<=0||t>=1)){
                 return true;
             }
         }
@@ -233,7 +233,7 @@ std::shared_ptr<Vector2> LineSegment::nonSimpleIntersects(const LineSegment &lin
     if (denom!=0){
         double t=C.cross(B)/denom;
         double u=-A.cross(C)/denom;
-        if (!(t<0||t>1)&&!(u<0||u>1)) {
+        if (!(t<=0||t>=1)&&!(u<=0||u>=1)) {
             return std::make_shared<Vector2>(start-A*t);
         }
     }

@@ -48,16 +48,21 @@ double Polygon::perimeterLength() const {
 bool Polygon::isConvex() const {
     if (amountOfVertices()<4) return true;// triangles are always convex
     bool sign=false;
+    bool signSet=false;
     int n=vertices.size();
     for (int i=0;i<n;i++){
         Vector2 d1=vertices[(i+2)%n]-vertices[(i+1)%n];
         Vector2 d2=vertices[i]-vertices[(i+1)%n];
         double cross=d1.cross(d2);
-        if (i==0){
-            sign=cross>0;
-        }
-        else if(sign!=(cross>0)){
-            return false;
+        // on a crossproduct of zero the points lie in one line and we can simply ignore this point's contribution to the convexity
+        if(cross!=0.0) {
+            if (! signSet) {
+                signSet = true;
+                sign = cross > 0;
+            }
+            else if (sign != (cross > 0)) {
+                return false;
+            }
         }
     }
     return true;
@@ -68,13 +73,13 @@ bool Polygon::isConvex() const {
 bool Polygon::isSimple() const {
     // we loop over every unique pair
     std::vector<LineSegment> lines;
-    for (auto first=vertices.begin()+1; first!=vertices.end(); ++first){
+    for (auto first=vertices.begin();first!=vertices.end();first++){
         LineSegment boundarySegment;
-        if (first==vertices.end()) {
+        if (first==std::prev(vertices.end())) {
             boundarySegment=LineSegment(*first,vertices[0]);
         }
         else{
-            boundarySegment=LineSegment(*first, *(first - 1));
+            boundarySegment=LineSegment(*first, *(first + 1));
         }
         for (auto line :lines){
             if(boundarySegment.nonSimpleDoesIntersect(line)){
@@ -87,6 +92,7 @@ bool Polygon::isSimple() const {
 }
 //https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
 // this is black magic but if it works it works
+/// on the boundary this function does not work!! see documentation if you are interested
 bool Polygon::contains(const Vector2 &point) const {
     int i, j, c = 0;
     int n=amountOfVertices();

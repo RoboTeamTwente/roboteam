@@ -4,8 +4,26 @@
 
 #include "../include/roboteam_utils/Polygon.h"
 namespace rtt{
+///constructor for rectangles oriented straight with respect to the x-axis.
+Polygon::Polygon(const Vector2 &lowerLeftCorner, double xlen, double ylen) {
+    vertices.push_back(lowerLeftCorner);
+    vertices.push_back(Vector2(lowerLeftCorner.x+xlen,lowerLeftCorner.y));
+    vertices.push_back(Vector2(lowerLeftCorner.x+xlen,lowerLeftCorner.y+ylen));
+    vertices.push_back(Vector2(lowerLeftCorner.x,lowerLeftCorner.y+ylen));
+}
+Polygon::Polygon(const std::vector<rtt::Vector2> &_vertices) {
+    vertices=_vertices;
+}
 int Polygon::amountOfVertices() const {
     return vertices.size();
+}
+Vector2 Polygon::operator[](int id) const {
+    return vertices[id];
+}
+void Polygon::move(const Vector2 &moveBy) {
+    for (std::vector<Vector2>::iterator it=vertices.begin();it!=vertices.end();++it){
+        *it+=moveBy;
+    }
 }
 std::vector<LineSegment> Polygon::getBoundary() const {
     std::vector<LineSegment> boundary;
@@ -68,6 +86,7 @@ bool Polygon::isSimple() const {
     return true;
 }
 //https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+// this is black magic but if it works it works
 bool Polygon::contains(const Vector2 &point) const {
     int i, j, c = 0;
     int n=amountOfVertices();
@@ -116,13 +135,22 @@ std::vector<Vector2> Polygon::intersections(const LineSegment &line) const {
     return intersections;
 }
 //https://en.wikipedia.org/wiki/Shoelace_formula
-// only works for simple polygons
+// area is well defined only for simple polygons
 double Polygon::area() const {
     int n=vertices.size();
     double sum=0;
     for (int i=0;i<n;i++){
         sum+=vertices[i].cross(vertices[(i+1)%n]);
-    }
-    return 0.5*abs(sum);
+}    return 0.5*abs(sum);
 }
+
+//https://en.wikipedia.org/wiki/Centroid
+Vector2 Polygon::centroid() const {
+    Vector2 sum={0,0};
+    for (auto vertice :vertices){
+        sum+=vertice;
+    }
+    return sum.scale(1/vertices.size());
+}
+
 }//rtt

@@ -9,10 +9,13 @@
 namespace rtt {
 class Polygon {
     public:
-        Polygon(std::vector<Vector2> vertices);
-
         std::vector<Vector2> vertices;
+        Polygon(const Vector2 &lowerLeftCorner,double xlen,double ylen);
+        Polygon(const std::vector<Vector2> &vertices);
+        void move(const Vector2 &moveBy);
+        Vector2 centroid() const;
 
+        Vector2 operator[](int id) const;
         int amountOfVertices() const;
         std::vector<LineSegment> getBoundary() const;
         double perimeterLength() const;
@@ -24,6 +27,7 @@ class Polygon {
         bool doesIntersect(const LineSegment& line) const;
         std::vector<Vector2> intersections(const LineSegment& line) const;
         double area() const;
+        double signedArea() const;
 
 
 };

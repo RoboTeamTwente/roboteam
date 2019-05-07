@@ -309,7 +309,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	  uint8_t usbDataRobotId = Buf[0] >> 3;
 
 	  // check if the usb data robot id is legal
-	  if (usbDataRobotId < 16) {
+	  if (usbDataRobotId < 16 && !msgBuff[usbDataRobotId].isNew) {
 
 		  if (usbDataRobotId == 0) {
 		    //toggle_pin(LD_3);
@@ -322,6 +322,11 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 
 	  }
   }
+//  else if (* Len == 4) {
+//	  if (Buf[0] == 0xF && Buf[1] == 0xA && Buf[2] == 0xC s&& Buf[3] == 0xC)
+//		  BS_DEBUG = (BS_DEBUG) ? 0 : 1;
+//	  set_pin(LD_2, BS_DEBUG);
+//  }
 
 
 

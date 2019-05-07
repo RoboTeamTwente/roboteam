@@ -31,6 +31,9 @@ void SX1280Setup(SX1280* SX){
 
     setSyncWordTolerance(SX, SX->SX_settings->syncWordTolerance);
 
+    setCrcSeed(SX, 0xAC, 0xB6); // seed value of 0xACB6 = 0b'1010110010110110
+    setCrcPoly(SX, 0x10, 0x21); // poly of P16(x) = x16 + x12 + x5 + 1
+
     setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
 
     setDIOIRQParams(SX); // IRQ masks are stored in reverse, so reverse again
@@ -467,13 +470,11 @@ void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance) {
 //		return false;
 //	return true;
 //}
-//void setCrcSeed(SX1280* SX, uint8_t seed1, uint8_t seed2){
-//	writeRegister(SX, CRC_INIT_MSB, &seed1, 1);
-//	writeRegister(SX, CRC_INIT_LSB, &seed2, 1);
-//}
-//void setCrcPoly(SX1280* SX, uint16_t poly){
-//	uint16_t poly_lsb = poly & 0xFF;
-//	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
-//	poly = poly>>8;
-//	writeRegister(SX, CRC_POLY_MSB, &poly, 1);
-//}
+void setCrcSeed(SX1280* SX, uint8_t seed_msb, uint8_t seed_lsb){
+	writeRegister(SX, CRC_INIT_MSB, &seed_msb, 1);
+	writeRegister(SX, CRC_INIT_LSB, &seed_lsb, 1);
+}
+void setCrcPoly(SX1280* SX, uint8_t poly_msb, uint8_t poly_lsb){
+	writeRegister(SX, CRC_POLY_MSB, &poly_msb, 1);
+	writeRegister(SX, CRC_POLY_LSB, &poly_lsb, 1);
+}

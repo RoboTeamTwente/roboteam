@@ -144,7 +144,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
-  SX = Wireless_Init(100, &hspi3);
+  SX = Wireless_Init(20, &hspi3);
   HAL_TIM_Base_Start_IT(&htim1);
 
   /* USER CODE END 2 */
@@ -561,6 +561,61 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 }
 
+void printBasestation(uint8_t input[13]) {
+	TextOut("BASESTATION SENT PACKET DECODED\n\r");
+	/*
+	 * Read data from packet
+	 */
+	uint8_t id = input[0]>>3; //a
+	uint16_t rho = (input[0]&0b111)<<8; //b
+	rho |= input[1]; //b
+	int16_t theta = input[2]<<3; //c
+	theta |= (input[3]>>5)&0b111; //c
+	uint8_t driving_reference = (input[3]>>4)&1; //d
+	uint8_t use_cam_info = (input[3]>>3)&1; //e
+	uint8_t use_angle	= (input[3]>>2)&1; //f
+	int16_t velocity_angular = (input[3]&0b11) << 8; //g
+	velocity_angular |= input[4]; //g
+	uint8_t debug_info = (input[5]>>3)&1; //h
+	uint8_t do_kick = (input[5]>>2)&1; //i
+	uint8_t do_chip = (input[5]>>1)&1; //j
+	uint8_t kick_chip_forced = input[5]&1; //k
+	uint8_t kick_chip_power = input[6]; //m
+	uint8_t velocity_dribbler = input[7]; //n
+	uint8_t geneva_drive_state = (input[8]>>5)&0b111; //p
+	int16_t cam_position_x = (input[8]&0b11111)<<8; //q
+	cam_position_x |= input[9]; //q
+	int16_t cam_position_y = input[10] << 5; //r
+	cam_position_y |= (input[11]>>3)&0b11111; //r
+	int16_t cam_rotation = (input[11]&0b111) << 8; //s
+	cam_rotation |= input[12]; //s
+
+	char msg[100];
+	sprintf(msg, "\tRoboID: %i \n\r", id);
+	TextOut(msg);
+	sprintf(msg, "\tDebug info: %i \n\r", debug_info);
+	TextOut(msg);
+	sprintf(msg, "\tRho: %i \n\r\tTheta: %i \n\r", rho, theta);
+	TextOut(msg);
+	sprintf(msg, "\tUse angle: %i \n\r", use_angle);
+	TextOut(msg);
+	sprintf(msg, "\tKICKCHIP\n\r");
+	TextOut(msg);
+	sprintf(msg, "\tKick %i \n\r\t Chip: %i \n\r\t Forced: %i \n\r\t Power: %i \n\r", do_kick, do_chip, kick_chip_forced, kick_chip_power);
+	TextOut(msg);
+	sprintf(msg, "\tDribbler velocity: %i \n\r", velocity_dribbler);
+	TextOut(msg);
+	sprintf(msg, "\tGeneva drive: %i \n\r", geneva_drive_state);
+	TextOut(msg);
+	sprintf(msg, "\tDriving reference: %i \n\r", driving_reference);
+	TextOut(msg);
+	sprintf(msg, "\tAngular velocity: %i \n\r", velocity_angular);
+	TextOut(msg);
+	sprintf(msg, "\tCAMERA \n\r\t use cam info: %i \n\r\t position x: %i \n\r\t position y: %i \n\r\t rotation: %i \n\r\n\r", use_cam_info, cam_position_x, cam_position_y, cam_rotation);
+	TextOut(msg);
+
+}
+
 // callback for Interrupts from SX1280
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if(htim->Instance == htim1.Instance){
@@ -570,14 +625,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 			msgBuff[sendToId].isNew = false;
 			SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
 			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-//			char numbers[26];
-//			TextOut("sending packet: ");
-//			for (int i=0,j=0; i<26; i++, j++) {
-//				sprintf(&numbers[i], "%X", msgBuff[sendToId].msg[j]);
-//				i++;
+//			if (BS_DEBUG == 1) {
+				char numbers[26];
+				TextOut("sending packet: ");
+				for (int i=0,j=0; i<26; i++, j++) {
+					itoa(msgBuff[sendToId].msg[j], numbers, 16);
+					TextOut(numbers);
+					TextOut(" ");
+					i++;
+				}
+				TextOut(numbers);
+				TextOut("\n\r");
+//				printBasestation(msgBuff[sendToId].msg);
 //			}
-//			TextOut(numbers);
-//			TextOut("\n\r");
+//				if (((msgBuff[sendToId].msg[5]>>2)&1) == 1) { // print only if kick=1
+//					printBasestation(msgBuff[sendToId].msg);
+//				}
 			SendPacket(SX, msgBuff[sendToId].msg, 13);
 		}
 		// increment id

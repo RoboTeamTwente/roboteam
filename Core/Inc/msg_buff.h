@@ -18,5 +18,7 @@ struct msgsBufferStatus {
 
 struct msgsBufferStatus msgBuff[16];
 
+uint8_t BS_DEBUG;
+
 
 #endif // __MSG_BUFF_STATUS_H

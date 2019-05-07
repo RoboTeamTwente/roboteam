@@ -29,6 +29,8 @@ SX1280_Settings set = {
 		.syncWords = {0x0, 0x0, 0x0},
 		.syncWordTolerance = 2, // accepted wrong bits in a detected syncword
         .syncSensitivity = 1, // high sensitivity mode
+        .crcSeed = {0xAC, 0xC6}, // seed value of 0xACB6 = 0b'1010110010110110
+        .crcPoly = {0x10, 0x21}, // poly of P16(x) = x16 + x12 + x5 + 1
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
@@ -112,9 +114,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 //    	TextOut("SX_IRQ RX_DONE\n\r");
 //    	toggle_pin(LD_2);
     	// if signal is strong, then receive packet; otherwise SendPacket() without changes
-    	if (SX->Packet_status->RSSISync < 180) {
+//    	if (SX->Packet_status->RSSISync < 180) {
 //    		ReceivePacket(SX);
-    	}
+//    	}
     }
 
     if(irq & SYNCWORD_VALID) {
@@ -132,6 +134,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & RXTX_TIMEOUT) {
     	// did not receive packet from robot
     	isTransmitting = false;
+        toggle_pin(LD_2);
 //    	TextOut("SX_IRQ RXTX_TIMEOUT\n\r");
     }
 

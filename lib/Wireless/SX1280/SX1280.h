@@ -1,12 +1,3 @@
-/*
- * SX1280.h
- *
- *  Created on: 7 feb. 2019
- *      Author: Cas Doornkamp
- * 
- * Implements functions for interacting with the SX1280
- */
-
 #ifndef __SX1280_H
 #define __SX1280_H
 
@@ -31,6 +22,8 @@ typedef struct _SX1280_Settings{
 	uint8_t syncSensitivity;
 	uint8_t TXoffset;
 	uint8_t RXoffset;
+	uint8_t crcSeed[2];
+	uint8_t crcPoly[2];
 	uint8_t ModParam[3];
 	uint8_t PacketParam[7];
 	uint16_t DIOIRQ[4];
@@ -72,8 +65,66 @@ typedef struct _SX1280{
 	GPIO_Pin RST_pin;
 } SX1280;
 
+extern uint32_t robot_syncWord[]; // check bottom of this file for the sycnwords
 
-// Sync Words for RobotID
+////////////////////////////////////// public functions
+void SX1280Setup(SX1280* SX);
+void SX1280WakeUp(SX1280* SX);
+
+// runtime functions
+bool writeBuffer(SX1280* SX, uint8_t * data, uint8_t Nbytes);
+void readBuffer(SX1280* SX, uint8_t Nbytes);
+uint8_t getStatus(SX1280* SX);
+
+void setDIOIRQParams(SX1280* SX);
+void clearIRQ(SX1280* SX, uint16_t mask);
+uint16_t getIRQ(SX1280* SX);
+void getPacketStatus(SX1280* SX);
+void getRXBufferStatus(SX1280* SX);
+
+////////////////////////////////////// private functions
+// private init functions
+void setRFFrequency(SX1280* SX, uint32_t frequency);
+void setModulationParam(SX1280* SX);
+void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address);
+void setPacketType(SX1280* SX, uint8_t type);
+uint8_t getPacketType(SX1280* SX);
+void setPacketParam(SX1280* SX);
+void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> -18 - 13 dBm, ramptime (us)
+void setRegulatorMode(SX1280* SX, uint8_t mode); // choose between integrated LDO (uses more power) or external DC-DC converter
+
+void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity);
+
+bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
+void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
+//bool setSyncWord_1(SX1280* SX, uint32_t word);
+
+void setCrcSeed(SX1280* SX, uint8_t seed_msb, uint8_t seed_lsb);
+void setCrcPoly(SX1280* SX, uint8_t poly_msb, uint8_t poly_lsb);
+
+void setChannel(SX1280* SX, float new_channel);
+
+// state functions
+void setStandby(SX1280* SX, uint8_t config);
+void setSleep(SX1280* SX, uint8_t config);
+bool setRX(SX1280* SX, uint8_t base, uint16_t count);
+bool setFS(SX1280* SX);
+void setAutoFS(SX1280* SX, bool enable);
+bool setTX(SX1280* SX, uint8_t base, uint16_t count);
+void setAutoTX(SX1280* SX, uint16_t wait_time);
+
+// register specific
+void modifyRegister(SX1280* SX, uint16_t address, uint8_t mask, uint8_t set_value);
+bool writeRegister(SX1280* SX, uint16_t address, void* data, uint8_t Nbytes);
+void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes);
+
+// Send/Receive data
+bool SendData(SX1280* SX, uint8_t Nbytes);
+bool SendData_DMA(SX1280* SX, uint8_t Nbytes);
+void DMA_Callback(SX1280* SX);
+#endif // __SX1280_H
+
+// Sync Words for RobotID 'abcde'
 /*
 abcde	0abc deab cdea bcde		abcd e1ab cdea bcde		hex
 00000	0000 0000 0000 0000 	0000 0100 0000 0000		0000 0400
@@ -111,63 +162,3 @@ abcde	0abc deab cdea bcde		abcd e1ab cdea bcde		hex
 11110	0111 1011 1101 1110		1111 0111 1101 1110		CBDE F7DE
 11111	0111 1111 1111 1111		1111 1111 1111 1111		CFFF FFFF
 */
-
-extern uint32_t robot_syncWord[];
-
-////////////////////////////////////// public functions
-void SX1280Setup(SX1280* SX);
-void SX1280WakeUp(SX1280* SX);
-
-// runtime functions
-bool writeBuffer(SX1280* SX, uint8_t * data, uint8_t Nbytes);
-void readBuffer(SX1280* SX, uint8_t Nbytes);
-uint8_t getStatus(SX1280* SX);
-
-void setDIOIRQParams(SX1280* SX);
-void clearIRQ(SX1280* SX, uint16_t mask);
-uint16_t getIRQ(SX1280* SX);
-void getPacketStatus(SX1280* SX);
-void getRXBufferStatus(SX1280* SX);
-
-////////////////////////////////////// private functions
-// private init functions
-void setRFFrequency(SX1280* SX, uint32_t frequency);
-void setModulationParam(SX1280* SX);
-void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address);
-void setPacketType(SX1280* SX, uint8_t type);
-uint8_t getPacketType(SX1280* SX);
-void setPacketParam(SX1280* SX);
-void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime); // power 0-31 --> -18 - 13 dBm, ramptime (us)
-void setRegulatorMode(SX1280* SX, uint8_t mode);
-
-void setSyncSensitivity (SX1280* SX, uint8_t syncSensitivity);
-
-bool setSyncWords(SX1280* SX, uint32_t syncWord_1, uint32_t syncWord_2, uint32_t syncWord_3);
-void setSyncWordTolerance(SX1280* SX, uint8_t syncWordTolerance);
-//bool setSyncWord_1(SX1280* SX, uint32_t word);
-
-void setCrcSeed(SX1280* SX, uint8_t seed_msb, uint8_t seed_lsb);
-void setCrcPoly(SX1280* SX, uint8_t poly_msb, uint8_t poly_lsb);
-
-void setChannel(SX1280* SX, float new_channel);
-
-// state functions
-void setStandby(SX1280* SX, uint8_t config);
-void setSleep(SX1280* SX, uint8_t config);
-bool setRX(SX1280* SX, uint8_t base, uint16_t count);
-bool setFS(SX1280* SX);
-void setAutoFS(SX1280* SX, bool enable);
-bool setTX(SX1280* SX, uint8_t base, uint16_t count);
-void setAutoTX(SX1280* SX, uint16_t wait_time);
-
-// register specific
-void modifyRegister(SX1280* SX, uint16_t address, uint8_t mask, uint8_t set_value);
-
-bool writeRegister(SX1280* SX, uint16_t address, void* data, uint8_t Nbytes);
-void readRegister(SX1280* SX, uint16_t address, uint8_t* data, uint8_t Nbytes);
-
-// Send/Receive data
-bool SendData(SX1280* SX, uint8_t Nbytes);
-bool SendData_DMA(SX1280* SX, uint8_t Nbytes);
-void DMA_Callback(SX1280* SX);
-#endif // __SX1280_H

@@ -626,16 +626,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 			SX->SX_settings->syncWords[0] = robot_syncWord[sendToId];
 			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
 //			if (BS_DEBUG == 1) {
-				char numbers[26];
-				TextOut("sending packet: ");
-				for (int i=0,j=0; i<26; i++, j++) {
-					itoa(msgBuff[sendToId].msg[j], numbers, 16);
-					TextOut(numbers);
-					TextOut(" ");
-					i++;
-				}
-				TextOut(numbers);
-				TextOut("\n\r");
+//				char numbers[26];
+//				TextOut("sending packet: ");
+//				for (int i=0,j=0; i<26; i++, j++) {
+//					itoa(msgBuff[sendToId].msg[j], numbers, 16);
+//					TextOut(numbers);
+//					TextOut(" ");
+//					i++;
+//				}
+//				TextOut(numbers);
+//				TextOut("\n\r");
 //				printBasestation(msgBuff[sendToId].msg);
 //			}
 //				if (((msgBuff[sendToId].msg[5]>>2)&1) == 1) { // print only if kick=1

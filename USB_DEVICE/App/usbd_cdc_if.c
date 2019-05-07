@@ -310,11 +310,6 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 
 	  // check if the usb data robot id is legal
 	  if (usbDataRobotId < 16 && !msgBuff[usbDataRobotId].isNew) {
-
-		  if (usbDataRobotId == 0) {
-		    //toggle_pin(LD_3);
-		  }
-
 		  // put the message in the buffer
 		  memcpy(msgBuff[usbDataRobotId].msg, Buf, 13);
 		  msgBuff[usbDataRobotId].isNew = true;

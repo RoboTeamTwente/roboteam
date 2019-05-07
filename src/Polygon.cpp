@@ -134,7 +134,9 @@ std::vector<Vector2> Polygon::intersections(const LineSegment &line) const {
     int n = vertices.size();
     for (int i = 0; i < n; i ++) {
         LineSegment segment(vertices[i],
-                vertices[(i + 1)%n]);// maybe there is a nice way to do this 'circular' access with iterators?
+                vertices[(i + 1)%n]);
+        // maybe there is a nice way to do this 'circular' access with iterators?
+        // the nonSimple intersects does not count any intersection that only touch the start or end of the line
         auto intersect = line.nonSimpleIntersects(segment);
         if (intersect) {
             intersections.push_back(*intersect);

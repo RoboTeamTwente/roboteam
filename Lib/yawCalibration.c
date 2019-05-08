@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////// VARIABLES
 
 static float calibratedYaw = 0.0f;
+static bool hasCalibratedOnce = false;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -37,6 +38,7 @@ void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
 			float avgXsensYaw = atan2f(sumXsensVec[1], sumXsensVec[0]);
 			yawOffset = constrainAngle(avgVisionYaw - avgXsensYaw);
+			hasCalibratedOnce = true;
 			restCounter = 0;
 		} else {
 			// Sum the unit vectors with these angles and then take the angle of the resulting vector.
@@ -61,6 +63,10 @@ void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
 float yaw_GetCalibratedYaw(){
 	return calibratedYaw;
 }
+
+bool yaw_hasCalibratedOnce(){
+	return hasCalibratedOnce;
+};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 

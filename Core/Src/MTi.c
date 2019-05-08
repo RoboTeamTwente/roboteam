@@ -180,8 +180,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 		return NULL;
 	}
 
-<<<<<<< HEAD
-=======
 	HAL_Delay(1);
 	if(MTi_UseIcc(MTi) == Xsens_OK) {
 		MTi->started_icc = true;
@@ -192,7 +190,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 		return NULL;
 	}
 
->>>>>>> 18da567cb44542541a17dbd85f2f8ddb4a98476d
 	// set settings
 	HAL_Delay(1);
 	txbuf[0] = SetProtocol;
@@ -202,12 +199,9 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	HAL_SPI_TransmitReceive(MTi->SPI, txbuf, rxbuf, 5, 100);
 	set_Pin(MTi->CS_pin, true);
 
-<<<<<<< HEAD
 	MTi->acc[0] = 0.0f;
 	MTi->acc[1] = 0.0f;
 	MTi->acc[2] = 0.0f;
-=======
->>>>>>> 18da567cb44542541a17dbd85f2f8ddb4a98476d
 	return MTi;
 }
 

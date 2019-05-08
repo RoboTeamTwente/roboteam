@@ -69,6 +69,10 @@ void stateControl_SetState(float input[3]){
 	state[body_w] = input[body_w];
 }
 
+void stateControl_ResetAngleI(){
+	stateK[body_w].I = 0;
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void body2Wheels(float wheelSpeed[4], float vel[3]){

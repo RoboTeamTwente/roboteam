@@ -32,4 +32,6 @@ float* stateControl_GetWheelRef();
 
 void stateControl_SetState(float input[3]);
 
+void stateControl_ResetAngleI();
+
 #endif /* DO_STATE_CONTROL_H_ */

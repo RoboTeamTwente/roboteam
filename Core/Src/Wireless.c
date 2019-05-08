@@ -27,10 +27,10 @@ SX1280_Settings set = {
         .periodBaseCount = 24,
 		.syncWords = {0x0, 0x0, 0x0},
 		.syncWordTolerance = 2, // accepted wrong bits in a detected syncword
-        .syncSensitivity = 0, // high sensitivity mode
+        .syncSensitivity = 1, // high sensitivity mode
         .TXoffset = 0x80,
         .RXoffset = 0x00,
-        .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_1_0, BT_0_5},
+        .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
         .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), NONE, NONE}
 };
@@ -106,9 +106,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     clearIRQ(SX,ALL);
 
     if(irq & CRC_ERROR) {
-    	isWirelessConnected = false;
+    	//isWirelessConnected = false;
     	toggle_Pin(LED6_pin);
-    	setRX(SX, SX->SX_settings->periodBase, 4000);
+    	setRX(SX, SX->SX_settings->periodBase, 8000);
     	return;
     }
 
@@ -125,10 +125,10 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & RX_DONE){
 //    	Putty_printf("RX_DONE...\n\r");
     	isWirelessConnected = true;
-    	toggle_Pin(LED2_pin);
+    	toggle_Pin(LED5_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 160) {
-    		//Putty_printf("noise: %d\n\r", SX->Packet_status->RSSISync);
+//    		Putty_printf("noise: %d\n\r", SX->Packet_status->RSSISync);
     		ReceivePacket(SX);
     	}else{
 //    		 not necessary to force setRX() here since configured in Rx Continuous mode
@@ -145,7 +145,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 //    if(irq & CRC_ERROR) {
 //    	isWirelessConnected = false;
 //    	toggle_Pin(LED6_pin);
-//    	setRX(SX, SX->SX_settings->periodBase, 4000);
+//    	setRX(SX, SX->SX_settings->periodBase, 8000);
 //    }
 
     if(irq & RXTX_TIMEOUT) {

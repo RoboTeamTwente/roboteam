@@ -104,7 +104,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	// set settings
 	HAL_Delay(1);
 	txbuf[0] = SetProtocol;
-	txbuf[HEADER_LENGTH] = Notification;
+	txbuf[HEADER_LENGTH] = Notification;//| Measurement;
 	while(MTi->SPI_busy){}
 	MTi->SPI_busy = true;
 	set_Pin(MTi->CS_pin, false);
@@ -176,28 +176,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 // 		return NULL;
 //	}
 
-	// set settings
-	HAL_Delay(1);
-	txbuf[0] = SetProtocol;
-	txbuf[HEADER_LENGTH] = Notification | Measurement;
-	while(MTi->SPI_busy){}
-	MTi->SPI_busy = true;
-	set_Pin(MTi->CS_pin, false);
-	HAL_SPI_TransmitReceive(MTi->SPI, txbuf, rxbuf, 5, 100);
-	set_Pin(MTi->CS_pin, true);
-	MTi->SPI_busy = false;
-
-	// verify settings
-	HAL_Delay(1);
-	txbuf[0] = ReadProtocol;
-	while(MTi->SPI_busy){}
-	MTi->SPI_busy = true;
-	set_Pin(MTi->CS_pin, false);
-	HAL_SPI_TransmitReceive(MTi->SPI, txbuf, rxbuf, 6, 100);
-	set_Pin(MTi->CS_pin, true);
-	MTi->SPI_busy = false;
-	MTi_printf("settings: %u", rxbuf[5]);
-
 	HAL_Delay(1);
 	if(MTi_UseIcc(MTi) == Xsens_OK) {
 		MTi->started_icc = true;
@@ -207,6 +185,16 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 		MTi_printf("ICC failed");
 		return NULL;
 	}
+
+	// set settings
+	HAL_Delay(1);
+	txbuf[0] = SetProtocol;
+	txbuf[HEADER_LENGTH] = Notification | Measurement;
+	while(MTi->SPI_busy){}
+	set_Pin(MTi->CS_pin, false);
+	HAL_SPI_TransmitReceive(MTi->SPI, txbuf, rxbuf, 5, 100);
+	set_Pin(MTi->CS_pin, true);
+
 	return MTi;
 }
 

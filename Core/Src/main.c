@@ -476,6 +476,7 @@ int main(void)
 		  halt = false;
 	  } else {
 		  halt = true;
+		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
 

@@ -287,7 +287,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateControl_SetState(stateEstimation_GetState());
 		stateControl_Update();
 
-		if (halt || !yaw_hasCalibratedOnce()) {
+		if (halt ){//|| !yaw_hasCalibratedOnce()) {
 			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 			wheels_SetRef(emptyRef);
 		}

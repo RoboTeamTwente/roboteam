@@ -418,9 +418,6 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
 bool SendData_DMA(SX1280* SX, uint8_t Nbytes){
 	while(read_Pin(SX->BUSY_pin)) {}
 	HAL_StatusTypeDef ret;
-	// wait till ready
-    while(SX->SPI->State != HAL_SPI_STATE_READY){}
-    // send/receive data
     set_Pin(SX->CS_pin, LOW);
     ret = HAL_SPI_TransmitReceive_DMA(SX->SPI, SX->TXbuf, SX->RXbuf, Nbytes);
     return ret == HAL_OK;

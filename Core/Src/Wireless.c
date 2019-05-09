@@ -84,8 +84,9 @@ void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 void ReceivePacket(SX1280* SX){
 	clearIRQ(SX,ALL);
     getRXBufferStatus(SX);
-    readBuffer(SX, SX->payloadLength);
     SX->expect_packet = true;
+    readBuffer(SX, SX->payloadLength);
+
 };
 
 bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not

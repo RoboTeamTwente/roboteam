@@ -15,26 +15,27 @@ uint32_t robot_syncWord[] = {
 };
 
 void SX1280Setup(SX1280* SX){
-	SX1280WakeUp(SX); // reset, initialize SPI, set to STDBY_RC
+	SX1280WakeUp(SX); // reset, initialize SPI, set to STDBY_RC in order to configure SX1280
 
     setPacketType(SX, SX->SX_settings->packettype); // packet type is set first!
 
     setChannel(SX, SX->SX_settings->channel); // calls setRFFrequency() with freq=(channel+2400)*1000000
 
-    setBufferBase(SX, SX->SX_settings->TXoffset, SX->SX_settings->RXoffset);
+    setBufferBase(SX, SX->SX_settings->TXoffset, SX->SX_settings->RXoffset); // set offsets to write TX and RX data in the SX1280 buffer
 
-    setModulationParam(SX);
+    setModulationParam(SX); // flrc = bitrate&BW, coding rate, modulation
 
-    setPacketParam(SX);
+    setPacketParam(SX); // flrc = preamble length, syncword length, syncword match, header, payload length, crc length, whitening=no
 
-    setSyncSensitivity (SX, SX->SX_settings->syncSensitivity);
+    setSyncSensitivity (SX, SX->SX_settings->syncSensitivity); // enable/disable highest gain step for receive
 
-    setSyncWordTolerance(SX, SX->SX_settings->syncWordTolerance);
+    setSyncWordTolerance(SX, SX->SX_settings->syncWordTolerance); // set how many bits can go wrong in the sync word
 
-    setCrcSeed(SX, 0xAC, 0xB6); // seed value of 0xACB6 = 0b'1010110010110110
-    setCrcPoly(SX, 0x10, 0x21); // poly of P16(x) = x16 + x12 + x5 + 1
+    setCrcSeed(SX, SX->SX_settings->crcSeed[0], SX->SX_settings->crcSeed[1]); // set crc seed value (msb then lsb)
 
-    setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time);
+    setCrcPoly(SX, SX->SX_settings->crcPoly[0], SX->SX_settings->crcPoly[1]); // set crc polynomial (msb then lsb)
+
+    setTXParam(SX, SX->SX_settings->txPower, SX->SX_settings->TX_ramp_time); // set TX power and ramp up time
 
     setDIOIRQParams(SX); // IRQ masks are stored in reverse, so reverse again
 }

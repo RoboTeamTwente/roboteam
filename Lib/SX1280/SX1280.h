@@ -31,6 +31,8 @@ typedef struct _SX1280_Settings{
 	uint8_t syncSensitivity;
 	uint8_t TXoffset;
 	uint8_t RXoffset;
+	uint8_t crcSeed[2];
+	uint8_t crcPoly[2];
 	uint8_t ModParam[3];
 	uint8_t PacketParam[7];
 	uint16_t DIOIRQ[4];

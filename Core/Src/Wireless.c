@@ -177,5 +177,7 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedDat
 //    		Putty_printf(packet);
 //    	}
 //    	Putty_printf("\n\r");
+	} else {
+		setRX(SX, SX->SX_settings->periodBase, 8000);
 	}
 }

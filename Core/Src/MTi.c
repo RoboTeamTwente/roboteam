@@ -25,7 +25,7 @@ uint8_t TXbuf[MAX_RAW_MESSAGE_SIZE] __attribute__((aligned(16)));
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 MTi_data_tuple data_configurations[]={
 	{.ID = XDI_PacketCounter	, .frequency = 100	, .data = &MTi_struct.packetcounter	},
-	{.ID = XDI_FreeAcceleration	, .frequency = 100	, .data = MTi_struct.acc			},
+	{.ID = XDI_Acceleration		, .frequency = 100	, .data = MTi_struct.acc			},
 	{.ID = XDI_StatusWord		, .frequency = 10	, .data = &MTi_struct.statusword	},
 	{.ID = XDI_EulerAngles		, .frequency = 100	, .data = MTi_struct.angles			},
 	{.ID = XDI_RateOfTurn		, .frequency = 100	, .data = MTi_struct.gyr			}

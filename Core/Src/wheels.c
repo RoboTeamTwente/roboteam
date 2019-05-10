@@ -35,8 +35,6 @@ static void SetDir();
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-//TODO: Fix/check timers, channels and PINS
-
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {

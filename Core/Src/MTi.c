@@ -123,8 +123,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	MTi->SPI_busy = false;
 	MTi_printf("settings: %u", rxbuf[5]);
 
-	//MTi->init_phase = false;
-	// TODO: Make this while loop not blocking
 	HAL_Delay(1);
 	MTi_GoToConfig(MTi);
 	if(WaitForAck(MTi,XMID_GoToConfigAck)){
@@ -146,8 +144,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 		MTi_printf("config ack failed");
 	}
 
-	//HAL_Delay(1);
-	//MTi_ReqConfig(MTi);
 	// set filter profile defined in XsFilterProfile
 	// 0 = general, 1 = high magnetic dep, 2 = dynamic
 	// 3 = assumes stable magnetic field, 4 = high dynamic magnetic field (unreferenced heading)
@@ -303,8 +299,6 @@ static Xsens_Status MTi_BuildConfig(MTi_data* MTi, enum XsDataIdentifier XDI, ui
 		mess.mid = XMID_SetOutputConfiguration;
 		mess.length = n_configs;
 		mess.data = &config;
-		//uint16_t* mdptr = mess.data;
-		//Putty_printf( "[%x %x] [%x %x] [%x %x]\n\r", *mdptr++, *mdptr++, *mdptr++, *mdptr++, *mdptr++, *mdptr++);
 		SendXbusMessage(MTi,mess);
 		n_configs = 0;
 	}

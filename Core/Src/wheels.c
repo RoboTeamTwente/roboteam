@@ -104,7 +104,6 @@ int* wheels_GetPWM() {
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void getEncoderData(short int encoderdata[4]){
-	// NOTE: RF and RB are swapped to match with wheel reference
 	encoderdata[wheels_RF] = __HAL_TIM_GET_COUNTER(ENC_RF);
 	encoderdata[wheels_RB] = __HAL_TIM_GET_COUNTER(ENC_RB);
 	encoderdata[wheels_LB] = __HAL_TIM_GET_COUNTER(ENC_LB);
@@ -112,11 +111,10 @@ static void getEncoderData(short int encoderdata[4]){
 }
 
 static void ResetEncoder() {
-	// NOTE: RF and RB are swapped to match with wheel reference
-		__HAL_TIM_SET_COUNTER(ENC_RF, 0);
-		__HAL_TIM_SET_COUNTER(ENC_RB, 0);
-		__HAL_TIM_SET_COUNTER(ENC_LB, 0);
-		__HAL_TIM_SET_COUNTER(ENC_LF, 0);
+	__HAL_TIM_SET_COUNTER(ENC_RF, 0);
+	__HAL_TIM_SET_COUNTER(ENC_RB, 0);
+	__HAL_TIM_SET_COUNTER(ENC_LB, 0);
+	__HAL_TIM_SET_COUNTER(ENC_LF, 0);
 }
 
 static void computeWheelSpeed(){

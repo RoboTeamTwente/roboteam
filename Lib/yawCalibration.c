@@ -1,10 +1,12 @@
 
 #include "yawCalibration.h"
+#include "PuTTY.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
-#define BUFFER_SIZE 5 // assume 50 ms (5 time steps) delay between vision and XSens
-#define restDuration 20 // number of time steps to do for averaging TODO: test this
+#define BUFFER_SIZE 5 			// assume 50 ms (5 time steps) delay between vision and XSens
+#define CALIBRATION_TIME 0.2f 	// number of seconds to do for averaging TODO: test this
+#define MAX_RATE_OF_TURN 1.0f 	// highest rate of turn (rad/s) allowed to do calibration
 
 ///////////////////////////////////////////////////// VARIABLES
 
@@ -21,19 +23,19 @@ static bool isRotatingSlow(float visionYaw);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
+void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visionAvailable) {
 	static float yawOffset = 0.0f;
 	static int restCounter = 0;
 	static float sumXsensVec[2] = {0.0f};
 	static float sumVisionVec[2] = {0.0f};
 	static float prevVisionYaw = 0.0f;
 
-	//if (visionYaw == prevVisionYaw) {
-	//	visionYaw += MT_GetGyro()[2] * TIME_DIFF;
-	//}
+	if (visionYaw == prevVisionYaw) {
+		visionYaw += rateOfTurn * TIME_DIFF;
+	}
 
 	if (isCalibrationNeeded(visionYaw, xsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
-		if (restCounter > restDuration) {
+		if (restCounter > CALIBRATION_TIME * TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
 			float avgXsensYaw = atan2f(sumXsensVec[1], sumXsensVec[0]);
@@ -58,6 +60,14 @@ void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable) {
 
 	prevVisionYaw = visionYaw;
 	calibratedYaw = constrainAngle(xsensYaw + yawOffset);
+
+	char msg[50];
+	int n = 0;
+	n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
+	n += sprintf(msg + n, "xsens: %f\n\r", xsensYaw);
+	n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
+	n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
+	Putty_printf(msg);
 }
 
 float yaw_GetCalibratedYaw(){
@@ -92,7 +102,7 @@ static bool isRotatingSlow(float visionYaw) {
 	static bool rotatingSlow = false;
 	static int rotateCounter = 0;
 	static float startYaw = 0;
-	if (fabs(constrainAngle(startYaw - visionYaw)) < 0.01) {
+	if (fabs(constrainAngle(startYaw - visionYaw)) < (MAX_RATE_OF_TURN * TIME_DIFF)) {
 		rotateCounter++;
 	} else {
 		rotateCounter = 0;

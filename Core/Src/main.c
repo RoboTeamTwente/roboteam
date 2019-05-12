@@ -117,7 +117,7 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
-StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
+StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 
 /* USER CODE END PV */
@@ -280,7 +280,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Degrees to Radians
+		stateInfo.rateOfTurn = (MTi->gyr[2]*M_PI/180); //Degrees to Radians
 		stateEstimation_Update(&stateInfo);
 
 		// State control
@@ -486,9 +487,9 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() >  printTime + 10) {
 		  printTime = HAL_GetTick();
-		  toggle_Pin(LED0_pin);
+//		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);

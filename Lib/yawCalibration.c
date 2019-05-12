@@ -34,6 +34,7 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 		visionYaw += rateOfTurn * TIME_DIFF;
 	}
 
+	bool calibratedThisTick = false;
 	if (isCalibrationNeeded(visionYaw, xsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
 		if (restCounter > CALIBRATION_TIME * TIME_DIFF) {
 			// calculate offset
@@ -41,6 +42,7 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 			float avgXsensYaw = atan2f(sumXsensVec[1], sumXsensVec[0]);
 			yawOffset = constrainAngle(avgVisionYaw - avgXsensYaw);
 			hasCalibratedOnce = true;
+			calibratedThisTick = true;
 			restCounter = 0;
 		} else {
 			// Sum the unit vectors with these angles and then take the angle of the resulting vector.
@@ -61,12 +63,13 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 	prevVisionYaw = visionYaw;
 	calibratedYaw = constrainAngle(xsensYaw + yawOffset);
 
-	char msg[50];
+	char msg[100];
 	int n = 0;
 	n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
 	n += sprintf(msg + n, "xsens: %f\n\r", xsensYaw);
 	n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
 	n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
+	n += sprintf(msg + n, "bool: %u\n\r", calibratedThisTick);
 	Putty_printf(msg);
 }
 

@@ -176,8 +176,8 @@ catkin_add_gtest(utils_test
         test/GraphTest.cpp
         test/OptimizationTest.cpp
         test/BiMapTest.cpp
-        test/ArcTest.cpp
-        #test/normaliseTest.cpp
+        #test/ArcTest.cpp
+        test/normaliseTest.cpp
         )
 add_dependencies(utils_test
         ${${PROJECT_NAME}_EXPORTED_TARGETS}

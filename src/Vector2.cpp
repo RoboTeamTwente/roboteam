@@ -31,7 +31,7 @@ Vector2 Vector2::scale(double scalar) const {
 
 Vector2 Vector2::normalize() const {
     if (this->length() == 0.0)
-        return {1.0, 0.0};
+        return {0.0, 0.0};
 
     double d = 1.0/length();
     return {x*d, y*d};

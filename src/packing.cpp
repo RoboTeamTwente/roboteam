@@ -48,7 +48,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotComman
     llrc.do_chip = command.chipper;                                 // [0, 1]          {true, false}
     llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
     llrc.kick_chip_power = (int) floor(kick_chip_power*255/8);           // [0, 255]        [0, 100]%
-    llrc.velocity_dribbler = command.dribbler ? 255 : 0;                      // [0, 255]        [0, 100]%
+    llrc.velocity_dribbler = command.dribbler;                      // [0, 255]        [0, 100]%
     llrc.geneva_drive_state = command.geneva_state;                            // [(0)1, 5]       [-2, 2]
     llrc.cam_position_x = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_position_y = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
@@ -60,8 +60,8 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotComman
             roboteam_msgs::WorldRobot robot;
             if (findBot) {
                 robot = *findBot;
-                llrc.cam_position_x = (int) (robot.pos.x/10.24*4096);
-                llrc.cam_position_y = (int) (robot.pos.y/10.24*4096);
+                llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
+                llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
                 llrc.cam_rotation = (int) floor(robot.angle/M_PI*1024);
                 llrc.use_cam_info = true;
             }

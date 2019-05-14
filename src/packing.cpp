@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #include "packing.h"
 
 #include <cassert>
@@ -33,12 +35,18 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotComman
     // Units           Represented values
     llrc.id = command.id;                                      // [0, 15]         [0, 15]
     llrc.rho = (int) floor(rho*250);                           // [0, 2047]       [0, 8.191]
+//    llrc.rho = 1999;                           // [0, 2047]       [0, 8.191]
+
     llrc.theta = (int) floor(theta*1023.5/M_PI);               // [-1024, 1023]   [-pi, pi>
+//    llrc.theta = 666;               // [-1024, 1023]   [-pi, pi>
+
     llrc.driving_reference = false;                                           // [0, 1]          {true, false}
     llrc.use_cam_info = false;                                           // [0, 1]          {true, false}
     llrc.use_angle = command.use_angle;                               // [0, 1]          {true, false}
     if (command.use_angle) {
         llrc.velocity_angular = (int) floor(command.w*(511/M_PI));        // [-512, 511]     [-pi, pi]
+//        llrc.velocity_angular = 333;        // [-512, 511]     [-pi, pi]
+
     }
     else {
         llrc.velocity_angular = (int) floor(command.w*(511/(8*2*M_PI)));// [-512, 511]     [-8*2pi, 8*2pi]
@@ -48,7 +56,9 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotComman
     llrc.do_chip = command.chipper;                                 // [0, 1]          {true, false}
     llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced; // [0, 1]          {true, false}
     llrc.kick_chip_power = (int) floor(kick_chip_power*255/8);           // [0, 255]        [0, 100]%
-    llrc.velocity_dribbler = command.dribbler;                      // [0, 255]        [0, 100]%
+//    llrc.velocity_dribbler = command.dribbler;                      // [0, 255]        [0, 100]%
+    llrc.velocity_dribbler = 7;                      // [0, 255]        [0, 100]%
+
     llrc.geneva_drive_state = command.geneva_state;                            // [(0)1, 5]       [-2, 2]
     llrc.cam_position_x = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_position_y = 0;                                               // [-4096, 4095]   [-10.24, 10.23]
@@ -126,69 +136,61 @@ std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 
     packed_protocol_message byteArr;
 
-    // Static cast truncates to the last 8 bits
-    // is implementation defined though.
 
-    byteArr[0] = static_cast<uint8_t>(  // aaaaabbb
-            (0b11111000 & (llrc.id << 3))                   //aaaaa000   5 bits; bits  4-0 to 7-3
-                    | (0b00000111 & (llrc.rho >> 8))                  //00000bbb  11 bits; bits 10-8 to 2-0
+    byteArr[0] = static_cast<uint8_t>( // ID 1 byte
+            0b11111111 & llrc.id
     );
 
-    byteArr[1] = static_cast<uint8_t>(  // bbbbbbbb
-            llrc.rho                                        //bbbbbbbb  11 bits; bits  7-0 to 7-0
+    byteArr[1] = static_cast<uint8_t>( // All zeros
+            0
     );
 
-    byteArr[2] = static_cast<uint8_t>(  // cccccccc
-            llrc.theta >> 3                                 // cccccccc 11 bits; bits 10-8 to 7-0
+    byteArr[2] = static_cast<uint8_t>( // rho  first byte
+            0b11111111 & llrc.rho >> 3
     );
 
-    byteArr[3] = static_cast<uint8_t>(  // cccdefgg
-            (0b11100000 & (llrc.theta << 5)) |              // ccc00000 11 bits; bits  2-0 to 7-5
-                    (0b00010000 & (llrc.driving_reference << 4)) |  // 000d0000  1 bit ; bit     0 to   4
-                    (0b00001000 & (llrc.use_cam_info) << 3) |       // 0000e000  1 bit ; bit     0 to   3
-                    (0b00000100 & (llrc.use_angle) << 2) |          // 00000f00  1 bit ; bit     0 to   2
-                    (0b00000011 & (llrc.velocity_angular >> 8))     // 000000gg 10 bits; bits  8-7 to 1-0
+    byteArr[3] = static_cast<uint8_t>(  // rho last 3 bits | theta first 5 bits
+            (0b11100000 & (llrc.rho << 5))
+            |
+            (0b00011111 & (llrc.theta >> 6))
     );
 
-    byteArr[4] = static_cast<uint8_t>(  // gggggggg
-            llrc.velocity_angular                           // gggggggg 10 bits; bits  7-0 to 7-0
+    byteArr[4] = static_cast<uint8_t>( // theta last 6 bits | angle first 2 bits
+            (0b11111100 & (llrc.theta << 2))
+            |
+            (0b00000011 & (llrc.velocity_angular >> 8))
     );
 
-    byteArr[5] = static_cast<uint8_t>(  // 0000hijk
-            (0b00001000 & (llrc.debug_info << 3)) |         // 0000h000  1 bit ; bit     0 to   3
-                    (0b00000100 & (llrc.do_kick << 2)) |            // 00000i00  1 bit ; bit     0 to   2
-                    (0b00000010 & (llrc.do_chip << 1)) |            // 000000j0  1 bit ; bit     0 to   1
-                    (0b00000001 & (llrc.kick_chip_forced))            // 0000000k  1 bit ; bit     0 to   0
+    byteArr[5] = static_cast<uint8_t>( // angle last byte
+            0b11111111 & llrc.velocity_angular
     );
 
-    byteArr[6] = static_cast<uint8_t>(  // mmmmmmmm
-            llrc.kick_chip_power                            // mmmmmmmm  8 bits; bits  7-0 to 7-0
+    byteArr[6] = static_cast<uint8_t>( // kick - chip power 1 byte
+            0b11111111 & llrc.kick_chip_power
     );
 
-    byteArr[7] = static_cast<uint8_t>(  // nnnnnnnn
-            llrc.velocity_dribbler                          // nnnnnnnn  8 bits; bits  7-0 to 7-0
+    byteArr[7] = static_cast<uint8_t>( // K C F De UC 3 bits of geneva
+            (0b10000000 & (llrc.do_kick << 7))
+            |
+            (0b01000000 & (llrc.do_chip << 6))
+            |
+            (0b00100000 & (llrc.kick_chip_forced << 5))
+            |
+            (0b00010000 & (llrc.debug_info << 4))
+            |
+            (0b00001000 & (llrc.use_cam_info << 3))
+            |
+            (0b00000111 & (llrc.geneva_drive_state))
     );
 
-    byteArr[8] = static_cast<uint8_t>(  // pppqqqqq
-            (0b11100000 & (llrc.geneva_drive_state << 5)) | // ppp00000  3 bits; bits  2-0 to 7-5
-                    (0b00011111 & (llrc.cam_position_x >> 8))      // 000qqqqq 13 bits; bits 12-8 to 4-0
+    byteArr[8] = static_cast<uint8_t>( // 5 bits dribble vel | first 3 bits of cam rotation
+            (0b11111000 & (llrc.velocity_dribbler << 3))
+            |
+            (0b00000111 & (llrc.cam_rotation >> 8))
     );
 
-    byteArr[9] = static_cast<uint8_t>(  // qqqqqqqq
-            llrc.cam_position_x                             // qqqqqqqq 13 bits; bits  7-0 to 7-0
-    );
-
-    byteArr[10] = static_cast<uint8_t>( // rrrrrrrr
-            llrc.cam_position_y >> 5                        // rrrrrrrr 13 bits; bits 12-5 to 7-0
-    );
-
-    byteArr[11] = static_cast<uint8_t>( // rrrrrsss
-            (0b11111000 & (llrc.cam_position_y << 3)) |     // rrrrr000 13 bits; bits  4-0 to 7-3
-                    (0b00000111 & (llrc.cam_rotation >> 8))         // 00000sss 11 bits; bits 10-8 to 2-0
-    );
-
-    byteArr[12] = static_cast<uint8_t>( // ssssssss
-            llrc.cam_rotation                               // ssssssss 11 bits; bits  7-0 to 7-0
+    byteArr[9] = static_cast<uint8_t>( // Last byte of cam rotation
+            0b11111111 & llrc.cam_rotation // TODO check
     );
 
     return std::make_shared<packed_protocol_message>(byteArr);
@@ -410,3 +412,5 @@ void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback)
 
 } // robothub
 } // rtt
+
+#pragma clang diagnostic pop

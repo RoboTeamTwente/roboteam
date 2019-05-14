@@ -8,7 +8,7 @@
 #include <ros/message_forward.h>
 #include "roboteam_msgs/World.h"
 
-using packed_protocol_message = std::array<uint8_t, 13>;
+using packed_protocol_message = std::array<uint8_t, 10>;
 using packed_robot_feedback = std::array<uint8_t, 23>;
 using boring_ack = std::array<uint8_t, 2>;
 

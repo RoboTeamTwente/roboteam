@@ -33,7 +33,7 @@ SX1280_Settings set = {
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, RECEIVEPKTLEN, CRC_2_BYTE, NO_WHITENING},
+        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, ROBOPKTLEN, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -167,10 +167,10 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedDat
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
 		SX->expect_packet = false;
-		for (int i=0; i<13; i++) {
-			PC_to_Bot[i] = SX->RXbuf[3+i];
-		}
+
+		memcpy(PC_to_Bot, SX->RXbuf+3, ROBOPKTLEN);
 		packetToRoboData(PC_to_Bot, receivedData);
+
 		setRX(SX, SX->SX_settings->periodBase, 8000);
 //    	char packet[30];
 //    	Putty_printf("received packet: ");

@@ -13,9 +13,9 @@
 #include <stdbool.h>
 #include "../Util/control_util.h"
 
-#define ROBOPKTLEN 13 //amount of bytes for a packet sent to the robot
+#define ROBOPKTLEN 8 //amount of bytes for a packet sent to the robot
 #define SHORTACKPKTLEN 11 //amount of bytes of an ACK packet sent by the robot without using the extra/debug fields
-#define FULLACKPKTLEN 23 //ACK packet with debug fields
+#define FULLACKPKTLEN 8 //ACK packet with debug fields
 
 // Conversion constants
 #define CONVERT_RHO 			0.004f
@@ -61,8 +61,8 @@ typedef struct roboData{
    uint8_t kick_chip_power:8;		//Kick/chip power             [0, 255]          0.39%         [0, 100]%                8
    uint8_t velocity_dribbler:8;		//Reference dribbler speed    [0, 255]          0.39%         [0, 100]%                8
    uint8_t geneva_drive_state:3;	//Geneva drive state          [0, 7]            -             [-2, 2]                  3
-   int16_t cam_position_x:13;		//x position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
-   int16_t cam_position_y:13;		//y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
+   //int16_t cam_position_x:13;		//x position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
+   //int16_t cam_position_y:13;		//y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
    int16_t cam_rotation:11;			//Orientation (camera)        [-1024, 1023]     0.00307rad    [-pi, pi]               11
 } roboData;
 

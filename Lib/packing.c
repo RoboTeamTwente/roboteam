@@ -49,7 +49,7 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]) {
 	Putty_printf("\tGeneva drive: %i \n\r", input->geneva_drive_state);
 	Putty_printf("\tDriving reference: %i \n\r", input->driving_reference);
 	Putty_printf("\tAngular velocity: %i \n\r", input->velocity_angular);
-	Putty_printf("\tCAMERA \n\r\t use cam info: %i \n\r\t position x: %i \n\r\t position y: %i \n\r\t rotation: %i \n\r\n\r", input->use_cam_info, input->cam_position_x, input->cam_position_y, input->cam_rotation);
+	Putty_printf("\tCAMERA \n\r\t use cam info: %i \n\r\t rotation: %i \n\r\n\r", input->use_cam_info, input->cam_rotation);
 }
 
 void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength) {
@@ -73,76 +73,6 @@ void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackData
 	Putty_printf("\tXSENS \n\t x: %.6f \n\t y: %.6f \n\t w: %.6f\n\n", uint32tofloat(input->xAcceleration), uint32tofloat(input->yAcceleration), uint32tofloat(input->angularRate));
 }
 
-/*
- * Convert a struct with roboData to a Bytearray, which can be transmitted by the nRF module.
- * You will only use this function for creating packets for debugging purposes on the basestation.
- * In the final version, the computer already sends a read-to-transmit byte array.
- *
- */
-void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]) {
-
-	output[0] = (uint8_t) (  							// aaaaabbb
-		(0b11111000 & (input->id << 3))                  // aaaaa000   5 bits; bits  4-0 to 7-3
-	  | (0b00000111 & (input->rho >> 8))                 // 00000bbb  11 bits; bits 10-8 to 2-0
-	);
-
-	output[1] = (uint8_t) (  							// bbbbbbbb
-		input->rho                                       // bbbbbbbb  11 bits; bits  7-0 to 7-0
-	);
-
-	output[2] = (uint8_t) (  							// cccccccc
-		input->theta >> 3                                // cccccccc 11 bits; bits 10-8 to 7-0
-	);
-
-	output[3] = (uint8_t) (  							// cccdefgg
-
-		(0b11100000 & (input->theta << 5)) |             // ccc00000 11 bits; bits  2-0 to 7-5
-		(0b00010000 & (input->driving_reference << 4)) | // 000d0000  1 bit ; bit     0 to   4
-		(0b00001000 & (input->use_cam_info) << 3) |      // 0000e000  1 bit ; bit     0 to   3
-		(0b00000011 & (input->velocity_angular >> 8))    // 000000gg 10 bits; bit     8 to   0
-	);
-
-	output[4] = (uint8_t) (  							// gggggggg
-		input->velocity_angular                          // gggggggg  8 bits; bits  7-0 to 7-0
-	);
-
-	output[5] = (uint8_t) (								// 0000hijk
-		(0b00001000 & (input->debug_info << 3)) |        // 0000h000  1 bit ; bit     0 to   3
-		(0b00000100 & (input->do_kick << 2)) |           // 00000i00  1 bit ; bit     0 to   2
-		(0b00000010 & (input->do_chip << 1)) |           // 000000j0  1 bit ; bit     0 to   1
-		(0b00000001 & (input->kick_chip_forced))    // 0000000k  1 bit ; bit     0 to   0
-	);
-
-	output[6] = (uint8_t) (  							// mmmmmmmm
-		input->kick_chip_power                           // mmmmmmmm  8 bits; bits  7-0 to 7-0
-	);
-
-	output[7] = (uint8_t) (  							// nnnnnnnn
-		input->velocity_dribbler                         // nnnnnnnn  8 bits; bits  7-0 to 7-0
-	);
-
-	output[8] = (uint8_t) ( 							// pppqqqqq
-		(0b11100000 & (input->geneva_drive_state << 5)) |// ppp00000  3 bits; bits  2-0 to 7-5
-		(0b00011111 & (input->cam_position_x >> 8 ))     // 000qqqqq 13 bits; bits 12-8 to 4-0
-	);
-
-	output[9] = (uint8_t) (  							// qqqqqqqq
-		input->cam_position_x                            // qqqqqqqq 13 bits; bits  7-0 to 7-0
-	);
-
-	output[10] = (uint8_t) ( 							// rrrrrrrr
-		input->cam_position_y >> 5                       // rrrrrrrr 13 bits; bits 12-5 to 7-0
-	);
-
-	output[11] = (uint8_t) (							// rrrrrsss
-		(0b11111000 & (input->cam_position_y << 3)) |    // rrrrr000 13 bits; bits  4-0 to 7-3
-		(0b00000111 & (input->cam_rotation >> 8))        // 00000sss 11 bits; bits 10-8 to 2-0
-	);
-
-	output[12] = (uint8_t) ( 							// ssssssss
-		input->cam_rotation                              // ssssssss 11 bits; bits  7-0 to 7-0
-	);
-}
 
 /*
  * Create a roboData structure from a given Bytearray.
@@ -171,31 +101,29 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	/*
 	 * Read data from packet
 	 */
-	uint8_t id = input[0]>>3; //a
-	uint16_t rho = (input[0]&0b111)<<8; //b
-	rho |= input[1]; //b
-	int16_t theta = input[2]<<3; //c
-	theta |= (input[3]>>5)&0b111; //c
-	uint8_t driving_reference = (input[3]>>4)&1; //d
-	uint8_t use_cam_info = (input[3]>>3)&1; //e
-	uint8_t use_angle	= (input[3]>>2)&1; //f
-	int16_t velocity_angular = (input[3]&0b11) << 8; //g
-	velocity_angular |= input[4]; //g
-	uint8_t debug_info = (input[5]>>3)&1; //h
-	uint8_t do_kick = (input[5]>>2)&1; //i
-	uint8_t do_chip = (input[5]>>1)&1; //j
-	uint8_t kick_chip_forced = input[5]&1; //k
-	uint8_t kick_chip_power = input[6]; //m
-	uint8_t velocity_dribbler = input[7]; //n
-	uint8_t geneva_drive_state = (input[8]>>5)&0b111; //p
-	int16_t cam_position_x = (input[8]&0b11111)<<8; //q
-	cam_position_x |= input[9]; //q
-	int16_t cam_position_y = input[10] << 5; //r
-	cam_position_y |= (input[11]>>3)&0b11111; //r
-	int16_t cam_rotation = (input[11]&0b111) << 8; //s
-	cam_rotation |= input[12]; //s
+	uint16_t rho = (input[0]) << 3;
+	rho |= (input[1] >> 5) & 0b00000111;
 
+	int16_t theta = (input[1] & 0b00011111) << 6;
+	theta |= (input[2] >> 2) & 0b00111111;
 
+	int16_t velocity_angular = (input[2] & 0b00000011) << 8;
+	velocity_angular |= input[3] & 0b11111111;
+
+	uint8_t kick_chip_power = input[4] & 0b11111111;
+
+	uint8_t do_kick = (input[5] & 0b10000000) >> 7;
+	uint8_t do_chip = (input[5] & 0b01000000) >> 6;
+	uint8_t kick_chip_forced = (input[5] & 0b00100000) >> 5;
+	uint8_t debug_info = (input[5] & 0b00010000) >> 4;
+	uint8_t use_cam_info = (input[5] & 0b00001000) >> 3;
+	uint8_t geneva_drive_state = input[5] & 0b00000111;
+
+	uint8_t velocity_dribbler = 0;
+	velocity_dribbler = (input[6] & 0b11111000) >> 3;
+	//velocity_dribbler = velocity_dribbler & 0b00011111;
+	int16_t cam_rotation = (input[6] & 0b00000111) << 8; //s
+	cam_rotation |= input[7] & 0b11111111; //s
 
 	/*
 	 * Convert data to useful units

@@ -7,7 +7,7 @@ TEST(ArcTests, unitCircle) {
     Arc circle;
     ASSERT_EQ(circle.length, circle.width);
     ASSERT_DOUBLE_EQ(1.0, circle.length);
-    ASSERT_DOUBLE_EQ(M_PIl * 2 - std::numeric_limits<float>::epsilon(), circle.angleEnd - circle.angleStart);
+    ASSERT_DOUBLE_EQ(M_PIl  - std::numeric_limits<float>::epsilon(), circle.angleEnd - circle.angleStart);
     
     // this is a circle
     ASSERT_TRUE(circle.isCircle());

@@ -209,11 +209,13 @@ void clearReceivedData(ReceivedData* receivedData) {
 // Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if (xsens_CalibrationDone) {	// don't do anything until xsens calibration is done
-		if(htim->Instance == htim6.Instance){
+	if(htim->Instance == htim6.Instance){
+		if (xsens_CalibrationDone) {	// don't do geneva update until xsens calibration is done
 			geneva_Update();
 		}
-		else if(htim->Instance == htim7.Instance) {
+	}
+	else if(htim->Instance == htim7.Instance) {
+		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
 			/* SQUARE WITH 90 DEGREES TURNS AT SIDES
 			float velocityRef[3];
 			velocityRef[0] = 0.0;
@@ -303,9 +305,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			wheels_Update();
 		}
-		else if (htim->Instance == htim11.Instance) {
-			shoot_Callback();
-		}
+	}
+	else if (htim->Instance == htim11.Instance) {
+		shoot_Callback();
 	}
 }
 

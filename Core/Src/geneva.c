@@ -149,6 +149,7 @@ static bool isResponding() {
 		cnt++;
 	} else {
 		cnt = 0;
+		result = true;
 	}
 	if (cnt >= 10) {
 		result = false;

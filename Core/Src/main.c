@@ -186,6 +186,8 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
+
+	// TODO: needs to listen to kick_forced. Or to ballsensor
 	if (receivedData->do_kick) {
 		shoot_Shoot(shoot_Kick);
 	} else if (receivedData->do_chip) {
@@ -500,7 +502,7 @@ int main(void)
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
-//		  printReceivedData(&receivedData);
+		  //printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */

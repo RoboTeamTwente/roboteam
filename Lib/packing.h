@@ -13,16 +13,16 @@
 #include <stdbool.h>
 #include "../Util/control_util.h"
 
-#define ROBOPKTLEN 13 //amount of bytes for a packet sent to the robot
+#define ROBOPKTLEN 8 //amount of bytes for a packet sent to the robot
 #define SHORTACKPKTLEN 11 //amount of bytes of an ACK packet sent by the robot without using the extra/debug fields
-#define FULLACKPKTLEN 23 //ACK packet with debug fields
+#define FULLACKPKTLEN 8 //ACK packet with debug fields
 
 // Conversion constants
 #define CONVERT_RHO 			0.004f
 #define CONVERT_THETA 			0.00307f
 #define CONVERT_YAW_REF 		0.00614f
 #define CONVERT_SHOOTING_POWER 	0.39f
-#define CONVERT_DRIBBLE_SPEED 	0.39f
+#define CONVERT_DRIBBLE_SPEED 	3.125f
 #define CONVERT_VISION_YAW 		0.00307f
 
 ///////////////////////////////////////////////////// STRUCTS
@@ -59,10 +59,10 @@ typedef struct roboData{
    uint8_t do_chip:1;				//Chip                        [0, 1]            -             {true, false}            1
    uint8_t kick_chip_forced:1;		//Kick/chip immediately       [0, 1]            -             {true, false}            1
    uint8_t kick_chip_power:8;		//Kick/chip power             [0, 255]          0.39%         [0, 100]%                8
-   uint8_t velocity_dribbler:8;		//Reference dribbler speed    [0, 255]          0.39%         [0, 100]%                8
+   uint8_t velocity_dribbler:5;		//Reference dribbler speed    [0, 31]          3.125%         [0, 100]%                5
    uint8_t geneva_drive_state:3;	//Geneva drive state          [0, 7]            -             [-2, 2]                  3
-   int16_t cam_position_x:13;		//x position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
-   int16_t cam_position_y:13;		//y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
+   //int16_t cam_position_x:13;		//x position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
+   //int16_t cam_position_y:13;		//y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
    int16_t cam_rotation:11;			//Orientation (camera)        [-1024, 1023]     0.00307rad    [-pi, pi]               11
 } roboData;
 

@@ -29,6 +29,9 @@ static void setDir();
 //Sets the PWM for the Geneva motor
 static void setOutput();
 
+// Checks if geneva is responding to pwm commands
+static bool isResponding();
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 void geneva_Init(){
@@ -60,6 +63,9 @@ void geneva_Update(){
 	float err = genevaRef - geneva_Encodervalue();
 	pwm = PID(err, &genevaK);
 	limitScale();
+	if (!isResponding()) {
+		pwm = 0;
+	}
 	setDir();
 	setOutput();
 }
@@ -133,6 +139,21 @@ static void limitScale(){
 	} else if(pwm > MAX_PWM){
 		pwm = MAX_PWM;
 	}
+}
+
+static bool isResponding() {
+	static bool result = true;
+	static int cnt = 0;
+	static int prevEncoder = 0;
+	if ((pwm > 0) && (geneva_Encodervalue() == prevEncoder)) {
+		cnt++;
+	} else {
+		cnt = 0;
+	}
+	if (cnt >= 10) {
+		result = false;
+	}
+	return result;
 }
 
 static void setDir(){

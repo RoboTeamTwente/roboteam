@@ -53,7 +53,6 @@
 #define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
 
 // Shoot
-//TODO: Tune KICK_TIME and CHIP_TIME to match with maximum and minimum shooting power
 #define KICK_TIME 20 				// time period of kicking per percent of kicking power
 #define CHIP_TIME 30 				// time period of chipping per percent of chipping power
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)

@@ -14,8 +14,8 @@
 #include "packing.h"
 
 // make buffers
-uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
-uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
+uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 
 // init structs
 SX1280_Settings set = {
@@ -101,15 +101,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);
     SX->irqStatus = irq;
     getPacketStatus(SX);
-//	char msg[20];
-//	sprintf(msg, "rssi: %d\n\r", SX->Packet_status->RSSISync);
-//	Putty_printf(msg);
-//	sprintf(msg, "errors: %d\n\r", SX->Packet_status->errors);
-//	Putty_printf(msg);
     clearIRQ(SX,ALL);
 
     if(irq & CRC_ERROR) {
-    	//isWirelessConnected = false;
     	toggle_Pin(LED6_pin);
     	setRX(SX, SX->SX_settings->periodBase, 8000);
     	return;
@@ -117,21 +111,13 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 
     // process interrupts
     if(irq & TX_DONE){
-//    	Putty_printf("TX_DONE...\n\r");
-//    	toggle_pin(LED3_pin);
-//    	if transmitted, switch to receive mode
-//    	SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
-//    	setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-//    	setRX(SX, SX->SX_settings->periodBase, 0xFFFF);
     }
 
     if(irq & RX_DONE){
-//    	Putty_printf("RX_DONE...\n\r");
     	isWirelessConnected = true;
     	toggle_Pin(LED5_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 160) {
-//    		Putty_printf("noise: %d\n\r", SX->Packet_status->RSSISync);
     		ReceivePacket(SX);
     	}else{
 //    		 not necessary to force setRX() here since configured in Rx Continuous mode
@@ -145,16 +131,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & SYNCWORD_ERROR) {
     }
 
-//    if(irq & CRC_ERROR) {
-//    	isWirelessConnected = false;
-//    	toggle_Pin(LED6_pin);
-//    	setRX(SX, SX->SX_settings->periodBase, 8000);
-//    }
-
     if(irq & RXTX_TIMEOUT) {
-//    	SX->SX_settings->syncWords[0] = robot_syncWord[31];
-//		setSyncWords(SX, SX->SX_settings->syncWords[0], SX->SX_settings->syncWords[1], SX->SX_settings->syncWords[2]);
-//		SendPacket(SX, buf, 13);
     	isWirelessConnected = false;
     	setRX(SX, SX->SX_settings->periodBase, 8000);
     }
@@ -172,13 +149,6 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedDat
 		}
 		packetToRoboData(PC_to_Bot, receivedData);
 		setRX(SX, SX->SX_settings->periodBase, 8000);
-//    	char packet[30];
-//    	Putty_printf("received packet: ");
-//    	for (int i=0; i<13; i++) {
-//    		sprintf(packet, "%X", SX->RXbuf[3+i]);
-//    		Putty_printf(packet);
-//    	}
-//    	Putty_printf("\n\r");
 	} else {
 		setRX(SX, SX->SX_settings->periodBase, 8000);
 	}

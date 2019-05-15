@@ -44,9 +44,6 @@ void kalman_Update(float acc[2], float vel[2]){
 		multiplyMatrix(aB, aU, aBU, STATE, 1, STATE);
 		addMatrix(aFX, aBU, aXcurrent, STATE);
 
-		// Get measurement
-		//TODO: Get measurement using MTi
-
 		// Process data
 		multiplyMatrix(aH, aXcurrent, aHX, OBSERVE, 1, STATE);
 		subMatrix(az, aHX, ayold, OBSERVE);

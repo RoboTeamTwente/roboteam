@@ -3,7 +3,7 @@
 //
 
 #include "../include/roboteam_utils/LineBase.h"
-namespace rtt{
+namespace rtt {
 double LineBase::length() const {
     return (end - start).length();
 }
@@ -14,11 +14,11 @@ double LineBase::slope() const {
     return (end.y - start.y)/(end.x - start.x);
 }
 bool LineBase::isVertical() const {
-    double sl=this->slope();
-    return sl==std::numeric_limits<double>::infinity()||sl==-std::numeric_limits<double>::infinity();
+    double sl = this->slope();
+    return sl == std::numeric_limits<double>::infinity() || sl == - std::numeric_limits<double>::infinity();
 }
 Vector2 LineBase::direction() const {
-    return Vector2(end-start);
+    return Vector2(end - start);
 }
 double LineBase::intercept() const {
     return start.y - this->slope()*start.x;
@@ -31,12 +31,12 @@ std::pair<double, double> LineBase::coefficients() const {
 bool LineBase::isPoint() const {
     return start == end;
 }
-bool LineBase::isParallel(const LineBase &line) const{
+bool LineBase::isParallel(const LineBase &line) const {
     // check if line is vertical, otherwise check the slope
-    double sl=this->slope();
-    if(sl==std::numeric_limits<double>::infinity()||sl==-std::numeric_limits<double>::infinity()){
+    double sl = this->slope();
+    if (sl == std::numeric_limits<double>::infinity() || sl == - std::numeric_limits<double>::infinity()) {
         return line.isVertical();
     }
-    else return sl==line.slope();
+    else return sl == line.slope();
 }
 }

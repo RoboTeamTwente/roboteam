@@ -78,12 +78,12 @@ typedef enum {
 }wheel_names;
 
 typedef enum{
+	geneva_none,			// While rotating
 	geneva_leftleft,
 	geneva_left,
 	geneva_middle,
 	geneva_right,
-	geneva_rightright,
-	geneva_none			// While rotating
+	geneva_rightright
 }geneva_positions;
 
 typedef enum {

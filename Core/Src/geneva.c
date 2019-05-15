@@ -50,7 +50,6 @@ void geneva_Update(){
 	switch(genevaState){
 	case off:
 		return;
-		break;
 	case setup:								// While in setup, slowly move towards the sensor/edge
 		genevaRef = 70000;	// if sensor is not seen yet, move to the right (70000 is above the max possible value)
 		CheckIfStuck();
@@ -83,6 +82,7 @@ void geneva_SetRef(geneva_positions position){
 		genevaRef = 1900;
 		break;
 	case geneva_none:
+		genevaRef = geneva_Encodervalue();
 		break;
 	}
 }

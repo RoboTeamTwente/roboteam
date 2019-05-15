@@ -106,9 +106,11 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 
 	int16_t theta = (input[1] & 0b00011111) << 6;
 	theta |= (input[2] >> 2) & 0b00111111;
+	theta |= (theta & 0x0400) ? 0xF800 : 0x0000; // sign extension
 
 	int16_t velocity_angular = (input[2] & 0b00000011) << 8;
 	velocity_angular |= input[3] & 0b11111111;
+	velocity_angular |= (velocity_angular & 0x0200) ? 0xFC00 : 0x0000; // sign extension
 
 	uint8_t kick_chip_power = input[4] & 0b11111111;
 
@@ -124,6 +126,7 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	//velocity_dribbler = velocity_dribbler & 0b00011111;
 	int16_t cam_rotation = (input[6] & 0b00000111) << 8; //s
 	cam_rotation |= input[7] & 0b11111111; //s
+	cam_rotation |= (cam_rotation & 0x0400) ? 0xF800 : 0x0000; // sign extension
 
 	/*
 	 * Convert data to useful units

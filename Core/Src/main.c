@@ -450,7 +450,7 @@ int main(void)
   // start the pingpong operation
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-  setRX(SX, SX->SX_settings->periodBase, 8000);
+  setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
   /* USER CODE END 2 */
 
@@ -483,14 +483,12 @@ int main(void)
 	   */
 	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  if (xsens_CalibrationDone && checkWirelessConnection()) { // TODO: make a real function for this
-		  executeCommands(&receivedData);
-		  halt = false;
-	  } else {
-		  halt = true;
+	  halt = !(xsens_CalibrationDone && checkWirelessConnection());
+	  if (halt) {
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
+	  executeCommands(&receivedData);
 
 	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 
@@ -502,8 +500,8 @@ int main(void)
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
-		  //printReceivedData(&receivedData);
-//		  printRobotStateData(&stateInfo);
+		  printReceivedData(&receivedData);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

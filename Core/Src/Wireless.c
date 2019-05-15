@@ -105,7 +105,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 
     if(irq & CRC_ERROR) {
     	toggle_Pin(LED6_pin);
-    	setRX(SX, SX->SX_settings->periodBase, 8000);
+    	setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     	return;
     }
 
@@ -121,7 +121,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     		ReceivePacket(SX);
     	}else{
 //    		 not necessary to force setRX() here since configured in Rx Continuous mode
-    		setRX(SX, SX->SX_settings->periodBase, 8000);
+    		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     	}
     }
 
@@ -133,7 +133,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 
     if(irq & RXTX_TIMEOUT) {
     	isWirelessConnected = false;
-    	setRX(SX, SX->SX_settings->periodBase, 8000);
+    	setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     }
 
     if(irq & PREAMBLE_DETECTED) {
@@ -148,8 +148,8 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedDat
 		memcpy(PC_to_Bot, SX->RXbuf+3, ROBOPKTLEN);
 		packetToRoboData(PC_to_Bot, receivedData);
 
-		setRX(SX, SX->SX_settings->periodBase, 8000);
+		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 	} else {
-		setRX(SX, SX->SX_settings->periodBase, 8000);
+		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 	}
 }

@@ -111,6 +111,9 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
+#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
+#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
+
 SX1280* SX;
 MTi_data* MTi;
 int counter = 0;
@@ -119,6 +122,7 @@ int strength = 0;
 ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
 bool halt = true;
+bool xsens_CalibrationDone = false;
 
 /* USER CODE END PV */
 
@@ -206,97 +210,101 @@ void clearReceivedData(ReceivedData* receivedData) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		geneva_Update();
+		if (xsens_CalibrationDone) {	// don't do geneva update until xsens calibration is done
+			geneva_Update();
+		}
 	}
 	else if(htim->Instance == htim7.Instance) {
-		/* SQUARE WITH 90 DEGREES TURNS AT SIDES
-	  	float velocityRef[3];
-		velocityRef[0] = 0.0;
-		velocityRef[1] = 0.0;
-		velocityRef[2] = 0.0*M_PI;
-		halt = false;
-		static uint velTimer;
-		int reps = 1;
-		static int count = 0;
-		float v = 0.5;
-		int t = 1500;
-		if (HAL_GetTick() < 7000) {
-			velTimer = HAL_GetTick();
-		} else if (HAL_GetTick() - velTimer < t) {
-			velocityRef[body_x] = v;
-			velocityRef[body_y] = 0.0;
-			velocityRef[body_w] = 0.0;
-		} else if (HAL_GetTick() - velTimer < 2*t) {
-			velocityRef[body_x] = v;
-			velocityRef[body_y] = 0.0;
-			velocityRef[body_w] = 0.5*M_PI;
-		} else if (HAL_GetTick() - velTimer < 3*t) {
-			velocityRef[body_x] = 0.0;
-			velocityRef[body_y] = v;
-			velocityRef[body_w] = 0.0;
-		} else if (HAL_GetTick() - velTimer < 4*t) {
-			velocityRef[body_x] = 0.0;
-			velocityRef[body_y] = v;
-			velocityRef[body_w] = 0.5*M_PI;
-		} else if (HAL_GetTick() - velTimer < 5*t) {
-			velocityRef[body_x] = -v;
-			velocityRef[body_y] = 0.0;
-			velocityRef[body_w] = 0.0;
-		} else if (HAL_GetTick() - velTimer < 6*t) {
-			velocityRef[body_x] = -v;
-			velocityRef[body_y] = 0.0;
-			velocityRef[body_w] = 0.5*M_PI;
-		} else if (HAL_GetTick() - velTimer < 7*t) {
-			velocityRef[body_x] = 0.0;
-			velocityRef[body_y] = -v;
-			velocityRef[body_w] = 0.0;
-		} else if (HAL_GetTick() - velTimer < 8*t) {
-			velocityRef[body_x] = 0.0;
-			velocityRef[body_y] = -v;
-			velocityRef[body_w] = 0.5*M_PI;
-		} else if (count < reps-1) {
-			velTimer = HAL_GetTick();
-			count++;
-		} else {
-			velocityRef[body_x] = 0.0;
-			velocityRef[body_y] = 0.0;
-			velocityRef[body_w] = 0.0;
+		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
+			/* SQUARE WITH 90 DEGREES TURNS AT SIDES
+			float velocityRef[3];
+			velocityRef[0] = 0.0;
+			velocityRef[1] = 0.0;
+			velocityRef[2] = 0.0*M_PI;
+			halt = false;
+			static uint velTimer;
+			int reps = 1;
+			static int count = 0;
+			float v = 0.5;
+			int t = 1500;
+			if (HAL_GetTick() < 7000) {
+				velTimer = HAL_GetTick();
+			} else if (HAL_GetTick() - velTimer < t) {
+				velocityRef[body_x] = v;
+				velocityRef[body_y] = 0.0;
+				velocityRef[body_w] = 0.0;
+			} else if (HAL_GetTick() - velTimer < 2*t) {
+				velocityRef[body_x] = v;
+				velocityRef[body_y] = 0.0;
+				velocityRef[body_w] = 0.5*M_PI;
+			} else if (HAL_GetTick() - velTimer < 3*t) {
+				velocityRef[body_x] = 0.0;
+				velocityRef[body_y] = v;
+				velocityRef[body_w] = 0.0;
+			} else if (HAL_GetTick() - velTimer < 4*t) {
+				velocityRef[body_x] = 0.0;
+				velocityRef[body_y] = v;
+				velocityRef[body_w] = 0.5*M_PI;
+			} else if (HAL_GetTick() - velTimer < 5*t) {
+				velocityRef[body_x] = -v;
+				velocityRef[body_y] = 0.0;
+				velocityRef[body_w] = 0.0;
+			} else if (HAL_GetTick() - velTimer < 6*t) {
+				velocityRef[body_x] = -v;
+				velocityRef[body_y] = 0.0;
+				velocityRef[body_w] = 0.5*M_PI;
+			} else if (HAL_GetTick() - velTimer < 7*t) {
+				velocityRef[body_x] = 0.0;
+				velocityRef[body_y] = -v;
+				velocityRef[body_w] = 0.0;
+			} else if (HAL_GetTick() - velTimer < 8*t) {
+				velocityRef[body_x] = 0.0;
+				velocityRef[body_y] = -v;
+				velocityRef[body_w] = 0.5*M_PI;
+			} else if (count < reps-1) {
+				velTimer = HAL_GetTick();
+				count++;
+			} else {
+				velocityRef[body_x] = 0.0;
+				velocityRef[body_y] = 0.0;
+				velocityRef[body_w] = 0.0;
+			}
+
+
+			receivedData.stateRef[body_x] = velocityRef[body_x];
+			receivedData.stateRef[body_y] = velocityRef[body_y];
+			receivedData.stateRef[body_w] = velocityRef[body_w];
+			stateControl_SetRef(velocityRef);
+			*/
+
+
+			// State estimation
+			stateInfo.visionAvailable = receivedData.visionAvailable;
+			stateInfo.visionYaw = receivedData.visionYaw;
+			for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+				stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+			}
+
+			stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+			stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+			stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+			stateEstimation_Update(&stateInfo);
+
+			// State control
+			stateControl_SetState(stateEstimation_GetState());
+			stateControl_Update();
+
+			if (halt || !yaw_hasCalibratedOnce()) {
+				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+				wheels_SetRef(emptyRef);
+			}
+			else {
+				// Wheel control
+				wheels_SetRef(stateControl_GetWheelRef());
+			}
+
+			wheels_Update();
 		}
-
-
-		receivedData.stateRef[body_x] = velocityRef[body_x];
-		receivedData.stateRef[body_y] = velocityRef[body_y];
-		receivedData.stateRef[body_w] = velocityRef[body_w];
-		stateControl_SetRef(velocityRef);
-		*/
-
-
-		// State estimation
-		stateInfo.visionAvailable = receivedData.visionAvailable;
-		stateInfo.visionYaw = receivedData.visionYaw;
-		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-		}
-
-		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-		stateEstimation_Update(&stateInfo);
-
-		// State control
-		stateControl_SetState(stateEstimation_GetState());
-		stateControl_Update();
-
-		if (halt ){//|| !yaw_hasCalibratedOnce()) {
-			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-			wheels_SetRef(emptyRef);
-		}
-		else {
-			// Wheel control
-			wheels_SetRef(stateControl_GetWheelRef());
-		}
-
-		wheels_Update();
 	}
 	else if (htim->Instance == htim11.Instance) {
 		shoot_Callback();
@@ -433,7 +441,7 @@ int main(void)
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
-  MTi = MTi_Init(6,XFP_VRU_general);
+  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
 
@@ -471,7 +479,9 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  if (checkWirelessConnection()) { // TODO: make a real function for this
+	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
+	  set_Pin(LED1_pin, !xsens_CalibrationDone);
+	  if (xsens_CalibrationDone && checkWirelessConnection()) { // TODO: make a real function for this
 		  executeCommands(&receivedData);
 		  halt = false;
 	  } else {

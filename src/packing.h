@@ -19,6 +19,9 @@ namespace roboteam_msgs {
 
 namespace rtt {
 namespace robothub {
+
+// The comments might not be fully correct.
+
 struct LowLevelRobotCommand {//Description                 Units             Values        Represented values    Bits
     int id;                 //Robot ID                    [0, 15]           -             [0, 15]                  4
     int rho;                //Velocity length             [0, 2047]         0.008m/s      [0, 8.191]              11
@@ -32,7 +35,7 @@ struct LowLevelRobotCommand {//Description                 Units             Val
     bool do_chip;           //Chip                        [0, 1]            -             {true, false}            1
     bool kick_chip_forced;  //Kick/chip immediately       [0, 1]            -             {true, false}            1
     int kick_chip_power;    //Kick/chip power             [0, 255]          0.39%         [0, 100]%                8
-    int velocity_dribbler;  //Reference dribbler speed    [0, 255]          0.39%         [0, 100]%                8
+    int velocity_dribbler;  //Reference dribbler speed    [0, 31]           -             [0, 100]%                5
     int geneva_drive_state; //Geneva drive state          [0, 7]            -             [-2, 2]                  3
     int cam_position_x;     //x position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13
     int cam_position_y;     //y position robot (camera)   [-4096, 4095]     0.0025m       [-10.24, 10.23]         13

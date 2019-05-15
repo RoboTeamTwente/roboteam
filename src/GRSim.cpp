@@ -320,7 +320,7 @@ void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand c
         command->set_kickspeedz(0);
     }
 
-    command->set_spinner(msg.dribbler);
+    command->set_spinner((msg.dribbler > 0));
     command->set_use_angle(msg.use_angle);
 
     // if no genevastate was given we set it to 3;

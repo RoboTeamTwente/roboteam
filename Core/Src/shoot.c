@@ -90,7 +90,8 @@ void shoot_SetPower(int input){
 
 void shoot_Shoot(shoot_types type)
 {
-	if(shootState == shoot_Ready)
+	bool genevaNotTurning = (geneva_GetPWM() == 0);
+	if(shootState == shoot_Ready && genevaNotTurning)
 	{
 		//Putty_printf("shooting! power = %d \n\r", power);
 		shootState = shoot_Shooting;

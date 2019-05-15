@@ -116,7 +116,7 @@ MTi_data* MTi;
 int counter = 0;
 int strength = 0;
 
-ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
+ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
 bool halt = true;
 

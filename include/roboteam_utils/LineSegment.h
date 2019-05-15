@@ -1,16 +1,14 @@
 //
-// Created by rolf on 18-4-19.
+// Created by rolf on 15-5-19.
 //
 
-#ifndef ROBOTEAM_UTILS_LINE_H
-#define ROBOTEAM_UTILS_LINE_H
-
+#ifndef ROBOTEAM_UTILS_LINESEGMENT_H
+#define ROBOTEAM_UTILS_LINESEGMENT_H
 #include "LineBase.h"
 namespace rtt {
-
-class Line : public LineBase {
+class LineSegment : public LineBase {
     public:
-        constexpr Line(const Vector2 &_start, const Vector2 &_end)
+        constexpr LineSegment(const Vector2 &_start, const Vector2 &_end)
                 :LineBase(_start, _end) { };
         double distanceToLine(const Vector2 &point) const override;
         bool isOnLine(const Vector2 &point) const override;
@@ -19,9 +17,7 @@ class Line : public LineBase {
         std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
         bool doesIntersect(const Line &line) const override;
         bool doesIntersect(const LineSegment &line) const override;
-
+        bool nonSimpleDoesIntersect(const LineSegment &line) const;
 };
-
 }
-
-#endif //ROBOTEAM_UTILS_LINE_H
+#endif //ROBOTEAM_UTILS_LINESEGMENT_H

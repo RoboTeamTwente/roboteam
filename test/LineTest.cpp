@@ -3,6 +3,7 @@
 //
 
 #include "roboteam_utils/Line.h"
+#include "roboteam_utils/LineSegment.h"
 #include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
 using namespace rtt;

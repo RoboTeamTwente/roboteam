@@ -68,15 +68,19 @@ void yaw_Calibrate(float newXsensYaw, float rateOfTurn, float visionYaw, bool vi
 	prevVisionYaw = visionYaw;
 	calibratedYaw = constrainAngle(oldXsensYaw + yawOffset);
 
-	char msg[100];
-	int n = 0;
-	n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
-	n += sprintf(msg + n, "new xsens: %f\n\r", newXsensYaw);
-	n += sprintf(msg + n, "old xsens: %f\n\r", oldXsensYaw);
-	n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
-	n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
-	n += sprintf(msg + n, "bool: %u\n\r", calibratedThisTick);
-	Putty_printf(msg);
+	uint printtime = 0;
+	if (HAL_GetTick() - printtime > 100) {
+		char msg[200];
+		int n = 0;
+		n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
+		n += sprintf(msg + n, "new xsens: %f\n\r", newXsensYaw);
+		n += sprintf(msg + n, "old xsens: %f\n\r", oldXsensYaw);
+		n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
+		n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
+		n += sprintf(msg + n, "bool: %u\n\r", calibratedThisTick);
+		Putty_printf(msg);
+		printtime = HAL_GetTick();
+	}
 }
 
 float yaw_GetCalibratedYaw(){

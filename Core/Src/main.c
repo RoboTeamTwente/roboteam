@@ -111,6 +111,9 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
+#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
+#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
+
 SX1280* SX;
 MTi_data* MTi;
 int counter = 0;
@@ -119,6 +122,7 @@ int strength = 0;
 ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
+bool xsens_CalibrationDone = false;
 
 /* USER CODE END PV */
 
@@ -206,9 +210,12 @@ void clearReceivedData(ReceivedData* receivedData) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == htim6.Instance){
-		geneva_Update();
+		if (xsens_CalibrationDone) {	// don't do geneva update until xsens calibration is done
+			geneva_Update();
+		}
 	}
 	else if(htim->Instance == htim7.Instance) {
+		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
 		/* SQUARE WITH 90 DEGREES TURNS AT SIDES
 	  	float velocityRef[3];
 		velocityRef[0] = 0.0;
@@ -288,7 +295,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateControl_SetState(stateEstimation_GetState());
 		stateControl_Update();
 
-		if (halt ){//|| !yaw_hasCalibratedOnce()) {
+		if (halt || !yaw_hasCalibratedOnce()) {
 			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 			wheels_SetRef(emptyRef);
 		}
@@ -298,6 +305,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		wheels_Update();
+		}
 	}
 	else if (htim->Instance == htim11.Instance) {
 		shoot_Callback();
@@ -434,7 +442,7 @@ int main(void)
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
-  MTi = MTi_Init(6,XFP_VRU_general);
+  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("ID: %u\n\r",ID);
 
@@ -472,7 +480,9 @@ int main(void)
 	  /*
 	   * Check for wireless data
 	   */
-	  if (checkWirelessConnection()) { // TODO: make a real function for this
+	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
+	  set_Pin(LED1_pin, !xsens_CalibrationDone);
+	  if (xsens_CalibrationDone && checkWirelessConnection()) { // TODO: make a real function for this
 		  executeCommands(&receivedData);
 		  halt = false;
 	  } else {

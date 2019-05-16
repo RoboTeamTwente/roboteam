@@ -119,7 +119,7 @@ MTi_data* MTi;
 int counter = 0;
 int strength = 0;
 
-ReceivedData receivedData = {{0.0}, false, 0.0f, 2, 0, 0, false, false};
+ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -186,6 +186,8 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
+
+	// TODO: needs to listen to kick_forced. Or to ballsensor
 	if (receivedData->do_kick) {
 		shoot_Shoot(shoot_Kick);
 	} else if (receivedData->do_chip) {
@@ -448,7 +450,7 @@ int main(void)
   // start the pingpong operation
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-  setRX(SX, SX->SX_settings->periodBase, 8000);
+  setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
   /* USER CODE END 2 */
 
@@ -481,14 +483,12 @@ int main(void)
 	   */
 	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  if (xsens_CalibrationDone && checkWirelessConnection()) { // TODO: make a real function for this
-		  executeCommands(&receivedData);
-		  halt = false;
-	  } else {
-		  halt = true;
+	  halt = !(xsens_CalibrationDone && checkWirelessConnection());
+	  if (halt) {
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
+	  executeCommands(&receivedData);
 
 	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 

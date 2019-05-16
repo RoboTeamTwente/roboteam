@@ -26,6 +26,7 @@
 
 // System
 #define TIME_DIFF 0.01F 		// time difference due to 100Hz frequency
+#define WIRELESS_RX_COUNT 4000  // count after which wireless should go to timeout after last packet. Multiply with period base (62.5 us) to get to the time in seconds.
 
 // Robot
 #define rad_robot 0.081F 	// robot radius (m) (from center to wheel contact point)
@@ -77,12 +78,12 @@ typedef enum {
 }wheel_names;
 
 typedef enum{
+	geneva_none,			// While rotating
 	geneva_leftleft,
 	geneva_left,
 	geneva_middle,
 	geneva_right,
-	geneva_rightright,
-	geneva_none			// While rotating
+	geneva_rightright
 }geneva_positions;
 
 typedef enum {

@@ -500,8 +500,8 @@ int main(void)
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
-		  printReceivedData(&receivedData);
-		  printRobotStateData(&stateInfo);
+//		  printReceivedData(&receivedData);
+//		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

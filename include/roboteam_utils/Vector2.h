@@ -119,7 +119,7 @@ class Vector2 {
         /*
          * \brief calculates the cross product
          */
-        double cross(const Vector2 &other);
+        double cross(const Vector2 &other) const;
         /**
          * Does the exact same as project... (?)
          */

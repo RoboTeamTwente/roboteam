@@ -31,7 +31,7 @@ Vector2 Vector2::scale(double scalar) const {
 
 Vector2 Vector2::normalize() const {
     if (this->length() == 0.0)
-        return {1.0, 0.0};
+        return {0.0, 0.0};
 
     double d = 1.0/length();
     return {x*d, y*d};
@@ -119,7 +119,7 @@ Vector2 Vector2::stretchToLength(double desiredLength) const {
     return {x*frac, y*frac};
 }
 
-double Vector2::cross(const Vector2 &other) {
+double Vector2::cross(const Vector2 &other) const{
     return this->x*other.y-this->y*other.x;
 }
 bool Vector2::operator==(const Vector2 &other) const {

@@ -60,4 +60,69 @@ bool Line::doesIntersect(const LineSegment &line) const {
     }
     return false;
 }
+//this is the algorithm from
+// https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+//takes overlaps into account in contrast to the intersect() function
+bool LineSegment::doesIntersect(const LineSegment &line) const {
+    Vector2 p=start,q=line.start,r=direction(),s=line.direction();
+    double denom=r.cross(s);
+    double numer=(q-p).cross(r);
+    if (denom==0){
+        if (numer==0){
+            // lines are colinear
+            double t0=(q-p).dot(r)/r.length2();
+            double t1=t0+s.dot(r)/r.length2();
+            if (t0<0){
+                return t1>=0;
+            }
+            else if(t0>1){
+                return t1<=1;
+            }
+            return true;
+        }
+    }
+    else{
+        double u= numer/denom;
+        if (!(u<0||u>1)){
+            double t=(q-p).cross(s)/denom;
+            if (!(t<0||t>1)){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// same as normal intersect, but always returns false if the lines are parallel
+// intersection points of non-parallel lines are called non-simple (hence the name)
+bool LineSegment::nonSimpleDoesIntersect(const LineSegment &line) const{
+    Vector2 p=start,q=line.start,r=direction(),s=line.direction();
+    double denom=r.cross(s);
+    double numer=(q-p).cross(r);
+    if (denom!=0){
+        double u= numer/denom;
+        if (!(u<=0||u>=1)){
+            double t=(q-p).cross(s)/denom;
+            if (!(t<=0||t>=1)){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+std::shared_ptr<Vector2> LineSegment::nonSimpleIntersects(const LineSegment &line) const {
+    Vector2 A=start-end;
+    Vector2 B=line.start-line.end;
+    Vector2 C=start-line.start;
+    double denom=A.cross(B);
+    if (denom!=0){
+        double t=C.cross(B)/denom;
+        double u=-A.cross(C)/denom;
+        if (!(t<=0||t>=1)&&!(u<=0||u>=1)) {
+            return std::make_shared<Vector2>(start-A*t);
+        }
+    }
+    return nullptr;
+}
+
 }

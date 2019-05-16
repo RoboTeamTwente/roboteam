@@ -10,6 +10,7 @@ namespace rtt {
 
 class Line : public LineBase {
     public:
+        constexpr Line() : LineBase(){};
         constexpr Line(const Vector2 &_start, const Vector2 &_end)
                 :LineBase(_start, _end) { };
         double distanceToLine(const Vector2 &point) const override;
@@ -19,6 +20,22 @@ class Line : public LineBase {
         std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
         bool doesIntersect(const Line &line) const override;
         bool doesIntersect(const LineSegment &line) const override;
+
+};
+class LineSegment : public LineBase {
+    public:
+        constexpr LineSegment() : LineBase(){};
+        constexpr LineSegment(const Vector2 &_start, const Vector2 &_end)
+                :LineBase(_start, _end) { };
+        double distanceToLine(const Vector2 &point) const override;
+        bool isOnLine(const Vector2 &point) const override;
+        Vector2 project(const Vector2 &point) const override;
+        std::shared_ptr<Vector2> intersects(const Line &line) const override;
+        std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
+        bool doesIntersect(const Line &line) const override;
+        bool doesIntersect(const LineSegment &line) const override;
+        bool nonSimpleDoesIntersect(const LineSegment &line) const;
+        std::shared_ptr<Vector2> nonSimpleIntersects(const LineSegment &line) const;
 
 };
 

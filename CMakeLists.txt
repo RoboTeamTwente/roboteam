@@ -135,6 +135,9 @@ configure_file(src/constants.cpp ${RTT_CONSTANTS_SOURCE_FILE} COPYONLY)
 ###########################
 
 add_library(roboteam_utils
+        src/LineBase.cpp
+        src/Line.cpp
+        src/LineSegment.cpp
         src/Vector2.cpp
         src/Angle.cpp
         src/Position.cpp
@@ -174,8 +177,9 @@ catkin_add_gtest(utils_test
         test/GraphTest.cpp
         test/OptimizationTest.cpp
         test/BiMapTest.cpp
-        test/ArcTest.cpp
-        #test/normaliseTest.cpp
+        #test/ArcTest.cpp
+        test/normaliseTest.cpp
+        test/LineTest.cpp
         )
 add_dependencies(utils_test
         ${${PROJECT_NAME}_EXPORTED_TARGETS}

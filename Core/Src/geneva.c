@@ -154,6 +154,7 @@ static bool isResponding() {
 	if (cnt >= 10) {
 		result = false;
 	}
+	prevEncoder = geneva_Encodervalue();
 	return result;
 }
 

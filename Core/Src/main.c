@@ -1496,8 +1496,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LB_FR_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LB_Locked_Pin ID0_Pin ID1_Pin Battery_empty_Pin */
-  GPIO_InitStruct.Pin = LB_Locked_Pin|ID0_Pin|ID1_Pin|Battery_empty_Pin;
+  /*Configure GPIO pins : LB_Locked_Pin ID0_Pin ID1_Pin */
+  GPIO_InitStruct.Pin = LB_Locked_Pin|ID0_Pin|ID1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1548,6 +1548,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(RB_Locked_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Battery_empty_Pin */
+  GPIO_InitStruct.Pin = Battery_empty_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(Battery_empty_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Geneva_cal_sensor_Pin */
   GPIO_InitStruct.Pin = Geneva_cal_sensor_Pin;

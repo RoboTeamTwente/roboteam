@@ -1,7 +1,6 @@
 #pragma once
 
 #include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/Draw.h"
 
 #include <vector>
 #include <string>
@@ -17,7 +16,7 @@ public:
 	bool IsWithinField(Vector2 point) const;
 	Vector2 ClosestPointOnSide(Vector2 point, Vector2 closeTo) const;
 	Vector2 SecondClosestPointOnSide(Vector2 point) const;
-	Vector2 ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo, Draw drawer, std::vector<std::string> names) const;
+	Vector2 ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo) const;
 	static Vector2 LineIntersection(Vector2 line1Start, Vector2 line1Dir, Vector2 line2Start, Vector2 line2Dir);
 	Vector2 LineIntersection(Vector2 lineStart, Vector2 lineEnd, bool sideA);
 	bool DoConesOverlap(Cone otherCone) const;

@@ -52,7 +52,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotComman
     llrc.do_chip = command.chipper;                                                 // [0, 1]          {true, false}
     llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced;        // [0, 1]          {true, false}
     llrc.kick_chip_power = (int) floor(kick_chip_power*255/8);                      // [0, 255]        [0, 100]%
-    llrc.velocity_dribbler = 7;                                                     // [0, 31]        [0, 100]%
+    llrc.velocity_dribbler = command.dribbler;                                      // [0, 31]        [0, 100]%
 
     llrc.geneva_drive_state = command.geneva_state;                                 // [(0)1, 5]       [-2, 2]
     llrc.cam_position_x = 0;                                                        // [-4096, 4095]   [-10.24, 10.23]

@@ -141,17 +141,12 @@ add_library(roboteam_utils
         src/Vector2.cpp
         src/Angle.cpp
         src/Position.cpp
-        src/world_analysis.cpp
         src/LastWorld.cpp
-        src/LastRef.cpp
-        src/Draw.cpp
         src/Math.cpp
         src/Cone.cpp
         src/normalize.cpp
-        src/TeamRobot.cpp
         src/Clip.cpp
         src/Optimization.cpp
-        src/RefLookup.cpp
         src/Arc.cpp
         src/Section.cpp
         ${RTT_CONSTANTS_SOURCE_FILE}

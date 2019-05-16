@@ -341,6 +341,7 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+	Putty_printf("Xsens rate of turn: %f rad/s\n\r", stateInfo->rateOfTurn);
 	Putty_printf("wheel refs:\n\r");
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
@@ -496,9 +497,9 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 10) {
+	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
-//		  toggle_Pin(LED0_pin);
+		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);

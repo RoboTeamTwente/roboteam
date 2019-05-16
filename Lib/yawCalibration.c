@@ -6,7 +6,7 @@
 
 #define BUFFER_SIZE 5 			// assume 50 ms (5 time steps) delay between vision and XSens
 #define CALIBRATION_TIME 0.2f 	// number of seconds to do for averaging TODO: test this
-#define MAX_RATE_OF_TURN 1.0f 	// highest rate of turn (rad/s) allowed to do calibration
+#define MAX_RATE_OF_TURN (M_PI/2.0f) / 4.0f 	// highest rate of turn (rad/s) allowed to do calibration
 
 ///////////////////////////////////////////////////// VARIABLES
 
@@ -15,15 +15,18 @@ static bool hasCalibratedOnce = false;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-//If the vision yaw and xsens yaw deviate too much for several time steps, set calibration needed to true
+// If the vision yaw and xsens yaw deviate too much for several time steps, set calibration needed to true
 static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset);
 
-//Check if robot has been rotating sufficiently slow for several time steps
+// Check if robot has been rotating sufficiently slow for several time steps
 static bool isRotatingSlow(float visionYaw);
+
+// Get the oldest Xsens yaw from the buffer (as old as the assumed delay)
+static float getOldXsensYaw(float newXsensYaw);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visionAvailable) {
+void yaw_Calibrate(float newXsensYaw, float rateOfTurn, float visionYaw, bool visionAvailable) {
 	static float yawOffset = 0.0f;
 	static int restCounter = 0;
 	static float sumXsensVec[2] = {0.0f};
@@ -34,8 +37,10 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 		visionYaw += rateOfTurn * TIME_DIFF;
 	}
 
+	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
+
 	bool calibratedThisTick = false;
-	if (isCalibrationNeeded(visionYaw, xsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
+	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
 		if (restCounter > CALIBRATION_TIME * TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
@@ -46,8 +51,8 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 			restCounter = 0;
 		} else {
 			// Sum the unit vectors with these angles and then take the angle of the resulting vector.
-			sumXsensVec[0] += cosf(xsensYaw);
-			sumXsensVec[1] += sinf(xsensYaw);
+			sumXsensVec[0] += cosf(oldXsensYaw);
+			sumXsensVec[1] += sinf(oldXsensYaw);
 			sumVisionVec[0] += cosf(visionYaw);
 			sumVisionVec[1] += sinf(visionYaw);
 			restCounter++;
@@ -61,12 +66,13 @@ void yaw_Calibrate(float xsensYaw, float rateOfTurn, float visionYaw, bool visio
 	}
 
 	prevVisionYaw = visionYaw;
-	calibratedYaw = constrainAngle(xsensYaw + yawOffset);
+	calibratedYaw = constrainAngle(oldXsensYaw + yawOffset);
 
 	char msg[100];
 	int n = 0;
 	n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
-	n += sprintf(msg + n, "xsens: %f\n\r", xsensYaw);
+	n += sprintf(msg + n, "new xsens: %f\n\r", newXsensYaw);
+	n += sprintf(msg + n, "old xsens: %f\n\r", oldXsensYaw);
 	n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
 	n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
 	n += sprintf(msg + n, "bool: %u\n\r", calibratedThisTick);
@@ -100,7 +106,6 @@ static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset
 	return calibrationNeeded;
 }
 
-
 static bool isRotatingSlow(float visionYaw) {
 	static bool rotatingSlow = false;
 	static int rotateCounter = 0;
@@ -118,5 +123,16 @@ static bool isRotatingSlow(float visionYaw) {
 		rotatingSlow = true;
 	}
 	return rotatingSlow;
+}
+
+static float getOldXsensYaw(float newXsensYaw) {
+	static float buffer[BUFFER_SIZE] = {0.0f};
+	static int index = 0;
+
+	float oldXsensYaw = buffer[index];
+	buffer[index] = newXsensYaw;
+	index++;
+	index = (index >= BUFFER_SIZE) ? 0 : index;
+	return oldXsensYaw;
 }
 

@@ -57,6 +57,7 @@
 #include "buzzer.h"
 #include "MTi.h"
 #include "yawCalibration.h"
+#include "iwdg.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -123,6 +124,8 @@ ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
+
+IWDG_Handle* iwdg;
 
 /* USER CODE END PV */
 
@@ -452,6 +455,8 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
+  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -477,6 +482,7 @@ int main(void)
 //		  //TODO: wireless DeInit() ?
 //	  }
 
+	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 	  /*
 	   * Check for wireless data

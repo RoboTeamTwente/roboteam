@@ -137,4 +137,20 @@ bool LineSegment::isOnLine(const Vector2 &point) const {
     }
     return true;
 }
+
+
+    std::shared_ptr<Vector2> LineSegment::nonSimpleIntersects(const LineSegment &line) const {
+        Vector2 A=start-end;
+        Vector2 B=line.start-line.end;
+        Vector2 C=start-line.start;
+        double denom=A.cross(B);
+        if (denom!=0){
+            double t=C.cross(B)/denom;
+            double u=-A.cross(C)/denom;
+            if (!(t<=0||t>=1)&&!(u<=0||u>=1)) {
+                return std::make_shared<Vector2>(start-A*t);
+            }
+        }
+        return nullptr;
+    }
 }

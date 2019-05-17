@@ -4,6 +4,8 @@
 
 #include "roboteam_utils/Polygon.h"
 #include "roboteam_utils/Vector2.h"
+#include "roboteam_utils/Line.h"
+
 #include <gtest/gtest.h>
 using namespace rtt;
 TEST(constructors, PolygonTest) {

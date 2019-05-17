@@ -5,7 +5,7 @@
 #ifndef ROBOTEAM_UTILS_POLYGON_H
 #define ROBOTEAM_UTILS_POLYGON_H
 #include "Vector2.h"
-#include "Line.h"
+#include "LineSegment.h"
 namespace rtt {
 class Polygon {
     public:

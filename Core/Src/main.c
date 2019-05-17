@@ -125,6 +125,8 @@ StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 
+IWDG_Handle* iwdg;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -454,7 +456,6 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
-  IWDG_Handle* iwdg;
   IWDG_Init(iwdg);
 
   /* USER CODE END 2 */

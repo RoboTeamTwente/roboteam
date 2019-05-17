@@ -57,6 +57,7 @@
 #include "buzzer.h"
 #include "MTi.h"
 #include "yawCalibration.h"
+#include "iwdg.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -453,6 +454,9 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
+  IWDG_Handle* iwdg;
+  IWDG_Init(iwdg);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -478,6 +482,7 @@ int main(void)
 //		  //TODO: wireless DeInit() ?
 //	  }
 
+	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 	  /*
 	   * Check for wireless data
@@ -1410,7 +1415,7 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);
@@ -1497,8 +1502,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LB_FR_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LB_Locked_Pin ID0_Pin ID1_Pin Battery_empty_Pin */
-  GPIO_InitStruct.Pin = LB_Locked_Pin|ID0_Pin|ID1_Pin|Battery_empty_Pin;
+  /*Configure GPIO pins : LB_Locked_Pin ID0_Pin ID1_Pin */
+  GPIO_InitStruct.Pin = LB_Locked_Pin|ID0_Pin|ID1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1549,6 +1554,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(RB_Locked_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Battery_empty_Pin */
+  GPIO_InitStruct.Pin = Battery_empty_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(Battery_empty_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Geneva_cal_sensor_Pin */
   GPIO_InitStruct.Pin = Geneva_cal_sensor_Pin;

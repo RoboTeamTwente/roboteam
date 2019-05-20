@@ -4,8 +4,8 @@
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
-#define BUFFER_SIZE 5 			// assume 50 ms (5 time steps) delay between vision and XSens
-#define CALIBRATION_TIME 0.2f 	// number of seconds to do for averaging TODO: test this
+#define BUFFER_SIZE 5 							// assume 50 ms (5 time steps) delay between vision and XSens
+#define CALIBRATION_TIME 0.2f 					// number of seconds to do for averaging TODO: test this
 #define MAX_RATE_OF_TURN (M_PI/2.0f) / 4.0f 	// highest rate of turn (rad/s) allowed to do calibration
 
 ///////////////////////////////////////////////////// VARIABLES
@@ -31,12 +31,12 @@ void yaw_Calibrate(float newXsensYaw, float rateOfTurn, float visionYaw, bool vi
 	static int restCounter = 0;
 	static float sumXsensVec[2] = {0.0f};
 	static float sumVisionVec[2] = {0.0f};
-	static float prevVisionYaw = 0.0f;
+	static float interpolatedYaw = 0.0f;
 
-	if (visionYaw == prevVisionYaw) {
-		visionYaw += rateOfTurn * TIME_DIFF;
-	}
+	// Interpolate the yaw from vision if a new measurement hasn't been received yet.
+	interpolatedYaw = visionAvailable ? (visionYaw + rateOfTurn * TIME_DIFF) : visionYaw;
 
+	// Calibrate the xsens yaw from some time ago with vision to account for delay while sending.
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
 	bool calibratedThisTick = false;
@@ -65,7 +65,7 @@ void yaw_Calibrate(float newXsensYaw, float rateOfTurn, float visionYaw, bool vi
 		sumVisionVec[1] = 0.0f;
 	}
 
-	prevVisionYaw = visionYaw;
+	// Add the calculated offset to the newly measured xsens yaw.
 	calibratedYaw = constrainAngle(newXsensYaw + yawOffset);
 
 //	char msg[200];

@@ -16,7 +16,7 @@ public:
     explicit SerialDeviceManager() = default;
     explicit SerialDeviceManager(const std::string &deviceName);
     bool ensureDeviceOpen();
-    bool readDevice();
+//    bool readDevice();  TODO remake
     bool writeToDevice(packed_protocol_message packet);
     void openDevice();
 

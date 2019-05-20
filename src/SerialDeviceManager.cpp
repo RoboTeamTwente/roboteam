@@ -23,13 +23,14 @@ bool SerialDeviceManager::ensureDeviceOpen() {
 
 /*
  * Read the data from the serial device and return it
- */
+// */
 //bool SerialDeviceManager::readDevice() {
 //    if (this->ensureDeviceOpen()) {
 //
 //        // calculate the size of the file
 //        // https://stackoverflow.com/a/2409527
 //        std::streampos beginOfData, endOfData, size;
+//
 //        beginOfData = f.tellg();
 //        f.seekg(0, std::ios::end);
 //        endOfData = f.tellg();
@@ -56,7 +57,10 @@ bool SerialDeviceManager::writeToDevice(const packed_protocol_message packet) {
             iswriting = true;
 
 
-            auto res = write(fileID, packet.data(), packet.size());
+            auto result = write(fileID, packet.data(), packet.size());
+            if (result == -1) {
+                std::cerr << "write to device failing" << std::endl;
+            }
             iswriting = false;
         }
     }
@@ -72,6 +76,7 @@ void SerialDeviceManager::openDevice() {
     if(tcgetattr(fileID, &tty) != 0) {
         printf("C CRAP Error %i from tcgetattr: %s\n", errno, strerror(errno));
     }
+    // This is important for 0x0A and 0x09 bytes otherwise they are dropped since ascii
     tty.c_oflag &= ~OPOST;
 
     cfsetispeed(&tty, B115200);

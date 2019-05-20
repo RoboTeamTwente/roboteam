@@ -456,7 +456,7 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
-  IWDG_Init(iwdg);
+  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
 
   /* USER CODE END 2 */
 

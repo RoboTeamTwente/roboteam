@@ -23,6 +23,9 @@ Application::Application() {
     if (getMode() == utils::Mode::SERIAL) {
         device = std::make_shared<SerialDeviceManager>(getSerialDevice());
     }
+
+    if (!device->ensureDeviceOpen())
+        device->openDevice();
 }
 
 /// Get the mode of robothub, either "serial" or "grsim" or "undefined"

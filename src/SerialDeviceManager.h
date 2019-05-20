@@ -15,13 +15,14 @@ class SerialDeviceManager {
 public:
     explicit SerialDeviceManager() = default;
     explicit SerialDeviceManager(const std::string &deviceName);
-    bool EnsureDeviceOpen();
+    bool ensureDeviceOpen();
     bool readDevice();
     bool writeToDevice(packed_protocol_message packet);
+    void openDevice();
 
 
 private:
-    std::fstream f;
+    int fileID = 0;
     std::string deviceName;
     bool iswriting = false;
 };

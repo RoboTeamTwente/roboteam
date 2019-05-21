@@ -294,7 +294,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
 			stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
 			stateEstimation_Update(&stateInfo);
-			receivedData.visionAvailable = false; // Set to false while no new packet has been received.
 
 			// State control
 			stateControl_SetState(stateEstimation_GetState());

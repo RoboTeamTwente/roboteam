@@ -26,22 +26,18 @@ static float getOldXsensYaw(float newXsensYaw);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void yaw_Calibrate(float newXsensYaw, float rateOfTurn, float visionYaw, bool visionAvailable) {
+void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
 	static float yawOffset = 0.0f;
 	static int restCounter = 0;
 	static float sumXsensVec[2] = {0.0f};
 	static float sumVisionVec[2] = {0.0f};
-	static float interpolatedYaw = 0.0f;
-
-	// Interpolate the yaw from vision if a new measurement hasn't been received yet.
-	interpolatedYaw = visionAvailable ? (visionYaw + rateOfTurn * TIME_DIFF) : visionYaw;
 
 	// Calibrate the xsens yaw from some time ago with vision to account for delay while sending.
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
 	bool calibratedThisTick = false;
 	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
-		if (restCounter > CALIBRATION_TIME * TIME_DIFF) {
+		if (restCounter > CALIBRATION_TIME / TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
 			float avgXsensYaw = atan2f(sumXsensVec[1], sumXsensVec[0]);

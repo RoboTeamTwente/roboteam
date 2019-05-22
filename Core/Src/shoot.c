@@ -15,6 +15,8 @@ static int power = 100; 			// percentage of maximum shooting power
 // Stops and starts the timer for a certain period of time
 void resetTimer(int timePeriod);
 
+int calculateShootingTime(shoot_types type);
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 void shoot_Init(){
@@ -93,12 +95,12 @@ void shoot_Shoot(shoot_types type)
 	bool genevaNotTurning = (geneva_GetPWM() == 0);
 	if(shootState == shoot_Ready && genevaNotTurning)
 	{
-		//Putty_printf("shooting! power = %d \n\r", power);
+//		Putty_printf("shooting! power = %d \n\r", power);
 		shootState = shoot_Shooting;
 		set_Pin(Charge_pin, 0); 								// Disable shoot_Charging
 		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
 
-		resetTimer(power * ((type == shoot_Kick) ? KICK_TIME : CHIP_TIME));
+		resetTimer(calculateShootingTime(type));
 	}
 }
 
@@ -113,3 +115,11 @@ void resetTimer(int timePeriod)
 	HAL_TIM_Base_Start_IT(TIM_SHOOT);						// Start timer
 }
 
+int calculateShootingTime(shoot_types type) {
+	if (type == shoot_Kick) {
+		return ((1.0 - power/100.0) * MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME);
+	} else if (type == shoot_Chip) {
+		return ((1.0 - power/100.0) * MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME);
+	}
+	return 0;
+}

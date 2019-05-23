@@ -54,8 +54,10 @@
 #define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
 
 // Shoot
-#define KICK_TIME 20 				// time period of kicking per percent of kicking power
-#define CHIP_TIME 30 				// time period of chipping per percent of chipping power
+#define MIN_KICK_TIME 25 				// minimum time period of kicking
+#define MAX_KICK_TIME 60 				// maximum time period of kicking
+#define MIN_CHIP_TIME 25 				// minimum time period of chipping
+#define MAX_CHIP_TIME 60 				// maximum time period of chipping
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)
 #define READY_CALLBACK_FREQ 1 		// frequency [Hz] of callback when shootState is Ready
 #define CHARGING_CALLBACK_FREQ 10 	// frequency [Hz] of callback when shootState is Charging

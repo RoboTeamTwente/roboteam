@@ -190,12 +190,18 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
-
-	// TODO: needs to listen to kick_forced. Or to ballsensor
+	// TODO: check if the current orientation of the BS is adequate for speed control
+	// TODO: tune the speed of the ball to trigger shooting
+	// TODO: add else{} to ballPosition checks (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
 	if (receivedData->do_kick) {
-		shoot_Shoot(shoot_Kick);
-	} else if (receivedData->do_chip) {
-		shoot_Shoot(shoot_Chip);
+		if (ballPosition.canKickBall || ballPosition.speed > 2.0) {
+			shoot_Shoot(shoot_Kick);
+		}
+	}
+	else if (receivedData->do_chip) {
+		if (ballPosition.canKickBall || ballPosition.speed > 2.0) {
+			shoot_Shoot(shoot_Chip);
+		}
 	}
 }
 

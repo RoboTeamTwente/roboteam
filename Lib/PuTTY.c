@@ -13,6 +13,8 @@
 #include <stdio.h>   // General
 #include <stdarg.h>  // for formatting in putty_printf
 #include <stdint.h>
+#include <stdlib.h>
+
 
 ///////////////////////////////////////////////////// DEFINITIONS
 // Commands to be remember
@@ -35,7 +37,7 @@ Putty_Enum Putty_Init()
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
-    char *startmessage = "----------PuttyInterface_Init-----------\n\r"; // Initial message
+    char *startmessage = "----------PuttyInterface_Init-----------\n\r\n\r-----type help to get help-----\n\r"; // Initial message
     Putty_printf(startmessage);
 
     HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1); // Data reception under serial interrupt mode
@@ -129,8 +131,10 @@ static void Putty_HandleCommand(char *input)
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
-	}else if(!strcmp(input, "make robots")){
-		Putty_printf("No U!");
+	}else if(!memcmp(input, "toggle ballsensor debug", strlen("toggle ballsensor debug"))){
+		ball_debug = !ball_debug;
+	}else if(!strcmp(input, "help")){
+		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rhelp\n\r");
 	}
 	return;
 }

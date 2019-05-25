@@ -88,5 +88,5 @@ GPIO_Pin SX_NSS_pin			= { SPI4_NSS_GPIO_Port 		, SPI4_NSS_Pin		};
 GPIO_Pin SX_BUSY_pin		= { SPI4_BUSY_GPIO_Port 	, SPI4_BUSY_Pin		};
 
 // Ballsensor
-GPIO_Pin BS_IRQ_pin			= { BS_RST_GPIO_Port 		, BS_RST_Pin		};
-GPIO_Pin BS_RST_pin			= { BS_IRQ_GPIO_Port 		, BS_IRQ_Pin		};
+GPIO_Pin BS_RST_pin			= { BS_RST_GPIO_Port 		, BS_RST_Pin		};
+GPIO_Pin BS_IRQ_pin			= { BS_IRQ_GPIO_Port 		, BS_IRQ_Pin		};

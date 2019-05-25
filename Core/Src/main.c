@@ -55,6 +55,7 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
+#include "buzzer_Tunes.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
@@ -82,7 +83,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 I2C_HandleTypeDef hi2c1;
-DMA_HandleTypeDef hdma_i2c1_rx;
 
 QSPI_HandleTypeDef hqspi;
 DMA_HandleTypeDef hdma_quadspi;
@@ -453,13 +453,13 @@ int main(void)
   geneva_Init();
   shoot_Init();
   dribbler_Init();
-  buzzer_Init();
   ballSensorInit();
+  buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
-  Putty_printf("ID: %u\n\r",ID);
+  Putty_printf("\n\rID: %u\n\r",ID);
 
   // start the pingpong operation
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
@@ -472,6 +472,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  bool once = false;
   while (1)
   {
 	  /*
@@ -519,6 +520,10 @@ int main(void)
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
+//		  if (xsens_CalibrationDone && !once) {
+//			  buzzer_Play_Tetris();
+//			  once = true;
+//		  }
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);
@@ -605,7 +610,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x6000030D;
+  hi2c1.Init.Timing = 0x20404768;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -1425,9 +1430,6 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);

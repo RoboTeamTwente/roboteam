@@ -78,6 +78,8 @@ void ballSensorReset() {
 	ballSensorInitialized = 0;
 	noBall();
 	set_Pin(BS_RST_pin, 0);
+	HAL_Delay(1);
+	set_Pin(BS_RST_pin, 1);
 	//Putty_printf("going to waitfordr\n\r");
 	zForceState = zForce_WaitForDR;
 }
@@ -200,8 +202,7 @@ void printBallSpeed() {
 		Putty_printf ("%d, %d, %d, %d, %.3f\n\r", ballPosition.y, y_pos_old, ballPosition.lastSeen, lastSeen_old, ballPosition.speed);
 }
 
-int8_t ballSensorFSM()
-{
+int8_t ballSensorFSM() {
 	//Putty_printf("HAL_I2C_GetState = [%02x]\n\r", HAL_I2C_GetState(&hi2c1));
 	if(HAL_I2C_GetState(BS_I2C) != HAL_I2C_STATE_READY) {
 		//Putty_printf("!=i2cstateready\n\r");
@@ -282,8 +283,9 @@ void I2CTx(uint8_t tosend[], uint8_t length) {
 //    ballSensorFSM(); // call to FSM to keep it rolling
 }
 
-void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *I2cHandle)
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+//	Putty_printf("ballsensor tx callback\n\r");
 	zForceState = zForce_WaitForDR;
 //	ballSensorFSM(); // call to FSM to keep it rolling
 }
@@ -298,7 +300,7 @@ void I2CRx() {
 //	ballSensorFSM(); // call to FSM to keep it rolling
 }
 
-void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *I2cHandle)
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 //	Putty_printf("ballsensor rx callback\n\r");
 	if(zForceState == zForce_WaitForDR) {

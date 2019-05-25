@@ -37,7 +37,7 @@ Putty_Enum Putty_Init()
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
-    char *startmessage = "----------PuttyInterface_Init-----------\n\r\n\r-----type help to get help-----\n\r"; // Initial message
+    char *startmessage = "\n\r\n\r----------PuttyInterface_Init-----------\n\r\n\r-----type help to get help-----\n\r"; // Initial message
     Putty_printf(startmessage);
 
     HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1); // Data reception under serial interrupt mode

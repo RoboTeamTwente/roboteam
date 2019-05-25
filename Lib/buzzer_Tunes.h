@@ -17,6 +17,7 @@ typedef struct song_struct{
 // BPM definitions
 #define Tbeat 0.4
 #define Mbeat 0.4
+#define fBeat 0.0336
 
 ///////////////////////////////////////////////////// TONES
 // tones are counters, so (1e6/tone_freq - 1) in buzzer_Play()
@@ -115,5 +116,6 @@ typedef struct song_struct{
 extern song_struct startup_song[];
 extern song_struct tetris[];
 extern song_struct mario_victory[];
+extern song_struct powerUp[];
 
 #endif /* BUZZER_TUNES_H_ */

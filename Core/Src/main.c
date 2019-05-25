@@ -520,10 +520,10 @@ int main(void)
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-//		  if (xsens_CalibrationDone && !once) {
-//			  buzzer_Play_Tetris();
-//			  once = true;
-//		  }
+		  if (xsens_CalibrationDone && !once) {
+			  buzzer_Play_PowerUp();
+			  once = true;
+		  }
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);

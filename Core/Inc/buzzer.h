@@ -22,10 +22,11 @@ void buzzer_Callback();
 
 void buzzer_SetPWM_Duty(uint16_t duty);
 
-// add functions to play songs here, call in other files where needed they will use internal setpwm_period and play functions
+// add functions to play songs here, call in other files where needed
 void buzzer_Play_Startup();
 void buzzer_Play_Tetris();
 void buzzer_Play_Mario();
+void buzzer_Play_PowerUp();
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);

@@ -6,7 +6,6 @@
 
 namespace rtt {
 
-
 Vector2::Vector2(rtt::Angle &angle, const double &length)
         :epsilon(0.00001) {
     y = sin(angle.getAngle())*length;
@@ -62,8 +61,8 @@ Vector2 Vector2::lerp(const Vector2 &other, double factor) const {
 }
 
 Vector2 Vector2::rotate(double radians) const {
-    auto c = static_cast<double>(cosl(radians));
-    auto s = static_cast<double>(sinl(radians));
+    double c = cos(radians);
+    double s = sin(radians);
     return Vector2(x*c - y*s, x*s + y*c);
 }
 
@@ -119,8 +118,8 @@ Vector2 Vector2::stretchToLength(double desiredLength) const {
     return {x*frac, y*frac};
 }
 
-double Vector2::cross(const Vector2 &other) const{
-    return this->x*other.y-this->y*other.x;
+double Vector2::cross(const Vector2 &other) const {
+    return this->x*other.y - this->y*other.x;
 }
 bool Vector2::operator==(const Vector2 &other) const {
     return fabs(this->x - other.x) < epsilon && fabs(this->y - other.y) < epsilon;

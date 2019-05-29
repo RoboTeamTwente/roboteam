@@ -45,4 +45,7 @@ Putty_Enum Putty_Reset();             // Reset all values
 Putty_Enum Putty_Callback();          // Add it to a timer (or to the main loop)
 Putty_Enum Putty_UARTCallback();      // Add it at HAL_UART_RxCpltCallback() | Called when data reception is finished
 
+void Putty_SetRunTest(bool value);
+bool Putty_GetRunTest();
+
 #endif /* PUTTY_H_ */

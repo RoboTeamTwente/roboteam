@@ -202,13 +202,83 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
 	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_middle;
+	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 0;
 	receivedData->stateRef[body_x] = 0.0f;
 	receivedData->stateRef[body_y] = 0.0f;
 	receivedData->stateRef[body_w] = 0.0f;
 	receivedData->visionAvailable = false;
 	receivedData->visionYaw = 0.0f;
+}
+
+void executeTest(ReceivedData* receivedData) {
+	receivedData->do_chip = false;
+	receivedData->do_kick = false;
+	receivedData->dribblerRef = 0;
+	receivedData->genevaRef = geneva_none;
+	receivedData->shootPower = 20;
+	receivedData->stateRef[body_x] = 0.0f;
+	receivedData->stateRef[body_y] = 0.0f;
+	receivedData->stateRef[body_w] = 0.0f;
+	receivedData->visionAvailable = false;
+	receivedData->visionYaw = 0.0f;
+
+	static uint start = -100000;
+	uint timeDiff = HAL_GetTick() - start;
+	static uint prevTimeDiff = 0;
+	if (timeDiff < 1000) {
+		if (prevTimeDiff > 21000) {
+			Putty_printf("Testing geneva...\n\r");
+		}
+		receivedData->genevaRef = geneva_leftleft;
+	} else if (timeDiff < 2000) {
+		receivedData->genevaRef = geneva_left;
+	} else if (timeDiff < 3000) {
+		receivedData->genevaRef = geneva_middle;
+	} else if (timeDiff < 4000) {
+		receivedData->genevaRef = geneva_right;
+	} else if (timeDiff < 5000) {
+		receivedData->genevaRef = geneva_rightright;
+	} else if (timeDiff < 10000) {
+		if (prevTimeDiff < 5000) {
+			Putty_printf("Testing forward driving...\n\r");
+		}
+		receivedData->stateRef[body_x] = 0.5f;
+	} else if (timeDiff < 15000) {
+		if (prevTimeDiff < 10000) {
+			Putty_printf("Testing sideways driving...\n\r");
+		}
+		receivedData->stateRef[body_y] = 0.5f;
+	} else if (timeDiff < 16000){
+		// wait
+		if (prevTimeDiff < 15000) {
+			Putty_printf("Testing kick...\n\r");
+		}
+	} else if (timeDiff < 16010) {
+		receivedData->do_kick = true;
+	} else if (timeDiff < 17000) {
+		// wait
+		if (prevTimeDiff < 16010) {
+			Putty_printf("Testing chip...\n\r");
+		}
+	} else if (timeDiff < 17010) {
+		receivedData->do_chip = true;
+	} else if (timeDiff < 18000) {
+		// wait
+	} else if (timeDiff < 19000) {
+		if (prevTimeDiff < 18000) {
+			Putty_printf("Testing dribbler...\n\r");
+		}
+		receivedData->dribblerRef = 50;
+	} else if (timeDiff < 21000){
+		start = HAL_GetTick();
+		Putty_SetRunTest(false);
+		Putty_printf("---------- End of test ----------\n\r");
+	} else {
+		start = HAL_GetTick();
+		Putty_printf("---------- Start test! ----------\n\r");
+	}
+	prevTimeDiff = timeDiff;
 }
 
 // Handles the interrupts of the different timers.
@@ -299,7 +369,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			stateControl_SetState(stateEstimation_GetState());
 			stateControl_Update();
 
-			if (halt || !yaw_hasCalibratedOnce()) {
+			if ((halt || !yaw_hasCalibratedOnce()) && !Putty_GetRunTest()) {
 				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 				wheels_SetRef(emptyRef);
 			}
@@ -494,6 +564,11 @@ int main(void)
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
+
+	  if (xsens_CalibrationDone && Putty_GetRunTest()) {
+		  executeTest(&receivedData);
+	  }
+
 	  executeCommands(&receivedData);
 
 	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
@@ -507,7 +582,9 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
-//		  printRobotStateData(&stateInfo);
+		  if (Putty_GetRunTest()) {
+//			  printRobotStateData(&stateInfo);
+		  }
 	  }
     /* USER CODE END WHILE */
 

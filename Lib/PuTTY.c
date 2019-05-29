@@ -18,6 +18,7 @@
 // Commands to be remember
 #define COMMANDS_TO_REMEMBER 16 // Used in PC commands 2D matrix
 #define MAX_COMMAND_LENGTH 32
+bool runTest = false;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 static void Putty_TextOut(char *str);                                // Displays the code on the console
@@ -94,6 +95,14 @@ Putty_Enum Putty_UARTCallback(UART_HandleTypeDef *huart)
     return Putty_Vars.errorCode;
 }
 
+void Putty_SetRunTest(bool value) {
+	runTest = value;
+}
+
+bool Putty_GetRunTest() {
+	return runTest;
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 static void Putty_TextOut(char *str)
 {
@@ -131,6 +140,8 @@ static void Putty_HandleCommand(char *input)
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
+	}else if (!memcmp(input, "run test", strlen("run test"))) {
+		runTest = true;
 	}
 	return;
 }

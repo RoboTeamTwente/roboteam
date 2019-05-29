@@ -15,6 +15,7 @@ bool runningTest[nTests] = {false};
 
 void test_ExecuteFullTest(ReceivedData* receivedData);
 void checkGeneva(geneva_positions position);
+void checkWheels(int avgPWM[4], int cnt);
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData);
 
@@ -92,33 +93,65 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 			checkGeneva(geneva_rightright);
 			Putty_printf("Testing forward driving...\n\r");
 		}
+		static int avgPWM[4] = {0};
+		static int cnt = 0;
+		if (timeDiff > 6000) {
+			if (timeDiff < 9000) {
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
+				}
+				cnt++;
+			} else if (prevTimeDiff < 9000) {
+				checkWheels(avgPWM, cnt);
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					avgPWM[wheel] = 0;
+				}
+				cnt = 0;
+			}
+		}
 		receivedData->stateRef[body_x] = 0.5f;
 	} else if (timeDiff < 15000) {
 		if (prevTimeDiff < 10000) {
 			Putty_printf("Testing sideways driving...\n\r");
 		}
+		static int avgPWM[4] = {0};
+		static int cnt = 0;
+		if (timeDiff > 11000) {
+			if (timeDiff < 14000) {
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
+				}
+				cnt++;
+			} else if (prevTimeDiff < 14000) {
+				checkWheels(avgPWM, cnt);
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					avgPWM[wheel] = 0;
+				}
+				cnt = 0;
+			}
+		}
 		receivedData->stateRef[body_y] = 0.5f;
-	} else if (timeDiff < 16000){
-		// wait
-		if (prevTimeDiff < 15000) {
-			Putty_printf("Testing kick...\n\r");
-		}
-	} else if (timeDiff < 16010) {
-		receivedData->do_kick = true;
-	} else if (timeDiff < 17000) {
-		// wait
-		if (prevTimeDiff < 16010) {
-			Putty_printf("Testing chip...\n\r");
-		}
-	} else if (timeDiff < 17010) {
-		receivedData->do_chip = true;
-	} else if (timeDiff < 18000) {
-		// wait
-	} else if (timeDiff < 19000) {
-		if (prevTimeDiff < 18000) {
-			Putty_printf("Testing dribbler...\n\r");
-		}
-		receivedData->dribblerRef = 50;
+//	} else if (timeDiff < 16000){
+//		// wait
+//		if (prevTimeDiff < 15000) {
+//			Putty_printf("Testing kick...\n\r");
+//		}
+//	} else if (timeDiff < 16010) {
+//		receivedData->do_kick = true;
+//	} else if (timeDiff < 17000) {
+//		// wait
+//		if (prevTimeDiff < 16010) {
+//			Putty_printf("Testing chip...\n\r");
+//		}
+//	} else if (timeDiff < 17010) {
+//		receivedData->do_chip = true;
+//	} else if (timeDiff < 18000) {
+//		// wait
+//	} else if (timeDiff < 19000) {
+//		if (prevTimeDiff < 18000) {
+//			Putty_printf("Testing dribbler...\n\r");
+//		}
+//		receivedData->dribblerRef = 50;
 	} else if (timeDiff < 21000){
 		start = HAL_GetTick();
 		runningTest[full] = false;
@@ -135,6 +168,22 @@ void checkGeneva(geneva_positions position) {
 
 	int encoderDiff = fabs(encoderForPosition[position] - geneva_GetEncoder());
 	Putty_printf("\t position %d: %s\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL");
+}
+
+void checkWheels(int avgPWM[4], int cnt) {
+	int margin = 100;
+
+	int minPWM = MAX_PWM;
+	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+		if (avgPWM[wheel]/cnt < minPWM) {
+			minPWM = avgPWM[wheel]/cnt;
+		}
+	}
+
+	Putty_printf("\t Wheel RF: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_RF]) < 5 ? "FAIL" : ((avgPWM[wheels_RF]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RF]/cnt);
+	Putty_printf("\t Wheel RB: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_RB]) < 5 ? "FAIL" : ((avgPWM[wheels_RB]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RB]/cnt);
+	Putty_printf("\t Wheel LB: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_LB]) < 5 ? "FAIL" : ((avgPWM[wheels_LB]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LB]/cnt);
+	Putty_printf("\t Wheel LF: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_LF]) < 5 ? "FAIL" : ((avgPWM[wheels_LF]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LF]/cnt);
 }
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData) {

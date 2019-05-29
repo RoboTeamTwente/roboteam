@@ -19,6 +19,10 @@
 #include "../Util/gpio_util.h"
 #include "../Util/tim_util.h"
 
+///////////////////////////////////////////////////// VARIABLES
+
+static int encoderForPosition[6] = {0, 1900, 2395, 2890, 3385, 3880};
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void geneva_Init();

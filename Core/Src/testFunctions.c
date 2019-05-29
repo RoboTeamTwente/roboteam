@@ -14,6 +14,7 @@ bool runningTest[nTests] = {false};
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 void test_ExecuteFullTest(ReceivedData* receivedData);
+void checkGeneva(geneva_positions position);
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData);
 
@@ -45,6 +46,7 @@ bool test_isTestRunning() {
 
 void test_ExecuteFullTest(ReceivedData* receivedData) {
 	runningTest[full] = true;
+
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
 	receivedData->dribblerRef = 0;
@@ -66,15 +68,28 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 		}
 		receivedData->genevaRef = geneva_leftleft;
 	} else if (timeDiff < 2000) {
+		if (prevTimeDiff < 1000) {
+			checkGeneva(geneva_leftleft);
+		}
 		receivedData->genevaRef = geneva_left;
 	} else if (timeDiff < 3000) {
+		if (prevTimeDiff < 2000) {
+			checkGeneva(geneva_left);
+		}
 		receivedData->genevaRef = geneva_middle;
 	} else if (timeDiff < 4000) {
+		if (prevTimeDiff < 3000) {
+			checkGeneva(geneva_middle);
+		}
 		receivedData->genevaRef = geneva_right;
 	} else if (timeDiff < 5000) {
+		if (prevTimeDiff < 4000) {
+			checkGeneva(geneva_right);
+		}
 		receivedData->genevaRef = geneva_rightright;
 	} else if (timeDiff < 10000) {
 		if (prevTimeDiff < 5000) {
+			checkGeneva(geneva_rightright);
 			Putty_printf("Testing forward driving...\n\r");
 		}
 		receivedData->stateRef[body_x] = 0.5f;
@@ -113,6 +128,13 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 		Putty_printf("---------- Start test! ----------\n\r");
 	}
 	prevTimeDiff = timeDiff;
+}
+
+void checkGeneva(geneva_positions position) {
+	int margin = 5; // if geneva within 5 encoder units, test passes
+
+	int encoderDiff = fabs(encoderForPosition[position] - geneva_GetEncoder());
+	Putty_printf("\t position %d: %s\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL");
 }
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData) {

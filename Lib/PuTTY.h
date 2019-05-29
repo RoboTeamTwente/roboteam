@@ -15,6 +15,7 @@
 #include "../Core/Inc/geneva.h"
 #include "../Core/Inc/shoot.h"
 #include "../Core/Inc/wheels.h"
+#include "../Core/Inc/testFunctions.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT
 //// Structs

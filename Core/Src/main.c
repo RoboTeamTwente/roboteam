@@ -58,6 +58,7 @@
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
+#include "testFunctions.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -211,76 +212,6 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->visionYaw = 0.0f;
 }
 
-void executeTest(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_none;
-	receivedData->shootPower = 20;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-
-	static uint start = -100000;
-	uint timeDiff = HAL_GetTick() - start;
-	static uint prevTimeDiff = 0;
-	if (timeDiff < 1000) {
-		if (prevTimeDiff > 21000) {
-			Putty_printf("Testing geneva...\n\r");
-		}
-		receivedData->genevaRef = geneva_leftleft;
-	} else if (timeDiff < 2000) {
-		receivedData->genevaRef = geneva_left;
-	} else if (timeDiff < 3000) {
-		receivedData->genevaRef = geneva_middle;
-	} else if (timeDiff < 4000) {
-		receivedData->genevaRef = geneva_right;
-	} else if (timeDiff < 5000) {
-		receivedData->genevaRef = geneva_rightright;
-	} else if (timeDiff < 10000) {
-		if (prevTimeDiff < 5000) {
-			Putty_printf("Testing forward driving...\n\r");
-		}
-		receivedData->stateRef[body_x] = 0.5f;
-	} else if (timeDiff < 15000) {
-		if (prevTimeDiff < 10000) {
-			Putty_printf("Testing sideways driving...\n\r");
-		}
-		receivedData->stateRef[body_y] = 0.5f;
-	} else if (timeDiff < 16000){
-		// wait
-		if (prevTimeDiff < 15000) {
-			Putty_printf("Testing kick...\n\r");
-		}
-	} else if (timeDiff < 16010) {
-		receivedData->do_kick = true;
-	} else if (timeDiff < 17000) {
-		// wait
-		if (prevTimeDiff < 16010) {
-			Putty_printf("Testing chip...\n\r");
-		}
-	} else if (timeDiff < 17010) {
-		receivedData->do_chip = true;
-	} else if (timeDiff < 18000) {
-		// wait
-	} else if (timeDiff < 19000) {
-		if (prevTimeDiff < 18000) {
-			Putty_printf("Testing dribbler...\n\r");
-		}
-		receivedData->dribblerRef = 50;
-	} else if (timeDiff < 21000){
-		start = HAL_GetTick();
-		Putty_SetRunTest(false);
-		Putty_printf("---------- End of test ----------\n\r");
-	} else {
-		start = HAL_GetTick();
-		Putty_printf("---------- Start test! ----------\n\r");
-	}
-	prevTimeDiff = timeDiff;
-}
-
 // Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -291,67 +222,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if(htim->Instance == htim7.Instance) {
 		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
-			/* SQUARE WITH 90 DEGREES TURNS AT SIDES
-			float velocityRef[3];
-			velocityRef[0] = 0.0;
-			velocityRef[1] = 0.0;
-			velocityRef[2] = 0.0*M_PI;
-			halt = false;
-			static uint velTimer;
-			int reps = 1;
-			static int count = 0;
-			float v = 0.5;
-			int t = 1500;
-			if (HAL_GetTick() < 7000) {
-				velTimer = HAL_GetTick();
-			} else if (HAL_GetTick() - velTimer < t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 2*t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 3*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 4*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 5*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 6*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 7*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 8*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (count < reps-1) {
-				velTimer = HAL_GetTick();
-				count++;
-			} else {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			}
-
-
-			receivedData.stateRef[body_x] = velocityRef[body_x];
-			receivedData.stateRef[body_y] = velocityRef[body_y];
-			receivedData.stateRef[body_w] = velocityRef[body_w];
-			stateControl_SetRef(velocityRef);
-			*/
-
 
 			// State estimation
 			stateInfo.visionAvailable = receivedData.visionAvailable;
@@ -369,7 +239,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			stateControl_SetState(stateEstimation_GetState());
 			stateControl_Update();
 
-			if ((halt || !yaw_hasCalibratedOnce()) && !Putty_GetRunTest()) {
+			if ((halt || !yaw_hasCalibratedOnce()) && !test_isTestRunning()) {
 				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 				wheels_SetRef(emptyRef);
 			}
@@ -565,13 +435,9 @@ int main(void)
 		  clearReceivedData(&receivedData);
 	  }
 
-	  if (xsens_CalibrationDone && Putty_GetRunTest()) {
-		  executeTest(&receivedData);
-	  }
+	  test_Update(&receivedData);
 
 	  executeCommands(&receivedData);
-
-	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 
 	  /*
 	   * Print stuff on PuTTY for debugging
@@ -580,11 +446,9 @@ int main(void)
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  //printBaseStationData();
+//		  printBaseStationData();
 //		  printReceivedData(&receivedData);
-		  if (Putty_GetRunTest()) {
-//			  printRobotStateData(&stateInfo);
-		  }
+//		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

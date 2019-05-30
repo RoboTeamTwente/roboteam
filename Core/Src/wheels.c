@@ -25,7 +25,10 @@ static void ResetEncoder();
 static void computeWheelSpeed();
 
 //Clamps the PWM
-static void limitScale();
+static void limit();
+
+//makes the PWM absolute
+static void scale();
 
 //Set the PWM for the wheels
 static void SetPWM();
@@ -77,8 +80,8 @@ void wheels_Update(){
 			float err = wheelRef[wheel]-wheelSpeed[wheel];
 			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 		}
-		limitScale();
-
+		limit();
+		scale();
 		SetDir();
 		SetPWM();
 	}
@@ -124,7 +127,7 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
-static void limitScale(){
+static void scale(){
 	static int Count[4] = {0};
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		if (Count[wheel] < 5){
@@ -153,7 +156,12 @@ static void limitScale(){
 				direction[wheel] = 1; // turn clockwise
 			}
 		}
-		// Limit PWM
+	}
+}
+
+static void limit(){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+	// Limit PWM
 		if(pwm[wheel] < PWM_CUTOFF){
 			pwm[wheel] = 0.0F;
 		} else if(pwm[wheel] > MAX_PWM){

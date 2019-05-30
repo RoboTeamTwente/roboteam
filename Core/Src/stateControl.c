@@ -29,7 +29,7 @@ int stateControl_Init(){
 	status = on;
 	initPID(&stateK[body_x], 0.1, 0.0, 0.0);
 	initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-	initPID(&stateK[body_w], 20.0, 1.5, 0.0);
+	initPID(&stateK[body_w], 10.0, 40.0, 0.0);
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
 }
@@ -112,11 +112,18 @@ static void translationVelControl(float state[3], float stateRef[3], float trans
 }
 
 static float angleControl(float angleRef, float angle){
+	static float prevangleErr = 0;
 	float angleErr = constrainAngle(angleRef - angle);//constrain it to one circle turn
+	if (angleErr == 0){
+		angleErr = 0.000001*prevangleErr;
+	}
 	if (fabs(angleErr) < YAW_MARGIN) { // reset the I to zero everytime the target has been reached
-		angleErr = 0;
+		prevangleErr = angleErr;
+		stateK[body_w].I = 0;
+	} else if (prevangleErr/angleErr < 0){
 		stateK[body_w].I = 0;
 	}
+	prevangleErr = angleErr;
 	return PID(angleErr, &stateK[body_w]);// PID control from control_util.h
 }
 

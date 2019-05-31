@@ -105,8 +105,8 @@ int geneva_GetPWM(){
 
 static void CheckIfStuck(){
 	static uint tick = 0xFFFF;			//
-	static int enc;
-	if(geneva_Encodervalue() != enc){
+	static int enc = 0;
+	if(fabs(geneva_Encodervalue() - enc) < ENCODER_DEVIATION_MARGIN){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
 	}else if(tick + 500 < HAL_GetTick()){
@@ -145,7 +145,7 @@ static bool isResponding() {
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;
-	if ((pwm > 0) && (geneva_Encodervalue() == prevEncoder)) {
+	if ((pwm > 0) && (fabs(geneva_Encodervalue() - prevEncoder)) < ENCODER_DEVIATION_MARGIN)  {
 		cnt++;
 	} else {
 		cnt = 0;

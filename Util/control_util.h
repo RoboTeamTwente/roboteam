@@ -52,6 +52,7 @@
 
 // Geneva
 #define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
+#define ENCODER_DEVIATION_MARGIN 3	// margin within which encoder is considered to be the same as previous encoder
 
 // Shoot
 #define MIN_KICK_TIME 25 				// minimum time period of kicking

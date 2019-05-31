@@ -467,7 +467,6 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-	  //TODO: Fix battery pin with electronics
 	  static int batCounter = 0;
 	  if (read_Pin(Bat_pin) && batCounter > 1000){
 		  Putty_printf("battery empty\n\r");

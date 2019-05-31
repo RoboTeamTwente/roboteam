@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////// DEFINITIONS
 
 #define BUFFER_SIZE 5 							// assume 50 ms (5 time steps) delay between vision and XSens
-#define CALIBRATION_TIME 0.2f 					// number of seconds to do for averaging TODO: test this
+#define CALIBRATION_TIME 0.2f 					// number of seconds to do for averaging
 #define MAX_RATE_OF_TURN (M_PI/2.0f) / 4.0f 	// highest rate of turn (rad/s) allowed to do calibration
 
 ///////////////////////////////////////////////////// VARIABLES

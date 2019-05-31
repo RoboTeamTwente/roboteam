@@ -15,7 +15,7 @@
 #ifndef YAWCALIBRATION_H_
 #define YAWCALIBRATION_H_
 
-#include "../Util/control_util.h"
+#include <stdbool.h>
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

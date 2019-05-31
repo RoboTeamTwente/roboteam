@@ -43,6 +43,12 @@ Putty_Enum Putty_Init()
     return Putty_Vars.errorCode = NoErrors;
 }
 
+Putty_Enum Putty_DeInit()
+{
+    // TODO properly
+    return Putty_Vars.errorCode = NoErrors;
+}
+
 Putty_Enum Putty_GetErrorCode()
 {
     return Putty_Vars.errorCode;
@@ -58,12 +64,6 @@ Putty_Enum Putty_printf(char *format, ...)
 
     // output string
     Putty_TextOut(Putty_Vars.smallStrBuffer);
-    return Putty_Vars.errorCode = NoErrors;
-}
-
-Putty_Enum Putty_DeInit()
-{
-    // TODO properly
     return Putty_Vars.errorCode = NoErrors;
 }
 

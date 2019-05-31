@@ -511,7 +511,7 @@ int main(void)
 	  if (HAL_GetTick() >  printTime + 5000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  //printBaseStationData();
+//		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 		  printRobotStateData(&stateInfo);
 	  }

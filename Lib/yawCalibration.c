@@ -35,7 +35,6 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
 	// Calibrate the xsens yaw from some time ago with vision to account for delay while sending.
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
-	bool calibratedThisTick = false;
 	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
 		if (restCounter > CALIBRATION_TIME / TIME_DIFF) {
 			// calculate offset
@@ -43,7 +42,6 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
 			float avgXsensYaw = atan2f(sumXsensVec[1], sumXsensVec[0]);
 			yawOffset = constrainAngle(avgVisionYaw - avgXsensYaw);
 			hasCalibratedOnce = true;
-			calibratedThisTick = true;
 			restCounter = 0;
 		} else {
 			// Sum the unit vectors with these angles and then take the angle of the resulting vector.
@@ -64,19 +62,6 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
 	// Add the calculated offset to the newly measured xsens yaw.
 	calibratedYaw = constrainAngle(newXsensYaw + yawOffset);
 
-//	char msg[200];
-//	int n = 0;
-//	static uint printtime = 0;
-//	if (HAL_GetTick() - printtime > 20) {
-//		n += sprintf(msg + n, "vision: %f\n\r", visionYaw);
-//		n += sprintf(msg + n, "new xsens: %f\n\r", newXsensYaw);
-//		n += sprintf(msg + n, "old xsens: %f\n\r", oldXsensYaw);
-//		n += sprintf(msg + n, "calibrated: %f\n\r", calibratedYaw);
-//		n += sprintf(msg + n, "offset: %f\n\r", yawOffset);
-//		n += sprintf(msg + n, "bool: %u\n\r", calibratedThisTick);
-//		Putty_printf(msg);
-//		printtime = HAL_GetTick();
-//	}
 }
 
 float yaw_GetCalibratedYaw(){

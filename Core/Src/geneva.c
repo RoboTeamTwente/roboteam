@@ -104,10 +104,9 @@ int geneva_GetPWM(){
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void CheckIfStuck(){
-	static int margin = 3; // encoder margin within which the geneva is at a certain position
 	static uint tick = 0xFFFF;			//
 	static int enc = 0;
-	if(fabs(geneva_Encodervalue() - enc) < margin){
+	if(fabs(geneva_Encodervalue() - enc) < ENCODER_DEVIATION_MARGIN){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
 	}else if(tick + 500 < HAL_GetTick()){
@@ -143,11 +142,10 @@ static void limitScale(){
 }
 
 static bool isResponding() {
-	static int margin = 5;	// margin within which encoder is considered to be the same as previous encoder
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;
-	if ((pwm > 0) && (fabs(geneva_Encodervalue() - prevEncoder)) < margin)  {
+	if ((pwm > 0) && (fabs(geneva_Encodervalue() - prevEncoder)) < ENCODER_DEVIATION_MARGIN)  {
 		cnt++;
 	} else {
 		cnt = 0;

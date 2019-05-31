@@ -80,6 +80,7 @@ void wheels_Update(){
 			float err = wheelRef[wheel]-wheelSpeed[wheel];
 			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 		}
+
 		limit();
 		scale();
 		SetDir();

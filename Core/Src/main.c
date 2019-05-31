@@ -300,6 +300,11 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
 	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	Putty_printf("wheel locked:\n\r");
+	Putty_printf("  RF: %s \n\r", read_Pin(RF_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  RB: %s \n\r", read_Pin(RB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LB: %s \n\r", read_Pin(LB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LF: %s \n\r", read_Pin(LF_LOCK_pin) ? "yes" : "no");
 	Putty_printf("Geneva: \n\r");
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
@@ -440,6 +445,13 @@ int main(void)
 	  test_Update(&receivedData);
 
 	  executeCommands(&receivedData);
+
+	  if (read_Pin(RF_LOCK_pin) || read_Pin(RB_LOCK_pin) || read_Pin(LB_LOCK_pin) || read_Pin(LF_LOCK_pin)) {
+		  set_Pin(LED2_pin, 1);
+	  } else {
+		  set_Pin(LED2_pin, 0);
+	  }
+	  set_Pin(LED3_pin, halt);
 
 	  /*
 	   * Print stuff on PuTTY for debugging

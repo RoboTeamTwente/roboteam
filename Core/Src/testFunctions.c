@@ -93,6 +93,7 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 	} else if (timeDiff < 17000) {
 		if (prevTimeDiff < 5000) {
 			checkGeneva(geneva_rightright);
+			receivedData->genevaRef = geneva_middle;
 			Putty_printf("Testing wheels...\n\r");
 		}
 
@@ -150,7 +151,7 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 }
 
 void checkGeneva(geneva_positions position) {
-	int margin = 5; // if geneva within 5 encoder units, test passes
+	int margin = 10; // if geneva within 5 encoder units, test passes
 
 	int encoderDiff = fabs(encoderForPosition[position] - geneva_GetEncoder());
 	Putty_printf("\t position %d: %s\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL");

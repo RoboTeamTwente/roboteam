@@ -78,6 +78,10 @@ void geneva_SetRef(geneva_positions position){
 	}
 }
 
+float geneva_GetRef(){
+	return genevaRef;
+}
+
 int geneva_GetEncoder(){
 	return geneva_Encodervalue();
 }
@@ -91,7 +95,7 @@ int geneva_GetPWM(){
 static void CheckIfStuck(){
 	static uint tick = 0xFFFF;			//
 	static int enc = 0;
-	if(fabs(geneva_Encodervalue() - enc) < 3){
+	if(geneva_Encodervalue() != enc){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
 	}else if(tick + 500 < HAL_GetTick()){
@@ -130,7 +134,7 @@ static bool isResponding() {
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;
-	if ((pwm > 0) && (geneva_Encodervalue() - prevEncoder) < 3) {
+	if ((pwm > 0) && (geneva_Encodervalue() == prevEncoder)) {
 		cnt++;
 	} else {
 		cnt = 0;

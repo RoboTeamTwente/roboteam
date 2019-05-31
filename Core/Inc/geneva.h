@@ -33,6 +33,8 @@ void geneva_Update();
 
 void geneva_SetRef(geneva_positions position);
 
+float geneva_GetRef();
+
 int geneva_GetEncoder();
 
 int geneva_GetPWM();

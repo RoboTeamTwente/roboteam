@@ -151,10 +151,10 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 }
 
 void checkGeneva(geneva_positions position) {
-	int margin = 10; // if geneva within 5 encoder units, test passes
+	int margin = 20; // if geneva within 5 encoder units, test passes
 
 	int encoderDiff = fabs(encoderForPosition[position] - geneva_GetEncoder());
-	Putty_printf("\t position %d: %s\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL");
+	Putty_printf("\t position %d: %s (offset: %d encoder units)\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL", encoderDiff);
 }
 
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]) {

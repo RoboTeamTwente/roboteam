@@ -222,32 +222,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if(htim->Instance == htim7.Instance) {
 		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
+			if (!test_isTestRunning()) {
+				// State estimation
+				stateInfo.visionAvailable = receivedData.visionAvailable;
+				stateInfo.visionYaw = receivedData.visionYaw;
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+				}
 
-			// State estimation
-			stateInfo.visionAvailable = receivedData.visionAvailable;
-			stateInfo.visionYaw = receivedData.visionYaw;
-			for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-				stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+				stateEstimation_Update(&stateInfo);
+
+				// State control
+				stateControl_SetState(stateEstimation_GetState());
+				stateControl_Update();
+
+				if (halt || !yaw_hasCalibratedOnce()) {
+					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+					wheels_SetRef(emptyRef);
+				}
+				else {
+					// Wheel control
+					wheels_SetRef(stateControl_GetWheelRef());
+				}
 			}
-
-			stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-			stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-			stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-			stateEstimation_Update(&stateInfo);
-
-			// State control
-			stateControl_SetState(stateEstimation_GetState());
-			stateControl_Update();
-
-			if ((halt || !yaw_hasCalibratedOnce()) && !test_isTestRunning()) {
-				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-				wheels_SetRef(emptyRef);
-			}
-			else {
-				// Wheel control
-				wheels_SetRef(stateControl_GetWheelRef());
-			}
-
 			wheels_Update();
 		}
 	}
@@ -443,12 +443,18 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() >  printTime + 500) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);
+
+//			Putty_printf("wheel speeds (encoders):\n\r");
+//			Putty_printf("  RF: %f rad/s\n\r", wheels_GetState()[wheels_RF]);
+//			Putty_printf("  RB: %f rad/s\n\r", wheels_GetState()[wheels_RB]);
+//			Putty_printf("  LB: %f rad/s\n\r", wheels_GetState()[wheels_LB]);
+//			Putty_printf("  LF: %f rad/s\n\r", wheels_GetState()[wheels_LF]);
 	  }
     /* USER CODE END WHILE */
 

@@ -9,13 +9,15 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
+#define WHEEL_TEST_SPEED 50.0f
 bool runningTest[nTests] = {false};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 void test_ExecuteFullTest(ReceivedData* receivedData);
 void checkGeneva(geneva_positions position);
-void checkWheels(int avgPWM[4], int cnt);
+void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]);
+void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]);
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData);
 
@@ -88,71 +90,55 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 			checkGeneva(geneva_right);
 		}
 		receivedData->genevaRef = geneva_rightright;
-	} else if (timeDiff < 10000) {
+	} else if (timeDiff < 17000) {
 		if (prevTimeDiff < 5000) {
 			checkGeneva(geneva_rightright);
-			Putty_printf("Testing forward driving...\n\r");
+			Putty_printf("Testing wheels...\n\r");
 		}
+
 		static int avgPWM[4] = {0};
-		static int cnt = 0;
-		if (timeDiff > 6000) {
-			if (timeDiff < 9000) {
-				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-					avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
-				}
-				cnt++;
-			} else if (prevTimeDiff < 9000) {
-				checkWheels(avgPWM, cnt);
-				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-					avgPWM[wheel] = 0;
-				}
-				cnt = 0;
-			}
+		static int cnt[4] = {0};
+		float wheelRef[4] = {0.0f};
+		static float wheelEncoders[4] = {0.0f};
+
+		if (timeDiff > 5500 && timeDiff < 7500) {
+			recordWheelData(wheels_RF, avgPWM, cnt, wheelEncoders, wheelRef);
 		}
-		receivedData->stateRef[body_x] = 0.5f;
-	} else if (timeDiff < 15000) {
-		if (prevTimeDiff < 10000) {
-			Putty_printf("Testing sideways driving...\n\r");
+		else if (timeDiff > 8500 && timeDiff < 10500) {
+			recordWheelData(wheels_RB, avgPWM, cnt, wheelEncoders, wheelRef);
 		}
-		static int avgPWM[4] = {0};
-		static int cnt = 0;
-		if (timeDiff > 11000) {
-			if (timeDiff < 14000) {
-				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-					avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
-				}
-				cnt++;
-			} else if (prevTimeDiff < 14000) {
-				checkWheels(avgPWM, cnt);
-				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-					avgPWM[wheel] = 0;
-				}
-				cnt = 0;
-			}
+		else if (timeDiff > 11500 && timeDiff < 13500) {
+			recordWheelData(wheels_LB, avgPWM, cnt, wheelEncoders, wheelRef);
 		}
-		receivedData->stateRef[body_y] = 0.5f;
-//	} else if (timeDiff < 16000){
-//		// wait
-//		if (prevTimeDiff < 15000) {
-//			Putty_printf("Testing kick...\n\r");
-//		}
-//	} else if (timeDiff < 16010) {
-//		receivedData->do_kick = true;
-//	} else if (timeDiff < 17000) {
-//		// wait
-//		if (prevTimeDiff < 16010) {
-//			Putty_printf("Testing chip...\n\r");
-//		}
-//	} else if (timeDiff < 17010) {
-//		receivedData->do_chip = true;
-//	} else if (timeDiff < 18000) {
-//		// wait
-//	} else if (timeDiff < 19000) {
-//		if (prevTimeDiff < 18000) {
-//			Putty_printf("Testing dribbler...\n\r");
-//		}
-//		receivedData->dribblerRef = 50;
-	} else if (timeDiff < 21000){
+		else if (timeDiff > 14500 && timeDiff < 16500) {
+			recordWheelData(wheels_LF, avgPWM, cnt, wheelEncoders, wheelRef);
+		}
+		else if (timeDiff > 16500 && prevTimeDiff <= 16500) {
+			checkWheels(avgPWM, cnt, wheelEncoders);
+		}
+		wheels_SetRef(wheelRef);
+	} else if (timeDiff < 18000){
+		// wait
+		if (prevTimeDiff < 17000) {
+			Putty_printf("Testing kick...\n\r");
+		}
+	} else if (timeDiff < 18010) {
+		receivedData->do_kick = true;
+	} else if (timeDiff < 19000) {
+		// wait
+		if (prevTimeDiff < 18010) {
+			Putty_printf("Testing chip...\n\r");
+		}
+	} else if (timeDiff < 19010) {
+		receivedData->do_chip = true;
+	} else if (timeDiff < 20000) {
+		// wait
+	} else if (timeDiff < 21000) {
+		if (prevTimeDiff < 20000) {
+			Putty_printf("Testing dribbler...\n\r");
+		}
+		receivedData->dribblerRef = 50;
+	} else if (timeDiff < 23000){
 		start = HAL_GetTick();
 		runningTest[full] = false;
 		Putty_printf("---------- End of test ----------\n\r");
@@ -170,20 +156,29 @@ void checkGeneva(geneva_positions position) {
 	Putty_printf("\t position %d: %s\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL");
 }
 
-void checkWheels(int avgPWM[4], int cnt) {
-	int margin = 100;
+void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]) {
+	avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
+	cnt[wheel]++;
+	wheelRef[wheel] = WHEEL_TEST_SPEED;
+	wheelEncoders[wheel] += fabs(wheels_GetState()[wheel]);
+}
+
+void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]) {
+	int margin = 100; // margin to check if wheel is turning heavily
 
 	int minPWM = MAX_PWM;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		if (avgPWM[wheel]/cnt < minPWM) {
-			minPWM = avgPWM[wheel]/cnt;
+		avgPWM[wheel] = avgPWM[wheel] / cnt[wheel];
+		wheelEncoders[wheel] = wheelEncoders[wheel] / cnt[wheel];
+		if (avgPWM[wheel] < minPWM) {
+			minPWM = avgPWM[wheel];
 		}
 	}
 
-	Putty_printf("\t Wheel RF: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_RF]) < 5 ? "FAIL" : ((avgPWM[wheels_RF]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RF]/cnt);
-	Putty_printf("\t Wheel RB: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_RB]) < 5 ? "FAIL" : ((avgPWM[wheels_RB]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RB]/cnt);
-	Putty_printf("\t Wheel LB: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_LB]) < 5 ? "FAIL" : ((avgPWM[wheels_LB]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LB]/cnt);
-	Putty_printf("\t Wheel LF: %s (PWM = %d)\n\r", fabs(wheels_GetState()[wheels_LF]) < 5 ? "FAIL" : ((avgPWM[wheels_LF]/cnt > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LF]/cnt);
+	Putty_printf("\t Wheel RF: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_RF]) < 5 ? "FAIL" : ((avgPWM[wheels_RF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RF]);
+	Putty_printf("\t Wheel RB: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_RB]) < 5 ? "FAIL" : ((avgPWM[wheels_RB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RB]);
+	Putty_printf("\t Wheel LB: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_LB]) < 5 ? "FAIL" : ((avgPWM[wheels_LB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LB]);
+	Putty_printf("\t Wheel LF: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_LF]) < 5 ? "FAIL" : ((avgPWM[wheels_LF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LF]);
 }
 
 void test_ExecuteSquareDrive(ReceivedData* receivedData) {

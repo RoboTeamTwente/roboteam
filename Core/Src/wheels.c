@@ -53,6 +53,7 @@ int wheels_Init(){
 
 int wheels_DeInit(){
 	wheels_state = off;
+	wheels_Update();
 	HAL_TIM_Base_Stop(ENC_RF); //RF
 	HAL_TIM_Base_Stop(ENC_RB); //RB
 	HAL_TIM_Base_Stop(ENC_LB); //LB
@@ -61,27 +62,24 @@ int wheels_DeInit(){
 	stop_PWM(PWM_RB); //RB
 	stop_PWM(PWM_LB); //LB
 	stop_PWM(PWM_LF); //LF
-
-	//TODO: Fix this huge stopping hack
-	for (int i=0; i<4; i++) {
-		pwm[i] = 0;
-	}
-	SetPWM();
 	return 0;
 }
 
 void wheels_Update(){
-	if (wheels_state == on) {
-		computeWheelSpeed();
+	if (wheels_state != on) {
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-			float err = wheelRef[wheel]-wheelSpeed[wheel];
-			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			wheelRef[wheel] = 0;
 		}
-		limitScale();
-
-		SetDir();
-		SetPWM();
 	}
+	computeWheelSpeed();
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+		float err = wheelRef[wheel]-wheelSpeed[wheel];
+		pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+	}
+	limitScale();
+
+	SetDir();
+	SetPWM();
 }
 
 void wheels_SetRef(float input[4]){

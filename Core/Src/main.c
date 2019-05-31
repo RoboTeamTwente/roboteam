@@ -334,6 +334,7 @@ void printReceivedData(ReceivedData* receivedData) {
 }
 
 void printRobotStateData(StateInfo* stateInfo) {
+	wheels_DeInit();
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
 	Putty_printf("halt? %u\n\r", halt);
@@ -506,13 +507,13 @@ int main(void)
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
-	  static uint printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  static int printTime = 10000;
+	  if (HAL_GetTick() >  printTime + 5000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
-//		  printRobotStateData(&stateInfo);
+		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

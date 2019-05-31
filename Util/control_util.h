@@ -35,7 +35,7 @@
 #define sin60 0.866F	// sine of 60 degrees
 
 // Wheels
-#define PWM_CUTOFF 100.0F // arbitrary treshold to avoid motor shutdown
+#define PWM_CUTOFF 200.0F // arbitrary treshold to avoid motor shutdown
 #define GEAR_RATIO 2.5F // gear ratio between motor and wheel
 #define MAX_PWM 3000 // defined in CubeMX
 #define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
@@ -47,11 +47,12 @@
 #define ENCODERtoOMEGA (float)2*M_PI/(TIME_DIFF*GEAR_RATIO*PULSES_PER_ROTATION) // conversion factor from number of encoder pulses to wheel speed [rad/s]
 
 // Control
-#define YAW_MARGIN (2.0F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0
+#define YAW_MARGIN (0.25F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
 
 // Geneva
 #define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
+#define ENCODER_DEVIATION_MARGIN 3	// margin within which encoder is considered to be the same as previous encoder
 
 // Shoot
 #define MIN_KICK_TIME 25 				// minimum time period of kicking
@@ -80,7 +81,7 @@ typedef enum {
 }wheel_names;
 
 typedef enum{
-	geneva_none,			// While rotating
+	geneva_none,
 	geneva_leftleft,
 	geneva_left,
 	geneva_middle,

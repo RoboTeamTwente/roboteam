@@ -71,10 +71,25 @@ void geneva_Update(){
 }
 
 void geneva_SetRef(geneva_positions position){
-	if (position == geneva_none) {
+	switch(position){
+	case geneva_rightright:
+		genevaRef = 3880;
+		break;
+	case geneva_right:
+		genevaRef = 3385;
+		break;
+	case geneva_middle:
+		genevaRef = 2890;
+		break;
+	case geneva_left:
+		genevaRef = 2395;
+		break;
+	case geneva_leftleft:
+		genevaRef = 1900;
+		break;
+	case geneva_none:
 		genevaRef = geneva_Encodervalue();
-	} else {
-		genevaRef = encoderForPosition[position];
+		break;
 	}
 }
 
@@ -95,7 +110,7 @@ int geneva_GetPWM(){
 static void CheckIfStuck(){
 	static uint tick = 0xFFFF;			//
 	static int enc = 0;
-	if(geneva_Encodervalue() != enc){
+	if(fabs(geneva_Encodervalue() - enc) < ENCODER_DEVIATION_MARGIN){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
 	}else if(tick + 500 < HAL_GetTick()){
@@ -134,7 +149,7 @@ static bool isResponding() {
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;
-	if ((pwm > 0) && (geneva_Encodervalue() == prevEncoder)) {
+	if ((pwm > 0) && (fabs(geneva_Encodervalue() - prevEncoder)) < ENCODER_DEVIATION_MARGIN)  {
 		cnt++;
 	} else {
 		cnt = 0;

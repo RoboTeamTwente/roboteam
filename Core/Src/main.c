@@ -122,7 +122,7 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
+StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 
@@ -284,6 +284,7 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+	Putty_printf("Xsens rate of turn: %f rad/s\n\r", stateInfo->rateOfTurn);
 	Putty_printf("wheel refs:\n\r");
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);

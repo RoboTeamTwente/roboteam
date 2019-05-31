@@ -143,7 +143,7 @@ static void limitScale(){
 }
 
 static bool isResponding() {
-	static margin = 5;	// margin within which encoder is considered to be the same as previous encoder
+	static int margin = 5;	// margin within which encoder is considered to be the same as previous encoder
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;

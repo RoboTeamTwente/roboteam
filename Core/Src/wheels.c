@@ -12,6 +12,7 @@ static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
+static GPIO_Pin lockPins[4];
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -48,6 +49,11 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
+
+	lockPins[wheels_RF] = RF_LOCK_pin;
+	lockPins[wheels_RB] = RB_LOCK_pin;
+	lockPins[wheels_LB] = LB_LOCK_pin;
+	lockPins[wheels_LF] = LF_LOCK_pin;
 	return 0;
 }
 
@@ -71,11 +77,25 @@ int wheels_DeInit(){
 }
 
 void wheels_Update(){
+	static int lockTimes[4] = {0};
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 			float err = wheelRef[wheel]-wheelSpeed[wheel];
+
+			if (fabs(err) < 0.1) {
+				err = 0.0;
+				wheelsK[wheel].I = 0;
+			}
+
 			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			if (read_Pin(lockPins[wheel])) {
+				if (HAL_GetTick() - lockTimes[wheel] < 200) {
+					pwm[wheel] = 0;
+				}
+			} else {
+				lockTimes[wheel] = HAL_GetTick();
+			}
 		}
 		limitScale();
 

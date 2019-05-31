@@ -39,7 +39,7 @@ static void SetDir();
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		initPID(&wheelsK[wheel], 5.0, 0.0, 0.0);
+		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
 	}
 	HAL_TIM_Base_Start(ENC_RF); //RF
 	HAL_TIM_Base_Start(ENC_RB); //RB
@@ -77,7 +77,7 @@ int wheels_DeInit(){
 }
 
 void wheels_Update(){
-	static int lockTimes[4] = {0};
+	static uint lockTimes[4] = {0};
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){

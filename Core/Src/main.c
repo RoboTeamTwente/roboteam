@@ -121,7 +121,7 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
+StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 
@@ -344,6 +344,7 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+	Putty_printf("Xsens rate of turn: %f rad/s\n\r", stateInfo->rateOfTurn);
 	Putty_printf("wheel refs:\n\r");
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
@@ -1415,7 +1416,7 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);

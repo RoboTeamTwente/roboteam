@@ -143,10 +143,11 @@ static void limitScale(){
 }
 
 static bool isResponding() {
+	static margin = 5;	// margin within which encoder is considered to be the same as previous encoder
 	static bool result = true;
 	static int cnt = 0;
 	static int prevEncoder = 0;
-	if ((pwm > 0) && (geneva_Encodervalue() == prevEncoder)) {
+	if ((pwm > 0) && (fabs(geneva_Encodervalue() - prevEncoder)) < margin)  {
 		cnt++;
 	} else {
 		cnt = 0;

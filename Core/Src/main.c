@@ -513,7 +513,7 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
-		  printRobotStateData(&stateInfo);
+//		  printRobotStateData(&stateInfo);
 	  }
     /* USER CODE END WHILE */
 

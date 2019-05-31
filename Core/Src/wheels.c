@@ -135,9 +135,7 @@ static void scale(){
 			//otherwise the motors drivers break
 			if (direction[wheel]== 0 && pwm[wheel]<= -1.0F){
 				pwm[wheel] *= -1;
-			} else if (direction[wheel]==1 && pwm[wheel]>= 1.0F){
-				pwm[wheel] *= 1;
-			} else {
+			} else if (!(direction[wheel]==1 && pwm[wheel]>= 1.0F)){
 				pwm[wheel] = 0;
 			}
 			Count[wheel] += 1;

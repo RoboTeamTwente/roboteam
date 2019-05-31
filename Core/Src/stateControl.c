@@ -117,10 +117,7 @@ static float angleControl(float angleRef, float angle){
 	if (angleErr == 0){
 		angleErr = 0.000001*prevangleErr;
 	}
-	if (fabs(angleErr) < YAW_MARGIN) { // reset the I to zero everytime the target has been reached
-		prevangleErr = angleErr;
-		stateK[body_w].I = 0;
-	} else if (prevangleErr/angleErr < 0){
+	if (fabs(angleErr) < YAW_MARGIN || prevangleErr/angleErr < 0) {
 		stateK[body_w].I = 0;
 	}
 	prevangleErr = angleErr;

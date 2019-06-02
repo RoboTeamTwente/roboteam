@@ -12,6 +12,7 @@ static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
+static GPIO_Pin lockPins[4];
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -41,7 +42,7 @@ static void SetDir();
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		initPID(&wheelsK[wheel], 5.0, 0.0, 0.0);
+		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
 	}
 	HAL_TIM_Base_Start(ENC_RF); //RF
 	HAL_TIM_Base_Start(ENC_RB); //RB
@@ -51,12 +52,16 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
+
+	lockPins[wheels_RF] = RF_LOCK_pin;
+	lockPins[wheels_RB] = RB_LOCK_pin;
+	lockPins[wheels_LB] = LB_LOCK_pin;
+	lockPins[wheels_LF] = LF_LOCK_pin;
 	return 0;
 }
 
 int wheels_DeInit(){
 	wheels_state = off;
-	wheels_Update();
 	HAL_TIM_Base_Stop(ENC_RF); //RF
 	HAL_TIM_Base_Stop(ENC_RB); //RB
 	HAL_TIM_Base_Stop(ENC_LB); //LB
@@ -65,26 +70,41 @@ int wheels_DeInit(){
 	stop_PWM(PWM_RB); //RB
 	stop_PWM(PWM_LB); //LB
 	stop_PWM(PWM_LF); //LF
+
+	//TODO: Fix this huge stopping hack
+	for (int i=0; i<4; i++) {
+		pwm[i] = 0;
+	}
+	SetPWM();
 	return 0;
 }
 
 void wheels_Update(){
-	if (wheels_state != on) {
+	static uint lockTimes[4] = {0};
+	if (wheels_state == on) {
+		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-			wheelRef[wheel] = 0;
+			float err = wheelRef[wheel]-wheelSpeed[wheel];
+
+			if (fabs(err) < 0.1) {
+				err = 0.0;
+				wheelsK[wheel].I = 0;
+			}
+
+			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			if (read_Pin(lockPins[wheel])) {
+				if (HAL_GetTick() - lockTimes[wheel] < 200) {
+					pwm[wheel] = 0;
+				}
+			} else {
+				lockTimes[wheel] = HAL_GetTick();
+			}
 		}
+		scale();
+		limit();
+		SetDir();
+		SetPWM();
 	}
-	computeWheelSpeed();
-
-	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		float err = wheelRef[wheel]-wheelSpeed[wheel];
-		pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
-	}
-
-	limit();
-	scale();
-	SetDir();
-	SetPWM();
 }
 
 void wheels_SetRef(float input[4]){

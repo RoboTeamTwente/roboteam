@@ -490,7 +490,7 @@ static inline void ErrorHandler(struct XbusMessage const* message){
 
 static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	bool timedout = false;
-	uint32_t cnt = 0;
+//	uint32_t cnt = 0;
 	while(MTi->LastAck != XMID && !timedout){
 //		HAL_Delay(10);
 //		timedout = 200 < cnt++;

@@ -31,6 +31,7 @@ private:
 
     // get parameters from ROS
     utils::Mode getMode();
+    void setMode();
     std::string getSerialDevice();
     bool getBatchingVariable();
 
@@ -48,6 +49,7 @@ private:
 
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
     void printStatistics();
+    std::string target;
 
     bool batching = false;
 };

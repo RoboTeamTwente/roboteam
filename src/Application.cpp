@@ -13,19 +13,17 @@ namespace robothub {
 
 Application::Application() {
     subscribeToROSTopics();
+    setMode();
     batching = getBatchingVariable();
-
-    // if you want to force a mode, set it here already
-    mode = utils::Mode::GRSIM;
 
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
     if (getMode() == utils::Mode::SERIAL) {
         device = std::make_shared<SerialDeviceManager>(getSerialDevice());
-        if (!device->ensureDeviceOpen())
-            device->openDevice();
-    }
 
+    }
+    if (getMode() == utils::Mode::SERIAL && !device->ensureDeviceOpen())
+        device->openDevice();
 
 }
 
@@ -73,6 +71,8 @@ bool Application::getBatchingVariable() {
 void Application::subscribeToROSTopics(){
     subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
     subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this,  ros::TransportHints().tcpNoDelay());
+    n.getParam("robot_output_target", target);
+    std::cout << "Set the target to: " << target << std::endl;
 }
 
 
@@ -152,6 +152,16 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
 /// send a GRSim command from a given robotcommand
 void Application::sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand) {
         this->grsimCommander->queueGRSimCommand(robotCommand);
+}
+void Application::setMode() {
+    if (target == "grsim")
+        mode = utils::Mode::GRSIM;
+    else if (target == "serial")
+        mode = utils::Mode::SERIAL;
+    else {
+        std::cerr << "robot_output_target not set with ROS, will default to SERIAL" << std::endl;
+        mode = utils::Mode::SERIAL;
+    }
 }
 
 } // robothub

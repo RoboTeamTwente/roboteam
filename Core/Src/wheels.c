@@ -101,8 +101,8 @@ void wheels_Update(){
 			}
 		}
 
-		limit();
 		scale();
+		limit();
 		SetDir();
 		SetPWM();
 	}

@@ -413,8 +413,8 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-	  //TODO: Fix battery pin with electronics
-//	  if (read_Pin(Bat_pin)) {
+//	  static int batCounter = 0;
+//	  if (read_Pin(Bat_pin) && batCounter > 1000){
 //		  Putty_printf("battery empty\n\r");
 //		  set_Pin(LED4_pin, 1);
 //		  Putty_DeInit();
@@ -426,7 +426,11 @@ int main(void)
 //		  dribbler_DeInit();
 //		  buzzer_DeInit();
 //		  MTi_DeInit(MTi);
-//		  //TODO: wireless DeInit() ?
+//		  Wireless_DeInit();
+//	  }else if (read_Pin(Bat_pin)) {
+//	  	  batCounter += 1;
+//	  } else {
+//		  batCounter = 0;
 //	  }
 
 	  IWDG_Refresh(iwdg);
@@ -441,22 +445,14 @@ int main(void)
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
-
-	  test_Update(&receivedData);
-
 	  executeCommands(&receivedData);
 
-	  if (read_Pin(RF_LOCK_pin) || read_Pin(RB_LOCK_pin) || read_Pin(LB_LOCK_pin) || read_Pin(LF_LOCK_pin)) {
-		  set_Pin(LED2_pin, 1);
-	  } else {
-		  set_Pin(LED2_pin, 0);
-	  }
-	  set_Pin(LED3_pin, halt);
+	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
-	  static uint printTime = 0;
+	  static int printTime = 0;
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);

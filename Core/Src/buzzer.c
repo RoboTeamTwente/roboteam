@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
-//TODO: make it work, low priority
+//TODO: make it work, done on a branch
 
 void buzzer_Init() {
 	start_PWM(PWM_Buzzer);

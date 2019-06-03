@@ -50,9 +50,9 @@ static Mode stringToMode(const std::string& type) {
 
 static std::string modeToString(Mode mode) {
     switch (mode) {
-    case Mode::SERIAL:return "serial";
-    case Mode::GRSIM:return "grsim";
-    case Mode::UNDEFINED:return "undefined";
+    case Mode::SERIAL:return "Serial";
+    case Mode::GRSIM:return "Grsim";
+    case Mode::UNDEFINED:return "Undefined";
     }
 }
 

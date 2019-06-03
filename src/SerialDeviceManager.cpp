@@ -74,7 +74,7 @@ void SerialDeviceManager::openDevice() {
     memset(&tty, 0, sizeof tty);
 
     if(tcgetattr(fileID, &tty) != 0) {
-        printf("C CRAP Error %i from tcgetattr: %s\n", errno, strerror(errno));
+        std::cerr <<"Open Device Error"<<std::endl;
     }
     // This is important for 0x0A and 0x09 bytes otherwise they are dropped since ascii
     tty.c_oflag &= ~OPOST;
@@ -83,7 +83,7 @@ void SerialDeviceManager::openDevice() {
     cfsetospeed(&tty, B115200);
 
     if (tcsetattr(fileID, TCSANOW, &tty) != 0) {
-        printf("C CRAP Error %i from tcsetattr: %s\n", errno, strerror(errno));
+        std::cerr <<"Open Device Error"<<std::endl;
     }
 }
 

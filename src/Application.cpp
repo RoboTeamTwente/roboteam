@@ -16,16 +16,17 @@ Application::Application() {
     batching = getBatchingVariable();
 
     // if you want to force a mode, set it here already
-    mode = utils::Mode::SERIAL;
+    mode = utils::Mode::GRSIM;
 
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
     if (getMode() == utils::Mode::SERIAL) {
         device = std::make_shared<SerialDeviceManager>(getSerialDevice());
+        if (!device->ensureDeviceOpen())
+            device->openDevice();
     }
 
-    if (!device->ensureDeviceOpen())
-        device->openDevice();
+
 }
 
 /// Get the mode of robothub, either "serial" or "grsim" or "undefined"
@@ -90,7 +91,7 @@ void Application::loop(){
         auto timeDiff = timeNow-lastStatistics;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {
             lastStatistics = timeNow;
-            ROS_INFO_STREAM("==========| " << currIteration++ << " |==========");
+            std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(getMode()) << " |==========" << std::endl;
             printStatistics();
         }
     }

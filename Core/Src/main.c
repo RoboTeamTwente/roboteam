@@ -311,6 +311,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			wheels_Update();
 		}
 	}
+	else if (htim->Instance == htim10.Instance) {
+		buzzer_Callback();
+	}
 	else if (htim->Instance == htim11.Instance) {
 		shoot_Callback();
 	}
@@ -1212,7 +1215,7 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = (APB-1)/4.5;
+  htim10.Init.Prescaler = (APB-1);
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim10.Init.Period = MAX_PWM;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

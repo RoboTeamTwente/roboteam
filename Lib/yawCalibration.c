@@ -26,7 +26,7 @@ static float getOldXsensYaw(float newXsensYaw);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
+void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable, float rateOfTurn) {
 	static float yawOffset = 0.0f;
 	static int restCounter = 0;
 	static float sumXsensVec[2] = {0.0f};
@@ -35,7 +35,7 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable) {
 	// Calibrate the xsens yaw from some time ago with vision to account for delay while sending.
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
-	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(visionYaw) && visionAvailable) {
+	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(rateOfTurn) && visionAvailable) {
 		if (restCounter > CALIBRATION_TIME / TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
@@ -91,23 +91,8 @@ static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset
 	return calibrationNeeded;
 }
 
-static bool isRotatingSlow(float visionYaw) {
-	static bool rotatingSlow = false;
-	static int rotateCounter = 0;
-	static float startYaw = 0;
-	if (fabs(constrainAngle(startYaw - visionYaw)) < (MAX_RATE_OF_TURN * TIME_DIFF)) {
-		rotateCounter++;
-	} else {
-		rotateCounter = 0;
-		startYaw = visionYaw;
-		rotatingSlow = false;
-	}
-	if (rotateCounter > 10) {
-		rotateCounter = 0;
-		startYaw = visionYaw;
-		rotatingSlow = true;
-	}
-	return rotatingSlow;
+static bool isRotatingSlow(float rateOfTurn) {
+	return fabs(rateOfTurn) < MAX_RATE_OF_TURN;
 }
 
 static float getOldXsensYaw(float newXsensYaw) {

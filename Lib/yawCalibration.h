@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 // Calibrate the state yaw with the vision yaw
-void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable);
+void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable, float rateOfTurn);
 
 // Getter for the yaw after calibration
 float yaw_GetCalibratedYaw();

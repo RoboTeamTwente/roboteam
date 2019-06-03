@@ -71,26 +71,13 @@ void geneva_Update(){
 }
 
 void geneva_SetRef(geneva_positions position){
-	switch(position){
-	case geneva_rightright:
-		genevaRef = 3880;
-		break;
-	case geneva_right:
-		genevaRef = 3385;
-		break;
-	case geneva_middle:
-		genevaRef = 2890;
-		break;
-	case geneva_left:
-		genevaRef = 2395;
-		break;
-	case geneva_leftleft:
-		genevaRef = 1900;
-		break;
-	case geneva_none:
-		genevaRef = geneva_Encodervalue();
-		break;
+	if (position != geneva_none) {
+		genevaRef = encoderForPosition[position];
 	}
+}
+
+float geneva_GetRef(){
+	return genevaRef;
 }
 
 int geneva_GetEncoder(){

@@ -202,7 +202,7 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
 	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_middle;
+	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 0;
 	receivedData->stateRef[body_x] = 0.0f;
 	receivedData->stateRef[body_y] = 0.0f;
@@ -221,93 +221,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if(htim->Instance == htim7.Instance) {
 		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
-			/* SQUARE WITH 90 DEGREES TURNS AT SIDES
-			float velocityRef[3];
-			velocityRef[0] = 0.0;
-			velocityRef[1] = 0.0;
-			velocityRef[2] = 0.0*M_PI;
-			halt = false;
-			static uint velTimer;
-			int reps = 1;
-			static int count = 0;
-			float v = 0.5;
-			int t = 1500;
-			if (HAL_GetTick() < 7000) {
-				velTimer = HAL_GetTick();
-			} else if (HAL_GetTick() - velTimer < t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 2*t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 3*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 4*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 5*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 6*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 7*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 8*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (count < reps-1) {
-				velTimer = HAL_GetTick();
-				count++;
-			} else {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
+			if (!test_isTestRunning()) {
+				// State estimation
+				stateInfo.visionAvailable = receivedData.visionAvailable;
+				stateInfo.visionYaw = receivedData.visionYaw;
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+				}
+
+				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+				stateEstimation_Update(&stateInfo);
+
+				// State control
+				stateControl_SetState(stateEstimation_GetState());
+				stateControl_Update();
+
+				if (halt || !yaw_hasCalibratedOnce()) {
+					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+					wheels_SetRef(emptyRef);
+				}
+				else {
+					// Wheel control
+					wheels_SetRef(stateControl_GetWheelRef());
+				}
 			}
-
-
-			receivedData.stateRef[body_x] = velocityRef[body_x];
-			receivedData.stateRef[body_y] = velocityRef[body_y];
-			receivedData.stateRef[body_w] = velocityRef[body_w];
-			stateControl_SetRef(velocityRef);
-			*/
-
-
-			// State estimation
-			stateInfo.visionAvailable = receivedData.visionAvailable;
-			stateInfo.visionYaw = receivedData.visionYaw;
-			for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-				stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-			}
-
-			stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-			stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-			stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-			stateEstimation_Update(&stateInfo);
-
-			// State control
-			stateControl_SetState(stateEstimation_GetState());
-			stateControl_Update();
-
-			if (halt || !yaw_hasCalibratedOnce()) {
-				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-				wheels_SetRef(emptyRef);
-			}
-			else {
-				// Wheel control
-				wheels_SetRef(stateControl_GetWheelRef());
-			}
-
 			wheels_Update();
 		}
 	}
@@ -363,9 +302,15 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
 	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	Putty_printf("wheel locked:\n\r");
+	Putty_printf("  RF: %s \n\r", read_Pin(RF_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  RB: %s \n\r", read_Pin(RB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LB: %s \n\r", read_Pin(LB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LF: %s \n\r", read_Pin(LF_LOCK_pin) ? "yes" : "no");
 	Putty_printf("Geneva: \n\r");
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
+	Putty_printf("  ref: %f\n\r", geneva_GetRef());
 }
 
 void printBaseStation() {

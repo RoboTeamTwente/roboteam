@@ -287,9 +287,9 @@ bool GRSimCommander::isBatch()
     return batch;
 }
 
-void GRSimCommander::setBatch(bool batch)
+void GRSimCommander::setBatch(bool _batch)
 {
-    this->batch = batch;
+    this->batch = _batch;
 }
 
 void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand const& msg)

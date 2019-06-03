@@ -27,11 +27,10 @@ static void Putty_HandlePcInput(char *input, size_t n_chars);        // Called w
 static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus); // Keeps values within the real range
 static void Putty_ClearLine();                                       //Clears the current line to that new text can be placed.
 
-
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 Putty_Enum Putty_Init()
 {
+
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
@@ -131,6 +130,10 @@ static void Putty_HandleCommand(char *input)
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
+	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
+		test_RunTest(full);
+	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
+		test_RunTest(square);
 	}
 	return;
 }

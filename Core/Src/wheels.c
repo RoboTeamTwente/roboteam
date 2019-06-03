@@ -100,6 +100,7 @@ void wheels_Update(){
 				lockTimes[wheel] = HAL_GetTick();
 			}
 		}
+
 		scale();
 		limit();
 		SetDir();

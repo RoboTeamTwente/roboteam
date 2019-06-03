@@ -32,7 +32,7 @@ void stateEstimation_Update(StateInfo* input) {
 	float kalman_State[4] = {0.0f};
 	kalman_GetState(kalman_State);
 
-	yaw_Calibrate(input->xsensYaw, input->visionYaw, input->visionAvailable);
+	yaw_Calibrate(input->xsensYaw, input->visionYaw, input->visionAvailable, input->rateOfTurn);
 	float calibratedYaw = yaw_GetCalibratedYaw();
 
 	state[body_x] = kalman_State[0];

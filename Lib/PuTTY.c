@@ -45,7 +45,7 @@ Putty_Enum Putty_Init()
 
 Putty_Enum Putty_DeInit()
 {
-    // TODO properly
+    //Not actually needed
     return Putty_Vars.errorCode = NoErrors;
 }
 

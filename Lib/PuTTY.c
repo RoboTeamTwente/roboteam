@@ -116,7 +116,9 @@ static void Putty_HandleCommand(char *input)
 	} else if(!memcmp(input, "geneva set" , strlen("geneva set"))){
 		geneva_SetRef(strtol(input + 1 + strlen("geneva set"), NULL, 10));
 	}else if(!memcmp(input, "kickbs", strlen("kickbs"))){
-		if (ballPosition.canKickBall) shoot_Shoot(shoot_Kick);
+		if (ballPosition.canKickBall) {
+			shoot_Shoot(shoot_Kick);
+		}
 	}else if(!memcmp(input, "kick", strlen("kick"))){
 		shoot_Shoot(shoot_Kick);
 	}else if(!memcmp(input, "chip", strlen("chip"))){

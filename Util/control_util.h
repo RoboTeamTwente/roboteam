@@ -129,7 +129,7 @@ static void initPID(PIDvariables* PID, float kP, float kI, float kD) {
 }
 
 //clamps the input
-//inline float clamp(float input, float min, float max){
+//static float clamp(float input, float min, float max){
 //	if (input<min){
 //		return min;
 //	} else if (input>max) {
@@ -140,7 +140,7 @@ static void initPID(PIDvariables* PID, float kP, float kI, float kD) {
 //}
 
 //limits the change in PID value
-//inline float ramp(float new_PID, float ramp, float prev_PID){
+//static float ramp(float new_PID, float ramp, float prev_PID){
 //	if (new_PID-prev_PID>ramp){
 //		return (prev_PID+ramp);
 //	} else if (new_PID-prev_PID<-ramp){

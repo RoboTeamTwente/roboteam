@@ -72,7 +72,7 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
 };
 
 void Wireless_DeInit() {
-	//TODO: Fill this
+	// Not necessary, till we get the feedback
 }
 
 void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){

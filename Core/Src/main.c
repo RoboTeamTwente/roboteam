@@ -60,6 +60,7 @@
 #include "yawCalibration.h"
 #include "iwdg.h"
 #include "ballSensor.h"
+#include "testFunctions.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -122,7 +123,7 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, {0.0}};
+StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 
@@ -209,7 +210,7 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_kick = false;
 	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_middle;
+	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 0;
 	receivedData->stateRef[body_x] = 0.0f;
 	receivedData->stateRef[body_y] = 0.0f;
@@ -228,93 +229,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if(htim->Instance == htim7.Instance) {
 		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
-			/* SQUARE WITH 90 DEGREES TURNS AT SIDES
-			float velocityRef[3];
-			velocityRef[0] = 0.0;
-			velocityRef[1] = 0.0;
-			velocityRef[2] = 0.0*M_PI;
-			halt = false;
-			static uint velTimer;
-			int reps = 1;
-			static int count = 0;
-			float v = 0.5;
-			int t = 1500;
-			if (HAL_GetTick() < 7000) {
-				velTimer = HAL_GetTick();
-			} else if (HAL_GetTick() - velTimer < t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 2*t) {
-				velocityRef[body_x] = v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 3*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 4*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 5*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 6*t) {
-				velocityRef[body_x] = -v;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (HAL_GetTick() - velTimer < 7*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.0;
-			} else if (HAL_GetTick() - velTimer < 8*t) {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = -v;
-				velocityRef[body_w] = 0.5*M_PI;
-			} else if (count < reps-1) {
-				velTimer = HAL_GetTick();
-				count++;
-			} else {
-				velocityRef[body_x] = 0.0;
-				velocityRef[body_y] = 0.0;
-				velocityRef[body_w] = 0.0;
+			if (!test_isTestRunning()) {
+				// State estimation
+				stateInfo.visionAvailable = receivedData.visionAvailable;
+				stateInfo.visionYaw = receivedData.visionYaw;
+				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+					stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
+				}
+
+				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+				stateEstimation_Update(&stateInfo);
+
+				// State control
+				stateControl_SetState(stateEstimation_GetState());
+				stateControl_Update();
+
+				if (halt || !yaw_hasCalibratedOnce()) {
+					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+					wheels_SetRef(emptyRef);
+				}
+				else {
+					// Wheel control
+					wheels_SetRef(stateControl_GetWheelRef());
+				}
 			}
-
-
-			receivedData.stateRef[body_x] = velocityRef[body_x];
-			receivedData.stateRef[body_y] = velocityRef[body_y];
-			receivedData.stateRef[body_w] = velocityRef[body_w];
-			stateControl_SetRef(velocityRef);
-			*/
-
-
-			// State estimation
-			stateInfo.visionAvailable = receivedData.visionAvailable;
-			stateInfo.visionYaw = receivedData.visionYaw;
-			for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-				stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-			}
-
-			stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-			stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-			stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-			stateEstimation_Update(&stateInfo);
-
-			// State control
-			stateControl_SetState(stateEstimation_GetState());
-			stateControl_Update();
-
-			if (halt || !yaw_hasCalibratedOnce()) {
-				float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-				wheels_SetRef(emptyRef);
-			}
-			else {
-				// Wheel control
-				wheels_SetRef(stateControl_GetWheelRef());
-			}
-
 			wheels_Update();
 		}
 	}
@@ -354,6 +294,7 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
 	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
+	Putty_printf("Xsens rate of turn: %f rad/s\n\r", stateInfo->rateOfTurn);
 	Putty_printf("wheel refs:\n\r");
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
@@ -369,9 +310,15 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
 	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	Putty_printf("wheel locked:\n\r");
+	Putty_printf("  RF: %s \n\r", read_Pin(RF_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  RB: %s \n\r", read_Pin(RB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LB: %s \n\r", read_Pin(LB_LOCK_pin) ? "yes" : "no");
+	Putty_printf("  LF: %s \n\r", read_Pin(LF_LOCK_pin) ? "yes" : "no");
 	Putty_printf("Geneva: \n\r");
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
+	Putty_printf("  ref: %f\n\r", geneva_GetRef());
 }
 
 void printBaseStation() {
@@ -477,8 +424,8 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-	  //TODO: Fix battery pin with electronics
-//	  if (read_Pin(Bat_pin)) {
+//	  static int batCounter = 0;
+//	  if (read_Pin(Bat_pin) && batCounter > 1000){
 //		  Putty_printf("battery empty\n\r");
 //		  set_Pin(LED4_pin, 1);
 //		  Putty_DeInit();
@@ -490,7 +437,11 @@ int main(void)
 //		  dribbler_DeInit();
 //		  buzzer_DeInit();
 //		  MTi_DeInit(MTi);
-//		  //TODO: wireless DeInit() ?
+//		  Wireless_DeInit();
+//	  }else if (read_Pin(Bat_pin)) {
+//	  	  batCounter += 1;
+//	  } else {
+//		  batCounter = 0;
 //	  }
 
 	  IWDG_Refresh(iwdg);
@@ -507,16 +458,18 @@ int main(void)
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
+
+	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
 
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
-	  static uint printTime = 0;
+	  static int printTime = 0;
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  //printBaseStationData();
+//		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);
 	  }
@@ -1220,7 +1173,7 @@ static void MX_TIM10_Init(void)
   htim10.Instance = TIM10;
   htim10.Init.Prescaler = (APB-1);
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 2271;
+  htim10.Init.Period = MAX_PWM;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -1423,7 +1376,7 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 1, 0);

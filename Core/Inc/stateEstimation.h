@@ -26,6 +26,7 @@ typedef struct StateInfo {
 	bool visionAvailable;
 	float xsensAcc[2];
 	float xsensYaw;
+	float rateOfTurn;
 	float wheelSpeeds[4];
 } StateInfo;
 

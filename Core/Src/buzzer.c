@@ -5,6 +5,7 @@
 uint32_t buzzer_Duration = 0;
 
 song_struct* song;
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
 void buzzer_Init() {

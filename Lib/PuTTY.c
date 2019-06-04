@@ -15,7 +15,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
 ///////////////////////////////////////////////////// DEFINITIONS
 // Commands to be remember
 #define COMMANDS_TO_REMEMBER 16 // Used in PC commands 2D matrix
@@ -29,11 +28,10 @@ static void Putty_HandlePcInput(char *input, size_t n_chars);        // Called w
 static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus); // Keeps values within the real range
 static void Putty_ClearLine();                                       //Clears the current line to that new text can be placed.
 
-
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 Putty_Enum Putty_Init()
 {
+
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
@@ -42,6 +40,12 @@ Putty_Enum Putty_Init()
 
     HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1); // Data reception under serial interrupt mode
 
+    return Putty_Vars.errorCode = NoErrors;
+}
+
+Putty_Enum Putty_DeInit()
+{
+    //Not actually needed
     return Putty_Vars.errorCode = NoErrors;
 }
 
@@ -60,12 +64,6 @@ Putty_Enum Putty_printf(char *format, ...)
 
     // output string
     Putty_TextOut(Putty_Vars.smallStrBuffer);
-    return Putty_Vars.errorCode = NoErrors;
-}
-
-Putty_Enum Putty_DeInit()
-{
-    // TODO properly
     return Putty_Vars.errorCode = NoErrors;
 }
 
@@ -137,6 +135,12 @@ static void Putty_HandleCommand(char *input)
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
 		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rhelp\n\r");
+	}else if(!strcmp(input, "make robots")){
+		Putty_printf("No U!");
+	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
+		test_RunTest(full);
+	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
+		test_RunTest(square);
 	}
 	return;
 }

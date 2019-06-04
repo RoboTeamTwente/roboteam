@@ -12,6 +12,7 @@ static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
+static GPIO_Pin lockPins[4];
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -25,7 +26,10 @@ static void ResetEncoder();
 static void computeWheelSpeed();
 
 //Clamps the PWM
-static void limitScale();
+static void limit();
+
+//makes the PWM absolute
+static void scale();
 
 //Set the PWM for the wheels
 static void SetPWM();
@@ -38,7 +42,7 @@ static void SetDir();
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		initPID(&wheelsK[wheel], 5.0, 0.0, 0.0);
+		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
 	}
 	HAL_TIM_Base_Start(ENC_RF); //RF
 	HAL_TIM_Base_Start(ENC_RB); //RB
@@ -48,6 +52,11 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
+
+	lockPins[wheels_RF] = RF_LOCK_pin;
+	lockPins[wheels_RB] = RB_LOCK_pin;
+	lockPins[wheels_LB] = LB_LOCK_pin;
+	lockPins[wheels_LF] = LF_LOCK_pin;
 	return 0;
 }
 
@@ -71,14 +80,29 @@ int wheels_DeInit(){
 }
 
 void wheels_Update(){
+	static uint lockTimes[4] = {0};
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 			float err = wheelRef[wheel]-wheelSpeed[wheel];
-			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
-		}
-		limitScale();
 
+			if (fabs(err) < 0.1) {
+				err = 0.0;
+				wheelsK[wheel].I = 0;
+			}
+
+			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			if (read_Pin(lockPins[wheel])) {
+				if (HAL_GetTick() - lockTimes[wheel] < 200) {
+					pwm[wheel] = 0;
+				}
+			} else {
+				lockTimes[wheel] = HAL_GetTick();
+			}
+		}
+
+		scale();
+		limit();
 		SetDir();
 		SetPWM();
 	}
@@ -124,18 +148,39 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
-static void limitScale(){
+static void scale(){
+	static int Count[4] = {0};
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		// Determine direction
-		if(pwm[wheel] <= -1.0F){
-			pwm[wheel] *= -1;
-			direction[wheel] = 0; // turn anti-clockwise
-		} else if(pwm[wheel] >= 1.0F){
-			direction[wheel] = 1; // turn clockwise
+		if (Count[wheel] < 5){
+			//for ^*10 ms the wheel cannot change direction
+			//otherwise the motors drivers break
+			if (direction[wheel]== 0 && pwm[wheel]<= -1.0F){
+				pwm[wheel] *= -1;
+			} else if (!(direction[wheel]==1 && pwm[wheel]>= 1.0F)){
+				pwm[wheel] = 0;
+			}
+			Count[wheel] += 1;
 		} else {
-			pwm[wheel] = 0; // the motor does not brake if pwm 0 is sent
+			// Determine direction
+			if(pwm[wheel] <= -1.0F){
+				pwm[wheel] *= -1;
+				if (direction[wheel] == 1){
+					Count[wheel] = 0;
+				}
+				direction[wheel] = 0; // turn anti-clockwise
+			} else if(pwm[wheel] >= 1.0F){
+				if (direction[wheel] == 0){
+					Count[wheel] = 0;
+				}
+				direction[wheel] = 1; // turn clockwise
+			}
 		}
-		// Limit PWM
+	}
+}
+
+static void limit(){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+	// Limit PWM
 		if(pwm[wheel] < PWM_CUTOFF){
 			pwm[wheel] = 0.0F;
 		} else if(pwm[wheel] > MAX_PWM){

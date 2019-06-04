@@ -58,6 +58,7 @@
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
+#include "testFunctions.h"
 
 #include "time.h"
 #include <unistd.h>

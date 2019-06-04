@@ -190,16 +190,15 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
-	// TODO: check if the current orientation of the BS is adequate for speed control
-	// TODO: tune the speed of the ball to trigger shooting
-	// TODO: add else{} to ballPosition checks (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
+	// TODO: add else{} to ballPosition checks
+	// (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
 	if (receivedData->do_kick) {
-		if (ballPosition.canKickBall || ballPosition.speed > 2.0) {
+		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
 			shoot_Shoot(shoot_Kick);
 		}
 	}
-	else if (receivedData->do_chip) {
-		if (ballPosition.canKickBall || ballPosition.speed > 2.0) {
+	else if (receivedData->do_chip || receivedData->kick_chip_forced) {
+		if (ballPosition.canKickBall) {
 			shoot_Shoot(shoot_Chip);
 		}
 	}
@@ -208,6 +207,7 @@ void executeCommands(ReceivedData* receivedData) {
 void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
+	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
 	receivedData->genevaRef = geneva_middle;
 	receivedData->shootPower = 0;
@@ -472,7 +472,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  bool once = false;
   while (1)
   {
 	  /*
@@ -497,7 +496,6 @@ int main(void)
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 	  ballSensorFSM();
-	  set_Pin(LED4_pin, ballSensorInitialized);
 
 	  /*
 	   * Check for wireless data
@@ -511,8 +509,6 @@ int main(void)
 	  }
 	  executeCommands(&receivedData);
 
-	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
-
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
@@ -520,10 +516,6 @@ int main(void)
 	  if (HAL_GetTick() >  printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  if (xsens_CalibrationDone && !once) {
-			  buzzer_Play_PowerUp();
-			  once = true;
-		  }
 		  //printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);

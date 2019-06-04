@@ -27,6 +27,11 @@ void buzzer_Play_Startup();
 void buzzer_Play_Tetris();
 void buzzer_Play_Mario();
 void buzzer_Play_PowerUp();
+void buzzer_Play_WarningOne();
+void buzzer_Play_WarningTwo();
+void buzzer_Play_WarningThree();
+void buzzer_Play_WarningFour();
+void buzzer_Play_BridgeBattle();
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);

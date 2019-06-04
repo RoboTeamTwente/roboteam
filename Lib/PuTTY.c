@@ -117,6 +117,8 @@ static void Putty_HandleCommand(char *input)
 		Putty_printf("Geneva encoder = %i\n\r", geneva_GetEncoder());
 	} else if(!memcmp(input, "geneva set" , strlen("geneva set"))){
 		geneva_SetRef(strtol(input + 1 + strlen("geneva set"), NULL, 10));
+	}else if(!memcmp(input, "kickbs", strlen("kickbs"))){
+		if (ballPosition.canKickBall) shoot_Shoot(shoot_Kick);
 	}else if(!memcmp(input, "kick", strlen("kick"))){
 		shoot_Shoot(shoot_Kick);
 	}else if(!memcmp(input, "chip", strlen("chip"))){
@@ -131,7 +133,7 @@ static void Putty_HandleCommand(char *input)
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
-	}else if(!memcmp(input, "toggle ballsensor debug", strlen("toggle ballsensor debug"))){
+	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
 		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rhelp\n\r");

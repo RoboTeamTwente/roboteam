@@ -151,7 +151,7 @@ static void scale(){
 	static int Count[4] = {0};
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		if (Count[wheel] < 5){
-			//for ^ ms the wheel cannot change direction
+			//for ^*10 ms the wheel cannot change direction
 			//otherwise the motors drivers break
 			if (direction[wheel]== 0 && pwm[wheel]<= -1.0F){
 				pwm[wheel] *= -1;

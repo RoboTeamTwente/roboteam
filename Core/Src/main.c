@@ -445,6 +445,8 @@ int main(void)
 		  stateControl_ResetAngleI();
 		  clearReceivedData(&receivedData);
 	  }
+
+	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
 
 	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));

@@ -1,9 +1,3 @@
-/*
- * ballSensor.c
- *
- *  Created on: Mar 30, 2018
- *      Author: Gebruiker
- */
 #include "ballSensor.h"
 #include "limits.h"
 #include "gpio_util.h"
@@ -11,20 +5,26 @@
 #include "string.h"
 #include "peripheral_util.h"
 
-int16_t y_pos_old = NOBALL;
-int16_t x_pos_old = NOBALL;
-uint lastSeen_old = 0;
+int16_t y_pos_old = NOBALL; // for speed calculations
+int16_t x_pos_old = NOBALL; // for speed calculations
+uint lastSeen_old = 0;  // for speed calculations
 
 uint error;
 
-int8_t config = 0;
-int8_t freq = 0;
+/* device responds with configured bytes. if some are not set, their value has to be checked.
+ * when config message is updated, response has be to updated too, but not set bytes might return 
+ * smth different from previous response. flag debugging works
+ * alternatively, can include all configuration bytes for the device (used/unused) in the config message
+ * but this is to be verified.
+ */ 
+int8_t config = 0; // for debugging configuration messages
+int8_t freq = 0; // for debugging configuration/frequency messages
 
 enum zForceStates zForceState = zForce_RST;
 
 uint8_t ball_debug = 0; // enable ball speed print statements
 
-uint8_t ballSensorInitialized = 0; // ball sensor initialization routine status
+uint8_t ballSensorInitialized = 0; // ball sensor initialization status
 uint8_t next_message_length = 2; // default length of next message is 2 bytes
 
 /* ball sensor boot complete response */
@@ -59,15 +59,12 @@ uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
 
 void ballSensorInit()
 {
-	//HAL_I2C_Init(&hi2c1);
-	//resetKickChipData();
+	//Putty_printf ("BS_INIT BEGIN\n\r");
 	noBall();
-	//Putty_printf ("init ballsensor\n\r");
 	ballSensorReset();
-
 	next_message_length = 2;
 	set_Pin(BS_RST_pin, 1);
-	int currentTime = HAL_GetTick();
+	int currentTime = HAL_GetTick(); // avoid lockup when initializing
 	zForceState = zForce_WaitForDR;
 	while(  !read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 1000)  );
 	I2CRx();
@@ -80,7 +77,6 @@ void ballSensorReset() {
 	set_Pin(BS_RST_pin, 0);
 	HAL_Delay(1);
 	set_Pin(BS_RST_pin, 1);
-	//Putty_printf("going to waitfordr\n\r");
 	zForceState = zForce_WaitForDR;
 }
 
@@ -122,11 +118,10 @@ void updatePosition(uint8_t data[]) {
 void noBall() {
 	ballPosition.x = ballPosition.y = y_pos_old = x_pos_old = NOBALL;
 	ballPosition.speed = 0;
-	ballPosition.lastSeen = 0;
+	ballPosition.lastSeen = lastSeen_old = 0;
 	ballPosition.id = -1;
 	ballPosition.canKickBall = 0;
 	ballPosition.canSeeBall = 0;
-	lastSeen_old = 0;
 }
 
 void parseMessage() {
@@ -147,7 +142,7 @@ void parseMessage() {
 
 	else if(!memcmp(data, enable_response, sizeof(enable_response))) {
         ballSensorInitialized = 1;
-        Putty_printf("BS_INIT\n\r");
+        Putty_printf("BS_INIT COMPLETE\n\r");
         zForceState = zForce_WaitForDR;
 	}
 

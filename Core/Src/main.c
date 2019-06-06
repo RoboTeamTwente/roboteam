@@ -255,7 +255,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					wheels_SetRef(stateControl_GetWheelRef());
 				}
 			}
-			wheels_Update();
+			static int wirelessCounter = 0;
+			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF){
+				yaw_ResetCalibration();
+			} else if (!checkWirelessConnection()){
+				wheels_Update();
+				wirelessCounter += 1;
+			} else {
+				wirelessCounter = 0;
+				wheels_Update();
+			}
 		}
 	}
 	else if (htim->Instance == htim10.Instance) {

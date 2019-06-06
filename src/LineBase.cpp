@@ -14,8 +14,7 @@ double LineBase::slope() const {
     return (end.y - start.y)/(end.x - start.x);
 }
 bool LineBase::isVertical() const {
-    double sl = this->slope();
-    return sl == std::numeric_limits<double>::infinity() || sl == - std::numeric_limits<double>::infinity();
+    return (end.x == start.x) && (end.y != start.y);
 }
 Vector2 LineBase::direction() const {
     return Vector2(end - start);

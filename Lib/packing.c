@@ -146,6 +146,7 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 
 	// Shoot
 	receivedData->shootPower = kick_chip_power * CONVERT_SHOOTING_POWER;
+	receivedData->kick_chip_forced = kick_chip_forced;
 	receivedData->do_kick = do_kick;
 	receivedData->do_chip = do_chip;
 

@@ -99,6 +99,9 @@ extern GPIO_Pin SX_RST_pin;
 extern GPIO_Pin SX_NSS_pin;
 extern GPIO_Pin SX_BUSY_pin;
 
+// Ballsensor
+extern GPIO_Pin BS_IRQ_pin;
+extern GPIO_Pin BS_RST_pin;
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 

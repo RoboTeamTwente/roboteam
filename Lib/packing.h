@@ -34,6 +34,7 @@ typedef struct ReceivedData {
 	int genevaRef;
 	int dribblerRef;
 	int shootPower;
+	bool kick_chip_forced;
 	bool do_kick;
 	bool do_chip;
 } ReceivedData;

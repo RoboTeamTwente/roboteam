@@ -55,9 +55,11 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
+#include "buzzer_Tunes.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
+#include "ballSensor.h"
 #include "testFunctions.h"
 
 #include "time.h"
@@ -82,7 +84,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 I2C_HandleTypeDef hi2c1;
-DMA_HandleTypeDef hdma_i2c1_rx;
 
 QSPI_HandleTypeDef hqspi;
 DMA_HandleTypeDef hdma_quadspi;
@@ -190,18 +191,24 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
-
-	// TODO: needs to listen to kick_forced. Or to ballsensor
+	// TODO: add else{} to ballPosition checks
+	// (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
 	if (receivedData->do_kick) {
-		shoot_Shoot(shoot_Kick);
-	} else if (receivedData->do_chip) {
-		shoot_Shoot(shoot_Chip);
+		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
+			shoot_Shoot(shoot_Kick);
+		}
+	}
+	else if (receivedData->do_chip || receivedData->kick_chip_forced) {
+		if (ballPosition.canKickBall) {
+			shoot_Shoot(shoot_Chip);
+		}
 	}
 }
 
 void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
+	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
 	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 0;
@@ -393,12 +400,13 @@ int main(void)
   geneva_Init();
   shoot_Init();
   dribbler_Init();
+  ballSensorInit();
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
-  Putty_printf("ID: %u\n\r",ID);
+  Putty_printf("\n\rID: %u\n\r",ID);
 
   // start the pingpong operation
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
@@ -438,6 +446,8 @@ int main(void)
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
+	  ballSensorFSM();
+
 	  /*
 	   * Check for wireless data
 	   */
@@ -451,8 +461,6 @@ int main(void)
 
 	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
-
-	  //set_Pin(LED6_pin, read_Pin(RF_LOCK_pin));
 
 	  /*
 	   * Print stuff on PuTTY for debugging
@@ -547,7 +555,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x6000030D;
+  hi2c1.Init.Timing = 0x20404768;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -1367,9 +1375,6 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);

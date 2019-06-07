@@ -56,7 +56,7 @@
 
 // Shoot
 #define MIN_KICK_TIME 25 				// minimum time period of kicking
-#define MAX_KICK_TIME 60 				// maximum time period of kicking
+#define MAX_KICK_TIME 300 				// maximum time period of kicking
 #define MIN_CHIP_TIME 25 				// minimum time period of chipping
 #define MAX_CHIP_TIME 60 				// maximum time period of chipping
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)

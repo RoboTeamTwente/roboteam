@@ -256,7 +256,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				}
 			}
 			static int wirelessCounter = 0;
-			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF){
+			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF && !test_isTestRunning()){
 				yaw_ResetCalibration();
 			} else if (!checkWirelessConnection()){
 				wheels_Update();

@@ -240,6 +240,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
 				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+				stateInfo.rateOfTurn = MTi->gyr[2];
 				stateEstimation_Update(&stateInfo);
 
 				// State control

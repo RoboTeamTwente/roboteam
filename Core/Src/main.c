@@ -191,15 +191,26 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
-	// TODO: add else{} to ballPosition checks
-	// (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
 	if (receivedData->do_kick) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
+		if (receivedData->kick_chip_forced)
+			// no questions asked
 			shoot_Shoot(shoot_Kick);
+		else if (ballPosition.canKickBall) {
+			if (receivedData->genevaRef < 3 && ballPosition.x < 550)
+				// geneva in left/leftleft position, then ball should be towards the left
+				shoot_Shoot(shoot_Kick);
+			else if (receivedData->genevaRef > 3 && ballPosition.x > 150)
+				// geneva in right/rightright position, then ball should be towards the right
+				shoot_Shoot(shoot_Kick);
+			else if (receivedData->genevaRef == 3) // && ballPosition.x > 150 && ballPosition.x < 550)
+				// technically, for centered geneva ball position is always good
+				// geneva in center position, then ball should be towards the center
+				shoot_Shoot(shoot_Kick);
+			// else condition is not shooting, because ball is out of range for geneva
 		}
 	}
-	else if (receivedData->do_chip || receivedData->kick_chip_forced) {
-		if (ballPosition.canKickBall) {
+	else if (receivedData->do_chip) {
+		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
 			shoot_Shoot(shoot_Chip);
 		}
 	}
@@ -447,6 +458,12 @@ int main(void)
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 	  ballSensorFSM();
+
+	  if (ballPosition.canKickBall){
+		  set_Pin(LED4_pin, 1);
+	  }
+	  else
+		  set_Pin(LED4_pin, 0);
 
 	  /*
 	   * Check for wireless data

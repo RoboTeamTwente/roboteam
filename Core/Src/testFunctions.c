@@ -52,6 +52,7 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
+	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
 	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 20;
@@ -125,6 +126,7 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 		}
 	} else if (timeDiff < 18010) {
 		receivedData->do_kick = true;
+		receivedData->kick_chip_forced = true;
 	} else if (timeDiff < 19000) {
 		// wait
 		if (prevTimeDiff < 18010) {
@@ -132,6 +134,7 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 		}
 	} else if (timeDiff < 19010) {
 		receivedData->do_chip = true;
+		receivedData->kick_chip_forced = true;
 	} else if (timeDiff < 20000) {
 		// wait
 	} else if (timeDiff < 21000) {

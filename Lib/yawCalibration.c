@@ -35,7 +35,7 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable, flo
 	// Calibrate the xsens yaw from some time ago with vision to account for delay while sending.
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
-	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && isRotatingSlow(rateOfTurn) && visionAvailable) {
+	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && visionAvailable && isRotatingSlow(rateOfTurn)) {
 		if (restCounter > CALIBRATION_TIME / TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);
@@ -72,6 +72,10 @@ bool yaw_hasCalibratedOnce(){
 	return hasCalibratedOnce;
 };
 
+void yaw_ResetCalibration(){
+	hasCalibratedOnce = false;
+};
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset) {
@@ -87,6 +91,9 @@ static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset
 	if (checkCounter > 10) {
 		checkCounter = 0;
 		calibrationNeeded = true;
+	}
+	if (!hasCalibratedOnce){
+		return true;
 	}
 	return calibrationNeeded;
 }

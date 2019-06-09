@@ -192,20 +192,24 @@ void executeCommands(ReceivedData* receivedData) {
 	shoot_SetPower(receivedData->shootPower);
 
 	if (receivedData->do_kick) {
-		if (receivedData->kick_chip_forced)
+		if (receivedData->kick_chip_forced){
 			// no questions asked
 			shoot_Shoot(shoot_Kick);
+		}
 		else if (ballPosition.canKickBall) {
-			if (receivedData->genevaRef < 3 && ballPosition.x < 550)
+			if (receivedData->genevaRef < 3 && ballPosition.x < 550){
 				// geneva in left/leftleft position, then ball should be towards the left
 				shoot_Shoot(shoot_Kick);
-			else if (receivedData->genevaRef > 3 && ballPosition.x > 150)
+			}
+			else if (receivedData->genevaRef > 3 && ballPosition.x > 150){
 				// geneva in right/rightright position, then ball should be towards the right
 				shoot_Shoot(shoot_Kick);
-			else if (receivedData->genevaRef == 3) // && ballPosition.x > 150 && ballPosition.x < 550)
+			}
+			else if (receivedData->genevaRef == 3) {// && ballPosition.x > 150 && ballPosition.x < 550)
 				// technically, for centered geneva ball position is always good
 				// geneva in center position, then ball should be towards the center
 				shoot_Shoot(shoot_Kick);
+			}
 			// else condition is not shooting, because ball is out of range for geneva
 		}
 	}
@@ -472,8 +476,9 @@ int main(void)
 	  if (ballPosition.canKickBall){
 		  set_Pin(LED4_pin, 1);
 	  }
-	  else
+	  else {
 		  set_Pin(LED4_pin, 0);
+	  }
 
 	  /*
 	   * Check for wireless data

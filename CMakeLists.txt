@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(roboteam_utils)
 
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
+include(cotire)
+
 # The code to generate protobuf files is mostly from here:
 # http://answers.ros.org/question/192882/using-catkin-to-generate-and-use-protobuf-messages/
 # See dustingooding's answer.
@@ -160,6 +163,7 @@ target_link_libraries(roboteam_utils
         ${catkin_LIBRARIES}
         ${PROJECT_NAME}_proto
         )
+cotire(roboteam_utils)
 
 # Protobuf messages.
 # add_library(roboteam_utils_proto ${PROTO_CPP} ${PROTO_H} ${PROTO_PY})
@@ -186,3 +190,4 @@ target_link_libraries(utils_test
         roboteam_utils
         ${catkin_LIBRARIES}
         )
+cotire(utils_test)

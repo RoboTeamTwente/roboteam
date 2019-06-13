@@ -22,7 +22,7 @@ typedef struct song_struct{
 
 ///////////////////////////////////////////////////// TONES
 // tones are counters, so (1e6/tone_freq - 1) in buzzer_Play()
-#define buzz_Silence 0
+#define buzz_Si 0
 #define buzz_B0  31
 #define buzz_C1  33
 #define buzz_CS1 35
@@ -123,5 +123,7 @@ extern song_struct warningTwo[];
 extern song_struct warningThree[];
 extern song_struct warningFour[];
 extern song_struct bridgeBattle[];
+extern song_struct imperialMarch[];
+extern song_struct flatLine[];
 
 #endif /* BUZZER_TUNES_H_ */

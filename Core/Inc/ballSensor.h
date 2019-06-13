@@ -11,7 +11,7 @@
 typedef struct{
 	int16_t x; // x coordinate, 0-700. -1 is no ball condition
 	int16_t y; // y coordinate. 0-440. -1 is no ball condition
-	float speed; // i am speeeeed
+	float speed; // i am speeeeed, not used cuz orientation
 	uint lastSeen; // for speed calculations; current BS orientation may not be optimal for this feature
 	int8_t id; // not really necessary since it is not reliable, but useful for debugging sometimes
 	int8_t canKickBall; // within ?mm in y direction, set in updatePosition()

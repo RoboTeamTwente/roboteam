@@ -29,4 +29,7 @@ float yaw_GetCalibratedYaw();
 // Check if we have calibrated at least once, otherwise the yaw is probably way off
 bool yaw_hasCalibratedOnce();
 
+// At some points the calibration has to be done again for certain.
+void yaw_ResetCalibration();
+
 #endif /* YAWCALIBRATION_H_ */

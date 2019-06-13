@@ -13,6 +13,9 @@
 #include "PuTTY.h"
 #include "packing.h"
 
+static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
+
+
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
@@ -94,7 +97,6 @@ void ReceivePacket(SX1280* SX){
 
 };
 
-bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
 bool checkWirelessConnection() {
 	return isWirelessConnected;
 }

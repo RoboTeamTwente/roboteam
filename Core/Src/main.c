@@ -195,20 +195,24 @@ void executeCommands(ReceivedData* receivedData) {
 	shoot_SetPower(receivedData->shootPower);
 
 	if (receivedData->do_kick) {
-		if (receivedData->kick_chip_forced)
+		if (receivedData->kick_chip_forced){
 			// no questions asked
 			shoot_Shoot(shoot_Kick);
+		}
 		else if (ballPosition.canKickBall) {
-			if (receivedData->genevaRef < 3 && ballPosition.x < 550)
+			if (receivedData->genevaRef < 3 && ballPosition.x < 550){
 				// geneva in left/leftleft position, then ball should be towards the left
 				shoot_Shoot(shoot_Kick);
-			else if (receivedData->genevaRef > 3 && ballPosition.x > 150)
+			}
+			else if (receivedData->genevaRef > 3 && ballPosition.x > 150){
 				// geneva in right/rightright position, then ball should be towards the right
 				shoot_Shoot(shoot_Kick);
-			else if (receivedData->genevaRef == 3) // && ballPosition.x > 150 && ballPosition.x < 550)
+			}
+			else if (receivedData->genevaRef == 3) {// && ballPosition.x > 150 && ballPosition.x < 550)
 				// technically, for centered geneva ball position is always good
 				// geneva in center position, then ball should be towards the center
 				shoot_Shoot(shoot_Kick);
+			}
 			// else condition is not shooting, because ball is out of range for geneva
 		}
 	}
@@ -254,6 +258,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
 				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+				stateInfo.rateOfTurn = MTi->gyr[2];
 				stateEstimation_Update(&stateInfo);
 
 				// State control
@@ -269,7 +274,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					wheels_SetRef(stateControl_GetWheelRef());
 				}
 			}
-			wheels_Update();
+			static int wirelessCounter = 0;
+			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF && !test_isTestRunning()){
+				yaw_ResetCalibration();
+			} else if (!checkWirelessConnection()){
+				wheels_Update();
+				wirelessCounter += 1;
+			} else {
+				wirelessCounter = 0;
+				wheels_Update();
+			}
 		}
 	}
 	else if (htim->Instance == htim10.Instance) {

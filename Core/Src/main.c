@@ -445,6 +445,7 @@ int main(void)
 		  geneva_DeInit();
 		  shoot_DeInit();
 		  dribbler_DeInit();
+		  ballSensor_Init();
 		  buzzer_DeInit();
 		  MTi_DeInit(MTi);
 		  Wireless_DeInit();

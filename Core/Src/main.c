@@ -410,7 +410,7 @@ int main(void)
   geneva_Init();
   shoot_Init();
   dribbler_Init();
-  ballSensorInit();
+  ballSensor_Init();
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
@@ -434,25 +434,26 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-//	  static int batCounter = 0;
-//	  if (read_Pin(Bat_pin) && batCounter > 1000){
-//		  Putty_printf("battery empty\n\r");
-//		  set_Pin(LED4_pin, 1);
-//		  Putty_DeInit();
-//		  wheels_DeInit();
-//		  stateControl_DeInit();
-//		  stateEstimation_DeInit();
-//		  geneva_DeInit();
-//		  shoot_DeInit();
-//		  dribbler_DeInit();
-//		  buzzer_DeInit();
-//		  MTi_DeInit(MTi);
-//		  Wireless_DeInit();
-//	  }else if (read_Pin(Bat_pin)) {
-//	  	  batCounter += 1;
-//	  } else {
-//		  batCounter = 0;
-//	  }
+	  static int batCounter = 0;
+	  if (read_Pin(Bat_pin) && batCounter > 1000){
+		  Putty_printf("battery empty\n\r");
+		  set_Pin(LED4_pin, 1);
+		  Putty_DeInit();
+		  wheels_DeInit();
+		  stateControl_DeInit();
+		  stateEstimation_DeInit();
+		  geneva_DeInit();
+		  shoot_DeInit();
+		  dribbler_DeInit();
+		  ballSensor_DeInit();
+		  buzzer_DeInit();
+		  MTi_DeInit(MTi);
+		  Wireless_DeInit();
+	  }else if (read_Pin(Bat_pin)) {
+	  	  batCounter += 1;
+	  } else {
+		  batCounter = 0;
+	  }
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();

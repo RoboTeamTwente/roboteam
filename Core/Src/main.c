@@ -55,7 +55,6 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
-#include "buzzer_Tunes.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
@@ -178,6 +177,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
+		// test only! construct feedback message elsewhere
+		Bot_to_PC[0] = get_Id();
+		Bot_to_PC[1] = ballPosition.canKickBall;
+		Bot_to_PC[2] = xsens_CalibrationDone;
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
@@ -418,7 +421,8 @@ int main(void)
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);
 
-  // start the pingpong operation
+  // start the wireless receiver
+  // transmit feedback packet for every received packet if wirelessFeedback==true
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

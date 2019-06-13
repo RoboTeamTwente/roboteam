@@ -8,12 +8,6 @@
 #ifndef BUZZER_TUNES_H_
 #define BUZZER_TUNES_H_
 
-///////////////////////////////////////////////////// PUBLIC VARIABLE DECLARATIONS
-typedef struct song_struct{
-	uint16_t period;
-	float duration;
-} song_struct;
-
 // BPM definitions
 #define Tbeat 0.4
 #define Mbeat 0.4
@@ -114,16 +108,111 @@ typedef struct song_struct{
 #define buzz_DS8 4978
 
 // tunes
-extern song_struct startup_song[];
-extern song_struct tetris[];
-extern song_struct mario_victory[];
-extern song_struct powerUp[];
-extern song_struct warningOne[];
-extern song_struct warningTwo[];
-extern song_struct warningThree[];
-extern song_struct warningFour[];
-extern song_struct bridgeBattle[];
-extern song_struct imperialMarch[];
-extern song_struct flatLine[];
+song_struct startup_song[] =
+						{{buzz_C4, 0.1}, {buzz_D4, 0.1}, {buzz_E4, 0.1}, {buzz_F4, 0.1}, {buzz_G4, 0.1}, {buzz_A4, 0.1}, {buzz_B4, 0.1}, {buzz_C5, 0.1}, {0xFFFF, 0}};
+
+song_struct tetris[] =
+						{{buzz_E5, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4, Tbeat},
+						{buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat},
+						{buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_E5, Tbeat}, {buzz_C5, Tbeat}, {buzz_A4, Tbeat}, {buzz_A4, Tbeat}, {buzz_Si, 1.5*Tbeat}, {buzz_D5, Tbeat},
+						{buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat},
+						{buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat},
+						{buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_E5,Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat},
+						{buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4,Tbeat}, {buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat},
+						{buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat},
+						{buzz_Si,1.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat},
+						{buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat},
+						{buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_E4,2*Tbeat}, {buzz_C4,2*Tbeat},
+						{buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_A3,2*Tbeat}, {buzz_GS3,2*Tbeat}, {buzz_B3,Tbeat}, {buzz_Si,Tbeat}, {buzz_E4,2*Tbeat},
+						{buzz_C4,2*Tbeat}, {buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,Tbeat}, {buzz_E4,Tbeat}, {buzz_A4,2*Tbeat}, {buzz_GS4,3*Tbeat}, {buzz_Si,Tbeat}, {0xFFFF, 0}};
+
+song_struct mario_victory[] =
+						{{buzz_GS3,Mbeat/3.0}, {buzz_CS4,Mbeat/3.0}, {buzz_F4,Mbeat/3.0}, {buzz_GS4,Mbeat/3.0}, {buzz_CS5,Mbeat/3.0}, {buzz_F5,Mbeat/3.0}, {buzz_GS5,Mbeat},
+						{buzz_F5,Mbeat}, {buzz_A3,Mbeat/3.0}, {buzz_CS4,Mbeat/3.0}, {buzz_E4,Mbeat/3.0}, {buzz_A4,Mbeat/3.0}, {buzz_CS5,Mbeat/3.0}, {buzz_E5,Mbeat/3.0},
+						{buzz_A5,Mbeat}, {buzz_E5,Mbeat}, {buzz_B3,Mbeat/3.0}, {buzz_DS4,Mbeat/3.0}, {buzz_FS4,Mbeat/3.0}, {buzz_B4,Mbeat/3.0}, {buzz_DS5,Mbeat/3.0},
+						{buzz_FS5,Mbeat/3.0}, {buzz_B5,Mbeat}, {buzz_B5,Mbeat/3.0}, {buzz_B5,Mbeat/3.0}, {buzz_B5,Mbeat/3.0}, {buzz_CS6,Mbeat*2.0}, {0xFFFF, 0}};
+
+song_struct powerUp[] =
+						{{buzz_C5,fBeat*0.5}, {buzz_G4,fBeat}, {buzz_C5,fBeat}, {buzz_E5,fBeat}, {buzz_G5,fBeat}, {buzz_C6,fBeat}, {buzz_G5,fBeat}, {buzz_C5,fBeat*0.5}, {buzz_GS4,fBeat},
+						{buzz_C5,fBeat}, {buzz_DS5,fBeat}, {buzz_GS5,fBeat}, {buzz_DS5,fBeat}, {buzz_GS5,fBeat}, {buzz_C6,fBeat}, {buzz_DS6,fBeat},
+						{buzz_GS6,fBeat}, {buzz_DS6,fBeat}, {buzz_D5,0.5*fBeat}, {buzz_AS4,fBeat}, {buzz_D5,fBeat}, {buzz_F5,fBeat}, {buzz_AS5,fBeat},
+						{buzz_F5,fBeat}, {buzz_AS5,fBeat}, {buzz_D6,fBeat}, {buzz_F6,fBeat}, {buzz_AS6,fBeat}, {buzz_F6,fBeat}, {0xFFFF, 0}};
+
+song_struct warningOne[] =
+						{{buzz_A5,0.1}, {buzz_E5,0.3}, {buzz_Si,0.2}, {buzz_A5,0.1}, {buzz_E5,0.3}, {buzz_Si,0.2}, {buzz_A5,0.1}, {buzz_E5,0.3}, {buzz_Si,0.2}, {0xFFFF, 0}};
+
+song_struct warningTwo[] =
+						{{buzz_C5,0.1}, {buzz_FS5,0.1}, {buzz_B5,0.6}, {buzz_C5,0.1}, {buzz_FS5,0.1}, {buzz_B5,0.1}, {buzz_Si,0.5}, {buzz_C5,0.1}, {buzz_FS5,0.1}, {buzz_B5,0.1},
+						{buzz_Si,0.5}, {buzz_C5,0.1}, {buzz_FS5,0.1}, {buzz_B5,0.1}, {buzz_Si,0.5}, {0xFFFF, 0}};
+
+
+song_struct warningThree[] =
+						{{buzz_FS6,0.66}, {buzz_D6,0.66}, {buzz_B5,0.66}, {buzz_G5,0.66}, {buzz_AS5,1.33}, {buzz_Si,1.76}, {buzz_FS6,0.66}, {buzz_D6,0.66},
+						{buzz_B5,0.66}, {buzz_G5,0.66}, {buzz_AS5,1.33}, {buzz_Si,1.76}, {buzz_FS6,0.66}, {buzz_D6,0.66}, {buzz_B5,0.66}, {buzz_G5,0.66}, {buzz_AS5,1.33},
+						{buzz_Si,1.76}, {0xFFFF, 0}};
+
+song_struct warningFour[] =
+						{{buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_Si,0.2}, {buzz_G5,0.05}, {buzz_GS5,0.05},
+						{buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_Si,0.2}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05},
+						{buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_Si,0.2}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05},
+						{buzz_Si,0.2}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_G5,0.05}, {buzz_GS5,0.05}, {buzz_Si,0.2}, {0xFFFF, 0}};
+
+song_struct bridgeBattle[] =
+						{{buzz_F4,halfBeat}, {buzz_F4,halfBeat}, {buzz_Si,halfBeat}, {buzz_F4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_Si,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_B4,halfBeat}, {buzz_AS4,0.6666*halfBeat}, {buzz_B4,0.6666*halfBeat},
+						{buzz_AS4,0.6666*halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_DS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_F4,halfBeat}, {buzz_Si,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_G4,halfBeat}, {buzz_F4,halfBeat}, {buzz_Si,9*halfBeat}, {buzz_F4,halfBeat}, {buzz_G4,halfBeat},
+						{buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_G4,halfBeat}, {buzz_F4,halfBeat}, {buzz_C5,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_CS5,halfBeat}, {buzz_F4,halfBeat}, {buzz_C5,halfBeat}, {buzz_GS4,2*halfBeat}, {buzz_GS4,halfBeat}, {buzz_AS4,halfBeat},
+						{buzz_E4,halfBeat}, {buzz_C5,halfBeat}, {buzz_E4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_G4,2*halfBeat}, {buzz_G4,halfBeat}, {buzz_GS4,halfBeat},
+						{buzz_G4,halfBeat}, {buzz_F4,halfBeat}, {buzz_G4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_G4,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_G4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_G4,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_C5,halfBeat}, {buzz_F4,halfBeat}, {buzz_CS5,halfBeat}, {buzz_F4,halfBeat}, {buzz_C5,halfBeat}, {buzz_GS4,2*halfBeat},
+						{buzz_GS4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_E4,halfBeat}, {buzz_C5,halfBeat}, {buzz_E4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_G4,2*halfBeat},
+						{buzz_G4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_C5,halfBeat}, {buzz_CS5,halfBeat}, {buzz_DS5,halfBeat}, {buzz_CS5,halfBeat},
+						{buzz_C5,halfBeat}, {buzz_CS5,halfBeat}, {buzz_DS5,10*halfBeat}, {buzz_C5,halfBeat}, {buzz_CS5,halfBeat}, {buzz_DS5,2*halfBeat}, {buzz_G5,2*halfBeat},
+						{buzz_F5,14*halfBeat}, {buzz_Si,2*halfBeat}, {buzz_AS4,3*halfBeat}, {buzz_F4,3*halfBeat}, {buzz_DS4,2*halfBeat}, {buzz_D4,3*halfBeat}, {buzz_DS4,3*halfBeat},
+						{buzz_D4,2*halfBeat}, {buzz_C4,3*halfBeat}, {buzz_F4,3*halfBeat}, {buzz_G4,2*halfBeat}, {buzz_A4,3*halfBeat}, {buzz_C5,3*halfBeat}, {buzz_D5,2*halfBeat},
+						{buzz_DS5,2*halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,2*halfBeat}, {buzz_D5,halfBeat}, {buzz_DS5,5*halfBeat}, {buzz_Si,halfBeat}, {buzz_DS5,2*halfBeat},
+						{buzz_F5,2*halfBeat}, {buzz_G5,2*halfBeat}, {buzz_F5,halfBeat}, {buzz_DS5,2*halfBeat}, {buzz_F5,halfBeat}, {buzz_G5,8*halfBeat}, {buzz_Si,2*halfBeat},
+						{buzz_A5,2*halfBeat}, {buzz_FS5,halfBeat}, {buzz_DS5,halfBeat}, {buzz_A4,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_DS5,2*halfBeat},
+						{buzz_DS5,2*halfBeat}, {buzz_C5,halfBeat}, {buzz_F5,2*halfBeat}, {buzz_DS5,2*halfBeat}, {buzz_D5,8*halfBeat}, {buzz_Si,halfBeat}, {buzz_G4,halfBeat},
+						{buzz_B4,halfBeat}, {buzz_D5,halfBeat}, {buzz_G5,halfBeat}, {buzz_F5,halfBeat}, {buzz_D5,halfBeat}, {buzz_B4,halfBeat}, {buzz_GS5,2*halfBeat},
+						{buzz_G5,halfBeat}, {buzz_Si,halfBeat}, {buzz_FS5,2*halfBeat}, {buzz_G5,halfBeat}, {buzz_Si,halfBeat}, {buzz_GS5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat},
+						{buzz_C5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat}, {buzz_G5,0.5*halfBeat}, {buzz_D5,0.5*halfBeat}, {buzz_B4,0.5*halfBeat}, {buzz_D5,0.5*halfBeat},
+						{buzz_FS5,0.5*halfBeat}, {buzz_CS5,0.5*halfBeat}, {buzz_AS4,0.5*halfBeat}, {buzz_CS5,0.5*halfBeat}, {buzz_G5,0.5*halfBeat}, {buzz_Si,0.5*halfBeat},
+						{buzz_C6,0.5*halfBeat}, {buzz_G5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat}, {buzz_G5,0.5*halfBeat}, {buzz_AS5,0.5*halfBeat}, {buzz_F5,0.5*halfBeat},
+						{buzz_D5,0.5*halfBeat}, {buzz_F5,0.5*halfBeat}, {buzz_GS5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat}, {buzz_C5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat},
+						{buzz_G5,0.5*halfBeat}, {buzz_D5,0.5*halfBeat}, {buzz_B4,0.5*halfBeat}, {buzz_D5,0.5*halfBeat}, {buzz_F5,0.5*halfBeat}, {buzz_C5,0.5*halfBeat},
+						{buzz_AS4,0.5*halfBeat}, {buzz_C5,0.5*halfBeat}, {buzz_DS5,0.5*halfBeat}, {buzz_C5,0.5*halfBeat}, {buzz_G4,0.5*halfBeat}, {buzz_C5,0.5*halfBeat},
+						{buzz_DS5,0.5*halfBeat}, {buzz_C5,0.5*halfBeat}, {buzz_FS4,0.5*halfBeat}, {buzz_C5,0.5*halfBeat}, {buzz_D5,0.5*halfBeat}, {buzz_B4,0.5*halfBeat},
+						{buzz_G4,0.5*halfBeat}, {buzz_D4,0.5*halfBeat}, {buzz_C5,halfBeat}, {buzz_C5,halfBeat}, {buzz_Si,halfBeat}, {buzz_C5,halfBeat}, {buzz_DS5,halfBeat},
+						{buzz_C5,halfBeat}, {buzz_Si,halfBeat}, {buzz_C5,halfBeat}, {buzz_DS5,halfBeat}, {buzz_C5,halfBeat}, {buzz_F5,halfBeat}, {buzz_FS5,halfBeat},
+						{buzz_F5,0.6666*halfBeat}, {buzz_FS5,0.6666*halfBeat}, {buzz_F5,0.6666*halfBeat}, {buzz_DS5,halfBeat}, {buzz_C5,halfBeat}, {buzz_AS4,halfBeat},
+						{buzz_GS5,3*halfBeat}, {buzz_G5,3*halfBeat}, {buzz_FS5,2*halfBeat}, {buzz_Si,2*halfBeat}, {buzz_DS5,2*halfBeat}, {buzz_D5,2*halfBeat}, {buzz_CS5,2*halfBeat},
+						{buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat},
+						{buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_B4,halfBeat},
+						{buzz_CS4,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat}, {buzz_D5,halfBeat}, {buzz_C5,halfBeat},
+						{buzz_D5,halfBeat}, {buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_B4,halfBeat}, {buzz_CS4,halfBeat},
+						{buzz_B4,halfBeat}, {buzz_CS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_F4,halfBeat}, {buzz_Si,halfBeat}, {buzz_F4,halfBeat}, {buzz_GS4,halfBeat},
+						{buzz_F4,halfBeat}, {buzz_Si,halfBeat}, {buzz_F4,halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_AS4,halfBeat}, {buzz_B4,halfBeat},
+						{buzz_AS4,0.6666*halfBeat}, {buzz_B4,0.6666*halfBeat}, {buzz_AS4,0.6666*halfBeat}, {buzz_GS4,halfBeat}, {buzz_F4,halfBeat}, {buzz_DS4,halfBeat},
+						{0xFFFF,0}};
+
+song_struct imperialMarch[] =
+						{{buzz_A4, 0.50}, {buzz_Si, 0.20}, {buzz_A4, 0.50},
+						{buzz_Si, 0.20}, {buzz_A4, 0.50}, {buzz_Si, 0.20}, {buzz_F4, 0.40}, {buzz_Si, 0.05}, {buzz_C5, 0.20}, {buzz_Si, 0.05},
+						{buzz_A4, 0.60}, {buzz_Si, 0.10}, {buzz_F4, 0.40}, {buzz_Si, 0.05}, {buzz_C5, 0.20},
+						{buzz_Si, 0.05}, {buzz_A4, 0.60}, {buzz_Si, 0.80},
+						{buzz_E5, 0.50}, {buzz_Si, 0.20},
+						{buzz_E5, 0.50}, {buzz_Si, 0.20}, {buzz_E5, 0.50}, {buzz_Si, 0.20}, {buzz_F5, 0.40},
+						{buzz_Si, 0.05}, {buzz_C5, 0.20}, {buzz_Si, 0.05},
+						{buzz_A4, 0.60}, {buzz_Si, 0.10}, {buzz_F4, 0.40}, {buzz_Si, 0.05}, {buzz_C5, 0.20},
+						{buzz_Si, 0.05}, {buzz_A4, 0.60}, {buzz_Si, 0.80}, {0xFFFF, 0}};
+
+song_struct flatLine[] =
+						{{buzz_A7,0.10}, {buzz_Si,1.00}, {buzz_A7,0.10}, {buzz_Si,1.00}, {buzz_A7,0.10}, {buzz_Si,1.00}, {buzz_A7,0.10}, {buzz_Si,1.00}, {buzz_A7,0.10}, {buzz_Si,1.00},
+						{buzz_A7,0.10}, {buzz_Si,0.10}, {buzz_A7,0.10}, {buzz_Si,0.10}, {buzz_A7,0.10}, {buzz_Si,0.10}, {buzz_A7,0.10}, {buzz_Si,0.10}, {buzz_A7,0.10}, {buzz_Si,0.10},
+						{buzz_A7,5.0}, {0xFFFF, 0}};
 
 #endif /* BUZZER_TUNES_H_ */

@@ -125,16 +125,14 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 			Putty_printf("Testing kick...\n\r");
 		}
 	} else if (timeDiff < 18010) {
-		receivedData->do_kick = true;
-		receivedData->kick_chip_forced = true;
+		shoot_Shoot(shoot_Kick);
 	} else if (timeDiff < 19000) {
 		// wait
 		if (prevTimeDiff < 18010) {
 			Putty_printf("Testing chip...\n\r");
 		}
 	} else if (timeDiff < 19010) {
-		receivedData->do_chip = true;
-		receivedData->kick_chip_forced = true;
+		shoot_Shoot(shoot_Chip);
 	} else if (timeDiff < 20000) {
 		// wait
 	} else if (timeDiff < 21000) {

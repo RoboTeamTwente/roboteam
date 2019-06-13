@@ -12,7 +12,7 @@ void buzzer_Init() {
 	HAL_TIM_Base_Stop(PWM_Buzzer.TIM);
 	buzzer_Duration = 0;
 	// play a sound to inform that we are aliiiiiiiiive
-	//buzzer_Play_Startup();
+	buzzer_Play_Startup();
 }
 
 void buzzer_DeInit() {
@@ -118,6 +118,7 @@ void buzzer_Play_Flatline() {
 	buzzer_Play(song);
 }
 
+
 song_struct startup_song[] = {{buzz_C4, 0.1}, {buzz_D4, 0.1}, {buzz_E4, 0.1}, {buzz_F4, 0.1}, {buzz_G4, 0.1}, {buzz_A4, 0.1}, {buzz_B4, 0.1}, {buzz_C5, 0.1}, {0xFFFF, 0}};
 song_struct tetris[] = {{buzz_E5, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4, Tbeat}, {buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_E5, Tbeat}, {buzz_C5, Tbeat}, {buzz_A4, Tbeat}, {buzz_A4, Tbeat}, {buzz_Si, 1.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat},{buzz_E5,Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4,Tbeat}, {buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_Si,1.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_E4,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_A3,2*Tbeat}, {buzz_GS3,2*Tbeat}, {buzz_B3,Tbeat}, {buzz_Si,Tbeat}, {buzz_E4,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,Tbeat}, {buzz_E4,Tbeat}, {buzz_A4,2*Tbeat}, {buzz_GS4,3*Tbeat}, {buzz_Si,Tbeat}, {0xFFFF, 0}};
 song_struct mario_victory[] = {{buzz_GS3,Mbeat/3.0}, {buzz_CS4,Mbeat/3.0}, {buzz_F4,Mbeat/3.0}, {buzz_GS4,Mbeat/3.0}, {buzz_CS5,Mbeat/3.0}, {buzz_F5,Mbeat/3.0}, {buzz_GS5,Mbeat}, {buzz_F5,Mbeat}, {buzz_A3,Mbeat/3.0}, {buzz_CS4,Mbeat/3.0}, {buzz_E4,Mbeat/3.0}, {buzz_A4,Mbeat/3.0}, {buzz_CS5,Mbeat/3.0}, {buzz_E5,Mbeat/3.0}, {buzz_A5,Mbeat}, {buzz_E5,Mbeat}, {buzz_B3,Mbeat/3.0}, {buzz_DS4,Mbeat/3.0}, {buzz_FS4,Mbeat/3.0}, {buzz_B4,Mbeat/3.0}, {buzz_DS5,Mbeat/3.0}, {buzz_FS5,Mbeat/3.0}, {buzz_B5,Mbeat}, {buzz_B5,Mbeat/3.0}, {buzz_B5,Mbeat/3.0}, {buzz_B5,Mbeat/3.0}, {buzz_CS6,Mbeat*2.0},{0xFFFF, 0}};
@@ -145,15 +146,13 @@ song_struct imperialMarch[] = {{buzz_A4, 0.50},{buzz_Si, 0.20},{buzz_A4, 0.50},
 		{buzz_A4, 0.60},{buzz_Si, 0.10},{buzz_F4, 0.40},{buzz_Si, 0.05}, {buzz_C5, 0.20},
 		{buzz_Si, 0.05},{buzz_A4, 0.60},{buzz_Si, 0.80},
 
-
 		{buzz_E5, 0.50},{buzz_Si, 0.20},
 		{buzz_E5, 0.50},{buzz_Si, 0.20},{buzz_E5, 0.50},{buzz_Si, 0.20},{buzz_F5, 0.40},
 		{buzz_Si, 0.05},{buzz_C5, 0.20},{buzz_Si, 0.05},
 
-
 		{buzz_A4, 0.60},{buzz_Si, 0.10},{buzz_F4, 0.40},{buzz_Si, 0.05}, {buzz_C5, 0.20},
-		{buzz_Si, 0.05},{buzz_A4, 0.60},{buzz_Si, 0.80}};
+		{buzz_Si, 0.05},{buzz_A4, 0.60},{buzz_Si, 0.80},{0xFFFF, 0}};
 song_struct flatLine[] = {
 		{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},
 		{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},
-		{buzz_A7,10.0}};
+		{buzz_A7,5.0},{0xFFFF, 0}};

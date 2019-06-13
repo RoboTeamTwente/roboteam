@@ -18,6 +18,8 @@
 
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)
+#define FEEDBACK_CHANNEL 40
+#define COMMAND_CHANNEL 20
 
 ///////////////////////////////////////////////////// VARIABLES
 

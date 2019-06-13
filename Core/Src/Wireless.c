@@ -119,6 +119,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	isWirelessTransmitting = false;
     	toggle_Pin(LED5_pin);
     	// start listening for a packet again
+    	setChannel(SX, COMMAND_CHANNEL); // set to channel 40 for basestation to robot
 		SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
 		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
@@ -134,6 +135,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     		if (wirelessFeedback && !isWirelessTransmitting) {
     			// feedback enabled, transmit a packet to basestation
     			isWirelessTransmitting = true;
+    			setChannel(SX, FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
     			SX->SX_settings->syncWords[0] = robot_syncWord[16]; // 0x82108610 for basestation Rx
     			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     			SendPacket(SX, Bot_to_PC, ROBOPKTLEN);

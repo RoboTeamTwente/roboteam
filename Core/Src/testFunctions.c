@@ -151,6 +151,42 @@ void test_ExecuteFullTest(ReceivedData* receivedData) {
 	prevTimeDiff = timeDiff;
 }
 
+status test_ExecuteWheelsTest() {
+	const int RUN_TIME = 2000; // [ticks]
+	const int PAUSE_TIME = 1000; // [ticks]
+	static uint timer = 0;
+	static uint prevTimeDiff = 0;
+	timer = timer == 0 ? HAL_GetTick() : timer;
+
+	uint timeDiff = HAL_GetTick() - timer;
+	if (prevTimeDiff == 0) {
+		Putty_printf("Testing wheels...\n\r");
+	}
+
+	static int avgPWM[4] = {0};
+	static int cnt[4] = {0};
+	float wheelRef[4] = {0.0f};
+	static float wheelEncoders[4] = {0.0f};
+
+	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+		uint startTime = wheel * (RUN_TIME + PAUSE_TIME);
+		if (timeDiff > startTime && timeDiff < startTime + RUN_TIME) {
+			recordWheelData(wheel, avgPWM, cnt, wheelEncoders, wheelRef);
+			break;
+		}
+	}
+	wheels_SetRef(wheelRef);
+
+	if (timeDiff > 4 * (RUN_TIME + PAUSE_TIME) && prevTimeDiff < 4 * (RUN_TIME + PAUSE_TIME)) {
+		checkWheels(avgPWM, cnt, wheelEncoders);
+		return done;
+	} else {
+		return running;
+	}
+
+	prevTimeDiff = timeDiff;
+}
+
 void checkGeneva(geneva_positions position) {
 	int margin = 20; // if geneva within 5 encoder units, test passes
 

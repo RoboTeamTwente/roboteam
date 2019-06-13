@@ -23,6 +23,11 @@ typedef enum {
 	square
 } tests;
 
+typedef enum {
+	done,
+	running
+} status;
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 void test_Update(ReceivedData* receivedData);
@@ -30,5 +35,7 @@ void test_Update(ReceivedData* receivedData);
 bool test_isTestRunning();
 
 void test_RunTest(tests t);
+
+status test_ExecuteWheelsTest();
 
 #endif /* INC_TESTFUNCTIONS_H_ */

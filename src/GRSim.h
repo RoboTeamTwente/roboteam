@@ -16,13 +16,14 @@ namespace roboteam_msgs {
 }
 
 namespace rtt {
+namespace robothub {
 
 class GRSimCommander {
 public:
     /**
      * Buffer type which keeps all received robot commands
      */
-    using RobotCommandBuffer = std::array<boost::optional<roboteam_msgs::RobotCommand>, 16>;
+    using RobotCommandBuffer = std::array<std::shared_ptr<roboteam_msgs::RobotCommand>, 16>;
 
     /**
      * Clock that always increases no matter what (daylight saving etc.)
@@ -33,7 +34,7 @@ public:
      * Timepoint type used for time recording
      */
     using TimePoint = std::chrono::time_point<Clock>;
-    
+
     /** 
      * Statistics struct
      */
@@ -76,36 +77,36 @@ public:
     /**
      * When batch is true batching is turned on from the start.
      */
-    GRSimCommander(bool batch = false);
+    explicit GRSimCommander(bool batch = true);
 
     /**
      * Submits a GRSim command for sending to the simulator.
      * If batching is enabled it might not be sent immediately.
      * If batching is disabled it's immediately sent.
      */
-    void queueGRSimCommand(const roboteam_msgs::RobotCommand & msg);
+    void queueGRSimCommand(const roboteam_msgs::RobotCommand& msg);
 
     /**
      * Sends a GRSim packet to the simulator using
      * GRSimCommander's UDP socket.
      */
-    void sendGRSimPacket(grSim_Packet const & packet);
+    void sendGRSimPacket(grSim_Packet const& packet);
     /**
      * Sends one single GRSim packet using GRSimCommander's
      * UDP socket.
      */
-    void sendGRSimCommand(const roboteam_msgs::RobotCommand & _msg);
+    void sendGRSimCommand(const roboteam_msgs::RobotCommand& _msg);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim.
      */
-    void sendMultipleGRSimCommands(const std::vector<roboteam_msgs::RobotCommand> & msgs);
+    void sendMultipleGRSimCommands(const std::vector<roboteam_msgs::RobotCommand>& msgs);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim depending on
      * if they're available in the buffer.
      */
-    void sendMultipleGRSimCommands(const RobotCommandBuffer & msgs);
+    void sendMultipleGRSimCommands(const RobotCommandBuffer& msgs);
 
     /**
      * Returns true if a command for id is in the buffer.
@@ -166,7 +167,7 @@ private:
      */
     SlowParam<std::string> colorParam;
     SlowParam<std::string> grsim_ip;
-    SlowParam<int>         grsim_port; 
+    SlowParam<int> grsim_port;
 
     // Batch variables
     RobotCommandBuffer robotCommands;
@@ -181,8 +182,9 @@ private:
     int efficiencyIndex;
     int numForcedFlushes;
 
-} ;
+};
 
-void addRobotCommandToPacket(grSim_Packet & packet, roboteam_msgs::RobotCommand const & msg);
+void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand const& msg);
 
-}
+} // robothub
+} // rtt

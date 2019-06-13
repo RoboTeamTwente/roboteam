@@ -1,13 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 project(roboteam_robothub)
 
+
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "-g -std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++14 ${CMAKE_CXX_FLAGS} -g3 -O0 -Wall --coverage")
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -23,54 +28,54 @@ find_package(catkin REQUIRED COMPONENTS
 # networking purposes we use Qt4.
 # RoboTeam Twente works in mysterious ways.
 set(QT_USE_QTNETWORK TRUE)
-find_package(Qt REQUIRED)
+find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
-
-#find_package(Protobuf REQUIRED)
-#include_directories(${PROTOBUF_INCLUDE_DIRS})
-
-#protobuf_generate_cpp(PROTO_CPP PROTO_H
-#    src/proto/grSim_Replacement.proto
-#    src/proto/grSim_Commands.proto
-#    src/proto/grSim_Packet.proto
-#)
 
 include_directories(
   "include"
   ${catkin_INCLUDE_DIRS}
 )
 
-#find_package(message_generation)
-
-#generate_messages(DEPENDENCIES std_msgs)
-
 catkin_package(
   CATKIN_DEPENDS message_runtime roboteam_msgs
 )
 
-add_executable(roboteam_robothub 
-    src/main.cpp
+set(SRCS
     src/packing.cpp
     src/GRSim.cpp
-)
+    src/SerialDeviceManager.cpp
+    src/SerialDeviceManager.h
+        src/utilities.h src/Application.cpp src/Application.h src/constants.h)
+
+add_executable(roboteam_robothub
+    src/main.cpp
+    ${SRCS})
+
+catkin_add_gtest(robothub_tests
+    ${SRCS}
+    test/main.cpp
+    test/packing.cpp
+    )
+target_compile_options(robothub_tests PUBLIC --coverage)
+
 target_link_libraries(roboteam_robothub 
     ${catkin_LIBRARIES} 
     ${QT_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
     )
+
+target_link_libraries(robothub_tests
+        ${catkin_LIBRARIES}
+        ${QT_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
+        gcov)
+
 add_dependencies(roboteam_robothub 
     ${${PROJECT_NAME}_EXPORTED_TARGETS} 
     ${catkin_EXPORTED_TARGETS}
     )
 
-add_executable(packet_tester
-    src/packet_tester.cpp
-    src/packing.cpp
-    )
-target_link_libraries(packet_tester
-    ${catkin_LIBRARIES}
-    )
-add_dependencies(packet_tester
-    ${catkin_EXPORTED_TARGETS}
-    ${${PROJECT_NAME}_EXPORTED_TARGETS}
-    )
+include(CodeCoverage)
+APPEND_COVERAGE_COMPILER_FLAGS()
+SETUP_TARGET_FOR_COVERAGE_LCOV(NAME ${PROJECT_NAME}_coverage EXECUTABLE robothub_tests)
 

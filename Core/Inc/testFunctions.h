@@ -16,16 +16,21 @@
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
-#define nTests 2
+#define nTests 6
 
 typedef enum {
 	full,
-	square
+	square,
+	geneva,
+	wheels,
+	shoot,
+	dribbler
 } tests;
 
 typedef enum {
-	done,
-	running
+	test_done,
+	test_running,
+	test_none
 } status;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS

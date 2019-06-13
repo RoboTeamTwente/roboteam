@@ -63,8 +63,9 @@ void I2CRx();
 void printRawData(uint8_t data[]); // prints received bytes, use for debugging (to determine new config response)
 void printBallPosition(); // prints latest ball position
 void parseMessage(); // decode received message and determine next FSM state
-void ballSensorInit(); // initialize
-void ballSensorReset(); // reset
+void ballSensor_Init(); // initialize
+void ballSensor_DeInit(); // deinitialize
+void ballSensor_Reset(); // reset
 int8_t ballSensorFSM(); // FSM controller
 void updatePosition(uint8_t data[]); // update position struct
 void noBall(); // set no ball values for Position struct

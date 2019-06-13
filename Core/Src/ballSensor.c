@@ -57,11 +57,11 @@ uint8_t enable_response[] = {0xEF, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x8
 /* ball sensor receive data notification */
 uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
 
-void ballSensorInit()
+void ballSensor_Init()
 {
 	//Putty_printf ("BS_INIT BEGIN\n\r");
 	noBall();
-	ballSensorReset();
+	ballSensor_Reset();
 	next_message_length = 2;
 	set_Pin(BS_RST_pin, 1);
 	int currentTime = HAL_GetTick(); // avoid lockup when initializing
@@ -70,7 +70,11 @@ void ballSensorInit()
 	I2CRx();
 }
 
-void ballSensorReset() {
+void ballSensor_DeInit(){
+	//Not needed but hey.
+}
+
+void ballSensor_Reset() {
 	//Putty_printf ("BS_RST\n\r");
 	ballSensorInitialized = 0;
 	noBall();
@@ -210,7 +214,7 @@ int8_t ballSensorFSM() {
 	switch(zForceState){
 	case zForce_RST:// device to be kept in reset
 		Putty_printf("zForce_RST\n\r");
-		ballSensorReset();
+		ballSensor_Reset();
 		break;
 
 	case zForce_SetConfig:

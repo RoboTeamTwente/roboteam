@@ -84,6 +84,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 I2C_HandleTypeDef hi2c1;
+DMA_HandleTypeDef hdma_i2c1_rx;
 
 QSPI_HandleTypeDef hqspi;
 DMA_HandleTypeDef hdma_quadspi;
@@ -181,6 +182,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
+	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
+		ballSensor_IRQ_Handler();
 	}
 }
 
@@ -412,7 +415,7 @@ int main(void)
   shoot_Init();
   dribbler_Init();
   ballSensorInit();
-  buzzer_Init();
+//  buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
@@ -457,13 +460,6 @@ int main(void)
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
-	  ballSensorFSM();
-
-	  if (ballPosition.canKickBall){
-		  set_Pin(LED4_pin, 1);
-	  }
-	  else
-		  set_Pin(LED4_pin, 0);
 
 	  /*
 	   * Check for wireless data
@@ -483,7 +479,7 @@ int main(void)
 	   * Print stuff on PuTTY for debugging
 	   */
 	  static int printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
 //		  printBaseStationData();
@@ -572,7 +568,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x20404768;
+  hi2c1.Init.Timing = 0x6000030D;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -1392,6 +1388,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);

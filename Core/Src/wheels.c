@@ -13,6 +13,7 @@ static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
 static GPIO_Pin lockPins[4];
+static bool isAWheelLocked = false;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -81,6 +82,7 @@ int wheels_DeInit(){
 
 void wheels_Update(){
 	static uint lockTimes[4] = {0};
+	isAWheelLocked = false;
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
@@ -96,6 +98,7 @@ void wheels_Update(){
 				if (HAL_GetTick() - lockTimes[wheel] < 200) {
 					pwm[wheel] = 0;
 				}
+				isAWheelLocked = true;
 			} else {
 				lockTimes[wheel] = HAL_GetTick();
 			}
@@ -120,6 +123,10 @@ float* wheels_GetState() {
 
 int* wheels_GetPWM() {
 	return pwm;
+}
+
+bool wheels_isAWheelLocked() {
+	return isAWheelLocked;
 }
 
 

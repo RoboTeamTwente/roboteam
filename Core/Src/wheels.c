@@ -125,7 +125,7 @@ int* wheels_GetPWM() {
 	return pwm;
 }
 
-bool wheels_isAWheelLocked() {
+bool wheels_IsAWheelLocked() {
 	return isAWheelLocked;
 }
 

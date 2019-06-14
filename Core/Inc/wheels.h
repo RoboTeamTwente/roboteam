@@ -32,6 +32,6 @@ float* wheels_GetState();
 
 int* wheels_GetPWM();
 
-bool wheels_isAWheelLocked();
+bool wheels_IsAWheelLocked();
 
 #endif /* WHEELS_H_ */

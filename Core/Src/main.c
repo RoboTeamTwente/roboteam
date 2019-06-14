@@ -476,16 +476,19 @@ int main(void)
 
 	  AckData.roboID = ID;
 	  AckData.XsensCalibrated = xsens_CalibrationDone;
-	  AckData.battery = batCounter > 1000;
+	  AckData.battery = (batCounter > 1000);
 	  AckData.ballSensorWorking = true;	// TODO: make a function  that does this
 	  AckData.hasBall = ballPosition.canKickBall;
 	  AckData.ballPos = ballPosition.x;
-	  AckData.genevaWorking = true;	// TODO: make a correct way of returning if it is working
-	  AckData.genevaState = geneva_GetRef();	// TODO: get a proper function to return its state
-	  AckData.rho = 0.0f;	// TODO: make a function taht can return its current velocity
-	  AckData.angle = MTi->angles[2];
-	  AckData.theta = 0.0f;
-	  AckData.wheelLocked = false;	// TODO: Make a function that does this
+	  AckData.genevaWorking = geneva_IsWorking();
+	  AckData.genevaState = geneva_GetState();
+
+	  float vx = stateEstimation_GetState()[body_x];
+	  float vy = stateEstimation_GetState()[body_y];
+	  AckData.rho = sqrt(vx*vx + vy*vy);
+	  AckData.angle = stateEstimation_GetState()[body_w];
+	  AckData.theta = atan2(vy, vx);
+	  AckData.wheelLocked = wheels_IsAWheelLocked();
 	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
 	  //memset(&AckData,0xAB,8);
 	  roboAckDataToPacket(&AckData,feedback);

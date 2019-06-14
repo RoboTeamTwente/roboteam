@@ -143,6 +143,14 @@ static void Putty_HandleCommand(char *input)
 		test_RunTest(full);
 	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
 		test_RunTest(square);
+	}else if (!memcmp(input, "run geneva test", strlen("run geneva test"))) {
+		test_RunTest(geneva);
+	}else if (!memcmp(input, "run wheels test", strlen("run wheels test"))) {
+		test_RunTest(wheels);
+	}else if (!memcmp(input, "run shoot test", strlen("run shoot test"))) {
+		test_RunTest(shoot);
+	}else if (!memcmp(input, "run dribbler test", strlen("run dribbler test"))) {
+		test_RunTest(dribbler);
 	}
 	return;
 }

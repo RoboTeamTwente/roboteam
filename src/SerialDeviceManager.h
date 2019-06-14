@@ -16,12 +16,14 @@ public:
     explicit SerialDeviceManager() = default;
     explicit SerialDeviceManager(const std::string &deviceName);
     bool ensureDeviceOpen();
-//    bool readDevice();  TODO remake
     bool writeToDevice(packed_protocol_message packet);
     void openDevice();
+    std::shared_ptr<packed_robot_feedback> readDevice();
+    std::shared_ptr<packed_robot_feedback> mostRecentFeedback = nullptr;
+    std::shared_ptr<packed_robot_feedback> getMostRecentFeedback() const;
+    void removeMostRecentFeedback();
 
-
-private:
+    private:
     int fileID = 0;
     std::string deviceName;
     bool iswriting = false;

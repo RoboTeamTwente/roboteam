@@ -51,8 +51,9 @@
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
 
 // Geneva
-#define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
-#define ENCODER_DEVIATION_MARGIN 3	// margin within which encoder is considered to be the same as previous encoder
+#define GENEVA_CAL_EDGE_CNT 4100		// the amount of encoder counts from one edge to the other
+#define ENCODER_DEVIATION_MARGIN 3		// margin within which encoder is considered to be the same as previous encoder
+#define GENEVA_NOT_WORKING_COUNT 200 	// number of ticks not responding after which geneva is considered to be not working
 
 // Shoot
 #define MIN_KICK_TIME 25 				// minimum time period of kicking

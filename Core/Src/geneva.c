@@ -97,6 +97,17 @@ geneva_positions geneva_GetState() {
 	return geneva_none;
 }
 
+bool geneva_IsWorking() {
+	static int cnt = 0;
+	static bool isWorking = true;
+
+	cnt = isResponding() ? 0 : cnt + 1;
+	if (cnt > GENEVA_NOT_WORKING_COUNT) {
+		isWorking = false;
+	}
+	return isWorking;
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void CheckIfStuck(){

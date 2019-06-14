@@ -138,7 +138,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     			setChannel(SX, FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
     			SX->SX_settings->syncWords[0] = robot_syncWord[16]; // 0x82108610 for basestation Rx
     			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    			SendPacket(SX, Bot_to_PC, ROBOPKTLEN);
+    			SendPacket(SX, data, Nbytes);
     		} else {
     			// feedback disabled, just stay in Rx mode
     			setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

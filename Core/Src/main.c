@@ -122,6 +122,8 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
+roboAckData AckData = {0};
+uint8_t feedback[ROBOPKTLEN] = {0};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -178,10 +180,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
 		// test only! construct feedback message elsewhere
-		Bot_to_PC[0] = get_Id();
-		Bot_to_PC[1] = ballPosition.canKickBall;
-		Bot_to_PC[2] = xsens_CalibrationDone;
-		Wireless_IRQ_Handler(SX, 0, 0);
+		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}
@@ -438,25 +437,24 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-//	  static int batCounter = 0;
-//	  if (read_Pin(Bat_pin) && batCounter > 1000){
-//		  Putty_printf("battery empty\n\r");
-//		  set_Pin(LED4_pin, 1);
-//		  Putty_DeInit();
-//		  wheels_DeInit();
-//		  stateControl_DeInit();
-//		  stateEstimation_DeInit();
-//		  geneva_DeInit();
-//		  shoot_DeInit();
-//		  dribbler_DeInit();
-//		  buzzer_DeInit();
-//		  MTi_DeInit(MTi);
-//		  Wireless_DeInit();
-//	  }else if (read_Pin(Bat_pin)) {
-//	  	  batCounter += 1;
-//	  } else {
-//		  batCounter = 0;
-//	  }
+	  static int batCounter = 0;
+	  if (read_Pin(Bat_pin) && batCounter > 1000 && false){
+		  Putty_printf("battery empty\n\r");
+		  set_Pin(LED4_pin, 1);
+		  Putty_DeInit();
+		  wheels_DeInit();
+		  stateControl_DeInit();
+		  stateEstimation_DeInit();
+		  geneva_DeInit();
+		  shoot_DeInit();
+		  dribbler_DeInit();
+		  buzzer_DeInit();
+		  MTi_DeInit(MTi);
+	  }else if (read_Pin(Bat_pin)) {
+	  	  batCounter += 1;
+	  } else {
+		  batCounter = 0;
+	  }
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
@@ -475,6 +473,22 @@ int main(void)
 
 	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
+
+	  AckData.roboID = ID;
+	  AckData.XsensCalibrated = xsens_CalibrationDone;
+	  AckData.battery = batCounter > 1000;
+	  AckData.ballSensorWorking = true;	// TODO: make a function  that does this
+	  AckData.hasBall = ballPosition.canKickBall;
+	  AckData.ballPos = ballPosition.x;
+	  AckData.genevaWorking = true;	// TODO: make a correct way of returning if it is working
+	  AckData.genevaState = geneva_GetRef();	// TODO: get a proper function to return its state
+	  AckData.rho = 0.0f;	// TODO: make a function taht can return its current velocity
+	  AckData.angle = MTi->angles[2];
+	  AckData.theta = 0.0f;
+	  AckData.wheelLocked = false;	// TODO: Make a function that does this
+	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
+	  //memset(&AckData,0xAB,8);
+	  roboAckDataToPacket(&AckData,feedback);
 
 	  /*
 	   * Print stuff on PuTTY for debugging

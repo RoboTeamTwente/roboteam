@@ -429,7 +429,7 @@ int main(void)
   shoot_Init();
   dribbler_Init();
   ballSensorInit();
-//  buzzer_Init();
+  buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
@@ -474,6 +474,8 @@ int main(void)
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
+
+	  set_Pin(LED4_pin, ballPosition.canKickBall); // claiming LED4 for ballsensor
 
 	  /*
 	   * Check for wireless data

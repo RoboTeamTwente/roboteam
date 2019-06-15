@@ -182,8 +182,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		Wireless_IRQ_Handler(SX, 0, 0);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
-	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
-		ballSensor_IRQ_Handler();
+//	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
+//		ballSensor_IRQ_Handler();
 	}
 }
 
@@ -441,7 +441,7 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
-  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+//  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
 
   /* USER CODE END 2 */
 
@@ -472,10 +472,20 @@ int main(void)
 //		  batCounter = 0;
 //	  }
 
-	  IWDG_Refresh(iwdg);
+//	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 
+	  if (read_Pin(BS_IRQ_pin)){
+		  ballSensor_IRQ_Handler();
+	  }
 	  set_Pin(LED4_pin, ballPosition.canKickBall); // claiming LED4 for ballsensor
+	  set_Pin(LED3_pin, ballSensorInitialized); // claiming LED4 for ballsensor
+	  if (ballPosition.canKickBall) {
+		  dribbler_SetSpeed(100);
+//		  shoot_Shoot(shoot_Kick);
+	  } else {
+		  dribbler_SetSpeed(0);
+	  }
 
 	  /*
 	   * Check for wireless data
@@ -498,6 +508,13 @@ int main(void)
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
+		  if (!ballSensorInitialized && init_attempts < 5) {
+			  init_attempts++;
+			  ballSensorInit();
+		  } else if (init_attempts == 5) {
+			  init_attempts++;
+			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
+		  }
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);
@@ -1405,7 +1422,7 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);

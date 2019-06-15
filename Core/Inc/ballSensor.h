@@ -27,6 +27,9 @@ extern uint8_t ball_debug; // enable ball speed print statements thru Putty ("to
 extern uint8_t ballSensorInitialized; // ball sensor initialization status
 extern uint8_t next_message_length; // default length of next message is 2 bytes (response type and length)
 
+extern bool bs_DMA_INUSE;
+extern uint8_t init_attempts;
+
 /* ball sensor boot complete response */
 extern uint8_t bootcomplete_response[];
 

@@ -9,6 +9,8 @@ uint error; // for i2c errors
 uint8_t ball_debug = 0; // enable ball print statements
 uint8_t ballSensorInitialized = 0; // ball sensor initialization status
 uint8_t next_message_length = 2; // default length of next message is 2 bytes
+bool bs_DMA_INUSE = false;
+uint8_t init_attempts = 0;
 
 /* ball sensor boot complete response */
 uint8_t bootcomplete_response[] = {0xF0, 0x11, 0x40, 0x02, 0x00, 0x00, 0x63, 0x0B, 0x80, 0x01, 0x00, 0x81, 0x02, 0x03,
@@ -30,8 +32,8 @@ uint8_t config_response[] = {0xEF, 0x43, 0x40, 0x02, 0x02, 0x00, 0x73, 0x3D, 0xA
 
 /* ball sensor frequency command */
 /* set scanning frequency to 100Hz (0x64) & idle frequency to 100Hz */
-uint8_t freq_command[] = {0xEE, 0x10, 0xEE, 0x0E, 0x40, 0x02, 0x02, 0x00, 0x68, 0x08, 0x80, 0x02, 0x01, 0x90, 0x82, 0x02, 0x01, 0x90};
-uint8_t freq_response[] = {0xEF, 0x0E, 0x40, 0x02, 0x00, 0x00, 0x68, 0x08, 0x80, 0x02, 0x01, 0x90, 0x82, 0x02, 0x01, 0x90};
+uint8_t freq_command[] = {0xEE, 0x0E, 0xEE, 0x0C, 0x40, 0x02, 0x02, 0x00, 0x68, 0x06, 0x80, 0x01, 0x64, 0x82, 0x01, 0x64};
+uint8_t freq_response[] = {0xEF, 0x0C, 0x40, 0x02, 0x00, 0x00, 0x68, 0x06, 0x80, 0x01, 0x64, 0x82, 0x01, 0x64};
 
 /* ball sensor enable device command */
 uint8_t enable_command[] = 	{0xEE, 0x0B, 0xEE, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x81, 0x01, 0x00};
@@ -119,29 +121,48 @@ void ballSensorDeInit() {
 
 void ballSensor_IRQ_Handler() {
 	if (ballSensorInitialized) {
+		while (bs_DMA_INUSE);
 		int currentTime = HAL_GetTick(); // avoid lockup
 		uint8_t next_msg[2] = {0}; // receive 2 bytes
 		while (BS_I2C->State != HAL_I2C_STATE_READY){
-			if (HAL_GetTick()-currentTime > 100) {
+			if (HAL_GetTick()-currentTime > 1000) {
+				noBall();
 				ballSensorInitialized = 0;
 				return;
 			}
 		}
-		HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg, 2, 1000);
-		next_message_length = next_msg[1]; // determine message length
-		currentTime = HAL_GetTick(); // avoid lockup
-		while (BS_I2C->State != HAL_I2C_STATE_READY){
-			if (HAL_GetTick()-currentTime > 100) {
-				ballSensorInitialized = 0;
-				return;
+		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg, 2, 1000))){
+			noBall();
+			ballSensorInitialized = 0;
+			Putty_printf("I2C_Rx_Blocking 2bytes - read failed with error [%d]!\n\r", error);
+			return;
+		} else {
+			next_message_length = next_msg[1]; // determine message length
+			currentTime = HAL_GetTick(); // avoid lockup
+			while (BS_I2C->State != HAL_I2C_STATE_READY){
+				if (HAL_GetTick()-currentTime > 1000) {
+					noBall();
+					ballSensorInitialized = 0;
+					return;
+				}
 			}
+			// receive packet in non-blocking mode, bs_CheckMeasurement() is called by callback
+			I2C_Rx_DMA();
 		}
 
-		I2C_Rx_DMA(); // receive packet in non-blocking mode
-
-		// receive packet in blocking mode:
-		//HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_message_length, 1000);
-		//bs_CheckMeasurement();
+		// receive packet in blocking mode, first option, but comment out everything else:
+//		if (I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
+//			bs_CheckMeasurement();
+//		}
+		// or second option using 2bytes read from above, but comment out i2c_rx_dma() call only
+//		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_message_length, 1000))){
+//			noBall();
+//			ballSensorInitialized = 0;
+//			Putty_printf("I2C_Rx_Blocking - read failed with error [%d]!\n\r", error);
+//			return;
+//		} else {
+//			bs_CheckMeasurement();
+//		}
 	}
 }
 
@@ -181,13 +202,14 @@ int8_t getBallPos() {
 bool I2C_Rx() {
 	while (BS_I2C->State != HAL_I2C_STATE_READY);
 	uint8_t next_msg_length[2];
-	if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg_length, 2, 100))){
+	if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg_length, 2, 1000))){
 		ballSensorInitialized = 0;
-		Putty_printf("I2C_Rx_Blocking - read failed with error [%d]!\n\r", error);
+		Putty_printf("I2C_Rx_Blocking 2bytes - read failed with error [%d]!\n\r", error);
 		return false;
 	} else {
-		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_msg_length[1], 100))){
+		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_msg_length[1], 1000))){
 			ballSensorInitialized = 0;
+			Putty_printf("I2C_Rx_Blocking fullmsg - read failed with error [%d]!\n\r", error);
 			return false;
 		} else {
 			return true;
@@ -207,15 +229,19 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 }
 
 void I2C_Rx_DMA() {
+	bs_DMA_INUSE = true;
 	if(HAL_OK != (error = HAL_I2C_Master_Receive_DMA(BS_I2C, BS_I2C_ADDR, data, next_message_length))){
+		noBall();
 		ballSensorInitialized = 0;
-		Putty_printf("I2CRx - read failed with error [%d]!\n\r", error);
+		Putty_printf("I2C_Rx_DMA - read failed with error [%d]!\n\r", error);
 	}
 }
 
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	//Putty_printf("ballsensor rx callback\n\r");
 	bs_CheckMeasurement();
+	bs_DMA_INUSE = false;
+
 }
 
 
@@ -231,7 +257,7 @@ bool bs_Boot() {
 }
 
 bool bs_SetConfig() {
-	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, config_command, sizeof(config_command), 100)){
+	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, config_command, sizeof(config_command), 1000)){
 		ballSensorInitialized = 0;
 		Putty_printf("bs_SetConfig - i2c transmit failed with error [%d]!", error);
 		return false;
@@ -251,7 +277,7 @@ bool bs_CheckConfig() {
 }
 
 bool bs_SetFreq() {
-	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, freq_command, sizeof(freq_command), 100)){
+	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, freq_command, sizeof(freq_command), 1000)){
 		ballSensorInitialized = 0;
 		Putty_printf("bs_SetFreq - i2c transmit failed with error [%d]!\n\r", error);
 		return false;
@@ -271,7 +297,7 @@ bool bs_CheckFreq() {
 }
 
 bool bs_EnableDevice() {
-	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, enable_command, sizeof(enable_command), 100)){
+	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, enable_command, sizeof(enable_command), 1000)){
 		ballSensorInitialized = 0;
 		Putty_printf("bs_EnableDevice - i2c transmit failed with error [%d]!\n\r", error);
 		return false;

@@ -69,6 +69,7 @@ bool Application::getBatchingVariable() {
 
 /// subscribe to ROS topics
 void Application::subscribeToROSTopics(){
+    feedbackPublisher = n.advertise<roboteam_msgs::RobotFeedback>("robot_feedback", 1000);
     subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
     subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this,  ros::TransportHints().tcpNoDelay());
     n.getParam("robot_output_target", target);
@@ -82,7 +83,6 @@ void Application::loop(){
 
     grsimCommander->setBatch(batching);
 
-
     int currIteration = 0;
     while (ros::ok()) {
         rate.sleep();
@@ -94,6 +94,7 @@ void Application::loop(){
             std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(getMode()) << " |==========" << std::endl;
             printStatistics();
         }
+
     }
 }
 
@@ -147,7 +148,12 @@ void Application::sendSerialCommand(LowLevelRobotCommand llrc) {
     }
     packed_protocol_message packet = *bytestream;
     device->writeToDevice(packet);
+    if (device->getMostRecentFeedback()) {
+        publishRobotFeedback(createRobotFeedback(*device->getMostRecentFeedback()));
+        device->removeMostRecentFeedback();
+    }
 }
+
 
 /// send a GRSim command from a given robotcommand
 void Application::sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand) {
@@ -162,6 +168,10 @@ void Application::setMode() {
         std::cerr << "robot_output_target not set with ROS, will default to SERIAL" << std::endl;
         mode = utils::Mode::SERIAL;
     }
+}
+
+void Application::publishRobotFeedback(LowLevelRobotFeedback llrf) {
+    feedbackPublisher.publish(toRobotFeedback(llrf));
 }
 
 } // robothub

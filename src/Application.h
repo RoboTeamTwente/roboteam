@@ -27,6 +27,7 @@ private:
     ros::NodeHandle n;
     ros::Subscriber subWorldState;
     ros::Subscriber subRobotCommands;
+    ros::Publisher feedbackPublisher;
     void subscribeToROSTopics();
 
     // get parameters from ROS
@@ -40,12 +41,14 @@ private:
     void processWorldState(const roboteam_msgs::World& world);
     void processRobotCommand(const roboteam_msgs::RobotCommand& cmd);
 
+
     // Serial and grsim managers
     std::shared_ptr<SerialDeviceManager> device;
     std::shared_ptr<GRSimCommander> grsimCommander;
 
     void sendSerialCommand(LowLevelRobotCommand llrc);
     void sendGrSimCommand(const roboteam_msgs::RobotCommand& robotCommand);
+    void publishRobotFeedback(LowLevelRobotFeedback llrf);
 
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
     void printStatistics();

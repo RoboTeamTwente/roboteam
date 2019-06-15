@@ -9,7 +9,7 @@
 #include "roboteam_msgs/World.h"
 
 using packed_protocol_message = std::array<uint8_t, 10>;
-using packed_robot_feedback = std::array<uint8_t, 23>;
+using packed_robot_feedback = std::array<uint8_t, 8>;
 using boring_ack = std::array<uint8_t, 2>;
 
 namespace roboteam_msgs {
@@ -41,30 +41,21 @@ struct LowLevelRobotCommand {
     int cam_position_y;
     int cam_rotation;
 };
+
 struct LowLevelRobotFeedback {
     int id;
-
-    bool wheelLeftFront;
-    bool wheelRightFront;
-    bool wheelLeftBack;
-    bool wheelRightBack;
-
-    bool genevaDriveState;
-    bool batteryState;
-
-    int position_x;
-    int position_y;
-
+    bool xSensCalibrated;
+    bool batteryLow;
+    bool ballSensorWorking;
+    bool hasBall;
+    int ballPosition;
+    bool genevaWorking;
+    int genevaState;
     int rho;
+    int angle;
     int theta;
-    int orientation;
-
-    int angularVelocity;
-    int ballSensor;
-
-    float acceleration_x;
-    float acceleration_y;
-    float velocity_angular;
+    bool hasLockedWheel;
+    int signalStrength;
 };
 
 // Software => Basestation

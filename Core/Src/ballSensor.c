@@ -121,39 +121,39 @@ void ballSensorDeInit() {
 
 void ballSensor_IRQ_Handler() {
 	if (ballSensorInitialized) {
-		while (bs_DMA_INUSE);
-		int currentTime = HAL_GetTick(); // avoid lockup
-		uint8_t next_msg[2] = {0}; // receive 2 bytes
-		while (BS_I2C->State != HAL_I2C_STATE_READY){
-			if (HAL_GetTick()-currentTime > 1000) {
-				noBall();
-				ballSensorInitialized = 0;
-				return;
-			}
-		}
-		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg, 2, 1000))){
-			noBall();
-			ballSensorInitialized = 0;
-			Putty_printf("I2C_Rx_Blocking 2bytes - read failed with error [%d]!\n\r", error);
-			return;
-		} else {
-			next_message_length = next_msg[1]; // determine message length
-			currentTime = HAL_GetTick(); // avoid lockup
-			while (BS_I2C->State != HAL_I2C_STATE_READY){
-				if (HAL_GetTick()-currentTime > 1000) {
-					noBall();
-					ballSensorInitialized = 0;
-					return;
-				}
-			}
-			// receive packet in non-blocking mode, bs_CheckMeasurement() is called by callback
-			I2C_Rx_DMA();
-		}
+//		while (bs_DMA_INUSE);
+//		int currentTime = HAL_GetTick(); // avoid lockup
+//		uint8_t next_msg[2] = {0}; // receive 2 bytes
+//		while (BS_I2C->State != HAL_I2C_STATE_READY){
+//			if (HAL_GetTick()-currentTime > 1000) {
+//				noBall();
+//				ballSensorInitialized = 0;
+//				return;
+//			}
+//		}
+//		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg, 2, 1000))){
+//			noBall();
+//			ballSensorInitialized = 0;
+//			Putty_printf("I2C_Rx_Blocking 2bytes - read failed with error [%d]!\n\r", error);
+//			return;
+//		} else {
+//			next_message_length = next_msg[1]; // determine message length
+//			currentTime = HAL_GetTick(); // avoid lockup
+//			while (BS_I2C->State != HAL_I2C_STATE_READY){
+//				if (HAL_GetTick()-currentTime > 1000) {
+//					noBall();
+//					ballSensorInitialized = 0;
+//					return;
+//				}
+//			}
+//			// receive packet in non-blocking mode, bs_CheckMeasurement() is called by callback
+//			I2C_Rx_DMA();
+//		}
 
 		// receive packet in blocking mode, first option, but comment out everything else:
-//		if (I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
-//			bs_CheckMeasurement();
-//		}
+		if (I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
+			bs_CheckMeasurement();
+		}
 		// or second option using 2bytes read from above, but comment out i2c_rx_dma() call only
 //		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_message_length, 1000))){
 //			noBall();

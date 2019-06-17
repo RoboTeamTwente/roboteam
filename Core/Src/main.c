@@ -444,7 +444,7 @@ int main(void)
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
-//  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
 
   /* USER CODE END 2 */
 
@@ -474,7 +474,7 @@ int main(void)
 		  batCounter = 0;
 	  }
 
-//	  IWDG_Refresh(iwdg);
+	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 
 	  if (read_Pin(BS_IRQ_pin)){

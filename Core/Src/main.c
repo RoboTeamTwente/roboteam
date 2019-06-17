@@ -508,12 +508,13 @@ int main(void)
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  if (!ballSensorInitialized && init_attempts < 5) {
+		  if (!ballSensorInitialized && init_attempts < 50) {
 			  init_attempts++;
 			  ballSensorInit();
-		  } else if (init_attempts == 5) {
+		  } else if (init_attempts == 50) {
 			  init_attempts++;
 			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
+			  buzzer_Play_PowerUp();
 		  }
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);

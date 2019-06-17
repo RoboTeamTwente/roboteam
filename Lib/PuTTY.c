@@ -151,6 +151,8 @@ static void Putty_HandleCommand(char *input)
 		test_RunTest(shoot);
 	}else if (!memcmp(input, "run dribbler test", strlen("run dribbler test"))) {
 		test_RunTest(dribbler);
+	}else if (!memcmp(input, "test", strlen("test"))) {
+		test_RunTest(normal);
 	}
 	return;
 }

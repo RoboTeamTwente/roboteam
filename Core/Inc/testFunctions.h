@@ -19,6 +19,7 @@
 #define nTests 6
 
 typedef enum {
+	normal,
 	full,
 	square,
 	geneva,

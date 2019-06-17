@@ -93,10 +93,12 @@ status executeFullTest(ReceivedData* receivedData) {
 	} else if (progress[dribbler] == test_running) {
 		progress[dribbler] = executeDribblerTest(receivedData);
 	} else if (progress[geneva] == test_none) {
-		Putty_printf("start with geneva \n\r");
 		progress[geneva] = test_running; // start with geneva test
 	} else {
 		Putty_printf("---------- End of test ----------\n\r");
+		for (int i = 0; i < nTests; i++) {
+			progress[i] = test_none;
+		}
 		return test_done;
 	}
 
@@ -128,6 +130,9 @@ status executeGenevaTest(ReceivedData* receivedData) {
 	}
 
 	if (timeDiff >= 6 * RUN_TIME && prevTimeDiff < 6 * RUN_TIME) {
+		timer = 0;
+		prevTimeDiff = 0;
+		firstTime = true;
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -165,6 +170,14 @@ status executeWheelsTest() {
 
 	if (timeDiff >= 4 * (RUN_TIME + PAUSE_TIME) && prevTimeDiff < 4 * (RUN_TIME + PAUSE_TIME)) {
 		checkWheels(avgPWM, cnt, wheelEncoders);
+		timer = 0;
+		prevTimeDiff = 0;
+		firstTime = true;
+		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
+			avgPWM[wheel] = 0;
+			cnt[wheel] = 0;
+			wheelEncoders[wheel] = 0;
+		}
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -209,6 +222,10 @@ status executeShootTest() {
 	}
 
 	if (timeDiff >= 3 * RUN_TIME + 2 * PAUSE_TIME) {
+		chargeCount = 0;
+		timer = 0;
+		prevTimeDiff = 0;
+		firstTime = true;
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -233,6 +250,8 @@ status executeDribblerTest(ReceivedData* receivedData) {
 	}
 
 	if (timeDiff > RUN_TIME + PAUSE_TIME) {
+		timer = 0;
+		firstTime = true;
 		return test_done;
 	} else {
 		return test_running;

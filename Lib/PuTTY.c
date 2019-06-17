@@ -136,7 +136,7 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
-		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rhelp\n\r");
+		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\trun full test\n\r\trun geneva test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {

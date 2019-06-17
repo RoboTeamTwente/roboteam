@@ -88,6 +88,26 @@ int geneva_GetPWM(){
 	return pwm;
 }
 
+geneva_positions geneva_GetState() {
+	for (geneva_positions pos = geneva_leftleft; pos <= geneva_rightright; pos++) {
+		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 10 * ENCODER_DEVIATION_MARGIN) {
+			return pos;
+		}
+	}
+	return geneva_none;
+}
+
+bool geneva_IsWorking() {
+	static int cnt = 0;
+	static bool isWorking = true;
+
+	cnt = isResponding() ? 0 : cnt + 1;
+	if (cnt > GENEVA_NOT_WORKING_COUNT) {
+		isWorking = false;
+	}
+	return isWorking;
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void CheckIfStuck(){

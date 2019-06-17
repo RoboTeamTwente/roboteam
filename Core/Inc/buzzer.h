@@ -4,7 +4,6 @@
 #include "../Util/control_util.h"
 #include "../Util/gpio_util.h"
 #include "../Util/tim_util.h"
-#include "buzzer_Tunes.h"
 
 ///////////////////////////////////////////////////// BUZZER LIMITERS
 #define BUZZER_SCALER 4000
@@ -12,6 +11,11 @@
 
 ///////////////////////////////////////////////////// PUBLIC VARIABLE DECLARATIONS
 extern uint32_t buzzer_Duration;
+
+typedef struct song_struct{
+	uint16_t period;
+	float duration;
+} song_struct;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 void buzzer_Init();
@@ -32,10 +36,11 @@ void buzzer_Play_WarningTwo();
 void buzzer_Play_WarningThree();
 void buzzer_Play_WarningFour();
 void buzzer_Play_BridgeBattle();
+void buzzer_Play_ImperialMarch();
+void buzzer_Play_Flatline();
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);
-
 void buzzer_Play(song_struct* tone);
 
 

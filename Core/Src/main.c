@@ -55,7 +55,6 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
-#include "buzzer_Tunes.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
@@ -124,6 +123,8 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
+roboAckData AckData = {0};
+uint8_t feedback[ROBOPKTLEN] = {0};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -179,7 +180,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-		Wireless_IRQ_Handler(SX, 0, 0);
+		// test only! construct feedback message elsewhere
+		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 //	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
@@ -436,7 +438,8 @@ int main(void)
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);
 
-  // start the pingpong operation
+  // start the wireless receiver
+  // transmit feedback packet for every received packet if wirelessFeedback==true
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
@@ -452,25 +455,24 @@ int main(void)
 	  /*
 	   * Check for empty battery
 	   */
-//	  static int batCounter = 0;
-//	  if (read_Pin(Bat_pin) && batCounter > 1000){
-//		  Putty_printf("battery empty\n\r");
-//		  set_Pin(LED4_pin, 1);
-//		  Putty_DeInit();
-//		  wheels_DeInit();
-//		  stateControl_DeInit();
-//		  stateEstimation_DeInit();
-//		  geneva_DeInit();
-//		  shoot_DeInit();
-//		  dribbler_DeInit();
-//		  buzzer_DeInit();
-//		  MTi_DeInit(MTi);
-//		  Wireless_DeInit();
-//	  }else if (read_Pin(Bat_pin)) {
-//	  	  batCounter += 1;
-//	  } else {
-//		  batCounter = 0;
-//	  }
+	  static int batCounter = 0;
+	  if (read_Pin(Bat_pin) && batCounter > 1000 && false){
+		  Putty_printf("battery empty\n\r");
+		  set_Pin(LED4_pin, 1);
+		  Putty_DeInit();
+		  wheels_DeInit();
+		  stateControl_DeInit();
+		  stateEstimation_DeInit();
+		  geneva_DeInit();
+		  shoot_DeInit();
+		  dribbler_DeInit();
+		  buzzer_DeInit();
+		  MTi_DeInit(MTi);
+	  }else if (read_Pin(Bat_pin)) {
+	  	  batCounter += 1;
+	  } else {
+		  batCounter = 0;
+	  }
 
 //	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
@@ -500,6 +502,25 @@ int main(void)
 
 	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
+
+	  AckData.roboID = ID;
+	  AckData.XsensCalibrated = xsens_CalibrationDone;
+	  AckData.battery = (batCounter > 1000);
+	  AckData.ballSensorWorking = true;	// TODO: make a function  that does this
+	  AckData.hasBall = ballPosition.canKickBall;
+	  AckData.ballPos = ballPosition.x;
+	  AckData.genevaWorking = geneva_IsWorking();
+	  AckData.genevaState = geneva_GetState();
+
+	  float vx = stateEstimation_GetState()[body_x];
+	  float vy = stateEstimation_GetState()[body_y];
+	  AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
+	  AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
+	  AckData.theta = atan2(vy, vx) / CONVERT_THETA;
+	  AckData.wheelLocked = wheels_IsAWheelLocked();
+	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
+	  //memset(&AckData,0xAB,8);
+	  roboAckDataToPacket(&AckData,feedback);
 
 	  /*
 	   * Print stuff on PuTTY for debugging

@@ -171,7 +171,9 @@ void Application::setMode() {
 }
 
 void Application::publishRobotFeedback(LowLevelRobotFeedback llrf) {
-    feedbackPublisher.publish(toRobotFeedback(llrf));
+    if (llrf.id >= 0 && llrf.id < 16) {
+        feedbackPublisher.publish(toRobotFeedback(llrf));
+    }
 }
 
 } // robothub

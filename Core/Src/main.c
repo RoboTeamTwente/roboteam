@@ -184,8 +184,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
-//	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
-//		ballSensor_IRQ_Handler();
+	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
+		ballSensor_IRQ_Handler();
 	}
 }
 
@@ -434,7 +434,7 @@ int main(void)
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
-  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
+//  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);
 
@@ -477,9 +477,9 @@ int main(void)
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 
-	  if (read_Pin(BS_IRQ_pin)){
-		  ballSensor_IRQ_Handler();
-	  }
+//	  if (read_Pin(BS_IRQ_pin)){
+//		  ballSensor_IRQ_Handler();
+//	  }
 	  set_Pin(LED4_pin, ballPosition.canKickBall); // claiming LED4 for ballsensor
 	  set_Pin(LED3_pin, ballSensorInitialized); // claiming LED4 for ballsensor
 	  if (ballPosition.canKickBall) {
@@ -529,14 +529,15 @@ int main(void)
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  if (!ballSensorInitialized && init_attempts < 50) {
+		  if (!ballSensorInitialized && init_attempts < 5) {
 			  init_attempts++;
 			  ballSensorInit();
-		  } else if (init_attempts == 50) {
+		  } else if (init_attempts == 5) {
 			  init_attempts++;
 			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
 			  buzzer_Play_PowerUp();
 		  }
+
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData(&stateInfo);

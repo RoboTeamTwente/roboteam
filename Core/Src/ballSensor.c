@@ -39,7 +39,6 @@ uint8_t freq_response[] = {0xEF, 0x0C, 0x40, 0x02, 0x00, 0x00, 0x68, 0x06, 0x80,
 uint8_t enable_command[] = 	{0xEE, 0x0B, 0xEE, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x81, 0x01, 0x00};
 uint8_t enable_response[] = {0xEF, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x81, 0x01, 0x00};
 
-
 /* ball sensor receive data notification */
 uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
 
@@ -154,6 +153,7 @@ void ballSensor_IRQ_Handler() {
 		if (I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
 			bs_CheckMeasurement();
 		}
+
 		// or second option using 2bytes read from above, but comment out i2c_rx_dma() call only
 //		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_message_length, 1000))){
 //			noBall();
@@ -163,6 +163,8 @@ void ballSensor_IRQ_Handler() {
 //		} else {
 //			bs_CheckMeasurement();
 //		}
+
+
 	}
 }
 
@@ -200,7 +202,14 @@ int8_t getBallPos() {
 }
 
 bool I2C_Rx() {
-	while (BS_I2C->State != HAL_I2C_STATE_READY);
+	int currentTime = HAL_GetTick(); // avoid lockup
+	while (BS_I2C->State != HAL_I2C_STATE_READY){
+		if (HAL_GetTick()-currentTime > 1000) {
+			noBall();
+			ballSensorInitialized = 0;
+			return false;
+		}
+	}
 	uint8_t next_msg_length[2];
 	if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg_length, 2, 1000))){
 		ballSensorInitialized = 0;
@@ -246,7 +255,6 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	bs_DMA_INUSE = false;
 
 }
-
 
 bool bs_Boot() {
 	I2C_Rx();

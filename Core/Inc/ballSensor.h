@@ -53,11 +53,16 @@ void I2CTx_IT(uint8_t tosend[], uint8_t length); // transmit in interrupt mode; 
 void I2C_Rx_DMA(); // non-blocking DMA receive for measurement messages in IRQ handler
 bool I2C_Rx(); // blocking receive for initialization (receives 2bytes and then full message)
 
-/* ballsensor public functions */
-bool ballSensorInit(); // initialize
-void ballSensorDeInit(); // de-initialize (keep under reset)
-void ballSensorReset(); // reset
+/* ballsensor functions */
+void printRawData(uint8_t data[]); // prints received bytes, use for debugging (to determine new config response)
+void printBallPosition(); // prints latest ball position
+bool ballSensor_Init(); // initialize
+void ballSensor_DeInit(); // deinitialize
+void ballSensor_Reset(); // reset
 void ballSensor_IRQ_Handler(); // irq handler
+int8_t ballSensorFSM(); // FSM controller
+void updatePosition(uint8_t data[]); // update position struct
+void noBall(); // set no ball values for Position struct
 int8_t getBallPos(); // returns latest ball position
 
 /* print functions */

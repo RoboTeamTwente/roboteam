@@ -313,7 +313,7 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("\n\r");
 }
 
-void printRobotStateData(StateInfo* stateInfo) {
+void printRobotStateData() {
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
 	Putty_printf("halt? %u\n\r", halt);
@@ -321,20 +321,20 @@ void printRobotStateData(StateInfo* stateInfo) {
 	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
 	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
 	Putty_printf("acceleration (xsens):\n\r");
-	Putty_printf("  x: %f m/s^2\n\r", stateInfo->xsensAcc[body_x]);
-	Putty_printf("  y: %f m/s^2\n\r", stateInfo->xsensAcc[body_y]);
+	Putty_printf("  x: %f m/s^2\n\r", MTi->acc[body_x]);
+	Putty_printf("  y: %f m/s^2\n\r", MTi->acc[body_y]);
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-	Putty_printf("Xsens rate of turn: %f rad/s\n\r", stateInfo->rateOfTurn);
+	Putty_printf("Xsens rate of turn: %f rad/s\n\r", MTi->gyr[2]);
 	Putty_printf("wheel refs:\n\r");
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
 	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
 	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateInfo->wheelSpeeds[wheels_LF]);
+	Putty_printf("  RF: %f rad/s\n\r", wheels_GetState()[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", wheels_GetState()[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", wheels_GetState()[wheels_LB]);
+	Putty_printf("  LF: %f rad/s\n\r", wheels_GetState()[wheels_LF]);
 	Putty_printf("wheel pwm:\n\r");
 	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
@@ -430,7 +430,7 @@ int main(void)
   geneva_Init();
   shoot_Init();
   dribbler_Init();
-  ballSensorInit();
+  ballSensor_Init();
   buzzer_Init();
   
   SX = Wireless_Init(20, COMM_SPI);
@@ -456,7 +456,7 @@ int main(void)
 	   * Check for empty battery
 	   */
 	  static int batCounter = 0;
-	  if (read_Pin(Bat_pin) && batCounter > 1000 && false){
+	  if (read_Pin(Bat_pin) && batCounter > 1000){
 		  Putty_printf("battery empty\n\r");
 		  set_Pin(LED4_pin, 1);
 		  Putty_DeInit();
@@ -466,8 +466,10 @@ int main(void)
 		  geneva_DeInit();
 		  shoot_DeInit();
 		  dribbler_DeInit();
+		  ballSensor_DeInit();
 		  buzzer_DeInit();
 		  MTi_DeInit(MTi);
+		  Wireless_DeInit();
 	  }else if (read_Pin(Bat_pin)) {
 	  	  batCounter += 1;
 	  } else {
@@ -531,7 +533,7 @@ int main(void)
 		  toggle_Pin(LED0_pin);
 		  if (!ballSensorInitialized && init_attempts < 5) {
 			  init_attempts++;
-			  ballSensorInit();
+			  ballSensor_Init();
 		  } else if (init_attempts == 5) {
 			  init_attempts++;
 			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
@@ -540,7 +542,7 @@ int main(void)
 
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
-//		  printRobotStateData(&stateInfo);
+//		  printRobotStateData();
 	  }
     /* USER CODE END WHILE */
 

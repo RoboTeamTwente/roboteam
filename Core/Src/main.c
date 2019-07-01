@@ -479,18 +479,6 @@ int main(void)
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
 
-//	  if (read_Pin(BS_IRQ_pin)){
-//		  ballSensor_IRQ_Handler();
-//	  }
-	  set_Pin(LED4_pin, ballPosition.canKickBall); // claiming LED4 for ballsensor
-	  set_Pin(LED3_pin, ballSensorInitialized); // claiming LED4 for ballsensor
-	  if (ballPosition.canKickBall) {
-//		  dribbler_SetSpeed(100);
-//		  shoot_Shoot(shoot_Kick);
-	  } else {
-//		  dribbler_SetSpeed(0);
-	  }
-
 	  /*
 	   * Check for wireless data
 	   */

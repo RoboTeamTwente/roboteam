@@ -18,8 +18,9 @@
 
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)
-#define FEEDBACK_CHANNEL 40
-#define COMMAND_CHANNEL 20
+
+#define FEEDBACK_CHANNEL -5	// 2.395 GHz
+#define COMMAND_CHANNEL -15 // 2.385 GHz
 
 ///////////////////////////////////////////////////// VARIABLES
 

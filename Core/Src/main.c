@@ -433,7 +433,7 @@ int main(void)
   ballSensorInit();
   buzzer_Init();
   
-  SX = Wireless_Init(20, COMM_SPI);
+  SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
 //  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);

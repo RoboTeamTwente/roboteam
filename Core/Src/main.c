@@ -350,6 +350,7 @@ void printRobotStateData() {
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
+	Putty_printf("  I: %f\n\r", geneva_GetI());
 }
 
 void printBaseStation() {
@@ -489,7 +490,6 @@ int main(void)
 	   * Check for wireless data
 	   */
 	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-	  set_Pin(LED1_pin, !xsens_CalibrationDone);
 	  halt = !(xsens_CalibrationDone && checkWirelessConnection());
 	  if (halt) {
 		  stateControl_ResetAngleI();
@@ -538,6 +538,28 @@ int main(void)
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData();
 	  }
+
+	  /*
+	   * LEDs for debugging
+	   */
+
+	  // LED0 : toggled every second while alive
+	  // LED1 : on while xsens startup calibration is not finished
+	  // LED2 : on when one of the wheels is stuck
+	  // LED3 : on when halting
+	  // LED4 : on when ballsensor says ball is within kicking range
+	  // LED5 : on when battery is empty
+	  // LED6 : toggled when a packet is received
+
+	  // TODO: do using isAWheelLocked() in ballsensor_3.0 branch
+	  bool wheelIsLocked = (read_Pin(RF_LOCK_pin) || read_Pin(RB_LOCK_pin)|| read_Pin(LB_LOCK_pin) || read_Pin(LF_LOCK_pin));
+	  // LED0 done in PuTTY prints above
+	  set_Pin(LED1_pin, !xsens_CalibrationDone);
+	  set_Pin(LED2_pin, wheelIsLocked);
+	  set_Pin(LED3_pin, halt);
+	  set_Pin(LED4_pin, ballPosition.canKickBall);
+	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
+	  // LED6 done in Wireless.c
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

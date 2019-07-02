@@ -168,8 +168,9 @@ inline float PID(float err, PIDvariables* K){
 //Scales the angle to the range Pi to -Pi in radians
 inline float constrainAngle(float x){
     x = fmodf(x + M_PI, 2*M_PI);
-    if (x < 0)
+    if (x < 0){
         x += 2*M_PI;
+    }
     return x - M_PI;
 }
 

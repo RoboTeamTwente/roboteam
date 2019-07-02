@@ -491,8 +491,8 @@ int main(void)
 	  // LED1 : on while xsens startup calibration is not finished
 	  // LED2 : on when one of the wheels is stuck
 	  // LED3 : on when halting
-	  // LED4 : on when battery is empty
-	  // LED5 : not used atm
+	  // LED4 : on when ballsensor says ball is within kicking range
+	  // LED5 : on when battery is empty
 	  // LED6 : toggled when a packet is received
 
 	  // TODO: do using isAWheelLocked() in ballsensor_3.0 branch
@@ -501,8 +501,8 @@ int main(void)
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
 	  set_Pin(LED2_pin, wheelIsLocked);
 	  set_Pin(LED3_pin, halt);
-	  set_Pin(LED4_pin, (read_Pin(Bat_pin) && batCounter > 1000));
-	  // LED5 not used
+	  set_Pin(LED4_pin, ballPosition.canKickBall);
+	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
 	  // LED6 done in Wireless.c
     /* USER CODE END WHILE */
 

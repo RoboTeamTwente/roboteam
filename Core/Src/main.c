@@ -484,7 +484,6 @@ int main(void)
 	  if (read_Pin(BS_IRQ_pin)){
 		  ballSensor_IRQ_Handler();
 	  }
-	  set_Pin(LED4_pin, ballPosition.canKickBall);
 
 	  /*
 	   * Check for wireless data
@@ -502,7 +501,7 @@ int main(void)
 	  AckData.roboID = ID;
 	  AckData.XsensCalibrated = xsens_CalibrationDone;
 	  AckData.battery = (batCounter > 1000);
-	  AckData.ballSensorWorking = true;	// TODO: make a function  that does this
+	  AckData.ballSensorWorking = ballSensor_isWorking();
 	  AckData.hasBall = ballPosition.canKickBall;
 	  AckData.ballPos = ballPosition.x;
 	  AckData.genevaWorking = geneva_IsWorking();

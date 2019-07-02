@@ -172,6 +172,10 @@ void ballSensor_IRQ_Handler() {
 	}
 }
 
+bool ballSensor_isWorking() {
+	return ballSensorInitialized;
+}
+
 void updatePosition(uint8_t data[]) {
 	uint16_t x;
 	x = data[12] << 8;

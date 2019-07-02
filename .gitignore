@@ -1,4 +1,5 @@
 cmake-build-debug/
 .idea/*
+.settings/*
 *.tmp
 Debug/

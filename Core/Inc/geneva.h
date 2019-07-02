@@ -39,4 +39,6 @@ int geneva_GetEncoder();
 
 int geneva_GetPWM();
 
+float geneva_GetI();
+
 #endif /* GENEVA_GENEVA_H_ */

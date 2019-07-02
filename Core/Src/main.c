@@ -329,6 +329,7 @@ void printRobotStateData() {
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
+	Putty_printf("  I: %f\n\r", geneva_GetI());
 }
 
 void printBaseStation() {

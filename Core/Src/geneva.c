@@ -93,10 +93,10 @@ int geneva_GetPWM(){
 static void CheckIfStuck(){
 	static uint tick = 0xFFFF;			//
 	static int enc = 0;
-	if(fabs(geneva_Encodervalue() - enc) < ENCODER_DEVIATION_MARGIN){
+	if(fabs(geneva_Encodervalue() - enc) > ENCODER_DEVIATION_MARGIN){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
-	}else if(tick + 500 < HAL_GetTick()){
+	}else if(tick + 100 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
 		geneva_SetRef(geneva_middle);
 		genevaState = on;

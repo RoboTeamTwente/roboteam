@@ -185,7 +185,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
-		ballSensor_IRQ_Handler();
+		// TODO: make this work and use instead of the thing in the while loop
+//		ballSensor_IRQ_Handler();
 	}
 }
 
@@ -478,6 +479,10 @@ int main(void)
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
+
+	  if (read_Pin(BS_IRQ_pin)){
+		  ballSensor_IRQ_Handler();
+	  }
 
 	  /*
 	   * Check for wireless data

@@ -15,7 +15,6 @@
 
 static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
 static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback
-static bool wirelessFeedback = true; // boolean to enable or disable wireless feedback
 
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));

@@ -73,8 +73,11 @@ GPIO_Pin ID1_pin			= { ID1_GPIO_Port			, ID1_Pin			};
 GPIO_Pin ID2_pin			= { ID2_GPIO_Port			, ID2_Pin			};
 GPIO_Pin ID3_pin			= { ID3_GPIO_Port			, ID3_Pin			};
 
-// Frequency select
-GPIO_Pin FRQ_sel			= { SW_Freq_GPIO_Port		, SW_Freq_Pin		};
+// GPIO header
+GPIO_Pin OUT1_pin			= { GPIO_OUT1_GPIO_Port		, GPIO_OUT1_Pin		};
+GPIO_Pin OUT2_pin			= { GPIO_OUT2_GPIO_Port		, GPIO_OUT2_Pin		};
+GPIO_Pin IN1_pin			= { GPIO_IN1_GPIO_Port		, GPIO_IN1_Pin		};
+GPIO_Pin IN2_pin			= { GPIO_IN2_GPIO_Port		, GPIO_IN2_Pin		};
 
 // MTi
 GPIO_Pin MTi_RST_pin 		= { XSENS_RST_GPIO_Port		, XSENS_RST_Pin		};

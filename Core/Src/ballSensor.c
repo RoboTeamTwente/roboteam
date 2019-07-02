@@ -42,13 +42,13 @@ uint8_t enable_response[] = {0xEF, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x8
 /* ball sensor receive data notification */
 uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
 
-// init procedure in blocking sequence, exit on error
-bool ballSensorInit()
+
+bool ballSensor_Init()
 {
 	Putty_printf ("BS_INIT BEGIN\n\r");
 	noBall();
 	HAL_Delay(20); // timing specs
-	ballSensorReset(); // 1ms pulse (min 300ns)
+	ballSensor_Reset();
 	next_message_length = 2;
 	int currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin)){
@@ -102,7 +102,11 @@ bool ballSensorInit()
 	}
 }
 
-void ballSensorReset() {
+void ballSensor_DeInit(){
+	//Not needed but hey.
+}
+
+void ballSensor_Reset() {
 	//Putty_printf ("BS_RST\n\r");
 	ballSensorInitialized = 0;
 	noBall();

@@ -136,13 +136,23 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
-		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rhelp\n\r");
+		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun geneva test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
 		test_RunTest(full);
 	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
 		test_RunTest(square);
+	}else if (!memcmp(input, "run geneva test", strlen("run geneva test"))) {
+		test_RunTest(geneva);
+	}else if (!memcmp(input, "run wheels test", strlen("run wheels test"))) {
+		test_RunTest(wheels);
+	}else if (!memcmp(input, "run shoot test", strlen("run shoot test"))) {
+		test_RunTest(shoot);
+	}else if (!memcmp(input, "run dribbler test", strlen("run dribbler test"))) {
+		test_RunTest(dribbler);
+	}else if (!memcmp(input, "test", strlen("test"))) {
+		test_RunTest(normal);
 	}
 	return;
 }

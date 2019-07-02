@@ -459,7 +459,7 @@ int main(void)
 	  static int batCounter = 0;
 	  if (read_Pin(Bat_pin) && batCounter > 1000){
 		  Putty_printf("battery empty\n\r");
-		  set_Pin(LED4_pin, 1);
+		  set_Pin(LED5_pin, 1);
 		  Putty_DeInit();
 		  wheels_DeInit();
 		  stateControl_DeInit();
@@ -483,6 +483,7 @@ int main(void)
 	  if (read_Pin(BS_IRQ_pin)){
 		  ballSensor_IRQ_Handler();
 	  }
+	  set_Pin(LED4_pin, ballPosition.canKickBall);
 
 	  /*
 	   * Check for wireless data

@@ -85,8 +85,11 @@ extern GPIO_Pin ID1_pin;
 extern GPIO_Pin ID2_pin;
 extern GPIO_Pin ID3_pin;
 
-// Frequency select
-extern GPIO_Pin FRQ_sel;
+// GPIO header
+extern GPIO_Pin OUT1_pin;
+extern GPIO_Pin OUT2_pin;	// feeback enable high pin
+extern GPIO_Pin IN1_pin;
+extern GPIO_Pin IN2_pin;	// feedback enable pin
 
 // MTi
 extern GPIO_Pin MTi_RST_pin;

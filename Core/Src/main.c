@@ -423,6 +423,7 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
+  set_Pin(OUT2_pin, HIGH);	// reference pin for feedback header
 
   Putty_Init();
   wheels_Init();
@@ -435,6 +436,7 @@ int main(void)
   buzzer_Init();
   
   SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
+  wirelessFeedback = read_Pin(IN2_pin);	// check if we should enable feedback or not (jumper = feedback)
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);
@@ -1511,7 +1513,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LB_FR_GPIO_Port, LB_FR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|OUT_Pin|RF_FR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
@@ -1557,15 +1559,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA2 OUT_Pin RF_FR_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|OUT_Pin|RF_FR_Pin;
+  /*Configure GPIO pins : GPIO_OUT1_Pin GPIO_OUT2_Pin RF_FR_Pin */
+  GPIO_InitStruct.Pin = GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA3 SW_Freq_Pin RF_Locked_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_3|SW_Freq_Pin|RF_Locked_Pin;
+  /*Configure GPIO pins : GPIO_IN1_Pin GPIO_IN2_Pin RF_Locked_Pin */
+  GPIO_InitStruct.Pin = GPIO_IN1_Pin|GPIO_IN2_Pin|RF_Locked_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

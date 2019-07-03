@@ -350,7 +350,6 @@ void printRobotStateData() {
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
-	Putty_printf("  I: %f\n\r", geneva_GetI());
 }
 
 void printBaseStation() {
@@ -521,6 +520,8 @@ int main(void)
 	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
+
+
 	  static int printTime = 0;
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();

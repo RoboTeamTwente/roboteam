@@ -483,7 +483,6 @@ int main(void)
 	  if (read_Pin(BS_IRQ_pin)){
 		  ballSensor_IRQ_Handler();
 	  }
-	  set_Pin(LED4_pin, ballPosition.canKickBall);
 
 	  /*
 	   * Check for wireless data
@@ -501,7 +500,7 @@ int main(void)
 	  AckData.roboID = ID;
 	  AckData.XsensCalibrated = xsens_CalibrationDone;
 	  AckData.battery = (batCounter > 1000);
-	  AckData.ballSensorWorking = true;	// TODO: make a function  that does this
+	  AckData.ballSensorWorking = ballSensor_isWorking();
 	  AckData.hasBall = ballPosition.canKickBall;
 	  AckData.ballPos = ballPosition.x;
 	  AckData.genevaWorking = geneva_IsWorking();
@@ -552,11 +551,9 @@ int main(void)
 	  // LED5 : on when battery is empty
 	  // LED6 : toggled when a packet is received
 
-	  // TODO: do using isAWheelLocked() in ballsensor_3.0 branch
-	  bool wheelIsLocked = (read_Pin(RF_LOCK_pin) || read_Pin(RB_LOCK_pin)|| read_Pin(LB_LOCK_pin) || read_Pin(LF_LOCK_pin));
 	  // LED0 done in PuTTY prints above
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  set_Pin(LED2_pin, wheelIsLocked);
+	  set_Pin(LED2_pin, wheels_IsAWheelLocked());
 	  set_Pin(LED3_pin, halt);
 	  set_Pin(LED4_pin, ballPosition.canKickBall);
 	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));

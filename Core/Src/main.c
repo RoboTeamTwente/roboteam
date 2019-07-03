@@ -552,7 +552,7 @@ int main(void)
 
 	  // LED0 done in PuTTY prints above
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  set_Pin(LED2_pin, wheels_isAWheelLocked());
+	  set_Pin(LED2_pin, wheels_IsAWheelLocked());
 	  set_Pin(LED3_pin, halt);
 	  set_Pin(LED4_pin, ballPosition.canKickBall);
 	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));

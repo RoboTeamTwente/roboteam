@@ -105,11 +105,21 @@ geneva_positions geneva_GetState() {
 }
 
 bool geneva_IsWorking() {
-	static int cnt = 0;
+	static int timer = 0xffff;
 	static bool isWorking = true;
 
-	cnt = isResponding() ? 0 : cnt + 1;
-	if (cnt > GENEVA_NOT_WORKING_COUNT) {
+	static bool isResponding = true;
+	static int prevEncoder = 0;
+
+	if (pwm > 0) {
+		isResponding = (fabs(geneva_Encodervalue() - prevEncoder) < ENCODER_DEVIATION_MARGIN); // if geneva moves, it is responding
+		prevEncoder = geneva_Encodervalue();
+	}
+
+	if (isResponding) {
+		timer = HAL_GetTick();
+		isWorking = true;
+	} else if (HAL_GetTick() - timer > GENEVA_NOT_WORKING_TIME) {
 		isWorking = false;
 	}
 	return isWorking;

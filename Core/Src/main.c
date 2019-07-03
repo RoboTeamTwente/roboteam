@@ -268,7 +268,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateControl_SetState(stateEstimation_GetState());
 				stateControl_Update();
 
-				if (halt || !yaw_hasCalibratedOnce()) {
+				if (halt ) {
 					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 					wheels_SetRef(emptyRef);
 				}
@@ -499,6 +499,9 @@ int main(void)
 	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
 
+	  /*
+	   * Feedback
+	   */
 	  AckData.roboID = ID;
 	  AckData.XsensCalibrated = xsens_CalibrationDone;
 	  AckData.battery = (batCounter > 1000);
@@ -512,7 +515,7 @@ int main(void)
 	  float vy = stateEstimation_GetState()[body_y];
 	  AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
 	  AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
-	  AckData.theta = atan2(vy, vx) / CONVERT_THETA;
+	  AckData.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
 	  AckData.wheelLocked = wheels_IsAWheelLocked();
 	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
 	  //memset(&AckData,0xAB,8);

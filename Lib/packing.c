@@ -132,7 +132,7 @@ void roboAckDataToPacket(roboAckData *input, uint8_t output[ROBOPKTLEN]) {
 	output[4] |= (uint8_t) ((input->angle >> 5) & 0x1F);
 
 	output[5]  = (uint8_t) ((input->angle & 0x1F) << 3);
-	output[5]  |= (uint8_t) ((input->theta >> 8) & 0x03);
+	output[5]  |= (uint8_t) ((input->theta >> 8) & 0x07);
 
 	output[6]  = (uint8_t) (input->theta & 0xFF);
 

@@ -103,7 +103,9 @@ bool ballSensor_Init()
 }
 
 void ballSensor_DeInit(){
-	//Not needed but hey.
+	ballSensorInitialized = 0;
+	set_Pin(BS_RST_pin, 0);
+	noBall();
 }
 
 void ballSensor_Reset() {

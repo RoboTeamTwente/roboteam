@@ -203,10 +203,6 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 
 Xsens_Status MTi_DeInit(MTi_data* MTi){
 	MTi->RX_state = unitialized;
-	if(HAL_SPI_Abort(MTi->SPI) != HAL_OK){
-		MTi->Xstate = Xsens_Unknown;
-		return Xsens_Failed_DeInit;
-	}
 	set_Pin(MTi_RST_pin, 0);		// set Xsense to reset
 	XbusParser_destroy(MTi->XBParser);
 	free(MTi->ReceivedMessageStorage);

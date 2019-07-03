@@ -117,25 +117,26 @@ void roboAckDataToPacket(roboAckData *input, uint8_t output[ROBOPKTLEN]) {
 
 	output[0]  = (input->roboID);
 
-	output[1]  = (uint8_t) (input->XsensCalibrated << 7);
-	output[1] |= (uint8_t) (input->battery << 6);
-	output[1] |= (uint8_t) (input->ballSensorWorking << 5);
+	output[1]  = (uint8_t) ((input->XsensCalibrated & 0x01) << 7);
+	output[1] |= (uint8_t) ((input->battery & 0x01) << 6);
+	output[1] |= (uint8_t) ((input->ballSensorWorking & 0x01) << 5);
+	output[1] |= (uint8_t) ((input->hasBall & 0x01) << 4);
 	output[1] |= (uint8_t) (input->ballPos & 0x0F);
 
-	output[2]  = (uint8_t) (input->genevaWorking << 7);
-	output[2]  = (uint8_t) (input->genevaState & 0x7F);
+	output[2]  = (uint8_t) ((input->genevaWorking & 0x01) << 7);
+	output[2] |= (uint8_t) (input->genevaState & 0x7F);
 
-	output[3]  = (uint8_t) (input->rho >> 8);
+	output[3]  = (uint8_t) (input->rho >> 3);
 
 	output[4]  = (uint8_t) ((input->rho & 0x03) << 5);
 	output[4] |= (uint8_t) ((input->angle >> 5) & 0x1F);
 
-	output[5]  = (uint8_t) ((input->angle & 0x1F) << 5);
-	output[5]  = (uint8_t) ((input->theta >> 8) & 0x03);
+	output[5]  = (uint8_t) ((input->angle & 0x1F) << 3);
+	output[5]  |= (uint8_t) ((input->theta >> 8) & 0x03);
 
 	output[6]  = (uint8_t) (input->theta & 0xFF);
 
 	output[7]  = (uint8_t) (input->wheelLocked << 7);
-	output[7]  = (uint8_t) (input->signalStrength & 0x7F);
+	output[7]  |= (uint8_t) (input->signalStrength & 0x7F);
 }
 

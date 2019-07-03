@@ -190,7 +190,8 @@ void updatePosition(uint8_t data[]) {
 	ballPosition.y = y;
 	ballPosition.lastSeen = HAL_GetTick();
 	ballPosition.id = data[10];
-	ballPosition.canKickBall = (y<250) ? 1 : 0;
+	ballPosition.canKickBall = (y<200) ? 1 : 0;
+	ballPosition.canKickBall &= x > 185 && x < 560;
 	ballPosition.canSeeBall = 1;
 
 	//printBallPosition();
@@ -221,13 +222,13 @@ bool I2C_Rx() {
 		}
 	}
 	uint8_t next_msg_length[2];
-	if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg_length, 2, 1000))){
+	if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, next_msg_length, 2, 5))){
 		ballSensorInitialized = 0;
 		noBall();
 		Putty_printf("I2C_Rx_Blocking 2bytes - read failed with error [%d]!\n\r", error);
 		return false;
 	} else {
-		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_msg_length[1], 1000))){
+		if (HAL_OK != (error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, next_msg_length[1], 5))){
 			ballSensorInitialized = 0;
 			noBall();
 			Putty_printf("I2C_Rx_Blocking fullmsg - read failed with error [%d]!\n\r", error);

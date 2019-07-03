@@ -1,6 +1,7 @@
 
 #include "../Inc/geneva.h"
 
+
 ///////////////////////////////////////////////////// STRUCTS
 
 static PID_states genevaState = off;
@@ -51,28 +52,66 @@ void geneva_DeInit(){
 
 void geneva_Update(){
 	const int calibrationStep = 50; // number of ticks to increase reference with for calibration
+
+	static int prev_genevaRef = 0;
+	static int prev_enc = 0;
+	static int stuck_count = 0;
+	bool moving = moving = geneva_Encodervalue() != prev_enc;
+
+	float err = genevaRef - geneva_Encodervalue();
+
 	switch(genevaState){
 	case off:
-		return;
+		pwm = 0;
+		break;
 	case setup:								// While in setup, slowly move towards the sensor/edge
 		genevaRef += calibrationStep;	// if sensor is not seen yet, move to the right (70000 is above the max possible value)
 		CheckIfStuck();
+		pwm = PID(err, &genevaK);
+		if(moving){
+			stuck_count = 0;
+		} else {
+			stuck_count++;
+		}
+		if(stuck_count > 200){
+			genevaState = off;
+		}
+		break;
+	case turning:
+		prev_enc = geneva_Encodervalue();
+		if(fabs(genevaRef - geneva_Encodervalue()) < ENCODER_DEVIATION_MARGIN){
+			genevaState = idle;
+			pwm = 0;
+			stuck_count = 0;
+		} else {
+			pwm = PID(err, &genevaK);
+			if(moving){
+				stuck_count = 0;
+			} else {
+				stuck_count++;
+			}
+		}
+		if(stuck_count > 200){
+			genevaState = off;
+		}
+		break;
+	case idle:
+		if(genevaRef != prev_genevaRef){
+			genevaState = turning;
+			prev_genevaRef = genevaRef;
+		}
+		pwm = 0;
 		break;
 	case on: 				// wait for external sources to set a new ref
 		break;
 	}
-	float err = genevaRef - geneva_Encodervalue();
 
 	// Reset I when error sign changes to decrease overshoot
 	if (err * genevaK.prev_e < 0) {
 		genevaK.I = 0;
 	}
 
-	pwm = PID(err, &genevaK);
 	limitScale();
-	if (!isResponding()) {
-		pwm = 0;
-	}
 	setDir();
 	setOutput();
 }
@@ -105,24 +144,30 @@ geneva_positions geneva_GetState() {
 }
 
 bool geneva_IsWorking() {
-	static int timer = 0xffff;
-	static bool isWorking = true;
+	return genevaState != off;
 
-	static bool isResponding = true;
-	static int prevEncoder = 0;
 
-	if (pwm > 0) {
-		isResponding = (fabs(geneva_Encodervalue() - prevEncoder) < ENCODER_DEVIATION_MARGIN); // if geneva moves, it is responding
-		prevEncoder = geneva_Encodervalue();
-	}
 
-	if (isResponding) {
-		timer = HAL_GetTick();
-		isWorking = true;
-	} else if (HAL_GetTick() - timer > GENEVA_NOT_WORKING_TIME) {
-		isWorking = false;
-	}
-	return isWorking;
+
+
+//	static int timer = 0xffff;
+//	static bool isWorking = true;
+//
+//	static bool isResponding = true;
+//	static int prevEncoder = 0;
+//
+//	if (fabs(pwm) > 0) {
+//		isResponding = (fabs(geneva_Encodervalue() - prevEncoder) > ENCODER_DEVIATION_MARGIN); // if geneva moves, it is responding
+//		prevEncoder = geneva_Encodervalue();
+//	}
+//
+//	if (isResponding) {
+//		timer = HAL_GetTick();
+//		isWorking = true;
+//	} else if (HAL_GetTick() - timer > 2000) {
+//		isWorking = false;
+//	}
+//	return isWorking;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -133,10 +178,10 @@ static void CheckIfStuck(){
 	if(fabs(geneva_Encodervalue() - enc) > ENCODER_DEVIATION_MARGIN){
 		enc = geneva_Encodervalue();
 		tick = HAL_GetTick();
-	}else if(tick + 100 < HAL_GetTick()){
+	}else if(tick + 1000 < HAL_GetTick()){
 		__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
 		geneva_SetRef(geneva_middle);
-		genevaState = on;
+		genevaState = turning;
 	}
 }
 

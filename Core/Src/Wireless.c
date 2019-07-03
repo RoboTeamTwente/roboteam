@@ -116,7 +116,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     // process interrupts
     if(irq & TX_DONE){
     	isWirelessTransmitting = false;
-    	toggle_Pin(LED5_pin);
+    	//toggle_Pin(LED5_pin);
     	// start listening for a packet again
     	setChannel(SX, COMMAND_CHANNEL); // set to channel 40 for basestation to robot
 		SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];

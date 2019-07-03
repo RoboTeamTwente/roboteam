@@ -93,7 +93,9 @@ typedef enum{
 typedef enum {
 	off,
 	setup,
-	on
+	on,
+	turning,
+	idle
 }PID_states;// keeps track of the state of the system
 
 struct PIDstruct{

@@ -507,7 +507,7 @@ int main(void)
 	  AckData.battery = (batCounter > 1000);
 	  AckData.ballSensorWorking = ballSensor_isWorking();
 	  AckData.hasBall = ballPosition.canKickBall;
-	  AckData.ballPos = ballPosition.x;
+	  AckData.ballPos = ballPosition.x/100;
 	  AckData.genevaWorking = geneva_IsWorking();
 	  AckData.genevaState = geneva_GetState();
 

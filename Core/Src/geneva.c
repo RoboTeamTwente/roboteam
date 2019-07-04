@@ -58,7 +58,7 @@ void geneva_Update(){
 	static int last_time = 10000;
 	static int time = 0;
 
-	bool moving = fabs(geneva_Encodervalue() - prev_enc) > ENCODER_DEVIATION_MARGIN;
+	bool moving = fabs(geneva_Encodervalue() - prev_enc) > ENCODER_DEVIATION_MARGIN || pwm < 200;
 	time = HAL_GetTick();
 	if(moving){
 		prev_enc = geneva_Encodervalue();
@@ -83,18 +83,18 @@ void geneva_Update(){
 
 		break;
 	case turning:
-		if(fabs(genevaRef - geneva_Encodervalue()) < ENCODER_DEVIATION_MARGIN*10){
+		if(fabs(genevaRef - geneva_Encodervalue()) < 3*ENCODER_DEVIATION_MARGIN){
 			genevaState = idle;
 			pwm = 0;
 		} else {
 			pwm = PID(err, &genevaK);
 		}
-		if((time - last_time) > 100){
+		if((time - last_time) > 1000){
 			genevaState = off;
 		}
 		break;
 	case idle:
-		if(fabs(genevaRef - geneva_Encodervalue()) >= ENCODER_DEVIATION_MARGIN*10){
+		if(fabs(genevaRef - geneva_Encodervalue()) >= 3 * ENCODER_DEVIATION_MARGIN){
 			genevaState = turning;
 			prev_genevaRef = genevaRef;
 		}
@@ -135,7 +135,7 @@ int geneva_GetPWM(){
 
 geneva_positions geneva_GetState() {
 	for (geneva_positions pos = geneva_leftleft; pos <= geneva_rightright; pos++) {
-		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 10 * ENCODER_DEVIATION_MARGIN) {
+		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 20) {
 			return pos;
 		}
 	}

@@ -37,7 +37,7 @@ static bool isResponding();
 
 void geneva_Init(){
 	genevaState = setup;	// go to setup
-	initPID(&genevaK, 10.0, 5.0, 0.0);
+	initPID(&genevaK, 10.0, 10.0, 1.5);
 	HAL_TIM_Base_Start(ENC_GENEVA);		// start the encoder
 	HAL_TIM_Base_Start_IT(TIM_GENEVA);
 	start_PWM(PWM_Geneva);
@@ -89,7 +89,7 @@ void geneva_Update(){
 		} else {
 			pwm = PID(err, &genevaK);
 		}
-		if((time - last_time) > 1000){
+		if((time - last_time) > 2000){
 			genevaState = off;
 		}
 		break;
@@ -135,7 +135,7 @@ int geneva_GetPWM(){
 
 geneva_positions geneva_GetState() {
 	for (geneva_positions pos = geneva_leftleft; pos <= geneva_rightright; pos++) {
-		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 20) {
+		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 15 * ENCODER_DEVIATION_MARGIN) {
 			return pos;
 		}
 	}

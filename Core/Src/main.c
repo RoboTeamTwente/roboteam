@@ -436,7 +436,7 @@ int main(void)
   buzzer_Init();
   
   SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
-  wirelessFeedback = read_Pin(IN2_pin);	// check if we should enable feedback or not (jumper = feedback)
+  wirelessFeedback = true;//read_Pin(IN2_pin);	// check if we should enable feedback or not (jumper = feedback)
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);

@@ -461,6 +461,7 @@ int main(void)
 	  static int batCounter = 0;
 	  if (read_Pin(Bat_pin) && batCounter > 1000){
 		  Putty_printf("battery empty\n\r");
+		  buzzer_Play_ImperialMarch();
 		  set_Pin(LED5_pin, 1);
 		  Putty_DeInit();
 		  wheels_DeInit();

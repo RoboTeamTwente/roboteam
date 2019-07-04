@@ -214,12 +214,8 @@ roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
     msg.genevaIsWorking = feedback.genevaWorking;
     msg.genevaState = feedback.genevaWorking;
 
-    msg.x_vel = feedback.theta;
-    msg.y_vel = feedback.rho;
-//    msg.angle = feedback.angle;
-
-//    msg.x_vel = (feedback.rho * 0.004) * cos(feedback.theta * 0.00307);
-//    msg.y_vel = (feedback.rho * 0.004) * sin(feedback.theta * 0.00307);
+    msg.x_vel = (feedback.rho * 0.004) * cos(feedback.theta * 0.00307);
+    msg.y_vel = (feedback.rho * 0.004) * sin(feedback.theta * 0.00307);
     msg.yaw = feedback.angle * 0.00614;
 
     msg.hasLockedWheel = feedback.hasLockedWheel;

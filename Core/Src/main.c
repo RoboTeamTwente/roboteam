@@ -203,20 +203,18 @@ void executeCommands(ReceivedData* receivedData) {
 			shoot_Shoot(shoot_Kick);
 		}
 		else if (ballPosition.canKickBall) {
-			if (receivedData->genevaRef < 3 && ballPosition.x > 330){
-				// geneva in left/leftleft position, then ball should be towards the left
+			bool geneva_able = false;
+			switch(geneva_GetState()){
+				case geneva_none: 		geneva_able = false;				break;
+				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
+				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
+				case geneva_middle:		geneva_able = true;					break;
+				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
+				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
+			}
+			if(geneva_able){
 				shoot_Shoot(shoot_Kick);
 			}
-			else if (receivedData->genevaRef > 3 && ballPosition.x < 390){
-				// geneva in right/rightright position, then ball should be towards the right
-				shoot_Shoot(shoot_Kick);
-			}
-			else if (receivedData->genevaRef == 3) {// && ballPosition.x > 150 && ballPosition.x < 550)
-				// technically, for centered geneva ball position is always good
-				// geneva in center position, then ball should be towards the center
-				shoot_Shoot(shoot_Kick);
-			}
-			// else condition is not shooting, because ball is out of range for geneva
 		}
 	}
 	else if (receivedData->do_chip) {

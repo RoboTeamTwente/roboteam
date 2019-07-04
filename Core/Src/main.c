@@ -203,11 +203,11 @@ void executeCommands(ReceivedData* receivedData) {
 			shoot_Shoot(shoot_Kick);
 		}
 		else if (ballPosition.canKickBall) {
-			if (receivedData->genevaRef < 3 && ballPosition.x < 550){
+			if (receivedData->genevaRef < 3 && ballPosition.x > 330){
 				// geneva in left/leftleft position, then ball should be towards the left
 				shoot_Shoot(shoot_Kick);
 			}
-			else if (receivedData->genevaRef > 3 && ballPosition.x > 150){
+			else if (receivedData->genevaRef > 3 && ballPosition.x < 390){
 				// geneva in right/rightright position, then ball should be towards the right
 				shoot_Shoot(shoot_Kick);
 			}

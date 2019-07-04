@@ -212,7 +212,7 @@ roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
     msg.ballPos = feedback.ballPosition;
 
     msg.genevaIsWorking = feedback.genevaWorking;
-    msg.genevaState = feedback.genevaWorking;
+    msg.genevaState = feedback.genevaState;
 
     msg.x_vel = (feedback.rho * 0.004) * cos(feedback.theta * 0.00307);
     msg.y_vel = (feedback.rho * 0.004) * sin(feedback.theta * 0.00307);

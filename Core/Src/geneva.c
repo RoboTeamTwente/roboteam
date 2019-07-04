@@ -55,14 +55,14 @@ void geneva_Update(){
 
 	static int prev_genevaRef = -1;
 	static int prev_enc = 0;
-	static int last_time = 0;
+	static int last_time = 10000;
+	static int time = 0;
 
-	bool moving = fabs(geneva_Encodervalue() - prev_enc) > ENCODER_DEVIATION_MARGIN;
+	bool moving = fabs(geneva_Encodervalue() - prev_enc) > ENCODER_DEVIATION_MARGIN || pwm < 200;
+	time = HAL_GetTick();
 	if(moving){
-		last_time = HAL_GetTick();
-	}
-	if((HAL_GetTick() - last_time) > 200){
-		genevaState = off;
+		prev_enc = geneva_Encodervalue();
+		last_time = time;
 	}
 
 	float err = genevaRef - geneva_Encodervalue();
@@ -73,32 +73,32 @@ void geneva_Update(){
 		break;
 	case setup:								// While in setup, slowly move towards the sensor/edge
 		genevaRef += calibrationStep;	// if sensor is not seen yet, move to the right (70000 is above the max possible value)
-		if((HAL_GetTick() - last_time) > 200){
-			genevaState = turning;
+		if((time - last_time) > 100){
+			genevaState = idle;
 			__HAL_TIM_SET_COUNTER(ENC_GENEVA, GENEVA_CAL_EDGE_CNT);
 			geneva_SetRef(geneva_middle);
+			last_time = HAL_GetTick();
 		}
 		pwm = PID(err, &genevaK);
 
 		break;
 	case turning:
-		prev_enc = geneva_Encodervalue();
-		if(fabs(genevaRef - geneva_Encodervalue()) < ENCODER_DEVIATION_MARGIN){
+		if(fabs(genevaRef - geneva_Encodervalue()) < 3*ENCODER_DEVIATION_MARGIN){
 			genevaState = idle;
 			pwm = 0;
 		} else {
 			pwm = PID(err, &genevaK);
 		}
-		if((HAL_GetTick() - last_time) > 200){
+		if((time - last_time) > 1000){
 			genevaState = off;
 		}
 		break;
 	case idle:
-		if(genevaRef != prev_genevaRef){
+		if(fabs(genevaRef - geneva_Encodervalue()) >= 3 * ENCODER_DEVIATION_MARGIN){
 			genevaState = turning;
 			prev_genevaRef = genevaRef;
 		}
-		last_time = HAL_GetTick();
+		last_time = time;
 		pwm = 0;
 		break;
 	case on:
@@ -135,7 +135,7 @@ int geneva_GetPWM(){
 
 geneva_positions geneva_GetState() {
 	for (geneva_positions pos = geneva_leftleft; pos <= geneva_rightright; pos++) {
-		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 10 * ENCODER_DEVIATION_MARGIN) {
+		if (fabs(encoderForPosition[pos] - geneva_Encodervalue()) < 20) {
 			return pos;
 		}
 	}

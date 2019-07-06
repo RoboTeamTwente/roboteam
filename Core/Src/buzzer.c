@@ -118,6 +118,11 @@ void buzzer_Play_Flatline() {
 	buzzer_Play(song);
 }
 
+void buzzer_Play_HBD() {
+	song = HBD;
+	buzzer_Play(song);
+}
+
 
 song_struct startup_song[] = {{buzz_C4, 0.1}, {buzz_D4, 0.1}, {buzz_E4, 0.1}, {buzz_F4, 0.1}, {buzz_G4, 0.1}, {buzz_A4, 0.1}, {buzz_B4, 0.1}, {buzz_C5, 0.1}, {0xFFFF, 0}};
 song_struct tetris[] = {{buzz_E5, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4, Tbeat}, {buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_E5, Tbeat}, {buzz_C5, Tbeat}, {buzz_A4, Tbeat}, {buzz_A4, Tbeat}, {buzz_Si, 1.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat},{buzz_E5,Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_A4,Tbeat}, {buzz_A4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_Si,1.5*Tbeat}, {buzz_D5, Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_A5, 0.5*Tbeat}, {buzz_G5, 0.5*Tbeat}, {buzz_F5, 0.5*Tbeat}, {buzz_E5, Tbeat}, {buzz_Si, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_E5,Tbeat}, {buzz_D5, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_B4, Tbeat}, {buzz_B4, 0.5*Tbeat}, {buzz_C5, 0.5*Tbeat}, {buzz_D5,Tbeat}, {buzz_E5,Tbeat}, {buzz_C5,Tbeat}, {buzz_A4,Tbeat}, {buzz_A4,Tbeat}, {buzz_E4,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_A3,2*Tbeat}, {buzz_GS3,2*Tbeat}, {buzz_B3,Tbeat}, {buzz_Si,Tbeat}, {buzz_E4,2*Tbeat}, {buzz_C4,2*Tbeat}, {buzz_D4,2*Tbeat}, {buzz_B3,2*Tbeat}, {buzz_C4,Tbeat}, {buzz_E4,Tbeat}, {buzz_A4,2*Tbeat}, {buzz_GS4,3*Tbeat}, {buzz_Si,Tbeat}, {0xFFFF, 0}};
@@ -156,3 +161,11 @@ song_struct flatLine[] = {
 		{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},{buzz_A7,0.10},{buzz_Si,1.00},
 		{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},{buzz_A7,0.10},{buzz_Si,0.10},
 		{buzz_A7,5.0},{0xFFFF, 0}};
+
+song_struct HBD[] = {{buzz_G4, 0.7*tempo},{buzz_Si, 0.1*tempo},{buzz_G4, 0.2*tempo},{buzz_A4, 1*tempo},{buzz_G4, 1*tempo}, {buzz_C5,1*tempo},{buzz_B4, 2*tempo},
+					 {buzz_G4, 0.7*tempo},{buzz_Si, 0.1*tempo},{buzz_G4, 0.2*tempo},{buzz_A4, 1*tempo},{buzz_G4, 1*tempo}, {buzz_D5,1*tempo},{buzz_C5, 2*tempo},
+					 {buzz_G4, 0.7*tempo},{buzz_Si, 0.1*tempo},{buzz_G4, 0.2*tempo},{buzz_G5, 1*tempo},{buzz_E5, 1*tempo}, {buzz_C5,1*tempo},{buzz_B4, 1*tempo},
+					 {buzz_A4, 1*tempo},{buzz_F5, 0.7*tempo},{buzz_Si, 0.1*tempo},{buzz_F5, 0.2*tempo},{buzz_E5, 1*tempo},{buzz_C5, 1*tempo}, {buzz_D5,1*tempo},
+					 {buzz_C5, 2*tempo},
+					 {0xFFFF, 0}};
+

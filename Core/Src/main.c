@@ -203,15 +203,15 @@ void executeCommands(ReceivedData* receivedData) {
 			shoot_Shoot(shoot_Kick);
 		}
 		else if (ballPosition.canKickBall) {
-			bool geneva_able = false;
-			switch(geneva_GetState()){
-				case geneva_none: 		geneva_able = false;				break;
-				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
-				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
-				case geneva_middle:		geneva_able = true;					break;
-				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
-				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
-			}
+			bool geneva_able = true; // set to false to use geneva+ballsensor
+//			switch(geneva_GetState()){
+//				case geneva_none: 		geneva_able = false;				break;
+//				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
+//				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
+//				case geneva_middle:		geneva_able = true;					break;
+//				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
+//				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
+//			}
 			if(geneva_able){
 				shoot_Shoot(shoot_Kick);
 			}
@@ -532,6 +532,9 @@ int main(void)
 		  if (!ballSensorInitialized && init_attempts < 5) {
 			  init_attempts++;
 			  ballSensor_Init();
+			  __HAL_I2C_DISABLE(BS_I2C);
+			  HAL_Delay(1);
+			  __HAL_I2C_ENABLE(BS_I2C);
 		  } else if (init_attempts == 5) {
 			  init_attempts++;
 			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");

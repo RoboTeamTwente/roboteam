@@ -3,3 +3,4 @@ cmake-build-debug/
 .settings/*
 *.tmp
 Debug/
+/Release/

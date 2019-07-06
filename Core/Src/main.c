@@ -123,8 +123,8 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-roboAckData AckData = {0};
-uint8_t feedback[ROBOPKTLEN] = {0};
+volatile roboAckData AckData = {0};
+volatile uint8_t feedback[ROBOPKTLEN] = {0};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -181,6 +181,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
 		// test only! construct feedback message elsewhere
+		roboAckDataToPacket(&AckData,feedback);
 		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
@@ -518,7 +519,6 @@ int main(void)
 	  AckData.wheelLocked = wheels_IsAWheelLocked();
 	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
 	  //memset(&AckData,0xAB,8);
-	  roboAckDataToPacket(&AckData,feedback);
 
 	  /*
 	   * Print stuff on PuTTY for debugging

@@ -267,7 +267,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateControl_SetState(stateEstimation_GetState());
 				stateControl_Update();
 
-				if (halt ) {
+				if (halt || !yaw_hasCalibratedOnce) {
 					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 					wheels_SetRef(emptyRef);
 				}
@@ -529,7 +529,7 @@ int main(void)
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  if ((!ballSensorInitialized && init_attempts < 5)) {
+		  if ((!ballSensorInitialized && init_attempts < 5) || !ballPosition.canSeeBall) {
 			  init_attempts++;
 			  ballSensor_Init();
 			  __HAL_I2C_DISABLE(BS_I2C);

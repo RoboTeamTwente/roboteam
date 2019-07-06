@@ -92,8 +92,8 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]);
 void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength);
 
 void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
-void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
-void roboAckDataToPacket(roboAckData *input, uint8_t output[ROBOPKTLEN]);
+void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
+void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]);
 void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);
 
 #endif /* PACKING_H_ */

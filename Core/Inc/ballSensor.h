@@ -8,7 +8,7 @@
 #define MAX_DATA_SIZE 255
 
 /* position struct */
-typedef struct{
+volatile typedef struct{
 	int16_t x; // x coordinate, 0-700. -1 is no ball condition
 	int16_t y; // y coordinate. 0-440. -1 is no ball condition
 	float speed; // i am speeeeed, not used cuz orientation
@@ -20,14 +20,13 @@ typedef struct{
 
 Position ballPosition; // system wide struct for ball position
 
-uint8_t data[MAX_DATA_SIZE] __attribute__((aligned(16))); // byte array for received messages
+volatile uint8_t data[MAX_DATA_SIZE] __attribute__((aligned(16))); // byte array for received messages
 
 extern uint8_t ball_debug; // enable ball speed print statements thru Putty ("toggle bs" command)
 
-extern uint8_t ballSensorInitialized; // ball sensor initialization status
+extern volatile uint8_t ballSensorInitialized; // ball sensor initialization status
 extern uint8_t next_message_length; // default length of next message is 2 bytes (response type and length)
 
-extern bool bs_DMA_INUSE;
 extern uint8_t init_attempts;
 
 /* ball sensor boot complete response */

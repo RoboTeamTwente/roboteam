@@ -7,9 +7,8 @@
 
 uint error; // for i2c errors
 uint8_t ball_debug = 0; // enable ball print statements
-uint8_t ballSensorInitialized = 0; // ball sensor initialization status
+volatile uint8_t ballSensorInitialized = 0; // ball sensor initialization status
 uint8_t next_message_length = 2; // default length of next message is 2 bytes
-bool bs_DMA_INUSE = false;
 uint8_t init_attempts = 0;
 
 /* ball sensor boot complete response */
@@ -193,8 +192,9 @@ void updatePosition(uint8_t data[]) {
 	ballPosition.y = y;
 	ballPosition.lastSeen = HAL_GetTick();
 	ballPosition.id = data[10];
-	ballPosition.canKickBall = (y<200) ? 1 : 0;
-	ballPosition.canKickBall &= x > 185 && x < 560;
+	ballPosition.canKickBall = (y<250) ? 1 : 0;
+	ballPosition.canKickBall &= x > 150 && x < 650;
+//	ballPosition.canKickBall &= x > 185 && x < 560;
 	ballPosition.canSeeBall = 1;
 
 	//printBallPosition();
@@ -255,7 +255,6 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
 }
 
 void I2C_Rx_DMA() {
-	bs_DMA_INUSE = true;
 	if(HAL_OK != (error = HAL_I2C_Master_Receive_DMA(BS_I2C, BS_I2C_ADDR, data, next_message_length))){
 		noBall();
 		ballSensorInitialized = 0;
@@ -266,8 +265,6 @@ void I2C_Rx_DMA() {
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	//Putty_printf("ballsensor rx callback\n\r");
 	bs_CheckMeasurement();
-	bs_DMA_INUSE = false;
-
 }
 
 bool bs_Boot() {

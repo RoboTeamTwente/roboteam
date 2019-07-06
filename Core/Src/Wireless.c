@@ -17,8 +17,8 @@ static bool isWirelessConnected = false; // boolean to check whether we have a w
 static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback
 
 // make buffers
-uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
-uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+volatile uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+volatile uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 
 // init structs
 SX1280_Settings set = {

@@ -57,7 +57,7 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]) {
  * Create a roboData structure from a given Bytearray.
  * This is used by the robot to convert a received nRF packet into a struct with named variables.
  */
-void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
+void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	uint16_t rho = (input[0]) << 3;
 	rho |= (input[1] >> 5) & 0b00000111;
 
@@ -113,7 +113,7 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 }
 
 
-void roboAckDataToPacket(roboAckData *input, uint8_t output[ROBOPKTLEN]) {
+void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]) {
 
 	output[0]  = (input->roboID);
 

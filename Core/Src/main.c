@@ -529,7 +529,7 @@ int main(void)
 	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
-		  if (!ballSensorInitialized && init_attempts < 5) {
+		  if ((!ballSensorInitialized && init_attempts < 5)) {
 			  init_attempts++;
 			  ballSensor_Init();
 			  __HAL_I2C_DISABLE(BS_I2C);
@@ -539,6 +539,8 @@ int main(void)
 			  init_attempts++;
 			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
 			  buzzer_Play_PowerUp();
+		  } else if (ballSensorInitialized) {
+			  init_attempts = 0;
 		  }
 
 //		  printBaseStationData();

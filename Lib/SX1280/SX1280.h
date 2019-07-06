@@ -49,7 +49,7 @@ typedef struct _SX1280_Packet_Status{
 } SX1280_Packet_Status;
 
 // Global struct
-typedef struct _SX1280{
+volatile typedef struct _SX1280{
 	SX1280_Settings* SX_settings;		// pointer to struct containing all the settings
 	SX1280_Packet_Status* Packet_status;// last known packet status
 

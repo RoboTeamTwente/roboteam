@@ -26,8 +26,8 @@
 
 SX1280 SX1280_struct;
 SX1280 * SX; // pointer to the datastruct
-uint8_t Bot_to_PC[ROBOPKTLEN]; // pointer to feedback data struct
-uint8_t PC_to_Bot[ROBOPKTLEN]; // pointer to received data struct
+volatile uint8_t Bot_to_PC[ROBOPKTLEN]; // pointer to feedback data struct
+volatile uint8_t PC_to_Bot[ROBOPKTLEN]; // pointer to received data struct
 
 bool wirelessFeedback; // boolean to enable or disable wireless feedback
 

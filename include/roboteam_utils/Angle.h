@@ -5,7 +5,7 @@
 #ifndef ANGLE_H
 #define ANGLE_H
 
-#include "Math.h"
+#include "Mathematics.h"
 
 namespace rtt {
 

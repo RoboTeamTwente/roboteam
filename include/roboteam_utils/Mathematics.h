@@ -1,6 +1,6 @@
 #pragma once
 
-#include "roboteam_utils/Vector2.h"
+#include "Vector2.h"
 #include <cmath>
 
 namespace rtt {

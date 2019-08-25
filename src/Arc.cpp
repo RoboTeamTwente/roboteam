@@ -1,5 +1,5 @@
-#include "roboteam_utils/Arc.h"
-#include "roboteam_utils/Math.h"
+#include "Arc.h"
+#include "Mathematics.h"
 #include <iostream>
 
 namespace rtt {
@@ -34,9 +34,9 @@ bool Arc::angleWithinArc(double angle) const {
 }   
    
 double Arc::normalize(double angle) {
-    angle = fmodl(angle, M_PIl * 2);
+    angle = fmodl(angle, M_PI * 2);
     if (angle < 0) {
-        angle = M_PIl * 2 + angle;
+        angle = M_PI * 2 + angle;
     }
     return angle;
 }   
@@ -53,14 +53,14 @@ bool Arc::pointOnArc(const Vector2& point) const {
     return arcPoint && *arcPoint == normPoint;
 }
 
-boost::optional<Vector2> Arc::checkAndDenormalize(Vector2 vec) const {
+std::optional<Vector2> Arc::checkAndDenormalize(Vector2 vec) const {
     return normalize(angleEnd - angleStart) - normalize(vec.angle() - angleStart) >= 0 ?
-            boost::optional<Vector2>(vec + center)
+            std::optional<Vector2>(vec + center)
             :
-            boost::none;
+            std::nullopt;
 }
 
-std::pair<boost::optional<Vector2>, boost::optional<Vector2>> 
+std::pair<std::optional<Vector2>, std::optional<Vector2>>
 Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
     // cannot use compound operator (-=) due to const-ness
     lineStart = lineStart - center;
@@ -79,10 +79,10 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
             
             auto first = checkAndDenormalize(Vector2(x1, y1));
             
-            boost::optional<Vector2> second;
+            std::optional<Vector2> second;
             if (fabsl(discr < .0001)) {
                 // single intersection
-                second = boost::none;
+                second = std::nullopt;
             } else {
                 // two intersections
                 second = checkAndDenormalize(Vector2(
@@ -93,7 +93,7 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
             return {first, second};
         } else {
             // no intersections
-            return {boost::none, boost::none};
+            return {std::nullopt, std::nullopt};
         }
         
     } else {
@@ -101,15 +101,15 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
     }
 }
 
-boost::optional<Vector2> Arc::arcPointTowards(Vector2 point) const {
+std::optional<Vector2> Arc::arcPointTowards(Vector2 point) const {
     return arcPointTowards((point - center).angle());
 }
 
-boost::optional<Vector2> Arc::arcPointTowards(double angle) const {
+std::optional<Vector2> Arc::arcPointTowards(double angle) const {
     // https://math.stackexchange.com/a/22068
     angle = normalize(angle);
     if (!angleWithinArc(angle)) {
-        return boost::none;
+        return std::nullopt;
     }
     
     // special cases
@@ -127,7 +127,7 @@ boost::optional<Vector2> Arc::arcPointTowards(double angle) const {
     
     double tan2 = powl(tanl(angle), 2);
     double denom = sqrtl(width*width  + length * length / tan2);
-    double sign = angle > M_PI_2l && angle < + M_PIl + M_PI_2l ? -1 : 1;
+    double sign = angle > M_PI_2 && angle < + M_PI + M_PI_2 ? -1 : 1;
     Vector2 point(
         (sign * length * width) / (sqrtl(width*width  + length * length * tan2)),
         (sign * length * width) / (sqrtl(length*length + width*width / tan2))

@@ -1,165 +1,127 @@
-#include "roboteam_utils/normalize.h"
-#include "roboteam_utils/constants.h"
-
-#include "roboteam_utils/Math.h"
-
-#include <string>
-
+#include <Mathematics.h>
+#include "normalize.h"
 
 namespace rtt {
 
-using namespace roboteam_msgs;
-
-DetectionFrame normalizeDetectionFrame(DetectionFrame& frame) {
-    return rotateDetectionFrame(frame);
+void normalizeDetectionFrame(DetectionFrame *frame) {
+  rotateDetectionFrame(frame);
 }
 
-
-GeometryData normalizeGeometryData(GeometryData& data) {
-    return rotateGeometryData(data);
+void normalizeGeometryData(GeometryData *data) {
+  rotateGeometryData(data);
 }
 
-RefereeData normalizeRefereeData(RefereeData& data) {
-    return rotateRefereeData(data);
+void normalizeRefereeData(RefereeData *data) {
+  rotateRefereeData(data);
 }
 
-DetectionFrame rotateDetectionFrame(DetectionFrame const & frame) {
-    DetectionFrame newFrame = frame;
+void rotateDetectionFrame(DetectionFrame *frame) {
+  for (DetectionBall ball : *frame->mutable_balls()) {
+    rotateBall(&ball);
+  }
 
-    for (auto& ball : newFrame.balls) {
-        ball = rotateBall(ball);
-    }
+  for (DetectionRobot bot : *frame->mutable_us()) {
+    rotateRobot(&bot);
+  }
 
-    for (auto& bot : newFrame.us) {
-        bot = rotateRobot(bot);
-    }
-
-    for (auto& bot : newFrame.them) {
-        bot = rotateRobot(bot);
-    }
-
-    return newFrame;
+  for (DetectionRobot bot : *frame->mutable_them()) {
+    rotateRobot(&bot);
+  }
 }
 
-DetectionBall rotateBall(DetectionBall& ball) {
-    ball.pos.x *= -1;
-    ball.pos.y *= -1;
-    ball.pixel_pos.x *= -1;
-    ball.pixel_pos.y *= -1;
-
-    return ball;
+void rotateBall(DetectionBall *ball) {
+  ball->mutable_pos()->set_x(ball->pos().x()*-1);
+  ball->mutable_pos()->set_y(ball->pos().y()*-1);
+  ball->mutable_pixel_pos()->set_x(ball->pixel_pos().x()*-1);
+  ball->mutable_pixel_pos()->set_y(ball->pixel_pos().y()*-1);
 }
 
-
-DetectionRobot rotateRobot(DetectionRobot& bot) {
-    bot.pos.x *= -1;
-    bot.pos.y *= -1;
-    bot.orientation = cleanAngle(bot.orientation + M_PI);
-    bot.pixel_pos.x *= -1;
-    bot.pixel_pos.y *= -1;
-
-    return bot;
+void rotateRobot(DetectionRobot *bot) {
+  bot->mutable_pos()->set_x(bot->pos().x()*-1);
+  bot->mutable_pos()->set_y(bot->pos().y()*-1);
+  bot->mutable_pixel_pos()->set_x(bot->pixel_pos().x()*-1);
+  bot->mutable_pixel_pos()->set_y(bot->pixel_pos().y()*-1);
+  bot->set_orientation(rtt::cleanAngle(bot->orientation() + M_PI));
 }
 
+void rotateGeometryData(GeometryData *data) {
+  rotateGeometryFieldSize(data->mutable_field());
 
-GeometryData rotateGeometryData(GeometryData& data) {
-    data.field = rotateGeometryFieldSize(data.field);
-
-    for (auto& calib : data.calib) {
-        calib = rotateGeometryCameraCalibration(calib);
-    }
-
-    return data;
+  for (auto calib : *data->mutable_calib()) {
+    rotateGeometryCameraCalibration(&calib);
+  }
 }
 
+void rotateGeometryFieldSize(GeometryFieldSize *size) {
 
-GeometryFieldSize rotateGeometryFieldSize(GeometryFieldSize& size) {
+  rotateLine(size->mutable_top_line());
 
-    size.top_line = rotateLine(size.top_line);
-    size.bottom_line = rotateLine(size.bottom_line);
-    size.left_line = rotateLine(size.left_line);
-    size.right_line = rotateLine(size.right_line);
-    size.half_line = rotateLine(size.half_line);
-    size.center_line = rotateLine(size.center_line);
-    size.left_penalty_line = rotateLine(size.left_penalty_line);
-    size.right_penalty_line = rotateLine(size.right_penalty_line);
+  rotateLine(size->mutable_bottom_line());
+  rotateLine(size->mutable_left_line());
+  rotateLine(size->mutable_right_line());
+  rotateLine(size->mutable_half_line());
+  rotateLine(size->mutable_center_line());
+  rotateLine(size->mutable_left_penalty_line());
+  rotateLine(size->mutable_right_penalty_line());
 
-    size.top_left_penalty_arc = rotateArc(size.top_left_penalty_arc);
-    size.bottom_left_penalty_arc = rotateArc(size.bottom_left_penalty_arc);
-    size.top_right_penalty_arc = rotateArc(size.top_right_penalty_arc);
-    size.bottom_right_penalty_arc = rotateArc(size.bottom_right_penalty_arc);
+  rotateArc(size->mutable_top_left_penalty_arc());
+  rotateArc(size->mutable_bottom_left_penalty_arc());
+  rotateArc(size->mutable_top_right_penalty_arc());
+  rotateArc(size->mutable_bottom_right_penalty_arc());
 
-    // adding rectangle box lines
-    size.top_left_penalty_stretch = rotateLine(size.top_left_penalty_stretch);
-    size.bottom_left_penalty_stretch = rotateLine(size.bottom_left_penalty_stretch);
-    size.top_right_penalty_stretch = rotateLine(size.top_right_penalty_stretch);
-    size.bottom_right_penalty_stretch = rotateLine(size.bottom_right_penalty_stretch);
+  // adding rectangle box lines
+  rotateLine(size->mutable_top_left_penalty_stretch());
+  rotateLine(size->mutable_bottom_left_penalty_stretch());
+  rotateLine(size->mutable_top_right_penalty_stretch());
+  rotateLine(size->mutable_bottom_right_penalty_stretch());
 
-    size.center_circle = rotateArc(size.center_circle);
+  rotateArc(size->mutable_center_circle());
 
-    for (auto& line : size.field_lines) {
-        line = rotateLine(line);
-    }
+  for (auto line : *size->mutable_field_lines()) {
+    rotateLine(&line);
+  }
 
-    for (auto& arc : size.field_arcs) {
-        arc = rotateArc(arc);
-    }
+  for (auto arc : *size->mutable_field_arcs()) {
+    rotateArc(&arc);
+  }
 
-    return size;
 }
 
-GeometryCameraCalibration rotateGeometryCameraCalibration(GeometryCameraCalibration& calib) {
-    calib.principal_point_x *= -1;
-    calib.principal_point_y *= -1;
-
-    calib.tx *= -1;
-    calib.ty *= -1;
-    calib.tz *= -1;
-
-    calib.derived_camera_world_ty *= -1;
-    calib.derived_camera_world_tz *= -1;
-    calib.derived_camera_world_tx *= -1;
-
-    // TODO: Should q0 - q4 be rotated?
-
-    return calib;
+void rotateGeometryCameraCalibration(GeometryCameraCalibration *calib) {
+  calib->set_principal_point_x(calib->principal_point_x() * -1);
+  calib->set_principal_point_y(calib->principal_point_y() * -1);
+  calib->set_tx(calib->tx() * -1);
+  calib->set_ty(calib->ty() * -1);
+  calib->set_tz(calib->tz() * -1);
+  calib->set_derived_camera_world_tx(calib->derived_camera_world_tx() * -1);
+  calib->set_derived_camera_world_ty(calib->derived_camera_world_ty() * -1);
+  calib->set_derived_camera_world_tz(calib->derived_camera_world_tz() * -1);
 }
 
-
-FieldLineSegment rotateLine(FieldLineSegment& line) {
-    line.begin.x *= -1;
-    line.begin.y *= -1;
-    line.end.x *= -1;
-    line.end.y *= -1;
-
-    return line;
+void rotateLine(FieldLineSegment *line) {
+  line->mutable_begin()->set_x(line->begin().x()*-1);
+  line->mutable_begin()->set_y(line->begin().y()*-1);
+  line->mutable_end()->set_x(line->end().x()*-1);
+  line->mutable_end()->set_y(line->end().y()*-1);
 }
 
-FieldCircularArc rotateArc(FieldCircularArc& arc) {
-    arc.center.x *= -1;
-    arc.center.y *= -1;
-    arc.a1 = arc.a1 + M_PI;
-    arc.a2 = arc.a2 + M_PI;
-
-    return arc;
+void rotateArc(FieldCircularArc *arc) {
+  arc->mutable_center()->set_x(arc->center().x()*-1);
+  arc->mutable_center()->set_y(arc->center().y()*-1);
+  arc->set_a1(arc->a1()*-1);
+  arc->set_a2(arc->a2()*-1);
 }
 
-
-RefereeData rotateRefereeData(RefereeData& data) {
-    data.designated_position.x *= -1;
-    data.designated_position.y *= -1;
-
-    return data;
+void rotateRefereeData(RefereeData *data) {
+  data->mutable_designated_position()->set_x(data->designated_position().x()*-1);
+  data->mutable_designated_position()->set_y(data->designated_position().y()*-1);
 }
 
+void rotateRobotCommand(RobotCommand *command) {
 
-roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command) {
-    roboteam_msgs::RobotCommand newCommand = command;
+  command->mutable_vel()->set_x(command->vel().x()*-1);
+  command->mutable_vel()->set_y(command->vel().y()*-1);
 
-    newCommand.x_vel = -command.x_vel;
-    newCommand.y_vel = -command.y_vel;
-
-    return newCommand;
 }
 
 } // rtt

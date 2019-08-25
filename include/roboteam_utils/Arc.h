@@ -1,10 +1,10 @@
 #pragma once
 
-#include <boost/optional.hpp>
 #include "Vector2.h"
 #include <limits>
 #include <utility>
 #include <cmath>
+#include <optional>
 
 namespace rtt {
     
@@ -14,7 +14,7 @@ namespace rtt {
  * This is because, appearantly, the fmodl function only has float precision even though it should support
  * 128-bit long doubles...
  */
-constexpr double ARC_MAX = M_PIl - std::numeric_limits<float>::epsilon();
+constexpr double ARC_MAX = M_PI - std::numeric_limits<float>::epsilon();
     
 /**
  * \class Arc
@@ -96,7 +96,7 @@ class Arc {
      *  the second optional will be empty. If the line segment does not intersect the arc, then
      *  both optionals will be empty.
      */
-    std::pair<boost::optional<Vector2>, boost::optional<Vector2>> 
+    std::pair<std::optional<Vector2>, std::optional<Vector2>>
     intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
     
     /**
@@ -105,7 +105,7 @@ class Arc {
      * \return If angleWithinArc(angle), an optional containing the point in the given direction.
      * Otherwise an empty optional.
      */
-    boost::optional<Vector2> arcPointTowards(double angle) const;
+    std::optional<Vector2> arcPointTowards(double angle) const;
     
     /**
      * \brief Gets the point on the Arc in a certain direction from the center, given by another point.
@@ -113,7 +113,7 @@ class Arc {
      * \return If angleWithinArc((point - center).angle()), an optional containing the point in the given direction.
      * Otherwise an empty optional.
      */
-    boost::optional<Vector2> arcPointTowards(Vector2 point) const;
+    std::optional<Vector2> arcPointTowards(Vector2 point) const;
     
     private:
     /**
@@ -125,7 +125,7 @@ class Arc {
      * \brief Checks whether a point lies on the Arc, and denormalizes (+center) it if so.
      * Otherwise, it returns an empty optional.
      */
-    boost::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
+    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
 };
     
 }

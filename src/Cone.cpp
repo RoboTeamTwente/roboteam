@@ -1,11 +1,8 @@
-#include "ros/ros.h"
-#include "roboteam_utils/Cone.h"
-#include "roboteam_utils/LastWorld.h"
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_msgs/GeometryFieldSize.h"
-#include "roboteam_utils/Math.h"
-
+#include "Cone.h"
+#include "Vector2.h"
+#include "GeometryFieldSize.pb.h"
 #include <cmath>
+#include <Mathematics.h>
 
 namespace rtt {
 
@@ -16,7 +13,7 @@ Cone::Cone(Vector2 startPoint, Vector2 centerPoint, double distance) {
 	if (radius > 0) {
 		angle = 2 * atan((radius) / (center-start).length());
 	} else {
-		ROS_WARN("radius for cone invalid!");
+		// ROS_WARN("radius for cone invalid!");
 	}
 	side1 = (center-start).rotate(0.5*angle);
 	side2 = (center-start).rotate(-0.5*angle);
@@ -46,7 +43,7 @@ bool Cone::IsWithinCone(Vector2 point, double marginRadius) const {
 	Vector2 vectorToCenter = center-start;
 	double extraAngle = atan(marginRadius / vectorToPoint.length());
 
-	if (fabs(cleanAngle(vectorToPoint.angle()-vectorToCenter.angle())) < (0.5*angle + extraAngle)) {
+	if (fabs(rtt::cleanAngle(vectorToPoint.angle()-vectorToCenter.angle())) < (0.5*angle + extraAngle)) {
 		return true;
 	} else {
 		return false;
@@ -55,19 +52,20 @@ bool Cone::IsWithinCone(Vector2 point, double marginRadius) const {
 
 
 bool Cone::IsWithinField(Vector2 point) const {
- 	roboteam_msgs::GeometryFieldSize field = LastWorld::get_field();
- 	double fieldLimitX = field.field_length / 2.0;
-	double fieldLimitY = field.field_width / 2.0;
-	if (point.x > fieldLimitX || point.x < -fieldLimitX || point.y > fieldLimitY || point.y < -fieldLimitY) {
-		return false;
-	} else {
-		return true;
-	}
+	std::cerr << "Cone::IsWithinField is DEPRECATED" << std::endl;
+// 	// roboteam_msgs::GeometryFieldSize field = LastWorld::get_field();
+// 	double fieldLimitX = field.field_length / 2.0;
+//	double fieldLimitY = field.field_width / 2.0;
+//	if (point.x > fieldLimitX || point.x < -fieldLimitX || point.y > fieldLimitY || point.y < -fieldLimitY) {
+//		return false;
+//	} else {
+//		return true;
+//	}
 }
 
 Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) const {
 	if (!IsWithinCone(point)) {
-		ROS_WARN("This point is not inside the cone");
+		// ROS_WARN("This point is not inside the cone");
 		return point;
 	}
 	Vector2 option1 = side1.scale(10 / side1.length()).closestPointOnVector(start, point);
@@ -89,7 +87,7 @@ Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) const {
 
 Vector2 Cone::SecondClosestPointOnSide(Vector2 point) const {
 	if (!IsWithinCone(point)) {
-		ROS_WARN("This point is not inside the cone");
+		std::cout << "This point is not inside the cone" << std::endl;
 		return point;
 	}
 	Vector2 vectorToPoint = point-start;
@@ -110,7 +108,8 @@ Vector2 Cone::SecondClosestPointOnSide(Vector2 point) const {
 
 Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo) const {
 	if (!(this->IsWithinCone(point) && otherCone.IsWithinCone(point))) {
-		ROS_WARN("This point is not inside either of the cones");
+		std::cout << "This point is not inside either of the cones" << std::endl;
+
 		return point;
 	}
 
@@ -157,7 +156,7 @@ bool Cone::DoConesOverlap(Cone otherCone) const {
 
 Cone Cone::MergeCones(Cone otherCone) const {
 	if (!DoConesOverlap(otherCone)) {
-		ROS_WARN("No overlap");
+		std::cout << "no overlap" << std::endl;
 		return *this;
 	}
 

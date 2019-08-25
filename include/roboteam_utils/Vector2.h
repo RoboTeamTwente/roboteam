@@ -1,7 +1,7 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include "roboteam_msgs/Vector2f.h"
+#include "Vector2f.pb.h"
 
 namespace rtt {
 class Angle;
@@ -27,8 +27,8 @@ class Vector2 {
         constexpr Vector2(const double x, const double y)
                 :x(x), y(y), epsilon(0.00001) { }
 
-        constexpr Vector2(const roboteam_msgs::Vector2f &msg)
-                :Vector2(msg.x, msg.y) { }
+        constexpr Vector2(const roboteam_proto::Vector2f &msg)
+                :Vector2(msg.x(), msg.y()) { }
 
         Vector2(rtt::Angle &angle, const double &length = 1.0);
 
@@ -206,12 +206,12 @@ class Vector2 {
         /**
          * \brief Set the values of this vector to the ones in the given ROS vector.
          */
-        void operator=(const roboteam_msgs::Vector2f &msg);
+        void operator=(const roboteam_proto::Vector2f &msg);
 
         /**
          * \brief Casts or implicitly converts this vector to a ROS one.
          */
-        operator roboteam_msgs::Vector2f() const;
+        operator roboteam_proto::Vector2f() const;
 
         /**
          * \brief Writes a textual representation of this vector to the given output stream.

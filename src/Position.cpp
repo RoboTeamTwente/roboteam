@@ -1,4 +1,4 @@
-#include "Position.h"
+#include "../include/roboteam_utils/Position.h"
 
 namespace rtt {
 

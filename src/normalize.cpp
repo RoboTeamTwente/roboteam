@@ -1,5 +1,5 @@
-#include <Mathematics.h>
-#include "normalize.h"
+#include "../include/roboteam_utils/Mathematics.h"
+#include "../include/roboteam_utils/normalize.h"
 
 namespace rtt {
 

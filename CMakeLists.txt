@@ -14,7 +14,6 @@ else (ENABLE_DEBUG_GRAPHICS)
     add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
 endif (ENABLE_DEBUG_GRAPHICS)
 
-find_package(Protobuf REQUIRED)
 
 set(CMAKE_CXX_FLAGS "\
 --std=c++17 ${CMAKE_CXX_FLAGS} \
@@ -26,9 +25,9 @@ set(CMAKE_CXX_FLAGS "\
         )
 
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/include/roboteam_utils)
 
-add_library(roboteam_utils
+
+add_library(roboteam_utils STATIC
         src/Polygon.cpp
         src/LineBase.cpp
         src/Line.cpp
@@ -43,7 +42,12 @@ add_library(roboteam_utils
         src/Clip.cpp
         src/Optimization.cpp
         src/Arc.cpp
-        src/Section.cpp )
+        src/Section.cpp)
 
 
-target_link_libraries(roboteam_utils roboteam_proto)
+target_include_directories(roboteam_utils PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE src )
+
+target_link_libraries(roboteam_utils PUBLIC roboteam_proto)

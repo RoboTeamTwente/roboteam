@@ -4,7 +4,7 @@
 
 #ifndef ROBOTEAM_UTILS_LINEBASE_H
 #define ROBOTEAM_UTILS_LINEBASE_H
-#include "Vector2.h"
+#include "roboteam_utils/Vector2.h"
 namespace rtt {
 class LineSegment;
 class Line;

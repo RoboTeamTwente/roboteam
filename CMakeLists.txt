@@ -50,4 +50,4 @@ target_include_directories(roboteam_utils PUBLIC
         $<INSTALL_INTERFACE:include>
         PRIVATE src )
 
-target_link_libraries(roboteam_utils)
+target_link_libraries(roboteam_utils roboteam_proto)

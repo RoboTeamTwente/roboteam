@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector2.h"
+#include "roboteam_utils/Vector2.h"
 #include <limits>
 #include <utility>
 #include <cmath>
@@ -77,14 +77,14 @@ class Arc {
      * \param point The point to check
      * \return True if the point lies within the ellipse defined by this Arc.
      */
-    bool pointInArc(const Vector2& point) const;
+  //  bool pointInArc(const Vector2& point) const;
     
     /**
      * \brief Checks whether a point lies on this Arc.
      * \param point The point to check
      * \return True if the point lies on this Arc.
      */
-    bool pointOnArc(const Vector2& point) const;
+  //  bool pointOnArc(const Vector2& point) const;
     
     /**
      * \brief Gets the point(s) at which the given line segment intersects this Arc, if such  points exist.
@@ -96,8 +96,8 @@ class Arc {
      *  the second optional will be empty. If the line segment does not intersect the arc, then
      *  both optionals will be empty.
      */
-    std::pair<std::optional<Vector2>, std::optional<Vector2>>
-    intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
+//    std::pair<std::optional<Vector2>, std::optional<Vector2>>
+//    intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
     
     /**
      * \brief Gets the point on the Arc in a certain direction from the center.
@@ -105,7 +105,7 @@ class Arc {
      * \return If angleWithinArc(angle), an optional containing the point in the given direction.
      * Otherwise an empty optional.
      */
-    std::optional<Vector2> arcPointTowards(double angle) const;
+//    std::optional<Vector2> arcPointTowards(double angle) const;
     
     /**
      * \brief Gets the point on the Arc in a certain direction from the center, given by another point.
@@ -113,7 +113,7 @@ class Arc {
      * \return If angleWithinArc((point - center).angle()), an optional containing the point in the given direction.
      * Otherwise an empty optional.
      */
-    std::optional<Vector2> arcPointTowards(Vector2 point) const;
+//    std::optional<Vector2> arcPointTowards(Vector2 point) const;
     
     private:
     /**
@@ -125,7 +125,7 @@ class Arc {
      * \brief Checks whether a point lies on the Arc, and denormalizes (+center) it if so.
      * Otherwise, it returns an empty optional.
      */
-    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
+//    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
 };
     
 }

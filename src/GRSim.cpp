@@ -1,11 +1,8 @@
-#include <roboteam_msgs/RobotCommand.h>
-
 #include <numeric>
-#include "GRSim.h"
+#include "../include/GRSim.h"
 #include "roboteam_utils/Vector2.h"
-#include "roboteam_msgs/RobotCommand.h"
-#include "roboteam_msgs/RobotFeedback.h"
-#include "packing.h"
+#include "../include/packing.h"
+#include "Robotcommand.pb.h"
 
 #define VERIFY_COMMANDS
 
@@ -14,38 +11,38 @@ namespace robothub {
 
 #ifdef VERIFY_COMMANDS
 
-bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string mode)
+bool verifyCommandIntegrity(const roboteam_proto::RobotCommand& cmd, std::string mode)
 {
-    if (cmd.id<0) {
-        ROS_ERROR("RobotHub (%s): Invalid ID number: %d (should be positive)", mode.c_str(), cmd.id);
+    if (cmd.id()<0) {
+        std::cout << "RobotHub (" << mode.c_str() << "): Invalid ID number: " << cmd.id() <<  " (should be positive)" << std::endl;
         return false;
     }
-    if (fabs(cmd.x_vel)>10000) {
-        ROS_ERROR("RobotHub (%s): X velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.x_vel);
+    if (fabs(cmd.vel().x())>10000) {
+        std::cout << "RobotHub (" << mode.c_str() << "): X velocity sanity check for " << cmd.id()<< " failed: " << cmd.vel().x() << std::endl;
         return false;
     }
-    if (fabs(cmd.y_vel)>10000) {
-        ROS_ERROR("RobotHub (%s): Y velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.y_vel);
+    if (fabs(cmd.vel().x())>10000) {
+        std::cout << "RobotHub (" << mode.c_str() << "): Y velocity sanity check for " <<  cmd.id() << " failed: " << cmd.vel().x() << std::endl;
         return false;
     }
-    if (fabs(cmd.w)>10000) {
-        ROS_ERROR("RobotHub (%s): Rotation velocity sanity check for %d failed: %f", mode.c_str(), cmd.id, cmd.w);
+    if (fabs(cmd.w())>10000) {
+        std::cout << "RobotHub (" << mode.c_str() << "): Rotation velocity sanity check for " << cmd.id() << " failed:" << cmd.w() << std::endl;
         return false;
     }
-    if (cmd.x_vel!=cmd.x_vel) {
-        ROS_ERROR("RobotHub (%s): X velocity for %d is NAN.", mode.c_str(), cmd.id);
+    if (cmd.vel().x()!=cmd.vel().y()) {
+        std::cout << "RobotHub (" << mode.c_str() << "): X velocity for " <<  cmd.id() << " is NAN." << std::endl;
         return false;
     }
-    if (cmd.y_vel!=cmd.y_vel) {
-        ROS_ERROR("RobotHub (%s): Y velocity for %d is NAN.", mode.c_str(), cmd.id);
+    if (cmd.vel().x()!=cmd.vel().y()) {
+        std::cout << "RobotHub (" << mode.c_str() << "): Y velocity for " <<  cmd.id() << " is NAN." << std::endl;
         return false;
     }
-    if (cmd.w!=cmd.w) {
-        ROS_ERROR("RobotHub (%s): Rotation velocity for %d is NAN.", mode.c_str(), cmd.id);
+    if (cmd.w()!=cmd.w()) {
+        std::cout << "RobotHub ("<< mode.c_str() <<"): Rotation velocity for "<<  cmd.id() << " is NAN." << std::endl;
         return false;
     }
-    if (cmd.geneva_state<0 || cmd.geneva_state>5) {
-        ROS_ERROR("RoboHub (%s): Geneva Drive state of %d is out of bounds.", mode.c_str(), cmd.geneva_state);
+    if (cmd.geneva_state()<0 || cmd.geneva_state()>5) {
+        std::cout << "RobotHub ("<< mode.c_str() <<"): Geneva Drive state of "<< cmd.id() << " is out of bounds. " << cmd.geneva_state() << std::endl;
         return false;
     }
     return true;
@@ -53,12 +50,11 @@ bool verifyCommandIntegrity(const roboteam_msgs::RobotCommand& cmd, std::string 
 
 #endif
 
-GRSimCommander::GRSimCommander(bool batch)
-        :
+GRSimCommander::GRSimCommander(bool batch) :
         batch{batch},
-        colorParam("our_color"),
-        grsim_ip("grsim/ip", "127.0.0.1"),
-        grsim_port("grsim/port", 20011),
+//        colorParam("our_color"),
+//        grsim_ip("grsim/ip", "127.0.0.1"),
+//        grsim_port("grsim/port", 20011),
         msgReceivedBits{},
         robotsSeenBits{},
         threshold{},
@@ -70,27 +66,27 @@ GRSimCommander::GRSimCommander(bool batch)
 
 }
 
-void GRSimCommander::queueGRSimCommand(const roboteam_msgs::RobotCommand& msg)
+void GRSimCommander::queueGRSimCommand(const roboteam_proto::RobotCommand& msg)
 {
     using namespace std::chrono;
 
-    if (msg.id>=16) {
-        ROS_ERROR("ID in RobotCommand is >= 16, not allowed!");
+    if (msg.id()>=16) {
+        std::cerr << "ID in RobotCommand is >= 16, not allowed!" << std::endl;
         return;
     }
 
     if (batch) {
         // If we already received this ID, increase drop count
-        if (hasMsgForID(msg.id)) {
+        if (hasMsgForID(msg.id())) {
             drops++;
         }
 
-        if (TRACE) std::cout << "Got message for: " << msg.id << "\n";
+        if (TRACE) std::cout << "Got message for: " << msg.id() << "\n";
 
         // Store the message and set appropriate flags
-        robotCommands[msg.id] = std::make_shared<roboteam_msgs::RobotCommand>(msg);
-        msgReceivedBits = msgReceivedBits | (1 << msg.id);
-        robotsSeenBits = robotsSeenBits | (1 << msg.id);
+        robotCommands[msg.id()] = std::make_shared<roboteam_proto::RobotCommand>(msg);
+        msgReceivedBits = msgReceivedBits | (1 << msg.id());
+        robotsSeenBits = robotsSeenBits | (1 << msg.id());
 
         // If MAX_DROPS was reached...
         if (drops>=MAX_DROPS) {
@@ -122,7 +118,7 @@ void GRSimCommander::queueGRSimCommand(const roboteam_msgs::RobotCommand& msg)
     }
     else {
         // If not batching, just send it right away
-        if (TRACE) std::cout << "Got message for: " << msg.id << ". Sending NOW\n";
+        if (TRACE) std::cout << "Got message for: " << msg.id() << ". Sending NOW\n";
         sendGRSimCommand(msg);
     }
 }
@@ -157,7 +153,7 @@ void GRSimCommander::flush()
     if (TRACE) std::cout << "Flushing.\n";
 }
 
-void GRSimCommander::sendGRSimPacket(grSim_Packet const& packet)
+void GRSimCommander::sendGRSimPacket(roboteam_proto::grSim_Packet const& packet)
 {
     // Use our preallocated buffer if it's big enough. If not, do the slow approach
     if (packet.ByteSize()<1024) {
@@ -165,21 +161,22 @@ void GRSimCommander::sendGRSimPacket(grSim_Packet const& packet)
         udpsocket.writeDatagram(
                 packetBuffer.data(),
                 packet.ByteSize(),
-                QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
+                QHostAddress(QString::fromStdString(grsim_ip)),
+                grsim_port
         );
-    }
-    else {
+    } else {
         QByteArray dgram;
         dgram.resize(packet.ByteSize());
         packet.SerializeToArray(dgram.data(), dgram.size());
         udpsocket.writeDatagram(
                 dgram,
-                QHostAddress(QString::fromStdString(grsim_ip())), grsim_port()
+                QHostAddress(QString::fromStdString(grsim_ip)),
+                grsim_port
         );
     }
 }
 
-void GRSimCommander::sendGRSimCommand(const roboteam_msgs::RobotCommand& _msg)
+void GRSimCommander::sendGRSimCommand(const roboteam_proto::RobotCommand& _msg)
 {
 #ifdef VERIFY_COMMANDS
     if (!verifyCommandIntegrity(_msg, "grsim")) {
@@ -187,17 +184,20 @@ void GRSimCommander::sendGRSimCommand(const roboteam_msgs::RobotCommand& _msg)
     }
 #endif
 
-    grSim_Packet packet;
+    roboteam_proto::grSim_Packet packet;
 
-    packet.mutable_commands()->set_isteamyellow(colorParam()=="yellow");
-    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+    time_t timeInSec;
+    time(&timeInSec);
+
+    packet.mutable_commands()->set_isteamyellow(isYellow);
+    packet.mutable_commands()->set_timestamp((double) timeInSec);
 
     addRobotCommandToPacket(packet, _msg);
 
     sendGRSimPacket(packet);
 }
 
-void GRSimCommander::sendMultipleGRSimCommands(const std::vector<roboteam_msgs::RobotCommand>& msgs)
+void GRSimCommander::sendMultipleGRSimCommands(const std::vector<roboteam_proto::RobotCommand>& msgs)
 {
 #ifdef VERIFY_COMMANDS
     for (auto const& msg : msgs) {
@@ -207,10 +207,14 @@ void GRSimCommander::sendMultipleGRSimCommands(const std::vector<roboteam_msgs::
     }
 #endif
 
-    grSim_Packet packet;
+    roboteam_proto::grSim_Packet packet;
 
-    packet.mutable_commands()->set_isteamyellow(colorParam()=="yellow");
-    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+
+    time_t timeInSec;
+    time(&timeInSec);
+
+    packet.mutable_commands()->set_isteamyellow(isYellow);
+    packet.mutable_commands()->set_timestamp((double) timeInSec);
 
     for (auto const& msg : msgs) {
         addRobotCommandToPacket(packet, msg);
@@ -229,10 +233,13 @@ void GRSimCommander::sendMultipleGRSimCommands(const RobotCommandBuffer& msgs)
     }
 #endif
 
-    grSim_Packet packet;
+    roboteam_proto::grSim_Packet packet;
 
-    packet.mutable_commands()->set_isteamyellow(colorParam()=="yellow");
-    packet.mutable_commands()->set_timestamp(ros::Time::now().toSec());
+    time_t timeInSec;
+    time(&timeInSec);
+
+    packet.mutable_commands()->set_isteamyellow(isYellow);
+    packet.mutable_commands()->set_timestamp(timeInSec);
 
     for (auto const& msg : msgs) {
         if (msg) {
@@ -292,25 +299,25 @@ void GRSimCommander::setBatch(bool _batch)
     this->batch = _batch;
 }
 
-void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand const& msg)
+void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
 {
-    grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
+    roboteam_proto::grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
 
-    command->set_id(msg.id);
+    command->set_id(msg.id());
     command->set_wheelsspeed(false);
-    command->set_veltangent(msg.x_vel);
-    command->set_velnormal(msg.y_vel);
-    command->set_velangular(msg.w);
+    command->set_veltangent(msg.vel().x());
+    command->set_velnormal(msg.vel().y());
+    command->set_velangular(msg.w());
 
-    if (msg.kicker || msg.kicker_forced) {
-        command->set_kickspeedx(msg.kicker_vel);
+    if (msg.kicker()) {
+        command->set_kickspeedx(msg.chip_kick_vel());
     }
     else {
         command->set_kickspeedx(0);
     }
 
-    if (msg.chipper || msg.chipper_forced) {
-        rtt::Vector2 vel = rtt::Vector2(msg.chipper_vel, 0);
+    if (msg.chipper()) {
+        rtt::Vector2 vel = rtt::Vector2(msg.chip_kick_vel(), 0);
         vel = vel.rotate(M_PI/4); // 45 degrees up.
 
         command->set_kickspeedx(vel.x);
@@ -320,13 +327,13 @@ void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand c
         command->set_kickspeedz(0);
     }
 
-    command->set_spinner((msg.dribbler > 0));
-    command->set_use_angle(msg.use_angle);
+    command->set_spinner((msg.dribbler() > 0));
+    command->set_use_angle(msg.use_angle());
 
     // if no genevastate was given we set it to 3;
     int genevaState = 3;
-    if (msg.geneva_state != 0) {
-        genevaState = msg.geneva_state-1;
+    if (msg.geneva_state() != 0) {
+        genevaState = msg.geneva_state()-1;
     }
     // angles in degrees
 

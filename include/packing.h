@@ -5,17 +5,13 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <ros/message_forward.h>
-#include "roboteam_msgs/World.h"
+#include <RobotCommand.pb.h>
+#include <RobotFeedback.pb.h>
+#include <World.pb.h>
 
 using packed_protocol_message = std::array<uint8_t, 10>;
 using packed_robot_feedback = std::array<uint8_t, 8>;
 using boring_ack = std::array<uint8_t, 2>;
-
-namespace roboteam_msgs {
-    ROS_DECLARE_MESSAGE(RobotCommand);
-    ROS_DECLARE_MESSAGE(RobotFeedback);
-}
 
 namespace rtt {
 namespace robothub {
@@ -60,25 +56,25 @@ struct LowLevelRobotFeedback {
 
 // Software => Basestation
 LowLevelRobotCommand createLowLevelRobotCommand(
-        roboteam_msgs::RobotCommand const& command, std::shared_ptr<roboteam_msgs::World> const& worldOpt = nullptr
+        roboteam_proto::RobotCommand const& command, std::shared_ptr<roboteam_proto::World> const& worldOpt = nullptr
 );
 
 std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 std::shared_ptr<packed_protocol_message> createRobotPacket(
-        roboteam_msgs::RobotCommand const& command, std::shared_ptr<roboteam_msgs::World> const& worldOpt = nullptr
+    roboteam_proto::RobotCommand const& command, std::shared_ptr<roboteam_proto::World> const& worldOpt = nullptr
 );
 
 // Basestation => Software
 LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
 
 // Printing functions
-void printRobotCommand(const roboteam_msgs::RobotCommand& cmd);
+void printRobotCommand(const roboteam_proto::RobotCommand& cmd);
 void printLowLevelRobotCommand(const LowLevelRobotCommand& llrc);
 void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf);
-void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback);
+void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback);
 
 bool validateRobotPacket(LowLevelRobotCommand llrc);
-roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
+roboteam_proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 
 std::string byteToBinary(uint8_t const& byte);
 

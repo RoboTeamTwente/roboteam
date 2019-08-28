@@ -1,81 +1,55 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 project(roboteam_robothub)
-
-
-find_package(Protobuf REQUIRED)
-include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 ${CMAKE_CXX_FLAGS} -g3 -O0 -Wall --coverage")
+set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -g3 -O0 -Wall --coverage")
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  message_generation
-  roboteam_msgs
-  rostest
-  roboteam_utils
-)
+# for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
+if(APPLE)
+    set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
+endif()
 
-# This part actually makes sure the network interface
-# of Qt4 is included! So while rqt uses Qt5, for our
-# networking purposes we use Qt4.
-# RoboTeam Twente works in mysterious ways.
-set(QT_USE_QTNETWORK TRUE)
-find_package(Qt4 REQUIRED)
-include(${QT_USE_FILE})
+# for Linux, BSD, Solaris, Minix
+if(UNIX AND NOT APPLE)
+    SET(Qt5Network_DIR "/usr/include/x86_64-linux-gnu/qt5/Qt5Network")
+endif()
 
-include_directories(
-  "include"
-  ${catkin_INCLUDE_DIRS}
-)
+find_package(Qt5Network REQUIRED)
 
-catkin_package(
-  CATKIN_DEPENDS message_runtime roboteam_msgs
-)
+add_library(roboteam_robothub STATIC
+        src/packing.cpp
+        src/GRSim.cpp
+        src/SerialDeviceManager.cpp
+        src/RobotHub.cpp)
 
-set(SRCS
-    src/packing.cpp
-    src/GRSim.cpp
-    src/SerialDeviceManager.cpp
-    src/SerialDeviceManager.h
-        src/utilities.h src/Application.cpp src/Application.h src/constants.h)
 
-add_executable(roboteam_robothub
-    src/main.cpp
-    ${SRCS})
+target_include_directories(roboteam_utils PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE src )
 
-catkin_add_gtest(robothub_tests
-    ${SRCS}
-    test/main.cpp
-    test/packing.cpp
-    )
-target_compile_options(robothub_tests PUBLIC --coverage)
+target_link_libraries(roboteam_robothub roboteam_proto roboteam_utils Qt5::Network)
 
-target_link_libraries(roboteam_robothub 
-    ${catkin_LIBRARIES} 
-    ${QT_LIBRARIES}
-        ${PROTOBUF_LIBRARIES}
-    )
 
-target_link_libraries(robothub_tests
-        ${catkin_LIBRARIES}
-        ${QT_LIBRARIES}
-        ${PROTOBUF_LIBRARIES}
-        gcov)
 
-add_dependencies(roboteam_robothub 
-    ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-    ${catkin_EXPORTED_TARGETS}
-    )
+#add_test(robothub_tests
+#    ${SRCS}
+#    test/main.cpp
+#    test/packing.cpp
+#    )
 
-include(CodeCoverage)
-APPEND_COVERAGE_COMPILER_FLAGS()
-SETUP_TARGET_FOR_COVERAGE_LCOV(NAME ${PROJECT_NAME}_coverage EXECUTABLE robothub_tests)
+#target_compile_options(robothub_tests PUBLIC --coverage)
+
+
+#target_link_libraries(robothub_tests ${QT_LIBRARIES} roboteam_proto gcov)
+#
+#include(CodeCoverage)
+#APPEND_COVERAGE_COMPILER_FLAGS()
+#SETUP_TARGET_FOR_COVERAGE_LCOV(NAME ${PROJECT_NAME}_coverage EXECUTABLE robothub_tests)
 

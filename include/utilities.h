@@ -62,7 +62,7 @@ static std::string modeToString(Mode mode) {
 // If this function is moved to utils, we can use that
 static std::shared_ptr<roboteam_proto::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_proto::World &world) {
 
-    auto botsRepeatedPtr = ourTeam ? world.us() : world.them();
+    auto botsRepeatedPtr = ourTeam ? world.yellow() : world.blue();
     std::vector<roboteam_proto::WorldRobot> robots(botsRepeatedPtr.begin(), botsRepeatedPtr.end());
 
     for (const auto &bot : robots) {

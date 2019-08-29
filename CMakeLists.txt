@@ -22,11 +22,11 @@ endif()
 
 find_package(Qt5Network REQUIRED)
 
-add_library(roboteam_robothub STATIC
+add_executable(roboteam_robothub
         src/packing.cpp
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
-        src/RobotHub.cpp)
+        src/RobotHub.cpp src/main.cpp)
 
 
 target_include_directories(roboteam_utils PUBLIC

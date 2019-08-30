@@ -164,7 +164,7 @@ private:
 //    SlowParam<int> grsim_port;
 
     bool isYellow = true;
-    std::string grsim_ip = "127.0.0.1";
+    std::string grsim_ip = "192.168.1.14";
     quint16 grsim_port = 20011;
 
     // Batch variables

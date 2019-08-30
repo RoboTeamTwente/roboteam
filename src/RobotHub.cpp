@@ -10,7 +10,11 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     subscribeToROSTopics();
+    target = "grsim";
+
     setMode();
+
+
     batching = getBatchingVariable();
 
     // set up the managers
@@ -66,6 +70,10 @@ bool RobotHub::getBatchingVariable() {
 
 /// subscribe to ROS topics
 void RobotHub::subscribeToROSTopics(){
+
+    robotCommandSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_AI_TCP_PUBLISHER, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
+    worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
+
 //    feedbackPublisher = n.advertise<roboteam_proto::RobotFeedback>("robot_feedback", 1000);
 //    subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
 //    subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this,  ros::TransportHints().tcpNoDelay());
@@ -90,7 +98,9 @@ void RobotHub::loop(){
             lastStatistics = timeNow;
             std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(getMode()) << " |==========" << std::endl;
             printStatistics();
+
         }
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     }
 }
@@ -110,12 +120,12 @@ void RobotHub::printStatistics() {
     }
 }
 
-void RobotHub::processWorldState(const roboteam_proto::World& world){
-    LastWorld = std::make_shared<roboteam_proto::World>(world);
+void RobotHub::processWorldState(roboteam_proto::World * world){
+    LastWorld = world;
 }
 
-void RobotHub::processRobotCommand(const roboteam_proto::RobotCommand& cmd) {
-    LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
+void RobotHub::processRobotCommand(roboteam_proto::RobotCommand * cmd) {
+    LowLevelRobotCommand llrc = createLowLevelRobotCommand(*cmd, LastWorld);
 
     // check if the command is valid, otherwise don't send anything
     if(!validateRobotPacket(llrc)) {
@@ -124,11 +134,11 @@ void RobotHub::processRobotCommand(const roboteam_proto::RobotCommand& cmd) {
         return;
     }
 
-    robotTicks[cmd.id()]++;
+    robotTicks[cmd->id()]++;
     if (getMode() == utils::Mode::SERIAL) {
         sendSerialCommand(llrc);
     } else {
-        sendGrSimCommand(cmd);
+        sendGrSimCommand(*cmd);
     }
 }
 

@@ -29,11 +29,11 @@ bool verifyCommandIntegrity(const roboteam_proto::RobotCommand& cmd, std::string
         std::cout << "RobotHub (" << mode.c_str() << "): Rotation velocity sanity check for " << cmd.id() << " failed:" << cmd.w() << std::endl;
         return false;
     }
-    if (cmd.vel().x()!=cmd.vel().y()) {
+    if (cmd.vel().x()!=cmd.vel().x()) {
         std::cout << "RobotHub (" << mode.c_str() << "): X velocity for " <<  cmd.id() << " is NAN." << std::endl;
         return false;
     }
-    if (cmd.vel().x()!=cmd.vel().y()) {
+    if (cmd.vel().y()!=cmd.vel().y()) {
         std::cout << "RobotHub (" << mode.c_str() << "): Y velocity for " <<  cmd.id() << " is NAN." << std::endl;
         return false;
     }

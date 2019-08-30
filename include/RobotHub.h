@@ -6,8 +6,10 @@
 #define ROBOTEAM_ROBOTHUB_APPLICATION_H
 
 #include <string>
+#include <roboteam_utils/constants.h>
 #include "utilities.h"
 #include "constants.h"
+#include <Subscriber.h>
 
 namespace rtt {
 namespace robothub {
@@ -19,13 +21,16 @@ public:
   RobotHub();
     void loop();
 private:
-    utils::Mode mode = utils::Mode::UNDEFINED;
+    utils::Mode mode = utils::Mode::GRSIM;
 
     // ROS subscriptions
 //    ros::NodeHandle n;
 //    ros::Subscriber subWorldState;
 //    ros::Subscriber subRobotCommands;
 //    ros::Publisher feedbackPublisher;
+  roboteam_proto::Subscriber * robotCommandSubscriber;
+  roboteam_proto::Subscriber * worldStateSubscriber;
+
     void subscribeToROSTopics();
 
     // get parameters from ROS
@@ -35,9 +40,9 @@ private:
     bool getBatchingVariable();
 
     // ROS callback functions
-    std::shared_ptr<roboteam_proto::World> LastWorld;
-    void processWorldState(const roboteam_proto::World& world);
-    void processRobotCommand(const roboteam_proto::RobotCommand& cmd);
+    roboteam_proto::World * LastWorld;
+    void processWorldState(roboteam_proto::World * world);
+    void processRobotCommand(roboteam_proto::RobotCommand * cmd);
 
 
     // Serial and grsim managers

@@ -19,7 +19,7 @@ namespace robothub {
  * uses this internally to convert a RobotCommand into something workable.
  */
 LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotCommand& command,
-        const std::shared_ptr<roboteam_proto::World>& worldOpt)
+        roboteam_proto::World * worldOpt)
 {
 
     double kick_chip_power = command.chip_kick_vel();

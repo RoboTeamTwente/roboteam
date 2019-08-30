@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace rtt {
 

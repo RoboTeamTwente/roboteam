@@ -33,32 +33,6 @@ extern const std::string NODE_STAND_FREE_TEST;
 
 extern const std::string NODE_TACTICS;
 
-void get_PARAM_ITERATIONS_PER_SECOND(int&);
-void set_PARAM_ITERATIONS_PER_SECOND(const int&);
-bool has_PARAM_ITERATIONS_PER_SECOND();
-
-void get_PARAM_KICKING(bool&);
-void set_PARAM_KICKING(const bool&);
-bool has_PARAM_KICKING();
-
-void get_PARAM_NORMALIZE_FIELD(bool&);
-void set_PARAM_NORMALIZE_FIELD(const bool&);
-bool has_PARAM_NORMALIZE_FIELD();
-
-void get_PARAM_NUM_ROLE_NODES(int&);
-void set_PARAM_NUM_ROLE_NODES(const int&);
-bool has_PARAM_NUM_ROLE_NODES();
-
-extern const std::array<string, 2> PARAM_OUR_COLOR_valid_values;
-void get_PARAM_OUR_COLOR(string& tgt, bool error_on_invalid = false);
-void set_PARAM_OUR_COLOR(const string& val, bool error_on_invalid = true);
-bool has_PARAM_OUR_COLOR();
-
-extern const std::array<string, 2> PARAM_OUR_SIDE_valid_values;
-void get_PARAM_OUR_SIDE(string& tgt, bool error_on_invalid = false);
-void set_PARAM_OUR_SIDE(const string& val, bool error_on_invalid = true);
-bool has_PARAM_OUR_SIDE();
-
 extern const std::string SERVICE_NAVSIM;
 
 extern const std::string SERVICE_OPPONENT_TRACKER;
@@ -86,6 +60,9 @@ extern const std::string TOPIC_WORLD_STATE;
 extern const std::string TRACKER_TYPE_ACCEL;
 
 extern const std::string TRACKER_TYPE_SPEED;
+
+extern const std::string ROBOTEAM_WORLD_TCP_PUBLISHER;
+extern const std::string ROBOTEAM_AI_TCP_PUBLISHER;
 
 
 } // namespace rtt

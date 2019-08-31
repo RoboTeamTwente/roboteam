@@ -2,7 +2,6 @@
 #include "../include/GRSim.h"
 #include "roboteam_utils/Vector2.h"
 #include "../include/packing.h"
-#include "Robotcommand.pb.h"
 
 #define VERIFY_COMMANDS
 

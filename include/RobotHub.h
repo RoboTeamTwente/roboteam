@@ -41,8 +41,8 @@ private:
 
     // ROS callback functions
     roboteam_proto::World * LastWorld;
-    void processWorldState(roboteam_proto::World * world);
-    void processRobotCommand(roboteam_proto::RobotCommand * cmd);
+    void processWorldState(roboteam_proto::World world);
+    void processRobotCommand(roboteam_proto::RobotCommand cmd);
 
 
     // Serial and grsim managers
@@ -58,6 +58,8 @@ private:
     std::string target;
 
     bool batching = false;
+
+    std::mutex worldLock;
 };
 
 } // robothub

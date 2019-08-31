@@ -9,13 +9,13 @@ namespace rtt {
 namespace robothub {
 
 RobotHub::RobotHub() {
+    batching = getBatchingVariable();
     subscribeToROSTopics();
     target = "grsim";
 
     setMode();
 
 
-    batching = getBatchingVariable();
 
     // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
@@ -120,12 +120,14 @@ void RobotHub::printStatistics() {
     }
 }
 
-void RobotHub::processWorldState(roboteam_proto::World * world){
-    LastWorld = world;
+void RobotHub::processWorldState(roboteam_proto::World world){
+    std::lock_guard<std::mutex> lock(worldLock);
+    LastWorld = &world;
 }
 
-void RobotHub::processRobotCommand(roboteam_proto::RobotCommand * cmd) {
-    LowLevelRobotCommand llrc = createLowLevelRobotCommand(*cmd, LastWorld);
+void RobotHub::processRobotCommand(roboteam_proto::RobotCommand cmd) {
+    std::lock_guard<std::mutex> lock(worldLock);
+    LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
 
     // check if the command is valid, otherwise don't send anything
     if(!validateRobotPacket(llrc)) {
@@ -134,11 +136,11 @@ void RobotHub::processRobotCommand(roboteam_proto::RobotCommand * cmd) {
         return;
     }
 
-    robotTicks[cmd->id()]++;
+    robotTicks[cmd.id()]++;
     if (getMode() == utils::Mode::SERIAL) {
         sendSerialCommand(llrc);
     } else {
-        sendGrSimCommand(*cmd);
+        sendGrSimCommand(cmd);
     }
 }
 

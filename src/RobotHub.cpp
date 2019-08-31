@@ -10,7 +10,6 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     batching = getBatchingVariable();
-    subscribeToROSTopics();
     target = "grsim";
 
     setMode();
@@ -25,6 +24,7 @@ RobotHub::RobotHub() {
     }
     if (getMode() == utils::Mode::SERIAL && !device->ensureDeviceOpen())
         device->openDevice();
+    subscribeToROSTopics();
 
 }
 
@@ -120,12 +120,12 @@ void RobotHub::printStatistics() {
     }
 }
 
-void RobotHub::processWorldState(roboteam_proto::World world){
+void RobotHub::processWorldState(roboteam_proto::World & world){
     std::lock_guard<std::mutex> lock(worldLock);
-    LastWorld = &world;
+    LastWorld = world;
 }
 
-void RobotHub::processRobotCommand(roboteam_proto::RobotCommand cmd) {
+void RobotHub::processRobotCommand(roboteam_proto::RobotCommand & cmd) {
     std::lock_guard<std::mutex> lock(worldLock);
     LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
 

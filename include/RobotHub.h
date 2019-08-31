@@ -40,9 +40,9 @@ private:
     bool getBatchingVariable();
 
     // ROS callback functions
-    roboteam_proto::World * LastWorld;
-    void processWorldState(roboteam_proto::World world);
-    void processRobotCommand(roboteam_proto::RobotCommand cmd);
+    roboteam_proto::World LastWorld;
+    void processWorldState(roboteam_proto::World & world);
+    void processRobotCommand(roboteam_proto::RobotCommand & cmd);
 
 
     // Serial and grsim managers

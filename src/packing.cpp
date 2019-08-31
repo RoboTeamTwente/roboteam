@@ -19,7 +19,7 @@ namespace robothub {
  * uses this internally to convert a RobotCommand into something workable.
  */
 LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotCommand& command,
-        roboteam_proto::World * worldOpt)
+        roboteam_proto::World worldOpt)
 {
 
     double kick_chip_power = command.chip_kick_vel();
@@ -54,29 +54,19 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotComma
     llrc.cam_position_y = 0;                                                        // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_rotation = 0;                                                          // [-1024, 1023]   [-pi, pi>
 
-    if (worldOpt) {
-        try {
-            std::shared_ptr<roboteam_proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, *worldOpt);
-          roboteam_proto::WorldRobot robot;
-            if (findBot) {
-                robot = *findBot;
-                llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
-                llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
-                llrc.cam_rotation = (int) floor(robot.angle()/M_PI*1024);
-                llrc.use_cam_info = true;
-            }
 
-        }
-        catch (std::out_of_range e) {
-          std::cout << "[createLowLevelRobotCommand] Robot " << command.id()
-                    << " not present in World! Not adding camera data" << std::endl;
-
-        }
-        catch (std::exception e) {
-          std::cout << "[createLowLevelRobotCommand] Something went wrong while adding camera data for robot "
-                    << command.id() << " : " << e.what() << std::endl;
-        }
+    std::shared_ptr<roboteam_proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, worldOpt);
+  roboteam_proto::WorldRobot robot;
+    if (findBot) {
+        robot = *findBot;
+        llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
+        llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
+        llrc.cam_rotation = (int) floor(robot.angle()/M_PI*1024);
+        llrc.use_cam_info = true;
     }
+
+
+
 
     return llrc;
 }

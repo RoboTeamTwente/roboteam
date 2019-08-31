@@ -7,6 +7,8 @@
 #include "Vector2.h"
 #include "LineSegment.h"
 #include <iostream>
+#include <vector>
+
 namespace rtt {
 class Polygon {
     public:

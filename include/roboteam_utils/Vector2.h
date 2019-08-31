@@ -27,7 +27,7 @@ class Vector2 {
         constexpr Vector2(const double x, const double y)
                 :x(x), y(y), epsilon(0.00001) { }
 
-        constexpr Vector2(const roboteam_proto::Vector2f &msg)
+        Vector2(const roboteam_proto::Vector2f &msg)
                 :Vector2(msg.x(), msg.y()) { }
 
         Vector2(rtt::Angle &angle, const double &length = 1.0);

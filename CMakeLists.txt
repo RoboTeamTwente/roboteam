@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
@@ -37,13 +37,14 @@ add_library(roboteam_utils STATIC
         src/Position.cpp
       #  src/LastWorld.cpp
         src/Mathematics.cpp
-        src/Cone.cpp
+#        src/Cone.cpp
         src/normalize.cpp
         src/constants.cpp
         src/Clip.cpp
         src/Optimization.cpp
         src/Arc.cpp
-        src/Section.cpp)
+#        src/Section.cpp
+        )
 
 
 target_include_directories(roboteam_utils PUBLIC

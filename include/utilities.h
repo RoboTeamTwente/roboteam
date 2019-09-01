@@ -73,6 +73,7 @@ static std::shared_ptr<roboteam_proto::WorldRobot> getWorldBot(unsigned int id, 
 
     for (const auto &bot : robots) {
         if (bot.id() == id) {
+
             return std::make_shared<roboteam_proto::WorldRobot>(bot);
         }
     }

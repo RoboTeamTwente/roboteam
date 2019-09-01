@@ -298,9 +298,20 @@ void GRSimCommander::setBatch(bool _batch)
     this->batch = _batch;
 }
 
-void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
+        void GRSimCommander::setColor(bool yellow) {
+isYellow = yellow;
+        }
+
+        void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
 {
+
     roboteam_proto::grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
+
+
+//    commands.robot_commands[0].kickspeedx,
+//    commands.robot_commands[0].kickspeedz,
+//    commands.robot_commands[0].spinner,
+//    commands.robot_commands[0].wheelsspeed
 
     command->set_id(msg.id());
     command->set_wheelsspeed(false);
@@ -342,6 +353,7 @@ void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_prot
     float geneva_angle = 2.0*M_PI*angles[genevaState]/360.0;
 
     command->set_geneva_angle(geneva_angle);
+
 }
 
 } // robothub

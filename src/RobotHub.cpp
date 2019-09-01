@@ -1,4 +1,5 @@
 
+#include <Setting.pb.h>
 #include "../include/RobotHub.h"
 #include "../include/SerialDeviceManager.h"
 #include "../include/GRSim.h"
@@ -60,7 +61,7 @@ std::string RobotHub::getSerialDevice() {
 
 /// Get batching mode for grsim from the ROS parameter server
 bool RobotHub::getBatchingVariable() {
-    std::string batching = "true";
+    std::string batching = "false";
 //    if(ros::param::has("grsim/batching")) {
 //        ros::param::get("grsim/batching", batching);
 //        if (batching == "false") return false;
@@ -73,6 +74,8 @@ void RobotHub::subscribeToROSTopics(){
 
     robotCommandSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_AI_TCP_PUBLISHER, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
     worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
+        settingsSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_AI_TCP_PUBLISHER, TOPIC_SETTINGS, &RobotHub::processSettings, this);
+
 
 //    feedbackPublisher = n.advertise<roboteam_proto::RobotFeedback>("robot_feedback", 1000);
 //    subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
@@ -140,12 +143,14 @@ void RobotHub::processRobotCommand(roboteam_proto::RobotCommand & cmd) {
     if (getMode() == utils::Mode::SERIAL) {
         sendSerialCommand(llrc);
     } else {
+
         sendGrSimCommand(cmd);
     }
 }
 
 /// send a serial command from a given robotcommand
 void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
+
 
     // convert the LLRC to a bytestream which we can send
     std::shared_ptr<packed_protocol_message> bytestream = createRobotPacket(llrc);
@@ -184,6 +189,11 @@ void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
        // feedbackPublisher.publish(toRobotFeedback(llrf));
     }
 }
+
+    void RobotHub::processSettings(roboteam_proto::Setting &setting) {
+this->settings = setting;
+grsimCommander->setColor(setting.isyellow());
+    }
 
 } // robothub
 } // rtt

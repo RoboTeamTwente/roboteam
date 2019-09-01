@@ -8,6 +8,8 @@
 #include <string>
 #include <roboteam_utils/constants.h>
 #include "utilities.h"
+#include "Setting.pb.h"
+
 #include "constants.h"
 #include <Subscriber.h>
 
@@ -30,6 +32,7 @@ private:
 //    ros::Publisher feedbackPublisher;
   roboteam_proto::Subscriber * robotCommandSubscriber;
   roboteam_proto::Subscriber * worldStateSubscriber;
+    roboteam_proto::Subscriber * settingsSubscriber;
 
     void subscribeToROSTopics();
 
@@ -43,7 +46,8 @@ private:
     roboteam_proto::World LastWorld;
     void processWorldState(roboteam_proto::World & world);
     void processRobotCommand(roboteam_proto::RobotCommand & cmd);
-
+    void processSettings(roboteam_proto::Setting & setting);
+    roboteam_proto::Setting settings;
 
     // Serial and grsim managers
     std::shared_ptr<SerialDeviceManager> device;

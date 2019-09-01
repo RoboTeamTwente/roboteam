@@ -127,6 +127,7 @@ public:
      * Turns batching on or off.
      */
     void setBatch(bool batch);
+    void setColor(bool yellow);
 
 private:
     /**
@@ -162,6 +163,7 @@ private:
 //    SlowParam<std::string> colorParam;
 //    SlowParam<std::string> grsim_ip;
 //    SlowParam<int> grsim_port;
+
 
     bool isYellow = true;
     std::string grsim_ip = "127.0.0.1";

@@ -14,6 +14,7 @@ static bool has(std::array<T, N> arr, T val) {
 
 const std::string ROBOTEAM_WORLD_TCP_PUBLISHER = "tcp://127.0.0.1:5555";
 const std::string ROBOTEAM_AI_TCP_PUBLISHER = "tcp://127.0.0.1:5556";
+const std::string ROBOTEAM_AI_2_TCP_PUBLISHER = "tcp://127.0.0.1:5557"; // for a eventual second ai
 
 
 const std::string NODE_AVOID_ROBOTS_TEST = "AvoidRobotsTest";

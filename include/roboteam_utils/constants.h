@@ -55,6 +55,6 @@ extern const std::string TRACKER_TYPE_SPEED;
 
 extern const std::string ROBOTEAM_WORLD_TCP_PUBLISHER;
 extern const std::string ROBOTEAM_AI_TCP_PUBLISHER;
-
+extern const std::string ROBOTEAM_AI_2_TCP_PUBLISHER; // for a second ai
 
 } // namespace rtt

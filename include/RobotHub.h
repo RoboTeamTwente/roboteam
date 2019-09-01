@@ -12,6 +12,7 @@
 
 #include "constants.h"
 #include <Subscriber.h>
+#include <Publisher.h>
 
 namespace rtt {
 namespace robothub {
@@ -24,6 +25,10 @@ public:
     void loop();
 private:
     std::string ai_publisher;
+    std::string robothub_publisher;
+public:
+    void setRobothubPublisher(const string &robothubPublisher);
+
 public:
     void setAiPublisher(const string &aiPublisher);
     void subscribeToROSTopics();
@@ -31,15 +36,11 @@ public:
 private:
     utils::Mode mode = utils::Mode::GRSIM;
 
-    // ROS subscriptions
-//    ros::NodeHandle n;
-//    ros::Subscriber subWorldState;
-//    ros::Subscriber subRobotCommands;
-//    ros::Publisher feedbackPublisher;
+
   roboteam_proto::Subscriber * robotCommandSubscriber;
   roboteam_proto::Subscriber * worldStateSubscriber;
     roboteam_proto::Subscriber * settingsSubscriber;
-
+    roboteam_proto::Publisher * publisher;
 
     // get parameters from ROS
     utils::Mode getMode();

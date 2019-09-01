@@ -75,6 +75,7 @@ void RobotHub::subscribeToROSTopics(){
     worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
         settingsSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_SETTINGS, &RobotHub::processSettings, this);
 
+        publisher = new roboteam_proto::Publisher(robothub_publisher);
 
 //    feedbackPublisher = n.advertise<roboteam_proto::RobotFeedback>("robot_feedback", 1000);
 //    subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
@@ -185,7 +186,7 @@ void RobotHub::setMode() {
 
 void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     if (llrf.id >= 0 && llrf.id < 16) {
-       // feedbackPublisher.publish(toRobotFeedback(llrf));
+        publisher->send(rtt::TOPIC_FEEDBACK, toRobotFeedback(llrf).SerializeAsString());
     }
 }
 
@@ -196,6 +197,10 @@ grsimCommander->setColor(setting.isyellow());
 
     void RobotHub::setAiPublisher(const string &aiPublisher) {
         ai_publisher = aiPublisher;
+    }
+
+    void RobotHub::setRobothubPublisher(const string &robothubPublisher) {
+        robothub_publisher = robothubPublisher;
     }
 
 } // robothub

@@ -17,8 +17,10 @@ int main(int argc, char *argv[]) {
     rtt::robothub::RobotHub app;
     if (id == 1) {
         app.setAiPublisher(rtt::ROBOTEAM_AI_2_TCP_PUBLISHER);
+        app.setRobothubPublisher(rtt::ROBOTEAM_ROBOTHUB_TCP_2_PUBLISHER);
     } else {
         app.setAiPublisher(rtt::ROBOTEAM_AI_TCP_PUBLISHER);
+        app.setRobothubPublisher(rtt::ROBOTEAM_ROBOTHUB_TCP_PUBLISHER);
     }
     app.subscribeToROSTopics();
 

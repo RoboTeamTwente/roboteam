@@ -48,19 +48,11 @@ const std::string SERVICE_WORLD_RESET = "world_reset";
 
 const std::string TOPIC_COMMANDS = "robotcommands";
 
-const std::string TOPIC_DEBUG_LINES = "view_debug_lines";
-
-const std::string TOPIC_DEBUG_POINTS = "view_debug_points";
-
-const std::string TOPIC_DETECTION = "vision_detection";
+const std::string TOPIC_SETTINGS = "settings";
 
 const std::string TOPIC_GEOMETRY = "vision_geometry";
 
 const std::string TOPIC_REFEREE = "vision_referee";
-
-const std::string TOPIC_ROLE_DIRECTIVE = "role_directive";
-
-const std::string TOPIC_ROLE_FEEDBACK = "role_feedback";
 
 const std::string TOPIC_WORLD_STATE = "world_state";
 

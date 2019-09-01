@@ -41,19 +41,11 @@ extern const std::string SERVICE_WORLD_RESET;
 
 extern const std::string TOPIC_COMMANDS;
 
-extern const std::string TOPIC_DEBUG_LINES;
-
-extern const std::string TOPIC_DEBUG_POINTS;
-
-extern const std::string TOPIC_DETECTION;
+extern const std::string TOPIC_SETTINGS;
 
 extern const std::string TOPIC_GEOMETRY;
 
 extern const std::string TOPIC_REFEREE;
-
-extern const std::string TOPIC_ROLE_DIRECTIVE;
-
-extern const std::string TOPIC_ROLE_FEEDBACK;
 
 extern const std::string TOPIC_WORLD_STATE;
 

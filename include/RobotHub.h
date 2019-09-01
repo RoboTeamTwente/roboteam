@@ -23,6 +23,12 @@ public:
   RobotHub();
     void loop();
 private:
+    std::string ai_publisher;
+public:
+    void setAiPublisher(const string &aiPublisher);
+    void subscribeToROSTopics();
+
+private:
     utils::Mode mode = utils::Mode::GRSIM;
 
     // ROS subscriptions
@@ -34,7 +40,6 @@ private:
   roboteam_proto::Subscriber * worldStateSubscriber;
     roboteam_proto::Subscriber * settingsSubscriber;
 
-    void subscribeToROSTopics();
 
     // get parameters from ROS
     utils::Mode getMode();

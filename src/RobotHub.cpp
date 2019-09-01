@@ -25,7 +25,6 @@ RobotHub::RobotHub() {
     }
     if (getMode() == utils::Mode::SERIAL && !device->ensureDeviceOpen())
         device->openDevice();
-    subscribeToROSTopics();
 
 }
 
@@ -72,9 +71,9 @@ bool RobotHub::getBatchingVariable() {
 /// subscribe to ROS topics
 void RobotHub::subscribeToROSTopics(){
 
-    robotCommandSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_AI_TCP_PUBLISHER, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
+    robotCommandSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
     worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
-        settingsSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_AI_TCP_PUBLISHER, TOPIC_SETTINGS, &RobotHub::processSettings, this);
+        settingsSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_SETTINGS, &RobotHub::processSettings, this);
 
 
 //    feedbackPublisher = n.advertise<roboteam_proto::RobotFeedback>("robot_feedback", 1000);
@@ -193,6 +192,10 @@ void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     void RobotHub::processSettings(roboteam_proto::Setting &setting) {
 this->settings = setting;
 grsimCommander->setColor(setting.isyellow());
+    }
+
+    void RobotHub::setAiPublisher(const string &aiPublisher) {
+        ai_publisher = aiPublisher;
     }
 
 } // robothub

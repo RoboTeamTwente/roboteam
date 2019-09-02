@@ -49,11 +49,17 @@ extern const std::string TOPIC_REFEREE;
 
 extern const std::string TOPIC_WORLD_STATE;
 
+extern const std::string TOPIC_FEEDBACK;
+
 extern const std::string TRACKER_TYPE_ACCEL;
 
 extern const std::string TRACKER_TYPE_SPEED;
 
 extern const std::string ROBOTEAM_WORLD_TCP_PUBLISHER;
+
+extern const std::string ROBOTEAM_ROBOTHUB_TCP_PUBLISHER;
+extern const std::string ROBOTEAM_ROBOTHUB_TCP_2_PUBLISHER;
+
 extern const std::string ROBOTEAM_AI_TCP_PUBLISHER;
 extern const std::string ROBOTEAM_AI_2_TCP_PUBLISHER; // for a second ai
 

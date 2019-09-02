@@ -34,7 +34,7 @@ void RobotHub::loop(){
         auto timeDiff = timeNow-lastStatistics;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {
             lastStatistics = timeNow;
-            std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(getMode()) << " |==========" << std::endl;
+            std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(mode) << " |==========" << std::endl;
             printStatistics();
 
         }
@@ -120,7 +120,7 @@ void RobotHub::processSettings(roboteam_proto::Setting &setting) {
     grsimCommander->setColor(setting.isyellow());
     grsimCommander->setGrsim_ip(setting.robothubsendip());
     grsimCommander->setGrsim_port(setting.robothubsendport());
-    
+
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;
     } else {

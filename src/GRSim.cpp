@@ -302,7 +302,14 @@ void GRSimCommander::setBatch(bool _batch)
 isYellow = yellow;
         }
 
-        void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
+void GRSimCommander::setGrsim_ip(const std::string &grsim_ip) {
+    GRSimCommander::grsim_ip = grsim_ip;
+}
+void GRSimCommander::setGrsim_port(quint16 grsim_port) {
+    GRSimCommander::grsim_port = grsim_port;
+}
+
+void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
 {
 
     roboteam_proto::grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();

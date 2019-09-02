@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
         app.setAiPublisher(rtt::ROBOTEAM_AI_TCP_PUBLISHER);
         app.setRobothubPublisher(rtt::ROBOTEAM_ROBOTHUB_TCP_PUBLISHER);
     }
-    app.subscribeToROSTopics();
+  app.subscribeToTopics();
 
   app.loop();
   return 0;

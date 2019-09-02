@@ -128,6 +128,8 @@ public:
      */
     void setBatch(bool batch);
     void setColor(bool yellow);
+  void setGrsim_ip(const std::string &grsim_ip);
+  void setGrsim_port(quint16 grsim_port);
 
 private:
     /**
@@ -156,17 +158,9 @@ private:
      * Stores the batching state.
      */
     bool batch;
-
-    /**
-     * For economically getting environment variables.
-     */
-//    SlowParam<std::string> colorParam;
-//    SlowParam<std::string> grsim_ip;
-//    SlowParam<int> grsim_port;
-
-
     bool isYellow = true;
     std::string grsim_ip = "127.0.0.1";
+
     quint16 grsim_port = 20011;
 
     // Batch variables

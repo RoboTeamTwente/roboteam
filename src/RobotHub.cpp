@@ -10,91 +10,26 @@ namespace rtt {
 namespace robothub {
 
 RobotHub::RobotHub() {
-    batching = getBatchingVariable();
-    target = "grsim";
-
-    setMode();
-
-
-
-    // set up the managers
     grsimCommander = std::make_shared<GRSimCommander>();
-    if (getMode() == utils::Mode::SERIAL) {
-        device = std::make_shared<SerialDeviceManager>(getSerialDevice());
-
-    }
-    if (getMode() == utils::Mode::SERIAL && !device->ensureDeviceOpen())
-        device->openDevice();
-
+    device = std::make_shared<SerialDeviceManager>("/dev/serial/by-id/usb-RTT_BaseStation_00000000001A-if00");
 }
 
-/// Get the mode of robothub, either "serial" or "grsim" or "undefined"
-utils::Mode RobotHub::getMode() {
-    if (mode == utils::Mode::UNDEFINED) {
-        std::string modeStr = "undefined";
-       // ros::param::get("robot_output_target", modeStr);
-        mode = rtt::robothub::utils::stringToMode(modeStr);
-        std::cout << "Current mode : " << utils::modeToString(mode) << std::endl;
-    }
-    return mode;
-}
-
-/// Get output device from the ROS parameter server
-// if there is no serial device from ROS then auto select one
-// then always just open basestation 78, which is the default (no jumper needed)
-std::string RobotHub::getSerialDevice() {
-    std::string deviceName;
-//
-//    if(ros::param::has("output_device")) {
-//        ros::param::get("output_device", deviceName);
-//        if (deviceName != "none") {
-//            std::cout << "[getSerialDevice] Looking for serial device defined by ROS parameter: " << deviceName << std::endl;
-//            return deviceName;
-//        }
-//    }
-
-    deviceName = "/dev/serial/by-id/usb-RTT_BaseStation_00000000001A-if00";
-    std::cout << "[getSerialDevice] No serial device name given in ROS. Assuming basestation " << deviceName << std::endl;
-    return deviceName;
-}
-
-/// Get batching mode for grsim from the ROS parameter server
-bool RobotHub::getBatchingVariable() {
-    std::string batching = "false";
-//    if(ros::param::has("grsim/batching")) {
-//        ros::param::get("grsim/batching", batching);
-//        if (batching == "false") return false;
-//    }
-    return true;
-}
-
-/// subscribe to ROS topics
-void RobotHub::subscribeToROSTopics(){
-
+/// subscribe to topics
+void RobotHub::subscribeToTopics(){
     robotCommandSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
     worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
-        settingsSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_SETTINGS, &RobotHub::processSettings, this);
-
-        publisher = new roboteam_proto::Publisher(robothub_publisher);
-
-//    feedbackPublisher = n.advertise<roboteam_proto::RobotFeedback>("robot_feedback", 1000);
-//    subWorldState = n.subscribe("world_state", 1000, &Application::processWorldState, this, ros::TransportHints().tcpNoDelay());
-//    subRobotCommands = n.subscribe("robotcommands", 1000, &Application::processRobotCommand, this,  ros::TransportHints().tcpNoDelay());
-//    n.getParam("robot_output_target", target);
-//    std::cout << "Set the target to: " << target << std::endl;
+    settingsSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_SETTINGS, &RobotHub::processSettings, this);
+    publisher = new roboteam_proto::Publisher(robothub_publisher);
 }
 
 
 void RobotHub::loop(){
- //   ros::Rate rate(ROBOTHUB_TICK_RATE);
     std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
 
-    grsimCommander->setBatch(batching);
+    grsimCommander->setBatch(true);
 
     int currIteration = 0;
-    while (true) { // ros::ok()
-//        rate.sleep();
-//        ros::spinOnce();
+    while (true) {
         auto timeNow = std::chrono::high_resolution_clock::now();
         auto timeDiff = timeNow-lastStatistics;
         if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {
@@ -104,7 +39,6 @@ void RobotHub::loop(){
 
         }
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
     }
 }
 
@@ -140,20 +74,22 @@ void RobotHub::processRobotCommand(roboteam_proto::RobotCommand & cmd) {
     }
 
     robotTicks[cmd.id()]++;
-    if (getMode() == utils::Mode::SERIAL) {
+    if (mode == utils::Mode::SERIAL) {
         sendSerialCommand(llrc);
     } else {
-
         sendGrSimCommand(cmd);
     }
 }
 
 /// send a serial command from a given robotcommand
 void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
-
-
     // convert the LLRC to a bytestream which we can send
     std::shared_ptr<packed_protocol_message> bytestream = createRobotPacket(llrc);
+
+
+    if (!device->ensureDeviceOpen()) {
+        device->openDevice();
+    }
 
     // Check if the message was created successfully
     if(!bytestream){
@@ -171,17 +107,7 @@ void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
 
 /// send a GRSim command from a given robotcommand
 void RobotHub::sendGrSimCommand(const roboteam_proto::RobotCommand& robotCommand) {
-        this->grsimCommander->queueGRSimCommand(robotCommand);
-}
-void RobotHub::setMode() {
-    if (target == "grsim")
-        mode = utils::Mode::GRSIM;
-    else if (target == "serial")
-        mode = utils::Mode::SERIAL;
-    else {
-        std::cerr << "robot_output_target not set with ROS, will default to SERIAL" << std::endl;
-        mode = utils::Mode::SERIAL;
-    }
+    this->grsimCommander->queueGRSimCommand(robotCommand);
 }
 
 void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
@@ -190,18 +116,25 @@ void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     }
 }
 
-    void RobotHub::processSettings(roboteam_proto::Setting &setting) {
-this->settings = setting;
-grsimCommander->setColor(setting.isyellow());
+void RobotHub::processSettings(roboteam_proto::Setting &setting) {
+    grsimCommander->setColor(setting.isyellow());
+    grsimCommander->setGrsim_ip(setting.robothubsendip());
+    grsimCommander->setGrsim_port(setting.robothubsendport());
+    
+    if (setting.serialmode()) {
+        mode = utils::Mode::SERIAL;
+    } else {
+        mode = utils::Mode::GRSIM;
     }
+}
 
-    void RobotHub::setAiPublisher(const string &aiPublisher) {
-        ai_publisher = aiPublisher;
-    }
+void RobotHub::setAiPublisher(const string &aiPublisher) {
+    ai_publisher = aiPublisher;
+}
 
-    void RobotHub::setRobothubPublisher(const string &robothubPublisher) {
-        robothub_publisher = robothubPublisher;
-    }
+void RobotHub::setRobothubPublisher(const string &robothubPublisher) {
+    robothub_publisher = robothubPublisher;
+}
 
 } // robothub
 } // rtt

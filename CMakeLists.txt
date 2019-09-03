@@ -47,9 +47,10 @@ add_library(roboteam_utils STATIC
         )
 
 
-target_include_directories(roboteam_utils PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+target_include_directories(roboteam_utils
+        INTERFACE include
+        PRIVATE include/roboteam_utils
         PRIVATE src )
 
-target_link_libraries(roboteam_utils roboteam_proto)
+target_link_libraries(roboteam_utils
+        PUBLIC roboteam_proto)

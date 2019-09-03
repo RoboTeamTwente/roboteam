@@ -1,7 +1,7 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include "Vector2f.pb.h"
+#include "roboteam_proto/Vector2f.pb.h"
 
 namespace rtt {
 class Angle;

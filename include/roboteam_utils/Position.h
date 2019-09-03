@@ -2,7 +2,7 @@
 #define POSITION_H
 
 #include "Vector2.h"
-#include "WorldRobot.pb.h"
+#include "roboteam_proto/WorldRobot.pb.h"
 
 namespace rtt
 {

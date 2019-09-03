@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RobotCommand.pb.h>
-#include <GeometryData.pb.h>
-#include <Referee.pb.h>
+#include <roboteam_proto/RobotCommand.pb.h>
+#include <roboteam_proto/GeometryData.pb.h>
+#include <roboteam_proto/Referee.pb.h>
 
 namespace rtt {
 

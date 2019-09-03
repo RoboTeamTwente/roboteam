@@ -1,11 +1,12 @@
 
 #include "roboteam_proto/Setting.pb.h"
-#include "../include/RobotHub.h"
-#include "../include/SerialDeviceManager.h"
-#include "../include/GRSim.h"
-#include "../include/packing.h"
-#include "../include/constants.h"
 #include "roboteam_utils/normalize.h"
+
+#include "RobotHub.h"
+#include "SerialDeviceManager.h"
+#include "GRSim.h"
+#include "packing.h"
+#include "constants.h"
 
 namespace rtt {
 namespace robothub {

@@ -2,8 +2,8 @@
 // Created by mrlukasbos on 7-3-19.
 //
 
-#include "../include/SerialDeviceManager.h"
-#include "../include/utilities.h"
+#include "SerialDeviceManager.h"
+#include "utilities.h"
 #include <iostream>
 #include <fstream>
 #include <termios.h>

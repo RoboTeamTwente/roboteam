@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef ROBOTEAM_ROBOTHUB_GRSIM_H
+#define ROBOTEAM_ROBOTHUB_GRSIM_H
 #include <array>
 #include <QtNetwork>
 #include <string>
@@ -182,3 +182,6 @@ void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_prot
 
 } // robothub
 } // rtt
+
+#endif //ROBOTEAM_ROBOTHUB_GRSIM_H
+

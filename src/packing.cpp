@@ -1,6 +1,4 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
-#include "../include/packing.h"
+#include "packing.h"
 
 #include <cassert>
 #include <cstdint>
@@ -9,7 +7,7 @@
 #include <math.h>
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/Mathematics.h"
-#include "../include/utilities.h"
+#include "utilities.h"
 
 namespace rtt {
 namespace robothub {
@@ -335,5 +333,3 @@ void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback)
 
 } // robothub
 } // rtt
-
-#pragma clang diagnostic pop

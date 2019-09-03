@@ -5,6 +5,7 @@
 #include "../include/GRSim.h"
 #include "../include/packing.h"
 #include "../include/constants.h"
+#include "roboteam_utils/normalize.h"
 
 namespace rtt {
 namespace robothub {
@@ -59,6 +60,7 @@ void RobotHub::printStatistics() {
 
 void RobotHub::processWorldState(roboteam_proto::World & world){
     std::lock_guard<std::mutex> lock(worldLock);
+    if(!isLeft) roboteam_utils::rotate(&world);
     LastWorld = world;
 }
 
@@ -120,6 +122,7 @@ void RobotHub::processSettings(roboteam_proto::Setting &setting) {
     grsimCommander->setColor(setting.isyellow());
     grsimCommander->setGrsim_ip(setting.robothubsendip());
     grsimCommander->setGrsim_port(setting.robothubsendport());
+    isLeft = setting.isleft();
 
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;

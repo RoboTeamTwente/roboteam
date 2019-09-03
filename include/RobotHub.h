@@ -29,6 +29,7 @@ public:
 
 private:
     utils::Mode mode = utils::Mode::GRSIM;
+    bool isLeft = true;
     roboteam_proto::Subscriber * robotCommandSubscriber;
     roboteam_proto::Subscriber * worldStateSubscriber;
     roboteam_proto::Subscriber * settingsSubscriber;

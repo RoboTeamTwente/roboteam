@@ -25,7 +25,7 @@ static int char2int(char input) {
     if (input>='a' && input<='f') return input-'a'+10;
 
     // TODO look into this, (throw somehow cannot be used)
-   // throw std::invalid_argument("char2int : Invalid input string");
+    throw std::invalid_argument("char2int : Invalid input string");
 }
 
 // This function assumes src to be a zero terminated sanitized string with an even number of [0-9a-f] characters, and target to be sufficiently large

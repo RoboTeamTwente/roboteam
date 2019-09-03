@@ -26,15 +26,20 @@ add_executable(roboteam_robothub
         src/packing.cpp
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
-        src/RobotHub.cpp src/main.cpp)
+        src/RobotHub.cpp
+        src/main.cpp)
 
 
-target_include_directories(roboteam_utils PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+target_include_directories(roboteam_robothub
+        INTERFACE include
+        PRIVATE include/roboteam_robothub
         PRIVATE src )
 
-target_link_libraries(roboteam_robothub roboteam_proto roboteam_utils Qt5::Network)
+target_link_libraries(roboteam_robothub
+        PUBLIC roboteam_proto
+        PRIVATE roboteam_utils
+        PRIVATE Qt5::Network
+        )
 
 
 

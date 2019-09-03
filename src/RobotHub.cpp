@@ -1,5 +1,5 @@
 
-#include <Setting.pb.h>
+#include "roboteam_proto/Setting.pb.h"
 #include "../include/RobotHub.h"
 #include "../include/SerialDeviceManager.h"
 #include "../include/GRSim.h"

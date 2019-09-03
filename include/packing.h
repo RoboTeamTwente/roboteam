@@ -5,9 +5,9 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <RobotCommand.pb.h>
-#include <RobotFeedback.pb.h>
-#include <World.pb.h>
+#include "roboteam_proto/RobotCommand.pb.h"
+#include "roboteam_proto/RobotFeedback.pb.h"
+#include "roboteam_proto/World.pb.h"
 
 using packed_protocol_message = std::array<uint8_t, 10>;
 using packed_robot_feedback = std::array<uint8_t, 8>;

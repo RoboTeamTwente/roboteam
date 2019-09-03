@@ -8,10 +8,10 @@
 #include <string>
 #include <roboteam_utils/constants.h>
 #include "utilities.h"
-#include "Setting.pb.h"
+#include "roboteam_proto/Setting.pb.h"
 #include "constants.h"
-#include <Subscriber.h>
-#include <Publisher.h>
+#include <roboteam_proto/Subscriber.h>
+#include <roboteam_proto/Publisher.h>
 
 namespace rtt {
 namespace robothub {

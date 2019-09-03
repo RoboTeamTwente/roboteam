@@ -1,4 +1,4 @@
-#include "include/roboteam_utils/normalize.h"
+#include "normalize.h"
 
 namespace roboteam_utils {
 
@@ -19,7 +19,7 @@ void rotate(roboteam_proto::WorldRobot *robot) {
   robot->mutable_vel()->set_x(robot->vel().x()*-1);
   robot->mutable_vel()->set_y(robot->vel().y()*-1);
   robot->set_w(robot->w()*-1);
-  robot->set_angle(rtt::cleanAngle(robot->angle() + M_PI));
+  robot->set_angle(static_cast<float>(rtt::cleanAngle(robot->angle() + M_PI)));
 }
 
 // rotate the ball and robots
@@ -105,5 +105,13 @@ void toMeters(roboteam_proto::SSL_GeometryFieldSize * field) {
     toMeters(field->mutable_field_arcs(i));
   }
 }
+
+// rotate robotcommands
+void rotate(roboteam_proto::RobotCommand * command) {
+  command->mutable_vel()->set_x(- command->vel().x());
+  command->mutable_vel()->set_y(- command->vel().y());
+  command->set_w(static_cast<float>(rtt::cleanAngle(command->w() + M_PI)));
+}
+
 
 } // roboteam_utils

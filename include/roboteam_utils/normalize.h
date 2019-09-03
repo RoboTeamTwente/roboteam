@@ -23,7 +23,7 @@ namespace roboteam_utils {
   void rotate(roboteam_proto::SSL_FieldLineSegment *line);
   void toMeters(roboteam_proto::SSL_FieldLineSegment * line);
   void rotate(roboteam_proto::SSL_GeometryFieldSize * field);
-  void toMeters(roboteam_proto::SSL_GeometryFieldSize * field);
+//  void toMeters(roboteam_proto::SSL_GeometryFieldSize * field);
   void rotate(roboteam_proto::RobotCommand * command);
 
 }

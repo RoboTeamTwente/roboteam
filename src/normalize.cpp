@@ -94,17 +94,28 @@ void rotate(roboteam_proto::SSL_GeometryFieldSize * field) {
 }
 
 // convert all units from the field from millimeters to meters.
-void toMeters(roboteam_proto::SSL_GeometryFieldSize * field) {
-  // convert all field lines
-  for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
-    toMeters(field->mutable_field_lines(i));
-  }
-
-  // convert all field arcs
-  for (int i = 0; i < field->mutable_field_arcs()->size(); i++) {
-    toMeters(field->mutable_field_arcs(i));
-  }
-}
+// BE CAREFUL: NOT EVERYTHING IS STORED AS DOUBLES SO
+// field_length, field_width, boundary_width, goal_depth, goal_width will be rouned to whole meters!
+//void toMeters(roboteam_proto::SSL_GeometryFieldSize * field) {
+//
+//  std::cerr << "WARNING: CONVERTING PROTUBUF SSL_GEOMETRYFIELDSIZE TO METERS IS NOT SAFE" << std::endl;
+//  // convert the standard properties
+//  field->set_field_length(mm_to_m(field->field_length()));
+//  field->set_field_width(mm_to_m(field->field_width()));
+//  field->set_boundary_width(mm_to_m(field->boundary_width()));
+//  field->set_goal_depth(mm_to_m(field->goal_depth()));
+//  field->set_goal_width(mm_to_m(field->goal_width()));
+//
+//  // convert all field lines
+//  for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
+//    toMeters(field->mutable_field_lines(i));
+//  }
+//
+//  // convert all field arcs
+//  for (int i = 0; i < field->mutable_field_arcs()->size(); i++) {
+//    toMeters(field->mutable_field_arcs(i));
+//  }
+//}
 
 // rotate robotcommands
 void rotate(roboteam_proto::RobotCommand * command) {

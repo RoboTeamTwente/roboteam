@@ -34,6 +34,7 @@ void buzzer_Play_WarningFour();
 void buzzer_Play_BridgeBattle();
 void buzzer_Play_ImperialMarch();
 void buzzer_Play_Flatline();
+void buzzer_Play_HBD();
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);

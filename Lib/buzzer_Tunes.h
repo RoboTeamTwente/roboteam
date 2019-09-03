@@ -19,6 +19,7 @@ typedef struct song_struct{
 #define Mbeat 0.4
 #define fBeat 0.0336
 #define halfBeat 0.168
+#define tempo 0.75
 
 ///////////////////////////////////////////////////// TONES
 // tones are counters, so (1e6/tone_freq - 1) in buzzer_Play()
@@ -125,5 +126,6 @@ extern song_struct warningFour[];
 extern song_struct bridgeBattle[];
 extern song_struct imperialMarch[];
 extern song_struct flatLine[];
+extern song_struct HBD[];
 
 #endif /* BUZZER_TUNES_H_ */

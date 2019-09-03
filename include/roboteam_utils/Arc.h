@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector2.h"
-#include "roboteam_utils/Vector2.h"
 #include <limits>
 #include <utility>
 #include <cmath>

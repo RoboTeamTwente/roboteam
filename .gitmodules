@@ -1,0 +1,15 @@
+[submodule "roboteam_ai"]
+	path = roboteam_ai
+	url = git@github.com:RoboTeamTwente/roboteam_ai.git
+[submodule "roboteam_world"]
+	path = roboteam_world
+	url = https://github.com/RoboTeamTwente/roboteam_world
+[submodule "roboteam_robothub"]
+	path = roboteam_robothub
+	url = https://github.com/RoboTeamTwente/roboteam_robothub
+[submodule "roboteam_utils"]
+	path = roboteam_utils
+	url = https://github.com/RoboTeamTwente/roboteam_utils
+[submodule "roboteam_proto"]
+	path = roboteam_proto
+	url = https://github.com/RoboTeamTwente/roboteam_proto

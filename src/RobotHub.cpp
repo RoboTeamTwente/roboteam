@@ -13,7 +13,12 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     grsimCommander = std::make_shared<GRSimCommander>();
+
+#ifdef __APPLE__
+    device = std::make_shared<SerialDeviceManager>("/dev/cu.usbmodem00000000001A1");
+#else
     device = std::make_shared<SerialDeviceManager>("/dev/serial/by-id/usb-RTT_BaseStation_00000000001A-if00");
+#endif
 }
 
 /// subscribe to topics
@@ -61,7 +66,7 @@ void RobotHub::printStatistics() {
 
 void RobotHub::processWorldState(roboteam_proto::World & world){
     std::lock_guard<std::mutex> lock(worldLock);
-    if(!isLeft) roboteam_utils::rotate(&world);
+    // if(!isLeft) roboteam_utils::rotate(&world);
     LastWorld = world;
 }
 

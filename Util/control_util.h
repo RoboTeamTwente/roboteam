@@ -51,14 +51,15 @@
 #define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
 
 // Geneva
-#define GENEVA_CAL_EDGE_CNT 4100	// the amount of encoder counts from one edge to the other
-#define ENCODER_DEVIATION_MARGIN 3	// margin within which encoder is considered to be the same as previous encoder
+#define GENEVA_CAL_EDGE_CNT 4100		// the amount of encoder counts from one edge to the other
+#define ENCODER_DEVIATION_MARGIN 3		// margin within which encoder is considered to be the same as previous encoder
+#define GENEVA_NOT_WORKING_TIME 2	 	// number of seconds not responding after which geneva is considered to be not working
 
 // Shoot
 #define MIN_KICK_TIME 25 				// minimum time period of kicking
 #define MAX_KICK_TIME 300 				// maximum time period of kicking
-#define MIN_CHIP_TIME 25 				// minimum time period of chipping
-#define MAX_CHIP_TIME 60 				// maximum time period of chipping
+#define MIN_CHIP_TIME 60 				// minimum time period of chipping
+#define MAX_CHIP_TIME 160 				// maximum time period of chipping
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)
 #define READY_CALLBACK_FREQ 1 		// frequency [Hz] of callback when shootState is Ready
 #define CHARGING_CALLBACK_FREQ 10 	// frequency [Hz] of callback when shootState is Charging
@@ -92,7 +93,9 @@ typedef enum{
 typedef enum {
 	off,
 	setup,
-	on
+	on,
+	turning,
+	idle
 }PID_states;// keeps track of the state of the system
 
 struct PIDstruct{
@@ -167,8 +170,9 @@ inline float PID(float err, PIDvariables* K){
 //Scales the angle to the range Pi to -Pi in radians
 inline float constrainAngle(float x){
     x = fmodf(x + M_PI, 2*M_PI);
-    if (x < 0)
+    if (x < 0){
         x += 2*M_PI;
+    }
     return x - M_PI;
 }
 

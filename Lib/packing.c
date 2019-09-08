@@ -52,55 +52,12 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]) {
 	Putty_printf("\tCAMERA \n\r\t use cam info: %i \n\r\t rotation: %i \n\r\n\r", input->use_cam_info, input->cam_rotation);
 }
 
-void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength) {
-	Putty_printf("<-----TO BASESTATION<-----\n");
-
-	//print ack packet in hex
-	for(int i=0; i<ackDataLength; i++) {
-		Putty_printf("%02x ", dataArray[i]);
-	}
-	Putty_printf("\n");
-
-	Putty_printf("\tRoboID: %i \n", input->roboID);
-	Putty_printf("\tWHEELS \n\t leftFront: %i \n\t rightFront: %i \n\t leftBack: %i \n\t rightBack: %i \n", input->wheelLeftFront, input->wheelRightFront, input->wheelLeftBack, input->wheelRightBack);
-	Putty_printf("\tGeneva drive: %i \n", input->genevaDriveState);
-	Putty_printf("\tBattery: %i \n", input->batteryState);
-	Putty_printf("\tPOSITION \n\t x: %i \n\t y: %i \n", input->xPosRobot, input->yPosRobot);
-	Putty_printf("\tRho: %i \n\tTheta: %i \n", input->rho, input->theta);
-	Putty_printf("\tOrientation: %i \n", input->orientation);
-	Putty_printf("\tAngular velocity: %i \n", input->angularVelocity);
-	Putty_printf("\tBall sensor: %i \n", input->ballSensor);
-	Putty_printf("\tXSENS \n\t x: %.6f \n\t y: %.6f \n\t w: %.6f\n\n", uint32tofloat(input->xAcceleration), uint32tofloat(input->yAcceleration), uint32tofloat(input->angularRate));
-}
-
 
 /*
  * Create a roboData structure from a given Bytearray.
  * This is used by the robot to convert a received nRF packet into a struct with named variables.
  */
-void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
-	/*
-	output[0] aaaaabbb
-	output[1] bbbbbbbb
-	output[2] cccccccc
-	output[3] cccdefgg
-	output[4] gggggggg
-	output[5] 0000hijk
-	output[6] mmmmmmmm
-	output[7] nnnnnnnn
-	output[8] pppqqqqq
-	output[9] qqqqqqqq
-	output[10] rrrrrrrr
-	output[11] rrrrrsss
-	output[12] ssssssss
-	 */
-
-
-//	Putty_printf("ptrd: "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"\r\n", BYTE_TO_BINARY(input[3]), BYTE_TO_BINARY(input[4]));
-
-	/*
-	 * Read data from packet
-	 */
+void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 	uint16_t rho = (input[0]) << 3;
 	rho |= (input[1] >> 5) & 0b00000111;
 
@@ -156,167 +113,30 @@ void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
 }
 
 
-/*
- * For the Robot ACKs we use the following packet definition
- *
- *skipping some characters for better readability
+void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]) {
 
-		Character   Description                 Values          Represented values    Units       Bits    Comment
-		a           Robot ID                    [0,31]          [0,31]                -              5    -
-		b           Left front wheel state      [0,1]           {true,false}          -              1    Indicates whether the left front wheel functions
-		c           Right front wheel state     [0,1]           {true,false}          -              1    Indicates whether the right front wheel functions
-		d           Left back wheel state       [0,1]           {true,false}          -              1    Indicates whether the left back wheel functions
-		e           Right back wheel state      [0,1]           {true,false}          -              1    Indicates whether the right back wheel functions
-		f           Geneva drive state          [0,1]           {true,false}          -              1    Indicates whether the Geneva drive functions
-		g           Battery state               [0,1]           {true,false}          -              1    States whether the battery is nearing depletion
-		h           x position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
-		k           y position robot            [-4096,4095]    [-1024,1023]          0.25cm        13    -
-		m           rho            				[-1024,1023]    [?,?]		          	            11    Magnitude of the robot velocity vector
-		o           theta           			[-1024,1023]    [?,?]                               11    Angle of the robot velocity vector
-		p           Orientation                 [-1024,1023]    [-pi,pi>              0.00307rad    11    Angle of the facing direction. 2048 possible angles. Intervals of ~0.00307 rad
-		q           Angular velocity            [-1024,1023]    [?,?]                 0.049rad/s?   11
-		s           Ball sensor                 [0,128]         {?}			          -              7    Can be used to specify where on the dribbler the ball is located. For now a non-zero value represents the presence of the ball
+	output[0]  = (input->roboID);
 
-		Extra
-		t           Acceleration x              [0, 4294967295]    [0, 32 bit float]       m/s/s         32    -
-		u           Acceleration y              [0, 4294967295]    [0, 32 bit float]       m/s/s         32    -
-		v           Angular rate                [0, 4294967295]    [0, 32 bit float]       m/s/s         32    raw angular velocity from xsense
+	output[1]  = (uint8_t) ((input->XsensCalibrated & 0x01) << 7);
+	output[1] |= (uint8_t) ((input->battery & 0x01) << 6);
+	output[1] |= (uint8_t) ((input->ballSensorWorking & 0x01) << 5);
+	output[1] |= (uint8_t) ((input->hasBall & 0x01) << 4);
+	output[1] |= (uint8_t) (input->ballPos & 0x0F);
 
+	output[2]  = (uint8_t) ((input->genevaWorking & 0x01) << 7);
+	output[2] |= (uint8_t) (input->genevaState & 0x7F);
 
-	===== Packet received from the robot =====
-		Byte      Config
-		 0        aaaaabcd
-		 1        efghhhhh
-		 2        hhhhhhhh
-		 3        kkkkkkkk
-		 4        kkkkkmmm
-		 5        mmmmmmmm
-		 6        oooooooo
-		 7        oooppppp
-		 8        ppppppqq
-		 9        qqqqqqqq
-		10        qsssssss
+	output[3]  = (uint8_t) (input->rho >> 3);
 
-		Extra
-		11        tttttttt
-		12        tttttttt
-		13        tttttttt
-		14        tttttttt
-		15        uuuuuuuu
-		16        uuuuuuuu
-		17        uuuuuuuu
-		18        uuuuuuuu
-		19        vvvvvvvv
-		20        vvvvvvvv
-		21        vvvvvvvv
-		22        vvvvvvvv
+	output[4]  = (uint8_t) ((input->rho & 0x03) << 5);
+	output[4] |= (uint8_t) ((input->angle >> 5) & 0x1F);
 
- */
+	output[5]  = (uint8_t) ((input->angle & 0x1F) << 3);
+	output[5]  |= (uint8_t) ((input->theta >> 8) & 0x07);
 
+	output[6]  = (uint8_t) (input->theta & 0xFF);
 
-
-
-/*
- * First, fill the fields on a roboAckData struct.
- * Then convert that struct into a Bytearray by using this function.
- * The result can be used as an ACK payload to transmit it over air.
- */
-
-void roboAckDataToPacket(roboAckData *input, uint8_t output[FULLACKPKTLEN]) {
-	output[0]  = (uint8_t) ((input->roboID)<<3); //a
-	output[0] |= (uint8_t) ((input->wheelLeftFront)<<2); //b
-	output[0] |= (uint8_t) ((input->wheelRightFront)<<1); //c
-	output[0] |= (uint8_t) ((input->wheelLeftBack)); //d
-
-
-	output[1]  = (uint8_t) ((input->wheelRightBack)<<7); //e
-	output[1] |= (uint8_t) ((input->genevaDriveState)<<6); //f
-	output[1] |= (uint8_t) ((input->batteryState)<<5); //g
-	output[1] |= (uint8_t) ((input->xPosRobot>>8))&0b11111; //h
-
-	output[2]  = (uint8_t) (input->xPosRobot&0xff); //h
-
-	output[3]  = (uint8_t) (input->yPosRobot>>5)&0xff; //k
-
-	output[4]  = (uint8_t) ((input->yPosRobot&0b11111)<<3); //k
-	output[4] |= (uint8_t) (input->rho>>8)&0b111; //m
-
-	output[5]  = (uint8_t) (input->rho&0xff); //m
-
-	output[6]  = (uint8_t) ((input->theta>>3)&0xff); //o
-
-	output[7]   = (uint8_t) ((input->theta&0xff)<<5); //o
-	output[7]  |= (uint8_t) (input->orientation>>6)&0b11111; //p
-
-	output[8]   = (uint8_t) (input->orientation&0b111111)<<2; //p
-	output[8]  |= (uint8_t) (input->angularVelocity>>9)&0b11; //q
-
-	output[9]  = (uint8_t) ((input->angularVelocity>>1)&0xff); //q
-
-	output[10]  = (uint8_t) ((input->angularVelocity&1)<<7); //q
-
-	output[10] |= (uint8_t) (input->ballSensor)&0x7f; //s
-
-	output[11] = (uint8_t) (input->xAcceleration >> 24)&0xff; //t
-	output[12] = (uint8_t) (input->xAcceleration >> 16)&0xff; //t
-	output[13] = (uint8_t) (input->xAcceleration >> 8)&0xff; //t
-	output[14] = (uint8_t) (input->xAcceleration)&0xff; //t
-
-	output[15] = (uint8_t) (input->yAcceleration >> 24)&0xff; //u
-	output[16] = (uint8_t) (input->yAcceleration >> 16)&0xff; //u
-	output[17] = (uint8_t) (input->yAcceleration >> 8)&0xff; //u
-	output[18] = (uint8_t) (input->yAcceleration)&0xff; //u
-
-	output[19] = (uint8_t) (input->angularRate >> 24)&0xff; //v
-	output[20] = (uint8_t) (input->angularRate >> 16)&0xff; //v
-	output[21] = (uint8_t) (input->angularRate >> 8)&0xff; //v
-	output[22] = (uint8_t) (input->angularRate)&0xff; //v
-
+	output[7]  = (uint8_t) (input->wheelLocked << 7);
+	output[7]  |= (uint8_t) (input->signalStrength & 0x7F);
 }
 
-/*
- * We would actually just pass the raw ack packet to the computer and let the computer handle the unwrapping.
- * But for completeness and for debug purposes it is nice to unwrap the ACK packet on the Basestation board
- * itself. In that way we can test and debug with just the Basestation and a serial monitor.
- *
- * ACK packets can be either 11 Bytes or 23 Bytes long. That depends on whether the Basestation requested
- * additional fields buy setting the debug_info flag in an earlier robo packet.
- */
-void ackPacketToRoboAckData(uint8_t input[23], uint8_t packetlength, roboAckData *output) {
-	//input is now specified as an array of size 23. Note that there are also ACK packets of the length 11.
-	//You need to use packetlength to know which range of the array contains useful information.
-	//The attempt of accessing input[11] to input[22] for a short ACK packet will yield garbage data.
-
-	output->roboID = input[0]>>3; //a
-	output->wheelLeftFront = (input[0]>>2)&1; //b
-	output->wheelRightFront = (input[0]>>1)&1; //c
-	output->wheelLeftBack = (input[0])&1; //d
-
-	output->wheelRightBack = (input[1]>>7)&1; //e
-	output->genevaDriveState = (input[1]>>6)&1; //f
-	output->batteryState = (input[1]>>5)&1;  //g
-	output->xPosRobot = ((input[1]&0b11111)<<8 | input[2]); //h
-
-	output->yPosRobot = ((input[3]<<5) | (input[4]>>3)); //k
-
-	output->rho = (input[4]&0b111)<<8; //m
-
-	output->rho |= input[5]; //m
-
-	output->theta = (input[6]<<3) | (input[7]>>5); //o
-
-	output->orientation = ((input[7]&0b11111)<<6) | (input[8]>>2); //p
-
-	output->angularVelocity = ((input[8]&0b11)<<9) | (input[9]<<1) | ((input[10]>>7)&1); //q
-
-	output->ballSensor = input[10]&0x7f; //s
-
-	if(packetlength < FULLACKPKTLEN)
-		return;
-
-	//extra data
-	output->xAcceleration = (input[11]<<24) | (input[12]<<16) | (input[13]<<8) | input[14]; //t
-	output->yAcceleration = (input[15]<<24) | (input[16]<<16) | (input[17]<<8) | input[18]; //u
-	output->angularRate = (input[19]<<24) | (input[20]<<16) | (input[21]<<8) | input[22]; //v
-
-}

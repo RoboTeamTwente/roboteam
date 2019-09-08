@@ -39,6 +39,8 @@ int geneva_GetEncoder();
 
 int geneva_GetPWM();
 
-float geneva_GetI();
+geneva_positions geneva_GetState();
+
+bool geneva_IsWorking();
 
 #endif /* GENEVA_GENEVA_H_ */

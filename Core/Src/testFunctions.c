@@ -107,7 +107,7 @@ status executeFullTest(ReceivedData* receivedData) {
 
 status executeGenevaTest(ReceivedData* receivedData) {
 
-	const int RUN_TIME = 1000; 		// [ticks]
+	const int RUN_TIME = 3000; 		// [ticks]
 	static uint timer = 0;
 	static uint prevTimeDiff = 0;
 	static bool firstTime = true;

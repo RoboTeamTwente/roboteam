@@ -75,7 +75,7 @@ typedef struct data_tuple{
 
 
 ///////////////////////////////////////////////////// MAIN DATA STRUCT
-typedef struct MTi_data_struct{
+volatile typedef struct MTi_data_struct{
 	SPI_HandleTypeDef* SPI;							// pointer to SPI struct
 	GPIO_Pin CS_pin;								// Chip select struct
 	bool SPI_busy;									// falg to see if there is a transaction happening

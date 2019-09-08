@@ -70,26 +70,19 @@ typedef struct roboData{
 //between 11 and 23 Bytes, ideally
 typedef struct roboAckData{
 	//regular fields: 11 Bytes
-	uint8_t roboID:5;
-	uint8_t wheelLeftFront:1;
-	uint8_t wheelRightFront:1;
-	uint8_t wheelLeftBack:1;
-	uint8_t wheelRightBack:1;
-	uint8_t genevaDriveState:1;
-	uint8_t batteryState:1;
-	int16_t xPosRobot:13;
-	int16_t yPosRobot:13;
-	int16_t rho:11;
-	int16_t theta:11;
-	int16_t orientation:11;
-	int16_t angularVelocity:11;
-	int8_t ballSensor:7;
-
-	//extra fields (add 12 Bytes)
-	uint32_t xAcceleration;
-	uint32_t yAcceleration;
-	uint32_t angularRate;
-
+	uint8_t roboID:8;
+	bool	XsensCalibrated:1;
+	bool	ballSensorWorking:1;
+	bool	battery:1;
+	bool	hasBall:1;
+	uint8_t	ballPos:4;
+	bool	genevaWorking:1;
+	uint8_t	genevaState:7;
+	int16_t	rho:11;
+	int16_t	angle:10;
+	int16_t	theta:11;
+	bool	wheelLocked:1;
+	uint8_t	signalStrength:7;
 } roboAckData;
 
 
@@ -99,8 +92,8 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]);
 void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength);
 
 void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
-void packetToRoboData(uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
-void roboAckDataToPacket(roboAckData *input, uint8_t output[FULLACKPKTLEN]);
+void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
+void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]);
 void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);
 
 #endif /* PACKING_H_ */

@@ -38,7 +38,6 @@ void buzzer_Play_HBD();
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);
-
 void buzzer_Play(song_struct* tone);
 
 

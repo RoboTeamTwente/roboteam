@@ -14,11 +14,11 @@
 #include "packing.h"
 
 static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
-
+static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback
 
 // make buffers
-uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
-uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+volatile uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+volatile uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 
 // init structs
 SX1280_Settings set = {
@@ -109,23 +109,42 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     clearIRQ(SX,ALL);
 
     if(irq & CRC_ERROR) {
-    	toggle_Pin(LED6_pin);
     	setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     	return;
     }
 
     // process interrupts
     if(irq & TX_DONE){
+    	isWirelessTransmitting = false;
+    	//toggle_Pin(LED5_pin);
+    	// start listening for a packet again
+    	setChannel(SX, COMMAND_CHANNEL); // set to channel 40 for basestation to robot
+		SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
+		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     }
 
     if(irq & RX_DONE){
     	isWirelessConnected = true;
-    	toggle_Pin(LED5_pin);
+    	toggle_Pin(LED6_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 160) {
     		ReceivePacket(SX);
+
+    		if (wirelessFeedback && !isWirelessTransmitting) {
+    			// feedback enabled, transmit a packet to basestation
+    			isWirelessTransmitting = true;
+    			setChannel(SX, FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
+    			SX->SX_settings->syncWords[0] = robot_syncWord[16]; // 0x82108610 for basestation Rx
+    			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+    			SendPacket(SX, data, Nbytes);
+    		} else {
+    			// feedback disabled, just stay in Rx mode
+    			setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
+    		}
+
     	}else{
-//    		 not necessary to force setRX() here since configured in Rx Continuous mode
+    		// not necessary to force setRX() here when configured in Rx Continuous mode
     		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     	}
     }
@@ -148,13 +167,14 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedData){
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
+		// was expecting a packet, process it
 		SX->expect_packet = false;
 
 		memcpy(PC_to_Bot, SX->RXbuf+3, ROBOPKTLEN);
 		packetToRoboData(PC_to_Bot, receivedData);
 
-		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 	} else {
+		// was not expecting a packet, go to Rx
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 	}
 }

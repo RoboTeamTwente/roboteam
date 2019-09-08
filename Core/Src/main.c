@@ -55,7 +55,6 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
-#include "buzzer_Tunes.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
@@ -84,6 +83,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 I2C_HandleTypeDef hi2c1;
+DMA_HandleTypeDef hdma_i2c1_rx;
 
 QSPI_HandleTypeDef hqspi;
 DMA_HandleTypeDef hdma_quadspi;
@@ -123,6 +123,8 @@ int counter = 0;
 int strength = 0;
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
+volatile roboAckData AckData = {0};
+volatile uint8_t feedback[ROBOPKTLEN] = {0};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -178,9 +180,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-		Wireless_IRQ_Handler(SX, 0, 0);
+		// test only! construct feedback message elsewhere
+		roboAckDataToPacket(&AckData,feedback);
+		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
+	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
+		// TODO: make this work and use instead of the thing in the while loop
+//		ballSensor_IRQ_Handler();
 	}
 }
 
@@ -191,15 +198,28 @@ void executeCommands(ReceivedData* receivedData) {
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
-	// TODO: add else{} to ballPosition checks
-	// (trigger feedback to AI or local robot control to drive to the ball if canSeeBall?)
 	if (receivedData->do_kick) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
+		if (receivedData->kick_chip_forced){
+			// no questions asked
 			shoot_Shoot(shoot_Kick);
 		}
+		else if (ballPosition.canKickBall) {
+			bool geneva_able = true; // set to false to use geneva+ballsensor
+//			switch(geneva_GetState()){
+//				case geneva_none: 		geneva_able = false;				break;
+//				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
+//				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
+//				case geneva_middle:		geneva_able = true;					break;
+//				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
+//				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
+//			}
+			if(geneva_able){
+				shoot_Shoot(shoot_Kick);
+			}
+		}
 	}
-	else if (receivedData->do_chip || receivedData->kick_chip_forced) {
-		if (ballPosition.canKickBall) {
+	else if (receivedData->do_chip) {
+		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
 			shoot_Shoot(shoot_Chip);
 		}
 	}
@@ -247,7 +267,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateControl_SetState(stateEstimation_GetState());
 				stateControl_Update();
 
-				if (halt || !yaw_hasCalibratedOnce()) {
+				if (halt || !yaw_hasCalibratedOnce) {
 					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 					wheels_SetRef(emptyRef);
 				}
@@ -329,7 +349,6 @@ void printRobotStateData() {
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
-	Putty_printf("  I: %f\n\r", geneva_GetI());
 }
 
 void printBaseStation() {
@@ -403,6 +422,7 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
+  set_Pin(OUT2_pin, HIGH);	// reference pin for feedback header
 
   Putty_Init();
   wheels_Init();
@@ -414,12 +434,14 @@ int main(void)
   ballSensor_Init();
   buzzer_Init();
   
-  SX = Wireless_Init(20, COMM_SPI);
+  SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
+  wirelessFeedback = true;//read_Pin(IN2_pin);	// check if we should enable feedback or not (jumper = feedback)
   MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
   uint16_t ID = get_Id();
   Putty_printf("\n\rID: %u\n\r",ID);
 
-  // start the pingpong operation
+  // start the wireless receiver
+  // transmit feedback packet for every received packet if wirelessFeedback==true
   SX->SX_settings->syncWords[0] = robot_syncWord[ID];
   setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
   setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
@@ -438,6 +460,8 @@ int main(void)
 	  static int batCounter = 0;
 	  if (read_Pin(Bat_pin) && batCounter > 1000){
 		  Putty_printf("battery empty\n\r");
+		  buzzer_Play_ImperialMarch();
+		  set_Pin(LED5_pin, 1);
 		  Putty_DeInit();
 		  wheels_DeInit();
 		  stateControl_DeInit();
@@ -457,7 +481,10 @@ int main(void)
 
 	  IWDG_Refresh(iwdg);
 	  Putty_Callback();
-	  ballSensorFSM();
+
+	  if (read_Pin(BS_IRQ_pin)){
+		  ballSensor_IRQ_Handler();
+	  }
 
 	  /*
 	   * Check for wireless data
@@ -473,12 +500,49 @@ int main(void)
 	  executeCommands(&receivedData);
 
 	  /*
+	   * Feedback
+	   */
+	  AckData.roboID = ID;
+	  AckData.XsensCalibrated = xsens_CalibrationDone;
+	  AckData.battery = (batCounter > 1000);
+	  AckData.ballSensorWorking = ballSensor_isWorking();
+	  AckData.hasBall = ballPosition.canKickBall;
+	  AckData.ballPos = ballPosition.x/100 & ballSensor_isWorking();
+	  AckData.genevaWorking = geneva_IsWorking();
+	  AckData.genevaState = geneva_GetState();
+
+	  float vx = stateEstimation_GetState()[body_x];
+	  float vy = stateEstimation_GetState()[body_y];
+	  AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
+	  AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
+	  AckData.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
+	  AckData.wheelLocked = wheels_IsAWheelLocked();
+	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
+	  //memset(&AckData,0xAB,8);
+
+	  /*
 	   * Print stuff on PuTTY for debugging
 	   */
+
+
 	  static int printTime = 0;
-	  if (HAL_GetTick() >  printTime + 1000) {
+	  if (HAL_GetTick() > printTime + 1000) {
 		  printTime = HAL_GetTick();
 		  toggle_Pin(LED0_pin);
+		  if ((!ballSensorInitialized && init_attempts < 5) || !ballPosition.canSeeBall) {
+			  init_attempts++;
+			  ballSensor_Init();
+			  __HAL_I2C_DISABLE(BS_I2C);
+			  HAL_Delay(1);
+			  __HAL_I2C_ENABLE(BS_I2C);
+		  } else if (init_attempts == 5) {
+			  init_attempts++;
+			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
+			  buzzer_Play_PowerUp();
+		  } else if (ballSensorInitialized) {
+			  init_attempts = 0;
+		  }
+
 //		  printBaseStationData();
 //		  printReceivedData(&receivedData);
 //		  printRobotStateData();
@@ -496,11 +560,9 @@ int main(void)
 	  // LED5 : on when battery is empty
 	  // LED6 : toggled when a packet is received
 
-	  // TODO: do using isAWheelLocked() in ballsensor_3.0 branch
-	  bool wheelIsLocked = (read_Pin(RF_LOCK_pin) || read_Pin(RB_LOCK_pin)|| read_Pin(LB_LOCK_pin) || read_Pin(LF_LOCK_pin));
 	  // LED0 done in PuTTY prints above
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  set_Pin(LED2_pin, wheelIsLocked);
+	  set_Pin(LED2_pin, wheels_IsAWheelLocked());
 	  set_Pin(LED3_pin, halt);
 	  set_Pin(LED4_pin, ballPosition.canKickBall);
 	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
@@ -587,7 +649,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x20404768;
+  hi2c1.Init.Timing = 0x6000030D;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -1407,6 +1469,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
@@ -1455,7 +1520,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LB_FR_GPIO_Port, LB_FR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|OUT_Pin|RF_FR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
@@ -1501,15 +1566,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA2 OUT_Pin RF_FR_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|OUT_Pin|RF_FR_Pin;
+  /*Configure GPIO pins : GPIO_OUT1_Pin GPIO_OUT2_Pin RF_FR_Pin */
+  GPIO_InitStruct.Pin = GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA3 SW_Freq_Pin RF_Locked_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_3|SW_Freq_Pin|RF_Locked_Pin;
+  /*Configure GPIO pins : GPIO_IN1_Pin GPIO_IN2_Pin RF_Locked_Pin */
+  GPIO_InitStruct.Pin = GPIO_IN1_Pin|GPIO_IN2_Pin|RF_Locked_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

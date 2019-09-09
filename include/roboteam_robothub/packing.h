@@ -39,19 +39,19 @@ struct LowLevelRobotCommand {
 };
 
 struct LowLevelRobotFeedback {
-    int id;
-    bool xSensCalibrated;
-    bool batteryLow;
-    bool ballSensorWorking;
-    bool hasBall;
-    int ballPosition;
-    bool genevaWorking;
-    int genevaState;
-    int rho;
-    int angle;
-    int theta;
-    bool hasLockedWheel;
-    int signalStrength;
+  int id:8;
+  bool xSensCalibrated:1;
+  bool batteryLow:1;
+  bool ballSensorWorking:1;
+  bool hasBall:1;
+  uint ballPosition:4;
+  bool genevaWorking:1;
+  int genevaState:7;
+  int rho:11;
+  int angle:10;
+  int theta:11;
+  bool hasLockedWheel:1;
+  uint signalStrength:7;
 };
 
 // Software => Basestation

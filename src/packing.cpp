@@ -195,11 +195,11 @@ roboteam_proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
     msg.set_ballpos(feedback.ballPosition);
 
     msg.set_genevaisworking(feedback.genevaWorking);
-    msg.set_genevastate(feedback.genevaWorking);
+    msg.set_genevastate(feedback.genevaState);
 
-    msg.set_theta( feedback.theta);
-    msg.set_rho(feedback.rho);
-    msg.set_angle( feedback.angle);
+    msg.set_x_vel((feedback.rho * 0.004) * cos(feedback.theta * 0.00307));
+    msg.set_y_vel((feedback.rho * 0.004) * sin(feedback.theta * 0.00307));
+    msg.set_yaw(feedback.angle * 0.00614);
 
     msg.set_haslockedwheel(feedback.hasLockedWheel);
     msg.set_signalstrength(feedback.signalStrength);
@@ -310,8 +310,7 @@ void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf)
     std::cout << std::endl;
 }
 
-void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback)
-{
+void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback) {
     std::cout << "RobotFeedback.proto: " << std::endl;
 
     std::cout << "    id               : " << feedback.id() << std::endl;
@@ -322,9 +321,9 @@ void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback)
     std::cout << "    bs_BallPosition  : " << feedback.ballpos() << std::endl;
     std::cout << "    geneva_Working   : " << (feedback.genevaisworking() ? "1" : "0") << std::endl;
     std::cout << "    geneva_State     : " << feedback.genevastate() << std::endl;
-    std::cout << "    rho              : " << feedback.rho() << std::endl;
-    std::cout << "    theta            : " << feedback.theta() << std::endl;
-    std::cout << "    angle            : " << feedback.angle() << std::endl;
+    std::cout << "    x_vel            : " << feedback.x_vel() << std::endl;
+    std::cout << "    y_vel            : " << feedback.y_vel() << std::endl;
+    std::cout << "    yaw              : " << feedback.yaw() << std::endl;
     std::cout << "    hasLockedWheel   : " << feedback.haslockedwheel() << std::endl;
     std::cout << "    signalStrength   : " << feedback.signalstrength() << std::endl;
 

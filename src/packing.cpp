@@ -212,11 +212,11 @@ roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
     msg.ballPos = feedback.ballPosition;
 
     msg.genevaIsWorking = feedback.genevaWorking;
-    msg.genevaState = feedback.genevaWorking;
+    msg.genevaState = feedback.genevaState;
 
-    msg.theta = feedback.theta;
-    msg.rho = feedback.rho;
-    msg.angle = feedback.angle;
+    msg.x_vel = (feedback.rho * 0.004) * cos(feedback.theta * 0.00307);
+    msg.y_vel = (feedback.rho * 0.004) * sin(feedback.theta * 0.00307);
+    msg.yaw = feedback.angle * 0.00614;
 
     msg.hasLockedWheel = feedback.hasLockedWheel;
     msg.signalStrength = feedback.signalStrength;
@@ -339,9 +339,9 @@ void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback)
     std::cout << "    bs_BallPosition  : " << feedback.ballPos << std::endl;
     std::cout << "    geneva_Working   : " << (feedback.genevaIsWorking ? "1" : "0") << std::endl;
     std::cout << "    geneva_State     : " << feedback.genevaState << std::endl;
-    std::cout << "    rho              : " << feedback.rho << std::endl;
-    std::cout << "    theta            : " << feedback.theta << std::endl;
-    std::cout << "    angle            : " << feedback.angle << std::endl;
+    std::cout << "    x_vel            : " << feedback.x_vel << std::endl;
+    std::cout << "    y_vel            : " << feedback.y_vel << std::endl;
+    std::cout << "    yaw              : " << feedback.yaw << std::endl;
     std::cout << "    hasLockedWheel   : " << feedback.hasLockedWheel << std::endl;
     std::cout << "    signalStrength   : " << feedback.signalStrength << std::endl;
 

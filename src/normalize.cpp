@@ -10,6 +10,8 @@ float mm_to_m(float scalar) {
 void rotate(roboteam_proto::WorldBall *ball) {
   ball->mutable_pos()->set_x(ball->pos().x()*-1);
   ball->mutable_pos()->set_y(ball->pos().y()*-1);
+  ball->mutable_vel()->set_x(ball->vel().x()*-1);
+  ball->mutable_vel()->set_y(ball->vel().y()*-1);
 }
 
 // rotate a single robot

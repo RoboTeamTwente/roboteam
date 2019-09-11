@@ -23,6 +23,8 @@ static int char2int(char input) {
     if (input>='0' && input<='9') return input-'0';
     if (input>='A' && input<='F') return input-'A'+10;
     if (input>='a' && input<='f') return input-'a'+10;
+
+    // TODO look into this, (throw somehow cannot be used)
     throw std::invalid_argument("char2int : Invalid input string");
 }
 
@@ -58,11 +60,21 @@ static std::string modeToString(Mode mode) {
 
 // Copy of getWorldBot() because I don't want to pull in tactics as a dependency.
 // If this function is moved to utils, we can use that
-static std::shared_ptr<roboteam_msgs::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_msgs::World &world) {
-    std::vector<roboteam_msgs::WorldRobot> bots = ourTeam ? world.us : world.them;
-    for (const auto &bot : bots) {
-        if (bot.id == id) {
-            return std::make_shared<roboteam_msgs::WorldRobot>(bot);
+static std::shared_ptr<roboteam_proto::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_proto::World &world) {
+
+    std::vector<roboteam_proto::WorldRobot> robots;
+
+    if (ourTeam) {
+        robots = std::vector<roboteam_proto::WorldRobot>( world.yellow().begin(),  world.yellow().end());
+    } else {
+        robots = std::vector<roboteam_proto::WorldRobot>(world.blue().begin(), world.blue().end());
+
+    }
+
+    for (const auto &bot : robots) {
+        if (bot.id() == id) {
+
+            return std::make_shared<roboteam_proto::WorldRobot>(bot);
         }
     }
     return nullptr;

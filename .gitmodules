@@ -1,6 +1,6 @@
 [submodule "roboteam_ai"]
 	path = roboteam_ai
-	url = git@github.com:RoboTeamTwente/roboteam_ai.git
+	url = https://github.com/RoboTeamTwente/roboteam_ai
 [submodule "roboteam_world"]
 	path = roboteam_world
 	url = https://github.com/RoboTeamTwente/roboteam_world

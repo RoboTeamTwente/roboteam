@@ -11,8 +11,11 @@
 namespace roboteam_utils {
 
 class Timer {
+ private:
+  bool running = true;
+  std::chrono::milliseconds lastTickedTime;
  public:
-  explicit Timer() = default;
+  explicit Timer();
 
   /*
   * Starts a loop in the current thread at a given rate (Hz) for a given function
@@ -20,9 +23,19 @@ class Timer {
   void loop(std::function<void(void)> func, int rate);
 
   /*
+   * Limit a function to be called at a maximum specified
+   */
+  void limit(std::function<void(void)> func, int rate);
+
+  /*
   * Get the current time in milliseconds
   */
   std::chrono::milliseconds getCurrentTime();
+
+  /*
+   * Stop the timer and break out of the loop
+   */
+  void stop();
 };
 
 } // roboteam_utils

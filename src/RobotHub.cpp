@@ -1,4 +1,5 @@
 
+#include <roboteam_utils/Timer.h>
 #include "roboteam_proto/Setting.pb.h"
 #include "roboteam_utils/normalize.h"
 
@@ -30,23 +31,13 @@ void RobotHub::subscribeToTopics(){
 }
 
 
-void RobotHub::loop(){
-    std::chrono::high_resolution_clock::time_point lastStatistics = std::chrono::high_resolution_clock::now();
-
-    grsimCommander->setBatch(true);
-
+void RobotHub::start(){
     int currIteration = 0;
-    while (true) {
-        auto timeNow = std::chrono::high_resolution_clock::now();
-        auto timeDiff = timeNow-lastStatistics;
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count()>1000) {
-            lastStatistics = timeNow;
-            std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(mode) << " |==========" << std::endl;
-            printStatistics();
-
-        }
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
+    roboteam_utils::Timer t;
+    t.loop([&]() {
+      std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(mode) << " |==========" << std::endl;
+      printStatistics();
+    }, 1);
 }
 
 /// print robot ticks in a nicely formatted way

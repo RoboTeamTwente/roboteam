@@ -24,6 +24,6 @@ int main(int argc, char *argv[]) {
     }
   app.subscribeToTopics();
 
-  app.loop();
+  app.start();
   return 0;
 }

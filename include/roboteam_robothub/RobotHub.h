@@ -21,7 +21,7 @@ class SerialDeviceManager;
 class RobotHub {
 public:
   RobotHub();
-    void loop();
+    void start();
 
     void setRobothubPublisher(const string &robothubPublisher);
     void setAiPublisher(const string &aiPublisher);

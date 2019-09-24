@@ -44,7 +44,7 @@ add_library(roboteam_utils STATIC
         src/Optimization.cpp
         src/Arc.cpp
 #        src/Section.cpp
-        )
+        src/Timer.cpp)
 
 
 target_include_directories(roboteam_utils

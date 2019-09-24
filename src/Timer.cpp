@@ -13,8 +13,10 @@ void Timer::loop(std::function<void(void)> func, int rate) {
   auto lastTickedTime = getCurrentTime();
 
   while (true) {
-    auto timeDiff = getCurrentTime() - lastTickedTime;
+    auto now = getCurrentTime();
+    auto timeDiff = now - lastTickedTime;
     if (timeDiff >= timeStep) {
+      lastTickedTime = now;
       func();
     } else {
       std::this_thread::sleep_for((timeStep - timeDiff));

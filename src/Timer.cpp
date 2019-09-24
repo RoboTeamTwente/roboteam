@@ -3,6 +3,8 @@
 //
 
 #include "Timer.h"
+#include <thread>
+
 namespace roboteam_utils {
 
 /// Starts a loop in the current thread at a given rate (Hz) for a given function

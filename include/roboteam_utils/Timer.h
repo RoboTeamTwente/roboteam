@@ -6,7 +6,6 @@
 #define RTT_TIMER_H
 
 #include <chrono>
-#include <thread>
 #include <functional>
 
 namespace roboteam_utils {

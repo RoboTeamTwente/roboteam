@@ -4,11 +4,11 @@
 
 #include "SerialDeviceManager.h"
 #include "utilities.h"
-#include <ros/ros.h>
 #include <iostream>
 #include <fstream>
 #include <termios.h>
 #include <fcntl.h>
+#include <unistd.h> // macOS wants this one
 
 namespace rtt {
 namespace robothub {

@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #include "packing.h"
 
 #include <cassert>
@@ -7,13 +5,8 @@
 #include <iostream>
 #include <memory>
 #include <math.h>
-#include <ros/ros.h>
-
-#include "roboteam_msgs/RobotCommand.h"
-#include "roboteam_msgs/RobotFeedback.h"
-#include "roboteam_msgs/World.h"
 #include "roboteam_utils/Vector2.h"
-#include "roboteam_utils/Math.h"
+#include "roboteam_utils/Mathematics.h"
 #include "utilities.h"
 
 namespace rtt {
@@ -23,65 +16,55 @@ namespace robothub {
  * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
  * uses this internally to convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_msgs::RobotCommand& command,
-        const std::shared_ptr<roboteam_msgs::World>& worldOpt)
+LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotCommand& command,
+        roboteam_proto::World worldOpt)
 {
 
-    double kick_chip_power = fmax(command.kicker_vel, command.chipper_vel);
-    double rho = sqrt(command.x_vel*command.x_vel+command.y_vel*command.y_vel);
-    double theta = atan2(command.y_vel, command.x_vel);
+    double kick_chip_power = command.chip_kick_vel();
+    double rho = sqrt(command.vel().x() *command.vel().x() +command.vel().y()*command.vel().y());
+    double theta = atan2(command.vel().y(), command.vel().x());
 
     LowLevelRobotCommand llrc{};
     // Units           Represented values
-    llrc.id = command.id;                                                           // [0, 15]         [0, 15]
+    llrc.id = command.id();                                                           // [0, 15]         [0, 15]
     llrc.rho = (int) floor(rho*250);                                                // [0, 2047]       [0, 8.191]
     llrc.theta = (int) floor(theta*1023.5/M_PI);                                    // [-1024, 1023]   [-pi, pi>
 
     llrc.driving_reference = false;                                                 // [0, 1]          {true, false}
     llrc.use_cam_info = false;                                                      // [0, 1]          {true, false}
-    llrc.use_angle = command.use_angle;                                             // [0, 1]          {true, false}
-    if (command.use_angle) {
-        llrc.velocity_angular = (int) floor(command.w*(511/M_PI));                  // [-512, 511]     [-pi, pi]
+    llrc.use_angle = command.use_angle();                                             // [0, 1]          {true, false}
+    if (command.use_angle()) {
+        llrc.velocity_angular = (int) floor(command.w()*(511/M_PI));                  // [-512, 511]     [-pi, pi]
 
     }
     else {
-        llrc.velocity_angular = (int) floor(command.w*(511/(8*2*M_PI)));            // [-512, 511]     [-8*2pi, 8*2pi]
+        llrc.velocity_angular = (int) floor(command.w()*(511/(8*2*M_PI)));            // [-512, 511]     [-8*2pi, 8*2pi]
     }
     llrc.debug_info = true;                                                         // [0, 1]          {true, false}
-    llrc.do_kick = command.kicker;                                                  // [0, 1]          {true, false}
-    llrc.do_chip = command.chipper;                                                 // [0, 1]          {true, false}
-    llrc.kick_chip_forced = command.kicker_forced || command.chipper_forced;        // [0, 1]          {true, false}
+    llrc.do_kick = command.kicker();                                                  // [0, 1]          {true, false}
+    llrc.do_chip = command.chipper();                                                 // [0, 1]          {true, false}
+    llrc.kick_chip_forced = command.chip_kick_forced();        // [0, 1]          {true, false}
     llrc.kick_chip_power = (int) floor(kick_chip_power*255/8);                      // [0, 255]        [0, 100]%
-    llrc.velocity_dribbler = command.dribbler;                                      // [0, 31]        [0, 100]%
+    llrc.velocity_dribbler = command.dribbler();                                      // [0, 31]        [0, 100]%
 
-    llrc.geneva_drive_state = command.geneva_state;                                 // [(0)1, 5]       [-2, 2]
+    llrc.geneva_drive_state = command.geneva_state();                                 // [(0)1, 5]       [-2, 2]
     llrc.cam_position_x = 0;                                                        // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_position_y = 0;                                                        // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_rotation = 0;                                                          // [-1024, 1023]   [-pi, pi>
 
-    if (worldOpt) {
-        try {
-            std::shared_ptr<roboteam_msgs::WorldRobot> findBot = utils::getWorldBot(command.id, true, *worldOpt);
-            roboteam_msgs::WorldRobot robot;
-            if (findBot) {
-                robot = *findBot;
-                llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
-                llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
-                llrc.cam_rotation = (int) floor(robot.angle/M_PI*1024);
-                llrc.use_cam_info = true;
-            }
 
-        }
-        catch (std::out_of_range e) {
-            ROS_WARN_STREAM_THROTTLE(1, "[createLowLevelRobotCommand] Robot " << command.id
-                                                                              << " not present in World! Not adding camera data");
-        }
-        catch (std::exception e) {
-            ROS_WARN_STREAM_THROTTLE(1,
-                    "[createLowLevelRobotCommand] Something went wrong while adding camera data for robot "
-                            << command.id << " : " << e.what());
-        }
+    std::shared_ptr<roboteam_proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, worldOpt);
+  roboteam_proto::WorldRobot robot;
+    if (findBot) {
+        robot = *findBot;
+        llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
+        llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
+        llrc.cam_rotation = (int) floor(robot.angle()/M_PI*1024);
+        llrc.use_cam_info = true;
     }
+
+
+
 
     return llrc;
 }
@@ -192,34 +175,34 @@ std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 }
 
 /**
- * Converts a LowLevelRobotFeedback into a roboteam_msgs::RobotFeedback
- * TODO this function might be redundant, because LowLevelRobotFeedback and roboteam_msgs::RobotFeedback have exactly the same values
- * TODO consider removing this function, and immediately converting packed_robot_feedback to roboteam_msgs::RobotFeedback
+ * Converts a LowLevelRobotFeedback into a roboteam_proto::RobotFeedback
+ * TODO this function might be redundant, because LowLevelRobotFeedback and roboteam_proto::RobotFeedback have exactly the same values
+ * TODO consider removing this function, and immediately converting packed_robot_feedback to roboteam_proto::RobotFeedback
  * @param feedback : LowLevelRobotFeedback to be converted
- * @returns a roboteam_msgs::RobotFeedback object
+ * @returns a roboteam_proto::RobotFeedback object
  */
-roboteam_msgs::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
-    roboteam_msgs::RobotFeedback msg;
+roboteam_proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
+    roboteam_proto::RobotFeedback msg;
 
-    msg.id = feedback.id;
+    msg.set_id(feedback.id);
 
-    msg.xSensCalibrated = feedback.xSensCalibrated;
+    msg.set_xsenscalibrated(feedback.xSensCalibrated);
 
-    msg.batteryLow = feedback.batteryLow;
+    msg.set_batterylow(feedback.batteryLow);
 
-    msg.ballSensorIsWorking = feedback.ballSensorWorking;
-    msg.hasBall = feedback.hasBall;
-    msg.ballPos = feedback.ballPosition;
+    msg.set_ballsensorisworking(feedback.ballSensorWorking);
+    msg.set_hasball(feedback.hasBall);
+    msg.set_ballpos(feedback.ballPosition);
 
-    msg.genevaIsWorking = feedback.genevaWorking;
-    msg.genevaState = feedback.genevaState;
+    msg.set_genevaisworking(feedback.genevaWorking);
+    msg.set_genevastate(feedback.genevaState);
 
-    msg.x_vel = (feedback.rho * 0.004) * cos(feedback.theta * 0.00307);
-    msg.y_vel = (feedback.rho * 0.004) * sin(feedback.theta * 0.00307);
-    msg.yaw = feedback.angle * 0.00614;
+    msg.set_x_vel((feedback.rho * 0.004) * cos(feedback.theta * 0.00307));
+    msg.set_y_vel((feedback.rho * 0.004) * sin(feedback.theta * 0.00307));
+    msg.set_yaw(feedback.angle * 0.00614);
 
-    msg.hasLockedWheel = feedback.hasLockedWheel;
-    msg.signalStrength = feedback.signalStrength;
+    msg.set_haslockedwheel(feedback.hasLockedWheel);
+    msg.set_signalstrength(feedback.signalStrength);
 
     return msg;
 }
@@ -258,24 +241,24 @@ LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bits) {
     return feedback;
 }
 
-void printRobotCommand(const roboteam_msgs::RobotCommand& cmd)
+void printRobotCommand(const roboteam_proto::RobotCommand& cmd)
 {
     std::cout << "RobotCommand: " << std::endl;
 
-    std::cout << "    id             : " << cmd.id << std::endl;
-    std::cout << "    active         : " << (int) cmd.active << std::endl;
-    std::cout << "    x_vel          : " << cmd.x_vel << std::endl;
-    std::cout << "    y_vel          : " << cmd.y_vel << std::endl;
-    std::cout << "    w              : " << cmd.w << std::endl;
-    std::cout << "    use_angle      : " << (int) cmd.use_angle << std::endl;
-    std::cout << "    dribbler       : " << (int) cmd.dribbler << std::endl;
-    std::cout << "    kicker         : " << (int) cmd.kicker << std::endl;
-    std::cout << "    kicker_forced  : " << (int) cmd.kicker_forced << std::endl;
-    std::cout << "    kicker_vel     : " << cmd.kicker_vel << std::endl;
-    std::cout << "    chipper        : " << (int) cmd.chipper << std::endl;
-    std::cout << "    chipper_forced : " << (int) cmd.chipper_forced << std::endl;
-    std::cout << "    chipper_vel    : " << cmd.chipper_vel << std::endl;
-    std::cout << "    geneva_state   : " << cmd.geneva_state << std::endl;
+    std::cout << "    id             : " << cmd.id() << std::endl;
+    std::cout << "    active         : " << (int) cmd.active() << std::endl;
+    std::cout << "    x_vel          : " << cmd.vel().x() << std::endl;
+    std::cout << "    y_vel          : " << cmd.vel().y() << std::endl;
+    std::cout << "    w              : " << cmd.w() << std::endl;
+    std::cout << "    use_angle      : " << (int) cmd.use_angle() << std::endl;
+    std::cout << "    dribbler       : " << (int) cmd.dribbler() << std::endl;
+    std::cout << "    kicker         : " << (int) cmd.kicker() << std::endl;
+    std::cout << "    kicker_forced  : " << (int) cmd.chip_kick_forced() << std::endl;
+    std::cout << "    kicker_vel     : " << cmd.chip_kick_vel() << std::endl;
+    std::cout << "    chipper        : " << (int) cmd.chipper() << std::endl;
+    std::cout << "    chipper_forced : " << (int) cmd.chip_kick_forced() << std::endl;
+    std::cout << "    chipper_vel    : " << cmd.chip_kick_vel() << std::endl;
+    std::cout << "    geneva_state   : " << cmd.geneva_state() << std::endl;
 
     std::cout << std::endl;
 }
@@ -327,28 +310,25 @@ void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf)
     std::cout << std::endl;
 }
 
-void printRobotFeedback(const roboteam_msgs::RobotFeedback& feedback)
-{
-    std::cout << "RobotFeedback: " << std::endl;
+void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback) {
+    std::cout << "RobotFeedback.proto: " << std::endl;
 
-    std::cout << "    id               : " << feedback.id << std::endl;
-    std::cout << "    xsensCalibrated  : " << feedback.xSensCalibrated << std::endl;
-    std::cout << "    batteryLow       : " << (feedback.batteryLow ? "1" : "0") << std::endl;
-    std::cout << "    bs_Working       : " << (feedback.ballSensorIsWorking ? "1" : "0") << std::endl;
-    std::cout << "    bs_hasBall       : " << (feedback.hasBall ? "1" : "0") << std::endl;
-    std::cout << "    bs_BallPosition  : " << feedback.ballPos << std::endl;
-    std::cout << "    geneva_Working   : " << (feedback.genevaIsWorking ? "1" : "0") << std::endl;
-    std::cout << "    geneva_State     : " << feedback.genevaState << std::endl;
-    std::cout << "    x_vel            : " << feedback.x_vel << std::endl;
-    std::cout << "    y_vel            : " << feedback.y_vel << std::endl;
-    std::cout << "    yaw              : " << feedback.yaw << std::endl;
-    std::cout << "    hasLockedWheel   : " << feedback.hasLockedWheel << std::endl;
-    std::cout << "    signalStrength   : " << feedback.signalStrength << std::endl;
+    std::cout << "    id               : " << feedback.id() << std::endl;
+    std::cout << "    xsensCalibrated  : " << feedback.xsenscalibrated() << std::endl;
+    std::cout << "    batteryLow       : " << (feedback.batterylow() ? "1" : "0") << std::endl;
+    std::cout << "    bs_Working       : " << (feedback.ballsensorisworking() ? "1" : "0") << std::endl;
+    std::cout << "    bs_hasBall       : " << (feedback.hasball() ? "1" : "0") << std::endl;
+    std::cout << "    bs_BallPosition  : " << feedback.ballpos() << std::endl;
+    std::cout << "    geneva_Working   : " << (feedback.genevaisworking() ? "1" : "0") << std::endl;
+    std::cout << "    geneva_State     : " << feedback.genevastate() << std::endl;
+    std::cout << "    x_vel            : " << feedback.x_vel() << std::endl;
+    std::cout << "    y_vel            : " << feedback.y_vel() << std::endl;
+    std::cout << "    yaw              : " << feedback.yaw() << std::endl;
+    std::cout << "    hasLockedWheel   : " << feedback.haslockedwheel() << std::endl;
+    std::cout << "    signalStrength   : " << feedback.signalstrength() << std::endl;
 
     std::cout << std::endl;
 }
 
 } // robothub
 } // rtt
-
-#pragma clang diagnostic pop

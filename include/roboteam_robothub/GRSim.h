@@ -1,19 +1,13 @@
-#pragma once
-
+#ifndef ROBOTEAM_ROBOTHUB_GRSIM_H
+#define ROBOTEAM_ROBOTHUB_GRSIM_H
 #include <array>
 #include <QtNetwork>
-#include <ros/message_forward.h>
 #include <string>
-#include <boost/optional.hpp>
 #include <chrono>
 
-#include "roboteam_utils/grSim_Commands.pb.h"
-#include "roboteam_utils/grSim_Packet.pb.h"
-#include "roboteam_utils/SlowParam.h"
-
-namespace roboteam_msgs {
-    ROS_DECLARE_MESSAGE(RobotCommand);
-}
+#include "roboteam_proto/RobotCommand.pb.h"
+#include "roboteam_proto/grSim_Commands.pb.h"
+#include "roboteam_proto/grSim_Packet.pb.h"
 
 namespace rtt {
 namespace robothub {
@@ -23,7 +17,7 @@ public:
     /**
      * Buffer type which keeps all received robot commands
      */
-    using RobotCommandBuffer = std::array<std::shared_ptr<roboteam_msgs::RobotCommand>, 16>;
+    using RobotCommandBuffer = std::array<std::shared_ptr<roboteam_proto::RobotCommand>, 16>;
 
     /**
      * Clock that always increases no matter what (daylight saving etc.)
@@ -84,23 +78,23 @@ public:
      * If batching is enabled it might not be sent immediately.
      * If batching is disabled it's immediately sent.
      */
-    void queueGRSimCommand(const roboteam_msgs::RobotCommand& msg);
+    void queueGRSimCommand(const roboteam_proto::RobotCommand& msg);
 
     /**
      * Sends a GRSim packet to the simulator using
      * GRSimCommander's UDP socket.
      */
-    void sendGRSimPacket(grSim_Packet const& packet);
+    void sendGRSimPacket(roboteam_proto::grSim_Packet const& packet);
     /**
      * Sends one single GRSim packet using GRSimCommander's
      * UDP socket.
      */
-    void sendGRSimCommand(const roboteam_msgs::RobotCommand& _msg);
+    void sendGRSimCommand(const roboteam_proto::RobotCommand& _msg);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim.
      */
-    void sendMultipleGRSimCommands(const std::vector<roboteam_msgs::RobotCommand>& msgs);
+    void sendMultipleGRSimCommands(const std::vector<roboteam_proto::RobotCommand>& msgs);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim depending on
@@ -133,6 +127,9 @@ public:
      * Turns batching on or off.
      */
     void setBatch(bool batch);
+    void setColor(bool yellow);
+  void setGrsim_ip(const std::string &grsim_ip);
+  void setGrsim_port(quint16 grsim_port);
 
 private:
     /**
@@ -161,13 +158,10 @@ private:
      * Stores the batching state.
      */
     bool batch;
+    bool isYellow = true;
+    std::string grsim_ip = "127.0.0.1";
 
-    /**
-     * For economically getting environment variables.
-     */
-    SlowParam<std::string> colorParam;
-    SlowParam<std::string> grsim_ip;
-    SlowParam<int> grsim_port;
+    quint16 grsim_port = 20011;
 
     // Batch variables
     RobotCommandBuffer robotCommands;
@@ -184,7 +178,10 @@ private:
 
 };
 
-void addRobotCommandToPacket(grSim_Packet& packet, roboteam_msgs::RobotCommand const& msg);
+void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg);
 
 } // robothub
 } // rtt
+
+#endif //ROBOTEAM_ROBOTHUB_GRSIM_H
+

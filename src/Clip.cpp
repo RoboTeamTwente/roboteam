@@ -1,4 +1,4 @@
-#include "roboteam_utils/Clip.h"
+#include "../include/roboteam_utils/Clip.h"
 #include <stdexcept>
 
 namespace rtt {

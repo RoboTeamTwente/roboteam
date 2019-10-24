@@ -1,8 +1,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include "roboteam_utils/Vector2.h"
-#include "roboteam_msgs/WorldRobot.h"
+#include "Vector2.h"
+#include "roboteam_proto/WorldRobot.pb.h"
 
 namespace rtt
 {
@@ -30,7 +30,7 @@ public:
 	/**
 	 * \brief Get a Position by reading values from a WorldRobot message.
 	 */
-	constexpr Position(const roboteam_msgs::WorldRobot& robotMsg) : Position(robotMsg.pos, robotMsg.angle) {}
+	Position(const roboteam_proto::WorldRobot& robotMsg) : Position(robotMsg.pos(), robotMsg.angle()) {}
 
 	/**
 	 * \brief Get the (x, y) coordinates of this position.

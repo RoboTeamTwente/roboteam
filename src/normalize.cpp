@@ -1,165 +1,130 @@
-#include "roboteam_utils/normalize.h"
-#include "roboteam_utils/constants.h"
+#include "normalize.h"
 
-#include "roboteam_utils/Math.h"
+namespace roboteam_utils {
 
-#include <string>
+float mm_to_m(float scalar) {
+  return scalar/1000;
+}
 
+// rotate a ball
+void rotate(roboteam_proto::WorldBall *ball) {
+  ball->mutable_pos()->set_x(ball->pos().x()*-1);
+  ball->mutable_pos()->set_y(ball->pos().y()*-1);
+  ball->mutable_vel()->set_x(ball->vel().x()*-1);
+  ball->mutable_vel()->set_y(ball->vel().y()*-1);
+}
 
-namespace rtt {
+// rotate a single robot
+void rotate(roboteam_proto::WorldRobot *robot) {
+  robot->mutable_pos()->set_x(robot->pos().x()*-1);
+  robot->mutable_pos()->set_y(robot->pos().y()*-1);
+  robot->mutable_vel()->set_x(robot->vel().x()*-1);
+  robot->mutable_vel()->set_y(robot->vel().y()*-1);
+  robot->set_w(robot->w()*-1);
+  robot->set_angle(static_cast<float>(rtt::cleanAngle(robot->angle() + M_PI)));
+}
 
-using namespace roboteam_msgs;
+// rotate the ball and robots
+void rotate(roboteam_proto::World *world) {
+  rotate(world->mutable_ball());
 
-DetectionFrame normalizeDetectionFrame(DetectionFrame& frame) {
-    return rotateDetectionFrame(frame);
+  // rotate all blue robots
+  for (int i = 0; i < world->mutable_blue()->size(); i++) {
+    rotate(world->mutable_blue(i));
+  }
+
+  // rotate all yellow robots
+  for (int i = 0; i < world->mutable_yellow()->size(); i++) {
+    rotate(world->mutable_yellow(i));
+  }
+}
+
+// rotate the designated position given by the referee
+// this position is used for example for ball placement.
+void rotate(roboteam_proto::SSL_Referee *refereeData) {
+  refereeData->mutable_designated_position()->set_x(refereeData->designated_position().x()*-1);
+  refereeData->mutable_designated_position()->set_y(refereeData->designated_position().y()*-1);
+}
+
+// rotate a single field arc
+void rotate(roboteam_proto::SSL_FieldCicularArc *arc) {
+  arc->mutable_center()->set_x(arc->center().x()*-1);
+  arc->mutable_center()->set_y(arc->center().y()*-1);
+  arc->set_a1(arc->a1()*-1);
+  arc->set_a2(arc->a2()*-1);
+}
+
+// convert an arc from millimeters to meters
+void toMeters(roboteam_proto::SSL_FieldCicularArc *arc) {
+  arc->mutable_center()->set_x(mm_to_m(arc->center().x()));
+  arc->mutable_center()->set_y(mm_to_m(arc->center().y()));
+  arc->set_a1(mm_to_m(arc->a1()));
+  arc->set_a2(mm_to_m(arc->a2()));
+  arc->set_radius(mm_to_m(arc->radius()));
+  arc->set_thickness(mm_to_m(arc->thickness()));
+}
+
+// rotate a single field line
+void rotate(roboteam_proto::SSL_FieldLineSegment *line) {
+  line->mutable_p1()->set_x(line->p1().x()*-1);
+  line->mutable_p1()->set_y(line->p1().y()*-1);
+  line->mutable_p2()->set_x(line->p2().x()*-1);
+  line->mutable_p2()->set_y(line->p2().y()*-1);
+}
+
+// convert a line from millimeters to meters
+void toMeters(roboteam_proto::SSL_FieldLineSegment * line) {
+  line->mutable_p1()->set_x(mm_to_m(line->p1().x()));
+  line->mutable_p1()->set_y(mm_to_m(line->p1().y()));
+  line->mutable_p2()->set_x(mm_to_m(line->p2().x()));
+  line->mutable_p2()->set_y(mm_to_m(line->p2().y()));
+  line->set_thickness(mm_to_m(line->thickness()));
+}
+
+// rotate the lines and arcs of a field
+void rotate(roboteam_proto::SSL_GeometryFieldSize * field) {
+
+  // rotate all field lines
+  for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
+    rotate(field->mutable_field_lines(i));
+  }
+
+  // rotate all field arcs
+  for (int i = 0; i < field->mutable_field_arcs()->size(); i++) {
+    rotate(field->mutable_field_arcs(i));
+  }
+}
+
+// convert all units from the field from millimeters to meters.
+// BE CAREFUL: NOT EVERYTHING IS STORED AS DOUBLES SO
+// field_length, field_width, boundary_width, goal_depth, goal_width will be rouned to whole meters!
+//void toMeters(roboteam_proto::SSL_GeometryFieldSize * field) {
+//
+//  std::cerr << "WARNING: CONVERTING PROTUBUF SSL_GEOMETRYFIELDSIZE TO METERS IS NOT SAFE" << std::endl;
+//  // convert the standard properties
+//  field->set_field_length(mm_to_m(field->field_length()));
+//  field->set_field_width(mm_to_m(field->field_width()));
+//  field->set_boundary_width(mm_to_m(field->boundary_width()));
+//  field->set_goal_depth(mm_to_m(field->goal_depth()));
+//  field->set_goal_width(mm_to_m(field->goal_width()));
+//
+//  // convert all field lines
+//  for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
+//    toMeters(field->mutable_field_lines(i));
+//  }
+//
+//  // convert all field arcs
+//  for (int i = 0; i < field->mutable_field_arcs()->size(); i++) {
+//    toMeters(field->mutable_field_arcs(i));
+//  }
+//}
+
+// rotate robotcommands
+void rotate(roboteam_proto::RobotCommand * command) {
+  command->mutable_vel()->set_x(- command->vel().x());
+  command->mutable_vel()->set_y(- command->vel().y());
+  command->set_w(static_cast<float>(rtt::cleanAngle(command->w() + M_PI)));
 }
 
 
-GeometryData normalizeGeometryData(GeometryData& data) {
-    return rotateGeometryData(data);
-}
-
-RefereeData normalizeRefereeData(RefereeData& data) {
-    return rotateRefereeData(data);
-}
-
-DetectionFrame rotateDetectionFrame(DetectionFrame const & frame) {
-    DetectionFrame newFrame = frame;
-
-    for (auto& ball : newFrame.balls) {
-        ball = rotateBall(ball);
-    }
-
-    for (auto& bot : newFrame.us) {
-        bot = rotateRobot(bot);
-    }
-
-    for (auto& bot : newFrame.them) {
-        bot = rotateRobot(bot);
-    }
-
-    return newFrame;
-}
-
-DetectionBall rotateBall(DetectionBall& ball) {
-    ball.pos.x *= -1;
-    ball.pos.y *= -1;
-    ball.pixel_pos.x *= -1;
-    ball.pixel_pos.y *= -1;
-
-    return ball;
-}
-
-
-DetectionRobot rotateRobot(DetectionRobot& bot) {
-    bot.pos.x *= -1;
-    bot.pos.y *= -1;
-    bot.orientation = cleanAngle(bot.orientation + M_PI);
-    bot.pixel_pos.x *= -1;
-    bot.pixel_pos.y *= -1;
-
-    return bot;
-}
-
-
-GeometryData rotateGeometryData(GeometryData& data) {
-    data.field = rotateGeometryFieldSize(data.field);
-
-    for (auto& calib : data.calib) {
-        calib = rotateGeometryCameraCalibration(calib);
-    }
-
-    return data;
-}
-
-
-GeometryFieldSize rotateGeometryFieldSize(GeometryFieldSize& size) {
-
-    size.top_line = rotateLine(size.top_line);
-    size.bottom_line = rotateLine(size.bottom_line);
-    size.left_line = rotateLine(size.left_line);
-    size.right_line = rotateLine(size.right_line);
-    size.half_line = rotateLine(size.half_line);
-    size.center_line = rotateLine(size.center_line);
-    size.left_penalty_line = rotateLine(size.left_penalty_line);
-    size.right_penalty_line = rotateLine(size.right_penalty_line);
-
-    size.top_left_penalty_arc = rotateArc(size.top_left_penalty_arc);
-    size.bottom_left_penalty_arc = rotateArc(size.bottom_left_penalty_arc);
-    size.top_right_penalty_arc = rotateArc(size.top_right_penalty_arc);
-    size.bottom_right_penalty_arc = rotateArc(size.bottom_right_penalty_arc);
-
-    // adding rectangle box lines
-    size.top_left_penalty_stretch = rotateLine(size.top_left_penalty_stretch);
-    size.bottom_left_penalty_stretch = rotateLine(size.bottom_left_penalty_stretch);
-    size.top_right_penalty_stretch = rotateLine(size.top_right_penalty_stretch);
-    size.bottom_right_penalty_stretch = rotateLine(size.bottom_right_penalty_stretch);
-
-    size.center_circle = rotateArc(size.center_circle);
-
-    for (auto& line : size.field_lines) {
-        line = rotateLine(line);
-    }
-
-    for (auto& arc : size.field_arcs) {
-        arc = rotateArc(arc);
-    }
-
-    return size;
-}
-
-GeometryCameraCalibration rotateGeometryCameraCalibration(GeometryCameraCalibration& calib) {
-    calib.principal_point_x *= -1;
-    calib.principal_point_y *= -1;
-
-    calib.tx *= -1;
-    calib.ty *= -1;
-    calib.tz *= -1;
-
-    calib.derived_camera_world_ty *= -1;
-    calib.derived_camera_world_tz *= -1;
-    calib.derived_camera_world_tx *= -1;
-
-    // TODO: Should q0 - q4 be rotated?
-
-    return calib;
-}
-
-
-FieldLineSegment rotateLine(FieldLineSegment& line) {
-    line.begin.x *= -1;
-    line.begin.y *= -1;
-    line.end.x *= -1;
-    line.end.y *= -1;
-
-    return line;
-}
-
-FieldCircularArc rotateArc(FieldCircularArc& arc) {
-    arc.center.x *= -1;
-    arc.center.y *= -1;
-    arc.a1 = arc.a1 + M_PI;
-    arc.a2 = arc.a2 + M_PI;
-
-    return arc;
-}
-
-
-RefereeData rotateRefereeData(RefereeData& data) {
-    data.designated_position.x *= -1;
-    data.designated_position.y *= -1;
-
-    return data;
-}
-
-
-roboteam_msgs::RobotCommand rotateRobotCommand(roboteam_msgs::RobotCommand const & command) {
-    roboteam_msgs::RobotCommand newCommand = command;
-
-    newCommand.x_vel = -command.x_vel;
-    newCommand.y_vel = -command.y_vel;
-
-    return newCommand;
-}
-
-} // rtt
+} // roboteam_utils

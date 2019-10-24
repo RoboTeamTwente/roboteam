@@ -1,5 +1,5 @@
-#include "roboteam_utils/Arc.h"
-#include "roboteam_utils/Math.h"
+#include "../include/roboteam_utils/Arc.h"
+#include "../include/roboteam_utils/Mathematics.h"
 #include <iostream>
 
 namespace rtt {
@@ -34,9 +34,9 @@ bool Arc::angleWithinArc(double angle) const {
 }   
    
 double Arc::normalize(double angle) {
-    angle = fmodl(angle, M_PIl * 2);
+    angle = fmodl(angle, M_PI * 2);
     if (angle < 0) {
-        angle = M_PIl * 2 + angle;
+        angle = M_PI * 2 + angle;
     }
     return angle;
 }   
@@ -44,7 +44,7 @@ double Arc::normalize(double angle) {
 bool Arc::pointInArc(const Vector2& point) const {
     Vector2 normPoint = point - center;
     auto arcPoint = arcPointTowards(normPoint.angle());
-    return arcPoint && normPoint.length() <= arcPoint->length();  
+    return arcPoint && normPoint.length() <= arcPoint->length();
 }
 
 bool Arc::pointOnArc(const Vector2& point) const {
@@ -57,10 +57,10 @@ boost::optional<Vector2> Arc::checkAndDenormalize(Vector2 vec) const {
     return normalize(angleEnd - angleStart) - normalize(vec.angle() - angleStart) >= 0 ?
             boost::optional<Vector2>(vec + center)
             :
-            boost::none;
+           boost::none;
 }
 
-std::pair<boost::optional<Vector2>, boost::optional<Vector2>> 
+std::pair<boost::optional<Vector2>, boost::optional<Vector2>>
 Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
     // cannot use compound operator (-=) due to const-ness
     lineStart = lineStart - center;
@@ -71,14 +71,14 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
         double dr = diff.length();
         double d = lineStart.x * lineEnd.y - lineEnd.x * lineStart.y;
         double discr = length * length * dr * dr - d * d;
-        
+
         if (discr >= 0) {
             double sign = diff.y >= 0 ? 1 : -1;
             double x1 = (d * diff.y + sign * diff.x * sqrtl(discr)) / (dr * dr);
             double y1 = (-d * diff.x + fabsl(diff.y) * sqrtl(discr)) / (dr * dr);
-            
+
             auto first = checkAndDenormalize(Vector2(x1, y1));
-            
+
             boost::optional<Vector2> second;
             if (fabsl(discr < .0001)) {
                 // single intersection
@@ -95,7 +95,7 @@ Arc::intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const {
             // no intersections
             return {boost::none, boost::none};
         }
-        
+
     } else {
         throw std::invalid_argument("Ellipse-line intersection not yet implemented");
     }
@@ -111,7 +111,7 @@ boost::optional<Vector2> Arc::arcPointTowards(double angle) const {
     if (!angleWithinArc(angle)) {
         return boost::none;
     }
-    
+
     // special cases
     // the 0.5 * pi and 1.5 * pi cases are important,
     // then tan(angle) is infinite and the normal calculation fails.
@@ -124,10 +124,10 @@ boost::optional<Vector2> Arc::arcPointTowards(double angle) const {
     } else if (fabsl(angle - M_PI - M_PI_2) < .000001) {
         return Vector2(0, -width);
     }
-    
+
     double tan2 = powl(tanl(angle), 2);
     double denom = sqrtl(width*width  + length * length / tan2);
-    double sign = angle > M_PI_2l && angle < + M_PIl + M_PI_2l ? -1 : 1;
+    double sign = angle > M_PI_2 && angle < + M_PI + M_PI_2 ? -1 : 1;
     Vector2 point(
         (sign * length * width) / (sqrtl(width*width  + length * length * tan2)),
         (sign * length * width) / (sqrtl(length*length + width*width / tan2))

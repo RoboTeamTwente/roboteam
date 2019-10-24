@@ -1,7 +1,6 @@
 #include "../include/roboteam_utils/Vector2.h"
 #include "../include/roboteam_utils/Angle.h"
 
-#include <ros/ros.h>
 #include <cmath>
 
 namespace rtt {
@@ -200,15 +199,15 @@ Vector2 Vector2::operator/(const double &scalar) const {
     return {x/scalar, y/scalar};
 }
 
-void Vector2::operator=(const roboteam_msgs::Vector2f &msg) {
-    x = msg.x;
-    y = msg.y;
+void Vector2::operator=(const roboteam_proto::Vector2f &msg) {
+    x = msg.x();
+    y = msg.y();
 }
 
-Vector2::operator roboteam_msgs::Vector2f() const {
-    roboteam_msgs::Vector2f msg;
-    msg.x = static_cast<float>(x);
-    msg.y = static_cast<float>(y);
+Vector2::operator roboteam_proto::Vector2f() const {
+    roboteam_proto::Vector2f msg;
+    msg.set_x(x);
+    msg.set_y(y);
     return msg;
 }
 

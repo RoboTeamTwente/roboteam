@@ -22,22 +22,30 @@ class RobotHub {
 public:
   RobotHub();
     void start();
-
-    void setRobothubPublisher(const string &robothubPublisher);
-    void setAiPublisher(const string &aiPublisher);
     void subscribeToTopics();
 
 private:
     utils::Mode mode = utils::Mode::GRSIM;
     bool isLeft = true;
-    roboteam_proto::Subscriber * robotCommandSubscriber;
-    roboteam_proto::Subscriber * worldStateSubscriber;
-    roboteam_proto::Subscriber * settingsSubscriber;
-    roboteam_proto::Publisher * publisher;
 
-    std::string ai_publisher;
-    std::string robothub_publisher;
-    
+    roboteam_proto::Channel robotCommandChannel;
+  roboteam_proto::Channel settingsChannel;
+ public:
+  void set_settings_channel(const roboteam_proto::Channel &settings_channel);
+
+ public:
+  void set_robot_command_channel(const roboteam_proto::Channel &robot_command_channel);
+  void set_feedback_channel(const roboteam_proto::Channel &feedback_channel);
+ private:
+  roboteam_proto::Channel feedbackChannel;
+
+ private:
+
+  roboteam_proto::Subscriber<roboteam_proto::RobotCommand> * robotCommandSubscriber;
+    roboteam_proto::Subscriber<roboteam_proto::World> * worldStateSubscriber;
+    roboteam_proto::Subscriber<roboteam_proto::Setting> * settingsSubscriber;
+    roboteam_proto::Publisher<roboteam_proto::RobotFeedback> * feedbackPublisher;
+
     // Callback functions
     roboteam_proto::World LastWorld;
     void processWorldState(roboteam_proto::World & world);

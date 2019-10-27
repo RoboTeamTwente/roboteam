@@ -133,13 +133,13 @@ void RobotHub::processSettings(roboteam_proto::Setting &setting) {
         mode = utils::Mode::GRSIM;
     }
 }
-void RobotHub::set_robot_command_channel(const roboteam_proto::Channel &robot_command_channel) {
+void RobotHub::set_robot_command_channel(const roboteam_utils::ChannelType &robot_command_channel) {
   robotCommandChannel = robot_command_channel;
 }
-void RobotHub::set_feedback_channel(const roboteam_proto::Channel &feedback_channel) {
+void RobotHub::set_feedback_channel(const roboteam_utils::ChannelType &feedback_channel) {
   feedbackChannel = feedback_channel;
 }
-void RobotHub::set_settings_channel(const roboteam_proto::Channel &settings_channel) {
+void RobotHub::set_settings_channel(const roboteam_utils::ChannelType &settings_channel) {
   settingsChannel = settings_channel;
 }
 

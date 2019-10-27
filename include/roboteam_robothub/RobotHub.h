@@ -28,16 +28,16 @@ private:
     utils::Mode mode = utils::Mode::GRSIM;
     bool isLeft = true;
 
-    roboteam_proto::Channel robotCommandChannel;
-  roboteam_proto::Channel settingsChannel;
+    roboteam_utils::ChannelType robotCommandChannel;
+  roboteam_utils::ChannelType settingsChannel;
  public:
-  void set_settings_channel(const roboteam_proto::Channel &settings_channel);
+  void set_settings_channel(const roboteam_utils::ChannelType &settings_channel);
 
  public:
-  void set_robot_command_channel(const roboteam_proto::Channel &robot_command_channel);
-  void set_feedback_channel(const roboteam_proto::Channel &feedback_channel);
+  void set_robot_command_channel(const roboteam_utils::ChannelType &robot_command_channel);
+  void set_feedback_channel(const roboteam_utils::ChannelType &feedback_channel);
  private:
-  roboteam_proto::Channel feedbackChannel;
+  roboteam_utils::ChannelType feedbackChannel;
 
  private:
 

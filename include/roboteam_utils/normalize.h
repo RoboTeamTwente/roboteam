@@ -14,16 +14,16 @@
 
 namespace roboteam_utils {
 
-  void rotate(roboteam_proto::WorldBall *ball) ;
-  void rotate(roboteam_proto::WorldRobot *robot);
-  void rotate(roboteam_proto::World *world);
-  void rotate(roboteam_proto::SSL_Referee *refereeData);
-  void rotate(roboteam_proto::SSL_FieldCicularArc *arc);
-  void toMeters(roboteam_proto::SSL_FieldCicularArc *arc);
-  void rotate(roboteam_proto::SSL_FieldLineSegment *line);
-  void toMeters(roboteam_proto::SSL_FieldLineSegment * line);
-  void rotate(roboteam_proto::SSL_GeometryFieldSize * field);
-//  void toMeters(roboteam_proto::SSL_GeometryFieldSize * field);
-  void rotate(roboteam_proto::RobotCommand * command);
+  void rotate(proto::WorldBall *ball) ;
+  void rotate(proto::WorldRobot *robot);
+  void rotate(proto::World *world);
+  void rotate(proto::SSL_Referee *refereeData);
+  void rotate(proto::SSL_FieldCicularArc *arc);
+  void toMeters(proto::SSL_FieldCicularArc *arc);
+  void rotate(proto::SSL_FieldLineSegment *line);
+  void toMeters(proto::SSL_FieldLineSegment * line);
+  void rotate(proto::SSL_GeometryFieldSize * field);
+//  void toMeters(proto::SSL_GeometryFieldSize * field);
+  void rotate(proto::RobotCommand * command);
 
 }

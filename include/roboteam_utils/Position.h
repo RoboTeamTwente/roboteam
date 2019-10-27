@@ -30,7 +30,7 @@ public:
 	/**
 	 * \brief Get a Position by reading values from a WorldRobot message.
 	 */
-	Position(const roboteam_proto::WorldRobot& robotMsg) : Position(robotMsg.pos(), robotMsg.angle()) {}
+	Position(const proto::WorldRobot& robotMsg) : Position(robotMsg.pos(), robotMsg.angle()) {}
 
 	/**
 	 * \brief Get the (x, y) coordinates of this position.

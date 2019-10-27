@@ -60,21 +60,21 @@ static std::string modeToString(Mode mode) {
 
 // Copy of getWorldBot() because I don't want to pull in tactics as a dependency.
 // If this function is moved to utils, we can use that
-static std::shared_ptr<roboteam_proto::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const roboteam_proto::World &world) {
+static std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const proto::World &world) {
 
-    std::vector<roboteam_proto::WorldRobot> robots;
+    std::vector<proto::WorldRobot> robots;
 
     if (ourTeam) {
-        robots = std::vector<roboteam_proto::WorldRobot>( world.yellow().begin(),  world.yellow().end());
+        robots = std::vector<proto::WorldRobot>( world.yellow().begin(),  world.yellow().end());
     } else {
-        robots = std::vector<roboteam_proto::WorldRobot>(world.blue().begin(), world.blue().end());
+        robots = std::vector<proto::WorldRobot>(world.blue().begin(), world.blue().end());
 
     }
 
     for (const auto &bot : robots) {
         if (bot.id() == id) {
 
-            return std::make_shared<roboteam_proto::WorldRobot>(bot);
+            return std::make_shared<proto::WorldRobot>(bot);
         }
     }
     return nullptr;

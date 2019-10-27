@@ -16,8 +16,8 @@ namespace robothub {
  * only from bitshifts, and no other funky angle sin/cos velocity arithmetic. createRobotPacket
  * uses this internally to convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotCommand& command,
-        roboteam_proto::World worldOpt)
+LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& command,
+        proto::World worldOpt)
 {
 
     double kick_chip_power = command.chip_kick_vel();
@@ -53,8 +53,8 @@ LowLevelRobotCommand createLowLevelRobotCommand(const roboteam_proto::RobotComma
     llrc.cam_rotation = 0;                                                          // [-1024, 1023]   [-pi, pi>
 
 
-    std::shared_ptr<roboteam_proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, worldOpt);
-  roboteam_proto::WorldRobot robot;
+    std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, worldOpt);
+  proto::WorldRobot robot;
     if (findBot) {
         robot = *findBot;
         llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
@@ -175,14 +175,14 @@ std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 }
 
 /**
- * Converts a LowLevelRobotFeedback into a roboteam_proto::RobotFeedback
- * TODO this function might be redundant, because LowLevelRobotFeedback and roboteam_proto::RobotFeedback have exactly the same values
- * TODO consider removing this function, and immediately converting packed_robot_feedback to roboteam_proto::RobotFeedback
+ * Converts a LowLevelRobotFeedback into a proto::RobotFeedback
+ * TODO this function might be redundant, because LowLevelRobotFeedback and proto::RobotFeedback have exactly the same values
+ * TODO consider removing this function, and immediately converting packed_robot_feedback to proto::RobotFeedback
  * @param feedback : LowLevelRobotFeedback to be converted
- * @returns a roboteam_proto::RobotFeedback object
+ * @returns a proto::RobotFeedback object
  */
-roboteam_proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
-    roboteam_proto::RobotFeedback msg;
+proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
+    proto::RobotFeedback msg;
 
     msg.set_id(feedback.id);
 
@@ -241,7 +241,7 @@ LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bits) {
     return feedback;
 }
 
-void printRobotCommand(const roboteam_proto::RobotCommand& cmd)
+void printRobotCommand(const proto::RobotCommand& cmd)
 {
     std::cout << "RobotCommand: " << std::endl;
 
@@ -310,7 +310,7 @@ void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf)
     std::cout << std::endl;
 }
 
-void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback) {
+void printRobotFeedback(const proto::RobotFeedback& feedback) {
     std::cout << "RobotFeedback.proto: " << std::endl;
 
     std::cout << "    id               : " << feedback.id() << std::endl;

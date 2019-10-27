@@ -28,36 +28,36 @@ private:
     utils::Mode mode = utils::Mode::GRSIM;
     bool isLeft = true;
 
-    roboteam_utils::ChannelType robotCommandChannel;
-  roboteam_utils::ChannelType settingsChannel;
+    proto::ChannelType robotCommandChannel;
+  proto::ChannelType settingsChannel;
  public:
-  void set_settings_channel(const roboteam_utils::ChannelType &settings_channel);
+  void set_settings_channel(const proto::ChannelType &settings_channel);
 
  public:
-  void set_robot_command_channel(const roboteam_utils::ChannelType &robot_command_channel);
-  void set_feedback_channel(const roboteam_utils::ChannelType &feedback_channel);
+  void set_robot_command_channel(const proto::ChannelType &robot_command_channel);
+  void set_feedback_channel(const proto::ChannelType &feedback_channel);
  private:
-  roboteam_utils::ChannelType feedbackChannel;
+  proto::ChannelType feedbackChannel;
 
  private:
 
-  roboteam_proto::Subscriber<roboteam_proto::RobotCommand> * robotCommandSubscriber;
-    roboteam_proto::Subscriber<roboteam_proto::World> * worldStateSubscriber;
-    roboteam_proto::Subscriber<roboteam_proto::Setting> * settingsSubscriber;
-    roboteam_proto::Publisher<roboteam_proto::RobotFeedback> * feedbackPublisher;
+  proto::Subscriber<proto::RobotCommand> * robotCommandSubscriber;
+    proto::Subscriber<proto::World> * worldStateSubscriber;
+    proto::Subscriber<proto::Setting> * settingsSubscriber;
+    proto::Publisher<proto::RobotFeedback> * feedbackPublisher;
 
     // Callback functions
-    roboteam_proto::World LastWorld;
-    void processWorldState(roboteam_proto::World & world);
-    void processRobotCommand(roboteam_proto::RobotCommand & cmd);
-    void processSettings(roboteam_proto::Setting & setting);
+    proto::World LastWorld;
+    void processWorldState(proto::World & world);
+    void processRobotCommand(proto::RobotCommand & cmd);
+    void processSettings(proto::Setting & setting);
 
     // Serial and grsim managers
     std::shared_ptr<SerialDeviceManager> device;
     std::shared_ptr<GRSimCommander> grsimCommander;
 
     void sendSerialCommand(LowLevelRobotCommand llrc);
-    void sendGrSimCommand(const roboteam_proto::RobotCommand& robotCommand);
+    void sendGrSimCommand(const proto::RobotCommand& robotCommand);
     void publishRobotFeedback(LowLevelRobotFeedback llrf);
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
     void printStatistics();

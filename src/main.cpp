@@ -15,13 +15,13 @@ int main(int argc, char *argv[]) {
     // this is for multiple AI support
     rtt::robothub::RobotHub app;
     if (id == 1) {
-        app.set_robot_command_channel(roboteam_utils::ROBOT_COMMANDS_SECONDARY_CHANNEL);
-        app.set_feedback_channel(roboteam_utils::FEEDBACK_SECONDARY_CHANNEL);
-        app.set_settings_channel(roboteam_utils::SETTINGS_SECONDARY_CHANNEL);
+        app.set_robot_command_channel(proto::ROBOT_COMMANDS_SECONDARY_CHANNEL);
+        app.set_feedback_channel(proto::FEEDBACK_SECONDARY_CHANNEL);
+        app.set_settings_channel(proto::SETTINGS_SECONDARY_CHANNEL);
     } else {
-        app.set_robot_command_channel(roboteam_utils::ROBOT_COMMANDS_PRIMARY_CHANNEL);
-        app.set_feedback_channel(roboteam_utils::FEEDBACK_PRIMARY_CHANNEL);
-        app.set_settings_channel(roboteam_utils::SETTINGS_PRIMARY_CHANNEL);
+        app.set_robot_command_channel(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL);
+        app.set_feedback_channel(proto::FEEDBACK_PRIMARY_CHANNEL);
+        app.set_settings_channel(proto::SETTINGS_PRIMARY_CHANNEL);
     }
   app.subscribeToTopics();
 

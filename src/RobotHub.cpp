@@ -24,16 +24,16 @@ RobotHub::RobotHub() {
 
 /// subscribe to topics
 void RobotHub::subscribeToTopics(){
-    robotCommandSubscriber = new roboteam_proto::Subscriber<roboteam_proto::RobotCommand>
+    robotCommandSubscriber = new proto::Subscriber<proto::RobotCommand>
         (robotCommandChannel, &RobotHub::processRobotCommand, this);
 
-    worldStateSubscriber = new roboteam_proto::Subscriber<roboteam_proto::World>
-        (roboteam_utils::WORLD_CHANNEL, &RobotHub::processWorldState, this);
+    worldStateSubscriber = new proto::Subscriber<proto::World>
+        (proto::WORLD_CHANNEL, &RobotHub::processWorldState, this);
 
-    settingsSubscriber = new roboteam_proto::Subscriber<roboteam_proto::Setting>
+    settingsSubscriber = new proto::Subscriber<proto::Setting>
         (settingsChannel, &RobotHub::processSettings, this);
 
-    feedbackPublisher = new roboteam_proto::Publisher<roboteam_proto::RobotFeedback>
+    feedbackPublisher = new proto::Publisher<proto::RobotFeedback>
         (feedbackChannel);
 }
 
@@ -62,12 +62,12 @@ void RobotHub::printStatistics() {
     }
 }
 
-void RobotHub::processWorldState(roboteam_proto::World & world){
+void RobotHub::processWorldState(proto::World & world){
     std::lock_guard<std::mutex> lock(worldLock);
     LastWorld = world;
 }
 
-void RobotHub::processRobotCommand(roboteam_proto::RobotCommand & cmd) {
+void RobotHub::processRobotCommand(proto::RobotCommand & cmd) {
     std::lock_guard<std::mutex> lock(worldLock);
     LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
 
@@ -111,7 +111,7 @@ void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
 
 
 /// send a GRSim command from a given robotcommand
-void RobotHub::sendGrSimCommand(const roboteam_proto::RobotCommand& robotCommand) {
+void RobotHub::sendGrSimCommand(const proto::RobotCommand& robotCommand) {
     this->grsimCommander->queueGRSimCommand(robotCommand);
 }
 
@@ -121,7 +121,7 @@ void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     }
 }
 
-void RobotHub::processSettings(roboteam_proto::Setting &setting) {
+void RobotHub::processSettings(proto::Setting &setting) {
     grsimCommander->setGrsim_ip(setting.robothubsendip());
     grsimCommander->setGrsim_port(setting.robothubsendport());
     isLeft = setting.isleft();
@@ -133,13 +133,13 @@ void RobotHub::processSettings(roboteam_proto::Setting &setting) {
         mode = utils::Mode::GRSIM;
     }
 }
-void RobotHub::set_robot_command_channel(const roboteam_utils::ChannelType &robot_command_channel) {
+void RobotHub::set_robot_command_channel(const proto::ChannelType &robot_command_channel) {
   robotCommandChannel = robot_command_channel;
 }
-void RobotHub::set_feedback_channel(const roboteam_utils::ChannelType &feedback_channel) {
+void RobotHub::set_feedback_channel(const proto::ChannelType &feedback_channel) {
   feedbackChannel = feedback_channel;
 }
-void RobotHub::set_settings_channel(const roboteam_utils::ChannelType &settings_channel) {
+void RobotHub::set_settings_channel(const proto::ChannelType &settings_channel) {
   settingsChannel = settings_channel;
 }
 

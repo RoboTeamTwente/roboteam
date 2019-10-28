@@ -10,7 +10,7 @@ namespace robothub {
 
 #ifdef VERIFY_COMMANDS
 
-bool verifyCommandIntegrity(const roboteam_proto::RobotCommand& cmd, std::string mode)
+bool verifyCommandIntegrity(const proto::RobotCommand& cmd, std::string mode)
 {
     if (cmd.id()<0) {
         std::cout << "RobotHub (" << mode.c_str() << "): Invalid ID number: " << cmd.id() <<  " (should be positive)" << std::endl;
@@ -65,7 +65,7 @@ GRSimCommander::GRSimCommander(bool batch) :
 
 }
 
-void GRSimCommander::queueGRSimCommand(const roboteam_proto::RobotCommand& msg)
+void GRSimCommander::queueGRSimCommand(const proto::RobotCommand& msg)
 {
     using namespace std::chrono;
 
@@ -83,7 +83,7 @@ void GRSimCommander::queueGRSimCommand(const roboteam_proto::RobotCommand& msg)
         if (TRACE) std::cout << "Got message for: " << msg.id() << "\n";
 
         // Store the message and set appropriate flags
-        robotCommands[msg.id()] = std::make_shared<roboteam_proto::RobotCommand>(msg);
+        robotCommands[msg.id()] = std::make_shared<proto::RobotCommand>(msg);
         msgReceivedBits = msgReceivedBits | (1 << msg.id());
         robotsSeenBits = robotsSeenBits | (1 << msg.id());
 
@@ -152,7 +152,7 @@ void GRSimCommander::flush()
     if (TRACE) std::cout << "Flushing.\n";
 }
 
-void GRSimCommander::sendGRSimPacket(roboteam_proto::grSim_Packet const& packet)
+void GRSimCommander::sendGRSimPacket(proto::grSim_Packet const& packet)
 {
     // Use our preallocated buffer if it's big enough. If not, do the slow approach
     if (packet.ByteSize()<1024) {
@@ -175,7 +175,7 @@ void GRSimCommander::sendGRSimPacket(roboteam_proto::grSim_Packet const& packet)
     }
 }
 
-void GRSimCommander::sendGRSimCommand(const roboteam_proto::RobotCommand& _msg)
+void GRSimCommander::sendGRSimCommand(const proto::RobotCommand& _msg)
 {
 #ifdef VERIFY_COMMANDS
     if (!verifyCommandIntegrity(_msg, "grsim")) {
@@ -183,7 +183,7 @@ void GRSimCommander::sendGRSimCommand(const roboteam_proto::RobotCommand& _msg)
     }
 #endif
 
-    roboteam_proto::grSim_Packet packet;
+    proto::grSim_Packet packet;
 
     time_t timeInSec;
     time(&timeInSec);
@@ -196,7 +196,7 @@ void GRSimCommander::sendGRSimCommand(const roboteam_proto::RobotCommand& _msg)
     sendGRSimPacket(packet);
 }
 
-void GRSimCommander::sendMultipleGRSimCommands(const std::vector<roboteam_proto::RobotCommand>& msgs)
+void GRSimCommander::sendMultipleGRSimCommands(const std::vector<proto::RobotCommand>& msgs)
 {
 #ifdef VERIFY_COMMANDS
     for (auto const& msg : msgs) {
@@ -206,7 +206,7 @@ void GRSimCommander::sendMultipleGRSimCommands(const std::vector<roboteam_proto:
     }
 #endif
 
-    roboteam_proto::grSim_Packet packet;
+    proto::grSim_Packet packet;
 
 
     time_t timeInSec;
@@ -232,7 +232,7 @@ void GRSimCommander::sendMultipleGRSimCommands(const RobotCommandBuffer& msgs)
     }
 #endif
 
-    roboteam_proto::grSim_Packet packet;
+    proto::grSim_Packet packet;
 
     time_t timeInSec;
     time(&timeInSec);
@@ -309,10 +309,10 @@ void GRSimCommander::setGrsim_port(quint16 grsim_port) {
     GRSimCommander::grsim_port = grsim_port;
 }
 
-void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg)
+void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand const& msg)
 {
 
-    roboteam_proto::grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
+    proto::grSim_Robot_Command* command = packet.mutable_commands()->add_robot_commands();
 
 
 //    commands.robot_commands[0].kickspeedx,

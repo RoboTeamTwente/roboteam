@@ -56,25 +56,25 @@ struct LowLevelRobotFeedback {
 
 // Software => Basestation
 LowLevelRobotCommand createLowLevelRobotCommand(
-        roboteam_proto::RobotCommand const& command, roboteam_proto::World worldOpt
+        proto::RobotCommand const& command, proto::World worldOpt
 );
 
 std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 std::shared_ptr<packed_protocol_message> createRobotPacket(
-    roboteam_proto::RobotCommand const& command, std::shared_ptr<roboteam_proto::World> const& worldOpt = nullptr
+    proto::RobotCommand const& command, std::shared_ptr<proto::World> const& worldOpt = nullptr
 );
 
 // Basestation => Software
 LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
 
 // Printing functions
-void printRobotCommand(const roboteam_proto::RobotCommand& cmd);
+void printRobotCommand(const proto::RobotCommand& cmd);
 void printLowLevelRobotCommand(const LowLevelRobotCommand& llrc);
 void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf);
-void printRobotFeedback(const roboteam_proto::RobotFeedback& feedback);
+void printRobotFeedback(const proto::RobotFeedback& feedback);
 
 bool validateRobotPacket(LowLevelRobotCommand llrc);
-roboteam_proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
+proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 
 std::string byteToBinary(uint8_t const& byte);
 

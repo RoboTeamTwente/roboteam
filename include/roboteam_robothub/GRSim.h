@@ -17,7 +17,7 @@ public:
     /**
      * Buffer type which keeps all received robot commands
      */
-    using RobotCommandBuffer = std::array<std::shared_ptr<roboteam_proto::RobotCommand>, 16>;
+    using RobotCommandBuffer = std::array<std::shared_ptr<proto::RobotCommand>, 16>;
 
     /**
      * Clock that always increases no matter what (daylight saving etc.)
@@ -78,23 +78,23 @@ public:
      * If batching is enabled it might not be sent immediately.
      * If batching is disabled it's immediately sent.
      */
-    void queueGRSimCommand(const roboteam_proto::RobotCommand& msg);
+    void queueGRSimCommand(const proto::RobotCommand& msg);
 
     /**
      * Sends a GRSim packet to the simulator using
      * GRSimCommander's UDP socket.
      */
-    void sendGRSimPacket(roboteam_proto::grSim_Packet const& packet);
+    void sendGRSimPacket(proto::grSim_Packet const& packet);
     /**
      * Sends one single GRSim packet using GRSimCommander's
      * UDP socket.
      */
-    void sendGRSimCommand(const roboteam_proto::RobotCommand& _msg);
+    void sendGRSimCommand(const proto::RobotCommand& _msg);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim.
      */
-    void sendMultipleGRSimCommands(const std::vector<roboteam_proto::RobotCommand>& msgs);
+    void sendMultipleGRSimCommands(const std::vector<proto::RobotCommand>& msgs);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim depending on
@@ -178,7 +178,7 @@ private:
 
 };
 
-void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg);
+void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand const& msg);
 
 } // robothub
 } // rtt

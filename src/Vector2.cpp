@@ -199,13 +199,13 @@ Vector2 Vector2::operator/(const double &scalar) const {
     return {x/scalar, y/scalar};
 }
 
-void Vector2::operator=(const roboteam_proto::Vector2f &msg) {
+void Vector2::operator=(const proto::Vector2f &msg) {
     x = msg.x();
     y = msg.y();
 }
 
-Vector2::operator roboteam_proto::Vector2f() const {
-    roboteam_proto::Vector2f msg;
+Vector2::operator proto::Vector2f() const {
+    proto::Vector2f msg;
     msg.set_x(x);
     msg.set_y(y);
     return msg;

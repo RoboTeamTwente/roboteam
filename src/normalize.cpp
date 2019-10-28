@@ -7,7 +7,7 @@ float mm_to_m(float scalar) {
 }
 
 // rotate a ball
-void rotate(roboteam_proto::WorldBall *ball) {
+void rotate(proto::WorldBall *ball) {
   ball->mutable_pos()->set_x(ball->pos().x()*-1);
   ball->mutable_pos()->set_y(ball->pos().y()*-1);
   ball->mutable_vel()->set_x(ball->vel().x()*-1);
@@ -15,7 +15,7 @@ void rotate(roboteam_proto::WorldBall *ball) {
 }
 
 // rotate a single robot
-void rotate(roboteam_proto::WorldRobot *robot) {
+void rotate(proto::WorldRobot *robot) {
   robot->mutable_pos()->set_x(robot->pos().x()*-1);
   robot->mutable_pos()->set_y(robot->pos().y()*-1);
   robot->mutable_vel()->set_x(robot->vel().x()*-1);
@@ -25,7 +25,7 @@ void rotate(roboteam_proto::WorldRobot *robot) {
 }
 
 // rotate the ball and robots
-void rotate(roboteam_proto::World *world) {
+void rotate(proto::World *world) {
   rotate(world->mutable_ball());
 
   // rotate all blue robots
@@ -41,13 +41,13 @@ void rotate(roboteam_proto::World *world) {
 
 // rotate the designated position given by the referee
 // this position is used for example for ball placement.
-void rotate(roboteam_proto::SSL_Referee *refereeData) {
+void rotate(proto::SSL_Referee *refereeData) {
   refereeData->mutable_designated_position()->set_x(refereeData->designated_position().x()*-1);
   refereeData->mutable_designated_position()->set_y(refereeData->designated_position().y()*-1);
 }
 
 // rotate a single field arc
-void rotate(roboteam_proto::SSL_FieldCicularArc *arc) {
+void rotate(proto::SSL_FieldCicularArc *arc) {
   arc->mutable_center()->set_x(arc->center().x()*-1);
   arc->mutable_center()->set_y(arc->center().y()*-1);
   arc->set_a1(arc->a1()*-1);
@@ -55,7 +55,7 @@ void rotate(roboteam_proto::SSL_FieldCicularArc *arc) {
 }
 
 // convert an arc from millimeters to meters
-void toMeters(roboteam_proto::SSL_FieldCicularArc *arc) {
+void toMeters(proto::SSL_FieldCicularArc *arc) {
   arc->mutable_center()->set_x(mm_to_m(arc->center().x()));
   arc->mutable_center()->set_y(mm_to_m(arc->center().y()));
   arc->set_a1(mm_to_m(arc->a1()));
@@ -65,7 +65,7 @@ void toMeters(roboteam_proto::SSL_FieldCicularArc *arc) {
 }
 
 // rotate a single field line
-void rotate(roboteam_proto::SSL_FieldLineSegment *line) {
+void rotate(proto::SSL_FieldLineSegment *line) {
   line->mutable_p1()->set_x(line->p1().x()*-1);
   line->mutable_p1()->set_y(line->p1().y()*-1);
   line->mutable_p2()->set_x(line->p2().x()*-1);
@@ -73,7 +73,7 @@ void rotate(roboteam_proto::SSL_FieldLineSegment *line) {
 }
 
 // convert a line from millimeters to meters
-void toMeters(roboteam_proto::SSL_FieldLineSegment * line) {
+void toMeters(proto::SSL_FieldLineSegment * line) {
   line->mutable_p1()->set_x(mm_to_m(line->p1().x()));
   line->mutable_p1()->set_y(mm_to_m(line->p1().y()));
   line->mutable_p2()->set_x(mm_to_m(line->p2().x()));
@@ -82,7 +82,7 @@ void toMeters(roboteam_proto::SSL_FieldLineSegment * line) {
 }
 
 // rotate the lines and arcs of a field
-void rotate(roboteam_proto::SSL_GeometryFieldSize * field) {
+void rotate(proto::SSL_GeometryFieldSize * field) {
 
   // rotate all field lines
   for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
@@ -98,7 +98,7 @@ void rotate(roboteam_proto::SSL_GeometryFieldSize * field) {
 // convert all units from the field from millimeters to meters.
 // BE CAREFUL: NOT EVERYTHING IS STORED AS DOUBLES SO
 // field_length, field_width, boundary_width, goal_depth, goal_width will be rouned to whole meters!
-//void toMeters(roboteam_proto::SSL_GeometryFieldSize * field) {
+//void toMeters(proto::SSL_GeometryFieldSize * field) {
 //
 //  std::cerr << "WARNING: CONVERTING PROTUBUF SSL_GEOMETRYFIELDSIZE TO METERS IS NOT SAFE" << std::endl;
 //  // convert the standard properties
@@ -120,7 +120,7 @@ void rotate(roboteam_proto::SSL_GeometryFieldSize * field) {
 //}
 
 // rotate robotcommands
-void rotate(roboteam_proto::RobotCommand * command) {
+void rotate(proto::RobotCommand * command) {
   command->mutable_vel()->set_x(- command->vel().x());
   command->mutable_vel()->set_y(- command->vel().y());
   command->set_w(static_cast<float>(rtt::cleanAngle(command->w() + M_PI)));

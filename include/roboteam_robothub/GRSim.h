@@ -56,17 +56,17 @@ public:
       * before the buffer is forcibly flushed and treshold
       * re-estimated.
       */
-    static int const MAX_DROPS = 2;
+    static int constexpr MAX_DROPS = 2;
 
     /** 
      * Number of entries in the efficiency history
      */
-    static int const HISTORY_LEN = 60;
+    static int constexpr HISTORY_LEN = 60;
 
     /**
      * When true, detailed debug trace info is printed.
      */
-    static bool const TRACE = false;
+    static bool constexpr TRACE = false;
 
     /**
      * When batch is true batching is turned on from the start.

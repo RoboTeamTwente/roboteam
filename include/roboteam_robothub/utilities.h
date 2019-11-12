@@ -26,6 +26,9 @@ static int char2int(char input) {
     if (input>='a' && input<='f') return input-'a'+10;
 
     // TODO look into this, (throw somehow cannot be used)
+    /**
+     * Strongly suggest to use std::optional then
+     */
     throw std::invalid_argument("char2int : Invalid input string");
 }
 
@@ -49,7 +52,7 @@ static int char2int(char input) {
  * Things that can be calculated compiletime **should** be actually calculated compiletime
  * Try stick to using constexpr as much as possible, you're using C++17 so might aswel use modern features
  */
-[[maybe_unused]] /* Why static?... inline instead */ static Mode stringToMode(const std::string& type) {
+[[maybe_unused]] /* Why static?... inline instead */ static Mode stringToMode(const std::string& type) noexcept {
     if (type=="serial") {
         return Mode::SERIAL;
     }
@@ -61,7 +64,7 @@ static int char2int(char input) {
     }
 }
 
-[[maybe_unused]] static std::string modeToString(Mode mode) {
+[[maybe_unused]] static std::string modeToString(Mode mode) noexcept {
     switch (mode) {
     case Mode::SERIAL:return "Serial";
     case Mode::GRSIM:return "Grsim";
@@ -102,7 +105,7 @@ static int char2int(char input) {
  * Maybe unused surpresses compiler warnings, nothing major it's just better to 
  * explicitly mark them unused
  */
-[[maybe_unused]] static void printbits(packed_protocol_message const& byteArr) {
+[[maybe_unused]] static void printbits(packed_protocol_message const& byteArr) noexcept {
     // for (int b = 0; b<12; b++) {
 
     for (auto const bit : byteArr) { // Litearlly def'd to std::array

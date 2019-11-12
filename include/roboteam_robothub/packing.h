@@ -90,19 +90,19 @@ std::string byteArrayToString(std::array<uint8_t, N> bytes)
     return result;
 }
 
-int const PACKET_MAX_ROBOT_VEL = 8191;
+int constexpr PACKET_MAX_ROBOT_VEL = 8191;
 
-int const PACKET_MAX_ANG = 511;
+int constexpr PACKET_MAX_ANG = 511;
 
-int const PACKET_MAX_W = 2047;
+int constexpr PACKET_MAX_W = 2047;
 
-int const PACKET_MAX_DRIBBLE_VEL = 7;
+int constexpr PACKET_MAX_DRIBBLE_VEL = 7;
 
-int const PACKET_MAX_CAM_ROBOT_VEL = 8191;
+int constexpr PACKET_MAX_CAM_ROBOT_VEL = 8191;
 
-int const PACKET_MAX_CAM_ANG = 511;
+int constexpr PACKET_MAX_CAM_ANG = 511;
 
-int const PACKET_MAX_CAM_W = 2047;
+int constexpr PACKET_MAX_CAM_W = 2047;
 
 } // robothub
 } // rtt

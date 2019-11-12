@@ -24,6 +24,9 @@ RobotHub::RobotHub() {
 
 /// subscribe to topics
 void RobotHub::subscribeToTopics(){
+    /**
+     * Memory leaks right here, make these unique_ptr's
+     */
     robotCommandSubscriber = new proto::Subscriber<proto::RobotCommand>
         (robotCommandChannel, &RobotHub::processRobotCommand, this);
 

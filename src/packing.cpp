@@ -27,24 +27,24 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
     LowLevelRobotCommand llrc{};
     // Units           Represented values
     llrc.id = command.id();                                                           // [0, 15]         [0, 15]
-    llrc.rho = (int) floor(rho*250);                                                // [0, 2047]       [0, 8.191]
-    llrc.theta = (int) floor(theta*1023.5/M_PI);                                    // [-1024, 1023]   [-pi, pi>
+    llrc.rho = static_cast<int>(floor(rho*250));                                                // [0, 2047]       [0, 8.191]
+    llrc.theta = static_cast<int>(floor(theta*1023.5/M_PI));                                    // [-1024, 1023]   [-pi, pi>
 
     llrc.driving_reference = false;                                                 // [0, 1]          {true, false}
     llrc.use_cam_info = false;                                                      // [0, 1]          {true, false}
     llrc.use_angle = command.use_angle();                                             // [0, 1]          {true, false}
     if (command.use_angle()) {
-        llrc.velocity_angular = (int) floor(command.w()*(511/M_PI));                  // [-512, 511]     [-pi, pi]
+        llrc.velocity_angular = static_cast<int>(floor(command.w()*(511/M_PI)));                  // [-512, 511]     [-pi, pi]
 
     }
     else {
-        llrc.velocity_angular = (int) floor(command.w()*(511/(8*2*M_PI)));            // [-512, 511]     [-8*2pi, 8*2pi]
+        llrc.velocity_angular = static_cast<int>(floor(command.w()*(511/(8*2*M_PI))));            // [-512, 511]     [-8*2pi, 8*2pi]
     }
     llrc.debug_info = true;                                                         // [0, 1]          {true, false}
     llrc.do_kick = command.kicker();                                                  // [0, 1]          {true, false}
     llrc.do_chip = command.chipper();                                                 // [0, 1]          {true, false}
     llrc.kick_chip_forced = command.chip_kick_forced();        // [0, 1]          {true, false}
-    llrc.kick_chip_power = (int) floor(kick_chip_power*255/8);                      // [0, 255]        [0, 100]%
+    llrc.kick_chip_power = static_cast<int>(floor(kick_chip_power*255/8));                      // [0, 255]        [0, 100]%
     llrc.velocity_dribbler = command.dribbler();                                      // [0, 31]        [0, 100]%
 
     llrc.geneva_drive_state = command.geneva_state();                                 // [(0)1, 5]       [-2, 2]
@@ -59,7 +59,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
         robot = *findBot;
         llrc.cam_position_x = 0;//(int) (robot.pos.x/10.24*4096); // set to 0 to avoid mystery stop bug
         llrc.cam_position_y = 0;//(int) (robot.pos.y/10.24*4096); // set to 0 to avoid mystery stop bug
-        llrc.cam_rotation = (int) floor(robot.angle()/M_PI*1024);
+        llrc.cam_rotation = static_cast<int>(floor(robot.angle()/M_PI*1024));
         llrc.use_cam_info = true;
     }
 
@@ -89,7 +89,7 @@ bool validateRobotPacket(LowLevelRobotCommand llrc)
     // Holds if all the values of the command are in range
     bool valuesInRange = true;
 
-    valuesInRange &= inRange(llrc.id, 0, 15);
+    valuesInRange &= inRange(llrc.id, 0, 15); 
     valuesInRange &= inRange(llrc.rho, 0, 2047);
     valuesInRange &= inRange(llrc.theta, -1024, 1023);
     valuesInRange &= inRange(llrc.velocity_angular, -512, 511);
@@ -243,20 +243,29 @@ LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bits) {
 
 void printRobotCommand(const proto::RobotCommand& cmd)
 {
+    /**
+     * C-style casts can fail runtime and return garbage values, but not only that, they're way more dangerous
+     * 
+     * const int* const x = new int{ 500 };
+     * (int*)x = 700; // ignores CV qualifiers, acts like a const_cast which is heavily frowned upon
+     * // reading x is now UB
+     * delete x;
+     * 
+     */
     std::cout << "RobotCommand: " << std::endl;
 
     std::cout << "    id             : " << cmd.id() << std::endl;
-    std::cout << "    active         : " << (int) cmd.active() << std::endl;
+    std::cout << "    active         : " << static_cast<int>(cmd.active()) << std::endl;
     std::cout << "    x_vel          : " << cmd.vel().x() << std::endl;
     std::cout << "    y_vel          : " << cmd.vel().y() << std::endl;
     std::cout << "    w              : " << cmd.w() << std::endl;
-    std::cout << "    use_angle      : " << (int) cmd.use_angle() << std::endl;
-    std::cout << "    dribbler       : " << (int) cmd.dribbler() << std::endl;
-    std::cout << "    kicker         : " << (int) cmd.kicker() << std::endl;
-    std::cout << "    kicker_forced  : " << (int) cmd.chip_kick_forced() << std::endl;
+    std::cout << "    use_angle      : " << static_cast<int>(cmd.use_angle()) << std::endl;
+    std::cout << "    dribbler       : " << static_cast<int>(cmd.dribbler()) << std::endl;
+    std::cout << "    kicker         : " << static_cast<int>(cmd.kicker()) << std::endl;
+    std::cout << "    kicker_forced  : " << static_cast<int>(cmd.chip_kick_forced()) << std::endl;
     std::cout << "    kicker_vel     : " << cmd.chip_kick_vel() << std::endl;
-    std::cout << "    chipper        : " << (int) cmd.chipper() << std::endl;
-    std::cout << "    chipper_forced : " << (int) cmd.chip_kick_forced() << std::endl;
+    std::cout << "    chipper        : " << static_cast<int>(cmd.chipper()) << std::endl;
+    std::cout << "    chipper_forced : " << static_cast<int>(cmd.chip_kick_forced()) << std::endl;
     std::cout << "    chipper_vel    : " << cmd.chip_kick_vel() << std::endl;
     std::cout << "    geneva_state   : " << cmd.geneva_state() << std::endl;
 
@@ -317,7 +326,9 @@ void printRobotFeedback(const proto::RobotFeedback& feedback) {
     std::cout << "    xsensCalibrated  : " << feedback.xsenscalibrated() << std::endl;
     std::cout << "    batteryLow       : " << (feedback.batterylow() ? "1" : "0") << std::endl;
     std::cout << "    bs_Working       : " << (feedback.ballsensorisworking() ? "1" : "0") << std::endl;
-    std::cout << "    bs_hasBall       : " << (feedback.hasball() ? "1" : "0") << std::endl;
+    std::cout << "    bs_hasBall       : " << (feedback.hasball() ? "1" : "0") << std::endl; // not sure what hasball is
+    // if hasball is a boolean then you can just print it it'll conver to 1 / 0 alreayd, if you want it to be `true` or `false`
+    // then std::cout << std::boolalpha first
     std::cout << "    bs_BallPosition  : " << feedback.ballpos() << std::endl;
     std::cout << "    geneva_Working   : " << (feedback.genevaisworking() ? "1" : "0") << std::endl;
     std::cout << "    geneva_State     : " << feedback.genevastate() << std::endl;

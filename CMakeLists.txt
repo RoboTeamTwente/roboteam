@@ -39,6 +39,7 @@ target_link_libraries(roboteam_robothub
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
+        gtest
         )
 
 

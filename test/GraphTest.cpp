@@ -3,7 +3,7 @@
 #include <vector>
 #include <list>
 #include <algorithm>
-#include <boost/optional.hpp>
+#include <optional>
 
 using namespace rtt;
 
@@ -31,7 +31,7 @@ TEST(GraphTests, structure) {
     path.push_back(v1);
     path.push_back(v2);
     path.push_back(v3);
-    boost::optional<std::list<Vertex<>>> found = g.find(v1, v3);
+    std::optional<std::list<Vertex<>>> found = g.find(v1, v3);
     ASSERT_TRUE((bool) found);
     ASSERT_EQ(*found, path);
     
@@ -39,7 +39,7 @@ TEST(GraphTests, structure) {
 */
 
 void assert_path_equals(Graph<int> g, Vertex<int> start, Vertex<int> goal, std::list<Vertex<int>>* expected) {
-    boost::optional<std::list<Vertex<int>>> found = g.astar(start, goal, [](const int& a, const int& b) { return b - a; } );
+    std::optional<std::list<Vertex<int>>> found = g.astar(start, goal, [](const int& a, const int& b) { return b - a; } );
     
     if (expected) {
         ASSERT_TRUE((bool) found);
@@ -51,11 +51,11 @@ void assert_path_equals(Graph<int> g, Vertex<int> start, Vertex<int> goal, std::
 
 TEST(GraphTests, astar) {
     Graph<int> g;
-    Vertex<int> v1 = g.add_vertex(boost::optional<int>(0));
-    Vertex<int> v2 = g.add_vertex(boost::optional<int>(1));
-    Vertex<int> v3 = g.add_vertex(boost::optional<int>(2));
-    Vertex<int> v4 = g.add_vertex(boost::optional<int>(1));
-    Vertex<int> v5 = g.add_vertex(boost::optional<int>(2));
+    Vertex<int> v1 = g.add_vertex(std::optional<int>(0));
+    Vertex<int> v2 = g.add_vertex(std::optional<int>(1));
+    Vertex<int> v3 = g.add_vertex(std::optional<int>(2));
+    Vertex<int> v4 = g.add_vertex(std::optional<int>(1));
+    Vertex<int> v5 = g.add_vertex(std::optional<int>(2));
     g.connect(v1, v4, 5.0);
     g.connect(v1, v2, 1.0);
     g.connect(v2, v3, 2.0);

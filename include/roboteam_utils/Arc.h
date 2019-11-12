@@ -5,7 +5,6 @@
 #include <utility>
 #include <cmath>
 #include <optional>
-#include <boost/optional.hpp>
 
 namespace rtt {
 
@@ -99,9 +98,9 @@ namespace rtt {
          *  the second optional will be empty. If the line segment does not intersect the arc, then
          *  both optionals will be empty.
          */
-        std::pair<boost::optional<Vector2>, boost::optional<Vector2>>
+        std::pair<std::optional<Vector2>, std::optional<Vector2>>
         intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
-//    std::pair<boost::optional<Vector2>, boost::optional<Vector2>>
+//    std::pair<std::optional<Vector2>, std::optional<Vector2>>
 //    intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
 
         /**
@@ -110,8 +109,8 @@ namespace rtt {
          * \return If angleWithinArc(angle), an optional containing the point in the given direction.
          * Otherwise an empty optional.
          */
-        boost::optional<Vector2> arcPointTowards(double angle) const;
-//    boost::optional<Vector2> arcPointTowards(double angle) const;
+        std::optional<Vector2> arcPointTowards(double angle) const;
+//    std::optional<Vector2> arcPointTowards(double angle) const;
 
         /**
          * \brief Gets the point on the Arc in a certain direction from the center, given by another point.
@@ -119,8 +118,8 @@ namespace rtt {
          * \return If angleWithinArc((point - center).angle()), an optional containing the point in the given direction.
          * Otherwise an empty optional.
          */
-        boost::optional<Vector2> arcPointTowards(Vector2 point) const;
-//    boost::optional<Vector2> arcPointTowards(Vector2 point) const;
+        std::optional<Vector2> arcPointTowards(Vector2 point) const;
+//    std::optional<Vector2> arcPointTowards(Vector2 point) const;
 
     private:
         /**
@@ -132,8 +131,8 @@ namespace rtt {
          * \brief Checks whether a point lies on the Arc, and denormalizes (+center) it if so.
          * Otherwise, it returns an empty optional.
          */
-        boost::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
-//    boost::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
+        std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
+//    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
     };
 
 }

@@ -1,7 +1,7 @@
 #ifndef RTT_GRAPH_H_
 #define RTT_GRAPH_H_
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <gtest/gtest_prod.h>
 #include <vector>
 #include <list>
@@ -19,10 +19,10 @@ template<typename T = void*>
 class Vertex {
 public:
     uint32_t id;
-    boost::optional<T> val;
+    std::optional<T> val;
     
     Vertex() {}
-    Vertex(const uint32_t id, const boost::optional<T> val): id(id), val(val) {}
+    Vertex(const uint32_t id, const std::optional<T> val): id{ id }, val{ val } {}
     bool operator<(const Vertex<T>& v) const { return id < v.id; }
     bool operator==(const Vertex& v) const { return id == v.id; }    
 };
@@ -49,8 +49,9 @@ private:
     std::vector<Vertex<T>> verts;
     uint32_t size;
 public:
-    Graph(): size(0) {}
-    Vertex<T> add_vertex(const boost::optional<T> val = boost::optional<T>()) {
+    // Graph(): size(0) {} // no need, can just be default
+    Graph() = default;
+    Vertex<T> add_vertex(const std::optional<T> val = std::optional<T>()) {
         Vertex<T> v(size++, val);
         adj.push_back(std::vector<Edge<T>>());
         verts.push_back(v);
@@ -71,7 +72,7 @@ public:
     
     void reset() {size = 0; adj.clear(); verts.clear(); }
     
-    boost::optional<std::list<Vertex<T>>> find(const Vertex<T>& start, const Vertex<T>& goal) const {
+    std::optional<std::list<Vertex<T>>> find(const Vertex<T>& start, const Vertex<T>& goal) const {
         std::vector<Vertex<T>> q;
         std::map<Vertex<T>, Vertex<T>> parents;
         std::map<Vertex<T>, double> costs;
@@ -90,7 +91,7 @@ public:
                 while (parents.find(v) != parents.end()) {
                     path.push_front(v = parents.at(v));
                 }
-                return boost::optional<std::list<Vertex<T>>>(path);
+                return std::optional<std::list<Vertex<T>>>(path);
             }
         
             for (const Edge<T>& e : adj[u.id]) {
@@ -109,7 +110,7 @@ public:
                 }
             }
         }
-        return boost::optional<std::list<Vertex<T>>>();
+        return std::optional<std::list<Vertex<T>>>();
     }
     
     template<typename K, typename V>
@@ -117,7 +118,7 @@ public:
         return m.find(key) == m.end() ? def : m.at(key);
     }
     
-    boost::optional<std::list<Vertex<T>>> astar(const Vertex<T>& start,
+    std::optional<std::list<Vertex<T>>> astar(const Vertex<T>& start,
                                           const Vertex<T>& goal,
                                           std::function<double(const T&, const T&)> heuristic) const {
         std::vector<Vertex<T>> open, closed;
@@ -137,7 +138,7 @@ public:
                 while (parents.find(v) != parents.end()) {
                     path.push_front(v = parents.at(v));
                 }
-                return boost::optional<std::list<Vertex<T>>>(path);
+                return std::optional<std::list<Vertex<T>>>(path);
             }
             closed.push_back(goal);
             for (const Edge<T>& e : adj[current.id]) {
@@ -153,7 +154,7 @@ public:
                 fscores[neighbor] = tentative + heuristic(*(neighbor.val), *(goal.val));
             }
         }
-        return boost::optional<std::list<Vertex<T>>>();
+        return std::optional<std::list<Vertex<T>>>();
     }    
     
     std::string to_DOT() const {

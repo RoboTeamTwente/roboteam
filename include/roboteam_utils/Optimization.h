@@ -100,8 +100,11 @@ public:
 	}
 
 	/**
-	 * \brief Continuously run the algorithm until getIterationCount() >= limit.
-	 * \return true if the algorithm ran at least once, false if not.
+	 * @brief Iterates until iterationCount hits limit
+	 * 
+	 * @param limit Limit of iterations
+	 * @return true if it iterates at least once
+	 * @return false if iterationcount is already >= limit
 	 */
 	bool iterateToLimit(size_t limit){
 		if (iterationCount >= limit) return false;

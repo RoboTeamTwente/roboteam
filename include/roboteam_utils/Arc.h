@@ -2,7 +2,6 @@
 
 #include "Vector2.h"
 #include <limits>
-#include <utility>
 #include <cmath>
 #include <optional>
 

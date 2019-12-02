@@ -7,7 +7,7 @@
 #include <list>
 #include <stdint.h>
 #include <math.h>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <functional>
@@ -168,42 +168,89 @@ namespace rtt {
         uint32_t size;
     public:
         // Graph(): size(0) {} // no need, can just be default
+        /**
+         * @brief Construct a new Graph object
+         * 
+         */
         Graph() = default;
 
-        Vertex<T>& add_vertex(const std::optional<T> val = std::optional<T>()) {
+        /**
+         * @brief Adds a vertex to the graph
+         * 
+         * Pushes a default constructed std::vector<Edge<T>> to adj
+         * Pushes a constructor Vertex<T> where the id is the old amount of elements in the graph, increments size
+         * 
+         * @param val Value to give to the Vertex<T>
+         * @return Vertex<T>& Newly created Vertex
+         */
+        Vertex<T>& add_vertex(const std::optional<T>& val = std::optional<T>()) {
             adj.emplace_back();
             return verts.emplace_back(size++, val);
         }
 
+        /**
+         * @brief Creates a new Edge<T>
+         * 
+         * @param in The in member for the Edge
+         * @param out The out member for the Edge
+         * @param cost The cost of the Edge
+         */
         void connect(const Vertex<T> &in, const Vertex<T> &out, const double cost) {
-            // Edge<T> e(in, out, cost);
             adj[in.id].emplace_back(in, out, cost);
-            // adj[in.id].push_back(e);
-            //adj[out.id].push_back(e);
         }
 
+        /**
+         * @brief Get the amount of Vertices in the graph
+         * 
+         * @return uint32_t Amount of Vertices in the graph
+         */
         uint32_t get_size() const { return size; }
 
+        /**
+         * @brief Gets a Vertex with a specific id
+         * 
+         * @param id id o get from the vertices
+         * @return Vertex<T> 
+         */
         Vertex<T> operator[](const uint32_t id) const { return verts[id]; }
 
+        /**
+         * @brief Gets all the neighbours for a vertex with a certain id
+         * 
+         * @param v Vertex to compare against
+         * @return std::vector<Edge<T>> Vector which contains all the neighbouring edges
+         */
         std::vector<Edge<T>> neighbors(const Vertex<T> &v) const { return adj[v.id]; }
 
+        /**
+         * @brief Resets the current datastructure
+         * 
+         * Ensures that size is 0, and that adj and verts are empty
+         * 
+         */
         void reset() {
             size = 0;
             adj.clear();
             verts.clear();
         }
 
+        /**
+         * @brief Finds a certain vertex from a begin point
+         * 
+         * @param start The vertex to start at
+         * @param goal To-look for vertex
+         * @return std::optional<std::list<Vertex<T>>>  Returns an optional list of vertices that match this vertex
+         */
         std::optional<std::list<Vertex<T>>> find(const Vertex<T> &start, const Vertex<T> &goal) const {
             std::vector<Vertex<T>> q;
-            std::map<Vertex<T>, Vertex<T>> parents;
-            std::map<Vertex<T>, double> costs;
+            std::unordered_map<Vertex<T>, Vertex<T>> parents;
+            std::unordered_map<Vertex<T>, double> costs;
 
             q.push_back(start);
             costs[start] = 0;
 
             while (!q.empty()) {
-                Vertex<T> u = *std::min_element(q.begin(), q.end(), [costs](Vertex<T> a, Vertex<T> b) {
+                Vertex<T> const& u = *std::min_element(q.begin(), q.end(), [costs](Vertex<T> a, Vertex<T> b) {
                     return costs.at(a) < costs.at(b);
                 });
                 q.erase(std::remove(q.begin(), q.end(), u), q.end());
@@ -237,23 +284,43 @@ namespace rtt {
             return std::nullopt;
         }
 
+
+        /**
+         * @brief Get the object with the key or return a default value
+         * 
+         * @tparam K Type of `key`
+         * @tparam V Type of `def`
+         * @param m Map to traverse through
+         * @param key Key to find
+         * @param def default value incase Key is not found
+         * @return V Either a defalut value `def` or a copy of the m[key]
+         */
         template<typename K, typename V>
-        inline V get_or_default(std::map<K, V> m, K key, V def) const {
-            return m.find(key) == m.end() ? def : m.at(key);
+        inline V get_or_default(std::unordered_map<K, V> const& m, K const& key, V const& def) const {
+            return m.find(key) == m.end() ? def : m[key];
         }
 
+        /**
+         * @brief A* pathfinding algorithm
+         * 
+         * @param start Vertex to start at
+         * @param goal Goal vertex
+         * @param heuristic Heuristic calculation function
+         * @return std::optional<std::list<Vertex<T>>> Optionally gets a list of vertices which are the path from start -> goal, std::nullopt if no path is available
+         */
         std::optional<std::list<Vertex<T>>> astar(const Vertex<T> &start,
                                                   const Vertex<T> &goal,
                                                   std::function<double(const T &, const T &)> heuristic) const {
-            std::vector<Vertex<T>> open, closed;
-            open.push_back(start);
-            std::map<Vertex<T>, Vertex<T>> parents;
-            std::map<Vertex<T>, double> gscores, fscores;
+            std::vector<Vertex<T>> open{ start };
+            std::vector<Vertex<T>> closed;
+            std::unordered_map<Vertex<T>, Vertex<T>> parents;
+            std::unordered_map<Vertex<T>, double> gscores{ };
+            std::unordered_map<Vertex<T>, double> fscores{ };
             gscores[start] = 0.0;
             fscores[start] = heuristic(*(start.val), *(goal.val));
             while (!open.empty()) {
                 Vertex<T> current = *std::min_element(open.begin(), open.end(),
-                                                      [fscores](Vertex<T> a, Vertex<T> b) {
+                                                      [&fscores](Vertex<T> a, Vertex<T> b) {
                                                           return fscores.at(a) < fscores.at(b);
                                                       });
                 open.erase(std::remove(open.begin(), open.end(), current), open.end());
@@ -264,7 +331,7 @@ namespace rtt {
                     while (parents.find(v) != parents.end()) {
                         path.push_front(v = parents.at(v));
                     }
-                    return std::optional<std::list<Vertex<T>>>(path);
+                    return path;
                 }
                 closed.push_back(goal);
                 for (const Edge<T> &e : adj[current.id]) {
@@ -280,9 +347,14 @@ namespace rtt {
                     fscores[neighbor] = tentative + heuristic(*(neighbor.val), *(goal.val));
                 }
             }
-            return std::optional<std::list<Vertex<T>>>();
+            return std::nullopt;
         }
 
+        /**
+         * @brief Returns a representation of the graph
+         * 
+         * @return std::string Representation of the graph
+         */
         std::string to_DOT() const {
             std::stringstream ss;
             ss << "digraph {\n";
@@ -298,7 +370,13 @@ namespace rtt {
             return ss.str();
         }
 
-        static std::string to_DOT(Graph<Vector2> graph) {
+        /**
+         * @brief Gets a graph representation
+         * 
+         * @param graph const-qualified graph which is a reference to the graph to represent as a string
+         * @return std::string String representation of \ref graph
+         */
+        static std::string to_DOT(Graph<Vector2> const& graph) {
             std::stringstream ss;
             ss << "strict digraph {\n";
             for (unsigned int i = 0; i < graph.size; i++) {

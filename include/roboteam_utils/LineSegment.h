@@ -20,6 +20,7 @@ class LineSegment : public LineBase {
     [[nodiscard]] bool doesIntersect(const LineSegment &line) const override;
     [[nodiscard]] bool nonSimpleDoesIntersect(const LineSegment &line) const;
     [[nodiscard]] std::shared_ptr<Vector2> nonSimpleIntersects(const LineSegment &line) const;
+    virtual ~LineSegment() { };
 
     };
 }

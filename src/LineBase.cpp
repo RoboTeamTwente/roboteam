@@ -31,9 +31,7 @@ namespace rtt {
     }
 
     std::pair<double, double> LineBase::coefficients() const {
-        double sl = this->slope();
-        double intercept = start.y - sl * start.x;
-        return std::make_pair(sl, intercept);
+        return { slope(), intercept() };
     }
 
     bool LineBase::isPoint() const {

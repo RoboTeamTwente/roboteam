@@ -116,9 +116,10 @@ Angle Angle::operator-=(const double &scalar) noexcept {
     return *this -= other;
 }
 
-void Angle::operator=(const double &scalar) noexcept {
+Angle& Angle::operator=(const double &scalar) noexcept {
     this->angle = scalar;
     this->constrain();
+    return *this;
 }
 
 Angle::operator double() const noexcept {

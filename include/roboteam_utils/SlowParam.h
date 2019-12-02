@@ -51,29 +51,29 @@
  * }
  */
 template<
-    typename T
+        typename T
 >
 class SlowParam {
 public:
-    SlowParam(std::string const & paramName) : 
-            // This is set to false to make sure that
-            // if a default parameter is not passed
-            // the ros param is not set to 0 when first getting it
-            // (i.e. at the side of the parameter server)
+    SlowParam(std::string const &paramName) :
+    // This is set to false to make sure that
+    // if a default parameter is not passed
+    // the ros param is not set to 0 when first getting it
+    // (i.e. at the side of the parameter server)
             updateRosParamToDefault{false},
             paramName{paramName},
             latestValue{},
             defaultValue{},
             wasParamSet{false},
-            lastCheck{} { } 
+            lastCheck{} {}
 
-    SlowParam(std::string const & paramName, T const & defaultValue) :
+    SlowParam(std::string const &paramName, T const &defaultValue) :
             updateRosParamToDefault{true},
             paramName{paramName},
             latestValue{},
             defaultValue{defaultValue},
             wasParamSet{false},
-            lastCheck{} { } 
+            lastCheck{} {}
 
     bool isSet() {
         auto duration = std::chrono::high_resolution_clock::now() - lastCheck;
@@ -116,4 +116,4 @@ private:
     bool wasParamSet;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastCheck;
 
-} ;
+};

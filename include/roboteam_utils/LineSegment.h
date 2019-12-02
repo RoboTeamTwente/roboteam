@@ -11,15 +11,15 @@ class LineSegment : public LineBase {
     constexpr LineSegment() : LineBase(){};
     constexpr LineSegment(const Vector2 &_start, const Vector2 &_end)
             :LineBase(_start, _end) { };
-    double distanceToLine(const Vector2 &point) const override;
-    bool isOnLine(const Vector2 &point) const override;
-    Vector2 project(const Vector2 &point) const override;
-    std::shared_ptr<Vector2> intersects(const Line &line) const override;
-    std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
-    bool doesIntersect(const Line &line) const override;
-    bool doesIntersect(const LineSegment &line) const override;
-    bool nonSimpleDoesIntersect(const LineSegment &line) const;
-    std::shared_ptr<Vector2> nonSimpleIntersects(const LineSegment &line) const;
+    [[nodiscard]] double distanceToLine(const Vector2 &point) const override;
+    [[nodiscard]] bool isOnLine(const Vector2 &point) const override;
+    [[nodiscard]] Vector2 project(const Vector2 &point) const override;
+    [[nodiscard]] std::shared_ptr<Vector2> intersects(const Line &line) const override;
+    [[nodiscard]] std::shared_ptr<Vector2> intersects(const LineSegment &line) const override;
+    [[nodiscard]] bool doesIntersect(const Line &line) const override;
+    [[nodiscard]] bool doesIntersect(const LineSegment &line) const override;
+    [[nodiscard]] bool nonSimpleDoesIntersect(const LineSegment &line) const;
+    [[nodiscard]] std::shared_ptr<Vector2> nonSimpleIntersects(const LineSegment &line) const;
 
     };
 }

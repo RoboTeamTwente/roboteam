@@ -43,7 +43,6 @@ namespace rtt {
         Arc(Vector2 center, double radius, double angleStart, double angleEnd);
 
 
-
         /**
          * \brief Constructs an Arc which is a part of an ellipse
          */
@@ -56,27 +55,27 @@ namespace rtt {
          *      - angleStart == 0.0
          *      - angleEnd == ARC_MAX
          */
-        bool isCircle() const;
+        [[nodiscard]] bool isCircle() const;
 
         /**
          * \brief Checks if this Arc is at least a part of a circle.
          * \return True iff length == width
          */
-        bool isPartialCircle() const;
+        [[nodiscard]] bool isPartialCircle() const;
 
         /**
          * \brief Checks whether an angle is within the range this Arc is defined on.
          * \param angle The angle to check.
          * \return True iff angleStart <= angle <= angleEnd
          */
-        bool angleWithinArc(double angle) const;
+        [[nodiscard]] bool angleWithinArc(double angle) const;
 
         /**
          * \brief Checks whether a point lies within this Arc.
          * \param point The point to check
          * \return True if the point lies within the ellipse defined by this Arc.
          */
-        bool pointInArc(const Vector2& point) const;
+        [[nodiscard]] bool pointInArc(const Vector2 &point) const;
         //  bool pointInArc(const Vector2& point) const;
 
         /**
@@ -84,7 +83,7 @@ namespace rtt {
          * \param point The point to check
          * \return True if the point lies on this Arc.
          */
-        bool pointOnArc(const Vector2& point) const;
+        [[nodiscard]] bool pointOnArc(const Vector2 &point) const;
         //  bool pointOnArc(const Vector2& point) const;
 
         /**
@@ -97,7 +96,7 @@ namespace rtt {
          *  the second optional will be empty. If the line segment does not intersect the arc, then
          *  both optionals will be empty.
          */
-        std::pair<std::optional<Vector2>, std::optional<Vector2>>
+        [[nodiscard]] std::pair<std::optional<Vector2>, std::optional<Vector2>>
         intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
 //    std::pair<std::optional<Vector2>, std::optional<Vector2>>
 //    intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
@@ -108,7 +107,7 @@ namespace rtt {
          * \return If angleWithinArc(angle), an optional containing the point in the given direction.
          * Otherwise an empty optional.
          */
-        std::optional<Vector2> arcPointTowards(double angle) const;
+        [[nodiscard]] std::optional<Vector2> arcPointTowards(double angle) const;
 //    std::optional<Vector2> arcPointTowards(double angle) const;
 
         /**
@@ -117,7 +116,7 @@ namespace rtt {
          * \return If angleWithinArc((point - center).angle()), an optional containing the point in the given direction.
          * Otherwise an empty optional.
          */
-        std::optional<Vector2> arcPointTowards(Vector2 point) const;
+        [[nodiscard]] std::optional<Vector2> arcPointTowards(Vector2 point) const;
 //    std::optional<Vector2> arcPointTowards(Vector2 point) const;
 
     private:
@@ -130,7 +129,7 @@ namespace rtt {
          * \brief Checks whether a point lies on the Arc, and denormalizes (+center) it if so.
          * Otherwise, it returns an empty optional.
          */
-        std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
+        [[nodiscard]] std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
 //    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
     };
 

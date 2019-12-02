@@ -40,7 +40,7 @@ add_library(roboteam_utils STATIC
         src/Mathematics.cpp
 #        src/Cone.cpp
         src/normalize.cpp
-        src/constants.cpp
+        # src/constants.cpp
         src/Clip.cpp
         src/Optimization.cpp
         src/Arc.cpp

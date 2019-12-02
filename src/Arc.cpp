@@ -81,7 +81,7 @@ namespace rtt {
                 auto first = checkAndDenormalize(Vector2(x1, y1));
 
                 std::optional<Vector2> second;
-                if (fabsl(discr < .0001)) {
+                if (fabsl(discr) < .0001) {
                     // single intersection
                     second = std::nullopt;
                 } else {

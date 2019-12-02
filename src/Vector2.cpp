@@ -213,7 +213,7 @@ namespace rtt {
         return os << "{ x = " << x << ", y = " << y << " }";
     }
 
-    std::ostream &operator<<(std::ostream &os, const rtt::Vector2 vec) {
+    std::ostream &operator<<(std::ostream &os, rtt::Vector2 const& vec) {
         return vec.write(os);
     }
 

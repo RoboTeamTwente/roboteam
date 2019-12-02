@@ -231,7 +231,7 @@ namespace rtt {
 /**
  * \brief Writes a vector to an output stream.
  */
-    std::ostream &operator<<(std::ostream &os, Vector2 const& vec);
+std::ostream &operator<<(std::ostream &os, Vector2 const& vec);
 
 }
 

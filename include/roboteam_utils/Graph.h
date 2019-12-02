@@ -110,7 +110,7 @@ public:
                 }
             }
         }
-        return std::optional<std::list<Vertex<T>>>();
+        return std::nullopt;
     }
     
     template<typename K, typename V>

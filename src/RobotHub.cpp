@@ -7,7 +7,6 @@
 #include "SerialDeviceManager.h"
 #include "GRSim.h"
 #include "packing.h"
-#include "constants.h"
 
 namespace rtt {
 namespace robothub {

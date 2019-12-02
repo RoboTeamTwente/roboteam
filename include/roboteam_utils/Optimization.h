@@ -52,48 +52,106 @@ template<typename Num, size_t N>
 class GradientDescent {
 public:
 	static_assert(std::is_arithmetic<Num>{}, "GradientDescent Num must be an arithmetic type");
-	typedef std::array<Num, N> Data;
-	typedef std::function<Num(const Data&)> ScoreFunction;
+	
+	using Data = std::array<Num, N>;
+	using ScoreFunction = std::function<Num(Data const&)>;
 
 	/**
 	 * \brief Constructs a GradientDescent by explicitly providing each parameter.
 	 */
-	GradientDescent(ScoreFunction scorer, Data initialData, Data initialSteps,
-			std::array<std::pair<Num, Num>, N> limits);
+	GradientDescent(ScoreFunction scorer, Data data, Data initialSteps, std::array<std::pair<Num, Num>, N> limits)
+		: scorer(scorer), data(data), steps(initialSteps), limits(limits),
+		  lastScore(-99999), justFlipped(true), iterationCount(0) 
+		{}
+
 
 	/**
 	 * \brief Constructs a GradientDescent where each parameter has the same initial step size, and
 	 * the same upper and lower limits.
 	 */
-	GradientDescent(ScoreFunction scorer, Data initialData, Num initialStep, Num minimum, Num maximum);
+	GradientDescent(ScoreFunction scorer, Data initialData, Num initialStep, Num minimum, Num maximum)
+		: scorer(scorer), data(data), lastScore(-99999), justFlipped(true), iterationCount(0) {
+		for (size_t i = 0; i < N; i++) {
+			limits[i] = { minimum, maximum };
+			steps[i] = initialStep;
+		}
+	}
 
 	/**
 	 * \brief Perform a single iteration of the algorithm.
 	 */
-	void singleIteration();
+	void singleIteration() {
+		Num currentSum{ 0 }; 
+		Num newSum{ 0 };
+		for (Num n : data) currentSum += n;
+
+		for (size_t i = 0; i < N; i++) {
+			data[i] = std::clamp(data[i] + steps[i], limits[i].first, limits[i].second);
+			newSum += data[i];
+		}
+
+		double newScore = scorer(data);
+		if (lastScore > newScore) {
+			for (size_t i = 0; i < N; i++) steps[i] *= Num(-.75);
+		}
+		lastScore = newScore;
+		lastDivergence = newSum - currentSum;
+		iterationCount++;
+	}
 
 	/**
 	 * \brief Continuously run the algorithm until getIterationCount() >= limit.
 	 * \return true if the algorithm ran at least once, false if not.
 	 */
-	bool iterateToLimit(size_t limit);
+	bool iterateToLimit(size_t limit){
+		if (iterationCount >= limit) return false;
+		while (iterationCount < limit) singleIteration();
+		return true;
+	}
 
 	/**
 	 * \brief Continously run the algorithm until either the score exceeds
 	 * the given threshold, or until it has run limit times (irrespective of the total iteration count).
 	 */
-	bool iterateUntilScoreAtLeast(Num threshold, size_t limit = 1000);
+	bool iterateUntilScoreAtLeast(Num threshold, size_t limit = 1000) {
+		if (lastScore >= threshold) return false;
+		size_t count = 0;
+		while (lastScore < threshold && count < limit) {
+			singleIteration();
+			count++;
+		}
+		return count < limit;
+	}
 
 	/**
 	 * \brief Continously run the algorithm until the total change in the data was at most
 	 * the given threshold, or until it has run limit times (irrespective of the total iteration count).
 	 */
-	bool iterateUntilConvergent(Num threshold, size_t limit = 1000);
+	bool iterateUntilConvergent(Num threshold, size_t limit = 1000) {
+		if (lastDivergence <= threshold) return false;
+		size_t count = 0;
+		while (lastDivergence > threshold && count < limit) {
+			singleIteration();
+			count++;
+		}
+		return count < limit;
+	}
 
-	Num getLastScore() const;
-	Num getLastDivergence() const;
-	size_t getIterationCount() const;
-	Data getCurrentValues() const;
+	Num getLastScore() const {
+		return lastScore;
+	}
+
+	Num getLastDivergence() const {
+		return lastDivergence;
+	}
+
+	size_t getIterationCount() const {
+		return iterationCount;
+	}
+
+	Data getCurrentValues() const {
+		return data;
+	}
 
 private:
 	ScoreFunction scorer;
@@ -107,5 +165,3 @@ private:
 };
 
 }
-
-#include "Optimization.tpp"

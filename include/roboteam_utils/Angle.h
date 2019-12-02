@@ -18,7 +18,7 @@ class Angle {
             : angle(0.0), epsilon(0.00001) { };
 
         constexpr Angle(const Angle &copy)
-            :angle(copy.angle), epsilon(0.00001) { }
+            : angle(copy.angle), epsilon(0.00001) { }
 
         Angle(double angle);
         Angle(const rtt::Vector2 &vec);

@@ -33,8 +33,8 @@ namespace rtt {
                 // One point is outside, one is inside
                 // We will now correct the outside point with respect to one edge of the field
                 double m = (point1.y - point0.y) / (point1.x - point0.x);
-                double x{0};
-                double y{0};
+                double x{ 0 };
+                double y{ 0 };
                 int &temp = code0 == CSCode::INSIDE ? code1 : code0; // temp = code of the outside point
                 Vector2 &point = temp == code0 ? point0 : point1;
                 if (temp & CSCode::TOP) {

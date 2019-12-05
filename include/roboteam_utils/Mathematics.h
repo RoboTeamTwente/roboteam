@@ -4,9 +4,21 @@
 #include <cmath>
 
 namespace rtt {
-
+    
+    /**
+     * @brief Converts radians to degrees
+     * 
+     * @param radians Amount of radians
+     * @return double Degrees
+     */
     double toDegrees(double radians);
 
+    /**
+     * @brief Degrees to radians
+     * 
+     * @param degrees Amount of degrees
+     * @return double Radians
+     */
     double toRadians(double degrees);
 
     double cleanAngle(double angle);
@@ -31,20 +43,14 @@ namespace rtt {
 
     Vector2 projectPointOntoLine(Vector2 P1, Vector2 P2, Vector2 pos);
 
-    template<bool is_signed, typename T>
-    inline constexpr
-    int signum(T x) {
-        if constexpr (is_signed) {
-            return (T(0) < x) - (x < T(0));
-        } else {
-            return T(0) < x;
-        }
-    }
-
     template<typename T>
     inline constexpr
     int signum(T x) {
-        return signum<std::is_signed_v<T>>(x);
+        if constexpr (is_signed) {
+            return (T(0) < x) - (x < T(0)); 
+        } else {
+            return T(0) < x;
+        }
     }
 
 }

@@ -21,6 +21,12 @@ namespace rtt {
      */
     double toRadians(double degrees);
 
+    /**
+     * @brief Limits angle between -pi and pi
+     * 
+     * @param angle Angle to clean
+     * @return double Cleaned angle
+     */
     double cleanAngle(double angle);
 
     Vector2 limitAngleDiff(Vector2 vector1, Vector2 vector2, double maxAngleDiff);
@@ -46,7 +52,7 @@ namespace rtt {
     template<typename T>
     inline constexpr
     int signum(T x) {
-        if constexpr (is_signed) {
+        if constexpr (std::is_signed<T>::value) {
             return (T(0) < x) - (x < T(0)); 
         } else {
             return T(0) < x;

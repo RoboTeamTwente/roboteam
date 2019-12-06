@@ -3,52 +3,57 @@
 //
 
 #include "../include/roboteam_utils/Polygon.h"
+#include <numeric>
 
 namespace rtt {
 ///constructor for rectangles oriented straight with respect to the x-axis.
-    Polygon::Polygon(const Vector2 &lowerLeftCorner, double xlen, double ylen) {
-        vertices.push_back(lowerLeftCorner);
-        vertices.push_back(Vector2(lowerLeftCorner.x + xlen, lowerLeftCorner.y));
-        vertices.push_back(Vector2(lowerLeftCorner.x + xlen, lowerLeftCorner.y + ylen));
-        vertices.push_back(Vector2(lowerLeftCorner.x, lowerLeftCorner.y + ylen));
-    }
+    Polygon::Polygon(const Vector2 &lowerLeftCorner, double xlen, double ylen) 
+        : vertices {
+            lowerLeftCorner,
+            Vector2{ lowerLeftCorner.x + xlen, lowerLeftCorner.y },
+            Vector2{ lowerLeftCorner.x + xlen, lowerLeftCorner.y + ylen },
+            Vector2{ lowerLeftCorner.x, lowerLeftCorner.y + ylen }
+        }
+    {}
 
-    Polygon::Polygon(const std::vector<rtt::Vector2> &_vertices) {
-        vertices = _vertices;
-    }
+    Polygon::Polygon(const std::vector<rtt::Vector2> &_vertices)
+        : vertices{ _vertices } 
+    {}
 
-    int Polygon::amountOfVertices() const {
+    size_t Polygon::amountOfVertices() const {
         return vertices.size();
     }
 
-    Vector2 Polygon::operator[](int id) const {
-        return vertices[id];
+    Vector2 Polygon::operator[](size_t idx) const {
+        return vertices[idx];
     }
 
     void Polygon::move(const Vector2 &moveBy) {
-        for (std::vector<Vector2>::iterator it = vertices.begin(); it != vertices.end(); ++it) {
-            *it += moveBy;
+        // This is a range-based for loop
+        // for (std::vector<Vector2>::iterator it = vertices.begin(); it != vertices.end(); ++it) {
+        //     *it += moveBy;
+        // }
+
+        for (auto& vertex : vertices) {
+            vertex += moveBy;
         }
     }
 
     std::vector<LineSegment> Polygon::getBoundary() const {
         std::vector<LineSegment> boundary;
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
-            boundary.push_back(LineSegment(vertices[i],
-                                           vertices[(i + 1) %
-                                                    n])); // maybe there is a nice way to do this 'circular' access with iterators?
+        size_t n = vertices.size();
+        for (size_t i = 0; i < n; i++) {
+            boundary.emplace_back(vertices[i], vertices[(i + 1) % n]); 
+            // maybe there is a nice way to do this 'circular' access with iterators?
         }
         return boundary;
     }
 
     double Polygon::perimeterLength() const {
         double totalLength = 0;
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
-            totalLength += (vertices[i] - vertices[(i + 1)
-                                                   %
-                                                   n]).length();// maybe there is a nice way to do this 'circular' access with iterators?
+        size_t n = vertices.size();
+        for (size_t i = 0; i < n; i++) {
+            totalLength += (vertices[i] - vertices[(i + 1) % n]).length();// maybe there is a nice way to do this 'circular' access with iterators?
 
         }
         return totalLength;
@@ -57,7 +62,8 @@ namespace rtt {
 //https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
 // this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
     bool Polygon::isConvex() const {
-        if (amountOfVertices() < 4) return true;// triangles are always convex
+        if (amountOfVertices() < 4) 
+            return true;// triangles are always convex
         bool sign = false;
         bool signSet = false;
         int n = vertices.size();
@@ -83,7 +89,7 @@ namespace rtt {
 // this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
     bool Polygon::isSimple() const {
         // we loop over every unique pair
-        std::vector<LineSegment> lines;
+        std::vector<LineSegment> lines{ };
         for (auto first = vertices.begin(); first != vertices.end(); first++) {
             LineSegment boundarySegment;
             if (first == std::prev(vertices.end())) {
@@ -91,7 +97,7 @@ namespace rtt {
             } else {
                 boundarySegment = LineSegment(*first, *(first + 1));
             }
-            for (auto line :lines) {
+            for (auto line : lines) {
                 if (boundarySegment.nonSimpleDoesIntersect(line)) {
                     return false;
                 }
@@ -105,9 +111,9 @@ namespace rtt {
 // this is black magic but if it works it works
 /// on the boundary this function does not work!! see documentation if you are interested
     bool Polygon::contains(const Vector2 &point) const {
-        int i, j, c = 0;
+        int c = 0;
         int n = amountOfVertices();
-        for (i = 0, j = n - 1; i < n; j = i++) {
+        for (int i = 0, j = n - 1; i < n; j = i++) {
             if (((vertices[i].y > point.y) != (vertices[j].y > point.y)) &&
                 (point.x < (vertices[j].x - vertices[i].x) * (point.y - vertices[i].y) / (vertices[j].y - vertices[i].y)
                            + vertices[i].x))
@@ -117,8 +123,8 @@ namespace rtt {
     }
 
     bool Polygon::doesIntersect(const LineSegment &line) const {
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
+        size_t n = vertices.size();
+        for (size_t i = 0; i < n; i++) {
             LineSegment segment(vertices[i],
                                 vertices[(i + 1) %
                                          n]);// maybe there is a nice way to do this 'circular' access with iterators?
@@ -130,8 +136,8 @@ namespace rtt {
     }
 
     bool Polygon::isOnBoundary(const Vector2 &point) const {
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
+        size_t n = vertices.size();
+        for (size_t i = 0; i < n; i++) {
             LineSegment segment(vertices[i],
                                 vertices[(i + 1) %
                                          n]);// maybe there is a nice way to do this 'circular' access with iterators?
@@ -144,8 +150,8 @@ namespace rtt {
 
     std::vector<Vector2> Polygon::intersections(const LineSegment &line) const {
         std::vector<Vector2> intersections;
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
+        size_t n = vertices.size();
+        for (size_t i = 0; i < n; i++) {
             LineSegment segment(vertices[i],
                                 vertices[(i + 1) % n]);
             // maybe there is a nice way to do this 'circular' access with iterators?
@@ -201,7 +207,7 @@ namespace rtt {
 // the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
     Vector2 Polygon::verticeCentroid() const {
         int n = vertices.size();
-        Vector2 sum = {0, 0};
+        Vector2 sum = { 0, 0 };
         for (int i = 0; i < n; ++i) {
             sum += vertices[i];
         }

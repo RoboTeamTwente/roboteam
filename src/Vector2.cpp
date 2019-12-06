@@ -6,10 +6,8 @@
 namespace rtt {
 
     Vector2::Vector2(rtt::Angle &angle, const double &length)
-            : epsilon(0.00001) {
-        y = sin(angle.getAngle()) * length;
-        x = cos(angle.getAngle()) * length;
-    }
+        : x{ cos(angle.getAngle()) * length}, y{ sin(angle.getAngle()) * length }, epsilon{ 0.00001 }
+    {}
 
     double Vector2::dot(const Vector2 &other) const {
         return this->x * other.x + this->y * other.y;
@@ -24,12 +22,12 @@ namespace rtt {
     }
 
     Vector2 Vector2::scale(double scalar) const {
-        return {x * scalar, y * scalar};
+        return { x * scalar, y * scalar };
     }
 
     Vector2 Vector2::normalize() const {
         if (this->length() == 0.0)
-            return {0.0, 0.0};
+            return { 0.0, 0.0 };
 
         double d = 1.0 / length();
         return {x * d, y * d};
@@ -49,10 +47,9 @@ namespace rtt {
 
     rtt::Angle Vector2::toAngle() const {
         if (this->length() < epsilon)
-            return {};
+            return { 0 };
 
-        Angle a = Angle(atan2(y, x));
-        return a;
+        return { atan2(y, x) };
     }
 
     Vector2 Vector2::lerp(const Vector2 &other, double factor) const {
@@ -78,13 +75,15 @@ namespace rtt {
     }
 
     Vector2 Vector2::project2(const Vector2 &ab) const {
-        Vector2 ap = *this;
-        double t = ap.dot(ab) / ab.dot(ab);
-        return ab.scale(t);
+        return ab.scale(
+            this->dot(ab) / ab.dot(ab));
     }
 
     bool Vector2::isNotNaN() const {
-        return x == x && y == y; // NaN != NaN
+        /**
+         * NaN is defined as not being equal to itself
+         */
+        return x == x && y == y; 
     }
 
     Vector2 Vector2::closestPointOnVector(const Vector2 &startPoint, const Vector2 &point) const {
@@ -155,9 +154,7 @@ namespace rtt {
     }
 
     Vector2 Vector2::operator/=(const Vector2 &other) {
-        if (other == Vector2())
-            throw std::invalid_argument("You mongol, stop dividing by zero");
-
+        assert(other == Vector2() && "Division by zero");
         return {this->x /= other.x, this->y /= other.y};
     }
 

@@ -38,7 +38,7 @@ namespace roboteam_utils {
 /// Limit a function to be called at a maximum specified rate
 /// it is not exact, since it is dependent on the loop rate when this function is called
     void Timer::limit(std::function<void(void)> func, int rate) {
-        auto timeStep = std::chrono::microseconds(static_cast<int>((1000.0 / rate) * 1000));
+        auto timeStep = std::chrono::microseconds((1000 / rate) * 1000);
         auto now = getCurrentTime();
         auto timeDiff = now - lastTickedTime[lastTickedTimeIteration];
         if (timeDiff >= timeStep) {

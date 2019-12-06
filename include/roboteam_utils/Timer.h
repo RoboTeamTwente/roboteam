@@ -13,7 +13,7 @@ namespace roboteam_utils {
     class Timer {
     private:
         bool running = true;
-        std::chrono::milliseconds lastTickedTime[10000] = {std::chrono::milliseconds(0)};
+        std::array<std::chrono::milliseconds, 10000> lastTickedTime = { std::chrono::milliseconds(0) };
         int lastTickedTimeIteration = 0;
     public:
         explicit Timer() = default;

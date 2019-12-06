@@ -156,6 +156,9 @@ namespace rtt {
 
         Vector2 operator*=(const Vector2 &other);
 
+        /**
+         * Explicitly asserts other to prevent division by 0
+         */
         Vector2 operator/=(const Vector2 &other);
 
         Vector2 operator+=(const double &scalar);

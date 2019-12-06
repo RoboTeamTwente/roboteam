@@ -12,13 +12,28 @@ namespace rtt {
         Vector2 a, b, center;
         double length;
 
+        Section() = default;
+        
+        /**
+         * @brief Construct a new Section object
+         * 
+         * @param ax Begin x
+         * @param ay Begin y
+         * @param bx End x
+         * @param by End y
+         */
         Section(double ax, double ay, double bx, double by) :
                 a(ax, ay), b(bx, by), center((ax + bx) / 2.0, (ay + by) / 2.0),
                 length(a.dist(b)) {}
 
+        /**
+         * @brief Construct a new Section object
+         * 
+         * @param a Begin  
+         * @param b End
+         */
         Section(Vector2 a, Vector2 b) : Section(a.x, a.y, b.x, b.y) {}
 
-        Section() {}
 
         /**
          * \brief Gets the point of intersection between this section and another.
@@ -36,11 +51,26 @@ namespace rtt {
          */
         [[nodiscard]] bool pointOnLine(const Vector2 &point) const;
 
+        /**
+         * @brief Compares two Sections
+         * 
+         * @param other Other section to compare with
+         * @return true True if this->a == other.a && this->b == other.b
+         * @return false False if this condition is not true
+         */
         bool operator==(const Section &other) const;
 
     };
 
-
+    /**
+     * @brief Writes the Section object to a stream
+     * 
+     * Represents in format: Section[sec.a, sec.b]
+     * 
+     * @param stream Strema to write to
+     * @param sec Section to represents
+     * @return std::ostream& Reference to \ref stream
+     */
     std::ostream &operator<<(std::ostream &stream, const Section &sec);
 
 }

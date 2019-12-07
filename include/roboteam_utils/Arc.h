@@ -76,7 +76,6 @@ namespace rtt {
          * \return True if the point lies within the ellipse defined by this Arc.
          */
         [[nodiscard]] bool pointInArc(const Vector2 &point) const;
-        //  bool pointInArc(const Vector2& point) const;
 
         /**
          * \brief Checks whether a point lies on this Arc.
@@ -84,7 +83,6 @@ namespace rtt {
          * \return True if the point lies on this Arc.
          */
         [[nodiscard]] bool pointOnArc(const Vector2 &point) const;
-        //  bool pointOnArc(const Vector2& point) const;
 
         /**
          * \brief Gets the point(s) at which the given line segment intersects this Arc, if such  points exist.
@@ -98,8 +96,6 @@ namespace rtt {
          */
         [[nodiscard]] std::pair<std::optional<Vector2>, std::optional<Vector2>>
         intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
-//    std::pair<std::optional<Vector2>, std::optional<Vector2>>
-//    intersectionWithLine(Vector2 lineStart, Vector2 lineEnd) const;
 
         /**
          * \brief Gets the point on the Arc in a certain direction from the center.
@@ -108,7 +104,6 @@ namespace rtt {
          * Otherwise an empty optional.
          */
         [[nodiscard]] std::optional<Vector2> arcPointTowards(double angle) const;
-//    std::optional<Vector2> arcPointTowards(double angle) const;
 
         /**
          * \brief Gets the point on the Arc in a certain direction from the center, given by another point.
@@ -117,7 +112,6 @@ namespace rtt {
          * Otherwise an empty optional.
          */
         [[nodiscard]] std::optional<Vector2> arcPointTowards(Vector2 point) const;
-//    std::optional<Vector2> arcPointTowards(Vector2 point) const;
 
     private:
         /**
@@ -130,7 +124,6 @@ namespace rtt {
          * Otherwise, it returns an empty optional.
          */
         [[nodiscard]] std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
-//    std::optional<Vector2> checkAndDenormalize(Vector2 vec) const;
     };
 
 }

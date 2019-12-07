@@ -105,7 +105,7 @@ namespace rtt {
 
         /**
          * @brief Gets a vector representation of an intersection
-         * 
+         *
          * same as normal intersect, but always returns false if the lines are parallel
          * intersection points of non-parallel lines are called non-simple (hence the name)
          *

@@ -52,10 +52,6 @@ namespace rtt {
 
 
     bool Cone::IsWithinField(Vector2 point) const noexcept {
-        /**
-         * Guys, no return value is undefined behavior and can crash your program
-         * Please pay attention to this stuff
-         */
         return false;
         // std::cerr << "Cone::IsWithinField is DEPRECATED" << std::endl;
         // roboteam_msgs::GeometryFieldSize field = LastWorld::get_field();

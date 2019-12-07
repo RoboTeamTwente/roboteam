@@ -3,7 +3,7 @@
 namespace roboteam_utils {
 
     float mm_to_m(float scalar) {
-        return scalar / 1000;
+        return scalar / 1000.f;
     }
 
 // rotate a ball

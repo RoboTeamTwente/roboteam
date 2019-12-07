@@ -21,14 +21,12 @@ namespace rtt {
          * @brief Default constructs an Angle
          * sets angle to 0 and epsilon to 0.00001
          */
-        constexpr Angle()
-                : angle(0.0), epsilon(0.00001) {};
+        Angle() = default;
 
         /**
          * @brief Copy constructor
          */
-        constexpr Angle(const Angle &copy)
-                : angle(copy.angle), epsilon(0.00001) {}
+        Angle(const Angle &copy) = default;
 
         /**
          * @brief Construct a new Angle object
@@ -212,7 +210,7 @@ namespace rtt {
          *
          * @param scalar Scalar to set `this->angle` to
          */
-        Angle& operator=(const double &scalar) noexcept;
+        Angle &operator=(const double &scalar) noexcept;
 
         /**
          * @brief Convert the Angle to a double.
@@ -233,7 +231,7 @@ namespace rtt {
          * @brief Current epsilon allowed for float comparison
          *
          */
-        double epsilon;
+        constexpr static double epsilon = 0.00001;
 
         /**
          * @brief Constrains the angle between 0 and 2 pi

@@ -8,12 +8,11 @@
 namespace rtt {
 
     Angle::Angle(double angle)
-            : angle(angle), epsilon(0.00001) {
+        : angle(angle) {
         this->constrain();
     }
 
-    Angle::Angle(const rtt::Vector2 &vec)
-            : epsilon(0.00001) {
+    Angle::Angle(const rtt::Vector2 &vec) {
         if (vec.length() < epsilon)
             angle = 0.0;
         else

@@ -1,5 +1,4 @@
 #include "../include/roboteam_utils/Vector2.h"
-#include "../include/roboteam_utils/Mathematics.h"
 #include <cmath>
 
 namespace rtt {
@@ -22,7 +21,7 @@ namespace rtt {
         }
     }
 
-    Vector2 limitAngleDiff(Vector2 vector1, Vector2 vector2, double maxAngleDiff) {
+    Vector2 limitAngleDiff(Vector2 vector1, const Vector2& vector2, double maxAngleDiff) {
         double angleDiff = cleanAngle(vector1.angle() - vector2.angle());
         if (angleDiff > maxAngleDiff) {
             vector1 = vector2.scale(vector1.length() / vector2.length()).rotate(maxAngleDiff);
@@ -32,38 +31,30 @@ namespace rtt {
         return vector1;
     }
 
-    bool isPointInCircle(Vector2 center, double radius, Vector2 point) {
+    bool isPointInCircle(const Vector2& center, double radius, const Vector2& point) {
         double xDiffSqr = (point.x - center.x) * (point.x - center.x);
         double yDiffSqr = (point.y - center.y) * (point.y - center.y);
         double radiusSqr = radius * radius;
         return ((xDiffSqr + yDiffSqr) < (radiusSqr));
     }
 
-    Vector2 worldToRobotFrame(Vector2 requiredv, double rotation) {
+    Vector2 worldToRobotFrame(const Vector2& requiredv, double rotation) {
         Vector2 robotRequiredv;
         robotRequiredv.x = requiredv.x * cos(-rotation) - requiredv.y * sin(-rotation);
         robotRequiredv.y = requiredv.x * sin(-rotation) + requiredv.y * cos(-rotation);
         return robotRequiredv;
     }
 
-    double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos) {
+    double computeAngle(const Vector2& robotPos, const Vector2& faceTowardsPos) {
         Vector2 differenceVector = faceTowardsPos - robotPos;
         return differenceVector.angle();
     }
 
     bool isBetweenAngles(double a1, double a2, double testAngle) {
         if (a2 > a1) {
-            if (testAngle >= a1 && testAngle <= a2) {
-                return true;
-            } else {
-                return false;
-            }
+            return testAngle >= a1 && testAngle <= a2;
         } else if (a1 > a2) {
-            if (testAngle >= a2 && testAngle <= a1) {
-                return false;
-            } else {
-                return true;
-            }
+            return !(testAngle >= a2 && testAngle <= a1);
         } else {
             return false;
         }
@@ -104,7 +95,7 @@ namespace rtt {
      * @param pos The point of which we want to know the distance to the line
      * @returns the shortest distance from the point to the line as a double
      */
-    double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos) {
+    double distanceFromPointToLine(const Vector2& P1, const Vector2& P2, const Vector2& pos) {
         return fabs((P2.y - P1.y) * pos.x - (P2.x - P1.x) * pos.y + P2.x * P1.y - P2.y * P1.x) /
                sqrt(pow(P2.y - P1.y, 2) + pow(P2.x - P1.x, 2));
     }
@@ -116,7 +107,7 @@ namespace rtt {
      * @param pos The point which we want to project on the line
      * @return the projection of pos on the line
      */
-    Vector2 projectPointOntoLine(Vector2 P1, Vector2 P2, Vector2 pos) {
+    Vector2 projectPointOntoLine(const Vector2& P1, const Vector2& P2, const Vector2& pos) {
         double k = ((P2.y - P1.y) * (pos.x - P1.x) - (P2.x - P1.x) * (pos.y - P1.y)) /
                    (pow(P2.y - P1.y, 2) + pow(P2.x - P1.x, 2));
         float x = pos.x - k * (P2.y - P1.y);

@@ -38,7 +38,7 @@ namespace rtt {
      * @param maxAngleDiff ?? 
      * @return Vector2 
      */
-    Vector2 limitAngleDiff(Vector2 vector1, Vector2 vector2, double maxAngleDiff);
+    Vector2 limitAngleDiff(Vector2 vector1, const Vector2& vector2, double maxAngleDiff);
 
     /**
      * @brief Checks whether a point is in a circle
@@ -49,9 +49,9 @@ namespace rtt {
      * @return true True if \ref point is in circle
      * @return false False if \ref point is not in circle
      */
-    bool isPointInCircle(Vector2 center, double radius, Vector2 point);
+    bool isPointInCircle(const Vector2& center, double radius, const Vector2& point);
 
-    Vector2 worldToRobotFrame(Vector2 requiredv, double rotation);
+    Vector2 worldToRobotFrame(const Vector2& requiredv, double rotation);
 
     /**
      * @brief Computes the angle between 2 vectors
@@ -60,7 +60,7 @@ namespace rtt {
      * @param faceTowardsPos Vector two
      * @return double Computed angle, in radians
      */
-    double computeAngle(Vector2 robotPos, Vector2 faceTowardsPos);
+    double computeAngle(const Vector2& robotPos, const Vector2& faceTowardsPos);
 
     bool isBetweenAngles(double a1, double a2, double testAngle);
 
@@ -70,9 +70,9 @@ namespace rtt {
 
     double smoothStep(const double &x);
 
-    double distanceFromPointToLine(Vector2 P1, Vector2 P2, Vector2 pos);
+    double distanceFromPointToLine(const Vector2& P1, const Vector2& P2, const Vector2& pos);
 
-    Vector2 projectPointOntoLine(Vector2 P1, Vector2 P2, Vector2 pos);
+    Vector2 projectPointOntoLine(const Vector2& P1, const Vector2& P2, const Vector2& pos);
 
     /**
      * @brief Calculates signum of an integral value

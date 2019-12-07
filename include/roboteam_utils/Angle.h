@@ -83,7 +83,7 @@ namespace rtt {
         /**
          * @brief Gets the shortest angle difference between `other` and `*this`
          *
-         * @param other Other angl to compare against
+         * @param other Other angle to compare against
          * @return double value of the shortest angle diff
          */
         double shortestAngleDiff(double &other) const noexcept;
@@ -91,13 +91,13 @@ namespace rtt {
         /**
          * @brief Converts the current Angle to a Vector2, does not consume
          *
-         * @param length Lenght of the vector
+         * @param length Length of the vector
          * @return rtt::Vector2 The new angle representation
          */
         [[nodiscard]] rtt::Vector2 toVector2(double length = 1.0) const noexcept;
 
         /**
-         * @brief Compares two angles against eachother
+         * @brief Compares two angles against each other
          *
          * @param other Rhs angle
          * @return true If this->angle - other.angle < epsilon
@@ -106,7 +106,7 @@ namespace rtt {
         bool operator==(const Angle &other) const noexcept;
 
         /**
-         * @brief Compares two angles agianstagainst eachother
+         * @brief Compares two angles against each other
          *
          * @param scalar Other angle to compare against
          * @return true If the angle is equal to `this->angle`

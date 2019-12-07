@@ -44,8 +44,6 @@ namespace rtt {
         return false;
     }
 
-// same as normal intersect, but always returns false if the lines are parallel
-// intersection points of non-parallel lines are called non-simple (hence the name)
     bool LineSegment::nonSimpleDoesIntersect(const LineSegment &line) const {
         Vector2 p = start, q = line.start, r = direction(), s = line.direction();
         double denom = r.cross(s);

@@ -93,7 +93,10 @@ namespace rtt {
 
         /**
          * @brief Similar to doesIntersect however a different calculation
-         * 
+         *
+         * same as normal intersect, but always returns false if the lines are parallel
+         * intersection points of non-parallel lines are called non-simple (hence the name)
+         *
          * @param line Line to check against
          * @return true True if \ref line intersects `this`
          * @return false False if \ref `line` does not intersect `this`
@@ -103,6 +106,9 @@ namespace rtt {
         /**
          * @brief Gets a vector representation of an intersection
          * 
+         * same as normal intersect, but always returns false if the lines are parallel
+         * intersection points of non-parallel lines are called non-simple (hence the name)
+         *
          * @param line Line to check against
          * @return std::shared_ptr<Vector2> Returns a shared_ptr to a Vector2 that represents the intersection
          */

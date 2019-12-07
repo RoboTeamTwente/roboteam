@@ -10,8 +10,9 @@ namespace rtt {
     /**
      * @brief Cone class used for arithmetic
      *
+     * Unused as of right now, hence marked maybe unused
      */
-    class Cone {
+    [[maybe_unused]] class Cone {
     public:
         /**
          * @brief Construct a new Cone object

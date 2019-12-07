@@ -50,7 +50,7 @@ namespace rtt {
         [[nodiscard]] bool isOnLine(const Vector2 &point) const override;
 
         /**
-         * @brief Gets the vector projection from the line to the point
+         * @brief Projects the point onto the line
          * 
          * @param point Point to get the projection to
          * @return Vector2 Vector projection from the line to the point

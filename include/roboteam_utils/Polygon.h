@@ -22,6 +22,8 @@ namespace rtt {
 
         /**
          * @brief Construct a new Polygon object
+         *
+         * It's a rectangular polygon that's placed horizontally
          * 
          * @param lowerLeftCorner Lower left corner of the polygon
          * @param xlen X-axis length of the polygon

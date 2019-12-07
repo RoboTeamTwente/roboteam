@@ -20,7 +20,6 @@ namespace roboteam_utils {
                 lastTickedLoopTime = now;
 
                 lastTickedTimeIteration = 0; // this is used for limiting functions
-
                 func();
             } else {
                 std::this_thread::sleep_for(std::chrono::microseconds(200));

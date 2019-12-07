@@ -206,12 +206,7 @@ namespace rtt {
 
 // the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
     Vector2 Polygon::verticeCentroid() const {
-        int n = vertices.size();
-        Vector2 sum = { 0, 0 };
-        for (int i = 0; i < n; ++i) {
-            sum += vertices[i];
-        }
-        return sum /= n;
+        return std::accumulate(vertices.begin(), vertices.end(), Vector2(0, 0)) /= vertices.size();
     }
 
     bool Polygon::isValid() const {

@@ -51,7 +51,7 @@ namespace rtt {
                     y = point.y + m * (X_MAX - point.x);
                 } else {
                     /**
-                     * Instead of this throwing an exception this should return an std::optional
+                     * TODO: Instead of this throwing an exception this should return an std::optional
                      */
                     throw std::logic_error(
                             "Illegal state in cohenSutherlandClip: point was outside, then magically was not.");

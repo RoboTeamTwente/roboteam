@@ -51,7 +51,7 @@ namespace rtt {
         /**
          * @brief Gets the length of the vector representation of this line
          * Literally:
-         *      (end - start).lenght()
+         *      (end - start).length()
          * @return double Gets the length of the line
          */
         [[nodiscard]] double length() const;
@@ -59,7 +59,7 @@ namespace rtt {
         /**
          * @brief Gets the length of the vector representation of this line
          * 
-         * @return double Lenght of this Line
+         * @return double Length of this Line
          */
         [[nodiscard]] double length2() const;
 
@@ -79,7 +79,7 @@ namespace rtt {
         [[nodiscard]] double intercept() const;
 
         /**
-         * @brief Gets the directoin of the Line
+         * @brief Gets the direction of the Line
          * 
          * @return Vector2 Vector representation of the direction of this vector
          */
@@ -113,7 +113,7 @@ namespace rtt {
          * @brief Checks whether line is a single point
          * 
          * @return true True if start == end
-         * @return false Flase if start != end
+         * @return false False if start != end
          */
         [[nodiscard]] bool isPoint() const;
 
@@ -138,7 +138,7 @@ namespace rtt {
          * @brief Gets the projection of \ref point to `this`
          * 
          * @param point Point to project
-         * @return Vector2 Vector representation of this projectoin
+         * @return Vector2 Vector representation of this projection
          */
         [[nodiscard]] virtual Vector2 project(const Vector2 &point) const = 0;
 

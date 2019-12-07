@@ -97,8 +97,6 @@ namespace rtt {
         double x, y, rot;
     };
 
-    constexpr Position ZERO_POSITION{};
-
     std::ostream &operator<<(std::ostream &stream, const Position &pos);
 
 }

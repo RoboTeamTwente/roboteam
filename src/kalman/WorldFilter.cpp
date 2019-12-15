@@ -19,7 +19,7 @@ namespace world {
         double timeCapture = msg.t_capture();
         uint cameraID = msg.camera_id();
         handleRobots(yellowBots,msg.robots_yellow(), filterGrabDistance, timeCapture, cameraID);
-        handleRobots(blueBots,msg.robots_yellow(), filterGrabDistance, timeCapture, cameraID);
+        handleRobots(blueBots,msg.robots_blue(), filterGrabDistance, timeCapture, cameraID);
         for (const proto::SSL_DetectionBall &detBall : msg.balls()) {
             bool addedBall = false;
             for (const auto &filter : balls) {

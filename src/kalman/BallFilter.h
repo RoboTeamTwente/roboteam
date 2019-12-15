@@ -7,49 +7,47 @@
 
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldBall.pb.h>
-#include "KalmanFilter.h"
 
-class BallFilter {
+#include <utility>
+#include "util/KalmanFilter.h"
+#include "CameraFilter.h"
+
+class BallFilter : public CameraFilter {
     typedef KalmanFilter<4, 2> Kalman;
 public:
     //TODO: add documentation
-    explicit BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime);
+    explicit BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime, int cameraID);
     void predict(double time, bool permanentUpdate);
     void update(double time, bool doLastPredict);;
-    void addObservation(const proto::SSL_DetectionBall &detectionBall, double time);
+    void addObservation(const proto::SSL_DetectionBall &detectionBall, double time, int cameraID);
     /**
      * Distance of the state of the filter to a point.
      * @param x xCoordinate (in millimeters!)
      * @param y yCoordinate (in millimeters!)
      * @return Distance from the state to the point (x,y)
      * */
-    double distanceTo(double x, double y) const;
+    [[nodiscard]] double distanceTo(double x, double y) const;
     /**
      * Outputs the current filter state in proto format.
      * @return The Proto message associated with the state of the filter
      */
-    proto::WorldBall asWorldBall() const;
+    [[nodiscard]] proto::WorldBall asWorldBall() const;
     /**
-     * The time of the last observation which was processed by the filter
-     * @return The time at which the filter was last updated
+     * @return Returns true if the ball has been the last 0.05 seconds.
      */
-    double getLastFrameTime() const;
-    /**
-     * The amount of observations the filter has processed
-     * @return The amount of observations the filter processed
-     */
-    int frames() const;
-    bool ballIsVisible() const;
+    [[nodiscard]] bool ballIsVisible() const;
     /**
      * A struct to keep Ball Data and time as one observation.
      */
     struct BallObservation{
-        explicit BallObservation(double time,const proto::SSL_DetectionBall& detectionBall) :
+        explicit BallObservation(int cameraID,double time,proto::SSL_DetectionBall  detectionBall) :
+                cameraID(cameraID),
                 time(time),
-                bot(detectionBall)
+                ball(std::move(detectionBall))
         {}
+        int cameraID;
         double time;
-        proto::SSL_DetectionBall bot;
+        proto::SSL_DetectionBall ball;
     };
 private:
     /**
@@ -58,16 +56,14 @@ private:
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionBall Ball to be applied to the filter
      */
-    void applyObservation(const proto::SSL_DetectionBall &detectionBall);
+    void applyObservation(const proto::SSL_DetectionBall &detectionBall, int cameraID);
     /**
      * Initializes the kalman Filter structures
      * @param detectionBall Contains the initial state of the Filter.
      */
     void KalmanInit(const proto::SSL_DetectionBall &detectionBall);
     std::unique_ptr<Kalman> kalman = nullptr;
-    double lastUpdateTime;
     double lastPredictTime;
-    int frameCount = 0;
     std::vector<BallObservation> observations;
 };
 

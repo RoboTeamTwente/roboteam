@@ -3,7 +3,7 @@
 //
 
 #include "RobotFilter.h"
-#include "Scaling.h"
+#include "util/Scaling.h"
 RobotFilter::RobotFilter(const proto::SSL_DetectionRobot &detectionRobot, double detectTime) :
 lastUpdateTime{detectTime},
 botId{static_cast<int>(detectionRobot.robot_id())},
@@ -175,6 +175,6 @@ int RobotFilter::frames() const {
     return frameCount;
 }
 
-double RobotFilter::getLastFrameTime() const {
+double RobotFilter::getLastUpdateTime() const {
     return lastUpdateTime;
 }

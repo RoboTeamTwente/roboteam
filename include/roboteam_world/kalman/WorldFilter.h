@@ -1,8 +1,8 @@
 #ifndef ROBOTEAM_WORLD_KALMANFILTER_H
 #define ROBOTEAM_WORLD_KALMANFILTER_H
 
-#include <util/RobotFilter.h>
-#include <util/BallFilter.h>
+#include <kalman/RobotFilter.h>
+#include <kalman/BallFilter.h>
 #include "roboteam_utils/Position.h"
 #include "roboteam_proto/WorldRobot.pb.h"
 #include "roboteam_proto/World.pb.h"

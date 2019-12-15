@@ -18,11 +18,11 @@ add_executable(roboteam_world
         src/WorldHandler.cpp
         src/kalman/WorldFilter.cpp
         src/util/KalmanFilter.h
-        src/util/RobotFilter.cpp
+        src/kalman/RobotFilter.cpp
         src/util/Scaling.h
-        src/util/BallFilter.cpp
-        src/util/BallFilter.h
-        )
+        src/kalman/BallFilter.cpp
+        src/kalman/BallFilter.h
+        src/kalman/CameraFilter.cpp src/kalman/CameraFilter.h)
 set_property(TARGET roboteam_world PROPERTY CXX_STANDARD 17)
 
 

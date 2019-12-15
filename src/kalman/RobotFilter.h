@@ -8,7 +8,7 @@
 
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
-#include "KalmanFilter.h"
+#include "util/KalmanFilter.h"
 
 /**
  * A class that can filter robots and predict where they will be based on observations.
@@ -61,7 +61,7 @@ public:
      * The time of the last observation which was processed by the filter
      * @return The time at which the filter was last updated
      */
-    double getLastFrameTime() const;
+    double getLastUpdateTime() const;
     /**
      * The amount of observations the filter has processed
      * @return The amount of observations the filter processed

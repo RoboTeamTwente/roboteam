@@ -3,12 +3,11 @@
 //
 
 #include "BallFilter.h"
-#include "Scaling.h"
+#include "util/Scaling.h"
 
-BallFilter::BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime) :
-        lastUpdateTime{detectTime},
-        lastPredictTime{detectTime},
-        frameCount{1} {
+BallFilter::BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime, int cameraID) :
+        CameraFilter(detectTime, cameraID),
+        lastPredictTime{detectTime} {
     KalmanInit(detectionBall);
 }
 void BallFilter::KalmanInit(const proto::SSL_DetectionBall &detectionBall) {
@@ -31,26 +30,26 @@ void BallFilter::KalmanInit(const proto::SSL_DetectionBall &detectionBall) {
 
     kalman->H.eye();     // Our observations are simply what we see.
 
-    const double posVar = 0.02; //variance in meters
-    kalman->R.zeros();
-    kalman->R.at(0, 0) = posVar;
-    kalman->R.at(1, 1) = posVar;
-}
-void BallFilter::applyObservation(const proto::SSL_DetectionBall &detectionBall) {
-    Kalman::VectorO observation;
-    observation.zeros();
-    observation.at(0) = mmToM(detectionBall.x());
-    observation.at(1) = mmToM(detectionBall.y());
 
+}
+void BallFilter::applyObservation(const proto::SSL_DetectionBall &detectionBall, int cameraID) {
+    Kalman::VectorO observation = {mmToM(detectionBall.x()), mmToM(detectionBall.y())};
     //TODO: do things with the other ball fields (pixel pos, area)
     kalman->z = observation;
+
+    //Observations which are not from the main camera are added but are seen as much more noisy
+    const double posVar = 0.02; //variance TODO: tune these 2
+    const double posVarOtherCamera = 0.05;
+    if (cameraID == mainCamera) {
+        kalman->R.zeros();
+        kalman->R.at(0, 0) = posVar;
+        kalman->R.at(1, 1) = posVar;
+    } else {
+        kalman->R.zeros();
+        kalman->R.at(0, 0) = posVarOtherCamera;
+        kalman->R.at(1, 1) = posVarOtherCamera;
+    }
     kalman->update();
-}
-int BallFilter::frames() const {
-    return frameCount;
-}
-double BallFilter::getLastFrameTime() const {
-    return lastUpdateTime;
 }
 proto::WorldBall BallFilter::asWorldBall() const {
     proto::WorldBall msg;
@@ -94,45 +93,46 @@ void BallFilter::predict(double time, bool permanentUpdate) {
     kalman->Q = G.t() * G * processNoise;
 
     kalman->predict(permanentUpdate);
-    lastPredictTime=time;
+    lastPredictTime = time;
     if (permanentUpdate) {
         lastUpdateTime = time;
     }
 }
-bool compareObservation(const BallFilter::BallObservation& a, const BallFilter::BallObservation& b ){
-    return (a.time<b.time);
+bool compareObservation(const BallFilter::BallObservation &a, const BallFilter::BallObservation &b) {
+    return (a.time < b.time);
 }
 void BallFilter::update(double time, bool doLastPredict) {
 
-    std::sort(observations.begin(),observations.end(),compareObservation); //First sort the observations in time increasing order
-    auto it=observations.begin();
-    while(it != observations.end()) {
-        auto observation=(*it);
-        //the observation is either too old (we already updated the robot) or too new and we don't need it yet.
-        if (observation.time<lastUpdateTime) {
+    std::sort(observations.begin(), observations.end(),
+              compareObservation); //First sort the observations in time increasing order
+    auto it = observations.begin();
+    while (it != observations.end()) {
+        auto observation = (*it);
+        //the observation is either too old (we already updated the ball) or too new and we don't need it yet.
+        if (observation.time < lastUpdateTime) {
             observations.erase(it);
             continue;
         }
-        if(observation.time>time){
+        if (observation.time > time) {
             //relevant update, but we don't need the info yet so we skip it.
             ++it;
             continue;
         }
         // We first predict the ball, and then apply the observation to calculate errors/offsets.
-        predict(observation.time,true);
-        applyObservation(observation.bot);
+        switchCamera(observation.cameraID, observation.time);
+        predict(observation.time, true);
+        applyObservation(observation.ball, observation.cameraID);
         observations.erase(it);
     }
-    if(doLastPredict){
-        predict(time,false);
+    if (doLastPredict) {
+        predict(time, false);
     }
 
 }
-void BallFilter::addObservation(const proto::SSL_DetectionBall &detectionBall, double time) {
-    observations.emplace_back(BallObservation(time, detectionBall));
-    frameCount++;
+void BallFilter::addObservation(const proto::SSL_DetectionBall &detectionBall, double time, int cameraID) {
+    observations.emplace_back(BallObservation(cameraID, time, detectionBall));
 }
 bool BallFilter::ballIsVisible() const {
     //If we extrapolated the ball for longer than 0.05 seconds we mark it not visible
-    return (lastPredictTime-lastUpdateTime)<0.05;
+    return (lastPredictTime - lastUpdateTime) < 0.05;
 }

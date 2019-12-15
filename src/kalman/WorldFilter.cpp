@@ -48,14 +48,14 @@ namespace world {
         }
         for (const proto::SSL_DetectionBall &detBall : msg.balls()) {
             bool addedBall=false;
-            for (const auto &filter : balls) {
+            for (const  auto &filter : balls) {
                 if (filter->distanceTo(detBall.x(),detBall.y())<filterGrabDistance){
-                    filter->addObservation(detBall,timeCapture);
+                    filter->addObservation(detBall,timeCapture,cameraID);
                     addedBall=true;
                 }
             }
             if(!addedBall){
-                balls.push_back(std::make_unique<BallFilter>(detBall,timeCapture));
+                balls.push_back(std::make_unique<BallFilter>(detBall,timeCapture,cameraID));
             }
         }
 
@@ -91,7 +91,7 @@ namespace world {
             auto filter=filtersAndId.second.begin();
             while (filter != filtersAndId.second.end()){
                 filter->get()->update(time,extrapolateLastStep);
-                if (time-filter->get()->getLastFrameTime()>removeFilterTime){
+                if (time- filter->get()->getLastUpdateTime() > removeFilterTime){
                     filtersAndId.second.erase(filter);
                 }
                 else{
@@ -103,7 +103,7 @@ namespace world {
             auto filter=filtersAndId.second.begin();
             while (filter != filtersAndId.second.end()){
                 filter->get()->update(time,extrapolateLastStep);
-                if (time-filter->get()->getLastFrameTime()>removeFilterTime){
+                if (time- filter->get()->getLastUpdateTime() > removeFilterTime){
                     filtersAndId.second.erase(filter);
                 }
                 else{
@@ -114,7 +114,7 @@ namespace world {
         auto ball=balls.begin();
         while (ball != balls.end()){
             ball->get()->update(time,extrapolateLastStep);
-            if (time-ball->get()->getLastFrameTime()>0.4){
+            if (time- ball->get()->getLastUpdateTime() > 0.4){
                 balls.erase(ball);
             }
             else{

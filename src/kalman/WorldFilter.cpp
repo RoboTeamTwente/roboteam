@@ -24,26 +24,26 @@ namespace world {
             bool addedBot=false;
             for (const auto &filter : yellowBots[robot.robot_id()]) {
                 if (filter->distanceTo(robot.x(),robot.y())<filterGrabDistance){
-                    filter->addObservation(robot,timeCapture);
+                    filter->addObservation(robot,timeCapture,cameraID);
                     addedBot=true;
                 }
             }
             if (!addedBot){
                 // We create a new filter if no filter close to the robot exists
-                yellowBots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot,timeCapture));
+                yellowBots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot,timeCapture,cameraID));
             }
         }
         for (const proto::SSL_DetectionRobot &robot : msg.robots_blue()) {
             bool addedBot=false;
             for (const auto &filter : blueBots[robot.robot_id()]) {
                 if (filter->distanceTo(robot.x(),robot.y())<filterGrabDistance){
-                    filter->addObservation(robot,timeCapture);
+                    filter->addObservation(robot,timeCapture,cameraID);
                     addedBot=true;
                 }
             }
             if (!addedBot){
                 // We create a new filter
-                blueBots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot,timeCapture));
+                blueBots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot,timeCapture,cameraID));
             }
         }
         for (const proto::SSL_DetectionBall &detBall : msg.balls()) {

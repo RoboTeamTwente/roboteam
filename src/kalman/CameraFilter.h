@@ -11,11 +11,12 @@
  * lastMainUpdate is updated correctly if switchCamera is called for every update, as it should be
  */
 class CameraFilter {
+private:
+    int frameCount = 0;
 protected:
     double lastUpdateTime;
     double lastMainUpdateTime;
     int mainCamera = -1;
-    int frameCount = 0;
 
     /**
      * Checks if we should our main camera and does so if necessary.

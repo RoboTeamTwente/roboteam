@@ -3,19 +3,18 @@
 //
 
 #include "CameraFilter.h"
+CameraFilter::CameraFilter(double observationTime, int camera) :
+        lastUpdateTime{observationTime},
+        lastMainUpdateTime{observationTime},
+        mainCamera{camera},
+        frameCount{1}{
 
+}
 int CameraFilter::frames() const {
     return frameCount;
 }
 double CameraFilter::getLastUpdateTime() const {
     return lastUpdateTime;
-}
-CameraFilter::CameraFilter(double observationTime, int camera) :
-lastUpdateTime{observationTime},
-lastMainUpdateTime{observationTime},
-mainCamera{camera},
-frameCount{1}{
-
 }
 bool CameraFilter::switchCamera(int camera, double time) {
     bool cameraSwitched = false;

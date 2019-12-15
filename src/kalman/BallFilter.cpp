@@ -21,8 +21,7 @@ void BallFilter::KalmanInit(const proto::SSL_DetectionBall &detectionBall) {
     Kalman::Matrix startCov;
     startCov.eye();
     //initial noise estimates
-    const double startPosNoise = 0.3;
-    const double startAngleNoise = 0.05;
+    const double startPosNoise = 0.05;
     startCov.at(0, 0) = startPosNoise;//m noise in x
     startCov.at(1, 1) = startPosNoise;//m noise in y
 
@@ -40,12 +39,11 @@ void BallFilter::applyObservation(const proto::SSL_DetectionBall &detectionBall,
     //Observations which are not from the main camera are added but are seen as much more noisy
     const double posVar = 0.02; //variance TODO: tune these 2
     const double posVarOtherCamera = 0.05;
+    kalman->R.zeros();
     if (cameraID == mainCamera) {
-        kalman->R.zeros();
         kalman->R.at(0, 0) = posVar;
         kalman->R.at(1, 1) = posVar;
     } else {
-        kalman->R.zeros();
         kalman->R.at(0, 0) = posVarOtherCamera;
         kalman->R.at(1, 1) = posVarOtherCamera;
     }

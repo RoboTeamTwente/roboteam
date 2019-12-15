@@ -8,22 +8,25 @@
 
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
+
+#include <utility>
 #include "util/KalmanFilter.h"
+#include "CameraFilter.h"
 
 /**
  * A class that can filter robots and predict where they will be based on observations.
  * @author Rolf
  * @date 5 November 2019
  */
-class RobotFilter {
-    typedef KalmanFilter<6,3> Kalman;
+class RobotFilter : public CameraFilter {
+    typedef KalmanFilter<6, 3> Kalman;
 public:
     /**
      * Construct a RobotFilter.
      * @param detectionRobot Initial observation of the robot we start our filter with.
      * @param detectTime Point in time we start the filter at.
      */
-    explicit RobotFilter(const proto::SSL_DetectionRobot& detectionRobot, double detectTime);
+    explicit RobotFilter(const proto::SSL_DetectionRobot &detectionRobot, double detectTime, int cameraID);
     /**
      * Predicts the state of the robot based on past observations
      * @param time The time at which we wish to have a prediction of where the robot will be
@@ -43,41 +46,35 @@ public:
      * Adds an observation of the robot to the filter.
      * @param detectionRobot State of the robot that was observed
      * @param time Time the robot was observed
+     * @param cameraID ID of the camera that saw the robot
      */
-    void addObservation(const proto::SSL_DetectionRobot& detectionRobot, double time);
+    void addObservation(const proto::SSL_DetectionRobot &detectionRobot, double time, int cameraID);
     /**
      * Distance of the state of the filter to a point.
      * @param x xCoordinate (in millimeters!)
      * @param y yCoordinate (in millimeters!)
      * @return Distance from the state to the point (x,y)
      */
-    double distanceTo(double x, double y) const;
+    [[nodiscard]] double distanceTo(double x, double y) const;
     /**
      * Outputs the current filter state in proto format.
      * @return The Proto message associated with the state of the filter
      */
-    proto::WorldRobot asWorldRobot() const;
-    /**
-     * The time of the last observation which was processed by the filter
-     * @return The time at which the filter was last updated
-     */
-    double getLastUpdateTime() const;
-    /**
-     * The amount of observations the filter has processed
-     * @return The amount of observations the filter processed
-     */
-    int frames() const;
+    [[nodiscard]] proto::WorldRobot asWorldRobot() const;
+
     /**
      * A struct to keep robotData and time as one observation.
      */
-    struct RobotObservation{
-        explicit RobotObservation(double time,const proto::SSL_DetectionRobot& detectionRobot) :
-        time(time),
-        bot(detectionRobot)
-        {}
+    struct RobotObservation {
+        explicit RobotObservation(int cameraID, double time, proto::SSL_DetectionRobot detectionRobot) :
+                cameraID(cameraID),
+                time(time),
+                bot(std::move(detectionRobot)) {}
+        int cameraID;
         double time;
         proto::SSL_DetectionRobot bot;
     };
+
 private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
@@ -85,21 +82,19 @@ private:
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionRobot Robot to be applied
      */
-    void applyObservation(const proto::SSL_DetectionRobot& detectionRobot);
+    void applyObservation(const proto::SSL_DetectionRobot &detectionRobot, int cameraID);
     /**
      * A function that casts any angle to the range [-PI,PI)
      * @param angle angle to be limited
      * @return Limited angle in range [-PI,PI)
      */
-    double limitAngle(double angle) const;
+    [[nodiscard]] double limitAngle(double angle) const;
     /**
      * Initializes the kalman Filter structures
      * @param detectionRobot Contains the initial state of the Filter.
      */
-    void KalmanInit(const proto::SSL_DetectionRobot& detectionRobot);
-    std::unique_ptr<Kalman> kalman= nullptr;
-    double lastUpdateTime;
-    int frameCount=0;
+    void KalmanInit(const proto::SSL_DetectionRobot &detectionRobot);
+    std::unique_ptr<Kalman> kalman = nullptr;
     int botId;
     std::vector<RobotObservation> observations;
 

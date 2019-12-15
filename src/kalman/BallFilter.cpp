@@ -66,7 +66,7 @@ double BallFilter::distanceTo(double x, double y) const {
     double dy = state[1] - mmToM(y);
     return sqrt(dx * dx + dy * dy);
 }
-void BallFilter::predict(double time, bool permanentUpdate) {
+void BallFilter::predict(double time, bool permanentUpdate, bool cameraSwitched) {
     double dt = time - lastUpdateTime;
     // forward model:
     kalman->F.eye();
@@ -80,15 +80,18 @@ void BallFilter::predict(double time, bool permanentUpdate) {
     kalman->u.zeros();
 
     //Set Q matrix
+    const float posNoise = 0.1;//TODO: tune
     Kalman::MatrixO G;
     G.zeros();
-    G.at(0, 0) = dt;
-    G.at(0, 2) = 1;
-    G.at(1, 1) = dt;
-    G.at(1, 3) = 1;
-
-    const float processNoise = 0.01;
-    kalman->Q = G.t() * G * processNoise;
+    G.at(0, 0) = dt * posNoise;
+    G.at(0, 2) = 1 * posNoise;
+    G.at(1, 1) = dt * posNoise;
+    G.at(1, 3) = 1 * posNoise;
+    if (cameraSwitched){
+        G.at(0,0)+=0.05;
+        G.at(1,1)+=0.05;
+    }
+    kalman->Q = G.t() * G ;
 
     kalman->predict(permanentUpdate);
     lastPredictTime = time;
@@ -117,7 +120,7 @@ void BallFilter::update(double time, bool doLastPredict) {
             continue;
         }
         // We first predict the ball, and then apply the observation to calculate errors/offsets.
-        switchCamera(observation.cameraID, observation.time);
+        bool cameraSwitched=switchCamera(observation.cameraID, observation.time);
         predict(observation.time, true);
         applyObservation(observation.ball, observation.cameraID);
         observations.erase(it);

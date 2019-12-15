@@ -17,7 +17,7 @@ class BallFilter : public CameraFilter {
 public:
     //TODO: add documentation
     explicit BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime, int cameraID);
-    void predict(double time, bool permanentUpdate);
+    void predict(double time, bool permanentUpdate, bool cameraSwitched);
     void update(double time, bool doLastPredict);;
     void addObservation(const proto::SSL_DetectionBall &detectionBall, double time, int cameraID);
     /**

@@ -33,13 +33,13 @@ void RobotFilter::update(double time, bool doLastPredict) {
             continue;
         }
         // We first predict the robot, and then apply the observation to calculate errors/offsets.
-        switchCamera(observation.cameraID, observation.time);
-        predict(observation.time, true);
+        bool cameraSwitched=switchCamera(observation.cameraID, observation.time);
+        predict(observation.time, true,cameraSwitched);
         applyObservation(observation.bot, observation.cameraID);
         observations.erase(it);
     }
     if (doLastPredict) {
-        predict(time, false);
+        predict(time, false, false);
     }
 
 }
@@ -67,7 +67,7 @@ void RobotFilter::KalmanInit(const proto::SSL_DetectionRobot &detectionRobot) {
 
 }
 
-void RobotFilter::predict(double time, bool permanentUpdate) {
+void RobotFilter::predict(double time, bool permanentUpdate,bool cameraSwitched) {
     double dt = time - lastUpdateTime;
     // forward model:
     kalman->F.eye();
@@ -82,16 +82,24 @@ void RobotFilter::predict(double time, bool permanentUpdate) {
     kalman->u.zeros();
 
     //Set Q
+    const double posNoise=0.1;
+    const double rotNoise=0.5;
     Kalman::MatrixO G;
     G.zeros();
-    G.at(0, 0) = dt;
-    G.at(0, 3) = 1;
-    G.at(1, 1) = dt;
-    G.at(1, 4) = 1;
-    G.at(2, 2) = dt;
-    G.at(2, 5) = 1;
-    const float processNoise = 0.01;
-    kalman->Q = G.t() * G * processNoise;
+    G.at(0, 0) = dt * posNoise;
+    G.at(0, 3) = 1 * posNoise;
+    G.at(1, 1) = dt * posNoise;
+    G.at(1, 4) = 1 * posNoise;
+    G.at(2, 2) = dt * rotNoise;
+    G.at(2, 5) = 1 * rotNoise;
+    //TODO: tune filters
+    //We add position errors in case we switch camera because calibration
+    if(cameraSwitched){
+        G.at(0,0)+=0.02;
+        G.at(1,1)+=0.02;
+        G.at(2,2)+=0.04;
+    }
+    kalman->Q = G.t() * G;
 
     kalman->predict(permanentUpdate);
     if (permanentUpdate) {

@@ -31,10 +31,11 @@ public:
      * Predicts the state of the robot based on past observations
      * @param time The time at which we wish to have a prediction of where the robot will be
      * @param permanentUpdate If set to true, the update is applied permanently to the filter.
+     * @param cameraSwitched Set to true if we just switched our main camera, gives a bit more leeway for offsets in position
      * If not, we may still add new observations from after the last time the Filter was between the variable time
      * and the last time the filter was permanently updated.
      */
-    void predict(double time, bool permanentUpdate);
+    void predict(double time, bool permanentUpdate, bool cameraSwitched);
     /**
      * Updates the Filter until the specified time, applying observations of the robot and predicting the state along the way.
      * @param time Time until which we want to update.

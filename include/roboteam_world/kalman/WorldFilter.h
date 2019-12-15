@@ -18,14 +18,17 @@ namespace world {
     private:
         void update(double time, bool extrapolateLastStep);
         typedef std::map<int, std::vector<std::unique_ptr<RobotFilter>>> robotMap;
-        const std::unique_ptr<RobotFilter>& bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters);
-        const std::unique_ptr<BallFilter>& bestFilter(const std::vector<std::unique_ptr<BallFilter>> &filters);
+        static const std::unique_ptr<RobotFilter> &bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters);
+        static const std::unique_ptr<BallFilter> &bestFilter(const std::vector<std::unique_ptr<BallFilter>> &filters);
 
         robotMap blueBots;
         robotMap yellowBots;
         std::vector<std::unique_ptr<BallFilter>> balls;
-
-        std::mutex filterMutex;
+        static void updateRobots(robotMap &robots, double time, bool extrapolateLastStep, double removeFilterTime);
+        static void
+        handleRobots(robotMap &robots,
+                     const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations,
+                     double filterGrabDistance, double timeCapture, uint cameraID);
     };
 }
 

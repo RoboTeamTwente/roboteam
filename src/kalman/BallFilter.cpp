@@ -121,12 +121,12 @@ void BallFilter::update(double time, bool doLastPredict) {
         }
         // We first predict the ball, and then apply the observation to calculate errors/offsets.
         bool cameraSwitched=switchCamera(observation.cameraID, observation.time);
-        predict(observation.time, true);
+        predict(observation.time, true,cameraSwitched);
         applyObservation(observation.ball, observation.cameraID);
         observations.erase(it);
     }
     if (doLastPredict) {
-        predict(time, false);
+        predict(time, false,false);
     }
 
 }

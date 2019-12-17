@@ -6,7 +6,6 @@
 #define ROBOTEAM_ROBOTHUB_APPLICATION_H
 
 #include <string>
-#include <roboteam_utils/constants.h>
 #include "utilities.h"
 #include "roboteam_proto/Setting.pb.h"
 #include "constants.h"

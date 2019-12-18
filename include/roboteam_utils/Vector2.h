@@ -2,9 +2,11 @@
 #define VECTOR2_H
 
 #include "roboteam_proto/Vector2f.pb.h"
+#include <iostream>
 
 namespace rtt {
-class Angle;
+
+    class Angle;
 
 /**
  * \class Vector2
@@ -13,34 +15,34 @@ class Angle;
  * but none of its methods will modify it, they will instead return a new vector when needed.
  * The only exception is operator=(const roboteam_msgs::Vector2f&).
  */
-class Vector2 {
+    class Vector2 {
     public:
         /**
          * \brief The zero vector.
          */
         constexpr Vector2()
-                :x(0.0), y(0.0), epsilon(0.00001) { }
+                : x(0.0), y(0.0), epsilon(0.00001) {}
 
         constexpr Vector2(const Vector2 &copy)
-                :x(copy.x), y(copy.y), epsilon(0.00001) { }
+                : x(copy.x), y(copy.y), epsilon(0.00001) {}
 
         constexpr Vector2(const double x, const double y)
-                :x(x), y(y), epsilon(0.00001) { }
+                : x(x), y(y), epsilon(0.00001) {}
 
         Vector2(const proto::Vector2f &msg)
-                :Vector2(msg.x(), msg.y()) { }
+                : Vector2(msg.x(), msg.y()) {}
 
         Vector2(rtt::Angle &angle, const double &length = 1.0);
 
         /**
          * \brief Calculate the dot product of this vector with another. (this . other)
          */
-        double dot(const Vector2 &other) const;
+        [[nodiscard]] double dot(const Vector2 &other) const;
 
         /**
          * \brief Calculate the distance between this vector and another.
          */
-        double dist(const Vector2 &other) const;
+        [[nodiscard]] double dist(const Vector2 &other) const;
 
         /**
          * \brief Calculate the square of the distance between this vector and another.
@@ -48,28 +50,28 @@ class Vector2 {
          * (for example, which vector is closest to a specific other one), this method is
          * preferred to Vector2::dist, since you don't need the expensive sqrt operation.
          */
-        double dist2(const Vector2 &other) const;
+        [[nodiscard]] double dist2(const Vector2 &other) const;
 
         /**
          * \brief Scales this vector by a scalar.
          */
-        Vector2 scale(double scalar) const;
+        [[nodiscard]] Vector2 scale(double scalar) const;
 
         /**
          * \brief Normalizes this vector such that it will have a length of 1. The angle of the
          * vector is preserved. In other words, this method maps the vector onto the unit circle.
          */
-        Vector2 normalize() const;
+        [[nodiscard]] Vector2 normalize() const;
 
         /**
          * \brief Calculate the length of this vector.
          */
-        double length() const;
+        [[nodiscard]] double length() const;
 
         /**
          * \brief Calculate the length squared of this vector.
          */
-        double length2() const;
+        [[nodiscard]] double length2() const;
 
         /**
 	     * \brief Calculate the angle of this vector, viewed from {0, 0}.
@@ -80,9 +82,9 @@ class Vector2 {
 	     *     - The angle of the zero vector is undefined.
 	     */
 
-        double angle() const;
+        [[nodiscard]] double angle() const;
 
-        rtt::Angle toAngle() const;
+        [[nodiscard]] rtt::Angle toAngle() const;
 
         /**
          * \brief Performs linear interpolation/extrapolation.
@@ -92,43 +94,45 @@ class Vector2 {
          * 	     (factor*100)% along the way between this vector and the other.
          * For example, {0, 0}.lerp({1, -2}, 0.5) == {0.5, -1}
          */
-        Vector2 lerp(const Vector2 &other, double factor) const;
+        [[nodiscard]] Vector2 lerp(const Vector2 &other, double factor) const;
 
         /**
          * \brief Rotates this vector around the origin.
          */
-        Vector2 rotate(double radials) const;
+        [[nodiscard]] Vector2 rotate(double radials) const;
 
         /**
          * \brief Projects this vector onto a line segment defined by two other vectors.
          * The result is the point on the line segment (line_a, line_b) which is closest to
          * this vector.
          */
-        Vector2 project(const Vector2 &line_a, const Vector2 &line_b) const;
+        [[nodiscard]] Vector2 project(const Vector2 &line_a, const Vector2 &line_b) const;
 
         /**
          * \brief Projects this vector onto another vector.
          * The result is a vector.
          */
-        Vector2 project2(const Vector2 &ab) const;
+        [[nodiscard]] Vector2 project2(const Vector2 &ab) const;
 
         /**
          * \brief Checks whether both components of this vector are real (non-NaN) values.
          */
-        bool isNotNaN() const;
+        [[nodiscard]] bool isNotNaN() const;
+
         /*
          * \brief calculates the cross product
          */
-        double cross(const Vector2 &other) const;
+        [[nodiscard]] double cross(const Vector2 &other) const;
+
         /**
          * Does the exact same as project... (?)
          */
-        Vector2 closestPointOnVector(const Vector2 &startPoint, const Vector2 &point) const;
+        [[nodiscard]] Vector2 closestPointOnVector(const Vector2 &startPoint, const Vector2 &point) const;
 
         /**
          * \brief Creates a vector with the same angle as this one, but with the specified length.
          */
-        Vector2 stretchToLength(double length) const;
+        [[nodiscard]] Vector2 stretchToLength(double length) const;
 
         /**
          * \brief Checks for equality.
@@ -152,6 +156,9 @@ class Vector2 {
 
         Vector2 operator*=(const Vector2 &other);
 
+        /**
+         * Explicitly asserts other to prevent division by 0
+         */
         Vector2 operator/=(const Vector2 &other);
 
         Vector2 operator+=(const double &scalar);
@@ -222,12 +229,12 @@ class Vector2 {
         double y;
     private:
         double epsilon;
-};
+    };
 
 /**
  * \brief Writes a vector to an output stream.
  */
-std::ostream &operator<<(std::ostream &os, const Vector2 vec);
+std::ostream &operator<<(std::ostream &os, Vector2 const& vec);
 
 }
 

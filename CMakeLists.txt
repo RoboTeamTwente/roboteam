@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
+set(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 include(cotire)
 
@@ -39,11 +40,10 @@ add_library(roboteam_utils STATIC
         src/Mathematics.cpp
 #        src/Cone.cpp
         src/normalize.cpp
-        src/constants.cpp
+        # src/constants.cpp
         src/Clip.cpp
         src/Optimization.cpp
         src/Arc.cpp
-#        src/Section.cpp
         src/Timer.cpp)
 
 
@@ -53,4 +53,5 @@ target_include_directories(roboteam_utils
         PRIVATE src )
 
 target_link_libraries(roboteam_utils
-        PUBLIC roboteam_proto)
+        PUBLIC roboteam_proto
+        gtest)

@@ -25,7 +25,7 @@ void Timer::loop(std::function<void(void)> func, int rate) {
 
             func();
         } else {
-            std::this_thread::sleep_for((timeStep - timeDiff));
+            std::this_thread::sleep_for(std::chrono::microseconds(200));
         }
     }
 }

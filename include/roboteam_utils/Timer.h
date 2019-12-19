@@ -5,6 +5,7 @@
 #ifndef RTT_TIMER_H
 #define RTT_TIMER_H
 
+#include <array>
 #include <chrono>
 #include <functional>
 

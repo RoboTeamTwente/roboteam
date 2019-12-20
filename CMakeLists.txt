@@ -54,4 +54,5 @@ target_include_directories(roboteam_utils
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
-        gtest)
+        #gtest
+        )

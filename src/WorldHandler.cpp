@@ -1,5 +1,4 @@
 #include "WorldHandler.h"
-#include "roboteam_utils/constants.h"
 #include "roboteam_proto/messages_robocup_ssl_wrapper.pb.h"
 #include <net/robocup_ssl_client.h>
 #include <sstream>

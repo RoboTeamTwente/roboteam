@@ -67,8 +67,8 @@ public:
      * Otherwise, the prediction is only stored locally as a prediction
      */
     void predict(bool permanentUpdate) {
-        Xtemp = F * X + u;
-        Ptemp = B * P * B.t() + Q;
+        Xtemp = F * X + B * u;
+        Ptemp = F * P * F.t() + Q;
         if (permanentUpdate) {
             X = Xtemp;
             P = Ptemp;

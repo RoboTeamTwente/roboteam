@@ -56,8 +56,8 @@ void RobotFilter::KalmanInit(const proto::SSL_DetectionRobot &detectionRobot) {
     Kalman::Matrix startCov;
     startCov.eye();
     //initial noise estimates
-    const double startPosNoise = 0.3;
-    const double startAngleNoise = 0.05;
+    const double startPosNoise = 0.1;
+    const double startAngleNoise = 0.1;
     startCov.at(0, 0) = startPosNoise;//m noise in x
     startCov.at(1, 1) = startPosNoise;//m noise in y
     startCov.at(2, 2) = startAngleNoise;//radians
@@ -134,7 +134,7 @@ void RobotFilter::applyObservation(const proto::SSL_DetectionRobot &detectionRob
     //we put much more trust in observations done by our main camera.
     if (cameraID == mainCamera) {
         //TODO: collect constants somewhere
-        const double posVar = 0.02; //variance in meters
+        const double posVar = 0.006; //variance in meters
         const double rotVar = 0.01;
         kalman->R.at(0, 0) = posVar;
         kalman->R.at(1, 1) = posVar;

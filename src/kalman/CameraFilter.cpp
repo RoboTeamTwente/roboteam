@@ -2,6 +2,7 @@
 // Created by rolf on 15-12-19.
 //
 
+#include <iostream>
 #include "CameraFilter.h"
 CameraFilter::CameraFilter(double observationTime, int camera) :
         lastUpdateTime{observationTime},
@@ -19,7 +20,7 @@ double CameraFilter::getLastUpdateTime() const {
 bool CameraFilter::switchCamera(int camera, double time) {
     bool cameraSwitched = false;
     const double TIMEOUT_TIME=0.05;
-    if (lastUpdateTime + TIMEOUT_TIME<time){
+    if (lastMainUpdateTime + TIMEOUT_TIME<time){
         // Check if this frame is actually from a new camera
         cameraSwitched = (camera != mainCamera);
         mainCamera = camera;

@@ -119,18 +119,9 @@ namespace world {
         int bestIndex = -1;
         int bestFrames = -1;
         for (int i = 0; i < filters.size(); ++i) {
-            if (filters[i]->frames() > bestFrames && filters[i]->ballIsVisible()) {
+            if (filters[i]->frames() > bestFrames) {
                 bestFrames = filters[i]->frames();
                 bestIndex = i;
-            }
-        }
-        //if we haven't found anything we throw away the visibility constraint
-        if (bestIndex == -1) {
-            for (int i = 0; i < filters.size(); ++i) {
-                if (filters[i]->frames() > bestFrames) {
-                    bestFrames = filters[i]->frames();
-                    bestIndex = i;
-                }
             }
         }
         return filters[bestIndex];

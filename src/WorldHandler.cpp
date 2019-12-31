@@ -19,12 +19,12 @@ void WorldHandler::start() {
       handleVisionPackets(vision_packet);
       handleRefboxPackets(ref_packet);
 
-      world_pub->send(KF->getWorld(lastPacketTime));
+      world_pub->send(worldFilter->getWorld(lastPacketTime));
     }, 100);
 }
 
 void WorldHandler::init() {
-    KF = new WorldFilter;
+    worldFilter = new WorldFilter;
     world_pub = new proto::Publisher<proto::World>(proto::WORLD_CHANNEL);
     ref_pub = new proto::Publisher<proto::SSL_Referee>(proto::REFEREE_CHANNEL);
     geom_pub = new proto::Publisher<proto::SSL_GeometryData>(proto::GEOMETRY_CHANNEL);
@@ -63,7 +63,7 @@ void WorldHandler::handleVisionPackets(proto::SSL_WrapperPacket &vision_packet) 
             if (time>lastPacketTime){
                 lastPacketTime=time;
             }
-            KF->addFrame(vision_packet.detection());
+            worldFilter->addFrame(vision_packet.detection());
         }
         if (vision_packet.has_geometry()) {
             geom_pub->send(vision_packet.geometry());

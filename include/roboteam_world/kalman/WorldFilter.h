@@ -9,7 +9,12 @@
 
 namespace world {
 
-//This class is a manager for the different Kalman object classes
+    /**
+     * @author Rolf van der Hulst
+     * @date November 2019
+     * @brief class that tracks a world. The function of this class is to determine when to create and delete filters,
+     * and to pass the relevant information to the relevant filter.
+     */
     class WorldFilter {
     public:
         WorldFilter();
@@ -27,7 +32,7 @@ namespace world {
         static void updateRobots(robotMap &robots, double time, bool extrapolateLastStep, double removeFilterTime);
         static void
         handleRobots(robotMap &robots,
-                     const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations,
+                     const google::protobuf::RepeatedPtrField <proto::SSL_DetectionRobot> &observations,
                      double filterGrabDistance, double timeCapture, uint cameraID);
     };
 }

@@ -3,7 +3,7 @@
 //
 
 #include "roboteam_proto/messages_robocup_ssl_detection.pb.h"
-#include <kalman/WorldFilter.h>
+#include <filters/WorldFilter.h>
 
 namespace world {
 

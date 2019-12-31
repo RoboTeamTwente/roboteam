@@ -1,9 +1,8 @@
 #ifndef ROBOTEAM_WORLD_KALMANFILTER_H
 #define ROBOTEAM_WORLD_KALMANFILTER_H
 
-#include <kalman/RobotFilter.h>
-#include <kalman/BallFilter.h>
-#include "roboteam_utils/Position.h"
+#include <filters/RobotFilter.h>
+#include <filters/BallFilter.h>
 #include "roboteam_proto/WorldRobot.pb.h"
 #include "roboteam_proto/World.pb.h"
 
@@ -13,7 +12,7 @@ namespace world {
      * @author Rolf van der Hulst
      * @date November 2019
      * @brief class that tracks a world. The function of this class is to determine when to create and delete filters,
-     * and to pass the relevant information to the relevant filter.
+     * and to pass the relevant incoming information to the relevant filter(s)
      */
     class WorldFilter {
     public:

@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "CameraFilter.h"
+#include "filters/CameraFilter.h"
 CameraFilter::CameraFilter(double observationTime, int camera) :
         lastUpdateTime{observationTime},
         lastMainUpdateTime{observationTime},

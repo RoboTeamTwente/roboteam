@@ -9,7 +9,7 @@
 #include <roboteam_proto/WorldBall.pb.h>
 
 #include <utility>
-#include "util/KalmanFilter.h"
+#include "KalmanFilter.h"
 #include "CameraFilter.h"
 
 class BallFilter : public CameraFilter {

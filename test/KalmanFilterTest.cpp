@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "util/KalmanFilter.h"
+#include "filters/KalmanFilter.h"
 
 TEST(OneDimension, KalmanFilterTest){
     // see https://www.kalmanfilter.net/kalman1d.html for where I got the values from
@@ -16,8 +16,8 @@ TEST(OneDimension, KalmanFilterTest){
     filter.u.zeros();
     filter.F={1.0}; // we estimate the building height stays constant
     filter.Q.zeros();
-    filter.H={1.0};
-    filter.R={25.0};
+    filter.H={1.0};// measurement scales linearly
+    filter.R={25.0};// we can estimate a building up to 5m accurate (so variance is 5^2)
     // we test if the state of the filter is the initial guess and if the basestate and state match
     ASSERT_DOUBLE_EQ(filter.state()[0],60.0);
     ASSERT_DOUBLE_EQ(filter.basestate()[0],60.0);

@@ -2,8 +2,8 @@
 // Created by rolf on 05-11-19.
 //
 
-#include "RobotFilter.h"
-#include "util/Scaling.h"
+#include "filters/RobotFilter.h"
+#include "Scaling.h"
 
 RobotFilter::RobotFilter(const proto::SSL_DetectionRobot &detectionRobot, double detectTime, int cameraID) :
         CameraFilter(detectTime, cameraID),

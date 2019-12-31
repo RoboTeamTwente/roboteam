@@ -13,16 +13,32 @@ add_library(net STATIC
 target_link_libraries(net
         PUBLIC roboteam_proto)
 
+add_library(worldUtils STATIC
+        include/roboteam_world/filters/KalmanFilter.h
+        include/roboteam_world/filters/WorldFilter.h
+        src/filters/WorldFilter.cpp
+        include/roboteam_world/filters/RobotFilter.h
+        src/filters/RobotFilter.cpp
+        include/roboteam_world/filters/BallFilter.h
+        src/filters/BallFilter.cpp
+        include/roboteam_world/filters/CameraFilter.h
+        src/filters/CameraFilter.cpp
+        src/filters/Scaling.h
+        )
+target_link_libraries(worldUtils
+        PUBLIC roboteam_proto
+        PRIVATE ${ARMADILLO_LIBRARIES}
+        )
+target_include_directories(worldUtils
+        INTERFACE include
+        PRIVATE include/roboteam_world
+        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
+        PRIVATE src
+)
 add_executable(roboteam_world
         src/main.cpp
         src/WorldHandler.cpp
-        src/kalman/WorldFilter.cpp
-        src/util/KalmanFilter.h
-        src/kalman/RobotFilter.cpp
-        src/util/Scaling.h
-        src/kalman/BallFilter.cpp
-        src/kalman/BallFilter.h
-        src/kalman/CameraFilter.cpp src/kalman/CameraFilter.h)
+        )
 set_property(TARGET roboteam_world PROPERTY CXX_STANDARD 17)
 
 
@@ -32,23 +48,19 @@ target_include_directories(roboteam_world
         PRIVATE src
         )
 
-#including armadillo files
-target_include_directories(roboteam_world
-        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
-        )
 
 target_link_libraries(roboteam_world
-        PRIVATE ${ARMADILLO_LIBRARIES}
         PRIVATE net
         PRIVATE roboteam_utils
+        PRIVATE worldUtils
         PUBLIC roboteam_proto)
 
 add_executable(world_tests
-        src/util/KalmanFilter.h
+        include/roboteam_world/filters/KalmanFilter.h
         test/main.cpp
         test/KalmanFilterTest.cpp
-
         )
+
 
 target_include_directories(world_tests
         INTERFACE include
@@ -62,16 +74,16 @@ target_include_directories(world_tests
         )
 
 
-if(UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE)
     target_link_libraries(world_tests
             PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
             PRIVATE roboteam_utils
             PRIVATE gtest
             PUBLIC roboteam_proto)
-endif()
+endif ()
 
-if(APPLE)
+if (APPLE)
     target_link_libraries(world_tests
             PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
@@ -79,4 +91,4 @@ if(APPLE)
             PUBLIC roboteam_proto
             /usr/local/lib/libgtest.a
             /usr/local/lib/libgtest_main.a)
-endif()
+endif ()

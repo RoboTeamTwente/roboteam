@@ -10,7 +10,7 @@
 #include <roboteam_proto/WorldRobot.pb.h>
 
 #include <utility>
-#include "util/KalmanFilter.h"
+#include "KalmanFilter.h"
 #include "CameraFilter.h"
 
 /**

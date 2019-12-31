@@ -5,8 +5,8 @@
 #include "roboteam_proto/Subscriber.h"
 #include <roboteam_proto/Publisher.h>
 #include <net/robocup_ssl_client.h>
-#include "kalman/WorldFilter.h"
-#include "util/KalmanFilter.h"
+#include "filters/WorldFilter.h"
+#include "filters/KalmanFilter.h"
 
 namespace world {
 

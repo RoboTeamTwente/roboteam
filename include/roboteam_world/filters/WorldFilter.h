@@ -33,6 +33,10 @@ namespace world {
         handleRobots(robotMap &robots,
                      const google::protobuf::RepeatedPtrField <proto::SSL_DetectionRobot> &observations,
                      double filterGrabDistance, double timeCapture, uint cameraID);
+        void
+        handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, const double filterGrabDistance, double timeCapture,
+                   uint cameraID);
+        void updateBalls(double time, bool extrapolateLastStep, const double removeFilterTime);
     };
 }
 

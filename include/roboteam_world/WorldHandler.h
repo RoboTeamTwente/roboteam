@@ -7,6 +7,7 @@
 #include <net/robocup_ssl_client.h>
 #include "filters/WorldFilter.h"
 #include "filters/KalmanFilter.h"
+#include <utility>
 
 namespace world {
 
@@ -17,7 +18,7 @@ class WorldHandler {
   proto::Publisher<proto::SSL_GeometryData> *geom_pub;
 
   double lastPacketTime; //seconds
-  WorldFilter *worldFilter =nullptr;
+  std::unique_ptr<WorldFilter> worldFilter ;
   RoboCupSSLClient *vision_client;
   RoboCupSSLClient *refbox_client;
 

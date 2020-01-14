@@ -24,7 +24,7 @@ void WorldHandler::start() {
 }
 
 void WorldHandler::init() {
-    worldFilter = new WorldFilter;
+    worldFilter = std::make_unique<WorldFilter>();
     world_pub = new proto::Publisher<proto::World>(proto::WORLD_CHANNEL);
     ref_pub = new proto::Publisher<proto::SSL_Referee>(proto::REFEREE_CHANNEL);
     geom_pub = new proto::Publisher<proto::SSL_GeometryData>(proto::GEOMETRY_CHANNEL);

@@ -80,17 +80,17 @@ namespace world {
         }
         return world;
     }
-    void WorldFilter::update(double time, bool extrapolateLastStep) {
+    void WorldFilter::update(double time, bool doLastPredict) {
         //TODO: Find a more pretty way to write a loop like this
         const double removeFilterTime = 0.4; //Remove filters if no new observations have been added to it for this amount of time
-        updateRobots(yellowBots, time, extrapolateLastStep, removeFilterTime);
-        updateRobots(blueBots, time, extrapolateLastStep, removeFilterTime);
-        updateBalls(time, extrapolateLastStep, removeFilterTime);
+        updateRobots(yellowBots, time, doLastPredict, removeFilterTime);
+        updateRobots(blueBots, time, doLastPredict, removeFilterTime);
+        updateBalls(time, doLastPredict, removeFilterTime);
     }
-    void WorldFilter::updateBalls(double time, bool extrapolateLastStep, const double removeFilterTime) {
+    void WorldFilter::updateBalls(double time, bool doLastPredict, const double removeFilterTime) {
         auto ball = balls.begin();
         while (ball != balls.end()) {
-            ball->get()->update(time, extrapolateLastStep);
+            ball->get()->update(time, doLastPredict);
             if (time - ball->get()->getLastUpdateTime() > removeFilterTime) {
                 balls.erase(ball);
             } else {
@@ -98,11 +98,11 @@ namespace world {
             }
         }
     }
-    void WorldFilter::updateRobots(robotMap &robots, double time, bool extrapolateLastStep, double removeFilterTime) {
+    void WorldFilter::updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime) {
         for (auto &botsOneId : robots) {
             auto filter = botsOneId.second.begin();
             while (filter != botsOneId.second.end()) {
-                filter->get()->update(time, extrapolateLastStep);
+                filter->get()->update(time, doLastPredict);
                 if (time - filter->get()->getLastUpdateTime() > removeFilterTime) {
                     botsOneId.second.erase(filter);
                 } else {

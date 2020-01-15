@@ -54,9 +54,9 @@ namespace world {
                      const google::protobuf::RepeatedPtrField <proto::SSL_DetectionRobot> &observations,
                      double filterGrabDistance, double timeCapture, uint cameraID);
         void
-        handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, const double filterGrabDistance, double timeCapture,
+        handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, double filterGrabDistance, double timeCapture,
                    uint cameraID);
-        void updateBalls(double time, bool doLastPredict, const double removeFilterTime);
+        void updateBalls(double time, bool doLastPredict, double removeFilterTime);
     };
 }
 

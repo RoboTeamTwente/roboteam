@@ -1,9 +1,9 @@
 #ifndef ROBOTEAM_ROBOTHUB_GRSIM_H
 #define ROBOTEAM_ROBOTHUB_GRSIM_H
-#include <array>
 #include <QtNetwork>
-#include <string>
+#include <array>
 #include <chrono>
+#include <string>
 
 #include "roboteam_proto/RobotCommand.pb.h"
 #include "roboteam_proto/grSim_Commands.pb.h"
@@ -13,7 +13,7 @@ namespace rtt {
 namespace robothub {
 
 class GRSimCommander {
-public:
+   public:
     /**
      * Buffer type which keeps all received robot commands
      */
@@ -29,7 +29,7 @@ public:
      */
     using TimePoint = std::chrono::time_point<Clock>;
 
-    /** 
+    /**
      * Statistics struct
      */
     struct Stats {
@@ -53,12 +53,12 @@ public:
     };
 
     /** Maximum amount of double messages to be received
-      * before the buffer is forcibly flushed and treshold
-      * re-estimated.
-      */
+     * before the buffer is forcibly flushed and treshold
+     * re-estimated.
+     */
     static int constexpr MAX_DROPS = 2;
 
-    /** 
+    /**
      * Number of entries in the efficiency history
      */
     static int constexpr HISTORY_LEN = 60;
@@ -128,10 +128,10 @@ public:
      */
     void setBatch(bool batch);
     void setColor(bool yellow);
-  void setGrsim_ip(const std::string &grsim_ip);
-  void setGrsim_port(quint16 grsim_port);
+    void setGrsim_ip(const std::string& grsim_ip);
+    void setGrsim_port(quint16 grsim_port);
 
-private:
+   private:
     /**
      * Updates the threshold and resets the appropriate variables.
      */
@@ -175,13 +175,11 @@ private:
     std::array<double, HISTORY_LEN> efficiency;
     int efficiencyIndex;
     int numForcedFlushes;
-
 };
 
 void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand const& msg);
 
-} // robothub
-} // rtt
+}  // namespace robothub
+}  // namespace rtt
 
-#endif //ROBOTEAM_ROBOTHUB_GRSIM_H
-
+#endif  // ROBOTEAM_ROBOTHUB_GRSIM_H

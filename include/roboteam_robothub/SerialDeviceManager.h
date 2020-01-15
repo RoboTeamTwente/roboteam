@@ -12,7 +12,7 @@ namespace rtt {
 namespace robothub {
 
 class SerialDeviceManager {
-public:
+   public:
     explicit SerialDeviceManager() = default;
     explicit SerialDeviceManager(const std::string &deviceName);
     bool ensureDeviceOpen();
@@ -23,13 +23,13 @@ public:
     std::shared_ptr<packed_robot_feedback> getMostRecentFeedback() const;
     void removeMostRecentFeedback();
 
-    private:
+   private:
     int fileID = 0;
     std::string deviceName;
     bool iswriting = false;
 };
 
-}
-}
+}  // namespace robothub
+}  // namespace rtt
 
-#endif //ROBOTEAM_ROBOTHUB_SERIALDEVICEMANAGER_H
+#endif  // ROBOTEAM_ROBOTHUB_SERIALDEVICEMANAGER_H

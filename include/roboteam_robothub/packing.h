@@ -39,30 +39,26 @@ struct LowLevelRobotCommand {
 };
 
 struct LowLevelRobotFeedback {
-  int id:8;
-  bool xSensCalibrated:1;
-  bool batteryLow:1;
-  bool ballSensorWorking:1;
-  bool hasBall:1;
-  uint ballPosition:4;
-  bool genevaWorking:1;
-  int genevaState:7;
-  int rho:11;
-  int angle:10;
-  int theta:11;
-  bool hasLockedWheel:1;
-  uint signalStrength:7;
+    int id : 8;
+    bool xSensCalibrated : 1;
+    bool batteryLow : 1;
+    bool ballSensorWorking : 1;
+    bool hasBall : 1;
+    uint ballPosition : 4;
+    bool genevaWorking : 1;
+    int genevaState : 7;
+    int rho : 11;
+    int angle : 10;
+    int theta : 11;
+    bool hasLockedWheel : 1;
+    uint signalStrength : 7;
 };
 
 // Software => Basestation
-LowLevelRobotCommand createLowLevelRobotCommand(
-        proto::RobotCommand const& command, proto::World worldOpt
-);
+LowLevelRobotCommand createLowLevelRobotCommand(proto::RobotCommand const& command, proto::World worldOpt);
 
 std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
-std::shared_ptr<packed_protocol_message> createRobotPacket(
-    proto::RobotCommand const& command, std::shared_ptr<proto::World> const& worldOpt = nullptr
-);
+std::shared_ptr<packed_protocol_message> createRobotPacket(proto::RobotCommand const& command, std::shared_ptr<proto::World> const& worldOpt = nullptr);
 
 // Basestation => Software
 LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bitsnbytes);
@@ -78,13 +74,12 @@ proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback);
 
 std::string byteToBinary(uint8_t const& byte);
 
-template<unsigned int N>
-std::string byteArrayToString(std::array<uint8_t, N> bytes)
-{
+template <unsigned int N>
+std::string byteArrayToString(std::array<uint8_t, N> bytes) {
     std::string result = "";
 
     for (auto byte : bytes) {
-        result += byteToBinary(byte)+"\n";
+        result += byteToBinary(byte) + "\n";
     }
 
     return result;
@@ -104,7 +99,7 @@ int constexpr PACKET_MAX_CAM_ANG = 511;
 
 int constexpr PACKET_MAX_CAM_W = 2047;
 
-} // robothub
-} // rtt
+}  // namespace robothub
+}  // namespace rtt
 
-#endif // ROBOTHUB_SRC_PACKING_H_
+#endif  // ROBOTHUB_SRC_PACKING_H_

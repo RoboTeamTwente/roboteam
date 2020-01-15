@@ -14,4 +14,4 @@ constexpr int MIN_ROBOT_ID = 0;
 constexpr int MAX_ROBOT_ID = 15;
 constexpr int ROBOTHUB_TICK_RATE = 60;
 
-#endif // ROBOTEAM_CONSTANTS_H_ROBOTHUB
+#endif  // ROBOTEAM_CONSTANTS_H_ROBOTHUB

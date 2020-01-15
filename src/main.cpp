@@ -5,7 +5,6 @@
 #include "RobotHub.h"
 
 int main(int argc, char *argv[]) {
-
     // get the id of the ai from the init
     int id = 0;
     if (argc == 2) {
@@ -23,8 +22,8 @@ int main(int argc, char *argv[]) {
         app.set_feedback_channel(proto::FEEDBACK_PRIMARY_CHANNEL);
         app.set_settings_channel(proto::SETTINGS_PRIMARY_CHANNEL);
     }
-  app.subscribeToTopics();
+    app.subscribeToTopics();
 
-  app.start();
-  return 0;
+    app.start();
+    return 0;
 }

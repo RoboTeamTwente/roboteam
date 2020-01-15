@@ -54,7 +54,7 @@ GRSimCommander::GRSimCommander(bool batch) :
 //        colorParam("our_color"),
 //        grsim_ip("grsim/ip", "127.0.0.1"),
 //        grsim_port("grsim/port", 20011),
-        msgReceivedBits{},
+        msgReceivedBits{}, /** No need to explicitly initialize these, but might aswel */
         robotsSeenBits{},
         threshold{},
         drops{},
@@ -80,7 +80,12 @@ void GRSimCommander::queueGRSimCommand(const proto::RobotCommand& msg)
             drops++;
         }
 
-        if (TRACE) std::cout << "Got message for: " << msg.id() << "\n";
+        /**
+         * if constexpr() allows compiletime evaluation of statements
+         * Meaning that if TRACE is 0 at compiletime, then the code wont' even be compiled and won't be present in the binary, however
+         * if you use if (TRACE) then it'll just create another branch for this
+         */
+        if constexpr (TRACE) std::cout << "Got message for: " << msg.id() << "\n";
 
         // Store the message and set appropriate flags
         robotCommands[msg.id()] = std::make_shared<proto::RobotCommand>(msg);

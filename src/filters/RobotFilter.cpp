@@ -113,8 +113,8 @@ void RobotFilter::predict(double time, bool permanentUpdate,bool cameraSwitched)
 void RobotFilter::applyObservation(const proto::SSL_DetectionRobot &detectionRobot, int cameraID) {
     //sanity check
     assert(botId==detectionRobot.robot_id());
-    
-    Kalman::VectorO observation = {mmToM(detectionRobot.x()), mmToM(detectionRobot.y())};
+
+    Kalman::VectorO observation = {mmToM(detectionRobot.x()), mmToM(detectionRobot.y()), 0};
     // We need to do something about the rotation's discontinuities at -pi/pi so it works correctly.
     // We allow the state to go outside of bounds (-PI,PI) in between updates, but then simply make sure the observation difference is correct
     double stateRot = kalman->state()[2];

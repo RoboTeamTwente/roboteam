@@ -25,8 +25,8 @@ private:
     Matrix P;// covariance matrix of the system (how sure are we of the state?)
 
     //Same as above, but only used for prediction. We only save actual observations in X and P, and predictions here, generally.
-    Vector Xtemp;
-    Matrix Ptemp;
+    Vector Xpredict;
+    Matrix Ppredict;
 public:
     Matrix F;// Forward model/state update matrix. Essentially a linear model of what we predict the next state will be
     MatrixO H;// Observation model/ states how we can interpret observation as our state
@@ -46,18 +46,18 @@ public:
      */
     explicit KalmanFilter(const Vector& x, const Matrix& p) :
             X(x),
-            Xtemp(x),
+            Xpredict(x),
             P(p),
-            Ptemp(p)
+            Ppredict(p)
     {
 
         F.eye();
-        H.zeros();
+        H.eye();
         Q.zeros();
         R.zeros();
         z.zeros();
 
-        B.eye();
+        B.eye   ();
         u.zeros();
 
     };
@@ -67,11 +67,11 @@ public:
      * Otherwise, the prediction is only stored locally as a prediction
      */
     void predict(bool permanentUpdate) {
-        Xtemp = F * X + B * u;
-        Ptemp = F * P * F.t() + Q;
+        Xpredict = F * X + B * u;
+        Ppredict = F * P * F.t() + Q;
         if (permanentUpdate) {
-            X = Xtemp;
-            P = Ptemp;
+            X = Xpredict;
+            P = Ppredict;
         }
     };
 
@@ -79,13 +79,13 @@ public:
      * Updates the filter using the current observation z that is set
      */
     void update() {
-        VectorO y = z - (H * Xtemp);
-        MatrixOO S = H * Ptemp * H.t() + R;
-        MatrixSO K = Ptemp * H.t() * S.i();
-        X = Xtemp + K * y;
+        VectorO y = z - (H * Xpredict);
+        MatrixOO S = H * Ppredict * H.t() + R;
+        MatrixSO K = Ppredict * H.t() * S.i();
+        X = Xpredict + K * y;
         Matrix Identity;
         Identity.eye();
-        P = (Identity - K * H) * Ptemp;
+        P = (Identity - K * H) * Ppredict;
     };
 
     /**
@@ -93,7 +93,7 @@ public:
      * @return (predicted) state of the system
      */
     const Vector& state() const{
-        return Xtemp;
+        return Xpredict;
     }
 
     /**
@@ -110,7 +110,7 @@ public:
      * @param value. Value to set state[index] to
      */
     void modifyState(int index, double value){
-        Xtemp.at(index) = value;
+        Xpredict.at(index) = value;
     }
 
 };

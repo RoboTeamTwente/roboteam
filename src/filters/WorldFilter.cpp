@@ -35,6 +35,7 @@ namespace world {
                 }
             }
             if (!addedBall) {
+                // We create a new filter if there is no existing filter which is reasonably close to the detection
                 balls.push_back(std::make_unique<BallFilter>(detBall, timeCapture, cameraID));
             }
         }
@@ -52,7 +53,7 @@ namespace world {
                 }
             }
             if (!addedBot) {
-                // We create a new filter if no filter close to the robot exists
+                // We create a new filter if there is no existing filter which is reasonably close to the detection
                 robots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot, timeCapture, cameraID));
             }
         }
@@ -60,7 +61,7 @@ namespace world {
 
 //Creates a world message with the currently observed objects in it
     proto::World WorldFilter::getWorld(double time) {
-        //First we update to the time we want packets at. Very important!
+        //First we update to the time we want packets at. Expensive, but ensures we have the latest information
         update(time, true);
         proto::World world;
         world.set_time(time);
@@ -81,7 +82,6 @@ namespace world {
         return world;
     }
     void WorldFilter::update(double time, bool doLastPredict) {
-        //TODO: Find a more pretty way to write a loop like this
         const double removeFilterTime = 0.4; //Remove filters if no new observations have been added to it for this amount of time
         updateRobots(yellowBots, time, doLastPredict, removeFilterTime);
         updateRobots(blueBots, time, doLastPredict, removeFilterTime);

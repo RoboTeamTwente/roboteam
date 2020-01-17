@@ -19,7 +19,9 @@ protected:
     int mainCamera = -1;
 
     /**
-     * Checks if we should our main camera and does so if necessary.
+     * Given a camera detection at time, decides whether we should switch our main camera or not.
+     * This is implemented as a check: if we receive a frame from another camera,
+     * and we have not received a frame from our main camera for some time, we switch our main camera to camera ID passed to the function.
      * @return true if we switched our main camera
      */
     bool switchCamera(int camera, double time);

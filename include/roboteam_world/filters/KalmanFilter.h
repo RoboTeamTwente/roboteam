@@ -1,7 +1,6 @@
 #ifndef RTT_KALMANFILTER_H
 #define RTT_KALMANFILTER_H
 
-#include <armadillo>
 #include <eigen3/Eigen/Dense>
 /**
  * A class for generic standard basic linear Kalman Filters using doubles and dense matrixes.

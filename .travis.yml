@@ -13,7 +13,7 @@ addons:
       - zmq       # proto dependency
       - zmqpp     # proto dependency
       - protobuf  # proto dependency
-      - armadillo # world dependency
+      - eigen3   # world dependency
       - ccache    # speeding up build
       - ninja     # speeding up build
       - qt        # roboteam_ai dependency

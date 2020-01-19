@@ -8,16 +8,18 @@
 TEST(OneDimension, KalmanFilterTest){
     // see https://www.kalmanfilter.net/kalman1d.html for where I got the values from
     //create a simple one dimensional kalman filter.
-    KalmanFilter<1,1>::Vector initialGuess={60.0};
-    KalmanFilter<1,1>::Matrix variance={225.0};
+    KalmanFilter<1,1>::Vector initialGuess;
+    initialGuess(0)=60.0;
+    KalmanFilter<1,1>::Matrix variance;
+    variance(0)=225.0;
     KalmanFilter<1,1> filter(initialGuess,variance);
 
-    filter.B={1.0};
-    filter.u.zeros();
-    filter.F={1.0}; // we estimate the building height stays constant
-    filter.Q.zeros();
-    filter.H={1.0};// measurement scales linearly
-    filter.R={25.0};// we can estimate a building up to 5m accurate (so variance is 5^2)
+    filter.B(0)=1.0;
+    filter.u(0)=0;
+    filter.F(0)=1.0; // we estimate the building height stays constant
+    filter.Q(0)=0.0;
+    filter.H(0)=1.0;// measurement scales linearly
+    filter.R(0)=25.0;// we can estimate a building up to 5m accurate (so variance is 5^2)
     // we test if the state of the filter is the initial guess and if the basestate and state match
     ASSERT_DOUBLE_EQ(filter.state()[0],60.0);
     ASSERT_DOUBLE_EQ(filter.basestate()[0],60.0);
@@ -27,7 +29,7 @@ TEST(OneDimension, KalmanFilterTest){
     //What our kalman filter should output after each update predict cycle.
     double outputs[10]={49.69,48.47,50.57,51.68,51.33,49.62,49.21,49.31,49.53,49.57};
     for (int i = 0; i < 10; ++i) {
-        filter.z={measurements[i]};
+        filter.z(0)=measurements[i];
         filter.update();
         filter.predict(true);
         //check if basestate and state match and if it matches predicted output.

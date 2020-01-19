@@ -4,7 +4,6 @@ project(roboteam_world)
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-find_package(Armadillo REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 add_library(net STATIC
@@ -28,13 +27,11 @@ add_library(worldUtils STATIC
         )
 target_link_libraries(worldUtils
         PUBLIC roboteam_proto
-        PRIVATE ${ARMADILLO_LIBRARIES}
         PRIVATE Eigen3::Eigen
         )
 target_include_directories(worldUtils
         INTERFACE include
         PRIVATE include/roboteam_world
-        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
         PRIVATE src
 )
 add_executable(roboteam_world

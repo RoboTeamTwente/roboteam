@@ -21,9 +21,7 @@ class WorldHandler {
   std::unique_ptr<WorldFilter> worldFilter ;
   RoboCupSSLClient *vision_client;
   RoboCupSSLClient *refbox_client;
-  std::chrono::nanoseconds total =std::chrono::nanoseconds(0);
-  std::chrono::nanoseconds lastTotal =std::chrono::nanoseconds(0);
-  int ticks = 0;
+
  public:
   WorldHandler() = default;
 

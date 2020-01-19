@@ -18,18 +18,8 @@ void WorldHandler::start() {
     t.loop([&]() {
       handleVisionPackets(vision_packet);
       handleRefboxPackets(ref_packet);
-      std::chrono::nanoseconds start=std::chrono::steady_clock::now().time_since_epoch();
-      world_pub->send(worldFilter->getWorld(lastPacketTime));
-      std::chrono::nanoseconds end=std::chrono::steady_clock::now().time_since_epoch();
-      total+=(end-start);
-      lastTotal+=(end-start);
-      ticks++;
 
-      if (ticks%50==0){
-          std::cout<<lastTotal.count()/(1000*50)<< "us last half second"<<std::endl;
-          lastTotal=std::chrono::nanoseconds(0);
-          std::cout<<total.count()/(float)(1000*ticks)<<" us"<<std::endl;
-      }
+      world_pub->send(worldFilter->getWorld(lastPacketTime));
     }, 100);
 }
 

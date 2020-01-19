@@ -42,8 +42,8 @@ add_executable(roboteam_world
         src/WorldHandler.cpp
         )
 set_property(TARGET roboteam_world PROPERTY CXX_STANDARD 17)
-set_target_properties(worldUtils PROPERTIES COMPILE_FLAGS "-Ofast")
-set_target_properties(roboteam_world PROPERTIES COMPILE_FLAGS "-Ofast")
+set_target_properties(worldUtils PROPERTIES COMPILE_FLAGS "-O3")
+set_target_properties(roboteam_world PROPERTIES COMPILE_FLAGS "-O3")
 
 
 target_include_directories(roboteam_world

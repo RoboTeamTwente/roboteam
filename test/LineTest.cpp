@@ -6,6 +6,7 @@
 #include "roboteam_utils/LineSegment.h"
 #include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
+#include <math.h>
 using namespace rtt;
 TEST(LineTests, direction) {
     Vector2 v1(0.0, 0.0), v2(1.0, 1.0), v3(0.0, 0.0);

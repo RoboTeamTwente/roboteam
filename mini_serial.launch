@@ -1,5 +1,0 @@
-<launch>
-    <include file="$(find roboteam_utils)/mini.launch">
-        <arg name="robot_output_target" value="serial" />
-    </include>
-</launch>

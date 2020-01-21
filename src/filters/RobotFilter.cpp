@@ -11,7 +11,10 @@ RobotFilter::RobotFilter(const proto::SSL_DetectionRobot &detectionRobot, double
     KalmanInit(detectionRobot);
 }
 
-bool compareObservation(const RobotFilter::RobotObservation &a, const RobotFilter::RobotObservation &b) {
+/*
+ * A short function to sort observations by time.
+ */
+bool compareObservation(const RobotObservation &a, const RobotObservation &b) {
     return (a.time < b.time);
 }
 void RobotFilter::update(double time, bool doLastPredict) {
@@ -35,7 +38,7 @@ void RobotFilter::update(double time, bool doLastPredict) {
         // We first predict the robot, and then apply the observation to calculate errors/offsets.
         bool cameraSwitched=switchCamera(observation.cameraID, observation.time);
         predict(observation.time, true,cameraSwitched);
-        applyObservation(observation.bot, observation.cameraID);
+        applyObservation(observation);
         observations.erase(it);
     }
     if (doLastPredict) {
@@ -109,11 +112,11 @@ void RobotFilter::predict(double time, bool permanentUpdate,bool cameraSwitched)
 /* Updates the kalman filter with the observation.
  * This function assumes you have already predicted until the right time!
  */
-void RobotFilter::applyObservation(const proto::SSL_DetectionRobot &detectionRobot, int cameraID) {
+void RobotFilter::applyObservation(const RobotObservation &observation) {
     //sanity check
-    assert(botId==detectionRobot.robot_id());
+    assert(botId==observation.bot.robot_id());
 
-    Kalman::VectorO observation = {mmToM(detectionRobot.x()), mmToM(detectionRobot.y()), 0};
+    Kalman::VectorO obsState = {mmToM(observation.bot.x()), mmToM(observation.bot.y()), 0};
     // We need to do something about the rotation's discontinuities at -pi/pi so it works correctly.
     // We allow the state to go outside of bounds (-PI,PI) in between updates, but then simply make sure the observation difference is correct
     double stateRot = kalman->state()[2];
@@ -122,14 +125,14 @@ void RobotFilter::applyObservation(const proto::SSL_DetectionRobot &detectionRob
         kalman->modifyState(2, limitedRot); //We're adjusting the value of the Kalman Filter here, be careful.
         //We're only doing this so we don't get flips from -inf to inf and loss of double precision at high values.
     }
-    double difference = limitAngle(detectionRobot.orientation() - stateRot);
-    observation(2) = limitedRot + difference;
+    double difference = limitAngle(observation.bot.orientation() - stateRot);
+    obsState(2) = limitedRot + difference;
 
-    kalman->z = observation;
+    kalman->z = obsState;
 
     kalman->R = Kalman::MatrixOO::Zero();
     //we put much more trust in observations done by our main camera.
-    if (cameraID == mainCamera) {
+    if (observation.cameraID == mainCamera) {
         //TODO: collect constants somewhere
         const double posVar = 0.006; //variance in meters
         const double rotVar = 0.01;

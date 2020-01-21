@@ -8,7 +8,7 @@
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldBall.pb.h>
 
-#include <utility>
+#include "BallObservation.h"
 #include "KalmanFilter.h"
 #include "CameraFilter.h"
 
@@ -36,19 +36,7 @@ public:
      * @return Returns true if the ball has been the last 0.05 seconds.
      */
     [[nodiscard]] bool ballIsVisible() const;
-    /**
-     * A struct to keep Ball Data and time as one observation.
-     */
-    struct BallObservation{
-        explicit BallObservation(int cameraID,double time,proto::SSL_DetectionBall  detectionBall) :
-                cameraID(cameraID),
-                time(time),
-                ball(std::move(detectionBall))
-        {}
-        int cameraID;
-        double time;
-        proto::SSL_DetectionBall ball;
-    };
+
 private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
@@ -56,7 +44,7 @@ private:
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionBall Ball to be applied to the filter
      */
-    void applyObservation(const proto::SSL_DetectionBall &detectionBall, int cameraID);
+    void applyObservation(const BallObservation &observation);
     /**
      * Initializes the kalman Filter structures
      * @param detectionBall Contains the initial state of the Filter.

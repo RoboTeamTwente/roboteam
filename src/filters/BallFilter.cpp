@@ -30,16 +30,16 @@ void BallFilter::KalmanInit(const proto::SSL_DetectionBall &detectionBall) {
 
 
 }
-void BallFilter::applyObservation(const proto::SSL_DetectionBall &detectionBall, int cameraID) {
-    Kalman::VectorO observation = {mmToM(detectionBall.x()), mmToM(detectionBall.y())};
+void BallFilter::applyObservation(const BallObservation &observation) {
+    Kalman::VectorO obsPos= {mmToM(observation.ball.x()), mmToM(observation.ball.y())};
     //TODO: do things with the other ball fields (pixel pos, area)
-    kalman->z = observation;
+    kalman->z = obsPos;
 
     //Observations which are not from the main camera are added but are seen as much more noisy
     const double posVar = 0.02; //variance TODO: tune these 2
     const double posVarOtherCamera = 0.05;
     kalman->R=Kalman::MatrixOO::Zero();
-    if (cameraID == mainCamera) {
+    if (observation.cameraID == mainCamera) {
         kalman->R(0, 0) = posVar;
         kalman->R(1, 1) = posVar;
     } else {
@@ -97,7 +97,7 @@ void BallFilter::predict(double time, bool permanentUpdate, bool cameraSwitched)
         lastUpdateTime = time;
     }
 }
-bool compareObservation(const BallFilter::BallObservation &a, const BallFilter::BallObservation &b) {
+bool compareObservation(const BallObservation &a, const BallObservation &b) {
     return (a.time < b.time);
 }
 void BallFilter::update(double time, bool doLastPredict) {
@@ -120,7 +120,7 @@ void BallFilter::update(double time, bool doLastPredict) {
         // We first predict the ball, and then apply the observation to calculate errors/offsets.
         bool cameraSwitched=switchCamera(observation.cameraID, observation.time);
         predict(observation.time, true,cameraSwitched);
-        applyObservation(observation.ball, observation.cameraID);
+        applyObservation(observation);
         observations.erase(it);
     }
     if (doLastPredict) {

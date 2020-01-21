@@ -9,7 +9,7 @@
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
 
-#include <utility>
+#include "RobotObservation.h"
 #include "KalmanFilter.h"
 #include "CameraFilter.h"
 
@@ -63,19 +63,6 @@ public:
      */
     [[nodiscard]] proto::WorldRobot asWorldRobot() const;
 
-    /**
-     * A struct to keep robotData and time as one observation.
-     */
-    struct RobotObservation {
-        explicit RobotObservation(int cameraID, double time, proto::SSL_DetectionRobot detectionRobot) :
-                cameraID(cameraID),
-                time(time),
-                bot(std::move(detectionRobot)) {}
-        int cameraID;
-        double time;
-        proto::SSL_DetectionRobot bot;
-    };
-
 private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
@@ -83,7 +70,7 @@ private:
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionRobot Robot to be applied
      */
-    void applyObservation(const proto::SSL_DetectionRobot &detectionRobot, int cameraID);
+    void applyObservation(const RobotObservation &observation);
     /**
      * A function that casts any angle to the range [-PI,PI)
      * @param angle angle to be limited

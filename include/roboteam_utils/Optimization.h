@@ -69,7 +69,7 @@ namespace rtt {
          * the same upper and lower limits.
          */
         GradientDescent(ScoreFunction scorer, Data initialData, Num initialStep, Num minimum, Num maximum)
-                : scorer(scorer), data(data), lastScore(-99999), justFlipped(true), iterationCount(0) {
+                : scorer(scorer), data(initialData), lastScore(-99999), justFlipped(true), iterationCount(0) {
             for (size_t i = 0; i < N; i++) {
                 limits[i] = {minimum, maximum};
                 steps[i] = initialStep;

@@ -7,51 +7,87 @@ include(cotire)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-set(ENABLE_DEBUG_GRAPHICS TRUE)
-
-if (ENABLE_DEBUG_GRAPHICS)
-    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=1)
-else (ENABLE_DEBUG_GRAPHICS)
-    add_definitions(-DRTT_CMAKE_ENABLE_DEBUG_GRAPHICS=0)
-endif (ENABLE_DEBUG_GRAPHICS)
-
-
-set(CMAKE_CXX_FLAGS "\
---std=c++17 ${CMAKE_CXX_FLAGS} \
--Wall \
--Wno-unused-function \
--Wsign-compare \
--g \
-"
-        )
-
-
-
 
 add_library(roboteam_utils STATIC
         src/Polygon.cpp
+        include/roboteam_utils/Polygon.h
         src/LineBase.cpp
+        include/roboteam_utils/LineBase.h
         src/Line.cpp
+        include/roboteam_utils/Line.h
         src/LineSegment.cpp
+        include/roboteam_utils/LineSegment.h
         src/Vector2.cpp
+        include/roboteam_utils/Vector2.h
         src/Angle.cpp
+        include/roboteam_utils/Angle.h
         src/Position.cpp
-      #  src/LastWorld.cpp
+        include/roboteam_utils/Position.h
         src/Mathematics.cpp
-#        src/Cone.cpp
+        include/roboteam_utils/Mathematics.h
+        #        src/Cone.cpp
+        #        include/roboteam_utils/Cone.h
         src/normalize.cpp
-        # src/constants.cpp
+        include/roboteam_utils/normalize.h
         src/Clip.cpp
+        include/roboteam_utils/Clip.h
         src/Optimization.cpp
+        include/roboteam_utils/Optimization.h
         src/Arc.cpp
-        src/Timer.cpp)
+        include/roboteam_utils/Arc.h
+        src/Timer.cpp
+        include/roboteam_utils/Timer.h
+        include/roboteam_utils/type_traits.h
+        include/roboteam_utils/json.hpp
+        #include/roboteam_utils/BiMap.h
+        #include/roboteam_utils/Graph.h
+        )
 
 
 target_include_directories(roboteam_utils
         INTERFACE include
         PRIVATE include/roboteam_utils
-        PRIVATE src )
+        PRIVATE src)
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
-        gtest)
+        gtest
+        )
+target_compile_options(roboteam_utils PRIVATE
+        --std=c++17
+        -Wall
+        -Werror
+        -Wextra
+        -Wno-unused-function
+        -Wno-comment
+        -Wsign-compare
+        -g
+        )
+add_executable(utils_tests
+        test/main.cpp
+        test/ArcTest.cpp
+        #test/BiMapTest.cpp
+        #test/GraphTest.cpp
+        test/LineTest.cpp
+        test/normaliseTest.cpp
+        test/OptimizationTest.cpp
+        test/PolygonTest.cpp
+        test/PositionTest.cpp
+        test/Vector2Test.cpp
+        test/HungarianTest.cpp
+        )
+
+if (UNIX AND NOT APPLE)
+    target_link_libraries(utils_tests
+            PRIVATE roboteam_utils
+            PRIVATE gtest
+            )
+endif ()
+
+if (APPLE)
+    target_link_libraries(utils_tests
+            PRIVATE roboteam_utils
+            PRIVATE /usr/local/lib/libgtest.a
+            PRIVATE /usr/local/lib/libgtest_main.a
+            )
+endif ()

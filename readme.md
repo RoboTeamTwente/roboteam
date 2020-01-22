@@ -1,2 +1,2 @@
-To enable or disable the drawing of debug points:
-    Set the boolean RTT_ENABLE_DEBUG_GRAPHICS in Draw.h to the respective value.
+This repository is a library containing utility classes that can be used in any other project that work as standalones.
+Particularly useful are the functions for geometry and vector calculus .

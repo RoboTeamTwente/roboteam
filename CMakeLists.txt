@@ -69,15 +69,10 @@ target_include_directories(world_tests
         PRIVATE src
         )
 
-#including armadillo files
-target_include_directories(world_tests
-        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
-        )
 
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(world_tests
-            PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
             PRIVATE roboteam_utils
             PRIVATE gtest
@@ -86,7 +81,6 @@ endif ()
 
 if (APPLE)
     target_link_libraries(world_tests
-            PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
             PRIVATE roboteam_utils
             PUBLIC roboteam_proto

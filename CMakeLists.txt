@@ -53,7 +53,6 @@ target_include_directories(roboteam_utils
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
- #       gtest
         )
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17

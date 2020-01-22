@@ -4,7 +4,7 @@ project(roboteam_world)
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-find_package(Armadillo REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 add_library(net STATIC
         src/net/netraw.cpp
@@ -27,12 +27,11 @@ add_library(worldUtils STATIC
         )
 target_link_libraries(worldUtils
         PUBLIC roboteam_proto
-        PRIVATE ${ARMADILLO_LIBRARIES}
+        PRIVATE Eigen3::Eigen
         )
 target_include_directories(worldUtils
         INTERFACE include
         PRIVATE include/roboteam_world
-        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
         PRIVATE src
 )
 add_executable(roboteam_world
@@ -40,6 +39,8 @@ add_executable(roboteam_world
         src/WorldHandler.cpp
         )
 set_property(TARGET roboteam_world PROPERTY CXX_STANDARD 17)
+set_target_properties(worldUtils PROPERTIES COMPILE_FLAGS "-O3")
+set_target_properties(roboteam_world PROPERTIES COMPILE_FLAGS "-O3")
 
 
 target_include_directories(roboteam_world
@@ -68,15 +69,10 @@ target_include_directories(world_tests
         PRIVATE src
         )
 
-#including armadillo files
-target_include_directories(world_tests
-        PRIVATE ${ARMADILLO_INCLUDE_DIRS}
-        )
 
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(world_tests
-            PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
             PRIVATE roboteam_utils
             PRIVATE gtest
@@ -85,7 +81,6 @@ endif ()
 
 if (APPLE)
     target_link_libraries(world_tests
-            PRIVATE ${ARMADILLO_LIBRARIES}
             PRIVATE net
             PRIVATE roboteam_utils
             PUBLIC roboteam_proto

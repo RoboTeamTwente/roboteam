@@ -18,16 +18,15 @@ void BallFilter::KalmanInit(const proto::SSL_DetectionBall &detectionBall) {
             x, y, 0, 0
     };
 
-    Kalman::Matrix startCov;
-    startCov.eye();
+    Kalman::Matrix startCov=Kalman::Matrix::Identity();
     //initial noise estimates
     const double startPosNoise = 0.05;
-    startCov.at(0, 0) = startPosNoise;//m noise in x
-    startCov.at(1, 1) = startPosNoise;//m noise in y
+    startCov(0, 0) = startPosNoise;//m noise in x
+    startCov(1, 1) = startPosNoise;//m noise in y
 
     kalman = std::make_unique<Kalman>(startState, startCov);
 
-    kalman->H.eye();     // Our observations are simply what we see.
+    kalman->H=Kalman::MatrixO::Identity();     // Our observations are simply what we see.
 
 
 }
@@ -39,13 +38,13 @@ void BallFilter::applyObservation(const proto::SSL_DetectionBall &detectionBall,
     //Observations which are not from the main camera are added but are seen as much more noisy
     const double posVar = 0.02; //variance TODO: tune these 2
     const double posVarOtherCamera = 0.05;
-    kalman->R.zeros();
+    kalman->R=Kalman::MatrixOO::Zero();
     if (cameraID == mainCamera) {
-        kalman->R.at(0, 0) = posVar;
-        kalman->R.at(1, 1) = posVar;
+        kalman->R(0, 0) = posVar;
+        kalman->R(1, 1) = posVar;
     } else {
-        kalman->R.at(0, 0) = posVarOtherCamera;
-        kalman->R.at(1, 1) = posVarOtherCamera;
+        kalman->R(0, 0) = posVarOtherCamera;
+        kalman->R(1, 1) = posVarOtherCamera;
     }
     kalman->update();
 }
@@ -69,29 +68,28 @@ double BallFilter::distanceTo(double x, double y) const {
 void BallFilter::predict(double time, bool permanentUpdate, bool cameraSwitched) {
     double dt = time - lastUpdateTime;
     // forward model:
-    kalman->F.eye();
-    kalman->F.at(0, 2) = dt;
-    kalman->F.at(1, 3) = dt;
+    kalman->F=Kalman::Matrix::Identity();
+    kalman->F(0, 2) = dt;
+    kalman->F(1, 3) = dt;
 
     //TODO: add 2 stage forward model?
     //Set B
     kalman->B = kalman->F;
     //Set u (we have no control input at the moment)
-    kalman->u.zeros();
+    kalman->u = Kalman::Vector::Zero();
 
     //Set Q matrix
     const float posNoise = 0.1;//TODO: tune
-    Kalman::MatrixO G;
-    G.zeros();
-    G.at(0, 0) = dt * posNoise;
-    G.at(0, 2) = 1 * posNoise;
-    G.at(1, 1) = dt * posNoise;
-    G.at(1, 3) = 1 * posNoise;
+    Kalman::MatrixO G = Kalman::MatrixO::Zero();
+    G(0, 0) = dt * posNoise;
+    G(0, 2) = 1 * posNoise;
+    G(1, 1) = dt * posNoise;
+    G(1, 3) = 1 * posNoise;
     if (cameraSwitched){
-        G.at(0,0)+=0.05;
-        G.at(1,1)+=0.05;
+        G(0,0)+=0.05;
+        G(1,1)+=0.05;
     }
-    kalman->Q = G.t() * G ;
+    kalman->Q = G.transpose() * G ;
 
     kalman->predict(permanentUpdate);
     lastPredictTime = time;

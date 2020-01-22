@@ -49,57 +49,56 @@ void RobotFilter::KalmanInit(const proto::SSL_DetectionRobot &detectionRobot) {
     double x = mmToM(detectionRobot.x());//m
     double y = mmToM(detectionRobot.y());//m
     double angle = detectionRobot.orientation(); //radians [-pi,pi)
-    Kalman::Vector startState = {
-            x, y, angle, 0, 0, 0
-    };
+    Kalman::Vector startState = Kalman::Vector::Zero();
+    startState(0) = x;
+    startState(1) = y;
+    startState(2) = angle;
 
-    Kalman::Matrix startCov;
-    startCov.eye();
+    Kalman::Matrix startCov=Kalman::Matrix::Identity();
     //initial noise estimates
     const double startPosNoise = 0.1;
     const double startAngleNoise = 0.1;
-    startCov.at(0, 0) = startPosNoise;//m noise in x
-    startCov.at(1, 1) = startPosNoise;//m noise in y
-    startCov.at(2, 2) = startAngleNoise;//radians
+    startCov(0, 0) = startPosNoise;//m noise in x
+    startCov(1, 1) = startPosNoise;//m noise in y
+    startCov(2, 2) = startAngleNoise;//radians
     kalman = std::make_unique<Kalman>(startState, startCov);
 
-    kalman->H.eye();     // Our observations are simply what we see.
+    kalman->H=Kalman::MatrixO::Identity();     // Our observations are simply what we see.
 
 }
 
 void RobotFilter::predict(double time, bool permanentUpdate,bool cameraSwitched) {
     double dt = time - lastUpdateTime;
     // forward model:
-    kalman->F.eye();
-    kalman->F.at(0, 3) = dt;
-    kalman->F.at(1, 4) = dt;
-    kalman->F.at(2, 5) = dt;
+    kalman->F=Kalman::Matrix::Identity();
+    kalman->F(0, 3) = dt;
+    kalman->F(1, 4) = dt;
+    kalman->F(2, 5) = dt;
 
     //Set B
     kalman->B = kalman->F;
 
     //Set u (we have no control input at the moment)
-    kalman->u.zeros();
+    kalman->u=Kalman::Vector::Zero();
 
     //Set Q
     const double posNoise=0.1;
     const double rotNoise=0.5;
-    Kalman::MatrixO G;
-    G.zeros();
-    G.at(0, 0) = dt * posNoise;
-    G.at(0, 3) = 1 * posNoise;
-    G.at(1, 1) = dt * posNoise;
-    G.at(1, 4) = 1 * posNoise;
-    G.at(2, 2) = dt * rotNoise;
-    G.at(2, 5) = 1 * rotNoise;
+    Kalman::MatrixO G=Kalman::MatrixO::Zero();
+    G(0, 0) = dt * posNoise;
+    G(0, 3) = 1 * posNoise;
+    G(1, 1) = dt * posNoise;
+    G(1, 4) = 1 * posNoise;
+    G(2, 2) = dt * rotNoise;
+    G(2, 5) = 1 * rotNoise;
     //TODO: tune filters
     //We add position errors in case we switch camera because calibration
     if(cameraSwitched){
-        G.at(0,0)+=0.02;
-        G.at(1,1)+=0.02;
-        G.at(2,2)+=0.04;
+        G(0,0)+=0.02;
+        G(1,1)+=0.02;
+        G(2,2)+=0.04;
     }
-    kalman->Q = G.t() * G;
+    kalman->Q = G.transpose() * G;
 
     kalman->predict(permanentUpdate);
     if (permanentUpdate) {
@@ -124,25 +123,25 @@ void RobotFilter::applyObservation(const proto::SSL_DetectionRobot &detectionRob
         //We're only doing this so we don't get flips from -inf to inf and loss of double precision at high values.
     }
     double difference = limitAngle(detectionRobot.orientation() - stateRot);
-    observation.at(2) = limitedRot + difference;
+    observation(2) = limitedRot + difference;
 
     kalman->z = observation;
 
-    kalman->R.zeros();
+    kalman->R = Kalman::MatrixOO::Zero();
     //we put much more trust in observations done by our main camera.
     if (cameraID == mainCamera) {
         //TODO: collect constants somewhere
         const double posVar = 0.006; //variance in meters
         const double rotVar = 0.01;
-        kalman->R.at(0, 0) = posVar;
-        kalman->R.at(1, 1) = posVar;
-        kalman->R.at(2, 2) = rotVar;
+        kalman->R(0, 0) = posVar;
+        kalman->R(1, 1) = posVar;
+        kalman->R(2, 2) = rotVar;
     } else {
         const double posVar = 0.06; //variance in meters
         const double rotVar = 0.04;
-        kalman->R.at(0, 0) = posVar;
-        kalman->R.at(1, 1) = posVar;
-        kalman->R.at(2, 2) = rotVar;
+        kalman->R(0, 0) = posVar;
+        kalman->R(1, 1) = posVar;
+        kalman->R(2, 2) = rotVar;
     }
     kalman->update();
 }

@@ -1,8 +1,7 @@
 #ifndef RTT_KALMANFILTER_H
 #define RTT_KALMANFILTER_H
 
-#include "armadillo"
-
+#include <eigen3/Eigen/Dense>
 /**
  * A class for generic standard basic linear Kalman Filters using doubles and dense matrixes.
  * Variable names are the same as on wikipedia: https://en.wikipedia.org/wiki/Kalman_filter
@@ -14,12 +13,12 @@
 template<int STATEDIM, int OBSDIM>
 class KalmanFilter {
 public:
-    typedef arma::mat::fixed<STATEDIM, STATEDIM> Matrix;
-    typedef arma::mat::fixed<OBSDIM, STATEDIM> MatrixO;
-    typedef arma::mat::fixed<OBSDIM, OBSDIM> MatrixOO;
-    typedef arma::mat::fixed<STATEDIM, OBSDIM> MatrixSO;
-    typedef arma::vec::fixed<STATEDIM> Vector;
-    typedef arma::vec::fixed<OBSDIM> VectorO;
+    typedef Eigen::Matrix<double,STATEDIM, STATEDIM> Matrix;
+    typedef Eigen::Matrix<double,OBSDIM, STATEDIM> MatrixO;
+    typedef Eigen::Matrix<double,OBSDIM, OBSDIM> MatrixOO;
+    typedef Eigen::Matrix<double,STATEDIM, OBSDIM> MatrixSO;
+    typedef Eigen::Matrix<double,STATEDIM,1> Vector;
+    typedef Eigen::Matrix<double,OBSDIM,1> VectorO;
 private:
     Vector X;// State of the system
     Matrix P;// covariance matrix of the system (how sure are we of the state?)
@@ -51,14 +50,14 @@ public:
             Ppredict(p)
     {
 
-        F.eye();
-        H.eye();
-        Q.zeros();
-        R.zeros();
-        z.zeros();
+        F=Matrix::Identity();
+        H=MatrixO::Identity();
+        Q=Matrix::Zero();
+        R=MatrixOO::Zero();
+        z=VectorO::Zero();
 
-        B.eye   ();
-        u.zeros();
+        B=Matrix::Identity();
+        u=Vector::Zero();
 
     };
     /**
@@ -68,7 +67,7 @@ public:
      */
     void predict(bool permanentUpdate) {
         Xpredict = F * X + B * u;
-        Ppredict = F * P * F.t() + Q;
+        Ppredict = F * P * F.transpose() + Q;
         if (permanentUpdate) {
             X = Xpredict;
             P = Ppredict;
@@ -80,12 +79,10 @@ public:
      */
     void update() {
         VectorO y = z - (H * Xpredict);
-        MatrixOO S = H * Ppredict * H.t() + R;
-        MatrixSO K = Ppredict * H.t() * S.i();
+        MatrixOO S = H * Ppredict * H.transpose() + R;
+        MatrixSO K = Ppredict * H.transpose() * S.inverse();
         X = Xpredict + K * y;
-        Matrix Identity;
-        Identity.eye();
-        P = (Identity - K * H) * Ppredict;
+        P = (Matrix::Identity() - K * H) * Ppredict;
     };
 
     /**
@@ -110,7 +107,7 @@ public:
      * @param value. Value to set state[index] to
      */
     void modifyState(int index, double value){
-        Xpredict.at(index) = value;
+        Xpredict(index) = value;
     }
 
 };

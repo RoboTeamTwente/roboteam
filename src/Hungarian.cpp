@@ -9,32 +9,31 @@
 // by Cong Ma, 2016
 //
 
-#include "roboteam_utils/Hungarian.h"
+#include "Hungarian.h"
 #include <stdlib.h>
 #include <cfloat>  // for DBL_MAX
 #include <cmath>   // for fabs()
-#include "world/World.h"
 
 namespace rtt {
 
-std::map<int, Vector2> HungarianAlgorithm::getRobotPositions(std::vector<int> robotIds, bool ourTeam, std::vector<Vector2> targetLocations) {
-    // init a vector with locations with the same size as the robots vector
-    std::vector<Vector2> robotLocations(robotIds.size());
-    for (unsigned int i = 0; i < robotIds.size(); i++) {
-        if (ai::world::world->getRobotForId(robotIds.at(i), ourTeam)) {
-            robotLocations.at(i) = ai::world::world->getRobotForId(robotIds.at(i), ourTeam)->pos;
-        }
-    }
-
-    auto positionPairs = calculateClosestPathsFromTwoSetsOfPoints(robotLocations, std::move(targetLocations));
-
-    std::map<int, Vector2> output;
-    for (unsigned int i = 0; i < positionPairs.size(); i++) {
-        output.insert(std::make_pair(robotIds.at(i), positionPairs.at(i).second));
-    }
-
-    return output;
-}
+//std::map<int, Vector2> HungarianAlgorithm::getRobotPositions(std::vector<int> robotIds, bool ourTeam, std::vector<Vector2> targetLocations) {
+//    // init a vector with locations with the same size as the robots vector
+//    std::vector<Vector2> robotLocations(robotIds.size());
+//    for (unsigned int i = 0; i < robotIds.size(); i++) {
+//        if (ai::world::world->getRobotForId(robotIds.at(i), ourTeam)) {
+//            robotLocations.at(i) = ai::world::world->getRobotForId(robotIds.at(i), ourTeam)->pos;
+//        }
+//    }
+//
+//    auto positionPairs = calculateClosestPathsFromTwoSetsOfPoints(robotLocations, std::move(targetLocations));
+//
+//    std::map<int, Vector2> output;
+//    for (unsigned int i = 0; i < positionPairs.size(); i++) {
+//        output.insert(std::make_pair(robotIds.at(i), positionPairs.at(i).second));
+//    }
+//
+//    return output;
+// }
 
 bool HungarianAlgorithm::validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2) {
     if (set1.size() > set2.size()) {

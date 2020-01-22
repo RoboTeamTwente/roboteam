@@ -24,9 +24,9 @@ class HungarianAlgorithm {
    public:
     HungarianAlgorithm() = default;
     double Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignment);
+    std::vector<std::pair<Vector2, Vector2>> calculateClosestPathsFromTwoSetsOfPoints(std::vector<Vector2> set1, std::vector<Vector2> set2);
 
    private:
-    std::vector<std::pair<Vector2, Vector2>> calculateClosestPathsFromTwoSetsOfPoints(std::vector<Vector2> set1, std::vector<Vector2> set2);
     bool validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2);
 
   void assignmentoptimal(int* assignment, double* cost, double* distMatrix, int nOfRows, int nOfColumns);

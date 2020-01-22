@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Hungarian.cpp: Implementation file for Class HungarianAlgorithm.
+// Hungarian.cpp: Implementation file for Class Hungarian.
 //
 // This is a C++ wrapper with slight modification of a hungarian algorithm implementation by Markus Buehren.
 // The original implementation is a few mex-functions for use in MATLAB, found here:
@@ -10,32 +10,33 @@
 //
 
 #include "Hungarian.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include <cfloat>  // for DBL_MAX
 #include <cmath>   // for fabs()
 
 namespace rtt {
 
-//std::map<int, Vector2> HungarianAlgorithm::getRobotPositions(std::vector<int> robotIds, bool ourTeam, std::vector<Vector2> targetLocations) {
-//    // init a vector with locations with the same size as the robots vector
-//    std::vector<Vector2> robotLocations(robotIds.size());
-//    for (unsigned int i = 0; i < robotIds.size(); i++) {
-//        if (ai::world::world->getRobotForId(robotIds.at(i), ourTeam)) {
-//            robotLocations.at(i) = ai::world::world->getRobotForId(robotIds.at(i), ourTeam)->pos;
-//        }
-//    }
-//
-//    auto positionPairs = calculateClosestPathsFromTwoSetsOfPoints(robotLocations, std::move(targetLocations));
-//
-//    std::map<int, Vector2> output;
-//    for (unsigned int i = 0; i < positionPairs.size(); i++) {
-//        output.insert(std::make_pair(robotIds.at(i), positionPairs.at(i).second));
-//    }
-//
-//    return output;
-// }
+// This function maps two sets of points and returns pairs of sets that give the shortest total distance
+// If you want to have the resulting pair of points for a specific pair
+std::unordered_map<int, Vector2> Hungarian::getOptimalPairsIdentified(const std::unordered_map<int, Vector2>& positions, std::vector<Vector2> targetLocations) {
+  std::vector<int> identifiers;
+  std::vector<Vector2> robotLocations;
 
-bool HungarianAlgorithm::validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2) {
+  // the robotIds and robotLocations have the same sorting and stay mapped
+  for (auto & position : positions) {
+    identifiers.push_back(position.first);
+    robotLocations.push_back(position.second);
+  }
+
+  auto positionPairs = getOptimalPairs(robotLocations, std::move(targetLocations));
+  std::unordered_map<int, Vector2> output;
+  for (unsigned int i = 0; i < positionPairs.size(); i++) {
+    output.insert(std::make_pair(identifiers.at(i), positionPairs.at(i).second));
+  }
+  return output;
+}
+
+bool Hungarian::validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2) {
     if (set1.size() > set2.size()) {
         std::cerr << "wrong input for hungarian: more robots than positions" << std::endl;
         return false;
@@ -47,20 +48,19 @@ bool HungarianAlgorithm::validateInput(std::vector<Vector2> const& set1, std::ve
     return true;
 }
 
-std::vector<std::pair<Vector2, Vector2>> HungarianAlgorithm::calculateClosestPathsFromTwoSetsOfPoints(std::vector<Vector2> set1, std::vector<Vector2> set2) {
+std::vector<std::pair<Vector2, Vector2>> Hungarian::getOptimalPairs(std::vector<Vector2> set1, std::vector<Vector2> set2) {
     if (validateInput(set1, set2)) {
-        std::vector<int> assignments;
         // compute a distance matrix, initialize it with zeros
         std::vector<std::vector<double>> distanceMatrix(set1.size(), std::vector<double>(set2.size()));
-
         for (unsigned int i = 0; i < set1.size(); i++) {
             for (unsigned int j = 0; j < set2.size(); j++) {
                 distanceMatrix.at(i).at(j) = set1[i].dist(set2[j]);
             }
         }
 
-        rtt::HungarianAlgorithm hungarian;
-        hungarian.Solve(distanceMatrix, assignments);
+        // this function mutates 'assignments'
+        std::vector<int> assignments;
+        Solve(distanceMatrix, assignments);
 
         std::vector<std::pair<Vector2, Vector2>> solutionPairs;
         for (unsigned int i = 0; i < assignments.size(); i++) {
@@ -74,7 +74,7 @@ std::vector<std::pair<Vector2, Vector2>> HungarianAlgorithm::calculateClosestPat
 //********************************************************//
 // A single function wrapper for solving assignment problem.
 //********************************************************//
-double HungarianAlgorithm::Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignment) {
+double Hungarian::Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignment) {
     unsigned long nRows = DistMatrix.size();
     unsigned long nCols = DistMatrix[0].size();
 
@@ -103,7 +103,7 @@ double HungarianAlgorithm::Solve(vector<vector<double>>& DistMatrix, vector<int>
 //********************************************************//
 // Solve optimal solution for assignment problem using Munkres algorithm, also known as Hungarian Algorithm.
 //********************************************************//
-void HungarianAlgorithm::assignmentoptimal(int* assignment, double* cost, double* distMatrixIn, int nOfRows, int nOfColumns) {
+void Hungarian::assignmentoptimal(int* assignment, double* cost, double* distMatrixIn, int nOfRows, int nOfColumns) {
     double *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;
     bool *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
     int nOfElements, minDim, row, col;
@@ -212,7 +212,7 @@ void HungarianAlgorithm::assignmentoptimal(int* assignment, double* cost, double
 }
 
 /********************************************************/
-void HungarianAlgorithm::buildassignmentvector(int* assignment, bool* starMatrix, int nOfRows, int nOfColumns) {
+void Hungarian::buildassignmentvector(int* assignment, bool* starMatrix, int nOfRows, int nOfColumns) {
     int row, col;
 
     for (row = 0; row < nOfRows; row++)
@@ -224,7 +224,7 @@ void HungarianAlgorithm::buildassignmentvector(int* assignment, bool* starMatrix
 }
 
 /********************************************************/
-void HungarianAlgorithm::computeassignmentcost(int* assignment, double* cost, double* distMatrix, int nOfRows) {
+void Hungarian::computeassignmentcost(int* assignment, double* cost, double* distMatrix, int nOfRows) {
     int row, col;
 
     for (row = 0; row < nOfRows; row++) {
@@ -234,8 +234,8 @@ void HungarianAlgorithm::computeassignmentcost(int* assignment, double* cost, do
 }
 
 /********************************************************/
-void HungarianAlgorithm::step2a(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
-                                int nOfColumns, int minDim) {
+void Hungarian::step2a(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                       int nOfColumns, int minDim) {
     bool *starMatrixTemp, *columnEnd;
     int col;
 
@@ -256,8 +256,8 @@ void HungarianAlgorithm::step2a(int* assignment, double* distMatrix, bool* starM
 }
 
 /********************************************************/
-void HungarianAlgorithm::step2b(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
-                                int nOfColumns, int minDim) {
+void Hungarian::step2b(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                       int nOfColumns, int minDim) {
     int col, nOfCoveredColumns;
 
     /* count covered columns */
@@ -275,8 +275,8 @@ void HungarianAlgorithm::step2b(int* assignment, double* distMatrix, bool* starM
 }
 
 /********************************************************/
-void HungarianAlgorithm::step3(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
-                               int nOfColumns, int minDim) {
+void Hungarian::step3(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim) {
     bool zerosFound;
     int row, col, starCol;
 
@@ -313,8 +313,8 @@ void HungarianAlgorithm::step3(int* assignment, double* distMatrix, bool* starMa
 }
 
 /********************************************************/
-void HungarianAlgorithm::step4(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
-                               int nOfColumns, int minDim, int row, int col) {
+void Hungarian::step4(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim, int row, int col) {
     int n, starRow, starCol, primeRow, primeCol;
     int nOfElements = nOfRows * nOfColumns;
 
@@ -360,8 +360,8 @@ void HungarianAlgorithm::step4(int* assignment, double* distMatrix, bool* starMa
 }
 
 /********************************************************/
-void HungarianAlgorithm::step5(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
-                               int nOfColumns, int minDim) {
+void Hungarian::step5(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim) {
     double h, value;
     int row, col;
 
@@ -388,5 +388,6 @@ void HungarianAlgorithm::step5(int* assignment, double* distMatrix, bool* starMa
     /* move to step 3 */
     step3(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
+
 
 }  // namespace rtt

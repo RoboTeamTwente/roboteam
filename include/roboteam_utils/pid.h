@@ -8,7 +8,6 @@
 #include <tuple>
 
 class PID {
-    static constexpr int TICK_RATE = 60;
    public:
     PID(double, double, double);
     PID(double, double, double, double);
@@ -42,6 +41,7 @@ class PID {
     static bool bounded(double, double, double);
     void checkSigns();
     void init();
+    static constexpr int TICK_RATE = 60;
     double P;
     double I;
     double D;

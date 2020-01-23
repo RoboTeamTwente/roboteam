@@ -13,7 +13,7 @@ namespace rtt {
  * This is because, appearantly, the fmodl function only has float precision even though it should support
  * 128-bit long doubles...
  */
-    constexpr double ARC_MAX = M_PI - std::numeric_limits<float>::epsilon();
+    constexpr double ARC_MAX = 2*M_PI - std::numeric_limits<float>::epsilon();
 
 /**
  * \class Arc

@@ -1,10 +1,4 @@
-//
-// Created by mrlukasbos on 29-3-19.
-//
-
-#include "roboteam_utils/pid.h"
-
-#include "utilities/Constants.h"
+#include "pid.h"
 
 //**********************************
 // Constructor functions
@@ -223,14 +217,14 @@ double PID::getOutput(double actual, double setpoint) {
     // Note, this->is negative. this->actually "slows" the system if it's doing
     // the correct thing, and small values helps prevent output spikes and overshoot
 
-    Doutput = -D * (actual - lastActual) * rtt::ai::Constants::TICK_RATE();
+    Doutput = -D * (actual - lastActual) * TICK_RATE;
     lastActual = actual;
 
     // The Iterm is more complex. There's several things to factor in to make it easier to deal with.
     // 1. maxIoutput restricts the amount of output contributed by the Iterm.
     // 2. prevent windup by not increasing errorSum if we're already running against our max Ioutput
     // 3. prevent windup by not increasing errorSum if output is output=maxOutput
-    Ioutput = I * errorSum / rtt::ai::Constants::TICK_RATE();
+    Ioutput = I * errorSum / TICK_RATE;
     if (maxIOutput != 0) {
         Ioutput = clamp(Ioutput, -maxIOutput, maxIOutput);
     }

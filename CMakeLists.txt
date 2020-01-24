@@ -59,7 +59,7 @@ target_link_libraries(roboteam_utils
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
         -Wall
-   #     -Werror
+#        -Werror
         -Wextra
         -Wno-unused-function
         -Wno-comment

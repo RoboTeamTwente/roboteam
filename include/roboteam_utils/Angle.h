@@ -52,9 +52,9 @@ namespace rtt {
         /**
          * @brief Set the Angle object's angle
          *
-         * @param angle Angle to set the angle to
+         * @param other Angle to set the angle to
          */
-        void setAngle(double angle) noexcept;
+        void setAngle(double other) noexcept;
 
         /**
          * @brief Gets the difference in angle between this angle and other
@@ -226,12 +226,6 @@ namespace rtt {
          * @brief Current angle stored
          */
         double angle;
-
-        /**
-         * @brief Current epsilon allowed for float comparison
-         *
-         */
-        constexpr static double epsilon = 0.00001;
 
         /**
          * @brief Constrains the angle between 0 and 2 pi

@@ -11,8 +11,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 add_library(roboteam_utils STATIC
         src/Polygon.cpp
         include/roboteam_utils/Polygon.h
-        src/LineBase.cpp
-        include/roboteam_utils/LineBase.h
         src/Line.cpp
         include/roboteam_utils/Line.h
         src/LineSegment.cpp
@@ -43,6 +41,7 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/json.hpp
         #include/roboteam_utils/BiMap.h
         #include/roboteam_utils/Graph.h
+        include/roboteam_utils/Definitions.h
         include/roboteam_utils/Statistics.h
         include/roboteam_utils/pid.h
         src/pid.cpp

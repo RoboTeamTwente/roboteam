@@ -30,6 +30,8 @@ add_library(roboteam_utils STATIC
         src/normalize.cpp
         include/roboteam_utils/normalize.h
         src/Clip.cpp
+        include/roboteam_utils/Hungarian.h
+        src/Hungarian.cpp
         include/roboteam_utils/Clip.h
         src/Optimization.cpp
         include/roboteam_utils/Optimization.h
@@ -54,7 +56,6 @@ target_include_directories(roboteam_utils
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
-        #gtest
         )
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
@@ -77,6 +78,7 @@ add_executable(utils_tests
         test/PolygonTest.cpp
         test/PositionTest.cpp
         test/Vector2Test.cpp
+        test/HungarianTest.cpp
         )
 
 if (UNIX AND NOT APPLE)

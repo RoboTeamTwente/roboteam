@@ -42,6 +42,8 @@ add_library(roboteam_utils STATIC
         #include/roboteam_utils/BiMap.h
         #include/roboteam_utils/Graph.h
         include/roboteam_utils/Statistics.h
+        include/roboteam_utils/pid.h
+        src/pid.cpp
         )
 
 

@@ -235,4 +235,14 @@ std::ostream &operator<<(std::ostream &os, Vector2 const &vec);
 
 }
 
+/**
+ * A hash function for the Vector2, for use with unordered_maps. It uses the implementation of the boost hash combine
+ */
+template<> struct std::hash<rtt::Vector2>{
+    size_t operator ()(const rtt::Vector2& object) const{
+        size_t xHash = std::hash<double>()(object.x) + 0x9e3779b9;
+        return xHash ^ (std::hash<double>()(object.y) + 0x9e3779b9 + (xHash<<6u) + (xHash>>2u));
+    }
+};
+
 #endif // VECTOR2_H

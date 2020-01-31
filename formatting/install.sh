@@ -9,7 +9,7 @@ do
     chmod 755 ./.git/modules/$submodule/hooks/pre-commit
 done
 
-cp ./formatting/roboteam_clang-format.file /opt/roboteam_clang-format.file
+cp ./formatting/roboteam_clang-format.file ~/.config/roboteam_clang-format.file
 
 if hash clang-format 2>/dev/null; then 
     echo "clang-format has been properly set up";

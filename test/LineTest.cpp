@@ -6,6 +6,7 @@
 #include "roboteam_utils/LineSegment.h"
 #include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
+#include <math.h>
 using namespace rtt;
 TEST(LineTests, direction) {
     Vector2 v1(0.0, 0.0), v2(1.0, 1.0), v3(0.0, 0.0);
@@ -19,9 +20,10 @@ TEST(LineTests, direction) {
     EXPECT_FALSE(l1.isPoint());
     EXPECT_FALSE(l2.isPoint());
     Vector2 v4(0.0, 0.0), v5(0.0, 10.0), v6(2.0, 0.0), v7(2.0, 9.0);
-    Vector2 v8(2.0, 0.0), v9(3.0, 10.0);
+    Vector2 v8(2.0, 0.0), v9(3.0, 10.0), v10(0.0+std::numeric_limits<double>::epsilon(),10);
     Line l4(v4, v5), l5(v6, v7);
     Line l6(v4, v8), l7(v5, v9);
+    Line l8(v4,v10);
     EXPECT_TRUE(l4.isParallel(l5));
     EXPECT_TRUE(l5.isParallel(l4));
     EXPECT_TRUE(l6.isParallel(l7));
@@ -39,6 +41,7 @@ TEST(LineTests, direction) {
     EXPECT_FALSE(l5.isParallel(l7));
     EXPECT_FALSE(l7.isParallel(l4));
     EXPECT_FALSE(l7.isParallel(l5));
+    EXPECT_FALSE(l4.isParallel(l8));
 
 }
 TEST(LineTests, slopeAndIntercept) {
@@ -161,62 +164,62 @@ TEST(LineTests, Intersections) {
     LineSegment LS1(P1, P2), LS2(P3, P4), LS3(P3, P5), LS4(P1, P5), LS5(P1, P4);
     Vector2 intersect(2.0, 2.0);
 
-    ASSERT_NE(L1.intersects(L2), nullptr);
+    ASSERT_NE(L1.intersects(L2), std::nullopt);
     ASSERT_TRUE(L1.doesIntersect(L2));
     EXPECT_EQ(*L1.intersects(L2), intersect);
 //test converse
-    ASSERT_NE(L2.intersects(L1), nullptr);
+    ASSERT_NE(L2.intersects(L1), std::nullopt);
     ASSERT_TRUE(L2.doesIntersect(L1));
     EXPECT_EQ(*L2.intersects(L1), intersect);
 
-    ASSERT_EQ(LS1.intersects(LS2), nullptr);
+    ASSERT_EQ(LS1.intersects(LS2), std::nullopt);
     ASSERT_FALSE(LS1.doesIntersect(LS2));
 //test converse
-    ASSERT_EQ(LS2.intersects(LS1), nullptr);
+    ASSERT_EQ(LS2.intersects(LS1), std::nullopt);
     ASSERT_FALSE(LS2.doesIntersect(LS1));
 
-    ASSERT_NE(L2.intersects(L4), nullptr);
+    ASSERT_NE(L2.intersects(L4), std::nullopt);
     ASSERT_TRUE(L2.doesIntersect(L4));
     EXPECT_EQ(*L2.intersects(L4), intersect);
 //test converse
-    ASSERT_NE(L4.intersects(L2), nullptr);
+    ASSERT_NE(L4.intersects(L2), std::nullopt);
     ASSERT_TRUE(L4.doesIntersect(L2));
     EXPECT_EQ(*L4.intersects(L2), intersect);
 
-    ASSERT_NE(LS2.intersects(LS4), nullptr);
+    ASSERT_NE(LS2.intersects(LS4), std::nullopt);
     ASSERT_TRUE(LS2.doesIntersect(LS4));
     EXPECT_EQ(*LS2.intersects(LS4), intersect);
 //test converse
-    ASSERT_NE(LS4.intersects(LS2), nullptr);
+    ASSERT_NE(LS4.intersects(LS2), std::nullopt);
     ASSERT_TRUE(LS4.doesIntersect(LS2));
     EXPECT_EQ(*LS4.intersects(LS2), intersect);
 
-    ASSERT_NE(L3.intersects(L4), nullptr);
+    ASSERT_NE(L3.intersects(L4), std::nullopt);
     ASSERT_TRUE(L3.doesIntersect(L4));
     EXPECT_EQ(*L3.intersects(L4), P5);
 //test converse
-    ASSERT_NE(L4.intersects(L3), nullptr);
+    ASSERT_NE(L4.intersects(L3), std::nullopt);
     ASSERT_TRUE(L4.doesIntersect(L3));
     EXPECT_EQ(*L4.intersects(L3), P5);
 
-    ASSERT_NE(LS3.intersects(LS4), nullptr);
+    ASSERT_NE(LS3.intersects(LS4), std::nullopt);
     ASSERT_TRUE(LS3.doesIntersect(LS4));
     EXPECT_EQ(*LS3.intersects(LS4), P5);
 //test converse
-    ASSERT_NE(LS4.intersects(LS3), nullptr);
+    ASSERT_NE(LS4.intersects(LS3), std::nullopt);
     ASSERT_TRUE(LS4.doesIntersect(LS3));
     EXPECT_EQ(*LS4.intersects(LS3), P5);
 
-    EXPECT_EQ(L3.intersects(L5), nullptr);
+    EXPECT_EQ(L3.intersects(L5), std::nullopt);
     EXPECT_FALSE(L3.doesIntersect(L5));
 //test converse
-    EXPECT_EQ(L5.intersects(L3), nullptr);
+    EXPECT_EQ(L5.intersects(L3), std::nullopt);
     EXPECT_FALSE(L5.doesIntersect(L3));
 
-    EXPECT_EQ(LS3.intersects(LS5), nullptr);
+    EXPECT_EQ(LS3.intersects(LS5), std::nullopt);
     EXPECT_FALSE(LS3.doesIntersect(LS5));
 //test converse
-    EXPECT_EQ(LS5.intersects(LS3), nullptr);
+    EXPECT_EQ(LS5.intersects(LS3), std::nullopt);
     EXPECT_FALSE(LS5.doesIntersect(LS3));
 
 }
@@ -227,13 +230,13 @@ TEST(LineTests, IntersectionsDifferentTypes) {
     LineSegment LS1(P1, P2), LS2(P3, P4);
 
 // no special things, just normal intersection. Should work as expected
-    ASSERT_NE(LS1.intersects(L2), nullptr);
+    ASSERT_NE(LS1.intersects(L2), std::nullopt);
     ASSERT_EQ(*LS1.intersects(L2), middle);
-    ASSERT_NE(L2.intersects(LS1), nullptr);
+    ASSERT_NE(L2.intersects(LS1), std::nullopt);
     ASSERT_EQ(*L2.intersects(LS1), middle);
-    ASSERT_NE(LS2.intersects(L1), nullptr);
+    ASSERT_NE(LS2.intersects(L1), std::nullopt);
     ASSERT_EQ(*LS2.intersects(L1), middle);
-    ASSERT_NE(L1.intersects(LS2), nullptr);
+    ASSERT_NE(L1.intersects(LS2), std::nullopt);
     ASSERT_EQ(*L1.intersects(LS2), middle);
 
     EXPECT_TRUE(LS1.doesIntersect(L2));
@@ -246,9 +249,9 @@ TEST(LineTests, IntersectionsDifferentTypes) {
     Line A1(R1, R2), A2(R3, R4);
     LineSegment AS1(R1, R2), AS2(R3, R4);
 
-    EXPECT_EQ(AS1.intersects(A2), nullptr);
+    EXPECT_EQ(AS1.intersects(A2), std::nullopt);
     EXPECT_FALSE(AS1.doesIntersect(A2));
-    EXPECT_NE(A1.intersects(AS2), nullptr);
+    EXPECT_NE(A1.intersects(AS2), std::nullopt);
     EXPECT_TRUE(A1.doesIntersect(AS2));
     EXPECT_EQ(*A1.intersects(AS2), Vector2(4.0, 0.0));
 
@@ -258,7 +261,7 @@ TEST(LineTests, IntersectionsDifferentTypes) {
     Line A3(R5, R6), A4(R2, R7), A5(R7, R8);
     LineSegment AS3(R5, R6), AS4(R2, R7), AS5(R7, R8);
 
-    ASSERT_NE(AS1.intersects(AS4), nullptr);
+    ASSERT_NE(AS1.intersects(AS4), std::nullopt);
     EXPECT_TRUE(AS1.doesIntersect(AS4));
     EXPECT_EQ(*AS1.intersects(AS4), R2);
 

@@ -69,13 +69,13 @@ namespace rtt {
          * @return false If key is not found
          */
         bool removeByLeft(const T &key) {
-            auto it = leftSet.find({left, nullptr});
+            auto it = leftSet.find({key, nullptr});
             if (it == leftSet.end()) {
                 return false;
             }
 
             rightSet.erase({*it->second, nullptr});
-            leftSet.erase({left, nullptr});
+            leftSet.erase({key, nullptr});
             return true;
         }
 
@@ -87,12 +87,12 @@ namespace rtt {
          * @return false If key is not found
          */
         bool removeByRight(const U &key) {
-            auto it = rightSet.find({right, nullptr});
+            auto it = rightSet.find({key, nullptr});
             if (it == rightSet.end()) {
                 return false;
             }
             leftSet.erase({*it->second, nullptr});
-            rightSet.erase({right, nullptr});
+            rightSet.erase({key, nullptr});
             return true;
         }
 
@@ -103,7 +103,7 @@ namespace rtt {
          * @return U* Returns nullptr if not found, otherwise it returns the second element
          */
         U *lookupLeft(const T &key) const {
-            auto it = leftSet.find({left, nullptr});
+            auto it = leftSet.find({key, nullptr});
             return it == leftSet.end() ? nullptr : it->second;
         }
 
@@ -114,7 +114,7 @@ namespace rtt {
          * @return U* Returns nullptr if not found, otherwise it returns the second element
          */
         T *lookupRight(const U &key) const {
-            auto it = rightSet.find({right, nullptr});
+            auto it = rightSet.find({key, nullptr});
             return it == rightSet.end() ? nullptr : it->second;
         }
 

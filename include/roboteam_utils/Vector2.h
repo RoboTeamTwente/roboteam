@@ -6,7 +6,7 @@
 
 namespace rtt {
 
-    class Angle;
+class Angle;
 
 /**
  * \class Vector2
@@ -15,24 +15,26 @@ namespace rtt {
  * but none of its methods will modify it, they will instead return a new vector when needed.
  * The only exception is operator=(const roboteam_msgs::Vector2f&).
  */
-    class Vector2 {
+class Vector2 {
     public:
+        double x;
+        double y;
         /**
          * \brief The zero vector.
          */
         constexpr Vector2()
-                : x(0.0), y(0.0), epsilon(0.00001) {}
+                :x{0.0}, y{0.0} { }
 
         constexpr Vector2(const Vector2 &copy)
-                : x(copy.x), y(copy.y), epsilon(0.00001) {}
+                :x{copy.x}, y{copy.y} { };
 
         constexpr Vector2(const double x, const double y)
-                : x(x), y(y), epsilon(0.00001) {}
+                :x{x}, y{y} { }
 
         Vector2(const proto::Vector2f &msg)
-                : Vector2(msg.x(), msg.y()) {}
+                :Vector2(msg.x(), msg.y()) { }
 
-        Vector2(rtt::Angle &angle, const double &length = 1.0);
+        explicit Vector2(rtt::Angle &angle, const double &length = 1.0);
 
         /**
          * \brief Calculate the dot product of this vector with another. (this . other)
@@ -211,7 +213,7 @@ namespace rtt {
         Vector2 operator/(const double &other) const;
 
         /**
-         * \brief Set the values of this vector to the ones in the given ROS vector.
+         * \brief Set the values of this vector to the ones in the given protobuf vector.
          */
         void operator=(const proto::Vector2f &msg);
 
@@ -224,17 +226,12 @@ namespace rtt {
          * \brief Writes a textual representation of this vector to the given output stream.
          */
         std::ostream &write(std::ostream &os) const;
-
-        double x;
-        double y;
-    private:
-        double epsilon;
-    };
+};
 
 /**
  * \brief Writes a vector to an output stream.
  */
-std::ostream &operator<<(std::ostream &os, Vector2 const& vec);
+std::ostream &operator<<(std::ostream &os, Vector2 const &vec);
 
 }
 

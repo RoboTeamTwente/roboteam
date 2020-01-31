@@ -7,6 +7,7 @@
 #include "roboteam_utils/Line.h"
 
 #include <gtest/gtest.h>
+#include <math.h>
 using namespace rtt;
 TEST(constructors, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);

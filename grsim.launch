@@ -1,3 +1,0 @@
-<launch>
-	<node name="grsim" pkg="roboteam_utils" type="grsim.sh" />
-</launch>

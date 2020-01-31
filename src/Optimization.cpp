@@ -33,17 +33,6 @@ namespace rtt {
         }
     }
 
-    Vector2 optimizeVector(
-            const Vector2 &center,
-            double minXDev,
-            double maxXDev,
-            double minYDev,
-            double maxYDev,
-            double step,
-            int refinement,
-            std::function<double(const Vector2 &)> scoreFunc) {
-        return Vector2(); // TODO
-    }
 
     Vector2 sampleForVector(
             const Vector2 &center,

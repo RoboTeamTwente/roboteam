@@ -4,7 +4,7 @@
 
 #include "../include/roboteam_utils/Angle.h"
 #include "../include/roboteam_utils/Vector2.h"
-
+#include "../include/roboteam_utils/Definitions.h"
 namespace rtt {
 
     Angle::Angle(double angle)
@@ -13,7 +13,7 @@ namespace rtt {
     }
 
     Angle::Angle(const rtt::Vector2 &vec) {
-        if (vec.length() < epsilon)
+        if (vec.length() < VECTOR_PRECISION)
             angle = 0.0;
         else
             angle = vec.toAngle().getAngle();
@@ -23,8 +23,8 @@ namespace rtt {
         return angle;
     }
 
-    void Angle::setAngle(double angle) noexcept {
-        *this = Angle(angle);
+    void Angle::setAngle(double other) noexcept {
+        *this = Angle(other);
     }
 
     Angle Angle::constrain() noexcept {
@@ -60,7 +60,7 @@ namespace rtt {
     }
 
     bool Angle::operator==(const Angle &other) const noexcept {
-        return fabs(this->angle - other.angle) < epsilon;
+        return fabs(this->angle - other.angle) < VECTOR_PRECISION;
     }
 
     bool Angle::operator==(const double &scalar) const noexcept {

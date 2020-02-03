@@ -81,3 +81,18 @@ Make sure you already have the following:
 ```
 $ brew install zmq zmqpp armadillo protobuf
 ```
+## Code Style Formatting
+To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.
+
+### Commit Formatting
+Run install.sh from the cloned 'formatting' folder in this repository. This will make sure that the code is formatted during every commit from then on. 
+
+### CLion Formatting
+1. Open CLion and go to File->Settings->Tools->External Tools
+2. Click on Add and fill in without quotes: 
+- Name: 'clang-format'
+- Program: The location on your computer to the formatting/format-all.sh file of this repository.
+- Working directory: '$FilePath$'
+3. Click on OK, OK
+4. If you now right click a folder and go to External Tools then you can click on clang-format which will format the entire folder (not this unfortunately does not yet work on single files).
+

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 cp ./formatting/pre-commit ./.git/hooks/pre-commit
 chmod 755 ./.git/hooks/pre-commit

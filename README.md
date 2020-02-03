@@ -85,7 +85,9 @@ $ brew install zmq zmqpp armadillo protobuf
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.
 
 ### Commit Formatting
-Run install.sh from the cloned 'formatting' folder in this repository. This will make sure that the code is formatted during every commit from then on. 
+1. Open a terminal and run 'sudo apt-get install clang-format'
+2. Run install.sh in the cloned 'formatting' folder with as working directory the cloned roboteam_suite folder. 
+This will make sure that the code is formatted during every commit from then on. 
 
 ### CLion Formatting
 1. Open CLion and go to File->Settings->Tools->External Tools
@@ -94,5 +96,5 @@ Run install.sh from the cloned 'formatting' folder in this repository. This will
 - Program: The location on your computer to the formatting/format-all.sh file of this repository.
 - Working directory: '$FilePath$'
 3. Click on OK, OK
-4. If you now right click a folder and go to External Tools then you can click on clang-format which will format the entire folder (not this unfortunately does not yet work on single files).
+4. If you now right click a folder in your Project Tree and go to External Tools then you can click on clang-format which will format the entire folder (not this unfortunately does not yet work on single files).
 

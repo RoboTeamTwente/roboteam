@@ -1,8 +1,8 @@
 #include "WorldHandler.h"
-#include "roboteam_proto/messages_robocup_ssl_wrapper.pb.h"
 #include <net/robocup_ssl_client.h>
-#include <sstream>
 #include <roboteam_utils/Timer.h>
+#include <sstream>
+#include "roboteam_proto/messages_robocup_ssl_wrapper.pb.h"
 
 namespace world {
 
@@ -15,12 +15,14 @@ void WorldHandler::start() {
 
     roboteam_utils::Timer t;
 
-    t.loop([&]() {
-      handleVisionPackets(vision_packet);
-      handleRefboxPackets(ref_packet);
+    t.loop(
+        [&]() {
+            handleVisionPackets(vision_packet);
+            handleRefboxPackets(ref_packet);
 
-      world_pub->send(worldFilter->getWorld(lastPacketTime));
-    }, 100);
+            world_pub->send(worldFilter->getWorld(lastPacketTime));
+        },
+        100);
 }
 
 void WorldHandler::init() {
@@ -28,9 +30,8 @@ void WorldHandler::init() {
     world_pub = new proto::Publisher<proto::World>(proto::WORLD_CHANNEL);
     ref_pub = new proto::Publisher<proto::SSL_Referee>(proto::REFEREE_CHANNEL);
     geom_pub = new proto::Publisher<proto::SSL_GeometryData>(proto::GEOMETRY_CHANNEL);
-    lastPacketTime=0.0;
+    lastPacketTime = 0.0;
 }
-
 
 void WorldHandler::setupSSLClients() {
     constexpr int DEFAULT_VISION_PORT = 10006;
@@ -45,7 +46,7 @@ void WorldHandler::setupSSLClients() {
     cout << "Vision  : " << SSL_VISION_SOURCE_IP << ":" << DEFAULT_VISION_PORT << endl;
     cout << "Referee  : " << SSL_REFEREE_SOURCE_IP << ":" << DEFAULT_REFEREE_PORT << endl;
 
-    vision_client->open(false); // boolean blocking
+    vision_client->open(false);  // boolean blocking
     refbox_client->open(false);
     this_thread::sleep_for(chrono::microseconds(10000));
 }
@@ -58,10 +59,10 @@ void WorldHandler::handleRefboxPackets(proto::SSL_Referee &ref_packet) const {
 
 void WorldHandler::handleVisionPackets(proto::SSL_WrapperPacket &vision_packet) {
     while (vision_client && vision_client->receive(vision_packet)) {
-        if (vision_packet.has_detection()){
-            double time=vision_packet.detection().t_capture();
-            if (time>lastPacketTime){
-                lastPacketTime=time;
+        if (vision_packet.has_detection()) {
+            double time = vision_packet.detection().t_capture();
+            if (time > lastPacketTime) {
+                lastPacketTime = time;
             }
             worldFilter->addFrame(vision_packet.detection());
         }
@@ -70,4 +71,4 @@ void WorldHandler::handleVisionPackets(proto::SSL_WrapperPacket &vision_packet) 
         }
     }
 }
-}
+}  // namespace world

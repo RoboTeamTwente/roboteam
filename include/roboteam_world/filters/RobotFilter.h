@@ -5,13 +5,12 @@
 #ifndef RTT_ROBOTFILTER_H
 #define RTT_ROBOTFILTER_H
 
-
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
+#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 
-#include <utility>
-#include "KalmanFilter.h"
 #include "CameraFilter.h"
+#include "KalmanFilter.h"
+#include "RobotObservation.h"
 
 /**
  * A class that can filter robots and predict where they will be based on observations.
@@ -20,7 +19,8 @@
  */
 class RobotFilter : public CameraFilter {
     typedef KalmanFilter<6, 3> Kalman;
-public:
+
+   public:
     /**
      * Construct a RobotFilter.
      * @param detectionRobot Initial observation of the robot we start our filter with.
@@ -63,27 +63,14 @@ public:
      */
     [[nodiscard]] proto::WorldRobot asWorldRobot() const;
 
-    /**
-     * A struct to keep robotData and time as one observation.
-     */
-    struct RobotObservation {
-        explicit RobotObservation(int cameraID, double time, proto::SSL_DetectionRobot detectionRobot) :
-                cameraID(cameraID),
-                time(time),
-                bot(std::move(detectionRobot)) {}
-        int cameraID;
-        double time;
-        proto::SSL_DetectionRobot bot;
-    };
-
-private:
+   private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
      * This changes the z and r matrices.
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionRobot Robot to be applied
      */
-    void applyObservation(const proto::SSL_DetectionRobot &detectionRobot, int cameraID);
+    void applyObservation(const RobotObservation &observation);
     /**
      * A function that casts any angle to the range [-PI,PI)
      * @param angle angle to be limited
@@ -98,8 +85,6 @@ private:
     std::unique_ptr<Kalman> kalman = nullptr;
     int botId;
     std::vector<RobotObservation> observations;
-
 };
 
-
-#endif //RTT_ROBOTFILTER_H
+#endif  // RTT_ROBOTFILTER_H

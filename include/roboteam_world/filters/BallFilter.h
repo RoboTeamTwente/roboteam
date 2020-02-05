@@ -5,20 +5,21 @@
 #ifndef RTT_BALLFILTER_H
 #define RTT_BALLFILTER_H
 
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldBall.pb.h>
+#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 
-#include <utility>
-#include "KalmanFilter.h"
+#include "BallObservation.h"
 #include "CameraFilter.h"
+#include "KalmanFilter.h"
 
 class BallFilter : public CameraFilter {
     typedef KalmanFilter<4, 2> Kalman;
-public:
-    //TODO: add documentation
+
+   public:
+    // TODO: add documentation
     explicit BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime, int cameraID);
     void predict(double time, bool permanentUpdate, bool cameraSwitched);
-    void update(double time, bool doLastPredict);;
+    void update(double time, bool doLastPredict);
     void addObservation(const proto::SSL_DetectionBall &detectionBall, double time, int cameraID);
     /**
      * Distance of the state of the filter to a point.
@@ -36,27 +37,15 @@ public:
      * @return Returns true if the ball has been the last 0.05 seconds.
      */
     [[nodiscard]] bool ballIsVisible() const;
-    /**
-     * A struct to keep Ball Data and time as one observation.
-     */
-    struct BallObservation{
-        explicit BallObservation(int cameraID,double time,proto::SSL_DetectionBall  detectionBall) :
-                cameraID(cameraID),
-                time(time),
-                ball(std::move(detectionBall))
-        {}
-        int cameraID;
-        double time;
-        proto::SSL_DetectionBall ball;
-    };
-private:
+
+   private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
      * This changes the z and r matrices.
      * Make sure you have predicted until the correct time before calling this!
      * @param detectionBall Ball to be applied to the filter
      */
-    void applyObservation(const proto::SSL_DetectionBall &detectionBall, int cameraID);
+    void applyObservation(const BallObservation &observation);
     /**
      * Initializes the kalman Filter structures
      * @param detectionBall Contains the initial state of the Filter.
@@ -67,5 +56,4 @@ private:
     std::vector<BallObservation> observations;
 };
 
-
-#endif //RTT_BALLFILTER_H
+#endif  // RTT_BALLFILTER_H

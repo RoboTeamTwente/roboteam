@@ -5,15 +5,15 @@
 #ifndef RTT_CAMERAFILTER_H
 #define RTT_CAMERAFILTER_H
 
-
 /*
  * This class relies on it's superclasses to set lastUpdateTime and framecount correctly!
  * lastMainUpdate is updated correctly if switchCamera is called for every update, as it should be
  */
 class CameraFilter {
-private:
+   private:
     int frameCount = 0;
-protected:
+
+   protected:
     double lastUpdateTime;
     double lastMainUpdateTime;
     int mainCamera = -1;
@@ -25,7 +25,8 @@ protected:
      * @return true if we switched our main camera
      */
     bool switchCamera(int camera, double time);
-public:
+
+   public:
     explicit CameraFilter(double observationTime, int camera);
     /**
      * The time of the last observation which was processed by the filter
@@ -39,5 +40,4 @@ public:
     [[nodiscard]] int frames() const;
 };
 
-
-#endif //RTT_CAMERAFILTER_H
+#endif  // RTT_CAMERAFILTER_H

@@ -9,13 +9,9 @@
  * A struct to keep robotData and time as one observation. We can pass this around to various classes easily.
  */
 struct RobotObservation {
-  explicit RobotObservation(int cameraID, double time, proto::SSL_DetectionRobot detectionRobot)
-          :
-          cameraID(cameraID),
-          time(time),
-          bot(std::move(detectionRobot)) { }
-  int cameraID;
-  double time;
-  proto::SSL_DetectionRobot bot;
+    explicit RobotObservation(int cameraID, double time, proto::SSL_DetectionRobot detectionRobot) : cameraID(cameraID), time(time), bot(std::move(detectionRobot)) {}
+    int cameraID;
+    double time;
+    proto::SSL_DetectionRobot bot;
 };
-#endif //RTT_ROBOTOBSERVATION_H
+#endif  // RTT_ROBOTOBSERVATION_H

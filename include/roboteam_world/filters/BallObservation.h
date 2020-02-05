@@ -9,13 +9,9 @@
  * A struct to keep Ball Data and time as one observation.
  */
 struct BallObservation {
-  explicit BallObservation(int cameraID, double time, proto::SSL_DetectionBall detectionBall)
-          :
-          cameraID(cameraID),
-          time(time),
-          ball(std::move(detectionBall)) { }
-  int cameraID;
-  double time;
-  proto::SSL_DetectionBall ball;
+    explicit BallObservation(int cameraID, double time, proto::SSL_DetectionBall detectionBall) : cameraID(cameraID), time(time), ball(std::move(detectionBall)) {}
+    int cameraID;
+    double time;
+    proto::SSL_DetectionBall ball;
 };
-#endif //RTT_BALLOBSERVATION_H
+#endif  // RTT_BALLOBSERVATION_H

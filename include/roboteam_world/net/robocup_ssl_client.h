@@ -20,38 +20,36 @@
 //========================================================================
 #ifndef ROBOCUP_SSL_CLIENT_H
 #define ROBOCUP_SSL_CLIENT_H
-#include "netraw.h"
 #include <string>
+#include "netraw.h"
 #include "roboteam_proto/messages_robocup_ssl_detection.pb.h"
 #include "roboteam_proto/messages_robocup_ssl_geometry.pb.h"
+#include "roboteam_proto/messages_robocup_ssl_referee.pb.h"
 #include "roboteam_proto/messages_robocup_ssl_wrapper.pb.h"
 #include "roboteam_proto/messages_robocup_ssl_wrapper_legacy.pb.h"
-#include "roboteam_proto/messages_robocup_ssl_referee.pb.h"
 using namespace std;
 /**
-	@author Author Name
+        @author Author Name
 */
 
-class RoboCupSSLClient{
-protected:
-  static const int MaxDataGramSize = 65536;
-  char * in_buffer;
-  Net::UDP mc; // multicast client
-  int _port;
-  string _net_address;
-  string _net_interface;
-public:
-    RoboCupSSLClient(int port = 10006,
-                     string net_ref_address="224.5.23.2",
-                     string net_ref_interface="");
+class RoboCupSSLClient {
+   protected:
+    static const int MaxDataGramSize = 65536;
+    char* in_buffer;
+    Net::UDP mc;  // multicast client
+    int _port;
+    string _net_address;
+    string _net_interface;
+
+   public:
+    RoboCupSSLClient(int port = 10006, string net_ref_address = "224.5.23.2", string net_ref_interface = "");
 
     ~RoboCupSSLClient();
-    bool open(bool blocking=false);
+    bool open(bool blocking = false);
     void close();
-    bool receive(proto::SSL_WrapperPacket & packet);
-    bool receive(proto::RoboCup2014Legacy::Wrapper::SSL_WrapperPacket & packet);
-    bool receive(proto::SSL_Referee & packet);
-
+    bool receive(proto::SSL_WrapperPacket& packet);
+    bool receive(proto::RoboCup2014Legacy::Wrapper::SSL_WrapperPacket& packet);
+    bool receive(proto::SSL_Referee& packet);
 };
 
 #endif

@@ -5,13 +5,12 @@
 #ifndef RTT_ROBOTFILTER_H
 #define RTT_ROBOTFILTER_H
 
-
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
+#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 
-#include "RobotObservation.h"
-#include "KalmanFilter.h"
 #include "CameraFilter.h"
+#include "KalmanFilter.h"
+#include "RobotObservation.h"
 
 /**
  * A class that can filter robots and predict where they will be based on observations.
@@ -20,7 +19,8 @@
  */
 class RobotFilter : public CameraFilter {
     typedef KalmanFilter<6, 3> Kalman;
-public:
+
+   public:
     /**
      * Construct a RobotFilter.
      * @param detectionRobot Initial observation of the robot we start our filter with.
@@ -63,7 +63,7 @@ public:
      */
     [[nodiscard]] proto::WorldRobot asWorldRobot() const;
 
-private:
+   private:
     /**
      * Applies the observation to the kalman Filter at the current time the filter is at.
      * This changes the z and r matrices.
@@ -85,8 +85,6 @@ private:
     std::unique_ptr<Kalman> kalman = nullptr;
     int botId;
     std::vector<RobotObservation> observations;
-
 };
 
-
-#endif //RTT_ROBOTFILTER_H
+#endif  // RTT_ROBOTFILTER_H

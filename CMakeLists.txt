@@ -8,7 +8,8 @@ find_package(Eigen3 REQUIRED)
 
 add_library(net STATIC
         src/net/netraw.cpp
-        src/net/robocup_ssl_client.cpp include/roboteam_world/filters/RobotObservation.h)
+        src/net/robocup_ssl_client.cpp
+        )
 
 target_link_libraries(net
         PUBLIC roboteam_proto)

@@ -33,22 +33,28 @@
 #define rad_wheel 0.028F 	// wheel radius (m)
 #define cos60 0.5F		// cosine of 60 degrees (wheel angle is at 60 degrees)
 #define sin60 0.866F	// sine of 60 degrees
+bool MOTORS_50W;			// wattage of motors, true = 50 W, false = 30 W
 
 // Wheels
 #define PWM_CUTOFF 200.0F // arbitrary treshold to avoid motor shutdown
 #define GEAR_RATIO 2.5F // gear ratio between motor and wheel
 #define MAX_PWM 3000 // defined in CubeMX
 #define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
-#define MAX_VOLTAGE 12 // see datasheet
-#define SPEED_CONSTANT (2*M_PI/60.0 * 374.0) //[(rad/s)/V] see datasheet
+float MAX_VOLTAGE; // [V] see datasheet
+#define MAX_VOLTAGE_30W 12.0
+#define MAX_VOLTAGE_50W 24.0
+float SPEED_CONSTANT; //[(rad/s)/V] see datasheet
+#define SPEED_CONSTANT_30W 374.0
+#define SPEED_CONSTANT_50W 285.0
 #define PULSES_PER_ROTATION (float)4*1024 // number of pulses of the encoder per rotation of the motor (see datasheet)
 
-#define OMEGAtoPWM (1/SPEED_CONSTANT)*(MAX_PWM/MAX_VOLTAGE)*GEAR_RATIO // conversion factor from wheel speed [rad/s] to required PWM on the motor
+float OMEGAtoPWM; // conversion factor from wheel speed [rad/s] to required PWM on the motor
 #define ENCODERtoOMEGA (float)2*M_PI/(TIME_DIFF*GEAR_RATIO*PULSES_PER_ROTATION) // conversion factor from number of encoder pulses to wheel speed [rad/s]
 
 // Control
 #define YAW_MARGIN (0.5F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0
-#define WHEEL_REF_LIMIT 2200/OMEGAtoPWM // Limit the maximum wheel reference to leave room for the wheels PID
+float WHEEL_REF_LIMIT; // [rad/s] Limit the maximum wheel reference to leave room for the wheels PID
+#define WHEEL_REF_LIMIT_PWM 2200 // [pwm]
 
 // Geneva
 #define GENEVA_CAL_EDGE_CNT 4100		// the amount of encoder counts from one edge to the other
@@ -114,6 +120,15 @@ struct PIDstruct{
 typedef struct PIDstruct PIDvariables;
 
 ///////////////////////////////////////////////////// FUNCTIONS
+/**
+ * Initializes motor wattage dependent constants
+ */
+inline void control_util_Init() {
+	MAX_VOLTAGE = MOTORS_50W ? MAX_VOLTAGE_50W : MAX_VOLTAGE_30W;
+	SPEED_CONSTANT = 2*M_PI/60.0 * (MOTORS_50W ? SPEED_CONSTANT_50W : SPEED_CONSTANT_30W);
+	OMEGAtoPWM = (1/SPEED_CONSTANT)*(MAX_PWM/MAX_VOLTAGE)*GEAR_RATIO;
+	WHEEL_REF_LIMIT = WHEEL_REF_LIMIT_PWM/OMEGAtoPWM;
+}
 
 //Initializes the PID values
 static void initPID(PIDvariables* PID, float kP, float kI, float kD) {

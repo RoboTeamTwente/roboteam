@@ -43,11 +43,7 @@ static void SetDir();
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		if (MOTORS_50W) {
-			initPID(&wheelsK[wheel], 7.0, 0.0, 0.0); // 50 W
-		} else {
-			initPID(&wheelsK[wheel], 7.0, 0.0, 0.0); // 30 W
-		}
+		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
 	}
 	HAL_TIM_Base_Start(ENC_RF); //RF
 	HAL_TIM_Base_Start(ENC_RB); //RB

@@ -27,17 +27,9 @@ static float angleControl(float angleRef, float angle);
 
 int stateControl_Init(){
 	status = on;
-	if (MOTORS_50W) {
-		// 50 W
-		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
-		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
-	} else {
-		// 30 W
-		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
-		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
-	}
+	initPID(&stateK[body_x], 0.1, 0.0, 0.0);
+	initPID(&stateK[body_y], 0.4, 0.0, 0.0);
+	initPID(&stateK[body_w], 20.0, 30.0, 0.0);
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
 }

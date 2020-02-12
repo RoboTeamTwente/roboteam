@@ -14,6 +14,14 @@ static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
 static bool isBraking = false;
 
+// Encoder
+static GPIO_Pin encoderAPins[4];
+static GPIO_Pin encoderBPins[4];
+static int count[4] = {0};
+static bool noEncoder[4] = {false};
+static bool Aold[4];
+static bool Bold[4];
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 //Reads out the value of the wheel encoders
@@ -37,6 +45,9 @@ static void SetPWM();
 //Sets the direction of the wheels
 static void SetDir();
 
+//Checks whether the encoder is working correctly
+static void checkEncoder(wheel_names wheel);
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int wheels_Init(){
@@ -57,6 +68,15 @@ int wheels_Init(){
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
 	wheels_Brake(true); // Brake on startup
+
+	encoderAPins[wheels_RF] = RF_ENC_A_pin;
+	encoderAPins[wheels_RB] = RB_ENC_A_pin;
+	encoderAPins[wheels_LB] = LB_ENC_A_pin;
+	encoderAPins[wheels_LF] = LF_ENC_A_pin;
+	encoderBPins[wheels_RF] = RF_ENC_B_pin;
+	encoderBPins[wheels_RB] = RB_ENC_B_pin;
+	encoderBPins[wheels_LB] = LB_ENC_B_pin;
+	encoderBPins[wheels_LF] = LF_ENC_B_pin;
 
 	return 0;
 }
@@ -85,14 +105,22 @@ void wheels_Update(){
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-			float err = wheelRef[wheel]-wheelSpeed[wheel];
+			// Check encoder data
+			checkEncoder(wheel);
 
-			if (fabs(err) < 0.1) {
-				err = 0.0;
-				wheelsK[wheel].I = 0;
+			if (noEncoder[wheel]) {
+				// Do not use PID when there is no encoder data
+				pwm[wheel] = OMEGAtoPWM*wheelRef[wheel];
+			} else {
+				float err = wheelRef[wheel]-wheelSpeed[wheel];
+
+				if (fabs(err) < 0.1) {
+					err = 0.0;
+					wheelsK[wheel].I = 0;
+				}
+
+				pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 			}
-
-			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 		}
 
 		scale();
@@ -208,4 +236,30 @@ static void SetDir(){
 	set_Pin(RB_DIR_pin, direction[wheels_RB]);
 	set_Pin(LB_DIR_pin, direction[wheels_LB]);
 	set_Pin(LF_DIR_pin, direction[wheels_LF]);
+}
+
+static void checkEncoder(wheel_names wheel) {
+	static const int threshold = 10; // Number of ticks the encoder data can be the same before detection of unconnected encoder
+
+	bool A = read_Pin(encoderAPins[wheel]);
+	bool B = read_Pin(encoderBPins[wheel]);
+
+	// When pwm is larger than the cutoff pwm, but encoder is not moving, then there is no correct encoder data
+	if (!noEncoder[wheel] && (A == Aold[wheel] || B == Bold[wheel]) && fabs(pwm[wheel]) >= PWM_CUTOFF) {
+		if (count[wheel] >= threshold) {
+			noEncoder[wheel] = true;
+		} else {
+			count[wheel]++;
+		}
+	} else {
+		count[wheel] = 0;
+	}
+
+	// Check if encoder data is back
+	if (noEncoder[wheel] && A != Aold[wheel] && B != Bold[wheel]) {
+		noEncoder[wheel] = false;
+	}
+
+	Aold[wheel] = A;
+	Bold[wheel] = B;
 }

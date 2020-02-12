@@ -32,6 +32,10 @@ float* wheels_GetState();
 
 int* wheels_GetPWM();
 
-bool wheels_IsAWheelLocked();
+// Returns whether brakes are activated
+bool wheels_IsBraking();
+
+// Activate or deactivate braking
+void wheels_Brake(bool brake);
 
 #endif /* WHEELS_H_ */

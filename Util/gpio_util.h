@@ -48,11 +48,11 @@ extern GPIO_Pin RF_DIR_pin;
 extern GPIO_Pin LB_DIR_pin;
 extern GPIO_Pin LF_DIR_pin;
 
-// Wheels Locked
-extern GPIO_Pin RB_LOCK_pin;
-extern GPIO_Pin RF_LOCK_pin;
-extern GPIO_Pin LB_LOCK_pin;
-extern GPIO_Pin LF_LOCK_pin;
+// Wheels Brake
+extern GPIO_Pin RB_Brake_pin;
+extern GPIO_Pin RF_Brake_pin;
+extern GPIO_Pin LB_Brake_pin;
+extern GPIO_Pin LF_Brake_pin;
 
 // Wheels ENC
 extern GPIO_Pin RB_ENC_A_pin;

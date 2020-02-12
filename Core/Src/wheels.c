@@ -12,8 +12,7 @@ static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
-static GPIO_Pin lockPins[4];
-static bool isAWheelLocked = false;
+static bool isBraking = false;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -53,11 +52,8 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
+	wheels_Brake(true); // Brake on startup
 
-	lockPins[wheels_RF] = RF_LOCK_pin;
-	lockPins[wheels_RB] = RB_LOCK_pin;
-	lockPins[wheels_LB] = LB_LOCK_pin;
-	lockPins[wheels_LF] = LF_LOCK_pin;
 	return 0;
 }
 
@@ -71,6 +67,7 @@ int wheels_DeInit(){
 	stop_PWM(PWM_RB); //RB
 	stop_PWM(PWM_LB); //LB
 	stop_PWM(PWM_LF); //LF
+	wheels_Brake(true); // Brake
 
 	//TODO: Fix this huge stopping hack
 	for (int i=0; i<4; i++) {
@@ -81,8 +78,6 @@ int wheels_DeInit(){
 }
 
 void wheels_Update(){
-	static uint lockTimes[4] = {0};
-	isAWheelLocked = false;
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
@@ -94,14 +89,6 @@ void wheels_Update(){
 			}
 
 			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
-			if (read_Pin(lockPins[wheel])) {
-				if (HAL_GetTick() - lockTimes[wheel] < 200) {
-					pwm[wheel] = 0;
-				}
-				isAWheelLocked = true;
-			} else {
-				lockTimes[wheel] = HAL_GetTick();
-			}
 		}
 
 		scale();
@@ -125,10 +112,19 @@ int* wheels_GetPWM() {
 	return pwm;
 }
 
-bool wheels_IsAWheelLocked() {
-	return isAWheelLocked;
+bool wheels_IsBraking() {
+	return isBraking;
 }
 
+void wheels_Brake(bool brake) {
+	// Set pin to LOW to brake
+	set_Pin(RB_Brake_pin, !brake);
+	set_Pin(LB_Brake_pin, !brake);
+	set_Pin(RF_Brake_pin, !brake);
+	set_Pin(LF_Brake_pin, !brake);
+
+	isBraking = brake;
+}
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 

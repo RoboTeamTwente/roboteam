@@ -81,7 +81,7 @@ typedef struct roboAckData{
 	int16_t	rho:11;
 	int16_t	angle:10;
 	int16_t	theta:11;
-	bool	wheelLocked:1;
+	bool	wheelBraking:1;
 	uint8_t	signalStrength:7;
 } roboAckData;
 

@@ -128,6 +128,7 @@ volatile uint8_t feedback[ROBOPKTLEN] = {0};
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
+bool xsens_CalibrationDoneFirst = true;
 
 IWDG_Handle* iwdg;
 
@@ -317,6 +318,7 @@ void printRobotStateData() {
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
 	Putty_printf("halt? %u\n\r", halt);
+	Putty_printf("Braking? %u\n\r", wheels_IsBraking());
 	Putty_printf("velocity (Kalman):\n\r");
 	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
 	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
@@ -340,11 +342,6 @@ void printRobotStateData() {
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
 	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
-	Putty_printf("wheel locked:\n\r");
-	Putty_printf("  RF: %s \n\r", read_Pin(RF_LOCK_pin) ? "yes" : "no");
-	Putty_printf("  RB: %s \n\r", read_Pin(RB_LOCK_pin) ? "yes" : "no");
-	Putty_printf("  LB: %s \n\r", read_Pin(LB_LOCK_pin) ? "yes" : "no");
-	Putty_printf("  LF: %s \n\r", read_Pin(LF_LOCK_pin) ? "yes" : "no");
 	Putty_printf("Geneva: \n\r");
 	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
 	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
@@ -496,6 +493,14 @@ int main(void)
 		  clearReceivedData(&receivedData);
 	  }
 
+	  /*
+	   * Unbrake wheels when Xsens calibration is done
+	   */
+	  if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
+		  xsens_CalibrationDoneFirst = false;
+		  wheels_Brake(false);
+	  }
+
 	  test_Update(&receivedData);
 	  executeCommands(&receivedData);
 
@@ -516,7 +521,7 @@ int main(void)
 	  AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
 	  AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
 	  AckData.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
-	  AckData.wheelLocked = wheels_IsAWheelLocked();
+	  AckData.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
 	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
 	  //memset(&AckData,0xAB,8);
 
@@ -554,7 +559,7 @@ int main(void)
 
 	  // LED0 : toggled every second while alive
 	  // LED1 : on while xsens startup calibration is not finished
-	  // LED2 : on when one of the wheels is stuck
+	  // LED2 : on when braking
 	  // LED3 : on when halting
 	  // LED4 : on when ballsensor says ball is within kicking range
 	  // LED5 : on when battery is empty
@@ -562,7 +567,7 @@ int main(void)
 
 	  // LED0 done in PuTTY prints above
 	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  set_Pin(LED2_pin, wheels_IsAWheelLocked());
+	  set_Pin(LED2_pin, wheels_IsBraking());
 	  set_Pin(LED3_pin, halt);
 	  set_Pin(LED4_pin, ballPosition.canKickBall);
 	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
@@ -1513,21 +1518,22 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
-                          |Kick_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+                          |Chip_Pin|Kick_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LB_FR_GPIO_Port, LB_FR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, LB_FR_Pin|LB_BRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin|RF_BRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
                           |LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_FR_Pin|SPI1_NSS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin 
+                          |SPI1_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Geneva_DIRA_Pin|Geneva_DIRB_Pin, GPIO_PIN_RESET);
@@ -1538,46 +1544,46 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, BS_RST_Pin|Charge_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : Charge_done_Pin LF_Locked_Pin */
-  GPIO_InitStruct.Pin = Charge_done_Pin|LF_Locked_Pin;
+  /*Configure GPIO pin : Charge_done_Pin */
+  GPIO_InitStruct.Pin = Charge_done_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  HAL_GPIO_Init(Charge_done_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin Chip_Pin 
-                           Kick_Pin */
-  GPIO_InitStruct.Pin = LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin|Chip_Pin 
-                          |Kick_Pin;
+  /*Configure GPIO pins : LF_BRK_Pin LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin 
+                           Chip_Pin Kick_Pin */
+  GPIO_InitStruct.Pin = LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+                          |Chip_Pin|Kick_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LB_FR_Pin */
-  GPIO_InitStruct.Pin = LB_FR_Pin;
+  /*Configure GPIO pins : LB_FR_Pin LB_BRK_Pin */
+  GPIO_InitStruct.Pin = LB_FR_Pin|LB_BRK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LB_FR_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LB_Locked_Pin ID0_Pin ID1_Pin */
-  GPIO_InitStruct.Pin = LB_Locked_Pin|ID0_Pin|ID1_Pin;
+  /*Configure GPIO pins : GPIO_OUT1_Pin GPIO_OUT2_Pin RF_FR_Pin RF_BRK_Pin */
+  GPIO_InitStruct.Pin = GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin|RF_BRK_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : GPIO_IN1_Pin GPIO_IN2_Pin */
+  GPIO_InitStruct.Pin = GPIO_IN1_Pin|GPIO_IN2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : ID0_Pin ID1_Pin */
+  GPIO_InitStruct.Pin = ID0_Pin|ID1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : GPIO_OUT1_Pin GPIO_OUT2_Pin RF_FR_Pin */
-  GPIO_InitStruct.Pin = GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : GPIO_IN1_Pin GPIO_IN2_Pin RF_Locked_Pin */
-  GPIO_InitStruct.Pin = GPIO_IN1_Pin|GPIO_IN2_Pin|RF_Locked_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ID2_Pin ID3_Pin SPI4_BUSY_Pin */
   GPIO_InitStruct.Pin = ID2_Pin|ID3_Pin|SPI4_BUSY_Pin;
@@ -1594,8 +1600,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD1_Pin LD0_Pin RB_FR_Pin */
-  GPIO_InitStruct.Pin = LD1_Pin|LD0_Pin|RB_FR_Pin;
+  /*Configure GPIO pins : LD1_Pin LD0_Pin RB_BRK_Pin RB_FR_Pin */
+  GPIO_InitStruct.Pin = LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1606,12 +1612,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : RB_Locked_Pin */
-  GPIO_InitStruct.Pin = RB_Locked_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(RB_Locked_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Battery_empty_Pin */
   GPIO_InitStruct.Pin = Battery_empty_Pin;

@@ -208,9 +208,4 @@ namespace rtt {
     Vector2 Polygon::verticeCentroid() const {
         return std::accumulate(vertices.begin(), vertices.end(), Vector2(0, 0)) /= vertices.size();
     }
-
-    bool Polygon::isValid() const {
-        return false;
-    }
-
 }//rtt

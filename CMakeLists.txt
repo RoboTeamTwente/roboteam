@@ -46,7 +46,8 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Rectangle.h
         include/roboteam_utils/pid.h
         src/pid.cpp
-        )
+        src/Triangle.cpp
+        include/roboteam_utils/Triangle.h)
 
 
 
@@ -81,7 +82,7 @@ add_executable(utils_tests
         test/Vector2Test.cpp
         test/RectangleTest.cpp
         test/HungarianTest.cpp
-        )
+        test/TriangleTest.cpp)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

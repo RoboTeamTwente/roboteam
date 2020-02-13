@@ -42,9 +42,12 @@ add_library(roboteam_utils STATIC
         #include/roboteam_utils/Graph.h
         include/roboteam_utils/Definitions.h
         include/roboteam_utils/Statistics.h
+        src/Rectangle.cpp
+        include/roboteam_utils/Rectangle.h
         include/roboteam_utils/pid.h
         src/pid.cpp
         )
+
 
 
 target_include_directories(roboteam_utils
@@ -76,6 +79,7 @@ add_executable(utils_tests
         test/PolygonTest.cpp
         test/PositionTest.cpp
         test/Vector2Test.cpp
+        test/RectangleTest.cpp
         test/HungarianTest.cpp
         )
 

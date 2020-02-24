@@ -4,6 +4,9 @@
 
 #ifndef RTT_CIRCLE_H
 #define RTT_CIRCLE_H
+
+#include <cmath>
+#include <vector>
 #include "Rectangle.h"
 #include "Vector2.h"
 
@@ -19,20 +22,20 @@ class Circle {
     double radius;
 
     /**
-     * @brief Constructs a circle with a default center and radius
+     * @brief Constructs a unit circle with center (0, 0) and radius 1.0
      */
-    Circle();
+    constexpr Circle() : center{0, 0}, radius{1.0} {};
     /**
-     * @brief Constructs a circle from a center and a radius
+     * @brief Constructs a circle from a center and a radius. Ensures a positive radius
      * @param center Center of the circle
      * @param radius Radius of the circle
      */
-    Circle(const Vector2& center, double radius);
+    constexpr Circle(const Vector2& center, double radius) : center{center}, radius{std::abs(radius)} {};
     /**
      * @brief Construct a circle from another circle by copying its center and radius
      * @param other The circle from which to copy the center and radius
      */
-    Circle(const Circle& other);
+    constexpr Circle(const Circle& other) = default;
 
     /**
      * @brief Finds out if and where the circle intersects with the given object
@@ -65,13 +68,7 @@ class Circle {
      */
     Vector2 project(const Vector2& point);
 
-    /**
-     * @brief Returns the bounding box of the circle
-     * @return The bounding box of the circle
-     */
-    Rectangle boundingBox();
-
-    /** @brief Check if two circles are equal by comparing the center and radius */
+    /** @brief Check if two circles are equal by comparing the centers and radii */
     bool operator==(const Circle& other);
 
     /** @brief Moves the center of the circle by the value given by the vector */

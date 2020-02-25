@@ -44,8 +44,10 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Statistics.h
         src/Rectangle.cpp
         include/roboteam_utils/Rectangle.h
-        include/roboteam_utils/pid.h
+        src/Circle.cpp
+        include/roboteam_utils/Circle.h
         src/pid.cpp
+        include/roboteam_utils/pid.h
         src/Triangle.cpp
         include/roboteam_utils/Triangle.h)
 
@@ -75,6 +77,7 @@ add_executable(utils_tests
         #test/BiMapTest.cpp
         #test/GraphTest.cpp
         test/LineTest.cpp
+        test/CircleTest.cpp
         test/normaliseTest.cpp
         test/OptimizationTest.cpp
         test/PolygonTest.cpp

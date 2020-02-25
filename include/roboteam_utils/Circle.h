@@ -7,6 +7,8 @@
 
 #include <cmath>
 #include <vector>
+#include "Line.h"
+#include "LineSegment.h"
 #include "Rectangle.h"
 #include "Vector2.h"
 
@@ -55,11 +57,12 @@ class Circle {
      * @return True if the circle and object intersect
      * @return False if the circle and object don't intersect
      */
-    [[nodiscard]] bool doesIntersect(const Vector2& other);
-    [[nodiscard]] bool doesIntersect(const Line& other);
-    [[nodiscard]] bool doesIntersect(const LineSegment& other);
-    [[nodiscard]] bool doesIntersect(const Circle& other);
-    [[nodiscard]] bool doesIntersect(const Rectangle& other);
+    [[nodiscard]] bool doesIntersectOrContain(const Vector2& other);
+    [[nodiscard]] bool doesIntersectOrContain(const Line& other);
+    [[nodiscard]] bool doesIntersectOrContain(const LineSegment& other);
+    [[nodiscard]] bool doesIntersectOrContain(const Circle& other);
+    [[nodiscard]] bool doesIntersectOrContain(const Rectangle& other);   // This method is faster
+    [[nodiscard]] bool doesIntersectOrContain2(const Rectangle& other);  // This method is easier to understand and handles rotated rectangles
 
     /**
      * @brief Projects the given point onto this circle
@@ -69,17 +72,18 @@ class Circle {
     Vector2 project(const Vector2& point);
 
     /** @brief Check if two circles are equal by comparing the centers and radii */
-    bool operator==(const Circle& other);
+    bool operator==(const Circle& other) const;
+    bool operator!=(const Circle& other) const;
 
     /** @brief Moves the center of the circle by the value given by the vector */
-    Circle operator+(const Vector2& other);
-    Circle operator-(const Vector2& other);
+    Circle operator+(const Vector2& other) const;
+    Circle operator-(const Vector2& other) const;
     Circle operator+=(const Vector2& other);
     Circle operator-=(const Vector2& other);
 
     /** @brief Scales the radius of the circle by the given scale */
-    Circle operator*(double scale);
-    Circle operator/(double scale);
+    Circle operator*(double scale) const;
+    Circle operator/(double scale) const;
     Circle operator*=(double scale);
     Circle operator/=(double scale);
 

@@ -7,14 +7,11 @@
 class Printer {
  public:
   static void print(const std::string& color, const std::string& type, const std::string& file, const std::string& func, int line, const std::string& txt) {
-      auto typeTxt = "[" + type + "]";
-      auto fileTxt = "[" + file + ":" + std::to_string(line) + "]";
-  //    auto funcTxt = "[" + func + "]";
+      auto fileTxt =  file + ":" + std::to_string(line);
 
       std::cout << color << std::setw(10) << std::left;
-      std::cout << typeTxt << std::setw(32) << std::left;
+      std::cout << type << std::setw(32) << std::left;
       std::cout << fileTxt << std::setw(32) << std::left;
-     // std::cout << funcTxt << std::setw(32) << std::left;
       std::cout << txt;
       std::cout << "\033[0m" << std::endl;
   }
@@ -35,6 +32,10 @@ class Printer {
 #define rtt_warning(...) { Printer::print("\033[93m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_info(...) { Printer::print("\033[37m", "INFO", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_success(...) { Printer::print("\033[92m", "SUCCESS", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_crash(...) {\
+    Printer::print("\033[91m", "CRASH", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__);\
+    assert(false);\
+}
 
 #else
     #define rtt_debug(...)

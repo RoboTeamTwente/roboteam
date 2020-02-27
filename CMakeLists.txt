@@ -42,6 +42,7 @@ add_library(roboteam_utils STATIC
         #include/roboteam_utils/BiMap.h
         #include/roboteam_utils/Graph.h
         include/roboteam_utils/Statistics.h
+        include/roboteam_utils/Print.h
         )
 
 
@@ -57,7 +58,7 @@ target_link_libraries(roboteam_utils
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
         -Wall
-        -Werror
+       # -Werror
         -Wextra
         -Wno-unused-function
         -Wno-comment

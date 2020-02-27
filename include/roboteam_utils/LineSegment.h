@@ -127,7 +127,12 @@ class LineSegment {
          * @return double distance between line and point
          */
         [[nodiscard]] double distanceToLine(const Vector2 &point) const;
-
+        /**
+         * @brief Gets the shortest distance between any two points on both line segments
+         * @param point Point to get distance to
+         * @return distance between this line and the passed line.
+         */
+        [[nodiscard]] double distanceToLine(const LineSegment &line) const;
         /**
          * @brief Checks whether a point is on the line
          *

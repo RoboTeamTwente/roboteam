@@ -205,4 +205,72 @@ std::optional<Vector2> LineSegment::nonSimpleIntersects(const LineSegment &line)
     return std::nullopt;
 }
 
+// http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment
+// for implementation hints. This is complicated unfortunately.
+double LineSegment::distanceToLine(const LineSegment &line) const {
+    Vector2 u = end - start;
+    Vector2 v = line.end - line.start;
+    Vector2 w = start - line.start;
+    double uu = u.dot(u);
+    double uv = u.dot(v);
+    double vv = v.dot(v);
+    double uw = u.dot(w);
+    double vw = v.dot(w);
+    double D = uu*vv-uv*uv; // Always >=0 by definition
+
+    double sN, sD = D;       // sc = sN / sD, default sD = D >= 0
+    double tN, tD = D;       // tc = tN / tD, default tD = D >= 0
+
+    // compute the line parameters of the two closest points
+    if (D == 0) { // the lines are parallel
+        sN = 0.0;         // force using point start on this segment
+        sD = 1.0;         // to prevent possible division by 0.0 later
+        tN = vw;
+        tD = vv;
+    }
+    else {                 // get the closest points on the infinite lines
+        sN = (uv*vw - vv*uw);
+        tN = (uu*vw - uv*uw);
+        if (sN < 0.0) {        // sc < 0 => the s=0 edge is visible
+            sN = 0.0;
+            tN = vw;
+            tD = vv;
+        }
+        else if (sN > sD) {  // sc > 1  => the s=1 edge is visible
+            sN = sD;
+            tN = vw + uv;
+            tD = vv;
+        }
+    }
+
+    if (tN < 0.0) {            // tc < 0 => the t=0 edge is visible
+        tN = 0.0;
+        // recompute sc for this edge
+        if (-uw < 0.0)
+            sN = 0.0;
+        else if (-uw > uu)
+            sN = sD;
+        else {
+            sN = -uw;
+            sD = uu;
+        }
+    }
+    else if (tN > tD) {      // tc > 1  => the t=1 edge is visible
+        tN = tD;
+        // recompute sc for this edge
+        if ((-uw + uv) < 0.0)
+            sN = 0;
+        else if ((-uw + uv) > uu)
+            sN = sD;
+        else {
+            sN = (-uw +  uv);
+            sD = uu;
+        }
+    }
+    double sc = sN == 0.0 ? 0.0 : sN / sD;
+    double tc = tN == 0.0 ? 0.0 : tN / tD;
+    Vector2 diff = w + (u * sc) - (v * tc);
+    return diff.length();
+}
+
 }

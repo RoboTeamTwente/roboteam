@@ -36,7 +36,7 @@ TEST(CircleTests, doesIntersectOrContainVector) {
     EXPECT_TRUE(circle.doesIntersectOrContain(vectorIn));
     // On the circle
     rtt::Vector2 vectorOn(1, 0);
-    EXPECT_FALSE(circle.doesIntersectOrContain(vectorOn));
+    EXPECT_TRUE(circle.doesIntersectOrContain(vectorOn));
     // Outside the circle
     rtt::Vector2 vectorOut(10, 10);
     EXPECT_FALSE(circle.doesIntersectOrContain(vectorOut));
@@ -49,7 +49,7 @@ TEST(CircleTests, doesIntersectOrContainLine) {
     EXPECT_TRUE(circle.doesIntersectOrContain(lineThrough));
     // On the circle
     rtt::Line lineOn({-1, 1}, {1, 1});
-    EXPECT_FALSE(circle.doesIntersectOrContain(lineOn));
+    EXPECT_TRUE(circle.doesIntersectOrContain(lineOn));
     // Outside the circle
     rtt::Line lineOut({-1, 2}, {1, 2});
     EXPECT_FALSE(circle.doesIntersectOrContain(lineOut));
@@ -62,7 +62,7 @@ TEST(CircleTests, doesIntersectOrContainLineSegment) {
     EXPECT_TRUE(circle.doesIntersectOrContain(lineThrough));
     // On the circle
     rtt::LineSegment lineOn({-1, 1}, {1, 1});
-    EXPECT_FALSE(circle.doesIntersectOrContain(lineOn));
+    EXPECT_TRUE(circle.doesIntersectOrContain(lineOn));
     // Outside the circle
     rtt::LineSegment lineOut({-1, 2}, {1, 2});
     EXPECT_FALSE(circle.doesIntersectOrContain(lineOut));
@@ -75,7 +75,7 @@ TEST(CircleTests, doesIntersectOrContainCircle) {
     EXPECT_TRUE(circle.doesIntersectOrContain(circleThrough));
     // On the circle
     rtt::Circle circleOn({2, 0}, 1);
-    EXPECT_FALSE(circle.doesIntersectOrContain(circleOn));
+    EXPECT_TRUE(circle.doesIntersectOrContain(circleOn));
     // Outside the circle
     rtt::Circle circleOut({4, 0}, 1);
     EXPECT_FALSE(circle.doesIntersectOrContain(circleOut));
@@ -95,6 +95,10 @@ TEST(CircleTests, doesIntersectOrContainRectangle) {
     rtt::Rectangle rectThrough({2, 2}, {0, 0});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectThrough));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectThrough));
+    // On the circle
+    rtt::Rectangle rectOn({1, 1}, {2, 0});
+    EXPECT_TRUE(circle.doesIntersectOrContain(rectOn));
+    EXPECT_TRUE(circle.doesIntersectOrContain2(rectOn));
     // Outside the circle
     rtt::Rectangle rectOutside({4, 4}, {2, 2});
     EXPECT_FALSE(circle.doesIntersectOrContain(rectOutside));

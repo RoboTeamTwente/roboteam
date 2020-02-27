@@ -113,17 +113,6 @@ namespace rtt {
         [[nodiscard]] bool isSimple() const;
 
         /**
-         * @brief Checks whether a polygon is valid
-         * 
-         * ALWAYS RETURNS FALSE, DEPRECATED 
-         * 
-         * @return true Never
-         * @return false Always
-         */
-        [[nodiscard]] [[deprecated("Please do not use this, always returns false")]] 
-        bool isValid() const;
-
-        /**
          * @brief Checks whether a point is contained within this polygon
          * 
          * @param point Point to check

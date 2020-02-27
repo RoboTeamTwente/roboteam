@@ -11,8 +11,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 add_library(roboteam_utils STATIC
         src/Polygon.cpp
         include/roboteam_utils/Polygon.h
-        src/LineBase.cpp
-        include/roboteam_utils/LineBase.h
         src/Line.cpp
         include/roboteam_utils/Line.h
         src/LineSegment.cpp
@@ -30,6 +28,8 @@ add_library(roboteam_utils STATIC
         src/normalize.cpp
         include/roboteam_utils/normalize.h
         src/Clip.cpp
+        include/roboteam_utils/Hungarian.h
+        src/Hungarian.cpp
         include/roboteam_utils/Clip.h
         src/Optimization.cpp
         include/roboteam_utils/Optimization.h
@@ -38,12 +38,23 @@ add_library(roboteam_utils STATIC
         src/Timer.cpp
         include/roboteam_utils/Timer.h
         include/roboteam_utils/type_traits.h
-        include/roboteam_utils/json.hpp
         #include/roboteam_utils/BiMap.h
         #include/roboteam_utils/Graph.h
+        include/roboteam_utils/Definitions.h
         include/roboteam_utils/Statistics.h
         include/roboteam_utils/Print.h
+        src/Rectangle.cpp
+        include/roboteam_utils/Rectangle.h
+        src/Circle.cpp
+        include/roboteam_utils/Circle.h
+        src/pid.cpp
+        include/roboteam_utils/pid.h
+        src/Triangle.cpp
+        include/roboteam_utils/Triangle.h
+        src/Tube.cpp
+        include/roboteam_utils/Tube.h
         )
+
 
 
 target_include_directories(roboteam_utils
@@ -53,7 +64,6 @@ target_include_directories(roboteam_utils
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
-        #gtest
         )
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
@@ -71,11 +81,16 @@ add_executable(utils_tests
         #test/BiMapTest.cpp
         #test/GraphTest.cpp
         test/LineTest.cpp
+        test/CircleTest.cpp
         test/normaliseTest.cpp
         test/OptimizationTest.cpp
         test/PolygonTest.cpp
         test/PositionTest.cpp
         test/Vector2Test.cpp
+        test/RectangleTest.cpp
+        test/HungarianTest.cpp
+        test/TriangleTest.cpp
+        test/TubeTest.cpp
         )
 
 if (UNIX AND NOT APPLE)

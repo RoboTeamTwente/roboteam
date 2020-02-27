@@ -29,7 +29,7 @@ namespace rtt {
         /**
          * \brief Get a Position by reading values from a WorldRobot message.
          */
-        Position(const proto::WorldRobot &robotMsg) : Position(robotMsg.pos(), robotMsg.angle()) {}
+        Position(const proto::WorldRobot &robotMsg) : Position(Vector2(robotMsg.pos()), robotMsg.angle()) {}
 
         /**
          * \brief Get the (x, y) coordinates of this position.

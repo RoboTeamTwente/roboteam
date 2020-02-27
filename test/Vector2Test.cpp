@@ -1,6 +1,7 @@
 #include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
 #include <cmath>
+#include <roboteam_utils/Angle.h>
 using namespace rtt;
 
 TEST(VectorTests, instantiation) {
@@ -13,6 +14,10 @@ TEST(VectorTests, instantiation) {
     ASSERT_DOUBLE_EQ(tenten.y, 10);
     ASSERT_DOUBLE_EQ(fivezero.x, 5);
     ASSERT_DOUBLE_EQ(fivezero.y, 0);
+    Angle ang=M_PI_2;
+    Vector2 vec(ang);
+    ASSERT_NEAR(vec.x,0,1e-15);
+    ASSERT_NEAR(vec.y,1,1e-15);
 }
 
 TEST(VectorTests, operators) {

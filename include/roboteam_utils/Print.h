@@ -8,14 +8,15 @@ class Printer {
  public:
   static void print(const std::string& color, const std::string& type, const std::string& file, const std::string& func, int line, const std::string& txt) {
       auto typeTxt = "[" + type + "]";
-      auto fileTxt = "[" + file + "::" + std::to_string(line) + "]";
-      auto funcTxt = "[" + func + "]";
+      auto fileTxt = "[" + file + ":" + std::to_string(line) + "]";
+  //    auto funcTxt = "[" + func + "]";
 
-      std::cout << color << std::setw(10) << std::left;\
-      std::cout << typeTxt << std::setw(32) << std::left;\
-      std::cout << fileTxt << std::setw(32) << std::left;\
-      std::cout << funcTxt << std::setw(32) << std::left;\
-      std::cout << txt << "\033[0m" << std::endl;\
+      std::cout << color << std::setw(10) << std::left;
+      std::cout << typeTxt << std::setw(32) << std::left;
+      std::cout << fileTxt << std::setw(32) << std::left;
+     // std::cout << funcTxt << std::setw(32) << std::left;
+      std::cout << txt;
+      std::cout << "\033[0m" << std::endl;
   }
 };
 
@@ -29,10 +30,10 @@ class Printer {
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 // read more about ansi escape codes: https://en.wikipedia.org/wiki/ANSI_escape_code
-#define rtt_debug(...) { Printer::print("\033[37m", "DEBUG", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_debug(...) { Printer::print("\033[95m", "DEBUG", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_error(...) { Printer::print("\033[91m","ERROR", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_warning(...) { Printer::print("\033[93m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
-#define rtt_info(...) { Printer::print("\033[94m", "INFO", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_info(...) { Printer::print("\033[37m", "INFO", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_success(...) { Printer::print("\033[92m", "SUCCESS", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 
 #else

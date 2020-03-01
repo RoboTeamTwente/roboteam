@@ -46,7 +46,7 @@
 #endif
 
 #if RTT_WARNING_LOGS
-#define rtt_warning(...) { Printer::print("\033[93m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_warning(...) { Printer::print("\033[33m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #else
 #define rtt_warning(...)
 #endif

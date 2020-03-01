@@ -7,7 +7,6 @@ include(cotire)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-
 add_library(roboteam_utils STATIC
         src/Polygon.cpp
         include/roboteam_utils/Polygon.h
@@ -42,6 +41,7 @@ add_library(roboteam_utils STATIC
         #include/roboteam_utils/Graph.h
         include/roboteam_utils/Definitions.h
         include/roboteam_utils/Statistics.h
+        include/roboteam_utils/Print.h
         src/Rectangle.cpp
         include/roboteam_utils/Rectangle.h
         src/Circle.cpp

@@ -32,7 +32,7 @@ class Circle {
      * @param center Center of the circle
      * @param radius Radius of the circle
      */
-    constexpr Circle(const Vector2& center, double radius) : center{center}, radius{std::abs(radius)} {};
+    Circle(const Vector2& center, double radius) : center{center}, radius{std::abs(radius)} {};
     /**
      * @brief Construct a circle from another circle by copying its center and radius
      * @param other The circle from which to copy the center and radius

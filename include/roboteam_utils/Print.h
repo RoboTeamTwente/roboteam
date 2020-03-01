@@ -40,19 +40,19 @@
 #if RTT_FANCY_LOGS
 
 #if RTT_DEBUG_LOGS
-#define rtt_debug(...) { Printer::print("\033[95m", "DEBUG", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_debug(...) { Printer::print("\033[35m", "DEBUG", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #else
 #define rtt_debug(...)
 #endif
 
 #if RTT_WARNING_LOGS
-#define rtt_warning(...) { Printer::print("\033[33m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_warning(...) { Printer::print("\033[93;3m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #else
 #define rtt_warning(...)
 #endif
 
 #if RTT_ERROR_LOGS
-#define rtt_error(...) { Printer::print("\033[91m","ERROR", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_error(...) { Printer::print("\033[31;1m","ERROR", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #else
 #define rtt_error(...)
 #endif
@@ -64,7 +64,7 @@
 #endif
 
 #if RTT_SUCCESS_LOGS
-#define rtt_success(...) { Printer::print("\033[92m", "SUCCESS", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
+#define rtt_success(...) { Printer::print("\033[32m", "SUCCESS", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #else
 #define rtt_success(...)
 #endif

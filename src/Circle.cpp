@@ -6,13 +6,13 @@
 
 namespace rtt {
 
-bool Circle::doesIntersectOrContain(const Vector2 &other) { return std::abs((center - other).length()) < radius; }
+bool Circle::doesIntersectOrContain(const Vector2 &other) { return std::abs((center - other).length()) <= radius; }
 
-bool Circle::doesIntersectOrContain(const Line &other) { return other.distanceToLine(center) < radius; }
+bool Circle::doesIntersectOrContain(const Line &other) { return other.distanceToLine(center) <= radius; }
 
-bool Circle::doesIntersectOrContain(const LineSegment &other) { return other.distanceToLine(center) < radius; }
+bool Circle::doesIntersectOrContain(const LineSegment &other) { return other.distanceToLine(center) <= radius; }
 
-bool Circle::doesIntersectOrContain(const Circle &other) { return std::abs((center - other.center).length()) < (radius + other.radius); }
+bool Circle::doesIntersectOrContain(const Circle &other) { return std::abs((center - other.center).length()) <= (radius + other.radius); }
 
 bool Circle::doesIntersectOrContain(const Rectangle &other) {
     // https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection

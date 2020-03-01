@@ -32,10 +32,6 @@ class Printer {
 #define rtt_warning(...) { Printer::print("\033[93m", "WARNING", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_info(...) { Printer::print("\033[37m", "INFO", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
 #define rtt_success(...) { Printer::print("\033[92m", "SUCCESS", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__); }
-#define rtt_crash(...) {\
-    Printer::print("\033[91m", "CRASH", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__);\
-    assert(false);\
-}
 
 #else
     #define rtt_debug(...)

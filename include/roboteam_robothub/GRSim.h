@@ -1,9 +1,9 @@
 #ifndef ROBOTEAM_ROBOTHUB_GRSIM_H
 #define ROBOTEAM_ROBOTHUB_GRSIM_H
-#include <array>
 #include <QtNetwork>
-#include <string>
+#include <array>
 #include <chrono>
+#include <string>
 
 #include "roboteam_proto/RobotCommand.pb.h"
 #include "roboteam_proto/grSim_Commands.pb.h"
@@ -13,11 +13,11 @@ namespace rtt {
 namespace robothub {
 
 class GRSimCommander {
-public:
+   public:
     /**
      * Buffer type which keeps all received robot commands
      */
-    using RobotCommandBuffer = std::array<std::shared_ptr<roboteam_proto::RobotCommand>, 16>;
+    using RobotCommandBuffer = std::array<std::shared_ptr<proto::RobotCommand>, 16>;
 
     /**
      * Clock that always increases no matter what (daylight saving etc.)
@@ -29,7 +29,7 @@ public:
      */
     using TimePoint = std::chrono::time_point<Clock>;
 
-    /** 
+    /**
      * Statistics struct
      */
     struct Stats {
@@ -53,20 +53,20 @@ public:
     };
 
     /** Maximum amount of double messages to be received
-      * before the buffer is forcibly flushed and treshold
-      * re-estimated.
-      */
-    static int const MAX_DROPS = 2;
+     * before the buffer is forcibly flushed and treshold
+     * re-estimated.
+     */
+    static int constexpr MAX_DROPS = 2;
 
-    /** 
+    /**
      * Number of entries in the efficiency history
      */
-    static int const HISTORY_LEN = 60;
+    static int constexpr HISTORY_LEN = 60;
 
     /**
      * When true, detailed debug trace info is printed.
      */
-    static bool const TRACE = false;
+    static bool constexpr TRACE = false;
 
     /**
      * When batch is true batching is turned on from the start.
@@ -78,23 +78,23 @@ public:
      * If batching is enabled it might not be sent immediately.
      * If batching is disabled it's immediately sent.
      */
-    void queueGRSimCommand(const roboteam_proto::RobotCommand& msg);
+    void queueGRSimCommand(const proto::RobotCommand& msg);
 
     /**
      * Sends a GRSim packet to the simulator using
      * GRSimCommander's UDP socket.
      */
-    void sendGRSimPacket(roboteam_proto::grSim_Packet const& packet);
+    void sendGRSimPacket(proto::grSim_Packet const& packet);
     /**
      * Sends one single GRSim packet using GRSimCommander's
      * UDP socket.
      */
-    void sendGRSimCommand(const roboteam_proto::RobotCommand& _msg);
+    void sendGRSimCommand(const proto::RobotCommand& _msg);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim.
      */
-    void sendMultipleGRSimCommands(const std::vector<roboteam_proto::RobotCommand>& msgs);
+    void sendMultipleGRSimCommands(const std::vector<proto::RobotCommand>& msgs);
 
     /**
      * Sends multiple GRSim commands in one batch to GRSim depending on
@@ -128,10 +128,10 @@ public:
      */
     void setBatch(bool batch);
     void setColor(bool yellow);
-  void setGrsim_ip(const std::string &grsim_ip);
-  void setGrsim_port(quint16 grsim_port);
+    void setGrsim_ip(const std::string& grsim_ip);
+    void setGrsim_port(quint16 grsim_port);
 
-private:
+   private:
     /**
      * Updates the threshold and resets the appropriate variables.
      */
@@ -175,13 +175,11 @@ private:
     std::array<double, HISTORY_LEN> efficiency;
     int efficiencyIndex;
     int numForcedFlushes;
-
 };
 
-void addRobotCommandToPacket(roboteam_proto::grSim_Packet& packet, roboteam_proto::RobotCommand const& msg);
+void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand const& msg);
 
-} // robothub
-} // rtt
+}  // namespace robothub
+}  // namespace rtt
 
-#endif //ROBOTEAM_ROBOTHUB_GRSIM_H
-
+#endif  // ROBOTEAM_ROBOTHUB_GRSIM_H

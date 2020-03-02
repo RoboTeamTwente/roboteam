@@ -3,11 +3,10 @@
 #include "roboteam_proto/Setting.pb.h"
 #include "roboteam_utils/normalize.h"
 
+#include "GRSim.h"
 #include "RobotHub.h"
 #include "SerialDeviceManager.h"
-#include "GRSim.h"
 #include "packing.h"
-#include "constants.h"
 
 namespace rtt {
 namespace robothub {
@@ -23,29 +22,36 @@ RobotHub::RobotHub() {
 }
 
 /// subscribe to topics
-void RobotHub::subscribeToTopics(){
-    robotCommandSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_COMMANDS, &RobotHub::processRobotCommand, this);
-    worldStateSubscriber = new roboteam_proto::Subscriber(ROBOTEAM_WORLD_TCP_PUBLISHER, TOPIC_WORLD_STATE, &RobotHub::processWorldState, this);
-    settingsSubscriber = new roboteam_proto::Subscriber(ai_publisher, TOPIC_SETTINGS, &RobotHub::processSettings, this);
-    publisher = new roboteam_proto::Publisher(robothub_publisher);
+void RobotHub::subscribeToTopics() {
+    /**
+     * Memory leaks right here, make these unique_ptr's
+     */
+    robotCommandSubscriber = new proto::Subscriber<proto::RobotCommand>(robotCommandChannel, &RobotHub::processRobotCommand, this);
+
+    worldStateSubscriber = new proto::Subscriber<proto::World>(proto::WORLD_CHANNEL, &RobotHub::processWorldState, this);
+
+    settingsSubscriber = new proto::Subscriber<proto::Setting>(settingsChannel, &RobotHub::processSettings, this);
+
+    feedbackPublisher = new proto::Publisher<proto::RobotFeedback>(feedbackChannel);
 }
 
-
-void RobotHub::start(){
+void RobotHub::start() {
     int currIteration = 0;
     roboteam_utils::Timer t;
-    t.loop([&]() {
-      std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(mode) << " |==========" << std::endl;
-      printStatistics();
-    }, 1);
+    t.loop(
+        [&]() {
+            std::cout << "==========| " << currIteration++ << "   " << utils::modeToString(mode) << " |==========" << std::endl;
+            printStatistics();
+        },
+        1);
 }
 
 /// print robot ticks in a nicely formatted way
 void RobotHub::printStatistics() {
     const int amountOfColumns = 4;
-    for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i+=amountOfColumns) {
+    for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i += amountOfColumns) {
         for (int j = 0; j < amountOfColumns; j++) {
-            const int robotId = i+j;
+            const int robotId = i + j;
             if (robotId < MAX_AMOUNT_OF_ROBOTS) {
                 std::cout << robotId << ": " << robotTicks[robotId] << "\t";
                 robotTicks[robotId] = 0;
@@ -55,19 +61,20 @@ void RobotHub::printStatistics() {
     }
 }
 
-void RobotHub::processWorldState(roboteam_proto::World & world){
+void RobotHub::processWorldState(proto::World &world) {
     std::lock_guard<std::mutex> lock(worldLock);
-    // if(!isLeft) roboteam_utils::rotate(&world);
     LastWorld = world;
 }
 
-void RobotHub::processRobotCommand(roboteam_proto::RobotCommand & cmd) {
+void RobotHub::processRobotCommand(proto::RobotCommand &cmd) {
     std::lock_guard<std::mutex> lock(worldLock);
     LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
 
     // check if the command is valid, otherwise don't send anything
-    if(!validateRobotPacket(llrc)) {
-        std::cout << "[processRobotCommand] LowLevelRobotCommand is not valid for our robots, no command is being sent!" << std::endl;
+    if (!validateRobotPacket(llrc)) {
+        std::cout << "[processRobotCommand] LowLevelRobotCommand is not valid "
+                     "for our robots, no command is being sent!"
+                  << std::endl;
         printLowLevelRobotCommand(llrc);
         return;
     }
@@ -85,13 +92,12 @@ void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
     // convert the LLRC to a bytestream which we can send
     std::shared_ptr<packed_protocol_message> bytestream = createRobotPacket(llrc);
 
-
     if (!device->ensureDeviceOpen()) {
         device->openDevice();
     }
 
     // Check if the message was created successfully
-    if(!bytestream){
+    if (!bytestream) {
         std::cout << "[sendSerialCommand] The message was not created succesfully!" << std::endl;
         return;
     }
@@ -103,23 +109,20 @@ void RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
     }
 }
 
-
 /// send a GRSim command from a given robotcommand
-void RobotHub::sendGrSimCommand(const roboteam_proto::RobotCommand& robotCommand) {
-    this->grsimCommander->queueGRSimCommand(robotCommand);
-}
+void RobotHub::sendGrSimCommand(const proto::RobotCommand &robotCommand) { this->grsimCommander->queueGRSimCommand(robotCommand); }
 
 void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     if (llrf.id >= 0 && llrf.id < 16) {
-        publisher->send(rtt::TOPIC_FEEDBACK, toRobotFeedback(llrf).SerializeAsString());
+        feedbackPublisher->send(toRobotFeedback(llrf));
     }
 }
 
-void RobotHub::processSettings(roboteam_proto::Setting &setting) {
-    grsimCommander->setColor(setting.isyellow());
+void RobotHub::processSettings(proto::Setting &setting) {
     grsimCommander->setGrsim_ip(setting.robothubsendip());
     grsimCommander->setGrsim_port(setting.robothubsendport());
     isLeft = setting.isleft();
+    grsimCommander->setColor(setting.isyellow());
 
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;
@@ -127,14 +130,9 @@ void RobotHub::processSettings(roboteam_proto::Setting &setting) {
         mode = utils::Mode::GRSIM;
     }
 }
+void RobotHub::set_robot_command_channel(const proto::ChannelType &robot_command_channel) { robotCommandChannel = robot_command_channel; }
+void RobotHub::set_feedback_channel(const proto::ChannelType &feedback_channel) { feedbackChannel = feedback_channel; }
+void RobotHub::set_settings_channel(const proto::ChannelType &settings_channel) { settingsChannel = settings_channel; }
 
-void RobotHub::setAiPublisher(const string &aiPublisher) {
-    ai_publisher = aiPublisher;
-}
-
-void RobotHub::setRobothubPublisher(const string &robothubPublisher) {
-    robothub_publisher = robothubPublisher;
-}
-
-} // robothub
-} // rtt
+}  // namespace robothub
+}  // namespace rtt

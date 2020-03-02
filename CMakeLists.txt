@@ -5,10 +5,9 @@ project(roboteam_robothub)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include(ccache)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -g -O0 -Wall --coverage")
+set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O3")
 
 # for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
 if(APPLE)
@@ -39,7 +38,6 @@ target_link_libraries(roboteam_robothub
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
-        gtest
         )
 
 

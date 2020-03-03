@@ -4,6 +4,7 @@ project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 set(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 include(cotire)
+include(ccache)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 

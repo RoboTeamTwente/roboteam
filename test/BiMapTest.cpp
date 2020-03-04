@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "roboteam_utils/BiMap.h"
+#include "roboteam_utils/containers/BiMap.h"
 #include <string>
 
 namespace rtt {

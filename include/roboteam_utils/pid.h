@@ -9,7 +9,9 @@
 namespace rtt {
 class PID {
  public:
-  PID(double, double, double);
+    PID();
+
+    PID(double, double, double);
   PID(double, double, double, double);
   PID(std::tuple<double, double, double>);
   PID(std::tuple<double, double, double, double>);

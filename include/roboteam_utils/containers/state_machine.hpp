@@ -70,7 +70,32 @@ namespace rtt::collections {
          */
         template <typename...Tys>
         explicit state_machine(Tys&&... args) noexcept {
+            // sizeof... gets the amount of elements in a pack
+            // https://en.cppreference.com/w/cpp/language/sizeof...
             _data.reserve(sizeof...(args));
+            // Fold expression
+            /**
+             * Fold expression, essentially:
+             * for element in args:
+             *  data.emplace_back(make_unique(ensure_reference_type(args))
+             *
+             * std::forward is a conditional cast to r-value reference, it's like std::move()
+             * but it won't std::move if it wasn't already std::move'd into the constructor
+             *
+             * You could for example print an argument pack by doing the following
+             *
+             * template <typename...Tys>
+             * void print_all(Tys... args) { // Copy for clarity
+             *      ((std::cout << args), ...);
+             * }
+             *
+             * Now say you'd want to add a space:
+             * ((std::cout << args << " "), ...);
+             *
+             * Add up a pack of ints together?
+             *
+             * int result = (args + ...);
+             */
             (_data.emplace_back(std::make_unique<Tys>(std::forward<Tys>(args))), ...);
         }
 

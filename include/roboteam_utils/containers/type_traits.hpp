@@ -36,7 +36,8 @@ namespace rtt::type_traits {
     struct is_valid_type<T, Enum, SI, void, void, void> : std::false_type {};
 
     /**
-     * stl-style `_v` value
+     * stl-style `_v` value, allows you to is_valid_type_v<T> instead of is_valid_type<T>::value
+     * (_v stands for value)
      * @tparam T Type
      * @tparam Enum Enum
      * @tparam SI Si

@@ -178,7 +178,11 @@ namespace rtt::collections {
          * @return .update(data)
          */
         [[nodiscard]] Enum update(SI const& data) noexcept {
-            return begin()[current_num()]->update(data);
+            auto value = begin()[current_num()]->update(data);
+            if (value == Enum::Success) {
+                terminate();
+            }
+            return value;
         }
 
         /**

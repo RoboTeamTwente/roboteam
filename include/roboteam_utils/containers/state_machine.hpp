@@ -195,7 +195,7 @@ namespace rtt::collections {
          * begin[current_num()]->initialize();
          */
         void initialize() noexcept {
-            begin()[current_num()]->initialize();
+            get_current()->initialize();
         }
 
         /**

@@ -181,6 +181,7 @@ namespace rtt::collections {
             auto value = begin()[current_num()]->update(data);
             if (value == Enum::Success) {
                 terminate();
+                initialize();
             }
             return value;
         }

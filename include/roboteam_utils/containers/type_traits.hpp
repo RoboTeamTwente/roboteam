@@ -11,6 +11,11 @@ namespace rtt::type_traits {
     /**
      * True case:
      * Ensures these member functions exists and are invocable
+     * std::enable_if enables this overload (std::true_type), so if std::is_invocable is false (aka if T().update is not a callable, ::value == false)
+     * 
+     * decltype() gets the type of something, so decltype(&T::update) gets the type of that function
+     * std::is_nothrow_invocable_r returns true if T::update returns Enum and is passed an SI const&
+     * 
      * @tparam T Type for which the member has to exist
      * @tparam Enum Enum type that's passed
      * @tparam SI SkilInfo class
@@ -22,7 +27,7 @@ namespace rtt::type_traits {
     struct is_valid_type : std::true_type {};
 
     /**
-     * Base false case for the above true case
+     * Base false case for the above true case, incase std::enable_if is false
      * @tparam T Type
      * @tparam Enum Enum type
      * @tparam SI SkillInfo type

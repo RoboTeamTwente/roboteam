@@ -6,8 +6,8 @@
 #define RTT_STATE_MACHINE_HPP
 
 #include <vector>
+#include <memory>
 #include <algorithm>
-#include <memory_resource>
 
 #include "type_traits.hpp"
 

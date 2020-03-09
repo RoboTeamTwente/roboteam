@@ -82,3 +82,54 @@ TEST(VectorTests, math) {
     ASSERT_DOUBLE_EQ(5, proj.x);
     ASSERT_DOUBLE_EQ(0, proj.y);
 }
+
+TEST(VectorTests, moreOperators) {
+    Vector2 a(1, 2);
+    Vector2 b(3, 4);
+
+    EXPECT_TRUE(a < b);
+    EXPECT_FALSE(b < a);
+
+    EXPECT_DOUBLE_EQ((a + b).x, a.x + b.x);
+    EXPECT_DOUBLE_EQ((a + b).y, a.y + b.y);
+    EXPECT_DOUBLE_EQ((a - b).x, a.x - b.x);
+    EXPECT_DOUBLE_EQ((a - b).y, a.y - b.y);
+    EXPECT_DOUBLE_EQ((b / a).x, b.x / a.x);
+    EXPECT_DOUBLE_EQ((b / a).y, b.y / a.y);
+
+    b /= a;
+    EXPECT_DOUBLE_EQ(b.x, 3);
+    EXPECT_DOUBLE_EQ(b.y, 2);
+    b *= a;
+    EXPECT_DOUBLE_EQ(b.x, 3);
+    EXPECT_DOUBLE_EQ(b.y, 4);
+    b *= 2;
+    EXPECT_DOUBLE_EQ(b.x, 6);
+    EXPECT_DOUBLE_EQ(b.y, 8);
+    b /= 2;
+    EXPECT_DOUBLE_EQ(b.x, 3);
+    EXPECT_DOUBLE_EQ(b.y, 4);
+    b -= a;
+    EXPECT_DOUBLE_EQ(b.x, 2);
+    EXPECT_DOUBLE_EQ(b.y, 2);
+    b -= 1;
+    EXPECT_DOUBLE_EQ(b.x, 1);
+    EXPECT_DOUBLE_EQ(b.y, 1);
+    b += 3;
+    EXPECT_DOUBLE_EQ(b.x, 4);
+    EXPECT_DOUBLE_EQ(b.y, 4);
+    b += a;
+    EXPECT_DOUBLE_EQ(b.x, 5);
+    EXPECT_DOUBLE_EQ(b.y, 6);
+}
+
+TEST(VectorTests, protoVector) {
+    Vector2 f(3, 4);
+    proto::Vector2f x = f;
+    EXPECT_DOUBLE_EQ(x.x(), f.x);
+    EXPECT_DOUBLE_EQ(x.y(), f.y);
+    Vector2 checkF = x;
+    EXPECT_DOUBLE_EQ(checkF.x, f.x);
+    EXPECT_DOUBLE_EQ(checkF.y, f.y);
+    std::cout << checkF << std::endl;  // testing print functionality
+} 

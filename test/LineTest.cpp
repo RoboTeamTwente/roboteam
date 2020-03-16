@@ -156,6 +156,10 @@ TEST(LineTests, pointOnLine) {
     EXPECT_TRUE(l3.isOnLine(A));
     EXPECT_TRUE(ls3.isOnLine(A));
 
+    LineSegment degenerate(point5,point5);
+    EXPECT_FALSE(degenerate.isOnLine(point6));
+    Line degenLine(degenerate);
+    EXPECT_FALSE(degenLine.isOnLine(point6));
 }
 
 TEST(LineTests, Intersections) {

@@ -174,15 +174,21 @@ namespace rtt::collections {
 
         /**
          * Updates the current element in the vector
+         * if get_current() returns nullptr, this function returns failure
          * @param data Data to pass to .update(data);
          * @return .update(data)
          */
         [[nodiscard]] Enum update(SI const& data) noexcept {
-            auto value = begin()[current_num()]->update(data);
+            auto current_elem = get_current();
+            if (!current_elem) {
+                return Enum::Failure;
+            }
+            auto value = current_elem->update(data);
             if (value == Enum::Success) {
                 terminate();
-                if (!finished())
-			initialize();
+                if (!finished()) {
+                    initialize();
+                }
             }
             return value;
         }
@@ -192,7 +198,11 @@ namespace rtt::collections {
          * begin(0[current_num()]->terminate();
          */
         void terminate() noexcept {
-            begin()[current_num()]->terminate();
+            auto _current = get_current();
+            if (!_current) {
+                return;
+            }
+            _current->terminate();
             skip_n(1);
         }
 
@@ -206,12 +216,17 @@ namespace rtt::collections {
 
         /**
          * Gets a Base* to the current element
+         * If curr_index exceeds the size -> nullptr is returned
          * Literally:
          *  begin()[current_num()].get();
          * @return Base* to that element
          */
         [[nodiscard]] Base* get_current() noexcept {
-            return begin()[current_num()].get();
+            auto curr_index = current_num();
+            if  (curr_index >= size()) {
+                return nullptr;
+            }
+            return begin()[curr_index].get();
         }
     };
 } // namespace rtt::collections

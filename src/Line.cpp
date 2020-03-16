@@ -71,6 +71,9 @@ Vector2 Line::project(const Vector2 &point) const {
 }
 
 bool Line::isOnLine(const Vector2 &point) const {
+    if (isPoint()){
+        return (start == point || end == point);
+    }
     Vector2 A = end - start;
     Vector2 B = point - start;
     return A.cross(B) == 0;

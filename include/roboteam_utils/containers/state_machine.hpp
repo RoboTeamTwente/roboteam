@@ -228,6 +228,12 @@ namespace rtt::collections {
             }
             return begin()[curr_index].get();
         }
+        /**
+         * Resets the state machine
+         */
+        void reset() noexcept {
+            skip_n(-current_num());
+        }
     };
 } // namespace rtt::collections
 

@@ -144,6 +144,15 @@ namespace rtt::collections {
         }
 
         /**
+         * Skips to element n, sets current to clamp(n, _data.size())
+         * @param n Element to skip to
+         */
+        void skip_to(int n) noexcept {
+            current = n;
+            current = std::clamp<size_t>(current, 0, _data.size());
+        }
+
+        /**
          * Checks whether al elements have been finalized
          * @return current_num() == total_count();
          */

@@ -97,6 +97,9 @@ namespace rtt::collections {
              * int result = (args + ...);
              */
             (_data.emplace_back(std::make_unique<Tys>(std::forward<Tys>(args))), ...);
+
+            // Call initialize on the first element if there is an element to initialize
+            if (size()) initialize();
         }
 
         /**

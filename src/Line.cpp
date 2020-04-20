@@ -81,42 +81,47 @@ bool Line::isOnLine(const Vector2 &point) const {
 
 // see https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection for help. These should be thoroughly tested
 std::optional<Vector2> Line::intersects(const Line &line) const {
-    Vector2 A = start - end;
-    Vector2 B = line.start - line.end;
-    double denom = A.cross(B);
-    if (denom != 0) {
-        Vector2 C = start - line.start;
-        double numer = - C.cross(B);
-        double t = numer/denom;
-        return start + A*t;
+    auto result = generalIntersect(Line(line));
+    return result.has_value() ? std::optional(result.value().first) : std::nullopt;
+}
+
+std::optional<Vector2> Line::intersects(const LineSegment &line) const {
+    auto result = generalIntersect(Line(line));
+    if (result.has_value()) {
+        float u = result.value().second;
+        if (u >= 0 && u <= 1) return std::optional(result.value().first);
     }
     return std::nullopt;
 }
 
-std::optional<Vector2> Line::intersects(const LineSegment &line) const {
+std::optional<Vector2> Line::forwardIntersect(const Line &line) const {
+    auto result = generalIntersect(Line(line));
+    if (result.has_value()) {
+        float u = result.value().second;
+        if (u >= 0) return std::optional(result.value().first);
+    }
+    return std::nullopt;
+}
+
+bool Line::doesIntersect(const Line &line) const {
+    return !this->isParallel(line);
+}
+
+bool Line::doesIntersect(const LineSegment &line) const {
+    return intersects(line).has_value();
+}
+
+std::optional<std::pair<Vector2, float>> Line::generalIntersect(const Line &line) const {
     Vector2 A = start - end;
     Vector2 B = line.start - line.end;
     double denom = A.cross(B);
     if (denom != 0) {
         Vector2 C = start - line.start;
         double numer = C.cross(A);
-        double u = numer/denom;
-        if (! (u < 0 || u > 1)) {
-            return line.start - B*u;
-        }
+        double u = numer / denom;
+        return std::pair(line.start - B*u, u);
     }
     return std::nullopt;
-}
-
-bool Line::doesIntersect(const Line &line) const {
-    return ! this->isParallel(line);
-}
-
-bool Line::doesIntersect(const LineSegment &line) const {
-    if (intersects(line)) {
-        return true;
-    }
-    return false;
 }
 
 }

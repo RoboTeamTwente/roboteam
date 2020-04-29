@@ -43,7 +43,7 @@ running two teams:
 - ZeroMQ 4.2.5 (https://zeromq.org/)
 - zmqpp 4.1.2 (https://github.com/zeromq/zmqpp) 
 - Armadillo 9.6 (http://arma.sourceforge.net/)
-
+- Pagmo 2.16 (https://esa.github.io/pagmo2)
 
 ## Installation on Linux (tested on Ubuntu 18.04 Bionic Beaver)
 
@@ -71,6 +71,18 @@ $ sudo apt-get install libzmq3-dev libzmqpp-dev
 ### install Armadillo
 ```
 sudo apt-get install libarmadillo-dev
+```
+
+### install Pagmo
+```
+$ git clone https://github.com/esa/pagmo2.git
+$ cd /path/to/pagmo
+$ mkdir build
+$ cd build
+
+$ cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/
+$ cmake --build .
+$ cmake --build . --target install
 ```
 
 ## installation on macOS (tested on macOS 10.14 Mojave)

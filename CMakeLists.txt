@@ -53,6 +53,8 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Triangle.h
         src/Tube.cpp
         include/roboteam_utils/Tube.h
+        src/HalfLine.cpp
+        include/roboteam_utils/HalfLine.h
         )
 
 

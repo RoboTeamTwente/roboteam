@@ -14,7 +14,7 @@ class LineSegment;
  *
  */
 class Line {
-   public:
+    public:
     /**
      * @brief Start of the line
      *
@@ -38,7 +38,7 @@ class Line {
      * @param _end End of the Line
      *
      */
-    constexpr Line(const Vector2 &_start, const Vector2 &_end) noexcept : start{_start}, end{_end} {};
+    constexpr Line(const Vector2 &_start, const Vector2 &_end) noexcept: start{_start}, end{_end} {};
     /**
      * @brief Constructs a new Line from a LineSegment.
      * @param other LineSegment to use for construction
@@ -121,7 +121,8 @@ class Line {
      */
     [[nodiscard]] bool isPoint() const;
     /**
-     * @brief Gets the distance from \ref point to the line
+     * @brief Gets the distance from \ref point to the line.
+     * The theory behind it is explained in: http://www.randygaul.net/2014/07/23/distance-point-to-line-segment/
      *
      * @param point Point to get distance to
      * @return double Distance to line
@@ -164,14 +165,6 @@ class Line {
     [[nodiscard]] std::optional<Vector2> intersects(const LineSegment &line) const;
 
     /**
-     * @brief Compute the intersection of this, and the line given as parameter. The parameter line is treated as half-line, so for a line a + tb, with b the direction vector and
-     * a the start parameter of this line, any point on the line where t<0 is not included in the calculation of the intersection.
-     * @param line The line of which the positive direction intersection is computed.
-     * @return No vector if the lines do not intersect in positive direction. Otherwise it returns a vector which represents the position of intersection.
-     */
-    [[nodiscard]] std::optional<Vector2> forwardIntersect(const Line &line) const;
-
-    /**
      * @brief Checks whether \ref line intersects `this`
      *
      * @param line Line to check against
@@ -189,17 +182,27 @@ class Line {
      */
     [[nodiscard]] bool doesIntersect(const LineSegment &line) const;
 
-   private:
     /**
-     * Get the intersection point between this line and the given line as parameter. Moreover compute how far the given intersection is located relatively in the direction of the
-     * start parameter of the line towards the end parameter of the line. Note if the line given as parameter is equal to this line then no intersection is returned.
-     * @param line Line to check against.
-     * @return std::nullopt if the lines do not intersect. Otherwise returns the intersection point and the relative extension of the given line to reach the intersection
-     * point.
+     * Get the intersection point between two infinite lines. No intersection point is returned in case the lines are equal or parallel.
+     *
+     * @param line1Start An arbitrary point on the first line.
+     * @param line1End An arbitrary other point on the first line (make sure that it is different than line1Start).
+     * @param line2Start An arbitrary point on the second line.
+     * @param line2End An arbitrary other point on the second line (make sure that it is different than line2Start).
+     * @return std::nullopt if the lines do not intersect or are equal. Otherwise return the intersection point.
      */
-    [[nodiscard]] std::optional<std::pair<Vector2, float>> generalIntersect(const Line &line) const;
-};
+    static std::optional<Vector2> intersect(const Vector2 line1Start, const Vector2 line1End, const Vector2 line2Start, const Vector2 line2End);
 
+    /**
+     * Get the relative position of pointOnLine on the given infinite line, i.e. compute t such that line1Start + (line1End - line1Start) * t = pointOnLine
+     *
+     * @param line1Start An arbitrary point on the first line.
+     * @param line1End An arbitrary other point on the first line (make sure that it is different than line1Start).
+     * @param pointOnLine A point that is located on the given line.
+     * @return The value t such that line1Start + (line1End - line1Start) * t = pointOnLine
+     */
+    static float relativePosition(const Vector2 line1Start, const Vector2 line1End, const Vector2 pointOnLine);
+};
 }  // namespace rtt
 
 #endif  // ROBOTEAM_UTILS_LINE_H

@@ -2,6 +2,7 @@
 // Created by rolf on 15-5-19.
 //
 
+#include "HalfLine.h"
 #include "../include/roboteam_utils/Line.h"
 #include "../include/roboteam_utils/LineSegment.h"
 
@@ -306,8 +307,8 @@ std::optional<LineSegment> LineSegment::shadow(const Vector2 &source, const Line
          * since the direction of a point is not known. */
         return std::nullopt;
     }
-    std::optional<Vector2> firstIntersect = Line(*this).forwardIntersect(Line(source, obstacle.start));
-    std::optional<Vector2> secondIntersect = Line(*this).forwardIntersect(Line(source, obstacle.end));
+    std::optional<Vector2> firstIntersect = HalfLine(source, obstacle.start).intersect(Line(*this));
+    std::optional<Vector2> secondIntersect = HalfLine(source, obstacle.end).intersect(Line(*this));
     if (!firstIntersect.has_value() && !secondIntersect.has_value()) {
         // If both lines from the sources to the start and end of the obstacle do not intersect with the infinite line expansion of this projection line then there is no shadow.
         return std::nullopt;

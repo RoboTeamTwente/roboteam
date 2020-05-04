@@ -4,9 +4,11 @@
 
 #include <gtest/gtest.h>
 #include <math.h>
+#include "roboteam_utils/HalfLine.h"
 #include "roboteam_utils/Line.h"
 #include "roboteam_utils/LineSegment.h"
 #include "roboteam_utils/Vector2.h"
+
 using namespace rtt;
 TEST(LineTests, direction) {
     Vector2 v1(0.0, 0.0), v2(1.0, 1.0), v3(0.0, 0.0);
@@ -285,17 +287,17 @@ TEST(LineTests, ForwardIntersect) {
     Vector2 forwardLine_start(0.0, 0.0), forwardLine_end(2.0, 2.0);
     Vector2 line1_start(-1.0, -3.0), line1_end(-1.0, -2.0), line2_start(1.0, 4.0), line2_end(1.0, 5.0), line3_start(-1.0, 1.0), line3_end(1.0, -1.0),
         line4_start(1000000000.0, -1000000000.0), line4_end(1000000000.0, -99999999.0), line5_start(1.0, 1.0), line5_end(3.0, 3.0);
-    Line forwardLine(forwardLine_start, forwardLine_end), line1(line1_start, line1_end), line2(line2_start, line2_end), line3(line3_start, line3_end),
-        line4(line4_start, line4_end), line5(line5_start, line5_end);
-    std::optional<Vector2> result = line1.forwardIntersect(forwardLine);
+    HalfLine forwardLine(forwardLine_start, forwardLine_end);
+    Line line1(line1_start, line1_end), line2(line2_start, line2_end), line3(line3_start, line3_end), line4(line4_start, line4_end), line5(line5_start, line5_end);
+    std::optional<Vector2> result = forwardLine.intersect(line1);
     EXPECT_FALSE(result.has_value());  // They do intersect, but not in positive direction
-    result = line2.forwardIntersect(forwardLine);
+    result = forwardLine.intersect(line2);
     EXPECT_EQ(result, Vector2(1.0, 1.0));  // An half-way past intersection in positive direction
-    result = line3.forwardIntersect(forwardLine);
+    result = forwardLine.intersect(line3);
     EXPECT_EQ(result, Vector2(0.0, 0.0));  // Boundary case where an intersection happens at the start of the forwardline
-    result = line4.forwardIntersect(forwardLine);
+    result = forwardLine.intersect(line4);
     EXPECT_EQ(result, Vector2(1000000000.0, 1000000000.0));  // Far away forward intersection for both lines
-    result = line5.forwardIntersect(forwardLine);
+    result = forwardLine.intersect(line5);
     EXPECT_FALSE(result.has_value());  // No intersection is returned in case the lines are the same
 }
 

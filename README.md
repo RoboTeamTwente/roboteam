@@ -73,14 +73,14 @@ $ sudo apt-get install libzmq3-dev libzmqpp-dev
 sudo apt-get install libarmadillo-dev
 ```
 
-### install Pagmo
+### Install Pagmo
 ```
 $ git clone https://github.com/esa/pagmo2.git
 $ cd /path/to/pagmo
 $ mkdir build
 $ cd build
 
-$ cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/
+$ cmake ../
 $ cmake --build .
 $ cmake --build . --target install
 ```

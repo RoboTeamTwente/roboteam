@@ -57,22 +57,6 @@ namespace rtt {
         void setAngle(double other) noexcept;
 
         /**
-         * @brief Gets the difference in angle between this angle and other
-         *
-         * @param other Other angle
-         * @return double angle
-         */
-        [[nodiscard]] double angleDiff(Angle const &other) const noexcept;
-
-        /**
-         * @brief Gets the difference between this.angle and other
-         *
-         * @param other Other angle
-         * @return double amount difference
-         */
-        [[nodiscard]] double angleDiff(double other) const noexcept;
-
-        /**
          * @brief Gets the angleDiff of the shortest angle (*this vs other)
          *
          * @param other Other angle to get from
@@ -233,7 +217,6 @@ namespace rtt {
          * @return Angle A copy of `*this`
          */
         Angle constrain() noexcept;
-
     };
 
 } // rtt

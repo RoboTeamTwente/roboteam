@@ -58,6 +58,13 @@ class Tube {
          * @return true if tube is a circle, false if not
          */
         [[nodiscard]] bool isCircle() const;
+
+        /**
+        * @brief Projects the given point onto this tube
+        * @param point The point which to project onto this tube
+        * @return The location where the point is projected onto the tube
+        */
+        Vector2 project(const Vector2& point);
 };
 }
 

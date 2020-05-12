@@ -20,6 +20,9 @@ RUN /bin/bash -c "apt-get -y install \
     autoconf \
     automake \
     libtool \
+    libtbb-dev \
+    apt-utils \
+    libboost-all-dev \
     libeigen3-dev \
     curl \
     make \
@@ -49,6 +52,17 @@ RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/google
     cmake .. &&\
     make -j $(nproc)&&\
     make install"
+
+# Setup pagmo2
+RUN /bin/bash -c "git clone https://github.com/esa/pagmo2.git /opt/pagmo2 && \
+    cd /opt/pagmo2 && \
+    git submodule update --init --recursive && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make && \
+    make install \
+    "
 
 # Clone the repos and checkout development on everything
 RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules &&\

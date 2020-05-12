@@ -74,7 +74,9 @@ sudo apt-get install libarmadillo-dev
 ```
 
 ### Install Pagmo
+Before installing make sure you have TBB, the intel threading library, installed via apt
 ```
+$ sudo apt install libtbb-dev
 $ git clone https://github.com/esa/pagmo2.git
 $ cd /path/to/pagmo
 $ mkdir build

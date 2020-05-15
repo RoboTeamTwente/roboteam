@@ -58,6 +58,17 @@ Vector2 Vector2::rotate(double radians) const {
     return Vector2(x*c - y*s, x*s + y*c);
 }
 
+Vector2 Vector2::rotateAroundPoint(double radians, const Vector2& pivot) const {
+    double c = cos(radians);
+    double s = sin(radians);
+
+    // Calculate new position
+    double rotatedX = (this->x - pivot.x) * c - (this->y - pivot.y) * s + pivot.x;
+    double rotatedY = (this->x - pivot.x) * s + (this->y - pivot.y) * c + pivot.y;
+
+    return Vector2(rotatedX, rotatedY);
+}
+
 Vector2 Vector2::project(const Vector2 &lineA, const Vector2 &lineB) const {
     Vector2 ab = lineB - lineA;
     Vector2 ap = *this - lineA;

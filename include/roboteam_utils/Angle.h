@@ -57,6 +57,13 @@ namespace rtt {
         void setAngle(double other) noexcept;
 
         /**
+         * Check what is the shortest direction to move from this angle to the other angle.
+         * @param other The other angle
+         * @return True if the positive direction is the shortest (which is counterclockwise), false if the negative direction is the shortest (which is clockwise).
+         */
+        [[nodiscard]] bool rotateDirection(const Angle &other) const noexcept;
+
+        /**
          * @brief Gets the angleDiff of the shortest angle (*this vs other)
          *
          * @param other Other angle to get from

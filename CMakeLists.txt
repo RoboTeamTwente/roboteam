@@ -55,6 +55,8 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Tube.h
         src/HalfLine.cpp
         include/roboteam_utils/HalfLine.h
+        src/Grid.cpp
+        include/roboteam_utils/Grid.h
         )
 
 
@@ -93,7 +95,8 @@ add_executable(utils_tests
         test/HungarianTest.cpp
         #test/TriangleTest.cpp
         test/TubeTest.cpp
-        test/StateMachineTest.cpp)
+        test/StateMachineTest.cpp
+        test/GridTest.cpp)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

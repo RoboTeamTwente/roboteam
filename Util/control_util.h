@@ -43,7 +43,7 @@ bool MOTORS_50W;			// wattage of motors, true = 50 W, false = 30 W
 
 // Wheels
 #define PWM_CUTOFF 200.0F // arbitrary treshold to avoid motor shutdown
-#define GEAR_RATIO 2.5F // gear ratio between motor and wheel
+#define GEAR_RATIO 2.65F // gear ratio between motor and wheel
 #define MAX_PWM 3000 // defined in CubeMX
 #define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
 float MAX_VOLTAGE; // [V] see datasheet

@@ -104,8 +104,8 @@ static void translationVelControl(float state[3], float stateRef[3], float trans
 
 	// Manually adjusting velocity command
 	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)
-	stateLocalRef[body_x] = 1.063 * stateLocalRef[body_x];
-	stateLocalRef[body_y] = 1.308 * stateLocalRef[body_y];
+	stateLocalRef[body_x] = 1.12 * stateLocalRef[body_x];
+	stateLocalRef[body_y] = 1.1 * stateLocalRef[body_y];
 
 	// Local control
 	float velxErr = (stateLocalRef[body_x] - state[body_x]);

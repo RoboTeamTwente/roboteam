@@ -27,9 +27,17 @@ static float angleControl(float angleRef, float angle);
 
 int stateControl_Init(){
 	status = on;
-	initPID(&stateK[body_x], 0.1, 0.0, 0.0);
-	initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-	initPID(&stateK[body_w], 20.0, 30.0, 0.0);
+	if (MOTORS_50W) {
+		// 50 W
+		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
+		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
+		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
+	} else {
+		// 30 W
+		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
+		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
+		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
+	}
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
 }
@@ -76,14 +84,11 @@ void stateControl_ResetAngleI(){
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void body2Wheels(float wheelSpeed[4], float vel[3]){
-	//mixing matrix
-	float velx2wheel = (vel[body_x]*sin60/rad_wheel);
-	float vely2wheel = (vel[body_y]*cos60/rad_wheel);
-	//float rot2wheel =  (rad_robot*vel[body_w]/rad_wheel);
-	wheelSpeed[wheels_RF] = (velx2wheel + vely2wheel);
-	wheelSpeed[wheels_RB] = (velx2wheel - vely2wheel);
-	wheelSpeed[wheels_LB] = (-velx2wheel - vely2wheel);
-	wheelSpeed[wheels_LF] = (-velx2wheel + vely2wheel);
+	// Transformation from translational velocities to wheel speeds
+	wheelSpeed[wheels_RF] = (vel[body_x] * cosFront + vel[body_y] * sinFront) / rad_wheel;
+	wheelSpeed[wheels_RB] = (vel[body_x] * cosBack + vel[body_y] * -sinBack) / rad_wheel;
+	wheelSpeed[wheels_LB] = (vel[body_x] * -cosBack + vel[body_y] * -sinBack) / rad_wheel;
+	wheelSpeed[wheels_LF] = (vel[body_x] * -cosFront + vel[body_y] * sinFront) / rad_wheel;
 }
 
 static void global2Local(float global[3], float local[3], float  yaw){
@@ -99,8 +104,8 @@ static void translationVelControl(float state[3], float stateRef[3], float trans
 
 	// Manually adjusting velocity command
 	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)
-	stateLocalRef[body_x] = 1.063 * stateLocalRef[body_x];
-	stateLocalRef[body_y] = 1.308 * stateLocalRef[body_y];
+	stateLocalRef[body_x] = 1.12 * stateLocalRef[body_x];
+	stateLocalRef[body_y] = 1.1 * stateLocalRef[body_y];
 
 	// Local control
 	float velxErr = (stateLocalRef[body_x] - state[body_x]);

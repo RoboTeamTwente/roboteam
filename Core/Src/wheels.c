@@ -12,8 +12,15 @@ static int pwm[4] = {0};
 static bool direction[4] = {0}; // 0 is counter clock-wise
 static float wheelSpeed[4] = {0};
 static float wheelRef[4] = {0.0f};
-static GPIO_Pin lockPins[4];
-static bool isAWheelLocked = false;
+static bool isBraking = false;
+
+// Encoder
+static GPIO_Pin encoderAPins[4];
+static GPIO_Pin encoderBPins[4];
+static int count[4] = {0};
+static bool noEncoder[4] = {false};
+static bool Aold[4];
+static bool Bold[4];
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -38,12 +45,19 @@ static void SetPWM();
 //Sets the direction of the wheels
 static void SetDir();
 
+//Checks whether the encoder is working correctly
+static void checkEncoder(wheel_names wheel);
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int wheels_Init(){
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
+		if (MOTORS_50W) {
+			initPID(&wheelsK[wheel], 7.0, 0.0, 0.0); // 50 W
+		} else {
+			initPID(&wheelsK[wheel], 7.0, 0.0, 0.0); // 30 W
+		}
 	}
 	HAL_TIM_Base_Start(ENC_RF); //RF
 	HAL_TIM_Base_Start(ENC_RB); //RB
@@ -53,11 +67,17 @@ int wheels_Init(){
 	start_PWM(PWM_RB); //RB
 	start_PWM(PWM_LB); //LB
 	start_PWM(PWM_LF); //LF
+	wheels_Brake(true); // Brake on startup
 
-	lockPins[wheels_RF] = RF_LOCK_pin;
-	lockPins[wheels_RB] = RB_LOCK_pin;
-	lockPins[wheels_LB] = LB_LOCK_pin;
-	lockPins[wheels_LF] = LF_LOCK_pin;
+	encoderAPins[wheels_RF] = RF_ENC_A_pin;
+	encoderAPins[wheels_RB] = RB_ENC_A_pin;
+	encoderAPins[wheels_LB] = LB_ENC_A_pin;
+	encoderAPins[wheels_LF] = LF_ENC_A_pin;
+	encoderBPins[wheels_RF] = RF_ENC_B_pin;
+	encoderBPins[wheels_RB] = RB_ENC_B_pin;
+	encoderBPins[wheels_LB] = LB_ENC_B_pin;
+	encoderBPins[wheels_LF] = LF_ENC_B_pin;
+
 	return 0;
 }
 
@@ -71,6 +91,7 @@ int wheels_DeInit(){
 	stop_PWM(PWM_RB); //RB
 	stop_PWM(PWM_LB); //LB
 	stop_PWM(PWM_LF); //LF
+	wheels_Brake(true); // Brake
 
 	//TODO: Fix this huge stopping hack
 	for (int i=0; i<4; i++) {
@@ -81,26 +102,24 @@ int wheels_DeInit(){
 }
 
 void wheels_Update(){
-	static uint lockTimes[4] = {0};
-	isAWheelLocked = false;
 	if (wheels_state == on) {
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-			float err = wheelRef[wheel]-wheelSpeed[wheel];
+			// Check encoder data
+			checkEncoder(wheel);
 
-			if (fabs(err) < 0.1) {
-				err = 0.0;
-				wheelsK[wheel].I = 0;
-			}
-
-			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
-			if (read_Pin(lockPins[wheel])) {
-				if (HAL_GetTick() - lockTimes[wheel] < 200) {
-					pwm[wheel] = 0;
-				}
-				isAWheelLocked = true;
+			if (noEncoder[wheel]) {
+				// Do not use PID when there is no encoder data
+				pwm[wheel] = OMEGAtoPWM*wheelRef[wheel];
 			} else {
-				lockTimes[wheel] = HAL_GetTick();
+				float err = wheelRef[wheel]-wheelSpeed[wheel];
+
+				if (fabs(err) < 0.1) {
+					err = 0.0;
+					wheelsK[wheel].I = 0;
+				}
+
+				pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
 			}
 		}
 
@@ -125,10 +144,19 @@ int* wheels_GetPWM() {
 	return pwm;
 }
 
-bool wheels_IsAWheelLocked() {
-	return isAWheelLocked;
+bool wheels_IsBraking() {
+	return isBraking;
 }
 
+void wheels_Brake(bool brake) {
+	// Set pin to LOW to brake
+	set_Pin(RB_Brake_pin, !brake);
+	set_Pin(LB_Brake_pin, !brake);
+	set_Pin(RF_Brake_pin, !brake);
+	set_Pin(LF_Brake_pin, !brake);
+
+	isBraking = brake;
+}
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
@@ -208,4 +236,30 @@ static void SetDir(){
 	set_Pin(RB_DIR_pin, direction[wheels_RB]);
 	set_Pin(LB_DIR_pin, direction[wheels_LB]);
 	set_Pin(LF_DIR_pin, direction[wheels_LF]);
+}
+
+static void checkEncoder(wheel_names wheel) {
+	static const int threshold = 10; // Number of ticks the encoder data can be the same before detection of unconnected encoder
+
+	bool A = read_Pin(encoderAPins[wheel]);
+	bool B = read_Pin(encoderBPins[wheel]);
+
+	// When pwm is larger than the cutoff pwm, but encoder is not moving, then there is no correct encoder data
+	if (!noEncoder[wheel] && (A == Aold[wheel] || B == Bold[wheel]) && fabs(pwm[wheel]) >= PWM_CUTOFF) {
+		if (count[wheel] >= threshold) {
+			noEncoder[wheel] = true;
+		} else {
+			count[wheel]++;
+		}
+	} else {
+		count[wheel] = 0;
+	}
+
+	// Check if encoder data is back
+	if (noEncoder[wheel] && A != Aold[wheel] && B != Bold[wheel]) {
+		noEncoder[wheel] = false;
+	}
+
+	Aold[wheel] = A;
+	Bold[wheel] = B;
 }

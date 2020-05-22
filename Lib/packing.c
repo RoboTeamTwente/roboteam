@@ -136,7 +136,7 @@ void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[RO
 
 	output[6]  = (uint8_t) (input->theta & 0xFF);
 
-	output[7]  = (uint8_t) (input->wheelLocked << 7);
+	output[7]  = (uint8_t) (input->wheelBraking << 7);
 	output[7]  |= (uint8_t) (input->signalStrength & 0x7F);
 }
 

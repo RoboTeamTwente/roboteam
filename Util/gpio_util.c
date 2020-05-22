@@ -35,11 +35,11 @@ GPIO_Pin RF_DIR_pin			= { RF_FR_GPIO_Port			, RF_FR_Pin			};
 GPIO_Pin LB_DIR_pin			= { LB_FR_GPIO_Port			, LB_FR_Pin			};
 GPIO_Pin LF_DIR_pin			= { LF_FR_GPIO_Port			, LF_FR_Pin			};
 
-// Wheels Locked
-GPIO_Pin RB_LOCK_pin		= { RB_Locked_GPIO_Port		, RB_Locked_Pin		};
-GPIO_Pin RF_LOCK_pin		= { RF_Locked_GPIO_Port		, RF_Locked_Pin		};
-GPIO_Pin LB_LOCK_pin		= { LB_Locked_GPIO_Port		, LB_Locked_Pin		};
-GPIO_Pin LF_LOCK_pin		= { LF_Locked_GPIO_Port		, LF_Locked_Pin		};
+// Wheels brake
+GPIO_Pin RB_Brake_pin		= { RB_BRK_GPIO_Port		, RB_BRK_Pin		};
+GPIO_Pin RF_Brake_pin		= { RF_BRK_GPIO_Port		, RF_BRK_Pin		};
+GPIO_Pin LB_Brake_pin		= { LB_BRK_GPIO_Port		, LB_BRK_Pin		};
+GPIO_Pin LF_Brake_pin		= { LF_BRK_GPIO_Port		, LF_BRK_Pin		};
 
 // Wheels ENC
 GPIO_Pin RB_ENC_A_pin		= { RB_CHA_GPIO_Port		, RB_CHA_Pin		};

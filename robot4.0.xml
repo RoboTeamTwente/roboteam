@@ -9,8 +9,8 @@
 <!ATTLIST board id CDATA #REQUIRED>
 ]>
 <targetDefinitions>
-  <board id="robot3.0">
-    <name>robot3.0</name>
+  <board id="robot4.0">
+    <name>robot4.0</name>
     <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
     <mcuId>stm32f767zitx</mcuId>

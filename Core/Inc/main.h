@@ -85,8 +85,8 @@ void Error_Handler(void);
 #define ENCODER_FILTER 15
 #define Charge_done_Pin GPIO_PIN_2
 #define Charge_done_GPIO_Port GPIOE
-#define LF_Locked_Pin GPIO_PIN_3
-#define LF_Locked_GPIO_Port GPIOE
+#define LF_BRK_Pin GPIO_PIN_3
+#define LF_BRK_GPIO_Port GPIOE
 #define LF_FR_Pin GPIO_PIN_4
 #define LF_FR_GPIO_Port GPIOE
 #define LF_PWM_Pin GPIO_PIN_5
@@ -95,8 +95,8 @@ void Error_Handler(void);
 #define LB_PWM_GPIO_Port GPIOE
 #define LB_FR_Pin GPIO_PIN_13
 #define LB_FR_GPIO_Port GPIOC
-#define LB_Locked_Pin GPIO_PIN_14
-#define LB_Locked_GPIO_Port GPIOC
+#define LB_BRK_Pin GPIO_PIN_14
+#define LB_BRK_GPIO_Port GPIOC
 #define PWM_Buzzer_Pin GPIO_PIN_6
 #define PWM_Buzzer_GPIO_Port GPIOF
 #define LF_CHA_Pin GPIO_PIN_0
@@ -154,8 +154,8 @@ void Error_Handler(void);
 #define RB_CHA_GPIO_Port GPIOD
 #define RB_CHB_Pin GPIO_PIN_13
 #define RB_CHB_GPIO_Port GPIOD
-#define RB_Locked_Pin GPIO_PIN_7
-#define RB_Locked_GPIO_Port GPIOG
+#define RB_BRK_Pin GPIO_PIN_7
+#define RB_BRK_GPIO_Port GPIOG
 #define RB_FR_Pin GPIO_PIN_8
 #define RB_FR_GPIO_Port GPIOG
 #define RB_PWM_Pin GPIO_PIN_6
@@ -172,8 +172,8 @@ void Error_Handler(void);
 #define RF_CHB_GPIO_Port GPIOA
 #define RF_FR_Pin GPIO_PIN_10
 #define RF_FR_GPIO_Port GPIOA
-#define RF_Locked_Pin GPIO_PIN_11
-#define RF_Locked_GPIO_Port GPIOA
+#define RF_BRK_Pin GPIO_PIN_11
+#define RF_BRK_GPIO_Port GPIOA
 #define Geneva_CHA_Pin GPIO_PIN_15
 #define Geneva_CHA_GPIO_Port GPIOA
 #define Battery_empty_Pin GPIO_PIN_10

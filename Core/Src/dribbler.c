@@ -18,5 +18,11 @@ void dribbler_SetSpeed(int speed){
 	}else if(speed < 0){
 		speed = 0;
 	}
-	set_PWM(PWM_Dribbler, (100 - speed) * (MAX_PWM / 100));
+
+	// The 12V and 24V boards require different calculations for the dribbler PWM
+	if (MOTORS_50W) {
+		set_PWM(PWM_Dribbler, speed / 100.0 * MAX_PWM);
+	} else {
+		set_PWM(PWM_Dribbler, (100 - speed) * (MAX_PWM / 100));
+	}
 }

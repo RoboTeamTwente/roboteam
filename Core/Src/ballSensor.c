@@ -47,7 +47,7 @@ uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
 
 bool ballSensor_Init()
 {
-	Putty_printf ("BS_INIT BEGIN\n\r");
+	//Putty_printf ("BS_INIT BEGIN\n\r");
 	noBall();
 	HAL_Delay(20); // timing specs
 	ballSensor_Reset();
@@ -56,7 +56,7 @@ bool ballSensor_Init()
 	while(!read_Pin(BS_IRQ_pin)){
 		// wait for DR
 		if (HAL_GetTick()-currentTime > 100) {
-			Putty_printf ("BS_INIT TIMEOUT FAIL\n\r");
+			//Putty_printf ("BS_INIT TIMEOUT FAIL\n\r");
 			return false;
 		}
 	}
@@ -192,8 +192,8 @@ void updatePosition(uint8_t data[]) {
 	ballPosition.y = y;
 	ballPosition.lastSeen = HAL_GetTick();
 	ballPosition.id = data[10];
-	ballPosition.canKickBall = (y<250) ? 1 : 0;
-	ballPosition.canKickBall &= x > 150 && x < 650;
+	ballPosition.canKickBall = (y<500) ? 1 : 0;
+	//ballPosition.canKickBall &= x > 50 && x < 700;
 //	ballPosition.canKickBall &= x > 185 && x < 560;
 	ballPosition.canSeeBall = 1;
 
@@ -271,7 +271,7 @@ bool bs_Boot() {
 	I2C_Rx();
 	// certain bytes of the response can change according to datasheet, so compare parts of the byte array
 	if(!memcmp( data, bootcomplete_response, 10) && !memcmp( data+11, bootcomplete_response+11, 3) && !memcmp( data+13, bootcomplete_response+13, 3)) {
-		Putty_printf("BS_BOOT\n\r");
+		//Putty_printf("BS_BOOT\n\r");
 		return true;
 	} else {
 		return false;
@@ -292,7 +292,7 @@ bool bs_SetConfig() {
 bool bs_CheckConfig() {
 	I2C_Rx();
 	if (!memcmp(data, config_response, sizeof(config_response))) {
-		Putty_printf("BS_CONF\n\r");
+		//Putty_printf("BS_CONF\n\r");
 		return true;
 	} else {
 		return false;
@@ -313,7 +313,7 @@ bool bs_SetFreq() {
 bool bs_CheckFreq() {
 	I2C_Rx();
 	if (!memcmp(data, freq_response, sizeof(freq_response))) {
-		Putty_printf("BS_FREQ\r\n");
+		//Putty_printf("BS_FREQ\r\n");
 		return true;
 	} else {
 		return false;
@@ -334,7 +334,7 @@ bool bs_EnableDevice() {
 bool bs_CheckEnable() {
 	I2C_Rx();
 	if (!memcmp(data, enable_response, sizeof(enable_response))) {
-        Putty_printf("BS_INIT COMPLETE\n\r");
+        //Putty_printf("BS_INIT COMPLETE\n\r");
         ballSensorInitialized = 1;
 		return true;
 	} else {

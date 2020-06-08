@@ -424,7 +424,7 @@ int main(void)
   set_Pin(OUT2_pin, HIGH);	// reference pin for feedback header
 
   // Check if robot has 30 W or 50 W motors (jumper = 50 W, no jumper = 30 W)
-  MOTORS_50W = read_Pin(IN1_pin);
+  MOTORS_50W = true;//read_Pin(IN1_pin);
   // Initialize control constants
   control_util_Init();
 

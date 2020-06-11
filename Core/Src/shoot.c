@@ -40,16 +40,17 @@ void shoot_DeInit(){
 void shoot_Callback()
 {
 	int callbackTime = 0;
+	static int count = 0;
+
 	switch(shootState){
 	case shoot_Ready:
-		set_Pin(Charge_pin, !charged);
-		charged = !charged;
+		set_Pin(Charge_pin, 1); // Keep charging
 		callbackTime = TIMER_FREQ/READY_CALLBACK_FREQ;
 		break;
 	case shoot_Charging:
-		if(!read_Pin(Charge_done_pin)){ // Charge_done_pin is high when charging and low when done, therefore we need the 'not' operator here
-			set_Pin(Charge_pin, 0);
+		if (count >= 5) {
 			charged = true;
+			count = 0;
 			shootState = shoot_Ready;
 		}
 		else {
@@ -57,6 +58,7 @@ void shoot_Callback()
 			set_Pin(Chip_pin, 0);
 			set_Pin(Charge_pin, 1);
 			charged = false;
+			count++;
 		}
 		callbackTime = TIMER_FREQ/CHARGING_CALLBACK_FREQ;
 		break;

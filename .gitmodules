@@ -13,3 +13,9 @@
 [submodule "roboteam_proto"]
 	path = roboteam_proto
 	url = https://github.com/RoboTeamTwente/roboteam_proto
+[submodule "thirdparty/stx"]
+	path = thirdparty/stx
+	url = https://github.com/lamarrr/STX.git
+[submodule "thirdparty/sdl2"]
+	path = thirdparty/sdl2
+	url = https://github.com/spurious/SDL-mirror.git

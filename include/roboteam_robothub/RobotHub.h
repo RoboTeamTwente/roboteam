@@ -26,6 +26,7 @@ class RobotHub {
    private:
     utils::Mode mode = utils::Mode::GRSIM;
     bool isLeft = true;
+    bool isYellow = true;
 
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;

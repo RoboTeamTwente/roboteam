@@ -17,7 +17,7 @@ namespace robothub {
  * sin/cos velocity arithmetic. createRobotPacket uses this internally to
  * convert a RobotCommand into something workable.
  */
-LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& command, proto::World worldOpt) {
+LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& command, proto::World worldOpt, bool isYellow) {
     double kick_chip_power = command.chip_kick_vel();
     double rho = sqrt(command.vel().x() * command.vel().x() + command.vel().y() * command.vel().y());
     double theta = atan2(command.vel().y(), command.vel().x());
@@ -41,7 +41,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
     llrc.do_kick = command.kicker();                                            // [0, 1]          {true, false}
     llrc.do_chip = command.chipper();                                           // [0, 1]          {true, false}
     llrc.kick_chip_forced = command.chip_kick_forced();                         // [0, 1] {true, false}
-    llrc.kick_chip_power = static_cast<int>(floor(kick_chip_power * 255 / 8));  // [0, 255]        [0, 100]%
+    llrc.kick_chip_power = static_cast<int>(floor(kick_chip_power * 255 / 6.5));  // [0, 255]        [0, 100]%
     llrc.velocity_dribbler = command.dribbler();                                // [0, 31]        [0, 100]%
 
     llrc.geneva_drive_state = command.geneva_state();  // [(0)1, 5]       [-2, 2]
@@ -49,7 +49,7 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
     llrc.cam_position_y = 0;                           // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_rotation = 0;                             // [-1024, 1023]   [-pi, pi>
 
-    std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), true, worldOpt);
+    std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), isYellow, worldOpt);
     proto::WorldRobot robot;
     if (findBot) {
         robot = *findBot;

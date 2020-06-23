@@ -68,7 +68,7 @@ void RobotHub::processWorldState(proto::World &world) {
 
 void RobotHub::processRobotCommand(proto::RobotCommand &cmd) {
     std::lock_guard<std::mutex> lock(worldLock);
-    LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld);
+    LowLevelRobotCommand llrc = createLowLevelRobotCommand(cmd, LastWorld, isYellow);
 
     // check if the command is valid, otherwise don't send anything
     if (!validateRobotPacket(llrc)) {
@@ -123,6 +123,7 @@ void RobotHub::processSettings(proto::Setting &setting) {
     grsimCommander->setGrsim_port(setting.robothubsendport());
     isLeft = setting.isleft();
     grsimCommander->setColor(setting.isyellow());
+    isYellow = setting.isyellow();
 
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;

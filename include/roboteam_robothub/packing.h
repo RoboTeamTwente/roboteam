@@ -55,7 +55,7 @@ struct LowLevelRobotFeedback {
 };
 
 // Software => Basestation
-LowLevelRobotCommand createLowLevelRobotCommand(proto::RobotCommand const& command, proto::World worldOpt);
+LowLevelRobotCommand createLowLevelRobotCommand(proto::RobotCommand const& command, proto::World worldOpt, bool isYellow);
 
 std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand llrc);
 std::shared_ptr<packed_protocol_message> createRobotPacket(proto::RobotCommand const& command, std::shared_ptr<proto::World> const& worldOpt = nullptr);

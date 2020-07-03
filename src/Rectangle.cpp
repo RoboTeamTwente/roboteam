@@ -131,6 +131,36 @@ std::vector<Vector2> Rectangle::intersects(const LineSegment &line) const {
 }
 bool Rectangle::doesIntersect(const LineSegment &line) const { return !intersects(line).empty(); }
 
+// include the boundary for this calculation!
+bool Rectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
+std::ostream &Rectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
+
+/* 	 ______   _______  _______  ______     _______  _______  ______   _______
+ *	(  __  \ (  ____ \(  ___  )(  __  \   (  ____ \(  ___  )(  __  \ (  ____ \
+ *	| (  \  )| (    \/| (   ) || (  \  )  | (    \/| (   ) || (  \  )| (    \/
+ *	| |   ) || (__    | (___) || |   ) |  | |      | |   | || |   ) || (__
+ *	| |   | ||  __)   |  ___  || |   | |  | |      | |   | || |   | ||  __)
+ *	| |   ) || (      | (   ) || |   ) |  | |      | |   | || |   ) || (
+ *	| (__/  )| (____/\| )   ( || (__/  )  | (____/\| (___) || (__/  )| (____/\
+ *	(______/ (_______/|/     \|(______/   (_______/(_______)(______/ (_______/
+ *
+ * The functions below are dead. Remove this tag if you use any of the functions and make sure to remove this tag at other places as well that will become alive by using any of the
+ * function below. Do not read/document/redesign/analyse/test/optimize/etc. any of this code, because it is a waste of your time! This code was not removed or placed at another
+ * branch, because other software developers are very attached to this code and are afraid that this code might be used at some day (but I think it won't be used at all and should
+ * be removed).
+ */
+
+/*
+bool Rectangle::doesIntersect(const Line &line) const {
+    std::vector<LineSegment> boxLines = lines();
+    for (const auto &boxLine : boxLines) {
+        if (line.doesIntersect(boxLine)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<Vector2> Rectangle::intersects(const Line &line) const {
     std::vector<LineSegment> boxLines = lines();
     std::vector<Vector2> intersections;
@@ -142,19 +172,8 @@ std::vector<Vector2> Rectangle::intersects(const Line &line) const {
     }
     return intersections;
 }
-bool Rectangle::doesIntersect(const Line &line) const {
-    std::vector<LineSegment> boxLines = lines();
-    for (const auto &boxLine : boxLines) {
-        if (line.doesIntersect(boxLine)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// include the boundary for this calculation!
-bool Rectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
-std::ostream &Rectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
 
 std::ostream &operator<<(std::ostream &out, const Rectangle &rect) { return rect.write(out); }
-}  // namespace rtt
+*/
+
+ }  // namespace rtt

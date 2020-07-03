@@ -51,6 +51,8 @@ TEST(basicFunctions, PolygonTest) {
         }
     }
 }
+
+/*
 TEST(isSimple, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
     //should be simple
@@ -74,6 +76,8 @@ TEST(isSimple, PolygonTest) {
     EXPECT_FALSE(rect6.isSimple());
     EXPECT_FALSE(rect7.isSimple());
 }
+*/
+
 TEST(isConvex, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0), convexPoint(4.0,
             2.0), nonConvexPoint(2.0, 2.0);
@@ -96,9 +100,9 @@ TEST(isConvex, PolygonTest) {
                                         P1Last, P1First, P2First, P2Last, P3First, P3Last, P4};
     //P1Last,P1First,;
     // convex calculation only makes sense if the examples we use are actually valid
-    for (const Polygon &example : allExamples) {
-        ASSERT_TRUE(example.isSimple());
-    }
+    // for (const Polygon &example : allExamples) {
+    //     ASSERT_TRUE(example.isSimple());
+    // }
     EXPECT_TRUE(convexPentagon.isConvex());
     EXPECT_TRUE(convexPentagonCCW.isConvex());
     EXPECT_FALSE(nonConvexPentagon.isConvex());
@@ -163,8 +167,8 @@ TEST(areas, PolygonTest) {
     // below should hold for any random 3 points (could randomly generate some later perhaps)
     Vector2 G(-3.57,0.4);
     Polygon triangleE({A,D,G});
-    Line l(A,D);
-    EXPECT_EQ(triangleE.area(),0.5*l.length()*l.distanceToLine(G));
+    LineSegment l(A,D);
+    EXPECT_EQ(triangleE.area(), 0.5 * l.length() * Line(l).distanceToLine(G));
 }
 TEST(intersections, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 3.0), leftTop(1.0, 3.0);

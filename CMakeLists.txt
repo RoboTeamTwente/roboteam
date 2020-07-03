@@ -57,6 +57,8 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/HalfLine.h
         src/Grid.cpp
         include/roboteam_utils/Grid.h
+        src/Shadow.cpp
+        include/roboteam_utils/Shadow.h
         )
 
 
@@ -81,10 +83,13 @@ target_compile_options(roboteam_utils PRIVATE
         )
 add_executable(utils_tests
         test/main.cpp
+        test/AngleTest.cpp
         test/ArcTest.cpp
         #test/BiMapTest.cpp
         #test/GraphTest.cpp
         test/LineTest.cpp
+        test/LineIntersectionTest.cpp
+        test/LineProjectionTest.cpp
         test/CircleTest.cpp
         test/normaliseTest.cpp
         # test/OptimizationTest.cpp
@@ -96,7 +101,8 @@ add_executable(utils_tests
         #test/TriangleTest.cpp
         test/TubeTest.cpp
         test/StateMachineTest.cpp
-        test/GridTest.cpp)
+        test/GridTest.cpp
+        test/ShadowTest.cpp)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

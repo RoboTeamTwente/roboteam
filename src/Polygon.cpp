@@ -84,29 +84,6 @@ namespace rtt {
         return true;
     }
 
-    // there are multiple possible algorithms, see
-    //https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
-    // this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
-    bool Polygon::isSimple() const {
-        // we loop over every unique pair
-        std::vector<LineSegment> lines{ };
-        for (auto first = vertices.begin(); first != vertices.end(); first++) {
-            LineSegment boundarySegment;
-            if (first == std::prev(vertices.end())) {
-                boundarySegment = LineSegment(*first, vertices[0]);
-            } else {
-                boundarySegment = LineSegment(*first, *(first + 1));
-            }
-            for (auto line : lines) {
-                if (boundarySegment.nonSimpleDoesIntersect(line)) {
-                    return false;
-                }
-            }
-            lines.push_back(boundarySegment);
-        }
-        return true;
-    }
-
     //https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
     // this is black magic but if it works it works
     /// on the boundary this function does not work!! see documentation if you are interested
@@ -153,7 +130,7 @@ namespace rtt {
         size_t n = vertices.size();
         for (size_t i = 0; i < n; i++) {
             LineSegment segment(vertices[i], vertices[(i + 1) % n]);
-            std::vector<Vector2> line_intersections = line.correctIntersects(segment);
+            std::vector<Vector2> line_intersections = line.multiIntersect(segment);
             intersections.insert(intersections.end(), line_intersections.begin(), line_intersections.end());
         }
         std::sort(intersections.begin(), intersections.end());
@@ -200,5 +177,27 @@ namespace rtt {
     // the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
     Vector2 Polygon::verticeCentroid() const {
         return std::accumulate(vertices.begin(), vertices.end(), Vector2(0, 0)) /= vertices.size();
+    }
+
+    bool Polygon::isSimple() const {
+        // we loop over every unique pair
+        std::vector<LineSegment> lines{ };
+        size_t numberIntersections = 0;
+        for (auto first = vertices.begin(); first != vertices.end(); first++) {
+            std::optional<LineSegment> boundarySegment;
+            if (first == std::prev(vertices.end())) {
+                boundarySegment = LineSegment(*first, vertices[0]);
+            } else {
+                boundarySegment = LineSegment(*first, *(first + 1));
+            }
+            for (auto line : lines) {
+                numberIntersections += boundarySegment.value().multiIntersect(line).size();
+            }
+            lines.push_back(boundarySegment.value());
+        }
+        /* - A polygon (simple/non-simple) can never have less than the amount of vertices as intersections. Because every line start at a vertex where another line has ended.
+         * - A polygon that is simple has an equal number of intersections as the amount of vertices, since it only intersects at the corners.
+         * - A polygon that is not simple has more intersections, because it does not only intersects once at every corner but at least at some other place as well. */
+        return numberIntersections == amountOfVertices();
     }
 }//rtt

@@ -56,6 +56,23 @@ TEST(Tube,contains){
     Vector2 test5(5,2.5); //last point, should be strictly outside
     EXPECT_FALSE(tube.contains(test5));
 }
+
+TEST(Tube,circleIntersect){
+    Vector2 start(1,1);
+    Vector2 end(9,1);
+    double radius = 1.0;
+    Tube tube(start,end,radius);
+
+    Circle circle(Vector2(0,0),1);
+    EXPECT_TRUE(tube.doesIntersectOrContain(circle));
+
+    Circle circle2(Vector2(0,0),sqrt(2)-1);
+    Circle circle3(Vector2(0,0),0.1);
+    EXPECT_TRUE(tube.doesIntersectOrContain(circle2)); //test if boundary intersection works, exactly touches the tube
+    EXPECT_FALSE(tube.doesIntersectOrContain(circle3));
+}
+
+/*
 TEST(Tube,doesIntersect){
     Vector2 start(1,1);
     Vector2 end(9,1);
@@ -74,20 +91,6 @@ TEST(Tube,doesIntersect){
     EXPECT_TRUE(tube.doesIntersectOrContain(test5));
     EXPECT_TRUE(tube.doesIntersectOrContain(test6));
 }
-TEST(Tube,circleIntersect){
-    Vector2 start(1,1);
-    Vector2 end(9,1);
-    double radius = 1.0;
-    Tube tube(start,end,radius);
-
-    Circle circle(Vector2(0,0),1);
-    EXPECT_TRUE(tube.doesIntersectOrContain(circle));
-
-    Circle circle2(Vector2(0,0),sqrt(2)-1);
-    Circle circle3(Vector2(0,0),0.1);
-    EXPECT_TRUE(tube.doesIntersectOrContain(circle2)); //test if boundary intersection works, exactly touches the tube
-    EXPECT_FALSE(tube.doesIntersectOrContain(circle3));
-}
-
+ */
 }
 

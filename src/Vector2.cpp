@@ -6,7 +6,7 @@
 namespace rtt {
 
 Vector2::Vector2(rtt::Angle &angle, const double &length)
-        :x{cos(angle.getAngle())*length}, y{sin(angle.getAngle())*length} { }
+        :x{cos(angle) * length}, y{sin(angle) * length} { }
 
 double Vector2::dot(const Vector2 &other) const {
     return this->x*other.x + this->y*other.y;
@@ -41,7 +41,7 @@ double Vector2::length2() const {
 }
 
 double Vector2::angle() const {
-    return this->toAngle().getAngle();
+    return this->toAngle();
 }
 
 rtt::Angle Vector2::toAngle() const {
@@ -99,7 +99,7 @@ Vector2 Vector2::closestPointOnVector(const Vector2 &startPoint, const Vector2 &
     Angle me = this->toAngle();
     Angle vtp = vectorToPoint.toAngle();
     Angle a = me - vtp;
-    double angle = a.getAngle();
+    double angle = a;
     double projectionLength = vectorToPoint.length()*cos(angle);
 
     Vector2 closestPoint;
@@ -128,11 +128,11 @@ double Vector2::cross(const Vector2 &other) const {
 }
 
 bool Vector2::operator==(const Vector2 &other) const {
-    return fabs(this->x - other.x) < VECTOR_PRECISION && fabs(this->y - other.y) < VECTOR_PRECISION;
+    return fabs(this->x - other.x) < FLOAT_PRECISION && fabs(this->y - other.y) < FLOAT_PRECISION;
 }
 
 bool Vector2::operator!=(const Vector2 &other) const {
-    return ! (*this == other);
+    return !(*this == other);
 }
 
 bool Vector2::operator<(const Vector2 &other) const {

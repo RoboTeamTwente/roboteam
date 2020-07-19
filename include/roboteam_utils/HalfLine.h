@@ -22,7 +22,7 @@ class HalfLine {
          * @param start The location where the HalfLine starts.
          * @param goesThrough An arbitrary other vector through the HalfLine goes (make sure that it is different than the start point).
          */
-        contexpr HalfLine(const Vector2 &start, const Vector2 &goesThrough);
+        explicit HalfLine(const Vector2 &start, const Vector2 &goesThrough);
 
         /**
          * Compute the intersection point between this HalfLine and the given Line.

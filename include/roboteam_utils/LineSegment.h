@@ -41,8 +41,7 @@ class LineSegment {
         [[nodiscard]] double length2() const;
 
         /**
-         * Checks whether this LineSegment is also a point, i.e. check if both of the endings of this LineSegment are the same. This function is protected against double/float rounding
-         * issues.
+         * Checks whether this LineSegment is also a point, i.e. check if both of the endings of this LineSegment are the same.
          *
          * @return True if the LineSegment is a point and false otherwise.
          */
@@ -57,7 +56,7 @@ class LineSegment {
         [[nodiscard]] double distanceToLine(const Vector2 &point) const;
 
         /**
-         * Checks whether a point lies on this LineSegment. This function is NOT protected against double/float rounding issues.
+         * Checks whether a point lies on this LineSegment.
          *
          * @param point Point which being checked if it lies at this LineSegment.
          * @return True if the point lies on this LineSegment and false otherwise.

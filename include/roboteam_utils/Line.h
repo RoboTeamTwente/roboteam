@@ -59,7 +59,7 @@ class Line {
     [[nodiscard]] std::optional<Vector2> intersect(const Line &line) const;
 
     /**
-     * Determine whether a point lies on this Line. This function is NOT protected against double/float rounding issues.
+     * Determine whether a point lies on this Line.
      *
      * @param point The point which might lie on the Line.
      * @return True if the given point lies on this Line, false otherwise.

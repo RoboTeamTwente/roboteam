@@ -100,9 +100,9 @@ TEST(isConvex, PolygonTest) {
                                         P1Last, P1First, P2First, P2Last, P3First, P3Last, P4};
     //P1Last,P1First,;
     // convex calculation only makes sense if the examples we use are actually valid
-    // for (const Polygon &example : allExamples) {
-    //     ASSERT_TRUE(example.isSimple());
-    // }
+    for (const Polygon &example : allExamples) {
+         ASSERT_TRUE(example.isSimple());
+    }
     EXPECT_TRUE(convexPentagon.isConvex());
     EXPECT_TRUE(convexPentagonCCW.isConvex());
     EXPECT_FALSE(nonConvexPentagon.isConvex());

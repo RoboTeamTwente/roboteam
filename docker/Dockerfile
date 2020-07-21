@@ -56,9 +56,10 @@ RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/google
 # Clone the repos and checkout development on everything
 RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules &&\
     cd /opt/roboteam/roboteam_suite &&\
-    git submodule update --init --recursive &&\
-    git submodule foreach git checkout development"
-
+    git checkout development && \
+    git submodule update --init --recursive \
+    "
+    
 # Set ccache symbolic link
 RUN mkdir -p /lib/ccache
 # Set symbolic link

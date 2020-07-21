@@ -18,7 +18,7 @@ using namespace rtt;
  * intersect (or do not intersect): t < 0, 0 <= t <= 1, 1 < t. We extend these test cases with boundary value analysis, but for t is (minus) infinity we use a very small and
  * very large number (we expect intersections to fail for FLT_MAX and -FLT_MAX). Moreover for parallel test cases we create 3 classes based on the LineSegment interpretation:
  * 'Equal': both LineSegment interpretation are equal, 'Subset': one of the LineSegments interpretations is a subset of the other, 'Overlap': both LineSegments interpretations
- * have a shared part, but non of them is a subset of the other one, 'Distinct': both LineSegments do not intersect, but have a shared finite LineSegment where both ar subsets
+ * have a shared part, but non of them is a subset of the other one, 'Distinct': both LineSegments do not intersect, but have a shared finite LineSegment where both are subsets
  * of, 'Different': both LineSegments do not intersect and do not have a shared infinite Line where both are subsets of. Furthermore create a test case for two LineSegments
  * that are 'Equal' points and that are 'Different' points.
  */

@@ -1,6 +1,9 @@
-FROM ubuntu:18.04
+FROM ubuntu:latest
 
 LABEL Maintainer Roboteam <roboteamtwente@gmail.com>
+
+# Set environment variables / arguments
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Update lists
 RUN /bin/bash -c "apt-get update"
@@ -11,7 +14,6 @@ RUN /bin/bash -c "apt-get dist-upgrade -y"
 # Install dependencies
 RUN /bin/bash -c "apt-get -y install \
     libzmq3-dev \
-    nlohmann-json-dev \
     libzmqpp-dev \
     ccache \
     clang \
@@ -34,6 +36,11 @@ RUN /bin/bash -c "apt-get -y install \
     qtdeclarative5-dev \
     git"
 
+# Nlohmann-json
+RUN /bin/bash -c "mkdir -p /usr/include/nlohmann && \
+    curl https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp > /usr/include/nlohmann/json.hpp \
+    "
+ 
 # Setup protobuf
 RUN /bin/bash -c "git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&\
     cd /opt/protobuf &&\
@@ -56,8 +63,12 @@ RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/google
 # Clone the repos and checkout development on everything
 RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules &&\
     cd /opt/roboteam/roboteam_suite &&\
-    git checkout development && \
-    git submodule update --init --recursive \
+    git submodule update --init --recursive &&\
+    cd roboteam_ai && git pull origin development &&\
+    cd ../roboteam_proto && git pull origin development &&\
+    cd ../roboteam_world && git pull origin development &&\
+    cd ../roboteam_utils && git pull origin development &&\
+    cd ../roboteam_robothub && git pull origin development \
     "
     
 # Set ccache symbolic link

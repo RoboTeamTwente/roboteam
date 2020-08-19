@@ -9,6 +9,11 @@
 #include <chrono>
 #include <ctime>
 
+/**
+ * \author Rolf van der Hulst
+ * \brief A class that represents a Time Duration. It measures all time points as durations from the clock's epoch (1970)
+ * \date August 19 2020
+ */
 class Time {
 public:
     Time() : timePoint{std::chrono::nanoseconds(0)} {};

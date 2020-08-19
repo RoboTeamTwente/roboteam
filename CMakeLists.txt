@@ -53,7 +53,7 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Triangle.h
         src/Tube.cpp
         include/roboteam_utils/Tube.h
-        src/Time.cpp include/roboteam_utils/Time.h)
+        src/Time.cpp include/roboteam_utils/Time.h src/Random.cpp include/roboteam_utils/Random.h)
 
 
 
@@ -91,7 +91,7 @@ add_executable(utils_tests
         test/HungarianTest.cpp
         test/TriangleTest.cpp
         test/TubeTest.cpp
-        test/TimeTest.cpp)
+        test/TimeTest.cpp test/RandomTest.cpp)
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

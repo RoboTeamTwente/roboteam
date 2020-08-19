@@ -71,6 +71,9 @@ Vector2 Line::project(const Vector2 &point) const {
 }
 
 bool Line::isOnLine(const Vector2 &point) const {
+    if (isPoint()){
+        return (start == point || end == point);
+    }
     Vector2 A = end - start;
     Vector2 B = point - start;
     return A.cross(B) == 0;
@@ -78,42 +81,47 @@ bool Line::isOnLine(const Vector2 &point) const {
 
 // see https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection for help. These should be thoroughly tested
 std::optional<Vector2> Line::intersects(const Line &line) const {
-    Vector2 A = start - end;
-    Vector2 B = line.start - line.end;
-    double denom = A.cross(B);
-    if (denom != 0) {
-        Vector2 C = start - line.start;
-        double numer = - C.cross(B);
-        double t = numer/denom;
-        return start + A*t;
-    }
-    return std::nullopt;
+    auto result = intersect(start, end, line.start, line.end);
+    return result.has_value() ? std::optional(result.value()) : std::nullopt;
 }
 
 std::optional<Vector2> Line::intersects(const LineSegment &line) const {
-    Vector2 A = start - end;
-    Vector2 B = line.start - line.end;
-    double denom = A.cross(B);
-    if (denom != 0) {
-        Vector2 C = start - line.start;
-        double numer = C.cross(A);
-        double u = numer/denom;
-        if (! (u < 0 || u > 1)) {
-            return line.start - B*u;
-        }
+    auto result = intersect(start, end, line.start, line.end);
+    if (result.has_value()) {
+        float u = relativePosition(line.start, line.end, result.value());
+        if (u >= 0 && u <= 1) return std::optional(result.value());
     }
     return std::nullopt;
 }
 
 bool Line::doesIntersect(const Line &line) const {
-    return ! this->isParallel(line);
+    return !this->isParallel(line);
 }
 
 bool Line::doesIntersect(const LineSegment &line) const {
-    if (intersects(line)) {
-        return true;
+    return intersects(line).has_value();
+}
+
+std::optional<Vector2> Line::intersect(const Vector2 line1Start, const Vector2 line1End, const Vector2 line2Start, const Vector2 line2End) {
+    Vector2 A = line1Start - line1End;
+    Vector2 B = line2Start - line2End;
+    double denom = A.cross(B);
+    if (denom != 0) {
+        Vector2 C = line1Start - line2Start;
+        double numer = C.cross(A);
+        double u = numer / denom;
+        return line2Start - B * u;
     }
-    return false;
+    return std::nullopt;
+}
+
+float Line::relativePosition(Vector2 line1Start, Vector2 line1End, Vector2 pointOnLine) {
+    float xDiff = line1End.x - line1Start.x;
+    if (xDiff == 0) {
+        return (pointOnLine.y - line1Start.y) / (line1End.y - line1Start.y);
+    } else {
+        return (pointOnLine.x - line1Start.x) / xDiff;
+    }
 }
 
 }

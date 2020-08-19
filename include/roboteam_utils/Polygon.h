@@ -7,6 +7,7 @@
 
 #include "Vector2.h"
 #include "LineSegment.h"
+#include <algorithm>
 #include <iostream>
 #include <vector>
 

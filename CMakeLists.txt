@@ -27,12 +27,12 @@ add_library(roboteam_utils STATIC
         #        include/roboteam_utils/Cone.h
         src/normalize.cpp
         include/roboteam_utils/normalize.h
-        src/Clip.cpp
+        # src/Clip.cpp
         include/roboteam_utils/Hungarian.h
         src/Hungarian.cpp
-        include/roboteam_utils/Clip.h
-        src/Optimization.cpp
-        include/roboteam_utils/Optimization.h
+        # include/roboteam_utils/Clip.h
+        # src/Optimization.cpp
+        # include/roboteam_utils/Optimization.h
         src/Arc.cpp
         include/roboteam_utils/Arc.h
         src/Timer.cpp
@@ -49,11 +49,19 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Circle.h
         src/pid.cpp
         include/roboteam_utils/pid.h
-        src/Triangle.cpp
-        include/roboteam_utils/Triangle.h
+        #src/Triangle.cpp
+        #include/roboteam_utils/Triangle.h
         src/Tube.cpp
         include/roboteam_utils/Tube.h
-        src/Time.cpp include/roboteam_utils/Time.h src/Random.cpp include/roboteam_utils/Random.h)
+        src/Time.cpp
+        include/roboteam_utils/Time.h
+        src/Random.cpp
+        include/roboteam_utils/Random.h
+        src/HalfLine.cpp
+        include/roboteam_utils/HalfLine.h
+        src/Grid.cpp
+        include/roboteam_utils/Grid.h
+        )
 
 
 
@@ -77,21 +85,27 @@ target_compile_options(roboteam_utils PRIVATE
         )
 add_executable(utils_tests
         test/main.cpp
+        test/AngleTest.cpp
         test/ArcTest.cpp
         #test/BiMapTest.cpp
         #test/GraphTest.cpp
         test/LineTest.cpp
         test/CircleTest.cpp
         test/normaliseTest.cpp
-        test/OptimizationTest.cpp
+        # test/OptimizationTest.cpp
         test/PolygonTest.cpp
         test/PositionTest.cpp
         test/Vector2Test.cpp
         test/RectangleTest.cpp
         test/HungarianTest.cpp
-        test/TriangleTest.cpp
+        #test/TriangleTest.cpp
         test/TubeTest.cpp
-        test/TimeTest.cpp test/RandomTest.cpp)
+        test/TimeTest.cpp
+        test/RandomTest.cpp
+        test/StateMachineTest.cpp
+        test/GridTest.cpp
+        )
+
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

@@ -4,6 +4,10 @@ namespace rtt {
 //**********************************
 // Constructor functions
 //**********************************
+PID::PID(){
+    init();
+}
+
 PID::PID(double p, double i, double d) {
   init();
   P = p;

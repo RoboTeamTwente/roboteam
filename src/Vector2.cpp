@@ -6,7 +6,7 @@
 namespace rtt {
 
 Vector2::Vector2(rtt::Angle &angle, const double &length)
-        :x{cos(angle.getAngle())*length}, y{sin(angle.getAngle())*length} { }
+        :x{cos(angle) * length}, y{sin(angle) * length} { }
 
 double Vector2::dot(const Vector2 &other) const {
     return this->x*other.x + this->y*other.y;
@@ -41,7 +41,7 @@ double Vector2::length2() const {
 }
 
 double Vector2::angle() const {
-    return this->toAngle().getAngle();
+    return this->toAngle();
 }
 
 rtt::Angle Vector2::toAngle() const {
@@ -56,6 +56,17 @@ Vector2 Vector2::rotate(double radians) const {
     double c = cos(radians);
     double s = sin(radians);
     return Vector2(x*c - y*s, x*s + y*c);
+}
+
+Vector2 Vector2::rotateAroundPoint(double radians, const Vector2& pivot) const {
+    double c = cos(radians);
+    double s = sin(radians);
+
+    // Calculate new position
+    double rotatedX = (this->x - pivot.x) * c - (this->y - pivot.y) * s + pivot.x;
+    double rotatedY = (this->x - pivot.x) * s + (this->y - pivot.y) * c + pivot.y;
+
+    return Vector2(rotatedX, rotatedY);
 }
 
 Vector2 Vector2::project(const Vector2 &lineA, const Vector2 &lineB) const {
@@ -88,7 +99,7 @@ Vector2 Vector2::closestPointOnVector(const Vector2 &startPoint, const Vector2 &
     Angle me = this->toAngle();
     Angle vtp = vectorToPoint.toAngle();
     Angle a = me - vtp;
-    double angle = a.getAngle();
+    double angle = a;
     double projectionLength = vectorToPoint.length()*cos(angle);
 
     Vector2 closestPoint;
@@ -153,7 +164,7 @@ Vector2 Vector2::operator*=(const double &scalar) {
 }
 
 Vector2 Vector2::operator/=(const Vector2 &other) {
-    assert(other == Vector2() && "Division by zero");
+    assert(!(other == Vector2()) && "Division by zero");
     return {this->x /= other.x, this->y /= other.y};
 }
 

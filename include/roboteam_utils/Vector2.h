@@ -104,6 +104,14 @@ class Vector2 {
         [[nodiscard]] Vector2 rotate(double radials) const;
 
         /**
+         * \brief Rotates this vector around another vector
+         * @param radians Rotation
+         * @param pivot Pivot point
+         * @return Rotated vector
+         */
+        [[nodiscard]] Vector2 rotateAroundPoint(double radians, const Vector2& pivot) const;
+
+        /**
          * \brief Projects this vector onto a line segment defined by two other vectors.
          * The result is the point on the line segment (line_a, line_b) which is closest to
          * this vector.

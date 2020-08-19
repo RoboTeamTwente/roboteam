@@ -6,8 +6,8 @@
 #include <numeric>
 
 namespace rtt {
-///constructor for rectangles oriented straight with respect to the x-axis.
-    Polygon::Polygon(const Vector2 &lowerLeftCorner, double xlen, double ylen) 
+    ///constructor for rectangles oriented straight with respect to the x-axis.
+    Polygon::Polygon(const Vector2 &lowerLeftCorner, double xlen, double ylen)
         : vertices {
             lowerLeftCorner,
             Vector2{ lowerLeftCorner.x + xlen, lowerLeftCorner.y },
@@ -59,8 +59,8 @@ namespace rtt {
         return totalLength;
     }
 
-//https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
-// this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
+    //https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
+    // this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
     bool Polygon::isConvex() const {
         if (amountOfVertices() < 4) 
             return true;// triangles are always convex
@@ -84,9 +84,9 @@ namespace rtt {
         return true;
     }
 
-// there are multiple possible algorithms, see
-//https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
-// this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
+    // there are multiple possible algorithms, see
+    //https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
+    // this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
     bool Polygon::isSimple() const {
         // we loop over every unique pair
         std::vector<LineSegment> lines{ };
@@ -107,9 +107,9 @@ namespace rtt {
         return true;
     }
 
-//https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
-// this is black magic but if it works it works
-/// on the boundary this function does not work!! see documentation if you are interested
+    //https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+    // this is black magic but if it works it works
+    /// on the boundary this function does not work!! see documentation if you are interested
     bool Polygon::contains(const Vector2 &point) const {
         int c = 0;
         int n = amountOfVertices();
@@ -152,24 +152,17 @@ namespace rtt {
         std::vector<Vector2> intersections;
         size_t n = vertices.size();
         for (size_t i = 0; i < n; i++) {
-            LineSegment segment(vertices[i],
-                                vertices[(i + 1) % n]);
-            // maybe there is a nice way to do this 'circular' access with iterators?
-            // the nonSimple intersects does not count any intersection that only touch the start or end of the line
-            auto intersect = line.nonSimpleIntersects(segment);
-            if (intersect) {
-                intersections.push_back(*intersect);
-            }
-            // check the vertices explicitly (so we don't double count if we do line intersection)
-            if (line.isOnLine(vertices[i])) {
-                intersections.push_back(vertices[i]);
-            }
+            LineSegment segment(vertices[i], vertices[(i + 1) % n]);
+            std::vector<Vector2> line_intersections = line.correctIntersects(segment);
+            intersections.insert(intersections.end(), line_intersections.begin(), line_intersections.end());
         }
+        std::sort(intersections.begin(), intersections.end());
+        intersections.erase(std::unique(intersections.begin(), intersections.end()), intersections.end());
         return intersections;
     }
 
-//https://en.wikipedia.org/wiki/Shoelace_formula
-// area is well defined only for simple polygons
+    //https://en.wikipedia.org/wiki/Shoelace_formula
+    // area is well defined only for simple polygons
     double Polygon::area() const {
         return 0.5 * abs(doubleSignedArea());
     }
@@ -184,8 +177,8 @@ namespace rtt {
 
     }
 
-//https://en.wikipedia.org/wiki/Centroid
-// only works for simple polygons
+    //https://en.wikipedia.org/wiki/Centroid
+    // only works for simple polygons
     Vector2 Polygon::centroid() const {
         // for triangles we can use a faster and simpler formula
         if (amountOfVertices() < 4) {
@@ -204,7 +197,7 @@ namespace rtt {
         return sum /= (3 * signedAreaTwice);
     }
 
-// the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
+    // the centroid of the set of vertices. is generally NOT the same as centroid for polygons with more than 3 sides
     Vector2 Polygon::verticeCentroid() const {
         return std::accumulate(vertices.begin(), vertices.end(), Vector2(0, 0)) /= vertices.size();
     }

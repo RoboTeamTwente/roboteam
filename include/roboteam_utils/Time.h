@@ -11,7 +11,8 @@
 
 /**
  * \author Rolf van der Hulst
- * \brief A class that represents a Time Duration. It measures all time points as durations from the clock's epoch (1970)
+ * \brief A class that represents a Time Duration. It measures all time points as durations from the clock's epoch (1970).
+ * The system clock can be measured up to nanosecond precision.
  * \date August 19 2020
  */
 class Time {

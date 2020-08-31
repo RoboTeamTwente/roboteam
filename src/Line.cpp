@@ -1,3 +1,4 @@
+#include "Print.h"
 #include "../include/roboteam_utils/Line.h"
 #include "../include/roboteam_utils/LineSegment.h"
 
@@ -6,8 +7,8 @@ Line::Line(const Vector2 &v1, const Vector2 &v2) {
     this->v1 = v1;
     this->v2 = v2;
     if (v1 == v2) {
-        std::cerr << "Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
-                     "the LineSegment class instead." << std::endl;
+        RTT_WARNING("Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
+                     "the LineSegment class instead.");
     }
 }
 
@@ -15,8 +16,8 @@ Line::Line(const LineSegment &other) noexcept {
     v1 = other.start;
     v2 = other.end;
     if (v1 == v2) {
-        std::cerr << "Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
-                     "the LineSegment class instead." << std::endl;
+        RTT_WARNING("Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
+                     "the LineSegment class instead.");
     }
 }
 

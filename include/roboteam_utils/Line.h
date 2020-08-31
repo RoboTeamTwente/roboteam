@@ -24,7 +24,7 @@ class Line {
      * @param v1 An arbitrary point on the Line.
      * @param v2 An arbitrary different point on the Line (make sure that it is different than the v2 point).
      */
-    explicit Line(const Vector2 &v1, const Vector2 &v2);
+    Line(const Vector2 &v1, const Vector2 &v2);
 
     /**
      * Create a new Line from a LineSegment by infinitely expanding that LineSegment.

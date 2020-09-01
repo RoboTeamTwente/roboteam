@@ -190,7 +190,7 @@ namespace rtt {
             } else {
                 boundarySegment = LineSegment(*first, *(first + 1));
             }
-            for (auto line : lines) {
+            for (auto const& line : lines) {
                 numberIntersections += boundarySegment.value().multiIntersect(line).size();
             }
             lines.push_back(boundarySegment.value());

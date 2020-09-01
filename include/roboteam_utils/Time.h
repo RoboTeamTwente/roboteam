@@ -17,7 +17,7 @@
  */
 class Time {
 public:
-    Time() : timePoint{std::chrono::nanoseconds(0)} {};
+    constexpr Time() : timePoint{std::chrono::nanoseconds(0)} {};
     explicit Time(std::chrono::high_resolution_clock::duration duration);
     explicit Time(double seconds);
     explicit Time(long nanoseconds) : timePoint{std::chrono::nanoseconds(nanoseconds)} {};

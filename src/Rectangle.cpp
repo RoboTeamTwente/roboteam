@@ -131,30 +131,10 @@ std::vector<Vector2> Rectangle::intersects(const LineSegment &line) const {
 }
 bool Rectangle::doesIntersect(const LineSegment &line) const { return !intersects(line).empty(); }
 
-std::vector<Vector2> Rectangle::intersects(const Line &line) const {
-    std::vector<LineSegment> boxLines = lines();
-    std::vector<Vector2> intersections;
-    for (const auto &boxLine : boxLines) {
-        std::optional<Vector2> point = line.intersects(boxLine);
-        if (point) {
-            intersections.push_back(*point);
-        }
-    }
-    return intersections;
-}
-bool Rectangle::doesIntersect(const Line &line) const {
-    std::vector<LineSegment> boxLines = lines();
-    for (const auto &boxLine : boxLines) {
-        if (line.doesIntersect(boxLine)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 // include the boundary for this calculation!
 bool Rectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
 std::ostream &Rectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
 
 std::ostream &operator<<(std::ostream &out, const Rectangle &rect) { return rect.write(out); }
-}  // namespace rtt
+
+ }  // namespace rtt

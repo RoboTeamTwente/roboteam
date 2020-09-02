@@ -13,11 +13,10 @@
  */
 
 /**
- * A comparison precision limit in our system.
- * If instances from Vector2 or Angle match to this degree we consider them 'equal' in length as a precaution against
- * floating point errors.
+ * A comparison precision limit in our system. If we check in Roboteam_utils if two floats are equal then we check actually if the distance between them is smaller than this
+ * given precision.
  */
-constexpr static double VECTOR_PRECISION=0.00001;
+constexpr static double FLOAT_PRECISION = 1e-5;
 
 
 #endif //RTT_DEFINITIONS_H

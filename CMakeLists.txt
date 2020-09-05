@@ -108,7 +108,7 @@ add_executable(utils_tests
         test/RandomTest.cpp
         test/StateMachineTest.cpp
         test/GridTest.cpp
-        test/ShadowTest.cpp)
+        test/ShadowTest.cpp
         )
 
 if (UNIX AND NOT APPLE)

@@ -25,8 +25,13 @@ class Vector2 {
         constexpr Vector2()
                 :x{0.0}, y{0.0} { }
 
-        constexpr Vector2(const Vector2 &copy)
-                :x{copy.x}, y{copy.y} { };
+
+        /**
+         * Default copy constructor and copy assignment operator
+         */
+        constexpr Vector2(const Vector2&) = default;
+        constexpr Vector2& operator=(Vector2 const&) = default;
+
 
         constexpr Vector2(const double x, const double y)
                 :x{x}, y{y} { }

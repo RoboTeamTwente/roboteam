@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 include(cotire)
 include(ccache)

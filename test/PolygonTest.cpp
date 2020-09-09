@@ -36,7 +36,7 @@ TEST(basicFunctions, PolygonTest) {
     ASSERT_EQ(triangle.amountOfVertices(), 3);
 
     for (const Polygon &obj:objects) {
-        for (int i = 0; i < obj.amountOfVertices(); ++ i) {
+        for (size_t i = 0; i < obj.amountOfVertices(); ++ i) {
             EXPECT_EQ(obj[i], obj.vertices[i]);
         }
     }
@@ -45,7 +45,7 @@ TEST(basicFunctions, PolygonTest) {
         Vector2 moveBy(- 3.7, 2.5);
         copy.move(Vector2(0.0, 0.0));
         copy2.move(moveBy);
-        for (int i = 0; i < obj.amountOfVertices(); ++ i) {
+        for (size_t i = 0; i < obj.amountOfVertices(); ++ i) {
             EXPECT_EQ(copy[i], obj[i]);
             EXPECT_EQ(copy2[i], obj[i] + moveBy);
         }
@@ -127,7 +127,7 @@ TEST(boundaryTests, PolygonTest) {
     std::vector<Polygon> objects;
     for (const Polygon &obj:objects) {
         std::vector<LineSegment> lines = obj.getBoundary();
-        for (int i = 0; i < lines.size(); ++ i) {
+        for (size_t i = 0; i < lines.size(); ++ i) {
             EXPECT_EQ(lines[i].start, obj[i]);
             EXPECT_EQ(lines[i].end, i == lines.size() - 1 ? obj[0] : obj[i + 1]);
         }
@@ -175,10 +175,10 @@ TEST(intersections, PolygonTest) {
     Vector2 OP1(0.5,2.0),OP2(2.0,0.5),OP3(3.5,2.0),OP4(2.0,3.5);
     LineSegment L1(OP1,OP2), L2(OP2,OP3),L3(OP3,OP4),L4(OP4,OP1);
     Polygon rect({leftCorner, rightBottom, rightTop, leftTop});
-    rect.intersections(L1);
-    rect.intersections(L2);
-    rect.intersections(L3);
-    rect.intersections(L4);
+    (void)rect.intersections(L1);
+    (void)rect.intersections(L2);
+    (void)rect.intersections(L3);
+    (void)rect.intersections(L4);
     EXPECT_TRUE(rect.doesIntersect(L1));
     EXPECT_TRUE(rect.doesIntersect(L2));
     EXPECT_TRUE(rect.doesIntersect(L3));

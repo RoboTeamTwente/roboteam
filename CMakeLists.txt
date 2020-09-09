@@ -92,6 +92,7 @@ target_compile_options(roboteam_utils PRIVATE
         )
 add_executable(utils_tests
         test/main.cpp
+        test/PubSubTest.cpp
         test/AngleTest.cpp
         test/ArcTest.cpp
         #test/BiMapTest.cpp

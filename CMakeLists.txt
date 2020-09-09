@@ -8,7 +8,6 @@ include(ccache)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-#message(FATAL_ERROR ${CMAKE_CURRENT_LIST_DIR})
 add_subdirectory(include/roboteam_utils/networking)
 
 add_library(roboteam_utils STATIC
@@ -73,11 +72,14 @@ add_library(roboteam_utils STATIC
 target_include_directories(roboteam_utils
         INTERFACE include
         PRIVATE include/roboteam_utils
-        PRIVATE src)
+        PRIVATE src
+        PUBLIC include/roboteam_utils/networking/include
+        )
 
 target_link_libraries(roboteam_utils
-        PUBLIC roboteam_proto
+        PUBLIC networking
         )
+
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
         -Wall
@@ -114,17 +116,7 @@ add_executable(utils_tests
         test/ShadowTest.cpp
         )
 
-if (UNIX AND NOT APPLE)
-    target_link_libraries(utils_tests
-            PRIVATE roboteam_utils
-            PRIVATE gtest
-            )
-endif ()
-
-if (APPLE)
-    target_link_libraries(utils_tests
-            PRIVATE roboteam_utils
-            PRIVATE /usr/local/lib/libgtest.a
-            PRIVATE /usr/local/lib/libgtest_main.a
-            )
-endif ()
+target_link_libraries(utils_tests
+        PRIVATE roboteam_utils
+        PRIVATE gtest
+        )

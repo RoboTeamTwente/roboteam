@@ -1,0 +1,3 @@
+[submodule "include/roboteam_utils/networking/proto"]
+	path = include/roboteam_utils/networking/proto
+	url = git@github.com:RoboTeamTwente/roboteam_proto.git

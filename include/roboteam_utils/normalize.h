@@ -1,15 +1,15 @@
 #pragma once
 
-#include <roboteam_proto/RobotCommand.pb.h>
-#include <roboteam_proto/GeometryData.pb.h>
-#include <roboteam_proto/Referee.pb.h>
-#include <roboteam_proto/WorldBall.pb.h>
-#include <roboteam_proto/WorldRobot.pb.h>
-#include <roboteam_proto/World.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
-#include "roboteam_proto/FieldLineSegment.pb.h"
-#include "roboteam_proto/FieldCircularArc.pb.h"
+#include <networking/RobotCommand.pb.h>
+#include <networking/GeometryData.pb.h>
+#include <networking/Referee.pb.h>
+#include <networking/WorldBall.pb.h>
+#include <networking/WorldRobot.pb.h>
+#include <networking/World.pb.h>
+#include <networking/messages_robocup_ssl_referee.pb.h>
+#include <networking/messages_robocup_ssl_geometry.pb.h>
+#include "networking/FieldLineSegment.pb.h"
+#include "networking/FieldCircularArc.pb.h"
 #include "Mathematics.h"
 
 namespace roboteam_utils {

@@ -1,8 +1,8 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include "Vector2f.pb.h"
 #include <iostream>
+#include <networking/Vector2f.pb.h>
 
 namespace rtt {
 

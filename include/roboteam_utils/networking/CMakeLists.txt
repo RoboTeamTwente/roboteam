@@ -9,7 +9,6 @@ find_package(zeroMQ REQUIRED)
 find_package(zmqpp 4.1.2 REQUIRED)
 
 set(PROTO_BASE_PATH proto/proto)
-message(${PROTO_BASE_PATH})
 
 # Generate the .h and .cxx files
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
@@ -62,7 +61,12 @@ add_library(networking STATIC
 
 target_include_directories(networking
         PUBLIC ./include
+        # Proto headers
+        PUBLIC ${PROTOBUF_INCLUDE_DIRS}
+        # This points to cmake-build-debug/utils/include/utils/networking
+        PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/..
         )
+
 
 target_link_libraries(networking
         PUBLIC ${PROTOBUF_LIBRARIES}

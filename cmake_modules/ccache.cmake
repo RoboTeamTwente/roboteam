@@ -16,9 +16,9 @@ if(CCACHE)
     if(APPLE)
         set(CMAKE_CXX_COMPILER "/usr/local/Cellar/ccache/3.7.7/libexec/${CXX_COMPILER}")
     else()
-        set(CMAKE_CXX_COMPILER "/lib/ccache/bin/${CXX_COMPILER}")
+        set(CMAKE_CXX_COMPILER "/lib/ccache/${CXX_COMPILER}")
     endif()
 else()
     set(CMAKE_CXX_COMPILER "${CXX_COMPILER_PATH}")
 endif()
-# end of ccache logic
+# end of ccache logicbin

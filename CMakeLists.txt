@@ -8,6 +8,9 @@ include(ccache)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+#message(FATAL_ERROR ${CMAKE_CURRENT_LIST_DIR})
+add_subdirectory(include/roboteam_utils/networking)
+
 add_library(roboteam_utils STATIC
         src/Polygon.cpp
         include/roboteam_utils/Polygon.h

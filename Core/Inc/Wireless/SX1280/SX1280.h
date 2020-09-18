@@ -51,25 +51,25 @@ typedef struct _SX1280{
 	SX1280_Settings* SX_settings;		// pointer to struct containing all the settings
 	SX1280_Packet_Status* Packet_status;// last known packet status
 
-	uint8_t* TXbuf;			// pointer to transmit buffer
-	uint8_t* RXbuf;			// pointer to receive buffer
+	volatile uint8_t* TXbuf;			// pointer to transmit buffer
+	volatile uint8_t* RXbuf;			// pointer to receive buffer
 
 	uint8_t payloadLength;	// length of received packet
 	uint8_t RXbufferoffset;	// start location of received packet
 	uint16_t irqStatus;		// last received irq status
 
-	SX1280_Status SX1280_status;	// last received status of the SX1280
+	volatile SX1280_Status SX1280_status;	// last received status of the SX1280
 	bool expect_packet;		// bool to specify if a packet is expected in the buffer
 	bool new_data;			// new data flag
 
 	SPI_HandleTypeDef* SPI;	// spi used
-	bool SPI_used;			// guard to limit one function to use spi
+	volatile bool SPI_used;			// guard to limit one function to use spi
 
 	// wiring
-	GPIO_Pin BUSY_pin;
-	GPIO_Pin CS_pin;
-	GPIO_Pin IRQ_pin;
-	GPIO_Pin RST_pin;
+	volatile GPIO_Pin BUSY_pin;
+	volatile GPIO_Pin CS_pin;
+	volatile GPIO_Pin IRQ_pin;
+	volatile GPIO_Pin RST_pin;
 } SX1280;
 
 extern uint32_t robot_syncWord[]; // check bottom of this file for the sycnwords

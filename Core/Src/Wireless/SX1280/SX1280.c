@@ -69,7 +69,7 @@ SX1280_Status getStatus(SX1280* SX){
     SX->TXbuf[1] = 0;
     SendData(SX,2);
     // cast first byte of RXBuf (status) to struct
-    SX->SX1280_status = *(SX1280_Status*)SX->RXbuf;
+    SX->SX1280_status = *(SX1280_Status*)&SX->RXbuf[1];
     return SX->SX1280_status;
 }
 
@@ -286,6 +286,7 @@ void getPacketStatus(SX1280* SX){
     memcpy(SX->Packet_status, SX->RXbuf+2, 5);
 }
 
+
 // -------------------------------------------- Interrupt
 void setDIOIRQParams(SX1280* SX){
 	uint16_t tmp[4] ={0};
@@ -411,8 +412,7 @@ bool SendData(SX1280* SX, uint8_t Nbytes){
     set_pin(SX->CS_pin, HIGH);
     SX->SPI_used = false;
     // return SPI status and SX status==command processed successfully
-    SX->SX1280_status = *(SX1280_Status*)SX->RXbuf;
-    uint8_t status = SX->RXbuf[0]>>2 & 0x7;
+    SX->SX1280_status = *(SX1280_Status*)&SX->RXbuf[1];
     bool ret_bool = false;
     ret_bool |= SX->SX1280_status.CommandStatus == TimeOut;
     ret_bool |= SX->SX1280_status.CommandStatus == ProcessingErr;

@@ -5,10 +5,14 @@
 
 volatile int I1 = 0;
 volatile int I2 = 0;
+volatile int Iusb = 0;
 
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 extern TIM_HandleTypeDef htim1;
+
+extern uint32_t usbLength;
+extern uint8_t usbData[64];
 
 void init(){
     HAL_Delay(1000);
@@ -38,19 +42,30 @@ void loop(){
     setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0x00, 0x00);
 
     while(1){
-        sprintf(msg, "Interrupt status : I1=%d, I2=%d\n", I1, I2);
+        sprintf(msg, "I1=%d, I2=%d Iusb=%d length=%d\n", I1, I2, Iusb, usbLength);
         TextOut(msg);
 
         SendPacket(SX_TX, msgToSend, 8);
-        
         TextOut("Packet sent\n");
-        HAL_Delay(100); 
+        HAL_Delay(100);
+        getStatus(SX_TX);
+        getStatus(SX_RX);
+        
+        sprintf(msg, "StatusTX : busy:%d, cmd:%d, int:%d\n", SX_TX->SX1280_status.busy, SX_TX->SX1280_status.CommandStatus, SX_TX->SX1280_status.InternalState);
+        TextOut(msg);
+        sprintf(msg, "StatusRX : busy:%d, cmd:%d, int:%d\n", SX_RX->SX1280_status.busy, SX_RX->SX1280_status.CommandStatus, SX_RX->SX1280_status.InternalState);
+        TextOut(msg);
+
         TextOut("Packet received:");
         HexOut(Bot_to_PC, 8);
         TextOut("\n");
         HAL_Delay(500); 
 
     }
+}
+
+void sendFakePacket(){
+    
 }
 
 

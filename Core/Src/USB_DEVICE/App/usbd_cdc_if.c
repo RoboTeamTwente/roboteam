@@ -23,7 +23,10 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "basestation.h"
+#include "msg_buff.h"
+#include "gpio_util.h"
+extern volatile int Iusb;
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +35,6 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -95,7 +97,9 @@ uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-
+uint8_t tempbuf[7];
+uint32_t usbLength = 0;
+uint8_t usbData[64];
 /* USER CODE END PRIVATE_VARIABLES */
 
 /**
@@ -221,11 +225,17 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
   /*******************************************************************************/
     case CDC_SET_LINE_CODING:
-
+      /* Needed for Windows to detect device */
+      for (int i=0; i<7; i++) {
+        	tempbuf[i] = pbuf[i];
+    	}
     break;
 
     case CDC_GET_LINE_CODING:
-
+      /* Needed for Windows to detect device */
+      for (int i=0; i<7; i++) {
+        	pbuf[i] = tempbuf[i];
+    	}
     break;
 
     case CDC_SET_CONTROL_LINE_STATE:
@@ -264,7 +274,29 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-  return (USBD_OK);
+  
+  // this is the USB callback
+  // store the latest data in usbData and usbLength
+  Iusb++;
+  // if the length is correct, store the data in the buffer
+  usbLength = *Len;
+  if (* Len == 13) {
+    // determine the robot id
+    uint8_t usbDataRobotId = Buf[0] >> 3;
+
+    // check if the usb data robot id is legal
+    if (usbDataRobotId < 16 && !msgBuff[usbDataRobotId].isNew) {
+      // put the message in the buffer
+      memcpy(msgBuff[usbDataRobotId].msg, Buf, 13);
+      msgBuff[usbDataRobotId].isNew = true;
+      return (USBD_OK);
+    }
+  }
+  else {
+    toggle_pin(LD_2);
+  }
+  return (USBD_FAIL);
+
   /* USER CODE END 6 */
 }
 

@@ -15,8 +15,10 @@
 
 
 // make buffers
-uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
-uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
+uint8_t SXTX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
+uint8_t SXTX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
+uint8_t SXRX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
+uint8_t SXRX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 
 bool isReceiving = false;
 
@@ -60,8 +62,8 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi, uint8_t m
     SX->RST_pin = (mode==0) ? SX_TX_RST : SX_RX_RST;
 
     // set buffer locations
-    SX->RXbuf = RX_buffer;
-    SX->TXbuf = TX_buffer;
+    SX->RXbuf = (mode==0) ? SXTX_RX_buffer : SXRX_RX_buffer;
+    SX->TXbuf = (mode==0) ? SXTX_TX_buffer : SXRX_TX_buffer;
 
     // link settings
     SX->SX_settings = &set;
@@ -70,7 +72,7 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi, uint8_t m
 
     SX1280Setup(SX); // SX1280 init procedure
 
-    setAutoFS(SX,false); // to go or not to go FS after TX or RX
+    setAutoFS(SX,true); // to go or not to go FS after TX or RX
 
     return SX;
 };
@@ -84,7 +86,8 @@ void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 	clearIRQ(SX,ALL);
     writeBuffer(SX, data, Nbytes);
-    // HAL_Delay(0);    setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
+    // HAL_Delay(0);    
+    setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
 }
 
 void ReceivePacket(SX1280* SX){

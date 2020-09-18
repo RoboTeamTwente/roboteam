@@ -2,7 +2,8 @@
 #define VECTOR2_H
 
 #include <iostream>
-#include <networking/Vector2f.pb.h>
+
+#include <roboteam_proto/Vector2f.pb.h>
 
 namespace rtt {
 

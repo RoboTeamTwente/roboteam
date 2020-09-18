@@ -73,7 +73,6 @@ target_include_directories(roboteam_utils
         INTERFACE include
         PRIVATE include/roboteam_utils
         PRIVATE src
-        PUBLIC include/roboteam_utils/networking/include
         )
 
 target_link_libraries(roboteam_utils

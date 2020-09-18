@@ -2,7 +2,7 @@
 #include <net/robocup_ssl_client.h>
 #include <roboteam_utils/Timer.h>
 #include <sstream>
-#include <networking/messages_robocup_ssl_wrapper.pb.h>
+#include <roboteam_proto/messages_robocup_ssl_wrapper.pb.h>
 
 namespace world {
 

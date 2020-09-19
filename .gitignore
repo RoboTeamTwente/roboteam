@@ -1,7 +1,7 @@
 # Custom
 .cproject
 .mxproject
-.pio
+.pio/
 
 # Prerequisites
 *.d

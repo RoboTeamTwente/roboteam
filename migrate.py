@@ -3,10 +3,12 @@ import shutil
 
 # Migrate all folders except Core and DRIVERS
 directories = [d for d in os.listdir('.') if os.path.isdir(d) and not d.startswith('.')]
-directories.remove("Core")
-directories.remove("Drivers")
+if "Core" in directories:
+	directories.remove("Core")
+if "Drivers" in directories:
+	directories.remove("Drivers")
 
-print(directories)
+print("Directories to merge:", ", ".join(directories))
 # Copy all directories to both Core/Inc and Core/Src
 for d in directories:
 	Inc = os.path.join("Core", "Inc", d)
@@ -56,6 +58,11 @@ build_flags =
 	for d in includes_dirs:
 		file.write("\t-I %s\n" % d)
 
+
+# Git checkout all USB files
+print("Warning : resetting all changes made to USB files in ./Core/(Inc|Src)/USB_DEVICE/")
+os.popen('git checkout ./Core/Inc/USB_DEVICE/')
+os.popen('git checkout ./Core/Src/USB_DEVICE/')
 
 # files = []
 # for _dir, _subdirs, _files in os.walk("./Core/Src"):

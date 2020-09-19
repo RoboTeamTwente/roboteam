@@ -1,7 +1,9 @@
 # Custom
+.project
 .cproject
 .mxproject
 .pio/
+.vscode/
 
 # Prerequisites
 *.d

@@ -18,9 +18,9 @@
 #ifndef __shoot_H
 #define __shoot_H
 
-#include "../Util/gpio_util.h"
-#include "../Util/tim_util.h"
-#include "../Util/control_util.h"
+#include "gpio_util.h"
+#include "tim_util.h"
+#include "control_util.h"
 #include <stdbool.h>
 #include "PuTTY.h"
 

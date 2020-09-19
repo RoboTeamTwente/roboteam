@@ -6,9 +6,9 @@
  */
 
 #include "Wireless.h"
-#include "SX1280/SX1280_Constants.h"
+#include "SX1280_Constants.h"
 #include "gpio_util.h"
-#include "SX1280/SX1280.h"
+#include "SX1280.h"
 #include <stdbool.h>
 #include "PuTTY.h"
 #include "packing.h"

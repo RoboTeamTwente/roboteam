@@ -15,9 +15,9 @@
 #ifndef DO_STATEESTIMATION_H_
 #define DO_STATEESTIMATION_H_
 
-#include "../Lib/yawCalibration.h"
-#include "../Lib/kalman.h"
-#include "../Util/control_util.h"
+#include "yawCalibration.h"
+#include "kalman.h"
+#include "control_util.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 

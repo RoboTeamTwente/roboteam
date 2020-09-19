@@ -1,5 +1,5 @@
 
-#include "../Inc/stateControl.h"
+#include "stateControl.h"
 
 ///////////////////////////////////////////////////// VARIABLES
 

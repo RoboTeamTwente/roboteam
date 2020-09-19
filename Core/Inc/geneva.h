@@ -15,9 +15,9 @@
 #ifndef GENEVA_GENEVA_H_
 #define GENEVA_GENEVA_H_
 
-#include "../Util/control_util.h"
-#include "../Util/gpio_util.h"
-#include "../Util/tim_util.h"
+#include "control_util.h"
+#include "gpio_util.h"
+#include "tim_util.h"
 
 ///////////////////////////////////////////////////// VARIABLES
 

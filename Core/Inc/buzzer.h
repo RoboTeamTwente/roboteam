@@ -1,9 +1,9 @@
 #ifndef INC_BUZZER_H_
 #define INC_BUZZER_H_
 
-#include "../Util/control_util.h"
-#include "../Util/gpio_util.h"
-#include "../Util/tim_util.h"
+#include "control_util.h"
+#include "gpio_util.h"
+#include "tim_util.h"
 #include "buzzer_Tunes.h"
 
 ///////////////////////////////////////////////////// BUZZER LIMITERS

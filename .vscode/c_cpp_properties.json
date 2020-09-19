@@ -1,0 +1,97 @@
+{
+    "configurations": [
+        {
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc",
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Src",
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib",
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib/MTi",
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib/SX1280",
+                "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Util",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Include",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Device/ST/STM32F7xx/Include",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/STM32F7xx_HAL_Driver/Inc",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/Common",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/STM32F7xx_Nucleo_144",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ft5336",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/mx25l512",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/rk043fn48h",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ampire480272",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/n25q128a",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/st7735",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/st7789h2",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/exc7200",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/stmpe811",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/wm8994",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/s5k5cag",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ov9655",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ts3510",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/mfxstm32l152",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ft6x06",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/n25q512a",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/otm8009a",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ampire640480",
+                "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/adv7533",
+                "/home/emiel/.platformio/packages/tool-unity",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc",
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Src",
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib",
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib/MTi",
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Lib/SX1280",
+                    "/home/emiel/Desktop/projects/roboteam_microcontroller4.0/Core/Inc/Util",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Include",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/CMSIS/Device/ST/STM32F7xx/Include",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/STM32F7xx_HAL_Driver/Inc",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/Common",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/STM32F7xx_Nucleo_144",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ft5336",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/mx25l512",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/rk043fn48h",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ampire480272",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/n25q128a",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/st7735",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/st7789h2",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/exc7200",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/stmpe811",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/wm8994",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/s5k5cag",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ov9655",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ts3510",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/mfxstm32l152",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ft6x06",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/n25q512a",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/otm8009a",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/ampire640480",
+                    "/home/emiel/.platformio/packages/framework-stm32cube/f7/Drivers/BSP/Components/adv7533",
+                    "/home/emiel/.platformio/packages/tool-unity",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=50001",
+                "STM32F767xx",
+                "USE_HAL_DRIVER",
+                "F_CPU=216000000L",
+                ""
+            ],
+            "intelliSenseMode": "clang-x64",
+            "cppStandard": "c++11",
+            "compilerPath": "/home/emiel/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mthumb",
+                "-mcpu=cortex-m7",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}

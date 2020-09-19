@@ -1,5 +1,5 @@
-#include "../Inc/buzzer.h"
-#include "../Util/tim_util.h"
+#include "buzzer.h"
+#include "tim_util.h"
 #include "buzzer_Tunes.h"
 
 uint32_t buzzer_Duration = 0;

@@ -11,8 +11,8 @@
 #define WIRELESS_WIRELESS_H_
 
 #include <stdbool.h>
-#include "SX1280/SX1280_Constants.h"
-#include "SX1280/SX1280.h"
+#include "SX1280_Constants.h"
+#include "SX1280.h"
 #include "main.h"
 #include "packing.h"
 

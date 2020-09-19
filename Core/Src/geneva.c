@@ -1,5 +1,5 @@
 
-#include "../Inc/geneva.h"
+#include "geneva.h"
 
 
 ///////////////////////////////////////////////////// STRUCTS

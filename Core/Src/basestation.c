@@ -42,7 +42,7 @@ void loop(){
     setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0x00, 0x00);
 
     while(1){
-        sprintf(msg, "I1=%d, I2=%d Iusb=%d length=%d\n", I1, I2, Iusb, usbLength);
+        sprintf(msg, "I1=%d, I2=%d Iusb=%d length=%lu\n", I1, I2, Iusb, usbLength);
         TextOut(msg);
 
         SendPacket(SX_TX, msgToSend, 8);

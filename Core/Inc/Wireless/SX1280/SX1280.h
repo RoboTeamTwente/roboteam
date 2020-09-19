@@ -51,8 +51,8 @@ typedef struct _SX1280{
 	SX1280_Settings* SX_settings;		// pointer to struct containing all the settings
 	SX1280_Packet_Status* Packet_status;// last known packet status
 
-	volatile uint8_t* TXbuf;			// pointer to transmit buffer
-	volatile uint8_t* RXbuf;			// pointer to receive buffer
+	uint8_t* TXbuf;			// pointer to transmit buffer
+	uint8_t* RXbuf;			// pointer to receive buffer
 
 	uint8_t payloadLength;	// length of received packet
 	uint8_t RXbufferoffset;	// start location of received packet

@@ -21,4 +21,4 @@ if(CCACHE)
 else()
     set(CMAKE_CXX_COMPILER "${CXX_COMPILER_PATH}")
 endif()
-# end of ccache logicbin
+# end of ccache logic

@@ -76,7 +76,7 @@ target_include_directories(roboteam_utils
         )
 
 target_link_libraries(roboteam_utils
-        PUBLIC networking
+        PUBLIC roboteam_proto
         )
 
 target_compile_options(roboteam_utils PRIVATE

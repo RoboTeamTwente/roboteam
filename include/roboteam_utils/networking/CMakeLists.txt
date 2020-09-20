@@ -11,7 +11,7 @@ add_library(networking STATIC
         )
 
 target_include_directories(networking
-        PUBLIC ./include
+        PUBLIC include
         )
 
 

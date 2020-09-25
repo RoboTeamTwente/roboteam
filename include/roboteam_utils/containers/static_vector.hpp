@@ -10,19 +10,17 @@
 #include <cstddef>
 #include <type_traits>
 
-namespace rtt::collections
-{
+namespace rtt::collections {
 
     /**
      * @brief Container that behaves like std::vector but is allocated on the stack with a max capacity
      * @tparam T Type to be contained
      * @tparam Cap size_t, maximum capacity of the static_vector.
      * 
-     * Opposing to std::vector iterators are never invalidated unless the entire strucutre is dropped. 
+     * Opposing to std::vector iterators are never invalidated unless the entire structure is dropped.
      */
-    template <typename T, size_t Cap>
-    class static_vector
-    {
+    template<typename T, size_t Cap>
+    class static_vector {
     public:
         /**
          * Contained type
@@ -58,20 +56,21 @@ namespace rtt::collections
         /**
          * Check whether it's default constructible, std::array requires it.
          */
-        static_assert(std::is_default_constructible_v<element_type>, "T has to be default constructible due to the nature of std::array.");
+        static_assert(std::is_default_constructible_v<element_type>,
+                      "T has to be default constructible due to the nature of std::array.");
 
         /**
          * Check whether it's either copy or move constructible.
          */
         static_assert(
-            std::is_nothrow_copy_constructible_v<element_type> || std::is_nothrow_move_assignable_v<element_type>,
-            "T is not noexcept move or copyable.");
+                std::is_nothrow_copy_constructible_v<element_type> || std::is_nothrow_move_assignable_v<element_type>,
+                "T is not noexcept move or copyable.");
 
         /**
          * Check whether the contained type is constant, if so we cannot placement-new
          */
         static_assert(
-            !std::is_const_v<element_type>, "T cannot be const.");
+                !std::is_const_v<element_type>, "T cannot be const.");
 
         /**
          * Internal array used for storage
@@ -87,16 +86,11 @@ namespace rtt::collections
         /**
          * Construction from initializer list.
          */
-        constexpr explicit static_vector(std::initializer_list<T> data)
-        {
-            for (size_t i = 0; i < data.size(); i++)
-            {
-                if constexpr (std::is_nothrow_move_constructible_v<element_type>)
-                {
+        constexpr explicit static_vector(std::initializer_list<T> data) {
+            for (size_t i = 0; i < data.size(); i++) {
+                if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
                     this->emplace_back(std::move(data[i]));
-                }
-                else
-                {
+                } else {
                     this->emplace_back(data[i]);
                 }
             }
@@ -107,16 +101,14 @@ namespace rtt::collections
         /**
          * Push back an element (const&)
          */
-        element_type &push_back(element_type const &data)
-        {
+        element_type &push_back(element_type const &data) {
             return this->emplace_back(data);
         }
 
         /**
          * Push back an element (copy)
          */
-        element_type &push_back(element_type data)
-        {
+        element_type &push_back(element_type data) {
             return this->emplace_back(std::move(data));
         }
 
@@ -124,14 +116,12 @@ namespace rtt::collections
          * Emplace back an element
          * @tparam Parameters passed to ctor
          */
-        template <typename... Tys>
-        element_type &emplace_back(Tys &&... args)
-        {
-            if (size() >= _data.size())
-            {
+        template<typename... Tys>
+        element_type &emplace_back(Tys &&... args) {
+            if (size() >= _data.size()) {
                 throw std::runtime_error{"Error in static_vector, attempt to append to filled static_vector."};
             }
-            new (&_data[size()]) T{std::forward<Tys>(args)...};
+            new(&_data[size()]) T{std::forward<Tys>(args)...};
             _size++;
             return back();
         }
@@ -139,24 +129,21 @@ namespace rtt::collections
         /**
          * Current size
          */
-        size_type size() const noexcept
-        {
+        size_type size() const noexcept {
             return _size;
         }
 
         /**
          * Begin iterator used for range-based for loop
          */
-        constexpr iterator begin() noexcept
-        {
+        constexpr iterator begin() noexcept {
             return _data.data();
         }
 
         /**
          * End iterator used for range-based for loop
          */
-        constexpr iterator end() noexcept
-        {
+        constexpr iterator end() noexcept {
             return &_data[size() - 1];
         }
 
@@ -164,8 +151,7 @@ namespace rtt::collections
          * Begin iterator used for range-based for loop
          * `this` is const.
          */
-        constexpr const_iterator cbegin() const noexcept
-        {
+        constexpr const_iterator cbegin() const noexcept {
             return &*_data.cbegin();
         }
 
@@ -173,64 +159,56 @@ namespace rtt::collections
          * End iterator used for range-based for loop
          * `this` is const.
          */
-        constexpr const_iterator cend() const noexcept
-        {
+        constexpr const_iterator cend() const noexcept {
             return &_data[size() - 1];
         }
 
         /**
          * Reference to the first element
          */
-        element_type &front() noexcept
-        {
+        element_type &front() noexcept {
             return _data.front();
         }
 
         /**
          * Reference to the last element
          */
-        element_type &back() noexcept
-        {
+        element_type &back() noexcept {
             return _data[size() - 1];
         }
 
         /**
          * Pointer to the internal data
          */
-        iterator data() noexcept
-        {
+        iterator data() noexcept {
             return &front();
         }
 
         /**
          * Reference to the first element
          */
-        const element_type &front() const noexcept
-        {
+        const element_type &front() const noexcept {
             return _data.front();
         }
 
         /**
          * Reference to the last element
          */
-        const element_type &back() const noexcept
-        {
+        const element_type &back() const noexcept {
             return _data[size() - 1];
         }
 
         /**
          * Pointer to the internal data
          */
-        const_iterator data() const noexcept
-        {
+        const_iterator data() const noexcept {
             return &front();
         }
 
         /**
          * operator[] defined to index the internal array
          */
-        element_type &operator[](size_type index) noexcept
-        {
+        element_type &operator[](size_type index) noexcept {
             return _data[index];
         }
 
@@ -238,8 +216,7 @@ namespace rtt::collections
         /**
          * Constant version of operator[]
          */
-        element_type const &operator[](size_type index) const noexcept
-        {
+        element_type const &operator[](size_type index) const noexcept {
             return _data[index];
         }
 
@@ -253,23 +230,18 @@ namespace rtt::collections
          * vec.erase(vec.begin() + index);
          * ~~~
          */
-        void erase(const_iterator iter)
-        {
+        void erase(const_iterator iter) {
             auto prev = iter;
-            for (iterator begin = ++iter; iter < end(); ++begin)
-            {
-                if constexpr (std::is_nothrow_move_constructible_v<element_type>)
-                {
+            for (iterator begin = ++iter; iter < end(); ++begin) {
+                if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
                     *prev = std::move(*begin);
-                }
-                else
-                {
+                } else {
                     *prev = *begin;
                 }
             }
-            size--;
+            _size--;
         }
     };
 } // namespace rtt::collections
 
-#endif RTT_STATIC_VECTOR_HPP
+#endif // RTT_STATIC_VECTOR_HPP

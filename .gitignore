@@ -1,3 +1,9 @@
+.pio/
+.cproject
+.mxproject
+.project
+.settings
+
 cmake-build-debug/
 .idea/*
 .settings/*

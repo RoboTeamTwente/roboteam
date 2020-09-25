@@ -2,9 +2,10 @@
 #include "main.h"
 #include "Wireless.h"
 #include "TextOut.h"
+#include "msg_buff.h"
 
 volatile int I1 = 0;
-volatile int I2 = 0;
+volatile int cFeedback = 0;
 volatile int Iusb = 0;
 
 extern SPI_HandleTypeDef hspi1;
@@ -21,7 +22,7 @@ void init(){
     SX_TX = Wireless_Init(COMMAND_CHANNEL, &hspi1, 0);
     
     TextOut("[basestation][init] Initializing SX_RX\n");
-    SX_RX = Wireless_Init(COMMAND_CHANNEL, &hspi2, 1);
+    SX_RX = Wireless_Init(FEEDBACK_CHANNEL, &hspi2, 1);
     SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
     setSyncWords(SX_RX, SX_RX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX_RX, SX_RX->SX_settings->periodBase, 0xFFFF);
@@ -34,6 +35,26 @@ void init(){
 
 uint8_t msgToSend[8] = {'h', 'e', 'l', 'l', 'o', 'o', 'o', 'o'};
 
+void loop(){
+    char msg[64];
+
+    for(int id = 0; id < 16; id++){
+        if(msgBuff[id].isNew){
+            msgBuff[id].isNew = false;
+            sprintf(msg, "cFeedback=%d | Packet received for robot %d\n", cFeedback, id);
+            TextOut(msg);
+
+            if(!isTransmitting){
+                isTransmitting = true;
+                SX_TX->SX_settings->syncWords[0] = robot_syncWord[id];
+                setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
+                SendPacket(SX_TX, msgBuff[id].msg, RECEIVEPKTLEN);
+            }
+        }
+    }
+}
+
+/*
 void loop(){
     TextOut("loop\n");
     char msg[64];
@@ -63,11 +84,7 @@ void loop(){
 
     }
 }
-
-void sendFakePacket(){
-    
-}
-
+*/
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
     if(hspi->Instance == SX_TX->SPI->Instance) {
@@ -75,8 +92,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
         Wireless_DMA_Handler(SX_TX, PC_to_Bot);
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
-        I2++;
-		Wireless_DMA_Handler(SX_RX, PC_to_Bot);
+        Wireless_DMA_Handler(SX_RX, PC_to_Bot);
 	}
     // TextOut("HAL_SPI_TxRxCpltCallback() handled\n");
 }
@@ -89,7 +105,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 	if (GPIO_Pin == SX_RX_IRQ.PIN) {
 		Wireless_IRQ_Handler(SX_RX, 0, 0);
-        I2++;
+        cFeedback++;
 		toggle_pin(LD_LED1);
 	}
     

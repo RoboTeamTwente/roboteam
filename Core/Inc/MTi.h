@@ -78,7 +78,7 @@ typedef struct data_tuple{
 volatile typedef struct MTi_data_struct{
 	SPI_HandleTypeDef* SPI;							// pointer to SPI struct
 	GPIO_Pin CS_pin;								// Chip select struct
-	bool SPI_busy;									// falg to see if there is a transaction happening
+	volatile bool SPI_busy;									// falg to see if there is a transaction happening
 	bool init_phase;								// bool to identify if we should stop reacting to interrupts
 	enum XsMessageId LastAck;						// last received ack (for wait for ack check)
 	uint8_t* RxBuffer;								// receive buffer for the SPI interface

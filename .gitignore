@@ -4,6 +4,7 @@
 .mxproject
 .pio/
 .vscode/
+__pycache__
 
 # Prerequisites
 *.d

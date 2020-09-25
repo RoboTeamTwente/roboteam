@@ -8,6 +8,7 @@
 #include <new>
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 #include <type_traits>
 
 namespace rtt::collections {

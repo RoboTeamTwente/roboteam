@@ -119,7 +119,7 @@ namespace rtt::collections {
          */
         template<typename... Tys>
         element_type &emplace_back(Tys &&... args) {
-            if (size() >= _data.size()) {
+            if (size() >= max_size) {
                 throw std::runtime_error{"Error in static_vector, attempt to append to filled static_vector."};
             }
             new(&_data[size()]) T{std::forward<Tys>(args)...};

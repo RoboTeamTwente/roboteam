@@ -232,15 +232,13 @@ namespace rtt::collections {
          * ~~~
          */
         void erase(const_iterator iter) {
-            auto prev = iter;
-            for (iterator begin = ++iter; iter < end(); ++begin) {
-                if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
-                    *prev = std::move(*begin);
-                } else {
-                    *prev = *begin;
-                }
+            auto prev = iter++;
+            if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
+                std::copy(prev, iter);
+            } else {
+                std::move(prev, iter);
             }
-            _size--;
+            size--;
         }
     };
 } // namespace rtt::collections

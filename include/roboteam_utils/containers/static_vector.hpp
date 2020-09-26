@@ -87,12 +87,12 @@ namespace rtt::collections {
         /**
          * Construction from initializer list.
          */
-        constexpr explicit static_vector(std::initializer_list<T> data) {
-            for (size_t i = 0; i < data.size(); i++) {
+        constexpr  static_vector(std::initializer_list<T> data) {
+            for (const auto& elem : data) {
                 if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
-                    this->emplace_back(std::move(data[i]));
+                    this->emplace_back(std::move(elem));
                 } else {
-                    this->emplace_back(data[i]);
+                    this->emplace_back(elem);
                 }
             }
         }
@@ -102,15 +102,15 @@ namespace rtt::collections {
         /**
          * Push back an element (const&)
          */
-        element_type &push_back(element_type const &data) {
-            return this->emplace_back(data);
+        void push_back(const element_type &data) {
+            this->emplace_back(data);
         }
 
         /**
          * Push back an element (copy)
          */
-        element_type &push_back(element_type data) {
-            return this->emplace_back(std::move(data));
+        void push_back(element_type&& data) {
+            this->emplace_back(std::move(data));
         }
 
         /**
@@ -141,13 +141,19 @@ namespace rtt::collections {
             return _data.data();
         }
 
+        constexpr const_iterator begin() const noexcept {
+            return cbegin();
+        }
         /**
          * End iterator used for range-based for loop
          */
         constexpr iterator end() noexcept {
-            return &_data[size() - 1];
+            return &_data[size()];
         }
 
+        constexpr const_iterator end() const noexcept {
+            return cend();
+        }
         /**
          * Begin iterator used for range-based for loop
          * `this` is const.
@@ -232,13 +238,13 @@ namespace rtt::collections {
          * ~~~
          */
         void erase(const_iterator iter) {
-            auto prev = iter++;
+            auto prev = iter++; //TODO: This statement does not compile
             if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
                 std::copy(prev, iter);
             } else {
                 std::move(prev, iter);
             }
-            size--;
+            _size--;
         }
     };
 } // namespace rtt::collections

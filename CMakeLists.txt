@@ -97,7 +97,9 @@ add_executable(utils_tests
         #test/TriangleTest.cpp
         test/TubeTest.cpp
         test/StateMachineTest.cpp
-        test/GridTest.cpp)
+        test/GridTest.cpp
+        test/StaticVectorTest.cpp
+        )
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(utils_tests

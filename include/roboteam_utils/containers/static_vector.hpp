@@ -238,11 +238,11 @@ namespace rtt::collections {
          * ~~~
          */
         void erase(iterator iter) {
-            element_type* prev = iter++; //TODO: This statement does not compile
+            element_type* prev = iter++;
             if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
-                std::copy(prev, end(), iter);
+                std::copy(iter, end(), prev);
             } else {
-                std::move(prev, end(), iter);
+                std::move(iter, end(), prev);
             }
             _size--;
         }

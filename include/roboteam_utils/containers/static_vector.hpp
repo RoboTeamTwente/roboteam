@@ -46,7 +46,7 @@ namespace rtt::collections {
         /**
          * Iterator used for cbegin() and cend()
          */
-        using const_iterator = const iterator;
+        using const_iterator = const element_type*;
 
         /**
          * Type of the size (size_t)
@@ -237,12 +237,12 @@ namespace rtt::collections {
          * vec.erase(vec.begin() + index);
          * ~~~
          */
-        void erase(const_iterator iter) {
-            auto prev = iter++; //TODO: This statement does not compile
+        void erase(iterator iter) {
+            element_type* prev = iter++; //TODO: This statement does not compile
             if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
-                std::copy(prev, iter);
+                std::copy(prev, end(), iter);
             } else {
-                std::move(prev, iter);
+                std::move(prev, end(), iter);
             }
             _size--;
         }

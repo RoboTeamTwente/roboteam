@@ -31,7 +31,7 @@ TEST(static_vector,erase){
     x.push_back(5.0);
     EXPECT_EQ(x.back(),5.0);
 
-    //x.erase(x.begin()+1);//TODO: not working
+    x.erase(x.begin()+1);
 
 
 }

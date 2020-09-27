@@ -33,6 +33,15 @@ TEST(static_vector,erase){
 
     x.erase(x.begin()+1);
 
+    EXPECT_EQ(x[0],3.0);
+    EXPECT_EQ(x[1],5.0);
+    EXPECT_EQ(x.size(),2);
+    //CHeck if begin and end pointers are properly adjusted as well
+    double sum = 0;
+    for (auto& elem : x){
+        sum += elem;
+    }
+    EXPECT_EQ(sum,8.0);
 
 }
 

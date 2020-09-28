@@ -108,6 +108,7 @@ add_executable(utils_tests
         test/RandomTest.cpp
         test/StateMachineTest.cpp
         test/GridTest.cpp
+        test/StaticVectorTest.cpp
         test/ShadowTest.cpp
         )
 

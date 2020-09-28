@@ -14,7 +14,6 @@ target_include_directories(networking
         PUBLIC include
         )
 
-
 target_link_libraries(networking
         # since Publishers/subscribers are templates these 2 libraries need to be PUBLIC
         PUBLIC ${ZeroMQ_LIBRARIES}

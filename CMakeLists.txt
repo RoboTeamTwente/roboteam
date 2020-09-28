@@ -77,6 +77,7 @@ target_include_directories(roboteam_utils
 
 target_link_libraries(roboteam_utils
         PUBLIC roboteam_proto
+        PUBLIC networking
         )
 
 target_compile_options(roboteam_utils PRIVATE
@@ -113,6 +114,7 @@ add_executable(utils_tests
         test/StateMachineTest.cpp
         test/GridTest.cpp
         test/ShadowTest.cpp
+        test/PubSubTest.cpp
         )
 
 target_link_libraries(utils_tests

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <Publisher.h>
-#include <Subscriber.h>
 #include <roboteam_proto/RobotCommand.pb.h>
+#include <roboteam_utils/networking/include/Subscriber.h>
+#include <roboteam_utils/networking/include/Publisher.h>
 #include "roboteam_utils/Timer.h"
 
 bool messageReceivedSuccesFully = false;

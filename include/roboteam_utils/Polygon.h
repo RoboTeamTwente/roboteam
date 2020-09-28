@@ -102,18 +102,6 @@ namespace rtt {
         [[nodiscard]] bool isConvex() const;
 
         /**
-         * @brief Checks whether the polygon is simple
-         * 
-         * There are multiple possible algorithms, see
-         * https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
-         * this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
-         * 
-         * @return true True if simple
-         * @return false False if not simple
-         */
-        [[nodiscard]] bool isSimple() const;
-
-        /**
          * @brief Checks whether a point is contained within this polygon
          * 
          * @param point Point to check
@@ -162,7 +150,17 @@ namespace rtt {
          */
         [[nodiscard]] double doubleSignedArea() const;
 
-
+        /**
+         * @brief Checks whether the polygon is simple. Note this function is not dead code, it is crucial for testing!
+         *
+         * There are multiple possible algorithms, see
+         * https://www.quora.com/What-is-the-simplest-algorithm-to-know-if-a-polygon-is-simple-or-not
+         * this is the 'naive' O(N^2) approach which is fine for small cases (polygons with less than say 8-10 vertices)
+         *
+         * @return true True if simple
+         * @return false False if not simple
+         */
+        [[nodiscard]] bool isSimple() const;
     };
 }
 #endif //ROBOTEAM_UTILS_POLYGON_H

@@ -8,7 +8,7 @@ namespace rtt {
     }
 
     Angle::Angle(const rtt::Vector2 &vec) {
-        if (vec.length() < VECTOR_PRECISION)
+        if (vec.length() < FLOAT_PRECISION)
             angle = 0.0;
         else
             angle = vec.toAngle();
@@ -43,7 +43,7 @@ namespace rtt {
     }
 
     bool Angle::operator==(const Angle &other) const noexcept {
-        return this->shortestAngleDiff(other) < VECTOR_PRECISION;
+        return this->shortestAngleDiff(other) < FLOAT_PRECISION;
     }
 
     bool Angle::operator!=(const Angle &other) const noexcept {

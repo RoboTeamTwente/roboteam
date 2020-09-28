@@ -128,11 +128,11 @@ double Vector2::cross(const Vector2 &other) const {
 }
 
 bool Vector2::operator==(const Vector2 &other) const {
-    return fabs(this->x - other.x) < VECTOR_PRECISION && fabs(this->y - other.y) < VECTOR_PRECISION;
+    return fabs(this->x - other.x) < FLOAT_PRECISION && fabs(this->y - other.y) < FLOAT_PRECISION;
 }
 
 bool Vector2::operator!=(const Vector2 &other) const {
-    return ! (*this == other);
+    return !(*this == other);
 }
 
 bool Vector2::operator<(const Vector2 &other) const {

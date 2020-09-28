@@ -40,12 +40,7 @@ class Tube {
          * @return True if point is inside or on the boundary of the tube
          */
         [[nodiscard]] bool contains(const Vector2 &point) const;
-        /**
-         * @brief checks if the line intersects the tube or is contained within the tube
-         * @param line to consider
-         * @return True if the line intersects with the tube
-         */
-        [[nodiscard]] bool doesIntersectOrContain(const LineSegment &line) const;
+
         /**
          * @brief checks if the tube and circle overlap
          * @param circle Circle to check intersection with
@@ -65,6 +60,13 @@ class Tube {
         * @return The location where the point is projected onto the tube
         */
         Vector2 project(const Vector2& point);
+
+        /**
+         * @brief checks if the line intersects the tube or is contained within the tube
+         * @param line to consider
+         * @return True if the line intersects with the tube
+         */
+        [[nodiscard]] bool doesIntersectOrContain(const LineSegment &line) const;
 };
 }
 

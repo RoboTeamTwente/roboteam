@@ -17,7 +17,8 @@ add_library(net STATIC
         )
 
 target_link_libraries(net
-        PUBLIC roboteam_proto)
+        PUBLIC roboteam_utils
+        )
 
 add_library(worldUtils STATIC
         include/roboteam_world/filters/KalmanFilter.h

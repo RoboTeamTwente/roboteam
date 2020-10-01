@@ -108,13 +108,15 @@ TEST(CircleTests, doesIntersectOrContainRectangle) {
 TEST(CircleTests, rectanglePerformance1) {
     rtt::Circle circle({0, 0}, 1);
     rtt::Rectangle rectThrough({2, 2}, {0, 0});
-    for (int i = 0; i < 1e7; i++) circle.doesIntersectOrContain(rectThrough);
+    for (int i = 0; i < 1e7; i++)
+        // Had a warning: ignoring return value of nodiscard.
+        (void)circle.doesIntersectOrContain(rectThrough);
 }
 
 TEST(CircleTests, rectanglePerformance2) {
     rtt::Circle circle({0, 0}, 1);
     rtt::Rectangle rectThrough({2, 2}, {0, 0});
-    for (int i = 0; i < 1e7; i++) circle.doesIntersectOrContain2(rectThrough);
+    for (int i = 0; i < 1e7; i++) (void)circle.doesIntersectOrContain2(rectThrough);
 }
 
 TEST(CircleTests, projectTest) {

@@ -18,7 +18,7 @@ struct SkillInfo {};
 
 class Base {
 public:
-    virtual TestEnum update(SkillInfo const& data) noexcept {
+    virtual TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept {
         return TestEnum::Success;
     }
 
@@ -29,11 +29,13 @@ public:
     virtual uint8_t type_num() noexcept {
         return 0;
     }
+
+    virtual ~Base() = default;
 };
 
 class Derived : public Base {
 public:
-    TestEnum update(SkillInfo const& data) noexcept override {
+    TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept override {
         return TestEnum::Failure;
     }
 
@@ -118,7 +120,7 @@ TEST(StateMachineTest, test_for_loop) {
     };
 
     // no optimize -> volatile
-    for (auto volatile& each : machine) {}
+    for ([[maybe_unused]] auto volatile& each : machine) {}
 }
 
 TEST(StateMachineTest, test_const_for_loop) {
@@ -128,5 +130,5 @@ TEST(StateMachineTest, test_const_for_loop) {
     };
 
     // no optimize -> volatile
-    for (auto volatile const& each : machine) {}
+    for ([[maybe_unused]] auto volatile const& each : machine) {}
 }

@@ -1,12 +1,11 @@
 #ifndef WORLDHANDLER_H
 #define WORLDHANDLER_H
-#include <roboteam_proto/Publisher.h>
-#include <roboteam_proto/Subscriber.h>
 #include <roboteam_proto/World.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 
 #include <net/robocup_ssl_client.h>
 #include <utility>
+#include "Publisher.h"
 
 #include "filters/KalmanFilter.h"
 #include "filters/WorldFilter.h"

@@ -1,7 +1,6 @@
 
 #include <roboteam_utils/Timer.h>
 #include "roboteam_proto/Setting.pb.h"
-#include "roboteam_utils/normalize.h"
 
 #include "GRSim.h"
 #include "RobotHub.h"

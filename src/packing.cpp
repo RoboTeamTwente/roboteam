@@ -1,12 +1,9 @@
 #include "packing.h"
 
 #include <math.h>
-#include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include "roboteam_utils/Mathematics.h"
-#include "roboteam_utils/Vector2.h"
 #include "utilities.h"
 
 namespace rtt {

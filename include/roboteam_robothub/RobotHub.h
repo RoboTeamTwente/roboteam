@@ -5,8 +5,8 @@
 #ifndef ROBOTEAM_ROBOTHUB_APPLICATION_H
 #define ROBOTEAM_ROBOTHUB_APPLICATION_H
 
-#include <roboteam_proto/Publisher.h>
-#include <roboteam_proto/Subscriber.h>
+#include <Publisher.h>
+#include <Subscriber.h>
 #include <string>
 #include "constants.h"
 #include "roboteam_proto/Setting.pb.h"

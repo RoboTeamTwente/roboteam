@@ -6,7 +6,6 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>  // macOS wants this one
-#include <fstream>
 #include <iostream>
 #include "utilities.h"
 

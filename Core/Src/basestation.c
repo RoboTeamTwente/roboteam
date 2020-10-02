@@ -18,19 +18,19 @@ extern uint8_t usbData[64];
 void init(){
     HAL_Delay(1000);
     
-    TextOut("[basestation][init] Initializing SX_TX\n");
+    // TextOut("[basestation][init] Initializing SX_TX\n");
     SX_TX = Wireless_Init(COMMAND_CHANNEL, &hspi1, 0);
     
-    TextOut("[basestation][init] Initializing SX_RX\n");
+    // TextOut("[basestation][init] Initializing SX_RX\n");
     SX_RX = Wireless_Init(FEEDBACK_CHANNEL, &hspi2, 1);
     SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
     setSyncWords(SX_RX, SX_RX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX_RX, SX_RX->SX_settings->periodBase, 0xFFFF);
 
-    TextOut("[basestation][init] Initializing Timer\n");
+    // TextOut("[basestation][init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
     
-    TextOut("[basestation][init] Initializion complete\n");
+    // TextOut("[basestation][init] Initializion complete\n");
 }
 
 uint8_t msgToSend[8] = {'h', 'e', 'l', 'l', 'o', 'o', 'o', 'o'};
@@ -41,7 +41,7 @@ void loop(){
     for(int id = 0; id < 16; id++){
         if(msgBuff[id].isNew){
             msgBuff[id].isNew = false;
-            sprintf(msg, "cFeedback=%d | Packet received for robot %d\n", cFeedback, id);
+            sprintf(msg, "%d cFeedback | Packet received for robot %d\n", cFeedback, id);
             TextOut(msg);
 
             if(!isTransmitting){
@@ -94,7 +94,6 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX_RX->SPI->Instance) {
         Wireless_DMA_Handler(SX_RX, PC_to_Bot);
 	}
-    // TextOut("HAL_SPI_TxRxCpltCallback() handled\n");
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {

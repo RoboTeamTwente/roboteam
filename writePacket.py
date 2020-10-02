@@ -12,6 +12,8 @@ p.setID(5)
 angle = 0
 counter = 0
 
+written = 0
+
 ser = None
 while True:
 	# Open connection with the basestation
@@ -22,8 +24,12 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 			ser.write(p.array.tobytes())
-			# while ser.available():
-			print(ser.readline().decode("utf-8"), end="")
+			written += 1
+
+			response = ser.readline().decode("utf-8")
+			cFeedback = int(response.split(" ")[0])
+			# print(cFeedback, response)
+			print(written, cFeedback, cFeedback / written)
 			
 			# Angle
 			angle += 0
@@ -32,7 +38,7 @@ while True:
 
 			# Velocity
 			counter += 1
-			vel = math.sin(counter/10)*300
+			vel = math.sin(counter/10)*100
 
 			if vel < 0:
 				p.setTheta(int(2**10)-1)
@@ -41,7 +47,7 @@ while True:
 
 			p.setRho(int(abs(vel)))
 
-			time.sleep(0.016)
+			time.sleep(0.01)
 
 	except Exception as e:
 		print("[Error]", e)

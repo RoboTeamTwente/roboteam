@@ -1,9 +1,9 @@
 import time
 import serial
 from bitarray import bitarray
-from bitarray.util import int2ba
+from bitarray.util import int2ba, ba2int
 
-def openPort(port="/dev/ttyACM1", suppressError = False):
+def openPort(port="/dev/ttyACM1", suppressError = False, timeout=None):
 	ser = None
 	try:
 		ser = serial.Serial(
@@ -11,7 +11,8 @@ def openPort(port="/dev/ttyACM1", suppressError = False):
 		    baudrate=115200,
 		    parity=serial.PARITY_ODD,
 		    stopbits=serial.STOPBITS_TWO,
-		    bytesize=serial.SEVENBITS
+		    bytesize=serial.SEVENBITS,
+		    timeout=timeout
 		)
 	except serial.serialutil.SerialException as e:
 		if not suppressError:
@@ -88,3 +89,43 @@ class Packet:
 
 	def __repr__(self):
 		return "[Packet]" + str(self.array)
+
+class Feedback:
+	def __init__(self, byts):
+		self.bytes = byts
+		self.decode()
+
+	def decode(self):
+		self.id = ba2int(self.bytes[0:8])
+		self.xSensCalibrated = self.bytes[8] == 1
+		self.batteryLow = self.bytes[9] == 1
+		self.ballSensorWorking = self.bytes[10] == 1
+		self.hasBall = self.bytes[11] == 1
+		self.ballPosition = ba2int(self.bytes[12:16])
+		self.genevaWorking = self.bytes[16] == 1
+		self.genevaState = ba2int(self.bytes[17:24])
+		self.rho = ba2int(self.bytes[24:35])
+		self.angle = ba2int(self.bytes[35:45])
+		self.theta = ba2int(self.bytes[45:56])
+		self.hasLockedWheel = self.bytes[56] == 1
+		self.signalStrength = ba2int(self.bytes[57:64])
+
+
+	def __repr__(self):
+		string = "Feedback(ID=%d, xsens=%d, bat=%d, bs=%d, hb=%d, bp=%d, gw=%d, geneva=%d, rho=%d, angle=%d, theta=%d, lw=%d, ssid=%d)" 
+		string = string % (
+			self.id,
+			self.xSensCalibrated,
+			self.batteryLow,
+			self.ballSensorWorking,
+			self.hasBall,
+			self.ballPosition,
+			self.genevaWorking,
+			self.genevaState,
+			self.rho,
+			self.angle,
+			self.theta,
+			self.hasLockedWheel,
+			self.signalStrength
+		)
+		return string

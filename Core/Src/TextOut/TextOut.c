@@ -30,6 +30,6 @@ void HexOut(uint8_t data[], uint8_t length){
 	//	set_pin(LD_3, HIGH);
 		memcpy(TxBuffer, data, length);
 		CDC_Transmit_FS(TxBuffer, length);
-		HAL_Delay(50);
+		// HAL_Delay(50);
 	}
 }

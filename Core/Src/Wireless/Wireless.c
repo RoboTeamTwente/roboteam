@@ -72,7 +72,7 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi, uint8_t m
 
     SX1280Setup(SX); // SX1280 init procedure
 
-    setAutoFS(SX,true); // to go or not to go FS after TX or RX
+    setAutoFS(SX, true); // to go or not to go FS after TX or RX
 
     return SX;
 };
@@ -102,43 +102,35 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);
     SX->irqStatus = irq;
     getPacketStatus(SX);
-//	char msg[20];
-//	sprintf(msg, "rssi: %d\n\r", SX->Packet_status->RSSISync);
-//	TextOut(msg);
-//	sprintf(msg, "errors: %d\n\r", SX->Packet_status->errors);
-//	TextOut(msg);
+    
     clearIRQ(SX,ALL);
 
+    /* Error in packet detected. Ignore */
     if(irq & CRC_ERROR) {
-//    	TextOut("SX_IRQ CRC_ERROR\n\r");
     	return;
     }
 
-    // process interrupts
+    /* Packet sent to robot */
     if(irq & TX_DONE){
-//    	TextOut("SX_IRQ TX_DONE\n\r");
     	isTransmitting = false;
     	toggle_pin(LD_TX);
     }
 
     if(irq & RX_DONE){
-//    	TextOut("SX_IRQ RX_DONE\n\r");
-    	toggle_pin(LD_RX);
-    	// if signal is strong, then receive packet; otherwise wait for packets
-    	if (SX->Packet_status->RSSISync < 160) {
+        /* It is possible that random noise can trigger the syncword. 
+        * Syncword is 32 bits. Noise comes in at 2.4GHz. Syncword resets when wrong bit is received.
+        * Expected length of wrong syncword is 1*0.5 + 2*0.25 + 3*0.125 + ... = 2
+        * 2^32 combinations / (2400000000 / 2) syncwords = correct syncword every 3.57 seconds purely from noise
+    	*/
+        // Correct syncword from noise have a very weak signal 
+    	// Threshold is at -160/2 = -80 dBm
+        if (SX->Packet_status->RSSISync < 160) {
     		ReceivePacket(SX);
     	}else{
     		// not necessary to force setRX() here when configured in Rx Continuous mode
     		//setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     	}
-    }
-
-    if(irq & SYNCWORD_VALID) {
-//    	TextOut("SX_IRQ SYNCWORD_VALID\n\r");
-    }
-
-    if(irq & SYNCWORD_ERROR) {
-//    	TextOut("SX_IRQ SYNCWORD_ERROR\n\r");
+    	toggle_pin(LD_RX);
     }
 
     if(irq & RXTX_TIMEOUT) {
@@ -147,13 +139,16 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	toggle_pin(LD_LED3);
 //    	TextOut("SX_IRQ RXTX_TIMEOUT\n\r");
     }
-
-    if(irq & PREAMBLE_DETECTED) {
-//    	TextOut("SX_IRQ PREAMBLE_DETECTED\n\r");
-    }
+    
+    // SYNCWORD_VALID interrupt not enabled in Wireless_Init. Never triggered
+    if(irq & SYNCWORD_VALID) { }
+    // SYNCWORD_ERROR interrupt not enabled in Wireless_Init. Never triggered
+    if(irq & SYNCWORD_ERROR) { }
+    // PREAMBLE_DETECTED interrupt not enabled in Wireless_Init. Never triggered
+    if(irq & PREAMBLE_DETECTED) { }
 };
 
-void Wireless_DMA_Handler(SX1280* SX, uint8_t* output){
+void Wireless_DMA_Handler(SX1280* SX){
 	DMA_Callback(SX);
     if(SX->expect_packet){ // expecting incoming packet in the buffer
     	SX->expect_packet = false;

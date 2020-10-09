@@ -5,6 +5,7 @@
 .pio/
 .vscode/
 __pycache__
+.idea/
 
 # Prerequisites
 *.d

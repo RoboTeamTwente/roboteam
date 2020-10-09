@@ -5,6 +5,7 @@
  *      Author: Cas Doornkamp
  */
 
+#include "basestation.h"
 #include "Wireless.h"
 #include "SX1280_Constants.h"
 #include "gpio_util.h"
@@ -19,8 +20,6 @@ uint8_t SXTX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXTX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
-
-bool isReceiving = false;
 
 // init structs
 SX1280_Settings set = {
@@ -153,7 +152,9 @@ void Wireless_DMA_Handler(SX1280* SX){
     if(SX->expect_packet){ // expecting incoming packet in the buffer
     	SX->expect_packet = false;
     	// reset RX if not in continuous RX mode!
-    	memcpy(Bot_to_PC, SX->RXbuf+3, RECEIVEPKTLEN);
-    	isReceiving = true;
+    	uint8_t id = SX->RXbuf[3];
+        msgBuff[id].feedback[0] = PACKET_TYPE_ROBOT_FEEDBACK;
+        memcpy(msgBuff[id].feedback+1, SX->RXbuf+3, PACKET_SIZE_ROBOT_FEEDBACK-1);
+        msgBuff[id].isNewFeedback = true;
     }
 }

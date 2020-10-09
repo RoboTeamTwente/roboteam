@@ -33,22 +33,25 @@ def openContinuous(*args, **kwargs):
 	print("\r[openContinuous] Basestation opened")
 	return ser
 
-class Packet:
+class RobotCommand:
 
 	array = bitarray(10*8)
 
 	def __init__(self):
-		print("New packet")
 		self.reset()
+		self.setPacketType()
+
+	def getBytes(self):
+		return self.array.tobytes()
 
 	def reset(self):
 		self.array[:] = 0
 
-	def setID(self, robot_id):
-		self.array[0:8] = int2ba(robot_id, length=8)
+	def setPacketType(self):
+		self.array[0:8] = int2ba(PACKET_TYPE["ROBOT_COMMAND"], length=8)
 	#---
-	def setEmpty(self):
-		self.array[8:16] = 0
+	def setID(self, robot_id):
+		self.array[8:16] = int2ba(robot_id, length=8)
 	#---
 	def setRho(self, rho):
 		self.array[16:27] = int2ba(rho, length=11)
@@ -96,24 +99,26 @@ class Feedback:
 		self.decode()
 
 	def decode(self):
-		self.id = ba2int(self.bytes[0:8])
-		self.xSensCalibrated = self.bytes[8] == 1
-		self.batteryLow = self.bytes[9] == 1
-		self.ballSensorWorking = self.bytes[10] == 1
-		self.hasBall = self.bytes[11] == 1
-		self.ballPosition = ba2int(self.bytes[12:16])
-		self.genevaWorking = self.bytes[16] == 1
-		self.genevaState = ba2int(self.bytes[17:24])
-		self.rho = ba2int(self.bytes[24:35])
-		self.angle = ba2int(self.bytes[35:45])
-		self.theta = ba2int(self.bytes[45:56])
-		self.hasLockedWheel = self.bytes[56] == 1
-		self.signalStrength = ba2int(self.bytes[57:64])
+		self.type = ba2int(self.bytes[0:8])
+		self.id = ba2int(self.bytes[8:16])
+		self.xSensCalibrated = self.bytes[16] == 1
+		self.batteryLow = self.bytes[17] == 1
+		self.ballSensorWorking = self.bytes[18] == 1
+		self.hasBall = self.bytes[19] == 1
+		self.ballPosition = ba2int(self.bytes[20:24])
+		self.genevaWorking = self.bytes[24] == 1
+		self.genevaState = ba2int(self.bytes[25:32])
+		self.rho = ba2int(self.bytes[32:43])
+		self.angle = ba2int(self.bytes[43:53])
+		self.theta = ba2int(self.bytes[53:64])
+		self.hasLockedWheel = self.bytes[64] == 1
+		self.signalStrength = ba2int(self.bytes[65:72])
 
 
 	def __repr__(self):
-		string = "Feedback(ID=%d, xsens=%d, bat=%d, bs=%d, hb=%d, bp=%d, gw=%d, geneva=%d, rho=%d, angle=%d, theta=%d, lw=%d, ssid=%d)" 
+		string = "Feedback(%s, ID=%d, xsens=%d, bat=%d, bs=%d, hb=%d, bp=%d, gw=%d, geneva=%d, rho=%d, angle=%d, theta=%d, lw=%d, rssi=-%d)" 
 		string = string % (
+			getType(self.type),
 			self.id,
 			self.xSensCalibrated,
 			self.batteryLow,
@@ -129,3 +134,28 @@ class Feedback:
 			self.signalStrength
 		)
 		return string
+
+PACKET_TYPE  = {
+	"ROBOT_COMMAND"                  : 0b01100110,
+	"ROBOT_FEEDBACK"                 : 0b00001111,
+	"ROBOT_SET_SETTINGS"             : 0b00110011,
+	"ROBOT_GET_SETTINGS"             : 0b00111100,
+	"ROBOT_SETTINGS"                 : 0b01010101,
+	"ROBOT_ALERT"                    : 0b01011010,
+
+	"BASESTATION_SET_SETTINGS"       : 0b10010110,
+	"BASESTATION_GET_SETTINGS"       : 0b10011001,
+	"BASESTATION_SETTINGS"           : 0b10100101,
+	"BASESTATION_GET_STATISTICS"     : 0b10101010,
+	"BASESTATION_STATISTICS"         : 0b11000011,
+	"BASESTATION_ALERT"              : 0b11001100,
+
+	"RESERVED_1"                     : 0b01101001,
+	"RESERVED_2"                     : 0b11110000
+}
+
+def getType(val):
+	for k in PACKET_TYPE.keys():
+		if PACKET_TYPE[k] == val:
+			return k
+	return "UNKNOWN_TYPE"

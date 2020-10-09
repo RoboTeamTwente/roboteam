@@ -275,27 +275,11 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
   
-  // this is the USB callback
-  // store the latest data in usbData and usbLength
-  Iusb++;
-  // if the length is correct, store the data in the buffer
-  usbLength = *Len;
-  if (* Len == 10) {
-    // determine the robot id
-    uint8_t usbDataRobotId = Buf[0];
-
-    // check if the usb data robot id is legal
-    if (usbDataRobotId < 16 && !msgBuff[usbDataRobotId].isNew) {
-      // put the message in the buffer
-      memcpy(msgBuff[usbDataRobotId].msg, Buf+2, 8);
-      msgBuff[usbDataRobotId].isNew = true;
-      return (USBD_OK);
-    }
-  }
-  else {
-    toggle_pin(LD_2);
-  }
-  return (USBD_FAIL);
+  bool succes = handlePacket(Buf, Len);
+  if(succes)
+    return USBD_OK;
+  
+  return USBD_FAIL;
 
   /* USER CODE END 6 */
 }

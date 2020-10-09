@@ -6,7 +6,7 @@ from bitarray.util import int2ba
 
 import utils
 
-p = utils.Packet()
+p = utils.RobotCommand()
 
 p.setID(15)
 
@@ -27,12 +27,12 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.01 < time.time() - lastWritten):
+			if(0.1 < time.time() - lastWritten):
 				# print("Written")
-				ser.write(p.array.tobytes())
+				ser.write(p.getBytes())
 				lastWritten = time.time()
 
-			response = ser.readline()
+			response = ser.read(9)
 			if 0 < len(response):
 				# print(response)
 				x = ba()		
@@ -44,7 +44,7 @@ while True:
 				# 	pass
 				# print(u)
 				print("Xsens=%d"%u.xSensCalibrated, "Angle=%d"%u.angle, len(response), response)
-				# print(utils.Feedback(x))
+				print(utils.Feedback(x))
 				
 
 			# ser.write(p.array.tobytes())
@@ -76,3 +76,4 @@ while True:
 		print("[Error]", e)
 		# Reset the connection to the basestation
 		ser = None
+		raise e

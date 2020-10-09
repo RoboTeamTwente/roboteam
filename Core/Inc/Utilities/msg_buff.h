@@ -12,11 +12,13 @@ bool isTransmitting;
  *  when it is send isNew should be set to false.
  */
 struct msgsBufferStatus {
-	uint8_t msg[13]; // packet size in bytes
-	bool isNew;
+	uint8_t command[PACKET_SIZE_ROBOT_COMMAND]; // packet size in bytes
+	bool isNewCommand;
+	uint8_t feedback[PACKET_SIZE_ROBOT_FEEDBACK];
+	bool isNewFeedback;
 };
 
-struct msgsBufferStatus msgBuff[17];
+struct msgsBufferStatus msgBuff[16];
 
 uint8_t BS_DEBUG;
 

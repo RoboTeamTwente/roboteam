@@ -8,10 +8,11 @@ import utils
 
 p = utils.RobotCommand()
 
-p.setID(15)
+p.setID(14)
 
 angle = 0
 counter = 0
+sentCounter = 0
 
 written = 0
 
@@ -21,31 +22,54 @@ ser = None
 while True:
 	# Open connection with the basestation
 	if ser is None or not ser.isOpen():
-		ser = utils.openContinuous(timeout=0.1)
+		ser = utils.openContinuous(timeout=0.01)
 
 	try:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.1 < time.time() - lastWritten):
-				# print("Written")
-				ser.write(p.getBytes())
+			if(0.016 < time.time() - lastWritten):
+				sentCounter += 1
+				if sentCounter % 20 == 0:
+					ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
+				else:
+					ser.write(p.getBytes())
 				lastWritten = time.time()
 
-			response = ser.read(9)
-			if 0 < len(response):
-				# print(response)
+			packet_type = ser.read(1)
+			if len(packet_type) == 0:
+				continue
+
+			packet_size = utils.PACKET_SIZE[packet_type[0]]
+			response = ser.read(packet_size-1)
+
+			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["ROBOT_FEEDBACK"]:
+
 				x = ba()		
 				angle = 0
-				# try:
-				x.frombytes(response)
+
+				x.frombytes(packet_type + response)
 				u = utils.Feedback(x)
-				# except Exception as e:
-				# 	pass
-				# print(u)
-				print("Xsens=%d"%u.xSensCalibrated, "Angle=%d"%u.angle, len(response), response)
-				print(utils.Feedback(x))
+
+				# print("Xsens=%d"%u.xSensCalibrated, "Angle=%d"%u.angle, len(response), response)
+				# print(utils.Feedback(x))
+				continue
 				
+			
+			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["BASESTATION_STATISTICS"]:
+				print("BASESTATION_STATISTICS received")
+				string = ""
+
+				for i in range(16):
+					string += " | %d %d %d" % (i, response[i*2], response[i*2+1])
+				print(string)
+
+				continue
+
+
+			if 0 < len(response):
+				print("Received something..", packet_type[0], packet_size)
+
 
 			# ser.write(p.array.tobytes())
 			# written += 1
@@ -76,4 +100,3 @@ while True:
 		print("[Error]", e)
 		# Reset the connection to the basestation
 		ser = None
-		raise e

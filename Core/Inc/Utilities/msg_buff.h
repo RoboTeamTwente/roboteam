@@ -16,6 +16,8 @@ struct msgsBufferStatus {
 	bool isNewCommand;
 	uint8_t feedback[PACKET_SIZE_ROBOT_FEEDBACK];
 	bool isNewFeedback;
+	uint8_t packetsSent;
+	uint8_t packetsReceived;
 };
 
 struct msgsBufferStatus msgBuff[16];

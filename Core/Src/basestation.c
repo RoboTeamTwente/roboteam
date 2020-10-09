@@ -38,28 +38,64 @@ void init(){
 
 void loop(){
 
-    /* Send any new command packets */
-    for(int id = 0; id < 16; id++){
-        if(msgBuff[id].isNewCommand){
-            if(!isTransmitting){
-                isTransmitting = true;
-                SX_TX->SX_settings->syncWords[0] = robot_syncWord[id];
-                setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-                SendPacket(SX_TX, msgBuff[id].command+2, PACKET_SIZE_ROBOT_COMMAND-2);
-                msgBuff[id].isNewCommand = false;
-            }
-        }
+  /* Send any new command packets */
+  for(int id = 0; id < 16; id++){
+    if(msgBuff[id].isNewCommand){
+      if(!isTransmitting){
+        isTransmitting = true;
+        msgBuff[id].packetsSent++;
+        SX_TX->SX_settings->syncWords[0] = robot_syncWord[id];
+        setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
+        SendPacket(SX_TX, msgBuff[id].command+2, PACKET_SIZE_ROBOT_COMMAND-2);
+        msgBuff[id].isNewCommand = false;
+      }
     }
-    
-    /* Send any new feedback packets */
-    for(int id = 0; id < 16; id++){
-        if(msgBuff[id].isNewFeedback){
-            HexOut(msgBuff[id].feedback, PACKET_SIZE_ROBOT_FEEDBACK);
-            msgBuff[id].isNewFeedback = false;
-        }
-    }
+  }
+  
+  /* Send any new feedback packets */
+  for(int id = 0; id < 16; id++){
+      if(msgBuff[id].isNewFeedback){
+          HexOut(msgBuff[id].feedback, PACKET_SIZE_ROBOT_FEEDBACK);
+          msgBuff[id].isNewFeedback = false;
+          msgBuff[id].packetsReceived++;
+      }
+  }
 }
 
+bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
+  if (Len == PACKET_SIZE_ROBOT_COMMAND) {
+    // determine the robot id
+    uint8_t usbDataRobotId = Buf[1];
+
+    // check if the usb data robot id is legal
+    if (usbDataRobotId < 16) {
+      // put the message in the buffer
+      memcpy(msgBuff[usbDataRobotId].command, Buf, PACKET_SIZE_ROBOT_COMMAND);
+      msgBuff[usbDataRobotId].isNewCommand = true;
+      return true;
+    }
+  }
+  else {
+    toggle_pin(LD_2);
+  }
+  return false;
+}
+
+bool handleStatistics(void){
+  uint8_t msg[PACKET_SIZE_BASESTATION_STATISTICS];
+  uint8_t *msgPtr = msg;
+  *msgPtr++ = PACKET_TYPE_BASESTATION_STATISTICS; 
+  for(int ID = 0; ID < 16; ID++){
+    // Send ratio + packets sent (clipped) for each robot
+    *msgPtr++ = (msgBuff[ID].packetsReceived*100)/msgBuff[ID].packetsSent;
+    *msgPtr++ = msgBuff[ID].packetsSent >= 255 ? 255 : msgBuff[ID].packetsSent;
+    // Reset statistics
+    msgBuff[ID].packetsSent = 0;
+    msgBuff[ID].packetsReceived = 0;
+  }
+  HexOut(msg, PACKET_SIZE_BASESTATION_STATISTICS);
+  return true;
+}
 /**
  * @brief 
  * 
@@ -73,30 +109,18 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
   uint8_t packetType = Buf[0];
   uint32_t packetSize = *Len;
   
-  if(packetType == PACKET_TYPE_ROBOT_COMMAND){
-    // this is the USB callback
-    // store the latest data in usbData and usbLength
-    Iusb++;
-    // if the length is correct, store the data in the buffer
+  Iusb++;
 
-    if (packetSize == 10) {
-      // determine the robot id
-      uint8_t usbDataRobotId = Buf[1];
-
-      // check if the usb data robot id is legal
-      if (usbDataRobotId < 16) {
-        // put the message in the buffer
-        memcpy(msgBuff[usbDataRobotId].command, Buf, PACKET_SIZE_ROBOT_COMMAND);
-        msgBuff[usbDataRobotId].isNewCommand = true;
-        return true;
-      }
-    }
-    else {
-      toggle_pin(LD_2);
-    }
-
+  switch(packetType){
+    case PACKET_TYPE_ROBOT_COMMAND:
+      handleRobotCommand(Buf, packetSize);
+      break;
+    case PACKET_TYPE_BASESTATION_GET_STATISTICS:
+      handleStatistics();
+      break;
+    default:
+      break;
   }
-
   return false;
 }
 
@@ -104,11 +128,10 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
     if(hspi->Instance == SX_TX->SPI->Instance) {
 		I1++;
-        Wireless_DMA_Handler(SX_TX);
+    Wireless_DMA_Handler(SX_TX);
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
-        Wireless_DMA_Handler(SX_RX);
-        new_packet = true;
+    Wireless_DMA_Handler(SX_RX);
 	}
 }
 

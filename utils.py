@@ -118,7 +118,7 @@ class Feedback:
 	def __repr__(self):
 		string = "Feedback(%s, ID=%d, xsens=%d, bat=%d, bs=%d, hb=%d, bp=%d, gw=%d, geneva=%d, rho=%d, angle=%d, theta=%d, lw=%d, rssi=-%d)" 
 		string = string % (
-			getType(self.type),
+			getPacketType(self.type),
 			self.id,
 			self.xSensCalibrated,
 			self.batteryLow,
@@ -154,7 +154,26 @@ PACKET_TYPE  = {
 	"RESERVED_2"                     : 0b11110000
 }
 
-def getType(val):
+PACKET_SIZE = {
+	PACKET_TYPE["ROBOT_COMMAND"] 			: 10,
+	PACKET_TYPE["ROBOT_FEEDBACK"] 			: 9,
+	PACKET_TYPE["ROBOT_SET_SETTINGS"] 		: 0,
+	PACKET_TYPE["ROBOT_GET_SETTINGS"] 		: 0,
+	PACKET_TYPE["ROBOT_SETTINGS"] 			: 0,
+	PACKET_TYPE["ROBOT_ALERT"] 				: 0,
+
+	PACKET_TYPE["BASESTATION_SET_SETTINGS"] : 0,
+	PACKET_TYPE["BASESTATION_GET_SETTINGS"] : 0,
+	PACKET_TYPE["BASESTATION_SETTINGS"] 	: 0,
+	PACKET_TYPE["BASESTATION_GET_STATISTICS"] : 0 ,
+	PACKET_TYPE["BASESTATION_STATISTICS"] 	: 33,
+	PACKET_TYPE["BASESTATION_ALERT"] 		: 0,
+
+	PACKET_TYPE["RESERVED_1"] 				: 0,
+	PACKET_TYPE["RESERVED_2"] 				: 0
+}
+
+def getPacketType(val):
 	for k in PACKET_TYPE.keys():
 		if PACKET_TYPE[k] == val:
 			return k

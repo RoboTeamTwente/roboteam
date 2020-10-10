@@ -6,6 +6,7 @@
 
 #include "BaseTypes.h"
 #include "BasestationStatistics.h"
+#include "RobotCommand.h"
 
 volatile int I1 = 0;
 volatile int cFeedback = 0;
@@ -49,7 +50,7 @@ void loop(){
         msgBuff[id].packetsSent++;
         SX_TX->SX_settings->syncWords[0] = robot_syncWord[id];
         setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-        SendPacket(SX_TX, msgBuff[id].command+2, PACKET_SIZE_ROBOT_COMMAND-2);
+        SendPacket(SX_TX, msgBuff[id].command.payload+2, PACKET_SIZE_ROBOT_COMMAND-2);
         msgBuff[id].isNewCommand = false;
       }
     }
@@ -67,14 +68,14 @@ void loop(){
 
 bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
   if (Len == PACKET_SIZE_ROBOT_COMMAND) {
-    // determine the robot id
-    uint8_t usbDataRobotId = Buf[1];
-
+    // interpret buffer as a robotCommand
+    robotCommand *rc;
+    rc = (robotCommand *)Buf;
     // check if the usb data robot id is legal
-    if (usbDataRobotId < 16) {
+    if (rc->id < 16) {
       // put the message in the buffer
-      memcpy(msgBuff[usbDataRobotId].command, Buf, PACKET_SIZE_ROBOT_COMMAND);
-      msgBuff[usbDataRobotId].isNewCommand = true;
+      memcpy(msgBuff[rc->id].command.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
+      msgBuff[rc->id].isNewCommand = true;
       return true;
     }
   }

@@ -4,6 +4,9 @@
 #include "TextOut.h"
 #include "msg_buff.h"
 
+#include "BaseTypes.h"
+#include "BasestationStatistics.h"
+
 volatile int I1 = 0;
 volatile int cFeedback = 0;
 volatile int Iusb = 0;

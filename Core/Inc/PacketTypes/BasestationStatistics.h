@@ -11,7 +11,7 @@ typedef union _basestationStatistics{
     struct{
         uint8_t header:8;
         struct{
-            uint8_t packetRatio:8;
+            uint8_t packetsReceived:8;
             uint8_t packetsSent:8;
         } robot[16];
     };

@@ -85,18 +85,18 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
 }
 
 bool handleStatistics(void){
-  uint8_t msg[PACKET_SIZE_BASESTATION_STATISTICS];
-  uint8_t *msgPtr = msg;
-  *msgPtr++ = PACKET_TYPE_BASESTATION_STATISTICS; 
+  //
+  basestationStatistics bs = {0};
+  bs.header = PACKET_TYPE_BASESTATION_STATISTICS;
   for(int ID = 0; ID < 16; ID++){
     // Send ratio + packets sent (clipped) for each robot
-    *msgPtr++ = (msgBuff[ID].packetsReceived*100)/msgBuff[ID].packetsSent;
-    *msgPtr++ = msgBuff[ID].packetsSent >= 255 ? 255 : msgBuff[ID].packetsSent;
+    bs.robot[ID].packetsReceived  = msgBuff[ID].packetsReceived >= 255 ? 255 : msgBuff[ID].packetsReceived;
+    bs.robot[ID].packetsSent      = msgBuff[ID].packetsSent     >= 255 ? 255 : msgBuff[ID].packetsSent;
     // Reset statistics
     msgBuff[ID].packetsSent = 0;
     msgBuff[ID].packetsReceived = 0;
   }
-  HexOut(msg, PACKET_SIZE_BASESTATION_STATISTICS);
+  HexOut(bs.payload, PACKET_SIZE_BASESTATION_STATISTICS);
   return true;
 }
 /**

@@ -65,8 +65,8 @@ add_library(roboteam_utils STATIC
         include/roboteam_utils/Grid.h
         src/Shadow.cpp
         include/roboteam_utils/Shadow.h
+        include/roboteam_utils/containers/circular_buffer.h
         )
-
 
 
 target_include_directories(roboteam_utils
@@ -115,6 +115,7 @@ add_executable(utils_tests
         test/GridTest.cpp
         test/StaticVectorTest.cpp
         test/ShadowTest.cpp
+        test/CircularBufferTest.cpp
         test/PubSubTest.cpp
         )
 

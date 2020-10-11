@@ -59,7 +59,7 @@ void loop(){
   /* Send any new feedback packets */
   for(int id = 0; id < 16; id++){
       if(msgBuff[id].isNewFeedback){
-          HexOut(msgBuff[id].feedback, PACKET_SIZE_ROBOT_FEEDBACK);
+          HexOut(msgBuff[id].feedback.payload, PACKET_SIZE_ROBOT_FEEDBACK);
           msgBuff[id].isNewFeedback = false;
           msgBuff[id].packetsReceived++;
       }

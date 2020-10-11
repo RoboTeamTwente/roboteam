@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "BaseTypes.h"
 #include "RobotCommand.h"
+#include "RobotFeedback.h"
 
 bool isTransmitting;
 
@@ -16,7 +17,7 @@ bool isTransmitting;
 struct msgsBufferStatus {
 	robotCommand command;
 	bool isNewCommand;
-	uint8_t feedback[PACKET_SIZE_ROBOT_FEEDBACK];
+	robotFeedback feedback;
 	bool isNewFeedback;
 	uint8_t packetsSent;
 	uint8_t packetsReceived;

@@ -28,12 +28,10 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.016 < time.time() - lastWritten):
+			if(0.1 < time.time() - lastWritten):
 				sentCounter += 1
-				if sentCounter % 20 == 0:
-					ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
-				else:
-					ser.write(p.getBytes())
+				if sentCounter % 10 == 0:	ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
+				else:						ser.write(p.getBytes())
 				lastWritten = time.time()
 
 			packet_type = ser.read(1)
@@ -44,28 +42,18 @@ while True:
 			response = ser.read(packet_size-1)
 
 			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["ROBOT_FEEDBACK"]:
-
-				x = ba()		
-				angle = 0
-
-				x.frombytes(packet_type + response)
-				u = utils.Feedback(x)
-
-				# print("Xsens=%d"%u.xSensCalibrated, "Angle=%d"%u.angle, len(response), response)
-				# print(utils.Feedback(x))
+				feedback = ba()		
+				feedback.frombytes(packet_type + response)
+				u = utils.Feedback(feedback)
+				print(utils.Feedback(feedback))
 				continue
 				
-			
 			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["BASESTATION_STATISTICS"]:
-				print("BASESTATION_STATISTICS received")
 				string = ""
-
 				for i in range(16):
 					string += " | %d %d %d" % (i, response[i*2], response[i*2+1])
 				print(string)
-
 				continue
-
 
 			if 0 < len(response):
 				print("Received something..", packet_type[0], packet_size)

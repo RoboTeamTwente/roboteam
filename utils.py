@@ -1,10 +1,14 @@
+import os
 import time
 import serial
 from bitarray import bitarray
 from bitarray.util import int2ba, ba2int
 
-def openPort(port="/dev/ttyACM1", suppressError = False, timeout=None):
+def openPort(port=None, suppressError = False, timeout=None):
 	ser = None
+	if port is None:
+		return None
+
 	try:
 		ser = serial.Serial(
 		    port=port,
@@ -23,15 +27,32 @@ def openPort(port="/dev/ttyACM1", suppressError = False, timeout=None):
 def openContinuous(*args, **kwargs):
 	ser = None
 	i = -1
+
 	while ser is None:
-		ser = openPort(**kwargs, suppressError = True)	
-		
 		i = (i + 1) % 93
-		print("\r[openContinuous] %s " % chr(33 + i), end="")
+
+		if "port" not in kwargs or kwargs["port"] is None:
+			kwargs["port"] = getBasestationPath()
+		
+		if kwargs["port"] is None:
+			print("\r[openContinuous] Basestation path not found %s " % chr(33 + i), end="")
+		else:
+			ser = openPort(**kwargs, suppressError = True)	
+			print("\r[openContinuous] %s " % chr(33 + i), end="")
 		
 		time.sleep(0.1)
 	print("\r[openContinuous] Basestation opened")
 	return ser
+
+def getBasestationPath():
+	try:
+		usb_devices = os.listdir("/dev/serial/by-id")
+		basestations = [device for device in usb_devices if device.startswith("usb-RTT_BaseStation")]
+		if 0 < len(basestations):
+			return os.path.join("/dev/serial/by-id", basestations[0])
+		return None
+	except Exception:
+		return None
 
 class RobotCommand:
 

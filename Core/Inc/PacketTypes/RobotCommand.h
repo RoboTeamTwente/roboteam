@@ -6,100 +6,89 @@
 
 #include "BaseTypes.h"
 
-typedef union _robotCommand{
-    uint8_t payload[10];
-    struct __attribute__((__packed__)){     // Description                      Encoded range               Unit        Value Range
-        PACKET_TYPE header          :8;     // packet type                      PACKET_TYPE_ROBOT_COMMAND   -           -
-        uint8_t     id              :8;     // destination robot ID             [0, 15]                     -           [0-15]
-        uint16_t    rho             :11;    // reference velocity amplitude     [0, 2047]                   0.004m/s    [0, 8.188]
-        int16_t     theta           :11;    // reference velocity angle         [-1024, 1023]               0.00307rad  [-pi, pi>
-        int16_t     angularVelocity :10;    // reference rotation speed         [-512, 511]                 0.098rad/s  [-16pi, 16pi>
-        uint8_t     power           :8;     // Kick/Chip power                  [0, 255]                    0.39%       [0, 100]%
-        bool        doKick          :1;     // Kick (Ballsensor)                [0, 1]                      -           {false, true}
-        bool        doChip          :1;     // Chip (Ballsensor)                [0, 1]                      -           {false, true}
-        bool        force           :1;     // Force a Kick/Chip                [0, 1]                      -           {false, true}
-        bool        debugInfo       :1;     // Request debug info (deprecated)  [0, 1]                      -           {false, true}
-        bool        useCamInfo      :1;     // Use cam info for alignment       [0, 1]                      -           {false, true}
-        uint8_t     geneva          :3;     // geneva angles (deprecated)       [0,7]                       -           [-2, 2]
-        uint8_t     dribblerSpeed   :5;     // dribbler rotation speed          [0, 31]                     3.125%      [0, 100]%
-        int16_t     camRotation     :11;    // Orientation seen by camera       [-1024, 1023]               0.00307rad  [-pi, pi>
-    };
-} robotCommand;
+typedef struct _RobotCommandPayload {
+    uint8_t payload[PACKET_SIZE_ROBOT_COMMAND];
+} RobotCommandPayload;
 
-// ----------------------------------------------------- Test Code to see how the data is packed  -----------------------------------------------------
+typedef struct _RobotCommand{
+    uint8_t header;
+    uint8_t id;
+    uint16_t rho;
+    int16_t theta;
+    int16_t angularVelocity;
+    uint8_t power;
+    bool doKick;
+    bool doChip;
+    bool force;
+    bool debugInfo;
+    bool useCamInfo;
+    uint8_t geneva;
+    uint8_t dribblerSpeed;
+    int16_t camRotation;
+} RobotCommand;
 
-// #define BYTE_TO_BIN_PAT "%c%c%c%c%c%c%c%c "
-// #define BYTE_TO_BIN(byte) \
-//     (byte & 0x01 ? '1' : '0'), \
-//     (byte & 0x02 ? '1' : '0'), \
-//     (byte & 0x04 ? '1' : '0'), \
-//     (byte & 0x08 ? '1' : '0'), \
-//     (byte & 0x10 ? '1' : '0'), \
-//     (byte & 0x20 ? '1' : '0'), \
-//     (byte & 0x40 ? '1' : '0'), \
-//     (byte & 0x80 ? '1' : '0')
+inline uint8_t RobotCommand_getHeader(RobotCommandPayload *rcp){
+    return rcp->payload[0];
+};
+inline uint8_t RobotCommand_getId(RobotCommandPayload *rcp){
+    return rcp->payload[1];
+};
+inline uint16_t RobotCommand_getRho(RobotCommandPayload *rcp){
+    return ((rcp->payload[2] & 0b11111111) << 3)
+         | ((rcp->payload[3] & 0b11100000) >> 5);
+};
+inline int16_t RobotCommand_getTheta(RobotCommandPayload *rcp){
+    return ((rcp->payload[3] & 0b00011111) << 6)
+         | ((rcp->payload[4] & 0b11111100) >> 2);
+};
+inline int16_t RobotCommand_getAngularVelocity(RobotCommandPayload *rcp){
+    return ((rcp->payload[4] & 0b00000011) << 8)
+         | ((rcp->payload[5] & 0b11111111) >> 0);
+};
+inline uint8_t RobotCommand_getPower(RobotCommandPayload *rcp){
+    return rcp->payload[6];
+};
+inline bool RobotCommand_getDoKick(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b10000000;
+};
+inline bool RobotCommand_getDoChip(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b01000000;
+};
+inline bool RobotCommand_getForce(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b00100000;
+};
+inline bool RobotCommand_getDebugInfo(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b00010000;
+};
+inline bool RobotCommand_getUseCamInfo(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b00001000;
+};
+inline uint8_t RobotCommand_getGeneva(RobotCommandPayload *rcp){
+    return rcp->payload[7] & 0b00000111;
+};
+inline uint8_t RobotCommand_getDribblerSpeed(RobotCommandPayload *rcp){
+    return (rcp->payload[8] & 0b11111000) >> 3;
+};
+inline int16_t RobotCommand_getCamRotation(RobotCommandPayload *rcp){
+    return ((rcp->payload[8] & 0b00000111) << 8)
+         | ((rcp->payload[9] & 0b11111111) >> 0);
+};
 
-// robotCommand rc = {0};
-// void printPayload(void){
-//     for(int i=0; i<9; i++){
-//         printf(BYTE_TO_BIN_PAT, BYTE_TO_BIN(rc.payload[i]));
-//     }
-//     printf("\n");
-// }
-
-// rc.header = 0b01100110;
-// printPayload();
-
-// rc.header = 0;
-// rc.id = 15;
-// printPayload();
-
-// rc.id = 0;
-// rc.rho = 2047;
-// printPayload();
-
-// rc.rho = 0;
-// rc.theta = -1;
-// printPayload();
-
-// rc.theta = 0;
-// rc.angularVelocity = -1;
-// printPayload();
-
-// rc.angularVelocity = 0;
-// rc.power = 255;
-// printPayload();
-
-// rc.power = 0;
-// rc.doKick = true;
-// printPayload();
-
-// rc.doKick = false;
-// rc.doChip = true;
-// printPayload();
-
-// rc.doChip = false;
-// rc.force = true;
-// printPayload();
-
-// rc.force = false;
-// rc.debugInfo = true;
-// printPayload();
-
-// rc.debugInfo = false;
-// rc.useCamInfo = true;
-// printPayload();
-
-// rc.useCamInfo = false;
-// rc.geneva = -1;
-// printPayload();
-
-// rc.geneva = 0;
-// rc.dribblerSpeed = 31;
-// printPayload();
-
-// rc.dribblerSpeed = 0;
-// rc.camRotation = -1;
-// printPayload();
+static inline void fillRobotCommand(RobotCommand *command, RobotCommandPayload *rcp){
+    command->header = RobotCommand_getHeader(rcp);
+    command->id = RobotCommand_getId(rcp);
+    command->rho = RobotCommand_getRho(rcp);
+    command->theta = RobotCommand_getTheta(rcp);
+    command->angularVelocity = RobotCommand_getAngularVelocity(rcp);
+    command->power = RobotCommand_getPower(rcp);
+    command->doKick = RobotCommand_getDoKick(rcp);
+    command->doChip = RobotCommand_getDoChip(rcp);
+    command->force = RobotCommand_getForce(rcp);
+    command->debugInfo = RobotCommand_getDebugInfo(rcp);
+    command->useCamInfo = RobotCommand_getUseCamInfo(rcp);
+    command->geneva = RobotCommand_getGeneva(rcp);
+    command->dribblerSpeed = RobotCommand_getDribblerSpeed(rcp);
+    command->camRotation = RobotCommand_getCamRotation(rcp);
+}
 
 #endif /*__ROBOT_COMMAND_H*/

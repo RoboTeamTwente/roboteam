@@ -15,9 +15,9 @@ bool isTransmitting;
  *  when it is send isNew should be set to false.
  */
 struct msgsBufferStatus {
-	robotCommand command;
+	RobotCommandPayload command;
 	bool isNewCommand;
-	robotFeedback feedback;
+	RobotFeedbackPayload feedback;
 	bool isNewFeedback;
 	uint8_t packetsSent;
 	uint8_t packetsReceived;

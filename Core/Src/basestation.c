@@ -58,35 +58,48 @@ void loop(){
   
   /* Send any new feedback packets */
   for(int id = 0; id < 16; id++){
-      if(msgBuff[id].isNewFeedback){
-          HexOut(msgBuff[id].feedback.payload, PACKET_SIZE_ROBOT_FEEDBACK);
-          msgBuff[id].isNewFeedback = false;
-          msgBuff[id].packetsReceived++;
-      }
+    if(msgBuff[id].isNewFeedback){
+        HexOut(msgBuff[id].feedback.payload, PACKET_SIZE_ROBOT_FEEDBACK);
+        msgBuff[id].isNewFeedback = false;
+        msgBuff[id].packetsReceived++;
+    }
+    if(id == 14){
+      toggle_pin(LD_LED2);
+    }
   }
 }
 
+/**
+ * @brief Receives a buffer which is assumed to be holding a RobotCommand packet. 
+ * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * the corresponding robot.
+ * 
+ * @param Buf Pointer to the buffer that holds the packet
+ * @param Len Length of the packet
+ * @return true if the packet has been handled succesfully
+ * @return false if there was something wrong with the packet
+ */
 bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
-  if (Len == PACKET_SIZE_ROBOT_COMMAND) {
-    // interpret buffer as a robotCommand
-    robotCommand *rc;
-    rc = (robotCommand *)Buf;
-    // check if the usb data robot id is legal
-    if (rc->id < 16) {
-      // put the message in the buffer
-      memcpy(msgBuff[rc->id].command.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
-      msgBuff[rc->id].isNewCommand = true;
-      return true;
-    }
-  }
-  else {
-    toggle_pin(LD_2);
-  }
-  return false;
+  // Check if the packet has the correct size
+  if(Len != PACKET_SIZE_ROBOT_COMMAND)
+    return false;
+
+  // Interpret buffer as a RobotCommandPayload
+  RobotCommandPayload *rc = (RobotCommandPayload*) Buf;
+
+  // Check if the robotId is valid
+  uint8_t robotId = RobotCommand_getId(rc);
+  if (16 <= robotId)
+    return false;
+    
+  // Store the message in the buffer. Set flag to be sent to the robot
+  memcpy(msgBuff[robotId].command.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
+  msgBuff[robotId].isNewCommand = true;
+  
+  return true;
 }
 
 bool handleStatistics(void){
-  //
   basestationStatistics bs = {0};
   bs.header = PACKET_TYPE_BASESTATION_STATISTICS;
   for(int ID = 0; ID < 16; ID++){
@@ -100,6 +113,7 @@ bool handleStatistics(void){
   HexOut(bs.payload, PACKET_SIZE_BASESTATION_STATISTICS);
   return true;
 }
+
 /**
  * @brief 
  * 

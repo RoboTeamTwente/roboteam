@@ -154,7 +154,7 @@ void Wireless_DMA_Handler(SX1280* SX){
     	SX->expect_packet = false;
     	// reset RX if not in continuous RX mode!
     	uint8_t id = SX->RXbuf[3];
-        msgBuff[id].feedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
+        msgBuff[id].feedback.payload[0] = PACKET_TYPE_ROBOT_FEEDBACK;
         memcpy(msgBuff[id].feedback.payload+1, SX->RXbuf+3, PACKET_SIZE_ROBOT_FEEDBACK-1);
         msgBuff[id].isNewFeedback = true;
     }

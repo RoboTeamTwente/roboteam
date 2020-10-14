@@ -3,6 +3,7 @@
 #include "Wireless.h"
 #include "TextOut.h"
 #include "msg_buff.h"
+#include "FT812Q.h"
 
 #include "BaseTypes.h"
 #include "BasestationStatistics.h"
@@ -36,7 +37,10 @@ void init(){
 
     // TextOut("[basestation][init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
-    
+
+    // display_Init();
+    // drawBasestation(true);
+
     // TextOut("[basestation][init] Initializion complete\n");
 }
 
@@ -62,6 +66,7 @@ void loop(){
         HexOut(msgBuff[id].feedback.payload, PACKET_SIZE_ROBOT_FEEDBACK);
         msgBuff[id].isNewFeedback = false;
         msgBuff[id].packetsReceived++;
+        // drawRobotInfo(14, true);
     }
     if(id == 14){
       toggle_pin(LD_LED2);

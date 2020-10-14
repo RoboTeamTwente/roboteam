@@ -28,7 +28,7 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.1 < time.time() - lastWritten):
+			if(0.02 < time.time() - lastWritten):
 				sentCounter += 1
 				if sentCounter % 10 == 0:	ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
 				else:						ser.write(p.getBytes())

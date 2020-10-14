@@ -21,15 +21,15 @@ namespace rtt {
          */
         Grid(double offSetX, double offSetY, double regionWidth, double regionHeight, int numStepsX, int numStepsY);
 
-        double getOffSetX() const;
-        double getOffSetY() const;
-        double getRegionWidth() const;
-        double getRegionHeight() const;
-        int getNumStepsX() const;
-        int getNumStepsY() const;
-        double getStepSizeX() const;
-        double getStepSizeY() const;
-        const std::vector<std::vector<Vector2>> &getPoints() const;
+        [[nodiscard]] double getOffSetX() const;
+        [[nodiscard]] double getOffSetY() const;
+        [[nodiscard]] double getRegionWidth() const;
+        [[nodiscard]] double getRegionHeight() const;
+        [[nodiscard]] int getNumStepsX() const;
+        [[nodiscard]] int getNumStepsY() const;
+        [[nodiscard]] double getStepSizeX() const;
+        [[nodiscard]] double getStepSizeY() const;
+        [[nodiscard]] const std::vector<std::vector<Vector2>> &getPoints() const;
 
     private:
         /**

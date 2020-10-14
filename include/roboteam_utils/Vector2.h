@@ -229,7 +229,7 @@ class Vector2 {
         /**
          * \brief Set the values of this vector to the ones in the given protobuf vector.
          */
-        void operator=(const proto::Vector2f &msg);
+        Vector2& operator=(const proto::Vector2f &msg);
 
         /**
          * \brief Casts or implicitly converts this vector to a ROS one.

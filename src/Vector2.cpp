@@ -204,9 +204,10 @@ Vector2 Vector2::operator/(const double &scalar) const {
     return {x/scalar, y/scalar};
 }
 
-void Vector2::operator=(const proto::Vector2f &msg) {
+Vector2& Vector2::operator=(const proto::Vector2f &msg) {
     x = msg.x();
     y = msg.y();
+    return *this;
 }
 
 Vector2::operator proto::Vector2f() const {

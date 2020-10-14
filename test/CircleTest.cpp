@@ -105,20 +105,6 @@ TEST(CircleTests, doesIntersectOrContainRectangle) {
     EXPECT_FALSE(circle.doesIntersectOrContain2(rectOutside));
 }
 
-TEST(CircleTests, rectanglePerformance1) {
-    rtt::Circle circle({0, 0}, 1);
-    rtt::Rectangle rectThrough({2, 2}, {0, 0});
-    for (int i = 0; i < 1e7; i++)
-        // Had a warning: ignoring return value of nodiscard.
-        (void)circle.doesIntersectOrContain(rectThrough);
-}
-
-TEST(CircleTests, rectanglePerformance2) {
-    rtt::Circle circle({0, 0}, 1);
-    rtt::Rectangle rectThrough({2, 2}, {0, 0});
-    for (int i = 0; i < 1e7; i++) (void)circle.doesIntersectOrContain2(rectThrough);
-}
-
 TEST(CircleTests, projectTest) {
     rtt::Circle circle({0, 0}, 1);
     // Inside the circle

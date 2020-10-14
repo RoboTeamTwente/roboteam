@@ -6,8 +6,6 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 include(cotire)
 include(ccache)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
 add_subdirectory(include/roboteam_utils/networking)
 
 add_library(roboteam_utils STATIC
@@ -29,19 +27,14 @@ add_library(roboteam_utils STATIC
         #        include/roboteam_utils/Cone.h
         src/normalize.cpp
         include/roboteam_utils/normalize.h
-        # src/Clip.cpp
         include/roboteam_utils/Hungarian.h
         src/Hungarian.cpp
-        # include/roboteam_utils/Clip.h
-        # src/Optimization.cpp
-        # include/roboteam_utils/Optimization.h
         src/Arc.cpp
         include/roboteam_utils/Arc.h
         src/Timer.cpp
         include/roboteam_utils/Timer.h
         include/roboteam_utils/type_traits.h
         #include/roboteam_utils/BiMap.h
-        #include/roboteam_utils/Graph.h
         include/roboteam_utils/Definitions.h
         include/roboteam_utils/Statistics.h
         include/roboteam_utils/Print.h
@@ -83,8 +76,9 @@ target_link_libraries(roboteam_utils
 target_compile_options(roboteam_utils PRIVATE
         --std=c++17
         -Wall
-#        -Werror
         -Wextra
+        -pedantic
+        -Werror
         -Wno-unused-function
         -Wno-comment
         -Wsign-compare
@@ -95,13 +89,11 @@ add_executable(utils_tests
         test/AngleTest.cpp
         test/ArcTest.cpp
         #test/BiMapTest.cpp
-        #test/GraphTest.cpp
         test/LineTest.cpp
         test/LineIntersectionTest.cpp
         test/LineProjectionTest.cpp
         test/CircleTest.cpp
         test/normaliseTest.cpp
-        # test/OptimizationTest.cpp
         test/PolygonTest.cpp
         test/PositionTest.cpp
         test/Vector2Test.cpp

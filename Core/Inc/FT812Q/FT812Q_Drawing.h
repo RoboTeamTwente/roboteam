@@ -17,6 +17,7 @@
 /* FUNCTIONS */
 void drawBasestation(bool USBstatus);
 uint32_t drawRobotInfo(uint8_t id, bool USBstatus);
+uint32_t drawBrightnessSlider(TouchState *touchState);
 uint32_t drawString(uint32_t addr, uint16_t x, uint16_t y, uint8_t handle, char* string, uint8_t color[]);
 uint32_t drawRect(uint32_t addr, uint16_t begin[], uint16_t end[], uint8_t color[], uint8_t width, uint8_t option); // 0 = filled, 1 = lines
 uint32_t drawLine(uint32_t addr, uint16_t xb, uint16_t yb, uint16_t xe, uint16_t ye, uint8_t color[], uint16_t width);
@@ -38,7 +39,7 @@ typedef struct drawingData {
 	bool robotStatus;
 	int TX_Packets;
 	int RX_Packets;
-}drawingData;
+} drawingData;
 
 drawingData robots[16];
 

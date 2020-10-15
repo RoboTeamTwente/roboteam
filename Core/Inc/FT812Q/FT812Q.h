@@ -12,7 +12,6 @@
 #include "stm32f7xx_hal_def.h"
 #include "stm32f7xx_hal_qspi.h"
 #include "FT812Q_Constants.h"
-#include "FT812Q_Drawing.h"
 #include "TextOut/TextOut.h"
 #include <stdbool.h>
 
@@ -26,7 +25,7 @@ void 		writeDisplay		(uint32_t address, uint32_t size, uint8_t* data);
 uint8_t*	readDisplay			(uint32_t address, uint32_t size, uint8_t* data);
 
 /* TOUCH */
-uint16_t* 	readTouch			();
+void	 	readTouch			(uint16_t* touchPoint);
 uint8_t		isInArea			(uint16_t* point);
 
 /* FUNCTIONS FOR DRAWING */
@@ -41,22 +40,23 @@ uint8_t* 	POINT_DATA			(uint16_t x, uint16_t y); // Construct data for a point a
 uint8_t* 	LETTER_DATA			(uint16_t x, uint16_t y, uint8_t font, uint8_t letter); // Construct data for a letter at (x,y)
 
 /* STATE MACHINE */
-enum states {
-    INIT,
-    MAIN,
-	READ_TOUCH_ID,
-	READ_TOUCH_RETURN,
-    ROBOT,
-}state;
+typedef enum _DISPLAY_STATES {
+	DISPLAY_STATE_DEINITIALIZED,
+	DISPLAY_STATE_INITIALIZED,
+    DISPLAY_STATE_MAIN,
+    DISPLAY_STATE_ROBOT,
+} DISPLAY_STATES;
 
-#define ROBOT_ID_MAX	15
-#define RETURN_VALUE	100
-#define	NO_TOUCH		200
+typedef enum _TOUCH_STATES {
+	TOUCH_STATE_RELEASED,
+	TOUCH_STATE_PRESSED
+} TOUCH_STATES;
 
-typedef struct testStruct {
-	uint8_t robotID;
-	bool USBstatus;
-}testStruct;
-testStruct test2[2];
+typedef struct _TouchState {
+	TOUCH_STATES state;
+	uint16_t x;
+	uint8_t y;
+	bool handled;
+} TouchState;
 
 #endif /* FT812Q_FT812Q_H_ */

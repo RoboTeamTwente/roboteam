@@ -9,7 +9,7 @@
 #define TEXTOUT_H_
 
 #include "usbd_cdc_if.h"
-extern char smallStrBuffer[1024];
+void LOG(char *message);
 void TextOut(char *str);
 void HexOut(uint8_t*, uint8_t);
 

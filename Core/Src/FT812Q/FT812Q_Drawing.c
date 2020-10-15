@@ -147,6 +147,40 @@ uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
 	return nxt;
 }
 
+uint32_t drawBrightnessSlider(TouchState *touchState){
+	if(touchState->state != TOUCH_STATE_PRESSED)
+		return 0;
+
+	/* INITIAL SETTINGS */
+	nxt = writeDispBuf	(0,		0x4, 	CLEAR_COLOR_RGB(40, 0, 0));
+	nxt = writeDispBuf	(nxt,  	0x4, 	CLEAR(1, 1, 1));
+	nxt = writeDispBuf	(nxt,	0x4,	VERTEX_FORMAT(0));
+
+	// Draw large bar
+	uint16_t y = YRES/2-5;
+	uint16_t begin[] 	= {40, y};
+	uint16_t end[] 		= {XRES-40, y};
+	nxt = drawRect(nxt, begin, end, WHITE, 2, 1);
+
+	// Draw slider square
+	uint16_t px = touchState->x;
+	if(px < 40) px = 40;
+	if(XRES-40 < px) px = XRES-40;
+	begin[0] = px-5; begin[1] = y-10;
+	end[0]   = px+5; end[1] = y+10;
+	nxt = drawRect(nxt, begin, end, WHITE, 2, 1);
+
+	/* DRAW */
+	nxt = writeDispBuf	(nxt, 	0x4, 	DISPLAY);
+	writeDisplay(RAM_DL, 		nxt, 	DispBuf);
+	writeDisplay(REG_DLSWAP, 	0x1, 	DLSWAP); // Display list swap
+
+	uint8_t pwm = 128 * (((float)px-40) / ((float)XRES-80));
+	writeDisplay(REG_PWM_DUTY, 0x1,	&pwm);
+
+	return nxt;
+}
+
 /* SUPPORTING FUNCTIONS */
 uint32_t drawString(uint32_t addr, uint16_t x, uint16_t y, uint8_t handle, char* string, uint8_t color[]){
 	addr = writeDispBuf(addr,  	0x4, 	COLOR_RGB(color[0], color[1], color[2]));

@@ -9,7 +9,6 @@
 #include "string.h"
 
 uint8_t data[4]; // used by functions
-uint16_t touchPoint[2];
 
 /* FUNCTIONS */
 void display_Init(){
@@ -115,49 +114,49 @@ uint8_t* readDisplay(uint32_t address, uint32_t size, uint8_t* data){
 }
 
 /* TOUCH */
-uint16_t* readTouch(){
+void readTouch(uint16_t* touchPoint){
 	uint8_t* data = readDisplay(REG_TOUCH_SCREEN_XY, 0x4, getData4);
 	int16_t touch_x = *(uint16_t*)(data+2);
 	int16_t touch_y = *(uint16_t*)(data);
 	touch_x = touch_x * (float)(480/(float)1023); // transform to x = 0:480
 	touch_y = touch_y * -(float)(272/(float)1023) + 272; // transform to y = 0:272
-	touchPoint[0] = touch_x; touchPoint[1] = touch_y;
-	return touchPoint;
+	touchPoint[0] = touch_x; 
+	touchPoint[1] = touch_y;
 }
 
 uint8_t	isInArea(uint16_t* point){
 	uint8_t result;
 
-	switch(state){
-	case READ_TOUCH_ID:
-		if ((touchPoint[0] < XRES && touchPoint[0] > 0) && (touchPoint[1] < YRES && touchPoint[1] > 50)){
-			uint16_t spacingX = robots[0].endPoint[0] - robots[0].beginPoint[0];
-			uint16_t spacingY = robots[0].endPoint[1] - robots[0].beginPoint[1];
-			int column = touchPoint[0]/spacingX;
-			int row = (touchPoint[1] - 31)/spacingY;
-			uint8_t id = 4*row + column;
-			if (robots[id].robotStatus == true){
-				result = (row < 0) ? NO_TOUCH : (4*row + column); // result = robot ID
-				break;
-			} else {
-				result = NO_TOUCH;
-				break;
-			}
-		} else {
-			result = NO_TOUCH;
-			break;
-		}
-	case READ_TOUCH_RETURN:
-		if ((touchPoint[0] < 60 && touchPoint[0] > 0) && (touchPoint[1] < 60 && touchPoint[1] > 0)) {
-			result = RETURN_VALUE;
-			break;
-		} else {
-			result = NO_TOUCH;
-			break;
-		}
-	default:
-		result = NO_TOUCH;
-	}
+	// switch(state){
+	// case READ_TOUCH_ID:
+	// 	if ((touchPoint[0] < XRES && touchPoint[0] > 0) && (touchPoint[1] < YRES && touchPoint[1] > 50)){
+	// 		uint16_t spacingX = robots[0].endPoint[0] - robots[0].beginPoint[0];
+	// 		uint16_t spacingY = robots[0].endPoint[1] - robots[0].beginPoint[1];
+	// 		int column = touchPoint[0]/spacingX;
+	// 		int row = (touchPoint[1] - 31)/spacingY;
+	// 		uint8_t id = 4*row + column;
+	// 		if (robots[id].robotStatus == true){
+	// 			result = (row < 0) ? NO_TOUCH : (4*row + column); // result = robot ID
+	// 			break;
+	// 		} else {
+	// 			result = NO_TOUCH;
+	// 			break;
+	// 		}
+	// 	} else {
+	// 		result = NO_TOUCH;
+	// 		break;
+	// 	}
+	// case READ_TOUCH_RETURN:
+	// 	if ((touchPoint[0] < 60 && touchPoint[0] > 0) && (touchPoint[1] < 60 && touchPoint[1] > 0)) {
+	// 		result = RETURN_VALUE;
+	// 		break;
+	// 	} else {
+	// 		result = NO_TOUCH;
+	// 		break;
+	// 	}
+	// default:
+	// 	result = NO_TOUCH;
+	// }
 	return result;
 }
 

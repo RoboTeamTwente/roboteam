@@ -28,9 +28,9 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.02 < time.time() - lastWritten):
+			if(0.1 < time.time() - lastWritten):
 				sentCounter += 1
-				if sentCounter % 10 == 0:	ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
+				if sentCounter % 50 == 0:	ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
 				else:						ser.write(p.getBytes())
 				lastWritten = time.time()
 
@@ -38,14 +38,22 @@ while True:
 			if len(packet_type) == 0:
 				continue
 
+			# Read packet size
 			packet_size = utils.PACKET_SIZE[packet_type[0]]
-			response = ser.read(packet_size-1)
+			# Read packet
+			response = None
+			if packet_type[0] == utils.PACKET_TYPE["BASESTATION_LOG"]:
+				response = ser.readline()
+			else:
+				response = ser.read(packet_size-1)
 
+			# Decode packet
+			
 			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["ROBOT_FEEDBACK"]:
 				feedback = ba()		
 				feedback.frombytes(packet_type + response)
 				u = utils.Feedback(feedback)
-				print(utils.Feedback(feedback))
+				# print(utils.Feedback(feedback))
 				continue
 				
 			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["BASESTATION_STATISTICS"]:
@@ -53,6 +61,10 @@ while True:
 				for i in range(16):
 					string += " | %d %d %d" % (i, response[i*2], response[i*2+1])
 				print(string)
+				continue
+
+			if 0 < len(response) and packet_type[0] == utils.PACKET_TYPE["BASESTATION_LOG"]:
+				print("[LOG]" + response.decode(), end="")
 				continue
 
 			if 0 < len(response):

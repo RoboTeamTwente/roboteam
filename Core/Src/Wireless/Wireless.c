@@ -17,8 +17,13 @@ static bool isWirelessConnected = false; // boolean to check whether we have a w
 static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback
 
 // make buffers
-volatile uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
-volatile uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
+
+SX1280 SX1280_struct;
+SX1280* SX; // pointer to the datastruct
+
+bool wirelessFeedback; // boolean to enable or disable wireless feedback
 
 // init structs
 SX1280_Settings set = {
@@ -164,15 +169,12 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     }
 };
 
-void Wireless_DMA_Handler(SX1280* SX, uint8_t* output, ReceivedData* receivedData){
+void Wireless_DMA_Handler(SX1280* SX, uint8_t output[]){
 	DMA_Callback(SX);
 	if (SX->expect_packet) {
 		// was expecting a packet, process it
 		SX->expect_packet = false;
-
-		memcpy(PC_to_Bot, SX->RXbuf+3, ROBOPKTLEN);
-		packetToRoboData(PC_to_Bot, receivedData);
-
+		memcpy(output, SX->RXbuf+3, ROBOPKTLEN);
 	} else {
 		// was not expecting a packet, go to Rx
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

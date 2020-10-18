@@ -20,7 +20,7 @@ volatile typedef struct{
 
 Position ballPosition; // system wide struct for ball position
 
-volatile uint8_t data[MAX_DATA_SIZE] __attribute__((aligned(16))); // byte array for received messages
+uint8_t data[MAX_DATA_SIZE] __attribute__((aligned(16))); // byte array for received messages
 
 extern uint8_t ball_debug; // enable ball speed print statements thru Putty ("toggle bs" command)
 

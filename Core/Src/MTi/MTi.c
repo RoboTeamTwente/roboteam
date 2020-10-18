@@ -48,7 +48,7 @@ static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID);
 
 // Calibration functions
 static Xsens_Status MTi_NoRotation(MTi_data* MTi, uint16_t seconds);
-static Xsens_Status MTi_SetFilterProfile(MTi_data* MTi, uint8_t filter);
+static Xsens_Status MTi_SetFilterProfile(MTi_data* MTi, enum XsFilterProfile filter);
 static Xsens_Status MTi_UseIcc(MTi_data* MTi);
 static Xsens_Status MTi_EnableAHS(MTi_data* MTi);
 
@@ -239,7 +239,7 @@ Xsens_Status MTi_IRQ_Handler(MTi_data* MTi){
 	MTi->SPI_busy = false;
 
 	//XbusParser_parseBuffer(MTi->XBParser, MTi->aRxBuffer, 5);
-	PipeStat* pipe_status = &rxbuf[HEADER_LENGTH];
+	PipeStat* pipe_status = (PipeStat*)&rxbuf[HEADER_LENGTH];
 	if(pipe_status->notification_size){
 		while(MTi->SPI_busy){}
 		MTi->SPI_busy = true;

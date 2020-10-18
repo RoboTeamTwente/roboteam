@@ -22,15 +22,6 @@
 #define FEEDBACK_CHANNEL -5	// 2.395 GHz
 #define COMMAND_CHANNEL -15 // 2.385 GHz
 
-///////////////////////////////////////////////////// VARIABLES
-
-SX1280 SX1280_struct;
-SX1280 * SX; // pointer to the datastruct
-volatile uint8_t Bot_to_PC[ROBOPKTLEN]; // pointer to feedback data struct
-volatile uint8_t PC_to_Bot[ROBOPKTLEN]; // pointer to received data struct
-
-bool wirelessFeedback; // boolean to enable or disable wireless feedback
-
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi);
@@ -38,7 +29,7 @@ void Wireless_DeInit();
 void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void ReceivePacket(SX1280* SX);
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes);
-void Wireless_DMA_Handler(SX1280* SX, uint8_t * output, ReceivedData * receivedData);
+void Wireless_DMA_Handler(SX1280* SX, uint8_t output[]);
 bool checkWirelessConnection();
 
 #endif /* WIRELESS_WIRELESS_H_ */

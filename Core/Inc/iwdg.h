@@ -34,6 +34,6 @@ typedef struct
 // Init function that sets the registers
 HAL_StatusTypeDef IWDG_Init(IWDG_Handle* hiwdg);
 // This function resets the timer and needs to be called every while loop
-extern inline void IWDG_Refresh(IWDG_Handle* hiwdg);
+void IWDG_Refresh(IWDG_Handle* hiwdg);
 
 #endif // IWDG_H

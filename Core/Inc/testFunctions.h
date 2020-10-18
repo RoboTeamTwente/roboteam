@@ -16,7 +16,7 @@
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
-#define nTests 6
+#define nTests 7
 
 typedef enum {
 	normal,

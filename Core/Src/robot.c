@@ -20,6 +20,8 @@
 #include "ballSensor.h"
 #include "testFunctions.h"
 
+#include "RobotFeedback.h"
+
 #include "time.h"
 #include <unistd.h>
 
@@ -34,10 +36,14 @@ int counter = 0;
 int strength = 0;
 
 
-uint8_t Bot_to_PC[ROBOPKTLEN];
-uint8_t PC_to_Bot[ROBOPKTLEN];
+RobotFeedbackPayload Bot_to_PC;
+RobotFeedback robotFeedback = {0};
+RobotCommandPayload PC_to_Bot;
+RobotCommand robotCommand = {0};
 ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-volatile roboAckData AckData = {0};
+
+
+
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
@@ -147,19 +153,6 @@ void printRobotStateData() {
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
 }
 
-void printBaseStation() {
-	Putty_printf("----->FROM BASESTATION----->\n\r");
-	char msg[40];
-	for(int i=0, j=0; j<ROBOPKTLEN; i++, j++) {
-		sprintf(&msg[i], "%02X  ", PC_to_Bot[j]);
-		i += 2;
-	}
-	Putty_printf("packet_counter: %d\n\r",counter);
-	counter = 0;
-	Putty_printf(msg);
-	Putty_printf("\n\r");
-}
-
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
@@ -259,22 +252,22 @@ void loop(void){
     /*
     * Feedback
     */
-    AckData.roboID = ID;
-    AckData.XsensCalibrated = xsens_CalibrationDone;
-    AckData.battery = (batCounter > 1000);
-    AckData.ballSensorWorking = ballSensor_isWorking();
-    AckData.hasBall = ballPosition.canKickBall;
-    AckData.ballPos = ballPosition.x/100 & ballSensor_isWorking();
-    AckData.genevaWorking = geneva_IsWorking();
-    AckData.genevaState = geneva_GetState();
+    robotFeedback.id = ID;
+    robotFeedback.XsensCalibrated = xsens_CalibrationDone;
+    robotFeedback.battery = (batCounter > 1000);
+    robotFeedback.ballSensorWorking = ballSensor_isWorking();
+    robotFeedback.hasBall = ballPosition.canKickBall;
+    robotFeedback.ballPos = ballPosition.x/100 & ballSensor_isWorking();
+    robotFeedback.genevaWorking = geneva_IsWorking();
+    robotFeedback.genevaState = geneva_GetState();
 
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
-    AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
-    AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
-    AckData.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
-    AckData.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    AckData.signalStrength = SX->Packet_status->RSSISync/2;
+    robotFeedback.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
+    robotFeedback.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
+    robotFeedback.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
+    robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
+    robotFeedback.rssi = SX->Packet_status->RSSISync/2;
     
     
     static int printTime = 0;
@@ -327,7 +320,7 @@ void loop(void){
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
-		Wireless_DMA_Handler(SX, PC_to_Bot);
+		Wireless_DMA_Handler(SX, PC_to_Bot.payload);
         packetToRoboData(PC_to_Bot, &receivedData);
 		counter++;
 		strength+= SX->Packet_status->RSSISync;
@@ -344,8 +337,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-		roboAckDataToPacket(&AckData, Bot_to_PC);
-		Wireless_IRQ_Handler(SX, Bot_to_PC, ROBOPKTLEN);
+        encodeRobotFeedback(&Bot_to_PC, &robotFeedback);
+		Wireless_IRQ_Handler(SX, Bot_to_PC.payload, ROBOPKTLEN);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){

@@ -14,7 +14,7 @@ opt = conf.get("env:nucleo_f767zi", "optimization")
 env.Append(
   CCFLAGS=[
     opt,
-    # "-std=c++11",
+    # "-std=c11",
     "-g3",
     "-Wall",
     # "-Wextra",

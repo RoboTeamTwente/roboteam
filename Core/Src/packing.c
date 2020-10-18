@@ -21,17 +21,8 @@
 #include <stdio.h>
 #include "PuTTY.h" // apparently only for debugging
 
-float uint32tofloat(uint32_t raw) {
-
-	union float_bytes {
-	       float val;
-	       uint32_t bytes;
-	    } data;
-
-	data.bytes = raw;
-	return data.val;
-
-}
+#include "RobotCommand.h"
+#include "RobotFeedback.h"
 
 void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]) {
 	Putty_printf("----->FROM BASESTATION----->\n\r");
@@ -57,86 +48,34 @@ void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]) {
  * Create a roboData structure from a given Bytearray.
  * This is used by the robot to convert a received nRF packet into a struct with named variables.
  */
-void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData) {
-	uint16_t rho = (input[0]) << 3;
-	rho |= (input[1] >> 5) & 0b00000111;
+void packetToRoboData(RobotCommandPayload input, ReceivedData* receivedData) {
+	RobotCommand rc = {0};
 
-	int16_t theta = (input[1] & 0b00011111) << 6;
-	theta |= (input[2] >> 2) & 0b00111111;
-	theta |= (theta & 0x0400) ? 0xF800 : 0x0000; // sign extension
-
-	int16_t velocity_angular = (input[2] & 0b00000011) << 8;
-	velocity_angular |= input[3] & 0b11111111;
-	velocity_angular |= (velocity_angular & 0x0200) ? 0xFC00 : 0x0000; // sign extension
-
-	uint8_t kick_chip_power = input[4] & 0b11111111;
-
-	uint8_t do_kick = (input[5] & 0b10000000) >> 7;
-	uint8_t do_chip = (input[5] & 0b01000000) >> 6;
-	uint8_t kick_chip_forced = (input[5] & 0b00100000) >> 5;
-	uint8_t debug_info = (input[5] & 0b00010000) >> 4;
-	uint8_t use_cam_info = (input[5] & 0b00001000) >> 3;
-	uint8_t geneva_drive_state = input[5] & 0b00000111;
-
-	uint8_t velocity_dribbler = 0;
-	velocity_dribbler = (input[6] & 0b11111000) >> 3;
-	//velocity_dribbler = velocity_dribbler & 0b00011111;
-	int16_t cam_rotation = (input[6] & 0b00000111) << 8; //s
-	cam_rotation |= input[7] & 0b11111111; //s
-	cam_rotation |= (cam_rotation & 0x0400) ? 0xF800 : 0x0000; // sign extension
+	decodeRobotCommand(&rc, &input);
 
 	/*
 	 * Convert data to useful units
 	 */
 	// State
 	//static float stateRef[3] = {0, 0, 0};
-	receivedData->stateRef[body_x] = (rho * CONVERT_RHO) * cosf(theta * CONVERT_THETA);
-	receivedData->stateRef[body_y] = (rho * CONVERT_RHO) * sinf(theta * CONVERT_THETA);
-	receivedData->stateRef[body_w] = velocity_angular * CONVERT_YAW_REF;
+	receivedData->stateRef[body_x] = (rc.rho * CONVERT_RHO) * cosf(rc.theta * CONVERT_THETA);
+	receivedData->stateRef[body_y] = (rc.rho * CONVERT_RHO) * sinf(rc.theta * CONVERT_THETA);
+	receivedData->stateRef[body_w] = rc.angularVelocity * CONVERT_YAW_REF;
 	//receivedData->stateRef = stateRef;
 
 	// Geneva
-	receivedData->genevaRef = geneva_drive_state;
+	receivedData->genevaRef = rc.geneva;
 
 	// Dribbler
-	receivedData->dribblerRef = velocity_dribbler * CONVERT_DRIBBLE_SPEED;
+	receivedData->dribblerRef = rc.dribblerSpeed * CONVERT_DRIBBLE_SPEED;
 
 	// Shoot
-	receivedData->shootPower = kick_chip_power * CONVERT_SHOOTING_POWER;
-	receivedData->kick_chip_forced = kick_chip_forced;
-	receivedData->do_kick = do_kick;
-	receivedData->do_chip = do_chip;
+	receivedData->shootPower = rc.power * CONVERT_SHOOTING_POWER;
+	receivedData->kick_chip_forced = rc.force;
+	receivedData->do_kick = rc.doKick;
+	receivedData->do_chip = rc.doChip;
 
 	// Vision data
-	receivedData->visionAvailable = use_cam_info;
-	receivedData->visionYaw = cam_rotation * CONVERT_VISION_YAW;
+	receivedData->visionAvailable = rc.useCamInfo;
+	receivedData->visionYaw = rc.camRotation * CONVERT_VISION_YAW;
 }
-
-
-void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]) {
-
-	output[0]  = (input->roboID);
-
-	output[1]  = (uint8_t) ((input->XsensCalibrated & 0x01) << 7);
-	output[1] |= (uint8_t) ((input->battery & 0x01) << 6);
-	output[1] |= (uint8_t) ((input->ballSensorWorking & 0x01) << 5);
-	output[1] |= (uint8_t) ((input->hasBall & 0x01) << 4);
-	output[1] |= (uint8_t) (input->ballPos & 0x0F);
-
-	output[2]  = (uint8_t) ((input->genevaWorking & 0x01) << 7);
-	output[2] |= (uint8_t) (input->genevaState & 0x7F);
-
-	output[3]  = (uint8_t) (input->rho >> 3);
-
-	output[4]  = (uint8_t) ((input->rho & 0x03) << 5);
-	output[4] |= (uint8_t) ((input->angle >> 5) & 0x1F);
-
-	output[5]  = (uint8_t) ((input->angle & 0x1F) << 3);
-	output[5]  |= (uint8_t) ((input->theta >> 8) & 0x07);
-
-	output[6]  = (uint8_t) (input->theta & 0xFF);
-
-	output[7]  = (uint8_t) (input->wheelBraking << 7);
-	output[7]  |= (uint8_t) (input->signalStrength & 0x7F);
-}
-

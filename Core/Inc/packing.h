@@ -12,6 +12,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include "control_util.h"
+#include "RobotCommand.h"
 
 #define ROBOPKTLEN 8 //amount of bytes for a packet sent to the robot
 #define SHORTACKPKTLEN 11 //amount of bytes of an ACK packet sent by the robot without using the extra/debug fields
@@ -67,34 +68,12 @@ typedef struct roboData{
    int16_t cam_rotation:11;			//Orientation (camera)        [-1024, 1023]     0.00307rad    [-pi, pi]               11
 } roboData;
 
-//between 11 and 23 Bytes, ideally
-typedef struct roboAckData{
-	//regular fields: 11 Bytes
-	uint8_t roboID:8;
-	bool	XsensCalibrated:1;
-	bool	ballSensorWorking:1;
-	bool	battery:1;
-	bool	hasBall:1;
-	uint8_t	ballPos:4;
-	bool	genevaWorking:1;
-	uint8_t	genevaState:7;
-	int16_t	rho:11;
-	int16_t	angle:10;
-	int16_t	theta:11;
-	bool	wheelBraking:1;
-	uint8_t	signalStrength:7;
-} roboAckData;
-
 
 //for debugging
 float uint32tofloat(uint32_t raw);
 void printRoboData(roboData *input, uint8_t dataArray[ROBOPKTLEN]);
-void printRoboAckData(roboAckData *input, uint8_t dataArray[32], uint8_t ackDataLength);
 
-void robotDataToPacket(roboData *input, uint8_t output[ROBOPKTLEN]);
-void packetToRoboData(volatile uint8_t input[ROBOPKTLEN], ReceivedData* receivedData);
-void roboAckDataToPacket(volatile roboAckData *input, volatile uint8_t output[ROBOPKTLEN]);
-void ackPacketToRoboAckData(uint8_t input[FULLACKPKTLEN], uint8_t packetlength, roboAckData *output);
+void packetToRoboData(RobotCommandPayload input, ReceivedData* receivedData);
 
 #endif /* PACKING_H_ */
 

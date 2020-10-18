@@ -46,97 +46,97 @@ typedef struct _RobotFeedback {
 // -------- -------- -------- -------- -------- -------- -------- -------- -1111111 // rssi
 
 // -------------------------------------- GETTERS --------------------------------------
-inline PACKET_TYPE RobotFeedback_getHeader(RobotFeedbackPayload *rfp){
+static inline PACKET_TYPE RobotFeedback_getHeader(RobotFeedbackPayload *rfp){
     return (PACKET_TYPE)rfp->payload[0];
 }
-inline uint8_t RobotFeedback_getRobotId(RobotFeedbackPayload *rfp){
+static inline uint8_t RobotFeedback_getRobotId(RobotFeedbackPayload *rfp){
     return rfp->payload[1];
 }
-inline bool RobotFeedback_getXsensCalibrated(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getXsensCalibrated(RobotFeedbackPayload *rfp){
     return rfp->payload[2] & 0b10000000 ? true : false;
 }
-inline bool RobotFeedback_getBattery(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getBattery(RobotFeedbackPayload *rfp){
     return rfp->payload[2] & 0b01000000 ? true : false;
 }
-inline bool RobotFeedback_getBallSensorWorking(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getBallSensorWorking(RobotFeedbackPayload *rfp){
     return rfp->payload[2] & 0b00100000 ? true : false;
 }
-inline bool RobotFeedback_getHasBall(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getHasBall(RobotFeedbackPayload *rfp){
     return rfp->payload[2] & 0b00010000 ? true : false;
 }
-inline uint8_t RobotFeedback_getBallPos(RobotFeedbackPayload *rfp){
+static inline uint8_t RobotFeedback_getBallPos(RobotFeedbackPayload *rfp){
     return rfp->payload[2] & 0b00001111;
 }
-inline bool RobotFeedback_getGenevaWorking(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getGenevaWorking(RobotFeedbackPayload *rfp){
     return rfp->payload[3] & 0b10000000 ? true : false;
 }
-inline uint8_t RobotFeedback_getGenevaState(RobotFeedbackPayload *rfp){
+static inline uint8_t RobotFeedback_getGenevaState(RobotFeedbackPayload *rfp){
     return rfp->payload[3] & 0b01111111;
 }
-inline int16_t RobotFeedback_getRho(RobotFeedbackPayload *rfp){
+static inline int16_t RobotFeedback_getRho(RobotFeedbackPayload *rfp){
     return ((rfp->payload[4] & 0b11111111) << 3)
          | ((rfp->payload[5] & 0b11100000) >> 5);
 }
-inline int16_t RobotFeedback_getAngle(RobotFeedbackPayload *rfp){
+static inline int16_t RobotFeedback_getAngle(RobotFeedbackPayload *rfp){
     return ((rfp->payload[5] & 0b00011111) << 5)
          | ((rfp->payload[6] & 0b11111000) >> 3);
 }
-inline int16_t RobotFeedback_getTheta(RobotFeedbackPayload *rfp){
+static inline int16_t RobotFeedback_getTheta(RobotFeedbackPayload *rfp){
     return ((rfp->payload[6] & 0b00000111) << 8)
          | ((rfp->payload[7] & 0b11111111) >> 0);
 }
-inline bool RobotFeedback_getWheelBraking(RobotFeedbackPayload *rfp){
+static inline bool RobotFeedback_getWheelBraking(RobotFeedbackPayload *rfp){
     return rfp->payload[8] & 0b10000000 ? true : false;
 }
-inline uint8_t RobotFeedback_getRSSI(RobotFeedbackPayload *rfp){
+static inline uint8_t RobotFeedback_getRSSI(RobotFeedbackPayload *rfp){
     return rfp->payload[8] & 0b01111111;
 }
 
 // -------------------------------------- SETTERS --------------------------------------
 // Note: functions assume an empty {0} packet to write to
-inline void RobotFeedback_setHeader(RobotFeedbackPayload *rcp, PACKET_TYPE header){
+static inline void RobotFeedback_setHeader(RobotFeedbackPayload *rcp, PACKET_TYPE header){
     rcp->payload[0] = header;
 }
-inline void RobotFeedback_setId(RobotFeedbackPayload *rcp, uint8_t id){
+static inline void RobotFeedback_setId(RobotFeedbackPayload *rcp, uint8_t id){
     rcp->payload[1] = id;
 }
-inline void RobotFeedback_setXsensCalibrated(RobotFeedbackPayload *rfp, bool XsensCalibrated){
+static inline void RobotFeedback_setXsensCalibrated(RobotFeedbackPayload *rfp, bool XsensCalibrated){
     rfp->payload[2] |= (XsensCalibrated << 7) & 0b10000000;
 }
-inline void RobotFeedback_setBattery(RobotFeedbackPayload *rfp, bool battery){
+static inline void RobotFeedback_setBattery(RobotFeedbackPayload *rfp, bool battery){
     rfp->payload[2] |= (battery << 6) & 0b01000000;
 }
-inline void RobotFeedback_setBallSensorWorking(RobotFeedbackPayload *rfp, bool ballSensorWorking){
+static inline void RobotFeedback_setBallSensorWorking(RobotFeedbackPayload *rfp, bool ballSensorWorking){
     rfp->payload[2] |= (ballSensorWorking << 6) & 0b00100000;
 }
-inline void RobotFeedback_setHasBall(RobotFeedbackPayload *rfp, bool hasBall){
+static inline void RobotFeedback_setHasBall(RobotFeedbackPayload *rfp, bool hasBall){
     rfp->payload[2] |= (hasBall << 5) & 0b00010000;
 }
-inline void RobotFeedback_setBallPos(RobotFeedbackPayload *rfp, uint8_t ballPos){
+static inline void RobotFeedback_setBallPos(RobotFeedbackPayload *rfp, uint8_t ballPos){
     rfp->payload[2] |= (ballPos) & 0b00001111;
 }
-inline void RobotFeedback_setGenevaWorking(RobotFeedbackPayload *rfp, bool genevaWorking){
+static inline void RobotFeedback_setGenevaWorking(RobotFeedbackPayload *rfp, bool genevaWorking){
     rfp->payload[3] |= (genevaWorking << 7) & 0b10000000;
 }
-inline void RobotFeedback_setGenevaState(RobotFeedbackPayload *rfp, uint8_t genevaState){
+static inline void RobotFeedback_setGenevaState(RobotFeedbackPayload *rfp, uint8_t genevaState){
     rfp->payload[3] |= (genevaState) & 0b01111111;
 }
-inline void RobotFeedback_setRho(RobotFeedbackPayload *rfp, int16_t rho){
+static inline void RobotFeedback_setRho(RobotFeedbackPayload *rfp, int16_t rho){
     rfp->payload[4]  = (rho >> 3) & 0b11111111;
     rfp->payload[5] |= (rho << 5) & 0b11100000;
 }
-inline void RobotFeedback_setAngle(RobotFeedbackPayload *rfp, int16_t angle){
+static inline void RobotFeedback_setAngle(RobotFeedbackPayload *rfp, int16_t angle){
     rfp->payload[5] |= (angle >> 5) & 0b00011111;
     rfp->payload[6] |= (angle << 3) & 0b11111000;
 }
-inline void RobotFeedback_setTheta(RobotFeedbackPayload *rfp, int16_t theta){
+static inline void RobotFeedback_setTheta(RobotFeedbackPayload *rfp, int16_t theta){
     rfp->payload[6] |= (theta >> 8) & 0b00000111;
     rfp->payload[7] |= (theta << 0) & 0b11111111;
 }
-inline void RobotFeedback_setWheelBraking(RobotFeedbackPayload *rfp, bool wheelBraking){
+static inline void RobotFeedback_setWheelBraking(RobotFeedbackPayload *rfp, bool wheelBraking){
     rfp->payload[8] |= (wheelBraking << 7) & 0b10000000;
 }
-inline void RobotFeedback_setRSSI(RobotFeedbackPayload *rfp, uint8_t rssi){
+static inline void RobotFeedback_setRSSI(RobotFeedbackPayload *rfp, uint8_t rssi){
     rfp->payload[8] |= (rssi) & 0b01111111;
 }
 

@@ -16,7 +16,7 @@ std::optional<Vector2> LineSegment::intersects(const LineSegment &line) const {
     if (result.has_value()) {
         float t = Line::relativePosition(start, end, result.value());
         float u = Line::relativePosition(line.start, line.end, result.value());
-        if (t >= 0 & t <= 1 && u >= 0 && u <= 1) {
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
             return result;
         } else {
             return std::nullopt;
@@ -79,7 +79,7 @@ std::vector<Vector2> LineSegment::multiIntersect(const LineSegment &line) const 
     if (result.has_value()) {
         float t = Line::relativePosition(start, end, result.value());
         float u = Line::relativePosition(line.start, line.end, result.value());
-        if (t >= 0 & t <= 1 && u >= 0 && u <= 1) {
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
             return {result.value()};
         } else {
             return {};

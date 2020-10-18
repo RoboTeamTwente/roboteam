@@ -100,6 +100,19 @@ TEST(VectorTests, moreOperators) {
     b /= a;
     EXPECT_DOUBLE_EQ(b.x, 3);
     EXPECT_DOUBLE_EQ(b.y, 2);
+
+    Vector2 z = b / 2;
+    EXPECT_DOUBLE_EQ(z.x,1.5);
+    EXPECT_DOUBLE_EQ(z.y,1);
+
+    z = b + 1;
+    EXPECT_DOUBLE_EQ(z.x,4);
+    EXPECT_DOUBLE_EQ(z.y,3);
+
+    z = b - 1;
+    EXPECT_DOUBLE_EQ(z.x,2);
+    EXPECT_DOUBLE_EQ(z.y,1);
+
     b *= a;
     EXPECT_DOUBLE_EQ(b.x, 3);
     EXPECT_DOUBLE_EQ(b.y, 4);
@@ -129,8 +142,12 @@ TEST(VectorTests, protoVector) {
     EXPECT_DOUBLE_EQ(x.x(), f.x);
     EXPECT_DOUBLE_EQ(x.y(), f.y);
     Vector2 checkF = x;
+    Vector2 b = Vector2(1, 1);
+    b = x;
     EXPECT_DOUBLE_EQ(checkF.x, f.x);
     EXPECT_DOUBLE_EQ(checkF.y, f.y);
+    EXPECT_DOUBLE_EQ(b.x, f.x);
+    EXPECT_DOUBLE_EQ(b.y, f.y);
     std::cout << checkF << std::endl;  // testing print functionality
 } 
 
@@ -166,4 +183,56 @@ TEST(VectorTests, rotateAroundPoint) {
     Vector2 rotatedPosition3 = f3.rotateAroundPoint(-M_PI_2, pivot3);
     EXPECT_DOUBLE_EQ(rotatedPosition3.x, 3);
     EXPECT_DOUBLE_EQ(rotatedPosition3.y, -1);
+}
+
+TEST(VectorTests, rotate) {
+    Vector2 A(sqrt(2), sqrt(2));
+
+    Vector2 result = A.rotate(M_PI_4);
+    Vector2 result2 = A.rotate(-M_PI_4);
+
+    EXPECT_NEAR(result.x, 0, 1e-15);
+    EXPECT_NEAR(result.y, 2, 1e-15);
+    EXPECT_NEAR(result2.x, 2, 1e-15);
+    EXPECT_NEAR(result2.y, 0, 1e-15);
+}
+
+TEST(VectorTests, lerp) {
+    Vector2 x(1, 1), y(3, 3);
+    Vector2 centre = x.lerp(y, 0.5);
+    Vector2 centre2 = y.lerp(x, 0.5);
+    Vector2 origin = x.lerp(y, 1.5);
+    Vector2 origin2 = y.lerp(x, -0.5);
+    EXPECT_DOUBLE_EQ(centre.x, 2);
+    EXPECT_DOUBLE_EQ(centre.y, 2);
+    EXPECT_DOUBLE_EQ(centre2.x, 2);
+    EXPECT_DOUBLE_EQ(centre2.y, 2);
+
+    EXPECT_DOUBLE_EQ(origin.x, 0);
+    EXPECT_DOUBLE_EQ(origin.y, 0);
+    EXPECT_DOUBLE_EQ(origin.x, 0);
+    EXPECT_DOUBLE_EQ(origin.y, 0);
+}
+
+TEST(VectorTests,nan){
+    Vector2 test(0, 0);
+    EXPECT_TRUE(test.isNotNaN());
+    double nan = std::numeric_limits<double>::quiet_NaN();
+    Vector2 test2(nan, 0);
+    EXPECT_FALSE(test2.isNotNaN());
+    Vector2 test3(nan, nan);
+    Vector2 test4(0, nan);
+    EXPECT_FALSE(test3.isNotNaN());
+    EXPECT_FALSE(test4.isNotNaN());
+}
+
+TEST(VectorTests, project2) {
+    Vector2 direction(2, 2);
+    Vector2 other(2, 0);
+    Vector2 result1 = other.project2(direction);
+    Vector2 result2 = direction.project2(other);
+    EXPECT_DOUBLE_EQ(result1.x, 1);
+    EXPECT_DOUBLE_EQ(result1.y, 1);
+    EXPECT_DOUBLE_EQ(result2.x, 2);
+    EXPECT_DOUBLE_EQ(result2.y, 0);
 }

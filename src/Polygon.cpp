@@ -4,6 +4,7 @@
 
 #include "../include/roboteam_utils/Polygon.h"
 #include <numeric>
+#include <utility>
 
 namespace rtt {
     ///constructor for rectangles oriented straight with respect to the x-axis.
@@ -16,8 +17,8 @@ namespace rtt {
         }
     {}
 
-    Polygon::Polygon(const std::vector<rtt::Vector2> &_vertices)
-        : vertices{ _vertices } 
+    Polygon::Polygon(std::vector<rtt::Vector2> vertices)
+        : vertices{std::move(vertices)}
     {}
 
     size_t Polygon::amountOfVertices() const {
@@ -29,10 +30,6 @@ namespace rtt {
     }
 
     void Polygon::move(const Vector2 &moveBy) {
-        // This is a range-based for loop
-        // for (std::vector<Vector2>::iterator it = vertices.begin(); it != vertices.end(); ++it) {
-        //     *it += moveBy;
-        // }
 
         for (auto& vertex : vertices) {
             vertex += moveBy;
@@ -60,7 +57,7 @@ namespace rtt {
     }
 
     //https://stackoverflow.com/questions/471962/how-do-i-efficiently-determine-if-a-polygon-is-convex-non-convex-or-complex
-    // this function only works if your polygon is already simple. In 90% of the cases when a polygon is not simple, it will not be convex
+    // this function only works if your polygon is already simple. If your polygon is not simple, it is highly like to not be convex
     bool Polygon::isConvex() const {
         if (amountOfVertices() < 4) 
             return true;// triangles are always convex

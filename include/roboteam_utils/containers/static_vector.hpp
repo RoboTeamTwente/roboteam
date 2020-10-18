@@ -167,7 +167,7 @@ namespace rtt::collections {
          * `this` is const.
          */
         constexpr const_iterator cend() const noexcept {
-            return &_data[size() - 1];
+            return &_data[size()];
         }
 
         /**
@@ -223,7 +223,7 @@ namespace rtt::collections {
         /**
          * Constant version of operator[]
          */
-        element_type const &operator[](size_type index) const noexcept {
+        const element_type& operator[](size_type index) const noexcept {
             return _data[index];
         }
 
@@ -239,10 +239,10 @@ namespace rtt::collections {
          */
         void erase(iterator iter) {
             element_type* prev = iter++;
-            if constexpr (std::is_nothrow_move_constructible_v<element_type>) {
-                std::copy(iter, end(), prev);
-            } else {
+            if constexpr (std::is_nothrow_move_constructible_v<element_type>) {//TODO: this makes no sense? We do not check for this
                 std::move(iter, end(), prev);
+            } else {
+                std::copy(iter, end(), prev);
             }
             _size--;
         }

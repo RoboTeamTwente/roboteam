@@ -141,11 +141,6 @@ class Vector2 {
         [[nodiscard]] double cross(const Vector2 &other) const;
 
         /**
-         * Does the exact same as project... (?)
-         */
-        [[nodiscard]] Vector2 closestPointOnVector(const Vector2 &startPoint, const Vector2 &point) const;
-
-        /**
          * \brief Creates a vector with the same angle as this one, but with the specified length.
          */
         [[nodiscard]] Vector2 stretchToLength(double length) const;

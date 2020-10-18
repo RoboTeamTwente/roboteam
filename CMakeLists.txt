@@ -6,6 +6,15 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 include(cotire)
 include(ccache)
 
+option(CODE_COVERAGE "Build for coverage tests" OFF)
+function(target_add_coverage_flags TARGET)
+    target_compile_options(${TARGET} PUBLIC
+            -O0
+            -g
+            --coverage
+            )
+endfunction()
+
 add_subdirectory(include/roboteam_utils/networking)
 
 add_library(roboteam_utils STATIC
@@ -80,6 +89,7 @@ target_compile_options(roboteam_utils PRIVATE
         -pedantic
         -Werror
         -Wno-unused-function
+        -Wno-deprecated-declarations
         -Wno-comment
         -Wsign-compare
         -g
@@ -115,3 +125,11 @@ target_link_libraries(utils_tests
         PRIVATE roboteam_utils
         PRIVATE gtest
         )
+if(CODE_COVERAGE)
+    target_add_coverage_flags(roboteam_utils)
+    target_add_coverage_flags(networking)
+    target_add_coverage_flags(utils_tests)
+    target_link_libraries(utils_tests
+            PRIVATE --coverage)
+
+endif(CODE_COVERAGE)

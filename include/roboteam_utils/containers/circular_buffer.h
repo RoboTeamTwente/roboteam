@@ -40,7 +40,7 @@ namespace rtt::collections {
 
     public:
         //Default constructor
-        circular_buffer() : _current_offset(0), _current_size(0) {
+        constexpr circular_buffer() : _current_offset(0), _current_size(0) {
         }
 
         //modifying functions

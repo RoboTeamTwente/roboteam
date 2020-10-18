@@ -81,7 +81,7 @@ class Subscriber {
     init(channelType, custom_ip);
 
     zmqpp::poller * poller = &reactor->get_poller();
-    auto callback = [=](){
+    auto callback = [=,this](){
       if(poller->has_input(* socket) ){
         zmqpp::message response;
         T_Response output;
@@ -110,7 +110,7 @@ class Subscriber {
       init(channelType, custom_ip);
 
     zmqpp::poller * poller = &reactor->get_poller();
-    auto callback = [=]() {
+    auto callback = [=,this]() {
       if(poller->has_input(* socket) ){
         zmqpp::message response;
         T_Response output;

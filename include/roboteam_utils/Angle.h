@@ -25,11 +25,11 @@ class Angle {
         Angle() = default;
 
         /**
-         * Construct a new Angle instance by using a double value representing the angle value, which will be directly normalized. However you should be cautious with float values
-         * close to -MAX_FLOAT and close to MAX_FLOAT.
+         * Construct a new Angle instance by using a double value representing the angle value, which will be directly normalized.
+         * However you should be cautious with large floating point numbers, as the normalization may give unacceptable errors.
          * @param angle The given double value. It is allowed to use a value outside the range [-PI, PI).
          */
-        Angle(const double &angle);
+        Angle(double angle);
 
         /**
          * Construct a new Angle instance by using the angle of a Vector2 (compared to the origin). In case the Angle is the origin then construct the zero Angle.
@@ -113,7 +113,7 @@ class Angle {
          * values close to -MAX_FLOAT and close to MAX_FLOAT.
          * @return A reference to this updated Angle instance.
          */
-        Angle &operator=(const double &scalar) noexcept;
+        Angle &operator=(double scalar) noexcept;
 
     private:
         double angle; // The current angle value, which is a value in the range [-PI, PI).

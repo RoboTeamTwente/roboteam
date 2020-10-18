@@ -62,7 +62,16 @@ TEST(StateMachineTest, test_skip_n) {
     machine.skip_n(1);
     ASSERT_EQ(machine.current_num(), 1);
 }
+TEST(StateMachineTest, test_skip_n_clamped) {
+    rtt::collections::state_machine<Base, TestEnum, SkillInfo> machine{
+            Base(),
+            Derived(),
+    };
 
+    ASSERT_EQ(machine.current_num(), 0);
+    machine.skip_n(3);
+    ASSERT_TRUE(machine.finished());
+}
 TEST(StateMachineTest, test_polymorphism) {
     rtt::collections::state_machine<Base, TestEnum, SkillInfo> machine{
             Base(),
@@ -131,4 +140,31 @@ TEST(StateMachineTest, test_const_for_loop) {
 
     // no optimize -> volatile
     for ([[maybe_unused]] auto volatile const& each : machine) {}
+}
+
+TEST(StateMachineTest, test_skip_to) {
+    rtt::collections::state_machine<Base, TestEnum, SkillInfo> machine{
+            Base(),
+            Derived(),
+    };
+    machine.skip_to(1);
+    EXPECT_EQ(machine.get_current()->type_num(), 1);
+    machine.skip_to(0);
+    EXPECT_EQ(machine.get_current()->type_num(), 0);
+    //test clamping:
+    machine.skip_to(3);
+    EXPECT_TRUE(machine.finished());
+}
+
+TEST(StateMachineTest, reset) {
+    rtt::collections::state_machine<Base, TestEnum, SkillInfo> machine{
+            Base(),
+            Derived(),
+    };
+    EXPECT_EQ(machine.get_current()->type_num(), 0);
+    machine.skip_n(1);
+    EXPECT_EQ(machine.get_current()->type_num(), 1);
+    machine.reset();
+    EXPECT_EQ(machine.get_current()->type_num(),0);
+
 }

@@ -13,10 +13,11 @@
  */
 
 /**
- * A comparison precision limit in our system. If we check in Roboteam_utils if two floats are equal then we check actually if the distance between them is smaller than this
- * given precision.
+ * A comparison precision limit in our system.
+ * If we check in Roboteam_utils if two floats are equal then we check actually
+ * if the distance between them is smaller than this given precision.
  */
-constexpr static double FLOAT_PRECISION = 1e-5;
+constexpr static double RTT_PRECISION_LIMIT = 1e-5;
 
 
 #endif //RTT_DEFINITIONS_H

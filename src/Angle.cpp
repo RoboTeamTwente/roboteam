@@ -1,17 +1,19 @@
-#include "../include/roboteam_utils/Angle.h"
-#include "../include/roboteam_utils/Vector2.h"
-#include "../include/roboteam_utils/Definitions.h"
+#include "Angle.h"
+#include "Vector2.h"
+#include "Definitions.h"
 
 namespace rtt {
-    Angle::Angle(const double &angle) : angle(angle) {
+    Angle::Angle(double angle) : angle(angle) {
         this->normalize();
     }
 
     Angle::Angle(const rtt::Vector2 &vec) {
-        if (vec.length() < FLOAT_PRECISION)
+        if (vec.length() < RTT_PRECISION_LIMIT) {
             angle = 0.0;
-        else
+        }
+        else {
             angle = vec.toAngle();
+        }
     }
 
     Angle::operator double() const noexcept {
@@ -43,7 +45,7 @@ namespace rtt {
     }
 
     bool Angle::operator==(const Angle &other) const noexcept {
-        return this->shortestAngleDiff(other) < FLOAT_PRECISION;
+        return this->shortestAngleDiff(other) < RTT_PRECISION_LIMIT;
     }
 
     bool Angle::operator!=(const Angle &other) const noexcept {
@@ -70,7 +72,7 @@ namespace rtt {
         return *this;
     }
 
-    Angle &Angle::operator=(const double &scalar) noexcept {
+    Angle &Angle::operator=(double scalar) noexcept {
         this->angle = scalar;
         this->normalize();
         return *this;

@@ -18,7 +18,7 @@ namespace rtt{
         for (auto nestedPoints : grid.getPoints()) {
             sizeOfGrid += nestedPoints.size();
         }
-        EXPECT_EQ(sizeOfGrid,grid.getNumStepsX() * grid.getNumStepsY());
+        EXPECT_EQ(sizeOfGrid,(grid.getNumSegmentsX()+1) *( grid.getNumSegmentsY()+1));
 
     }
 
@@ -28,10 +28,21 @@ namespace rtt{
         Grid grid = Grid(2, 2, 1, 1, 4, 4);
         for (auto nestedPoints : grid.getPoints()) {
             for (auto point : nestedPoints) {
-                EXPECT_TRUE(point.x >= 2 && point.x < 3);
-                EXPECT_TRUE(point.y >= 2 && point.y < 3);
+                EXPECT_TRUE(point.x >= 2 && point.x <= 3);
+                EXPECT_TRUE(point.y >= 2 && point.y <= 3);
             }
         }
+    }
+    TEST(Grid,getters){
+        Grid grid = Grid(1,2,3,4,5,6);
+        EXPECT_EQ(grid.getOffSetX(),1);
+        EXPECT_EQ(grid.getOffSetY(),2);
+        EXPECT_EQ(grid.getRegionWidth(),3);
+        EXPECT_EQ(grid.getRegionHeight(),4);
+        EXPECT_EQ(grid.getNumSegmentsX(),5);
+        EXPECT_EQ(grid.getNumSegmentsY(),6);
+        EXPECT_DOUBLE_EQ(grid.getStepSizeX(),3/5.0); //TOOD: possible bugs? Is the grid defined to be inclusive edge or not?
+        EXPECT_DOUBLE_EQ(grid.getStepSizeY(),4/6.0);
     }
 
 

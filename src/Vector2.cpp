@@ -94,27 +94,6 @@ bool Vector2::isNotNaN() const {
     return x == x && y == y;
 }
 
-Vector2 Vector2::closestPointOnVector(const Vector2 &startPoint, const Vector2 &point) const {
-    Vector2 vectorToPoint = point - startPoint;
-    Angle me = this->toAngle();
-    Angle vtp = vectorToPoint.toAngle();
-    Angle a = me - vtp;
-    double angle = a;
-    double projectionLength = vectorToPoint.length()*cos(angle);
-
-    Vector2 closestPoint;
-    if (projectionLength > this->length()) {
-        closestPoint = *this + startPoint;
-    }
-    else if (projectionLength < 0) {
-        closestPoint = startPoint;
-    }
-    else {
-        closestPoint = this->scale(projectionLength/this->length()) + startPoint;
-    }
-    return closestPoint;
-}
-
 Vector2 Vector2::stretchToLength(double desiredLength) const {
     if (length() == 0.0) {
         return {desiredLength, 0};
@@ -128,7 +107,7 @@ double Vector2::cross(const Vector2 &other) const {
 }
 
 bool Vector2::operator==(const Vector2 &other) const {
-    return fabs(this->x - other.x) < FLOAT_PRECISION && fabs(this->y - other.y) < FLOAT_PRECISION;
+    return fabs(this->x - other.x) < RTT_PRECISION_LIMIT && fabs(this->y - other.y) < RTT_PRECISION_LIMIT;
 }
 
 bool Vector2::operator!=(const Vector2 &other) const {

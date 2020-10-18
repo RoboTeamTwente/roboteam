@@ -37,7 +37,7 @@ namespace rtt {
          * 
          * @param vertices Vertices that will literally be copied to this->vertices
          */
-        Polygon(const std::vector<Vector2> &vertices);
+        Polygon(std::vector<Vector2> vertices);
 
         /**
          * @brief Moves a polygon

@@ -72,4 +72,38 @@ TEST(static_vector, range_based_for_loop){
         sum3+=elem;
     }
     EXPECT_EQ(sum3,12.0);
+    EXPECT_DOUBLE_EQ(x.front(),*x.data());
+}
+struct MockClass{
+    MockClass() = default;
+    explicit MockClass(double x) : value{x}{
+
+    }
+    MockClass& operator=(const MockClass&) = default;
+    MockClass(const MockClass&) = default;
+    MockClass(MockClass &&) = delete;
+    double value;
+};
+static_assert(std::is_default_constructible_v<MockClass>,"Is type default constructable");
+static_assert(!std::is_nothrow_move_constructible_v<MockClass>,"Mock class should test nothrow move constructability");
+
+TEST(static_vector,none_movable){
+    MockClass data{3.0};
+    MockClass data2{2.0};
+    MockClass data3{1.0};
+    static_vector<MockClass,3> dataList = {data,data2,data3};
+    const static_vector<MockClass,3> copy = dataList;
+    double sum = 0;
+    for(const auto& elem : copy){
+        sum+=elem.value;
+    }
+    EXPECT_DOUBLE_EQ(sum,6.0);
+
+    const MockClass& read = copy[1];
+    EXPECT_DOUBLE_EQ(read.value,2.0);
+    EXPECT_DOUBLE_EQ(copy.front().value,3.0);
+    EXPECT_DOUBLE_EQ(copy.front().value,copy.data()->value);
+    EXPECT_DOUBLE_EQ(copy.back().value,1.0);
+    dataList.erase(dataList.begin()+1);
+    EXPECT_DOUBLE_EQ(dataList[1].value,1.0);
 }

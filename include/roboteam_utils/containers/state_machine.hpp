@@ -138,7 +138,7 @@ namespace rtt::collections {
          * Skips n elements, sets current to clamp(current + n, _data.size())
          * @param n Amount of elements to skip
          */
-        void skip_n(int n) noexcept {
+        void skip_n(std::size_t n) noexcept {
             current += n;
             current = std::clamp<size_t>(current, 0, _data.size());
         }
@@ -147,7 +147,7 @@ namespace rtt::collections {
          * Skips to element n, sets current to clamp(n, _data.size())
          * @param n Element to skip to
          */
-        void skip_to(int n) noexcept {
+        void skip_to(std::size_t n) noexcept {
             current = n;
             current = std::clamp<size_t>(current, 0, _data.size());
         }

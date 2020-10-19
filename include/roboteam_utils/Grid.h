@@ -12,8 +12,8 @@ namespace rtt {
     public:
         /**
          * A Grid is a 2D vector of Vector2 points.
-         * @param offSetX the distance you want to horizontally shift the grid from 0
-         * @param offSetY the distance you want to vertically shift the grid from 0
+         * @param offSetX the distance you want to horizontally shift the grid from 0 (where 0 is left edge)
+         * @param offSetY the distance you want to vertically shift the grid from 0 (where 0 is bottom edge)
          * @param regionWidth the width of the region you want the grid to encompass
          * @param regionHeight the height of the region you want the grid to encompass
          * @param numStepsX number of segments to divide the grid into in x direction

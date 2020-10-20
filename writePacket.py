@@ -17,6 +17,7 @@ sentCounter = 0
 written = 0
 
 lastWritten = time.time()
+timerHz = time.time()
 
 ser = None
 while True:
@@ -28,10 +29,15 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			if(0.1 < time.time() - lastWritten):
+			if(1/60. < time.time() - lastWritten):
 				sentCounter += 1
-				if sentCounter % 50 == 0:	ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
-				else:						ser.write(p.getBytes())
+				if sentCounter % 60 == 0:
+					print("Hz : %.2f" % (60 / (time.time()-timerHz)))
+					ser.write(bytes([utils.PACKET_TYPE["BASESTATION_GET_STATISTICS"]]))
+					timerHz = time.time()
+				else:						
+					p.setID(sentCounter % 5)
+					ser.write(p.getBytes())
 				lastWritten = time.time()
 
 			packet_type = ser.read(1)

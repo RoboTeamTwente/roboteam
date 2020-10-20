@@ -43,9 +43,9 @@ void init(){
     LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
-    display_Init();
-    displayState = DISPLAY_STATE_INITIALIZED;
-    drawBasestation(true);
+    // display_Init();
+    // displayState = DISPLAY_STATE_INITIALIZED;
+    // drawBasestation(true);
 
     LOG("[init] Initializion complete\n");
 }
@@ -83,9 +83,12 @@ void loop(){
     return;
   screenCounter = 0;
 
+  if(displayState != DISPLAY_STATE_DEINITIALIZED)
+    updateTouchState(&touchState);
+
   /* Do screen stuff */
   // TODO this should probably go somewhere else. Maybe to FT812Q.c?
-  updateTouchState(&touchState);
+  
   /* TODO redesign these states */
   switch(displayState){
     case DISPLAY_STATE_DEINITIALIZED:

@@ -6,7 +6,6 @@
 #include <memory>
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 
-namespace world {
 
 WorldFilter::WorldFilter() {
     blueBots.clear();
@@ -129,4 +128,3 @@ const std::unique_ptr<BallFilter> &WorldFilter::bestFilter(const std::vector<std
     }
     return filters[bestIndex];
 }
-}  // namespace world

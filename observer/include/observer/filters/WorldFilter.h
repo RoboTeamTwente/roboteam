@@ -4,10 +4,8 @@
 #include <roboteam_proto/World.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
 
-#include "filters/BallFilter.h"
-#include "filters/RobotFilter.h"
-
-namespace world {
+#include "BallFilter.h"
+#include "RobotFilter.h"
 
 /**
  * @author Rolf van der Hulst
@@ -56,6 +54,5 @@ class WorldFilter {
     void handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, double filterGrabDistance, double timeCapture, uint cameraID);
     void updateBalls(double time, bool doLastPredict, double removeFilterTime);
 };
-}  // namespace world
 
 #endif  // ROBOTEAM_WORLD_KALMANFILTER_H

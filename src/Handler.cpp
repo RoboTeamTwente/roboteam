@@ -14,7 +14,13 @@ void Handler::start() {
         [&]() {
             auto vision_packets = receiveVisionPackets();
             auto referee_packets = receiveRefereePackets();
-            observer.process(vision_packets,referee_packets);
+            std::vector<proto::RobotData> robothub_info;
+            {
+                std::lock_guard guard(sub_mutex);
+                robothub_info = receivedRobotData;
+                receivedRobotData.clear();
+            }
+            observer.process(vision_packets,referee_packets,robothub_info);
             auto state = observer.getState(Time::now());//TODO: fix time extrapolation
             while(!pub_state->send(state)); //TODO: try sending for a max limit amount of times
         },
@@ -63,6 +69,7 @@ std::vector<proto::SSL_Referee> Handler::receiveRefereePackets()  {
 }
 
 void Handler::robotDataCallBack(proto::RobotData& data) {
+    std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(data);
 }
 

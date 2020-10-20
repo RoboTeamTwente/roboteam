@@ -27,7 +27,9 @@ public:
      * @param refereePackets All ofthe packets which were received from the referee.
      *
      */
-    void process(std::vector<proto::SSL_WrapperPacket> visionPackets, std::vector<proto::SSL_Referee> refereePackets);
+    void process(std::vector<proto::SSL_WrapperPacket> visionPackets,
+                 std::vector<proto::SSL_Referee> refereePackets,
+                 std::vector<proto::RobotData> robotData);
 
     /**
      * Gets (predicts) state of the game at a point slightly in the future.

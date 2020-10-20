@@ -10,6 +10,7 @@ proto::State Observer::getState(Time time) const {
 }
 
 void
-Observer::process(std::vector<proto::SSL_WrapperPacket> visionPackets, std::vector<proto::SSL_Referee> refereePackets) {
+Observer::process(std::vector<proto::SSL_WrapperPacket> visionPackets, std::vector<proto::SSL_Referee> refereePackets,
+                  std::vector<proto::RobotData> robotData) {
 
 }

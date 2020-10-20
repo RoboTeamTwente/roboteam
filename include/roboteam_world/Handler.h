@@ -19,6 +19,7 @@ class Handler {
     std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback = nullptr;
     Observer observer;
     std::vector<proto::RobotData> receivedRobotData;
+    std::mutex sub_mutex;
    public:
     Handler() = default;
 

@@ -25,14 +25,13 @@ add_executable(roboteam_robothub
         src/packing.cpp
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
-        src/RobotHub.cpp
-        src/main.cpp)
-
+        src/RobotHub.cpp)
 
 target_include_directories(roboteam_robothub
         INTERFACE include
         PRIVATE include/roboteam_robothub
-        PRIVATE src )
+        PRIVATE src
+        PRIVATE roboteam_embedded_messages/include )
 
 target_link_libraries(roboteam_robothub
         PUBLIC roboteam_proto
@@ -40,20 +39,20 @@ target_link_libraries(roboteam_robothub
         PRIVATE Qt5::Network
         )
 
+add_executable(basestation
+        src/baseStationDevelopment.cpp
+        )
+target_include_directories(basestation
+        PRIVATE include/roboteam_robothub
+        PRIVATE roboteam_embedded_messages/include
+        )
+target_link_libraries(basestation
+        usb-1.0)
 
 
-#add_test(robothub_tests
-#    ${SRCS}
-#    test/main.cpp
-#    test/packing.cpp
-#    )
-
-#target_compile_options(robothub_tests PUBLIC --coverage)
-
-
-#target_link_libraries(robothub_tests ${QT_LIBRARIES} roboteam_proto gcov)
-#
-#include(CodeCoverage)
-#APPEND_COVERAGE_COMPILER_FLAGS()
-#SETUP_TARGET_FOR_COVERAGE_LCOV(NAME ${PROJECT_NAME}_coverage EXECUTABLE robothub_tests)
-
+add_executable(circbuf
+        src/CircularBuffer.c
+        )
+target_include_directories(circbuf
+        PRIVATE include/roboteam_robothub
+        )

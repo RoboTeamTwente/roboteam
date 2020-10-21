@@ -1,0 +1,3 @@
+[submodule "roboteam_embedded_messages"]
+	path = roboteam_embedded_messages
+	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages

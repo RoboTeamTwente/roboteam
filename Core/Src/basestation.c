@@ -56,20 +56,6 @@ void init(){
 uint32_t screenCounter = 0;
 
 void loop(){
-
-  /* Send any new command packets */
-  for(int id = 0; id < 16; id++){
-    if(msgBuff[id].isNewCommand){
-      if(!isTransmitting){
-        isTransmitting = true;
-        msgBuff[id].packetsSent++;
-        SX_TX->SX_settings->syncWords[0] = robot_syncWord[id];
-        setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-        SendPacket(SX_TX, msgBuff[id].command.payload+2, PACKET_SIZE_ROBOT_COMMAND-2);
-        msgBuff[id].isNewCommand = false;
-      }
-    }
-  }
   
   /* Send any new feedback packets */
   for(int id = 0; id < 16; id++){
@@ -269,4 +255,29 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		toggle_pin(LD_LED1);
 	}
     
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  // TDMA Timer callback
+  if(htim->Instance == htim1.Instance){
+    static uint8_t idCounter = 0;
+    /* Send new command if available for this robot ID */
+    if(msgBuff[idCounter].isNewCommand){
+      if(!isTransmitting){
+        isTransmitting = true;
+        msgBuff[idCounter].packetsSent++;
+        SX_TX->SX_settings->syncWords[0] = robot_syncWord[idCounter];
+        setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
+        SendPacket(SX_TX, msgBuff[idCounter].command.payload+2, PACKET_SIZE_ROBOT_COMMAND-2);
+        msgBuff[idCounter].isNewCommand = false;
+      }
+    }
+    // Schedule next ID to be sent
+    idCounter++;
+    // Wrap around if the last ID has been dealt with
+    if(idCounter >= 16){
+      idCounter = 0;
+    }
+  }
 }

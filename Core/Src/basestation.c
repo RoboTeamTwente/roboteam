@@ -8,6 +8,7 @@
 #include "BaseTypes.h"
 #include "BasestationStatistics.h"
 #include "RobotCommand.h"
+#include "CircularBuffer.h"
 
 volatile int I1 = 0;
 volatile int cFeedback = 0;
@@ -26,7 +27,8 @@ uint16_t touchPoint[2] = {-1, -1}; // Initialize touchPoint outside of screen, m
 TouchState touchState; // TODO check default initialization. What is touchState->state? Compiler dependent?
 char logBuffer[100];
 
-
+/* Flags */
+volatile bool flagHandleStatistics = false;
 
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
@@ -78,8 +80,13 @@ void loop(){
     }
   }
 
+  if(flagHandleStatistics){
+    handleStatistics();
+    flagHandleStatistics = false;
+  }
+
   /* Ensures that the CPU doesn't get overloaded with display stuff. Make better solution for this? */
-  if(screenCounter++ < 50000)
+  if(screenCounter++ < 80000)
     return;
   screenCounter = 0;
 
@@ -175,6 +182,8 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
   return true;
 }
 
+
+
 /**
  * @brief Handles sending basestation statistics over USB.
  * 
@@ -198,9 +207,15 @@ bool handleStatistics(void){
   return true;
 }
 
+
+
 /**
  * @brief routes any incoming packet to the correct function. Hub for all incoming packets.
  * TODO actually make it route all incoming packets, and not just USB packets
+ * 
+ * Note : Packets are never larger than 64 bytes. If the host sends 100 bytes of data, it
+ * will arrive as two packets of 64 and 36 bytes. This is because the wMaxPacketSize for
+ * full speed USB is 64 bytes.
  * 
  * @param Buf Pointer to the buffer the packet from the USB is stored in
  * @param Len Length of the packet currently in the buffer
@@ -215,12 +230,13 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
   Iusb++;
 
   bool success = false;
+
   switch(packetType){
     case PACKET_TYPE_ROBOT_COMMAND:
       success = handleRobotCommand(Buf, packetSize);
       break;
     case PACKET_TYPE_BASESTATION_GET_STATISTICS:
-      success = handleStatistics();
+      flagHandleStatistics = true;
       break;
     default:
       break;

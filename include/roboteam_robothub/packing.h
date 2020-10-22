@@ -32,7 +32,6 @@ struct LowLevelRobotCommand {
     bool kick_chip_forced;
     int kick_chip_power;
     int velocity_dribbler;
-    int geneva_drive_state;
     int cam_position_x;
     int cam_position_y;
     int cam_rotation;
@@ -45,8 +44,6 @@ struct LowLevelRobotFeedback {
     bool ballSensorWorking : 1;
     bool hasBall : 1;
     uint ballPosition : 4;
-    bool genevaWorking : 1;
-    int genevaState : 7;
     int rho : 11;
     int angle : 10;
     int theta : 11;

@@ -15,6 +15,9 @@
 #include "RobotCommand.h"
 #include "BaseTypes.h"
 
+volatile int totalBytesSent;
+volatile int totalBytesReceived;
+
 std::string bmAttributes_TransferTypeToString(uint8_t bmAttributes){
     uint8_t transferType = bmAttributes & 0b00000011;
     switch(transferType){
@@ -266,20 +269,85 @@ void enumerate(){
     libusb_exit(ctx);
 }
 
-bool writeThread(libusb_device_handle *handle){
+void printStatistics(const uint8_t* statistics){
+    for(int i = 0; i < 16; i ++){
+        uint8_t sent = statistics[i*2+1];
+        uint8_t rcvd = statistics[i*2+2];
+        if(i != 0 && i%4 == 0) printf("\n");
+
+        if(i < 10) printf(" ");
+        printf("%d ", i);
+
+        if(sent < 10) printf(" ");
+        printf("%d ", sent);
+
+        if(rcvd < 10) printf(" ");
+        printf("%d | ", rcvd);
+    }
+    printf("\n\n");
+}
+
+void writeThread(libusb_device_handle *handle){
     std::cout << "[writeThread]" << std::endl;
-    for(int werwerwer = 0; werwerwer < 10; werwerwer++){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::cout << "[writeThread] " << werwerwer << std::endl;
+
+    uint8_t getStatistics = PACKET_TYPE_BASESTATION_GET_STATISTICS;
+
+    RobotCommandPayload cmd;
+    RobotCommand_setHeader(&cmd, PACKET_TYPE_ROBOT_COMMAND);
+
+    int actual_length = 0;
+
+    auto tsNow = std::chrono::high_resolution_clock::now();
+
+    while(true){
+        for(int counter = 0; counter < 60; counter++) {
+
+           tsNow = std::chrono::high_resolution_clock::now();
+
+            for (int id = 0; id < 16; id++) {
+                RobotCommand_setId(&cmd, id);
+                int error = libusb_bulk_transfer(handle, 0x01, cmd.payload, PACKET_SIZE_ROBOT_COMMAND, &actual_length,500);
+                if (error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
+                totalBytesSent += actual_length;
+            }
+
+            std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - tsNow;
+            int msToSleep = 17 - 1000 * elapsed.count();
+            std::this_thread::sleep_for(std::chrono::milliseconds(msToSleep));
+
+        }
+
+        libusb_bulk_transfer(handle, 0x01, &getStatistics, 1, &actual_length, 500);
     }
 }
 
-bool readThread(libusb_device_handle *handle){
+void readThread(libusb_device_handle *handle){
     std::cout << "[readThread]" << std::endl;
-    for(int rewrewrew = 0; rewrewrew < 10; rewrewrew++){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::cout << "[readThread] " << rewrewrew << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    uint8_t buffer[4906];
+    int actual_length = 0;
+
+    while(true){
+        int error = libusb_bulk_transfer(handle, 0x81, buffer, 4096, &actual_length, 100);
+        if (actual_length == 0) continue;
+        if (error) std::cout << "ERROR receiving : " << errorToString(error) << std::endl;
+
+        if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
+            printf("LOG: ");
+            for (int i = 1; i < actual_length; i++)
+                printf("%c", buffer[i]);
+        }
+
+        if (buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS) {
+            printStatistics(buffer);
+        }
+
+        if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
+            totalBytesReceived += actual_length;
+        }
     }
+
+    std::cout << "[readThread] total bytes received : " << totalBytesReceived << std::endl;
 }
 
 bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle){
@@ -341,12 +409,6 @@ bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_han
 int main(int argc, char *argv[]) {
     std::cout << "Hello basestation!" << std::endl;
 
-    std::thread tWrite(writeThread, nullptr);
-    std::thread tRead(readThread, nullptr);
-    tWrite.join();
-    tRead.join();
-    std::cout << "[main] Threads joined" << std::endl;
-    return 0;
 
     // =========================== ESTABLISH CONNECTION =========================== //
 
@@ -367,98 +429,37 @@ int main(int argc, char *argv[]) {
 
     // =========================== CONNECTION ESTABLISHED =========================== //
 
-    RobotCommandPayload cmd;
-    RobotCommand_setHeader(&cmd, PACKET_TYPE_ROBOT_COMMAND);
+    std::thread tRead(readThread, basestation_handle);
+    std::this_thread::sleep_for(std::chrono::seconds (1));
+    std::thread tWrite(writeThread, basestation_handle);
 
-    int actual_length = 0;
-    int bufSize = 8192;
-    unsigned char buffer[bufSize];
+    auto tsStart = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 1000; i++){
+        std::this_thread::sleep_for(std::chrono::seconds (1));
+        std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - tsStart;
+        double seconds = elapsed.count();
 
-    int totalBytesSent = 0;
-    int totalBytesReceived = 0;
+        double kbpsSent = 8 * (totalBytesSent / seconds) / 1000.;
+        double kbpsRcvd = 8 * (totalBytesReceived / seconds) / 1000.;
+        double kbpsSentExpected = (16*60*8*PACKET_SIZE_ROBOT_COMMAND )/1000.;
+        double kbpsRcvdExpected = ( 5*60*8*PACKET_SIZE_ROBOT_FEEDBACK)/1000.;
 
-    int msSlept = 0;
-
-    auto start = std::chrono::high_resolution_clock::now();
-    auto last = std::chrono::high_resolution_clock::now();
-    for(int counter = 1; counter < 600; counter++) {
-
-        std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - last;
-        int msToSleep = 16 - 1000 * elapsed.count();
-        msSlept += msToSleep;
-        std::this_thread::sleep_for(std::chrono::milliseconds(msToSleep));
-
-        // Send
-        if(counter % 60 == 0) {
-            buffer[0] = PACKET_TYPE_BASESTATION_GET_STATISTICS;
-            error = libusb_bulk_transfer(basestation_handle, 0x01, buffer, 1, &actual_length, 500);
-            if(error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
-        }
-
-        for(int id = 0; id < 16; id++) {
-            RobotCommand_setId(&cmd, id);
-            error = libusb_bulk_transfer(basestation_handle, 0x01, cmd.payload, PACKET_SIZE_ROBOT_COMMAND, &actual_length, 500);
-            if (error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
-            else totalBytesSent += actual_length;
-        }
-
-        last = std::chrono::high_resolution_clock::now();
-
-        // Receive
-        for(int i = 0; i < 3; i++) {
-            error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &actual_length, 1);
-            if (actual_length == 0) continue;
-            if (error) std::cout << "ERROR receiving : " << errorToString(error) << std::endl;
-
-            //        totalBytesReceived += actual_length;
-            //        std::cout << "Received " << actual_length << " bytes" << std::endl;
-
-            if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
-                printf("LOG: ");
-                for (int i = 1; i < actual_length; i++)
-                    printf("%c", buffer[i]);
-            }
-
-            if (buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS) {
-                std::cout << "PACKET_TYPE_BASESTATION_STATISTICS" << std::endl;
-                for (int i = 0; i < actual_length; i++)
-                    printf("%d ", buffer[i]);
-                printf("\n");
-            }
-
-            if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
-                totalBytesReceived += actual_length;
-            }
-        }
+        std::cout << "    totalBytesSent " << totalBytesSent << std::endl;
+        std::cout << "totalBytesReceived " << totalBytesReceived << std::endl;;
+        printf("          duration %0.2f seconds\n", seconds);
+        std::cout << "expected kbps sent " << kbpsSentExpected << std::endl;
+        std::cout << "  actual kbps sent " << kbpsSent << std::endl;
+        std::cout << "expected kbps rcvd " << kbpsRcvdExpected << std::endl;
+        std::cout << "  actual kbps rcvd " << kbpsRcvd << std::endl;
+        std::cout << std::endl;
     }
 
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    double seconds = elapsed.count();
-    double kbpsSent = 8 * (totalBytesSent / seconds) / 1000.;
-    double kbpsRcvd = 8 * (totalBytesReceived / seconds) / 1000.;
-
-    double kbpsSentExpected = (16*60*8*PACKET_SIZE_ROBOT_COMMAND)/1000.;
-    double kbpsRcvdExpected = 0;
-    double idle = 100 * msSlept / (seconds * 1000);
-
-    std::cout << std::endl;
-    std::cout << "    totalBytesSent " << totalBytesSent << std::endl;
-    std::cout << "totalBytesReceived " << totalBytesReceived << std::endl;;
-    printf("          duration %0.2f seconds\n", seconds);
-    std::cout << "expected kbps sent " << kbpsSentExpected << std::endl;
-    std::cout << "  actual kbps sent " << kbpsSent << std::endl;
-    std::cout << "expected kbps rcvd " << kbpsRcvdExpected << std::endl;
-    std::cout << "  actual kbps rcvd " << kbpsRcvd << std::endl;
-    printf("   percentage idle %.0f%%\n", idle);
-
-
-    RobotCommandPayload rcp;
-    rcp.payload[1] = 4;
+    tWrite.join();
+    tRead.join();
+    std::cout << "[main] Threads joined" << std::endl;
 
     libusb_release_interface(basestation_handle, 1);
     libusb_close(basestation_handle);
-//    libusb_free_device_list(list, true);
     libusb_exit(ctx);
 
     return 0;

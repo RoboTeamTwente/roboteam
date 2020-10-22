@@ -22,6 +22,7 @@ endif()
 find_package(Qt5Network REQUIRED)
 
 add_executable(roboteam_robothub
+        src/main.cpp
         src/packing.cpp
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
@@ -39,7 +40,9 @@ target_link_libraries(roboteam_robothub
         PRIVATE Qt5::Network
         )
 
-find_package(Threads)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
 add_executable(basestation
         src/baseStationDevelopment.cpp
         )
@@ -48,7 +51,7 @@ target_include_directories(basestation
         PRIVATE roboteam_embedded_messages/include
         )
 target_link_libraries(basestation
-        ${CMAKE_THREAD_LIBS_INIT}
+        Threads::Threads
         usb-1.0)
 
 

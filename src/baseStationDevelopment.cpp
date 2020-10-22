@@ -1,6 +1,7 @@
 //
 // Created by emiel on 17-10-20.
 // Libusb documentation : http://libusb.sourceforge.net/api-1.0/modules.html
+// https://stackoverflow.com/questions/39926448/what-is-the-effective-maximum-payload-throughput-for-usb-in-full-speed
 //
 
 #include "baseStationDevelopment.h"
@@ -265,10 +266,89 @@ void enumerate(){
     libusb_exit(ctx);
 }
 
+bool writeThread(libusb_device_handle *handle){
+    std::cout << "[writeThread]" << std::endl;
+    for(int werwerwer = 0; werwerwer < 10; werwerwer++){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::cout << "[writeThread] " << werwerwer << std::endl;
+    }
+}
+
+bool readThread(libusb_device_handle *handle){
+    std::cout << "[readThread]" << std::endl;
+    for(int rewrewrew = 0; rewrewrew < 10; rewrewrew++){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::cout << "[readThread] " << rewrewrew << std::endl;
+    }
+}
+
+bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle){
+
+    libusb_device* basestation_dev = nullptr;
+    libusb_device **list;
+    int num_devices = libusb_get_device_list(ctx, &list);
+
+    int error;
+    for (int i = 0; i < num_devices; i++) {
+        libusb_device *device = list[i];
+        libusb_device_descriptor desc{};
+
+        error = libusb_get_device_descriptor(device, &desc);
+        if (error) std::cout << "[findBasestation] Error : " << errorToString(error) << std::endl;
+        if (desc.idVendor == 0x0483 && desc.idProduct == 0x5740) {
+            basestation_dev = device;
+            int deviceBus = libusb_get_bus_number(device);
+            int deviceAddress = libusb_get_device_address(device);
+            int deviceSpeed = libusb_get_device_speed(device);
+            printf("[findBasestation] Basestation found. %04x:%04x (bus %d, device %d) %s\n",
+                    desc.idVendor, desc.idProduct, deviceBus, deviceAddress, speedToString(deviceSpeed).c_str());
+        }
+    }
+
+    if(basestation_dev == nullptr) {
+        std::cout << "[findBasestation] Basestation not found" << std::endl;
+        libusb_free_device_list(list, true);
+        return false;
+    }
+
+    error = libusb_open(basestation_dev, basestation_handle);
+    if(error){
+        std::cout << "Error while trying to open handle : " << errorToString(error) << std::endl;
+        return false;
+    }
+
+    /** libusb_set_auto_detach_kernel_driver() Enable/disable libusb's automatic kernel driver detachment. When this is
+     * enabled libusb will automatically detach the kernel driver on an interface when claiming the interface, and
+     * attach it when releasing the interface.
+     */
+    error = libusb_set_auto_detach_kernel_driver(*basestation_handle, 1);
+    if(error){
+        std::cout << "Error while enabling auto detach : " << errorToString(error) << std::endl;
+        return false;
+    }
+    /** libusb_claim_interface() Claim an interface on a given device handle. You must claim the interface you wish to
+     * use before you can perform I/O on any of its endpoints.
+     */
+    error = libusb_claim_interface(*basestation_handle, 1);
+    if(error){
+        std::cout << "Error while claiming interface : " << errorToString(error) << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 int main(int argc, char *argv[]) {
     std::cout << "Hello basestation!" << std::endl;
 
-    enumerate();
+    std::thread tWrite(writeThread, nullptr);
+    std::thread tRead(readThread, nullptr);
+    tWrite.join();
+    tRead.join();
+    std::cout << "[main] Threads joined" << std::endl;
+    return 0;
+
+    // =========================== ESTABLISH CONNECTION =========================== //
 
     int error;
     // Initialize USB context
@@ -278,113 +358,107 @@ int main(int argc, char *argv[]) {
     // Set logging level
     error = libusb_set_option(ctx, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
     if(error) std::cout << "error : " << errorToString(error) << std::endl;
-    // Retrieve a list of all USB devices
-    libusb_device **list;
-    int count = libusb_get_device_list(ctx, &list);
-    std::cout << "Number of devices found : " << count << std::endl;
-
-    libusb_device* device_basestation = NULL;
-    for (int i = 0; i < count; i++) {
-        libusb_device *device = list[i];
-        libusb_device_descriptor desc{};
-
-        error = libusb_get_device_descriptor(device, &desc);
-        if (error) std::cout << "error : " << errorToString(error) << std::endl;
-        if (desc.idVendor != 0x0483 || desc.idProduct != 0x5740)
-            continue;
-
-        device_basestation = device;
-        int deviceBus = libusb_get_bus_number(device);
-        int deviceAddress = libusb_get_device_address(device);
-        int deviceSpeed = libusb_get_device_speed(device);
-        printf("\n%04x:%04x (bus %d, device %d) %s\n", desc.idVendor, desc.idProduct, deviceBus, deviceAddress, speedToString(deviceSpeed).c_str());
-    }
-
-    if(device_basestation == NULL){
-        std::cout << "Basestation not found!";
+    // Open connection
+    libusb_device_handle *basestation_handle = nullptr;
+    if(!openBasestation(ctx, &basestation_handle)){
+        std::cout << "[main] Basestation has not been found.. aborting" << std::endl;
         return -1;
     }
 
-    std::cout << "Basestation found!" << std::endl;
+    // =========================== CONNECTION ESTABLISHED =========================== //
 
-    libusb_device_handle* handle;
-    error = libusb_open(device_basestation, &handle);
-    if(error){
-        std::cout << "Error while trying to open handle : " << errorToString(error) << std::endl;
-        return -1;
-    }
-
-    /** libusb_set_auto_detach_kernel_driver() Enable/disable libusb's automatic kernel driver detachment. When this is
-     * enabled libusb will automatically detach the kernel driver on an interface when claiming the interface, and
-     * attach it when releasing the interface.
-     */
-    error = libusb_set_auto_detach_kernel_driver(handle, 1);
-    if(error){
-        std::cout << "Error while enabling auto detach : " << errorToString(error) << std::endl;
-        return -1;
-    }
-
-    /** libusb_claim_interface() Claim an interface on a given device handle. You must claim the interface you wish to
-     * use before you can perform I/O on any of its endpoints.
-     */
-    error = libusb_claim_interface(handle, 1);
-    if(error){
-        std::cout << "Error while claiming interface : " << errorToString(error) << std::endl;
-        return -1;
-    }
+    RobotCommandPayload cmd;
+    RobotCommand_setHeader(&cmd, PACKET_TYPE_ROBOT_COMMAND);
 
     int actual_length = 0;
-    unsigned char buffer[4096];
-    for(int i = 0; i < 100; i++) buffer[i] = (i%100)+1;
+    int bufSize = 8192;
+    unsigned char buffer[bufSize];
 
     int totalBytesSent = 0;
     int totalBytesReceived = 0;
 
+    int msSlept = 0;
+
     auto start = std::chrono::high_resolution_clock::now();
-    for(int counter = 1; counter < 1000; counter++) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    auto last = std::chrono::high_resolution_clock::now();
+    for(int counter = 1; counter < 600; counter++) {
+
+        std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - last;
+        int msToSleep = 16 - 1000 * elapsed.count();
+        msSlept += msToSleep;
+        std::this_thread::sleep_for(std::chrono::milliseconds(msToSleep));
 
         // Send
-        if(counter % 10 == 0) {
+        if(counter % 60 == 0) {
             buffer[0] = PACKET_TYPE_BASESTATION_GET_STATISTICS;
-            error = libusb_bulk_transfer(handle, 0x01, buffer, 1, &actual_length, 500);
+            error = libusb_bulk_transfer(basestation_handle, 0x01, buffer, 1, &actual_length, 500);
             if(error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
         }
 
-        // Receive
-        error = libusb_bulk_transfer(handle, 0x81, buffer, 4096, &actual_length, 0);
-        if(0 < actual_length)
-            std::cout << "Received " << actual_length << " bytes" << std::endl;
-
-        if(buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
-            printf("LOG: ");
-            for (int i = 1; i < actual_length; i++)
-                printf("%c", buffer[i]);
+        for(int id = 0; id < 16; id++) {
+            RobotCommand_setId(&cmd, id);
+            error = libusb_bulk_transfer(basestation_handle, 0x01, cmd.payload, PACKET_SIZE_ROBOT_COMMAND, &actual_length, 500);
+            if (error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
+            else totalBytesSent += actual_length;
         }
 
-        if(buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS){
-            std::cout << "PACKET_TYPE_BASESTATION_STATISTICS" << std::endl;
+        last = std::chrono::high_resolution_clock::now();
+
+        // Receive
+        for(int i = 0; i < 3; i++) {
+            error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &actual_length, 1);
+            if (actual_length == 0) continue;
+            if (error) std::cout << "ERROR receiving : " << errorToString(error) << std::endl;
+
+            //        totalBytesReceived += actual_length;
+            //        std::cout << "Received " << actual_length << " bytes" << std::endl;
+
+            if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
+                printf("LOG: ");
+                for (int i = 1; i < actual_length; i++)
+                    printf("%c", buffer[i]);
+            }
+
+            if (buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS) {
+                std::cout << "PACKET_TYPE_BASESTATION_STATISTICS" << std::endl;
+                for (int i = 0; i < actual_length; i++)
+                    printf("%d ", buffer[i]);
+                printf("\n");
+            }
+
+            if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
+                totalBytesReceived += actual_length;
+            }
         }
     }
 
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
     double seconds = elapsed.count();
-    double kbpsSent = (totalBytesSent / seconds) / 1000.;
-    double kbpsRcvd = (totalBytesReceived / seconds) / 1000.;
+    double kbpsSent = 8 * (totalBytesSent / seconds) / 1000.;
+    double kbpsRcvd = 8 * (totalBytesReceived / seconds) / 1000.;
 
-    std::cout << "totalBytesSent     " << totalBytesSent << std::endl;
-    std::cout << "totalBytesReceived " << totalBytesReceived << std::endl;
-    std::cout << "duration  " << seconds << std::endl;
-    std::cout << "kBps sent " << kbpsSent << std::endl;
-    std::cout << "kBps rcvd " << kbpsRcvd << std::endl;
+    double kbpsSentExpected = (16*60*8*PACKET_SIZE_ROBOT_COMMAND)/1000.;
+    double kbpsRcvdExpected = 0;
+    double idle = 100 * msSlept / (seconds * 1000);
+
+    std::cout << std::endl;
+    std::cout << "    totalBytesSent " << totalBytesSent << std::endl;
+    std::cout << "totalBytesReceived " << totalBytesReceived << std::endl;;
+    printf("          duration %0.2f seconds\n", seconds);
+    std::cout << "expected kbps sent " << kbpsSentExpected << std::endl;
+    std::cout << "  actual kbps sent " << kbpsSent << std::endl;
+    std::cout << "expected kbps rcvd " << kbpsRcvdExpected << std::endl;
+    std::cout << "  actual kbps rcvd " << kbpsRcvd << std::endl;
+    printf("   percentage idle %.0f%%\n", idle);
+
 
     RobotCommandPayload rcp;
     rcp.payload[1] = 4;
 
-    libusb_release_interface(handle, 1);
-    libusb_close(handle);
-    libusb_free_device_list(list, true);
+    libusb_release_interface(basestation_handle, 1);
+    libusb_close(basestation_handle);
+//    libusb_free_device_list(list, true);
     libusb_exit(ctx);
 
     return 0;

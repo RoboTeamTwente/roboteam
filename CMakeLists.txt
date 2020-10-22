@@ -39,6 +39,7 @@ target_link_libraries(roboteam_robothub
         PRIVATE Qt5::Network
         )
 
+find_package(Threads)
 add_executable(basestation
         src/baseStationDevelopment.cpp
         )
@@ -47,6 +48,7 @@ target_include_directories(basestation
         PRIVATE roboteam_embedded_messages/include
         )
 target_link_libraries(basestation
+        ${CMAKE_THREAD_LIBS_INIT}
         usb-1.0)
 
 

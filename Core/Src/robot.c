@@ -252,6 +252,7 @@ void loop(void){
     /*
     * Feedback
     */
+	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     robotFeedback.battery = (batCounter > 1000);

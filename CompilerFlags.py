@@ -15,7 +15,7 @@ env.Append(
   CCFLAGS=[
     opt,
     # "-std=c11",
-    "-g3",
+    # "-g3",
     "-Wall",
     # "-Wextra",
     # "-Wconversion",

@@ -80,7 +80,7 @@ typedef struct MTi_data_struct{
 	GPIO_Pin CS_pin;								// Chip select struct
 	volatile bool SPI_busy;									// falg to see if there is a transaction happening
 	bool init_phase;								// bool to identify if we should stop reacting to interrupts
-	enum XsMessageId LastAck;						// last received ack (for wait for ack check)
+	volatile enum XsMessageId LastAck;						// last received ack (for wait for ack check)
 	uint8_t* RxBuffer;								// receive buffer for the SPI interface
 	uint8_t* TxBuffer;								// transmit buffer for the SPI interface
 	MTi_data_tuple* data_configurations;			// pointer to an array of things to measure

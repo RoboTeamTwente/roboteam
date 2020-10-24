@@ -277,7 +277,7 @@ void loop(void){
         toggle_Pin(LED0_pin);
         // Check if ballsesnor connection is still correct
         // TODO: check if statemachine is correct (!ballPosition.canSeeBall)
-        if ((!ballSensorInitialized && init_attempts < 5) || !ballPosition.canSeeBall) {
+        if ((!ballSensorInitialized && init_attempts < 5)) {
             init_attempts++;
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);

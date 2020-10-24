@@ -103,9 +103,10 @@ static void Putty_TextOut(char *str)
 
 static void Putty_HexOut(uint8_t data[], uint8_t length)
 {
-    while (UART_PC->gState != HAL_UART_STATE_READY);            // Wait until ready
-    memcpy(Putty_Vars.TxBuf, data, length);                  // Copy all data to TxBuf (Transmission Buffer)
-    HAL_UART_Transmit_DMA(UART_PC, Putty_Vars.TxBuf, length); // Transmit the data to the compter
+    if(UART_PC->gState == HAL_UART_STATE_READY){            // Wait until ready
+        memcpy(Putty_Vars.TxBuf, data, length);                  // Copy all data to TxBuf (Transmission Buffer)
+        HAL_UART_Transmit_DMA(UART_PC, Putty_Vars.TxBuf, length); // Transmit the data to the compter
+    }
 }
 
 // Performs an action on the robot depending on the input.

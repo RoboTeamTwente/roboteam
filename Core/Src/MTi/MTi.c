@@ -19,8 +19,18 @@
 MTi_data MTi_struct;
 MTi_data* MTi;
 
-uint8_t RXbuf[MAX_RAW_MESSAGE_SIZE] __attribute__((aligned(16)));
-uint8_t TXbuf[MAX_RAW_MESSAGE_SIZE] __attribute__((aligned(16)));
+
+// Storage for messages to and from the MTi, must be alligned for possible DMA transfers
+#define CEILING(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
+#define BYTES_NEEDED(BYTES) (CEILING(((float)BYTES/32.0f))*32)
+
+uint8_t RXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
+uint8_t TXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
+// Cache coherency rules for RXbuf and TXbuf:
+// 1. Invalidate DCache if a new message is received. This forces the program to read from memory instead of the DCache (SCB_InvalidateDCache_by_Addr)
+// 2. Clean the DCache after a write action to TXbuf. This forces the program to write the DCache to memory. (SCB_CleanDCache_by_Addr)
+// 3. The SCB functions require that the data it is pointing to is 32 BYTE alligned, and as such are invalidated/cleaned with 32 BYTE multiples,
+//	  so the buffer alignement and size should match that.
 
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 MTi_data_tuple data_configurations[]={
@@ -213,6 +223,8 @@ Xsens_Status MTi_DeInit(MTi_data* MTi){
 Xsens_Status MTi_SPI_RxCpltCallback(MTi_data* MTi){
 	// deselect MTi
 	set_Pin(MTi->CS_pin, true);
+	// Invalidate (entire) Cached RxBuffer to force load from memory
+	SCB_InvalidateDCache_by_Addr((uint32_t*)MTi->RxBuffer, BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE));
 	MTi->RxBuffer[2] = XBUS_PREAMBLE;
 	MTi->RxBuffer[3] = XBUS_MASTERDEVICE;
 	XbusParser_parseBuffer(MTi->XBParser, MTi->RxBuffer+2, MTi->RxBuffer[5] +5);
@@ -243,17 +255,24 @@ Xsens_Status MTi_IRQ_Handler(MTi_data* MTi){
 	if(pipe_status->notification_size){
 		while(MTi->SPI_busy){}
 		MTi->SPI_busy = true;
+
+		uint32_t message_size = 2 + pipe_status->notification_size;
+
 		uint8_t* ptr = MTi->TxBuffer;
 		*ptr++ = ReadNotification;
-		memset(ptr,0,2+pipe_status->notification_size);
-		HAL_Delay(1);		// MTi cannot process commands this fast, so add a delay
+		memset(ptr,0,message_size);
+		// HAL_Delay(1);		// MTi cannot process commands this fast, so add a delay
+		// Force (entire) MTi->TxBuffer write to memory
+		
+		SCB_CleanDCache_by_Addr((uint32_t*)MTi->TxBuffer, BYTES_NEEDED(message_size + 2));
+		// Perform read/write action
 		set_Pin(MTi->CS_pin, false);
-		HAL_SPI_TransmitReceive(MTi->SPI, MTi->TxBuffer, MTi->RxBuffer, 4 + pipe_status->notification_size, 100);
+		HAL_SPI_TransmitReceive(MTi->SPI, MTi->TxBuffer, MTi->RxBuffer, message_size + 2, 100);
 		set_Pin(MTi->CS_pin, true);
 
 		MTi->RxBuffer[2] = XBUS_PREAMBLE;
 		MTi->RxBuffer[3] = XBUS_MASTERDEVICE;
-		XbusParser_parseBuffer(MTi->XBParser, MTi->RxBuffer+2, 2 + pipe_status->notification_size);
+		XbusParser_parseBuffer(MTi->XBParser, MTi->RxBuffer+2, message_size);
 		MTi->SPI_busy = false;
 
 		if (MTi->ReceivedMessageStorage->mid == XMID_Error) {
@@ -272,12 +291,17 @@ Xsens_Status MTi_IRQ_Handler(MTi_data* MTi){
 		HAL_Delay(1);
 		while(MTi->SPI_busy){}
 		MTi->SPI_busy = true;
+
+		uint32_t message_size = 2+pipe_status->measurement_size;
+
 		uint8_t* ptr = MTi->TxBuffer;
 		*ptr++ = ReadMeasurement;
-		memset(ptr,0,2+pipe_status->measurement_size);
-
+		memset(ptr,0,message_size);
+		// Force (entire) MTi->TxBuffer write to memory
+		SCB_CleanDCache_by_Addr((uint32_t*)MTi->TxBuffer, BYTES_NEEDED(message_size + 2));
+		// read from 
 		set_Pin(MTi->CS_pin, false);
-		if(HAL_SPI_TransmitReceive_DMA(MTi->SPI, MTi->TxBuffer, MTi->RxBuffer, 4 + pipe_status->measurement_size) != HAL_OK){
+		if(HAL_SPI_TransmitReceive_DMA(MTi->SPI, MTi->TxBuffer, MTi->RxBuffer, message_size + 2) != HAL_OK){
 			MTi->SPI_busy = false;
 		}
 	}
@@ -334,6 +358,9 @@ static HAL_StatusTypeDef SendXbusMessage(MTi_data* MTi, struct XbusMessage XbusM
 	while(MTi->SPI_busy){}
 	MTi->SPI_busy = true;
 	do{
+		// Force (entire) MTi->TxBuffer write to memory
+		SCB_CleanDCache_by_Addr((uint32_t*)MTi->TxBuffer, XbusMes_size);
+		// Perform the write
 		set_Pin(MTi->CS_pin, false);
 		SPI_status = HAL_SPI_Transmit/*_IT*/(MTi->SPI, MTi->TxBuffer, XbusMes_size, 100);
 		set_Pin(MTi->CS_pin, true);

@@ -21,16 +21,18 @@ MTi_data* MTi;
 
 
 // Storage for messages to and from the MTi, must be alligned for possible DMA transfers
-#define CEILING(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
-#define BYTES_NEEDED(BYTES) (CEILING(((float)BYTES/32.0f))*32)
 
-uint8_t RXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
-uint8_t TXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
 // Cache coherency rules for RXbuf and TXbuf:
 // 1. Invalidate DCache if a new message is received. This forces the program to read from memory instead of the DCache (SCB_InvalidateDCache_by_Addr)
 // 2. Clean the DCache after a write action to TXbuf. This forces the program to write the DCache to memory. (SCB_CleanDCache_by_Addr)
 // 3. The SCB functions require that the data it is pointing to is 32 BYTE alligned, and as such are invalidated/cleaned with 32 BYTE multiples,
 //	  so the buffer alignement and size should match that.
+
+// This define makes sure the buffer length is a multiple of 32
+#define BYTES_NEEDED(BYTES) ((((BYTES - 1) >> 5) + 1) << 5)
+
+uint8_t RXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
+uint8_t TXbuf[BYTES_NEEDED(MAX_RAW_MESSAGE_SIZE)] __attribute__((aligned(32)));
 
 ///////////////////////////////////////////////////// DATA MEASUREMENT CONFIGURATIONS
 MTi_data_tuple data_configurations[]={

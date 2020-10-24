@@ -103,10 +103,9 @@ static void Putty_TextOut(char *str)
 
 static void Putty_HexOut(uint8_t data[], uint8_t length)
 {
-    if(UART_PC->gState == HAL_UART_STATE_READY){            // Wait until ready
-        memcpy(Putty_Vars.TxBuf, data, length);                  // Copy all data to TxBuf (Transmission Buffer)
-        HAL_UART_Transmit_DMA(UART_PC, Putty_Vars.TxBuf, length); // Transmit the data to the compter
-    }
+    while(UART_PC->gState != HAL_UART_STATE_READY);           // Wait until ready
+    memcpy(Putty_Vars.TxBuf, data, length);                  // Copy all data to TxBuf (Transmission Buffer)
+    HAL_UART_Transmit_DMA(UART_PC, Putty_Vars.TxBuf, length); // Transmit the data to the compter
 }
 
 // Performs an action on the robot depending on the input.
@@ -137,7 +136,7 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
-		Putty_printf("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun geneva test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
+		Putty_TextOut("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun geneva test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
@@ -173,8 +172,8 @@ static void Putty_HandlePcInput(char *input, size_t n_chars)
     {                         //newline, is end of command
         kb_arrow_counter = 0; // reset the arrow input counter
         PC_Input[commands_counter][PC_Input_counter++] = '\0';
-        Putty_TextOut("\r");
-        Putty_TextOut(PC_Input[commands_counter]);
+        // Putty_TextOut("\r");
+        // Putty_TextOut(PC_Input[commands_counter]);
         Putty_TextOut("\n\r");
         PC_Input_counter = 0;
         Putty_HandleCommand(PC_Input[commands_counter++]);
@@ -226,7 +225,7 @@ static void Putty_HandlePcInput(char *input, size_t n_chars)
         }
         else
         {
-            Putty_printf("%c" /*, input[0]*/);
+            Putty_printf("%c" , input[0]);
             PC_Input[commands_counter][PC_Input_counter++] = (char)input[0];
         }
     }

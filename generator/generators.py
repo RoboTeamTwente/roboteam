@@ -1,38 +1,6 @@
 import math
 
-RobotCommand = [
-	["uint8_t", 	"header", 			8, 		"Header indicating packet type"],
-	["uint8_t", 	"id", 				4,		"Id of the robot"],
-	["bool", 		"doKick", 			1,		"Do a kick if ballsensor"],
-	["bool", 		"doChip", 			1,		"Do a chip if ballsensor"],
-	["bool", 		"doForce", 			1,		"Do regardless of ballsensor"],
-	["bool", 		"useCameraAngle", 	1,		"Use the info in 'cameraAngle'"],
-	["uint16_t",	"rho", 				16,		"Direction of movement"],
-	["uint16_t",	"theta", 			16,		"Magnitude of movement (speed)"],
-	["uint16_t",	"angle", 			16,		"Absolute angle / angular velocity"],
-	["uint16_t",	"cameraAngle", 		16,		"Angle of the robot as seen by camera"],
-	["uint8_t", 	"dribbler", 		3,		"Dribbler speed"],
-	["uint8_t", 	"kickChipPower", 	3,		"Power of the kick or chip"],
-	["bool", 		"angularControl", 	1,		"0 = angular velocity, 1 = absolute angle"],
-	["bool", 		"feedback", 		1,		"Ignore the packet. Just send feedback"],
-]
 
-RobotFeedback = [
-	["uint8_t",		"header",          		8,	"Header byte indicating the type of packet"],
-	["uint8_t",		"id",               	4,  "Id of the robot "],
-	["uint8_t",		"battery_level",       	4,  "The voltage level of the battery"],
-	["bool", 		"xsens_calibrated",  	1,  "Indicates if the XSens IMU is calibrated"],
-	["bool",		"ballsensor_working", 	1,  "Indicates if the ballsensor is working"],
-	["bool",		"has_ball",            	1,  "Indicates if the ball is somewhere in front of the ballsensor"],
-	["bool",		"capacitor_charged", 	1,  "Indicates if the capacitor for kicking and chipping is charged"],
-	["uint8_t",		"ball_position",      	4,  "Indicates where in front of the ballsensor the ball is"],
-	["uint16_t",	"rho",               	16, "The estimated direction of movement"],
-	["uint16_t",	"theta",            	16, "The estimated magnitude of movement (speed)"],
-	["uint16_t",	"angle",          	  	16, "The estimated angle"],
-	["uint8_t",		"wheel_locked",     	4,  "Indicates if a wheel is locked. One bit per wheel"],
-	["uint8_t",		"wheel_slipping",    	4,  "Indicates if a wheel is slipping. One bit per wheel"],
-	["uint8_t",		"rssi",            		4,  "Signal strength of the last packet received by the robot"]
-]
 
 funcDeclGet = """static inline %s %s_get%s(%s *%s){
 	return %s;
@@ -55,10 +23,21 @@ def shift(left, right):
 	if left < right: return " >> %d" % (right-left)
 	if right < left: return " << %d" % (left-right)
 
+# RobotCommand => rc
 def CamelCaseToAbbrev(word):
 	return ''.join([letter for letter in word if letter.isupper()]).lower()
 
+# RobotCommand => _ROBOT_COMMAND
+def CamelCaseToUpper(word):
+	return ''.join(['_'*char.isupper() + char.upper() for char in word])
 
+def toHeaderGuard(packet):
+	return "_%s_H" % CamelCaseToUpper(packet)
+
+def toStructPayload(packet):
+	struct = "typedef struct _%sPayload {\n\tuint8_t payload[PACKET_SIZE%s];\n} %sPayload;"
+	struct %= (packet, CamelCaseToUpper(packet), packet)
+	return struct
 
 def toStruct(packet, variables):
 	struct = "typedef struct _%s {\n" % packet
@@ -69,10 +48,9 @@ def toStruct(packet, variables):
 	return struct
 
 def toStructure(packet, variables):
-	struct = "/** ================================ PACKET ================================\n"
 	nBytes = math.ceil(sum([nBits for (_, _, nBits, _) in variables]) / 8)
 
-	struct += ' '.join(["[%s--]" % (("%d"%i).rjust(4,"-")) for i in range(nBytes)])
+	struct = ' '.join(["[%s--]" % (("%d"%i).rjust(4,"-")) for i in range(nBytes)])
 	at = 0
 	for _type, variable, nBits, desc in variables:
 		set1 = list(range(at, at+nBits))
@@ -82,7 +60,6 @@ def toStructure(packet, variables):
 			struct += "1" if i in set1 else "-"
 		struct += " %s" % variable
 		at += nBits
-	struct += "\n**/"
 	return struct
 
 def toGetter(_type, variable, nBits, packet, at):
@@ -191,57 +168,3 @@ def toEncode(packet, variables):
 		f += "\t%s_set%s(%s, %s->%s);\n" % (packet, upperFirst(variable), abbr1, abbr2, variable)
 	f += "}"
 	return f
-
-
-
-
-
-# print(toStructure("RobotCommand", RobotCommand))
-
-# print("\n\n\n/** ================================ STRUCT ================================ */")
-# print(toStruct("RobotCommand", RobotCommand))
-
-# print("\n\n\n/** ================================ GETTERS ================================ */")
-# at = 0
-# for _type, variable, nBits, _ in RobotCommand:
-# 	print(toGetter(_type, variable, nBits, "RobotCommand", at))
-# 	at += nBits
-
-# print("\n\n\n/** ================================ SETTERS ================================ */")
-# at = 0
-# for _type, variable, nBits, _ in RobotCommand:
-# 	print(toSetter(_type, variable, nBits, "RobotCommand", at))
-# 	at += nBits
-
-# print("\n\n\n/** ================================ ENCODE ================================ */")
-# print(toDecode("RobotCommand", RobotCommand))
-
-# print("\n\n\n/** ================================ DECODE ================================ */")
-# print(toEncode("RobotCommand", RobotCommand))
-
-
-
-
-
-# print(toStructure("RobotFeedback", RobotFeedback))
-
-# print("\n\n\n/** ================================ STRUCT ================================ */")
-# print(toStruct("RobotFeedback", RobotFeedback))
-
-# print("\n\n\n/** ================================ GETTERS ================================ */")
-# at = 0
-# for _type, variable, nBits, _ in RobotFeedback:
-# 	print(toGetter(_type, variable, nBits, "RobotFeedback", at))
-# 	at += nBits
-
-# print("\n\n\n/** ================================ SETTERS ================================ */")
-# at = 0
-# for _type, variable, nBits, _ in RobotFeedback:
-# 	print(toSetter(_type, variable, nBits, "RobotFeedback", at))
-# 	at += nBits
-
-# print("\n\n\n/** ================================ ENCODE ================================ */")
-# print(toDecode("RobotFeedback", RobotFeedback))
-
-# print("\n\n\n/** ================================ DECODE ================================ */")
-# print(toEncode("RobotFeedback", RobotFeedback))

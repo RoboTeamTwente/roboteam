@@ -1,0 +1,2 @@
+generator/generated/*
+generator/__pycache__

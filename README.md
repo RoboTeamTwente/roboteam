@@ -3,8 +3,8 @@ This repository holds all definitions and implementations of messages that are s
 This repository is header-only, and is to stay that way.
 
 ### Suggested packet formats
-Below are the suggested packet formats. At the time of writing, these have not yet been implemented.
-##### RobotCommand (not yet implemented)
+Below are the currently implemented packet formats. These have not yet been tested
+##### RobotCommand (not yet tested)
 ```
 header          :  8 bits  Header byte indicating the type of packet
 id              :  4 bits  Id of the robot 
@@ -23,7 +23,7 @@ feedback only   :  1 bits  indicates that the packet may be ignored. Do send fee
 last revision : Oktober 22nd 2020 by Emiel Steerneman
 ```
 
-##### RobotFeedback (not yet implemented)
+##### RobotFeedback (not yet tested)
 ```
 header              :  8 bits  Header byte indicating the type of packet
 id                  :  4 bits  Id of the robot 

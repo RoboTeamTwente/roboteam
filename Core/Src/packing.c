@@ -60,22 +60,22 @@ void packetToRoboData(RobotCommandPayload input, ReceivedData* receivedData) {
 	//static float stateRef[3] = {0, 0, 0};
 	receivedData->stateRef[body_x] = (rc.rho * CONVERT_RHO) * cosf(rc.theta * CONVERT_THETA);
 	receivedData->stateRef[body_y] = (rc.rho * CONVERT_RHO) * sinf(rc.theta * CONVERT_THETA);
-	receivedData->stateRef[body_w] = rc.angularVelocity * CONVERT_YAW_REF;
+	receivedData->stateRef[body_w] = rc.angle * CONVERT_YAW_REF - M_PI;
 	//receivedData->stateRef = stateRef;
 
 	// Geneva
-	receivedData->genevaRef = rc.geneva;
+	// receivedData->genevaRef = rc.geneva;
 
 	// Dribbler
-	receivedData->dribblerRef = rc.dribblerSpeed * CONVERT_DRIBBLE_SPEED;
+	receivedData->dribblerRef = rc.dribbler * CONVERT_DRIBBLE_SPEED;
 
 	// Shoot
-	receivedData->shootPower = rc.power * CONVERT_SHOOTING_POWER;
-	receivedData->kick_chip_forced = rc.force;
+	receivedData->shootPower = rc.kickChipPower * CONVERT_SHOOTING_POWER;
+	receivedData->kick_chip_forced = rc.doForce;
 	receivedData->do_kick = rc.doKick;
 	receivedData->do_chip = rc.doChip;
 
 	// Vision data
-	receivedData->visionAvailable = rc.useCamInfo;
-	receivedData->visionYaw = rc.camRotation * CONVERT_VISION_YAW;
+	receivedData->visionAvailable = rc.useCameraAngle;
+	receivedData->visionYaw = rc.cameraAngle * CONVERT_VISION_YAW;
 }

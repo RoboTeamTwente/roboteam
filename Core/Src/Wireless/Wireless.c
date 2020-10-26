@@ -41,7 +41,7 @@ SX1280_Settings set = {
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, ROBOPKTLEN, CRC_2_BYTE, NO_WHITENING},
+        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, PACKET_SIZE_ROBOT_COMMAND, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -174,7 +174,7 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t output[]){
 	if (SX->expect_packet) {
 		// was expecting a packet, process it
 		SX->expect_packet = false;
-		memcpy(output, SX->RXbuf+3, ROBOPKTLEN);
+		memcpy(output, SX->RXbuf+3, PACKET_SIZE_ROBOT_COMMAND);
 	} else {
 		// was not expecting a packet, go to Rx
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

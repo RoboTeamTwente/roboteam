@@ -255,12 +255,12 @@ void loop(void){
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
-    robotFeedback.battery = (batCounter > 1000);
+    robotFeedback.batteryLevel = (batCounter > 1000);
     robotFeedback.ballSensorWorking = ballSensor_isWorking();
     robotFeedback.hasBall = ballPosition.canKickBall;
     robotFeedback.ballPos = ballPosition.x/100 & ballSensor_isWorking();
-    robotFeedback.genevaWorking = geneva_IsWorking();
-    robotFeedback.genevaState = geneva_GetState();
+    // robotFeedback.genevaWorking = geneva_IsWorking();
+    // robotFeedback.genevaState = geneva_GetState();
 
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
@@ -339,7 +339,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
         encodeRobotFeedback(&Bot_to_PC, &robotFeedback);
-		Wireless_IRQ_Handler(SX, Bot_to_PC.payload, ROBOPKTLEN);
+		Wireless_IRQ_Handler(SX, Bot_to_PC.payload, PACKET_SIZE_ROBOT_FEEDBACK);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){

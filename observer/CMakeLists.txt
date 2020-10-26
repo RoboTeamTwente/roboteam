@@ -5,8 +5,10 @@ add_library(observer STATIC
         src/filters/CameraFilter.cpp
         src/filters/Scaling.h
         src/Observer.cpp
-        )
+        src/parameters/RobotParameterDatabase.cpp
+        src/filters/geometry/GeometryFilter.cpp src/filters/geometry/GeometryFilter.h)
 target_link_libraries(observer
+        PRIVATE data
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Eigen3::Eigen

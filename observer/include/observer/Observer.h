@@ -10,7 +10,10 @@
 #include <roboteam_proto/RobotData.pb.h>
 #include <roboteam_proto/State.pb.h>
 #include <roboteam_utils/Time.h>
+
 #include "filters/WorldFilter.h"
+#include "filters/geometry/GeometryFilter.h"
+#include "parameters/RobotParameterDatabase.h"
 
 /**
  * @brief This class provides a unified interface for processing all the real-time information provided by the SSL and our system
@@ -38,9 +41,10 @@ public:
      */
     [[nodiscard]] proto::State getState(Time time) const;
 private:
+    RobotParameterDatabase parameterDatabase;
     WorldFilter worldFilter;
-//    GeometryFilter geometryFilter;
-//    RefereeFilter refereeFilter;
+    GeometryFilter geometryFilter;
+    //RefereeFilter refereeFilter;
 
 };
 

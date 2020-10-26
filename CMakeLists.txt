@@ -6,6 +6,7 @@ include(cotire)
 include(ccache)
 find_package(Eigen3 REQUIRED)
 
+add_subdirectory(data)
 add_subdirectory(net)
 add_subdirectory(observer)
 

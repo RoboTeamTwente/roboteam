@@ -18,17 +18,17 @@ packets = {
 	"RobotFeedback" : [
 		["uint8_t",		"header",          		8,	"Header byte indicating the type of packet"],
 		["uint8_t",		"id",               	4,  "Id of the robot "],
-		["uint8_t",		"battery_level",       	4,  "The voltage level of the battery"],
-		["bool", 		"xsens_calibrated",  	1,  "Indicates if the XSens IMU is calibrated"],
-		["bool",		"ballsensor_working", 	1,  "Indicates if the ballsensor is working"],
-		["bool",		"has_ball",            	1,  "Indicates if the ball is somewhere in front of the ballsensor"],
-		["bool",		"capacitor_charged", 	1,  "Indicates if the capacitor for kicking and chipping is charged"],
-		["uint8_t",		"ball_position",      	4,  "Indicates where in front of the ballsensor the ball is"],
+		["uint8_t",		"batteryLevel",       	4,  "The voltage level of the battery"],
+		["bool", 		"XsensCalibrated",  	1,  "Indicates if the XSens IMU is calibrated"],
+		["bool",		"ballSensorWorking", 	1,  "Indicates if the ballsensor is working"],
+		["bool",		"hasBall",            	1,  "Indicates if the ball is somewhere in front of the ballsensor"],
+		["bool",		"capacitorCharged", 	1,  "Indicates if the capacitor for kicking and chipping is charged"],
+		["uint8_t",		"ballPos",		      	4,  "Indicates where in front of the ballsensor the ball is"],
 		["uint16_t",	"rho",               	16, "The estimated direction of movement"],
 		["uint16_t",	"theta",            	16, "The estimated magnitude of movement (speed)"],
 		["uint16_t",	"angle",          	  	16, "The estimated angle"],
-		["uint8_t",		"wheel_locked",     	4,  "Indicates if a wheel is locked. One bit per wheel"],
-		["uint8_t",		"wheel_slipping",    	4,  "Indicates if a wheel is slipping. One bit per wheel"],
+		["uint8_t",		"wheelLocked",	     	4,  "Indicates if a wheel is locked. One bit per wheel"],
+		["uint8_t",		"wheelBraking",	    	4,  "Indicates if a wheel is slipping. One bit per wheel"],
 		["uint8_t",		"rssi",            		4,  "Signal strength of the last packet received by the robot"]
 	]
-}
+}	

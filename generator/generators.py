@@ -2,11 +2,11 @@ import math
 
 
 
-funcDeclGet = """static inline %s %s_get%s(%s *%s){
+funcDeclGet = """static inline %s %s_get_%s(%s *%s){
 	return %s;
 }"""
 
-funcDeclSet = """static inline void %s_set%s(%s *%s, %s %s){
+funcDeclSet = """static inline void %s_set_%s(%s *%s, %s %s){
 %s
 }"""
 
@@ -99,7 +99,7 @@ def toGetter(_type, variable, nBits, packet, at):
 
 		returnValue = ' | '.join(operations)
 
-	func = funcDeclGet % (_type, packet, upperFirst(variable), payload, var, returnValue)
+	func = funcDeclGet % (_type, packet, variable, payload, var, returnValue)
 	return func
 
 def toSetter(_type, variable, nBits, packet, at):
@@ -144,7 +144,7 @@ def toSetter(_type, variable, nBits, packet, at):
 	value = '\n'.join(operations)
 
 	func = funcDeclSet % \
-	(packet, upperFirst(variable), payload, abbr, _type, variable, value)
+	(packet, variable, payload, abbr, _type, variable, value)
 	return func
 
 def toDecode(packet, variables):

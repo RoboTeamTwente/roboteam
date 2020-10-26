@@ -42,7 +42,7 @@ def toStructPayload(packet):
 def toStruct(packet, variables):
 	struct = "typedef struct _%s {\n" % packet
 	for _type, variable, nBits, desc in variables:
-		strVar = "\t%s %s;" % (_type, variable)
+		strVar = "\t%s %s:%s;" % (_type, variable, str(nBits))
 		struct += strVar.ljust(30) + "// %s\n" % desc
 	struct += "} %s;" % packet
 	return struct
@@ -154,7 +154,7 @@ def toDecode(packet, variables):
 
 	f = "static inline void decode%s(%s *%s, %s *%s){\n" % (packet, packet, abbr1, payload, abbr2)
 	for _type, variable, nBits, _ in variables:
-		f += ("\t%s->%s"%(abbr1, variable)).ljust(25) + "= %s_get%s(%s);\n" % (packet, upperFirst(variable), abbr2)
+		f += ("\t%s->%s"%(abbr1, variable)).ljust(25) + "= %s_get_%s(%s);\n" % (packet, variable, abbr2)
 	f += "}"
 	return f
 
@@ -165,6 +165,6 @@ def toEncode(packet, variables):
 
 	f = "static inline void encode%s(%s *%s, %s *%s){\n" % (packet, payload, abbr1, packet, abbr2)
 	for _type, variable, nBits, _ in variables:
-		f += "\t%s_set%s(%s, %s->%s);\n" % (packet, upperFirst(variable), abbr1, abbr2, variable)
+		f += "\t%s_set_%s(%s, %s->%s);\n" % (packet, variable, abbr1, abbr2, variable)
 	f += "}"
 	return f

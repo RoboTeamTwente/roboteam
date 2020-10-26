@@ -27,7 +27,7 @@ typedef enum _PACKET_TYPE {
 
 typedef enum _PACKET_SIZE { 
 	PACKET_SIZE_ROBOT_COMMAND                  = 10,
-    PACKET_SIZE_ROBOT_FEEDBACK                 = 9,
+    PACKET_SIZE_ROBOT_FEEDBACK                 = 10,
     PACKET_SIZE_ROBOT_SET_SETTINGS             = 0,
     PACKET_SIZE_ROBOT_GET_SETTINGS             = 0,
     PACKET_SIZE_ROBOT_SETTINGS                 = 0,

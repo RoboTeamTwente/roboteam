@@ -64,9 +64,8 @@ def toStruct(packet, variables):
 	struct = "typedef struct _%s {\n" % packet
 	for variable, nBits,  _range, desc in variables:
 		_, _type = getTypes(nBits, _range)				# Get type (bool, float, uint16_t, etc)
-		strVar  = "    " + ("%s"%_type).ljust(10)		# Add type
-		strVar += " %s;" % variable 					# Add variable name
-		struct += strVar.ljust(40) + "// %s\n" % desc 	# Add description
+		strVar = "\t%s %s:%s;" % (_type, variable, str(nBits))
+		struct += strVar.ljust(30) + "// %s\n" % desc 	# Add description
 	struct += "} %s;" % packet
 	return struct
 

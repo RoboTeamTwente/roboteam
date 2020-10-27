@@ -3,9 +3,12 @@
 
 #include <roboteam_proto/World.pb.h>
 #include <roboteam_proto/WorldRobot.pb.h>
+#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 
 #include "BallFilter.h"
 #include "RobotFilter.h"
+
+#include "observer/parameters/RobotParameterDatabase.h"
 
 /**
  * @author Rolf van der Hulst
@@ -16,13 +19,7 @@
 class WorldFilter {
    public:
     WorldFilter();
-    /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
-     *  Or they will be created if they do not exist yet. Note this does NOT call the Kalman update/predict equations and thus
-     *  only puts the data in the right spot. Worldfilter itself manages the messages based on their timestamps,
-     *  so in between update/predict calls the order in which you supply messages does not matter.
-     *  @param msg Frame to be given to the filter
-     */
-    void addFrame(const proto::SSL_DetectionFrame &msg);
+
     /**
      * Get the state estimation of the world as a proto message. This also calls update(), ensuring that data is sent
      * is as up to date as possible.
@@ -31,16 +28,26 @@ class WorldFilter {
      * @return Proto message containing the entire world state.
      */
     proto::World getWorld(double time);
+
+    void setGeometry(const proto::SSL_GeometryData& geometry);
+    void setRobotParameters(const TwoTeamRobotParameters& parameters);
+    void process(std::vector<proto::SSL_DetectionFrame> visionFrames);
+   private:
+    /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
+     *  Or they will be created if they do not exist yet. Note this does NOT call the Kalman update/predict equations and thus
+     *  only puts the data in the right spot. Worldfilter itself manages the messages based on their timestamps,
+     *  so in between update/predict calls the order in which you supply messages does not matter.
+     *  @param msg Frame to be given to the filter
+     */
+    void addFrame(const proto::SSL_DetectionFrame &msg);
     /**
      * Updates the world filter's state estimation until a certain time.
      * @param time Time to update to.
      * @param doLastPredict If set to true, all filters  predict/extrapolate the positions of all objects
      * from the last time they were seen until the time specified.
      * You should always set this to true if you plan on using data immediately.
-     */
+      */
     void update(double time, bool doLastPredict);
-
-   private:
     typedef std::map<int, std::vector<std::unique_ptr<RobotFilter>>> robotMap;
     static const std::unique_ptr<RobotFilter> &bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters);
     static const std::unique_ptr<BallFilter> &bestFilter(const std::vector<std::unique_ptr<BallFilter>> &filters);
@@ -48,6 +55,7 @@ class WorldFilter {
     robotMap blueBots;
     robotMap yellowBots;
     std::vector<std::unique_ptr<BallFilter>> balls;
+    double lastUpdateTime = 0.0;
     static void updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime);
     static void handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
                              uint cameraID);

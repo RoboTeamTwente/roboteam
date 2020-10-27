@@ -6,16 +6,17 @@ add_library(observer STATIC
         src/filters/Scaling.h
         src/Observer.cpp
         src/parameters/RobotParameterDatabase.cpp
-        src/filters/geometry/GeometryFilter.cpp src/filters/geometry/GeometryFilter.h)
+        src/filters/geometry/GeometryFilter.cpp
+        )
 target_link_libraries(observer
-        PRIVATE data
+        PUBLIC data
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Eigen3::Eigen
         )
 target_include_directories(observer
         PRIVATE include/observer
-        INTERFACE include
+        PUBLIC include
         )
 target_compile_options(observer
         PUBLIC

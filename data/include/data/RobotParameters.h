@@ -9,7 +9,9 @@
 
 class RobotParameters {
 public:
+
     RobotParameters();
+    RobotParameters(double radius, double height, double frontWidth, double dribblerWidth, double angleOffset);
     explicit RobotParameters(const proto::RobotParameters& protoParams);
     [[nodiscard]] proto::RobotParameters toProto() const;
     static RobotParameters DEFAULT();

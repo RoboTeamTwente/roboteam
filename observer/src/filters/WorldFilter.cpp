@@ -5,6 +5,7 @@
 #include <filters/WorldFilter.h>
 #include <memory>
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <iomanip>
 
 
 WorldFilter::WorldFilter() {
@@ -127,4 +128,30 @@ const std::unique_ptr<BallFilter> &WorldFilter::bestFilter(const std::vector<std
         }
     }
     return filters[bestIndex];
+}
+
+void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames) {
+    std::sort(visionFrames.begin(),visionFrames.end(),[](const proto::SSL_DetectionFrame& a, const proto::SSL_DetectionFrame&b){
+        return a.t_capture() < b.t_capture();
+    });
+    for(const auto& frame : visionFrames){
+        addFrame(frame);
+    }
+    if(!visionFrames.empty()){
+        double latestTime = visionFrames.back().t_capture();
+        if(latestTime>lastUpdateTime){
+            lastUpdateTime = latestTime;
+        }
+    }
+    update(lastUpdateTime,false);
+}
+
+void WorldFilter::setRobotParameters(const TwoTeamRobotParameters& parameters) {
+//TODO: use robot parameters for collision detection etc.
+
+}
+
+void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
+    //TODO: implement geometry here.
+
 }

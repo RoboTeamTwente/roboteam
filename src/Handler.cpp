@@ -41,13 +41,13 @@ void Handler::setupSSLClients() {
     const string SSL_REFEREE_SOURCE_IP = "224.5.23.1";
     
     vision_client = std::make_unique<RoboCupSSLClient>(DEFAULT_VISION_PORT, SSL_VISION_SOURCE_IP);
-    refbox_client = std::make_unique<RoboCupSSLClient>(DEFAULT_REFEREE_PORT, SSL_REFEREE_SOURCE_IP);
+    referee_client = std::make_unique<RoboCupSSLClient>(DEFAULT_REFEREE_PORT, SSL_REFEREE_SOURCE_IP);
 
     cout << "Vision  : " << SSL_VISION_SOURCE_IP << ":" << DEFAULT_VISION_PORT << endl;
     cout << "Referee  : " << SSL_REFEREE_SOURCE_IP << ":" << DEFAULT_REFEREE_PORT << endl;
 
     vision_client->open(false);  // boolean blocking
-    refbox_client->open(false);
+    referee_client->open(false);
     this_thread::sleep_for(chrono::microseconds(10000));
 }
 
@@ -62,7 +62,7 @@ std::vector<proto::SSL_WrapperPacket> Handler::receiveVisionPackets() {
 std::vector<proto::SSL_Referee> Handler::receiveRefereePackets()  {
     std::vector<proto::SSL_Referee> receivedPackets;
     proto::SSL_Referee packet;
-    while(vision_client && vision_client->receive(packet)){
+    while(referee_client && referee_client->receive(packet)){
         receivedPackets.push_back(packet);
     }
     return receivedPackets;

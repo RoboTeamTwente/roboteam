@@ -15,7 +15,7 @@ class Handler {
    private:
     std::unique_ptr<proto::Publisher<proto::State>> pub_state = nullptr;
     std::unique_ptr<RoboCupSSLClient> vision_client = nullptr;
-    std::unique_ptr<RoboCupSSLClient> refbox_client = nullptr;
+    std::unique_ptr<RoboCupSSLClient> referee_client = nullptr;
     std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback = nullptr;
     Observer observer;
     std::vector<proto::RobotData> receivedRobotData;

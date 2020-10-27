@@ -22,17 +22,7 @@ for packetName in packets.keys():
 	file.write("#include \"BaseTypes.h\"\n")
 	file.write("\n")
 	file.write("%s\n" % g.toStructPayload(packetName))
-	file.write("\n")
-
-	# TODO fix this hack
-	if packetName == "RobotCommand":
-		file.write("#define CONVERT_RHO             0.004f\n")
-		file.write("#define CONVERT_THETA           0.00307f\n")
-		file.write("#define CONVERT_YAW_REF         0.00614f\n")
-		file.write("#define CONVERT_SHOOTING_POWER  0.39f\n")
-		file.write("#define CONVERT_DRIBBLE_SPEED   3.125f\n")
-		file.write("#define CONVERT_VISION_YAW      0.00307f\n")
-
+	
 	file.write("\n\n\n/** ================================ PACKET ================================ \n")
 	file.write(g.toStructure(packetName, packets[packetName]))
 	file.write("\n*/")
@@ -43,18 +33,12 @@ for packetName in packets.keys():
 	file.write("\n")
 
 	file.write("\n\n\n/** ================================ GETTERS ================================ */\n")
-	at = 0
-	for _type, variable, nBits, _ in packets[packetName]:
-		file.write("%s\n" % g.toGetter(_type, variable, nBits, packetName, at))
-		at += nBits
+	file.write("%s\n" % g.toGetters(packetName, packets))
 
-	file.write("\n\n\n/** ================================ SETTERS ================================ */\n")
-	at = 0
-	for _type, variable, nBits, _ in packets[packetName]:
-		file.write("%s\n" % g.toSetter(_type, variable, nBits, packetName, at))
-		at += nBits
+	file.write("\n\n/** ================================ SETTERS ================================ */\n")
+	file.write("%s\n" % g.toSetters(packetName, packets))
 
-	file.write("\n\n\n/** ================================ DECODE ================================ */\n")
+	file.write("\n\n/** ================================ DECODE ================================ */\n")
 	file.write(g.toDecode(packetName, packets[packetName]))
 	file.write("\n")
 
@@ -67,5 +51,3 @@ for packetName in packets.keys():
 	file.close()
 
 	shutil.copy("generated/%s" % filename, "../include/%s" % filename)
-
-

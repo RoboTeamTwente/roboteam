@@ -1,34 +1,36 @@
+import math
+
 packets = {
-	"RobotCommand" : [
-		["uint8_t", 	"header", 				8,	"Header indicating packet type"],
-		["uint8_t", 	"id", 					4,	"Id of the robot"],
-		["bool", 		"doKick", 				1,	"Do a kick if ballsensor"],
-		["bool", 		"doChip", 				1,	"Do a chip if ballsensor"],
-		["bool", 		"doForce", 				1,	"Do regardless of ballsensor"],
-		["bool", 		"useCameraAngle", 		1,	"Use the info in 'cameraAngle'"],
-		["uint16_t",	"rho", 					16,	"Direction of movement"],
-		["uint16_t",	"theta", 				16,	"Magnitude of movement (speed)"],
-		["uint16_t",	"angle", 				16,	"Absolute angle / angular velocity"],
-		["uint16_t",	"cameraAngle", 			16,	"Angle of the robot as seen by camera"],
-		["uint8_t", 	"dribbler", 			3,	"Dribbler speed"],
-		["uint8_t", 	"kickChipPower", 		3,	"Power of the kick or chip"],
-		["bool", 		"angularControl", 		1,	"0 = angular velocity, 1 = absolute angle"],
-		["bool", 		"feedback", 			1,	"Ignore the packet. Just send feedback"],
-	],
-	"RobotFeedback" : [
-		["uint8_t",		"header",          		8,	"Header byte indicating the type of packet"],
-		["uint8_t",		"id",               	4,  "Id of the robot "],
-		["uint8_t",		"batteryLevel",       	4,  "The voltage level of the battery"],
-		["bool", 		"XsensCalibrated",  	1,  "Indicates if the XSens IMU is calibrated"],
-		["bool",		"ballSensorWorking", 	1,  "Indicates if the ballsensor is working"],
-		["bool",		"hasBall",            	1,  "Indicates if the ball is somewhere in front of the ballsensor"],
-		["bool",		"capacitorCharged", 	1,  "Indicates if the capacitor for kicking and chipping is charged"],
-		["uint8_t",		"ballPos",		      	4,  "Indicates where in front of the ballsensor the ball is"],
-		["uint16_t",	"rho",               	16, "The estimated direction of movement"],
-		["uint16_t",	"theta",            	16, "The estimated magnitude of movement (speed)"],
-		["uint16_t",	"angle",          	  	16, "The estimated angle"],
-		["uint8_t",		"wheelLocked",	     	4,  "Indicates if a wheel is locked. One bit per wheel"],
-		["uint8_t",		"wheelBraking",	    	4,  "Indicates if a wheel is slipping. One bit per wheel"],
-		["uint8_t",		"rssi",            		4,  "Signal strength of the last packet received by the robot"]
-	]
-}	
+    "RobotCommand" : [
+        ["header",             8,  None, "Header indicating packet type"],
+        ["id",                 4,  None, "Id of the robot"],
+        ["doKick",             1,  None, "Do a kick if ballsensor"],
+        ["doChip",             1,  None, "Do a chip if ballsensor"],
+        ["doForce",            1,  None, "Do regardless of ballsensor"],
+        ["useCameraAngle",     1,  None, "Use the info in 'cameraAngle'"],
+        ["rho",                16, [-math.pi, math.pi],    "Direction of movement (radians)"],
+        ["theta",              16, [-5, 5],                "Magnitude of movement (m/s)"],
+        ["angle",              16, [-math.pi, math.pi],    "Absolute angle (rad) / angular velocity (rad/s)"],
+        ["cameraAngle",        16, [-math.pi, math.pi],    "Angle of the robot as seen by camera (rad)"],
+        ["dribbler",           3,  None, "Dribbler speed"],
+        ["kickChipPower",      3,  None, "Power of the kick or chip"],
+        ["angularControl",     1,  None, "0 = angular velocity, 1 = absolute angle"],
+        ["feedback",           1,  None, "Ignore the packet. Just send feedback"],
+    ],
+    "RobotFeedback" : [
+        ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["id",                 4,  None, "Id of the robot "],
+        ["batteryLevel",       4,  None, "The voltage level of the battery"],
+        ["XsensCalibrated",    1,  None, "Indicates if the XSens IMU is calibrated"],
+        ["ballSensorWorking",  1,  None, "Indicates if the ballsensor is working"],
+        ["hasBall",            1,  None, "Indicates if the ball is somewhere in front of the ballsensor"],
+        ["capacitorCharged",   1,  None, "Indicates if the capacitor for kicking and chipping is charged"],
+        ["ballPos",            4,  [-0.5, 0.5],            "Indicates where in front of the ballsensor the ball is"],
+        ["rho",                16, [-math.pi, math.pi],    "The estimated direction of movement (rad)"],
+        ["theta",              16, [-5, 5],                "The estimated magnitude of movement (m/s)"],
+        ["angle",              16, [-math.pi, math.pi],    "The estimated angle (rad)"],
+        ["wheelLocked",        4,  None, "Indicates if a wheel is locked. One bit per wheel"],
+        ["wheelBraking",       4,  None, "Indicates if a wheel is slipping. One bit per wheel"],
+        ["rssi",               4,  None, "Signal strength of the last packet received by the robot"]
+    ]
+}    

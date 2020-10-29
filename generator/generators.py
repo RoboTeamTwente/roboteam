@@ -94,7 +94,8 @@ def toGetters(packetName, packets):
 	for variable, nBits, _range, _ in packets[packetName]:
 		payload = upperFirst(packetName) + "Payload" # RobotCommandPayload
 		abbr = CamelCaseToAbbrev(payload)		     # rcp
-
+		totalBits = nBits
+		
 		type1, type2 = getTypes(nBits, _range)
 
 		returnValue = ""
@@ -134,7 +135,7 @@ def toGetters(packetName, packets):
 			if type1 == type2: # immediately return the value
 				returnValue = "    return %s;" % operationsStr
 			elif type2 == "float": # First convert the value to float
-				a, b = getConversionToFloat(nBits, _range)
+				a, b = getConversionToFloat(totalBits, _range)
 				returnValue = "    %s %s = %s;\n" % (type1, variable, operationsStr)
 				returnValue+= "    return (%s * %.16f) + %.16f;" % (variable, a, b)
 
@@ -151,6 +152,7 @@ def toSetters(packetName, packets):
 	for variable, nBits, _range, _ in packets[packetName]:
 		payload = upperFirst(packetName) + "Payload" # RobotCommandPayload
 		abbr = CamelCaseToAbbrev(payload)		     # rcp
+		totalBits = nBits
 
 		type1, type2 = getTypes(nBits, _range)
 
@@ -191,7 +193,7 @@ def toSetters(packetName, packets):
 
 		operationsStr = ""
 		if type2 == "float":
-			a, b = getConversionToInt(nBits, _range)
+			a, b = getConversionToInt(totalBits, _range)
 			operationsStr += "    %s %s = (_%s - %.16f) * %.16f;\n" % (type1, variable, variable, b, a)
 
 		operationsStr += '\n'.join(operations)

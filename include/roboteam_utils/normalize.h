@@ -56,14 +56,6 @@ namespace roboteam_utils {
      */
     void rotate(proto::SSL_FieldCircularArc *arc);
 
-    /**
-     * @brief Changes every member of an arc from milimeters -> meters
-     * 
-     * Pointer is asserted in debug mode
-     * 
-     * @param arc Arc to rotate
-     */
-    void toMeters(proto::SSL_FieldCircularArc *arc);
 
     /**
      * @brief Rotates all members of a line
@@ -73,16 +65,6 @@ namespace roboteam_utils {
      * @param line Line to rotate
      */
     void rotate(proto::SSL_FieldLineSegment *line);
-
-
-    /**
-     * @brief Changes a line's member from milimeters -> meters
-     * 
-     * Pointer is asserted in debug mode
-     * 
-     * @param line Line to change
-     */
-    void toMeters(proto::SSL_FieldLineSegment *line);
 
     /**
      * @brief Rotate all field lines and field arcs in a field

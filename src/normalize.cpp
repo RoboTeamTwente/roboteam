@@ -50,7 +50,7 @@ namespace roboteam_utils {
     }
 
 // rotate a single field arc
-    void rotate(proto::SSL_FieldCicularArc *arc) {
+    void rotate(proto::SSL_FieldCircularArc *arc) {
         assert(arc && "Invalid pointer for arc");
         arc->mutable_center()->set_x(arc->center().x() * -1);
         arc->mutable_center()->set_y(arc->center().y() * -1);
@@ -59,7 +59,7 @@ namespace roboteam_utils {
     }
 
 // convert an arc from millimeters to meters
-    void toMeters(proto::SSL_FieldCicularArc *arc) {
+    void toMeters(proto::SSL_FieldCircularArc *arc) {
         assert(arc && "Invalid pointer for arc");
         arc->mutable_center()->set_x(mm_to_m(arc->center().x()));
         arc->mutable_center()->set_y(mm_to_m(arc->center().y()));

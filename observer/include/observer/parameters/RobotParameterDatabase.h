@@ -11,11 +11,13 @@ struct TwoTeamRobotParameters{
     bool yellowChanged = false;
     RobotParameters blueParameters;
     RobotParameters yellowParameters;
+    [[nodiscard]] proto::TeamParameters yellowTeamProto() const;
+    [[nodiscard]] proto::TeamParameters blueTeamProto() const;
 };
 class RobotParameterDatabase {
 public:
     TwoTeamRobotParameters update(const proto::SSL_Referee& refMessage);
-    [[nodiscard]] TwoTeamRobotParameters update() const;
+    [[nodiscard]] TwoTeamRobotParameters getParams() const;
 
     static RobotParameters getTeamParameters(const std::string& teamName);
 private:

@@ -20,8 +20,8 @@ void Handler::start() {
                 robothub_info = receivedRobotData;
                 receivedRobotData.clear();
             }
-            observer.process(vision_packets,referee_packets,robothub_info);
-            auto state = observer.getState(Time::now());//TODO: fix time extrapolation
+
+            auto state = observer.process(Time::now(),vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
             while(!pub_state->send(state)); //TODO: try sending for a max limit amount of times
         },
         100);

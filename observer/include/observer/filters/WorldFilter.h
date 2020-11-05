@@ -27,7 +27,7 @@ class WorldFilter {
      * This should not be much more late than the latest message or else you will get very unphysical results.
      * @return Proto message containing the entire world state.
      */
-    proto::World getWorld(double time);
+    proto::World getWorld();
 
     void setGeometry(const proto::SSL_GeometryData& geometry);
     void setRobotParameters(const TwoTeamRobotParameters& parameters);
@@ -56,6 +56,7 @@ class WorldFilter {
     robotMap yellowBots;
     std::vector<std::unique_ptr<BallFilter>> balls;
     double lastUpdateTime = 0.0;
+    double latestCaptureTime = 0.0;
     static void updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime);
     static void handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
                              uint cameraID);

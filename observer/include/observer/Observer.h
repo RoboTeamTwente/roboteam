@@ -13,6 +13,7 @@
 
 #include "filters/WorldFilter.h"
 #include "filters/geometry/GeometryFilter.h"
+#include "filters/referee/RefereeFilter.h"
 #include "parameters/RobotParameterDatabase.h"
 
 /**
@@ -26,26 +27,29 @@ class Observer {
 public:
     /**
      * Calls all of the feedbacks for processing relevant data given the given input data.
+     * @param time time to extrapolate the world to
      * @param visionPackets all of the packets received from vision, including detectionFrames and geometry information
      * @param refereePackets All ofthe packets which were received from the referee.
-     *
+     *@return The entire known/predicted state of the game at this point in time.
      */
-    void process(std::vector<proto::SSL_WrapperPacket> visionPackets,
-                 std::vector<proto::SSL_Referee> refereePackets,
+    proto::State process(Time extrapolatedTo,
+                 const std::vector<proto::SSL_WrapperPacket>& visionPackets,
+                 const std::vector<proto::SSL_Referee>& refereePackets,
                  std::vector<proto::RobotData> robotData);
 
-    /**
-     * Gets (predicts) state of the game at a point slightly in the future.
-     * @param time
-     * @return The entire known/predicted state of the game at this point in time.
-     */
-    [[nodiscard]] proto::State getState(Time time) const;
 private:
     RobotParameterDatabase parameterDatabase;
     WorldFilter worldFilter;
     GeometryFilter geometryFilter;
-    //RefereeFilter refereeFilter;
+    RefereeFilter refereeFilter;
 
+    void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
+
+    void updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+
+    void updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+
+    void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
 };
 
 

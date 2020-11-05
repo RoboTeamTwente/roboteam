@@ -23,7 +23,7 @@ TwoTeamRobotParameters RobotParameterDatabase::update(const proto::SSL_Referee &
     return twoTeamParameters;
 }
 
-TwoTeamRobotParameters RobotParameterDatabase::update() const {
+TwoTeamRobotParameters RobotParameterDatabase::getParams() const {
     TwoTeamRobotParameters twoTeamParameters;
     twoTeamParameters.blueParameters = blueParameters;
     twoTeamParameters.yellowParameters = yellowParameters;
@@ -39,4 +39,20 @@ RobotParameters RobotParameterDatabase::getTeamParameters(const std::string &tea
     }else{
         return RobotParameters::DEFAULT();
     }
+}
+
+proto::TeamParameters TwoTeamRobotParameters::blueTeamProto() const {
+    proto::TeamParameters teamParams;
+    teamParams.set_didchange(blueChanged);
+    auto params = blueParameters.toProto();
+    teamParams.mutable_parameters()->CopyFrom(params);
+    return teamParams;
+}
+
+proto::TeamParameters TwoTeamRobotParameters::yellowTeamProto() const {
+    proto::TeamParameters teamParams;
+    teamParams.set_didchange(yellowChanged);
+    auto params = yellowParameters.toProto();
+    teamParams.mutable_parameters()->CopyFrom(params);
+    return teamParams;
 }

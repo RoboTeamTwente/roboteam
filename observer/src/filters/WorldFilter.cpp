@@ -18,6 +18,9 @@ WorldFilter::WorldFilter() {
 void WorldFilter::addFrame(const proto::SSL_DetectionFrame &msg) {
     const double filterGrabDistance = 0.5;
     double timeCapture = msg.t_capture();
+    if(timeCapture > latestCaptureTime){
+        latestCaptureTime = timeCapture;
+    }
     uint cameraID = msg.camera_id();
     handleRobots(yellowBots, msg.robots_yellow(), filterGrabDistance, timeCapture, cameraID);
     handleRobots(blueBots, msg.robots_blue(), filterGrabDistance, timeCapture, cameraID);
@@ -56,11 +59,11 @@ void WorldFilter::handleRobots(robotMap &robots, const google::protobuf::Repeate
 }
 
 // Creates a world message with the currently observed objects in it
-proto::World WorldFilter::getWorld(double time) {
+proto::World WorldFilter::getWorld() {
     // First we update to the time we want packets at. Expensive, but ensures we have the latest information
-    update(time, true);
+    update(latestCaptureTime, true);
     proto::World world;
-    world.set_time(time);
+    world.set_time(latestCaptureTime);
     for (const auto &yellowBotsOneId : yellowBots) {
         if (!yellowBotsOneId.second.empty()) {
             world.mutable_yellow()->Add(bestFilter(yellowBotsOneId.second)->asWorldRobot());

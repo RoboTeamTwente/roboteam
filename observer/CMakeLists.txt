@@ -7,7 +7,8 @@ add_library(observer STATIC
         src/Observer.cpp
         src/parameters/RobotParameterDatabase.cpp
         src/filters/geometry/GeometryFilter.cpp
-        src/filters/referee/RefereeFilter.cpp src/filters/referee/RefereeFilter.h)
+        src/filters/referee/RefereeFilter.cpp
+        )
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto

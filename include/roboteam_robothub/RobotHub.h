@@ -8,12 +8,14 @@
 #include <Publisher.h>
 #include <Subscriber.h>
 #include <string>
+#include <roboteam_proto/RobotData.pb.h>
+#include <roboteam_proto/AICommand.pb.h>
+#include <roboteam_proto/Setting.pb.h>
+
 #include "constants.h"
-#include "roboteam_proto/Setting.pb.h"
 #include "utilities.h"
 
-namespace rtt {
-namespace robothub {
+namespace rtt::robothub {
 
 class GRSimCommander;
 class SerialDeviceManager;
@@ -42,30 +44,28 @@ class RobotHub {
     proto::ChannelType feedbackChannel;
 
    private:
-    proto::Subscriber<proto::RobotCommand> *robotCommandSubscriber;
-    proto::Subscriber<proto::World> *worldStateSubscriber;
+    proto::Subscriber<proto::AICommand> *robotCommandSubscriber;
+    proto::Publisher<proto::RobotData> *feedbackPublisher;
     proto::Subscriber<proto::Setting> *settingsSubscriber;
-    proto::Publisher<proto::RobotFeedback> *feedbackPublisher;
 
     // Callback functions
-    proto::World LastWorld;
-    void processWorldState(proto::World &world);
-    void processRobotCommand(proto::RobotCommand &cmd);
+
+    void processAIBatch(proto::AICommand &cmd);
+    bool processCommand(const proto::RobotCommand &robotCommand,const proto::World& world);
     void processSettings(proto::Setting &setting);
 
     // Serial and grsim managers
     std::shared_ptr<SerialDeviceManager> device;
     std::shared_ptr<GRSimCommander> grsimCommander;
 
-    void sendSerialCommand(LowLevelRobotCommand llrc);
-    void sendGrSimCommand(const proto::RobotCommand &robotCommand);
+    bool sendSerialCommand(LowLevelRobotCommand llrc);
+    bool sendGrSimCommand(const proto::RobotCommand &robotCommand);
     void publishRobotFeedback(LowLevelRobotFeedback llrf);
     int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
     void printStatistics();
     std::mutex worldLock;
 };
 
-}  // namespace robothub
 }  // namespace rtt
 
 #endif  // ROBOTEAM_ROBOTHUB_APPLICATION_H

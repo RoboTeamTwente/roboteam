@@ -31,6 +31,8 @@ void Handler::init() {
     pub_state = std::make_unique<proto::Publisher<proto::State>>(proto::WORLD_CHANNEL);
     //TODO: update channel type
     sub_feedback = std::make_unique<proto::Subscriber<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL,&Handler::robotDataCallBack,this);
+    sub_feedback_2 = std::make_unique<proto::Subscriber<proto::RobotData>>(proto::FEEDBACK_SECONDARY_CHANNEL,&Handler::robotDataCallBack,this);
+
 }
 
 void Handler::setupSSLClients() {

@@ -56,6 +56,7 @@ void RobotHub::printStatistics() {
 
 void RobotHub::processAIBatch(proto::AICommand &cmd) {
   proto::RobotData sentCommands;
+  sentCommands.set_isyellow(isYellow);
   for(const auto& command : cmd.commands()){
     bool wasSent =processCommand(command,cmd.extrapolatedworld());
     if(wasSent){
@@ -120,6 +121,7 @@ void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
         proto::RobotData data;
         proto::RobotFeedback * feedback = data.mutable_receivedfeedback()->Add();
         feedback->CopyFrom(toRobotFeedback(llrf));
+        data.set_isyellow(isYellow);
         feedbackPublisher->send(data);
     }
 }

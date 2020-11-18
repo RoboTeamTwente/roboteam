@@ -13,13 +13,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3")
 set(STX_BUILD_SHARED 1)
 add_subdirectory(thirdparty/stx)
 
-# sdl2, since currently broken in ubuntu libs
-add_subdirectory(thirdparty/sdl2)
-
 # internal projects
 add_subdirectory(roboteam_proto)
 add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
 add_subdirectory(roboteam_world)
+add_subdirectory(roboteam_central_server)
 #add_subdirectory(grSim)

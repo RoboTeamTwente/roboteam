@@ -16,6 +16,6 @@
 [submodule "thirdparty/stx"]
 	path = thirdparty/stx
 	url = https://github.com/lamarrr/STX.git
-[submodule "thirdparty/sdl2"]
-	path = thirdparty/sdl2
-	url = https://github.com/spurious/SDL-mirror.git
+[submodule "roboteam_central_server"]
+	path = roboteam_central_server
+	url = https://github.com/RoboTeamTwente/roboteam_central_server

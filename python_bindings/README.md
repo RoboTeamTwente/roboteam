@@ -13,3 +13,7 @@
 
 * cffi >= 1.14.4
 * pycparser (a dependency of cffi that's also used by generate.py)
+
+## Important notice
+
+This implementation may be incompatible with certain typedefs, however such incompatible typedefs aren't currently generated and can only be introduced with future changes. If for some reason a typedef is being omitted by this generator, either the original C code should be changed or this implementation refactored. 

@@ -74,3 +74,4 @@ if __name__ == "__main__":
     ffi.compile(tmpdir=args.output)
 
     print("[+] Bindings generated!")
+    

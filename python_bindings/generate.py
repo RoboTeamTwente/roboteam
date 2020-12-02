@@ -6,7 +6,7 @@ from collections import OrderedDict
 try:
     # For generating bindings
     import cffi 
-except (ImportError):
+except ImportError:
     print("[!] `CFFI` is missing.")
     exit(1)
 

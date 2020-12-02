@@ -15,7 +15,7 @@ from pycparser import parse_file, c_generator, c_ast
 
 # The C pre-processor expands the fake stdlib headers we provide. If this is compiled by cffi, there will be weird type size issues.
 def kill_unwanted_typedefs(tree):
-    for x, i in tree.children():
+    for _, i in tree.children():
         # We only need to look at Typedefs
         if type(i) is c_ast.Typedef:
             # If the type is too simple or if it's a struct with no implementation

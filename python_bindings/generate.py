@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import argparse
+import tempfile
 
 try:
     # For generating bindings
@@ -35,22 +36,24 @@ def remove_function_bodies(tree):
 
 def expose_decl_in_bindings(files: list, ffi: cffi.FFI, c_compiler: str):
     # Create a temporary file as workaround for issues with redeclaring types
-    with open('.tmp_preprocess.h', 'w') as tmp_file:
-        tmp_file.write(format_include_for_compiler(files))
+    tmp_file = tempfile.NamedTemporaryFile(mode='w',suffix='.h')
+
+    tmp_file.write(format_include_for_compiler(files))
+    tmp_file.flush()
     
     # Converts an AST representation to C code. Used to create cdef-compatible isinstance/func declarations.
     generator = c_generator.CGenerator()
     
-    res = parse_file(os.path.abspath('.tmp_preprocess.h'), use_cpp=True,  cpp_path=c_compiler, cpp_args=[r'-E', r'-nostdinc', r'-Ipycparser/utils/fake_libc_include'])
+    res = parse_file(tmp_file.name, use_cpp=True,  cpp_path=c_compiler, cpp_args=[r'-E', r'-nostdinc', r'-Ipycparser/utils/fake_libc_include'])
     
     kill_unwanted_typedefs(res)
     remove_function_bodies(res)
-    
+
     # Cdef specifies what should be exposed in the final bindings
     ffi.cdef(generator.visit(res))
 
-    # Remove created tmp file
-    os.remove('.tmp_preprocess.h')
+    tmp_file.close()
+
 
 def format_include_for_compiler(files: list) -> str:
     # This could probably be done with a lambda

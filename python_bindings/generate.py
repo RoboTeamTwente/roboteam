@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import argparse
-from collections import OrderedDict
 
 try:
     # For generating bindings
@@ -17,14 +16,15 @@ from pycparser import parse_file, c_generator, c_ast
 def kill_unwanted_typedefs(tree):
     for _, i in tree.children():
         # We only need to look at Typedefs
-        if type(i) is c_ast.Typedef:
-            # If the type is too simple or if it's a struct with no implementation
-            if type(i.type.type) is c_ast.IdentifierType or (type(i.type.type) is c_ast.Struct and not i.type.type.decls):
+        if type(i) is not c_ast.Typedef:
+            continue
+        # If the type is too simple or if it's a struct with no implementation
+        if type(i.type.type) is c_ast.IdentifierType or (type(i.type.type) is c_ast.Struct and not i.type.type.decls):
+            tree.ext.remove(i)
+        # Some edge cases - a typedef with pointers
+        elif type(i.type) is c_ast.PtrDecl:
+            if type(i.type.type.type) is c_ast.IdentifierType:
                 tree.ext.remove(i)
-            # Some edge cases - a typedef with pointers
-            elif type(i.type) is c_ast.PtrDecl:
-                if type(i.type.type.type) is c_ast.IdentifierType:
-                    tree.ext.remove(i)
 
 
 def expose_decl_in_bindings(files: list, ffi: cffi.FFI, c_compiler: str):

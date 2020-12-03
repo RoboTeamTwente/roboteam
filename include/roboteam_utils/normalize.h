@@ -54,7 +54,7 @@ namespace roboteam_utils {
      * 
      * @param arc Arc to rotate
      */
-    void rotate(proto::SSL_FieldCicularArc *arc);
+    void rotate(proto::SSL_FieldCircularArc *arc);
 
     /**
      * @brief Changes every member of an arc from milimeters -> meters
@@ -63,7 +63,7 @@ namespace roboteam_utils {
      * 
      * @param arc Arc to rotate
      */
-    void toMeters(proto::SSL_FieldCicularArc *arc);
+    void toMeters(proto::SSL_FieldCircularArc *arc);
 
     /**
      * @brief Rotates all members of a line

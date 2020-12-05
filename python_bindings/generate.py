@@ -64,11 +64,11 @@ def format_include_for_compiler(files: list) -> str:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generates python bindings for given files')
-    parser.add_argument("--includes", required=True, nargs='+', help="C header files to make bindings for")
-    parser.add_argument("--output", nargs=1, type=str, help="Output location of the python bindings", default=".")
-    parser.add_argument("--name", nargs=1, type=str, help="Name of the generated python module", default="_roboteam_embedded_messages")
+    parser.add_argument("--includes", nargs='+', required=True, help="C header files to make bindings for")
+    parser.add_argument("--output", type=str, help="Output location of the python bindings", default=".")
+    parser.add_argument("--name", type=str, help="Name of the generated python module", default="_roboteam_embedded_messages")
     parser.add_argument("--lib", nargs='+', help="Additional libraries to link with", default=[])
-    parser.add_argument("--compiler", nargs=1, type=str, help="C(++) compiler to use to preprocess files", default="gcc")
+    parser.add_argument("--compiler", type=str, help="C(++) compiler to use to preprocess files", default="gcc")
     args = parser.parse_args()
 
     ffi = cffi.FFI()

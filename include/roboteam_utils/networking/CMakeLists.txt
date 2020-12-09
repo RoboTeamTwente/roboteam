@@ -15,9 +15,9 @@ target_include_directories(networking
         )
 
 target_link_libraries(networking
-        # since Publishers/subscribers are templates these 2 libraries need to be PUBLIC
-        PUBLIC ${ZeroMQ_LIBRARIES}
-        PUBLIC ${ZMQPP_LIBRARIES}
-
+        PUBLIC stx
         PUBLIC roboteam_proto
+        # since Publishers/subscribers are templates these 2 libraries need to be PUBLIC
+        PUBLIC ${ZMQPP_LIBRARIES}
+        PUBLIC ${ZeroMQ_LIBRARIES}
         )

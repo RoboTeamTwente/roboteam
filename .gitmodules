@@ -28,3 +28,6 @@
 [submodule "thirdparty/zmqpp"]
 	path = thirdparty/zmqpp
 	url = git://github.com/zeromq/zmqpp.git
+[submodule "thirdparty/IXWebSocket"]
+	path = thirdparty/IXWebSocket
+	url = https://github.com/machinezone/IXWebSocket.git

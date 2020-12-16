@@ -13,6 +13,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3")
 set(STX_BUILD_SHARED 1)
 add_subdirectory(thirdparty/stx)
 
+# IXWebsocket
+add_subdirectory(thirdparty/IXWebSocket)
+
 # internal projects
 add_subdirectory(roboteam_proto)
 add_subdirectory(roboteam_utils)

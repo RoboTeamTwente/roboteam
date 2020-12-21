@@ -8,6 +8,7 @@ find_package(zmqpp 4.1.2 REQUIRED)
 add_library(networking STATIC
         src/Channel.cpp
         src/Channels.cpp
+        src/Module.cpp
         )
 
 target_include_directories(networking

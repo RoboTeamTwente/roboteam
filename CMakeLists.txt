@@ -16,6 +16,10 @@ add_subdirectory(thirdparty/stx)
 # IXWebsocket
 add_subdirectory(thirdparty/IXWebSocket)
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
+include(cmake_modules/BuildZeroMQ.cmake)
+include(cmake_modules/BuildZMQPP.cmake)
+
 # internal projects
 add_subdirectory(roboteam_proto)
 add_subdirectory(roboteam_utils)

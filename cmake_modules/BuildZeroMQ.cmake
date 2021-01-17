@@ -11,6 +11,9 @@ ExternalProject_Add(project_zeromq
         -DZMQ_BUILD_FRAMEWORK=OFF
         CONFIGURE_COMMAND ./configure --with-libsodium --without-docs --prefix=${CMAKE_CURRENT_BINARY_DIR}/libzmq
 )
+set(ZEROMQ_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/libzmq/include)
+set(ZEROMQ_LIBRARY_SHARED ${CMAKE_CURRENT_BINARY_DIR}/libzmq/lib/libzmq.so)
+set(ZEROMQ_LIBRARY_STATIC ${CMAKE_CURRENT_BINARY_DIR}/libzmq/lib/libzmq.a)
 
 add_library(lib::zmq STATIC IMPORTED)
 add_dependencies(lib::zmq project_zeromq)

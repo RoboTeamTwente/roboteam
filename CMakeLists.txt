@@ -7,17 +7,17 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPic
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3")
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
+include(cmake_modules/BuildZeroMQ.cmake)
 
 # external libraries
 # stx
 set(STX_BUILD_SHARED 1)
 add_subdirectory(thirdparty/stx)
-
+add_subdirectory(thirdparty/sdl2)
 # IXWebsocket
 add_subdirectory(thirdparty/IXWebSocket)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-include(cmake_modules/BuildZeroMQ.cmake)
 include(cmake_modules/BuildZMQPP.cmake)
 
 # internal projects

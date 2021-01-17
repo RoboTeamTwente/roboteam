@@ -35,11 +35,10 @@ namespace rtt::networking {
         }
 
         template <typename T>
-        void write(T const& s) {
+        void write(T const& s, const bool dont_block = false) {
             std::string out;
             s.SerializeToString(&out);
-            std::cout << out << std::endl;
-            socket.send(out);
+            socket.send(out,dont_block);
         }
 
         bool is_ok() {

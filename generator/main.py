@@ -51,3 +51,4 @@ for packetName in packets.keys():
 	file.close()
 
 	shutil.copy("generated/%s" % filename, "../include/%s" % filename)
+	print("Generated file %s" % filename)

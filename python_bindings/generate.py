@@ -20,7 +20,7 @@ def kill_unwanted_typedefs(tree):
         if not isinstance(i, c_ast.Typedef):
             continue
         # If the isinstance is too simple or if it's a struct with no implementation
-        if isinstance(i.type.type, c_ast.IdentifierType)or (isinstance(i.type.type, c_ast.Struct) and not i.type.type.decls):
+        if isinstance(i.type.type, c_ast.IdentifierType) or (isinstance(i.type.type, c_ast.Struct) and not i.type.type.decls):
             tree.ext.remove(i)
         # Some edge cases - a typedef with pointers
         elif isinstance(i.type, c_ast.PtrDecl):

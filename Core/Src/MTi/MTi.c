@@ -5,9 +5,9 @@
  *      Author: Cas Doornkamp
  */
 
-#include <MTi/xbusutility.h>
-#include <MTi/xsdeviceid.h>
-#include <MTi/xbusdef.h>
+#include "xbusutility.h"
+#include "xsdeviceid.h"
+#include "xbusdef.h"
 #include "MTi/MTi_protocol.h"
 #include "MTi.h"
 #include <string.h>

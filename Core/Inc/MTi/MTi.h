@@ -25,7 +25,7 @@ Notes:
 #define MTI_MTI_H_
 
 // Includes
-#include <MTi/xbusparser.h>
+#include "xbusparser.h"
 #include <stdlib.h>
 #include "gpio_util.h"
 #include "PuTTY.h"

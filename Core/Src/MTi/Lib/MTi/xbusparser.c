@@ -15,9 +15,10 @@
  * under the License.
  */
 
-#include <MTi/xbusdef.h>
-#include <MTi/xbusparser.h>
-#include <MTi/xbusutility.h>
+#include <xbusdef.h>
+#include <xbusparser.h>
+#include <xbusutility.h>
+
 #include <stdlib.h>
 #include <string.h>
 

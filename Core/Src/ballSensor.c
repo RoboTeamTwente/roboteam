@@ -5,7 +5,7 @@
 #include "string.h"
 #include "peripheral_util.h"
 
-uint error; // for i2c errors
+uint32_t error; // for i2c errors
 uint8_t ball_debug = 0; // enable ball print statements
 volatile uint8_t ballSensorInitialized = 0; // ball sensor initialization status
 uint8_t next_message_length = 2; // default length of next message is 2 bytes
@@ -355,7 +355,7 @@ void bs_CheckMeasurement() {
 
 void printRawData(uint8_t data[]) {
     Putty_printf("\n\rdata = [");
-    for(uint i = 0; i < next_message_length; i++){
+    for(uint32_t i = 0; i < next_message_length; i++){
       Putty_printf("0x%02X, ", data[i]);
     }
     Putty_printf("]\n\r");

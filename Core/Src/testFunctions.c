@@ -108,12 +108,12 @@ status executeFullTest(ReceivedData* receivedData) {
 status executeGenevaTest(ReceivedData* receivedData) {
 
 	const int RUN_TIME = 3000; 		// [ticks]
-	static uint timer = 0;
-	static uint prevTimeDiff = 0;
+	static uint32_t timer = 0;
+	static uint32_t prevTimeDiff = 0;
 	static bool firstTime = true;
 	timer = timer == 0 ? HAL_GetTick() : timer;
 
-	uint timeDiff = HAL_GetTick() - timer;
+	uint32_t timeDiff = HAL_GetTick() - timer;
 	if (firstTime) {
 		Putty_printf("Testing geneva...\n\r");
 		firstTime = false;
@@ -143,12 +143,12 @@ status executeGenevaTest(ReceivedData* receivedData) {
 status executeWheelsTest() {
 	const int RUN_TIME = 2000; // [ticks]
 	const int PAUSE_TIME = 1000; // [ticks]
-	static uint timer = 0;
-	static uint prevTimeDiff = 0;
+	static uint32_t timer = 0;
+	static uint32_t prevTimeDiff = 0;
 	static bool firstTime = true;
 	timer = timer == 0 ? HAL_GetTick() : timer;
 
-	uint timeDiff = HAL_GetTick() - timer;
+	uint32_t timeDiff = HAL_GetTick() - timer;
 	if (firstTime) {
 		Putty_printf("Testing wheels...\n\r");
 		firstTime = false;
@@ -160,7 +160,7 @@ status executeWheelsTest() {
 	static float wheelEncoders[4] = {0.0f};
 
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		uint startTime = wheel * (RUN_TIME + PAUSE_TIME);
+		uint32_t startTime = wheel * (RUN_TIME + PAUSE_TIME);
 		if (timeDiff > startTime && timeDiff < startTime + RUN_TIME) {
 			recordWheelData(wheel, avgPWM, cnt, wheelEncoders, wheelRef);
 			break;
@@ -190,12 +190,12 @@ status executeShootTest() {
 	const int PAUSE_TIME = 1000; 	// [ticks]
 	const int MIN_CHARGE_TIME = 10; // [ticks]
 	static int chargeCount = 0;
-	static uint timer = 0;
-	static uint prevTimeDiff = 0;
+	static uint32_t timer = 0;
+	static uint32_t prevTimeDiff = 0;
 	static bool firstTime = true;
 	timer = timer == 0 ? HAL_GetTick() : timer;
 
-	uint timeDiff = HAL_GetTick() - timer;
+	uint32_t timeDiff = HAL_GetTick() - timer;
 
 	// Run test
 	if (timeDiff < RUN_TIME) {
@@ -236,11 +236,11 @@ status executeShootTest() {
 status executeDribblerTest(ReceivedData* receivedData) {
 	const int RUN_TIME = 2000; 		// [ticks]
 	const int PAUSE_TIME = 1000; 	// [ticks]
-	static uint timer = 0;
+	static uint32_t timer = 0;
 	static bool firstTime = true;
 	timer = timer == 0 ? HAL_GetTick() : timer;
 
-	uint timeDiff = HAL_GetTick() - timer;
+	uint32_t timeDiff = HAL_GetTick() - timer;
 
 	if (firstTime) {
 		Putty_printf("Testing dribbler...\n\r");

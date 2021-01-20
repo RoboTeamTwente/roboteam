@@ -37,7 +37,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
@@ -215,11 +214,12 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  /**Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /**Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
@@ -233,13 +233,13 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /**Activate the Over-Drive mode 
+  /** Activate the Over-Drive mode
   */
   if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     Error_Handler();
   }
-  /**Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -292,13 +292,13 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
-  /**Configure Analogue filter 
+  /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-  /**Configure Digital filter 
+  /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
   {
@@ -1011,7 +1011,7 @@ static void MX_TIM13_Init(void)
   htim13.Instance = TIM13;
   htim13.Init.Prescaler = APB-1;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim13.Init.Period = 0;
+  htim13.Init.Period = 65535;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim13) != HAL_OK)
@@ -1042,7 +1042,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = APB-1;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 0;
+  htim14.Init.Period = 65535;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -1090,11 +1090,12 @@ static void MX_UART5_Init(void)
 
 }
 
-/** 
+/**
   * Enable DMA controller clock
   */
-static void MX_DMA_Init(void) 
+static void MX_DMA_Init(void)
 {
+
   /* DMA controller clock enable */
   __HAL_RCC_DMA2_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
@@ -1144,7 +1145,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+  HAL_GPIO_WritePin(GPIOE, LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin
                           |Chip_Pin|Kick_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1154,11 +1155,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin|RF_BRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
+  HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin
                           |LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin 
+  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin
                           |SPI1_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1176,9 +1177,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Charge_done_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LF_BRK_Pin LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin 
+  /*Configure GPIO pins : LF_BRK_Pin LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin
                            Chip_Pin Kick_Pin */
-  GPIO_InitStruct.Pin = LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+  GPIO_InitStruct.Pin = LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin
                           |Chip_Pin|Kick_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1217,9 +1218,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD6_Pin LD5_Pin LD4_Pin LD3_Pin 
+  /*Configure GPIO pins : LD6_Pin LD5_Pin LD4_Pin LD3_Pin
                            LD2_Pin */
-  GPIO_InitStruct.Pin = LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
+  GPIO_InitStruct.Pin = LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin
                           |LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1324,7 +1325,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

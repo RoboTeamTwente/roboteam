@@ -5,8 +5,8 @@ import shutil
 directories = [d for d in os.listdir('.') if os.path.isdir(d) and not d.startswith('.')]
 if "Core" in directories:
 	directories.remove("Core")
-# if "Drivers" in directories:
-# 	directories.remove("Drivers")
+if "Drivers" in directories:
+	directories.remove("Drivers")
 
 print("Directories to merge:", ", ".join(directories))
 # Copy all directories to both Core/Inc and Core/Src

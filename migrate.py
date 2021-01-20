@@ -52,6 +52,11 @@ src_dir = Core/Src
 platform = ststm32
 board = nucleo_f767zi
 framework = stm32cube
+extra_scripts = 
+	pre:CompilerFlags.py
+
+debug_build_flags = -O3 -ggdb3 -g3
+optimization = -O3
 
 build_flags = 
 """)

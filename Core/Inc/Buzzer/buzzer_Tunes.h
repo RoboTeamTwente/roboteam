@@ -127,5 +127,10 @@ extern song_struct bridgeBattle[];
 extern song_struct imperialMarch[];
 extern song_struct flatLine[];
 extern song_struct HBD[];
-
+extern song_struct GoT[];
+extern song_struct HarryPotter[];
+extern song_struct RickRoll[];
+extern song_struct PinkPanther[];
+extern song_struct mii[];
+extern song_struct zelda[];
 #endif /* BUZZER_TUNES_H_ */

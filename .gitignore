@@ -5,6 +5,7 @@
 .project
 .settings
 
+startup
 cmake-build-debug/
 .idea/*
 .settings/*
@@ -12,3 +13,6 @@ cmake-build-debug/
 Debug/
 /Release/
 Drivers
+*.ld
+
+python_utils/rem/*

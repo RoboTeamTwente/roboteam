@@ -11,7 +11,7 @@ while True:
 	try:
 		# Continuously read and print messages from the basestation
 		while True:
-			print(ser.readline().decode("utf-8"), end="")
+			print(ser.readline().decode("cp437"), end="")
 	except Exception as e:
 		print("[Error]", e)
 		# Reset the connection to the basestation

@@ -5,6 +5,7 @@
 #include "BaseTypes.h"
 #include "peripheral_util.h"
 #include "robot.h"
+#include "PuTTY.h"
 
 // Buffer to move received packets in to
 uint8_t REM_buffer[100];
@@ -47,7 +48,7 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
         robotCommandIsFresh = 1;
     }else{
         // TODO add some error handling here or something.
-        print("Received unknown header\n");
+        Putty_printf("Received unknown header\n");
     }
     
     // Schedule the read for the next header byte

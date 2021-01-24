@@ -23,7 +23,7 @@ uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 SX1280 SX1280_struct;
 SX1280* SX; // pointer to the datastruct
 
-bool wirelessFeedback; // boolean to enable or disable wireless feedback
+bool wirelessFeedback = true; // boolean to enable or disable wireless feedback
 
 // init structs
 SX1280_Settings set = {

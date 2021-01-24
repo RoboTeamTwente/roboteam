@@ -10,6 +10,18 @@
 #include "RobotCommand.h"
 #include "CircularBuffer.h"
 
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
+
+
 volatile int I1 = 0;
 volatile int cFeedback = 0;
 volatile int Iusb = 0;
@@ -57,6 +69,12 @@ uint32_t screenCounter = 0;
 
 void loop(){
   
+  /* Send log if any */
+  if(0 < strlen(logBuffer)){
+    LOG(logBuffer);
+    logBuffer[0] = '\0';
+  }
+  
   /* Send any new feedback packets */
   for(int id = 0; id < 16; id++){
     if(msgBuff[id].isNewFeedback){
@@ -71,10 +89,25 @@ void loop(){
     flagHandleStatistics = false;
   }
 
+
+  // if(screenCounter++ == 2000000){
+  //   LOG("Tick\n");
+  //   screenCounter = 0;
+  // }
+
+
+
+  /* Skip all screen stuff */
+  return;
+
+
   /* Ensures that the CPU doesn't get overloaded with display stuff. Make better solution for this? */
   if(screenCounter++ < 80000)
+    LOG("Tick\n");
     return;
+    
   screenCounter = 0;
+
 
   if(displayState != DISPLAY_STATE_DEINITIALIZED)
     updateTouchState(&touchState);
@@ -158,13 +191,13 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
 
   // Check if the robotId is valid
   uint8_t robotId = RobotCommand_get_id(rcp);
-  if (16 <= robotId)
+  if (15 <= robotId)
     return false;
     
   // Store the message in the buffer. Set flag to be sent to the robot
   memcpy(msgBuff[robotId].command.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
   msgBuff[robotId].isNewCommand = true;
-  
+    
   return true;
 }
 
@@ -198,6 +231,7 @@ bool handleStatistics(void){
 /**
  * @brief routes any incoming packet to the correct function. Hub for all incoming packets.
  * TODO actually make it route all incoming packets, and not just USB packets
+ * TODO add handling for undefined ./ unknown packets
  * 
  * Note : Packets are never larger than 64 bytes. If the host sends 100 bytes of data, it
  * will arrive as two packets of 64 and 36 bytes. This is because the wMaxPacketSize for
@@ -225,6 +259,7 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
       flagHandleStatistics = true;
       break;
     default:
+      sprintf(logBuffer, "Packet unknown! type=%d length=%d\n", packetType, packetSize);
       break;
   }
 
@@ -257,6 +292,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     
 }
 
+/* Responsible for sending RobotCommand packages to the corresponding robots */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   // TDMA Timer callback
@@ -269,7 +305,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         msgBuff[idCounter].packetsSent++;
         SX_TX->SX_settings->syncWords[0] = robot_syncWord[idCounter];
         setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-        SendPacket(SX_TX, msgBuff[idCounter].command.payload+2, PACKET_SIZE_ROBOT_COMMAND-2);
+        SendPacket(SX_TX, msgBuff[idCounter].command.payload, PACKET_SIZE_ROBOT_COMMAND);
         msgBuff[idCounter].isNewCommand = false;
       }
     }

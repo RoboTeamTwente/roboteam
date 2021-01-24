@@ -96,19 +96,15 @@ uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
 	RobotFeedbackPayload *rfp = &msgBuff[id].feedback;
 
 	// /* CALCULATE DATA */
-	int16_t angle				= RobotFeedback_getAngle(rfp);
-	angle |= (angle & 0x0200) ? 0xFC00 : 0x0000; // sign extension
+	float angle				= RobotFeedback_get_angle(rfp);
 	char angle_char[5];
-	sprintf(angle_char, "%.2f", (float)angle);
+	sprintf(angle_char, "%.2f", angle);
 
-	uint16_t theta				= RobotFeedback_getTheta(rfp);
-	theta |= (theta & 0x0400) ? 0xF800 : 0x0000; // sign extension
+	float theta				= RobotFeedback_get_theta(rfp);
+	float rho 				= RobotFeedback_get_rho(rfp);
 
-	uint16_t rho 				= RobotFeedback_getRho(rfp);
-
-	float x_vel 				= (CONVERT_RHO * rho) * cos(CONVERT_THETA * theta);
-	float y_vel 				= (CONVERT_RHO * rho) * sin(CONVERT_THETA * theta);
-	float angle_vel				= (CONVERT_ANGLE * angle);
+	float x_vel 				= rho * cos(theta);
+	float y_vel 				= rho * sin(theta);
 
 	bool kickStatus 			= false;
 	bool chipStatus 			= false;
@@ -136,7 +132,7 @@ uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
 
 	nxt = drawStatusBar	(nxt, 	120, 	50, 	MAX_X_VEL, 	x_vel); // status bar for x vel
 	nxt = drawStatusBar	(nxt, 	120, 	80, 	MAX_Y_VEL, 	y_vel); // status bar for y vel
-	nxt = drawStatusBar	(nxt, 	120,	110,	MAX_ANGLE, 	angle_vel);
+	nxt = drawStatusBar	(nxt, 	120,	110,	MAX_ANGLE, 	angle);
 
 	nxt = drawPolarCoordinates(nxt, 300, 200, x_vel, y_vel);
 

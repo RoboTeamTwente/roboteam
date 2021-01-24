@@ -154,10 +154,10 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
     return false;
 
   // Interpret buffer as a RobotCommandPayload
-  RobotCommandPayload *rc = (RobotCommandPayload*) Buf;
+  RobotCommandPayload *rcp = (RobotCommandPayload*) Buf;
 
   // Check if the robotId is valid
-  uint8_t robotId = RobotCommand_getId(rc);
+  uint8_t robotId = RobotCommand_get_id(rcp);
   if (16 <= robotId)
     return false;
     

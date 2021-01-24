@@ -6,6 +6,12 @@
 .vscode/
 __pycache__
 .idea/
+Drivers
+Middlewares
+USB_DEVICE
+startup
+
+STM32F767ZITx_FLASH.ld
 
 # Prerequisites
 *.d

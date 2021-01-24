@@ -20,13 +20,27 @@
 #include "ballSensor.h"
 #include "testFunctions.h"
 
+#include "rem.h"
+
 #include "RobotFeedback.h"
 
 #include "time.h"
 #include <unistd.h>
+#include <stdio.h>
 
 #define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
+
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
 
 uint16_t ID;
 
@@ -116,6 +130,7 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("chip: %u\n\r",receivedData->do_chip);
 	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
 	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
+	Putty_printf("XSens calibrated: %u\n\r", xsens_CalibrationDone);
 	Putty_printf("\n\r");
 }
 
@@ -153,6 +168,23 @@ void printRobotStateData() {
 	Putty_printf("  ref: %f\n\r", geneva_GetRef());
 }
 
+void printRobotCommand(RobotCommand* rc){
+	Putty_printf("======== RobotCommand ========\r\n");
+	Putty_printf("            id : %d\r\n", rc->id);
+	Putty_printf("        doKick : %d\r\n", rc->doKick);
+	Putty_printf("        doChip : %d\r\n", rc->doChip);
+	Putty_printf("       doForce : %d\r\n", rc->doForce);
+	Putty_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
+	Putty_printf("           rho : %.4f\r\n", rc->rho);
+	Putty_printf("         theta : %.4f\r\n", rc->theta);
+	Putty_printf("         angle : %.4f\r\n", rc->angle);
+	Putty_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
+	Putty_printf("      dribbler : %d\r\n", rc->dribbler);
+	Putty_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
+	Putty_printf("angularControl : %d\r\n", rc->angularControl);
+	Putty_printf("      feedback : %d\r\n", rc->feedback);
+}
+
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
@@ -174,6 +206,9 @@ void init(void){
     dribbler_Init();
     ballSensor_Init();
     buzzer_Init();
+    
+    robotCommandIsFresh = 0;
+    REM_UARTinit(UART_PC);
 
     SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
     MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
@@ -190,7 +225,42 @@ void init(void){
 }
 
 // ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
+
+volatile int commandCounter = 0;
+
 void loop(void){
+
+	// wheels_Brake(false);
+
+	if(0 < strlen(logBuffer)){
+		HAL_UART_Transmit(UART_PC, (uint8_t*) logBuffer, strlen(logBuffer), 10);
+		logBuffer[0] = '\0';
+	}
+
+	if(robotCommandIsFresh == 1){
+		robotCommandIsFresh = 0;
+		packetToRoboData(&myRobotCommandPayload, &receivedData);
+		
+		// printRobotCommand(&myRobotCommand);
+		// printReceivedData(&receivedData);	
+		
+		// Putty_printf("body x=%.3f y=%.3f z=%.3f\n", 
+		// 	receivedData.stateRef[body_x],
+		// 	receivedData.stateRef[body_y],
+		// 	receivedData.stateRef[body_w]);		
+	}
+
+	// if(robotCommandIsFresh_wireless == 1){
+	// 	robotCommandIsFresh_wireless = 0;
+	// 	decodeRobotCommand(&myRobotCommand, &PC_to_Bot);
+	// 	printRobotCommand(&myRobotCommand);
+	// 	printReceivedData(&receivedData);
+		
+	// 	for(int i = 0; i < PACKET_SIZE_ROBOT_COMMAND; i++){
+	// 		Putty_printf("%d\t "BYTE_TO_BINARY_PATTERN" %d\r\n", i, BYTE_TO_BINARY(PC_to_Bot.payload[i]), PC_to_Bot.payload[i]);
+	// 	}
+	// }
+
     /*
     * Check for empty battery
     */
@@ -264,8 +334,8 @@ void loop(void){
 
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
-    robotFeedback.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
-    robotFeedback.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
+    robotFeedback.rho = sqrt(vx*vx + vy*vy);
+    robotFeedback.angle = stateEstimation_GetState()[body_w];
     robotFeedback.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
     robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2;
@@ -276,6 +346,7 @@ void loop(void){
         printTime = HAL_GetTick();
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
+
         // Check if ballsesnor connection is still correct
         // TODO: check if statemachine is correct (!ballPosition.canSeeBall)
         if ((!ballSensorInitialized && init_attempts < 5)) {
@@ -287,7 +358,7 @@ void loop(void){
         } else if (init_attempts == 5) {
             init_attempts++;
             Putty_printf("too many BS_INIT attempts. Quit!\n\r");
-            buzzer_Play_PowerUp();
+            // buzzer_Play_PowerUp();
         } else if (ballSensorInitialized) {
             init_attempts = 0;
         }
@@ -322,17 +393,20 @@ void loop(void){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	if(hspi->Instance == SX->SPI->Instance) {
 		Wireless_DMA_Handler(SX, PC_to_Bot.payload);
-        packetToRoboData(PC_to_Bot, &receivedData);
-		counter++;
+        packetToRoboData(&PC_to_Bot, &receivedData);
+		robotCommandIsFresh_wireless = 1;
+		commandCounter++;
 		strength+= SX->Packet_status->RSSISync;
-	}else if(hspi->Instance == MTi->SPI->Instance){
+	}
+	else if(hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == UART_PC->Instance){
-		Putty_UARTCallback(huart);
+		// Putty_UARTCallback(huart);
+		REM_UARTCallback(huart);
 	}
 }
 
@@ -344,9 +418,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
 		// TODO: make this work and use instead of the thing in the while loop
-//		ballSensor_IRQ_Handler();
+		ballSensor_IRQ_Handler();
 	}
 }
+
+volatile uint32_t timcnt = 0;
 
 // Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -357,8 +433,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 	}
 	else if(htim->Instance == htim7.Instance) {
+		timcnt += 2;
+		
+
 		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
 			if (!test_isTestRunning()) {
+				
 				// State estimation
 				stateInfo.visionAvailable = receivedData.visionAvailable;
 				stateInfo.visionYaw = receivedData.visionYaw;
@@ -376,7 +456,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				stateControl_SetState(stateEstimation_GetState());
 				stateControl_Update();
 
-				if (halt || !yaw_hasCalibratedOnce()) {
+				if (halt){// || !yaw_hasCalibratedOnce()) {
+					// if(10000 < timcnt) Putty_printf("[Tim] empty\n");
 					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 					wheels_SetRef(emptyRef);
 				}
@@ -384,6 +465,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					// Wheel control
 					wheels_SetRef(stateControl_GetWheelRef());
 				}
+				
+				// wheels_SetRef(stateControl_GetWheelRef());
 			}
 			static int wirelessCounter = 0;
 			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF && !test_isTestRunning()){
@@ -395,6 +478,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				wirelessCounter = 0;
 				wheels_Update();
 			}
+		}
+
+		if(300 < timcnt){
+			sprintf(logBuffer, "[Tim]\n");
+			Putty_printf("[Tim] cc = %d\n", commandCounter);
+			timcnt = 0;
 		}
 	}
 	else if (htim->Instance == htim10.Instance) {

@@ -41,9 +41,9 @@ void packetToRoboData(RobotCommandPayload* input, ReceivedData* receivedData) {
 	 */
 	// State
 	//static float stateRef[3] = {0, 0, 0};
-	receivedData->stateRef[body_x] = (rc.rho * CONVERT_RHO) * cosf(rc.theta * CONVERT_THETA);
-	receivedData->stateRef[body_y] = (rc.rho * CONVERT_RHO) * sinf(rc.theta * CONVERT_THETA);
-	receivedData->stateRef[body_w] = rc.angle * CONVERT_YAW_REF - M_PI;
+	receivedData->stateRef[body_x] = (rc.rho) * cosf(rc.theta);
+	receivedData->stateRef[body_y] = (rc.rho) * sinf(rc.theta);
+	receivedData->stateRef[body_w] = rc.angle;
 	//receivedData->stateRef = stateRef;
 
 	// Geneva

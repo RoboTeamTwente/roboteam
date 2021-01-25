@@ -55,8 +55,7 @@ namespace roboteam_utils {
      * @param arc Arc to rotate
      */
     void rotate(proto::SSL_FieldCircularArc *arc);
-
-
+  
     /**
      * @brief Rotates all members of a line
      * 

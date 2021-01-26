@@ -35,7 +35,7 @@ def rand():
 written = 0
 
 lastWritten = time.time()
-timerHz = time.time()
+lastHz = time.time()
 
 ser = None
 
@@ -45,6 +45,9 @@ rho = 0
 theta = 0
 angle = 0
 cameraAngle = 0
+
+feedbackTracker = [0] * 16
+print(feedbackTracker)
 
 while True:
 	# Open connection with the basestation
@@ -65,47 +68,52 @@ while True:
 			# 		ser.write(p.getBytes())
 			# 	lastWritten = time.time()
 
-			if 2 < time.time() - lastWritten:
+			if 1./60 < time.time() - lastWritten:
 				# print("Tick")
 				cmd = rem.ffi.new("RobotCommand*")
 				cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
 				cmd.id = 3
 
-				cmd.doKick = rand()
-				cmd.doChip = rand()
-				cmd.doForce = rand()
-				cmd.dribbler = 1
-				cmd.kickChipPower = 2
-
-				cmd.rho = rho
-				cmd.theta = theta
-				cmd.angle = angle
-				cmd.cameraAngle = cameraAngle
-				cmd.angularControl = rand()
-				cmd.feedback = rand()
-
-				printRobotCommand(cmd)
+				cmd.rho = 0
+				cmd.theta = 0
+				cmd.angle = np.sin(sentCounter / 20.) * math.pi / 2
+				# print(cmd.angle)
+				cmd.cameraAngle = 0
 
 				# hijack packet header to ask for statistics. Big hack and drops a command packet. Bad, bad, bad.
-				# if sentCounter % 61 == 0:
-				# 	print("Hz : %.2f" % (60 / (time.time()-timerHz)))
-				# 	# print(rem.lib.PACKET_TYPE_BASESTATION_GET_STATISTICS)
-				# 	cmd.header = rem.lib.PACKET_TYPE_BASESTATION_GET_STATISTICS
-				# 	timerHz = time.time()
-				
+				if  1. < time.time() - lastHz:
+					string = ""
+					for i in range(len(feedbackTracker)):
+						string += "%d = %d | " % (i, feedbackTracker[i])
+					print("Feedback |", string)
+					feedbackTracker = [0] * len(feedbackTracker)
+					lastHz = time.time()			
 
 				payload = rem.ffi.new("RobotCommandPayload*")
 				rem.lib.encodeRobotCommand(payload, cmd) 
 
-				for iP in range(rem.lib.PACKET_SIZE_ROBOT_COMMAND):
-					print("%d\t"%iP, "{0:b}".format(payload.payload[iP]).zfill(8), "\t %d" % payload.payload[iP], "\t", hex(payload.payload[iP]))
+				# printRobotCommand(cmd)
+				# for iP in range(rem.lib.PACKET_SIZE_ROBOT_COMMAND):
+				# 	print("%d\t"%iP, "{0:b}".format(payload.payload[iP]).zfill(8), "\t %d" % payload.payload[iP], "\t", hex(payload.payload[iP]))
 				
 		
 				ser.write(payload.payload)
-				rho = (rho + 0.1) % 3
+
+
+
+				rho = (rho + 0.01) % 3
 				theta = (theta + 0.2) % 3
-				angle = (angle + 0.3) % 3
-				cameraAngle = (cameraAngle + 0.4) % 3	
+				# angle = (angle - 0.05)
+				
+
+
+				if 2 * math.pi < angle:
+					angle = 0
+				if angle < 0:
+					angle = math.pi * 2
+
+				cameraAngle = (cameraAngle + 0.4) % 3
+
 
 				sentCounter += 1
 				id_ = (id_ + 1) % 16
@@ -139,16 +147,18 @@ while True:
 				printRobotCommand(cmd)
 
 			if packetType == rem.lib.PACKET_TYPE_ROBOT_FEEDBACK:
-				print("RobotFeedback received")
+				# print("RobotFeedback received")
 				packet = packet_type + ser.read(rem.lib.PACKET_SIZE_ROBOT_FEEDBACK - 1)
 				payload = rem.ffi.new("RobotFeedbackPayload*")
 				payload.payload = packet
 
 				cmd = rem.ffi.new("RobotFeedback*")
 				rem.lib.decodeRobotFeedback(cmd, payload)
-				for k, v in getmembers(cmd):
-					print(k.rjust(20), v)
-				print("\n")
+				# for k, v in getmembers(cmd):
+				# 	print(k.rjust(20), v)
+				# print("\n")
+
+				feedbackTracker[cmd.id] += 1
 
 
 			if packetType == rem.lib.PACKET_TYPE_BASESTATION_STATISTICS:

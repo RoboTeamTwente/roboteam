@@ -1,24 +1,30 @@
 [submodule "roboteam_ai"]
 	path = roboteam_ai
 	url = https://github.com/RoboTeamTwente/roboteam_ai
+	branch = development
 [submodule "roboteam_world"]
 	path = roboteam_world
 	url = https://github.com/RoboTeamTwente/roboteam_world
+	branch = development
 [submodule "roboteam_robothub"]
 	path = roboteam_robothub
 	url = https://github.com/RoboTeamTwente/roboteam_robothub
+	branch = development
 [submodule "roboteam_utils"]
 	path = roboteam_utils
 	url = https://github.com/RoboTeamTwente/roboteam_utils
+	branch = development
 [submodule "roboteam_proto"]
 	path = roboteam_proto
 	url = https://github.com/RoboTeamTwente/roboteam_proto
+	branch = development
 [submodule "thirdparty/stx"]
 	path = thirdparty/stx
 	url = https://github.com/lamarrr/STX.git
 [submodule "roboteam_central_server"]
 	path = roboteam_central_server
 	url = https://github.com/RoboTeamTwente/roboteam_central_server
+	branch = development
 [submodule "thirdparty/libsodium"]
 	path = thirdparty/libsodium
 	url = git://github.com/jedisct1/libsodium.git

@@ -41,7 +41,6 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
     llrc.kick_chip_power = static_cast<int>(floor(kick_chip_power * 255 / 6.5));  // [0, 255]        [0, 100]%
     llrc.velocity_dribbler = command.dribbler();                                // [0, 31]        [0, 100]%
 
-    llrc.geneva_drive_state = command.geneva_state();  // [(0)1, 5]       [-2, 2]
     llrc.cam_position_x = 0;                           // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_position_y = 0;                           // [-4096, 4095]   [-10.24, 10.23]
     llrc.cam_rotation = 0;                             // [-1024, 1023]   [-pi, pi>
@@ -83,7 +82,6 @@ bool validateRobotPacket(LowLevelRobotCommand llrc) {
     valuesInRange &= inRange(llrc.velocity_angular, -512, 511);
     valuesInRange &= inRange(llrc.kick_chip_power, 0, 255);
     valuesInRange &= inRange(llrc.velocity_dribbler, 0, 31);
-    valuesInRange &= inRange(llrc.geneva_drive_state, 0, 5);
     valuesInRange &= inRange(llrc.cam_position_x, -4096, 4095);
     valuesInRange &= inRange(llrc.cam_position_y, -4096, 4095);
     valuesInRange &= inRange(llrc.cam_rotation, -1024, 1023);
@@ -127,7 +125,7 @@ std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 
     byteArr[7] = static_cast<uint8_t>(  // K C F De UC 3 bits of geneva
         (0b10000000 & (llrc.do_kick << 7)) | (0b01000000 & (llrc.do_chip << 6)) | (0b00100000 & (llrc.kick_chip_forced << 5)) | (0b00010000 & (llrc.debug_info << 4)) |
-        (0b00001000 & (llrc.use_cam_info << 3)) | (0b00000111 & (llrc.geneva_drive_state)));
+        (0b00001000 & (llrc.use_cam_info << 3)) | (0b00000111 & (0))); // TODO : remove geneva state
 
     byteArr[8] = static_cast<uint8_t>(  // 5 bits dribble vel | first 3 bits of
                                         // cam rotation
@@ -162,9 +160,6 @@ proto::RobotFeedback toRobotFeedback(LowLevelRobotFeedback feedback) {
     msg.set_hasball(feedback.hasBall);
     msg.set_ballpos(feedback.ballPosition);
 
-    msg.set_genevaisworking(feedback.genevaWorking);
-    msg.set_genevastate(feedback.genevaState);
-
     msg.set_x_vel((feedback.rho * 0.004) * cos(feedback.theta * 0.00307));
     msg.set_y_vel((feedback.rho * 0.004) * sin(feedback.theta * 0.00307));
     msg.set_yaw(feedback.angle * 0.00614);
@@ -191,9 +186,6 @@ LowLevelRobotFeedback createRobotFeedback(packed_robot_feedback bits) {
     feedback.ballSensorWorking = (0b00100000 & bits[1]) >> 5;
     feedback.hasBall = (0b00010000 & bits[1]) >> 4;
     feedback.ballPosition = 0b00001111 & bits[1];
-
-    feedback.genevaWorking = (0b10000000 & bits[2]) >> 7;
-    feedback.genevaState = 0b01111111 & bits[2];
 
     feedback.rho = (0b11111111 & bits[3]) << 3;
     feedback.rho |= (0b11100000 & bits[4]) >> 5;
@@ -225,7 +217,6 @@ void printRobotCommand(const proto::RobotCommand& cmd) {
     std::cout << "RobotCommand: " << std::endl;
 
     std::cout << "    id             : " << cmd.id() << std::endl;
-    std::cout << "    active         : " << static_cast<int>(cmd.active()) << std::endl;
     std::cout << "    x_vel          : " << cmd.vel().x() << std::endl;
     std::cout << "    y_vel          : " << cmd.vel().y() << std::endl;
     std::cout << "    w              : " << cmd.w() << std::endl;
@@ -237,7 +228,6 @@ void printRobotCommand(const proto::RobotCommand& cmd) {
     std::cout << "    chipper        : " << static_cast<int>(cmd.chipper()) << std::endl;
     std::cout << "    chipper_forced : " << static_cast<int>(cmd.chip_kick_forced()) << std::endl;
     std::cout << "    chipper_vel    : " << cmd.chip_kick_vel() << std::endl;
-    std::cout << "    geneva_state   : " << cmd.geneva_state() << std::endl;
 
     std::cout << std::endl;
 }
@@ -258,7 +248,6 @@ void printLowLevelRobotCommand(const LowLevelRobotCommand& llrc) {
     std::cout << "    kick_chip_forced   : " << llrc.kick_chip_forced << std::endl;
     std::cout << "    kick_chip_power    : " << llrc.kick_chip_power << std::endl;
     std::cout << "    velocity_dribbler  : " << llrc.velocity_dribbler << std::endl;
-    std::cout << "    geneva_drive_state : " << llrc.geneva_drive_state << std::endl;
     std::cout << "    cam_position_x     : " << llrc.cam_position_x << std::endl;
     std::cout << "    cam_position_y     : " << llrc.cam_position_y << std::endl;
     std::cout << "    cam_rotation       : " << llrc.cam_rotation << std::endl;
@@ -275,8 +264,6 @@ void printLowLevelRobotFeedback(const LowLevelRobotFeedback& llrf) {
     std::cout << "    bs_Working       : " << (llrf.ballSensorWorking ? "1" : "0") << std::endl;
     std::cout << "    bs_hasBall       : " << (llrf.hasBall ? "1" : "0") << std::endl;
     std::cout << "    bs_BallPosition  : " << (llrf.ballPosition ? "1" : "0") << std::endl;
-    std::cout << "    geneva_Working   : " << (llrf.genevaWorking ? "1" : "0") << std::endl;
-    std::cout << "    geneva_State     : " << llrf.genevaState << std::endl;
     std::cout << "    rho              : " << llrf.rho << std::endl;
     std::cout << "    theta            : " << llrf.theta << std::endl;
     std::cout << "    angle            : " << llrf.angle << std::endl;
@@ -298,8 +285,6 @@ void printRobotFeedback(const proto::RobotFeedback& feedback) {
     // alreayd, if you want it to be `true` or `false` then std::cout <<
     // std::boolalpha first
     std::cout << "    bs_BallPosition  : " << feedback.ballpos() << std::endl;
-    std::cout << "    geneva_Working   : " << (feedback.genevaisworking() ? "1" : "0") << std::endl;
-    std::cout << "    geneva_State     : " << feedback.genevastate() << std::endl;
     std::cout << "    x_vel            : " << feedback.x_vel() << std::endl;
     std::cout << "    y_vel            : " << feedback.y_vel() << std::endl;
     std::cout << "    yaw              : " << feedback.yaw() << std::endl;

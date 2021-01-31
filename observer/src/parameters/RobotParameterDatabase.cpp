@@ -35,9 +35,9 @@ RobotParameters RobotParameterDatabase::getTeamParameters(const std::string &tea
     //https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/src/components/settings/team/TeamName.vue
     //TODO: add teams we play against here.
     if(teamName == "RoboTeam Twente"){
-        return RobotParameters::RTT_2020();
+        return RobotParameters::from_rtt2020();
     }else{
-        return RobotParameters::DEFAULT();
+        return RobotParameters::from_default();
     }
 }
 

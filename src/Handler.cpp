@@ -57,7 +57,7 @@ std::vector<proto::SSL_WrapperPacket> Handler::receiveVisionPackets() {
     std::vector<proto::SSL_WrapperPacket> receivedPackets;
     proto::SSL_WrapperPacket packet;
     while(vision_client && vision_client->receive(packet)){
-        receivedPackets.push_back(packet);
+        receivedPackets.emplace_back(std::move(packet));
     }
     return receivedPackets;
 }
@@ -65,7 +65,7 @@ std::vector<proto::SSL_Referee> Handler::receiveRefereePackets()  {
     std::vector<proto::SSL_Referee> receivedPackets;
     proto::SSL_Referee packet;
     while(referee_client && referee_client->receive(packet)){
-        receivedPackets.push_back(packet);
+        receivedPackets.emplace_back(std::move(packet));
     }
     return receivedPackets;
 }

@@ -64,7 +64,6 @@ void Observer::updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visio
         }
     }
     if (geometryWasUpdated) {
-        //TODO: actually implement
         worldFilter.setGeometry(geometryFilter.getGeometry());
     }
 }
@@ -78,7 +77,6 @@ void Observer::updateRobotParams(std::vector<proto::SSL_Referee> refereePackets)
     TwoTeamRobotParameters parameters = !refereePackets.empty() ? parameterDatabase.update(refereePackets.back())
                                                                 : parameterDatabase.getParams();
     if (parameters.blueChanged || parameters.yellowChanged) {
-        //TODO: actually implement
         worldFilter.setRobotParameters(parameters);
     }
 }

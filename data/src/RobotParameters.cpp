@@ -5,12 +5,12 @@
 
 #include "RobotParameters.h"
 
-RobotParameters RobotParameters::DEFAULT() {
+RobotParameters RobotParameters::from_default() {
     RobotParameters parameters; //default constructor should be roughly correct
     return parameters;
 }
 
-RobotParameters RobotParameters::RTT_2020() {
+RobotParameters RobotParameters::from_rtt2020() {
     //TODO: fix these
     RobotParameters parameters(0.09,0.15,0.1,0.1,0.0);
     return parameters;

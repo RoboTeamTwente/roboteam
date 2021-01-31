@@ -21,6 +21,7 @@ add_subdirectory(thirdparty/IXWebSocket)
 include(cmake_modules/BuildZMQPP.cmake)
 
 # internal projects
+add_subdirectory(roboteam_proto)
 add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)

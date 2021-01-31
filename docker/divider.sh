@@ -31,7 +31,11 @@ fi
 # Cd into the suite
 cd /opt/roboteam/roboteam_suite
 # Pull each
-git submodule foreach git pull
+cd roboteam_ai && git pull origin development
+cd ../roboteam_world && git pull origin development
+cd ../roboteam_proto && git pull origin development
+cd ../roboteam_utils && git pull origin development
+cd ../roboteam_robothub && git pull origin development
 # cd into correct repo
 cd "$REPO_NAME"
 # Checkout branch name

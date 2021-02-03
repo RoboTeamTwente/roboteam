@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(roboteam_world)
 
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
-include(cotire)
-include(ccache)
 find_package(Eigen3 REQUIRED)
 
 add_subdirectory(data)

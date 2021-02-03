@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
-set(CMAKE_CXX_STANDARD 20)
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
-include(cotire)
-include(ccache)
-
 option(CODE_COVERAGE "Build for coverage tests" OFF)
 function(target_add_coverage_flags TARGET)
     target_compile_options(${TARGET} PUBLIC
@@ -83,7 +78,6 @@ target_link_libraries(roboteam_utils
         )
 
 target_compile_options(roboteam_utils PRIVATE
-        --std=c++17
         -Wall
         -Wextra
         -pedantic
@@ -93,6 +87,10 @@ target_compile_options(roboteam_utils PRIVATE
         -Wno-comment
         -Wsign-compare
         -g
+        )
+set_target_properties(roboteam_utils PROPERTIES
+        CMAKE_CXX_STANDARD 20
+        CMAKE_CXX_STANDARD_REQUIRED 1
         )
 add_executable(utils_tests
         test/main.cpp

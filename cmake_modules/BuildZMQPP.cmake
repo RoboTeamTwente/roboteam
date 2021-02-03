@@ -21,5 +21,6 @@ set_target_properties(lib::zmqpp PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BI
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/libzmqpp/include)
 target_link_libraries(lib::zmqpp
         INTERFACE lib::zmq)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libzmqpp/include) #make the include directory so cmake doesn't whine about it not existing
 target_include_directories(lib::zmqpp
         INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/libzmqpp/include)

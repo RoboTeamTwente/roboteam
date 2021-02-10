@@ -31,7 +31,7 @@ SpacesInAngles: 'false'
 SpacesInCStyleCastParentheses: 'false'
 SpacesInContainerLiterals: 'true'
 SpacesInParentheses: 'false'
-Standard: Cpp20
+Standard: Cpp11
 UseTab: false
 IndentWidth: 4
 AccessModifierOffset: -4

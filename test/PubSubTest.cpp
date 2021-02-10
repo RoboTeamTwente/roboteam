@@ -8,7 +8,7 @@ bool messageReceivedSuccesFully = false;
 double receivedTime = 0;
 
 void handleRobotCommand(proto::RobotCommand & robot_command) {
-  EXPECT_EQ(robot_command.geneva_state(), 4);
+  EXPECT_EQ(robot_command.w(), 1.0);
   receivedTime = robot_command.id();
   messageReceivedSuccesFully = true;
 }
@@ -18,7 +18,7 @@ TEST(PubSubTest, function_subscription) {
   auto pub = std::make_shared<proto::Publisher<proto::RobotCommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL);
 
   proto::RobotCommand cmd;
-  cmd.set_geneva_state(4);
+  cmd.set_w(1.0);
 
   auto reference_time = roboteam_utils::Timer::getCurrentTime().count();
   while(!messageReceivedSuccesFully) {
@@ -58,7 +58,7 @@ TEST(PubSubTest, method_subscription) {
   
   auto pub = std::make_shared<proto::Publisher<proto::RobotCommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL);
   proto::RobotCommand cmd;
-  cmd.set_geneva_state(2);
+  cmd.set_w(2.0);
 
   auto reference_time = roboteam_utils::Timer::getCurrentTime().count();
   while(!dummy.got_command) {
@@ -72,5 +72,5 @@ TEST(PubSubTest, method_subscription) {
 
   // the communication should be fast (<10ms)
   EXPECT_LE( roboteam_utils::Timer::getCurrentTime().count() - dummy.receivedTime,  10);
-  EXPECT_EQ(dummy.cmd.geneva_state(), 2);
+  EXPECT_EQ(dummy.cmd.w(), 2.0);
 }

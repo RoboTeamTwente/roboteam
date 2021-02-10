@@ -58,17 +58,6 @@ namespace roboteam_utils {
         arc->set_a2(arc->a2() * -1);
     }
 
-// convert an arc from millimeters to meters
-    void toMeters(proto::SSL_FieldCircularArc *arc) {
-        assert(arc && "Invalid pointer for arc");
-        arc->mutable_center()->set_x(mm_to_m(arc->center().x()));
-        arc->mutable_center()->set_y(mm_to_m(arc->center().y()));
-        arc->set_a1(mm_to_m(arc->a1()));
-        arc->set_a2(mm_to_m(arc->a2()));
-        arc->set_radius(mm_to_m(arc->radius()));
-        arc->set_thickness(mm_to_m(arc->thickness()));
-    }
-
 // rotate a single field line
     void rotate(proto::SSL_FieldLineSegment *line) {
         assert(line && "Invalid pointer for line");
@@ -76,16 +65,6 @@ namespace roboteam_utils {
         line->mutable_p1()->set_y(line->p1().y() * -1);
         line->mutable_p2()->set_x(line->p2().x() * -1);
         line->mutable_p2()->set_y(line->p2().y() * -1);
-    }
-
-// convert a line from millimeters to meters
-    void toMeters(proto::SSL_FieldLineSegment *line) {
-        assert(line && "Invalid pointer for line");
-        line->mutable_p1()->set_x(mm_to_m(line->p1().x()));
-        line->mutable_p1()->set_y(mm_to_m(line->p1().y()));
-        line->mutable_p2()->set_x(mm_to_m(line->p2().x()));
-        line->mutable_p2()->set_y(mm_to_m(line->p2().y()));
-        line->set_thickness(mm_to_m(line->thickness()));
     }
 
 // rotate the lines and arcs of a field
@@ -101,30 +80,6 @@ namespace roboteam_utils {
             rotate(field->mutable_field_arcs(i));
         }
     }
-
-// convert all units from the field from millimeters to meters.
-// BE CAREFUL: NOT EVERYTHING IS STORED AS DOUBLES SO
-// field_length, field_width, boundary_width, goal_depth, goal_width will be rouned to whole meters!
-//void toMeters(proto::SSL_GeometryFieldSize * field) {
-//
-//  std::cerr << "WARNING: CONVERTING PROTUBUF SSL_GEOMETRYFIELDSIZE TO METERS IS NOT SAFE" << std::endl;
-//  // convert the standard properties
-//  field->set_field_length(mm_to_m(field->field_length()));
-//  field->set_field_width(mm_to_m(field->field_width()));
-//  field->set_boundary_width(mm_to_m(field->boundary_width()));
-//  field->set_goal_depth(mm_to_m(field->goal_depth()));
-//  field->set_goal_width(mm_to_m(field->goal_width()));
-//
-//  // convert all field lines
-//  for (int i = 0; i < field->mutable_field_lines()->size(); i++) {
-//    toMeters(field->mutable_field_lines(i));
-//  }
-//
-//  // convert all field arcs
-//  for (int i = 0; i < field->mutable_field_arcs()->size(); i++) {
-//    toMeters(field->mutable_field_arcs(i));
-//  }
-//}
 
 // rotate robotcommands
     void rotate(proto::RobotCommand *command) {

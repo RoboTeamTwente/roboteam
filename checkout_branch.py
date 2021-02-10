@@ -8,7 +8,7 @@ def checkout_repo_branch(repo: str, branch: str):
     if not os.system(f"cd {repo} && git pull origin {branch} && cd .."):
         return
     
-    raise Exception("Failed to checkout repo")
+    raise Exception(f"Failed to checkout repo  {repo} to branch {branch}")
 
 def checkout_main_repos_branch(branch: str):
     main_repos: List[str] = [
@@ -16,7 +16,8 @@ def checkout_main_repos_branch(branch: str):
         "roboteam_proto",
         "roboteam_robothub",
         "roboteam_utils",
-        "roboteam_world"
+        "roboteam_world",
+        "roboteam_central_server"
     ]
     for each in main_repos:
         checkout_repo_branch(each, branch)

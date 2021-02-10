@@ -1,7 +1,7 @@
-#include "WorldHandler.h"
+#include "Handler.h"
 
 int main(int argc, char** argv) {
-    world::WorldHandler handler;
+    Handler handler;
     handler.start();
     return 0;
 }

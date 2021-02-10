@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "../../include/roboteam_world/net/util.h"
+#include "util.h"
 
-#include "../../include/roboteam_world/net/netraw.h"
+#include "netraw.h"
 
 namespace Net {
 

@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "filters/KalmanFilter.h"
+#include <observer/filters/KalmanFilter.h>
 
 TEST(OneDimension, KalmanFilterTest){
     // see https://www.kalmanfilter.net/kalman1d.html for where I got the values from

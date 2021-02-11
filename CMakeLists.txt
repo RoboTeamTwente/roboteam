@@ -21,6 +21,7 @@ include(cmake_modules/BuildZeroMQ.cmake)
 # stx
 set(STX_BUILD_SHARED 1)
 add_subdirectory(thirdparty/stx)
+add_subdirectory(thirdparty/sdl2)
 
 # IXWebsocket
 add_subdirectory(thirdparty/IXWebSocket)

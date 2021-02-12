@@ -13,8 +13,6 @@ RUN /bin/bash -c "apt-get dist-upgrade -y"
 
 # Install dependencies
 RUN /bin/bash -c "apt-get -y install \
-    libzmq3-dev \
-    libzmqpp-dev \
     ccache \
     clang \
     xvfb \
@@ -60,17 +58,14 @@ RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/google
     make -j $(nproc)&&\
     make install"
 
-# Clone the repos and checkout development on everything
-RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules &&\
-    cd /opt/roboteam/roboteam_suite &&\
-    git submodule update --init --recursive &&\
-    cd roboteam_ai && git pull origin development &&\
-    cd ../roboteam_proto && git pull origin development &&\
-    cd ../roboteam_world && git pull origin development &&\
-    cd ../roboteam_utils && git pull origin development &&\
-    cd ../roboteam_robothub && git pull origin development \
+# Clone the repos and 
+RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules"
+
+# checkout development on everything
+RUN "cd /opt/roboteam/roboteam_suite &&\
+    python ./checkout_branch.py development\
     "
-    
+
 # Set ccache symbolic link
 RUN mkdir -p /lib/ccache
 # Set symbolic link

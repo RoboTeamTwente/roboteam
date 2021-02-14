@@ -1,5 +1,5 @@
 include(ExternalProject)
-set(sodium_src_dir   ${CMAKE_CURRENT_SOURCE_DIR}/libsodium)
+set(sodium_src_dir   ${CMAKE_CURRENT_BINARY_DIR}/libsodium/build)
 set(sodium_build_dir ${CMAKE_CURRENT_BINARY_DIR}/libsodium)
 set(LIBSODIUM_LIB_DIR     ${sodium_build_dir}/lib)
 set(LIBSODIUM_INCLUDE_DIR ${sodium_src_dir}/src/libsodium/include)
@@ -17,3 +17,4 @@ ExternalProject_Add(project_libsodium
 add_library(lib::sodium STATIC IMPORTED)
 add_dependencies(lib::sodium project_libsodium)
 set_target_properties(lib::sodium PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/libsodium/lib/libsodium.a)
+file(MAKE_DIRECTORY ${LIBSODIUM_INCLUDE_DIR}) #make the include directory so cmake doesn't whine about it not existing when compiling for the first time

@@ -1,4 +1,3 @@
-find_package(Sodium)
 include(ExternalProject)
 
 ExternalProject_Add(project_zeromq
@@ -9,7 +8,7 @@ ExternalProject_Add(project_zeromq
         -DENABLE_DRAFTS=ON
         -DBUILD_TESTING=OFF
         -DZMQ_BUILD_FRAMEWORK=OFF
-        CONFIGURE_COMMAND ./configure --with-libsodium --without-docs --prefix=${CMAKE_CURRENT_BINARY_DIR}/libzmq
+        CONFIGURE_COMMAND ./configure --with-libsodium=${LIBSODIUM_LIB_DIR} --without-docs --prefix=${CMAKE_CURRENT_BINARY_DIR}/libzmq
 )
 set(ZEROMQ_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/libzmq/include)
 set(ZEROMQ_LIBRARY_SHARED ${CMAKE_CURRENT_BINARY_DIR}/libzmq/lib/libzmq.so)
@@ -20,6 +19,6 @@ add_dependencies(lib::zmq project_zeromq)
 set_target_properties(lib::zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/libzmq/lib/libzmq.a)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/libzmq/include)
 target_link_libraries(lib::zmq
-        INTERFACE ${sodium_LIBRARIES})
-#target_include_directories(lib::zmq
-#        INTERFACE ${CMAKE_CURRENT_BINARY_DIR})
+        INTERFACE lib::sodium)
+target_include_directories(lib::zmq
+        INTERFACE ${LIBSODIUM_INCLUDE_DIR})

@@ -15,6 +15,7 @@ include(ccache)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
+include(cmake_modules/BuildSodium.cmake)
 include(cmake_modules/BuildZeroMQ.cmake)
 
 # external libraries

@@ -1,4 +1,3 @@
-find_package(Sodium)
 include(ExternalProject)
 
 ExternalProject_Add(project_zeromq

@@ -25,15 +25,6 @@
 	path = roboteam_central_server
 	url = https://github.com/RoboTeamTwente/roboteam_central_server
 	branch = development
-[submodule "thirdparty/libsodium"]
-	path = thirdparty/libsodium
-	url = git://github.com/jedisct1/libsodium.git
-[submodule "thirdparty/libzmq"]
-	path = thirdparty/libzmq
-	url = git://github.com/zeromq/libzmq.git
-[submodule "thirdparty/zmqpp"]
-	path = thirdparty/zmqpp
-	url = git://github.com/zeromq/zmqpp.git
 [submodule "thirdparty/IXWebSocket"]
 	path = thirdparty/IXWebSocket
 	url = https://github.com/machinezone/IXWebSocket.git

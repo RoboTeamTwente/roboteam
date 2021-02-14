@@ -37,3 +37,6 @@
 [submodule "thirdparty/IXWebSocket"]
 	path = thirdparty/IXWebSocket
 	url = https://github.com/machinezone/IXWebSocket.git
+[submodule "thirdparty/sdl2"]
+	path = thirdparty/sdl2
+	url = https://github.com/spurious/SDL-mirror

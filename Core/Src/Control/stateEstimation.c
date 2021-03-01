@@ -32,6 +32,7 @@ void stateEstimation_Update(StateInfo* input) {
 	float kalman_State[4] = {0.0f};
 	kalman_GetState(kalman_State);
 
+	// TODO check if input->visionYaw is scaled properly with the new REM messages
 	yaw_Calibrate(input->xsensYaw, input->visionYaw, input->visionAvailable, input->rateOfTurn);
 	float calibratedYaw = yaw_GetCalibratedYaw();
 

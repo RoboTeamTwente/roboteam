@@ -50,15 +50,16 @@ void packetToRoboData(RobotCommandPayload* input, ReceivedData* receivedData) {
 	// receivedData->genevaRef = rc.geneva;
 
 	// Dribbler
-	receivedData->dribblerRef = rc.dribbler * CONVERT_DRIBBLE_SPEED;
+	receivedData->dribblerRef = rc.dribbler * 14.285f; // Scale [0, 7] to [0, 100]
 
 	// Shoot
-	receivedData->shootPower = rc.kickChipPower * CONVERT_SHOOTING_POWER;
+	// TODO fix this rounding of shootPower
+	receivedData->shootPower = rc.kickChipPower * 14.285f; // Scale [0, 7] to [0, 100]
 	receivedData->kick_chip_forced = rc.doForce;
 	receivedData->do_kick = rc.doKick;
 	receivedData->do_chip = rc.doChip;
 
 	// Vision data
 	receivedData->visionAvailable = rc.useCameraAngle;
-	receivedData->visionYaw = rc.cameraAngle * CONVERT_VISION_YAW;
+	receivedData->visionYaw = rc.cameraAngle; // TODO check if this should be converted to something else
 }

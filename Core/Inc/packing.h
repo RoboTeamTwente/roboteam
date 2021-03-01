@@ -23,7 +23,7 @@
 #define CONVERT_THETA 			0.00307f
 #define CONVERT_YAW_REF 		0.00614f
 #define CONVERT_SHOOTING_POWER 	0.39f
-#define CONVERT_DRIBBLE_SPEED 	3.125f
+#define CONVERT_DRIBBLE_SPEED 	14.285f
 #define CONVERT_VISION_YAW 		0.00307f
 
 ///////////////////////////////////////////////////// STRUCTS

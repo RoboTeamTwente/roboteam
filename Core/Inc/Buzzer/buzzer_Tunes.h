@@ -115,7 +115,8 @@ typedef struct song_struct{
 #define buzz_DS8 4978
 
 // tunes
-extern song_struct quickBeep[];
+extern song_struct quickBeepUp[];
+extern song_struct quickBeepDown[];
 extern song_struct startup_song[];
 extern song_struct tetris[];
 extern song_struct mario_victory[];

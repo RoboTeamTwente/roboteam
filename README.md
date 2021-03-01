@@ -21,7 +21,7 @@ dribbler            :  3            Dribbler speed
 kickChipPower       :  3            Power of the kick or chip
 angularControl      :  1            0 = angular velocity 1 = absolute angle
 feedback            :  1            Ignore the packet. Just send feedback
-                    ----+	
+                    ----+    
                       88
 
 last revision : January 26th 2021 by Emiel Steerneman
@@ -48,4 +48,32 @@ rssi                :  4            Signal strength of the last packet received 
                       84
 
 last revision : January 26th 2021 by Emiel Steerneman
+```
+
+### Generate python bindings
+The .h files come with Python bindings, so that messages can be sent using Python. To generate the Python bindings, go into the folder ```python_bindings``` and run ```setup.sh```. Then, in the same folder, run the command ```python generate.py --includes ../include/*  --name rem --output ../../rem```. This will create a folder named ```rem``` next to the folder ```roboteam_embedded_messages```. Following is a small example to send a RobotCommand via basestation to a robot.
+
+```
+import time
+import serial
+from rem import rem # import the roboteam_embedded_messages (rem) python bindings
+
+port = [BASESTATION PATH HERE. Probably something like "/dev/serial/by-id/usb-RTT_BaseStation...."
+connection = serial.Serial(port=port, baudrate=115200, parity=serial.PARITY_ODD, stopbits=serial.STOPBITS_TWO, bytesize=serial.SEVENBITS, timeout=0.01)
+
+# These structs are defined in RobotCommand.h
+cmd = rem.ffi.new("RobotCommand*")
+cmdPayload = rem.ffi.new("RobotCommandPayload*")
+
+# Turn on the dribbler, and send packets at around +- 60Hz
+while True:
+    time.sleep(0.017)
+
+    cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
+    cmd.id = 3       # Set the ID of the robot
+    cmd.dribbler = 4 # Turn on the dribbler
+
+    # The encodeRobotCommand function is defined in RobotCommand.h
+    rem.lib.encodeRobotCommand(cmdPayload, cmd)
+    connection.write(cmdPayload.payload)
 ```

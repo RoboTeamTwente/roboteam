@@ -5,9 +5,54 @@
 #include <iostream>
 #include <memory>
 #include "utilities.h"
+#include "RobotCommand.h"
 
 namespace rtt {
 namespace robothub {
+
+bool protoToEmbedded_RobotCommand(const proto::RobotCommand& command, RobotCommandPayload* rcp, const proto::World& worldOpt, bool isYellow){
+
+    // ======== Convert units ======== //
+    double rho = sqrt(command.vel().x() * command.vel().x() + command.vel().y() * command.vel().y());
+    double theta = atan2(command.vel().y(), command.vel().x());
+
+    int rhoI   = static_cast<int>(floor(rho * 250));
+    int thetaI = static_cast<int>(floor(theta * 1023.5 / M_PI));
+
+    int angleI;
+    if(command.use_angle()) angleI = static_cast<int>(floor(command.w() * (511 / M_PI)));
+    else                    angleI = static_cast<int>(floor(command.w() * (511 / (8 * 2 * M_PI))));
+
+    int _kick_chip_power = static_cast<int>(floor(command.chip_kick_vel() * 255 / 6.5));
+
+    // ======== Set Values ======== //
+    RobotCommand_setHeader(rcp, PACKET_TYPE_ROBOT_COMMAND);
+    RobotCommand_setId(rcp, command.id());
+
+    RobotCommand_setDoKick(rcp, command.kicker());
+    RobotCommand_setDoChip(rcp, command.chipper());
+    RobotCommand_setDoForce(rcp, command.chip_kick_forced());
+    RobotCommand_setUseCameraAngle(rcp, false);
+
+    RobotCommand_setRho(rcp,   rhoI);
+    RobotCommand_setTheta(rcp, thetaI);
+    RobotCommand_setAngle(rcp, angleI);
+
+    std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), isYellow, worldOpt);
+    proto::WorldRobot robot;
+    if (findBot) {
+        robot = *findBot;
+        int _cameraAngle = static_cast<int>(floor(robot.angle() / M_PI * 1024));
+        RobotCommand_setUseCameraAngle(rcp, true);
+        RobotCommand_setCameraAngle(rcp, _cameraAngle);
+    }
+
+    RobotCommand_setKickChipPower(rcp, _kick_chip_power);
+    RobotCommand_setDribbler(rcp, command.dribbler());
+    RobotCommand_setAngularControl(rcp, command.use_angle());
+
+}
+
 /**
  * Creates a low level robot command, i.e. a command from which you can
  * construct a robot packet only from bitshifts, and no other funky angle

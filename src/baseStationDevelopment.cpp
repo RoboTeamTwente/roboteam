@@ -293,7 +293,7 @@ void writeThread(libusb_device_handle *handle){
     uint8_t getStatistics = PACKET_TYPE_BASESTATION_GET_STATISTICS;
 
     RobotCommandPayload cmd;
-    RobotCommand_setHeader(&cmd, PACKET_TYPE_ROBOT_COMMAND);
+    RobotCommand_set_header(&cmd, PACKET_TYPE_ROBOT_COMMAND);
 
     int actual_length = 0;
 
@@ -305,7 +305,7 @@ void writeThread(libusb_device_handle *handle){
            tsNow = std::chrono::high_resolution_clock::now();
 
             for (int id = 0; id < 16; id++) {
-                RobotCommand_setId(&cmd, id);
+                RobotCommand_set_id(&cmd, id);
                 int error = libusb_bulk_transfer(handle, 0x01, cmd.payload, PACKET_SIZE_ROBOT_COMMAND, &actual_length,500);
                 if (error) std::cout << "ERROR sending : " << errorToString(error) << std::endl;
                 totalBytesSent += actual_length;

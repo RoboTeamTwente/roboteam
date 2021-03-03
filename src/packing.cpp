@@ -15,42 +15,35 @@ bool protoToEmbedded_RobotCommand(const proto::RobotCommand& command, RobotComma
     // ======== Convert units ======== //
     double rho = sqrt(command.vel().x() * command.vel().x() + command.vel().y() * command.vel().y());
     double theta = atan2(command.vel().y(), command.vel().x());
-
-    int rhoI   = static_cast<int>(floor(rho * 250));
-    int thetaI = static_cast<int>(floor(theta * 1023.5 / M_PI));
-
-    int angleI;
-    if(command.use_angle()) angleI = static_cast<int>(floor(command.w() * (511 / M_PI)));
-    else                    angleI = static_cast<int>(floor(command.w() * (511 / (8 * 2 * M_PI))));
+    double angle = command.w();
 
     int _kick_chip_power = static_cast<int>(floor(command.chip_kick_vel() * 255 / 6.5));
 
     // ======== Set Values ======== //
-    RobotCommand_setHeader(rcp, PACKET_TYPE_ROBOT_COMMAND);
-    RobotCommand_setId(rcp, command.id());
+    RobotCommand_set_header(rcp, PACKET_TYPE_ROBOT_COMMAND);
+    RobotCommand_set_id(rcp, command.id());
 
-    RobotCommand_setDoKick(rcp, command.kicker());
-    RobotCommand_setDoChip(rcp, command.chipper());
-    RobotCommand_setDoForce(rcp, command.chip_kick_forced());
-    RobotCommand_setUseCameraAngle(rcp, false);
+    RobotCommand_set_doKick(rcp, command.kicker());
+    RobotCommand_set_doChip(rcp, command.chipper());
+    RobotCommand_set_doForce(rcp, command.chip_kick_forced());
+    RobotCommand_set_useCameraAngle(rcp, false);
 
-    RobotCommand_setRho(rcp,   rhoI);
-    RobotCommand_setTheta(rcp, thetaI);
-    RobotCommand_setAngle(rcp, angleI);
+    RobotCommand_set_rho  (rcp, rho);
+    RobotCommand_set_theta(rcp, theta);
+    RobotCommand_set_angle(rcp, angle);
 
     std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), isYellow, worldOpt);
     proto::WorldRobot robot;
     if (findBot) {
         robot = *findBot;
         int _cameraAngle = static_cast<int>(floor(robot.angle() / M_PI * 1024));
-        RobotCommand_setUseCameraAngle(rcp, true);
-        RobotCommand_setCameraAngle(rcp, _cameraAngle);
+        RobotCommand_set_useCameraAngle(rcp, true);
+        RobotCommand_set_cameraAngle(rcp, _cameraAngle);
     }
 
-    RobotCommand_setKickChipPower(rcp, _kick_chip_power);
-    RobotCommand_setDribbler(rcp, command.dribbler());
-    RobotCommand_setAngularControl(rcp, command.use_angle());
-
+    RobotCommand_set_kickChipPower(rcp, _kick_chip_power);
+    RobotCommand_set_dribbler(rcp, command.dribbler());
+    RobotCommand_set_angularControl(rcp, command.use_angle());
 }
 
 /**

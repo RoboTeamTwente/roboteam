@@ -8,7 +8,7 @@ ExternalProject_Add(project_zeromq
         -DENABLE_DRAFTS=ON
         -DBUILD_TESTING=OFF
         -DZMQ_BUILD_FRAMEWORK=OFF
-        CONFIGURE_COMMAND ./configure --with-libsodium=${LIBSODIUM_LIB_DIR} --without-docs --prefix=${CMAKE_CURRENT_BINARY_DIR}/libzmq --enable-static
+        CONFIGURE_COMMAND ./configure --with-libsodium=${LIBSODIUM_LIB_DIR} --without-docs --prefix=${CMAKE_CURRENT_BINARY_DIR}/libzmq --enable-static --disable-libbsd
         DEPENDS lib::sodium
         )
 set(ZEROMQ_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/libzmq/include)

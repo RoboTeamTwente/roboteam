@@ -67,4 +67,96 @@ Circle Circle::operator/=(double scale) { return {center, radius /= std::abs(sca
 std::ostream &Circle::write(std::ostream &os) const { return os << "Circle({" << center.x << ", " << center.y << "}, " << radius << ")"; }
 
 std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return circle.write(os); }
+
+    double sq(double x) {
+        return x * x;
+    }
+
+    std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::Circle circle, rtt::LineSegment line){
+        std::vector<rtt::Vector2> res;
+        constexpr auto eps = 1e-16;
+        bool segment = true;
+
+        auto x0 = circle.center.x; //cp.first;
+        auto y0 = circle.center.y;//cp.second;
+        auto r = circle.radius;
+        auto x1 = line.start.x;//p1.first;
+        auto y1 = line.start.y;//p1.second;
+        auto x2 = line.end.x;//p2.first;
+        auto y2 = line.end.y;//p2.second;
+        auto A = y2 - y1;
+        auto B = x1 - x2;
+        auto C = x2 * y1 - x1 * y2;
+        auto a = A*A + B*B;
+        double b, c;
+        bool bnz = true;
+        if (abs(B) >= eps) {
+            b = 2 * (A * C + A * B * y0 - sq(B) * x0);
+            c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
+        } else {
+            b = 2 * (B * C + A * B * x0 - sq(A) * y0);
+            c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
+            bnz = false;
+        }
+        auto d = sq(b) - 4 * a * c; // discriminant
+        if (d < 0) {
+            return res;
+        }
+
+        // checks whether a point is within a segment
+        auto within = [x1, y1, x2, y2](double x, double y) {
+            auto d1 = sqrt(sq(x2 - x1) + sq(y2 - y1));  // distance between end-points
+            auto d2 = sqrt(sq(x - x1) + sq(y - y1));    // distance from point to one end
+            auto d3 = sqrt(sq(x2 - x) + sq(y2 - y));    // distance from point to other end
+            auto delta = d1 - d2 - d3;
+            return abs(delta) < eps;                    // true if delta is less than a small tolerance
+        };
+
+        auto fx = [A, B, C](double x) {
+            return -(A * x + C) / B;
+        };
+
+        auto fy = [A, B, C](double y) {
+            return -(B * y + C) / A;
+        };
+
+        auto rxy = [segment, &res, within](double x, double y) {
+            if (!segment || within(x, y)) {
+                res.emplace_back(x,y);
+            }
+        };
+
+        double x, y;
+        if (d == 0.0) {
+            // line is tangent to circle, so just one intersect at most
+            if (bnz) {
+                x = -b / (2 * a);
+                y = fx(x);
+                rxy(x, y);
+            } else {
+                y = -b / (2 * a);
+                x = fy(y);
+                rxy(x, y);
+            }
+        } else {
+            // two intersects at most
+            d = sqrt(d);
+            if (bnz) {
+                x = (-b + d) / (2 * a);
+                y = fx(x);
+                rxy(x, y);
+                x = (-b - d) / (2 * a);
+                y = fx(x);
+                rxy(x, y);
+            } else {
+                y = (-b + d) / (2 * a);
+                x = fy(y);
+                rxy(x, y);
+                y = (-b - d) / (2 * a);
+                x = fy(y);
+                rxy(x, y);
+            }
+        }
+        return res;
+    }
 }  // namespace rtt

@@ -74,20 +74,20 @@ std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return c
 
     std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::Circle circle, rtt::LineSegment line){
         std::vector<rtt::Vector2> res;
-        constexpr auto eps = 1e-16;
+        constexpr double eps = 1e-16;
         bool segment = true;
 
-        auto x0 = circle.center.x; //cp.first;
-        auto y0 = circle.center.y;//cp.second;
-        auto r = circle.radius;
-        auto x1 = line.start.x;//p1.first;
-        auto y1 = line.start.y;//p1.second;
-        auto x2 = line.end.x;//p2.first;
-        auto y2 = line.end.y;//p2.second;
-        auto A = y2 - y1;
-        auto B = x1 - x2;
-        auto C = x2 * y1 - x1 * y2;
-        auto a = A*A + B*B;
+        double x0 = circle.center.x; //cp.first;
+        double y0 = circle.center.y;//cp.second;
+        double r = circle.radius;
+        double x1 = line.start.x;//p1.first;
+        double y1 = line.start.y;//p1.second;
+        double x2 = line.end.x;//p2.first;
+        double y2 = line.end.y;//p2.second;
+        double A = y2 - y1;
+        double B = x1 - x2;
+        double C = x2 * y1 - x1 * y2;
+        double a = A*A + B*B;
         double b, c;
         bool bnz = true;
         if (abs(B) >= eps) {
@@ -98,17 +98,17 @@ std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return c
             c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
             bnz = false;
         }
-        auto d = sq(b) - 4 * a * c; // discriminant
+        double d = sq(b) - 4 * a * c; // discriminant
         if (d < 0) {
             return res;
         }
 
         // checks whether a point is within a segment
         auto within = [x1, y1, x2, y2](double x, double y) {
-            auto d1 = sqrt(sq(x2 - x1) + sq(y2 - y1));  // distance between end-points
-            auto d2 = sqrt(sq(x - x1) + sq(y - y1));    // distance from point to one end
-            auto d3 = sqrt(sq(x2 - x) + sq(y2 - y));    // distance from point to other end
-            auto delta = d1 - d2 - d3;
+            double d1 = sqrt(sq(x2 - x1) + sq(y2 - y1));  // distance between end-points
+            double d2 = sqrt(sq(x - x1) + sq(y - y1));    // distance from point to one end
+            double d3 = sqrt(sq(x2 - x) + sq(y2 - y));    // distance from point to other end
+            double delta = d1 - d2 - d3;
             return abs(delta) < eps;                    // true if delta is less than a small tolerance
         };
 

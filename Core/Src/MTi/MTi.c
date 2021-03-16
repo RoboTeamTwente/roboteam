@@ -106,7 +106,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	set_Pin(MTi_RST_pin, true);
 	//HAL_Delay(1);
 
-	if(WaitForAck(MTi,XMID_WakeUp)){
+	if(WaitForAck(MTi, XMID_WakeUp)){
 		MTi_printf("failed go to config");
 		return NULL;
 	}
@@ -515,10 +515,10 @@ static inline void ErrorHandler(struct XbusMessage const* message){
 
 static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	bool timedout = false;
-//	uint32_t cnt = 0;
+	uint32_t cnt = 0;
 	while(MTi->LastAck != XMID && !timedout){
-//		HAL_Delay(10);
-//		timedout = 200 < cnt++;
+		HAL_Delay(10);
+		timedout = 200 < cnt++;
 	}
 	return timedout ? Xsens_Failed_Receive : Xsens_OK;
 }

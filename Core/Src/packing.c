@@ -46,9 +46,6 @@ void packetToRoboData(RobotCommandPayload* input, ReceivedData* receivedData) {
 	receivedData->stateRef[body_w] = rc.angle;
 	//receivedData->stateRef = stateRef;
 
-	// Geneva
-	// receivedData->genevaRef = rc.geneva;
-
 	// Dribbler
 	receivedData->dribblerRef = rc.dribbler * 14.285f; // Scale [0, 7] to [0, 100]
 

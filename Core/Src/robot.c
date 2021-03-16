@@ -9,7 +9,6 @@
 #include "wheels.h"
 #include "stateControl.h"
 #include "stateEstimation.h"
-#include "geneva.h"
 #include "dribbler.h"
 #include "shoot.h"
 #include "Wireless.h"
@@ -54,7 +53,7 @@ RobotFeedbackPayload Bot_to_PC;
 RobotFeedback robotFeedback = {0};
 RobotCommandPayload PC_to_Bot;
 RobotCommand robotCommand = {0};
-ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
+ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
 
 
@@ -69,28 +68,12 @@ IWDG_Handle* iwdg;
 // Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
 	stateControl_SetRef(receivedData->stateRef);
-	geneva_SetRef(receivedData->genevaRef);
 	dribbler_SetSpeed(receivedData->dribblerRef);
 	shoot_SetPower(receivedData->shootPower);
 
 	if (receivedData->do_kick) {
-		if (receivedData->kick_chip_forced){
-			// no questions asked
+		if (ballPosition.canKickBall || receivedData->kick_chip_forced){
 			shoot_Shoot(shoot_Kick);
-		}
-		else if (ballPosition.canKickBall) {
-			bool geneva_able = true; // set to false to use geneva+ballsensor
-//			switch(geneva_GetState()){
-//				case geneva_none: 		geneva_able = false;				break;
-//				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
-//				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
-//				case geneva_middle:		geneva_able = true;					break;
-//				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
-//				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
-//			}
-			if(geneva_able){
-				shoot_Shoot(shoot_Kick);
-			}
 		}
 	}
 	else if (receivedData->do_chip) {
@@ -105,7 +88,6 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_kick = false;
 	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 0;
 	receivedData->stateRef[body_x] = 0.0f;
 	receivedData->stateRef[body_y] = 0.0f;
@@ -123,7 +105,6 @@ void printReceivedData(ReceivedData* receivedData) {
 	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
 	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
 	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
 	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
 	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
 	Putty_printf("kick: %u\n\r",receivedData->do_kick);
@@ -162,10 +143,6 @@ void printRobotStateData() {
 	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
 	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
 	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
-	Putty_printf("Geneva: \n\r");
-	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
-	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
-	Putty_printf("  ref: %f\n\r", geneva_GetRef());
 }
 
 void printRobotCommand(RobotCommand* rc){
@@ -210,7 +187,6 @@ void init(void){
     wheels_Init();
     stateControl_Init();
     stateEstimation_Init();
-    geneva_Init();
     shoot_Init();
     dribbler_Init();
     ballSensor_Init();
@@ -296,7 +272,6 @@ void loop(void){
         wheels_DeInit();
         stateControl_DeInit();
         stateEstimation_DeInit();
-        geneva_DeInit();
         shoot_DeInit();
         dribbler_DeInit();
         ballSensor_DeInit();
@@ -352,8 +327,6 @@ void loop(void){
     robotFeedback.ballSensorWorking = ballSensor_isWorking();
     robotFeedback.hasBall = ballPosition.canKickBall;
     robotFeedback.ballPos = ballPosition.x/100 & ballSensor_isWorking();
-    // robotFeedback.genevaWorking = geneva_IsWorking();
-    // robotFeedback.genevaState = geneva_GetState();
 
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
@@ -449,11 +422,10 @@ volatile uint32_t timcnt = 0;
 
 // Handles the interrupts of the different timers.
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
+{	
+	// Old Geneva timer. Needs to be properly disabled in CubeMX
 	if(htim->Instance == htim6.Instance){
-		if (xsens_CalibrationDone) {	// don't do geneva update until xsens calibration is done
-			geneva_Update();
-		}
+
 	}
 	else if(htim->Instance == htim7.Instance) {
 		timcnt += 2;

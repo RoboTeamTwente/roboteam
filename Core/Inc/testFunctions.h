@@ -22,7 +22,6 @@ typedef enum {
 	normal,
 	full,
 	square,
-	geneva,
 	wheels,
 	shoot,
 	dribbler

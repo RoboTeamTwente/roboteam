@@ -32,7 +32,6 @@ typedef struct ReceivedData {
 	float stateRef[3];
 	bool visionAvailable;
 	float visionYaw;
-	int genevaRef;
 	int dribblerRef;
 	int shootPower;
 	bool kick_chip_forced;

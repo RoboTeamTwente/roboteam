@@ -112,11 +112,7 @@ static void Putty_HexOut(uint8_t data[], uint8_t length)
 // Performs an action on the robot depending on the input.
 static void Putty_HandleCommand(char *input)
 {
-	if(!strcmp(input, "geneva get")){
-		Putty_printf("Geneva encoder = %i\n\r", geneva_GetEncoder());
-	} else if(!memcmp(input, "geneva set" , strlen("geneva set"))){
-		geneva_SetRef(strtol(input + 1 + strlen("geneva set"), NULL, 10));
-	}else if(!memcmp(input, "kickbs", strlen("kickbs"))){
+    if(!memcmp(input, "kickbs", strlen("kickbs"))){
 		if (ballPosition.canKickBall) {
 			shoot_Shoot(shoot_Kick);
 		}
@@ -137,15 +133,13 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
 		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
-		Putty_TextOut("geneva get\n\rgeneva set <arg>\n\rshoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun geneva test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
+		Putty_TextOut("shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
 		test_RunTest(full);
 	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
 		test_RunTest(square);
-	}else if (!memcmp(input, "run geneva test", strlen("run geneva test"))) {
-		test_RunTest(geneva);
 	}else if (!memcmp(input, "run wheels test", strlen("run wheels test"))) {
 		test_RunTest(wheels);
 	}else if (!memcmp(input, "run shoot test", strlen("run shoot test"))) {

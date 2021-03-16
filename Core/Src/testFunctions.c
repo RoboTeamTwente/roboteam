@@ -15,13 +15,11 @@ bool runningTest[nTests] = {false};
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 status executeFullTest(ReceivedData* receivedData);
-status executeGenevaTest(ReceivedData* receivedData);
 status executeWheelsTest();
 status executeShootTest();
 status executeDribblerTest(ReceivedData* receivedData);
 status executeSquareDrive(ReceivedData* receivedData);
 
-void checkGeneva(geneva_positions position);
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]);
 void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]);
 
@@ -32,8 +30,6 @@ void test_Update(ReceivedData* receivedData) {
 		runningTest[full] = (executeFullTest(receivedData) == test_running);
 	} else if (runningTest[square]) {
 		runningTest[square] = executeSquareDrive(receivedData) == test_running;
-	} else if (runningTest[geneva]) {
-		runningTest[geneva] = executeGenevaTest(receivedData) == test_running;
 	} else if (runningTest[wheels]) {
 		runningTest[wheels] = executeWheelsTest(receivedData) == test_running;
 	} else if (runningTest[shoot]) {
@@ -65,7 +61,6 @@ status executeFullTest(ReceivedData* receivedData) {
 	receivedData->do_kick = false;
 	receivedData->kick_chip_forced = false;
 	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_none;
 	receivedData->shootPower = 20;
 	receivedData->stateRef[body_x] = 0.0f;
 	receivedData->stateRef[body_y] = 0.0f;
@@ -75,12 +70,7 @@ status executeFullTest(ReceivedData* receivedData) {
 
 	static status progress[nTests] = {test_none, test_none, test_none, test_none, test_none, test_none};
 
-	if (progress[geneva] == test_running) {
-		progress[geneva] = executeGenevaTest(receivedData);
-		if (progress[geneva] == test_done) {
-			progress[wheels] = test_running;
-		}
-	} else if (progress[wheels] == test_running) {
+	if (progress[wheels] == test_running) {
 		progress[wheels] = executeWheelsTest();
 		if (progress[wheels] == test_done) {
 			progress[shoot] = test_running;
@@ -92,8 +82,6 @@ status executeFullTest(ReceivedData* receivedData) {
 		}
 	} else if (progress[dribbler] == test_running) {
 		progress[dribbler] = executeDribblerTest(receivedData);
-	} else if (progress[geneva] == test_none) {
-		progress[geneva] = test_running; // start with geneva test
 	} else {
 		Putty_printf("---------- End of test ----------\n\r");
 		for (int i = 0; i < nTests; i++) {
@@ -103,41 +91,6 @@ status executeFullTest(ReceivedData* receivedData) {
 	}
 
 	return test_running;
-}
-
-status executeGenevaTest(ReceivedData* receivedData) {
-
-	const int RUN_TIME = 3000; 		// [ticks]
-	static uint32_t timer = 0;
-	static uint32_t prevTimeDiff = 0;
-	static bool firstTime = true;
-	timer = timer == 0 ? HAL_GetTick() : timer;
-
-	uint32_t timeDiff = HAL_GetTick() - timer;
-	if (firstTime) {
-		Putty_printf("Testing geneva...\n\r");
-		firstTime = false;
-	}
-
-	for (geneva_positions pos = geneva_leftleft; pos <= geneva_rightright + 1; pos++) {
-		if (timeDiff < pos * RUN_TIME) {
-			if (pos > geneva_leftleft && prevTimeDiff < (pos - 1) * RUN_TIME) {
-				checkGeneva(pos - 1);
-			}
-			receivedData->genevaRef = pos > geneva_rightright ? geneva_middle : pos;
-			break;
-		}
-	}
-
-	if (timeDiff >= 6 * RUN_TIME && prevTimeDiff < 6 * RUN_TIME) {
-		timer = 0;
-		prevTimeDiff = 0;
-		firstTime = true;
-		return test_done;
-	} else {
-		prevTimeDiff = timeDiff;
-		return test_running;
-	}
 }
 
 status executeWheelsTest() {
@@ -321,13 +274,6 @@ status executeSquareDrive(ReceivedData* receivedData) {
 	receivedData->stateRef[body_w] = velocityRef[body_w];
 
 	return test_running;
-}
-
-void checkGeneva(geneva_positions position) {
-	int margin = 20; // if geneva within 5 encoder units, test passes
-
-	int encoderDiff = fabs(encoderForPosition[position] - geneva_GetEncoder());
-	Putty_printf("\t position %d: %s (offset: %d encoder units)\n\r", position, (encoderDiff < margin) ? "PASS" : "FAIL", encoderDiff);
 }
 
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]) {

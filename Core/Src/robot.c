@@ -164,40 +164,56 @@ void printRobotCommand(RobotCommand* rc){
 
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
+
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
     set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
 
+	// Turn off all leds. Use leds to indicate init() progress
+	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
+ 
     // Check if robot has 30 W or 50 W motors (jumper = 50 W, no jumper = 30 W)
     MOTORS_50W = true;//read_Pin(IN1_pin);
     // TODO: remove this bool, it should not be here or used
 
 	ID = get_Id();
-
-	buzzer_Init();
-	buzzer_Play_ID(ID);
-	HAL_Delay(1500);
-
-	Putty_Init();
-
 	Putty_printf("ID: %d\n", ID);
+	set_Pin(LED0_pin, 1);
+
+	/* Initialize buzzer */
+	buzzer_Init();
+	buzzer_Play_QuickBeepUp();
+	set_Pin(LED1_pin, 1);
+
+	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
+	/* Initialize Putty. Not possible when REM_UARTinit() is called */
+	// Putty_Init();
+
+	/* Initialize Roboteam_Embedded_Messages. Not possible when Putty_Init() is called */
+	/* Can now receive RobotCommands (and other packets) via UART */
+    robotCommandIsFresh = 0;
+    REM_UARTinit(UART_PC);
+	set_Pin(LED2_pin, 1);
 
     // Initialize control constants
     control_util_Init();
-
     wheels_Init();
     stateControl_Init();
     stateEstimation_Init();
     shoot_Init();
     dribbler_Init();
     ballSensor_Init();
-    
-    
-	
-    robotCommandIsFresh = 0;
-    REM_UARTinit(UART_PC);
-
+    set_Pin(LED3_pin, 1);
+		
+	/* Initialize the SX1280 wireless chip */
+	// TODO figure out why a hardfault occurs when this is disabled
 	Putty_printf("Initializing wireless\n");
     SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
+	SX->SX_settings->syncWords[0] = robot_syncWord[ID];
+    setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+    setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
+	set_Pin(LED4_pin, 1);
+
+	/* Initialize the XSens chip */
 	Putty_printf("Initializing XSens\n");
     MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
     if(MTi == NULL){
@@ -205,18 +221,14 @@ void init(void){
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
 	}
-    
-	// start the wireless receiver
-    // transmit feedback packet for every received packet if wirelessFeedback==true
-    SX->SX_settings->syncWords[0] = robot_syncWord[ID];
-    setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
+	set_Pin(LED5_pin, 1);
 
-	Putty_printf("Wireless initialized\n");
-
-	buzzer_Play_QuickBeepUp();
+	Putty_printf("Initialized\n");
     IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
 
+	// Turn of all leds. Will now be used to indicate robot status
+	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
+	buzzer_Play_ID(ID);
 }
 
 // ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
@@ -226,14 +238,14 @@ uint32_t timeLastPacket = 0;
 
 volatile int commandCounter = 0;
 void loop(void){
+	uint32_t currentTime = HAL_GetTick();
 
+	/* Send anything in the log buffer over UART */
 	if(0 < strlen(logBuffer)){
 		HAL_UART_Transmit(UART_PC, (uint8_t*) logBuffer, strlen(logBuffer), 10);
 		logBuffer[0] = '\0';
 	}
 	
-	uint32_t currentTime = HAL_GetTick();
-
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
@@ -241,28 +253,15 @@ void loop(void){
 		
 		toggle_Pin(LED6_pin);
 		
-		printRobotCommand(&myRobotCommand);
+		// printRobotCommand(&myRobotCommand);
 		// printReceivedData(&receivedData);	
 	}
 
-	// If serial packet is no older than 250ms
+	// If serial packet is no older than 250ms, assume connected via wire
 	isSerialConnected = (currentTime - timeLastPacket) < 250;
 	
 
-	// if(robotCommandIsFresh_wireless == 1){
-	// 	robotCommandIsFresh_wireless = 0;
-	// 	decodeRobotCommand(&myRobotCommand, &PC_to_Bot);
-	// 	printRobotCommand(&myRobotCommand);
-	// 	printReceivedData(&receivedData);
-		
-	// 	for(int i = 0; i < PACKET_SIZE_ROBOT_COMMAND; i++){
-	// 		Putty_printf("%d\t "BYTE_TO_BINARY_PATTERN" %d\r\n", i, BYTE_TO_BINARY(PC_to_Bot.payload[i]), PC_to_Bot.payload[i]);
-	// 	}
-	// }
-
-    /*
-    * Check for empty battery
-    */
+	// Check for empty battery 
     static int batCounter = 0;
     if (read_Pin(Bat_pin) && batCounter > 1000){
         Putty_printf("battery empty\n\r");
@@ -284,6 +283,7 @@ void loop(void){
         batCounter = 0;
     }
 
+
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
@@ -293,9 +293,8 @@ void loop(void){
         ballSensor_IRQ_Handler();
     }
 
-    /*
-    * Check for wireless data
-    */
+
+	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
     if (halt) {
@@ -303,9 +302,7 @@ void loop(void){
         clearReceivedData(&receivedData);
     }
 
-    /*
-    * Unbrake wheels when Xsens calibration is done
-    */
+    // Unbrake wheels when Xsens calibration is done
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
         wheels_Brake(false);
@@ -317,9 +314,8 @@ void loop(void){
     // Go through all commands
     executeCommands(&receivedData);
 
-    /*
-    * Feedback
-    */
+
+    // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
@@ -336,7 +332,7 @@ void loop(void){
     robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2;
     
-    
+    // Heartbeat every second
     static int printTime = 0;
     if (HAL_GetTick() > printTime + 1000) {
         printTime = HAL_GetTick();

@@ -135,4 +135,22 @@ extern song_struct RickRoll[];
 extern song_struct PinkPanther[];
 extern song_struct mii[];
 extern song_struct zelda[];
+
+extern song_struct id0[];
+extern song_struct id1[];
+extern song_struct id2[];
+extern song_struct id3[];
+extern song_struct id4[];
+extern song_struct id5[];
+extern song_struct id6[];
+extern song_struct id7[];
+extern song_struct id8[];
+extern song_struct id9[];
+extern song_struct id10[];
+extern song_struct id11[];
+extern song_struct id12[];
+extern song_struct id13[];
+extern song_struct id14[];
+extern song_struct id15[];
+
 #endif /* BUZZER_TUNES_H_ */

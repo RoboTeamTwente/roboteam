@@ -38,6 +38,7 @@ void buzzer_Play_ImperialMarch();
 void buzzer_Play_Flatline();
 void buzzer_Play_HBD();
 
+void buzzer_Play_ID(uint8_t id);
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 void buzzer_SetPWM_Period(uint16_t period);
 void buzzer_Play(song_struct* tone);

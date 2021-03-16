@@ -188,16 +188,25 @@ void printRobotCommand(RobotCommand* rc){
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
-    set_Pin(OUT2_pin, HIGH);	// reference pin for feedback header
+    set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
 
     // Check if robot has 30 W or 50 W motors (jumper = 50 W, no jumper = 30 W)
     MOTORS_50W = true;//read_Pin(IN1_pin);
     // TODO: remove this bool, it should not be here or used
 
+	ID = get_Id();
+
+	buzzer_Init();
+	buzzer_Play_ID(ID);
+	HAL_Delay(1500);
+
+	Putty_Init();
+
+	Putty_printf("ID: %d\n", ID);
+
     // Initialize control constants
     control_util_Init();
 
-    Putty_Init();
     wheels_Init();
     stateControl_Init();
     stateEstimation_Init();
@@ -205,50 +214,64 @@ void init(void){
     shoot_Init();
     dribbler_Init();
     ballSensor_Init();
-    buzzer_Init();
     
+    
+	
     robotCommandIsFresh = 0;
     REM_UARTinit(UART_PC);
 
+	Putty_printf("Initializing wireless\n");
     SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
+	Putty_printf("Initializing XSens\n");
     MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
-    ID = get_Id();
-    Putty_printf("\n\rID: %u\n\r",ID);
-
-    // start the wireless receiver
+    if(MTi == NULL){
+		Putty_printf("Failed to initialize XSens\n");
+		buzzer_Play_WarningOne();
+		HAL_Delay(1500);
+	}
+    
+	// start the wireless receiver
     // transmit feedback packet for every received packet if wirelessFeedback==true
     SX->SX_settings->syncWords[0] = robot_syncWord[ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 
+	Putty_printf("Wireless initialized\n");
+
+	buzzer_Play_QuickBeepUp();
     IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+
 }
 
 // ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
 
+bool isSerialConnected = false;
+uint32_t timeLastPacket = 0;
+
 volatile int commandCounter = 0;
-
 void loop(void){
-
-	// wheels_Brake(false);
 
 	if(0 < strlen(logBuffer)){
 		HAL_UART_Transmit(UART_PC, (uint8_t*) logBuffer, strlen(logBuffer), 10);
 		logBuffer[0] = '\0';
 	}
+	
+	uint32_t currentTime = HAL_GetTick();
 
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
+		timeLastPacket = currentTime;
 		packetToRoboData(&myRobotCommandPayload, &receivedData);
 		
-		// printRobotCommand(&myRobotCommand);
-		// printReceivedData(&receivedData);	
+		toggle_Pin(LED6_pin);
 		
-		// Putty_printf("body x=%.3f y=%.3f z=%.3f\n", 
-		// 	receivedData.stateRef[body_x],
-		// 	receivedData.stateRef[body_y],
-		// 	receivedData.stateRef[body_w]);		
+		printRobotCommand(&myRobotCommand);
+		// printReceivedData(&receivedData);	
 	}
+
+	// If serial packet is no older than 250ms
+	isSerialConnected = (currentTime - timeLastPacket) < 250;
+	
 
 	// if(robotCommandIsFresh_wireless == 1){
 	// 	robotCommandIsFresh_wireless = 0;
@@ -299,7 +322,7 @@ void loop(void){
     * Check for wireless data
     */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && checkWirelessConnection());
+    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
     if (halt) {
         stateControl_ResetAngleI();
         clearReceivedData(&receivedData);
@@ -441,7 +464,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				
 				// State estimation
 				stateInfo.visionAvailable = receivedData.visionAvailable;
-				stateInfo.visionYaw = receivedData.visionYaw;
+				stateInfo.visionYaw = receivedData.visionYaw; // TODO check if this is scaled properly with the new REM messages
 				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 					stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
 				}
@@ -481,8 +504,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		if(300 < timcnt){
-			sprintf(logBuffer, "[Tim]\n");
-			Putty_printf("[Tim] cc = %d\n", commandCounter);
+			// sprintf(logBuffer, "[Tim]\n");
+			// Putty_printf("[Tim] cc = %d\n", commandCounter);
 			timcnt = 0;
 		}
 	}

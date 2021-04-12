@@ -17,6 +17,7 @@ Observer::process(Time extrapolatedTo,
     proto::State state;
     proto::World world = worldFilter.getWorld();
     state.mutable_last_seen_world()->CopyFrom(world);
+    state.mutable_command_extrapolated_world()->CopyFrom(world);//TODO; actually do extrapolation
     auto twoTeamParams = parameterDatabase.getParams();
 
     auto blueParams = twoTeamParams.blueTeamProto();

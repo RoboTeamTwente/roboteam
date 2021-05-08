@@ -17,6 +17,8 @@ RobotHub::RobotHub() {
 #else
     device = std::make_shared<SerialDeviceManager>("/dev/serial/by-id/usb-RTT_BaseStation_00000000001A-if00");
 #endif
+
+    simulator_connection = std::make_shared<SSLSimulator>();
 }
 
 /// subscribe to topics
@@ -55,6 +57,11 @@ void RobotHub::printStatistics() {
 }
 
 void RobotHub::processAIBatch(proto::AICommand &cmd) {
+  //TODO split up sending here, not in the lower functions
+  if( mode == utils::Mode::SSL_SIMULATOR){
+      sendSimulatorBatch(cmd);
+      return;
+  }
   proto::RobotData sentCommands;
   sentCommands.set_isyellow(isYellow);
   for(const auto& command : cmd.commands()){
@@ -133,14 +140,41 @@ void RobotHub::processSettings(proto::Setting &setting) {
     grsimCommander->setColor(setting.isyellow());
     isYellow = setting.isyellow();
 
+    simulator_connection->set_ip(setting.robothubsendip());
+    simulator_connection->set_color(setting.isyellow());
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;
     } else {
-        mode = utils::Mode::GRSIM;
+        //mode = utils::Mode::GRSIM; //TODO; quick hack, make sure these can coexist, but need to fix this in AI and other places as well (bad idea for now)
+        mode = utils::Mode::SSL_SIMULATOR;
     }
 }
 void RobotHub::set_robot_command_channel(const proto::ChannelType &robot_command_channel) { robotCommandChannel = robot_command_channel; }
 void RobotHub::set_feedback_channel(const proto::ChannelType &feedback_channel) { feedbackChannel = feedback_channel; }
 void RobotHub::set_settings_channel(const proto::ChannelType &settings_channel) { settingsChannel = settings_channel; }
+
+void RobotHub::sendSimulatorBatch(proto::AICommand &cmd) {
+    proto::RobotData sentCommands;
+    sentCommands.set_isyellow(isYellow);
+    for(const auto& command : cmd.commands()){
+        LowLevelRobotCommand llrc = createLowLevelRobotCommand(command, cmd.extrapolatedworld(), isYellow);
+
+        // check if the command is valid, otherwise don't send anything
+        if (!validateRobotPacket(llrc)) {
+            std::cout << "[processRobotCommand] LowLevelRobotCommand is not valid "
+                         "for our robots, no command is being sent!"
+                      << std::endl;
+            printLowLevelRobotCommand(llrc);
+
+        }else{
+            simulator_connection->add_robot_command(command);
+            robotTicks[command.id()]++;
+            proto::RobotCommand * sent = sentCommands.mutable_sentcommands()->Add();
+            sent->CopyFrom(command);
+        }
+    }
+    simulator_connection->send_commands();
+    feedbackPublisher->send(sentCommands);
+}
 
 }  // namespace rtt

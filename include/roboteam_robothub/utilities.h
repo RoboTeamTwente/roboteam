@@ -15,7 +15,7 @@ namespace rtt {
 namespace robothub {
 namespace utils {
 
-enum class Mode { SERIAL, GRSIM, UNDEFINED };
+enum class Mode { SERIAL, GRSIM, UNDEFINED,SSL_SIMULATOR };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';

@@ -1,29 +1,30 @@
 //
-// Created by mrlukasbos on 8-3-19.
+// Created by emiel on 22-05-21.
 //
 
-#ifndef ROBOTEAM_ROBOTHUB_APPLICATION_H
-#define ROBOTEAM_ROBOTHUB_APPLICATION_H
+#ifndef RTT_ROBOTHUB_H
+#define RTT_ROBOTHUB_H
 
 #include <Publisher.h>
 #include <Subscriber.h>
-#include <string>
-#include "constants.h"
+
 #include "roboteam_proto/Setting.pb.h"
+
+#include "BasestationWriter.h"
+#include "BasestationReader.h"
 #include "utilities.h"
 
 namespace rtt {
 namespace robothub {
 
-class GRSimCommander;
-class SerialDeviceManager;
 class RobotHub {
-   public:
+public:
     RobotHub();
-    void start();
-    void subscribeToTopics();
 
-   private:
+private:
+    bool startBasestation();
+    bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle);
+
     utils::Mode mode = utils::Mode::GRSIM;
     bool isLeft = true;
     bool isYellow = true;
@@ -31,41 +32,24 @@ class RobotHub {
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
 
-   public:
-    void set_settings_channel(const proto::ChannelType &settings_channel);
+    std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::World>> worldStateSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
+    std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
-   public:
-    void set_robot_command_channel(const proto::ChannelType &robot_command_channel);
-    void set_feedback_channel(const proto::ChannelType &feedback_channel);
+    libusb_context *ctx;
+    libusb_device_handle* basestation_handle;
 
-   private:
-    proto::ChannelType feedbackChannel;
+    std::unique_ptr<BasestationWriter> writer;
+    std::unique_ptr<BasestationReader> reader;
 
-   private:
-    proto::Subscriber<proto::RobotCommand> *robotCommandSubscriber;
-    proto::Subscriber<proto::World> *worldStateSubscriber;
-    proto::Subscriber<proto::Setting> *settingsSubscriber;
-    proto::Publisher<proto::RobotFeedback> *feedbackPublisher;
-
-    // Callback functions
+    std::mutex worldLock;
     proto::World LastWorld;
     void processWorldState(proto::World &world);
-    void processRobotCommand(proto::RobotCommand &cmd);
     void processSettings(proto::Setting &setting);
-
-    // Serial and grsim managers
-    std::shared_ptr<SerialDeviceManager> device;
-    std::shared_ptr<GRSimCommander> grsimCommander;
-
-    void sendSerialCommand(LowLevelRobotCommand llrc);
-    void sendGrSimCommand(const proto::RobotCommand &robotCommand);
-    void publishRobotFeedback(LowLevelRobotFeedback llrf);
-    int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
-    void printStatistics();
-    std::mutex worldLock;
 };
 
 }  // namespace robothub
 }  // namespace rtt
 
-#endif  // ROBOTEAM_ROBOTHUB_APPLICATION_H
+#endif //RTT_ROBOTHUB_H

@@ -5,10 +5,4 @@
 #ifndef RTT_BASESTATIONDEVELOPMENT_H
 #define RTT_BASESTATIONDEVELOPMENT_H
 
-
-class baseStationDevelopment {
-
-};
-
-
 #endif //RTT_BASESTATIONDEVELOPMENT_H

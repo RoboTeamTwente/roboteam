@@ -30,10 +30,17 @@ void BasestationReader::run() {
     int actual_length = 0;
 
     while(running){
+        if(basestation_handle == nullptr){
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            continue;
+        }
 
         int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &actual_length, 100);
+        if(error != LIBUSB_SUCCESS and error != LIBUSB_ERROR_TIMEOUT){
+            std::cout << "[BasestationReader::run] Error receiving : " << usbutils_errorToString(error) << std::endl;
+            basestation_handle = nullptr;
+        }
         if (actual_length == 0) continue;
-        if (error) std::cout << "ERROR receiving : " << usbutils_errorToString(error) << std::endl;
 
         if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
             printf("LOG: ");

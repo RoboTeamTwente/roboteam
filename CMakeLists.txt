@@ -7,7 +7,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
 include(ccache)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O0")
 
 # for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
 if(APPLE)
@@ -21,35 +21,15 @@ endif()
 
 find_package(Qt5Network REQUIRED)
 
-#add_executable(roboteam_robothub
-#        src/main.cpp
-#        src/packing.cpp
-#        src/GRSim.cpp
-#        src/SerialDeviceManager.cpp
-#        src/RobotHub.cpp
-#        src/baseStationDevelopment.cpp)
-#
-#target_include_directories(roboteam_robothub
-#        INTERFACE include
-#        PRIVATE include/roboteam_robothub
-#        PRIVATE src
-#        PRIVATE roboteam_embedded_messages/include )
-#
-#target_link_libraries(roboteam_robothub
-#        PUBLIC roboteam_proto
-#        PRIVATE roboteam_utils
-#        PRIVATE Qt5::Network
-#        )
-
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 add_executable(basestation
-        src/baseStationDevelopment.cpp
-        src/BasestationWriter.cpp
+        src/RobotHub.cpp
+        src/GRSim.cpp
         src/BasestationReader.cpp
         src/Packing.cpp
-        src/LibusbUtilities.cpp src/RobotHub.cpp)
+        src/LibusbUtilities.cpp)
 target_include_directories(basestation
         PRIVATE include/roboteam_robothub
         PRIVATE roboteam_embedded_messages/include
@@ -57,13 +37,6 @@ target_include_directories(basestation
 target_link_libraries(basestation
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
+        PRIVATE Qt5::Network
         Threads::Threads
         usb-1.0)
-
-
-add_executable(circbuf
-        src/CircularBuffer.c
-        )
-target_include_directories(circbuf
-        PRIVATE include/roboteam_robothub
-        )

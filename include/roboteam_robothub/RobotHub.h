@@ -7,9 +7,9 @@
 
 #include <Publisher.h>
 #include <Subscriber.h>
-
 #include "roboteam_proto/Setting.pb.h"
 
+#include "GRSim.h"
 #include "BasestationWriter.h"
 #include "BasestationReader.h"
 #include "utilities.h"
@@ -20,14 +20,18 @@ namespace robothub {
 class RobotHub {
 public:
     RobotHub();
+    void subscribe();
+    void run();
 
+    void handleBasestationAttach(libusb_device* device);
+    void handleBasestationDetach(libusb_device* device);
 private:
     bool startBasestation();
     bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle);
+    bool running = true;
+    int whatever = 123;
 
-    utils::Mode mode = utils::Mode::GRSIM;
-    bool isLeft = true;
-    bool isYellow = true;
+    proto::Setting settings;
 
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
@@ -38,13 +42,26 @@ private:
     std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
     libusb_context *ctx;
+    libusb_device* basestation_device;
     libusb_device_handle* basestation_handle;
+    bool usb_initialized = false;
+    libusb_hotplug_callback_handle callback_handle_attach;
+    libusb_hotplug_callback_handle callback_handle_detach;
 
-    std::unique_ptr<BasestationWriter> writer;
+
+
+    std::shared_ptr<GRSimCommander> grsimCommander;
     std::unique_ptr<BasestationReader> reader;
 
+    std::thread readerThread;
+
     std::mutex worldLock;
-    proto::World LastWorld;
+    proto::World world;
+    void sendSerialCommand(const proto::RobotCommand &robotCommand);
+    void sendGrSimCommand(const proto::RobotCommand &robotCommand);
+    void readBasestation();
+
+    void processAIcommand(proto::AICommand &AIcmd);
     void processWorldState(proto::World &world);
     void processSettings(proto::Setting &setting);
 };

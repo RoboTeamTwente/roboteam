@@ -99,21 +99,22 @@ std::string usbutils_classToString(int bDeviceClass){
     }
 }
 std::string usbutils_errorToString(int error){
+
     switch(error){
-        case 0:   return "LIBUSB_SUCCESS";
-        case -1:  return "LIBUSB_ERROR_IO";
-        case -2:  return "LIBUSB_ERROR_INVALID_PARAM";
-        case -3:  return "LIBUSB_ERROR_ACCESS";
-        case -4:  return "LIBUSB_ERROR_NO_DEVICE";
-        case -5:  return "LIBUSB_ERROR_NOT_FOUND";
-        case -6:  return "LIBUSB_ERROR_BUSY";
-        case -7:  return "LIBUSB_ERROR_TIMEOUT";
-        case -8:  return "LIBUSB_ERROR_OVERFLOW";
-        case -9:  return "LIBUSB_ERROR_PIPE";
-        case -10: return "LIBUSB_ERROR_INTERRUPTED";
-        case -11: return "LIBUSB_ERROR_NO_MEM";
-        case -12: return "LIBUSB_ERROR_NOT_SUPPORTED";
-        case -99: return "LIBUSB_ERROR_OTHER";
+        case LIBUSB_SUCCESS:              return "LIBUSB_SUCCESS";
+        case LIBUSB_ERROR_IO:             return "LIBUSB_ERROR_IO";
+        case LIBUSB_ERROR_INVALID_PARAM:  return "LIBUSB_ERROR_INVALID_PARAM";
+        case LIBUSB_ERROR_ACCESS:         return "LIBUSB_ERROR_ACCESS";
+        case LIBUSB_ERROR_NO_DEVICE:      return "LIBUSB_ERROR_NO_DEVICE";
+        case LIBUSB_ERROR_NOT_FOUND:      return "LIBUSB_ERROR_NOT_FOUND";
+        case LIBUSB_ERROR_BUSY:           return "LIBUSB_ERROR_BUSY";
+        case LIBUSB_ERROR_TIMEOUT:        return "LIBUSB_ERROR_TIMEOUT";
+        case LIBUSB_ERROR_OVERFLOW:       return "LIBUSB_ERROR_OVERFLOW";
+        case LIBUSB_ERROR_PIPE:           return "LIBUSB_ERROR_PIPE";
+        case LIBUSB_ERROR_INTERRUPTED:    return "LIBUSB_ERROR_INTERRUPTED";
+        case LIBUSB_ERROR_NO_MEM:         return "LIBUSB_ERROR_NO_MEM";
+        case LIBUSB_ERROR_NOT_SUPPORTED:  return "LIBUSB_ERROR_NOT_SUPPORTED";
+        case LIBUSB_ERROR_OTHER:          return "LIBUSB_ERROR_OTHER";
         default: return "Unknown error code " + std::to_string(error);
     }
 }

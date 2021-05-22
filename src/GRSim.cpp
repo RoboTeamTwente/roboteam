@@ -39,10 +39,6 @@ bool verifyCommandIntegrity(const proto::RobotCommand& cmd, std::string mode) {
         std::cout << "RobotHub (" << mode.c_str() << "): Rotation velocity for " << cmd.id() << " is NAN." << std::endl;
         return false;
     }
-    if (cmd.geneva_state() < 0 || cmd.geneva_state() > 5) {
-        std::cout << "RobotHub (" << mode.c_str() << "): Geneva Drive state of " << cmd.id() << " is out of bounds. " << cmd.geneva_state() << std::endl;
-        return false;
-    }
     return true;
 }
 
@@ -311,19 +307,6 @@ void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand co
     command->set_spinner((msg.dribbler() > 0));
     command->set_use_angle(msg.use_angle());
 
-    // if no genevastate was given we set it to 3;
-    int genevaState = 3;
-    if (msg.geneva_state() != 0) {
-        genevaState = msg.geneva_state() - 1;
-    }
-    // angles in degrees
-
-    float angles[] = {20.0, 10.0, 0.0, -10.0, -20.0};
-
-    // geneva_angle in radians
-    float geneva_angle = 2.0 * M_PI * angles[genevaState] / 360.0;
-
-    command->set_geneva_angle(geneva_angle);
 }
 
 }  // namespace robothub

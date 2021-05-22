@@ -7,6 +7,7 @@
 
 #include <libusb-1.0/libusb.h>
 #include <roboteam_proto/AICommand.pb.h>
+#include "roboteam_proto/Setting.pb.h"
 
 namespace rtt {
 namespace robothub {
@@ -18,13 +19,16 @@ public:
     bool running = true;
     int packetsWritten = 0;
     int totalBytesWritten = 0;
+    proto::Setting settings;
 
     BasestationWriter();
 
     void setBasestationHandle(libusb_device_handle* _basestation_handle);
+    void setSettings(proto::Setting &settings);
 
     void processAIcommand(proto::AICommand &AIcmd);
-    void sendSerialCommand(const proto::RobotCommand &cmd);
+    void sendCommand(const proto::RobotCommand &cmd);
+    void sendSimulatorCommand(const proto::RobotCommand &cmd);
 
     void run();
 };

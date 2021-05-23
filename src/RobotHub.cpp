@@ -6,22 +6,26 @@
 
 #include <cstdio>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 
 #include "LibusbUtilities.h"
 #include "RobotCommand.h"
 #include "Packing.h"
 
+using namespace std::chrono;
 
 int hotplug_callback_attach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data){
     std::cout << "[hotplug_callback_attach] Event triggered!" << std::endl;
-    rtt::robothub::RobotHub* hub = (rtt::robothub::RobotHub*)(user_data);
-    hub->handleBasestationDetach(device);
-    //(rtt::robothub::RobotHub*)(user_data)->handleBasestationDetach();
+    auto* robothub = (rtt::robothub::RobotHub*)(user_data);
+    robothub->handleBasestationAttach(device);
     return 0;
 }
 
 int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data){
     std::cout << "[hotplug_callback_detach] Event triggered!" << std::endl;
+    auto* robothub = (rtt::robothub::RobotHub*)(user_data);
+    robothub->handleBasestationDetach(device);
     return 0;
 }
 
@@ -31,14 +35,11 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     std::cout << "[RobotHub] New RobotHub" << std::endl;
-
     grsimCommander = std::make_shared<GRSimCommander>();
-    reader = std::make_unique<BasestationReader>();
+}
 
-    startBasestation();
-    basestation_handle = nullptr;
-    reader->setBasestationHandle(basestation_handle);
-    readerThread = std::thread([&]() { reader->run(); });
+RobotHub::~RobotHub() {
+    std::cout << "[RobotHub::~RobotHub] Destructor" << std::endl;
 }
 
 void RobotHub::subscribe(){
@@ -58,37 +59,62 @@ void RobotHub::subscribe(){
 void RobotHub::run(){
     std::cout << "[RobotHub::run] Initialize " << std::endl;
 
+    if (!startBasestation()) {
+        std::cout << "[RobotHub::run] Error while initializing basestation. Aborting..." << std::endl;
+        return;
+    }
+
     /* Subscribe to relevant topics */
     subscribe();
 
     /* Start basestation reading thread */
-    std::thread readThread();
+    std::thread readThread(&RobotHub::readBasestation, this);
 
-    timeval usb_event_timeout{.tv_usec=100000}; // 100ms timeout
+    timeval usb_event_timeout{.tv_usec=100000}; // 100ms timeout for USB events
+    steady_clock::time_point tNextTick = steady_clock::now();
 
     std::cout << "[RobotHub::run] Loop " << std::endl;
-
     while(running){
-        std::cout << "[RobotHub::run] Tick " << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(milliseconds(10));
+        libusb_handle_events_timeout(ctx, &usb_event_timeout);
 
-        /* Initialize libusb, and subscribe to relevant usb events */
-        if(!usb_initialized && settings.serialmode()) {
-            if (!startBasestation()) {
-                std::cout << "[RobotHub::run] Error while initializing basestation. Aborting..." << std::endl;
-                return;
-            }
-            usb_initialized = true;
+        if(tNextTick + seconds(1) < steady_clock::now()){
+            std::cout << "Tick" << std::endl;
+            printStatistics();
+            tNextTick += seconds(1);
         }
-
-        if(usb_initialized)
-            libusb_handle_events_timeout(ctx, &usb_event_timeout);
-
     }
 }
 
+void RobotHub::printStatistics() {
+    std::stringstream ss;
+
+    const int amountOfColumns = 4;
+    for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i += amountOfColumns) {
+        for (int j = 0; j < amountOfColumns; j++) {
+            const int robotId = i + j;
+            if (robotId < MAX_AMOUNT_OF_ROBOTS) {
+                int nSent = commands_sent[robotId];
+                int nReceived = feedback_received[robotId];
+                commands_sent[robotId] = 0;
+                feedback_received[robotId] = 0;
+
+                if(robotId < 10) ss << " "; ss << robotId;
+                ss << "(";
+                if(nSent     < 100) ss << " "; if(nSent     < 10) ss << " "; ss << nSent;
+                ss << ":";
+                if(nReceived < 100) ss << " "; if(nReceived < 10) ss << " "; ss << nReceived;
+                ss << ") | ";
+            }
+        }
+        ss << std::endl;
+    }
+
+    std::cout << ss.str();
+}
+
+/* USB functions */
 void RobotHub::handleBasestationAttach(libusb_device* device){
-    std::cout << "[RobotHub::handleBasestationAttach] " << std::endl;
     basestation_device = device;
 
     int error;
@@ -113,31 +139,32 @@ void RobotHub::handleBasestationAttach(libusb_device* device){
     error = libusb_claim_interface(basestation_handle, 1);
     if(error){
         std::cout << "[RobotHub::handleBasestationAttach] Error while claiming interface : " << usbutils_errorToString(error) << std::endl;
+        basestation_handle = nullptr;
         return;
     }
 
-    reader->setBasestationHandle(basestation_handle);
+    std::cout << "[RobotHub::handleBasestationAttach] Basestation opened" << std::endl;
 }
 
 void RobotHub::handleBasestationDetach(libusb_device* device){
+    std::cout << "[RobotHub::handleBasestationDetach] " << std::endl;
     libusb_release_interface(basestation_handle, 1);
     libusb_close(basestation_handle);
     basestation_handle = nullptr;
-    reader->setBasestationHandle(basestation_handle);
-    std::cout << "[RobotHub::handleBasestationDetach] " << std::endl;
 }
 
 bool RobotHub::startBasestation(){
     int error;
 
-    // Initialize USB context
+    /* Initialize USB context */
     error = libusb_init(&ctx);
     if(error){
         std::cout << "[RobotHub::startBasestation] Error on libusb_init : " << usbutils_errorToString(error) << std::endl;
         return false;
     }
-    // Set logging level
-    error = libusb_set_option(ctx, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_DEBUG);
+
+    /* Set logging level */
+    error = libusb_set_option(ctx, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
     if(error){
         std::cout << "[RobotHub::startBasestation] Error on libusb_set_option : " << usbutils_errorToString(error) << std::endl;
         return false;
@@ -146,7 +173,7 @@ bool RobotHub::startBasestation(){
     /* Subscribe to detach event */
     error = libusb_hotplug_register_callback(
             ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS,
-            0x0483, 0x5740, LIBUSB_HOTPLUG_MATCH_ANY,
+            BASESTATION_VENDOR_ID, BASESTATION_PRODUCT_ID, LIBUSB_HOTPLUG_MATCH_ANY,
             hotplug_callback_detach, (void*)this, &callback_handle_detach);
     if(error){
         std::cout << "[RobotHub::startBasestation] Error on libusb_hotplug_register_callback detach : " << usbutils_errorToString(error) << std::endl;
@@ -154,9 +181,10 @@ bool RobotHub::startBasestation(){
     }
 
     /* Subscribe to attach event */
+    /* pass LIBUSB_HOTPLUG_ENUMERATE to immediately attach a basestation if already plugged into the PC */
     error = libusb_hotplug_register_callback(
             ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_ENUMERATE,
-            0x0483, 0x5740, LIBUSB_HOTPLUG_MATCH_ANY,
+            BASESTATION_VENDOR_ID, BASESTATION_PRODUCT_ID, LIBUSB_HOTPLUG_MATCH_ANY,
             hotplug_callback_attach, (void*) this, &callback_handle_attach);
     if(error){
         std::cout << "[RobotHub::startBasestation] Error on libusb_hotplug_register_callback attach : " << usbutils_errorToString(error) << std::endl;
@@ -164,14 +192,6 @@ bool RobotHub::startBasestation(){
     }
 
     return true;
-    // Open connection
-    basestation_handle = nullptr;
-    if(!openBasestation(ctx, &basestation_handle)){
-        std::cout << "[main] Basestation has not been found.. aborting" << std::endl;
-        return false;
-    }
-    return true;
-    // =========================== CONNECTION ESTABLISHED =========================== //
 }
 
 bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle){
@@ -230,9 +250,11 @@ bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **bases
     return true;
 }
 
+/* Functions that actually send packets */
 void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
     if(basestation_handle == nullptr){
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
+        std::this_thread::sleep_for(seconds(1));
         return;
     }
 
@@ -252,20 +274,22 @@ void RobotHub::sendGrSimCommand(const proto::RobotCommand &cmd) {
 
 void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(milliseconds(1000));
     uint8_t buffer[4906];
     int actual_length = 0;
 
-    while(running){
+    while(read_running){
         if(basestation_handle == nullptr){
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::cout << "[RobotHub::readBasestation] Sleep" << std::endl;
+            std::this_thread::sleep_for(milliseconds(1000));
             continue;
         }
 
         int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &actual_length, 100);
         if(error != LIBUSB_SUCCESS and error != LIBUSB_ERROR_TIMEOUT){
             std::cout << "[BasestationReader::run] Error receiving : " << usbutils_errorToString(error) << std::endl;
-            basestation_handle = nullptr;
+            std::this_thread::sleep_for(milliseconds(1000));
+            continue;
         }
         if (actual_length == 0) continue;
 
@@ -276,28 +300,25 @@ void RobotHub::readBasestation(){
         }
 
         if (buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS) {
-//            printStatistics(buffer);
             std::cout << "[RobotHub::readBasestation] Statistics" << std::endl;
         }
 
         if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
-            std::cout << "[RobotHub::readBasestation] Feedback!" << std::endl;
+            feedback_received[RobotFeedback_get_id((RobotFeedbackPayload*)buffer)]++;
         }
     }
 
-    std::cout << "[readThread] Terminating" << std::endl;
+    std::cout << "[RobotHub::readBasestation] Terminating" << std::endl;
 }
 
 /* Process functions */
 void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     for(const proto::RobotCommand &cmd : AIcmd.commands()){
         if(settings.serialmode())
-            if(usb_initialized)
-                sendSerialCommand(cmd);
-            else
-                std::cout << "[RobotHub::processAIcommand] Warning. Trying to send serial command without initializing USB" << std::endl;
+            sendSerialCommand(cmd);
         else
             sendGrSimCommand(cmd);
+        commands_sent[cmd.id()]++;
     }
 }
 

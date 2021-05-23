@@ -67,7 +67,14 @@ void init(){
 // screenCounter acts as a timer for updating the screen
 uint32_t screenCounter = 0;
 
+uint32_t loop_counter = 0;
+
 void loop(){
+  
+  if(1000 < HAL_GetTick() - loop_counter){
+    loop_counter = HAL_GetTick();
+    LOG("Tick\n");
+  }
   
   /* Send log if any */
   if(0 < strlen(logBuffer)){

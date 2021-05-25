@@ -89,6 +89,12 @@ void buzzer_Play_Mario(){
 	song = mario_victory;
 	buzzer_Play(song);
 }
+
+void buzzer_Play_PinkPanther(){
+	song = PinkPanther;
+	buzzer_Play(song);
+}
+
 void buzzer_Play_PowerUp(){
 	song = powerUp;
 	buzzer_Play(song);
@@ -137,22 +143,23 @@ void buzzer_Play_HBD() {
 
 /* If it's ugly and it works, is it still ugly? */
 void buzzer_Play_ID(uint8_t id){
-	if(id ==  0){ song = id0;  buzzer_Play(id0);  }
-	if(id ==  1){ song = id1;  buzzer_Play(id1);  }
-	if(id ==  2){ song = id2;  buzzer_Play(id2);  }
-	if(id ==  3){ song = id3;  buzzer_Play(id3);  }
-	if(id ==  4){ song = id4;  buzzer_Play(id4);  }
-	if(id ==  5){ song = id5;  buzzer_Play(id5);  }
-	if(id ==  6){ song = id6;  buzzer_Play(id6);  }
-	if(id ==  7){ song = id7;  buzzer_Play(id7);  }
-	if(id ==  8){ song = id8;  buzzer_Play(id8);  }
-	if(id ==  9){ song = id9;  buzzer_Play(id9);  }
-	if(id == 10){ song = id10; buzzer_Play(id10); }
-	if(id == 11){ song = id11; buzzer_Play(id11); }
-	if(id == 12){ song = id12; buzzer_Play(id12); }
-	if(id == 13){ song = id13; buzzer_Play(id13); }
-	if(id == 14){ song = id14; buzzer_Play(id14); }
-	if(id == 15){ song = id15; buzzer_Play(id15); }
+	if(id ==  0){ song = id0; }
+	if(id ==  1){ song = id1; }
+	if(id ==  2){ song = id2; }
+	if(id ==  3){ song = id3; }
+	if(id ==  4){ song = id4; }
+	if(id ==  5){ song = id5; }
+	if(id ==  6){ song = id6; }
+	if(id ==  7){ song = id7; }
+	if(id ==  8){ song = id8; }
+	if(id ==  9){ song = id9; }
+	if(id == 10){ song = id10;}
+	if(id == 11){ song = id11;}
+	if(id == 12){ song = id12;}
+	if(id == 13){ song = id13;}
+	if(id == 14){ song = id14;}
+	if(id == 15){ song = id15;}
+	buzzer_Play(song);
 }
 
 song_struct quickBeepUp[] = {{buzz_C4, 0.1}, {buzz_C5, 0.1}, {0xFFFF, 0}};

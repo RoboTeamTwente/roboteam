@@ -201,7 +201,8 @@ void init(void){
     stateEstimation_Init();
     shoot_Init();
     dribbler_Init();
-    ballSensor_Init();
+    if(ballSensor_Init())
+		Putty_printf("Ballsensor initialized\n");	
     set_Pin(LED3_pin, 1);
 		
 	/* Initialize the SX1280 wireless chip */
@@ -237,6 +238,10 @@ bool isSerialConnected = false;
 uint32_t timeLastPacket = 0;
 
 volatile int commandCounter = 0;
+
+uint32_t heartbeat_100ms = 0;
+uint32_t heartbeat_1000ms;
+
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
 
@@ -260,6 +265,7 @@ void loop(void){
 	// If serial packet is no older than 250ms, assume connected via wire
 	isSerialConnected = (currentTime - timeLastPacket) < 250;
 	
+
 
 	// Check for empty battery 
     static int batCounter = 0;
@@ -287,12 +293,6 @@ void loop(void){
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
-
-    // Check for new ballsensor data
-    if (read_Pin(BS_IRQ_pin)){
-        ballSensor_IRQ_Handler();
-    }
-
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
@@ -332,10 +332,17 @@ void loop(void){
     robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2;
     
-    // Heartbeat every second
-    static int printTime = 0;
-    if (HAL_GetTick() > printTime + 1000) {
-        printTime = HAL_GetTick();
+    // Heartbeat every second	
+	if(heartbeat_100ms + 100 < HAL_GetTick()){
+		heartbeat_100ms += 100;
+		Putty_printf("100ms\n");
+		Putty_printf("ball.x %d ball.y %d\n", ballPosition.x, ballPosition.y);
+	}
+
+	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
+		heartbeat_1000ms += 1000;
+		Putty_printf("1000ms\n");
+		
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 

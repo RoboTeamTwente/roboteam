@@ -3,7 +3,7 @@
 
 #include "gpio_util.h"
 
-#define NOBALL -1
+#define BALLSENSOR_NO_BALL -1
 #define BS_I2C_ADDR (uint16_t)(0x50 << 1)
 #define MAX_DATA_SIZE 255
 
@@ -50,7 +50,7 @@ extern uint8_t measurement_rx[];
 /* i2c communication functions, callbacks are also implemented in .c */
 void I2CTx_IT(uint8_t tosend[], uint8_t length); // transmit in interrupt mode; not used
 void I2C_Rx_DMA(); // non-blocking DMA receive for measurement messages in IRQ handler
-bool I2C_Rx(); // blocking receive for initialization (receives 2bytes and then full message)
+bool ballSensor_I2C_Rx(); // blocking receive for initialization (receives 2bytes and then full message)
 
 /* ballsensor functions */
 void printRawData(uint8_t data[]); // prints received bytes, use for debugging (to determine new config response)
@@ -61,8 +61,7 @@ void ballSensor_Reset(); // reset
 void ballSensor_IRQ_Handler(); // irq handler
 int8_t ballSensorFSM(); // FSM controller
 void updatePosition(uint8_t data[]); // update position struct
-void noBall(); // set no ball values for Position struct
-int8_t getBallPos(); // returns latest ball position
+void ballSensor_NoBall(); // set no ball values for Position struct
 bool ballSensor_isWorking();
 
 /* print functions */
@@ -79,6 +78,6 @@ bool bs_EnableDevice(); // send enable device message
 bool bs_CheckEnable(); // check enable device response
 void bs_CheckMeasurement(); // check received measurement notification
 void updatePosition(uint8_t data[]); // update position struct
-void noBall(); // set no ball values for position struct
+void ballSensor_NoBall(); // set no ball values for position struct
 
 #endif /* BALLSENSOR_H_ */

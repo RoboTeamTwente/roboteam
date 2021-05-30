@@ -160,6 +160,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & SYNCWORD_ERROR) {
     }
 
+    /* Timeout is triggered after WIRELESS_RX_COUNT * 62.5 microseconds. Should be 4000 * 62.5 = 250ms */
     if(irq & RXTX_TIMEOUT) {
     	isWirelessConnected = false;
     	setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

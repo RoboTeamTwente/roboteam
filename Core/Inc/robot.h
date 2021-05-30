@@ -8,7 +8,6 @@
 RobotCommandPayload myRobotCommandPayload;
 RobotCommand myRobotCommand;
 volatile uint8_t robotCommandIsFresh;
-volatile uint8_t robotCommandIsFresh_wireless;
 
 void print(char _out[]);
 

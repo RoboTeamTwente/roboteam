@@ -36,6 +36,7 @@ void yaw_Calibrate(float newXsensYaw, float visionYaw, bool visionAvailable, flo
 	float oldXsensYaw = getOldXsensYaw(newXsensYaw);
 
 	if (isCalibrationNeeded(visionYaw, oldXsensYaw, yawOffset) && visionAvailable && isRotatingSlow(rateOfTurn)) {
+		// TODO replace TIME_DIFF with hardware clock. If someone changes the timer, it would break everything
 		if (restCounter > CALIBRATION_TIME / TIME_DIFF) {
 			// calculate offset
 			float avgVisionYaw = atan2f(sumVisionVec[1], sumVisionVec[0]);

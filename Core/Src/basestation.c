@@ -22,8 +22,8 @@
   (byte & 0x01 ? '1' : '0')
 
 
-volatile int I1 = 0;
-volatile int cFeedback = 0;
+volatile int totalCommandsSent = 0;
+volatile int totalFeedbackReceived = 0;
 volatile int Iusb = 0;
 
 extern SPI_HandleTypeDef hspi1;
@@ -71,17 +71,18 @@ uint32_t loop_counter = 0;
 
 void loop(){
   
-  if(1000 < HAL_GetTick() - loop_counter){
-    loop_counter = HAL_GetTick();
-    LOG("Tick\n");
-  }
-  
   /* Send log if any */
   if(0 < strlen(logBuffer)){
     LOG(logBuffer);
     logBuffer[0] = '\0';
   }
-  
+
+  if(1000 < HAL_GetTick() - loop_counter){
+    loop_counter = HAL_GetTick();
+    sprintf(logBuffer, "Tick %d %d\n", totalCommandsSent, totalFeedbackReceived);
+    LOG(logBuffer);
+  }
+
   /* Send any new feedback packets */
   for(int id = 0; id < 16; id++){
     if(msgBuff[id].isNewFeedback){
@@ -109,9 +110,10 @@ void loop(){
 
 
   /* Ensures that the CPU doesn't get overloaded with display stuff. Make better solution for this? */
-  if(screenCounter++ < 80000)
+  if(screenCounter++ < 80000){
     LOG("Tick\n");
     return;
+  }
     
   screenCounter = 0;
 
@@ -198,7 +200,7 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
 
   // Check if the robotId is valid
   uint8_t robotId = RobotCommand_get_id(rcp);
-  if (15 <= robotId)
+  if (15 < robotId)
     return false;
     
   // Store the message in the buffer. Set flag to be sent to the robot
@@ -276,7 +278,7 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
 /* Triggers when a call to HAL_SPI_TransmitReceive_DMA or HAL_SPI_TransmitReceive_IT (both non-blocking) completes */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
     if(hspi->Instance == SX_TX->SPI->Instance) {
-		I1++;
+		totalCommandsSent++;
     Wireless_DMA_Handler(SX_TX);
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
@@ -285,18 +287,16 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 }
 
 /* External interrupt. Triggers when one of the SX1280 antennas has information available */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    
-	if (GPIO_Pin == SX_TX_IRQ.PIN) {
-		Wireless_IRQ_Handler(SX_TX, 0, 0);
-        I1++;
-	}
-	if (GPIO_Pin == SX_RX_IRQ.PIN) {
-		Wireless_IRQ_Handler(SX_RX, 0, 0);
-        cFeedback++;
-		toggle_pin(LD_LED1);
-	}
-    
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {  
+  if (GPIO_Pin == SX_TX_IRQ.PIN) {
+    Wireless_IRQ_Handler(SX_TX, 0, 0);
+    totalCommandsSent++;
+  }
+  if (GPIO_Pin == SX_RX_IRQ.PIN) {
+    Wireless_IRQ_Handler(SX_RX, 0, 0);
+    totalFeedbackReceived++;
+    toggle_pin(LD_LED1);
+  } 
 }
 
 /* Responsible for sending RobotCommand packages to the corresponding robots */

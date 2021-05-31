@@ -58,10 +58,14 @@ cmdPayload = rem.ffi.new("RobotCommandPayload*")
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 300
+periodLength = 500
+packetHz = 60
 
-packetsReceived = 0
+totalCommandsSent = 0
+totalFeedbackReceived = 0
 robotConnected = True
+
+lastBasestationLog = ""
 
 while True:
 	# Open basestation with the basestation
@@ -72,80 +76,81 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-
 			# Run at 60fps
-			if time.time() - lastWritten < 1./60:
-				time.sleep(0.001)
-				continue
-			
-			lastWritten = time.time()
-			tickCounter += 1
-			period = tickCounter % periodLength
-			periodFraction = period / periodLength
+			if 1./packetHz <= time.time() - lastWritten:
 
+				lastWritten = time.time()
+				tickCounter += 1
+				period = tickCounter % periodLength
+				periodFraction = period / periodLength
 
-			# Robot connectivity
-			if period == 0:
-				packetsReceived = 0
-			if 0.5 < periodFraction:
-				robotConnected = True
-				# If less than half of feedback packets received
-				if packetsReceived < 0.5 * 60 * periodFraction:
-					robotConnected = False
-
-
-			# Create new empty robot command
-			cmd = rem.ffi.new("RobotCommand*")
-			cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
-			cmd.id = robotId
-
-
-			log = ""
-
-			if test == "kicker" or test == "chipper":
+				# Robot connectivity
 				if period == 0:
-					if test == "kicker"  : cmd.doKick = True
-					if test == "chipper" : cmd.doChip = True
-					cmd.doForce = True
-					cmd.kickChipPower = 3
+					totalCommandsSent = 0
+					totalFeedbackReceived = 0
+				if 0.5 < periodFraction:
+					robotConnected = True
+					# If less than half of feedback packets received
+					if totalFeedbackReceived < 0.5 * packetHz * periodFraction:
+						robotConnected = False
 
-			if test == "dribbler":
-				cmd.dribbler = math.floor(8 * periodFraction)
-				log = "speed = %d" % cmd.dribbler
+				# Create new empty robot command
+				cmd = rem.ffi.new("RobotCommand*")
+				cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
+				cmd.id = robotId
 
-			if test == "rotate":
-				cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
-				log = "angle = %+.3f" % cmd.angle
+				# All tests
+				log = ""
 
-			if test == "forward" or test == "sideways":
-				cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-				if 0.5 < periodFraction : cmd.theta = -math.pi
-				log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
+				if test == "kicker" or test == "chipper":
+					if period == 0:
+						if test == "kicker"  : cmd.doKick = True
+						if test == "chipper" : cmd.doChip = True
+						cmd.doForce = True
+						cmd.kickChipPower = 3
 
-			if test == "sideways":
-				cmd.angle = math.pi / 2
+				if test == "dribbler":
+					cmd.dribbler = math.floor(8 * periodFraction)
+					log = "speed = %d" % cmd.dribbler
 
-			if test == "rotate-discrete":
-				if periodFraction <=  1.: cmd.angle = math.pi/2
-				if periodFraction <= .75: cmd.angle = -math.pi
-				if periodFraction <= .50: cmd.angle = -math.pi/2
-				if periodFraction <= .25: cmd.angle = 0
-				log = "angle = %+.3f" % cmd.angle
+				if test == "rotate":
+					cmd.angle = -math.pi + 2 * math.pi * ((periodFraction*4 + 0.5) % 1)
+					log = "angle = %+.3f" % cmd.angle
 
-			if test == "forward-rotate":
-				cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-				if 0.5 < periodFraction : cmd.theta = -math.pi
-				cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
-				log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
+				if test == "forward" or test == "sideways":
+					cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
+					if 0.5 < periodFraction : cmd.theta = -math.pi
+					log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
 
-			bar = drawProgressBar(periodFraction)
-			if not robotConnected:
-				print(" Receiving no feedback!", end="")
-			print(" %d - %s" % (robotId, test), bar, log, end="\r")
+				if test == "sideways":
+					cmd.angle = math.pi / 2
 
-			rem.lib.encodeRobotCommand(cmdPayload, cmd)
-			basestation.write(cmdPayload.payload)
+				if test == "rotate-discrete":
+					if periodFraction <=  1.: cmd.angle = math.pi/2
+					if periodFraction <= .75: cmd.angle = -math.pi
+					if periodFraction <= .50: cmd.angle = -math.pi/2
+					if periodFraction <= .25: cmd.angle = 0
+					log = "angle = %+.3f" % cmd.angle
 
+				if test == "forward-rotate":
+					cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
+					if 0.5 < periodFraction : cmd.theta = -math.pi
+					cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
+					log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
+
+				# Logging
+				bar = drawProgressBar(periodFraction)
+				if not robotConnected:
+					print(" Receiving no feedback!", end="")
+				tcs, tfr = totalCommandsSent, totalFeedbackReceived
+				print(f" {robotId} - {test} {bar} {log} | "
+					f"Sent:{tcs} Rcvd:{tfr} ({100*(tfr+1)/(tcs+1):.0f}%) | "
+					f"{lastBasestationLog}", end="\r")
+
+				# Send command
+				rem.lib.encodeRobotCommand(cmdPayload, cmd)
+				basestation.write(cmdPayload.payload)
+				totalCommandsSent += 1
 
 
 			# Read feedback packets coming from the robot
@@ -164,9 +169,15 @@ while True:
 				if receivedId != robotId:
 					print("Error : Received feedback from robot %d ???" % receivedId)
 					exit()
-				packetsReceived += 1
+				totalFeedbackReceived += 1
 
+			if packetType == rem.lib.PACKET_TYPE_BASESTATION_STATISTICS:
+				print("[Statistics]")
+				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_BASESTATION_STATISTICS - 1)
+				print(type(packet), len(packet), packet[1], packet[2], packet[3], packet[4])
 
+			if packetType == rem.lib.PACKET_TYPE_BASESTATION_LOG:
+				lastBasestationLog = basestation.readline().decode()[:-1] + " "*20
 
 	except serial.SerialException as se:
 		print("SerialException", se)

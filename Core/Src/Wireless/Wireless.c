@@ -28,17 +28,20 @@ SX1280_Settings set = {
         .txPower = 31, // -18 + txPower = transmit power in dBm (13dBm max)
 		.packettype = PACKET_TYPE_FLRC,
         .TX_ramp_time = RADIO_RAMP_20_US,
-		.periodBase = BASE_62_us,
+		/* 11.6.4 SetTx, page 79. Time-out duration = periodBase * periodBaseCount. */
+        /* 62.5 μs * 24 = 1.5ms timeout, which gives 666.6Hz. Enough for 11 robots at 60Hz each  */
+        .periodBase = BASE_62_us,
         .periodBaseCount = 24,
 		.syncWords = {0x0, 0x0, 0x0},
 		.syncWordTolerance = 2, // accepted wrong bits in a detected syncword
         .syncSensitivity = 1, // high sensitivity mode
         .crcSeed = {0xAC, 0xB6}, // seed value of 0xACB6 = 0b'1010110010110110
         .crcPoly = {0x10, 0x21}, // poly of P16(x) = x16 + x12 + x5 + 1
+        /* 8.4 Using the Data buffer. SX1280 has a 256 byte buffer. Give half to RX, half to TX */
         .TXoffset = 0x80,
         .RXoffset = 0x00,
-        .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, PACKET_SIZE_ROBOT_COMMAND, CRC_2_BYTE, NO_WHITENING},
+        /* 14.3.1.5, page 121 */ .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}, /* Full power 1.3Mbps, 3/4 encoding rate, 
+        /* 14.3.1.6, page 122 */ .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, PACKET_SIZE_ROBOT_COMMAND, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -72,6 +75,7 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi, uint8_t m
 
     SX1280Setup(SX); // SX1280 init procedure
 
+    // AutoFS reduces time between consecutive read / write operations
     setAutoFS(SX, true); // to go or not to go FS after TX or RX
 
     return SX;

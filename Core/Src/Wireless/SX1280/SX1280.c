@@ -14,8 +14,11 @@ uint32_t robot_syncWord[] = {
 };
 
 void SX1280Setup(SX1280* SX){
+    /* 14.3 FLRC Operation, page 121 */
 	SX1280WakeUp(SX); // reset, initialize SPI, set to STDBY_RC in order to configure SX1280
 
+    /* 6.1 Overview, page 34. Note: Care must therefore be taken to ensure that modulation parameters are set
+    using the command SetModulationParam() only after defining the packet type SetPacketType() to be used. */
     setPacketType(SX, SX->SX_settings->packettype); // packet type is set first!
 
     setChannel(SX, SX->SX_settings->channel); // calls setRFFrequency() with freq=(channel+2400)*1000000
@@ -102,6 +105,8 @@ bool setFS(SX1280* SX){
     return SendData(SX,1);
 }
 
+/* 11.6.4 SetTx, page 79 */
+/* The command setTX sets the device in Transmit mode. Clear IRQ status before using this command */
 bool setTX(SX1280* SX, uint8_t base, uint16_t count){
 	clearIRQ(SX, ALL);
 	// wait till send complete
@@ -115,6 +120,8 @@ bool setTX(SX1280* SX, uint8_t base, uint16_t count){
     return SendData(SX,4);
 }
 
+/* 11.6.5 SetRx, page 80 */
+/* The command setRX sets the device in Receiver mode. The IRQ status should be cleared prior to using this command */
 bool setRX(SX1280* SX, uint8_t base, uint16_t count){
 	clearIRQ(SX, ALL);
     // wait till send complete
@@ -140,6 +147,10 @@ void setRXDuty(SX1280* SX, uint8_t base, uint16_t rxcount, uint16_t sleepcount){
     SX->TXbuf[5] = sleepcount & 0xFF;
     SendData(SX,6);
 }
+
+/* 11.6.12 SetAutoFs, page 85 */
+/* This feature modifies the chip behavior so that the state following a Rx or Tx operation is FS and not STDBY */
+/* This feature is to be used to reduce the switching time between consecutive Rx and/or Tx operations */
 void setAutoFS(SX1280* SX, bool enable){
     // wait till send complete
     while(SX->SPI_used){}
@@ -161,6 +172,20 @@ void setAutoTX(SX1280* SX, uint16_t wait_time){
 }
 
 // -------------------------------------------- Packet Type / Params
+/* 11.7 Radio Configuration, page 85 */
+
+/* 11.7.1 SetPacketType, page 85 */
+void setPacketType(SX1280* SX, uint8_t type){
+    // wait till send complete
+    while(SX->SPI_used){}
+    SX->SPI_used = true;
+    // make command
+    SX->TXbuf[0] = SET_PACKET;
+    SX->TXbuf[1] = type;
+    SendData(SX,2);
+}
+
+/* 11.7.3 SetRfFrequency, page 87 */
 void setRFFrequency(SX1280* SX, uint32_t frequency){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -183,15 +208,6 @@ void setChannel(SX1280* SX, float channel) {
 	setRFFrequency(SX, frequency);
 }
 
-void setPacketType(SX1280* SX, uint8_t type){
-    // wait till send complete
-    while(SX->SPI_used){}
-    SX->SPI_used = true;
-    // make command
-    SX->TXbuf[0] = SET_PACKET;
-    SX->TXbuf[1] = type;
-    SendData(SX,2);
-}
 
 uint8_t getPacketType(SX1280* SX){
     // wait till send complete
@@ -205,6 +221,7 @@ uint8_t getPacketType(SX1280* SX){
     return SX->RXbuf[2];
 }
 
+/* 11.7.4 SetTxParams, page 87 */
 void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime){
     // wait till send complete
     while(SX->SPI_used){}
@@ -216,6 +233,7 @@ void setTXParam(SX1280* SX, uint8_t power, uint8_t rampTime){
     SendData(SX,3);
 }
 
+/* 14.7.1 SetRegulatorMode, page 143 */
 void setRegulatorMode(SX1280* SX, uint8_t mode) {
     // wait till send complete
     while(SX->SPI_used){}
@@ -226,6 +244,7 @@ void setRegulatorMode(SX1280* SX, uint8_t mode) {
     SendData(SX,2);
 }
 
+/* 11.7.6 SetBufferBaseAddress, page 89 */
 void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address){
     // wait till send complete
     while(SX->SPI_used){}
@@ -237,6 +256,7 @@ void setBufferBase(SX1280* SX, uint8_t tx_address, uint8_t rx_address){
     SendData(SX,3);
 }
 
+/* 11.7.7 SetModulationParams, page 89 */
 void setModulationParam(SX1280* SX){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -248,6 +268,7 @@ void setModulationParam(SX1280* SX){
     SendData(SX,4);
 }
 
+/* 11.7.8 SetPacketParams, page 90 */
 void setPacketParam(SX1280* SX){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -260,6 +281,7 @@ void setPacketParam(SX1280* SX){
 }
 
 // -------------------------------------------- Status
+/* 11.8.1 GetRxBufferStatus, page 92 */
 void getRXBufferStatus(SX1280* SX){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -273,6 +295,7 @@ void getRXBufferStatus(SX1280* SX){
     SX->RXbufferoffset = SX->RXbuf[3];
 }
 
+/* 11.8.2 GetPacketStatus, page 93 */
 void getPacketStatus(SX1280* SX){
 	uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -286,8 +309,13 @@ void getPacketStatus(SX1280* SX){
     memcpy(SX->Packet_status, SX->RXbuf+2, 5);
 }
 
+/* 11.8.3 GetRssiInst, page 95 */
+// Not implemented
 
 // -------------------------------------------- Interrupt
+/* 11.9 IRQ Handling, page 95 */
+
+/* 11.9.1 SetDioIrqParams, page 96 */
 void setDIOIRQParams(SX1280* SX){
 	uint16_t tmp[4] ={0};
 	for(int i = 0; i<4; i++){
@@ -304,6 +332,7 @@ void setDIOIRQParams(SX1280* SX){
     SendData(SX,9);
 }
 
+/* 11.9.2 GetIrqStatus, page 97 */
 uint16_t getIRQ(SX1280* SX){
     uint8_t* ptr = SX->TXbuf;
     // wait till send complete
@@ -316,6 +345,7 @@ uint16_t getIRQ(SX1280* SX){
     return SX->irqStatus = (SX->RXbuf[2] << 8) | SX->RXbuf[3];
 }
 
+/* 11.9.3 ClearIrqStatus, page 97 */
 void clearIRQ(SX1280* SX, uint16_t mask){
     // wait till send complete
     while(SX->SPI_used){}

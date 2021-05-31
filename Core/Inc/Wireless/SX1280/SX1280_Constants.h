@@ -142,7 +142,8 @@
 #define BASE_62_us		0x01
 #define BASE_15_us		0x00
 
-// different types of IRQ that can be set
+// Different types of IRQ that can be set. Only interrupts triggerable in FLRC mode implemented.
+/* 11.9 IRQ Handling - Table 11-73: IRQ Register, page 95 */
 typedef enum _SX1280_IRQ{
 	NONE 				= 0,
 	TX_DONE 			= 1<<0,		// ALL
@@ -155,17 +156,18 @@ typedef enum _SX1280_IRQ{
 	ALL 				= 0xFFFF	// ALL (utility to clear all interupts)
 } SX1280_IRQ;
 
-
+/* 11.3 GetStatus Command - Table 11-5: Status Byte Definition - bit 4:2, page 73 */
 typedef enum _SX1280_ComStatus{
 	Reserved = 0,
-	Success = 1,
-	DataAvailable = 2,
-	TimeOut = 3,
-	ProcessingErr = 4,
-	Failed = 5,
-	TxDone = 6
-}SX1280_ComStatus;
+	Success = 1,        /* Transceiver has successfully processed the command */
+	DataAvailable = 2,  /* Data are available to host */
+	TimeOut = 3,        /* Command time-out */
+	ProcessingErr = 4,  /* Command processing error */
+	Failed = 5,         /* Failure to execute command */
+	TxDone = 6          /* Command Tx done */
+} SX1280_ComStatus;
 
+/* 11.3 GetStatus Command - Table 11-5: Status Byte Definition - bit 7:5, page 73 */
 typedef enum _SX1280_State{
 	Reserved0 = 0,
 	Reserved1 = 1,
@@ -174,6 +176,6 @@ typedef enum _SX1280_State{
 	FS = 4,
 	RX = 5,
 	TX = 6
-}SX1280_State;
+} SX1280_State;
 
 #endif //__SX1280_CONSTANTS_H

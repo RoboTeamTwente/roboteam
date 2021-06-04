@@ -2,7 +2,7 @@ import math
 
 packets = {
     "RobotCommand" : [
-        ["header",             8,  None, "Header indicating packet type"],
+        ["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot"],
         ["doKick",             1,  None, "Do a kick if ballsensor"],
         ["doChip",             1,  None, "Do a chip if ballsensor"],
@@ -32,5 +32,10 @@ packets = {
         ["wheelLocked",        4,  None, "Indicates if a wheel is locked. One bit per wheel"],
         ["wheelBraking",       4,  None, "Indicates if a wheel is slipping. One bit per wheel"],
         ["rssi",               4,  None, "Signal strength of the last packet received by the robot"]
+    ],
+    "BuzzerCommand" : [
+    	["header",             8,  None, "Header byte indicating the type of packet"],
+    	["period",             16, None,      "Sound that the buzzer makes."],
+    	["duration",           32, [0., 10.], "Duration of the sound"]
     ]
 }    

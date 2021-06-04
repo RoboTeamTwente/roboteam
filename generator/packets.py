@@ -33,7 +33,7 @@ packets = {
         ["wheelBraking",       4,  None, "Indicates if a wheel is slipping. One bit per wheel"],
         ["rssi",               4,  None, "Signal strength of the last packet received by the robot"]
     ],
-    "BuzzerCommand" : [
+    "RobotBuzzer" : [
     	["header",             8,  None, "Header byte indicating the type of packet"],
     	["period",             16, None,      "Sound that the buzzer makes."],
     	["duration",           32, [0., 10.], "Duration of the sound"]

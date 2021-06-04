@@ -35,7 +35,7 @@ typedef enum _PACKET_SIZE {
     PACKET_SIZE_ROBOT_INTERNAL_MESSAGE         = 0,
     // PACKET_TYPE_ROBOT_LOG                      = 0,
     // PACKET_SIZE_ROBOT_ALERT                    = 0,
-    PACKET_TYPE_ROBOT_BUZZER                   = 7,
+    PACKET_SIZE_ROBOT_BUZZER                   = 7,
 
     PACKET_SIZE_BASESTATION_SET_SETTINGS       = 0,
     PACKET_SIZE_BASESTATION_GET_SETTINGS       = 0,

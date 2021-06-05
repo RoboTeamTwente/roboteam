@@ -30,6 +30,7 @@ void buzzer_Callback() {
 			HAL_TIM_PWM_Stop(PWM_Buzzer.TIM, PWM_Buzzer.Channel);
 			HAL_TIM_Base_Stop_IT(PWM_Buzzer.TIM);
 			if(song->period == 0xFFFF){
+				__HAL_TIM_SET_COUNTER(PWM_Buzzer.TIM, 0);
 				song = NULL;
 				return;
 			}
@@ -47,22 +48,34 @@ void buzzer_SetPWM_Period(uint16_t period) {
 	__HAL_TIM_SET_AUTORELOAD(PWM_Buzzer.TIM, period);
 }
 
+void buzzer_Play_note(uint16_t period, float duration){
+	period = (period == 0) ? 0xFFFF : ((1e6 / period)-1);
+	buzzer_Duration = (0.9e6 / period) * (duration);
+	
+	song = quickBeepUp;
+	song->period = 0xFFFF; // Make sure that the buzzer stops after the tone is finshed
+
+	__HAL_TIM_SET_COUNTER(PWM_Buzzer.TIM, 0);
+	buzzer_SetPWM_Period(period);
+	buzzer_SetPWM_Duty(period/2);
+	HAL_TIM_Base_Start_IT(PWM_Buzzer.TIM);
+
+	if(period != 0xFFFF)
+		HAL_TIM_PWM_Start(PWM_Buzzer.TIM, PWM_Buzzer.Channel);
+
+}
+
 void buzzer_Play(song_struct* tone) {
 	tone->period = (tone->period == 0) ? 0xFFFF : ((1e6 / tone->period)-1);
 	buzzer_Duration = (0.9e6 / tone->period) * (tone->duration);
 
-	if (tone->period == 0xFFFF) {
-		HAL_TIM_Base_Start_IT(PWM_Buzzer.TIM);
-		buzzer_SetPWM_Period(tone->period);
-		buzzer_SetPWM_Duty(tone->period/2);
-	}
-	else {
-		// set the period and duty cycle
-		buzzer_SetPWM_Period(tone->period);
-		buzzer_SetPWM_Duty(tone->period/2);
-		HAL_TIM_Base_Start_IT(PWM_Buzzer.TIM);
-		HAL_TIM_PWM_Start(PWM_Buzzer.TIM, PWM_Buzzer.Channel);
-	}
+	__HAL_TIM_SET_COUNTER(PWM_Buzzer.TIM, 0);
+	buzzer_SetPWM_Period(tone->period);
+	buzzer_SetPWM_Duty(tone->period/2);
+	HAL_TIM_Base_Start_IT(PWM_Buzzer.TIM);
+
+	if(tone->period != 0xFFFF)
+		HAL_TIM_PWM_Start(PWM_Buzzer.TIM, PWM_Buzzer.Channel);	
 }
 
 void buzzer_Play_QuickBeepUp(){

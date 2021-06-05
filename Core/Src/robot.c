@@ -21,7 +21,9 @@
 
 #include "rem.h"
 
+#include "RobotCommand.h"
 #include "RobotFeedback.h"
+#include "RobotBuzzer.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -49,10 +51,14 @@ int counter = 0;
 int strength = 0;
 
 
+uint8_t message_buffer[100];
 RobotFeedbackPayload Bot_to_PC;
 RobotFeedback robotFeedback = {0};
 RobotCommandPayload PC_to_Bot;
 RobotCommand robotCommand = {0};
+RobotBuzzerPayload robotBuzzerPayload;
+RobotBuzzer robotBuzzer;
+
 ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
 
@@ -267,31 +273,6 @@ void loop(void){
 
 	// If serial packet is no older than 250ms, assume connected via wire
 	isSerialConnected = (currentTime - timeLastPacket) < 250;
-	
-
-
-	// Check for empty battery 
-    // static int batCounter = 0;
-    // if (read_Pin(Bat_pin) && batCounter > 1000){
-    //     Putty_printf("battery empty\n\r");
-    //     buzzer_Play_ImperialMarch();
-    //     set_Pin(LED5_pin, 1);
-    //     Putty_DeInit();
-    //     wheels_DeInit();
-    //     stateControl_DeInit();
-    //     stateEstimation_DeInit();
-    //     shoot_DeInit();
-    //     dribbler_DeInit();
-    //     ballSensor_DeInit();
-    //     buzzer_DeInit();
-    //     MTi_DeInit(MTi);
-    //     Wireless_DeInit();
-    // }else if (read_Pin(Bat_pin)) {
-    //     batCounter += 1;
-    // } else {
-    //     batCounter = 0;
-    // }
-
 
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
@@ -393,18 +374,51 @@ void loop(void){
 
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
+/* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
+/* This function is triggered after calling HAL_SPI_TransmitReceive_IT */
+/* Since we transmit everything using blocking mode, this function should only be called when we receive something */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
-		Wireless_DMA_Handler(SX, PC_to_Bot.payload);
-        packetToRoboData(&PC_to_Bot, &receivedData);
-		commandCounter++;
-		strength+= SX->Packet_status->RSSISync;
+		
+		Wireless_DMA_Handler(SX, message_buffer);
+
+		uint8_t total_packet_length = SX->payloadLength;
+		uint8_t total_bytes_processed = 0;
+
+		while(total_bytes_processed < total_packet_length){
+				
+			if(message_buffer[total_bytes_processed] == PACKET_TYPE_ROBOT_COMMAND){
+				memcpy(PC_to_Bot.payload, message_buffer + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
+				packetToRoboData(&PC_to_Bot, &receivedData);
+				commandCounter++;
+				strength += SX->Packet_status->RSSISync;
+				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
+				continue;
+			}
+
+			if(message_buffer[total_bytes_processed] == PACKET_TYPE_ROBOT_BUZZER){
+				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer + total_bytes_processed);
+				uint16_t period = RobotBuzzer_get_period(rbp);
+				float duration = RobotBuzzer_get_duration(rbp);
+				buzzer_Play_note(period, duration);
+				sprintf(logBuffer, "Buz! %d %.2f\n", period, duration);
+
+				total_bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
+				continue;
+			}
+
+			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, message_buffer[total_bytes_processed]);
+			break;
+		}
 	}
+	// If we received data from the XSens
 	else if(hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
 
+/* Callback for when bytes have been received via the UART */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == UART_PC->Instance){
 		if(USE_PUTTY){

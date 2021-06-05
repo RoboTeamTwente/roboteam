@@ -41,7 +41,8 @@ SX1280_Settings set = {
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5},
-        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, PACKET_SIZE_ROBOT_COMMAND, CRC_2_BYTE, NO_WHITENING},
+        // .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, PACKET_SIZE_ROBOT_FEEDBACK, CRC_2_BYTE, NO_WHITENING},
+        .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, 100, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -83,13 +84,18 @@ void Wireless_DeInit() {
 	// Not necessary, till we get the feedback
 }
 
-void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
-    writeBuffer(SX, data, Nbytes);
-    setAutoTX(SX, AUTO_TX_TIME);
-};
-
 void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 	clearIRQ(SX,ALL);
+
+    // If the packet that we're sending has a different size than the previous packet, we have to update the packet size in the SX1280
+    // Table 14-38: Payload Length Definition in FLRC Packet, page 124
+    if(SX->SX_settings->PacketParam[4] != Nbytes){
+        SX->SX_settings->PacketParam[4] = Nbytes;
+        setPacketParam(SX);
+    }
+    // Not sure if this is needed, but just to be sure
+    clearIRQ(SX,ALL);
+
     writeBuffer(SX, data, Nbytes);
     setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
 }
@@ -99,7 +105,6 @@ void ReceivePacket(SX1280* SX){
     getRXBufferStatus(SX);
     SX->expect_packet = true;
     readBuffer(SX, SX->payloadLength);
-
 };
 
 bool checkWirelessConnection() {
@@ -123,9 +128,15 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	isWirelessTransmitting = false;
     	//toggle_Pin(LED5_pin);
     	// start listening for a packet again
-    	setChannel(SX, COMMAND_CHANNEL); // set to channel 40 for basestation to robot
+    	setChannel(SX, WIRELESS_COMMAND_CHANNEL); // set to channel 40 for basestation to robot
 		SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
 		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
+
+        // If the packet that we're sending has a different size than the previous packet, we have to update the packet size in the SX1280
+        // Table 14-38: Payload Length Definition in FLRC Packet, page 124
+        SX->SX_settings->PacketParam[4] = 127; // TODO Create a #define for this, so that it works with RXoffset and TXoffset
+        setPacketParam(SX);
+
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
     }
 
@@ -139,7 +150,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     		if (wirelessFeedback && !isWirelessTransmitting) {
     			// feedback enabled, transmit a packet to basestation
     			isWirelessTransmitting = true;
-    			setChannel(SX, FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
+    			setChannel(SX, WIRELESS_FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
     			SX->SX_settings->syncWords[0] = robot_syncWord[16]; // 0x82108610 for basestation Rx
     			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     			SendPacket(SX, data, Nbytes);
@@ -175,7 +186,7 @@ void Wireless_DMA_Handler(SX1280* SX, uint8_t output[]){
 	if (SX->expect_packet) {
 		// was expecting a packet, process it
 		SX->expect_packet = false;
-		memcpy(output, SX->RXbuf+3, PACKET_SIZE_ROBOT_COMMAND);
+		memcpy(output, SX->RXbuf+3, SX->payloadLength);
 	} else {
 		// was not expecting a packet, go to Rx
 		setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

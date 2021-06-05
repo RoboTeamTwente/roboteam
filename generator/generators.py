@@ -10,14 +10,19 @@ funcDeclSet = """static inline void %s_set_%s(%s *%s, %s %s){
 %s
 }\n"""
 
-
+# Capitalizes the first letter of a word
 def upperFirst(word):
 	return word[0].capitalize() + word[1:]
 
+# Returns a string of 0bxxxxxxxx where x=1 if x in range [start, stop), else 0. If reverse=True, swap 0 and 1
+# bitString(1, 2, reverse=False) = 0b01000000
+# bitString(5, 6, reverse=True ) = 0b11111011
 def bitString(start, stop, reverse = False):
 	set1 = list(range(start, stop))
-	return "0b" + ''.join(["%d" % ((i in set1) ^ reverse) for i in range(8)])
+	bitstring = "0b" + ''.join(["%d" % ((i in set1) ^ reverse) for i in range(8)])
+	return bitstring
 	
+# Return either <<, >>, or nothing, depending on left vs right	
 def shift(left, right):
 	if left == right: return ""
 	if left < right: return " >> %d" % (right-left)
@@ -31,6 +36,7 @@ def CamelCaseToAbbrev(word):
 def CamelCaseToUpper(word):
 	return ''.join(['_'*char.isupper() + char.upper() for char in word])
 
+# Change number of bits to required integer size. If range is given, return float
 def getTypes(nBits, _range):
 	type1 = "bool"
 	if  1 < nBits: type1 = "uint8_t"
@@ -40,6 +46,7 @@ def getTypes(nBits, _range):
 
 	if _range is None : return [type1, type1]
 	else :				return [type1, "float"]
+
 
 def getConversionToFloat(nBits, _range):
 		vMin, vMax = _range
@@ -52,14 +59,26 @@ def getConversionToInt(nBits, _range):
 		return 2**nBits / vTotal, vMin
 
 
+# RobotCommand => __ROBOT_COMMAND_H
 def toHeaderGuard(packet):
 	return "_%s_H" % CamelCaseToUpper(packet)
 
+
+# RobotCommand =>
+# typedef struct _RobotCommandPayload {
+#     uint8_t payload[PACKET_SIZE_ROBOT_COMMAND];
+# } RobotCommandPayload;
 def toStructPayload(packet):
 	struct = "typedef struct _%sPayload {\n\tuint8_t payload[PACKET_SIZE%s];\n} %sPayload;"
 	struct %= (packet, CamelCaseToUpper(packet), packet)
 	return struct
 
+
+# RobotCommand, [[var], [var]] => 
+# typedef struct _RobotCommand {
+#     uint8_t    header;                  // Header byte indicating the type of packet
+#    ...
+# } RobotCommand;
 def toStruct(packet, variables):
 	struct = "typedef struct _%s {\n" % packet
 	for variable, nBits,  _range, desc in variables:
@@ -70,6 +89,10 @@ def toStruct(packet, variables):
 	struct += "} %s;" % packet
 	return struct
 
+
+# RobotCommand, [[var], [var]] =>
+# [---0--] [---1--] [---2--] [---3--] [---4--] [---5--] [---6--] [---7--] [---8--] [---9--] [--10--]
+# 11111111 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- header
 def toStructure(packet, variables):
 	# Calculate number of bytes needed to store all variables. ceil(total number of bits / 8)
 	nBytes = math.ceil(sum([nBits for (	_, nBits, _, _) in variables]) / 8)

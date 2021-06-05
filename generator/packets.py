@@ -40,6 +40,7 @@ packets = {
     	["duration",           32, [0., 10.], "Duration of the sound"]
     ],
     "BasestationStatistics" : [
+        ["header",     8, None, "Header byte indicating the type of packet"],
         ["bot0_sent",  8, None, "Packets sent to robot with ID 0"],
         ["bot0_rcvd",  8, None, "Packets received from robot with ID 0"],
         ["bot1_sent",  8, None, "Packets sent to robot with ID 1"],

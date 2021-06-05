@@ -33,6 +33,18 @@ packets = {
         ["wheelBraking",       4,  None, "Indicates if a wheel is slipping. One bit per wheel"],
         ["rssi",               4,  None, "Signal strength of the last packet received by the robot"]
     ],
+    "RobotStateInfo" : [
+        ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["id",                 4,  None, "Id of the robot "],
+        ["xsensAcc1",         32, [-50000., 50000.], "xsensAcc1"],
+        ["xsensAcc2",         32, [-50000., 50000.], "xsensAcc2"],
+        ["xsensYaw",          32, [-50000., 50000.], "xsensYaw"],
+        ["rateOfTurn",        32, [-50000., 50000.], "rateOfTurn"],
+        ["wheelSpeed1",       32, [-50000., 50000.], "wheelSpeed1"],
+        ["wheelSpeed2",       32, [-50000., 50000.], "wheelSpeed2"],
+        ["wheelSpeed3",       32, [-50000., 50000.], "wheelSpeed3"],
+        ["wheelSpeed4",       32, [-50000., 50000.], "wheelSpeed4"],
+    ],
     "RobotBuzzer" : [
     	["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot"],

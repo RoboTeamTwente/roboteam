@@ -24,7 +24,7 @@
 
 /* USER CODE BEGIN INCLUDE */
 #include "basestation.h"
-#include "msg_buff.h"
+#include "packet_buffers.h"
 #include "gpio_util.h"
 extern volatile int Iusb;
 /* USER CODE END INCLUDE */
@@ -275,7 +275,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
   
-  bool succes = handlePacket(Buf, Len);
+  bool succes = handlePacket(Buf, *Len);
   if(succes)
     return USBD_OK;
   

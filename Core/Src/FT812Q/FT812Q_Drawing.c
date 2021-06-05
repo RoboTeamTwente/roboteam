@@ -9,7 +9,7 @@
 #include <math.h>
 
 #include "FT812Q_Drawing.h"
-#include "msg_buff.h"
+#include "packet_buffers.h"
 #include "RobotFeedback.h"
 
 
@@ -93,7 +93,7 @@ void drawBasestation(bool USBstatus){
 }
 
 uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
-	RobotFeedbackPayload *rfp = &msgBuff[id].feedback;
+	RobotFeedbackPayload *rfp = &buffer_RobotFeedback[id].packet;
 
 	// /* CALCULATE DATA */
 	float angle				= RobotFeedback_get_angle(rfp);

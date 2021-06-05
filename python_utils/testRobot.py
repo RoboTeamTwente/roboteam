@@ -8,6 +8,8 @@ import re
 import argparse
 import sys 
 import shutil
+import multiprocessing
+import getch
 
 try:
 	from rem import rem
@@ -37,6 +39,7 @@ def drawProgressBar(progress):
 
 testsAvailable = ["kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate"]
 
+# Parse input arguments 
 try:
 	if len(sys.argv) != 3:
 		raise Exception("Error : Invalid number of arguments. Expected id and test")
@@ -53,12 +56,26 @@ except Exception as e:
 	print("Error : Run script with \"python testRobot.py id test\"")
 	exit()
 
+# Input handling for music, simply because
+def read_input(note):
+	while True:
+		char = getch.getch()
+		if char in notes:
+			note.value = notes[char]
+
+notes = {"c" : 523,	"d" : 587,	"e" : 659,	"f" : 698,	"g" : 784,	"a" : 880,	"b" : 988,	"x" : 1047}
+note = multiprocessing.Value('i', 0)
+inputThread = multiprocessing.Process(target=read_input, args=(note,))
+inputThread.start()
+
+
 basestation = None
 cmdPayload = rem.ffi.new("RobotCommandPayload*")
+buzzPayload = rem.ffi.new("RobotBuzzerPayload*")
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 500
+periodLength = 300
 packetHz = 60
 
 totalCommandsSent = 0
@@ -84,10 +101,16 @@ while True:
 				period = tickCounter % periodLength
 				periodFraction = period / periodLength
 
-				# Robot connectivity
-				if period == 0:
-					totalCommandsSent = 0
-					totalFeedbackReceived = 0
+				if note.value != 0:
+					cmd = rem.ffi.new("RobotBuzzer*")
+					cmd.header = rem.lib.PACKET_TYPE_ROBOT_BUZZER
+					cmd.id = robotId
+					cmd.period = note.value
+					cmd.duration = 1.
+					rem.lib.encodeRobotBuzzer(buzzPayload, cmd)
+					basestation.write(buzzPayload.payload)
+					note.value = 0
+
 				if 0.5 < periodFraction:
 					robotConnected = True
 					# If less than half of feedback packets received
@@ -144,7 +167,7 @@ while True:
 					print(" Receiving no feedback!", end="")
 				tcs, tfr = totalCommandsSent, totalFeedbackReceived
 				print(f" {robotId} - {test} {bar} {log} | "
-					f"Sent:{tcs} Rcvd:{tfr} ({100*(tfr+1)/(tcs+1):.0f}%) | "
+					# f"Sent:{tcs} Rcvd:{tfr} ({100*(tfr+1)/(tcs+1):.0f}%) | "
 					f"{lastBasestationLog}", end="\r")
 
 				# Send command

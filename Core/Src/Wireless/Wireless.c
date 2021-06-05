@@ -12,7 +12,7 @@
 #include "gpio_util.h"
 #include "SX1280.h"
 #include <stdbool.h>
-#include "msg_buff.h"
+#include "packet_buffers.h"
 #include "TextOut.h"
 
 
@@ -28,20 +28,24 @@ SX1280_Settings set = {
         .txPower = 31, // -18 + txPower = transmit power in dBm (13dBm max)
 		.packettype = PACKET_TYPE_FLRC,
         .TX_ramp_time = RADIO_RAMP_20_US,
-		/* 11.6.4 SetTx, page 79. Time-out duration = periodBase * periodBaseCount. */
+		
+        /* 11.6.4 SetTx, page 79. Time-out duration = periodBase * periodBaseCount. */
         /* 62.5 μs * 24 = 1.5ms timeout, which gives 666.6Hz. Enough for 11 robots at 60Hz each  */
         .periodBase = BASE_62_us,
         .periodBaseCount = 24,
-		.syncWords = {0x0, 0x0, 0x0},
+		
+        .syncWords = {0x0, 0x0, 0x0},
 		.syncWordTolerance = 2, // accepted wrong bits in a detected syncword
         .syncSensitivity = 1, // high sensitivity mode
         .crcSeed = {0xAC, 0xB6}, // seed value of 0xACB6 = 0b'1010110010110110
         .crcPoly = {0x10, 0x21}, // poly of P16(x) = x16 + x12 + x5 + 1
+        
         /* 8.4 Using the Data buffer. SX1280 has a 256 byte buffer. Give half to RX, half to TX */
         .TXoffset = 0x80,
         .RXoffset = 0x00,
-        /* 14.3.1.5, page 121 */ .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}, /* Full power 1.3Mbps, 3/4 encoding rate, 
-        /* 14.3.1.6, page 122 */ .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_FIXED_LENGTH, PACKET_SIZE_ROBOT_COMMAND, CRC_2_BYTE, NO_WHITENING},
+        
+        /* 14.3.1.5, page 121 */ .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}, /* Full power 1.3Mbps, 3/4 encoding rate, Pulse Shaping (Raised Cosine Filter) of 0.5 */ 
+        /* 14.3.1.6, page 122 */ .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, 127, CRC_2_BYTE, NO_WHITENING},
         .DIOIRQ = {(TX_DONE|RX_DONE|CRC_ERROR|RXTX_TIMEOUT), (TX_DONE|RX_DONE|RXTX_TIMEOUT), NONE, NONE}
 };
 SX1280_Packet_Status PacketStat;
@@ -81,14 +85,18 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi, uint8_t m
     return SX;
 };
 
-
-void SendAutoPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
-    writeBuffer(SX, data, Nbytes);
-    setAutoTX(SX, AUTO_TX_TIME);
-};
-
 void SendPacket(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 	clearIRQ(SX,ALL);
+
+    // If the packet that we're sending has a different size than the previous packet, we have to update the packet size in the SX1280
+    // Table 14-38: Payload Length Definition in FLRC Packet, page 124
+    if(SX->SX_settings->PacketParam[4] != Nbytes){
+        SX->SX_settings->PacketParam[4] = Nbytes;
+        setPacketParam(SX);
+    }
+    // Not sure if this is needed, but just to be sure
+    clearIRQ(SX,ALL);
+
     writeBuffer(SX, data, Nbytes);
     // HAL_Delay(0);    
     setTX(SX, SX->SX_settings->periodBase, SX->SX_settings->periodBaseCount);
@@ -138,10 +146,9 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     }
 
     if(irq & RXTX_TIMEOUT) {
-    	// did not receive packet from robot
+    	// Did not receive packet from robot. Should never be triggered, since the receiving SX is in continuous receiving mode
     	isTransmitting = false;
     	toggle_pin(LD_LED3);
-//    	TextOut("SX_IRQ RXTX_TIMEOUT\n\r");
     }
     
     // SYNCWORD_VALID interrupt not enabled in Wireless_Init. Never triggered
@@ -152,17 +159,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     if(irq & PREAMBLE_DETECTED) { }
 };
 
-void Wireless_DMA_Handler(SX1280* SX){DMA_Callback(SX);
-    if(SX->expect_packet){
-        SX->expect_packet = false;
-        // reset RX if not in continuous RX mode!
-        // First 3 bytes are status bytes
-        if(SX->RXbuf[3] == PACKET_TYPE_ROBOT_FEEDBACK){
-            uint8_t id = RobotFeedback_get_id(SX->RXbuf + 3);
-            if(id < 16){
-                memcpy(msgBuff[id].feedback.payload, SX->RXbuf+3, PACKET_SIZE_ROBOT_FEEDBACK);
-                msgBuff[id].isNewFeedback = true;
-            }
-        }
-    }
+void Wireless_DMA_Handler(SX1280* SX){
+    DMA_Callback(SX);
+    SX->expect_packet = false;
 }

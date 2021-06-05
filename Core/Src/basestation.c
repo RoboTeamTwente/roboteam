@@ -2,7 +2,7 @@
 #include "main.h"
 #include "Wireless.h"
 #include "TextOut.h"
-#include "msg_buff.h"
+#include "packet_buffers.h"
 #include "FT812Q_Drawing.h"
 
 #include "BaseTypes.h"
@@ -39,6 +39,13 @@ uint16_t touchPoint[2] = {-1, -1}; // Initialize touchPoint outside of screen, m
 TouchState touchState; // TODO check default initialization. What is touchState->state? Compiler dependent?
 char logBuffer[100];
 
+// Based on Wireless.c:SX1280_Settings.TXoffset
+// Currently, we're splitting the SX1280 256 byte buffer in half. 128 for sending, 128 for receiving
+// Set to 127, because that's the max value as defined in the datasheet
+// Table 14-38: Payload Length Definition in FLRC Packet, page 124
+#define MAX_PACKET_SIZE 127
+uint8_t sendBuffer[MAX_PACKET_SIZE];
+
 /* Flags */
 volatile bool flagHandleStatistics = false;
 
@@ -46,14 +53,18 @@ void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
     
     LOG("[init] Initializing SX_TX\n");
-    SX_TX = Wireless_Init(COMMAND_CHANNEL, &hspi1, 0);
+    SX_TX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, &hspi1, 0);
     
     LOG("[init] Initializing SX_RX\n");
-    SX_RX = Wireless_Init(FEEDBACK_CHANNEL, &hspi2, 1);
+    SX_RX = Wireless_Init(WIRELESS_FEEDBACK_CHANNEL, &hspi2, 1);
+
+    // Set SX_RX syncword to basestation syncword
     SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
     setSyncWords(SX_RX, SX_RX->SX_settings->syncWords[0], 0x00, 0x00);
+    // Start listening on the SX_RX
     setRX(SX_RX, SX_RX->SX_settings->periodBase, 0xFFFF);
 
+    // Start the timer that is responsible for sending packets
     LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
@@ -67,7 +78,7 @@ void init(){
 // screenCounter acts as a timer for updating the screen
 uint32_t screenCounter = 0;
 
-uint32_t loop_counter = 0;
+uint32_t heartbeat_1000ms = 0;
 
 void loop(){
   
@@ -77,18 +88,18 @@ void loop(){
     logBuffer[0] = '\0';
   }
 
-  if(1000 < HAL_GetTick() - loop_counter){
-    loop_counter = HAL_GetTick();
+  /* Heartbeat every second */
+  if(heartbeat_1000ms + 1000 < HAL_GetTick()){
+    heartbeat_1000ms += 1000;
     sprintf(logBuffer, "Tick %d %d\n", totalCommandsSent, totalFeedbackReceived);
     LOG(logBuffer);
   }
 
   /* Send any new feedback packets */
-  for(int id = 0; id < 16; id++){
-    if(msgBuff[id].isNewFeedback){
-      HexOut(msgBuff[id].feedback.payload, PACKET_SIZE_ROBOT_FEEDBACK);
-      msgBuff[id].isNewFeedback = false;
-      msgBuff[id].packetsReceived++;
+  for(int id = 0; id < MAX_ROBOT_ID; id++){
+    if(buffer_RobotFeedback[id].isNewPacket){
+      HexOut(buffer_RobotFeedback[id].packet.payload, PACKET_SIZE_ROBOT_FEEDBACK);
+      buffer_RobotFeedback[id].isNewPacket = false;
     }
   }
 
@@ -148,7 +159,7 @@ void loop(){
 
 /**
  * @brief Updates the state of the touch. This helps identifying
- * multiple touch events as a single screen press, keeps track on
+ * multiple touch evsents as a single screen press, keeps track on
  * if the screen press has been handled, and stores the location 
  * of the last touch event
  * TODO there might be a better place for this. Maybe in FT812Q.c?
@@ -179,7 +190,6 @@ void updateTouchState(TouchState* touchState){
 }
 
 
-
 /**
  * @brief Receives a buffer which is assumed to be holding a RobotCommand packet. 
  * If so, it moves the packet to the buffer, and sets a flag to send the packet to
@@ -200,16 +210,48 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
 
   // Check if the robotId is valid
   uint8_t robotId = RobotCommand_get_id(rcp);
-  if (15 < robotId)
+  if (MAX_ROBOT_ID < robotId)
     return false;
     
   // Store the message in the buffer. Set flag to be sent to the robot
-  memcpy(msgBuff[robotId].command.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
-  msgBuff[robotId].isNewCommand = true;
+  memcpy(buffer_RobotCommand[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
+  buffer_RobotCommand[robotId].isNewPacket = true;
+  buffer_RobotCommand[robotId].counter++;
     
   return true;
 }
 
+
+/**
+ * @brief Receives a buffer which is assumed to be holding a RobotFeedback packet. 
+ * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * the computer.
+ * 
+ * @param Buf Pointer to the buffer that holds the packet
+ * @param Len Length of the packet
+ * @return true if the packet has been handled succesfully
+ * @return false if there was something wrong with the packet
+ */
+bool handleRobotFeedback(uint8_t* Buf, uint32_t Len){
+  // Check if the packet has the correct size
+  if(Len != PACKET_SIZE_ROBOT_FEEDBACK)
+    return false;
+
+  // Interpret buffer as a RobotFeedbackPayload
+  RobotFeedbackPayload *rfp = (RobotFeedbackPayload*) Buf;
+
+  // Check if the robotId is valid
+  uint8_t robotId = RobotFeedback_get_id(rfp);
+  if (MAX_ROBOT_ID < robotId)
+    return false;
+    
+  // Store the message in the buffer. Set flag to be sent to the robot
+  memcpy(buffer_RobotFeedback[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_FEEDBACK);
+  buffer_RobotFeedback[robotId].isNewPacket = true;
+  buffer_RobotFeedback[robotId].counter++;
+    
+  return true;
+}
 
 
 /**
@@ -219,22 +261,54 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
  * @return false if there was something wrong with the packet
  */
 bool handleStatistics(void){
-  basestationStatistics bs = {0};
-  bs.header = PACKET_TYPE_BASESTATION_STATISTICS;
-  for(int ID = 0; ID < 16; ID++){
+  // Not dealing with the BasestationStatistics struct. Due to autogenerating, it's not suited for for-loops
+  BasestationStatisticsPayload bsp = {0};
+  bsp.payload[0] = PACKET_TYPE_BASESTATION_STATISTICS;
+  for(int robotId = 0; robotId < 16; robotId++){
     // Send ratio + packets sent (clipped) for each robot
     // TODO this clipping is not nice at all. Next to that, we need to find some way to figure out
     // how to draw if robots are "active", meaning we need to reset these stats every few ms or so.
-    bs.robot[ID].packetsReceived  = msgBuff[ID].packetsReceived >= 255 ? 255 : msgBuff[ID].packetsReceived;
-    bs.robot[ID].packetsSent      = msgBuff[ID].packetsSent     >= 255 ? 255 : msgBuff[ID].packetsSent;
+    bsp.payload[robotId*2+1] = buffer_RobotCommand [robotId].counter >= 255 ? 255 : buffer_RobotCommand [robotId].counter;
+    bsp.payload[robotId*2+2] = buffer_RobotFeedback[robotId].counter >= 255 ? 255 : buffer_RobotFeedback[robotId].counter;
     // Reset statistics
-    msgBuff[ID].packetsSent = 0;
-    msgBuff[ID].packetsReceived = 0;
+    buffer_RobotCommand [robotId].counter = 0;
+    buffer_RobotFeedback[robotId].counter = 0;
   }
-  HexOut(bs.payload, PACKET_SIZE_BASESTATION_STATISTICS);
+  HexOut(bsp.payload, PACKET_SIZE_BASESTATION_STATISTICS);
   return true;
 }
 
+
+/**
+ * @brief Receives a buffer which is assumed to be holding a RobotCommand packet. 
+ * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * the corresponding robot.
+ * 
+ * @param Buf Pointer to the buffer that holds the packet
+ * @param Len Length of the packet
+ * @return true if the packet has been handled succesfully
+ * @return false if there was something wrong with the packet
+ */
+bool handleRobotBuzzer(uint8_t* Buf, uint32_t Len){
+  // Check if the packet has the correct size
+  if(Len != PACKET_SIZE_ROBOT_BUZZER)
+    return false;
+
+  // Interpret buffer as a RobotBuzzerPayload
+  RobotBuzzerPayload *rbp = (RobotBuzzerPayload*) Buf;
+
+  // Check if the robotId is valid
+  uint8_t robotId = RobotBuzzer_get_id(rbp);
+  if (MAX_ROBOT_ID < robotId)
+    return false;
+    
+  // Store the message in the buffer. Set flag to be sent to the robot
+  memcpy(buffer_RobotBuzzer[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_BUZZER);
+  buffer_RobotBuzzer[robotId].isNewPacket = true;
+  buffer_RobotBuzzer[robotId].counter++;
+    
+  return true;
+}
 
 
 /**
@@ -251,10 +325,10 @@ bool handleStatistics(void){
  * @return true if the packed has been handled succesfully
  * @return false if the packet has been handled unsuccessfully, e.g. due to corruption
  */
-bool handlePacket(uint8_t* Buf, uint32_t *Len){
+bool handlePacket(uint8_t* Buf, uint32_t Len){
 
   uint8_t packetType = Buf[0];
-  uint32_t packetSize = *Len;
+  uint32_t packetSize = Len;
   
   Iusb++;
 
@@ -264,10 +338,16 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
     case PACKET_TYPE_ROBOT_COMMAND:
       success = handleRobotCommand(Buf, packetSize);
       break;
+    case PACKET_TYPE_ROBOT_FEEDBACK:
+      success = handleRobotFeedback(Buf, packetSize);
+      break;
     case PACKET_TYPE_BASESTATION_GET_STATISTICS:
       flagHandleStatistics = true;
       break;
-    default:
+    case PACKET_TYPE_ROBOT_BUZZER:
+      success = handleRobotBuzzer(Buf, packetSize);
+      break;
+    default: 
       sprintf(logBuffer, "Packet unknown! type=%d length=%d\n", packetType, packetSize);
       break;
   }
@@ -275,23 +355,31 @@ bool handlePacket(uint8_t* Buf, uint32_t *Len){
   return success;
 }
 
+
 /* Triggers when a call to HAL_SPI_TransmitReceive_DMA or HAL_SPI_TransmitReceive_IT (both non-blocking) completes */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
-    if(hspi->Instance == SX_TX->SPI->Instance) {
-		totalCommandsSent++;
+  if(hspi->Instance == SX_TX->SPI->Instance){
     Wireless_DMA_Handler(SX_TX);
+    // SX_TX should never receive a packet so that's why we don't call handlePacket here.
+    totalCommandsSent++;
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
     Wireless_DMA_Handler(SX_RX);
+    // First 3 bytes are status bytes
+    handlePacket(SX_RX->RXbuf+3, SX_RX->payloadLength);
+    totalFeedbackReceived++;
 	}
 }
 
+
 /* External interrupt. Triggers when one of the SX1280 antennas has information available */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {  
+  // SX that sends packets wants to tell us something
   if (GPIO_Pin == SX_TX_IRQ.PIN) {
     Wireless_IRQ_Handler(SX_TX, 0, 0);
     totalCommandsSent++;
   }
+  // SX that receives packets wants to tell us something
   if (GPIO_Pin == SX_RX_IRQ.PIN) {
     Wireless_IRQ_Handler(SX_RX, 0, 0);
     totalFeedbackReceived++;
@@ -299,27 +387,48 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   } 
 }
 
+
 /* Responsible for sending RobotCommand packages to the corresponding robots */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+
   // TDMA Timer callback
   if(htim->Instance == htim1.Instance){
     static uint8_t idCounter = 0;
+
+    // Keeps track of the total length of the packet that goes to the robot. 
+    // Cannot exceed MAX_PACKET_SIZE, or it will overflow the internal buffer of the SX1280
+    uint8_t total_packet_length = 0;    
+
+    /* Add robot command */
+    if(buffer_RobotCommand[idCounter].isNewPacket 
+    && total_packet_length + PACKET_SIZE_ROBOT_COMMAND < MAX_PACKET_SIZE){
+      buffer_RobotCommand[idCounter].isNewPacket = false;
+      memcpy(sendBuffer + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, PACKET_SIZE_ROBOT_COMMAND);
+      total_packet_length += PACKET_SIZE_ROBOT_COMMAND;
+    }
+
+    /* Add buzzer command */
+    if(buffer_RobotBuzzer[idCounter].isNewPacket
+    && total_packet_length + PACKET_SIZE_ROBOT_BUZZER < MAX_PACKET_SIZE){
+      buffer_RobotBuzzer[idCounter].isNewPacket = false;
+      memcpy(sendBuffer + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, PACKET_SIZE_ROBOT_BUZZER);
+      total_packet_length += PACKET_SIZE_ROBOT_BUZZER;
+    }
+    
     /* Send new command if available for this robot ID */
-    if(msgBuff[idCounter].isNewCommand){
+    if(0 < total_packet_length){
       if(!isTransmitting){
         isTransmitting = true;
-        msgBuff[idCounter].packetsSent++;
         SX_TX->SX_settings->syncWords[0] = robot_syncWord[idCounter];
         setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-        SendPacket(SX_TX, msgBuff[idCounter].command.payload, PACKET_SIZE_ROBOT_COMMAND);
-        msgBuff[idCounter].isNewCommand = false;
+        SendPacket(SX_TX, sendBuffer, total_packet_length);
       }
     }
+
     // Schedule next ID to be sent
     idCounter++;
     // Wrap around if the last ID has been dealt with
-    if(idCounter >= 16){
+    if(MAX_ROBOT_ID < idCounter){
       idCounter = 0;
     }
   }

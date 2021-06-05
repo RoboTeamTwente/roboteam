@@ -39,6 +39,10 @@ packets = {
     	["period",             16, None,      "Sound that the buzzer makes."],
     	["duration",           32, [0., 10.], "Duration of the sound"]
     ],
+
+    "BasestationGetStatistics" : [
+        ["header",     8, None, "Header byte indicating the type of packet"]
+    ],
     "BasestationStatistics" : [
         ["header",     8, None, "Header byte indicating the type of packet"],
         ["bot0_sent",  8, None, "Packets sent to robot with ID 0"],

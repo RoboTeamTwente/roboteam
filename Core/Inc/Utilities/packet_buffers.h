@@ -3,10 +3,13 @@
 #define __MSG_BUFF_STATUS_H
 
 #include <stdbool.h>
+#include "basestation.h"
+
 #include "BaseTypes.h"
 #include "RobotCommand.h"
 #include "RobotFeedback.h"
 #include "RobotBuzzer.h"
+#include "RobotStateInfo.h"
 
 bool isTransmitting;
 
@@ -37,7 +40,7 @@ struct _buffer_RobotCommand {
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotCommand buffer_RobotCommand[16];
+struct _buffer_RobotCommand buffer_RobotCommand[MAX_ROBOT_ID + 1];
 
 
 struct _buffer_RobotFeedback {
@@ -45,15 +48,21 @@ struct _buffer_RobotFeedback {
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotFeedback buffer_RobotFeedback[16];
+struct _buffer_RobotFeedback buffer_RobotFeedback[MAX_ROBOT_ID + 1];
 
+struct _buffer_RobotStateInfo {
+	RobotStateInfoPayload packet;
+	bool isNewPacket;
+	uint32_t counter;
+};
+struct _buffer_RobotStateInfo buffer_RobotStateInfo[MAX_ROBOT_ID + 1];
 
-typedef struct _buffer_RobotBuzzer {
+struct _buffer_RobotBuzzer {
 	RobotBuzzerPayload packet;
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotBuzzer buffer_RobotBuzzer[16];
+struct _buffer_RobotBuzzer buffer_RobotBuzzer[MAX_ROBOT_ID + 1];
 
 
 

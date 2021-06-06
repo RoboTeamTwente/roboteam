@@ -24,6 +24,7 @@
 #include "RobotCommand.h"
 #include "RobotFeedback.h"
 #include "RobotBuzzer.h"
+#include "RobotStateInfo.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -32,45 +33,30 @@
 #define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
-#define BYTE_TO_BINARY(byte)  \
-  (byte & 0x80 ? '1' : '0'), \
-  (byte & 0x40 ? '1' : '0'), \
-  (byte & 0x20 ? '1' : '0'), \
-  (byte & 0x10 ? '1' : '0'), \
-  (byte & 0x08 ? '1' : '0'), \
-  (byte & 0x04 ? '1' : '0'), \
-  (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0')
-
-uint16_t ID;
+static const bool SEND_ROBOT_STATE_INFO = false;
+static const bool USE_PUTTY = false;
 
 SX1280* SX;
 MTi_data* MTi;
-int counter = 0;
-int strength = 0;
 
+uint16_t ID;
 
-uint8_t message_buffer[100];
-RobotFeedbackPayload Bot_to_PC;
+uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
+uint8_t message_buffer_out[127];
+
+RobotCommandPayload robotCommandPayload = {0};
+RobotBuzzerPayload robotBuzzerPayload = {0};
 RobotFeedback robotFeedback = {0};
-RobotCommandPayload PC_to_Bot;
-RobotCommand robotCommand = {0};
-RobotBuzzerPayload robotBuzzerPayload;
-RobotBuzzer robotBuzzer;
+RobotStateInfo robotStateInfo = {0};
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
-
-
 
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
-
 IWDG_Handle* iwdg;
 
-static bool USE_PUTTY = false;
 
 // Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
@@ -217,7 +203,7 @@ void init(void){
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	Putty_printf("Initializing wireless\n");
-    SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
+    SX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, COMM_SPI);
 	SX->SX_settings->syncWords[0] = robot_syncWord[ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
@@ -316,6 +302,19 @@ void loop(void){
     robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2;
     
+	if(SEND_ROBOT_STATE_INFO){
+		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
+		robotStateInfo.id = ID;
+		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
+		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
+		robotStateInfo.xsensYaw = stateInfo.xsensYaw;
+		robotStateInfo.rateOfTurn = stateInfo.rateOfTurn;
+		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
+		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
+		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
+		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+	}
+
     // Heartbeat every 100ms	
 	if(heartbeat_100ms + 100 < HAL_GetTick()){
 		heartbeat_100ms += 100;
@@ -327,7 +326,7 @@ void loop(void){
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
 		Putty_printf("1000ms\n");
-		Putty_printf("Command counter: %d\n", commandCounter);
+		Putty_printf("Command counter: %d \n", commandCounter);
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 
@@ -380,25 +379,23 @@ void loop(void){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
-		
-		Wireless_DMA_Handler(SX, message_buffer);
+		Wireless_DMA_Handler(SX, message_buffer_in);
 
 		uint8_t total_packet_length = SX->payloadLength;
 		uint8_t total_bytes_processed = 0;
 
 		while(total_bytes_processed < total_packet_length){
 				
-			if(message_buffer[total_bytes_processed] == PACKET_TYPE_ROBOT_COMMAND){
-				memcpy(PC_to_Bot.payload, message_buffer + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
-				packetToRoboData(&PC_to_Bot, &receivedData);
+			if(message_buffer_in[total_bytes_processed] == PACKET_TYPE_ROBOT_COMMAND){
+				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
+				packetToRoboData(&robotCommandPayload, &receivedData);
 				commandCounter++;
-				strength += SX->Packet_status->RSSISync;
 				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
 				continue;
 			}
 
-			if(message_buffer[total_bytes_processed] == PACKET_TYPE_ROBOT_BUZZER){
-				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer + total_bytes_processed);
+			if(message_buffer_in[total_bytes_processed] == PACKET_TYPE_ROBOT_BUZZER){
+				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
 				uint16_t period = RobotBuzzer_get_period(rbp);
 				float duration = RobotBuzzer_get_duration(rbp);
 				buzzer_Play_note(period, duration);
@@ -408,7 +405,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 				continue;
 			}
 
-			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, message_buffer[total_bytes_processed]);
+			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, message_buffer_in[total_bytes_processed]);
 			break;
 		}
 	}
@@ -431,8 +428,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-        encodeRobotFeedback(&Bot_to_PC, &robotFeedback);
-		Wireless_IRQ_Handler(SX, Bot_to_PC.payload, PACKET_SIZE_ROBOT_FEEDBACK);
+
+		/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
+		* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
+		* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
+		* Somehow, make sure that this is only done on RX_DONE
+		*/
+		uint8_t total_packet_length = 0;
+
+		encodeRobotFeedback((RobotFeedbackPayload*)&message_buffer_out[total_packet_length], &robotFeedback);
+		total_packet_length += PACKET_SIZE_ROBOT_FEEDBACK;
+
+		if(SEND_ROBOT_STATE_INFO){
+			encodeRobotStateInfo((RobotStateInfoPayload*)&message_buffer_out[total_packet_length], &robotStateInfo);
+			total_packet_length += PACKET_SIZE_ROBOT_STATE_INFO;
+		}
+				
+		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
+
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
@@ -481,6 +494,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		wheels_SetRef(stateControl_GetWheelRef());
 		wheels_Update();
 
+
+		///////////////// OLD CODE. Revert to this if stuff seems to be going wrong
 		// if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
 		// 	if (!test_isTestRunning()) {
 				

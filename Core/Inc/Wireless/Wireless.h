@@ -19,8 +19,8 @@
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)
 
-#define FEEDBACK_CHANNEL -5	// 2.395 GHz
-#define COMMAND_CHANNEL -15 // 2.385 GHz
+#define WIRELESS_FEEDBACK_CHANNEL -5	// 2.395 GHz
+#define WIRELESS_COMMAND_CHANNEL -15 // 2.385 GHz
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

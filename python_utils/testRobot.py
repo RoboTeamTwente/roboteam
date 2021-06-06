@@ -11,6 +11,20 @@ import shutil
 import multiprocessing
 import getch
 
+
+### Neede for visualizing RobotStateInfo
+# import cv2
+# img = np.zeros((500, 500, 3), dtype=np.float)
+
+# def rotate(origin, point, angle):
+#     ox, oy = origin
+#     px, py = point
+
+#     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+#     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    # return qx, qy
+
+
 try:
 	from rem import rem
 except ImportError:
@@ -56,22 +70,11 @@ except Exception as e:
 	print("Error : Run script with \"python testRobot.py id test\"")
 	exit()
 
-# Input handling for music, simply because
-def read_input(note):
-	while True:
-		char = getch.getch()
-		if char in notes:
-			note.value = notes[char]
-
-notes = {"c" : 523,	"d" : 587,	"e" : 659,	"f" : 698,	"g" : 784,	"a" : 880,	"b" : 988,	"x" : 1047}
-note = multiprocessing.Value('i', 0)
-inputThread = multiprocessing.Process(target=read_input, args=(note,))
-inputThread.start()
-
 
 basestation = None
 cmdPayload = rem.ffi.new("RobotCommandPayload*")
-buzzPayload = rem.ffi.new("RobotBuzzerPayload*")
+feedbackPayload = rem.ffi.new("RobotFeedbackPayload*")
+stateInfoPayload = rem.ffi.new("RobotStateInfoPayload*")
 
 lastWritten = time.time()
 tickCounter = 0
@@ -96,21 +99,13 @@ while True:
 			# Run at 60fps
 			if 1./packetHz <= time.time() - lastWritten:
 
-				lastWritten = time.time()
+				# Timing stuff
+				lastWritten += 1./packetHz
 				tickCounter += 1
 				period = tickCounter % periodLength
 				periodFraction = period / periodLength
 
-				if note.value != 0:
-					cmd = rem.ffi.new("RobotBuzzer*")
-					cmd.header = rem.lib.PACKET_TYPE_ROBOT_BUZZER
-					cmd.id = robotId
-					cmd.period = note.value
-					cmd.duration = 1.
-					rem.lib.encodeRobotBuzzer(buzzPayload, cmd)
-					basestation.write(buzzPayload.payload)
-					note.value = 0
-
+				# Check connection with robot
 				if 0.5 < periodFraction:
 					robotConnected = True
 					# If less than half of feedback packets received
@@ -125,41 +120,42 @@ while True:
 				# All tests
 				log = ""
 
-				if test == "kicker" or test == "chipper":
-					if period == 0:
-						if test == "kicker"  : cmd.doKick = True
-						if test == "chipper" : cmd.doChip = True
-						cmd.doForce = True
-						cmd.kickChipPower = 3
+				if True: # This if-statement is just here so that I can easily collapse this large amount of code
+					if test == "kicker" or test == "chipper":
+						if period == 0:
+							if test == "kicker"  : cmd.doKick = True
+							if test == "chipper" : cmd.doChip = True
+							cmd.doForce = True
+							cmd.kickChipPower = 3
 
-				if test == "dribbler":
-					cmd.dribbler = math.floor(8 * periodFraction)
-					log = "speed = %d" % cmd.dribbler
+					if test == "dribbler":
+						cmd.dribbler = math.floor(8 * periodFraction)
+						log = "speed = %d" % cmd.dribbler
 
-				if test == "rotate":
-					cmd.angle = -math.pi + 2 * math.pi * ((periodFraction*4 + 0.5) % 1)
-					log = "angle = %+.3f" % cmd.angle
+					if test == "rotate":
+						cmd.angle = -math.pi + 2 * math.pi * ((periodFraction*4 + 0.5) % 1)
+						log = "angle = %+.3f" % cmd.angle
 
-				if test == "forward" or test == "sideways":
-					cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-					if 0.5 < periodFraction : cmd.theta = -math.pi
-					log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
+					if test == "forward" or test == "sideways":
+						cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
+						if 0.5 < periodFraction : cmd.theta = -math.pi
+						log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
 
-				if test == "sideways":
-					cmd.angle = math.pi / 2
+					if test == "sideways":
+						cmd.angle = math.pi / 2
 
-				if test == "rotate-discrete":
-					if periodFraction <=  1.: cmd.angle = math.pi/2
-					if periodFraction <= .75: cmd.angle = -math.pi
-					if periodFraction <= .50: cmd.angle = -math.pi/2
-					if periodFraction <= .25: cmd.angle = 0
-					log = "angle = %+.3f" % cmd.angle
+					if test == "rotate-discrete":
+						if periodFraction <=  1.: cmd.angle = math.pi/2
+						if periodFraction <= .75: cmd.angle = -math.pi
+						if periodFraction <= .50: cmd.angle = -math.pi/2
+						if periodFraction <= .25: cmd.angle = 0
+						log = "angle = %+.3f" % cmd.angle
 
-				if test == "forward-rotate":
-					cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-					if 0.5 < periodFraction : cmd.theta = -math.pi
-					cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
-					log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
+					if test == "forward-rotate":
+						cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
+						if 0.5 < periodFraction : cmd.theta = -math.pi
+						cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
+						log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
 
 				# Logging
 				bar = drawProgressBar(periodFraction)
@@ -167,7 +163,6 @@ while True:
 					print(" Receiving no feedback!", end="")
 				tcs, tfr = totalCommandsSent, totalFeedbackReceived
 				print(f" {robotId} - {test} {bar} {log} | "
-					# f"Sent:{tcs} Rcvd:{tfr} ({100*(tfr+1)/(tcs+1):.0f}%) | "
 					f"{lastBasestationLog}", end="\r")
 
 				# Send command
@@ -176,7 +171,7 @@ while True:
 				totalCommandsSent += 1
 
 
-			# Read feedback packets coming from the robot
+			# Read feedback pacstateInfoPayloadkets coming from the robot
 			packet_type = basestation.read(1)
 			if len(packet_type) == 0:
 				continue
@@ -185,26 +180,52 @@ while True:
 
 			if packetType == rem.lib.PACKET_TYPE_ROBOT_FEEDBACK:
 				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_ROBOT_FEEDBACK - 1)
-				payload = rem.ffi.new("RobotFeedbackPayload*")
-				payload.payload = packet
+				feedbackPayload.payload = packet
 
-				receivedId = rem.lib.RobotFeedback_get_id(payload)
+				receivedId = rem.lib.RobotFeedback_get_id(feedbackPayload)
 				if receivedId != robotId:
 					print("Error : Received feedback from robot %d ???" % receivedId)
-					exit()
 				totalFeedbackReceived += 1
+
+
+			if packetType == rem.lib.PACKET_TYPE_ROBOT_STATE_INFO:
+				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_ROBOT_STATE_INFO - 1)
+				stateInfoPayload.payload = packet
+
+				"""
+				xsensacc1 = rem.lib.RobotStateInfo_get_xsensAcc1(stateInfoPayload)
+				xsensacc2 = rem.lib.RobotStateInfo_get_xsensAcc2(stateInfoPayload)
+				xsensYaw = rem.lib.RobotStateInfo_get_xsensYaw(stateInfoPayload)
+
+				img *= 0.7
+
+				# Draw XSens data
+				y = 250 + int(15 * xsensacc1)
+				x = 250 + int(15 * xsensacc2)
+				cv2.circle(img, (x, y), 10, (255,255,255), -1)
+				# Draw XSens yaw
+				px, py = rotate((250, 250), (250, 50), -xsensYaw)
+				cv2.circle(img, (int(px), int(py)), 5, (255,255,255), -1)
+				
+				cv2.imshow("img", img)
+				if cv2.waitKey(1) == 27: exit()
+				"""
+
 
 			if packetType == rem.lib.PACKET_TYPE_BASESTATION_STATISTICS:
 				print("[Statistics]")
 				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_BASESTATION_STATISTICS - 1)
 				print(type(packet), len(packet), packet[1], packet[2], packet[3], packet[4])
 
+
 			if packetType == rem.lib.PACKET_TYPE_BASESTATION_LOG:
-				lastBasestationLog = basestation.readline().decode()[:-1] + " "*20
+				logmessage = basestation.readline().decode()
+				lastBasestationLog = logmessage[:-1] + " "*20
+
 
 	except serial.SerialException as se:
 		print("SerialException", se)
-		ser = None
+		basestation = None
 	except serial.SerialTimeoutException as ste:
 		print("SerialTimeoutException", ste)
 	except KeyError:

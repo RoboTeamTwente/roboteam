@@ -8,30 +8,17 @@
 #include "BaseTypes.h"
 #include "BasestationStatistics.h"
 #include "RobotCommand.h"
-#include "CircularBuffer.h"
+#include "RobotFeedback.h"
+#include "RobotStateInfo.h"
 
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
-#define BYTE_TO_BINARY(byte)  \
-  (byte & 0x80 ? '1' : '0'), \
-  (byte & 0x40 ? '1' : '0'), \
-  (byte & 0x20 ? '1' : '0'), \
-  (byte & 0x10 ? '1' : '0'), \
-  (byte & 0x08 ? '1' : '0'), \
-  (byte & 0x04 ? '1' : '0'), \
-  (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0')
-
-
-volatile int totalCommandsSent = 0;
-volatile int totalFeedbackReceived = 0;
-volatile int Iusb = 0;
+volatile int handled_RobotCommand = 0;
+volatile int handled_RobotFeedback = 0;
+volatile int handled_RobotBuzzer = 0;
+volatile int handled_RobotStateInfo = 0;
 
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 extern TIM_HandleTypeDef htim1;
-
-extern uint32_t usbLength;
-extern uint8_t usbData[64];
 
 /* Screen variables */
 DISPLAY_STATES displayState = DISPLAY_STATE_DEINITIALIZED;
@@ -91,15 +78,28 @@ void loop(){
   /* Heartbeat every second */
   if(heartbeat_1000ms + 1000 < HAL_GetTick()){
     heartbeat_1000ms += 1000;
-    sprintf(logBuffer, "Tick %d %d\n", totalCommandsSent, totalFeedbackReceived);
+    sprintf(logBuffer, "Tick | RC %d RF %d RB %d RSI %d\n",
+    handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo);
     LOG(logBuffer);
+    logBuffer[0] = '\0';
   }
 
-  /* Send any new feedback packets */
+  // TODO put multiple of these messages into a single USB packet, instead of sending every packet separately
+
+  /* Send any new RobotFeedback packets */
   for(int id = 0; id < MAX_ROBOT_ID; id++){
     if(buffer_RobotFeedback[id].isNewPacket){
       HexOut(buffer_RobotFeedback[id].packet.payload, PACKET_SIZE_ROBOT_FEEDBACK);
       buffer_RobotFeedback[id].isNewPacket = false;
+    }
+  }
+
+  /* Send any new RobotStateInfo packets */
+  for(int id = 0; id < MAX_ROBOT_ID; id++){
+    if(buffer_RobotStateInfo[id].isNewPacket){
+      handled_RobotBuzzer++;
+      HexOut(buffer_RobotStateInfo[id].packet.payload, PACKET_SIZE_ROBOT_STATE_INFO);
+      buffer_RobotStateInfo[id].isNewPacket = false;
     }
   }
 
@@ -109,18 +109,12 @@ void loop(){
   }
 
 
-  // if(screenCounter++ == 2000000){
-  //   LOG("Tick\n");
-  //   screenCounter = 0;
-  // }
-
-
-
   /* Skip all screen stuff */
   return;
 
 
-  /* Ensures that the CPU doesn't get overloaded with display stuff. Make better solution for this? */
+  /* Ensures that the CPU doesn't get overloaded with display stuff */
+  // TODO switch to HAL_GetTick instead of counter
   if(screenCounter++ < 80000){
     LOG("Tick\n");
     return;
@@ -196,15 +190,11 @@ void updateTouchState(TouchState* touchState){
  * the corresponding robot.
  * 
  * @param Buf Pointer to the buffer that holds the packet
- * @param Len Length of the packet
  * @return true if the packet has been handled succesfully
  * @return false if there was something wrong with the packet
  */
-bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
-  // Check if the packet has the correct size
-  if(Len != PACKET_SIZE_ROBOT_COMMAND)
-    return false;
-
+bool handleRobotCommand(uint8_t* Buf){
+  handled_RobotCommand++;
   // Interpret buffer as a RobotCommandPayload
   RobotCommandPayload *rcp = (RobotCommandPayload*) Buf;
 
@@ -228,15 +218,11 @@ bool handleRobotCommand(uint8_t* Buf, uint32_t Len){
  * the computer.
  * 
  * @param Buf Pointer to the buffer that holds the packet
- * @param Len Length of the packet
  * @return true if the packet has been handled succesfully
  * @return false if there was something wrong with the packet
  */
-bool handleRobotFeedback(uint8_t* Buf, uint32_t Len){
-  // Check if the packet has the correct size
-  if(Len != PACKET_SIZE_ROBOT_FEEDBACK)
-    return false;
-
+bool handleRobotFeedback(uint8_t* Buf){
+  handled_RobotFeedback++;
   // Interpret buffer as a RobotFeedbackPayload
   RobotFeedbackPayload *rfp = (RobotFeedbackPayload*) Buf;
 
@@ -249,6 +235,34 @@ bool handleRobotFeedback(uint8_t* Buf, uint32_t Len){
   memcpy(buffer_RobotFeedback[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_FEEDBACK);
   buffer_RobotFeedback[robotId].isNewPacket = true;
   buffer_RobotFeedback[robotId].counter++;
+    
+  return true;
+}
+
+
+/**
+ * @brief Receives a buffer which is assumed to be holding a handleRobotStateInfo packet. 
+ * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * the computer.
+ * 
+ * @param Buf Pointer to the buffer that holds the packet
+ * @return true if the packet has been handled succesfully
+ * @return false if there was something wrong with the packet
+ */
+bool handleRobotStateInfo(uint8_t* Buf){
+  handled_RobotStateInfo++;
+  // Interpret buffer as a RobotStateInfoPayload
+  RobotStateInfoPayload *rsip = (RobotStateInfoPayload*) Buf;
+
+  // Check if the robotId is valid
+  uint8_t robotId = RobotStateInfo_get_id(rsip);
+  if (MAX_ROBOT_ID < robotId)
+    return false;
+    
+  // Store the message in the buffer. Set flag to be sent to the robot
+  memcpy(buffer_RobotStateInfo[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_STATE_INFO);
+  buffer_RobotStateInfo[robotId].isNewPacket = true;
+  buffer_RobotStateInfo[robotId].counter++;
     
   return true;
 }
@@ -285,15 +299,11 @@ bool handleStatistics(void){
  * the corresponding robot.
  * 
  * @param Buf Pointer to the buffer that holds the packet
- * @param Len Length of the packet
  * @return true if the packet has been handled succesfully
  * @return false if there was something wrong with the packet
  */
-bool handleRobotBuzzer(uint8_t* Buf, uint32_t Len){
-  // Check if the packet has the correct size
-  if(Len != PACKET_SIZE_ROBOT_BUZZER)
-    return false;
-
+bool handleRobotBuzzer(uint8_t* Buf){
+  handled_RobotBuzzer++;
   // Interpret buffer as a RobotBuzzerPayload
   RobotBuzzerPayload *rbp = (RobotBuzzerPayload*) Buf;
 
@@ -325,32 +335,54 @@ bool handleRobotBuzzer(uint8_t* Buf, uint32_t Len){
  * @return true if the packed has been handled succesfully
  * @return false if the packet has been handled unsuccessfully, e.g. due to corruption
  */
-bool handlePacket(uint8_t* Buf, uint32_t Len){
+bool handlePacket(uint8_t* packet, uint32_t packet_length){
+  uint8_t packet_type;
+  uint32_t bytes_processed = 0;
 
-  uint8_t packetType = Buf[0];
-  uint32_t packetSize = Len;
-  
-  Iusb++;
+  bool success = true;
 
-  bool success = false;
+  while(bytes_processed < packet_length){
 
-  switch(packetType){
+    packet_type = packet[bytes_processed];
+
+    switch (packet_type){
+
     case PACKET_TYPE_ROBOT_COMMAND:
-      success = handleRobotCommand(Buf, packetSize);
+      bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
+      success = handleRobotCommand(packet);
       break;
+    
     case PACKET_TYPE_ROBOT_FEEDBACK:
-      success = handleRobotFeedback(Buf, packetSize);
+      bytes_processed += PACKET_SIZE_ROBOT_FEEDBACK;
+      success = handleRobotFeedback(packet);
       break;
+    
     case PACKET_TYPE_BASESTATION_GET_STATISTICS:
-      flagHandleStatistics = true;
+      bytes_processed += PACKET_SIZE_BASESTATION_GET_STATISTICS;
+      flagHandleStatistics = true;  
       break;
+    
     case PACKET_TYPE_ROBOT_BUZZER:
-      success = handleRobotBuzzer(Buf, packetSize);
+      bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
+      success = handleRobotBuzzer(packet);
       break;
-    default: 
-      sprintf(logBuffer, "Packet unknown! type=%d length=%d\n", packetType, packetSize);
+
+    case PACKET_TYPE_ROBOT_STATE_INFO:
+      bytes_processed += PACKET_SIZE_ROBOT_STATE_INFO;
+      success = handleRobotStateInfo(packet);
       break;
+
+    default:
+      sprintf(logBuffer, "[handlePacket] Error! At %d of %d bytes. [@] = %d\n", packet, packet_length, packet[bytes_processed]);
+      return false;
+    
+    }
+    
+    if(!success) break;
   }
+
+  if(!success)
+    sprintf(logBuffer, "[handlePacket] Error! Could not parse packet with type %d\n", packet_type);
 
   return success;
 }
@@ -361,13 +393,11 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
   if(hspi->Instance == SX_TX->SPI->Instance){
     Wireless_DMA_Handler(SX_TX);
     // SX_TX should never receive a packet so that's why we don't call handlePacket here.
-    totalCommandsSent++;
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
     Wireless_DMA_Handler(SX_RX);
     // First 3 bytes are status bytes
     handlePacket(SX_RX->RXbuf+3, SX_RX->payloadLength);
-    totalFeedbackReceived++;
 	}
 }
 
@@ -377,12 +407,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   // SX that sends packets wants to tell us something
   if (GPIO_Pin == SX_TX_IRQ.PIN) {
     Wireless_IRQ_Handler(SX_TX, 0, 0);
-    totalCommandsSent++;
   }
   // SX that receives packets wants to tell us something
   if (GPIO_Pin == SX_RX_IRQ.PIN) {
     Wireless_IRQ_Handler(SX_RX, 0, 0);
-    totalFeedbackReceived++;
     toggle_pin(LD_LED1);
   } 
 }

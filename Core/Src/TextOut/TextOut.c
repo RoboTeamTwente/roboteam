@@ -42,8 +42,6 @@ void LOG(char *message){
 	HexOut(buffer, length);
   // Free up the memory
   free(buffer);
-  // Set first character to \0. It might happen that the message is sent twice by the basestation main loop. This prevents that
-  message[0] = '\0';
 }
 
 void TextOut(char *str){

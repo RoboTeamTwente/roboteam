@@ -5,10 +5,12 @@
 #include "SSLSimulator.h"
 #include <roboteam_proto/ssl_simulation_robot_control.pb.h>
 #include <roboteam_proto/ssl_simulation_robot_feedback.pb.h>
+#include <roboteam_proto/World.pb.h>
+#include "utilities.h"
+#include <cmath>
 
 
-
-proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand &command) const {
+proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand &command,const proto::World& world) const {
     proto::sim::RobotCommand sim_command;
     sim_command.set_id(command.id());
 
@@ -21,10 +23,30 @@ proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand
     sim_command.set_dribbler_speed(command.dribbler());//TODO: find suitable conversion (especially for GrSim)
 
     proto::sim::RobotMoveCommand move_command;
-    auto *  global_vel = move_command.mutable_global_velocity();
-    global_vel->set_x(command.vel().x());
-    global_vel->set_y(command.vel().y());
-    global_vel->set_angular(command.w()); //TODO: fix w in this case!!
+//    {
+//        auto *global_vel = move_command.mutable_global_velocity();
+//        global_vel->set_x(command.vel().x());
+//        global_vel->set_y(command.vel().y());
+//        global_vel->set_angular(command.w());
+//        sim_command.mutable_move_command()->CopyFrom(move_command);
+//
+//    }
+
+    //below is for if erforce decides not to support global velocity. Above works fine in grsim... >.<
+    {
+        float robot_angle = 0.0;
+        std::shared_ptr<proto::WorldRobot> findBot = rtt::robothub::utils::getWorldBot(command.id(),is_yellow, world);
+        if(findBot){
+            robot_angle = findBot->angle();
+        }
+        float forward = cosf(robot_angle) * command.vel().x() - sinf(robot_angle) * command.vel().y();
+        float left = sinf(robot_angle) * command.vel().x() + cosf(robot_angle) * command.vel().y();
+        auto * local_vel = move_command.mutable_local_velocity();
+        local_vel->set_forward(forward);
+        local_vel->set_left(left);
+        local_vel->set_angular(command.w());
+
+    }
 
     sim_command.mutable_move_command()->CopyFrom(move_command);
 
@@ -41,8 +63,8 @@ void SSLSimulator::set_color(bool _is_yellow) {
     port = is_yellow ? 10302 : 10301; //TODO: hardcoded, make it settable?
 }
 
-void SSLSimulator::add_robot_command(const proto::RobotCommand &command) {
-    commands.push_back(convert_command(command));
+void SSLSimulator::add_robot_command(const proto::RobotCommand &command, const proto::World& world) {
+    commands.push_back(convert_command(command,world));
 }
 
 void SSLSimulator::send_commands() {
@@ -55,8 +77,10 @@ void SSLSimulator::send_commands() {
     datagram.resize(packet.ByteSizeLong());
     packet.SerializeToArray(datagram.data(),datagram.size());
 
-    socket.writeDatagram(datagram,QHostAddress(QString::fromStdString(ip)),port);
+    auto bytes_sent = socket.writeDatagram(datagram,QHostAddress(QString::fromStdString(ip)),port);
 
+
+    commands.clear();
 }
 
 

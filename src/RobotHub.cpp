@@ -59,7 +59,7 @@ void RobotHub::printStatistics() {
 void RobotHub::processAIBatch(proto::AICommand &cmd) {
   //TODO split up sending here, not in the lower functions
   if( mode == utils::Mode::SSL_SIMULATOR){
-      sendSimulatorBatch(cmd);
+      sendSimulatorBatch(cmd,cmd.extrapolatedworld());
       return;
   }
   proto::RobotData sentCommands;
@@ -153,7 +153,7 @@ void RobotHub::set_robot_command_channel(const proto::ChannelType &robot_command
 void RobotHub::set_feedback_channel(const proto::ChannelType &feedback_channel) { feedbackChannel = feedback_channel; }
 void RobotHub::set_settings_channel(const proto::ChannelType &settings_channel) { settingsChannel = settings_channel; }
 
-void RobotHub::sendSimulatorBatch(proto::AICommand &cmd) {
+void RobotHub::sendSimulatorBatch(proto::AICommand &cmd,const proto::World &world) {
     proto::RobotData sentCommands;
     sentCommands.set_isyellow(isYellow);
     for(const auto& command : cmd.commands()){
@@ -167,7 +167,7 @@ void RobotHub::sendSimulatorBatch(proto::AICommand &cmd) {
             printLowLevelRobotCommand(llrc);
 
         }else{
-            simulator_connection->add_robot_command(command);
+            simulator_connection->add_robot_command(command,world);
             robotTicks[command.id()]++;
             proto::RobotCommand * sent = sentCommands.mutable_sentcommands()->Add();
             sent->CopyFrom(command);

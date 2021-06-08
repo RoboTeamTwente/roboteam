@@ -52,7 +52,7 @@ class RobotHub {
     // Callback functions
 
     void processAIBatch(proto::AICommand &cmd);
-    void sendSimulatorBatch(proto::AICommand &cmd);
+    void sendSimulatorBatch(proto::AICommand &cmd, const proto::World &world);
     bool processCommand(const proto::RobotCommand &robotCommand,const proto::World& world);
     void processSettings(proto::Setting &setting);
 

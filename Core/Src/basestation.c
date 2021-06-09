@@ -348,13 +348,13 @@ bool handlePacket(uint8_t* packet, uint32_t packet_length){
     switch (packet_type){
 
     case PACKET_TYPE_ROBOT_COMMAND:
+      success = handleRobotCommand(packet + bytes_processed);
       bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
-      success = handleRobotCommand(packet);
       break;
     
     case PACKET_TYPE_ROBOT_FEEDBACK:
+      success = handleRobotFeedback(packet + bytes_processed);
       bytes_processed += PACKET_SIZE_ROBOT_FEEDBACK;
-      success = handleRobotFeedback(packet);
       break;
     
     case PACKET_TYPE_BASESTATION_GET_STATISTICS:
@@ -363,13 +363,13 @@ bool handlePacket(uint8_t* packet, uint32_t packet_length){
       break;
     
     case PACKET_TYPE_ROBOT_BUZZER:
+      success = handleRobotBuzzer(packet + bytes_processed);
       bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
-      success = handleRobotBuzzer(packet);
       break;
 
     case PACKET_TYPE_ROBOT_STATE_INFO:
+      success = handleRobotStateInfo(packet + bytes_processed);
       bytes_processed += PACKET_SIZE_ROBOT_STATE_INFO;
-      success = handleRobotStateInfo(packet);
       break;
 
     default:

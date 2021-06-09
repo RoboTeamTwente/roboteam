@@ -26,6 +26,7 @@ static float angleControl(float angleRef, float angle);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int stateControl_Init(){
+	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
 	status = on;
 	if (MOTORS_50W) {
 		// 50 W

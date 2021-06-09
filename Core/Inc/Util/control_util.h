@@ -39,8 +39,6 @@
 #define cosBack cos(BACK_ANGLE * M_PI/180)
 #define sinBack sin(BACK_ANGLE * M_PI/180)
 
-bool MOTORS_50W;			// wattage of motors, true = 50 W, false = 30 W
-
 // Wheels
 #define PWM_CUTOFF 200.0F // arbitrary treshold to avoid motor shutdown
 #define GEAR_RATIO 2.65F // gear ratio between motor and wheel

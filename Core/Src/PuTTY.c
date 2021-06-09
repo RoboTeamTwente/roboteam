@@ -130,8 +130,6 @@ static void Putty_HandleCommand(char *input)
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
-	}else if(!memcmp(input, "toggle bs", strlen("toggle bs"))){
-		ball_debug = !ball_debug;
 	}else if(!strcmp(input, "help")){
 		Putty_TextOut("shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
 	}else if(!strcmp(input, "make robots")){

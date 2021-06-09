@@ -33,7 +33,7 @@
 #define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
-static const bool SEND_ROBOT_STATE_INFO = false;
+static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
 SX1280* SX;
@@ -48,6 +48,7 @@ RobotCommandPayload robotCommandPayload = {0};
 RobotBuzzerPayload robotBuzzerPayload = {0};
 RobotFeedback robotFeedback = {0};
 RobotStateInfo robotStateInfo = {0};
+RobotStateInfoPayload robotStateInfoPayload = {0};
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
@@ -57,6 +58,12 @@ bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
 IWDG_Handle* iwdg;
 
+
+volatile uint32_t counter_htim6 = 0;
+volatile uint32_t counter_htim7 = 0;
+volatile uint32_t counter_htim10 = 0;
+volatile uint32_t counter_htim11 = 0;
+uint32_t timestamp_initialized = 0;
 
 // Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
@@ -160,17 +167,18 @@ void init(void){
 
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
     set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
-
+	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
-    // Check if robot has 30 W or 50 W motors (jumper = 50 W, no jumper = 30 W)
-    MOTORS_50W = true;
-    // TODO: remove this bool, it should not be here or used
-
 	ID = get_Id();
 	Putty_printf("ID: %d\n", ID);
 	set_Pin(LED0_pin, 1);
+
+
+	/* Read jumper */
+	SEND_ROBOT_STATE_INFO = read_Pin(IN1_pin);
+	Putty_printf("SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -225,6 +233,8 @@ void init(void){
 	// Turn of all leds. Will now be used to indicate robot status
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
 	buzzer_Play_ID(ID);
+	
+	timestamp_initialized = HAL_GetTick();
 }
 
 // ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
@@ -234,6 +244,9 @@ uint32_t timeLastPacket = 0;
 
 volatile int commandCounter = 0;
 
+float fakeAngle = 0.;
+uint32_t heartbeat_17ms_counter = 0;
+uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
@@ -268,6 +281,7 @@ void loop(void){
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
     if (halt) {
+		toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         clearReceivedData(&receivedData);
     }
@@ -290,9 +304,9 @@ void loop(void){
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     // robotFeedback.batteryLevel = (batCounter > 1000);
-    robotFeedback.ballSensorWorking = ballSensor_isWorking();
+    robotFeedback.ballSensorWorking = ballSensor_isInitialized();
     robotFeedback.hasBall = ballPosition.canKickBall;
-    robotFeedback.ballPos = ballPosition.x/100 & ballSensor_isWorking();
+    robotFeedback.ballPos = ballSensor_isInitialized() ? (-.5 + ballPosition.x / 700.) : 0;
 
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
@@ -307,7 +321,8 @@ void loop(void){
 		robotStateInfo.id = ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
-		robotStateInfo.xsensYaw = stateInfo.xsensYaw;
+		// robotStateInfo.xsensYaw = stateInfo.xsensYaw;
+		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
 		robotStateInfo.rateOfTurn = stateInfo.rateOfTurn;
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
@@ -315,39 +330,49 @@ void loop(void){
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
 
+    // Heartbeat every 17ms	
+	if(heartbeat_17ms + 17 < HAL_GetTick()){
+		heartbeat_17ms += 17;
+
+		// if(!halt){
+		// 	isSerialConnected = heartbeat_17ms_counter++ < 1200;
+		// 	if(isSerialConnected) toggle_Pin(LED6_pin);
+			
+		// 	fakeAngle += 0.1;
+		// 	if(M_PI <= fakeAngle) fakeAngle -= M_PI * 2;
+		// 	RobotCommand_set_angle(&robotCommandPayload, fakeAngle);
+		// 	packetToRoboData(&robotCommandPayload, &receivedData);
+		// }
+	}	
+
     // Heartbeat every 100ms	
 	if(heartbeat_100ms + 100 < HAL_GetTick()){
 		heartbeat_100ms += 100;
 		// Putty_printf("100ms %d\n", halt);
 		// Putty_printf("ball.x %d ball.y %d\n", ballPosition.x, ballPosition.y);
+		// encodeRobotStateInfo(&robotStateInfoPayload, &robotStateInfo);
 	}
 
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
 		Putty_printf("1000ms\n");
-		Putty_printf("Command counter: %d \n", commandCounter);
+
+		uint32_t msPassed = HAL_GetTick() - timestamp_initialized;
+		float hz_7 = 1000 * counter_htim7 / msPassed; 
+		Putty_printf("6: %d, 7: %d, 10: %d, 11: %d | hz = %2f\n", 
+		counter_htim6, counter_htim7, counter_htim10, counter_htim11, hz_7);
+
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
-
+		
         // Check if ballsesnor connection is still correct
-        // TODO: check if statemachine is correct (!ballPosition.canSeeBall)
-        if ((!ballSensorInitialized && init_attempts < 5)) {
-            init_attempts++;
+        if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
-        } else if (init_attempts == 5) {
-            init_attempts++;
-            Putty_printf("too many BS_INIT attempts. Quit!\n\r");
-            // buzzer_Play_PowerUp();
-        } else if (ballSensorInitialized) {
-            init_attempts = 0;
         }
-//		  printBaseStationData();
-//		  printReceivedData(&receivedData);
-//		  printRobotStateData();
     }
 
     /*
@@ -436,14 +461,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		*/
 		uint8_t total_packet_length = 0;
 
-		encodeRobotFeedback((RobotFeedbackPayload*)&message_buffer_out[total_packet_length], &robotFeedback);
+		encodeRobotFeedback( (RobotFeedbackPayload*) (message_buffer_out + total_packet_length), &robotFeedback);
 		total_packet_length += PACKET_SIZE_ROBOT_FEEDBACK;
 
 		if(SEND_ROBOT_STATE_INFO){
-			encodeRobotStateInfo((RobotStateInfoPayload*)&message_buffer_out[total_packet_length], &robotStateInfo);
+			encodeRobotStateInfo( (RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
 			total_packet_length += PACKET_SIZE_ROBOT_STATE_INFO;
 		}
-				
+
 		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
 
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
@@ -455,15 +480,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 
 // Handles the interrupts of the different timers.
-static volatile uint32_t heartbeat_htim7;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {	
 	// Old Geneva timer. Needs to be properly disabled in CubeMX
 	if(htim->Instance == htim6.Instance){
-
+		counter_htim6++;
 	}
 	else if(htim->Instance == htim7.Instance) {
-		heartbeat_htim7++;
+		counter_htim7++;
+
 		if(test_isTestRunning())
 			return;
 
@@ -543,9 +569,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		// }
 	}
 	else if (htim->Instance == htim10.Instance) {
+		counter_htim10++;
 		buzzer_Callback();
 	}
 	else if (htim->Instance == htim11.Instance) {
+		counter_htim11++;
 		shoot_Callback();
 	}
 }

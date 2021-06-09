@@ -1,3 +1,8 @@
+/* NNAMC0720PC01 */
+/* Page 114. Detection area = 72mm * 44.7mm */
+/* Page 105. Touch resolution = 0.1mm */
+
+
 #include "ballSensor.h"
 #include "limits.h"
 #include "gpio_util.h"
@@ -6,164 +11,79 @@
 #include "peripheral_util.h"
 #include "main.h"
 
-// 7.3.2 I2C : Read XX amount of bytes (number of bytes to read is indicated by second byte of first I2C Read Operation).
+// Static to keep everything local to this file
+static uint32_t error; // for i2c errors
+static volatile bool initialized = false; // ball sensor initialization status
+uint8_t data[255] __attribute__((aligned(16))); // byte array for received messages
 
-uint32_t error; // for i2c errors
-uint8_t ball_debug = 0; // enable ball print statements
-volatile uint8_t ballSensorInitialized = 0; // ball sensor initialization status
-uint8_t next_message_length = 2; // default length of next message is 2 bytes
-uint8_t init_attempts = 0;
+
+
+
+
+// ====================== REQUESTS / RESPONSES / NOTIFICATIONS ====================== //
 
 // Important. Values above 127 are represented by two bytes, even though it fits in one.
 // 7.4.1 Serialization Protocol Quick Start - Encoding Integers
 // * If the integer is between 0 and 127, it is represented by one byte ( 00 to 7F ).
 // * If the integer is between 128 and 32767, it is represented by two bytes ( 00 80 to 7F FF ).
 
-/* ball sensor boot complete response. 7.3.2 I2C, Page 44 */
-// 0xF0 0x11 = 11 1 10000 [PRIVATE 16] Notification 17 bytes
-// 0x40, 0x02, 0x00, 0x00 = 01 0 00000 = [Application 0] DeviceAddress, 2 bytes, 0 0?
-// 0x63, 0x0B = 01 1 00011 = [APPLICATION 3] BootCompleteNotification, 11 bytes
-	// 0x80, 0x01, 0x00 = 10 0 00000 = [0] asicStatus, 1 byte, value 0 = asicExists
-	// 0x81, 0x02, 0x03, 0x00 = 10 0 00001 = [1] resetSource, 2 bytes, 0000 0011 0000 0000
-	// 0x82, 0x02, 0x00, 0x00 = 10 0 00010 = [2] globalState, 2 bytes, 0000 0000 0000 0000
+/* Ball sensor boot complete response. 7.3.2 I2C, Page 44 */
+uint8_t response_bootComplete[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_PLATFORM, 
+	BS_BOOT_COMPLETE_NOTIFICATION, 11, BS_ASIC_STATUS, 1, 0, 0x81, 0x02, 0x03, 0x00, 0x82, 0x02, 0x00, 0x00};
 
-uint8_t bootcomplete_response[] = {0xF0, 0x11, 0x40, 0x02, 0x00, 0x00, 0x63, 0x0B, 0x80, 0x01, 0x00, 0x81, 0x02, 0x03,
-									0x00, 0x82, 0x02, 0x00, 0x00};
-
-/* ball sensor configuration command, to be sent before enabling device */
-/* page 82 */
-/* minX 0, minY 0, maxX 700, maxY 440, minSize 0, reported&tracked touch 1, everything else off */
 /* Device Configuration */
-uint8_t config_command[] = {
-	// ProtocolMessage request [PRIVATE 14] : 7:6=Private=11, 5=SEQUENCE=1, 4:0=14=01110 => 11101110 => 0xEE
-	BS_REQUEST, 0x40, // ID for request message (0xEE), number of bytes (64)
-	BS_REQUEST, 0x3E, // ID for request followed by length of total payload (0x40 = 62 bytes)
+uint8_t request_deviceConfiguration[] = {
+	BS_REQUEST, 27, /* Really not sure why I need to send BS_REQUEST twice, but it's the only way this works */
+	BS_REQUEST, 25, /* Asked on Github, but no response.. https://github.com/neonode-inc/zforce-arduino/issues/52 */
 	BS_DEVICE_ADDRESS_AIR,
-	// 0x40, 0x02, 0x02, 0x00, // Device address (always the same for the zForce AIR Touch Sensor)
-	// Page 86. 0x40 = 0100 0000 => 7:6=01=Application, 5=0=primitive, 4:0=00000=tag=0
-	//          0x02 = number of bytes that follow
-	//          0x02 = Device type (Zforce Air), 0x00 = Device index (always 0 on Zforce Air)
-
-	// deviceConfiguration [APPLICATION 19] SEQUENCE : 7:6=Application=01, 5=SEQUENCE=1, 4:0=19=10011 => 01110011 => 0x73
-	BS_DEVICE_CONFIGURATION, 0x38, // ID for deviceConfiguration (0x73), number of bytes (56)
-		// numberOfTrackedTouches [0] INTEGER (0..255) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-		BS_NUMBEROFTRACKEDTOUCHES, 1, 1, // ID for numberOfTrackedTouches (0x80), number of bytes (1), value (1)
-		// subTouchActiveArea [2] SEQUENCE : 7:6=Contextspecific=10, 5=SEQUENCE=1, 4:0=2=00010 => 10100010 => 0xA2
-		BS_SUBTOUCHACTIVEAREA, 29, // ID for subTouchActiveArea (0xA2), number of bytes (29)
-			// lowBoundX [0] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-			BS_LOWBOUNDX, 1, 0, // ID for lowBoundX (0x80), number of bytes (1), value (0)
-			// lowBoundY [1] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=1=00001 => 10000001 => 0x81
-			BS_LOWBOUNDY, 1, 0, // ID for lowBoundY (0x81), number of bytes (1), value (0)
-			// highBoundX [2] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=2=00010 => 10000010 => 0x82
-			BS_HIGHBOUNDX, 2, 700 >> 8, 700 & 0xFF, // ID for highBoundX (0x82) number of bytes (2), value (700)
-			// highBoundY [3] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=3=00011 => 10000011 => 0x83
-			BS_HIGHBOUNDY, 2, 440 >> 8, 440 & 0xFF, // ID for highBoundY (0x83) number of bytes (2), value (440)
-			// reverseX [4] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=4=00100 => 10000100 = 0x84
-			BS_REVERSEX, 1, 0, // ID for reverseX (0x84), number of bytes (1), value (0)
-			// reverseY [5] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=5=00101 => 10000101 = 0x85
-			BS_REVERSEY, 1, 0, // ID for reverseY (0x85), number of bytes (1), value (0)
-			// flipXY [6] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=6=00110 => 10000110 = 0x86
-			BS_FLIPXY, 1, 0, // ID for flipXY (0x86), number of bytes (1), value (0)
-			// offsetX [7] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=7=00111 => 10000111 = 0x87
-			BS_OFFSETX, 1, 0, // ID for offsetX (0x87), number of bytes (1), value (0)
-			// offsetY [8] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=8=01000 => 10001000 = 0x88
-			BS_OFFSETY, 1, 0, // ID for offsetY (0x88), number of bytes (1), value (0)
-		// sizeRestriction [4] SEQUENCE : 7:6=Contextspecific=10, 5=SEQUENCE=1, 4:0=4=00100, => 10100100 => 0xA4
-		BS_SIZERESTRICTION, 9, // ID for sizeRestriction (0xA4), number of bytes (9)
-			// maxSizeEnabled [0] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-			BS_MAXSIZEENABLED, 1, 0, // ID for maxSizeEnabled (0x80), number of bytes (1), value (0)
-			// minSizeEnabled [2] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=2=00010 => 10000010 => 0x82
-			BS_MINSIZEENABLED, 1, 0, // ID for minSizeEnabled (0x82), number of bytes (1), value (0)
-			// minSize [3] INTEGER (0..32767) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=3=00011 => 10000011 => 0x83
-			BS_MINSIZE, 1, 0, // ID for minSize (0x83), number of bytes (1), value (0)		
-			// ?????????????????????????????????????????????????????????????????????????
-			0x86, 0x01, 0x01, // ?????????????????????????????????????????????????????????????????????
-			// TODO the fuck is 0x86?? The sizeRestriction only has 4 fields.
-		
-		// TODO figure out why we set this? Doesn't make any sense to set scaling to 0?
-		// Page 82 : hidDisplaySize: Scaling the coordinate system when using the sensor module in HID Touch Digitizer mode.
-		// hidDisplaySize [7] SEQUENCE : 7:6=Contextspecific=10, 5=SEQUENCE=1, 4:0=7=00111, => 10100111 => 0xA7
-		0xA7, 0x06, // ID for hidDisplaySize (0xA7), number of bytes (6)
-			// x [0] INTEGER (0..32767) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-			0x80, 0x01, 0x00, // ID for x (0x80), number of bytes (1), value (0)
-			// y [1] INTEGER (0..32767) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=1=00001 => 10000001 => 0x81
-			0x81, 0x01, 0x00, // ID for y (0x81), number of bytes (1), value (0)
+	BS_DEVICE_CONFIGURATION, 19,
+		/* Make sure that only one object is tracked. The code is not set up to deal with messages thar report multiple touches */
+		BS_NUMBER_OF_REPORTED_TOUCHES, 1, 1, 
+		/* This is not really needed, these are default values. However, let's leave this here in case we need to change it */
+		BS_SUBTOUCHACTIVEAREA, 14,
+			BS_LOWBOUNDX, 1, 0, BS_LOWBOUNDY, 1, 0,
+			BS_HIGHBOUNDX, 2, 700 >> 8, 700 & 0xFF,
+			BS_HIGHBOUNDY, 2, 440 >> 8, 440 & 0xFF
 	};
+/* Page 81, Device Configuration response */
+/* I'm not going to completely check the response. As long as the ballsensor works, it's fine */
+uint8_t response_deviceConfiguration[] = {BS_DEVICE_ADDRESS_AIR, BS_DEVICE_CONFIGURATION};
 
-// 0xEF, 0x43 = response [PRIVATE 15] Message
-// 0x40, 0x02, 0x02, 0x00 = device address
-// 0x73, 0x3D, device configuration
-// 0xA2, 0x1D, subtouchactivearea
-	// 0x80, 0x01, 0x24, lowBoundX
-	// 0x81, 0x01, 0x00, lowBoundY
-	// 0x82, 0x02, 0x02, 0xBC, highBoundX
-	// 0x83, 0x02, 0x01, 0xB8, highBoundY
-	// 0x84, 0x01, 0x00, reverseX
-	// 0x85, 0x01, 0x00, reverseY
-	// 0x86, 0x01, 0x00, flipXY
-	// 0x87, 0x01, 0x00, offsetX
-    // 0x88, 0x01, 0x00, offsetY
-// 0xA4, 0x0C, sizeRestriction
-	// 0x80, 0x01, 0x00, maxSizeEnabled
-	// 0x81, 0x01, 0x00, maxSize
-	// 0x82, 0x01, 0x00, minSizeEnabled
-	// 0x83, 0x01, 0x00, minSize
-	// 0x85, 0x01, 0x00, ????????
-	// 0x86, 0x01, 0x01, ????????
-// 0xA7, 0x08, hidDisplaySize
-	// 0x80, 0x02, 0x02, 0x98, x
-	// 0x81, 0x02, 0x01, 0xB8, y
+/* A ball can move at most 6.5 m/s. Page 29 https://robocup-ssl.github.io/ssl-rules/sslrules.pdf */
+/* The plunger of the robot is 45mm in width. 6500 / 45 gives a required scanning frequency of at least 144.44. Let's stick with 200 */
+/* 9.2.4 Scanning Frequency, page 109 */
+uint8_t request_scanningFrequency[] = {BS_REQUEST, 16, BS_REQUEST, 14, BS_DEVICE_ADDRESS_AIR, BS_FREQUENCY, 8, BS_FINGER, 2, 200 >> 8, 200 & 0xFF, BS_IDLE, 2, 200 >> 8, 200 & 0xFF};
+uint8_t response_scanningFrequency[] = {BS_RESPONSE, 14, BS_DEVICE_ADDRESS_PLATFORM, BS_FREQUENCY, 8, BS_FINGER, 2, 200 >> 8, 200 & 0xFF, BS_IDLE, 2, 200 >> 8, 200 & 0xFF};
 
-uint8_t config_response[] = {BS_RESPONSE, 0x43, BS_DEVICE_ADDRESS_AIR, 0x73, 0x3D, 0xA2, 0x1D,
-							0x80, 0x01, 0x24, 0x81, 0x01, 0x00, 0x82, 0x02, 0x02, 0xBC, 0x83, 0x02, 0x01,
-							0xB8, 0x84, 0x01, 0x00, 0x85, 0x01, 0x00, 0x86, 0x01, 0x00, 0x87, 0x01, 0x00,
-							0x88, 0x01, 0x00, 0xA4, 0x0C, 0x80, 0x01, 0x00, 0x81, 0x01, 0x00, 0x82, 0x01,
-							0x00, 0x83, 0x01, 0x00, 0x85, 0x01, 0x00, 0x86, 0x01, 0x01, 0xA7, 0x08, 0x80,
-							0x02, 0x02, 0x98, 0x81, 0x02, 0x01, 0xB8};
-
-/* ball sensor frequency command */
-/* set scanning frequency to 100Hz (0x64) & idle frequency to 100Hz */
-//uint8_t freq_command[] = {0xEE, 0x0E, 0xEE, 0x0C, 0x40, 0x02, 0x02, 0x00, 0x68, 0x06, 0x80, 0x01, 0x64, 0x82, 0x01, 0x64};
-//uint8_t freq_response[] = {0xEF, 0x0C, 0x40, 0x02, 0x00, 0x00, 0x68, 0x06, 0x80, 0x01, 0x64, 0x82, 0x01, 0x64};
-
-// 0xEE => 11 1 01110 -> PRIVATE SEQUENCE 14, 0x10 => 16 bytes
-// 0xEE => 11 1 01110 -> PRIVATE SEQUENCE 14, 0x0E => 14 bytes
-	// 0x40 => 01 0 00000 -> [APPLICATION 0] PRIMITIVE = DeviceAddress, 0x02 => 2 bytes, 0x02 = zForce Air, 0x00 => 0
-	// 0x68 => 01 1 01000 -> [APPLICATION 8] SEQUENCE = frequency, 0x08 => 8 bytes,
-		// 0x80 => 10 0 00000 -> [0] = finger, 0x02 = 2 bytes, 0x01, 0x90 = 400
-		// 0x82 => 10 0 00010 -> [2] = idle, 0x02 = 2 bytes, 0x01, 0x90 = 400
-		    // TODO What the fuck 400Hz??? Why? Looks a little much to me tbh...
-
-
-uint8_t freq_command[] = {BS_REQUEST, 14, BS_REQUEST, 12, BS_DEVICE_ADDRESS_AIR, BS_FREQUENCY, 6, BS_FINGER, 1, 100, BS_IDLE, 1, 100};
-uint8_t freq_response[] = {BS_RESPONSE, 12, BS_DEVICE_ADDRESS_PLATFORM, BS_FREQUENCY, 6, BS_FINGER, 1, 100, BS_IDLE, 1, 100};
-
-uint8_t get_touch_format[] = {BS_REQUEST, 8, BS_REQUEST, 6, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_FORMAT, 0};
+/* Still haven't completely figured out the response that this gives... Page 76 */
+uint8_t request_touchFormat[] = {BS_REQUEST, 8, BS_REQUEST, 6, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_FORMAT, 0};
 
 /* Ballsensor enable device command. 7.4.3 I2C Transport, Page 69 */
 /* 7.4.1 Serialization Protocol Quick Start -> Enabling Touch Sensor Modules, page 50 */
-uint8_t enable_command[] = 	{BS_REQUEST, 11, BS_REQUEST, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
-uint8_t enable_response[] = {BS_RESPONSE, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
+uint8_t request_enable[] = 	{BS_REQUEST, 11, BS_REQUEST, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
+uint8_t response_enable[] = {BS_RESPONSE, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
 
 /* ball sensor receive data notification */
-uint8_t measurement_rx[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_NOTIFICATION_SEQUENCE, 11, BS_TOUCH_NOTIFICATION, 9};
+uint8_t notification_touch[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_NOTIFICATION_SEQUENCE, 11, BS_TOUCH_NOTIFICATION, 9};
 
-// F0 11 BS_DEVICE_ADDRESS_AIR BS_TOUCH_NOTIFICATION_SEQUENCE 11   42 09   09 01 01 E0 00 F4 00 44 00
+// ================================================================================== //
 
-// BS_DEVICE_ADDRESS?
 
-bool ballSensor_Init()
-{
+
+
+
+// ====================== PUBLIC FUNCTIONS ====================== //
+
+bool ballSensor_Init(){
 	Putty_printf("[ballsensor] init\n");
 	
-	ballSensor_NoBall();
+	bs_NoBall();
 	HAL_Delay(20); // timing specs
 	ballSensor_Reset();
-	next_message_length = 2;
+	
 	int currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin)){
-		// wait for DR
-		if (HAL_GetTick()-currentTime > 100) {
+		if (HAL_GetTick() - currentTime > 100) {
 			Putty_printf("[ballsensor] timeout\n");
 			return false;
 		}
@@ -176,121 +96,88 @@ bool ballSensor_Init()
 		return false; // boot failed, leave
 	}
 
-	// config procedure (set&check)
+	// Set configuration
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
-	if (!bs_SetConfig()){
+	if (!bs_setDeviceConfiguration()){
 		Putty_printf("[ballsensor] set config failed\n");
 		return false; // set config failed, leave
 	}
+	// Check configuration
 	currentTime = HAL_GetTick(); // avoid lockup when initializing
-	while(!read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 5)); // wait for DR
-	if (!bs_CheckConfig()){
+	while(!read_Pin(BS_IRQ_pin) && (HAL_GetTick()-currentTime < 5)); // wait for DR
+	if (!bs_checkDeviceConfiguration()){
 		Putty_printf("[ballsensor] check config failed\n");
 		return false;
 	}
 
-	// freq procedure (set&check)
+	// Set scanning frequency
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
-	if (!bs_SetFreq()){
+	if (!bs_setScanningFrequency()){
 		return false; // set freq failed, leave
 	}
+	// Check scanning frequency
 	currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 5)); // wait for DR
-	if (!bs_CheckFreq()){
+	if (!bs_checkScanningFrequency()){
 		return false;
 	}
-
 	
 	// Touch format
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
-	if (!bs_requestTouchFormat()){
+	if (!bs_getTouchFormat()){
 		return false; // set freq failed, leave
 	}
 	currentTime = HAL_GetTick(); // avoid lockup when initializing
-	// while(!read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 5)); // wait for DR
-	while(!read_Pin(BS_IRQ_pin)){}; // wait for DR
-	if (!bs_readTouchFormat()){
+	while(!read_Pin(BS_IRQ_pin) && (HAL_GetTick()-currentTime < 5)); // wait for DR
+	if (!bs_checkTouchFormat()){
 		return false;
 	}
 
-
-	// enable device (set&check)
+	// Enable device
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
-	if (!bs_EnableDevice()){
+	if (!bs_setEnableDevice()){
 		return false; // set enable failed, leave
 	}
 	currentTime = HAL_GetTick(); // avoid lockup when initializing
-	while(!read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 5)); // wait for DR
-	if (!bs_CheckEnable()){
-		return false;
-	} else{
-		// end of init procedure
-		return (ballSensorInitialized) ? true : false;
-	}
+	while(!read_Pin(BS_IRQ_pin) && (HAL_GetTick() - currentTime < 5)); // wait for DR
+	return bs_checkEnableDevice();
 }
 
 void ballSensor_DeInit(){
-	ballSensorInitialized = 0;
+	initialized = false;
 	set_Pin(BS_RST_pin, 0);
-	ballSensor_NoBall();
+	bs_NoBall();
 }
 
 void ballSensor_Reset() {
-	//Putty_printf ("BS_RST\n\r");
-	ballSensorInitialized = 0;
-	ballSensor_NoBall();
+	initialized = false;
+	bs_NoBall();
 	set_Pin(BS_RST_pin, 0);
 	HAL_Delay(1);
 	set_Pin(BS_RST_pin, 1);
 }
 
-void ballSensorDeInit() {
-	//Putty_printf ("BS_DEINIT\n\r");
-	ballSensorInitialized = 0;
-	ballSensor_NoBall();
-	set_Pin(BS_RST_pin, 0);
-}
-
 void ballSensor_IRQ_Handler() {
 
-	if (ballSensorInitialized) {
+	if (initialized) {
 		if (ballSensor_I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
 
-			// sprintf(logBuffer, "%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
-			// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
-			// data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
+			// If interrupt is handled by CheckMeasurement, then its all good
+			if(bs_CheckMeasurement())
+				return;
 
-
-			bs_CheckMeasurement();
+			// Received interrupt that can't be handled
+			uint8_t message_size = data[1];
+			for(uint16_t at = 0; at < message_size; at += 10){
+				Putty_printf("[%d] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+				at, data[at+0], data[at+1], data[at+2], data[at+3], data[at+4], data[at+5], data[at+6], data[at+7], data[at+8], data[at+9]);
+			}
 		}
 	}
 }
 
-bool ballSensor_isWorking() {
-	return ballSensorInitialized;
-}
-
-void updatePosition(uint8_t data[]) {
-
-	ballPosition.x = data[12] << 8 | data[13];
-	ballPosition.y = data[14] << 8 | data[15];;
-	ballPosition.lastSeen = HAL_GetTick();
-	ballPosition.id = data[10];
-	ballPosition.canKickBall = (ballPosition.y<500) ? 1 : 0;
-	//ballPosition.canKickBall &= x > 50 && x < 700;
-//	ballPosition.canKickBall &= x > 185 && x < 560;
-	ballPosition.canSeeBall = 1;
-
-	// printBallPosition();
-}
-
-void ballSensor_NoBall() {
-	ballPosition.x = BALLSENSOR_NO_BALL;
-	ballPosition.y = BALLSENSOR_NO_BALL;
-	ballPosition.lastSeen = 0;
-	ballPosition.id = -1;
-	ballPosition.canKickBall = 0;
-	ballPosition.canSeeBall = 0;
+bool ballSensor_isInitialized() {
+	return initialized;
 }
 
 bool ballSensor_I2C_Rx() {
@@ -303,8 +190,8 @@ bool ballSensor_I2C_Rx() {
 	int currentTime = HAL_GetTick(); // avoid lockup
 	while (BS_I2C->State != HAL_I2C_STATE_READY){
 		if (HAL_GetTick()-currentTime > 5) {
-			ballSensor_NoBall();
-			ballSensorInitialized = 0;
+			bs_NoBall();
+			initialized = false;
 			Putty_printf("[ballsensor][I2C_Rx] Timeout!\n", error);
 			return false;
 		}
@@ -316,8 +203,8 @@ bool ballSensor_I2C_Rx() {
 
 	error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, response, 2, 5);
 	if(error != HAL_OK){
-		ballSensorInitialized = 0;
-		ballSensor_NoBall();
+		initialized = false;
+		bs_NoBall();
 		Putty_printf("[ballsensor][I2C_Rx] Error at reading message length : %d!\n", error);
 		return false;
 	}
@@ -325,8 +212,8 @@ bool ballSensor_I2C_Rx() {
 
 	error = HAL_I2C_Master_Receive(BS_I2C, BS_I2C_ADDR, data, length_message, 5);
 	if(error != HAL_OK){
-		ballSensorInitialized = 0;
-		ballSensor_NoBall();
+		initialized = false;
+		bs_NoBall();
 		Putty_printf("[ballsensor][I2C_Rx] Error at reading full message : %d!\n", error);
 		return false;
 	}
@@ -334,30 +221,13 @@ bool ballSensor_I2C_Rx() {
 	return true;
 }
 
-void I2CTx_IT(uint8_t tosend[], uint8_t length) {
-    if(HAL_OK != (error = HAL_I2C_Master_Transmit_IT(BS_I2C, BS_I2C_ADDR, tosend, length))){
-    	ballSensorInitialized = 0;
-    	ballSensor_NoBall();
-        Putty_printf("BALLSENSOR - i2c transmit failed with error [%d]!\n\rzForce stopped\n\r", error);
-    }
+// ====================== PRIVATE FUNCTIONS ====================== //
+
+void bs_I2C_error(uint8_t error){
+	initialized = false;
+	bs_NoBall();
+	Putty_printf("[bs_I2C_error] %d\n", error);
 }
-
-// void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
-// 	//Putty_printf("ballsensor tx callback\n\r");
-// }
-
-void I2C_Rx_DMA() {
-	if(HAL_OK != (error = HAL_I2C_Master_Receive_DMA(BS_I2C, BS_I2C_ADDR, data, next_message_length))){
-		ballSensor_NoBall();
-		ballSensorInitialized = 0;
-		Putty_printf("I2C_Rx_DMA - read failed with error [%d]!\n\r", error);
-	}
-}
-
-// void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
-// 	//Putty_printf("ballsensor rx callback\n\r");
-// 	bs_CheckMeasurement();
-// }
 
 bool bs_Boot() {
 	/* 7.3.2 I2C, Page 44.
@@ -374,124 +244,130 @@ bool bs_Boot() {
 	*/ 
 	ballSensor_I2C_Rx();
 	// certain bytes of the response can change according to datasheet, so compare parts of the byte array
-	return !memcmp( data, bootcomplete_response, 10) 
-		&& !memcmp( data+11, bootcomplete_response+11, 3) 
-		&& !memcmp( data+13, bootcomplete_response+13, 3);
+	return !memcmp( data, response_bootComplete, 10) 
+		&& !memcmp( data+11, response_bootComplete+11, 3) 
+		&& !memcmp( data+13, response_bootComplete+13, 3);
 }
 
-bool bs_SetConfig() {
-	error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, config_command, sizeof(config_command), 5);
 
-	if (error != HAL_OK){
-		ballSensorInitialized = 0;
-		ballSensor_NoBall();
-		Putty_printf("[ballsensor][bs_SetConfig] - i2c transmit failed with error [%d]!", error);
-		return false;
-	}
-	
-	return true;
-}
-
-bool bs_CheckConfig() {
-	ballSensor_I2C_Rx();
-	if (!memcmp(data, config_response, sizeof(config_response))) {
-		//Putty_printf("BS_CONF\n\r");
-		return true;
-	} else {
-		return false;
-	}
-}
-
-bool bs_requestTouchFormat(){
-
-	error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, get_touch_format, sizeof(get_touch_format), 5);
+bool bs_setDeviceConfiguration() {
+	error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, request_deviceConfiguration, sizeof(request_deviceConfiguration), 5);
 
 	if (error != HAL_OK)
-		Putty_printf("[ballsensor][bs_getTouchFormat] I2C error %d\n", error);
+		bs_I2C_error(error);
 
 	return error == HAL_OK;
 }
 
-bool bs_readTouchFormat(){
+bool bs_checkDeviceConfiguration() {
+	ballSensor_I2C_Rx();
 
+	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+	// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19], data[20], data[21], data[22], data[23], data[24], data[25], data[26], data[27], data[28], data[29]);
+
+	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+	// data[30], data[31], data[32], data[33], data[34], data[35], data[36], data[37], data[38], data[39], data[40], data[41], data[42], data[43], data[44], data[45], data[46], data[47], data[48], data[49], data[50], data[51], data[52], data[53], data[54], data[55], data[56], data[57], data[58], data[59]);
+	
+	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", 
+	// data[60], data[61], data[62], data[63], data[64], data[65], data[66], data[67], data[68]);
+
+	bool isEqual = !memcmp(data + 2, response_deviceConfiguration, sizeof(response_deviceConfiguration));
+
+	return isEqual;
+}
+
+
+bool bs_getTouchFormat(){
+
+	error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, request_touchFormat, sizeof(request_touchFormat), 5);
+
+	if (error != HAL_OK)
+		bs_I2C_error(error);
+
+	return error == HAL_OK;
+}
+
+bool bs_checkTouchFormat(){
+	// Still haven't figured out the response that this gives ...
 	if(!ballSensor_I2C_Rx()){
 		Putty_printf("[ballsensor][bs_readTouchFormat] Read error\n");
 		return false;
 	}
 
-	Putty_printf("%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
-	data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
-	data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
+	// Putty_printf("%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+	// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
+	// data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
 
 	return true;
 }
 
-bool bs_SetFreq() {
-	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, freq_command, sizeof(freq_command), 5)){
-		ballSensorInitialized = 0;
-		ballSensor_NoBall();
-		Putty_printf("bs_SetFreq - i2c transmit failed with error [%d]!\n\r", error);
-		return false;
-	} else {
-		return true;
-	}
+
+bool bs_setScanningFrequency() {
+	uint8_t error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, request_scanningFrequency, sizeof(request_scanningFrequency), 5);
+
+	if (error != HAL_OK)
+		bs_I2C_error(error);
+
+	return error == HAL_OK;
 }
 
-bool bs_CheckFreq() {
+bool bs_checkScanningFrequency() {
 	ballSensor_I2C_Rx();
-	if (!memcmp(data, freq_response, sizeof(freq_response))) {
-		//Putty_printf("BS_FREQ\r\n");
-		return true;
-	} else {
-		return false;
-	}
+
+	bool isEqual = !memcmp(data, response_scanningFrequency, sizeof(response_scanningFrequency));
+	
+	return isEqual;
 }
 
-bool bs_EnableDevice() {
-	if (HAL_OK != HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, enable_command, sizeof(enable_command), 5)){
-		ballSensorInitialized = 0;
-		ballSensor_NoBall();
-		Putty_printf("bs_EnableDevice - i2c transmit failed with error [%d]!\n\r", error);
-		return false;
-	} else {
-		return true;
-	}
+
+bool bs_setEnableDevice() {
+	uint8_t error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, request_enable, sizeof(request_enable), 5);
+	
+	if (error != HAL_OK)
+		bs_I2C_error(error);
+
+	return error == HAL_OK;
 }
 
-bool bs_CheckEnable() {
+bool bs_checkEnableDevice() {
 	ballSensor_I2C_Rx();
-	if (!memcmp(data, enable_response, sizeof(enable_response))) {
-        //Putty_printf("BS_INIT COMPLETE\n\r");
-        ballSensorInitialized = 1;
-		return true;
-	} else {
-		return false;
+	
+	bool isEqual = !memcmp(data, response_enable, sizeof(response_enable));
+
+	initialized = isEqual;
+	
+	return isEqual;
+}
+
+
+bool bs_CheckMeasurement() {
+	bool isEqual = !memcmp(data, notification_touch, sizeof(notification_touch));
+	
+	if(isEqual){
+		if(data[11] == 2)
+			bs_NoBall();
+		else
+			bs_updatePosition(data);
 	}
+
+	return isEqual;
 }
 
-void bs_CheckMeasurement() {
-	if(!memcmp(data, measurement_rx, sizeof(measurement_rx)) && data[11] != 2) {
-		// ball detected if event ID (data[11]) is 0 or 1. data[11]==2 is for lost objects
-		updatePosition(data);
-		// if (true) Putty_printf ("ball: x=%d, y=%d\n\r", ballPosition.x, ballPosition.y);
-	} else {
-		//ignore any other data
-		ballSensor_NoBall();
-	}
+
+void bs_updatePosition(uint8_t data[]) {
+	ballPosition.x = data[12] << 8 | data[13];
+	ballPosition.y = data[14] << 8 | data[15];;
+	ballPosition.lastSeen = HAL_GetTick();
+	ballPosition.id = data[10];
+	ballPosition.canKickBall = (0 <= ballPosition.y && ballPosition.y <= 500) ? 1 : 0;
+	ballPosition.canSeeBall = 1;
 }
 
-void printRawData(uint8_t data[]) {
-    Putty_printf("\n\rdata = [");
-    for(uint32_t i = 0; i < next_message_length; i++){
-      Putty_printf("0x%02X, ", data[i]);
-    }
-    Putty_printf("]\n\r");
+void bs_NoBall() {
+	ballPosition.x = BALLSENSOR_NO_BALL;
+	ballPosition.y = BALLSENSOR_NO_BALL;
+	ballPosition.lastSeen = 0;
+	ballPosition.id = -1;
+	ballPosition.canKickBall = 0;
+	ballPosition.canSeeBall = 0;
 }
-
-void printBallPosition() {
-	Putty_printf("\n\rball at\n\rx,y: %d  %d\n\r", ballPosition.x, ballPosition.y);
-	Putty_printf("id is %d\n\r", ballPosition.id);
-	Putty_printf("canKickBall: %d, canSeeBall: %d\n\r", ballPosition.canKickBall, ballPosition.canSeeBall);
-	//Putty_printf("size %hu, %hu\n\r", data[16], data[17]);
-}
-

@@ -4,7 +4,7 @@
 #include "PuTTY.h"
 #include "string.h"
 #include "peripheral_util.h"
-
+#include "main.h"
 
 // 7.3.2 I2C : Read XX amount of bytes (number of bytes to read is indicated by second byte of first I2C Read Operation).
 
@@ -20,6 +20,13 @@ uint8_t init_attempts = 0;
 // * If the integer is between 128 and 32767, it is represented by two bytes ( 00 80 to 7F FF ).
 
 /* ball sensor boot complete response. 7.3.2 I2C, Page 44 */
+// 0xF0 0x11 = 11 1 10000 [PRIVATE 16] Notification 17 bytes
+// 0x40, 0x02, 0x00, 0x00 = 01 0 00000 = [Application 0] DeviceAddress, 2 bytes, 0 0?
+// 0x63, 0x0B = 01 1 00011 = [APPLICATION 3] BootCompleteNotification, 11 bytes
+	// 0x80, 0x01, 0x00 = 10 0 00000 = [0] asicStatus, 1 byte, value 0 = asicExists
+	// 0x81, 0x02, 0x03, 0x00 = 10 0 00001 = [1] resetSource, 2 bytes, 0000 0011 0000 0000
+	// 0x82, 0x02, 0x00, 0x00 = 10 0 00010 = [2] globalState, 2 bytes, 0000 0000 0000 0000
+
 uint8_t bootcomplete_response[] = {0xF0, 0x11, 0x40, 0x02, 0x00, 0x00, 0x63, 0x0B, 0x80, 0x01, 0x00, 0x81, 0x02, 0x03,
 									0x00, 0x82, 0x02, 0x00, 0x00};
 
@@ -29,45 +36,46 @@ uint8_t bootcomplete_response[] = {0xF0, 0x11, 0x40, 0x02, 0x00, 0x00, 0x63, 0x0
 /* Device Configuration */
 uint8_t config_command[] = {
 	// ProtocolMessage request [PRIVATE 14] : 7:6=Private=11, 5=SEQUENCE=1, 4:0=14=01110 => 11101110 => 0xEE
-	0xEE, 0x40, // ID for request message (0xEE), number of bytes (64)
-	0xEE, 0x3E, // ID for request followed by length of total payload (0x40 = 62 bytes)
-	0x40, 0x02, 0x02, 0x00, // Device address (always the same for the zForce AIR Touch Sensor)
+	BS_REQUEST, 0x40, // ID for request message (0xEE), number of bytes (64)
+	BS_REQUEST, 0x3E, // ID for request followed by length of total payload (0x40 = 62 bytes)
+	BS_DEVICE_ADDRESS_AIR,
+	// 0x40, 0x02, 0x02, 0x00, // Device address (always the same for the zForce AIR Touch Sensor)
 	// Page 86. 0x40 = 0100 0000 => 7:6=01=Application, 5=0=primitive, 4:0=00000=tag=0
 	//          0x02 = number of bytes that follow
 	//          0x02 = Device type (Zforce Air), 0x00 = Device index (always 0 on Zforce Air)
 
 	// deviceConfiguration [APPLICATION 19] SEQUENCE : 7:6=Application=01, 5=SEQUENCE=1, 4:0=19=10011 => 01110011 => 0x73
-	0x73, 0x38, // ID for deviceConfiguration (0x73), number of bytes (56)
+	BS_DEVICE_CONFIGURATION, 0x38, // ID for deviceConfiguration (0x73), number of bytes (56)
 		// numberOfTrackedTouches [0] INTEGER (0..255) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-		0x80, 0x01, 0x01, // ID for numberOfTrackedTouches (0x80), number of bytes (1), value (1)
+		BS_NUMBEROFTRACKEDTOUCHES, 1, 1, // ID for numberOfTrackedTouches (0x80), number of bytes (1), value (1)
 		// subTouchActiveArea [2] SEQUENCE : 7:6=Contextspecific=10, 5=SEQUENCE=1, 4:0=2=00010 => 10100010 => 0xA2
-		0xA2, 0x1D, // ID for subTouchActiveArea (0xA2), number of bytes (29)
+		BS_SUBTOUCHACTIVEAREA, 29, // ID for subTouchActiveArea (0xA2), number of bytes (29)
 			// lowBoundX [0] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-			0x80, 0x01, 0x00, // ID for lowBoundX (0x80), number of bytes (1), value (0)
+			BS_LOWBOUNDX, 1, 0, // ID for lowBoundX (0x80), number of bytes (1), value (0)
 			// lowBoundY [1] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=1=00001 => 10000001 => 0x81
-			0x81, 0x01, 0x00, // ID for lowBoundY (0x81), number of bytes (1), value (0)
+			BS_LOWBOUNDY, 1, 0, // ID for lowBoundY (0x81), number of bytes (1), value (0)
 			// highBoundX [2] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=2=00010 => 10000010 => 0x82
-			0x82, 0x02, 0x02, 0xBC, // ID for highBoundX (0x82) number of bytes (2), value (700)
+			BS_HIGHBOUNDX, 2, 700 >> 8, 700 & 0xFF, // ID for highBoundX (0x82) number of bytes (2), value (700)
 			// highBoundY [3] INTEGER (0..16383) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=3=00011 => 10000011 => 0x83
-			0x83, 0x02, 0x01, 0xB8, // ID for highBoundY (0x83) number of bytes (2), value (440)
+			BS_HIGHBOUNDY, 2, 440 >> 8, 440 & 0xFF, // ID for highBoundY (0x83) number of bytes (2), value (440)
 			// reverseX [4] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=4=00100 => 10000100 = 0x84
-			0x84, 0x01, 0x00, // ID for reverseX (0x84), number of bytes (1), value (0)
+			BS_REVERSEX, 1, 0, // ID for reverseX (0x84), number of bytes (1), value (0)
 			// reverseY [5] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=5=00101 => 10000101 = 0x85
-			0x85, 0x01, 0x00, // ID for reverseY (0x85), number of bytes (1), value (0)
+			BS_REVERSEY, 1, 0, // ID for reverseY (0x85), number of bytes (1), value (0)
 			// flipXY [6] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=6=00110 => 10000110 = 0x86
-			0x86, 0x01, 0x00, // ID for flipXY (0x86), number of bytes (1), value (0)
+			BS_FLIPXY, 1, 0, // ID for flipXY (0x86), number of bytes (1), value (0)
 			// offsetX [7] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=7=00111 => 10000111 = 0x87
-			0x87, 0x01, 0x00, // ID for offsetX (0x87), number of bytes (1), value (0)
+			BS_OFFSETX, 1, 0, // ID for offsetX (0x87), number of bytes (1), value (0)
 			// offsetY [8] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=8=01000 => 10001000 = 0x88
-			0x88, 0x01, 0x00, // ID for offsetY (0x88), number of bytes (1), value (0)
+			BS_OFFSETY, 1, 0, // ID for offsetY (0x88), number of bytes (1), value (0)
 		// sizeRestriction [4] SEQUENCE : 7:6=Contextspecific=10, 5=SEQUENCE=1, 4:0=4=00100, => 10100100 => 0xA4
-		0xA4, 0x09, // ID for sizeRestriction (0xA4), number of bytes (9)
+		BS_SIZERESTRICTION, 9, // ID for sizeRestriction (0xA4), number of bytes (9)
 			// maxSizeEnabled [0] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=0=00000 => 10000000 => 0x80
-			0x80, 0x01, 0x00, // ID for maxSizeEnabled (0x80), number of bytes (1), value (0)
+			BS_MAXSIZEENABLED, 1, 0, // ID for maxSizeEnabled (0x80), number of bytes (1), value (0)
 			// minSizeEnabled [2] BOOLEAN : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=2=00010 => 10000010 => 0x82
-			0x82, 0x01, 0x00, // ID for minSizeEnabled (0x82), number of bytes (1), value (0)
+			BS_MINSIZEENABLED, 1, 0, // ID for minSizeEnabled (0x82), number of bytes (1), value (0)
 			// minSize [3] INTEGER (0..32767) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=3=00011 => 10000011 => 0x83
-			0x83, 0x01, 0x00, // ID for minSize (0x83), number of bytes (1), value (0)		
+			BS_MINSIZE, 1, 0, // ID for minSize (0x83), number of bytes (1), value (0)		
 			// ?????????????????????????????????????????????????????????????????????????
 			0x86, 0x01, 0x01, // ?????????????????????????????????????????????????????????????????????
 			// TODO the fuck is 0x86?? The sizeRestriction only has 4 fields.
@@ -81,7 +89,32 @@ uint8_t config_command[] = {
 			// y [1] INTEGER (0..32767) : 7:6=Contextspecific=10, 5=PRIMITIVE=0, 4:0=1=00001 => 10000001 => 0x81
 			0x81, 0x01, 0x00, // ID for y (0x81), number of bytes (1), value (0)
 	};
-uint8_t config_response[] = {0xEF, 0x43, 0x40, 0x02, 0x02, 0x00, 0x73, 0x3D, 0xA2, 0x1D,
+
+// 0xEF, 0x43 = response [PRIVATE 15] Message
+// 0x40, 0x02, 0x02, 0x00 = device address
+// 0x73, 0x3D, device configuration
+// 0xA2, 0x1D, subtouchactivearea
+	// 0x80, 0x01, 0x24, lowBoundX
+	// 0x81, 0x01, 0x00, lowBoundY
+	// 0x82, 0x02, 0x02, 0xBC, highBoundX
+	// 0x83, 0x02, 0x01, 0xB8, highBoundY
+	// 0x84, 0x01, 0x00, reverseX
+	// 0x85, 0x01, 0x00, reverseY
+	// 0x86, 0x01, 0x00, flipXY
+	// 0x87, 0x01, 0x00, offsetX
+    // 0x88, 0x01, 0x00, offsetY
+// 0xA4, 0x0C, sizeRestriction
+	// 0x80, 0x01, 0x00, maxSizeEnabled
+	// 0x81, 0x01, 0x00, maxSize
+	// 0x82, 0x01, 0x00, minSizeEnabled
+	// 0x83, 0x01, 0x00, minSize
+	// 0x85, 0x01, 0x00, ????????
+	// 0x86, 0x01, 0x01, ????????
+// 0xA7, 0x08, hidDisplaySize
+	// 0x80, 0x02, 0x02, 0x98, x
+	// 0x81, 0x02, 0x01, 0xB8, y
+
+uint8_t config_response[] = {BS_RESPONSE, 0x43, BS_DEVICE_ADDRESS_AIR, 0x73, 0x3D, 0xA2, 0x1D,
 							0x80, 0x01, 0x24, 0x81, 0x01, 0x00, 0x82, 0x02, 0x02, 0xBC, 0x83, 0x02, 0x01,
 							0xB8, 0x84, 0x01, 0x00, 0x85, 0x01, 0x00, 0x86, 0x01, 0x00, 0x87, 0x01, 0x00,
 							0x88, 0x01, 0x00, 0xA4, 0x0C, 0x80, 0x01, 0x00, 0x81, 0x01, 0x00, 0x82, 0x01,
@@ -100,23 +133,24 @@ uint8_t config_response[] = {0xEF, 0x43, 0x40, 0x02, 0x02, 0x00, 0x73, 0x3D, 0xA
 		// 0x80 => 10 0 00000 -> [0] = finger, 0x02 = 2 bytes, 0x01, 0x90 = 400
 		// 0x82 => 10 0 00010 -> [2] = idle, 0x02 = 2 bytes, 0x01, 0x90 = 400
 		    // TODO What the fuck 400Hz??? Why? Looks a little much to me tbh...
-uint8_t freq_command[] = {0xEE, 0x10, 0xEE, 0x0E, 0x40, 0x02, 0x02, 0x00, 0x68, 0x08, 0x80, 0x02, 0x01, 0x90, 0x82, 0x02, 0x01, 0x90};
-uint8_t freq_response[] = {0xEF, 0x0E, 0x40, 0x02, 0x00, 0x00, 0x68, 0x08, 0x80, 0x02, 0x01, 0x90, 0x82, 0x02, 0x01, 0x90};
 
+
+uint8_t freq_command[] = {BS_REQUEST, 14, BS_REQUEST, 12, BS_DEVICE_ADDRESS_AIR, BS_FREQUENCY, 6, BS_FINGER, 1, 100, BS_IDLE, 1, 100};
+uint8_t freq_response[] = {BS_RESPONSE, 12, BS_DEVICE_ADDRESS_PLATFORM, BS_FREQUENCY, 6, BS_FINGER, 1, 100, BS_IDLE, 1, 100};
+
+uint8_t get_touch_format[] = {BS_REQUEST, 8, BS_REQUEST, 6, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_FORMAT, 0};
 
 /* Ballsensor enable device command. 7.4.3 I2C Transport, Page 69 */
 /* 7.4.1 Serialization Protocol Quick Start -> Enabling Touch Sensor Modules, page 50 */
-// 0xEE => 11 1 01110 -> PRIVATE SEQUENCE 14, 0x0B => 11 bytes
-// 0xEE => 11 1 01110 -> PRIVATE SEQUENCE 14, 0x09 => 9 bytes
-	// 0x40 => 01 0 00000 -> [APPLICATION 0] PRIMITIVE = DeviceAddress, 0x02 => 2 bytes, 0x02 = zForce Air, 0x00 => 0
-	// 0x65 => 01 1 00101 -> [APPLICATION 5] SEQUENCE = enable, 0x03 => 3 bytes, 
-		// 0x81 => 10 0 00001 -> [1] INTEGER = enable, 0x01 = 1 byte, 0x00 => 0. -- Send enable with value 0 to enable continuous mode.
-uint8_t enable_command[] = 	{0xEE, 0x0B, 0xEE, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x81, 0x01, 0x00};
-uint8_t enable_response[] = {0xEF, 0x09, 0x40, 0x02, 0x02, 0x00, 0x65, 0x03, 0x81, 0x01, 0x00};
+uint8_t enable_command[] = 	{BS_REQUEST, 11, BS_REQUEST, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
+uint8_t enable_response[] = {BS_RESPONSE, 9, BS_DEVICE_ADDRESS_AIR, BS_ENABLE_SEQUENCE, 3, BS_ENABLE, 1, BS_ENABLE_CONTINUOUS};
 
 /* ball sensor receive data notification */
-uint8_t measurement_rx[] = {0xF0, 0x11, 0x40, 0x02, 0x02};
+uint8_t measurement_rx[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_AIR, BS_TOUCH_NOTIFICATION_SEQUENCE, 11, BS_TOUCH_NOTIFICATION, 9};
 
+// F0 11 BS_DEVICE_ADDRESS_AIR BS_TOUCH_NOTIFICATION_SEQUENCE 11   42 09   09 01 01 E0 00 F4 00 44 00
+
+// BS_DEVICE_ADDRESS?
 
 bool ballSensor_Init()
 {
@@ -166,6 +200,20 @@ bool ballSensor_Init()
 		return false;
 	}
 
+	
+	// Touch format
+	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
+	if (!bs_requestTouchFormat()){
+		return false; // set freq failed, leave
+	}
+	currentTime = HAL_GetTick(); // avoid lockup when initializing
+	// while(!read_Pin(BS_IRQ_pin)  &&  (HAL_GetTick()-currentTime < 5)); // wait for DR
+	while(!read_Pin(BS_IRQ_pin)){}; // wait for DR
+	if (!bs_readTouchFormat()){
+		return false;
+	}
+
+
 	// enable device (set&check)
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
 	if (!bs_EnableDevice()){
@@ -204,8 +252,15 @@ void ballSensorDeInit() {
 }
 
 void ballSensor_IRQ_Handler() {
+
 	if (ballSensorInitialized) {
 		if (ballSensor_I2C_Rx()){ // this I2C_Rx() does not have a timeout! it is meant for init
+
+			// sprintf(logBuffer, "%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+			// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
+			// data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
+
+
 			bs_CheckMeasurement();
 		}
 	}
@@ -345,6 +400,30 @@ bool bs_CheckConfig() {
 	} else {
 		return false;
 	}
+}
+
+bool bs_requestTouchFormat(){
+
+	error = HAL_I2C_Master_Transmit(BS_I2C, BS_I2C_ADDR, get_touch_format, sizeof(get_touch_format), 5);
+
+	if (error != HAL_OK)
+		Putty_printf("[ballsensor][bs_getTouchFormat] I2C error %d\n", error);
+
+	return error == HAL_OK;
+}
+
+bool bs_readTouchFormat(){
+
+	if(!ballSensor_I2C_Rx()){
+		Putty_printf("[ballsensor][bs_readTouchFormat] Read error\n");
+		return false;
+	}
+
+	Putty_printf("%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+	data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
+	data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
+
+	return true;
 }
 
 bool bs_SetFreq() {

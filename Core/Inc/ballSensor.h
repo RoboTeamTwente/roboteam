@@ -72,6 +72,8 @@ void printBallPosition(); // prints latest ball position
 bool bs_Boot(); // receive bootcomplete response
 bool bs_SetConfig(); // send configuration message
 bool bs_CheckConfig(); // check configuration response
+bool bs_requestTouchFormat();
+bool bs_readTouchFormat();
 bool bs_SetFreq(); // send frequency settings
 bool bs_CheckFreq(); // check frequency settings
 bool bs_EnableDevice(); // send enable device message
@@ -79,5 +81,69 @@ bool bs_CheckEnable(); // check enable device response
 void bs_CheckMeasurement(); // check received measurement notification
 void updatePosition(uint8_t data[]); // update position struct
 void ballSensor_NoBall(); // set no ball values for position struct
+
+
+/* Page 83
+* 87654321 = byte
+* ccsttttt = usage. 
+* c = class tag. 00 = unused; 01 = APPLICATION; 10 = Context-Specific; 11 = PRIVATE;
+* s = indication either list or variable; 0 = PRIMITIVE (variable); 1 = SEQUENCE (list);
+* t = tag number. Simply a 5-bit number, between 0 and 31.
+*/
+
+#define BS_REQUEST 0xEE /* = 11101110 = 11 1 01110 = PRIVATE SEQUENCE 14 = [PRIVATE 14] = request*/
+#define BS_RESPONSE 0xEF
+	#define BS_DEVICE_ADDRESS_AIR 0x40, 0x02, 0x02, 0x00
+	#define BS_DEVICE_ADDRESS_PLATFORM 0x40, 0x02, 0x00, 0x00
+	#define BS_ENABLE_SEQUENCE 0x65
+		#define BS_ENABLE 0x81
+			#define BS_ENABLE_CONTINUOUS 0x00
+	#define BS_TOUCH_FORMAT 0x66 /* touchFormat [APPLICATION 6] SEQUENCE = 01 1 00110 = 0x66 */
+	#define BS_FREQUENCY 0x68
+		#define BS_FINGER 0x80
+		#define BS_IDLE 0x82
+	#define BS_DEVICE_CONFIGURATION 0x73
+		#define BS_NUMBEROFTRACKEDTOUCHES 0x80
+		#define BS_SUBTOUCHACTIVEAREA 0xA2
+			#define BS_LOWBOUNDX 0x80
+			#define BS_LOWBOUNDY 0x81
+			#define BS_HIGHBOUNDX 0x82
+			#define BS_HIGHBOUNDY 0x83
+			#define BS_REVERSEX 0x84
+			#define BS_REVERSEY 0x85
+			#define BS_FLIPXY 0x86
+			#define BS_OFFSETX 0x87
+			#define BS_OFFSETY 0x88
+		#define BS_SIZERESTRICTION 0xA4
+			#define BS_MAXSIZEENABLED 0x80
+			#define BS_MAXSIZE 0x81
+			#define BS_MINSIZEENABLED 0x82
+			#define BS_MINSIZE 0x83
+#define BS_NOTIFICATION 0xF0
+	#define BS_TOUCH_NOTIFICATION_SEQUENCE 0xA0
+		#define BS_TOUCH_NOTIFICATION 0x42
+/*
+11 1 10000
+F0 11 
+	40 02 02 00 
+	A0 0B // A0 10 1 00000 => Context-specific Sequence 0 : 
+		42 09 // 42 01 0 00010 [APPLICATION 2] PRIMITIVE (OCTET STRING) TouchNotification
+		0E 01 00 17 00 7B 00 41 00
+	 // 10 11 12 13 14 15 16 17 18
+F0 11 
+	40 02 02 00 
+		A0 0B 42 09 0E 02 00 00 00 79 00 41 00 BC
+
+
+EF 0C RESPONSE
+	40 02 02 00 DEVICE_ADDRESS
+	66 06 : 01 1 00110 [APPLICATION 6] touchFormat
+		41 04 : 01 0 00001 = [APPLICATION 1] BIT STRING TouchDescriptor
+			01 F6 18 04 	0000 0001    1111 0110    0001 1000    0000 0100
+
+*/
+
+
+
 
 #endif /* BALLSENSOR_H_ */

@@ -18,19 +18,12 @@ proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand
     float kick_vel = command.chipper() || command.kicker() ?  command.chip_kick_vel() : 0.0f;
     float kick_angle = command.chipper() ? 45.0f : 0.0f;
     sim_command.set_kick_speed(kick_vel); //kick speed in m/s
-    sim_command.set_kick_angle(kick_angle); //TODO: what is the normal kick angle of our robots?
+    sim_command.set_kick_angle(kick_angle);
 
-    sim_command.set_dribbler_speed(command.dribbler());//TODO: find suitable conversion (especially for GrSim)
-
+    if(command.dribbler()>0){
+        sim_command.set_dribbler_speed(1021);//Theoretical max rpm according to alejandro, probably a bit quick..
+    }
     proto::sim::RobotMoveCommand move_command;
-//    {
-//        auto *global_vel = move_command.mutable_global_velocity();
-//        global_vel->set_x(command.vel().x());
-//        global_vel->set_y(command.vel().y());
-//        global_vel->set_angular(command.w());
-//        sim_command.mutable_move_command()->CopyFrom(move_command);
-//
-//    }
 
     //below is for if erforce decides not to support global velocity. Above works fine in grsim... >.<
     {

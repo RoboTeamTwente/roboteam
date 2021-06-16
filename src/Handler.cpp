@@ -36,7 +36,7 @@ void Handler::init() {
 }
 
 void Handler::setupSSLClients() {
-    constexpr quint16 DEFAULT_VISION_PORT = 10006;
+    constexpr quint16 DEFAULT_VISION_PORT = 10020;
     constexpr quint16 DEFAULT_REFEREE_PORT = 10003;
 
     const QString SSL_VISION_SOURCE_IP = "224.5.23.2";

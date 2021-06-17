@@ -36,42 +36,46 @@ void Handler::init() {
 }
 
 void Handler::setupSSLClients() {
-    constexpr int DEFAULT_VISION_PORT = 10006;
-    constexpr int DEFAULT_REFEREE_PORT = 10003;
+    constexpr quint16 DEFAULT_VISION_PORT = 10006;
+    constexpr quint16 DEFAULT_REFEREE_PORT = 10003;
 
-    const string SSL_VISION_SOURCE_IP = "224.5.23.2";
-    const string SSL_REFEREE_SOURCE_IP = "224.5.23.1";
+    const QString SSL_VISION_SOURCE_IP = "224.5.23.2";
+    const QString SSL_REFEREE_SOURCE_IP = "224.5.23.1";
     
-    vision_client = std::make_unique<RoboCupSSLClient>(DEFAULT_VISION_PORT, SSL_VISION_SOURCE_IP);
-    referee_client = std::make_unique<RoboCupSSLClient>(DEFAULT_REFEREE_PORT, SSL_REFEREE_SOURCE_IP);
+    vision_client = new RobocupReceiver<proto::SSL_WrapperPacket>(QHostAddress(SSL_VISION_SOURCE_IP),DEFAULT_VISION_PORT);
+    referee_client = new RobocupReceiver<proto::SSL_Referee>(QHostAddress(SSL_REFEREE_SOURCE_IP),DEFAULT_REFEREE_PORT);
 
-    cout << "Vision  : " << SSL_VISION_SOURCE_IP << ":" << DEFAULT_VISION_PORT << endl;
-    cout << "Referee  : " << SSL_REFEREE_SOURCE_IP << ":" << DEFAULT_REFEREE_PORT << endl;
+    cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << endl;
+    cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << endl;
 
-    vision_client->open(false);  // boolean blocking
-    referee_client->open(false);
+    vision_client->connect();
+    referee_client->connect();
     this_thread::sleep_for(chrono::microseconds(10000));
 }
 
 std::vector<proto::SSL_WrapperPacket> Handler::receiveVisionPackets() {
     std::vector<proto::SSL_WrapperPacket> receivedPackets;
-    proto::SSL_WrapperPacket packet;
-    while(vision_client && vision_client->receive(packet)){
-        receivedPackets.emplace_back(std::move(packet));
+    bool ok = vision_client->receive(receivedPackets);
+    if(!ok){
+      std::cout<<"error receiving vision messages"<<std::endl;
     }
     return receivedPackets;
 }
 std::vector<proto::SSL_Referee> Handler::receiveRefereePackets()  {
-    std::vector<proto::SSL_Referee> receivedPackets;
-    proto::SSL_Referee packet;
-    while(referee_client && referee_client->receive(packet)){
-        receivedPackets.emplace_back(std::move(packet));
-    }
-    return receivedPackets;
+  std::vector<proto::SSL_Referee> receivedPackets;
+  bool ok = referee_client->receive(receivedPackets);
+  if(!ok){
+    std::cout<<"error receiving referee messages"<<std::endl;
+  }
+  return receivedPackets;
 }
 
 void Handler::robotDataCallBack(proto::RobotData& data) {
     std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(data);
+}
+Handler::~Handler() {
+  delete referee_client;
+  delete vision_client;
 }
 

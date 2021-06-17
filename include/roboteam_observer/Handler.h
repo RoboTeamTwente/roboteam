@@ -8,14 +8,16 @@
 #include <Subscriber.h>
 #include <observer/Observer.h>
 #include <utility>
-
+#include "RobocupReceiver.h"
 
 
 class Handler {
    private:
     std::unique_ptr<proto::Publisher<proto::State>> pub_state = nullptr;
-    std::unique_ptr<RoboCupSSLClient> vision_client = nullptr;
-    std::unique_ptr<RoboCupSSLClient> referee_client = nullptr;
+
+    RobocupReceiver<proto::SSL_WrapperPacket> * vision_client = nullptr;
+    RobocupReceiver<proto::SSL_Referee> * referee_client = nullptr;
+
     std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback = nullptr;
     std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback_2 = nullptr;
     Observer observer;
@@ -23,6 +25,7 @@ class Handler {
     std::mutex sub_mutex;
    public:
     Handler() = default;
+    ~Handler();
 
     /*
      * Setup a world with a kalmanfilter, and initialize the publishers for publishing data.

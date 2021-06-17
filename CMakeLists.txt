@@ -23,7 +23,7 @@ add_executable(roboteam_robothub
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
         src/RobotHub.cpp
-        src/main.cpp)
+        src/main.cpp src/SSLSimulator.cpp include/roboteam_robothub/SSLSimulator.h)
 
 
 target_include_directories(roboteam_robothub

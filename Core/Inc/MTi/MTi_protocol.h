@@ -10,6 +10,10 @@
 
 #include <stdlib.h>
 
+/* Page 13. 2.7.5 SPI. The first byte transmitted by the Master is the opcode which identifies what kind of data is 
+transmitted by the Master and what kind of data the Master wants to read from the Slave (See MTSSP). The second- to 
+fourth byte transmitted are the fill words. These fill words are needed to give the Slave some time to prepare the 
+remainder of the transfer. */
 #define HEADER_LENGTH 4		// amount of bytes before actual data is sent/received
 
 // OP-codes

@@ -14,6 +14,7 @@
 
 #include "constants.h"
 #include "utilities.h"
+#include "SSLSimulator.h"
 
 namespace rtt::robothub {
 
@@ -51,12 +52,14 @@ class RobotHub {
     // Callback functions
 
     void processAIBatch(proto::AICommand &cmd);
+    void sendSimulatorBatch(proto::AICommand &cmd, const proto::World &world);
     bool processCommand(const proto::RobotCommand &robotCommand,const proto::World& world);
     void processSettings(proto::Setting &setting);
 
     // Serial and grsim managers
     std::shared_ptr<SerialDeviceManager> device;
     std::shared_ptr<GRSimCommander> grsimCommander;
+    std::shared_ptr<SSLSimulator> simulator_connection;
 
     bool sendSerialCommand(LowLevelRobotCommand llrc);
     bool sendGrSimCommand(const proto::RobotCommand &robotCommand);

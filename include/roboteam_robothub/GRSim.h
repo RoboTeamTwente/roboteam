@@ -159,7 +159,7 @@ class GRSimCommander {
      */
     bool batch;
     bool isYellow = true;
-    std::string grsim_ip = "127.0.0.1";
+    std::string grsim_ip = "172.25.0.2";
 
     quint16 grsim_port = 20011;
 

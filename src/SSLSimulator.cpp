@@ -32,7 +32,9 @@ proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand
         float robot_angle = 0.0;
         std::shared_ptr<proto::WorldRobot> findBot = rtt::robothub::utils::getWorldBot(command.id(),is_yellow, world);
         if(findBot){
-            robot_angle = findBot->angle();
+            robot_angle = - findBot->angle();
+        }else{
+            std::cout<<"could not find robot!"<<std::endl;
         }
         float forward = cosf(robot_angle) * command.vel().x() - sinf(robot_angle) * command.vel().y();
         float left = sinf(robot_angle) * command.vel().x() + cosf(robot_angle) * command.vel().y();

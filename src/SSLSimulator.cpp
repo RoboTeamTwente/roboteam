@@ -22,6 +22,8 @@ proto::sim::RobotCommand SSLSimulator::convert_command(const proto::RobotCommand
 
     if(command.dribbler()>0){
         sim_command.set_dribbler_speed(1021);//Theoretical max rpm according to alejandro, probably a bit quick..
+    }else{
+        sim_command.set_dribbler_speed(0.0);
     }
     proto::sim::RobotMoveCommand move_command;
 

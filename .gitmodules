@@ -1,3 +1,6 @@
 [submodule "Core/Inc/roboteam_embedded_messages"]
 	path = Core/Inc/roboteam_embedded_messages
 	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git
+[submodule "python_utils/roboteam_embedded_messages"]
+	path = python_utils/roboteam_embedded_messages
+	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git

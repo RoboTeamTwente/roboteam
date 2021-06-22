@@ -24,7 +24,7 @@ last_written = time.time()
 packet_Hz = 60
 basestation = None
 
-robot_id = 0
+robot_id = 15
 absolute_angle = 0
 
 class JoystickWrapper:
@@ -53,18 +53,46 @@ class JoystickWrapper:
             self.robot_id += self.controller.hat.x
             print(f"Switched to ID {self.robot_id}")
 
+        self.command.dribbler = 7
+        if self.controller.button_y._value:
+            print("dribbler", self.controller.button_y._value)
+            self.command.dribbler = 4
+
         if self.robot_id < 0: self.robot_id = 0
         if 15 < self.robot_id : self.robot_id = 15
+
+        self.command.doKick = False
+        self.command.doChip = False
+
+        if self.controller.button_a._value and not self.A:
+            self.command.kickChipPower = 5
+            self.command.doChip = True
+        self.A = self.controller.button_a._value
+
+        if self.controller.button_b._value and not self.B:
+            self.command.kickChipPower = 5
+            self.command.doKick = True
+        self.B = self.controller.button_b._value
+
 
         # Angle
         if 0.3 < abs(self.controller.axis_r.x): self.absolute_angle -= self.controller.axis_r.x * 0.1
         
         # Forward backward left right
-        y = self.controller.axis_l.y if 0.3 < abs(self.controller.axis_l.y) else 0 
-        x = self.controller.axis_l.x if 0.3 < abs(self.controller.axis_l.x) else 0
-        rho = math.sqrt(x * x + y * y);
-        theta = math.atan2(-x, -y);
-        
+        deadzone = 0.3
+
+        velocity_x = 0
+        if deadzone < abs(self.controller.axis_l.x):
+            velocity_x = ( abs(self.controller.axis_l.x) - deadzone) / (1 - deadzone)
+            velocity_x *= np.sign(self.controller.axis_l.x)
+
+        velocity_y = 0
+        if deadzone < abs(self.controller.axis_l.y):
+            velocity_y = ( abs(self.controller.axis_l.y) - deadzone) / (1 - deadzone)
+            velocity_y *= np.sign(self.controller.axis_l.y)
+
+        rho = math.sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
+        theta = math.atan2(-velocity_x, -velocity_y);
 
         self.command.id = self.robot_id
         self.command.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
@@ -75,6 +103,7 @@ class JoystickWrapper:
 
         rem.lib.encodeRobotCommand(self.payload, self.command)
         return self.payload
+
 
 print(Xbox360Controller.get_available())
 
@@ -98,47 +127,6 @@ while True:
                 
                 for wrapper in wrappers:
                     basestation.write(wrapper.get_payload().payload)
-
-
-                # buzzer.header = rem.lib.PACKET_TYPE_ROBOT_BUZZER
-                # buzzer.id = robot_id
-
-                # buzzer.period = 570 + int(350 * controller.axis_l.x)
-                # buzzer.duration = 1
-                # rem.lib.encodeRobotBuzzer(buzzerPayload, buzzer)
-                # basestation.write(buzzerPayload.payload)
-
-                # if wrapper.HAT_X != controller.hat.x:
-                #     wrapper.HAT_X = controller.hat.x
-                #     robot_id += controller.hat.x
-                #     print(f"Switched to ID {robot_id}")
-
-                # if robot_id < 0: robot_id = 0
-                # if 15 < robot_id : robot_id = 15
-
-                # # Angle
-                # if 0.3 < abs(controller.axis_r.x): absolute_angle -= controller.axis_r.x * 0.1
-                
-                # # Forward backward left right
-                # y = controller.axis_l.y if 0.3 < abs(controller.axis_l.y) else 0 
-                # x = controller.axis_l.x if 0.3 < abs(controller.axis_l.x) else 0
-                # rho = math.sqrt(x * x + y * y);
-                # theta = math.atan2(-x, -y);
-                
-
-
-                # command.id = robot_id
-                # command.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
-
-                # command.rho = rho
-                # command.theta = theta + absolute_angle
-                # command.angle = absolute_angle
-
-                # rem.lib.encodeRobotCommand(commandPayload, command)
-                # basestation.write(commandPayload.payload)
-
-
-
 
                 # robotcommand = np.zeros(11, dtype=np.uint8)
                 # robotcommand[0] = 15 # 15 = RobotCommand

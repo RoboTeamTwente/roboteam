@@ -25,6 +25,9 @@ buzzPayload = rem.ffi.new("RobotBuzzerPayload*")
 lastWritten = time.time()
 packetHz = 60
 
+# q w d | f y j | k | j
+# a w c
+
 notes = {
 	"q" : 220, # A3
 	"a" : 233, # AS3

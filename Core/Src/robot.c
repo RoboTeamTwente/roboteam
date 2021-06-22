@@ -59,11 +59,24 @@ bool xsens_CalibrationDoneFirst = true;
 IWDG_Handle* iwdg;
 
 
+volatile uint32_t counter_loop = 0;
 volatile uint32_t counter_htim6 = 0;
 volatile uint32_t counter_htim7 = 0;
 volatile uint32_t counter_htim10 = 0;
 volatile uint32_t counter_htim11 = 0;
 uint32_t timestamp_initialized = 0;
+
+
+bool isSerialConnected = false;
+uint32_t timeLastPacket = 0;
+
+volatile int commandCounter = 0;
+
+float fakeAngle = 0.;
+uint32_t heartbeat_17ms_counter = 0;
+uint32_t heartbeat_17ms = 0;
+uint32_t heartbeat_100ms = 0;
+uint32_t heartbeat_1000ms = 0;
 
 // Set the references from the received data and execute the desired actions.
 void executeCommands(ReceivedData* receivedData) {
@@ -194,8 +207,8 @@ void init(void){
 		/* Can now receive RobotCommands (and other packets) via UART */
 		robotCommandIsFresh = 0;
 		REM_UARTinit(UART_PC);
-		set_Pin(LED2_pin, 1);
 	}
+	set_Pin(LED2_pin, 1);
 
     // Initialize control constants
     control_util_Init();
@@ -239,19 +252,9 @@ void init(void){
 
 // ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
 
-bool isSerialConnected = false;
-uint32_t timeLastPacket = 0;
-
-volatile int commandCounter = 0;
-
-float fakeAngle = 0.;
-uint32_t heartbeat_17ms_counter = 0;
-uint32_t heartbeat_17ms = 0;
-uint32_t heartbeat_100ms = 0;
-uint32_t heartbeat_1000ms = 0;
-
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
+	counter_loop++;
 
 	/* Send anything in the log buffer over UART */
 	if(0 < strlen(logBuffer)){
@@ -281,7 +284,7 @@ void loop(void){
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
     if (halt) {
-		toggle_Pin(LED5_pin);
+		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         clearReceivedData(&receivedData);
     }
@@ -312,14 +315,15 @@ void loop(void){
     float vy = stateEstimation_GetState()[body_y];
     robotFeedback.rho = sqrt(vx*vx + vy*vy);
     robotFeedback.angle = stateEstimation_GetState()[body_w];
-    robotFeedback.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
+    robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    robotFeedback.rssi = SX->Packet_status->RSSISync/2;
+    robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
 		robotStateInfo.id = ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
+		// robotStateInfo.xsensAcc1 = last_RX_RSSISync;
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		// robotStateInfo.xsensYaw = stateInfo.xsensYaw;
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
@@ -349,7 +353,8 @@ void loop(void){
 	if(heartbeat_100ms + 100 < HAL_GetTick()){
 		heartbeat_100ms += 100;
 		// Putty_printf("100ms %d\n", halt);
-		// Putty_printf("ball.x %d ball.y %d\n", ballPosition.x, ballPosition.y);
+		// Putty_printf("RSSI %d\n", last_RX_RSSISync);
+		// Putty_printf("rho %.6f theta %.6f \n" , robotFeedback.rho, robotFeedback.angle);
 		// encodeRobotStateInfo(&robotStateInfoPayload, &robotStateInfo);
 	}
 
@@ -357,11 +362,6 @@ void loop(void){
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
 		Putty_printf("1000ms\n");
-
-		uint32_t msPassed = HAL_GetTick() - timestamp_initialized;
-		float hz_7 = 1000 * counter_htim7 / msPassed; 
-		Putty_printf("6: %d, 7: %d, 10: %d, 11: %d | hz = %2f\n", 
-		counter_htim6, counter_htim7, counter_htim10, counter_htim11, hz_7);
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
@@ -404,6 +404,7 @@ void loop(void){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
+
 		Wireless_DMA_Handler(SX, message_buffer_in);
 
 		uint8_t total_packet_length = SX->payloadLength;
@@ -424,7 +425,6 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 				uint16_t period = RobotBuzzer_get_period(rbp);
 				float duration = RobotBuzzer_get_duration(rbp);
 				buzzer_Play_note(period, duration);
-				sprintf(logBuffer, "Buz! %d %.2f\n", period, duration);
 
 				total_bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
 				continue;
@@ -494,9 +494,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			return;
 
 		if( halt ){
-			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-			wheels_SetRef(emptyRef);
-			wheels_Update();
+			wheels_Stop();
 			return;
 		}
 
@@ -520,53 +518,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		wheels_SetRef(stateControl_GetWheelRef());
 		wheels_Update();
 
-
-		///////////////// OLD CODE. Revert to this if stuff seems to be going wrong
-		// if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
-		// 	if (!test_isTestRunning()) {
-				
-		// 		// State estimation
-		// 		stateInfo.visionAvailable = receivedData.visionAvailable;
-		// 		stateInfo.visionYaw = receivedData.visionYaw; // TODO check if this is scaled properly with the new REM messages
-		// 		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-		// 			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-		// 		}
-
-		// 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-		// 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		// 		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-		// 		stateInfo.rateOfTurn = MTi->gyr[2];
-		// 		stateEstimation_Update(&stateInfo);
-
-		// 		// State control
-		// 		stateControl_SetState(stateEstimation_GetState());
-		// 		stateControl_Update();
-
-		// 		if (halt){// || !yaw_hasCalibratedOnce()) {
-		// 			float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		// 			wheels_SetRef(emptyRef);
-		// 		}
-		// 		else {
-		// 			// Wheel control
-		// 			wheels_SetRef(stateControl_GetWheelRef());
-		// 		}
-				
-		// 		// wheels_SetRef(stateControl_GetWheelRef());
-		// 	}
-
-		// 	static int wirelessCounter = 0;
-		// 	if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF && !test_isTestRunning()){
-		// 		yaw_ResetCalibration();
-		// 		sprintf(logBuffer, "cal triggered\n");
-		// 		Putty_printf("cal triggered\n");
-		// 	} else if (!checkWirelessConnection()){
-		// 		wheels_Update();
-		// 		wirelessCounter += 1;
-		// 	} else {
-		// 		wirelessCounter = 0;
-		// 		wheels_Update();
-		// 	}
-		// }
 	}
 	else if (htim->Instance == htim10.Instance) {
 		counter_htim10++;

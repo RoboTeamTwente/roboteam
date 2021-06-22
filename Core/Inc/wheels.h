@@ -24,6 +24,8 @@ int wheels_Init();
 
 int wheels_DeInit();
 
+void wheels_Stop();
+
 void wheels_Update();
 
 void wheels_SetRef(float input[4]);

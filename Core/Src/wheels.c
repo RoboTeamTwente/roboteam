@@ -102,6 +102,15 @@ int wheels_DeInit(){
 	return 0;
 }
 
+
+/* Stop the motors without deinitializing them */
+void wheels_Stop(){
+	for (int i=0; i<4; i++) {
+		pwm[i] = 0;
+	}
+	SetPWM();
+}
+
 void wheels_Update(){
 	if (wheels_state == on) {
 		computeWheelSpeed();

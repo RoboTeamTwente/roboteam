@@ -44,7 +44,7 @@ def expose_decl_in_bindings(files: list, ffi: cffi.FFI, c_compiler: str):
     # Converts an AST representation to C code. Used to create cdef-compatible isinstance/func declarations.
     generator = c_generator.CGenerator()
     
-    res = parse_file(tmp_file.name, use_cpp=True,  cpp_path=c_compiler, cpp_args=[r'-E', r'-nostdinc', r'-Ipycparser/utils/fake_libc_include'])
+    res = parse_file(tmp_file.name, use_cpp=True,  cpp_path=c_compiler, cpp_args=[r'-E', r'-Ipycparser/utils/fake_libc_include'])
     
     kill_unwanted_typedefs(res)
     remove_function_bodies(res)

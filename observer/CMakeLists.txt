@@ -1,13 +1,18 @@
 add_library(observer STATIC
-        src/filters/WorldFilter.cpp
-        src/filters/RobotFilter.cpp
-        src/filters/BallFilter.cpp
-        src/filters/CameraFilter.cpp
+
         src/filters/Scaling.h
         src/Observer.cpp
         src/parameters/RobotParameterDatabase.cpp
-        src/filters/geometry/GeometryFilter.cpp
         src/filters/referee/RefereeFilter.cpp
+        src/filters/vision/CameraObjectFilter.cpp
+        src/filters/vision/robot/CameraRobotFilter.cpp
+        src/filters/vision/ball/CameraBallFilter.cpp
+        src/filters/vision/WorldFilter.cpp
+        src/filters/vision/GeometryFilter.cpp
+        src/filters/vision/VisionFilter.cpp
+        src/filters/vision/robot/RobotFilter.cpp
+        src/filters/vision/ball/BallFilter.cpp
+        src/filters/vision/CameraFilter.cpp
         )
 target_link_libraries(observer
         PUBLIC data

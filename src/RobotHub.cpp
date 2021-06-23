@@ -79,7 +79,6 @@ void RobotHub::run(){
         libusb_handle_events_timeout(ctx, &usb_event_timeout);
 
         if(tNextTick + seconds(1) < steady_clock::now()){
-            std::cout << "Tick" << std::endl;
             printStatistics();
             tNextTick += seconds(1);
         }
@@ -261,6 +260,7 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
     RobotCommandPayload payload = createEmbeddedCommand(cmd, world, false);
     int bytesSent;
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
+
     if(error){
         std::cout << "[RobotHub::sendSerialCommand] Error while sending to basestation. Resetting connection .." << std::endl;
         std::cout << "[RobotHub::sendSerialCommand] Error : " << usbutils_errorToString(error) << std::endl;
@@ -276,26 +276,27 @@ void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
     std::this_thread::sleep_for(milliseconds(1000));
     uint8_t buffer[4906];
-    int actual_length = 0;
+    int bytes_received = 0;
 
     while(read_running){
+        /* Check if the basestation is connected. Sleep if not */
         if(basestation_handle == nullptr){
-            std::cout << "[RobotHub::readBasestation] Sleep" << std::endl;
             std::this_thread::sleep_for(milliseconds(1000));
             continue;
         }
 
-        int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &actual_length, 100);
+        /* Read bytes from the basestation. At most 4096 bytes */
+        int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &bytes_received, 100);
         if(error != LIBUSB_SUCCESS and error != LIBUSB_ERROR_TIMEOUT){
             std::cout << "[BasestationReader::run] Error receiving : " << usbutils_errorToString(error) << std::endl;
             std::this_thread::sleep_for(milliseconds(1000));
             continue;
         }
-        if (actual_length == 0) continue;
+        if (bytes_received == 0) continue;
 
         if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
-            printf("LOG: ");
-            for (int i = 1; i < actual_length; i++)
+            printf("[Basestation] ");
+            for (int i = 1; i < bytes_received; i++)
                 printf("%c", buffer[i]);
         }
 
@@ -346,5 +347,4 @@ int main(int argc, char *argv[]) {
     rtt::robothub::RobotHub app;
     app.run();
 
-//    testUsbStuff();
 }

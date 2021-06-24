@@ -9,6 +9,7 @@
 //Note the getState() function returns invalid results for this class!
 class RobotOrientationFilter : public PosVelFilter1D {
  public:
+  RobotOrientationFilter() :PosVelFilter1D(){}
   RobotOrientationFilter(const Eigen::Vector2d &initialState,
                          const Eigen::Matrix2d &initialCovariance,
                          double modelError,

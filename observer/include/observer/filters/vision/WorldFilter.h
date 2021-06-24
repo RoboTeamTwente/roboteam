@@ -6,7 +6,7 @@
 #include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 
 #include "BallFilter.h"
-#include "RobotFilter.h"
+#include "filters/vision/robot/RobotFilter.h"
 
 #include "observer/parameters/RobotParameterDatabase.h"
 

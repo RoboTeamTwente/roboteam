@@ -2,7 +2,7 @@
 // Created by rolf on 26-10-20.
 //
 
-#include "filters/geometry/GeometryFilter.h"
+#include "filters/vision/GeometryFilter.h"
 
 bool GeometryFilter::process(const proto::SSL_GeometryData &geometryData) {
     //We serialize the data to string and check if it is the same as the string of last message

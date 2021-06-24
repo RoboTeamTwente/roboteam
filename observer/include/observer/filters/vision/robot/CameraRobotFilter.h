@@ -8,9 +8,13 @@
 #include "filters/vision/CameraObjectFilter.h"
 #include "filters/vision/PosVelFilter2D.h"
 #include "RobotOrientationFilter.h"
+#include "RobotObservation.h"
+#include "RobotPos.h"
+#include "FilteredRobot.h"
+
 class CameraRobotFilter : public CameraObjectFilter{
  public:
-  CameraRobotFilter(const RobotObservation& observation, RobotVel velocityEstimate);
+  CameraRobotFilter(const RobotObservation& observation, RobotVel velocityEstimate = RobotVel());
 
 
   void predict(Time time);
@@ -19,15 +23,22 @@ class CameraRobotFilter : public CameraObjectFilter{
 
   bool updateRobotNotSeen(const Time& time);
 
-  FilteredRobot estimate(const Time& time) const;
+  [[nodiscard]] FilteredRobot estimate(const Time& time) const;
 
-  RobotVel velocityEstimate(const Time& time) const;
-  RobotTrajectory getLastFrameTrajectory() const;
+  [[nodiscard]] RobotVel velocityEstimate(const Time& time) const;
+
+  [[nodiscard]] bool acceptObservation(const RobotObservation& observation) const;
+
+  [[nodiscard]] bool justUpdated() const;
+
+  //RobotTrajectory getLastFrameTrajectory() const; //TODO fix
 
  private:
+
+  void updatePreviousInfo();
   PosVelFilter2D positionFilter;
   RobotOrientationFilter angleFilter;
-  bool justUpdated; //keeps track if the filter was just updated e.g. a observation was given to it
+  bool just_updated; //keeps track if the filter was just updated e.g. a observation was given to it
                     // so that we can efficiently find filters which were not updated
   TeamRobotID robot;
   int cameraID;

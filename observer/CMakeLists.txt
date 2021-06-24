@@ -16,7 +16,9 @@ add_library(observer STATIC
         src/filters/vision/PosVelFilter2D.cpp
         src/filters/vision/robot/RobotOrientationFilter.cpp
         src/filters/vision/PosVelFilter1D.cpp
-        )
+        src/filters/vision/robot/RobotObservation.cpp
+        src/filters/vision/robot/RobotPos.cpp
+        src/filters/vision/robot/FilteredRobot.cpp src/filters/vision/robot/FilteredRobot.h)
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto

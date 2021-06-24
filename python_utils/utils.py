@@ -12,10 +12,10 @@ def openPort(port=None, suppressError = False, timeout=None):
 	try:
 		ser = serial.Serial(
 		    port=port,
-		    baudrate=115200,
-		    parity=serial.PARITY_ODD,
-		    stopbits=serial.STOPBITS_TWO,
-		    bytesize=serial.SEVENBITS,
+		    baudrate=115000,
+		    parity=serial.PARITY_NONE,
+		    stopbits=serial.STOPBITS_ONE,
+		    bytesize=serial.EIGHTBITS,
 		    timeout=timeout
 		)
 	except serial.serialutil.SerialException as e:

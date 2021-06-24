@@ -5,6 +5,8 @@
 #ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAOBJECTFILTER_H_
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAOBJECTFILTER_H_
 
+#include <roboteam_utils/Time.h>
+
 /**
  * @author
  * @class Base class for a single object which is tracked on a single camera.
@@ -14,11 +16,18 @@
  */
 class CameraObjectFilter {
  public:
+  /**
+   * Initializes the camera This can only be done if an object is actually seen
+   * This automatically calculates the slope so that the object goes from full health to unhealthy in fullHealthyToUnhealthyTime,
+   * given the tickRate number of ticks it should take to reach full health and the number of ticks after which the robot is declared healthy
+   * @param time the time the object was seen at
+   */
+  explicit CameraObjectFilter(double fullHealthToUnhealthyTime, double frame_interval, double fullHealthTicks, double isHealthyAfter,Time time);
   [[nodiscard]] Time lastSeen() const;
   [[nodiscard]] std::size_t numObservations() const;
   [[nodiscard]] double getHealth() const;
-  bool isHealthy() const;
-  std::size_t consecutiveFramesNotSeen() const;
+  [[nodiscard]] bool isHealthy() const;
+  [[nodiscard]] std::size_t consecutiveFramesNotSeen() const;
  protected:
   void objectSeen(const Time& time);
   void objectInvisible(const Time& time);
@@ -29,7 +38,8 @@ class CameraObjectFilter {
   Time lastUpdateTime;
   double health;
 
-  //below 4 could be moved out of class using templates perhaps; effectively constant
+  //TODO below 4 could be moved out of class using templates perhaps; effectively constant, but different for ball and robots
+  //see calculation (in constructor, now)
   double INCREMENT;
   double DECREMENT_SLOPE;
   double MAXIMUM;

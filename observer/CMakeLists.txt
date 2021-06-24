@@ -13,7 +13,10 @@ add_library(observer STATIC
         src/filters/vision/robot/RobotFilter.cpp
         src/filters/vision/ball/BallFilter.cpp
         src/filters/vision/CameraFilter.cpp
-        include/observer/filters/vision/PosVelFilter2D.cpp include/observer/filters/vision/PosVelFilter2D.h src/filters/vision/robot/RobotOrientationFilter.cpp src/filters/vision/robot/RobotOrientationFilter.h)
+        src/filters/vision/PosVelFilter2D.cpp
+        src/filters/vision/robot/RobotOrientationFilter.cpp
+        src/filters/vision/PosVelFilter1D.cpp
+        )
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto

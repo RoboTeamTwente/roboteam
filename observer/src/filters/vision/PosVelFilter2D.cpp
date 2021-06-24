@@ -8,7 +8,7 @@ bool PosVelFilter2D::predict(const Time &timeStamp) {
 
   double dt = (timeStamp-lastUpdateTime).asSeconds();
   if (dt<=0){
-    return false;
+    return dt == 0.0;
   }
   lastUpdateTime = timeStamp;
   setTransitionMatrix(dt);

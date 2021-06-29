@@ -21,6 +21,7 @@ add_library(observer STATIC
         src/filters/vision/DetectionFrame.cpp
         src/filters/vision/ball/BallObservation.cpp
         include/observer/filters/vision/KalmanFilter.h
+        src/filters/vision/ball/GroundBallExtendedKalmanFilter.cpp
         )
 target_link_libraries(observer
         PUBLIC data

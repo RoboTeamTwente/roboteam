@@ -10,12 +10,12 @@ Observer::process(Time extrapolatedTo,
                   std::vector<proto::RobotData> robotData) {
 
     updateRobotParams(refereePackets);
-    updateGeometry(visionPackets);
-    updateWorld(visionPackets);
+    proto::State state;
+    proto::World world = visionFilter.process(visionPackets,extrapolatedTo);
     updateReferee(refereePackets);
 
-    proto::State state;
-    proto::World world = worldFilter.getWorld();
+
+
     state.mutable_last_seen_world()->CopyFrom(world);
     state.mutable_command_extrapolated_world()->CopyFrom(world);//TODO; actually do extrapolation
     auto twoTeamParams = parameterDatabase.getParams();
@@ -26,10 +26,10 @@ Observer::process(Time extrapolatedTo,
     state.mutable_blue_robot_parameters()->CopyFrom(blueParams);
     state.mutable_yellow_robot_parameters()->CopyFrom(yellowParams);
 
-    //TODO: define a default geometry
-    if(geometryFilter.receivedFirstGeometry()){
-        auto geometry = geometryFilter.getGeometry();
-        state.mutable_field()->CopyFrom(geometry);
+    //TODO: define a default geometry so that null geometries no longer exist
+    auto geometry = visionFilter.getGeometry();
+    if(geometry.has_value()){
+        state.mutable_field()->CopyFrom(geometry.value());
     }
 
     std::optional<proto::SSL_Referee> refMsg = refereeFilter.getLastRefereeMessage();
@@ -47,28 +47,6 @@ Observer::process(Time extrapolatedTo,
     return state;
 }
 
-void Observer::updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets) {
-    std::vector<proto::SSL_DetectionFrame> detectionFrames;
-    for (const auto &packet : visionPackets) {
-        if (packet.has_detection()) {
-            detectionFrames.push_back(packet.detection());
-        }
-    }
-    worldFilter.process(detectionFrames);
-}
-
-void Observer::updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets) {
-    bool geometryWasUpdated = false;
-    for (const auto &packet : visionPackets) {
-        if (packet.has_geometry()) {
-            geometryWasUpdated |= geometryFilter.process(packet.geometry());
-        }
-    }
-    if (geometryWasUpdated) {
-        worldFilter.setGeometry(geometryFilter.getGeometry());
-    }
-}
-
 void Observer::updateRobotParams(std::vector<proto::SSL_Referee> refereePackets) {
     //sort the referee packets; we only use the last one as there is no additional information in between packets
     std::sort(refereePackets.begin(), refereePackets.end(),
@@ -78,10 +56,11 @@ void Observer::updateRobotParams(std::vector<proto::SSL_Referee> refereePackets)
     TwoTeamRobotParameters parameters = !refereePackets.empty() ? parameterDatabase.update(refereePackets.back())
                                                                 : parameterDatabase.getParams();
     if (parameters.blueChanged || parameters.yellowChanged) {
-        worldFilter.setRobotParameters(parameters);
+        visionFilter.updateRobotParameters(parameters);
     }
 }
 
 void Observer::updateReferee(const std::vector<proto::SSL_Referee> &refereePackets) {
     refereeFilter.process(refereePackets);
 }
+

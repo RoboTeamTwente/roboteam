@@ -29,10 +29,10 @@ CameraRobotFilter::CameraRobotFilter(const RobotObservation& observation, RobotV
   initialPosCov(2,2) = ROBOT_VELOCITY_INITIAL_COV;
   initialPosCov(3,3) = ROBOT_VELOCITY_INITIAL_COV;
 
-  Eigen::Vector4d initialPos ={observation.position.x(),observation.position.y(),velocityEstimate.x(),velocityEstimate.y()};
+  Eigen::Vector4d initialPos ={observation.position.x(),observation.position.y(),velocityEstimate.velocity.x(),velocityEstimate.velocity.y()};
   positionFilter = PosVelFilter2D(initialPos,initialPosCov,ROBOT_POSITION_MODEL_ERROR,ROBOT_POSITION_MEASUREMENT_ERROR,observation.timeCaptured);
 
-  Eigen::Vector2d initialAngle = {observation.orientation,velocityEstimate.z()};
+  Eigen::Vector2d initialAngle = {observation.orientation,velocityEstimate.angularVelocity};
   Eigen::Matrix2d initialAngleCov = Eigen::Matrix2d::Zero();
   initialAngleCov(0,0) = ROBOT_ANGLE_INITIAL_COV;
   initialAngleCov(1,1) = ROBOT_ANGULAR_VEL_INITIAL_COV;

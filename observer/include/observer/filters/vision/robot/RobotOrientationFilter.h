@@ -5,7 +5,7 @@
 #ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_ROBOT_ROBOTORIENTATIONFILTER_H_
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_ROBOT_ROBOTORIENTATIONFILTER_H_
 
-#include "filters/vision/PosVelFilter1D.h"
+#include "observer/filters/vision/PosVelFilter1D.h"
 //Note the getState() function returns invalid results for this class!
 class RobotOrientationFilter : public PosVelFilter1D {
  public:

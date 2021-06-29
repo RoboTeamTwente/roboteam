@@ -41,7 +41,30 @@ class RobotVel {
 
 };
 struct RobotID {
-  RobotID(unsigned int id) : robotID{id}{}
+  explicit RobotID(unsigned int id) : robotID{id}{}
+
+  [[nodiscard]] bool isValid() const{
+    return robotID < 16;
+  }
+
+  bool operator<=(const RobotID& other) const{
+    return robotID <= other.robotID;
+  }
+  bool operator>=(const RobotID& other) const{
+    return robotID >= other.robotID;
+  }
+  bool operator<(const RobotID& other) const{
+    return robotID < other.robotID;
+  }
+  bool operator>(const RobotID& other) const{
+    return robotID > other.robotID;
+  }
+  bool operator==(const RobotID& other) const{
+    return robotID == other.robotID;
+  }
+  bool operator!=(const RobotID& other) const{
+    return !(*this == other);
+  }
   unsigned int robotID;
 };
 enum class TeamColor {
@@ -52,6 +75,12 @@ enum class TeamColor {
 struct TeamRobotID {
   TeamRobotID(unsigned int robotID, TeamColor color) : robot_id(robotID), team{color}{
 
+  }
+  bool operator==(const TeamRobotID& other) const{
+    return robot_id == other.robot_id && team == other.team;
+  }
+  bool operator!=(const TeamRobotID& other) const{
+    return !(*this == other);
   }
   RobotID robot_id;
   TeamColor team;

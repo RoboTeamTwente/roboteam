@@ -12,18 +12,21 @@ add_library(observer STATIC
         src/filters/vision/VisionFilter.cpp
         src/filters/vision/robot/RobotFilter.cpp
         src/filters/vision/ball/BallFilter.cpp
-        src/filters/vision/CameraFilter.cpp
         src/filters/vision/PosVelFilter2D.cpp
         src/filters/vision/robot/RobotOrientationFilter.cpp
         src/filters/vision/PosVelFilter1D.cpp
         src/filters/vision/robot/RobotObservation.cpp
         src/filters/vision/robot/RobotPos.cpp
-        src/filters/vision/robot/FilteredRobot.cpp src/filters/vision/robot/FilteredRobot.h)
+        src/filters/vision/robot/FilteredRobot.cpp
+        src/filters/vision/DetectionFrame.cpp
+        src/filters/vision/ball/BallObservation.cpp
+        include/observer/filters/vision/KalmanFilter.h
+        )
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
-        PRIVATE Eigen3::Eigen
+        PUBLIC Eigen3::Eigen
         )
 target_include_directories(observer
         PRIVATE include/observer

@@ -26,6 +26,12 @@ class VisionFilter {
    */
   proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets, Time time);
 
+  /*
+   * Updates the robot definitions the vision filter uses in world prediction
+   */
+  void updateRobotParameters(const TwoTeamRobotParameters& parameters);
+
+  std::optional<proto::SSL_GeometryData> getGeometry() const;
  private:
 
   /**

@@ -11,8 +11,7 @@
 #include <roboteam_proto/State.pb.h>
 #include <roboteam_utils/Time.h>
 
-#include "filters/WorldFilter.h"
-#include "filters/geometry/GeometryFilter.h"
+#include "filters/vision/VisionFilter.h"
 #include "filters/referee/RefereeFilter.h"
 #include "parameters/RobotParameterDatabase.h"
 
@@ -39,15 +38,13 @@ public:
 
 private:
     RobotParameterDatabase parameterDatabase;
-    WorldFilter worldFilter;
-    GeometryFilter geometryFilter;
+    VisionFilter visionFilter;
     RefereeFilter refereeFilter;
 
     void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
 
-    void updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
 
-    void updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+    void updateVision(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
 
     void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
 };

@@ -5,8 +5,8 @@
 #ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAROBOTFILTER_H_
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAROBOTFILTER_H_
 
-#include "filters/vision/CameraObjectFilter.h"
-#include "filters/vision/PosVelFilter2D.h"
+#include "observer/filters/vision/CameraObjectFilter.h"
+#include "observer/filters/vision/PosVelFilter2D.h"
 #include "RobotOrientationFilter.h"
 #include "RobotObservation.h"
 #include "RobotPos.h"

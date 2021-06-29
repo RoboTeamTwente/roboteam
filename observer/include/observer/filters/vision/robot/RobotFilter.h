@@ -6,7 +6,7 @@
 #define RTT_ROBOTFILTER_H
 
 #include "CameraRobotFilter.h"
-#include "filters/vision/robot/RobotObservation.h"
+#include "observer/filters/vision/robot/RobotObservation.h"
 class RobotFilter  {
  public:
   explicit RobotFilter(const RobotObservation &observation);

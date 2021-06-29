@@ -5,9 +5,9 @@
 #include <roboteam_proto/WorldRobot.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 
-#include "BallFilter.h"
-#include "filters/vision/robot/RobotFilter.h"
-
+//#include "BallFilter.h"
+#include "observer/filters/vision/robot/RobotFilter.h"
+#include "DetectionFrame.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
 /**
@@ -17,51 +17,48 @@
  * and to pass the relevant incoming information to the relevant filter(s)
  */
 class WorldFilter {
-   public:
-    WorldFilter();
+ public:
+  WorldFilter();
 
-    /**
-     * Get the state estimation of the world as a proto message. This also calls update(), ensuring that data is sent
-     * is as up to date as possible.
-     * @param time The time at which you want an estimation of the world state.
-     * This should not be much more late than the latest message or else you will get very unphysical results.
-     * @return Proto message containing the entire world state.
-     */
-    proto::World getWorld();
+  void process(const std::vector<proto::SSL_DetectionFrame> &frames);
 
-    void setGeometry(const proto::SSL_GeometryData& geometry);
-    void setRobotParameters(const TwoTeamRobotParameters& parameters);
-    void process(std::vector<proto::SSL_DetectionFrame> visionFrames);
-   private:
-    /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
-     *  Or they will be created if they do not exist yet. Note this does NOT call the Kalman update/predict equations and thus
-     *  only puts the data in the right spot. Worldfilter itself manages the messages based on their timestamps,
-     *  so in between update/predict calls the order in which you supply messages does not matter.
-     *  @param msg Frame to be given to the filter
-     */
-    void addFrame(const proto::SSL_DetectionFrame &msg);
-    /**
-     * Updates the world filter's state estimation until a certain time.
-     * @param time Time to update to.
-     * @param doLastPredict If set to true, all filters  predict/extrapolate the positions of all objects
-     * from the last time they were seen until the time specified.
-     * You should always set this to true if you plan on using data immediately.
-      */
-    void update(double time, bool doLastPredict);
-    typedef std::map<int, std::vector<std::unique_ptr<RobotFilter>>> robotMap;
-    static const std::unique_ptr<RobotFilter> &bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters);
-    static const std::unique_ptr<BallFilter> &bestFilter(const std::vector<std::unique_ptr<BallFilter>> &filters);
+  [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
 
-    robotMap blueBots;
-    robotMap yellowBots;
-    std::vector<std::unique_ptr<BallFilter>> balls;
-    double lastUpdateTime = 0.0;
-    double latestCaptureTime = 0.0;
-    static void updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime);
-    static void handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
-                             uint cameraID);
-    void handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, double filterGrabDistance, double timeCapture, uint cameraID);
-    void updateBalls(double time, bool doLastPredict, double removeFilterTime);
+  /**
+   * Updates the cameras which the worldFilter uses for calculations, and the field geometry which is used for detecting
+   * wall collisions.
+   * @param geometry to grab the cameras from
+   */
+  void updateGeometry(const proto::SSL_GeometryData& geometry);
+
+  void updateRobotParameters(const TwoTeamRobotParameters& robotInfo); //TODO: link to interface
+
+ private:
+  typedef std::map<RobotID, std::vector<RobotFilter>> robotMap;
+  robotMap blue;
+  robotMap yellow;
+
+  RobotParameters blueParams;
+  RobotParameters yellowParams;
+
+  std::map<int,Time> lastCaptureTimes;
+
+  constexpr static int MAX_ROBOTFILTERS = 5; //maximum number of object filters for one robot ID
+  constexpr static int MAX_BALLFILTERS = 8; //maximum number of object filters for one ball ID
+
+  void processFrame(const DetectionFrame& frame);
+  void processRobots(const DetectionFrame& frame, bool blueBots);
+  void processBalls(const DetectionFrame& frame);
+  void processForVirtualBalls(const DetectionFrame& frame);
+  [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time)  const;
+  [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
+  void addRobotPredictionsToMessage(proto::World& world, Time time) const;
+
+
+  //do they care, although these method are static, they DO modify the current object as they have a robotMap&
+  static void predictRobots(const DetectionFrame &frame, robotMap &robots);
+  static void updateRobots(robotMap &robots, const std::vector<RobotObservation> &detectedRobots);
+  static void updateRobotsNotSeen(const DetectionFrame &frame,robotMap &robots);
 };
 
 #endif  // ROBOTEAM_WORLD_KALMANFILTER_H

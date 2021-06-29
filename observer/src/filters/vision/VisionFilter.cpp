@@ -36,3 +36,12 @@ void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>
   }
   worldFilter.process(detectionFrames);
 }
+void VisionFilter::updateRobotParameters(const TwoTeamRobotParameters &parameters) {
+  worldFilter.updateRobotParameters(parameters);
+}
+std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {
+  if(geomFilter.receivedFirstGeometry()){
+    return geomFilter.getGeometry();
+  }
+  return std::nullopt;
+}

@@ -2,159 +2,170 @@
 // Created by kjhertenberg on 13-5-19.
 //
 
-#include <filters/WorldFilter.h>
-#include <memory>
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
-#include <iomanip>
-
+#include "filters/vision/WorldFilter.h"
 
 WorldFilter::WorldFilter() {
-    blueBots.clear();
-    yellowBots.clear();
-    balls.clear();
 }
 
-// if we get a new frame we update our observations
-void WorldFilter::addFrame(const proto::SSL_DetectionFrame &msg) {
-    const double filterGrabDistance = 0.5;
-    double timeCapture = msg.t_capture();
-    if(timeCapture > latestCaptureTime){
-        latestCaptureTime = timeCapture;
-    }
-    uint cameraID = msg.camera_id();
-    handleRobots(yellowBots, msg.robots_yellow(), filterGrabDistance, timeCapture, cameraID);
-    handleRobots(blueBots, msg.robots_blue(), filterGrabDistance, timeCapture, cameraID);
-    handleBall(msg.balls(), filterGrabDistance, timeCapture, cameraID);
-}
-void WorldFilter::handleBall(const google::protobuf::RepeatedPtrField<proto::SSL_DetectionBall> &observations, const double filterGrabDistance, double timeCapture, uint cameraID) {
-    for (const proto::SSL_DetectionBall &detBall : observations) {
-        bool addedBall = false;
-        for (const auto &filter : balls) {
-            if (filter->distanceTo(detBall.x(), detBall.y()) < filterGrabDistance) {
-                filter->addObservation(detBall, timeCapture, cameraID);
-                addedBall = true;
-            }
-        }
-        if (!addedBall) {
-            // We create a new filter if there is no existing filter which is reasonably close to the detection
-            balls.push_back(std::make_unique<BallFilter>(detBall, timeCapture, cameraID));
-        }
-    }
-}
-void WorldFilter::handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
-                               uint cameraID) {
-    for (const proto::SSL_DetectionRobot &robot : observations) {
-        bool addedBot = false;
-        for (const auto &filter : robots[robot.robot_id()]) {
-            if (filter->distanceTo(robot.x(), robot.y()) < filterGrabDistance) {
-                filter->addObservation(robot, timeCapture, cameraID);
-                addedBot = true;
-            }
-        }
-        if (!addedBot) {
-            // We create a new filter if there is no existing filter which is reasonably close to the detection
-            robots[robot.robot_id()].push_back(std::make_unique<RobotFilter>(robot, timeCapture, cameraID));
-        }
-    }
+void WorldFilter::updateGeometry(const proto::SSL_GeometryData &geometry) {
+  //TODO: fix
 }
 
-// Creates a world message with the currently observed objects in it
-proto::World WorldFilter::getWorld() {
-    // First we update to the time we want packets at. Expensive, but ensures we have the latest information
-    update(latestCaptureTime, true);
-    proto::World world;
-    world.set_time(latestCaptureTime);
-    for (const auto &yellowBotsOneId : yellowBots) {
-        if (!yellowBotsOneId.second.empty()) {
-            world.mutable_yellow()->Add(bestFilter(yellowBotsOneId.second)->asWorldRobot());
-        }
-    }
-    for (const auto &blueBotsOneId : blueBots) {
-        if (!blueBotsOneId.second.empty()) {
-            world.mutable_blue()->Add(bestFilter(blueBotsOneId.second)->asWorldRobot());
-        }
-    }
-    if (!balls.empty()) {
-        proto::WorldBall worldBall = bestFilter(balls)->asWorldBall();
-        world.mutable_ball()->CopyFrom(worldBall);
-    }
-    return world;
-}
-void WorldFilter::update(double time, bool doLastPredict) {
-    const double removeFilterTime = 0.4;  // Remove filters if no new observations have been added to it for this amount of time
-    updateRobots(yellowBots, time, doLastPredict, removeFilterTime);
-    updateRobots(blueBots, time, doLastPredict, removeFilterTime);
-    updateBalls(time, doLastPredict, removeFilterTime);
-}
-void WorldFilter::updateBalls(double time, bool doLastPredict, const double removeFilterTime) {
-    auto ball = balls.begin();
-    while (ball != balls.end()) {
-        ball->get()->update(time, doLastPredict);
-        if (time - ball->get()->getLastUpdateTime() > removeFilterTime) {
-            balls.erase(ball);
-        } else {
-            ++ball;
-        }
-    }
-}
-void WorldFilter::updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime) {
-    for (auto &botsOneId : robots) {
-        auto filter = botsOneId.second.begin();
-        while (filter != botsOneId.second.end()) {
-            filter->get()->update(time, doLastPredict);
-            if (time - filter->get()->getLastUpdateTime() > removeFilterTime) {
-                botsOneId.second.erase(filter);
-            } else {
-                ++filter;
-            }
-        }
-    }
-}
-const std::unique_ptr<RobotFilter> &WorldFilter::bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters) {
-    int bestIndex = 0;
-    int bestFrames = -1;
-    for (int i = 0; i < filters.size(); ++i) {
-        if (filters[i]->frames() > bestFrames) {
-            bestFrames = filters[i]->frames();
-            bestIndex = i;
-        }
-    }
-    return filters[bestIndex];
-}
-const std::unique_ptr<BallFilter> &WorldFilter::bestFilter(const std::vector<std::unique_ptr<BallFilter>> &filters) {
-    int bestIndex = 0;
-    int bestFrames = -1;
-    for (int i = 0; i < filters.size(); ++i) {
-        if (filters[i]->frames() > bestFrames) {
-            bestFrames = filters[i]->frames();
-            bestIndex = i;
-        }
-    }
-    return filters[bestIndex];
+proto::World WorldFilter::getWorldPrediction(const Time &time) const {
+  //TODO: split up in functions for robot and ball
+  proto::World world;
+  addRobotPredictionsToMessage(world,time);
+  world.set_time(time.asNanoSeconds());
+
+  return world;
 }
 
-void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames) {
-    std::sort(visionFrames.begin(),visionFrames.end(),[](const proto::SSL_DetectionFrame& a, const proto::SSL_DetectionFrame&b){
-        return a.t_capture() < b.t_capture();
-    });
-    for(const auto& frame : visionFrames){
-        addFrame(frame);
-    }
-    if(!visionFrames.empty()){
-        double latestTime = visionFrames.back().t_capture();
-        if(latestTime>lastUpdateTime){
-            lastUpdateTime = latestTime;
-        }
-    }
-    update(lastUpdateTime,false);
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames) {
+  std::vector<DetectionFrame> detectionFrames;
+  for (const auto &protoFrame: frames) {
+    detectionFrames.emplace_back(DetectionFrame(protoFrame));
+  }
+  //Sort by time
+  std::sort(detectionFrames.begin(), detectionFrames.end(),
+            [](const DetectionFrame &lhs, const DetectionFrame &rhs) { return lhs.timeCaptured < rhs.timeCaptured; });
+  for (auto &frame : detectionFrames) {
+    auto cameraTime = lastCaptureTimes.find(frame.cameraID);
+    frame.dt = cameraTime == lastCaptureTimes.end() ? 0.0 : (cameraTime->second -
+        lastCaptureTimes[frame.cameraID]).asSeconds();
+    //TODO: make a realtime option
+    //TODO: remove any frames with captures times which differ more than a second from the current time
+  }
+  //Remove frames which are too late. For now we do this, because it's quite hard to go back in time and reconstruct the state of the entire visionFilter
+
+  //This can also be caused by other teams running e.g. their simulators internally and accidentally broadcasting onto the network
+  detectionFrames.erase(std::remove_if(detectionFrames.begin(), detectionFrames.end(),
+                                       [](const DetectionFrame &frame) { return frame.dt < 0.0; }),detectionFrames.end());
+  for (const auto &frame : detectionFrames) {
+    processFrame(frame);
+  }
 }
 
-void WorldFilter::setRobotParameters(const TwoTeamRobotParameters& parameters) {
-//TODO: use robot parameters for collision detection etc.
+
+void WorldFilter::processRobots(const DetectionFrame &frame, bool blueBots) {
+  robotMap &robots = blueBots ? blue : yellow;
+  const std::vector<RobotObservation> &detectedRobots = blueBots ? frame.blue : frame.yellow;
+
+  predictRobots(frame, robots);
+  updateRobots(robots, detectedRobots);
+  updateRobotsNotSeen(frame, robots);
+}
+
+void WorldFilter::updateRobotsNotSeen(const DetectionFrame &frame, robotMap &robots) {
+  for (auto &oneIDFilters : robots) {
+    std::vector<RobotFilter> &filters = oneIDFilters.second;
+    auto it = filters.begin();
+    while (it != filters.end()) {
+      if (it->processNotSeen(frame.cameraID, frame.timeCaptured)) { //updates the relevant object filter. If the filter is redundant, we can remove it
+        it = filters.erase(it);
+      } else {
+        it++;
+      }
+    }
+  }
+}
+
+void WorldFilter::updateRobots(robotMap &robots,
+                               const std::vector<RobotObservation> &detectedRobots) {
+  //add detected robots to existing filter(s) or create a new filter if no filter accepts the robot
+  for (const auto &detectedRobot : detectedRobots) {
+    if (!detectedRobot.robot.robot_id.isValid()) {
+      continue;
+    }
+    std::vector<RobotFilter> &oneIDFilters = robots[detectedRobot.robot.robot_id];
+    bool accepted = false;
+    for (RobotFilter &filter : oneIDFilters) {
+      accepted |= filter.processDetection(detectedRobot);
+    }
+    if (!accepted && oneIDFilters.size() < MAX_ROBOTFILTERS) {
+      oneIDFilters.emplace_back(RobotFilter(detectedRobot));
+    }
+  }
+}
+
+void WorldFilter::predictRobots(const DetectionFrame &frame, robotMap &robots) {
+  for (auto &oneIDFilters : robots) {
+    for (auto &filter : oneIDFilters.second) {
+      filter.predictCam(frame.cameraID, frame.timeCaptured);
+    }
+  }
+}
+
+void WorldFilter::processFrame(const DetectionFrame &frame) {
+  processRobots(frame, true);
+  processRobots(frame, false);
 
 }
 
-void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
-    //TODO: implement geometry here.
 
+
+void WorldFilter::updateRobotParameters(const TwoTeamRobotParameters& parameters) {
+    blueParams = parameters.blueParameters;
+    yellowParams = parameters.yellowParameters;
 }
+
+
+
+std::vector<FilteredRobot> WorldFilter::getHealthiestRobotsMerged(bool blueBots, Time time) const {
+  std::vector<FilteredRobot> robots;
+  const robotMap &map = blueBots ? blue : yellow;
+  for (const auto &oneIDFilters : map) {
+    if (oneIDFilters.second.empty()) {
+      continue;;
+    }
+    double maxHealth = -std::numeric_limits<double>::infinity();
+    auto bestFilter = oneIDFilters.second.begin();
+    for (auto robotFilter = oneIDFilters.second.begin();
+         robotFilter != oneIDFilters.second.end(); ++robotFilter) {
+      double health = robotFilter->getHealth();
+      if (health > maxHealth) {
+        maxHealth = health;
+        bestFilter = robotFilter;
+      }
+    }
+    robots.push_back(bestFilter->mergeRobots(time));
+  }
+  return robots;
+}
+
+std::vector<FilteredRobot> WorldFilter::oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const {
+  std::vector<FilteredRobot> robots;
+  const robotMap &map = blueBots ? blue : yellow;
+  for (const auto &oneIDFilters : map) {
+    if (oneIDFilters.second.empty()) {
+      continue;;
+    }
+    double maxHealth = -std::numeric_limits<double>::infinity();
+    auto bestFilter = oneIDFilters.second.begin();
+    for (auto robotFilter = oneIDFilters.second.begin();
+         robotFilter != oneIDFilters.second.end(); ++robotFilter) {
+      double health = robotFilter->getHealth();
+      if (health > maxHealth) {
+        maxHealth = health;
+        bestFilter = robotFilter;
+      }
+    }
+    auto robot = bestFilter->getRobot(camera_id, time);
+    if (robot) {
+      robots.push_back(robot.value());
+    }
+  }
+  return robots;
+}
+void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) const{
+  std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
+  for (const auto &blueBot : blueRobots) {
+    world.mutable_blue()->Add()->CopyFrom(blueBot.asWorldRobot());
+  }
+  std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
+  for (const auto &yellowBot : yellowRobots) {
+    world.mutable_yellow()->Add()->CopyFrom(yellowBot.asWorldRobot());
+  }
+}
+
+
+

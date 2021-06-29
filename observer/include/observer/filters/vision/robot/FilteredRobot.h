@@ -5,9 +5,9 @@
 #ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_ROBOT_FILTEREDROBOT_H_
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_ROBOT_FILTEREDROBOT_H_
 
-#include <utility>
 
 #include "RobotPos.h"
+#include <roboteam_proto/WorldRobot.pb.h>
 struct FilteredRobot {
   explicit FilteredRobot(TeamRobotID id,
                 RobotPos position,
@@ -25,6 +25,17 @@ struct FilteredRobot {
       velocityUncertainty{velocityUncertainty},
       angleUncertainty{angleUncertainty},
       angularVelUncertainty{angularVelUncertainty} {
+  }
+  [[nodiscard]] proto::WorldRobot asWorldRobot() const{
+    proto::WorldRobot robot;
+    robot.mutable_pos()->set_x(position.position.x());
+    robot.mutable_pos()->set_y(position.position.y());
+    robot.set_angle(position.angle);
+    robot.mutable_vel()->set_x(velocity.velocity.x());
+    robot.mutable_vel()->set_y(velocity.velocity.y());
+    robot.set_w(velocity.angularVelocity);
+    robot.set_id(id.robot_id.robotID);
+    return robot;
   }
   TeamRobotID id;
   RobotPos position;

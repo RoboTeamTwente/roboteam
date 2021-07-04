@@ -123,6 +123,8 @@ class Generator:
 
 	def convert_type(self, variable_type):
 		return None
+	def cast_to_type(self, string, variable_type):
+		raise NotImplementedError
 
 	def begin_block_comment(self):
 		raise NotImplementedError()
@@ -243,7 +245,8 @@ class Generator:
 			variable_type = "" if self.convert_type(_type) is None else f"{self.convert_type(_type)} "
 			subtract_string = f"{variable_name}" if b == 0 else f"({variable_name} {-b:+.16f})"
 			division_string = f" / {int(a)}" if int(a) == float(a) else f" / {a:.16f}"
-			conversion_string += f"{self.get_indent()}    {variable_type}_{variable_name} = int({subtract_string}{division_string})\n"
+			calculation_string = self.cast_to_type(f"{subtract_string}{division_string}", _type)
+			conversion_string += f"{self.get_indent()}    {variable_type}_{variable_name} = {calculation_string};\n"
 			variable_name = f"_{variable_name}"
 
 		# Create all bitwise operations
@@ -299,6 +302,9 @@ class C_Generator(Generator):
 
 	def convert_type(self, variable_type):
 		return variable_type
+
+	def cast_to_type(self, string, variable_type):
+		return f"({variable_type})({string})"
 
 	def begin_block_comment(self):
 		return "/*"
@@ -388,6 +394,11 @@ class C_Generator(Generator):
 		return "_%s_H" % CamelCaseToUpper(packet_name)
 
 class Python_Generator(Generator):
+
+	def cast_to_type(self, string, variable_type):
+		if variable_type in ["uint32_t", "uint64_t"]:
+			return f"int({string})"
+		return string
 
 	def begin_block_comment(self):
 		return '"""'

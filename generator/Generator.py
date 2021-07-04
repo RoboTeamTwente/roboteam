@@ -188,7 +188,7 @@ class Generator:
 		payload_variable = self.get_payload_variable(packet_name)
 
 		if _type == "bool":
-			return f"{self.get_indent()}    return ({payload_variable}[{at_byte}] & {bitString(at_bit, at_bit+1)}) > 0"
+			return f"{self.get_indent()}    return ({payload_variable}[{at_byte}] & {bitString(at_bit, at_bit+1)}) > 0;\n"
 
 		if _type in ["uint32_t", "uint64_t"]:
 			n_bits_remaining = n_bits

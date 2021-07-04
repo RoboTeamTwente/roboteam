@@ -263,7 +263,7 @@ class Generator:
 			# Create the mask that prevents unrelated bits from being set
 			string_inverse = ""
 			if bits_from_byte < 8:
-				string_inverse = f" | (payload[{at_byte}]{bitmask_inverted})"
+				string_inverse = f" | ({payload_variable}[{at_byte}]{bitmask_inverted})"
 
 			# Add shifting of variable if needed
 			string_shift = variable_name

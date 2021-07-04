@@ -4,6 +4,7 @@ packets = {
     "RobotCommand" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot"],
+        ["messageId",          4,  None, "Id of the message"],
         ["doKick",             1,  None, "Do a kick if ballsensor"],
         ["doChip",             1,  None, "Do a chip if ballsensor"],
         ["doForce",            1,  None, "Do regardless of ballsensor"],
@@ -20,6 +21,7 @@ packets = {
     "RobotFeedback" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot "],
+        ["messageId",          4,  None, "Id of the message"],
         ["batteryLevel",       4,  None, "The voltage level of the battery"],
         ["XsensCalibrated",    1,  None, "Indicates if the XSens IMU is calibrated"],
         ["ballSensorWorking",  1,  None, "Indicates if the ballsensor is working"],
@@ -36,6 +38,7 @@ packets = {
     "RobotStateInfo" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot "],
+        ["messageId",          4,  None, "Id of the message"],
         ["xsensAcc1",         32, [-50000., 50000.], "xsensAcc1"],
         ["xsensAcc2",         32, [-50000., 50000.], "xsensAcc2"],
         ["xsensYaw",          32, [-50000., 50000.], "xsensYaw"],
@@ -48,8 +51,9 @@ packets = {
     "RobotBuzzer" : [
     	["header",             8,  None, "Header byte indicating the type of packet"],
         ["id",                 4,  None, "Id of the robot"],
-    	["period",             16, None,      "Sound that the buzzer makes."],
-    	["duration",           32, [0., 10.], "Duration of the sound"]
+        ["messageId",          4,  None, "Id of the message"],
+    	["period",             12, None, "Sound that the buzzer makes."],
+    	["duration",           16, [0., 5.], "Duration of the sound"]
     ],
 
     "BasestationStatistics" : [

@@ -97,7 +97,7 @@ class Generator:
 	def generate_getters(self, packet_name, variables):
 		current_bit = 0
 		getters_string = ""
-		for variable in variables[:3]:
+		for variable in variables:
 			getters_string += self.to_function_call_get(packet_name, variable)
 			getters_string += self.to_getter(packet_name, variable, current_bit)
 			getters_string += self.end_function()
@@ -109,7 +109,7 @@ class Generator:
 	def generate_setters(self, packet_name, variables):
 		current_bit = 0
 		setters_string = ""
-		for variable in variables[:3]:
+		for variable in variables:
 			setters_string += self.to_function_call_set(packet_name, variable)
 			setters_string += self.to_setter(packet_name, variable, current_bit)
 			setters_string += self.end_function()

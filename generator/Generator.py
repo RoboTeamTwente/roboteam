@@ -118,6 +118,12 @@ class Generator:
 			current_bit += n_bits
 		return setters_string
 
+
+
+
+	def convert_type(self, variable_type):
+		return None
+
 	def begin_block_comment(self):
 		raise NotImplementedError()
 	def end_block_comment(self):
@@ -215,7 +221,8 @@ class Generator:
 			# Range given. Do integer => float conversion
 			else: 
 				a, b = getConversion(n_bits, _range) # y = ax + b
-				conversion_string  = f"{self.get_indent()}    _{variable_name} = {bitwise_operations_string};\n"
+				variable_type = "" if self.convert_type(_type) is None else f"{self.convert_type(_type)} "
+				conversion_string  = f"{self.get_indent()}    {variable_type}_{variable_name} = {bitwise_operations_string};\n"
 				conversion_string += f"{self.get_indent()}    return (_{variable_name} * {a:.16f}) + {b:.16f};\n"
 				return conversion_string
 
@@ -233,9 +240,10 @@ class Generator:
 		if float_conversion:
 			# Formula : y = ax + b => x = (y - b) / a
 			a, b = getConversion(n_bits, _range)
+			variable_type = "" if self.convert_type(_type) is None else f"{self.convert_type(_type)} "
 			subtract_string = f"{variable_name}" if b == 0 else f"({variable_name} {-b:+.16f})"
 			division_string = f" / {int(a)}" if int(a) == float(a) else f" / {a:.16f}"
-			conversion_string += f"{self.get_indent()}    _{variable_name} = int({subtract_string}{division_string})\n"
+			conversion_string += f"{self.get_indent()}    {variable_type}_{variable_name} = int({subtract_string}{division_string})\n"
 			variable_name = f"_{variable_name}"
 
 		# Create all bitwise operations
@@ -288,6 +296,9 @@ class Generator:
 
 
 class C_Generator(Generator):
+
+	def convert_type(self, variable_type):
+		return variable_type
 
 	def begin_block_comment(self):
 		return "/*"

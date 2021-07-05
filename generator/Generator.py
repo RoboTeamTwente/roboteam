@@ -45,7 +45,7 @@ def getType(n_bits, _range):
 def getConversion(nBits, _range):
 		vMin, vMax = _range
 		vTotal = vMax - vMin
-		return vTotal / 2**nBits, vMin
+		return vTotal / (2**nBits - 1), vMin
 
 
 
@@ -269,7 +269,7 @@ class Generator:
 
 			# Figure out how much we need to shift this baby in total
 			shift_to_left = 8 - stop_bit
-			shift_to_right = max(0, n_bits - bits_from_byte)
+			shift_to_right = max(0, n_bits_remaining - bits_from_byte)
 
 			# Create the mask that prevents unrelated bits from being set
 			string_inverse = ""
@@ -414,12 +414,17 @@ class Python_Generator(Generator):
 	def get_indent(self):
 		return "    "
 	
+	def to_begin(self, packet_name):
+		begin_string  = "import numpy as np\n"
+		begin_string += "import BaseTypes\n"
+		return begin_string 
+
 	def to_end(self, packet_name):
-		end_string  = f"    def printBitString(self):"
-		end_string += f"        payload = self.encode()"
-		end_string += f"        for i in range(len(payload)):"
-		end_string += f"            print(format(payload[i], '08b'), end=\" \")"
-		end_string += f"        print()"	
+		end_string  = f"    def print_bit_string(self):\n"
+		end_string += f"        payload = self.encode()\n"
+		end_string += f"        for i in range(len(payload)):\n"
+		end_string += f"            print(format(payload[i], '08b'), end=\" \")\n"
+		end_string += f"        print()\n"	
 		return end_string
 
 	# class RobotCommand:
@@ -437,11 +442,11 @@ class Python_Generator(Generator):
 
 	def to_function_call_get(self, packet_name, variable):
 		function_string  =  "    @staticmethod\n"
-		function_string += f"    get_{variable[0]}(payload):\n"
+		function_string += f"    def get_{variable[0]}(payload):\n"
 		return function_string
 	def to_function_call_set(self, packet_name, variable):
 		function_string  =  "    @staticmethod\n"
-		function_string += f"    set_{variable[0]}(payload, {variable[0]}):\n"
+		function_string += f"    def set_{variable[0]}(payload, {variable[0]}):\n"
 		return function_string
 
 

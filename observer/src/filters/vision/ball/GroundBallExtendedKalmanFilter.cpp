@@ -18,7 +18,7 @@ void GroundBallExtendedKalmanFilter::update(const Eigen::Vector2d &observation) 
   P -= K * H * P;
 }
 
-GroundBallExtendedKalmanFilter::GroundBallExtendedKalmanFilter(Eigen::Vector4d  initialState, Eigen::Matrix4d initialCovariance,
+GroundBallExtendedKalmanFilter::GroundBallExtendedKalmanFilter(Eigen::Vector4d   initialState, Eigen::Matrix4d  initialCovariance,
                              double modelError, double measurementError, Time timeStamp) :
     modelError{modelError},
     lastUpdateTime{timeStamp},
@@ -140,10 +140,8 @@ Eigen::Matrix4d GroundBallExtendedKalmanFilter::covariance() const {
 
 
 void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
-  if (timeStamp < lastUpdateTime) {
-    std::__throw_invalid_argument("Bad timestamp");
-    return;
-  }
+
+  assert(timeStamp>= lastUpdateTime);
   double frame_dt = (timeStamp - lastUpdateTime).asSeconds();
   if (frame_dt <= 0) {
     return;

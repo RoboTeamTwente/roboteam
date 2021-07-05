@@ -18,14 +18,14 @@
  */
 class GroundBallExtendedKalmanFilter {
  public:
-  GroundBallExtendedKalmanFilter(Eigen::Vector4d  initialState, const Eigen::Matrix4d initialCovariance,
+  GroundBallExtendedKalmanFilter() = default; //only used for convenience, should probably not exist
+  GroundBallExtendedKalmanFilter(Eigen::Vector4d initialState, Eigen::Matrix4d initialCovariance,
                                  double modelError, double measurementError, Time timeStamp);
   void predict(Time predictionTime);
   void update(const Eigen::Vector2d& observation);
   [[nodiscard]] Eigen::Vector2d getPosition() const;
   [[nodiscard]] Eigen::Vector2d getPositionEstimate(const Time& time) const;
   [[nodiscard]] Eigen::Vector4d getStateEstimate(const Time& time) const;
-  [[nodiscard]] Eigen::Vector4d getStateEstimate(double dt) const;
   [[nodiscard]] Eigen::Vector2d getVelocity() const;
   [[nodiscard]] Eigen::Vector2d getVelocityEstimate(const Time& time) const;
 
@@ -45,8 +45,9 @@ class GroundBallExtendedKalmanFilter {
   [[nodiscard]] Eigen::Matrix4d covariance() const;
  private:
   void setProccessNoise(double dt);
+  [[nodiscard]] Eigen::Vector4d getStateEstimate(double dt) const;
 
-  double modelError;
+  double modelError = 0.0;
   double acceleration = -0.3;
   Time lastUpdateTime;
   Eigen::Vector4d X;

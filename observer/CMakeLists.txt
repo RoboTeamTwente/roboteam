@@ -6,7 +6,7 @@ add_library(observer STATIC
         src/filters/referee/RefereeFilter.cpp
         src/filters/vision/CameraObjectFilter.cpp
         src/filters/vision/robot/CameraRobotFilter.cpp
-        src/filters/vision/ball/CameraBallFilter.cpp
+        src/filters/vision/ball/CameraGroundBallFilter.cpp
         src/filters/vision/WorldFilter.cpp
         src/filters/vision/GeometryFilter.cpp
         src/filters/vision/VisionFilter.cpp
@@ -22,7 +22,7 @@ add_library(observer STATIC
         src/filters/vision/ball/BallObservation.cpp
         include/observer/filters/vision/KalmanFilter.h
         src/filters/vision/ball/GroundBallExtendedKalmanFilter.cpp
-        )
+        src/filters/vision/ball/FilteredBall.cpp src/filters/vision/ball/FilteredBall.h)
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto

@@ -195,34 +195,35 @@ bool RobotHub::startBasestation(){
 
 bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle){
 
-    libusb_device* basestation_dev = nullptr;
-    libusb_device **list;
-    int num_devices = libusb_get_device_list(ctx, &list);
+    libusb_device* basestation_device = nullptr;
+    libusb_device **device_list;
+    int num_devices = libusb_get_device_list(ctx, &device_list);
 
     int error;
     for (int i = 0; i < num_devices; i++) {
-        libusb_device *device = list[i];
-        libusb_device_descriptor desc{};
+        libusb_device *device = device_list[i];
+        libusb_device_descriptor descriptor{};
 
-        error = libusb_get_device_descriptor(device, &desc);
-        if (error) std::cout << "[findBasestation] Error : " << usbutils_errorToString(error) << std::endl;
-        if (desc.idVendor == 0x0483 && desc.idProduct == 0x5740) {
-            basestation_dev = device;
-            int deviceBus = libusb_get_bus_number(device);
-            int deviceAddress = libusb_get_device_address(device);
-            int deviceSpeed = libusb_get_device_speed(device);
-            printf("[findBasestation] Basestation found. %04x:%04x (bus %d, device %d) %s\n",
-                   desc.idVendor, desc.idProduct, deviceBus, deviceAddress, usbutils_speedToString(deviceSpeed).c_str());
+        error = libusb_get_device_descriptor(device, &descriptor);
+        if (error) std::cout << "[openBasestation] Error : " << usbutils_errorToString(error) << std::endl;
+        if (descriptor.idVendor == 0x0483 && descriptor.idProduct == 0x5740) {
+            basestation_device = device;
+
+            printf("[openBasestation] Basestation found. %04x:%04x (bus %d, device %d) %s\n",
+                   descriptor.idVendor, descriptor.idProduct,
+                   libusb_get_bus_number(device), libusb_get_device_address(device),
+                   usbutils_speedToString(libusb_get_device_speed(device)).c_str());
         }
     }
 
-    if(basestation_dev == nullptr) {
+    libusb_free_device_list(device_list, true);
+
+    if(basestation_device == nullptr) {
         std::cout << "[findBasestation] Basestation not found" << std::endl;
-        libusb_free_device_list(list, true);
         return false;
     }
 
-    error = libusb_open(basestation_dev, basestation_handle);
+    error = libusb_open(basestation_device, basestation_handle);
     if(error){
         std::cout << "Error while trying to open handle : " << usbutils_errorToString(error) << std::endl;
         return false;
@@ -237,6 +238,7 @@ bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **bases
         std::cout << "Error while enabling auto detach : " << usbutils_errorToString(error) << std::endl;
         return false;
     }
+
     /** libusb_claim_interface() Claim an interface on a given device handle. You must claim the interface you wish to
      * use before you can perform I/O on any of its endpoints.
      */

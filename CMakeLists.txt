@@ -27,7 +27,6 @@ find_package(Threads REQUIRED)
 add_executable(roboteam_robothub
         src/RobotHub.cpp
         src/GRSim.cpp
-        src/BasestationReader.cpp
         src/Packing.cpp
         src/LibusbUtilities.cpp)
 target_include_directories(roboteam_robothub

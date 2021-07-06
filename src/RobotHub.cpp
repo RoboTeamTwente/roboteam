@@ -15,13 +15,14 @@
 
 using namespace std::chrono;
 
+/** @brief Callback funnction triggered when a basestation is connected */
 int hotplug_callback_attach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data){
     std::cout << "[hotplug_callback_attach] Event triggered!" << std::endl;
     auto* robothub = (rtt::robothub::RobotHub*)(user_data);
     robothub->handleBasestationAttach(device);
     return 0;
 }
-
+/** @brief Callback funnction triggered when a basestation is disconnected */
 int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data){
     std::cout << "[hotplug_callback_detach] Event triggered!" << std::endl;
     auto* robothub = (rtt::robothub::RobotHub*)(user_data);
@@ -112,7 +113,15 @@ void RobotHub::printStatistics() {
     std::cout << ss.str();
 }
 
-/* USB functions */
+
+
+/* =========================================== USB FUNCTIONS =========================================== */
+/** @brief Callback function that is triggered when a basestation is connected to the PC
+ *
+ * When a basestation is connected to the PC, this function claims that basestation. It first detaches the kernel
+ * drivers, and then claims the correct interface. It stores the handle to the basestation in the basestation_handle
+ * variable. The reading-thread automatically starts reading the basestation.
+ */
 void RobotHub::handleBasestationAttach(libusb_device* device){
     basestation_device = device;
 
@@ -145,6 +154,13 @@ void RobotHub::handleBasestationAttach(libusb_device* device){
     std::cout << "[RobotHub::handleBasestationAttach] Basestation opened" << std::endl;
 }
 
+
+
+/** @brief Callback function that is triggered when a basestation is disconnected from the PC
+ *
+ * When a basestation is disconnected from the PC, the corresponding handle is reset. This causes the reading-thread to
+ * sleep instead of hogging the CPU with nonstop device errors.
+ */
 void RobotHub::handleBasestationDetach(libusb_device* device){
     std::cout << "[RobotHub::handleBasestationDetach] " << std::endl;
     libusb_release_interface(basestation_handle, 1);
@@ -152,6 +168,20 @@ void RobotHub::handleBasestationDetach(libusb_device* device){
     basestation_handle = nullptr;
 }
 
+
+
+/** @brief sets up the event listeners that respond to the (dis)connecting of a basestation.
+ *
+ * This function sets up event listeners that respond to the (dis)connecting of a basestation. These listeners trigger
+ * functions that automatically claim and release any basestation. Event handlers are preferred over manually
+ * enumerating all USB devices to search for a basestation, since manual enumeration does not work nicely when
+ * attaching / detaching a basestation. The event listener responsible for listening to the attachment of a basestation
+ * immediately triggers once as initialization if a basestation is present. This means that the order of connecting a
+ * basestation and running RobotHub is not important. The listeners know that a basestation (dis)connected based on
+ * its vendor-id (0x0483) and product-id (0x5740).
+ *
+ * @return true if everything went smoothly, false otherwise
+ */
 bool RobotHub::startBasestation(){
     int error;
 
@@ -193,6 +223,20 @@ bool RobotHub::startBasestation(){
     return true;
 }
 
+
+/** @brief Finds and opens a basestation device by looping over all connected USB devices. Unused.
+ *
+ * This function loops over all connected USB devices and searches for a basestation by looking for the correct
+ * vendor-id (0x0483) and product-id (0x5740). If a basestation is found, it is opened and the handle to it is stored
+ * in the 'basestation_handle' parameter. The function first detaches the kernel drivers from the basestation, then
+ * claims the basestation for itself. Currently this function is not used, in favor of the event handling method, where
+ * a callback is triggered when a USB device is (dis)connected from the PC. See RobotHub::startBasestation. This
+ * function is kept as reference, or as backup in case the event handling method doesn't work as intended.
+ *
+ * @param ctx Libusb_context
+ * @param basestation_handle Variable in which the basestation handle can be placed, if a basestation is found
+ * @return true if a basestation is opened, false otherwise
+ */
 bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle){
 
     libusb_device* basestation_device = nullptr;
@@ -251,16 +295,29 @@ bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **bases
     return true;
 }
 
-/* Functions that actually send packets */
+
+
+
+/* =========================================== READING/WRITING FUNCTIONS =========================================== */
+/** @brief Sends a proto::RobotCommand to the basestation
+ *
+ * This function takes a proto::RobotCommand that needs to be sent to the basestation. The command is first converted
+ * into a RobotCommandPayload (a packet command, using the minimum amoumt of bytes), and additional information is
+ * (possibly) added to it, such as the angle of the robot in the world. If there is no connection to a basestation, the
+ * packet is simply dropped.
+ *
+ * @param cmd Reference to the proto::RobotCommand that needs to be sent to the basestation
+ */
 void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
+    // Check if a connection to a basestation exists
     if(basestation_handle == nullptr){
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
         std::this_thread::sleep_for(seconds(1));
         return;
     }
-
+    // Convert the proto::RobotCommand to a RobotCommandPayload
     RobotCommandPayload payload = createEmbeddedCommand(cmd, world, false);
-    int bytesSent;
+    int bytesSent; // Holds the value of actual bytes sent to the basestation after transfer is complete
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
 
     if(error){
@@ -270,10 +327,18 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
 
 }
 
+
 void RobotHub::sendGrSimCommand(const proto::RobotCommand &cmd) {
     this->grsimCommander->queueGRSimCommand(cmd);
 }
 
+
+
+/** @brief Receives and handles any packets coming from a basestation
+ *
+ * This function should be run in a separate thread, since it uses blocking USB reads in a while-loop. Any log messages
+ * are printed to the terminal. Any robot feedback is forwarded to the rest of the system via the feedback channel.
+ */
 void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
     std::this_thread::sleep_for(milliseconds(1000));
@@ -294,6 +359,7 @@ void RobotHub::readBasestation(){
             std::this_thread::sleep_for(milliseconds(1000));
             continue;
         }
+        // If a timeout occurs, the number of bytes received is 0. In that case, continue.
         if (bytes_received == 0) continue;
 
         if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
@@ -314,7 +380,9 @@ void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Terminating" << std::endl;
 }
 
-/* Process functions */
+
+
+/* =========================================== PACKET CALLBACK FUNCTIONS =========================================== */
 void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     for(const proto::RobotCommand &cmd : AIcmd.commands()){
         if(settings.serialmode())

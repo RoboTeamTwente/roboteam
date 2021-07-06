@@ -39,6 +39,7 @@ RobotCommandPayload createEmbeddedCommand(const proto::RobotCommand& proto, cons
     encodeRobotCommand(&payload,&command);
     return payload;
 }
+
 proto::RobotFeedback feedbackFromRaw(RobotFeedbackPayload * payload){
     RobotFeedback feedback;
     decodeRobotFeedback(&feedback,payload);

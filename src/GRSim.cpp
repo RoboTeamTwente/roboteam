@@ -1,6 +1,5 @@
 #include "GRSim.h"
 #include <numeric>
-#include "packing.h"
 #include "roboteam_utils/Vector2.h"
 
 #define VERIFY_COMMANDS

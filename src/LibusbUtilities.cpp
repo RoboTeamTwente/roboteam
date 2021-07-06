@@ -258,7 +258,5 @@ void usbutils_enumerate(){
         libusb_free_device_list(list, true);
         libusb_exit(ctx);
     }
-
-
 } // namespace robothub
 } // namespace rtt

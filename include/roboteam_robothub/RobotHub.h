@@ -5,13 +5,15 @@
 #ifndef RTT_ROBOTHUB_H
 #define RTT_ROBOTHUB_H
 
+#include <libusb-1.0/libusb.h>
+
 #include <Publisher.h>
 #include <Subscriber.h>
-#include "roboteam_proto/Setting.pb.h"
+#include <roboteam_proto/AICommand.pb.h>
+#include <roboteam_proto/Setting.pb.h>
+#include <roboteam_proto/RobotFeedback.pb.h>
 
 #include "GRSim.h"
-#include "BasestationWriter.h"
-#include "BasestationReader.h"
 #include "utilities.h"
 #include "constants.h"
 
@@ -60,7 +62,6 @@ private:
     libusb_hotplug_callback_handle callback_handle_detach;
 
     std::shared_ptr<GRSimCommander> grsimCommander;
-    std::unique_ptr<BasestationReader> reader;
 
     std::mutex worldLock;
     proto::World world;

@@ -39,3 +39,13 @@ target_link_libraries(roboteam_robothub
         PRIVATE Qt5::Network
         Threads::Threads
         usb-1.0)
+
+add_executable(roboteam_robothub_enumerate_usb
+        src/LibusbUtilities.cpp
+        src/EnumerateBasestations.cpp)
+target_include_directories(roboteam_robothub_enumerate_usb
+        PRIVATE include/roboteam_robothub
+)
+target_link_libraries(roboteam_robothub_enumerate_usb
+        usb-1.0
+)

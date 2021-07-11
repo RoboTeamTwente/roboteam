@@ -35,9 +35,6 @@ def drawProgressBar(progress):
 	string += "]"
 	return string
 
-
-cmdPayload = rem.ffi.new("RobotCommandPayload*")
-
 lastWritten = time.time()
 tickCounter = 0
 periodLength = 300
@@ -59,30 +56,6 @@ while True:
 		# Continuously read and print messages from the basestation
 		while True:
 
-			# log = connection.readline().decode()
-			# if 0 < len(log):
-			# 	print("[log]", log, end="")
-			
-			# # Run at 60fps
-			# if time.time() - lastWritten < 1./60.:
-			# 	time.sleep(0.001)
-			# 	continue
-			# lastWritten = time.time()
-
-
-			# cmd = rem.ffi.new("RobotCommand*")
-			# cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
-			# cmd.id = 1
-			# cmd.dribbler = 2
-			# cmdPayload = rem.ffi.new("RobotCommandPayload*")
-			# rem.lib.encodeRobotCommand(cmdPayload, cmd)
-			# connection.write(cmdPayload.payload)
-			
-			# # exit()
-			# continue
-
-			tickCounter += 1
-			
 			# Read feedback packets coming from the robot
 			packet_type = connection.read(1)
 			if len(packet_type) == 0:

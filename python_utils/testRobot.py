@@ -52,7 +52,7 @@ def rotate(origin, point, angle):
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
     return qx, qy
 
-testsAvailable = ["nothing", "full", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate"]
+testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate"]
 
 # Parse input arguments 
 try:
@@ -91,7 +91,7 @@ rate_of_turn_avg = 0
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 300
+periodLength = 600
 packetHz = 60
 
 totalCommandsSent = 0
@@ -107,9 +107,12 @@ testIndex = 2
 # t = time.time()
 # logfile = open(f"logfile_{t}.txt", "w")
 
+stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
+
 while True:
 	# Open basestation with the basestation
 	if basestation is None or not basestation.isOpen():
+		# basestation = utils.openContinuous(timeout=0.001, port=stlink_port)
 		basestation = utils.openContinuous(timeout=0.001)
 
 	try:
@@ -152,12 +155,16 @@ while True:
 						cmd.theta = 0
 						cmd.angle = 0	
 
+					if test == "kicker-reflect":
+						cmd.doKick = True
+						cmd.kickChipPower = 3
+
 					if test == "kicker" or test == "chipper":
 						if period == 0:
 							if test == "kicker"  : cmd.doKick = True
 							if test == "chipper" : cmd.doChip = True
 							cmd.doForce = True
-							cmd.kickChipPower = 2
+							cmd.kickChipPower = 3
 
 					if test == "dribbler":
 						cmd.dribbler = math.floor(8 * periodFraction)
@@ -198,8 +205,14 @@ while True:
 
 				# Send command
 				rem.lib.encodeRobotCommand(commandPayload, cmd)
-				basestation.write(commandPayload.payload)
+				# basestation.write(commandPayload.payload)
 				totalCommandsSent += 1
+
+
+			# logmessage = basestation.readline().decode()
+			# if 0 < len(logmessage):
+			# 	print(logmessage, end="")
+			# continue
 
 
 			# Read feedback pacstateInfoPayloadkets coming from the robot
@@ -214,10 +227,13 @@ while True:
 				feedbackTimestamp = time.time()
 				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_ROBOT_FEEDBACK - 1)
 				feedbackPayload.payload = packet
-				rem.lib.decodeRobotFeedback(feedback, feedbackPayload)
+				
 
-				if feedback.id != robotId:
-					print("Error : Received feedback from robot %d ???" % receivedId)
+				if rem.lib.RobotFeedback_get_id(feedbackPayload) != robotId:
+					print("Error : Received feedback from robot %d ???" % feedback.id)
+					break
+
+				rem.lib.decodeRobotFeedback(feedback, feedbackPayload)	
 				totalFeedbackReceived += 1
 
 
@@ -227,8 +243,8 @@ while True:
 				stateInfoPayload.payload = packet
 				rem.lib.decodeRobotStateInfo(stateInfo, stateInfoPayload)
 
+
 			if packetType == rem.lib.PACKET_TYPE_BASESTATION_STATISTICS:
-				print("[Statistics]")
 				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_BASESTATION_STATISTICS - 1)
 				print(type(packet), len(packet), packet[1], packet[2], packet[3], packet[4])
 
@@ -237,7 +253,8 @@ while True:
 				logmessage = basestation.readline().decode()
 				lastBasestationLog = logmessage[:-1] + " "*20
 
-			# break
+
+			# Break if cv2 is not imported
 			if not cv2_available:
 				break
 
@@ -303,19 +320,6 @@ while True:
 				rx, ry = rotate((170, 170), (170, 170 + wheel_speeds_exp[3] * 80), 30 * np.pi / 180.)
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (1, 1, 1), 4)
 				
-				# XSens wheel speed 1
-				# cv2.ellipse(img, (400, 100), (40, 40), -90, 0, wheel_speeds_avg[0] * 180, (.15,.15, 1), -1)
-				# cv2.ellipse(img, (400, 100), (30, 30), -90, 0, wheel_speeds_exp[0] * 180, (1,1,1), -1)
-				# # XSens wheel speed 2
-				# cv2.ellipse(img, (400, 400), (40, 40), -90, 0, wheel_speeds_avg[1] * 180, (.15,.15, 1), -1)
-				# cv2.ellipse(img, (400, 400), (30, 30), -90, 0, wheel_speeds_exp[1] * 180, (1,1,1), -1)
-				# # XSens wheel speed 3
-				# cv2.ellipse(img, (100, 400), (40, 40), -90, 0, wheel_speeds_avg[2] * 180, (.15,.15, 1), -1)
-				# cv2.ellipse(img, (100, 400), (30, 30), -90, 0, wheel_speeds_exp[2] * 180, (1,1,1), -1)
-				# # XSens wheel speed 4
-				# cv2.ellipse(img, (100, 100), (40, 40), -90, 0, wheel_speeds_avg[3] * 180, (.15,.15, 1), -1)
-				# cv2.ellipse(img, (100, 100), (30, 30), -90, 0, wheel_speeds_exp[3] * 180, (1,1,1), -1)
-
 			cv2.imshow("img", img)
 			if cv2.waitKey(1) == 27: exit()
 

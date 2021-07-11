@@ -53,10 +53,16 @@ class JoystickWrapper:
             self.robot_id += self.controller.hat.x
             print(f"Switched to ID {self.robot_id}")
 
-        self.command.dribbler = 7
-        if self.controller.button_y._value:
-            print("dribbler", self.controller.button_y._value)
-            self.command.dribbler = 4
+        # Toggle dribbler
+        self.command.dribbler = 0
+        if self.controller.button_y._value and not self.Y:
+            self.Y = True
+            if self.command.dribbler == 0: 
+                self.command.dribbler = 7
+            else:
+                self.command.dribbler = 0
+        else:
+            self.Y = False
 
         if self.robot_id < 0: self.robot_id = 0
         if 15 < self.robot_id : self.robot_id = 15
@@ -67,11 +73,13 @@ class JoystickWrapper:
         if self.controller.button_a._value and not self.A:
             self.command.kickChipPower = 5
             self.command.doChip = True
+            self.command.doForce = True
         self.A = self.controller.button_a._value
 
         if self.controller.button_b._value and not self.B:
             self.command.kickChipPower = 5
             self.command.doKick = True
+            self.command.doForce = True
         self.B = self.controller.button_b._value
 
 

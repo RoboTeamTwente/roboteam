@@ -2,7 +2,7 @@
  * TextOut.c
  *
  *  Created on: 14 sep. 2016
- *      Author: Hans-van-der-Heide
+ *      Author: Cas Doornkamp & Emiel Steerneman
  */
 
 #include "stm32f7xx_hal.h"
@@ -27,6 +27,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
  * 
  * @param message The message to send over the USB
  */
+// TODO Don't use malloc; Simply copy straight into the TxBuffer
 void LOG(char *message){
   // Add +1 to the length of the string to account for the extra header bytes
 	int length = strlen(message) + 1;

@@ -5,17 +5,14 @@
 #include <stdint.h>
 #include "FT812Q.h"
 
-// Yes these are the same value, but they have different use cases
-// Anything regarding the number of robots will go up to 15 : [0, 15)
-// anything regarding robot ids will go up to and including 15 : [0, 15]
-#define MAX_NUMBER_OF_ROBOTS 15
-#define MAX_ROBOT_ID 15
+#define MAX_NUMBER_OF_ROBOTS 16
+#define MAX_ROBOT_ID (MAX_NUMBER_OF_ROBOTS-1)
 
 void init();
 void loop();
 
 void updateTouchState(TouchState* touchState);
 bool handlePacket(uint8_t* packet, uint32_t packet_length);
-bool handleStatistics(void);
+void handleStatistics();
 
 #endif  /* __BASESTATION_H */

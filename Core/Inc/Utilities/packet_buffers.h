@@ -13,34 +13,12 @@
 
 bool isTransmitting;
 
-
-/*
- * create a struct that keeps track of all buffered messages and if they are new or not.
- *  when it is send isNew should be set to false.
- */
-// struct msgsBufferStatus {
-// 	RobotCommandPayload command;
-// 	bool isNewCommand;
-// 	RobotFeedbackPayload feedback;
-// 	bool isNewFeedback;
-// 	uint8_t packetsSent;
-// 	uint8_t packetsReceived;
-// };
-// struct msgsBufferStatus msgBuff[16];
-
-// struct msgBufferRobotBuzzer {
-// 	RobotBuzzerPayload command;
-// 	bool isNewCommand;
-// };
-// struct msgBufferRobotBuzzer msgBuffRobotBuzzer[16];
-
-
 struct _buffer_RobotCommand {
 	RobotCommandPayload packet;
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotCommand buffer_RobotCommand[MAX_ROBOT_ID + 1];
+struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
 
 
 struct _buffer_RobotFeedback {
@@ -48,21 +26,21 @@ struct _buffer_RobotFeedback {
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotFeedback buffer_RobotFeedback[MAX_ROBOT_ID + 1];
+struct _buffer_RobotFeedback buffer_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
 struct _buffer_RobotStateInfo {
 	RobotStateInfoPayload packet;
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotStateInfo buffer_RobotStateInfo[MAX_ROBOT_ID + 1];
+struct _buffer_RobotStateInfo buffer_RobotStateInfo[MAX_NUMBER_OF_ROBOTS];
 
 struct _buffer_RobotBuzzer {
 	RobotBuzzerPayload packet;
 	bool isNewPacket;
 	uint32_t counter;
 };
-struct _buffer_RobotBuzzer buffer_RobotBuzzer[MAX_ROBOT_ID + 1];
+struct _buffer_RobotBuzzer buffer_RobotBuzzer[MAX_NUMBER_OF_ROBOTS];
 
 
 

@@ -11,11 +11,13 @@
 #include "RobotFeedback.h"
 #include "RobotStateInfo.h"
 
+/* Counters, tracking the number of packets handled */ 
 volatile int handled_RobotCommand = 0;
 volatile int handled_RobotFeedback = 0;
 volatile int handled_RobotBuzzer = 0;
 volatile int handled_RobotStateInfo = 0;
 
+/* Import hardware handles from main.c */
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 extern TIM_HandleTypeDef htim1;
@@ -31,10 +33,19 @@ char logBuffer[100];
 // Set to 127, because that's the max value as defined in the datasheet
 // Table 14-38: Payload Length Definition in FLRC Packet, page 124
 #define MAX_PACKET_SIZE 127
+// global buffer that holds a single transmission that can be sent to the robot. Used in the timer1 callback
 uint8_t sendBuffer[MAX_PACKET_SIZE];
 
 /* Flags */
-volatile bool flagHandleStatistics = false;
+volatile bool flagHandleStatistics = false; 
+
+// screenCounter acts as a timer for updating the screen
+uint32_t screenCounter = 0;
+
+/* Tracks time since last heartbeat. Runs at 1Hz */
+uint32_t heartbeat_1000ms = 0;
+
+
 
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
@@ -48,10 +59,11 @@ void init(){
     // Set SX_RX syncword to basestation syncword
     SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
     setSyncWords(SX_RX, SX_RX->SX_settings->syncWords[0], 0x00, 0x00);
-    // Start listening on the SX_RX
+    // Start listening on the SX_RX for packets from the robots
     setRX(SX_RX, SX_RX->SX_settings->periodBase, 0xFFFF);
 
-    // Start the timer that is responsible for sending packets
+    // Start the timer that is responsible for sending packets to the robots
+    // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
     LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
@@ -62,17 +74,16 @@ void init(){
     LOG("[init] Initializion complete\n");
 }
 
-// screenCounter acts as a timer for updating the screen
-uint32_t screenCounter = 0;
 
-uint32_t heartbeat_1000ms = 0;
 
 void loop(){
   
-  /* Send log if any */
+  /* Send logs to PC, if there is anything in the buffer */
+  /* Nothing should be sent to the PC while in an interrupt. Therefore, while in an interrupt, text can be placed in the logBuffer */
+  /* Here, in the main loop, text can be safely sent to the PC */
   if(0 < strlen(logBuffer)){
-    LOG(logBuffer);
-    logBuffer[0] = '\0';
+    LOG(logBuffer);        // Send any text in the buffer over USB to the PC
+    logBuffer[0] = '\0';   // 'Empty' the buffer by setting the first byte to \0
   }
 
   /* Heartbeat every second */
@@ -85,9 +96,8 @@ void loop(){
   }
 
   // TODO put multiple of these messages into a single USB packet, instead of sending every packet separately
-
   /* Send any new RobotFeedback packets */
-  for(int id = 0; id < MAX_ROBOT_ID; id++){
+  for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_RobotFeedback[id].isNewPacket){
       HexOut(buffer_RobotFeedback[id].packet.payload, PACKET_SIZE_ROBOT_FEEDBACK);
       buffer_RobotFeedback[id].isNewPacket = false;
@@ -95,7 +105,7 @@ void loop(){
   }
 
   /* Send any new RobotStateInfo packets */
-  for(int id = 0; id < MAX_ROBOT_ID; id++){
+  for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_RobotStateInfo[id].isNewPacket){
       handled_RobotBuzzer++;
       HexOut(buffer_RobotStateInfo[id].packet.payload, PACKET_SIZE_ROBOT_STATE_INFO);
@@ -103,8 +113,9 @@ void loop(){
     }
   }
 
+  // TODO needs to be updated to the latest roboteam_embedded_messages version. Disabled for now.
   if(flagHandleStatistics){
-    handleStatistics();
+    // handleStatistics();
     flagHandleStatistics = false;
   }
 
@@ -184,141 +195,88 @@ void updateTouchState(TouchState* touchState){
 }
 
 
+
 /**
  * @brief Receives a buffer which is assumed to be holding a RobotCommand packet. 
- * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * If so, it moves the packet to the RobotCommand buffer, and sets a flag to send the packet to
  * the corresponding robot.
  * 
- * @param Buf Pointer to the buffer that holds the packet
- * @return true if the packet has been handled succesfully
- * @return false if there was something wrong with the packet
+ * @param packet_buffer Pointer to the buffer that holds the packet
  */
-bool handleRobotCommand(uint8_t* Buf){
+void handleRobotCommand(uint8_t* packet_buffer){
   handled_RobotCommand++;
-  // Interpret buffer as a RobotCommandPayload
-  RobotCommandPayload *rcp = (RobotCommandPayload*) Buf;
 
-  // Check if the robotId is valid
-  uint8_t robotId = RobotCommand_get_id(rcp);
-  if (MAX_ROBOT_ID < robotId)
-    return false;
-    
-  // Store the message in the buffer. Set flag to be sent to the robot
-  memcpy(buffer_RobotCommand[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_COMMAND);
-  buffer_RobotCommand[robotId].isNewPacket = true;
-  buffer_RobotCommand[robotId].counter++;
-    
-  return true;
+  // Store the message in the RobotCommand buffer. Set flag indicating packet needs to be sent to the robot
+  uint8_t robot_id = RobotCommand_get_id((RobotCommandPayload*) packet_buffer);
+  memcpy(buffer_RobotCommand[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_COMMAND);
+  buffer_RobotCommand[robot_id].isNewPacket = true;
+  buffer_RobotCommand[robot_id].counter++;
 }
 
 
 /**
  * @brief Receives a buffer which is assumed to be holding a RobotFeedback packet. 
- * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * If so, it moves the packet to the RobotFeedback buffer, and sets a flag to send the packet to
  * the computer.
  * 
- * @param Buf Pointer to the buffer that holds the packet
- * @return true if the packet has been handled succesfully
- * @return false if there was something wrong with the packet
+ * @param packet_buffer Pointer to the buffer that holds the packet
  */
-bool handleRobotFeedback(uint8_t* Buf){
+void handleRobotFeedback(uint8_t* packet_buffer){
   handled_RobotFeedback++;
-  // Interpret buffer as a RobotFeedbackPayload
-  RobotFeedbackPayload *rfp = (RobotFeedbackPayload*) Buf;
-
-  // Check if the robotId is valid
-  uint8_t robotId = RobotFeedback_get_id(rfp);
-  if (MAX_ROBOT_ID < robotId)
-    return false;
-    
-  // Store the message in the buffer. Set flag to be sent to the robot
-  memcpy(buffer_RobotFeedback[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_FEEDBACK);
-  buffer_RobotFeedback[robotId].isNewPacket = true;
-  buffer_RobotFeedback[robotId].counter++;
-    
-  return true;
+  
+  // Store the message in the RobotFeedback buffer. Set flag indicating packet needs to be sent to the robot
+  uint8_t robot_id = RobotFeedback_get_id((RobotFeedbackPayload*) packet_buffer);
+  memcpy(buffer_RobotFeedback[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_FEEDBACK);
+  buffer_RobotFeedback[robot_id].isNewPacket = true;
+  buffer_RobotFeedback[robot_id].counter++;
 }
 
 
 /**
- * @brief Receives a buffer which is assumed to be holding a handleRobotStateInfo packet. 
- * If so, it moves the packet to the buffer, and sets a flag to send the packet to
+ * @brief Receives a buffer which is assumed to be holding a RobotStateInfo packet. 
+ * If so, it moves the packet to the RobotStateInfo buffer, and sets a flag to send the packet to
  * the computer.
  * 
- * @param Buf Pointer to the buffer that holds the packet
- * @return true if the packet has been handled succesfully
- * @return false if there was something wrong with the packet
+ * @param packet_buffer Pointer to the buffer that holds the packet
  */
-bool handleRobotStateInfo(uint8_t* Buf){
+void handleRobotStateInfo(uint8_t* packet_buffer){
   handled_RobotStateInfo++;
-  // Interpret buffer as a RobotStateInfoPayload
-  RobotStateInfoPayload *rsip = (RobotStateInfoPayload*) Buf;
 
-  // Check if the robotId is valid
-  uint8_t robotId = RobotStateInfo_get_id(rsip);
-  if (MAX_ROBOT_ID < robotId)
-    return false;
-    
-  // Store the message in the buffer. Set flag to be sent to the robot
-  memcpy(buffer_RobotStateInfo[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_STATE_INFO);
-  buffer_RobotStateInfo[robotId].isNewPacket = true;
-  buffer_RobotStateInfo[robotId].counter++;
-    
-  return true;
+  // Store the message in the RobotStateInfo buffer. Set flag to be sent to the robot
+  uint8_t robot_id = RobotStateInfo_get_id((RobotStateInfoPayload*) packet_buffer);
+  memcpy(buffer_RobotStateInfo[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_STATE_INFO);
+  buffer_RobotStateInfo[robot_id].isNewPacket = true;
+  buffer_RobotStateInfo[robot_id].counter++;
+}
+
+
+/**
+ * @brief Receives a buffer which is assumed to be holding a RobotBuzzer packet. 
+ * If so, it moves the packet to the RobotBuzzer buffer, and sets a flag to send the packet to
+ * the corresponding robot.
+ * 
+ * @param packet_buffer Pointer to the buffer that holds the packet
+ */
+void handleRobotBuzzer(uint8_t* packet_buffer){
+  handled_RobotBuzzer++;
+  
+  // Store the message in the RobotBuzzer buffer. Set flag to be sent to the robot
+  uint8_t robot_id = RobotBuzzer_get_id((RobotBuzzerPayload*) packet_buffer);
+  memcpy(buffer_RobotBuzzer[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_BUZZER);
+  buffer_RobotBuzzer[robot_id].isNewPacket = true;
+  buffer_RobotBuzzer[robot_id].counter++;
 }
 
 
 /**
  * @brief Handles sending basestation statistics over USB.
- * 
- * @return true if the packet has been handled succesfully
- * @return false if there was something wrong with the packet
+ * Meant to sent all counters from buffer_RobotCommand and buffer_RobotFeedback to the PC.
+ * TODO needs to be updated with the latest version of roboteam_embedded_messages. Currently disabled
  */
-bool handleStatistics(void){
-  // Not dealing with the BasestationStatistics struct. Due to autogenerating, it's not suited for for-loops
-  BasestationStatisticsPayload bsp = {0};
-  bsp.payload[0] = PACKET_TYPE_BASESTATION_STATISTICS;
-  for(int robotId = 0; robotId < 16; robotId++){
-    // Send ratio + packets sent (clipped) for each robot
-    // TODO this clipping is not nice at all. Next to that, we need to find some way to figure out
-    // how to draw if robots are "active", meaning we need to reset these stats every few ms or so.
-    bsp.payload[robotId*2+1] = buffer_RobotCommand [robotId].counter >= 255 ? 255 : buffer_RobotCommand [robotId].counter;
-    bsp.payload[robotId*2+2] = buffer_RobotFeedback[robotId].counter >= 255 ? 255 : buffer_RobotFeedback[robotId].counter;
-    // Reset statistics
-    buffer_RobotCommand [robotId].counter = 0;
-    buffer_RobotFeedback[robotId].counter = 0;
-  }
-  HexOut(bsp.payload, PACKET_SIZE_BASESTATION_STATISTICS);
-  return true;
+void handleStatistics(){
+  return;
 }
 
-
-/**
- * @brief Receives a buffer which is assumed to be holding a RobotCommand packet. 
- * If so, it moves the packet to the buffer, and sets a flag to send the packet to
- * the corresponding robot.
- * 
- * @param Buf Pointer to the buffer that holds the packet
- * @return true if the packet has been handled succesfully
- * @return false if there was something wrong with the packet
- */
-bool handleRobotBuzzer(uint8_t* Buf){
-  handled_RobotBuzzer++;
-  // Interpret buffer as a RobotBuzzerPayload
-  RobotBuzzerPayload *rbp = (RobotBuzzerPayload*) Buf;
-
-  // Check if the robotId is valid
-  uint8_t robotId = RobotBuzzer_get_id(rbp);
-  if (MAX_ROBOT_ID < robotId)
-    return false;
-    
-  // Store the message in the buffer. Set flag to be sent to the robot
-  memcpy(buffer_RobotBuzzer[robotId].packet.payload, Buf, PACKET_SIZE_ROBOT_BUZZER);
-  buffer_RobotBuzzer[robotId].isNewPacket = true;
-  buffer_RobotBuzzer[robotId].counter++;
-    
-  return true;
-}
 
 
 /**
@@ -330,62 +288,55 @@ bool handleRobotBuzzer(uint8_t* Buf){
  * will arrive as two packets of 64 and 36 bytes. This is because the wMaxPacketSize for
  * full speed USB is 64 bytes.
  * 
- * @param Buf Pointer to the buffer the packet from the USB is stored in
- * @param Len Length of the packet currently in the buffer
- * @return true if the packed has been handled succesfully
- * @return false if the packet has been handled unsuccessfully, e.g. due to corruption
+ * @param packet_buffer Pointer to the buffer the packet from the USB is stored in
+ * @param packet_length Length of the packet currently in the buffer
+ * @return true if the packet(s) have been handled succesfully
+ * @return false if the packet(s) have been handled unsuccessfully, e.g. due to corruption
  */
-bool handlePacket(uint8_t* packet, uint32_t packet_length){
+bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
   uint8_t packet_type;
   uint32_t bytes_processed = 0;
 
-  bool success = true;
-
   while(bytes_processed < packet_length){
 
-    packet_type = packet[bytes_processed];
+    packet_type = packet_buffer[bytes_processed];
 
     switch (packet_type){
 
-    case PACKET_TYPE_ROBOT_COMMAND:
-      success = handleRobotCommand(packet + bytes_processed);
-      bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
-      break;
-    
-    case PACKET_TYPE_ROBOT_FEEDBACK:
-      success = handleRobotFeedback(packet + bytes_processed);
-      bytes_processed += PACKET_SIZE_ROBOT_FEEDBACK;
-      break;
-    
-    case PACKET_TYPE_BASESTATION_GET_STATISTICS:
-      bytes_processed += PACKET_SIZE_BASESTATION_GET_STATISTICS;
-      flagHandleStatistics = true;  
-      break;
-    
-    case PACKET_TYPE_ROBOT_BUZZER:
-      success = handleRobotBuzzer(packet + bytes_processed);
-      bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
-      break;
+      case PACKET_TYPE_ROBOT_COMMAND:
+        handleRobotCommand(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
+        break;
+      
+      case PACKET_TYPE_ROBOT_FEEDBACK:
+        handleRobotFeedback(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_ROBOT_FEEDBACK;
+        break;
+      
+      case PACKET_TYPE_BASESTATION_GET_STATISTICS:
+        bytes_processed += PACKET_SIZE_BASESTATION_GET_STATISTICS;
+        // flagHandleStatistics = true;  
+        break;
+      
+      case PACKET_TYPE_ROBOT_BUZZER:
+        handleRobotBuzzer(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
+        break;
 
-    case PACKET_TYPE_ROBOT_STATE_INFO:
-      success = handleRobotStateInfo(packet + bytes_processed);
-      bytes_processed += PACKET_SIZE_ROBOT_STATE_INFO;
-      break;
+      case PACKET_TYPE_ROBOT_STATE_INFO:
+        handleRobotStateInfo(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_ROBOT_STATE_INFO;
+        break;
 
-    default:
-      sprintf(logBuffer, "[handlePacket] Error! At %d of %d bytes. [@] = %d\n", packet, packet_length, packet[bytes_processed]);
-      return false;
-    
+      default:
+        sprintf(logBuffer, "[handlePacket] Error! At %ld of %ld bytes. [@] = %d\n", bytes_processed, packet_length, packet_buffer[bytes_processed]);
+        return false;
     }
-    
-    if(!success) break;
   }
 
-  if(!success)
-    sprintf(logBuffer, "[handlePacket] Error! Could not parse packet with type %d\n", packet_type);
-
-  return success;
+  return true;
 }
+
 
 
 /* Triggers when a call to HAL_SPI_TransmitReceive_DMA or HAL_SPI_TransmitReceive_IT (both non-blocking) completes */
@@ -396,7 +347,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 	}
 	if(hspi->Instance == SX_RX->SPI->Instance) {
     Wireless_DMA_Handler(SX_RX);
-    // First 3 bytes are status bytes
+    // First 3 bytes in the buffer are SX1280 status bytes, therefore +3
     handlePacket(SX_RX->RXbuf+3, SX_RX->payloadLength);
 	}
 }
@@ -416,18 +367,26 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 
 
-/* Responsible for sending RobotCommand packages to the corresponding robots */
+/* Responsible for sending RobotCommand packets to the corresponding robots */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
-  // TDMA Timer callback
+  // TDMA Timer callback, runs at approximately 960Hz
+  /* Every millisecond, a transmission can be made to a single robot. As per the TDMA protocol, the robot has
+  * to respond with any of its own packets within this millisecond. The code loops through all possible robot 
+  * id's (currently 0 to 15), incrementing the id it sends packets to, every millisecond. A transmission to 
+  * the robot can consist of multiple packet, for example a RobotCommand and a RobotBuzzer. These packets 
+  * are stitched together and sent to the robot in a single transmission. A single transmission can never 
+  * exceed more than 127 bytes, per the SX1280 datasheet and our settings. */
+
   if(htim->Instance == htim1.Instance){
+    // Counter that tracks the current robot id that the basestation sends a packet to
     static uint8_t idCounter = 0;
 
     // Keeps track of the total length of the packet that goes to the robot. 
     // Cannot exceed MAX_PACKET_SIZE, or it will overflow the internal buffer of the SX1280
     uint8_t total_packet_length = 0;    
 
-    /* Add robot command */
+    /* Add RobotCommand to the transmission */
     if(buffer_RobotCommand[idCounter].isNewPacket 
     && total_packet_length + PACKET_SIZE_ROBOT_COMMAND < MAX_PACKET_SIZE){
       buffer_RobotCommand[idCounter].isNewPacket = false;
@@ -435,7 +394,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
       total_packet_length += PACKET_SIZE_ROBOT_COMMAND;
     }
 
-    /* Add buzzer command */
+    /* Add RobotBuzzer to the transmission */
     if(buffer_RobotBuzzer[idCounter].isNewPacket
     && total_packet_length + PACKET_SIZE_ROBOT_BUZZER < MAX_PACKET_SIZE){
       buffer_RobotBuzzer[idCounter].isNewPacket = false;

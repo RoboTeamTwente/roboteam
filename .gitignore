@@ -1,3 +1,17 @@
+# Custom
+.project
+.cproject
+.mxproject
+.pio/
+.vscode/
+__pycache__
+.idea/
+Drivers
+Middlewares
+USB_DEVICE
+startup
+STM32F767ZITx_FLASH.ld
+python_utils/rem
 # Prerequisites
 *.d
 

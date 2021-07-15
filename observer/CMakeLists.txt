@@ -22,7 +22,9 @@ add_library(observer STATIC
         src/filters/vision/ball/BallObservation.cpp
         include/observer/filters/vision/KalmanFilter.h
         src/filters/vision/ball/GroundBallExtendedKalmanFilter.cpp
-        src/filters/vision/ball/FilteredBall.cpp src/filters/vision/ball/FilteredBall.h)
+        src/filters/vision/ball/FilteredBall.cpp
+        src/filters/vision/ball/BallAssigner.cpp
+        )
 target_link_libraries(observer
         PUBLIC data
         PUBLIC roboteam_proto

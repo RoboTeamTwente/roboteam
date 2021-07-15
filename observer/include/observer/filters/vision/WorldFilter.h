@@ -5,7 +5,7 @@
 #include <roboteam_proto/WorldRobot.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 
-//#include "BallFilter.h"
+#include "observer/filters/vision/ball/BallFilter.h"
 #include "observer/filters/vision/robot/RobotFilter.h"
 #include "DetectionFrame.h"
 #include "observer/parameters/RobotParameterDatabase.h"
@@ -37,6 +37,7 @@ class WorldFilter {
   typedef std::map<RobotID, std::vector<RobotFilter>> robotMap;
   robotMap blue;
   robotMap yellow;
+  std::vector<BallFilter> balls;
 
   RobotParameters blueParams;
   RobotParameters yellowParams;
@@ -49,11 +50,10 @@ class WorldFilter {
   void processFrame(const DetectionFrame& frame);
   void processRobots(const DetectionFrame& frame, bool blueBots);
   void processBalls(const DetectionFrame& frame);
-  void processForVirtualBalls(const DetectionFrame& frame);
   [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time)  const;
   [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
   void addRobotPredictionsToMessage(proto::World& world, Time time) const;
-
+  void addBallPredictionsToMessage(proto::World& world, Time time) const;
 
   //do they care, although these method are static, they DO modify the current object as they have a robotMap&
   static void predictRobots(const DetectionFrame &frame, robotMap &robots);

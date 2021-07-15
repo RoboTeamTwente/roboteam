@@ -3,7 +3,7 @@
 //
 
 #include "filters/vision/WorldFilter.h"
-
+#include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {
 }
 
@@ -15,6 +15,7 @@ proto::World WorldFilter::getWorldPrediction(const Time &time) const {
   //TODO: split up in functions for robot and ball
   proto::World world;
   addRobotPredictionsToMessage(world,time);
+  addBallPredictionsToMessage(world,time);
   world.set_time(time.asNanoSeconds());
 
   return world;
@@ -96,9 +97,10 @@ void WorldFilter::predictRobots(const DetectionFrame &frame, robotMap &robots) {
 }
 
 void WorldFilter::processFrame(const DetectionFrame &frame) {
+  //robots are processed first, as the robots can affect the ball but vice versa not so much
   processRobots(frame, true);
   processRobots(frame, false);
-
+  processBalls(frame);
 }
 
 
@@ -164,6 +166,40 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
   std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
   for (const auto &yellowBot : yellowRobots) {
     world.mutable_yellow()->Add()->CopyFrom(yellowBot.asWorldRobot());
+  }
+}
+void WorldFilter::processBalls(const DetectionFrame &frame) {
+  std::vector<CameraGroundBallPrediction> predictions(balls.size());
+  //get predictions from cameras
+  for (std::size_t i = 0; i < balls.size(); ++i) {
+    predictions[i] = balls[i].predictCam(frame.cameraID,frame.timeCaptured).prediction;
+  }
+  //assign observations to relevant filters
+  BallAssignmentResult assignment = BallAssigner::assign_balls(predictions,frame.balls);
+
+  //update filters with their paired observations
+  //we iterate backwards: this helps keep the logic clean when erasing filters
+  for (int i = static_cast<int>(balls.size())-1; i >= 0; --i) {
+    bool removeFilter = balls[i].processDetections(assignment.op_pairs[i],frame.cameraID);
+    if(removeFilter){
+      balls.erase(balls.begin()+i);
+    }
+  }
+
+  //create new ball filters for balls which were not yet assigned
+  for(const auto& newBall : assignment.unpairedObservations){
+    balls.emplace_back(BallFilter(newBall));
+  }
+}
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
+  if(!balls.empty()){
+    auto bestFilter = std::max_element(balls.begin(),balls.end(),[](const BallFilter& best, const BallFilter& filter){
+      return best.getHealth() < filter.getHealth();
+    });
+
+    FilteredBall bestBall = bestFilter->mergeBalls(time);
+
+    world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
   }
 }
 

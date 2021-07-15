@@ -86,10 +86,19 @@ class PosVelFilter1D {
    */
   void setCovariance(const Eigen::Matrix2d &covariance);
 
-  [[maybe_unused]] [[nodiscard]] Time lastUpdated() const;
+  /**
+   * @return The last time the filter was predicted to.
+   */
+  [[nodiscard]] Time lastUpdated() const;
 
+  /**
+   * @return The covariance matrix of the filter
+   */
   [[nodiscard]] Eigen::Matrix2d getCovariance() const;
 
+  /**
+   * @return the innovation, e.g. the difference between the last observation and the last prediction
+   */
   [[nodiscard]] double getInnovation() const;
 
  protected:

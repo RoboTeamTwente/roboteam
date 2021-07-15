@@ -11,7 +11,7 @@
  * @brief Class that filters 2d positions. This is essentially a constant velocity kalman filter in 2 dimensions.
  * objects are assumed to keep moving as they do.
  * the first two state index represent the x and y coordinates,
- * the 3rd and fourth represent the x and y velocity respectively
+ * the 3rd and fourth represent the x and y velocity respectively.
  */
 class PosVelFilter2D {
  public:
@@ -91,12 +91,26 @@ class PosVelFilter2D {
    */
   void setCovariance(const Eigen::Matrix4d &covariance);
 
+  /**
+   * @return the time the filter was last predicted to.
+   */
   [[nodiscard]] Time lastUpdated() const;
 
+  /**
+   * @return The current covariance of the kalman filter
+   */
   [[nodiscard]] Eigen::Matrix4d getCovariance() const;
 
+  /**
+   * @return the innovation, e.g. the difference between the last prediction and observation in the last update function.
+   */
   [[nodiscard]] Eigen::Vector2d getInnovation() const;
 
+  /**
+   * Adds uncertainty to the filter by increasing the diagonal entries of the covariance matrix
+   * @param posUncertainty
+   * @param velUncertainty
+   */
   void addUncertainty(double posUncertainty, double velUncertainty);
  private:
   //Before every tick we need to set the matrices we use using the dt of the tick

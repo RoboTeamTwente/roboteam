@@ -67,3 +67,9 @@ FilteredBall BallFilter::mergeBalls(Time time) const {
 
   return ball;
 }
+double BallFilter::getHealth() const {
+  double maxHealth = 0.0;
+  for (const auto &filter : groundFilters) {
+    maxHealth = fmax(filter.second.getHealth(), maxHealth);
+  }
+  return maxHealth;}

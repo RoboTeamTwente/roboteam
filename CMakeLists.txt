@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(roboteam_world)
 
+include(LocateQt5)
+
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Network)
 add_subdirectory(data)

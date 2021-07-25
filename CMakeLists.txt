@@ -6,17 +6,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O3")
 
-# for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
-if(APPLE)
-    set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
-endif()
+include(LocateQt5)
 
-# for Linux, BSD, Solaris, Minix
-if(UNIX AND NOT APPLE)
-    SET(Qt5Network_DIR "/usr/include/x86_64-linux-gnu/qt5/Qt5Network")
-endif()
-
-find_package(Qt5Network REQUIRED)
+find_package(Qt5 COMPONENTS Network REQUIRED)
 
 add_executable(roboteam_robothub
         src/packing.cpp

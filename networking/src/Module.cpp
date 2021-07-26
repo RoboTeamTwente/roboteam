@@ -1,4 +1,4 @@
-#include "Module.hpp"
+#include "networking/Module.hpp"
 
 namespace rtt::networking {
     Module::Module(proto::Handshake handshake)

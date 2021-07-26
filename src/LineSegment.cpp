@@ -1,5 +1,3 @@
-#include "../include/roboteam_utils/LineSegment.h"
-#include "../include/roboteam_utils/Line.h"
 #include "HalfLine.h"
 
 namespace rtt {

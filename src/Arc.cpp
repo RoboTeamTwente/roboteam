@@ -1,6 +1,8 @@
-#include "../include/roboteam_utils/Arc.h"
-#include "../include/roboteam_utils/Mathematics.h"
+#include "Arc.h"
+
 #include <iostream>
+
+#include "Mathematics.h"
 
 namespace rtt {
 

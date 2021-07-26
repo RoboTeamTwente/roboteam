@@ -1,6 +1,6 @@
+#include "Line.h"
+
 #include "Print.h"
-#include "../include/roboteam_utils/Line.h"
-#include "../include/roboteam_utils/LineSegment.h"
 
 namespace rtt {
 Line::Line(const Vector2 &v1, const Vector2 &v2) {

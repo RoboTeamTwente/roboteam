@@ -1,5 +1,6 @@
-#include "../include/roboteam_utils/Vector2.h"
 #include <cmath>
+
+#include "Vector2.h"
 
 namespace rtt {
 

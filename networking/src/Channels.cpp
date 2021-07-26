@@ -1,5 +1,5 @@
 
-#include "../include/Channels.h"
+#include "networking/Channels.h"
 
 namespace proto {
 

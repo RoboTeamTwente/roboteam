@@ -2,9 +2,10 @@
 // Created by rolf on 24-01-20.
 //
 
-#include "Triangle.h"
-#include "LineSegment.h"
-#include "Line.h"
+#include "roboteam_utils/Triangle.h"
+
+#include "roboteam_utils/Line.h"
+#include "roboteam_utils/LineSegment.h"
 
 namespace rtt {
 Triangle::Triangle(const Vector2 &point1, const Vector2 &point2, const Vector2 &point3)

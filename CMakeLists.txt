@@ -1,12 +1,5 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 project(roboteam_robothub)
-
-# Needed for the documentation generator.
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O3")
-
-include(LocateQt5)
 
 find_package(Qt5 COMPONENTS Network REQUIRED)
 
@@ -15,16 +8,18 @@ add_executable(roboteam_robothub
         src/GRSim.cpp
         src/SerialDeviceManager.cpp
         src/RobotHub.cpp
-        src/main.cpp src/SSLSimulator.cpp include/roboteam_robothub/SSLSimulator.h)
+        src/main.cpp
+        src/SSLSimulator.cpp
+        )
 
 
 target_include_directories(roboteam_robothub
-        INTERFACE include
         PRIVATE include/roboteam_robothub
-        PRIVATE src )
+        INTERFACE include
+        )
 
 target_link_libraries(roboteam_robothub
-        PUBLIC roboteam_proto
+        PRIVATE roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         )

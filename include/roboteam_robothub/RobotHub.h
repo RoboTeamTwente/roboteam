@@ -5,16 +5,17 @@
 #ifndef ROBOTEAM_ROBOTHUB_APPLICATION_H
 #define ROBOTEAM_ROBOTHUB_APPLICATION_H
 
-#include <Publisher.h>
-#include <Subscriber.h>
-#include <string>
-#include <roboteam_proto/RobotData.pb.h>
+#include <networking/Publisher.h>
+#include <networking/Subscriber.h>
 #include <roboteam_proto/AICommand.pb.h>
+#include <roboteam_proto/RobotData.pb.h>
 #include <roboteam_proto/Setting.pb.h>
 
+#include <string>
+
+#include "SSLSimulator.h"
 #include "constants.h"
 #include "utilities.h"
-#include "SSLSimulator.h"
 
 namespace rtt::robothub {
 

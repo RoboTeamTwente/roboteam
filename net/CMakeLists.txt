@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+
 add_library(net STATIC
         src/netraw.cpp
         src/robocup_ssl_client.cpp

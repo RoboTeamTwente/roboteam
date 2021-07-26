@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+
 add_library(observer STATIC
         src/filters/WorldFilter.cpp
         src/filters/RobotFilter.cpp
@@ -19,12 +21,8 @@ target_include_directories(observer
         PRIVATE include/observer
         PUBLIC include
         )
-target_compile_options(observer
-        PUBLIC
-        -O3
-        -std=c++11
-        )
 
+set_target_properties(observer PROPERTIES UNITY_BUILD FALSE)
 
 add_executable(observer_tests
         test/main.cpp

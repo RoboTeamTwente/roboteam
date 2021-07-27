@@ -53,10 +53,9 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 # Installation
 ## List of dependencies
 
-- [CMake 3.10](https://cmake.org/)
+- [CMake 3.16](https://cmake.org/)
 - [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
 - [ZeroMQ 4.2.5](https://zeromq.org/)
-- [zmqpp 4.1.2](https://github.com/zeromq/zmqpp) 
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [QT5](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
 - [QT5Charts](https://doc.qt.io/qt-5/qtcharts-index.html)
@@ -81,7 +80,7 @@ $ sudo ldconfig # refresh shared library cache.
 
 ### Install ZMQ
 ```
-$ sudo apt-get install libzmq3-dev libzmqpp-dev
+$ sudo apt-get install libzmq3-dev
 ```
 ### Install Eigen3
 ```
@@ -113,13 +112,15 @@ If you want to run tests, please install and build gtest using the following ins
 (https://stackoverflow.com/questions/28869319/cannot-find-lgtest-when-setting-up-google-test) <br>
 \* You can follow similar steps for google mock, should you need it
 
-## Installation on macOS (tested on macOS 10.14 Mojave)
+## Installation on macOS (tested on macOS 11.4 Big Sur)
 Make sure you already have the following:
-- CMake (3.10 or higher)
-- HomeBrew
+- XCode
+- XCode Command Line Tools (Run XCode once, then `xcode-select --install`)
+- Homebrew
 
 ```
-$ brew install zmq zmqpp armadillo protobuf
+$ brew install cmake zmq armadillo libsodium
+$ brew install protobuf --HEAD     # As of 3.17.3, protobuf is is broken and neeeds to be compiled from HEAD
 ```
 ## Code Style Formatting
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.

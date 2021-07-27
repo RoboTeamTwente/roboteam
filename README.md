@@ -35,6 +35,16 @@ Also, make sure you have installed GRSim using the instructions found on the [Ro
 ```
 /directory_you_cloned_grsim/grSim/bin/grsim
 ```
+
+## Faster compilation
+CCache will be automatically enabled and cache compilation results if installed (speeding up recompilation).
+
+Ninja (a modern replacement for Make) has to be manually enabled. Add `-G Ninja` and `-j <# of threads, use ~# of CPU cores>` to CMake parameters in CLion.
+
+Don't forget to do the same for any Release profiles as well.
+
+<img src="https://github.com/RoboTeamTwente/roboteam_suite/blob/RobotJesse-patch-1/readme_images/enable_ninja.png?raw=true" width="800" height="500"><br>
+
 ## Making the executables: 
 
 Make sure the vision multicast port is set to 10006
@@ -59,6 +69,8 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [QT5](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
 - [QT5Charts](https://doc.qt.io/qt-5/qtcharts-index.html)
+- [Ninja](http://ninja-build.org)
+- [CCache](https://ccache.dev)
 - [Google Test and Google Mock](https://github.com/google/googletest)
 ## Installation on Linux (tested on Ubuntu 18.04 Bionic Beaver)
 
@@ -96,6 +108,17 @@ $ sudo apt-get install qt5-default
 ```
 $ sudo apt install libqt5charts5-dev 
 ```
+
+### Install Ninja 
+```
+$ sudo apt install ninja-build
+```
+
+### Install Ccache
+```
+$ sudo apt install ccache
+```
+
 ### Install Google Test
 If you want to run tests, please install and build gtest using the following instructions:
 `sudo apt-get install lcov gcovr` <br>
@@ -121,6 +144,15 @@ Make sure you already have the following:
 ```
 $ brew install cmake zmq armadillo libsodium
 $ brew install protobuf --HEAD     # As of 3.17.3, protobuf is is broken and neeeds to be compiled from HEAD
+```
+
+Create a sparse disk image with a case-sensitive FS to hold source code
+```
+$ hdiutil create -size 2g -volname rbtt-workspace -layout GPTSPUD -fs "Case-sensitive APFS" -type SPARSE -nospotlight ~/Desktop/rbtt_workspace
+$ hdiutil attach ~/Desktop/rbtt_workspace
+$ cd /Volumes/rbtt_workspace/
+$ git clone git@github.com:RoboTeamTwente/roboteam_suite.git
+$ git submodule update --init --recursive
 ```
 ## Code Style Formatting
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.

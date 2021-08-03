@@ -4,8 +4,8 @@
 #include <roboteam_proto/RobotData.pb.h>
 #include <roboteam_proto/State.pb.h>
 #include <net/robocup_ssl_client.h>
-#include <Publisher.h> //TODO: ugly include, fix in utils
-#include <Subscriber.h>
+#include <networking/Publisher.h>
+#include <networking/Subscriber.h>
 #include <observer/Observer.h>
 #include <utility>
 #include "RobocupReceiver.h"

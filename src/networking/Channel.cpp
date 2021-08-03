@@ -1,4 +1,4 @@
-#include "../include/Channel.h"
+#include "networking/Channel.h"
 
 proto::Channel::Channel(std::string name, std::string ip, std::string port)
   : name(std::move(name)), ip(std::move(ip)), port(std::move(port))

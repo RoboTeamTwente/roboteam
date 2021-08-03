@@ -1,7 +1,9 @@
-#include "../include/roboteam_utils/Vector2.h"
-#include "../include/roboteam_utils/Angle.h"
-#include "../include/roboteam_utils/Definitions.h"
+#include "Vector2.h"
+
 #include <cmath>
+
+#include "Angle.h"
+#include "Definitions.h"
 
 namespace rtt {
 

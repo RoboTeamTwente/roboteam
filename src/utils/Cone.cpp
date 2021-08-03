@@ -1,8 +1,10 @@
-#include "../include/roboteam_utils/Cone.h"
-#include "../include/roboteam_utils/Vector2.h"
-#include "GeometryFieldSize.pb.h"
+#include "roboteam_utils/Cone.h"
+
 #include <cmath>
-#include "../include/roboteam_utils/Mathematics.h"
+
+#include "GeometryFieldSize.pb.h"
+#include "roboteam_utils/Mathematics.h"
+#include "roboteam_utils/Vector2.h"
 
 namespace rtt {
 

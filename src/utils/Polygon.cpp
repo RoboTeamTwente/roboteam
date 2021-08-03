@@ -2,7 +2,7 @@
 // Created by rolf on 24-4-19.
 //
 
-#include "../include/roboteam_utils/Polygon.h"
+#include "Polygon.h"
 #include <numeric>
 #include <utility>
 

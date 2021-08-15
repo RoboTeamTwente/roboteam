@@ -12,5 +12,4 @@ target_include_directories(roboteam_interface_lib
 
 target_link_libraries(roboteam_interface_lib
         PUBLIC Qt5::Widgets
-        PRIVATE roboteam_proto
-        PRIVATE zmqpp)
+        PRIVATE utils_networking_lib)

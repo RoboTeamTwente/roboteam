@@ -27,6 +27,6 @@ FetchContent_Declare(proj_ixwebsocket
 
 FetchContent_MakeAvailable(proj_libzmqpp proj_sdl2 proj_stx proj_ixwebsocket)
 
-target_include_directories(zmqpp INTERFACE ${proj_libzmqpp_SOURCE_DIR}/src)
+target_include_directories(zmqpp BEFORE INTERFACE ${proj_libzmqpp_SOURCE_DIR}/src)
 
 set_target_properties(SDL2 PROPERTIES UNITY_BUILD FALSE)

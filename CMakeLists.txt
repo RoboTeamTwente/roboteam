@@ -3,8 +3,6 @@ project(rtt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 
-set(CMAKE_GENERATOR Ninja)
-
 include(ccache)
 
 set(CMAKE_CXX_STANDARD 20) # -std=c++17

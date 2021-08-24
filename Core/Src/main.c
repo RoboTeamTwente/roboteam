@@ -37,33 +37,12 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "control_util.h"
-#include "gpio_util.h"
-#include "tim_util.h"
-#include "peripheral_util.h"
-#include "PuTTY.h"
-#include "wheels.h"
-#include "stateControl.h"
-#include "stateEstimation.h"
-#include "geneva.h"
-#include "dribbler.h"
-#include "shoot.h"
-#include "Wireless.h"
-#include "buzzer.h"
-#include "MTi.h"
-#include "yawCalibration.h"
-#include "iwdg.h"
-#include "ballSensor.h"
-#include "testFunctions.h"
-
-#include "time.h"
-#include <unistd.h>
+#include "robot.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,23 +94,7 @@ UART_HandleTypeDef huart5;
 DMA_HandleTypeDef hdma_uart5_tx;
 
 /* USER CODE BEGIN PV */
-#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
-#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
-SX1280* SX;
-MTi_data* MTi;
-int counter = 0;
-int strength = 0;
-
-ReceivedData receivedData = {{0.0}, false, 0.0f, geneva_none, 0, 0, false, false};
-volatile roboAckData AckData = {0};
-volatile uint8_t feedback[ROBOPKTLEN] = {0};
-StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
-bool halt = true;
-bool xsens_CalibrationDone = false;
-bool xsens_CalibrationDoneFirst = true;
-
-IWDG_Handle* iwdg;
 
 /* USER CODE END PV */
 
@@ -164,203 +127,6 @@ static void MX_TIM14_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
-	if(hspi->Instance == SX->SPI->Instance) {
-		Wireless_DMA_Handler(SX, PC_to_Bot, &receivedData);
-		counter++;
-		strength+= SX->Packet_status->RSSISync;
-	}else if(hspi->Instance == MTi->SPI->Instance){
-		MTi_SPI_RxCpltCallback(MTi);
-	}
-}
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == UART_PC->Instance){
-		Putty_UARTCallback(huart);
-	}
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-		// test only! construct feedback message elsewhere
-		roboAckDataToPacket(&AckData,feedback);
-		Wireless_IRQ_Handler(SX, feedback, ROBOPKTLEN);
-	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
-		MTi_IRQ_Handler(MTi);
-	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
-		// TODO: make this work and use instead of the thing in the while loop
-//		ballSensor_IRQ_Handler();
-	}
-}
-
-// Set the references from the received data and execute the desired actions.
-void executeCommands(ReceivedData* receivedData) {
-	stateControl_SetRef(receivedData->stateRef);
-	geneva_SetRef(receivedData->genevaRef);
-	dribbler_SetSpeed(receivedData->dribblerRef);
-	shoot_SetPower(receivedData->shootPower);
-
-	if (receivedData->do_kick) {
-		if (receivedData->kick_chip_forced){
-			// no questions asked
-			shoot_Shoot(shoot_Kick);
-		}
-		else if (ballPosition.canKickBall) {
-			bool geneva_able = true; // set to false to use geneva+ballsensor
-//			switch(geneva_GetState()){
-//				case geneva_none: 		geneva_able = false;				break;
-//				case geneva_leftleft: 	geneva_able = ballPosition.x > 300;	break;
-//				case geneva_left:		geneva_able = ballPosition.x > 250;	break;
-//				case geneva_middle:		geneva_able = true;					break;
-//				case geneva_right:		geneva_able = ballPosition.x < 450;	break;
-//				case geneva_rightright: geneva_able = ballPosition.x < 350;	break;
-//			}
-			if(geneva_able){
-				shoot_Shoot(shoot_Kick);
-			}
-		}
-	}
-	else if (receivedData->do_chip) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
-			shoot_Shoot(shoot_Chip);
-		}
-	}
-}
-
-void clearReceivedData(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->kick_chip_forced = false;
-	receivedData->dribblerRef = 0;
-	receivedData->genevaRef = geneva_none;
-	receivedData->shootPower = 0;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-}
-
-// Handles the interrupts of the different timers.
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	if(htim->Instance == htim6.Instance){
-		if (xsens_CalibrationDone) {	// don't do geneva update until xsens calibration is done
-			geneva_Update();
-		}
-	}
-	else if(htim->Instance == htim7.Instance) {
-		if (xsens_CalibrationDone) {	// don't do control until xsens calibration is done
-			if (!test_isTestRunning()) {
-				// State estimation
-				stateInfo.visionAvailable = receivedData.visionAvailable;
-				stateInfo.visionYaw = receivedData.visionYaw;
-				for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-					stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-				}
-
-				stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-				stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-				stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-				stateInfo.rateOfTurn = MTi->gyr[2];
-				stateEstimation_Update(&stateInfo);
-
-				// State control
-				stateControl_SetState(stateEstimation_GetState());
-				stateControl_Update();
-
-				if (halt || !yaw_hasCalibratedOnce) {
-					float emptyRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-					wheels_SetRef(emptyRef);
-				}
-				else {
-					// Wheel control
-					wheels_SetRef(stateControl_GetWheelRef());
-				}
-			}
-			static int wirelessCounter = 0;
-			if (!checkWirelessConnection() && wirelessCounter > 1.25/TIME_DIFF && !test_isTestRunning()){
-				yaw_ResetCalibration();
-			} else if (!checkWirelessConnection()){
-				wheels_Update();
-				wirelessCounter += 1;
-			} else {
-				wirelessCounter = 0;
-				wheels_Update();
-			}
-		}
-	}
-	else if (htim->Instance == htim10.Instance) {
-		buzzer_Callback();
-	}
-	else if (htim->Instance == htim11.Instance) {
-		shoot_Callback();
-	}
-}
-
-void printReceivedData(ReceivedData* receivedData) {
-	Putty_printf("\n\r");
-	Putty_printf("-----Received robot data-------\n\r");
-	Putty_printf("velocity:\n\r");
-	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
-	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
-	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-	Putty_printf("geneva state: %d\n\r", receivedData->genevaRef);
-	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
-	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
-	Putty_printf("kick: %u\n\r",receivedData->do_kick);
-	Putty_printf("chip: %u\n\r",receivedData->do_chip);
-	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
-	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
-	Putty_printf("\n\r");
-}
-
-void printRobotStateData() {
-	Putty_printf("\n\r");
-	Putty_printf("-------Robot state data--------\n\r");
-	Putty_printf("halt? %u\n\r", halt);
-	Putty_printf("Braking? %u\n\r", wheels_IsBraking());
-	Putty_printf("velocity (Kalman):\n\r");
-	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
-	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
-	Putty_printf("acceleration (xsens):\n\r");
-	Putty_printf("  x: %f m/s^2\n\r", MTi->acc[body_x]);
-	Putty_printf("  y: %f m/s^2\n\r", MTi->acc[body_y]);
-	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-	Putty_printf("Xsens rate of turn: %f rad/s\n\r", MTi->gyr[2]);
-	Putty_printf("wheel refs:\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", wheels_GetState()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", wheels_GetState()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", wheels_GetState()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", wheels_GetState()[wheels_LF]);
-	Putty_printf("wheel pwm:\n\r");
-	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
-	Putty_printf("Geneva: \n\r");
-	Putty_printf("  encoder: %d \n\r", geneva_GetEncoder());
-	Putty_printf("  pwm: %d\n\r", geneva_GetPWM());
-	Putty_printf("  ref: %f\n\r", geneva_GetRef());
-}
-
-void printBaseStation() {
-	Putty_printf("----->FROM BASESTATION----->\n\r");
-	char msg[40];
-	for(int i=0, j=0; j<ROBOPKTLEN; i++, j++) {
-		sprintf(&msg[i], "%02X  ", PC_to_Bot[j]);
-		i += 2;
-	}
-	Putty_printf("packet_counter: %d\n\r",counter);
-	counter = 0;
-	Putty_printf(msg);
-	Putty_printf("\n\r");
-}
 
 /* USER CODE END 0 */
 
@@ -386,14 +152,14 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  HAL_InitTick(0);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -420,37 +186,7 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
-  set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
-  set_Pin(OUT2_pin, HIGH);	// reference pin for feedback header
-
-  // Check if robot has 30 W or 50 W motors (jumper = 50 W, no jumper = 30 W)
-  MOTORS_50W = true;//read_Pin(IN1_pin);
-  // Initialize control constants
-  control_util_Init();
-
-  Putty_Init();
-  wheels_Init();
-  stateControl_Init();
-  stateEstimation_Init();
-  geneva_Init();
-  shoot_Init();
-  dribbler_Init();
-  ballSensor_Init();
-  buzzer_Init();
-
-  SX = Wireless_Init(COMMAND_CHANNEL, COMM_SPI);
-  wirelessFeedback = true;//read_Pin(IN2_pin);	// check if we should enable feedback or not (jumper = feedback)
-  MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
-  uint16_t ID = get_Id();
-  Putty_printf("\n\rID: %u\n\r",ID);
-
-  // start the wireless receiver
-  // transmit feedback packet for every received packet if wirelessFeedback==true
-  SX->SX_settings->syncWords[0] = robot_syncWord[ID];
-  setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-  setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
-
-  IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+  init();
 
   /* USER CODE END 2 */
 
@@ -458,127 +194,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /*
-	   * Check for empty battery
-	   */
-	  static int batCounter = 0;
-	  if (read_Pin(Bat_pin) && batCounter > 1000){
-		  Putty_printf("battery empty\n\r");
-		  buzzer_Play_ImperialMarch();
-		  set_Pin(LED5_pin, 1);
-		  Putty_DeInit();
-		  wheels_DeInit();
-		  stateControl_DeInit();
-		  stateEstimation_DeInit();
-		  geneva_DeInit();
-		  shoot_DeInit();
-		  dribbler_DeInit();
-		  ballSensor_DeInit();
-		  buzzer_DeInit();
-		  MTi_DeInit(MTi);
-		  Wireless_DeInit();
-	  }else if (read_Pin(Bat_pin)) {
-	  	  batCounter += 1;
-	  } else {
-		  batCounter = 0;
-	  }
-
-	  IWDG_Refresh(iwdg);
-	  Putty_Callback();
-
-	  if (read_Pin(BS_IRQ_pin)){
-		  ballSensor_IRQ_Handler();
-	  }
-
-	  /*
-	   * Check for wireless data
-	   */
-	  xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-	  halt = !(xsens_CalibrationDone && checkWirelessConnection());
-	  if (halt) {
-		  stateControl_ResetAngleI();
-		  clearReceivedData(&receivedData);
-	  }
-
-	  /*
-	   * Unbrake wheels when Xsens calibration is done
-	   */
-	  if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
-		  xsens_CalibrationDoneFirst = false;
-		  wheels_Brake(false);
-	  }
-
-	  test_Update(&receivedData);
-	  executeCommands(&receivedData);
-
-	  /*
-	   * Feedback
-	   */
-	  AckData.roboID = ID;
-	  AckData.XsensCalibrated = xsens_CalibrationDone;
-	  AckData.battery = (batCounter > 1000);
-	  AckData.ballSensorWorking = ballSensor_isWorking();
-	  AckData.hasBall = ballPosition.canKickBall;
-	  AckData.ballPos = ballPosition.x/100 & ballSensor_isWorking();
-	  AckData.genevaWorking = geneva_IsWorking();
-	  AckData.genevaState = geneva_GetState();
-
-	  float vx = stateEstimation_GetState()[body_x];
-	  float vy = stateEstimation_GetState()[body_y];
-	  AckData.rho = sqrt(vx*vx + vy*vy) / CONVERT_RHO;
-	  AckData.angle = stateEstimation_GetState()[body_w] / CONVERT_YAW_REF;
-	  AckData.theta = atan2(vy, vx) / 0.0062; // range is [-512, 511] instead of [-1024, 1023]
-	  AckData.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-	  AckData.signalStrength = SX->Packet_status->RSSISync/2;
-	  //memset(&AckData,0xAB,8);
-
-	  /*
-	   * Print stuff on PuTTY for debugging
-	   */
-
-
-	  static int printTime = 0;
-	  if (HAL_GetTick() > printTime + 1000) {
-		  printTime = HAL_GetTick();
-		  toggle_Pin(LED0_pin);
-		  if ((!ballSensorInitialized && init_attempts < 5) || !ballPosition.canSeeBall) {
-			  init_attempts++;
-			  ballSensor_Init();
-			  __HAL_I2C_DISABLE(BS_I2C);
-			  HAL_Delay(1);
-			  __HAL_I2C_ENABLE(BS_I2C);
-		  } else if (init_attempts == 5) {
-			  init_attempts++;
-			  Putty_printf("too many BS_INIT attempts. Quit!\n\r");
-			  buzzer_Play_PowerUp();
-		  } else if (ballSensorInitialized) {
-			  init_attempts = 0;
-		  }
-
-//		  printBaseStationData();
-//		  printReceivedData(&receivedData);
-//		  printRobotStateData();
-	  }
-
-	  /*
-	   * LEDs for debugging
-	   */
-
-	  // LED0 : toggled every second while alive
-	  // LED1 : on while xsens startup calibration is not finished
-	  // LED2 : on when braking
-	  // LED3 : on when halting
-	  // LED4 : on when ballsensor says ball is within kicking range
-	  // LED5 : on when battery is empty
-	  // LED6 : toggled when a packet is received
-
-	  // LED0 done in PuTTY prints above
-	  set_Pin(LED1_pin, !xsens_CalibrationDone);
-	  set_Pin(LED2_pin, wheels_IsBraking());
-	  set_Pin(LED3_pin, halt);
-	  set_Pin(LED4_pin, ballPosition.canKickBall);
-	  set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
-	  // LED6 done in Wireless.c
+    
+    loop();
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -596,31 +214,27 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  /**Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /**Initializes the CPU, AHB and APB busses clocks 
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 216;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 150;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
-  /**Activate the Over-Drive mode 
-  */
-  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /**Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -629,7 +243,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -661,7 +275,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x6000030D;
+  hi2c1.Init.Timing = 0x00301242;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -673,13 +287,13 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
-  /**Configure Analogue filter 
+  /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-  /**Configure Digital filter 
+  /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
   {
@@ -1392,7 +1006,7 @@ static void MX_TIM13_Init(void)
   htim13.Instance = TIM13;
   htim13.Init.Prescaler = APB-1;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim13.Init.Period = 0;
+  htim13.Init.Period = 65535;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim13) != HAL_OK)
@@ -1423,7 +1037,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = APB-1;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 0;
+  htim14.Init.Period = 65535;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -1471,11 +1085,12 @@ static void MX_UART5_Init(void)
 
 }
 
-/** 
+/**
   * Enable DMA controller clock
   */
-static void MX_DMA_Init(void) 
+static void MX_DMA_Init(void)
 {
+
   /* DMA controller clock enable */
   __HAL_RCC_DMA2_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
@@ -1525,7 +1140,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+  HAL_GPIO_WritePin(GPIOE, LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin
                           |Chip_Pin|Kick_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1535,11 +1150,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_OUT1_Pin|GPIO_OUT2_Pin|RF_FR_Pin|RF_BRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
+  HAL_GPIO_WritePin(GPIOF, LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin
                           |LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin 
+  HAL_GPIO_WritePin(GPIOG, LD1_Pin|LD0_Pin|RB_BRK_Pin|RB_FR_Pin
                           |SPI1_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1557,9 +1172,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Charge_done_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LF_BRK_Pin LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin 
+  /*Configure GPIO pins : LF_BRK_Pin LF_FR_Pin SPI4_NSS_Pin SPI4_RST_Pin
                            Chip_Pin Kick_Pin */
-  GPIO_InitStruct.Pin = LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin 
+  GPIO_InitStruct.Pin = LF_BRK_Pin|LF_FR_Pin|SPI4_NSS_Pin|SPI4_RST_Pin
                           |Chip_Pin|Kick_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1598,9 +1213,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD6_Pin LD5_Pin LD4_Pin LD3_Pin 
+  /*Configure GPIO pins : LD6_Pin LD5_Pin LD4_Pin LD3_Pin
                            LD2_Pin */
-  GPIO_InitStruct.Pin = LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin 
+  GPIO_InitStruct.Pin = LD6_Pin|LD5_Pin|LD4_Pin|LD3_Pin
                           |LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1705,7 +1320,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

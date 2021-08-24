@@ -14,15 +14,17 @@
 #ifndef WHEELS_H_
 #define WHEELS_H_
 
-#include "../Util/control_util.h"
-#include "../Util/gpio_util.h"
-#include "../Util/tim_util.h"
+#include "control_util.h"
+#include "gpio_util.h"
+#include "tim_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 int wheels_Init();
 
 int wheels_DeInit();
+
+void wheels_Stop();
 
 void wheels_Update();
 

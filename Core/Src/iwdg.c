@@ -38,7 +38,7 @@ HAL_StatusTypeDef IWDG_Init(IWDG_Handle* hiwdg)
 	return HAL_OK;
 }
 
-inline void IWDG_Refresh(IWDG_Handle* hiwdg)
+void IWDG_Refresh(IWDG_Handle* hiwdg)
 {
 	WRITE_REG((hiwdg)->mem->Key, RELOAD);
 }

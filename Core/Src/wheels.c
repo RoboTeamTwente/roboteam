@@ -1,5 +1,5 @@
 
-#include "../Inc/wheels.h"
+#include "wheels.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -51,6 +51,7 @@ static void checkEncoder(wheel_names wheel);
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 int wheels_Init(){
+	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
 	wheels_state = on;
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 		if (MOTORS_50W) {
@@ -99,6 +100,15 @@ int wheels_DeInit(){
 	}
 	SetPWM();
 	return 0;
+}
+
+
+/* Stop the motors without deinitializing them */
+void wheels_Stop(){
+	for (int i=0; i<4; i++) {
+		pwm[i] = 0;
+	}
+	SetPWM();
 }
 
 void wheels_Update(){

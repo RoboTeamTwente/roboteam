@@ -13,9 +13,9 @@
 #ifndef DRIBBLER_DRIBBLER_H_
 #define DRIBBLER_DRIBBLER_H_
 
-#include "../Util/control_util.h"
-#include "../Util/gpio_util.h"
-#include "../Util/tim_util.h"
+#include "control_util.h"
+#include "gpio_util.h"
+#include "tim_util.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 

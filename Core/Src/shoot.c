@@ -94,8 +94,7 @@ void shoot_SetPower(int input){
 
 void shoot_Shoot(shoot_types type)
 {
-	bool genevaNotTurning = (geneva_GetPWM() == 0);
-	if(shootState == shoot_Ready && genevaNotTurning)
+	if(shootState == shoot_Ready)
 	{
 //		Putty_printf("shooting! power = %d \n\r", power);
 		shootState = shoot_Shooting;
@@ -119,9 +118,17 @@ void resetTimer(int timePeriod)
 
 int calculateShootingTime(shoot_types type) {
 	if (type == shoot_Kick) {
-		return /*((1.0 - power/100.0) **/ MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME/*)*/;
+		int kickTime = MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME;
+		if(kickTime < MIN_KICK_TIME) kickTime = MIN_KICK_TIME;
+		if(MAX_KICK_TIME < kickTime) kickTime = MAX_KICK_TIME;
+		return kickTime;
+		// return /*((1.0 - power/100.0) **/ MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME/*)*/;
 	} else if (type == shoot_Chip) {
-		return /*((1.0 - power/100.0) **/ MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME/*)*/;
+		int chipTime = MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME;
+		if(chipTime < MIN_CHIP_TIME) chipTime = MIN_CHIP_TIME;
+		if(MAX_CHIP_TIME < chipTime) chipTime = MAX_CHIP_TIME;
+		return chipTime;
+		// return /*((1.0 - power/100.0) **/ MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME/*)*/;
 	}
 	return 0;
 }

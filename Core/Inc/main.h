@@ -67,6 +67,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+char logBuffer[100];
+
 
 /* USER CODE END EM */
 
@@ -80,7 +82,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define APB 216
+#define APB 150
 #define MAX_PWM 3000
 #define ENCODER_FILTER 15
 #define Charge_done_Pin GPIO_PIN_2

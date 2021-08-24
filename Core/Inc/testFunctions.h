@@ -16,13 +16,12 @@
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
-#define nTests 6
+#define nTests 7
 
 typedef enum {
 	normal,
 	full,
 	square,
-	geneva,
 	wheels,
 	shoot,
 	dribbler

@@ -65,13 +65,15 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 
 ### List of dependencies
 
-- [CMake 3.10](https://cmake.org/)
+- [CMake 3.16](https://cmake.org/)
 - [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
 - [ZeroMQ 4.2.5](https://zeromq.org/)
 - [zmqpp 4.1.2](https://github.com/zeromq/zmqpp)
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [QT5](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
 - [QT5Charts](https://doc.qt.io/qt-5/qtcharts-index.html)
+- [Ninja](http://ninja-build.org)
+- [CCache](https://ccache.dev)
 - [Google Test and Google Mock](https://github.com/google/googletest)
 - [nlohmann-json](https://github.com/nlohmann/json)
 
@@ -144,7 +146,6 @@ $ sudo -s /bin/bash -c "git clone https://github.com/google/googletest.git /opt/
 ```
 
 ### Code Style Formatting
-
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.
 
 You can install the pre-commit hooks by doing the following

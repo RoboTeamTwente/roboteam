@@ -1,33 +1,23 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 project(rtt)
-message("using compiler: ${CMAKE_CXX_COMPILER}")
+
+set(CMAKE_UNITY_BUILD ON)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
+
+set(CMAKE_GENERATOR Ninja)
+
+include(ccache)
 
 set(CMAKE_CXX_STANDARD 20) # -std=c++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # -std=c++17 required
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) # -fPic
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-deprecated-declarations")
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-
-include(cotire)
-include(ccache)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-include(cmake_modules/BuildSodium.cmake)
-include(cmake_modules/BuildZeroMQ.cmake)
-
-# external libraries
-# stx
-set(STX_BUILD_SHARED 1)
-add_subdirectory(thirdparty/stx)
-add_subdirectory(thirdparty/sdl2)
-# IXWebsocket
-add_subdirectory(thirdparty/IXWebSocket)
-include(cmake_modules/BuildZMQPP.cmake)
-
-
+include(LocateQt5)
+include(FindSodium)
+include(GetDependencies)
 
 # internal projects
 add_subdirectory(roboteam_proto)

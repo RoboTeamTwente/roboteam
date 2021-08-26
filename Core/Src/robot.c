@@ -72,7 +72,7 @@ uint32_t timeLastPacket = 0;
 
 volatile int commandCounter = 0;
 
-float fakeAngle = 0.;
+float fakeAngle = 0;
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
@@ -296,7 +296,7 @@ void loop(void){
     }
 
     // Update test (if active)
-    // test_Update(&receivedData);
+    test_Update(&receivedData);
     
     // Go through all commands
     executeCommands(&receivedData);
@@ -361,7 +361,6 @@ void loop(void){
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
-		Putty_printf("1000ms\n");
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
@@ -490,8 +489,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
-		if(test_isTestRunning())
-			return;
+		if(test_isTestRunning()) {
+            wheels_Update();
+            return;
+        }
 
 		if( halt ){
 			wheels_Stop();

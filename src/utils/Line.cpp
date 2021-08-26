@@ -1,5 +1,5 @@
 #include "Line.h"
-
+#include "LineSegment.h"
 #include "Print.h"
 
 namespace rtt {

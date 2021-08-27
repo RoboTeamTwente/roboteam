@@ -75,7 +75,7 @@ uint8_t notification_touch[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_AIR, BS_T
 // ====================== PUBLIC FUNCTIONS ====================== //
 
 bool ballSensor_Init(){
-	Putty_printf("[ballsensor] init\n");
+//	Putty_printf("[ballsensor] init\n");
 	
 	bs_NoBall();
 	HAL_Delay(20); // timing specs
@@ -84,7 +84,7 @@ bool ballSensor_Init(){
 	int currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin)){
 		if (HAL_GetTick() - currentTime > 100) {
-			Putty_printf("[ballsensor] timeout\n");
+//			Putty_printf("[ballsensor] timeout\n");
 			return false;
 		}
 	}

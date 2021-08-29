@@ -68,7 +68,6 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 - [CMake 3.16](https://cmake.org/)
 - [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
 - [ZeroMQ 4.2.5](https://zeromq.org/)
-- [zmqpp 4.1.2](https://github.com/zeromq/zmqpp)
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [QT5](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
 - [QT5Charts](https://doc.qt.io/qt-5/qtcharts-index.html)
@@ -91,6 +90,7 @@ Install these by running the following:
 # apt -y dist-upgrade
 # apt -y install \
     ccache \
+    libzmq3-dev \
     clang \
     clang-format \
     xvfb \
@@ -143,6 +143,28 @@ $ sudo -s /bin/bash -c "git clone https://github.com/google/googletest.git /opt/
     cmake .. &&\
     make -j $(nproc)&&\
     make install"
+```
+
+## Installation on macOS (tested on macOS 11.4 Big Sur)
+Make sure you already have the following:
+- XCode
+- XCode Command Line Tools (Run XCode once, then `xcode-select --install`)
+- Homebrew
+
+```
+$ brew install cmake zmq armadillo libsodium qt@5 googletest
+$ brew install protobuf --HEAD     # As of 3.17.3, protobuf is is broken and neeeds to be compiled from HEAD
+```
+
+Create a sparse disk image with a case-sensitive FS to hold the source code
+```
+$ hdiutil create -size 2g -volname rbtt-workspace -layout GPTSPUD -fs "Case-sensitive APFS" -type SPARSE -nospotlight ~/Desktop/rbtt-workspace
+$ hdiutil attach ~/Desktop/rbtt-workspace
+$ cd /Volumes/rbtt_workspace/
+$ git clone git@github.com:RoboTeamTwente/roboteam_suite.git
+$ cd roboteam_suite/
+$ git submodule update --init --recursive
+$ git submodule foreach git checkout development
 ```
 
 ### Code Style Formatting

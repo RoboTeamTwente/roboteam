@@ -416,7 +416,7 @@ class Python_Generator(Generator):
 	
 	def to_begin(self, packet_name):
 		begin_string  = "import numpy as np\n"
-		begin_string += "import BaseTypes\n"
+		begin_string += "from . import BaseTypes\n"
 		return begin_string 
 
 	def to_end(self, packet_name):

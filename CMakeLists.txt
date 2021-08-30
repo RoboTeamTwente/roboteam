@@ -52,19 +52,6 @@ target_include_directories(observer_lib
 set_target_properties(observer_lib PROPERTIES UNITY_BUILD FALSE)
 target_compile_options(observer_lib PRIVATE "${COMPILER_FLAGS}")
 
-# -- OBSERVER_TESTS --
-
-add_executable(observer_lib_tests
-        test/observer/main.cpp
-        test/observer/KalmanFilterTest.cpp
-        )
-
-target_link_libraries(observer_lib_tests
-        PRIVATE observer_lib
-        PRIVATE gtest
-        )
-target_compile_options(observer_lib_tests PRIVATE "${COMPILER_FLAGS}")
-
 # -- NET --
 
 add_library(observer_net_lib STATIC
@@ -97,3 +84,19 @@ target_link_libraries(observer_data_lib
         PUBLIC roboteam_networking
 )
 target_compile_options(observer_data_lib PRIVATE "${COMPILER_FLAGS}")
+
+# -- TESTS --
+
+add_executable(roboteam_observer_tests
+        test/observer/KalmanFilterTest.cpp
+        )
+
+target_link_libraries(roboteam_observer_tests
+        PRIVATE observer_lib
+        PRIVATE GTest::gtest
+        PRIVATE GTest::gtest_main
+        )
+
+gtest_discover_tests(roboteam_observer_tests)
+
+target_compile_options(roboteam_observer_tests PRIVATE "${COMPILER_FLAGS}")

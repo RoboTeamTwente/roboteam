@@ -1,17 +1,27 @@
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTORCC ON)
+#set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+qt5_wrap_cpp(IFACE_SRC ../include/roboteam_interface/MainWindow.h)
 
 add_library(roboteam_interface_lib
         InterfaceDeclaration.cpp
         InterfaceDeclarations.cpp
         InterfaceSettings.cpp
-        InterfaceValue.cpp)
+        InterfaceValue.cpp
+        InterfaceController.cpp
+        MainWindow.cpp
+        ${IFACE_SRC}
+        )
+
 
 target_include_directories(roboteam_interface_lib
         PRIVATE ../include/roboteam_interface
+        PRIVATE ../include/roboteam_interface/widgets
         INTERFACE ../include)
 
 target_link_libraries(roboteam_interface_lib

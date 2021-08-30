@@ -2,21 +2,28 @@
 // Created by Dawid Kulikowski on 05/08/2021.
 //
 
-#include "roboteam_interface/InterfaceDeclarations.h"
-#include "nlohmann/json.hpp"
+#include <QApplication>
+#include <QtWidgets>
 
-#include <fstream>
-#include <iostream>
+#include "roboteam_interface/MainWindow.h"
+#include "roboteam_interface/InterfaceController.h"
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    std::ifstream jsonFile("interface_declarations.json");
-    nlohmann::json decls;
-    jsonFile >> decls;
+    QApplication roboteam_interface(argc, argv);
+    auto ctrl = std::make_unique<rtt::Interface::InterfaceController>();
+    ctrl->run();
 
-    rtt::Interface::InterfaceDeclarations ifaceDecls(decls);
+    rtt::Interface::MainWindow window(std::move(ctrl));
 
-    std::cout << ifaceDecls.getDeclarations()[0].path << std::endl;
+    window.setWindowState(Qt::WindowState::WindowMaximized);
+    window.show();
+    window.setWindowTitle("Hello, world!");
+
+
+
+    return roboteam_interface.exec();
 
 }

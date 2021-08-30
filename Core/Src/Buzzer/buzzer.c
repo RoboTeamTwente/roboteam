@@ -21,6 +21,10 @@ void buzzer_DeInit() {
 	HAL_TIM_Base_Stop_IT(PWM_Buzzer.TIM);
 }
 
+bool buzzer_IsPlaying(){
+	return song == NULL;
+}
+
 void buzzer_Callback() {
 	if(song){
 		if(buzzer_Duration != 0){

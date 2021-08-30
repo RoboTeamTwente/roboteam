@@ -59,6 +59,7 @@ StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
+volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
 
 
@@ -295,6 +296,11 @@ void loop(void){
 		toggle_Pin(LED6_pin);
 	}
 
+	// Play a warning if a REM packet with an incorrect version was received
+	if(!REM_last_packet_had_correct_version)
+		if(!buzzer_IsPlaying())
+			buzzer_Play_WarningTwo();
+
 	// If serial packet is no older than 250ms, assume connected via wire
 	isSerialConnected = (currentTime - timeLastPacket) < 250;
 
@@ -304,11 +310,12 @@ void loop(void){
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
+    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected)) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         clearReceivedData(&receivedData);
+		REM_last_packet_had_correct_version = true;
     }
 
     // Unbrake wheels when Xsens calibration is done
@@ -322,6 +329,7 @@ void loop(void){
 
     // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
+	robotFeedback.remVersion= LOCAL_REM_VERSION;
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     // robotFeedback.batteryLevel = (batCounter > 1000);
@@ -339,6 +347,7 @@ void loop(void){
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
+		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
@@ -419,6 +428,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 
 			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
 				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
+				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
 				packetToRoboData(&robotCommandPayload, &receivedData);
 
 				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
@@ -427,6 +437,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 
 			if(packet_header == PACKET_TYPE_ROBOT_BUZZER){
 				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
+				REM_last_packet_had_correct_version &= RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
 				uint16_t period = RobotBuzzer_get_period(rbp);
 				float duration = RobotBuzzer_get_duration(rbp);
 				buzzer_Play_note(period, duration);

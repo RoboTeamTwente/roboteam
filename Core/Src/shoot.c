@@ -122,13 +122,12 @@ int calculateShootingTime(shoot_types type) {
 		if(kickTime < MIN_KICK_TIME) kickTime = MIN_KICK_TIME;
 		if(MAX_KICK_TIME < kickTime) kickTime = MAX_KICK_TIME;
 		return kickTime;
-		// return /*((1.0 - power/100.0) **/ MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME/*)*/;
+
 	} else if (type == shoot_Chip) {
 		int chipTime = MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME;
 		if(chipTime < MIN_CHIP_TIME) chipTime = MIN_CHIP_TIME;
 		if(MAX_CHIP_TIME < chipTime) chipTime = MAX_CHIP_TIME;
 		return chipTime;
-		// return /*((1.0 - power/100.0) **/ MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME/*)*/;
 	}
 	return 0;
 }

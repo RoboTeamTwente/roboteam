@@ -56,3 +56,5 @@ add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
 add_subdirectory(roboteam_world)
+
+enable_testing()

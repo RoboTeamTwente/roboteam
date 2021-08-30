@@ -61,13 +61,19 @@ target_include_directories(roboteam_utils
 
 target_compile_options(roboteam_utils PRIVATE "${COMPILER_FLAGS}")
 
-add_executable(utils_tests
+# -- TESTS --
+
+add_executable(roboteam_utils_tests
         ${ROBOTEAM_UTILS_TEST_SRC}
         )
 
-target_link_libraries(utils_tests
-        PRIVATE roboteam_utils
-        PRIVATE gtest
+target_link_libraries(roboteam_utils_tests
+        PRIVATE GTest::gtest
+        PRIVATE GTest::gtest_main
         PRIVATE pthread
+        PRIVATE roboteam_utils
         )
-target_compile_options(utils_tests PRIVATE "${COMPILER_FLAGS}")
+
+target_compile_options(roboteam_utils_tests PRIVATE "${COMPILER_FLAGS}")
+
+gtest_discover_tests(roboteam_utils_tests)

@@ -17,6 +17,8 @@ class InterfaceDeclarations {
    private:
        std::vector<InterfaceDeclaration> decls = {};
 
+       std::vector<InterfaceDeclaration> delta = {};
+
        mutable std::mutex mtx;
 
        std::weak_ptr<InterfaceStateHandler> stateHandler;
@@ -34,6 +36,11 @@ class InterfaceDeclarations {
 
        void addDeclaration(InterfaceDeclaration);
        void removeDeclaration(std::string);
+
+       void addDeclarationToDelta(InterfaceDeclaration);
+       std::vector<InterfaceDeclaration> getDeclarationDelta();
+       bool doesHaveDelta();
+       void mergeDeclarationDelta();
 
        std::vector<InterfaceDeclaration> getDeclarations() const;
        std::optional<InterfaceDeclaration> getDeclaration(std::string) const;

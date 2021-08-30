@@ -46,15 +46,49 @@ void InterfaceSettings::handleData(const proto::UiValues& values, InterfaceSetti
         this->_unsafeSetSetting(entry.first, entry.second);
     }
 }
-proto::UiValues InterfaceSettings::toProto() {
+proto::UiValues InterfaceSettings::toProto() const {
     std::scoped_lock lck(this->mtx);
+
+    return this->_unsafeToProto(this->values);
+}
+
+void InterfaceSettings::addSettingToDelta(const std::string name, InterfaceValue value) {
+    std::scoped_lock lck(this->mtx);
+
+    this->delta.insert_or_assign(name, value);
+}
+
+std::map<std::string, InterfaceValue> InterfaceSettings::getSettingsDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    return this->delta;
+}
+proto::UiValues InterfaceSettings::_unsafeToProto(const std::map<std::string, InterfaceValue>& valueMap) const {
     proto::UiValues vals;
 
-    for (const auto& [key, value] : this->values) {
+    for (const auto& [key, value] : valueMap) {
         vals.mutable_ui_values()->insert({key, value.toProto()});
     }
 
     return vals;
 }
+proto::UiValues InterfaceSettings::getSettingsDeltaAsProto() {
+    std::scoped_lock lck(this->mtx);
+
+    return this->_unsafeToProto(this->delta);
+}
+bool InterfaceSettings::doesHaveDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    return !this->delta.empty();
+}
+void InterfaceSettings::mergeSettingsDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    for (const &[key, value] : this->delta) {
+
+    }
+}
+
 
 }

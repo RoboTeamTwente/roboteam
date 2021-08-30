@@ -74,4 +74,32 @@ proto::UiOptionDeclarations InterfaceDeclarations::toProto() const {
 InterfaceDeclarations::InterfaceDeclarations(const nlohmann::json& json) {
     json.get_to(this->decls);
 }
+
+void InterfaceDeclarations::addDeclarationToDelta(InterfaceDeclaration newDelta) {
+    std::scoped_lock lck(this->mtx);
+
+    this->delta.emplace_back(newDelta);
+}
+std::vector<InterfaceDeclaration> InterfaceDeclarations::getDeclarationDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    return this->delta;
+}
+
+bool InterfaceDeclarations::doesHaveDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    return !this->delta.empty();
+}
+
+void InterfaceDeclarations::mergeDeclarationDelta() {
+    std::scoped_lock lck(this->mtx);
+
+    for (const auto& singleDelta : this->delta) {
+        this->_unsafeAddDeclaration(singleDelta);
+    }
+
+    this->delta.clear();
+}
+
 }

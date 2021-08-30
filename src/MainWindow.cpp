@@ -15,8 +15,6 @@ namespace rtt::Interface {
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(conditionallyEmitDeclsChanged()));
         timer->start(1000);
-
-//        std::thread t1([&]() {interfaceController->run();});
     }
 
     void MainWindow::conditionallyEmitDeclsChanged() {

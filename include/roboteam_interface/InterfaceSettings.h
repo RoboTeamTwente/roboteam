@@ -15,12 +15,15 @@ enum class InterfaceSettingsPrecedence { AI, IFACE };
 class InterfaceSettings {
    private:
     std::map<std::string, InterfaceValue> values = {};
+    std::map<std::string, InterfaceValue> delta = {};
 
     mutable std::mutex mtx;
 
     std::weak_ptr<InterfaceStateHandler> stateHandler;
 
     void _unsafeSetSetting(const std::string name, const InterfaceValue newValue);
+
+    proto::UiValues _unsafeToProto(const std::map<std::string, InterfaceValue>&) const;
 
    public:
     InterfaceSettings(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(sts) {};
@@ -30,7 +33,13 @@ class InterfaceSettings {
 
     void handleData(const proto::UiValues&, InterfaceSettingsPrecedence = InterfaceSettingsPrecedence::AI);
 
-    proto::UiValues toProto();
+    proto::UiValues toProto() const;
+
+    void addSettingToDelta(const std::string, InterfaceValue);
+    std::map<std::string, InterfaceValue> getSettingsDelta();
+    proto::UiValues getSettingsDeltaAsProto();
+    bool doesHaveDelta();
+    void mergeSettingsDelta();
 };
 }  // namespace rbtt::Interface
 

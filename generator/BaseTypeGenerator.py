@@ -12,7 +12,7 @@ def CamelCaseToUpper(word):
 
 class BaseTypeGenerator:
 
-	def generate(self, packets):
+	def generate(self, packets, version):
 
 		codewords = [
 						  "0b00001111", "0b00110011", "0b00111100",
@@ -46,6 +46,8 @@ class BaseTypeGenerator:
 		file_string += f"\n"
 
 		file_string += self.to_begin()
+
+		file_string += self.to_constant("LOCAL_REM_VERSION", version) + "\n\n"
 
 		for iPacket, packet_name in enumerate(packets.keys()):
 			variables = packets[packet_name]

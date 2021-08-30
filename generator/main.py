@@ -1,3 +1,4 @@
+import argparse
 import os
 from datetime import datetime
 import math
@@ -6,6 +7,22 @@ import shutil
 import Generator
 import BaseTypeGenerator
 from packets import packets
+
+
+def read_version():
+	return int(open("latest_rem_version.txt", "r").read())
+def write_version(version):
+	open("latest_rem_version.txt", "w").write(str(version % 16))
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--version', help='REM version number', type=int)
+args = parser.parse_args()
+
+version = read_version() + 1
+if args.version is not None:
+	version = args.version
+
+print(f"Generating REM version {version}")
 
 generator_c = Generator.C_Generator()
 generator_python = Generator.Python_Generator()
@@ -33,12 +50,12 @@ basetypegenerator_python = BaseTypeGenerator.Python_BaseTypeGenerator()
 
 filename = "BaseTypes.h"
 with open(os.path.join("generated_c", filename), "w") as file:
-	file.write(basetypegenerator_c.generate(packets))
+	file.write(basetypegenerator_c.generate(packets, version))
 print(f"Generated file {filename}")
 
 filename = "BaseTypes.py"
 with open(os.path.join("generated_python", filename), "w") as file:
-	file.write(basetypegenerator_python.generate(packets))
+	file.write(basetypegenerator_python.generate(packets, version))
 print(f"Generated file {filename}")
 
 
@@ -50,12 +67,4 @@ for file in os.listdir("generated_c"):
 for file in os.listdir("generated_python"):
 	shutil.move(f"generated_python/{file}", f"../python/{file}")
 
-
-
-
-
-
-
-
-
-
+write_version(version)

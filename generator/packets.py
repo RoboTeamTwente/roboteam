@@ -3,6 +3,7 @@ import math
 packets = {
     "RobotCommand" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
         ["id",                 4,  None, "Id of the robot"],
         ["messageId",          4,  None, "Id of the message"],
         ["doKick",             1,  None, "Do a kick if ballsensor"],
@@ -14,12 +15,13 @@ packets = {
         ["angle",              16, [-math.pi, math.pi], "Absolute angle (rad) / angular velocity (rad/s)"],
         ["cameraAngle",        16, [-math.pi, math.pi], "Angle of the robot as seen by camera (rad)"],
         ["dribbler",           3,  None, "Dribbler speed"],
-        ["kickChipPower",      3,  None, "Power of the kick or chip"],
-        ["angularControl",     1,  None, "0 = angular velocity, 1 = absolute angle"],
+        ["kickChipPower",      3,  [0, 1], "Power of the kick or chip"],
+        ["angularControl",     1,  None, "NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle"],
         ["feedback",           1,  None, "Ignore the packet. Just send feedback"],
     ],
     "RobotFeedback" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
         ["id",                 4,  None, "Id of the robot "],
         ["messageId",          4,  None, "Id of the message"],
         ["batteryLevel",       4,  None, "The voltage level of the battery"],
@@ -37,6 +39,7 @@ packets = {
     ],
     "RobotStateInfo" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
         ["id",                 4,  None, "Id of the robot "],
         ["messageId",          4,  None, "Id of the message"],
         ["xsensAcc1",         32, [-50000., 50000.], "xsensAcc1"],
@@ -50,6 +53,7 @@ packets = {
     ],
     "RobotBuzzer" : [
     	["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
         ["id",                 4,  None, "Id of the robot"],
         ["messageId",          4,  None, "Id of the message"],
     	["period",             12, None, "Sound that the buzzer makes."],
@@ -58,6 +62,7 @@ packets = {
 
     "BasestationStatistics" : [
         ["header",     8, None, "Header byte indicating the type of packet"],
+        ["remVersion", 4,  None, "Version of roboteam_embedded_messages"],
         ["bot0_sent",  8, None, "Packets sent to robot with ID 0"],
         ["bot0_rcvd",  8, None, "Packets received from robot with ID 0"],
         ["bot1_sent",  8, None, "Packets sent to robot with ID 1"],

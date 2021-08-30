@@ -164,7 +164,7 @@ void loop(){
 
 /**
  * @brief Updates the state of the touch. This helps identifying
- * multiple touch evsents as a single screen press, keeps track on
+ * multiple touch events as a single screen press, keeps track on
  * if the screen press has been handled, and stores the location 
  * of the last touch event
  * TODO there might be a better place for this. Maybe in FT812Q.c?
@@ -206,6 +206,13 @@ void updateTouchState(TouchState* touchState){
 void handleRobotCommand(uint8_t* packet_buffer){
   handled_RobotCommand++;
 
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = RobotCommand_get_remVersion((RobotCommandPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleRobotCommand] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
   // Store the message in the RobotCommand buffer. Set flag indicating packet needs to be sent to the robot
   uint8_t robot_id = RobotCommand_get_id((RobotCommandPayload*) packet_buffer);
   memcpy(buffer_RobotCommand[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_COMMAND);
@@ -224,6 +231,13 @@ void handleRobotCommand(uint8_t* packet_buffer){
 void handleRobotFeedback(uint8_t* packet_buffer){
   handled_RobotFeedback++;
   
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = RobotFeedback_get_remVersion((RobotFeedbackPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleRobotFeedback] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
   // Store the message in the RobotFeedback buffer. Set flag indicating packet needs to be sent to the robot
   uint8_t robot_id = RobotFeedback_get_id((RobotFeedbackPayload*) packet_buffer);
   memcpy(buffer_RobotFeedback[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_FEEDBACK);
@@ -241,6 +255,13 @@ void handleRobotFeedback(uint8_t* packet_buffer){
  */
 void handleRobotStateInfo(uint8_t* packet_buffer){
   handled_RobotStateInfo++;
+  
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = RobotStateInfo_get_remVersion((RobotStateInfoPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleRobotStateInfo] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
 
   // Store the message in the RobotStateInfo buffer. Set flag to be sent to the robot
   uint8_t robot_id = RobotStateInfo_get_id((RobotStateInfoPayload*) packet_buffer);
@@ -260,6 +281,13 @@ void handleRobotStateInfo(uint8_t* packet_buffer){
 void handleRobotBuzzer(uint8_t* packet_buffer){
   handled_RobotBuzzer++;
   
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = RobotBuzzer_get_remVersion((RobotBuzzerPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleRobotBuzzer] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
   // Store the message in the RobotBuzzer buffer. Set flag to be sent to the robot
   uint8_t robot_id = RobotBuzzer_get_id((RobotBuzzerPayload*) packet_buffer);
   memcpy(buffer_RobotBuzzer[robot_id].packet.payload, packet_buffer, PACKET_SIZE_ROBOT_BUZZER);

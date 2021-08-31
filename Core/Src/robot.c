@@ -52,10 +52,14 @@ RobotStateInfoPayload robotStateInfoPayload = {0};
 
 ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
+RobotCommand activeRobotCommand = {0};
+float activeStateReference[3];
+
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
 bool halt = true;
 bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
+volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
 
 
@@ -70,9 +74,6 @@ uint32_t timestamp_initialized = 0;
 bool isSerialConnected = false;
 uint32_t timeLastPacket = 0;
 
-volatile int commandCounter = 0;
-
-float fakeAngle = 0;
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
@@ -96,6 +97,29 @@ void executeCommands(ReceivedData* receivedData) {
 	}
 }
 
+/* Upcoming new code, this will at some point replace everything with "receivedData"
+void _executeCommands(RobotCommand* robotCommand){
+	float stateReference[3];
+	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
+	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
+	stateReference[body_w] = robotCommand->angle;
+	stateControl_SetRef(stateReference);
+	dribbler_SetSpeed(robotCommand->dribbler);
+	shoot_SetPower(robotCommand->kickChipPower);
+
+	if (robotCommand->doKick) {
+		if (ballPosition.canKickBall || robotCommand->doForce){
+			shoot_Shoot(shoot_Kick);
+		}
+	}
+	else if (robotCommand->doChip) {
+		if (ballPosition.canKickBall || robotCommand->doForce) {
+			shoot_Shoot(shoot_Chip);
+		}
+	}
+}
+*/
+
 void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->do_chip = false;
 	receivedData->do_kick = false;
@@ -109,24 +133,22 @@ void clearReceivedData(ReceivedData* receivedData) {
 	receivedData->visionYaw = 0.0f;
 }
 
-
-
-void printReceivedData(ReceivedData* receivedData) {
-	Putty_printf("\n\r");
-	Putty_printf("-----Received robot data-------\n\r");
-	Putty_printf("velocity:\n\r");
-	Putty_printf("  x: %f\n\r", receivedData->stateRef[body_x]);
-	Putty_printf("  y: %f\n\r", receivedData->stateRef[body_y]);
-	Putty_printf("yaw: %f\n\r", receivedData->stateRef[body_w]);
-	Putty_printf("dribbler speed: %d %%\n\r", receivedData->dribblerRef);
-	Putty_printf("shooting power: %d %%\n\r", receivedData->shootPower);
-	Putty_printf("kick: %u\n\r",receivedData->do_kick);
-	Putty_printf("chip: %u\n\r",receivedData->do_chip);
-	Putty_printf("vision available: %u\n\r",receivedData->visionAvailable);
-	Putty_printf("vision yaw: %f\n\r", receivedData->visionYaw);
-	Putty_printf("XSens calibrated: %u\n\r", xsens_CalibrationDone);
-	Putty_printf("\n\r");
+/*
+void resetRobotCommand(RobotCommand* robotCommand){
+	robotCommand->doKick = false;
+	robotCommand->doChip = false;
+	robotCommand->doForce = false;
+	robotCommand->useCameraAngle = false;
+	robotCommand->rho = 0.;
+	robotCommand->theta = 0.;
+	robotCommand->angle = 0.;
+	robotCommand->cameraAngle = 0.;
+	robotCommand->dribbler = 0;
+	robotCommand->kickChipPower = 0;
+	robotCommand->angularControl = false;
+	robotCommand->feedback = false;
 }
+*/
 
 void printRobotStateData() {
 	Putty_printf("\n\r");
@@ -174,6 +196,8 @@ void printRobotCommand(RobotCommand* rc){
 	Putty_printf("angularControl : %d\r\n", rc->angularControl);
 	Putty_printf("      feedback : %d\r\n", rc->feedback);
 }
+
+
 
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
@@ -250,8 +274,9 @@ void init(void){
 	timestamp_initialized = HAL_GetTick();
 }
 
-// ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
 
+
+// ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
 	counter_loop++;
@@ -262,16 +287,19 @@ void loop(void){
 		logBuffer[0] = '\0';
 	}
 	
+	// If a RobotCommand came in via UART
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
 		packetToRoboData(&myRobotCommandPayload, &receivedData);
-		
+
 		toggle_Pin(LED6_pin);
-		
-		// printRobotCommand(&myRobotCommand);
-		// printReceivedData(&receivedData);	
 	}
+
+	// Play a warning if a REM packet with an incorrect version was received
+	if(!REM_last_packet_had_correct_version)
+		if(!buzzer_IsPlaying())
+			buzzer_Play_WarningTwo();
 
 	// If serial packet is no older than 250ms, assume connected via wire
 	isSerialConnected = (currentTime - timeLastPacket) < 250;
@@ -282,11 +310,12 @@ void loop(void){
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected));
+    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected)) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         clearReceivedData(&receivedData);
+		REM_last_packet_had_correct_version = true;
     }
 
     // Unbrake wheels when Xsens calibration is done
@@ -301,9 +330,9 @@ void loop(void){
     // Go through all commands
     executeCommands(&receivedData);
 
-
     // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
+	robotFeedback.remVersion= LOCAL_REM_VERSION;
     robotFeedback.id = ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     // robotFeedback.batteryLevel = (batCounter > 1000);
@@ -321,11 +350,10 @@ void loop(void){
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
+		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
-		// robotStateInfo.xsensAcc1 = last_RX_RSSISync;
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
-		// robotStateInfo.xsensYaw = stateInfo.xsensYaw;
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
 		robotStateInfo.rateOfTurn = stateInfo.rateOfTurn;
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
@@ -337,25 +365,11 @@ void loop(void){
     // Heartbeat every 17ms	
 	if(heartbeat_17ms + 17 < HAL_GetTick()){
 		heartbeat_17ms += 17;
-
-		// if(!halt){
-		// 	isSerialConnected = heartbeat_17ms_counter++ < 1200;
-		// 	if(isSerialConnected) toggle_Pin(LED6_pin);
-			
-		// 	fakeAngle += 0.1;
-		// 	if(M_PI <= fakeAngle) fakeAngle -= M_PI * 2;
-		// 	RobotCommand_set_angle(&robotCommandPayload, fakeAngle);
-		// 	packetToRoboData(&robotCommandPayload, &receivedData);
-		// }
 	}	
 
     // Heartbeat every 100ms	
 	if(heartbeat_100ms + 100 < HAL_GetTick()){
 		heartbeat_100ms += 100;
-		// Putty_printf("100ms %d\n", halt);
-		// Putty_printf("RSSI %d\n", last_RX_RSSISync);
-		// Putty_printf("rho %.6f theta %.6f \n" , robotFeedback.rho, robotFeedback.angle);
-		// encodeRobotStateInfo(&robotStateInfoPayload, &robotStateInfo);
 	}
 
 	// Heartbeat every 1000ms
@@ -401,6 +415,7 @@ void loop(void){
 /* This function is triggered after calling HAL_SPI_TransmitReceive_IT */
 /* Since we transmit everything using blocking mode, this function should only be called when we receive something */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
 
@@ -411,16 +426,20 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 
 		while(total_bytes_processed < total_packet_length){
 				
-			if(message_buffer_in[total_bytes_processed] == PACKET_TYPE_ROBOT_COMMAND){
+			uint8_t packet_header = message_buffer_in[total_bytes_processed];
+
+			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
 				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
+				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
 				packetToRoboData(&robotCommandPayload, &receivedData);
-				commandCounter++;
+
 				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
 				continue;
 			}
 
-			if(message_buffer_in[total_bytes_processed] == PACKET_TYPE_ROBOT_BUZZER){
+			if(packet_header == PACKET_TYPE_ROBOT_BUZZER){
 				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
+				REM_last_packet_had_correct_version &= RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
 				uint16_t period = RobotBuzzer_get_period(rbp);
 				float duration = RobotBuzzer_get_duration(rbp);
 				buzzer_Play_note(period, duration);
@@ -429,10 +448,11 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 				continue;
 			}
 
-			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, message_buffer_in[total_bytes_processed]);
+			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, packet_header);
 			break;
 		}
 	}
+
 	// If we received data from the XSens
 	else if(hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);

@@ -16,6 +16,8 @@ extern uint32_t buzzer_Duration;
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 void buzzer_Init();
 
+bool buzzer_IsPlaying();
+
 void buzzer_DeInit();
 
 void buzzer_Callback();

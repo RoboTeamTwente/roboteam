@@ -9,7 +9,11 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
-import getch
+
+import roboteam_embedded_messages.python.BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.RobotCommand import RobotCommand
+from roboteam_embedded_messages.python.RobotFeedback import RobotFeedback
+from roboteam_embedded_messages.python.RobotStateInfo import RobotStateInfo
 
 try:
 	import cv2
@@ -17,14 +21,6 @@ try:
 except:
 	print("Warning! Could not import cv2. Can't visualize.")
 	cv2_available = False
-
-try:
-	from rem import rem
-except ImportError:
-	print("[Error] Could not import rem, the roboteam_embedded_messages python bindings")
-	print("[Error] Generate the bindings by going to ./roboteam_embedded_messages/python_bindings, and execute:")
-	print("[Error] $ python generate.py --includes ../include/*  --name rem --output ../../rem")
-	exit()
 
 def printPacket(rc):
 	maxLength = max([len(k) for k, v in getmembers(rc)])
@@ -76,14 +72,12 @@ except Exception as e:
 img = np.zeros((500, 500, 3), dtype=np.float)
 
 basestation = None
-commandPayload = rem.ffi.new("RobotCommandPayload*")
 
-feedbackPayload = rem.ffi.new("RobotFeedbackPayload*")
-feedback = rem.ffi.new("RobotFeedback*")
+robotCommand = RobotCommand()
+robotFeedback = RobotFeedback()
+robotStateInfo = RobotStateInfo()
+
 feedbackTimestamp = 0
-
-stateInfoPayload = rem.ffi.new("RobotStateInfoPayload*")
-stateInfo = rem.ffi.new("RobotStateInfo*");
 stateInfoTimestamp = 0
 
 wheel_speeds_avg = np.zeros(4)
@@ -100,12 +94,8 @@ robotConnected = True
 
 lastBasestationLog = ""
 
-
 doFullTest = test == "full"
 testIndex = 2
-
-# t = time.time()
-# logfile = open(f"logfile_{t}.txt", "w")
 
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 
@@ -142,8 +132,9 @@ while True:
 					test = testsAvailable[testIndex]
 
 				# Create new empty robot command
-				cmd = rem.ffi.new("RobotCommand*")
-				cmd.header = rem.lib.PACKET_TYPE_ROBOT_COMMAND
+				cmd = RobotCommand()
+				cmd.header = BaseTypes.PACKET_TYPE_ROBOT_COMMAND
+				cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
 				cmd.id = robotId
 
 				# All tests
@@ -204,55 +195,42 @@ while True:
 					f"{lastBasestationLog}", end="\r")
 
 				# Send command
-				rem.lib.encodeRobotCommand(commandPayload, cmd)
-				# basestation.write(commandPayload.payload)
+				basestation.write( cmd.encode() )
 				totalCommandsSent += 1
 
 
-			# logmessage = basestation.readline().decode()
-			# if 0 < len(logmessage):
-			# 	print(logmessage, end="")
-			# continue
 
-
-			# Read feedback pacstateInfoPayloadkets coming from the robot
+			### Read any packets coming from the basestation
+			# Read packet type
 			packet_type = basestation.read(1)
 			if len(packet_type) == 0:
 				continue
 
 			packetType = packet_type[0]
 
-
-			if packetType == rem.lib.PACKET_TYPE_ROBOT_FEEDBACK:
+			# Parse packet based on packet type
+			if packetType == BaseTypes.PACKET_TYPE_ROBOT_FEEDBACK:
 				feedbackTimestamp = time.time()
-				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_ROBOT_FEEDBACK - 1)
-				feedbackPayload.payload = packet
-				
+				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_FEEDBACK - 1)
 
-				if rem.lib.RobotFeedback_get_id(feedbackPayload) != robotId:
+				if RobotFeedback.get_id(packet) != robotId:
 					print("Error : Received feedback from robot %d ???" % feedback.id)
 					break
 
-				rem.lib.decodeRobotFeedback(feedback, feedbackPayload)	
+				robotFeedback.decode(packet)
 				totalFeedbackReceived += 1
 
-
-			if packetType == rem.lib.PACKET_TYPE_ROBOT_STATE_INFO:
+			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_STATE_INFO:
 				stateInfoTimestamp = time.time()
-				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_ROBOT_STATE_INFO - 1)
-				stateInfoPayload.payload = packet
-				rem.lib.decodeRobotStateInfo(stateInfo, stateInfoPayload)
+				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_STATE_INFO - 1)
+				robotStateInfo.decode(packet)
 
-
-			if packetType == rem.lib.PACKET_TYPE_BASESTATION_STATISTICS:
-				packet = packet_type + basestation.read(rem.lib.PACKET_SIZE_BASESTATION_STATISTICS - 1)
-				print(type(packet), len(packet), packet[1], packet[2], packet[3], packet[4])
-
-
-			if packetType == rem.lib.PACKET_TYPE_BASESTATION_LOG:
+			elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
 				lastBasestationLog = logmessage[:-1] + " "*20
 
+			else:
+				print(f"Error : Unhandled packet with type {packetType}")
 
 			# Break if cv2 is not imported
 			if not cv2_available:
@@ -264,57 +242,56 @@ while True:
 			cv2.line(img, (int(250-s/2), 250-73), (int(250+s/2), 250-73), (255,255,255),2)
 			cv2.ellipse(img, (250, 250), (90, 90), -90, 35, 325, (255,255,255), 2)			
 
+			### Draw information received from the RobotFeedback packet
 			if time.time() - feedbackTimestamp < 1:
-				# if not feedback.
-
-				if feedback.ballSensorWorking:
+				# Ballsensor
+				if robotFeedback.ballSensorWorking:
 					cv2.line(img, (int(250-s/2), 250-73-5), (int(250+s/2), 250-73-5), (0, 1, 0),2)
-					if feedback.hasBall:
-						cv2.circle(img, (250+int(73*feedback.ballPos), 250-90), 10, (0, 0.4, 1), -1)
+					if robotFeedback.hasBall:
+						cv2.circle(img, (250+int(73*robotFeedback.ballPos), 250-90), 10, (0, 0.4, 1), -1)
 				else:
 					cv2.line(img, (int(250-s/2), 250-73-5), (int(250+s/2), 250-73-5), (0, 0, 1),2)
 
-				# print(f"{feedback.rho:.5f}, {feedback.theta:.3f}")
-
-				length = int(feedback.rho * 500)
-				px, py = rotate((250, 250), (250, 250+length), feedback.theta)
+				length = int(robotFeedback.rho * 500)
+				px, py = rotate((250, 250), (250, 250+length), robotFeedback.theta)
 				cv2.line(img, (250,250), (int(px), int(py)), (1, 0, 0), 8)
 
+			### Draw information received from the RobotStateInfo packet
 			if time.time() - stateInfoTimestamp < 1:
 
 				# XSens yaw
-				px, py = rotate((250, 250), (250, 150), -stateInfo.xsensYaw)
+				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)
 				cv2.line(img, (250, 250), (int(px), int(py)), (1, 1, 1), 1)
 				cv2.circle(img, (int(px), int(py)), 5, (1, 1, 1), -1)
 				
 				# XSens rate of turn
-				rate_of_turn_avg = rate_of_turn_avg * 0.99 + stateInfo.rateOfTurn * 0.01
+				rate_of_turn_avg = rate_of_turn_avg * 0.99 + robotStateInfo.rateOfTurn * 0.01
 				cv2.ellipse(img, (250, 250), (40, 40), -90, 0, 0.5*-rate_of_turn_avg * 180 / math.pi, (1,.45, .5), 12)
-				cv2.ellipse(img, (250, 250), (40, 40), -90, 0, 0.5*-stateInfo.rateOfTurn * 180 / math.pi, (1, 1, 1), 4)
+				cv2.ellipse(img, (250, 250), (40, 40), -90, 0, 0.5*-robotStateInfo.rateOfTurn * 180 / math.pi, (1, 1, 1), 4)
 				
 				# Wheel speeds
-				wheel_speeds = np.array([stateInfo.wheelSpeed1, stateInfo.wheelSpeed2, stateInfo.wheelSpeed3, stateInfo.wheelSpeed4])
+				wheel_speeds = np.array([robotStateInfo.wheelSpeed1, robotStateInfo.wheelSpeed2, robotStateInfo.wheelSpeed3, robotStateInfo.wheelSpeed4])
 				wheel_speeds_exp = np.log(np.abs(wheel_speeds))
 				wheel_speeds_exp = np.clip(wheel_speeds_exp, 0, None)
 				wheel_speeds_exp = wheel_speeds_exp * .25 * np.sign(wheel_speeds)
 				wheel_speeds_avg = wheel_speeds_avg * 0.99 + wheel_speeds_exp * 0.01
 
-				# XSens wheel speed 1				
+				# XSens wheel speed 1
 				rx, ry = rotate((330, 170), (330, 170 - wheel_speeds_avg[0] * 80), -30 * np.pi / 180.)
 				cv2.line(img, (330, 170), (int(rx), int(ry)), (.15, .15, 1), 10)
 				rx, ry = rotate((330, 170), (330, 170 - wheel_speeds_exp[0] * 80), -30 * np.pi / 180.)
 				cv2.line(img, (330, 170), (int(rx), int(ry)), (1, 1, 1), 4)
-				
+				# XSens wheel speed 2
 				rx, ry = rotate((330, 330), (330, 330 - wheel_speeds_avg[1] * 80), 60 * np.pi / 180.)
 				cv2.line(img, (330, 330), (int(rx), int(ry)), (.15, .15, 1), 10)
 				rx, ry = rotate((330, 330), (330, 330 - wheel_speeds_exp[1] * 80), 60 * np.pi / 180.)
 				cv2.line(img, (330, 330), (int(rx), int(ry)), (1, 1, 1), 4)
-				
+				# XSens wheel speed 3
 				rx, ry = rotate((170, 330), (170, 330 + wheel_speeds_avg[2] * 80), -60 * np.pi / 180.)
 				cv2.line(img, (170, 330), (int(rx), int(ry)), (.15, .15, 1), 10)
 				rx, ry = rotate((170, 330), (170, 330 + wheel_speeds_exp[2] * 80), -60 * np.pi / 180.)
 				cv2.line(img, (170, 330), (int(rx), int(ry)), (1, 1, 1), 4)
-
+				# XSens wheel speed 4
 				rx, ry = rotate((170, 170), (170, 170 + wheel_speeds_avg[3] * 80), 30 * np.pi / 180.)
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (.15, .15, 1), 10)
 				rx, ry = rotate((170, 170), (170, 170 + wheel_speeds_exp[3] * 80), 30 * np.pi / 180.)
@@ -333,5 +310,3 @@ while True:
 		print("[Error] KeyError", e, "{0:b}".format(int(str(e))))
 	except Exception as e:
 		print("[Error]", e)
-		# Res the connection to the basestation
-		# ser = None

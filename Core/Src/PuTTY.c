@@ -27,6 +27,7 @@ static void Putty_HandleCommand(char *input);                        // Executes
 static void Putty_HandlePcInput(char *input, size_t n_chars);        // Called with timer | Change this
 static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus); // Keeps values within the real range
 static void Putty_ClearLine();                                       //Clears the current line to that new text can be placed.
+static void Putty_UpdateHelpPrint(bool begin);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 Putty_Enum Putty_Init()
@@ -85,6 +86,8 @@ Putty_Enum Putty_Callback()
         Putty_Vars.huart_Rx_len = 0;                                                  // Reset the size of the input
         HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1);                          // Keep on checking for new data
     }
+
+    Putty_UpdateHelpPrint(false);
     return Putty_Vars.errorCode = NoErrors;
 }
 
@@ -131,7 +134,7 @@ static void Putty_HandleCommand(char *input)
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "help")){
-		Putty_TextOut("shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
+		Putty_UpdateHelpPrint(true)
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
@@ -250,4 +253,20 @@ static void Putty_ClearLine()
         Putty_TextOut(" "); // Input spacing (no idea why)
     }
     Putty_TextOut("\r");    // Inputs return again
+}
+
+
+// Split printing of help text over multiple calls to reduce the load
+static void Putty_UpdateHelpPrint(bool begin) {
+    static char string[300] = "shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rtests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)\n\rhelp\n\r";
+    static char *token = NULL;
+
+    if (begin) {
+        token = strtok(string, " ");
+    }
+    elif(token != NULL)
+    {
+        Putty_TextOut(token)
+        token = strtok(NULL, " ")
+    }
 }

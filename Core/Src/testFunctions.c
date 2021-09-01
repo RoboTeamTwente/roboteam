@@ -44,14 +44,19 @@ void test_RunTest(tests t) {
 	Putty_printf("---------- Start test! ----------\n\r");
 }
 
-bool test_isTestRunning() {
-	bool result = false;
-	for (int i = 0; i < nTests; i++) {
-		if (runningTest[i]) {
-			result = true;
-		}
-	}
-	return result;
+bool test_isTestRunning(tests t) {
+    if (t == any) {
+        bool result = false;
+        for (int i = 0; i < nTests; i++) {
+            if (runningTest[i]) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    else {
+        return runningTest[t];
+    }
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -131,6 +136,7 @@ status executeWheelsTest() {
 			cnt[wheel] = 0;
 			wheelEncoders[wheel] = 0;
 		}
+        Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -205,6 +211,7 @@ status executeDribblerTest(ReceivedData* receivedData) {
 	if (timeDiff > RUN_TIME + PAUSE_TIME) {
 		timer = 0;
 		firstTime = true;
+        Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	} else {
 		return test_running;
@@ -260,7 +267,6 @@ status executeSquareDrive(ReceivedData* receivedData) {
 		count++;
 	} else if (HAL_GetTick() - velTimer > 10*t) {
 		velTimer = HAL_GetTick();
-		Putty_printf("---------- Start test! ----------\n\r");
 	} else {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = 0.0;
@@ -272,7 +278,7 @@ status executeSquareDrive(ReceivedData* receivedData) {
 	receivedData->stateRef[body_x] = velocityRef[body_x];
 	receivedData->stateRef[body_y] = velocityRef[body_y];
 	receivedData->stateRef[body_w] = velocityRef[body_w];
-
+    stateControl_SetRef(receivedData->stateRef);
 	return test_running;
 }
 

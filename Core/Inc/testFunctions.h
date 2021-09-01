@@ -24,7 +24,8 @@ typedef enum {
 	square,
 	wheels,
 	shoot,
-	dribbler
+	dribbler,
+	any
 } tests;
 
 typedef enum {
@@ -37,7 +38,7 @@ typedef enum {
 
 void test_Update(ReceivedData* receivedData);
 
-bool test_isTestRunning();
+bool test_isTestRunning(tests t);
 
 void test_RunTest(tests t);
 

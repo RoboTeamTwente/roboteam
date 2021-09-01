@@ -10,17 +10,11 @@ import multiprocessing
 import getch
 import sys
 
-try:
-	from rem import rem
-except ImportError:
-	print("[Error] Could not import rem, the roboteam_embedded_messages python bindings")
-	print("[Error] Generate the bindings by going to ./roboteam_embedded_messages/python_bindings, and execute:")
-	print("[Error] $ python generate.py --includes ../include/*  --name rem --output ../../rem")
-	exit()
+import roboteam_embedded_messages.python.BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.RobotBuzzer import RobotBuzzer
 
 basestation = None
-buzzPacket = rem.ffi.new("RobotBuzzer*")
-buzzPayload = rem.ffi.new("RobotBuzzerPayload*")
+buzzPacket = RobotBuzzer()
 
 lastWritten = time.time()
 packetHz = 60
@@ -71,7 +65,8 @@ except Exception as e:
 	exit()
 
 
-buzzPacket.header = rem.lib.PACKET_TYPE_ROBOT_BUZZER
+buzzPacket.header = BaseTypes.PACKET_TYPE_ROBOT_BUZZER
+buzzPacket.remVersion = BaseTypes.LOCAL_REM_VERSION
 buzzPacket.id = robotId
 
 
@@ -102,8 +97,7 @@ while True:
 				if note.value != 0:
 					buzzPacket.period = note.value
 					buzzPacket.duration = 1
-					rem.lib.encodeRobotBuzzer(buzzPayload, buzzPacket)
-					basestation.write(buzzPayload.payload)
+					basestation.write(buzzPacket.encode())
 					note.value = 0
 
 			# Read feedback packets coming from the robot
@@ -113,7 +107,7 @@ while True:
 
 			packetType = packet_type[0]
 
-			if packetType == rem.lib.PACKET_TYPE_BASESTATION_LOG:
+			if packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
 				msg = basestation.readline().decode()
 				print("[LOG]", msg, end="")
 

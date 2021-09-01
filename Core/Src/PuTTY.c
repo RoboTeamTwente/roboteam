@@ -27,7 +27,7 @@ static void Putty_HandleCommand(char *input);                        // Executes
 static void Putty_HandlePcInput(char *input, size_t n_chars);        // Called with timer | Change this
 static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus); // Keeps values within the real range
 static void Putty_ClearLine();                                       //Clears the current line to that new text can be placed.
-static void Putty_UpdateHelpPrint(bool begin);
+static void Putty_UpdateHelpPrint(bool begin);                       // Prints list of commands during multiple ticks
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 Putty_Enum Putty_Init()
@@ -36,7 +36,7 @@ Putty_Enum Putty_Init()
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
-    char *startmessage = "\n\r\n\r----------PuttyInterface_Init-----------\n\r\n\r-----type help to get help-----\n\r"; // Initial message
+    char *startmessage = "\n\r\n\r----------PuttyInterface_Init-----------\n\r-----type help for a list of possible commands-----\n\r\n\r"; // Initial message
     Putty_printf(startmessage);
 
     HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1); // Data reception under serial interrupt mode
@@ -153,7 +153,9 @@ static void Putty_HandleCommand(char *input)
 		wheels_Brake(true);
 	}else if (!memcmp(input, "unbrake", strlen("unbrake"))) {
 		wheels_Brake(false);
-	}
+	}else if (!memcmp(input, "buzzer play", strlen("buzzer play"))) {
+        test_Buzzer(input + 1 + strlen(buzzer play));
+    }
 	return;
 }
 
@@ -258,7 +260,25 @@ static void Putty_ClearLine()
 
 // Split printing of help text over multiple calls to reduce the load
 static void Putty_UpdateHelpPrint(bool begin) {
-    static char string[300] = "shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\rtests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)\n\rhelp\n\r";
+    static char *string = "\n\r-----List of possible commands-----\n\r"
+                          "shoot power <power>\n\r"
+                          "shoot state\n\r"
+                          "kick\n\r"
+                          "kickbs\n\r"
+                          "chip\n\r"
+                          "dribble <speed>\n\r"
+                          "wheels <speed>\n\r"
+                          "toggle ballsensor debug\n\r"
+                          "test\n\r"
+                          "run full test\n\r"
+                          "run wheels test\n\r"
+                          "run shoot test\n\r"
+                          "run dribbler test\n\r"
+                          "run square test (includes driving)\n\r"
+                          "help\n\r"
+                          "buzzer play <song>\n\r"
+                          "brake\n\r"
+                          "unbrake\n\r";
     static char *token = NULL;
 
     if (begin) {

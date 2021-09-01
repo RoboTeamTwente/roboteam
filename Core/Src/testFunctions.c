@@ -59,6 +59,40 @@ bool test_isTestRunning(tests t) {
     }
 }
 
+void test_Buzzer(const char *song) {
+    if (!strcmp(song, "quick beep up")) {
+        buzzer_Play_QuickBeepUp();
+    } else if (!strcmp(song, "quick beep down")) {
+        buzzer_Play_QuickBeepDown();
+    } else if (!strcmp(song, "startup")) {
+        buzzer_Play_Startup();
+    } else if (!strcmp(song, "tetris")) {
+        buzzer_Play_Tetris();
+    } else if (!strcmp(song, "mario")) {
+        buzzer_Play_Mario();
+    } else if (!strcmp(song, "pink panther")) {
+        buzzer_Play_PinkPanther();
+    } else if (!strcmp(song, "power up")) {
+        buzzer_Play_PowerUp();
+    } else if (!strcmp(song, "warning one")) {
+        buzzer_Play_WarningOne();
+    } else if (!strcmp(song, "warning two")) {
+        buzzer_Play_WarningTwo();
+    } else if (!strcmp(song, "warning three")) {
+        buzzer_Play_WarningThree();
+    } else if (!strcmp(song, "warning four")) {
+        buzzer_Play_WarningFour();
+    } else if (!strcmp(song, "bridge battle")) {
+        buzzer_Play_BridgeBattle();
+    } else if (!strcmp(song, "imperial march")) {
+        buzzer_Play_ImperialMarch();
+    } else if (!strcmp(song, "flatline")) {
+        buzzer_Play_Flatline();
+    } else if (!strcmp(song, "happy birthday")) {
+        buzzer_Play_HBD();
+    }
+}
+
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 status executeFullTest(ReceivedData* receivedData) {

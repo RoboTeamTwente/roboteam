@@ -13,6 +13,7 @@
 #include "stm32f7xx_hal.h"
 #include "PuTTY.h"
 #include "stateControl.h"
+#include "Buzzer/buzzer.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -43,5 +44,7 @@ bool test_isTestRunning(tests t);
 void test_RunTest(tests t);
 
 status test_ExecuteWheelsTest();
+
+void test_Buzzer(char *song);
 
 #endif /* INC_TESTFUNCTIONS_H_ */

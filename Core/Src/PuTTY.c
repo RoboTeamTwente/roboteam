@@ -134,7 +134,7 @@ static void Putty_HandleCommand(char *input)
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "help")){
-		Putty_UpdateHelpPrint(true)
+		Putty_UpdateHelpPrint(true);
 	}else if(!strcmp(input, "make robots")){
 		Putty_printf("No U!");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
@@ -264,9 +264,8 @@ static void Putty_UpdateHelpPrint(bool begin) {
     if (begin) {
         token = strtok(string, " ");
     }
-    elif(token != NULL)
-    {
-        Putty_TextOut(token)
-        token = strtok(NULL, " ")
+    else if (token) {
+        Putty_TextOut(token);
+        token = strtok(NULL, " ");
     }
 }

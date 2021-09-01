@@ -328,7 +328,9 @@ void loop(void){
     test_Update(&receivedData);
     
     // Go through all commands
-    executeCommands(&receivedData);
+    if (!halt) {
+        executeCommands(&receivedData);
+    }
 
     // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
@@ -509,12 +511,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
-		if(test_isTestRunning()) {
+		if(test_isTestRunning(wheels)) {
             wheels_Update();
             return;
         }
 
-		if( halt ){
+		if( halt && !test_isTestRunning(square)){
 			wheels_Stop();
 			return;
 		}

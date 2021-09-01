@@ -262,10 +262,10 @@ static void Putty_UpdateHelpPrint(bool begin) {
     static char *token = NULL;
 
     if (begin) {
-        token = strtok(string, " ");
+        token = strtok(string, "\r");
     }
     else if (token) {
         Putty_TextOut(token);
-        token = strtok(NULL, " ");
+        token = strtok(NULL, "\r");
     }
 }

@@ -325,7 +325,7 @@ void loop(void){
     }
 
     // Update test (if active)
-    test_Update(&receivedData);
+    test_Update();
     
     // Go through all commands
     if (!halt) {

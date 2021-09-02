@@ -38,7 +38,7 @@ typedef enum {
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-void test_Update(ReceivedData* receivedData);
+void test_Update();
 
 bool test_isTestRunning(tests t);
 

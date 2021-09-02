@@ -14,28 +14,28 @@ bool runningTest[nTests] = {false};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-status executeFullTest(ReceivedData* receivedData);
+status executeFullTest();
 status executeWheelsTest();
 status executeShootTest();
-status executeDribblerTest(ReceivedData* receivedData);
-status executeSquareDrive(ReceivedData* receivedData);
+status executeDribblerTest();
+status executeSquareDrive();
 
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]);
 void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void test_Update(ReceivedData* receivedData) {
+void test_Update() {
 	if (runningTest[full]) {
-		runningTest[full] = (executeFullTest(receivedData) == test_running);
+		runningTest[full] = (executeFullTest() == test_running);
 	} else if (runningTest[square]) {
-		runningTest[square] = executeSquareDrive(receivedData) == test_running;
+		runningTest[square] = executeSquareDrive() == test_running;
 	} else if (runningTest[wheels]) {
-		runningTest[wheels] = executeWheelsTest(receivedData) == test_running;
+		runningTest[wheels] = executeWheelsTest() == test_running;
 	} else if (runningTest[shoot]) {
-		runningTest[shoot] = executeShootTest(receivedData) == test_running;
+		runningTest[shoot] = executeShootTest() == test_running;
 	} else if (runningTest[dribbler]) {
-		runningTest[dribbler] = executeDribblerTest(receivedData) == test_running;
+		runningTest[dribbler] = executeDribblerTest() == test_running;
 	}
 }
 
@@ -100,18 +100,7 @@ void test_Buzzer(const char *song) {
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-status executeFullTest(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->kick_chip_forced = false;
-	receivedData->dribblerRef = 0;
-	receivedData->shootPower = 20;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-
+status executeFullTest() {
 	static status progress[nTests] = {test_none, test_none, test_none, test_none, test_none, test_none};
 
     if (progress[wheels] == test_none) {
@@ -132,7 +121,7 @@ status executeFullTest(ReceivedData* receivedData) {
             runningTest[dribbler] = true;
 		}
 	} else if (progress[dribbler] == test_running) {
-		progress[dribbler] = executeDribblerTest(receivedData);
+		progress[dribbler] = executeDribblerTest();
 	} else {
 		Putty_printf("---------- End of test ----------\n\r");
 		for (int i = 0; i < nTests; i++) {
@@ -240,7 +229,7 @@ status executeShootTest() {
 	}
 }
 
-status executeDribblerTest(ReceivedData* receivedData) {
+status executeDribblerTest() {
 	const int RUN_TIME = 2000; 		// [ticks]
 	const int PAUSE_TIME = 1000; 	// [ticks]
 	static uint32_t timer = 0;
@@ -267,7 +256,7 @@ status executeDribblerTest(ReceivedData* receivedData) {
 	}
 }
 
-status executeSquareDrive(ReceivedData* receivedData) {
+status executeSquareDrive() {
 	// SQUARE WITH 90 DEGREES TURNS AT SIDES
 	float velocityRef[3];
 	velocityRef[0] = 0.0;
@@ -324,10 +313,7 @@ status executeSquareDrive(ReceivedData* receivedData) {
 		return test_done;
 	}
 
-	receivedData->stateRef[body_x] = velocityRef[body_x];
-	receivedData->stateRef[body_y] = velocityRef[body_y];
-	receivedData->stateRef[body_w] = velocityRef[body_w];
-    stateControl_SetRef(receivedData->stateRef);
+    stateControl_SetRef(velocityRef);
 	return test_running;
 }
 

@@ -239,13 +239,14 @@ status executeDribblerTest(ReceivedData* receivedData) {
 		Putty_printf("Testing dribbler...\n\r");
 		firstTime = false;
 	} else if (timeDiff < RUN_TIME) {
-		receivedData->dribblerRef = 50;
+		dribbler_SetSpeed(50);
 	}
 
 	if (timeDiff > RUN_TIME + PAUSE_TIME) {
 		timer = 0;
 		firstTime = true;
         Putty_printf("---------- End of test ----------\n\r");
+        dribbler_SetSpeed(0);
 		return test_done;
 	} else {
 		return test_running;

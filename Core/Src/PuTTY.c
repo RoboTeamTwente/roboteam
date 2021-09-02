@@ -154,7 +154,7 @@ static void Putty_HandleCommand(char *input)
 	}else if (!memcmp(input, "unbrake", strlen("unbrake"))) {
 		wheels_Brake(false);
 	}else if (!memcmp(input, "buzzer play", strlen("buzzer play"))) {
-        test_Buzzer(input + 1 + strlen(buzzer play));
+        test_Buzzer(input + 1 + strlen("buzzer play"));
     }
 	return;
 }
@@ -278,7 +278,7 @@ static void Putty_UpdateHelpPrint(bool begin) {
                           "help\n\r"
                           "buzzer play <song>\n\r"
                           "brake\n\r"
-                          "unbrake\n\r";
+                          "unbrake\n\r\n\r";
     static char *token = NULL;
 
     if (begin) {

@@ -14,6 +14,7 @@
 #include "PuTTY.h"
 #include "stateControl.h"
 #include "Buzzer/buzzer.h"
+#include "dribbler.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -43,8 +44,6 @@ bool test_isTestRunning(tests t);
 
 void test_RunTest(tests t);
 
-status test_ExecuteWheelsTest();
-
-void test_Buzzer(char *song);
+void test_Buzzer(const char *song);
 
 #endif /* INC_TESTFUNCTIONS_H_ */

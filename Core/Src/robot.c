@@ -511,7 +511,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
-		if(test_isTestRunning(wheels)) {
+		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
             return;
         }

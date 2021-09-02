@@ -130,13 +130,14 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "dribble", strlen("dribble"))){
 		dribbler_SetSpeed(strtol(input + 1 + strlen("dribble"), NULL, 10));
 	}else if(!memcmp(input, "wheels", strlen("wheels"))){
+        // Requires test to be running, so type "test" first
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "help")){
 		Putty_UpdateHelpPrint(true);
 	}else if(!strcmp(input, "make robots")){
-		Putty_printf("No U!");
+		Putty_printf("No U!\n");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
 		test_RunTest(full);
 	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
@@ -149,6 +150,8 @@ static void Putty_HandleCommand(char *input)
 		test_RunTest(dribbler);
 	}else if (!memcmp(input, "test", strlen("test"))) {
 		test_RunTest(normal);
+    }else if (!memcmp(input, "stop test", strlen("stop test"))) {
+        test_StopTest(normal);
 	}else if (!memcmp(input, "brake", strlen("brake"))) {
 		wheels_Brake(true);
 	}else if (!memcmp(input, "unbrake", strlen("unbrake"))) {
@@ -270,6 +273,7 @@ static void Putty_UpdateHelpPrint(bool begin) {
                           "wheels <speed>\n\r"
                           "toggle ballsensor debug\n\r"
                           "test\n\r"
+                          "stop test\n\r"
                           "run full test\n\r"
                           "run wheels test\n\r"
                           "run shoot test\n\r"

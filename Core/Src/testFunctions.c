@@ -44,6 +44,11 @@ void test_RunTest(tests t) {
 	Putty_printf("---------- Start test! ----------\n\r");
 }
 
+void test_StopTest(tests t) {
+    runningTest[t] = false;
+    Putty_printf("---------- End of test ----------\n\r");
+}
+
 bool test_isTestRunning(tests t) {
     if (t == any) {
         bool result = false;
@@ -109,15 +114,22 @@ status executeFullTest(ReceivedData* receivedData) {
 
 	static status progress[nTests] = {test_none, test_none, test_none, test_none, test_none, test_none};
 
-	if (progress[wheels] == test_running) {
+    if (progress[wheels] == test_none) {
+        progress[wheels] = test_running;
+        runningTest[wheels] = true;
+    } else if (progress[wheels] == test_running) {
 		progress[wheels] = executeWheelsTest();
 		if (progress[wheels] == test_done) {
 			progress[shoot] = test_running;
+            runningTest[wheels] = false;
+            runningTest[shoot] = true;
 		}
 	} else if (progress[shoot] == test_running) {
 		progress[shoot] = executeShootTest();
 		if (progress[shoot] == test_done) {
 			progress[dribbler] = test_running;
+            runningTest[shoot] = false;
+            runningTest[dribbler] = true;
 		}
 	} else if (progress[dribbler] == test_running) {
 		progress[dribbler] = executeDribblerTest(receivedData);
@@ -126,6 +138,7 @@ status executeFullTest(ReceivedData* receivedData) {
 		for (int i = 0; i < nTests; i++) {
 			progress[i] = test_none;
 		}
+		runningTest[dribbler] = false;
 		return test_done;
 	}
 
@@ -219,6 +232,7 @@ status executeShootTest() {
 		timer = 0;
 		prevTimeDiff = 0;
 		firstTime = true;
+        Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;

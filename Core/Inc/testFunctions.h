@@ -44,6 +44,8 @@ bool test_isTestRunning(tests t);
 
 void test_RunTest(tests t);
 
+void test_StopTest(tests t);
+
 void test_Buzzer(const char *song);
 
 #endif /* INC_TESTFUNCTIONS_H_ */

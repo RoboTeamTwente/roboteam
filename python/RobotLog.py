@@ -2,8 +2,9 @@
 # Generated on September 09 2021, 16:17:59
 
 """
-[  0   ]
-11111111 header
+[  0   ] [  1   ]
+11111111 -------- header
+-------- 1111---- id
 """
 
 import numpy as np
@@ -11,8 +12,9 @@ from . import BaseTypes
 
 
 
-class BasestationLog:
+class RobotLog:
     header = 0                # Header byte indicating the type of packet
+    id = 0                    # Id of the robot
 
 
 
@@ -21,21 +23,31 @@ class BasestationLog:
     def get_header(payload):
         return ((payload[0]));
 
+    @staticmethod
+    def get_id(payload):
+        return ((payload[1] & 0b11110000) >> 4);
+
 # ================================ SETTERS ================================
     @staticmethod
     def set_header(payload, header):
         payload[0] = header;
 
+    @staticmethod
+    def set_id(payload, id):
+        payload[1] = ((id << 4) & 0b11110000) | (payload[1] & 0b00001111);
+
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(BaseTypes.PACKET_SIZE_BASESTATION_LOG, dtype=np.uint8)
-        BasestationLog.set_header              (payload, self.header)
+        payload = np.zeros(BaseTypes.PACKET_SIZE_ROBOT_LOG, dtype=np.uint8)
+        RobotLog.set_header              (payload, self.header)
+        RobotLog.set_id                  (payload, self.id)
         return payload
 
 
 # ================================ DECODE ================================
     def decode(self, payload):
-        self.header           = BasestationLog.get_header(payload)
+        self.header           = RobotLog.get_header(payload)
+        self.id               = RobotLog.get_id(payload)
 
 
     def print_bit_string(self):

@@ -5,6 +5,7 @@
  *      Author: simen
  */
 
+#include "main.h"
 #include "testFunctions.h"
 
 ///////////////////////////////////////////////////// VARIABLES

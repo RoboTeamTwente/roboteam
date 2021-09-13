@@ -67,4 +67,14 @@ proto::UiValues InterfaceSettings::_unsafeToProto(const std::map<std::string, In
 
     return vals;
 }
+void InterfaceSettings::removeSetting(const std::string name) {
+    std::scoped_lock lck(this->mtx);
+
+    this->values.erase(name);
+
+
+    if (auto state = this->stateHandler.lock()) {
+        state->stateDidChange();
+    }
+}
 }

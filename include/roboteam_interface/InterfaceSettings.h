@@ -29,6 +29,7 @@ class InterfaceSettings {
 
     std::optional<InterfaceValue> getSetting(const std::string name) const;
     void setSetting(const std::string name, const InterfaceValue newValue);
+    void removeSetting(const std::string name);
 
     void handleData(const proto::UiValues&, InterfaceSettingsPrecedence = InterfaceSettingsPrecedence::AI);
 

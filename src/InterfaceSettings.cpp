@@ -16,6 +16,7 @@ std::optional<InterfaceValue> InterfaceSettings::getSetting(const std::string na
 
     return this->values.at(name);
 }
+
 void InterfaceSettings::setSetting(const std::string name, const InterfaceValue newValue) {
     std::scoped_lock lck(this->mtx);
 
@@ -45,6 +46,11 @@ void InterfaceSettings::handleData(const proto::UiValues& values, InterfaceSetti
     for (const auto& entry : values.ui_values()) {
         this->_unsafeSetSetting(entry.first, entry.second);
     }
+
+    if (auto state = this->stateHandler.lock()) {
+        state->stateDidChange();
+    }
+
 }
 proto::UiValues InterfaceSettings::toProto() const {
     std::scoped_lock lck(this->mtx);

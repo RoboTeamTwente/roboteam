@@ -59,6 +59,10 @@ void InterfaceDeclarations::handleData(const proto::UiOptionDeclarations& recvDe
     for (auto singleDecl: recvDecls.options()) {
         this->decls.emplace_back(singleDecl);
     }
+
+    if (auto state = this->stateHandler.lock()) {
+        state->stateDidChange();
+    }
 }
 proto::UiOptionDeclarations InterfaceDeclarations::toProto() const {
     std::scoped_lock lck(this->mtx);
@@ -73,5 +77,9 @@ proto::UiOptionDeclarations InterfaceDeclarations::toProto() const {
 }
 InterfaceDeclarations::InterfaceDeclarations(const nlohmann::json& json) {
     json.get_to(this->decls);
+
+    if (auto state = this->stateHandler.lock()) {
+        state->stateDidChange();
+    }
 }
 }

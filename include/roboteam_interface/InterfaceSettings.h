@@ -15,7 +15,6 @@ enum class InterfaceSettingsPrecedence { AI, IFACE };
 class InterfaceSettings {
    private:
     std::map<std::string, InterfaceValue> values = {};
-    std::map<std::string, InterfaceValue> delta = {};
 
     mutable std::mutex mtx;
 
@@ -34,12 +33,6 @@ class InterfaceSettings {
     void handleData(const proto::UiValues&, InterfaceSettingsPrecedence = InterfaceSettingsPrecedence::AI);
 
     proto::UiValues toProto() const;
-
-    void addSettingToDelta(const std::string, InterfaceValue);
-    std::map<std::string, InterfaceValue> getSettingsDelta();
-    proto::UiValues getSettingsDeltaAsProto();
-    bool doesHaveDelta();
-    void mergeSettingsDelta();
 };
 }  // namespace rbtt::Interface
 

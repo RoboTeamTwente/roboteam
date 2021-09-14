@@ -27,7 +27,7 @@ class InterfaceDeclarations {
        std::optional<InterfaceDeclaration> _unsafeGetDeclaration(std::string) const;
 
    public:
-       InterfaceDeclarations(const nlohmann::json&);
+       InterfaceDeclarations(const nlohmann::json&, std::weak_ptr<InterfaceStateHandler>);
        InterfaceDeclarations(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(sts) {}
 
        explicit InterfaceDeclarations(const std::vector<InterfaceDeclaration> vec, std::weak_ptr<InterfaceStateHandler> sts) : decls(vec), stateHandler(sts) {};

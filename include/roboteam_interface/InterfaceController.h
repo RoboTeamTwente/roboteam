@@ -45,8 +45,8 @@ namespace rtt::Interface  {
         std::weak_ptr<InterfaceSettings> getValues() const {return vals;}
 
         void handleData(const proto::ModuleState state) {
+            // TODO: Handle field state
             if (state.handshakes_size() != 1) {
-                RTT_WARNING("Got no handshakes");
                 return;
             }
 

@@ -75,7 +75,7 @@ proto::UiOptionDeclarations InterfaceDeclarations::toProto() const {
 
     return protoDecls;
 }
-InterfaceDeclarations::InterfaceDeclarations(const nlohmann::json& json) {
+InterfaceDeclarations::InterfaceDeclarations(const nlohmann::json& json, std::weak_ptr<InterfaceStateHandler> sts): stateHandler(sts) {
     json.get_to(this->decls);
 
     if (auto state = this->stateHandler.lock()) {

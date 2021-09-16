@@ -83,8 +83,8 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define APB 150
-#define MAX_PWM 3000
 #define ENCODER_FILTER 15
+#define MAX_PWM 6000
 #define Charge_done_Pin GPIO_PIN_2
 #define Charge_done_GPIO_Port GPIOE
 #define LF_BRK_Pin GPIO_PIN_3

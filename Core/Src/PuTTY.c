@@ -130,7 +130,7 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "dribble", strlen("dribble"))){
 		dribbler_SetSpeed(strtol(input + 1 + strlen("dribble"), NULL, 10));
 	}else if(!memcmp(input, "wheels", strlen("wheels"))){
-        // Requires test to be running, so type "test" first
+        test_RunTest(normal);
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);

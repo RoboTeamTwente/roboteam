@@ -150,8 +150,10 @@ static void Putty_HandleCommand(char *input)
 		test_RunTest(dribbler);
 	}else if (!memcmp(input, "test", strlen("test"))) {
 		test_RunTest(normal);
-    }else if (!memcmp(input, "stop test", strlen("stop test"))) {
-        test_StopTest(normal);
+    }else if (!memcmp(input, "stop", strlen("stop"))) {
+        for (int t = 0; t < nTests; t++)
+            test_StopTest(t);
+        dribbler_SetSpeed(0);
 	}else if (!memcmp(input, "brake", strlen("brake"))) {
 		wheels_Brake(true);
 	}else if (!memcmp(input, "unbrake", strlen("unbrake"))) {

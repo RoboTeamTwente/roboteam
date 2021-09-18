@@ -15,28 +15,28 @@ bool runningTest[nTests] = {false};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-status executeFullTest(ReceivedData* receivedData);
+status executeFullTest();
 status executeWheelsTest();
 status executeShootTest();
-status executeDribblerTest(ReceivedData* receivedData);
-status executeSquareDrive(ReceivedData* receivedData);
+status executeDribblerTest();
+status executeSquareDrive();
 
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]);
 void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
-void test_Update(ReceivedData* receivedData) {
+void test_Update() {
 	if (runningTest[full]) {
-		runningTest[full] = (executeFullTest(receivedData) == test_running);
+		runningTest[full] = (executeFullTest() == test_running);
 	} else if (runningTest[square]) {
-		runningTest[square] = executeSquareDrive(receivedData) == test_running;
+		runningTest[square] = executeSquareDrive() == test_running;
 	} else if (runningTest[wheels]) {
-		runningTest[wheels] = executeWheelsTest(receivedData) == test_running;
+		runningTest[wheels] = executeWheelsTest() == test_running;
 	} else if (runningTest[shoot]) {
-		runningTest[shoot] = executeShootTest(receivedData) == test_running;
+		runningTest[shoot] = executeShootTest() == test_running;
 	} else if (runningTest[dribbler]) {
-		runningTest[dribbler] = executeDribblerTest(receivedData) == test_running;
+		runningTest[dribbler] = executeDribblerTest() == test_running;
 	}
 }
 
@@ -45,49 +45,90 @@ void test_RunTest(tests t) {
 	Putty_printf("---------- Start test! ----------\n\r");
 }
 
-bool test_isTestRunning() {
-	bool result = false;
-	for (int i = 0; i < nTests; i++) {
-		if (runningTest[i]) {
-			result = true;
-		}
-	}
-	return result;
+void test_StopTest(tests t) {
+    runningTest[t] = false;
+    Putty_printf("---------- End of test ----------\n\r");
+}
+
+bool test_isTestRunning(tests t) {
+    if (t == any) {
+        bool result = false;
+        for (int i = 0; i < nTests; i++) {
+            if (runningTest[i]) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    else {
+        return runningTest[t];
+    }
+}
+
+void test_Buzzer(const char *song) {
+    if (!strcmp(song, "quick beep up")) {
+        buzzer_Play_QuickBeepUp();
+    } else if (!strcmp(song, "quick beep down")) {
+        buzzer_Play_QuickBeepDown();
+    } else if (!strcmp(song, "startup")) {
+        buzzer_Play_Startup();
+    } else if (!strcmp(song, "tetris")) {
+        buzzer_Play_Tetris();
+    } else if (!strcmp(song, "mario")) {
+        buzzer_Play_Mario();
+    } else if (!strcmp(song, "pink panther")) {
+        buzzer_Play_PinkPanther();
+    } else if (!strcmp(song, "power up")) {
+        buzzer_Play_PowerUp();
+    } else if (!strcmp(song, "warning one")) {
+        buzzer_Play_WarningOne();
+    } else if (!strcmp(song, "warning two")) {
+        buzzer_Play_WarningTwo();
+    } else if (!strcmp(song, "warning three")) {
+        buzzer_Play_WarningThree();
+    } else if (!strcmp(song, "warning four")) {
+        buzzer_Play_WarningFour();
+    } else if (!strcmp(song, "bridge battle")) {
+        buzzer_Play_BridgeBattle();
+    } else if (!strcmp(song, "imperial march")) {
+        buzzer_Play_ImperialMarch();
+    } else if (!strcmp(song, "flatline")) {
+        buzzer_Play_Flatline();
+    } else if (!strcmp(song, "happy birthday")) {
+        buzzer_Play_HBD();
+    }
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
-status executeFullTest(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->kick_chip_forced = false;
-	receivedData->dribblerRef = 0;
-	receivedData->shootPower = 20;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-
+status executeFullTest() {
 	static status progress[nTests] = {test_none, test_none, test_none, test_none, test_none, test_none};
 
-	if (progress[wheels] == test_running) {
+    if (progress[wheels] == test_none) {
+        progress[wheels] = test_running;
+        runningTest[wheels] = true;
+    } else if (progress[wheels] == test_running) {
 		progress[wheels] = executeWheelsTest();
 		if (progress[wheels] == test_done) {
 			progress[shoot] = test_running;
+            runningTest[wheels] = false;
+            runningTest[shoot] = true;
 		}
 	} else if (progress[shoot] == test_running) {
 		progress[shoot] = executeShootTest();
 		if (progress[shoot] == test_done) {
 			progress[dribbler] = test_running;
+            runningTest[shoot] = false;
+            runningTest[dribbler] = true;
 		}
 	} else if (progress[dribbler] == test_running) {
-		progress[dribbler] = executeDribblerTest(receivedData);
+		progress[dribbler] = executeDribblerTest();
 	} else {
 		Putty_printf("---------- End of test ----------\n\r");
 		for (int i = 0; i < nTests; i++) {
 			progress[i] = test_none;
 		}
+		runningTest[dribbler] = false;
 		return test_done;
 	}
 
@@ -132,6 +173,7 @@ status executeWheelsTest() {
 			cnt[wheel] = 0;
 			wheelEncoders[wheel] = 0;
 		}
+        Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -180,6 +222,7 @@ status executeShootTest() {
 		timer = 0;
 		prevTimeDiff = 0;
 		firstTime = true;
+        Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -187,7 +230,7 @@ status executeShootTest() {
 	}
 }
 
-status executeDribblerTest(ReceivedData* receivedData) {
+status executeDribblerTest() {
 	const int RUN_TIME = 2000; 		// [ticks]
 	const int PAUSE_TIME = 1000; 	// [ticks]
 	static uint32_t timer = 0;
@@ -200,19 +243,21 @@ status executeDribblerTest(ReceivedData* receivedData) {
 		Putty_printf("Testing dribbler...\n\r");
 		firstTime = false;
 	} else if (timeDiff < RUN_TIME) {
-		receivedData->dribblerRef = 50;
+		dribbler_SetSpeed(50);
 	}
 
 	if (timeDiff > RUN_TIME + PAUSE_TIME) {
 		timer = 0;
 		firstTime = true;
+        Putty_printf("---------- End of test ----------\n\r");
+        dribbler_SetSpeed(0);
 		return test_done;
 	} else {
 		return test_running;
 	}
 }
 
-status executeSquareDrive(ReceivedData* receivedData) {
+status executeSquareDrive() {
 	// SQUARE WITH 90 DEGREES TURNS AT SIDES
 	float velocityRef[3];
 	velocityRef[0] = 0.0;
@@ -261,7 +306,6 @@ status executeSquareDrive(ReceivedData* receivedData) {
 		count++;
 	} else if (HAL_GetTick() - velTimer > 10*t) {
 		velTimer = HAL_GetTick();
-		Putty_printf("---------- Start test! ----------\n\r");
 	} else {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = 0.0;
@@ -270,10 +314,7 @@ status executeSquareDrive(ReceivedData* receivedData) {
 		return test_done;
 	}
 
-	receivedData->stateRef[body_x] = velocityRef[body_x];
-	receivedData->stateRef[body_y] = velocityRef[body_y];
-	receivedData->stateRef[body_w] = velocityRef[body_w];
-
+    stateControl_SetRef(velocityRef);
 	return test_running;
 }
 

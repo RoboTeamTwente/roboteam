@@ -13,6 +13,8 @@
 #include "stm32f7xx_hal.h"
 #include "PuTTY.h"
 #include "stateControl.h"
+#include "Buzzer/buzzer.h"
+#include "dribbler.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -24,7 +26,8 @@ typedef enum {
 	square,
 	wheels,
 	shoot,
-	dribbler
+	dribbler,
+	any
 } tests;
 
 typedef enum {
@@ -35,12 +38,14 @@ typedef enum {
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-void test_Update(ReceivedData* receivedData);
+void test_Update();
 
-bool test_isTestRunning();
+bool test_isTestRunning(tests t);
 
 void test_RunTest(tests t);
 
-status test_ExecuteWheelsTest();
+void test_StopTest(tests t);
+
+void test_Buzzer(const char *song);
 
 #endif /* INC_TESTFUNCTIONS_H_ */

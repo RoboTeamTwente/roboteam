@@ -27,6 +27,7 @@ static void Putty_HandleCommand(char *input);                        // Executes
 static void Putty_HandlePcInput(char *input, size_t n_chars);        // Called with timer | Change this
 static uint8_t Putty_Wrap(uint8_t val, int8_t dif, uint8_t modulus); // Keeps values within the real range
 static void Putty_ClearLine();                                       //Clears the current line to that new text can be placed.
+static void Putty_UpdateHelpPrint(bool begin);                       // Prints list of commands during multiple ticks
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 Putty_Enum Putty_Init()
@@ -35,7 +36,7 @@ Putty_Enum Putty_Init()
     Putty_Vars.errorCode = 0;
     Putty_Vars.huart_Rx_len = 0;
 
-    char *startmessage = "\n\r\n\r----------PuttyInterface_Init-----------\n\r\n\r-----type help to get help-----\n\r"; // Initial message
+    char *startmessage = "\n\r\n\r----------PuttyInterface_Init-----------\n\r-----type help for a list of possible commands-----\n\r\n\r"; // Initial message
     Putty_printf(startmessage);
 
     HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1); // Data reception under serial interrupt mode
@@ -85,6 +86,8 @@ Putty_Enum Putty_Callback()
         Putty_Vars.huart_Rx_len = 0;                                                  // Reset the size of the input
         HAL_UART_Receive_IT(UART_PC, Putty_Vars.rec_buf, 1);                          // Keep on checking for new data
     }
+
+    Putty_UpdateHelpPrint(false);
     return Putty_Vars.errorCode = NoErrors;
 }
 
@@ -127,13 +130,14 @@ static void Putty_HandleCommand(char *input)
 	}else if(!memcmp(input, "dribble", strlen("dribble"))){
 		dribbler_SetSpeed(strtol(input + 1 + strlen("dribble"), NULL, 10));
 	}else if(!memcmp(input, "wheels", strlen("wheels"))){
+        test_RunTest(normal);
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
 		wheels_SetRef(wheelref);
 	}else if(!strcmp(input, "help")){
-		Putty_TextOut("shoot power <arg>\n\rshoot state\n\rkick\n\rchip\n\rdribble <arg>\n\rwheels <arg>\n\rtoggle ballsensor debug\n\r\tests options:\n\r\ttest\n\r\trun full test\n\r\trun wheels test\n\r\trun shoot test\n\r\trun dribbler test\n\r\trun square test (includes driving)n\rhelp\n\r");
+		Putty_UpdateHelpPrint(true);
 	}else if(!strcmp(input, "make robots")){
-		Putty_printf("No U!");
+		Putty_printf("No U!\n");
 	}else if (!memcmp(input, "run full test", strlen("run full test"))) {
 		test_RunTest(full);
 	}else if (!memcmp(input, "run square test", strlen("run square test"))) {
@@ -146,11 +150,17 @@ static void Putty_HandleCommand(char *input)
 		test_RunTest(dribbler);
 	}else if (!memcmp(input, "test", strlen("test"))) {
 		test_RunTest(normal);
+    }else if (!memcmp(input, "stop", strlen("stop"))) {
+        for (int t = 0; t < nTests; t++)
+            test_StopTest(t);
+        dribbler_SetSpeed(0);
 	}else if (!memcmp(input, "brake", strlen("brake"))) {
 		wheels_Brake(true);
 	}else if (!memcmp(input, "unbrake", strlen("unbrake"))) {
 		wheels_Brake(false);
-	}
+	}else if (!memcmp(input, "buzzer play", strlen("buzzer play"))) {
+        test_Buzzer(input + 1 + strlen("buzzer play"));
+    }
 	return;
 }
 
@@ -250,4 +260,38 @@ static void Putty_ClearLine()
         Putty_TextOut(" "); // Input spacing (no idea why)
     }
     Putty_TextOut("\r");    // Inputs return again
+}
+
+
+// Split printing of help text over multiple calls to reduce the load
+static void Putty_UpdateHelpPrint(bool begin) {
+    static char *string = "\n\r-----List of possible commands-----\n\r"
+                          "shoot power <power>\n\r"
+                          "shoot state\n\r"
+                          "kick\n\r"
+                          "kickbs\n\r"
+                          "chip\n\r"
+                          "dribble <speed>\n\r"
+                          "wheels <speed>\n\r"
+                          "toggle ballsensor debug\n\r"
+                          "test\n\r"
+                          "stop test\n\r"
+                          "run full test\n\r"
+                          "run wheels test\n\r"
+                          "run shoot test\n\r"
+                          "run dribbler test\n\r"
+                          "run square test (includes driving)\n\r"
+                          "help\n\r"
+                          "buzzer play <song>\n\r"
+                          "brake\n\r"
+                          "unbrake\n\r\n\r";
+    static char *token = NULL;
+
+    if (begin) {
+        token = strtok(string, "\r");
+    }
+    else if (token) {
+        Putty_TextOut(token);
+        token = strtok(NULL, "\r");
+    }
 }

@@ -34,7 +34,7 @@
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
 static bool SEND_ROBOT_STATE_INFO = false;
-static const bool USE_PUTTY = false;
+static const bool USE_PUTTY = true;
 
 SX1280* SX;
 MTi_data* MTi;
@@ -323,9 +323,14 @@ void loop(void){
         xsens_CalibrationDoneFirst = false;
         wheels_Brake(false);
     }
+
+    // Update test (if active)
+    test_Update();
     
     // Go through all commands
-    executeCommands(&receivedData);
+    if (!halt) {
+        executeCommands(&receivedData);
+    }
 
     // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
@@ -372,7 +377,6 @@ void loop(void){
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
-		Putty_printf("1000ms\n");
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
@@ -413,7 +417,7 @@ void loop(void){
 /* This function is triggered after calling HAL_SPI_TransmitReceive_IT */
 /* Since we transmit everything using blocking mode, this function should only be called when we receive something */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
-	
+
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
 
@@ -507,10 +511,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
-		if(test_isTestRunning())
-			return;
+		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
+            wheels_Update();
+            return;
+        }
 
-		if( halt ){
+		if( halt && !test_isTestRunning(square)){
 			wheels_Stop();
 			return;
 		}

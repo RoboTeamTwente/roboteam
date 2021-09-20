@@ -18,6 +18,7 @@
 #include "iwdg.h"
 #include "ballSensor.h"
 #include "testFunctions.h"
+#include "logging.h"
 
 #include "rem.h"
 
@@ -38,8 +39,6 @@ static const bool USE_PUTTY = true;
 
 SX1280* SX;
 MTi_data* MTi;
-
-uint16_t ID;
 
 uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
 uint8_t message_buffer_out[127];
@@ -208,8 +207,8 @@ void init(void){
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
-	ID = get_Id();
-	Putty_printf("ID: %d\n", ID);
+	ROBOT_ID = get_Id();
+	Putty_printf("ROBOT_ID: %d\n", ROBOT_ID);
 	set_Pin(LED0_pin, 1);
 
 
@@ -249,7 +248,7 @@ void init(void){
 	// TODO figure out why a hardfault occurs when this is disabled
 	Putty_printf("Initializing wireless\n");
     SX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, COMM_SPI);
-	SX->SX_settings->syncWords[0] = robot_syncWord[ID];
+	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
 	set_Pin(LED4_pin, 1);
@@ -269,7 +268,7 @@ void init(void){
 
 	// Turn of all leds. Will now be used to indicate robot status
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
-	buzzer_Play_ID(ID);
+	buzzer_Play_ID(ROBOT_ID);
 	
 	timestamp_initialized = HAL_GetTick();
 }
@@ -335,7 +334,7 @@ void loop(void){
     // Create RobotFeedback
 	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
 	robotFeedback.remVersion= LOCAL_REM_VERSION;
-    robotFeedback.id = ID;
+    robotFeedback.id = ROBOT_ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     // robotFeedback.batteryLevel = (batCounter > 1000);
     robotFeedback.ballSensorWorking = ballSensor_isInitialized();
@@ -353,7 +352,7 @@ void loop(void){
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
 		robotStateInfo.remVersion = LOCAL_REM_VERSION;
-		robotStateInfo.id = ID;
+		robotStateInfo.id = ROBOT_ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
@@ -377,6 +376,8 @@ void loop(void){
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
 		heartbeat_1000ms += 1000;
+		
+		LOG("Hello\n");
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
@@ -388,6 +389,8 @@ void loop(void){
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
         }
+
+		// printRobotStateData();
     }
 
     /*

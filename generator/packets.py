@@ -106,6 +106,8 @@ packets = {
     ],
     "RobotLog" : [
         ["header",     8, None, "Header byte indicating the type of packet"],
-        ["id",         4, None, "Id of the robot"]
+        ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
+        ["id",         4, None, "Id of the robot"],
+        ["message_length", 8, None, "Length of the following message"]
     ]
 }

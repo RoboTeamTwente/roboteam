@@ -3,8 +3,7 @@ project(roboteam_world)
 
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Network)
-add_subdirectory(data)
-add_subdirectory(net)
+
 add_subdirectory(observer)
 
 add_executable(roboteam_observer
@@ -13,7 +12,6 @@ add_executable(roboteam_observer
         )
 target_link_libraries(roboteam_observer
         PRIVATE observer
-        PRIVATE net
         PRIVATE roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network

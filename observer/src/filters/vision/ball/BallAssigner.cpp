@@ -64,10 +64,11 @@ BallAssignmentResult assign_balls(const std::vector<CameraGroundBallPrediction>&
       }
   }
 
-  //we only want to assign a single ball per ground ball filter, so we pick the best one for each prediction:
+  //we only want to assign a single ball per ground ball filter, so we pick the best one for each prediction if multiple balls are assigned
+  //if multiple balls are close, they are merged into a single observation.
   for (std::size_t i = 0; i < predictions.size(); ++i) {
     const auto& prediction = predictions[i];
-    const auto& assigned_observations =prediction_observations[i];
+    const auto& assigned_observations = prediction_observations[i];
 
     //simple base cases which are most often hit
     if(assigned_observations.empty()){

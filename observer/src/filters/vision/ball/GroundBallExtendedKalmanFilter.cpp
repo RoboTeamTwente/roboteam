@@ -152,7 +152,7 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
   Eigen::Vector2d currentVel = getVelocity();
   double vel = currentVel.norm();
   //We need to check if the velocity does not reach 0, as at that point the ball simply lays still. Otherwise, we accelerate the ball 'backwards'
-  //Because of the dimples it usually lays still when it reaches ~= 0.01 cm/s but this is typically negligible
+  //Because of the dimples it usually lays still when it reaches ~= 0.01 cm/s but we ignore this in our model
   double dt = frame_dt;
   if (vel + acceleration * frame_dt < 0) {
     dt = -vel / acceleration;

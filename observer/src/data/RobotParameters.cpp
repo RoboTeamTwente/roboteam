@@ -3,7 +3,7 @@
 //
 
 
-#include "RobotParameters.h"
+#include "../../include/observer/data/RobotParameters.h"
 
 RobotParameters RobotParameters::from_default() {
     RobotParameters parameters; //default constructor should be roughly correct

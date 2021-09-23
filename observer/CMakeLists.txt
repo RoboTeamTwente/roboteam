@@ -1,5 +1,4 @@
 add_library(observer STATIC
-
         src/filters/Scaling.h
         src/Observer.cpp
         src/parameters/RobotParameterDatabase.cpp
@@ -24,9 +23,10 @@ add_library(observer STATIC
         src/filters/vision/ball/GroundBallExtendedKalmanFilter.cpp
         src/filters/vision/ball/FilteredBall.cpp
         src/filters/vision/ball/BallAssigner.cpp
+        src/data/RobotParameters.cpp
         )
+
 target_link_libraries(observer
-        PUBLIC data
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PUBLIC Eigen3::Eigen

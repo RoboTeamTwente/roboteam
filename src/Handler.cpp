@@ -45,8 +45,8 @@ void Handler::setupSSLClients() {
     vision_client = new RobocupReceiver<proto::SSL_WrapperPacket>(QHostAddress(SSL_VISION_SOURCE_IP),DEFAULT_VISION_PORT);
     referee_client = new RobocupReceiver<proto::SSL_Referee>(QHostAddress(SSL_REFEREE_SOURCE_IP),DEFAULT_REFEREE_PORT);
 
-    std::cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << endl;
-    std::cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << endl;
+    std::cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << std::endl;
+    std::cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << std::endl;
 
     vision_client->connect();
     referee_client->connect();

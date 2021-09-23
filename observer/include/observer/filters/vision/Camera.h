@@ -51,7 +51,7 @@ public:
 
     // All of the below 6 functions are just Eigen3 implementations of the logic in SSL-Vision, so nothing here is really 'created' by us.
     // If you have problems understanding it I recommend looking further at camera_calibration.h in ssl-vision or to send
-    // me a message so I can help explaining it. Note the SSL-vision code may change, so compatibility can break here
+    // me (Rolf) a message so I can help explaining it. Note the SSL-vision code may change, so compatibility can break here
     /**
      * @brief maps 3d field points to points on the camera image coordinates
      * @param fieldPoint  3d point to be mapped to image !!! in millimeters !!!

@@ -25,6 +25,7 @@ add_library(observer STATIC
         src/filters/vision/ball/BallAssigner.cpp
         src/data/RobotParameters.cpp
         src/filters/vision/Camera.cpp
+        src/filters/vision/CameraMap.cpp
         )
 
 target_link_libraries(observer

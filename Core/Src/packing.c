@@ -51,7 +51,7 @@ void packetToRoboData(RobotCommandPayload* input, ReceivedData* receivedData) {
 
 	// Shoot
 	// TODO fix this rounding of shootPower
-	receivedData->shootPower = rc.kickChipPower * 14.285f; // Scale [0, 7] to [0, 100]
+	receivedData->shootPower = rc.kickChipPower * 100.0f; // Scale [0, 1] to [0, 100]
 	receivedData->kick_chip_forced = rc.doForce;
 	receivedData->do_kick = rc.doKick;
 	receivedData->do_chip = rc.doChip;

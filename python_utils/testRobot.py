@@ -85,7 +85,7 @@ rate_of_turn_avg = 0
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 600
+periodLength = 300
 packetHz = 60
 
 totalCommandsSent = 0
@@ -97,12 +97,12 @@ lastBasestationLog = ""
 doFullTest = test == "full"
 testIndex = 2
 
-stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
+# stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
+stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
 while True:
 	# Open basestation with the basestation
 	if basestation is None or not basestation.isOpen():
-		# basestation = utils.openContinuous(timeout=0.001, port=stlink_port)
 		basestation = utils.openContinuous(timeout=0.001)
 
 	try:
@@ -148,14 +148,14 @@ while True:
 
 					if test == "kicker-reflect":
 						cmd.doKick = True
-						cmd.kickChipPower = 3
+						cmd.kickChipPower = 0.2
 
 					if test == "kicker" or test == "chipper":
 						if period == 0:
 							if test == "kicker"  : cmd.doKick = True
 							if test == "chipper" : cmd.doChip = True
 							cmd.doForce = True
-							cmd.kickChipPower = 3
+							cmd.kickChipPower = 0.2
 
 					if test == "dribbler":
 						cmd.dribbler = math.floor(8 * periodFraction)
@@ -229,6 +229,10 @@ while True:
 				logmessage = basestation.readline().decode()
 				lastBasestationLog = logmessage[:-1] + " "*20
 
+			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_LOG:
+				logmessage = basestation.readline().decode()
+				print("[BOT]", logmessage)
+				# lastBasestationLog = logmessage[:-1] + " "*20
 			else:
 				print(f"Error : Unhandled packet with type {packetType}")
 

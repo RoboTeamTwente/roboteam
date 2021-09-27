@@ -4,7 +4,7 @@ import serial
 from bitarray import bitarray
 from bitarray.util import int2ba, ba2int
 
-def openPort(port=None, suppressError = False, timeout=None):
+def openPort(port=None, suppressError = True, timeout=None):
 	ser = None
 	if port is None:
 		return None
@@ -19,8 +19,8 @@ def openPort(port=None, suppressError = False, timeout=None):
 		    timeout=timeout
 		)
 	except serial.serialutil.SerialException as e:
-		if not suppressError:
-			print("[open]", e)
+		print("[open]", e)
+		# if not suppressError:
 
 	return ser
 
@@ -33,6 +33,9 @@ def openContinuous(*args, **kwargs):
 
 		if "port" not in kwargs or kwargs["port"] is None:
 			kwargs["port"] = getBasestationPath()
+		
+		if "port" not in kwargs or kwargs["port"] is None:
+			kwargs["port"] = getSTLinkPath()
 		
 		if kwargs["port"] is None:
 			print("\r[openContinuous] Basestation path not found %s " % chr(33 + i), end="")
@@ -50,6 +53,16 @@ def getBasestationPath():
 		basestations = [device for device in usb_devices if device.startswith("usb-RTT_BaseStation")]
 		if 0 < len(basestations):
 			return os.path.join("/dev/serial/by-id", basestations[0])
+		return None
+	except Exception:
+		return None
+
+def getSTLinkPath():
+	try:
+		usb_devices = os.listdir("/dev/serial/by-id")
+		stlinks = [device for device in usb_devices if device.startswith("usb-STMicroelectronics_STM32_STLink")]
+		if 0 < len(stlinks):
+			return os.path.join("/dev/serial/by-id", stlinks[0])
 		return None
 	except Exception:
 		return None

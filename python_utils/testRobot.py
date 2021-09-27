@@ -15,6 +15,14 @@ from roboteam_embedded_messages.python.RobotCommand import RobotCommand
 from roboteam_embedded_messages.python.RobotFeedback import RobotFeedback
 from roboteam_embedded_messages.python.RobotStateInfo import RobotStateInfo
 
+
+
+robotStateInfoFile = open(f"robotStateInfo_{int(time.time())}.csv", "w")
+robotFeedbackFile = open(f"robotFeedback_{int(time.time())}.csv", "w")
+
+
+
+
 try:
 	import cv2
 	cv2_available = True
@@ -85,7 +93,7 @@ rate_of_turn_avg = 0
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 300
+periodLength = 500
 packetHz = 60
 
 totalCommandsSent = 0
@@ -195,8 +203,18 @@ while True:
 					f"{lastBasestationLog}", end="\r")
 
 				# Send command
-				basestation.write( cmd.encode() )
-				totalCommandsSent += 1
+				if test != "nothing":
+					basestation.write( cmd.encode() )
+					totalCommandsSent += 1
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,17 +231,23 @@ while True:
 				feedbackTimestamp = time.time()
 				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_FEEDBACK - 1)
 
-				if RobotFeedback.get_id(packet) != robotId:
-					print("Error : Received feedback from robot %d ???" % feedback.id)
-					break
-
-				robotFeedback.decode(packet)
-				totalFeedbackReceived += 1
-
+				if RobotFeedback.get_id(packet) == robotId:
+					robotFeedback.decode(packet)
+					totalFeedbackReceived += 1
+				else:
+					print("Error : Received feedback from robot %d ???" % RobotFeedback.get_id(packet))
+	
 			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_STATE_INFO:
 				stateInfoTimestamp = time.time()
 				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_STATE_INFO - 1)
-				robotStateInfo.decode(packet)
+
+				if RobotStateInfo.get_id(packet) == robotId:
+					robotStateInfo.decode(packet)
+					robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensYaw} {robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4}\n")
+					robotStateInfoFile.flush()
+
+				else:
+					print("Error : Received StateInfo from robot %d ???" % RobotFeedback.get_id(packet))
 
 			elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
@@ -239,6 +263,15 @@ while True:
 			# Break if cv2 is not imported
 			if not cv2_available:
 				break
+
+
+
+
+
+
+
+
+
 
 			img *= 0.5
 

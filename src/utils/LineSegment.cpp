@@ -1,3 +1,4 @@
+#include <optional>
 #include "HalfLine.h"
 #include "LineSegment.h"
 

@@ -1,5 +1,8 @@
 #ifndef ROBOTEAM_UTILS_LINESEGMENT_H
 #define ROBOTEAM_UTILS_LINESEGMENT_H
+
+#include <optional>
+
 #include "Definitions.h"
 #include "Vector2.h"
 

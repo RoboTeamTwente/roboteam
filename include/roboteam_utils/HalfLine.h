@@ -1,6 +1,7 @@
 #ifndef RTT_ROBOTEAM_UTILS_SRC_HALFLINE_H_
 #define RTT_ROBOTEAM_UTILS_SRC_HALFLINE_H_
 
+#include <optional>
 #include "Line.h"
 #include "Vector2.h"
 

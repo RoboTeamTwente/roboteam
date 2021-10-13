@@ -14,6 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 include(LocateQt5)
 include(FindSodium)
 include(GetDependencies)
+include(BuildLibusb)
 
 # internal projects
 add_subdirectory(roboteam_proto)

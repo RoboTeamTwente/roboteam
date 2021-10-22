@@ -26,9 +26,11 @@ print(f"Generating REM version {version}")
 
 generator_c = Generator.C_Generator()
 generator_python = Generator.Python_Generator()
+generator_proto = Generator.Proto_Generator()
 
 os.makedirs("generated_c", exist_ok=True)
 os.makedirs("generated_python", exist_ok=True)
+os.makedirs("generated_proto", exist_ok=True)
 
 for packet_name in packets:
 	variables = packets[packet_name]
@@ -41,6 +43,11 @@ for packet_name in packets:
 	filename = f"{packet_name}.py"
 	with open(os.path.join("generated_python", filename), "w") as file:
 		file.write(generator_python.generate(packet_name, variables))
+	print(f"Generated file {filename}")
+
+	filename = f"{packet_name}.proto"
+	with open(os.path.join("generated_proto", filename), "w") as file:
+		file.write(generator_proto.generate(packet_name, variables))
 	print(f"Generated file {filename}")
 
 
@@ -66,5 +73,8 @@ for file in os.listdir("generated_c"):
 
 for file in os.listdir("generated_python"):
 	shutil.move(f"generated_python/{file}", f"../python/{file}")
+
+for file in os.listdir("generated_proto"):
+	shutil.move(f"generated_proto/{file}", f"../proto/{file}")
 
 write_version(version)

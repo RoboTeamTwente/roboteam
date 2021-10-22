@@ -62,11 +62,12 @@ class BaseTypeGenerator:
 			VARIABLE_NAME = f"PACKET_SIZE{PACKET_NAME}".ljust(60)
 			file_string += self.to_constant(VARIABLE_NAME, total_bytes) + "\n"
 
-			for variable, _, _range, _ in variables:
+			for variable, n_bits, _range, _ in variables:
 				if _range is None: continue
 				VARIABLE_NAME = CamelCaseToUpper(variable)
 				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_MIN".ljust(60), f"{_range[0]:.16f}".rstrip('0')) + "\n"
 				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_MAX".ljust(60), f"{_range[1]:.16f}".rstrip('0')) + "\n"
+				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_N_BITS".ljust(60), f"{n_bits}" + "\n")
 
 			file_string += "\n"
 

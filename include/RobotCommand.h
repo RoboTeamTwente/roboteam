@@ -31,22 +31,22 @@ typedef struct _RobotCommandPayload {
 } RobotCommandPayload;
 
 typedef struct _RobotCommand {
-    uint32_t   header              ; // Header byte indicating the type of packet
-    uint32_t   remVersion          ; // Version of roboteam_embedded_messages
-    uint32_t   id                  ; // Id of the robot
-    uint32_t   messageId           ; // Id of the message
-    bool       doKick              ; // Do a kick if ballsensor
-    bool       doChip              ; // Do a chip if ballsensor
-    bool       doForce             ; // Do regardless of ballsensor
-    bool       useCameraAngle      ; // Use the info in 'cameraAngle'
-    float      rho                 ; // Magnitude of movement (m/s)
-    float      theta               ; // Direction of movement (radians)
-    float      angle               ; // Absolute angle (rad) / angular velocity (rad/s)
-    float      cameraAngle         ; // Angle of the robot as seen by camera (rad)
-    uint32_t   dribbler            ; // Dribbler speed
-    float      kickChipPower       ; // Power of the kick or chip
-    bool       angularControl      ; // NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
-    bool       feedback            ; // Ignore the packet. Just send feedback
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t   id                  ; // integer [0, 15]              Id of the robot
+    uint32_t   messageId           ; // integer [0, 15]              Id of the message
+    bool       doKick              ; // integer [0, 1]               Do a kick if ballsensor
+    bool       doChip              ; // integer [0, 1]               Do a chip if ballsensor
+    bool       doForce             ; // integer [0, 1]               Do regardless of ballsensor
+    bool       useCameraAngle      ; // integer [0, 1]               Use the info in 'cameraAngle'
+    float      rho                 ; // float   [0.000, 8.000)       Magnitude of movement (m/s)
+    float      theta               ; // float   [-3.142, 3.142)      Direction of movement (radians)
+    float      angle               ; // float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
+    float      cameraAngle         ; // float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
+    uint32_t   dribbler            ; // integer [0, 7]               Dribbler speed
+    float      kickChipPower       ; // float   [0.000, 1.000)       Power of the kick or chip
+    bool       angularControl      ; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
+    bool       feedback            ; // integer [0, 1]               Ignore the packet. Just send feedback
 } RobotCommand;
 
 // ================================ GETTERS ================================

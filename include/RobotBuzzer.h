@@ -21,12 +21,12 @@ typedef struct _RobotBuzzerPayload {
 } RobotBuzzerPayload;
 
 typedef struct _RobotBuzzer {
-    uint32_t   header              ; // Header byte indicating the type of packet
-    uint32_t   remVersion          ; // Version of roboteam_embedded_messages
-    uint32_t   id                  ; // Id of the robot
-    uint32_t   messageId           ; // Id of the message
-    uint32_t   period              ; // Sound that the buzzer makes.
-    float      duration            ; // Duration of the sound
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t   id                  ; // integer [0, 15]              Id of the robot
+    uint32_t   messageId           ; // integer [0, 15]              Id of the message
+    uint32_t   period              ; // integer [0, 4095]            Sound that the buzzer makes.
+    float      duration            ; // float   [0.000, 5.000)       Duration of the sound
 } RobotBuzzer;
 
 // ================================ GETTERS ================================

@@ -31,22 +31,22 @@ typedef struct _RobotFeedbackPayload {
 } RobotFeedbackPayload;
 
 typedef struct _RobotFeedback {
-    uint32_t   header              ; // Header byte indicating the type of packet
-    uint32_t   remVersion          ; // Version of roboteam_embedded_messages
-    uint32_t   id                  ; // Id of the robot 
-    uint32_t   messageId           ; // Id of the message
-    uint32_t   batteryLevel        ; // The voltage level of the battery
-    bool       XsensCalibrated     ; // Indicates if the XSens IMU is calibrated
-    bool       ballSensorWorking   ; // Indicates if the ballsensor is working
-    bool       hasBall             ; // Indicates if the ball is somewhere in front of the ballsensor
-    bool       capacitorCharged    ; // Indicates if the capacitor for kicking and chipping is charged
-    float      ballPos             ; // Indicates where in front of the ballsensor the ball is
-    float      rho                 ; // The estimated magnitude of movement (m/s)
-    float      theta               ; // The estimated direction of movement (rad)
-    float      angle               ; // The estimated angle (rad)
-    uint32_t   wheelLocked         ; // Indicates if a wheel is locked. One bit per wheel
-    uint32_t   wheelBraking        ; // Indicates if a wheel is slipping. One bit per wheel
-    uint32_t   rssi                ; // Signal strength of the last packet received by the robot
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t   id                  ; // integer [0, 15]              Id of the robot 
+    uint32_t   messageId           ; // integer [0, 15]              Id of the message
+    uint32_t   batteryLevel        ; // integer [0, 15]              The voltage level of the battery
+    bool       XsensCalibrated     ; // integer [0, 1]               Indicates if the XSens IMU is calibrated
+    bool       ballSensorWorking   ; // integer [0, 1]               Indicates if the ballsensor is working
+    bool       hasBall             ; // integer [0, 1]               Indicates if the ball is somewhere in front of the ballsensor
+    bool       capacitorCharged    ; // integer [0, 1]               Indicates if the capacitor for kicking and chipping is charged
+    float      ballPos             ; // float   [-0.500, 0.500)      Indicates where in front of the ballsensor the ball is
+    float      rho                 ; // float   [0.000, 8.000)       The estimated magnitude of movement (m/s)
+    float      theta               ; // float   [-3.142, 3.142)      The estimated direction of movement (rad)
+    float      angle               ; // float   [-3.142, 3.142)      The estimated angle (rad)
+    uint32_t   wheelLocked         ; // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
+    uint32_t   wheelBraking        ; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
+    uint32_t   rssi                ; // integer [0, 15]              Signal strength of the last packet received by the robot
 } RobotFeedback;
 
 // ================================ GETTERS ================================

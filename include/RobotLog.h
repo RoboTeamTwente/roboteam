@@ -19,10 +19,10 @@ typedef struct _RobotLogPayload {
 } RobotLogPayload;
 
 typedef struct _RobotLog {
-    uint32_t   header              ; // Header byte indicating the type of packet
-    uint32_t   remVersion          ; // Version of roboteam_embedded_messages
-    uint32_t   id                  ; // Id of the robot
-    uint32_t   message_length      ; // Length of the following message
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t   id                  ; // integer [0, 15]              Id of the robot
+    uint32_t   message_length      ; // integer [0, 255]             Length of the following message
 } RobotLog;
 
 // ================================ GETTERS ================================

@@ -25,22 +25,22 @@ from . import BaseTypes
 
 
 class RobotCommand:
-    header = 0                # Header byte indicating the type of packet
-    remVersion = 0            # Version of roboteam_embedded_messages
-    id = 0                    # Id of the robot
-    messageId = 0             # Id of the message
-    doKick = 0                # Do a kick if ballsensor
-    doChip = 0                # Do a chip if ballsensor
-    doForce = 0               # Do regardless of ballsensor
-    useCameraAngle = 0        # Use the info in 'cameraAngle'
-    rho = 0                   # Magnitude of movement (m/s)
-    theta = 0                 # Direction of movement (radians)
-    angle = 0                 # Absolute angle (rad) / angular velocity (rad/s)
-    cameraAngle = 0           # Angle of the robot as seen by camera (rad)
-    dribbler = 0              # Dribbler speed
-    kickChipPower = 0         # Power of the kick or chip
-    angularControl = 0        # NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
-    feedback = 0              # Ignore the packet. Just send feedback
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
+    remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
+    id = 0                    # integer [0, 15]              Id of the robot
+    messageId = 0             # integer [0, 15]              Id of the message
+    doKick = 0                # integer [0, 1]               Do a kick if ballsensor
+    doChip = 0                # integer [0, 1]               Do a chip if ballsensor
+    doForce = 0               # integer [0, 1]               Do regardless of ballsensor
+    useCameraAngle = 0        # integer [0, 1]               Use the info in 'cameraAngle'
+    rho = 0                   # float   [0.000, 8.000)       Magnitude of movement (m/s)
+    theta = 0                 # float   [-3.142, 3.142)      Direction of movement (radians)
+    angle = 0                 # float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
+    cameraAngle = 0           # float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
+    dribbler = 0              # integer [0, 7]               Dribbler speed
+    kickChipPower = 0         # float   [0.000, 1.000)       Power of the kick or chip
+    angularControl = 0        # integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
+    feedback = 0              # integer [0, 1]               Ignore the packet. Just send feedback
 
 
 

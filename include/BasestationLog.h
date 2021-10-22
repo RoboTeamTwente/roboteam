@@ -16,7 +16,7 @@ typedef struct _BasestationLogPayload {
 } BasestationLogPayload;
 
 typedef struct _BasestationLog {
-    uint32_t   header              ; // Header byte indicating the type of packet
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
 } BasestationLog;
 
 // ================================ GETTERS ================================

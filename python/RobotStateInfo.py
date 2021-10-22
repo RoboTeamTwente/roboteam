@@ -21,18 +21,18 @@ from . import BaseTypes
 
 
 class RobotStateInfo:
-    header = 0                # Header byte indicating the type of packet
-    remVersion = 0            # Version of roboteam_embedded_messages
-    id = 0                    # Id of the robot 
-    messageId = 0             # Id of the message
-    xsensAcc1 = 0             # xsensAcc1
-    xsensAcc2 = 0             # xsensAcc2
-    xsensYaw = 0              # xsensYaw
-    rateOfTurn = 0            # rateOfTurn
-    wheelSpeed1 = 0           # wheelSpeed1
-    wheelSpeed2 = 0           # wheelSpeed2
-    wheelSpeed3 = 0           # wheelSpeed3
-    wheelSpeed4 = 0           # wheelSpeed4
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
+    remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
+    id = 0                    # integer [0, 15]              Id of the robot 
+    messageId = 0             # integer [0, 15]              Id of the message
+    xsensAcc1 = 0             # float   [-50000.000, 50000.000) xsensAcc1
+    xsensAcc2 = 0             # float   [-50000.000, 50000.000) xsensAcc2
+    xsensYaw = 0              # float   [-50000.000, 50000.000) xsensYaw
+    rateOfTurn = 0            # float   [-50000.000, 50000.000) rateOfTurn
+    wheelSpeed1 = 0           # float   [-50000.000, 50000.000) wheelSpeed1
+    wheelSpeed2 = 0           # float   [-50000.000, 50000.000) wheelSpeed2
+    wheelSpeed3 = 0           # float   [-50000.000, 50000.000) wheelSpeed3
+    wheelSpeed4 = 0           # float   [-50000.000, 50000.000) wheelSpeed4
 
 
 

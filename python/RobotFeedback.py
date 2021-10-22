@@ -25,22 +25,22 @@ from . import BaseTypes
 
 
 class RobotFeedback:
-    header = 0                # Header byte indicating the type of packet
-    remVersion = 0            # Version of roboteam_embedded_messages
-    id = 0                    # Id of the robot 
-    messageId = 0             # Id of the message
-    batteryLevel = 0          # The voltage level of the battery
-    XsensCalibrated = 0       # Indicates if the XSens IMU is calibrated
-    ballSensorWorking = 0     # Indicates if the ballsensor is working
-    hasBall = 0               # Indicates if the ball is somewhere in front of the ballsensor
-    capacitorCharged = 0      # Indicates if the capacitor for kicking and chipping is charged
-    ballPos = 0               # Indicates where in front of the ballsensor the ball is
-    rho = 0                   # The estimated magnitude of movement (m/s)
-    theta = 0                 # The estimated direction of movement (rad)
-    angle = 0                 # The estimated angle (rad)
-    wheelLocked = 0           # Indicates if a wheel is locked. One bit per wheel
-    wheelBraking = 0          # Indicates if a wheel is slipping. One bit per wheel
-    rssi = 0                  # Signal strength of the last packet received by the robot
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
+    remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
+    id = 0                    # integer [0, 15]              Id of the robot 
+    messageId = 0             # integer [0, 15]              Id of the message
+    batteryLevel = 0          # integer [0, 15]              The voltage level of the battery
+    XsensCalibrated = 0       # integer [0, 1]               Indicates if the XSens IMU is calibrated
+    ballSensorWorking = 0     # integer [0, 1]               Indicates if the ballsensor is working
+    hasBall = 0               # integer [0, 1]               Indicates if the ball is somewhere in front of the ballsensor
+    capacitorCharged = 0      # integer [0, 1]               Indicates if the capacitor for kicking and chipping is charged
+    ballPos = 0               # float   [-0.500, 0.500)      Indicates where in front of the ballsensor the ball is
+    rho = 0                   # float   [0.000, 8.000)       The estimated magnitude of movement (m/s)
+    theta = 0                 # float   [-3.142, 3.142)      The estimated direction of movement (rad)
+    angle = 0                 # float   [-3.142, 3.142)      The estimated angle (rad)
+    wheelLocked = 0           # integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
+    wheelBraking = 0          # integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
+    rssi = 0                  # integer [0, 15]              Signal strength of the last packet received by the robot
 
 
 

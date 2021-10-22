@@ -49,40 +49,40 @@ typedef struct _BasestationStatisticsPayload {
 } BasestationStatisticsPayload;
 
 typedef struct _BasestationStatistics {
-    uint32_t   header              ; // Header byte indicating the type of packet
-    uint32_t   remVersion          ; // Version of roboteam_embedded_messages
-    uint32_t   bot0_sent           ; // Packets sent to robot with ID 0
-    uint32_t   bot0_rcvd           ; // Packets received from robot with ID 0
-    uint32_t   bot1_sent           ; // Packets sent to robot with ID 1
-    uint32_t   bot1_rcvd           ; // Packets received from robot with ID 1
-    uint32_t   bot2_sent           ; // Packets sent to robot with ID 2
-    uint32_t   bot2_rcvd           ; // Packets received from robot with ID 2
-    uint32_t   bot3_sent           ; // Packets sent to robot with ID 3
-    uint32_t   bot3_rcvd           ; // Packets received from robot with ID 3
-    uint32_t   bot4_sent           ; // Packets sent to robot with ID 4
-    uint32_t   bot4_rcvd           ; // Packets received from robot with ID 4
-    uint32_t   bot5_sent           ; // Packets sent to robot with ID 5
-    uint32_t   bot5_rcvd           ; // Packets received from robot with ID 5
-    uint32_t   bot6_sent           ; // Packets sent to robot with ID 6
-    uint32_t   bot6_rcvd           ; // Packets received from robot with ID 6
-    uint32_t   bot7_sent           ; // Packets sent to robot with ID 7
-    uint32_t   bot7_rcvd           ; // Packets received from robot with ID 7
-    uint32_t   bot8_sent           ; // Packets sent to robot with ID 8
-    uint32_t   bot8_rcvd           ; // Packets received from robot with ID 8
-    uint32_t   bot9_sent           ; // Packets sent to robot with ID 9
-    uint32_t   bot9_rcvd           ; // Packets received from robot with ID 9
-    uint32_t   bot10_sent          ; // Packets sent to robot with ID 10
-    uint32_t   bot10_rcvd          ; // Packets received from robot with ID 10
-    uint32_t   bot11_sent          ; // Packets sent to robot with ID 11
-    uint32_t   bot11_rcvd          ; // Packets received from robot with ID 11
-    uint32_t   bot12_sent          ; // Packets sent to robot with ID 12
-    uint32_t   bot12_rcvd          ; // Packets received from robot with ID 12
-    uint32_t   bot13_sent          ; // Packets sent to robot with ID 13
-    uint32_t   bot13_rcvd          ; // Packets received from robot with ID 13
-    uint32_t   bot14_sent          ; // Packets sent to robot with ID 14
-    uint32_t   bot14_rcvd          ; // Packets received from robot with ID 14
-    uint32_t   bot15_sent          ; // Packets sent to robot with ID 15
-    uint32_t   bot15_rcvd          ; // Packets received from robot with ID 15
+    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t   bot0_sent           ; // integer [0, 255]             Packets sent to robot with ID 0
+    uint32_t   bot0_rcvd           ; // integer [0, 255]             Packets received from robot with ID 0
+    uint32_t   bot1_sent           ; // integer [0, 255]             Packets sent to robot with ID 1
+    uint32_t   bot1_rcvd           ; // integer [0, 255]             Packets received from robot with ID 1
+    uint32_t   bot2_sent           ; // integer [0, 255]             Packets sent to robot with ID 2
+    uint32_t   bot2_rcvd           ; // integer [0, 255]             Packets received from robot with ID 2
+    uint32_t   bot3_sent           ; // integer [0, 255]             Packets sent to robot with ID 3
+    uint32_t   bot3_rcvd           ; // integer [0, 255]             Packets received from robot with ID 3
+    uint32_t   bot4_sent           ; // integer [0, 255]             Packets sent to robot with ID 4
+    uint32_t   bot4_rcvd           ; // integer [0, 255]             Packets received from robot with ID 4
+    uint32_t   bot5_sent           ; // integer [0, 255]             Packets sent to robot with ID 5
+    uint32_t   bot5_rcvd           ; // integer [0, 255]             Packets received from robot with ID 5
+    uint32_t   bot6_sent           ; // integer [0, 255]             Packets sent to robot with ID 6
+    uint32_t   bot6_rcvd           ; // integer [0, 255]             Packets received from robot with ID 6
+    uint32_t   bot7_sent           ; // integer [0, 255]             Packets sent to robot with ID 7
+    uint32_t   bot7_rcvd           ; // integer [0, 255]             Packets received from robot with ID 7
+    uint32_t   bot8_sent           ; // integer [0, 255]             Packets sent to robot with ID 8
+    uint32_t   bot8_rcvd           ; // integer [0, 255]             Packets received from robot with ID 8
+    uint32_t   bot9_sent           ; // integer [0, 255]             Packets sent to robot with ID 9
+    uint32_t   bot9_rcvd           ; // integer [0, 255]             Packets received from robot with ID 9
+    uint32_t   bot10_sent          ; // integer [0, 255]             Packets sent to robot with ID 10
+    uint32_t   bot10_rcvd          ; // integer [0, 255]             Packets received from robot with ID 10
+    uint32_t   bot11_sent          ; // integer [0, 255]             Packets sent to robot with ID 11
+    uint32_t   bot11_rcvd          ; // integer [0, 255]             Packets received from robot with ID 11
+    uint32_t   bot12_sent          ; // integer [0, 255]             Packets sent to robot with ID 12
+    uint32_t   bot12_rcvd          ; // integer [0, 255]             Packets received from robot with ID 12
+    uint32_t   bot13_sent          ; // integer [0, 255]             Packets sent to robot with ID 13
+    uint32_t   bot13_rcvd          ; // integer [0, 255]             Packets received from robot with ID 13
+    uint32_t   bot14_sent          ; // integer [0, 255]             Packets sent to robot with ID 14
+    uint32_t   bot14_rcvd          ; // integer [0, 255]             Packets received from robot with ID 14
+    uint32_t   bot15_sent          ; // integer [0, 255]             Packets sent to robot with ID 15
+    uint32_t   bot15_rcvd          ; // integer [0, 255]             Packets received from robot with ID 15
 } BasestationStatistics;
 
 // ================================ GETTERS ================================

@@ -13,10 +13,10 @@ from . import BaseTypes
 
 
 class RobotLog:
-    header = 0                # Header byte indicating the type of packet
-    remVersion = 0            # Version of roboteam_embedded_messages
-    id = 0                    # Id of the robot
-    message_length = 0        # Length of the following message
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
+    remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
+    id = 0                    # integer [0, 15]              Id of the robot
+    message_length = 0        # integer [0, 255]             Length of the following message
 
 
 

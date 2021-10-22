@@ -10,7 +10,7 @@ from . import BaseTypes
 
 
 class BasestationLog:
-    header = 0                # Header byte indicating the type of packet
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
 
 
 

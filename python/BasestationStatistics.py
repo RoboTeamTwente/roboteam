@@ -43,40 +43,40 @@ from . import BaseTypes
 
 
 class BasestationStatistics:
-    header = 0                # Header byte indicating the type of packet
-    remVersion = 0            # Version of roboteam_embedded_messages
-    bot0_sent = 0             # Packets sent to robot with ID 0
-    bot0_rcvd = 0             # Packets received from robot with ID 0
-    bot1_sent = 0             # Packets sent to robot with ID 1
-    bot1_rcvd = 0             # Packets received from robot with ID 1
-    bot2_sent = 0             # Packets sent to robot with ID 2
-    bot2_rcvd = 0             # Packets received from robot with ID 2
-    bot3_sent = 0             # Packets sent to robot with ID 3
-    bot3_rcvd = 0             # Packets received from robot with ID 3
-    bot4_sent = 0             # Packets sent to robot with ID 4
-    bot4_rcvd = 0             # Packets received from robot with ID 4
-    bot5_sent = 0             # Packets sent to robot with ID 5
-    bot5_rcvd = 0             # Packets received from robot with ID 5
-    bot6_sent = 0             # Packets sent to robot with ID 6
-    bot6_rcvd = 0             # Packets received from robot with ID 6
-    bot7_sent = 0             # Packets sent to robot with ID 7
-    bot7_rcvd = 0             # Packets received from robot with ID 7
-    bot8_sent = 0             # Packets sent to robot with ID 8
-    bot8_rcvd = 0             # Packets received from robot with ID 8
-    bot9_sent = 0             # Packets sent to robot with ID 9
-    bot9_rcvd = 0             # Packets received from robot with ID 9
-    bot10_sent = 0            # Packets sent to robot with ID 10
-    bot10_rcvd = 0            # Packets received from robot with ID 10
-    bot11_sent = 0            # Packets sent to robot with ID 11
-    bot11_rcvd = 0            # Packets received from robot with ID 11
-    bot12_sent = 0            # Packets sent to robot with ID 12
-    bot12_rcvd = 0            # Packets received from robot with ID 12
-    bot13_sent = 0            # Packets sent to robot with ID 13
-    bot13_rcvd = 0            # Packets received from robot with ID 13
-    bot14_sent = 0            # Packets sent to robot with ID 14
-    bot14_rcvd = 0            # Packets received from robot with ID 14
-    bot15_sent = 0            # Packets sent to robot with ID 15
-    bot15_rcvd = 0            # Packets received from robot with ID 15
+    header = 0                # integer [0, 255]             Header byte indicating the type of packet
+    remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
+    bot0_sent = 0             # integer [0, 255]             Packets sent to robot with ID 0
+    bot0_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 0
+    bot1_sent = 0             # integer [0, 255]             Packets sent to robot with ID 1
+    bot1_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 1
+    bot2_sent = 0             # integer [0, 255]             Packets sent to robot with ID 2
+    bot2_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 2
+    bot3_sent = 0             # integer [0, 255]             Packets sent to robot with ID 3
+    bot3_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 3
+    bot4_sent = 0             # integer [0, 255]             Packets sent to robot with ID 4
+    bot4_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 4
+    bot5_sent = 0             # integer [0, 255]             Packets sent to robot with ID 5
+    bot5_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 5
+    bot6_sent = 0             # integer [0, 255]             Packets sent to robot with ID 6
+    bot6_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 6
+    bot7_sent = 0             # integer [0, 255]             Packets sent to robot with ID 7
+    bot7_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 7
+    bot8_sent = 0             # integer [0, 255]             Packets sent to robot with ID 8
+    bot8_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 8
+    bot9_sent = 0             # integer [0, 255]             Packets sent to robot with ID 9
+    bot9_rcvd = 0             # integer [0, 255]             Packets received from robot with ID 9
+    bot10_sent = 0            # integer [0, 255]             Packets sent to robot with ID 10
+    bot10_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 10
+    bot11_sent = 0            # integer [0, 255]             Packets sent to robot with ID 11
+    bot11_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 11
+    bot12_sent = 0            # integer [0, 255]             Packets sent to robot with ID 12
+    bot12_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 12
+    bot13_sent = 0            # integer [0, 255]             Packets sent to robot with ID 13
+    bot13_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 13
+    bot14_sent = 0            # integer [0, 255]             Packets sent to robot with ID 14
+    bot14_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 14
+    bot15_sent = 0            # integer [0, 255]             Packets sent to robot with ID 15
+    bot15_rcvd = 0            # integer [0, 255]             Packets received from robot with ID 15
 
 
 

@@ -7,8 +7,8 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include <Publisher.h>
-#include <Subscriber.h>
+#include <networking/Publisher.h>
+#include <networking/Subscriber.h>
 #include <roboteam_proto/AICommand.pb.h>
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/RobotFeedback.pb.h>

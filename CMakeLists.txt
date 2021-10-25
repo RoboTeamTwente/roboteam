@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 project(roboteam_robothub)
 
 # Needed for the documentation generator.
@@ -36,7 +36,7 @@ target_include_directories(roboteam_robothub
         PRIVATE roboteam_embedded_messages/include
 )
 target_link_libraries(roboteam_robothub
-        PUBLIC roboteam_proto
+        PRIVATE roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         Threads::Threads

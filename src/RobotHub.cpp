@@ -10,7 +10,10 @@
 #include <fstream>
 
 #include "LibusbUtilities.h"
+#include "BaseTypes.h"
 #include "RobotCommand.h"
+#include "RobotFeedback.h"
+#include "RobotStateInfo.h"
 #include "Packing.h"
 
 using namespace std::chrono;
@@ -60,6 +63,7 @@ void RobotHub::subscribe(){
 void RobotHub::run(){
     std::cout << "[RobotHub::run] Initialize " << std::endl;
 
+    /* set up the event listeners that respond to the (dis)connecting of a basestation */
     if (!startBasestation()) {
         std::cout << "[RobotHub::run] Error while initializing basestation. Aborting..." << std::endl;
         return;
@@ -77,8 +81,9 @@ void RobotHub::run(){
     std::cout << "[RobotHub::run] Loop " << std::endl;
     while(running){
         std::this_thread::sleep_for(milliseconds(10));
+        // Handle any possible USB events such as the attaching / detaching of a basestation
         libusb_handle_events_timeout(ctx, &usb_event_timeout);
-
+        // Print statistics every second
         if(tNextTick + seconds(1) < steady_clock::now()){
             printStatistics();
             tNextTick += seconds(1);
@@ -120,7 +125,7 @@ void RobotHub::printStatistics() {
  *
  * When a basestation is connected to the PC, this function claims that basestation. It first detaches the kernel
  * drivers, and then claims the correct interface. It stores the handle to the basestation in the basestation_handle
- * variable. The reading-thread automatically starts reading the basestation.
+ * variable. The reading-thread automatically starts reading from the basestation.
  */
 void RobotHub::handleBasestationAttach(libusb_device* device){
     basestation_device = device;
@@ -225,6 +230,7 @@ bool RobotHub::startBasestation(){
 
 
 /** @brief Finds and opens a basestation device by looping over all connected USB devices. Unused.
+ * DEPRECATED in favor of event based methods
  *
  * This function loops over all connected USB devices and searches for a basestation by looking for the correct
  * vendor-id (0x0483) and product-id (0x5740). If a basestation is found, it is opened and the handle to it is stored
@@ -312,7 +318,7 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
     // Check if a connection to a basestation exists
     if(basestation_handle == nullptr){
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
-        std::this_thread::sleep_for(seconds(1));
+        std::this_thread::sleep_for(milliseconds (300));
         return;
     }
     // Convert the proto::RobotCommand to a RobotCommandPayload
@@ -346,6 +352,7 @@ void RobotHub::readBasestation(){
     int bytes_received = 0;
 
     while(read_running){
+
         /* Check if the basestation is connected. Sleep if not */
         if(basestation_handle == nullptr){
             std::this_thread::sleep_for(milliseconds(1000));
@@ -374,6 +381,12 @@ void RobotHub::readBasestation(){
 
         if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
             feedback_received[RobotFeedback_get_id((RobotFeedbackPayload*)buffer)]++;
+        }
+
+        if(buffer[0] == PACKET_TYPE_ROBOT_STATE_INFO) {
+            RobotStateInfo rsi;
+            decodeRobotStateInfo(&rsi, (RobotStateInfoPayload*)buffer);
+
         }
     }
 

@@ -24,28 +24,33 @@ find_package(Qt5Network REQUIRED)
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
+
 add_executable(roboteam_robothub
         src/RobotHub.cpp
         src/GRSim.cpp
         src/Packing.cpp
-        src/LibusbUtilities.cpp)
+        src/LibusbUtilities.cpp
+)
 target_include_directories(roboteam_robothub
         PRIVATE include/roboteam_robothub
         PRIVATE roboteam_embedded_messages/include
-        )
+)
 target_link_libraries(roboteam_robothub
         PUBLIC roboteam_proto
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         Threads::Threads
-        lib::usb)
+        lib::usb
+)
 
 add_executable(roboteam_robothub_enumerate_usb
         src/LibusbUtilities.cpp
-        src/EnumerateBasestations.cpp)
+        src/EnumerateBasestations.cpp
+)
 target_include_directories(roboteam_robothub_enumerate_usb
         PRIVATE include/roboteam_robothub
 )
 target_link_libraries(roboteam_robothub_enumerate_usb
+        Threads::Threads
         lib::usb
 )

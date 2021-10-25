@@ -44,7 +44,7 @@ def openContinuous(*args, **kwargs):
 			print("\r[openContinuous] %s " % chr(33 + i), end="")
 		
 		time.sleep(0.1)
-	print("\r[openContinuous] Basestation opened")
+	print(f"\r[openContinuous] Basestation opened at {ser.port}")
 	return ser
 
 def getBasestationPath():

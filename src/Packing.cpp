@@ -41,12 +41,16 @@ RobotCommandPayload createEmbeddedCommand(const proto::RobotCommand& proto, cons
 }
 
 proto::RobotFeedback feedbackFromRaw(RobotFeedbackPayload * payload){
+    // TODO UPDATE FUNCTION TO LATEST REM VERSION
+    proto::RobotFeedback _packet;
+    return _packet;
+
+
     RobotFeedback feedback;
     decodeRobotFeedback(&feedback,payload);
 
-    //TODO: the proto robotfeedback definition needs adjustments throughout our system to use the data more effectively
-
     proto::RobotFeedback packet;
+
     packet.set_id(feedback.id);
     packet.set_xsenscalibrated(feedback.XsensCalibrated);
     packet.set_ballsensorisworking(feedback.ballSensorWorking);

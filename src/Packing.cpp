@@ -13,6 +13,7 @@ RobotCommandPayload createEmbeddedCommand(const proto::RobotCommand& proto, cons
 
     RobotCommand command;
     command.header = PACKET_TYPE_ROBOT_COMMAND;
+    command.remVersion = LOCAL_REM_VERSION;
     command.id = proto.id();
 
     command.doKick = proto.kicker();

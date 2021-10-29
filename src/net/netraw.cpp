@@ -1,15 +1,14 @@
-#include <sys/poll.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include "netraw.h"
 
 #include <fcntl.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <sys/poll.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "util.h"
-
-#include "netraw.h"
 
 namespace Net {
 

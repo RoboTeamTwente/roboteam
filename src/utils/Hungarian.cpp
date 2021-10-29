@@ -10,30 +10,31 @@
 //
 
 #include "Hungarian.h"
-#include <cstdlib>
+
 #include <cfloat>  // for DBL_MAX
 #include <cmath>   // for fabs()
+#include <cstdlib>
 
 namespace rtt {
 
 // This function maps two sets of points and returns pairs of sets that give the shortest total distance
 // If you want to have the resulting pair of points for a specific pair
 std::unordered_map<int, Vector2> Hungarian::getOptimalPairsIdentified(const std::unordered_map<int, Vector2>& positions, std::vector<Vector2> targetLocations) {
-  std::vector<int> identifiers;
-  std::vector<Vector2> robotLocations;
+    std::vector<int> identifiers;
+    std::vector<Vector2> robotLocations;
 
-  // the robotIds and robotLocations have the same sorting and stay mapped
-  for (auto & position : positions) {
-    identifiers.push_back(position.first);
-    robotLocations.push_back(position.second);
-  }
+    // the robotIds and robotLocations have the same sorting and stay mapped
+    for (auto& position : positions) {
+        identifiers.push_back(position.first);
+        robotLocations.push_back(position.second);
+    }
 
-  auto positionPairs = getOptimalPairs(robotLocations, std::move(targetLocations));
-  std::unordered_map<int, Vector2> output;
-  for (unsigned int i = 0; i < positionPairs.size(); i++) {
-    output.insert(std::make_pair(identifiers.at(i), positionPairs.at(i).second));
-  }
-  return output;
+    auto positionPairs = getOptimalPairs(robotLocations, std::move(targetLocations));
+    std::unordered_map<int, Vector2> output;
+    for (unsigned int i = 0; i < positionPairs.size(); i++) {
+        output.insert(std::make_pair(identifiers.at(i), positionPairs.at(i).second));
+    }
+    return output;
 }
 
 bool Hungarian::validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2) {
@@ -388,6 +389,5 @@ void Hungarian::step5(int* assignment, double* distMatrix, bool* starMatrix, boo
     /* move to step 3 */
     step3(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
-
 
 }  // namespace rtt

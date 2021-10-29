@@ -13,7 +13,7 @@ class Time;
  * using Time::now() is pretty much always a bad idea, and that the user is better off using e.g. the time of the world
  */
 class Random {
-public:
+   public:
     explicit Random(long seed);
     explicit Random(const Time& time);
     /**
@@ -24,12 +24,10 @@ public:
      * @return a uniformly distributed random number on the [0,1] interval
      */
     double getUniform();
-    std::mt19937& instance();//Can be used for custom distributions
+    std::mt19937& instance();  // Can be used for custom distributions
 
-private:
+   private:
     std::mt19937 engine;
-
 };
 
-
-#endif //RTT_RANDOM_H
+#endif  // RTT_RANDOM_H

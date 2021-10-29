@@ -1,3 +1,3 @@
-#include "roboteam_utils/normalize.h"
-
 #include <gtest/gtest.h>
+
+#include "roboteam_utils/normalize.h"

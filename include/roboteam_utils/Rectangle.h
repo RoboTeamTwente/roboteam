@@ -5,6 +5,7 @@
 #ifndef ROBOTEAM_UTILS_RECTANGLE_H
 #define ROBOTEAM_UTILS_RECTANGLE_H
 #include <vector>
+
 #include "Vector2.h"
 namespace rtt {
 class LineSegment;
@@ -127,7 +128,6 @@ class Rectangle {
      * @return vector with all of the points where the line segment intersects the rectangle
      */
     [[nodiscard]] std::vector<Vector2> intersects(const Line &line) const;
-
 };
 std::ostream &operator<<(std::ostream &out, const Rectangle &rect);
 

@@ -1,5 +1,6 @@
-#include "roboteam_utils/Position.h"
 #include <gtest/gtest.h>
+
+#include "roboteam_utils/Position.h"
 
 using namespace rtt;
 

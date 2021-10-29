@@ -6,7 +6,8 @@ HalfLine::HalfLine(const Vector2 &start, const Vector2 &goesThrough) {
     this->goesThrough = goesThrough;
     if (start == goesThrough) {
         std::cerr << "Warning: you created an undefined line, because start == goesThrough. Note that HalfLines have an infinite length. If you want to have a Line with finite "
-                     "length then use the LineSegment class instead." << std::endl;
+                     "length then use the LineSegment class instead."
+                  << std::endl;
     }
 }
 
@@ -30,5 +31,4 @@ Vector2 HalfLine::project(const Vector2 &point) const {
     return projection;
 }
 
-}
-
+}  // namespace rtt

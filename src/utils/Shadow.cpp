@@ -1,5 +1,6 @@
-#include "HalfLine.h"
 #include "Shadow.h"
+
+#include "HalfLine.h"
 
 namespace rtt {
 std::optional<LineSegment> Shadow::shadow(const Vector2 &source, const LineSegment &obstacle, const LineSegment &project, float negligible_shadow_length) {
@@ -36,4 +37,4 @@ std::optional<LineSegment> Shadow::shadow(const Vector2 &source, const LineSegme
     }
     return shadow->length() > negligible_shadow_length ? shadow : std::nullopt;
 }
-}
+}  // namespace rtt

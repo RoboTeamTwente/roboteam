@@ -35,7 +35,7 @@ add_library(observer_lib STATIC
         src/observer/parameters/RobotParameterDatabase.cpp
         src/observer/filters/geometry/GeometryFilter.cpp
         src/observer/filters/referee/RefereeFilter.cpp
-        )
+        src/observer/filters/RobotFeedbackFilter.cpp)
 
 target_link_libraries(observer_lib
         PUBLIC observer_data_lib

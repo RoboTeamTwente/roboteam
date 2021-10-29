@@ -78,6 +78,12 @@ proto::World WorldFilter::getWorld() {
         proto::WorldBall worldBall = bestFilter(balls)->asWorldBall();
         world.mutable_ball()->CopyFrom(worldBall);
     }
+    for(auto feedback : feedbackFilter.getData(true)){
+        world.mutable_yellowfeedback()->Add(std::move(feedback));
+    }
+    for(auto feedback : feedbackFilter.getData(false)){
+        world.mutable_bluefeedback()->Add(std::move(feedback));
+    }
     return world;
 }
 void WorldFilter::update(double time, bool doLastPredict) {
@@ -133,7 +139,22 @@ const std::unique_ptr<BallFilter> &WorldFilter::bestFilter(const std::vector<std
     return filters[bestIndex];
 }
 
-void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames) {
+
+void WorldFilter::setRobotParameters(const TwoTeamRobotParameters& parameters) {
+//TODO: use robot parameters for collision detection etc.
+
+}
+
+void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
+    //TODO: implement geometry here.
+
+}
+
+void
+WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData>& robothubData) {
+    for(const auto& data : robothubData){
+        feedbackFilter.process(data);
+    }
     std::sort(visionFrames.begin(),visionFrames.end(),[](const proto::SSL_DetectionFrame& a, const proto::SSL_DetectionFrame&b){
         return a.t_capture() < b.t_capture();
     });
@@ -147,14 +168,4 @@ void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames) {
         }
     }
     update(lastUpdateTime,false);
-}
-
-void WorldFilter::setRobotParameters(const TwoTeamRobotParameters& parameters) {
-//TODO: use robot parameters for collision detection etc.
-
-}
-
-void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
-    //TODO: implement geometry here.
-
 }

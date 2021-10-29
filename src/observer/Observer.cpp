@@ -7,11 +7,11 @@
 proto::State
 Observer::process(Time extrapolatedTo,
                   const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
-                  std::vector<proto::RobotData> robotData) {
+                  const std::vector<proto::RobotData>& robotData) {
 
     updateRobotParams(refereePackets);
     updateGeometry(visionPackets);
-    updateWorld(visionPackets);
+    updateWorld(visionPackets,robotData);
     updateReferee(refereePackets);
 
     proto::State state;
@@ -47,14 +47,14 @@ Observer::process(Time extrapolatedTo,
     return state;
 }
 
-void Observer::updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets) {
+void Observer::updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets, const std::vector<proto::RobotData>& robothubData) {
     std::vector<proto::SSL_DetectionFrame> detectionFrames;
     for (const auto &packet : visionPackets) {
         if (packet.has_detection()) {
             detectionFrames.push_back(packet.detection());
         }
     }
-    worldFilter.process(detectionFrames);
+    worldFilter.process(detectionFrames,robothubData);
 }
 
 void Observer::updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets) {

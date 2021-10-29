@@ -7,6 +7,7 @@
 
 #include "BallFilter.h"
 #include "RobotFilter.h"
+#include "RobotFeedbackFilter.h"
 
 #include "observer/parameters/RobotParameterDatabase.h"
 
@@ -31,7 +32,7 @@ class WorldFilter {
 
     void setGeometry(const proto::SSL_GeometryData& geometry);
     void setRobotParameters(const TwoTeamRobotParameters& parameters);
-    void process(std::vector<proto::SSL_DetectionFrame> visionFrames);
+    void process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData>& robothubData);
    private:
     /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
      *  Or they will be created if they do not exist yet. Note this does NOT call the Kalman update/predict equations and thus
@@ -57,6 +58,7 @@ class WorldFilter {
     std::vector<std::unique_ptr<BallFilter>> balls;
     double lastUpdateTime = 0.0;
     double latestCaptureTime = 0.0;
+    RobotFeedbackFilter feedbackFilter;
     static void updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime);
     static void handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
                              uint cameraID);

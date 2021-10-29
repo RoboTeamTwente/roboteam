@@ -35,7 +35,7 @@ public:
     proto::State process(Time extrapolatedTo,
                  const std::vector<proto::SSL_WrapperPacket>& visionPackets,
                  const std::vector<proto::SSL_Referee>& refereePackets,
-                 std::vector<proto::RobotData> robotData);
+                 const std::vector<proto::RobotData>& robotData);
 
 private:
     RobotParameterDatabase parameterDatabase;
@@ -47,7 +47,7 @@ private:
 
     void updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
 
-    void updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+    void updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets, const std::vector<proto::RobotData>& robothubData);
 
     void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
 };

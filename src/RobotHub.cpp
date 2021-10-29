@@ -16,6 +16,8 @@
 #include "RobotStateInfo.h"
 #include "Packing.h"
 
+#include "roboteam_proto/State.pb.h"
+
 using namespace std::chrono;
 
 /** @brief Callback funnction triggered when a basestation is connected */
@@ -51,7 +53,7 @@ void RobotHub::subscribe(){
             proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this
     );
 
-    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::World>>(
+    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::State>>(
             proto::WORLD_CHANNEL, &RobotHub::processWorldState, this
     );
 
@@ -406,7 +408,8 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     }
 }
 
-void RobotHub::processWorldState(proto::World &_world) {
+void RobotHub::processWorldState(proto::State &_state) {
+    auto _world = _state.last_seen_world();
     std::lock_guard<std::mutex> lock(worldLock);
     world = _world;
 }

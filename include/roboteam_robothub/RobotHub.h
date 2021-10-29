@@ -12,6 +12,7 @@
 #include <roboteam_proto/AICommand.pb.h>
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/RobotFeedback.pb.h>
+#include "roboteam_proto/State.pb.h"
 
 #include "GRSim.h"
 #include "utilities.h"
@@ -48,7 +49,7 @@ private:
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
-    std::unique_ptr<proto::Subscriber<proto::World>> worldStateSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
     std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
@@ -71,7 +72,7 @@ private:
     void readBasestation();
 
     void processAIcommand(proto::AICommand &AIcmd);
-    void processWorldState(proto::World &world);
+    void processWorldState(proto::State &state);
     void processSettings(proto::Setting &setting);
 };
 

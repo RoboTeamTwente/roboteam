@@ -1,9 +1,11 @@
 #include "packing.h"
 
 #include <math.h>
+
 #include <cstdint>
 #include <iostream>
 #include <memory>
+
 #include "utilities.h"
 
 namespace rtt {
@@ -34,16 +36,16 @@ LowLevelRobotCommand createLowLevelRobotCommand(const proto::RobotCommand& comma
     } else {
         llrc.velocity_angular = static_cast<int>(floor(command.w() * (511 / (8 * 2 * M_PI))));  // [-512, 511]     [-8*2pi, 8*2pi]
     }
-    llrc.debug_info = true;                                                     // [0, 1]          {true, false}
-    llrc.do_kick = command.kicker();                                            // [0, 1]          {true, false}
-    llrc.do_chip = command.chipper();                                           // [0, 1]          {true, false}
-    llrc.kick_chip_forced = command.chip_kick_forced();                         // [0, 1] {true, false}
+    llrc.debug_info = true;                                                       // [0, 1]          {true, false}
+    llrc.do_kick = command.kicker();                                              // [0, 1]          {true, false}
+    llrc.do_chip = command.chipper();                                             // [0, 1]          {true, false}
+    llrc.kick_chip_forced = command.chip_kick_forced();                           // [0, 1] {true, false}
     llrc.kick_chip_power = static_cast<int>(floor(kick_chip_power * 255 / 6.5));  // [0, 255]        [0, 100]%
-    llrc.velocity_dribbler = command.dribbler();                                // [0, 31]        [0, 100]%
+    llrc.velocity_dribbler = command.dribbler();                                  // [0, 31]        [0, 100]%
 
-    llrc.cam_position_x = 0;                           // [-4096, 4095]   [-10.24, 10.23]
-    llrc.cam_position_y = 0;                           // [-4096, 4095]   [-10.24, 10.23]
-    llrc.cam_rotation = 0;                             // [-1024, 1023]   [-pi, pi>
+    llrc.cam_position_x = 0;  // [-4096, 4095]   [-10.24, 10.23]
+    llrc.cam_position_y = 0;  // [-4096, 4095]   [-10.24, 10.23]
+    llrc.cam_rotation = 0;    // [-1024, 1023]   [-pi, pi>
 
     std::shared_ptr<proto::WorldRobot> findBot = utils::getWorldBot(command.id(), isYellow, worldOpt);
     proto::WorldRobot robot;
@@ -125,7 +127,7 @@ std::shared_ptr<packed_protocol_message> createRobotPacket(LowLevelRobotCommand 
 
     byteArr[7] = static_cast<uint8_t>(  // K C F De UC 3 bits of geneva
         (0b10000000 & (llrc.do_kick << 7)) | (0b01000000 & (llrc.do_chip << 6)) | (0b00100000 & (llrc.kick_chip_forced << 5)) | (0b00010000 & (llrc.debug_info << 4)) |
-        (0b00001000 & (llrc.use_cam_info << 3)) | (0b00000111 & (0))); // TODO : remove geneva state
+        (0b00001000 & (llrc.use_cam_info << 3)) | (0b00000111 & (0)));  // TODO : remove geneva state
 
     byteArr[8] = static_cast<uint8_t>(  // 5 bits dribble vel | first 3 bits of
                                         // cam rotation

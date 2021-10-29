@@ -8,6 +8,7 @@
 #include <bitset>
 #include <iostream>
 #include <string>
+
 #include "packing.h"
 #include "roboteam_proto/World.pb.h"
 
@@ -15,7 +16,7 @@ namespace rtt {
 namespace robothub {
 namespace utils {
 
-enum class Mode { SERIAL, GRSIM, UNDEFINED,SSL_SIMULATOR };
+enum class Mode { SERIAL, GRSIM, UNDEFINED, SSL_SIMULATOR };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';

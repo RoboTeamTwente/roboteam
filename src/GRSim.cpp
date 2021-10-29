@@ -1,5 +1,7 @@
 #include "GRSim.h"
+
 #include <numeric>
+
 #include "packing.h"
 #include "roboteam_utils/Vector2.h"
 
@@ -307,7 +309,6 @@ void addRobotCommandToPacket(proto::grSim_Packet& packet, proto::RobotCommand co
 
     command->set_spinner((msg.dribbler() > 0));
     command->set_use_angle(msg.use_angle());
-
 }
 
 }  // namespace robothub

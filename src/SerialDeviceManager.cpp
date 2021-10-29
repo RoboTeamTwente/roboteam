@@ -3,10 +3,13 @@
 //
 
 #include "SerialDeviceManager.h"
+
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>  // macOS wants this one
+
 #include <iostream>
+
 #include "utilities.h"
 
 namespace rtt {

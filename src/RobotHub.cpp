@@ -350,7 +350,7 @@ void RobotHub::sendGrSimCommand(const proto::RobotCommand &cmd) {
 void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
     std::this_thread::sleep_for(milliseconds(1000));
-    uint8_t buffer[4906];
+    uint8_t buffer[4096];
     int bytes_received = 0;
 
     while(read_running){

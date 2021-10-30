@@ -49,7 +49,7 @@ private:
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
-    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
+//    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
     std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
@@ -64,15 +64,15 @@ private:
 
     std::shared_ptr<GRSimCommander> grsimCommander;
 
-    std::mutex worldLock;
+//    std::mutex worldLock;
     proto::World world;
 
-    void sendSerialCommand(const proto::RobotCommand &robotCommand);
+    void sendSerialCommand(const proto::RobotCommand &robotCommand, const proto::World &extrapolated_world);
     void sendGrSimCommand(const proto::RobotCommand &robotCommand);
     void readBasestation();
 
     void processAIcommand(proto::AICommand &AIcmd);
-    void processWorldState(proto::State &state);
+//    void processWorldState(proto::State &state);
     void processSettings(proto::Setting &setting);
 };
 

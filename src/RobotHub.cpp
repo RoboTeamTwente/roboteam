@@ -53,9 +53,9 @@ void RobotHub::subscribe(){
             proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this
     );
 
-    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::State>>(
-            proto::WORLD_CHANNEL, &RobotHub::processWorldState, this
-    );
+//    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::State>>(
+//            proto::WORLD_CHANNEL, &RobotHub::processWorldState, this
+//    );
 
     settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(
             proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this
@@ -318,7 +318,7 @@ bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **bases
  *
  * @param cmd Reference to the proto::RobotCommand that needs to be sent to the basestation
  */
-void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
+void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd, const proto::World &extrapolated_world) {
     // Check if a connection to a basestation exists
     if(basestation_handle == nullptr){
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
@@ -326,7 +326,7 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd) {
         return;
     }
     // Convert the proto::RobotCommand to a RobotCommandPayload
-    RobotCommandPayload payload = createEmbeddedCommand(cmd, world, false);
+    RobotCommandPayload payload = createEmbeddedCommand(cmd, extrapolated_world, false);
     int bytesSent; // Holds the value of actual bytes sent to the basestation after transfer is complete
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
 
@@ -414,18 +414,18 @@ void RobotHub::readBasestation(){
 void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     for(const proto::RobotCommand &cmd : AIcmd.commands()){
         if(settings.serialmode())
-            sendSerialCommand(cmd);
+            sendSerialCommand(cmd, AIcmd.extrapolatedworld());
         else
             sendGrSimCommand(cmd);
         commands_sent[cmd.id()]++;
     }
 }
 
-void RobotHub::processWorldState(proto::State &_state) {
-    auto _world = _state.last_seen_world();
-    std::lock_guard<std::mutex> lock(worldLock);
-    world = _world;
-}
+//void RobotHub::processWorldState(proto::State &_state) {
+//    auto _world = _state.last_seen_world();
+//    std::lock_guard<std::mutex> lock(worldLock);
+//    world = _world;
+//}
 
 void RobotHub::processSettings(proto::Setting &_settings) {
     settings = _settings;

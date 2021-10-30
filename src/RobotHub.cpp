@@ -326,7 +326,7 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd, const proto::Wo
         return;
     }
     // Convert the proto::RobotCommand to a RobotCommandPayload
-    RobotCommandPayload payload = createEmbeddedCommand(cmd, extrapolated_world, false);
+    RobotCommandPayload payload = createEmbeddedCommand(cmd, extrapolated_world, settings.isyellow());
     int bytesSent; // Holds the value of actual bytes sent to the basestation after transfer is complete
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
 

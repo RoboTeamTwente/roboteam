@@ -49,6 +49,8 @@ RobotHub::~RobotHub() {
 }
 
 void RobotHub::subscribe(){
+    // TODO choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
+
     robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(
             proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this
     );
@@ -260,7 +262,7 @@ bool RobotHub::openBasestation(libusb_context* ctx, libusb_device_handle **bases
 
         error = libusb_get_device_descriptor(device, &descriptor);
         if (error) std::cout << "[openBasestation] Error : " << usbutils_errorToString(error) << std::endl;
-        if (descriptor.idVendor == 0x0483 && descriptor.idProduct == 0x5740) {
+        if (descriptor.idVendor == BASESTATION_VENDOR_ID && descriptor.idProduct == BASESTATION_PRODUCT_ID) {
             basestation_device = device;
 
             printf("[openBasestation] Basestation found. %04x:%04x (bus %d, device %d) %s\n",
@@ -322,7 +324,8 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd, const proto::Wo
     // Check if a connection to a basestation exists
     if(basestation_handle == nullptr){
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
-        std::this_thread::sleep_for(milliseconds (300));
+        // TODO check if sleeping here is a good idea. Will it block ZMQ? Will this fill up some queue somewhere when packets keep coming in?
+        std::this_thread::sleep_for(milliseconds (SLEEP_NO_BASESTATION_MS));
         return;
     }
     // Convert the proto::RobotCommand to a RobotCommandPayload
@@ -351,23 +354,23 @@ void RobotHub::sendGrSimCommand(const proto::RobotCommand &cmd) {
  */
 void RobotHub::readBasestation(){
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
-    std::this_thread::sleep_for(milliseconds(1000));
-    uint8_t buffer[4096];
+    std::this_thread::sleep_for(milliseconds(SLEEP_NO_BASESTATION_MS));
+    uint8_t buffer[USB_BUFFER_SIZE_RECEIVE];
     int bytes_received = 0;
 
     while(read_running){
 
         /* Check if the basestation is connected. Sleep if not */
         if(basestation_handle == nullptr){
-            std::this_thread::sleep_for(milliseconds(1000));
+            std::this_thread::sleep_for(milliseconds(SLEEP_NO_BASESTATION_MS));
             continue;
         }
 
-        /* Read bytes from the basestation. At most 4096 bytes */
-        int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, 4096, &bytes_received, 100);
+        /* Read bytes from the basestation. At most USB_BUFFER_SIZE_RECEIVE bytes */
+        int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, USB_BUFFER_SIZE_RECEIVE, &bytes_received, THREAD_READ_TIMEOUT_MS);
         if(error != LIBUSB_SUCCESS and error != LIBUSB_ERROR_TIMEOUT){
             std::cout << "[BasestationReader::run] Error receiving : " << usbutils_errorToString(error) << std::endl;
-            std::this_thread::sleep_for(milliseconds(1000));
+            std::this_thread::sleep_for(milliseconds(SLEEP_NO_BASESTATION_MS));
             continue;
         }
         // If a timeout occurs, the number of bytes received is 0. In that case, continue.

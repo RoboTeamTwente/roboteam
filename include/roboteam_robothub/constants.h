@@ -10,8 +10,13 @@
  * C++11 / 14 introduce constexpr, a replacement for macros
  */
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
-constexpr int MIN_ROBOT_ID = 0;
-constexpr int MAX_ROBOT_ID = 15;
-constexpr int ROBOTHUB_TICK_RATE = 60;
+constexpr int BASESTATION_VENDOR_ID = 0x0483;
+constexpr int BASESTATION_PRODUCT_ID = 0x5740;
+
+// 4096 bytes should be enough to receive any packet from the basestation.
+constexpr int USB_BUFFER_SIZE_RECEIVE = 4096;
+constexpr int SLEEP_NO_BASESTATION_MS = 1000;
+constexpr int THREAD_READ_TIMEOUT_MS = 100;
+
 
 #endif  // ROBOTEAM_CONSTANTS_H_ROBOTHUB

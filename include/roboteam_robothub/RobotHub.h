@@ -1,75 +1,82 @@
 //
-// Created by mrlukasbos on 8-3-19.
+// Created by emiel on 22-05-21.
 //
 
-#ifndef ROBOTEAM_ROBOTHUB_APPLICATION_H
-#define ROBOTEAM_ROBOTHUB_APPLICATION_H
+#ifndef RTT_ROBOTHUB_H
+#define RTT_ROBOTHUB_H
+
+#include <libusb-1.0/libusb.h>
 
 #include <networking/Publisher.h>
 #include <networking/Subscriber.h>
 #include <roboteam_proto/AICommand.pb.h>
-#include <roboteam_proto/RobotData.pb.h>
 #include <roboteam_proto/Setting.pb.h>
+#include <roboteam_proto/RobotFeedback.pb.h>
+#include "roboteam_proto/State.pb.h"
 
-#include <string>
-
-#include "SSLSimulator.h"
-#include "constants.h"
+#include "GRSim.h"
 #include "utilities.h"
+#include "constants.h"
 
-namespace rtt::robothub {
+namespace rtt {
+namespace robothub {
 
-class GRSimCommander;
-class SerialDeviceManager;
 class RobotHub {
-   public:
+public:
     RobotHub();
-    void start();
-    void subscribeToTopics();
+    ~RobotHub();
+    void run();
 
-   private:
-    utils::Mode mode = utils::Mode::GRSIM;
-    bool isLeft = true;
-    bool isYellow = true;
+    void handleBasestationAttach(libusb_device* device);
+    void handleBasestationDetach(libusb_device* device);
+private:
+
+    void subscribe();
+
+    // unused but kept for future reference
+    bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle);
+
+    bool running = true;
+    bool read_running = true;
+
+    void printStatistics();
+    int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
+    int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
+
+    proto::Setting settings;
 
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
 
-   public:
-    void set_settings_channel(const proto::ChannelType &settings_channel);
+    std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
+//    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
+    std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
-   public:
-    void set_robot_command_channel(const proto::ChannelType &robot_command_channel);
-    void set_feedback_channel(const proto::ChannelType &feedback_channel);
+    /* libusb */
+    bool startBasestation();
 
-   private:
-    proto::ChannelType feedbackChannel;
+    libusb_context *ctx;
+    libusb_device* basestation_device = nullptr;
+    libusb_device_handle* basestation_handle = nullptr;
+    libusb_hotplug_callback_handle callback_handle_attach;
+    libusb_hotplug_callback_handle callback_handle_detach;
 
-   private:
-    proto::Subscriber<proto::AICommand> *robotCommandSubscriber;
-    proto::Publisher<proto::RobotData> *feedbackPublisher;
-    proto::Subscriber<proto::Setting> *settingsSubscriber;
-
-    // Callback functions
-
-    void processAIBatch(proto::AICommand &cmd);
-    void sendSimulatorBatch(proto::AICommand &cmd, const proto::World &world);
-    bool processCommand(const proto::RobotCommand &robotCommand,const proto::World& world);
-    void processSettings(proto::Setting &setting);
-
-    // Serial and grsim managers
-    std::shared_ptr<SerialDeviceManager> device;
     std::shared_ptr<GRSimCommander> grsimCommander;
-    std::shared_ptr<SSLSimulator> simulator_connection;
 
-    bool sendSerialCommand(LowLevelRobotCommand llrc);
-    bool sendGrSimCommand(const proto::RobotCommand &robotCommand);
-    void publishRobotFeedback(LowLevelRobotFeedback llrf);
-    int robotTicks[MAX_AMOUNT_OF_ROBOTS] = {};
-    void printStatistics();
-    std::mutex worldLock;
+//    std::mutex worldLock;
+    proto::World world;
+
+    void sendSerialCommand(const proto::RobotCommand &robotCommand, const proto::World &extrapolated_world);
+    void sendGrSimCommand(const proto::RobotCommand &robotCommand);
+    void readBasestation();
+
+    void processAIcommand(proto::AICommand &AIcmd);
+//    void processWorldState(proto::State &state);
+    void processSettings(proto::Setting &setting);
 };
 
+}  // namespace robothub
 }  // namespace rtt
 
-#endif  // ROBOTEAM_ROBOTHUB_APPLICATION_H
+#endif //RTT_ROBOTHUB_H

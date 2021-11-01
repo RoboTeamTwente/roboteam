@@ -8,7 +8,6 @@
 #include <bitset>
 #include <iostream>
 #include <string>
-#include "packing.h"
 #include "roboteam_proto/World.pb.h"
 
 namespace rtt {
@@ -27,22 +26,6 @@ static int char2int(char input) {
      * Strongly suggest to use std::optional then
      */
     throw std::invalid_argument("char2int : Invalid input string");
-}
-
-// This function assumes src to be a zero terminated sanitized string with an
-// even number of [0-9a-f] characters, and target to be sufficiently large
-[[maybe_unused]] static void hex2bin(const char* src, packed_robot_feedback& target) {
-    int i{0};  // don't leave this uninitialized, the value is UB, incrementing
-               // it could either be 1, 0, -500, 273613 or whatever else
-    /**
-     * be consistent
-     * operator[] for pointers is essentiall *(ptr + i), so *src == src[0]
-     */
-    while (src[0] && src[1]) {
-        target.at(i) = char2int(*src) * 16 + char2int(src[1]);
-        src += 2;
-        i++;
-    }
 }
 
 /**
@@ -107,29 +90,6 @@ static int char2int(char input) {
     return nullptr;
 }
 
-/**
- * Maybe unused surpresses compiler warnings, nothing major it's just better to
- * explicitly mark them unused
- */
-[[maybe_unused]] static void printbits(packed_protocol_message const& byteArr) noexcept {
-    // for (int b = 0; b<12; b++) {
-
-    for (auto const bit : byteArr) {  // Litearlly def'd to std::array
-                                      /**
-                                       * std::array implements begin() and end(), hence this is easier
-                                       */
-        std::cout << "    " << std::bitset<8>(bit) << std::endl;
-    }
-    // for (int i = 0; i < 8; i++) {
-    // for (int i = 7; i>=0; i--) {
-    //     if ((byte & (1 << i))==(1 << i)) {
-    //         std::cout << "1";
-    //     } else {
-    //         std::cout << "0";
-    //     }
-    // }
-    // std::cout << std::endl;
-}
 
 }  // namespace utils
 }  // namespace robothub

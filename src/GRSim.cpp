@@ -1,6 +1,5 @@
 #include "GRSim.h"
 #include <numeric>
-#include "packing.h"
 #include "roboteam_utils/Vector2.h"
 
 #define VERIFY_COMMANDS
@@ -39,7 +38,6 @@ bool verifyCommandIntegrity(const proto::RobotCommand& cmd, std::string mode) {
         std::cout << "RobotHub (" << mode.c_str() << "): Rotation velocity for " << cmd.id() << " is NAN." << std::endl;
         return false;
     }
-
     return true;
 }
 

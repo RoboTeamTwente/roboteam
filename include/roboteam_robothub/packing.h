@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-
 #include "roboteam_proto/RobotCommand.pb.h"
 #include "roboteam_proto/RobotFeedback.pb.h"
 #include "roboteam_proto/World.pb.h"

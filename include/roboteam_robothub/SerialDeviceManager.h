@@ -6,7 +6,6 @@
 #define ROBOTEAM_ROBOTHUB_SERIALDEVICEMANAGER_H
 
 #include <fstream>
-
 #include "packing.h"
 
 namespace rtt {

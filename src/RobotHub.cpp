@@ -1,12 +1,11 @@
 
-#include "RobotHub.h"
-
 #include <roboteam_utils/Timer.h>
+#include "roboteam_proto/Setting.pb.h"
 
 #include "GRSim.h"
+#include "RobotHub.h"
 #include "SerialDeviceManager.h"
 #include "packing.h"
-#include "roboteam_proto/Setting.pb.h"
 
 namespace rtt::robothub {
 
@@ -58,24 +57,25 @@ void RobotHub::printStatistics() {
 }
 
 void RobotHub::processAIBatch(proto::AICommand &cmd) {
-    // TODO split up sending here, not in the lower functions
-    if (mode == utils::Mode::SSL_SIMULATOR) {
-        sendSimulatorBatch(cmd, cmd.extrapolatedworld());
-        return;
+  //TODO split up sending here, not in the lower functions
+  if( mode == utils::Mode::SSL_SIMULATOR){
+      sendSimulatorBatch(cmd,cmd.extrapolatedworld());
+      return;
+  }
+  proto::RobotData sentCommands;
+  sentCommands.set_isyellow(isYellow);
+  for(const auto& command : cmd.commands()){
+    bool wasSent =processCommand(command,cmd.extrapolatedworld());
+    if(wasSent){
+      proto::RobotCommand * sent = sentCommands.mutable_sentcommands()->Add();
+      sent->CopyFrom(command);
     }
-    proto::RobotData sentCommands;
-    sentCommands.set_isyellow(isYellow);
-    for (const auto &command : cmd.commands()) {
-        bool wasSent = processCommand(command, cmd.extrapolatedworld());
-        if (wasSent) {
-            proto::RobotCommand *sent = sentCommands.mutable_sentcommands()->Add();
-            sent->CopyFrom(command);
-        }
-    }
-    // TODO: add times command was sent
-    feedbackPublisher->send(sentCommands);
+  }
+  //TODO: add times command was sent
+  feedbackPublisher->send(sentCommands);
+
 }
-bool RobotHub::processCommand(const proto::RobotCommand &robotCommand, const proto::World &world) {
+bool RobotHub::processCommand(const proto::RobotCommand &robotCommand,const proto::World &world) {
     LowLevelRobotCommand llrc = createLowLevelRobotCommand(robotCommand, world, isYellow);
 
     // check if the command is valid, otherwise don't send anything
@@ -119,14 +119,14 @@ bool RobotHub::sendSerialCommand(LowLevelRobotCommand llrc) {
 
 /// send a GRSim command from a given robotcommand
 bool RobotHub::sendGrSimCommand(const proto::RobotCommand &robotCommand) {
-    this->grsimCommander->queueGRSimCommand(robotCommand);
-    return true;
+  this->grsimCommander->queueGRSimCommand(robotCommand);
+  return true;
 }
 
 void RobotHub::publishRobotFeedback(LowLevelRobotFeedback llrf) {
     if (llrf.id >= 0 && llrf.id < 16) {
         proto::RobotData data;
-        proto::RobotFeedback *feedback = data.mutable_receivedfeedback()->Add();
+        proto::RobotFeedback * feedback = data.mutable_receivedfeedback()->Add();
         feedback->CopyFrom(toRobotFeedback(llrf));
         data.set_isyellow(isYellow);
         feedbackPublisher->send(data);
@@ -145,7 +145,7 @@ void RobotHub::processSettings(proto::Setting &setting) {
     if (setting.serialmode()) {
         mode = utils::Mode::SERIAL;
     } else {
-        // mode = utils::Mode::GRSIM; //TODO; quick hack, make sure these can coexist, but need to fix this in AI and other places as well (bad idea for now)
+        //mode = utils::Mode::GRSIM; //TODO; quick hack, make sure these can coexist, but need to fix this in AI and other places as well (bad idea for now)
         mode = utils::Mode::SSL_SIMULATOR;
     }
 }
@@ -153,10 +153,10 @@ void RobotHub::set_robot_command_channel(const proto::ChannelType &robot_command
 void RobotHub::set_feedback_channel(const proto::ChannelType &feedback_channel) { feedbackChannel = feedback_channel; }
 void RobotHub::set_settings_channel(const proto::ChannelType &settings_channel) { settingsChannel = settings_channel; }
 
-void RobotHub::sendSimulatorBatch(proto::AICommand &cmd, const proto::World &world) {
+void RobotHub::sendSimulatorBatch(proto::AICommand &cmd,const proto::World &world) {
     proto::RobotData sentCommands;
     sentCommands.set_isyellow(isYellow);
-    for (const auto &command : cmd.commands()) {
+    for(const auto& command : cmd.commands()){
         LowLevelRobotCommand llrc = createLowLevelRobotCommand(command, cmd.extrapolatedworld(), isYellow);
 
         // check if the command is valid, otherwise don't send anything
@@ -166,10 +166,10 @@ void RobotHub::sendSimulatorBatch(proto::AICommand &cmd, const proto::World &wor
                       << std::endl;
             printLowLevelRobotCommand(llrc);
 
-        } else {
-            simulator_connection->add_robot_command(command, world);
+        }else{
+            simulator_connection->add_robot_command(command,world);
             robotTicks[command.id()]++;
-            proto::RobotCommand *sent = sentCommands.mutable_sentcommands()->Add();
+            proto::RobotCommand * sent = sentCommands.mutable_sentcommands()->Add();
             sent->CopyFrom(command);
         }
     }
@@ -177,4 +177,4 @@ void RobotHub::sendSimulatorBatch(proto::AICommand &cmd, const proto::World &wor
     feedbackPublisher->send(sentCommands);
 }
 
-}  // namespace rtt::robothub
+}  // namespace rtt

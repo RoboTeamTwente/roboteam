@@ -54,7 +54,7 @@ class RobotHub {
 
     void processAIBatch(proto::AICommand &cmd);
     void sendSimulatorBatch(proto::AICommand &cmd, const proto::World &world);
-    bool processCommand(const proto::RobotCommand &robotCommand,const proto::World& world);
+    bool processCommand(const proto::RobotCommand &robotCommand, const proto::World &world);
     void processSettings(proto::Setting &setting);
 
     // Serial and grsim managers
@@ -70,6 +70,6 @@ class RobotHub {
     std::mutex worldLock;
 };
 
-}  // namespace rtt
+}  // namespace rtt::robothub
 
 #endif  // ROBOTEAM_ROBOTHUB_APPLICATION_H

@@ -7,7 +7,6 @@
 
 #include "BallFilter.h"
 #include "RobotFilter.h"
-
 #include "observer/parameters/RobotParameterDatabase.h"
 
 /**
@@ -29,9 +28,10 @@ class WorldFilter {
      */
     proto::World getWorld();
 
-    void setGeometry(const proto::SSL_GeometryData& geometry);
-    void setRobotParameters(const TwoTeamRobotParameters& parameters);
+    void setGeometry(const proto::SSL_GeometryData &geometry);
+    void setRobotParameters(const TwoTeamRobotParameters &parameters);
     void process(std::vector<proto::SSL_DetectionFrame> visionFrames);
+
    private:
     /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
      *  Or they will be created if they do not exist yet. Note this does NOT call the Kalman update/predict equations and thus
@@ -46,7 +46,7 @@ class WorldFilter {
      * @param doLastPredict If set to true, all filters  predict/extrapolate the positions of all objects
      * from the last time they were seen until the time specified.
      * You should always set this to true if you plan on using data immediately.
-      */
+     */
     void update(double time, bool doLastPredict);
     typedef std::map<int, std::vector<std::unique_ptr<RobotFilter>>> robotMap;
     static const std::unique_ptr<RobotFilter> &bestFilter(const std::vector<std::unique_ptr<RobotFilter>> &filters);

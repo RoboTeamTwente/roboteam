@@ -5,16 +5,16 @@
 #ifndef RTT_REFEREEFILTER_H
 #define RTT_REFEREEFILTER_H
 
-#include <roboteam_utils/Time.h>
 #include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
+#include <roboteam_utils/Time.h>
 class RefereeFilter {
-public:
+   public:
     void process(const std::vector<proto::SSL_Referee> &refereePackets);
     std::optional<proto::SSL_Referee> getLastRefereeMessage() const;
-private:
+
+   private:
     bool firstMessageReceived = false;
     proto::SSL_Referee latestMessage;
 };
 
-
-#endif //RTT_REFEREEFILTER_H
+#endif  // RTT_REFEREEFILTER_H

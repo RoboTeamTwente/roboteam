@@ -2,6 +2,7 @@
 #define ROBOTEAM_UTILS_LINE_H
 
 #include <optional>
+
 #include "Vector2.h"
 
 namespace rtt {

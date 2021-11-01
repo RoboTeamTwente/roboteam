@@ -1,6 +1,8 @@
-#include <optional>
-#include "HalfLine.h"
 #include "LineSegment.h"
+
+#include <optional>
+
+#include "HalfLine.h"
 
 namespace rtt {
 double LineSegment::length() const { return (end - start).length(); }

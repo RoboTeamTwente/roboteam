@@ -13,7 +13,7 @@ namespace rtt {
  * @since 2020-05-27
  */
 class Shadow {
-    public:
+   public:
     /**
      * @brief Computes the shadow caused by an 'obstacle' (LineSegment) and (light) 'source' (Vector2) on a given 'project' line (LineSegment).
      * The shadow is subset of the 'project' LineSegment. And a point p on the 'project' line is considered to be in the shadow if the line between the source and point p
@@ -28,5 +28,5 @@ class Shadow {
      */
     [[nodiscard]] static std::optional<LineSegment> shadow(const Vector2 &source, const LineSegment &obstacle, const LineSegment &project, float negligible_shadow_length = 1e-6);
 };
-} // namespace rtt
-#endif //RTT_ROBOTEAM_UTILS_SRC_SHADOW_H_
+}  // namespace rtt
+#endif  // RTT_ROBOTEAM_UTILS_SRC_SHADOW_H_

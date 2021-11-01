@@ -5,7 +5,6 @@
 #ifndef RTT_TIME_H
 #define RTT_TIME_H
 
-
 #include <chrono>
 #include <ctime>
 
@@ -16,7 +15,7 @@
  * \date August 19 2020
  */
 class Time {
-public:
+   public:
     constexpr Time() : timePoint{std::chrono::nanoseconds(0)} {};
     explicit Time(std::chrono::high_resolution_clock::duration duration);
     explicit Time(double seconds);
@@ -33,8 +32,8 @@ public:
     [[nodiscard]] double asMilliSeconds() const;
     Time operator+(const Time &other) const;
     Time operator-(const Time &other) const;
-    Time& operator-=(const Time &other);
-    Time& operator+=(const Time &other);
+    Time &operator-=(const Time &other);
+    Time &operator+=(const Time &other);
     bool operator>(const Time &other) const;
     bool operator>=(const Time &other) const;
     bool operator<(const Time &other) const;
@@ -42,9 +41,8 @@ public:
     bool operator==(const Time &other) const;
     bool operator!=(const Time &other) const;
 
-private:
+   private:
     std::chrono::high_resolution_clock::duration timePoint;
 };
 
-
-#endif //RTT_TIME_H
+#endif  // RTT_TIME_H

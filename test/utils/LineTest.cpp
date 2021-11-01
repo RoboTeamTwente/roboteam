@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <math.h>
+
 #include "roboteam_utils/HalfLine.h"
 #include "roboteam_utils/Line.h"
 #include "roboteam_utils/LineSegment.h"

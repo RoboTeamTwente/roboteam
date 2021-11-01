@@ -220,45 +220,45 @@ TEST(AngleTests, toVector2) {
     ASSERT_EQ(expectedVector, actualVector);
 }
 
-TEST(AngleTests,equalities){
+TEST(AngleTests, equalities) {
     Angle x(3.0);
     Angle y(3.0);
-    EXPECT_TRUE( x==y);
-    EXPECT_FALSE(x!=y);
+    EXPECT_TRUE(x == y);
+    EXPECT_FALSE(x != y);
     Angle z(3.01);
-    EXPECT_TRUE(x!=z);
-    EXPECT_FALSE(x==z);
-    Angle w(3.0+RTT_PRECISION_LIMIT*0.1);
+    EXPECT_TRUE(x != z);
+    EXPECT_FALSE(x == z);
+    Angle w(3.0 + RTT_PRECISION_LIMIT * 0.1);
     EXPECT_TRUE(w == x);
-    EXPECT_FALSE( w!=x);
+    EXPECT_FALSE(w != x);
 }
-TEST(AngleTest,assignment){
+TEST(AngleTest, assignment) {
     Angle x(3.0);
-    x=2.0;
-    EXPECT_DOUBLE_EQ(x,2.0);
-    //Check normalization
-    x = 2*M_PI;
-    EXPECT_DOUBLE_EQ(x,0.0);
-    x = -2.5*M_PI;
-    EXPECT_DOUBLE_EQ(x,-0.5*M_PI);
+    x = 2.0;
+    EXPECT_DOUBLE_EQ(x, 2.0);
+    // Check normalization
+    x = 2 * M_PI;
+    EXPECT_DOUBLE_EQ(x, 0.0);
+    x = -2.5 * M_PI;
+    EXPECT_DOUBLE_EQ(x, -0.5 * M_PI);
 }
-TEST(AngleTest,fromVec){
-    Angle y(Vector2(0,RTT_PRECISION_LIMIT*0.1));
-    EXPECT_DOUBLE_EQ(y,0.0);
-    Angle z(Vector2(1,1));
-    EXPECT_DOUBLE_EQ(z,M_PI_4);
+TEST(AngleTest, fromVec) {
+    Angle y(Vector2(0, RTT_PRECISION_LIMIT * 0.1));
+    EXPECT_DOUBLE_EQ(y, 0.0);
+    Angle z(Vector2(1, 1));
+    EXPECT_DOUBLE_EQ(z, M_PI_4);
 }
 
-TEST(AngleTest,addition_substraction){
+TEST(AngleTest, addition_substraction) {
     Angle x(M_PI_2);
     Angle y(M_PI);
     Angle z(-M_PI);
-    EXPECT_DOUBLE_EQ(x+y,-M_PI_2);
-    EXPECT_DOUBLE_EQ(x+z,-M_PI_2);
-    x+=y;
-    EXPECT_DOUBLE_EQ(x,-M_PI_2);
-    y-=z;
-    EXPECT_DOUBLE_EQ(y,0);
+    EXPECT_DOUBLE_EQ(x + y, -M_PI_2);
+    EXPECT_DOUBLE_EQ(x + z, -M_PI_2);
+    x += y;
+    EXPECT_DOUBLE_EQ(x, -M_PI_2);
+    y -= z;
+    EXPECT_DOUBLE_EQ(y, 0);
 }
 
 }  // namespace rtt

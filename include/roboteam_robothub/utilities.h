@@ -15,7 +15,7 @@ namespace rtt {
 namespace robothub {
 namespace utils {
 
-enum class Mode { SERIAL, GRSIM, UNDEFINED, SSL_SIMULATOR };
+enum class Mode { SERIAL, UNDEFINED };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';
@@ -39,8 +39,6 @@ static int char2int(char input) {
 [[maybe_unused]] /* Why static?... inline instead */ static Mode stringToMode(const std::string& type) noexcept {
     if (type == "serial") {
         return Mode::SERIAL;
-    } else if (type == "grsim") {
-        return Mode::GRSIM;
     } else {
         return Mode::UNDEFINED;
     }
@@ -50,8 +48,6 @@ static int char2int(char input) {
     switch (mode) {
         case Mode::SERIAL:
             return "Serial";
-        case Mode::GRSIM:
-            return "Grsim";
         case Mode::UNDEFINED:
             return "Undefined";
     }

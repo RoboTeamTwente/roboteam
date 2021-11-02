@@ -39,7 +39,6 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     std::cout << "[RobotHub] New RobotHub" << std::endl;
-    grsimCommander = std::make_shared<GRSimCommander>();
 }
 
 RobotHub::~RobotHub() { std::cout << "[RobotHub::~RobotHub] Destructor" << std::endl; }
@@ -319,8 +318,6 @@ void RobotHub::sendSerialCommand(const proto::RobotCommand &cmd, const proto::Wo
     }
 }
 
-void RobotHub::sendGrSimCommand(const proto::RobotCommand &cmd) { this->grsimCommander->queueGRSimCommand(cmd); }
-
 /** @brief Receives and handles any packets coming from a basestation
  *
  * This function should be run in a separate thread, since it uses blocking USB reads in a while-loop. Any log messages
@@ -388,8 +385,6 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     for (const proto::RobotCommand &cmd : AIcmd.commands()) {
         if (settings.serialmode())
             sendSerialCommand(cmd, AIcmd.extrapolatedworld());
-        else
-            sendGrSimCommand(cmd);
         commands_sent[cmd.id()]++;
     }
 }
@@ -402,10 +397,6 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
 
 void RobotHub::processSettings(proto::Setting &_settings) {
     settings = _settings;
-
-    grsimCommander->setGrsim_ip(settings.robothubsendip());
-    grsimCommander->setGrsim_port(settings.robothubsendport());
-    grsimCommander->setColor(settings.isyellow());
 }
 
 }  // namespace robothub

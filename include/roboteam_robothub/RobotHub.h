@@ -13,7 +13,6 @@
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/State.pb.h>
 
-#include "GRSim.h"
 #include "constants.h"
 #include "utilities.h"
 
@@ -61,13 +60,10 @@ class RobotHub {
     libusb_hotplug_callback_handle callback_handle_attach;
     libusb_hotplug_callback_handle callback_handle_detach;
 
-    std::shared_ptr<GRSimCommander> grsimCommander;
-
     //    std::mutex worldLock;
     proto::World world;
 
     void sendSerialCommand(const proto::RobotCommand &robotCommand, const proto::World &extrapolated_world);
-    void sendGrSimCommand(const proto::RobotCommand &robotCommand);
     void readBasestation();
 
     void processAIcommand(proto::AICommand &AIcmd);

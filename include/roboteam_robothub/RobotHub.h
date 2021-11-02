@@ -11,10 +11,10 @@
 #include <roboteam_proto/AICommand.pb.h>
 #include <roboteam_proto/RobotFeedback.pb.h>
 #include <roboteam_proto/Setting.pb.h>
+#include <roboteam_proto/State.pb.h>
 
 #include "GRSim.h"
 #include "constants.h"
-#include "roboteam_proto/State.pb.h"
 #include "utilities.h"
 
 namespace rtt {

@@ -25,7 +25,7 @@ std::string usbutils_speedToString(int speed);
 
 void usbutils_enumerate();
 
-} // namespace robothub
-} // namespace rtt
+}  // namespace robothub
+}  // namespace rtt
 
-#endif //RTT_LIBUSBUTILITIES_H
+#endif  // RTT_LIBUSBUTILITIES_H

@@ -6,35 +6,34 @@
 #define RTT_ROBOTHUB_H
 
 #include <libusb-1.0/libusb.h>
-
 #include <networking/Publisher.h>
 #include <networking/Subscriber.h>
 #include <roboteam_proto/AICommand.pb.h>
-#include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/RobotFeedback.pb.h>
-#include "roboteam_proto/State.pb.h"
+#include <roboteam_proto/Setting.pb.h>
 
 #include "GRSim.h"
-#include "utilities.h"
 #include "constants.h"
+#include "roboteam_proto/State.pb.h"
+#include "utilities.h"
 
 namespace rtt {
 namespace robothub {
 
 class RobotHub {
-public:
+   public:
     RobotHub();
     ~RobotHub();
     void run();
 
-    void handleBasestationAttach(libusb_device* device);
-    void handleBasestationDetach(libusb_device* device);
-private:
+    void handleBasestationAttach(libusb_device *device);
+    void handleBasestationDetach(libusb_device *device);
 
+   private:
     void subscribe();
 
     // unused but kept for future reference
-    bool openBasestation(libusb_context* ctx, libusb_device_handle **basestation_handle);
+    bool openBasestation(libusb_context *ctx, libusb_device_handle **basestation_handle);
 
     bool running = true;
     bool read_running = true;
@@ -49,7 +48,7 @@ private:
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
-//    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
+    //    std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
     std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
 
@@ -57,14 +56,14 @@ private:
     bool startBasestation();
 
     libusb_context *ctx;
-    libusb_device* basestation_device = nullptr;
-    libusb_device_handle* basestation_handle = nullptr;
+    libusb_device *basestation_device = nullptr;
+    libusb_device_handle *basestation_handle = nullptr;
     libusb_hotplug_callback_handle callback_handle_attach;
     libusb_hotplug_callback_handle callback_handle_detach;
 
     std::shared_ptr<GRSimCommander> grsimCommander;
 
-//    std::mutex worldLock;
+    //    std::mutex worldLock;
     proto::World world;
 
     void sendSerialCommand(const proto::RobotCommand &robotCommand, const proto::World &extrapolated_world);
@@ -72,11 +71,11 @@ private:
     void readBasestation();
 
     void processAIcommand(proto::AICommand &AIcmd);
-//    void processWorldState(proto::State &state);
+    //    void processWorldState(proto::State &state);
     void processSettings(proto::Setting &setting);
 };
 
 }  // namespace robothub
 }  // namespace rtt
 
-#endif //RTT_ROBOTHUB_H
+#endif  // RTT_ROBOTHUB_H

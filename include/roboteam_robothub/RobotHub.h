@@ -13,6 +13,7 @@
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/State.pb.h>
 
+#include "SimulatorManager.hpp"
 #include "constants.h"
 #include "utilities.h"
 
@@ -41,6 +42,8 @@ class RobotHub {
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
 
+    std::unique_ptr<simulation::SimulatorManager> simulatorManager;
+
     proto::Setting settings;
 
     proto::ChannelType robotCommandChannel;
@@ -62,6 +65,8 @@ class RobotHub {
 
     //    std::mutex worldLock;
     proto::World world;
+
+    void sendSimulatorCommand(proto::AICommand &aiCmd);
 
     void sendSerialCommand(const proto::RobotCommand &robotCommand, const proto::World &extrapolated_world);
     void readBasestation();

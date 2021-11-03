@@ -27,6 +27,7 @@ add_executable(roboteam_robothub
         src/RobotHub.cpp
         src/Packing.cpp
         src/LibusbUtilities.cpp
+        src/SimulatorManager.cpp
 )
 target_include_directories(roboteam_robothub
         PRIVATE include/roboteam_robothub

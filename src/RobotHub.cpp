@@ -39,6 +39,11 @@ namespace robothub {
 
 RobotHub::RobotHub() {
     std::cout << "[RobotHub] New RobotHub" << std::endl;
+
+    simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
+                                                        .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
+                                                        .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
+    this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
 }
 
 RobotHub::~RobotHub() { std::cout << "[RobotHub::~RobotHub] Destructor" << std::endl; }
@@ -289,6 +294,26 @@ bool RobotHub::openBasestation(libusb_context *ctx, libusb_device_handle **bases
     return true;
 }
 
+void RobotHub::sendSimulatorCommand(proto::AICommand &aiCmd) {
+    if (this->simulatorManager == nullptr) return;
+
+    simulation::RobotControlCommand simCommand;
+    for (auto robotCommand : aiCmd.commands()) {
+        int id = robotCommand.id();
+        float kickSpeed = robotCommand.kicker() ? DEFAULT_KICK_SPEED : 0.0f;
+        float kickAngle = 0.0f;
+        float dribblerSpeed = (float)robotCommand.dribbler();
+        float xVelocity = robotCommand.vel().x();
+        float yVelocity = robotCommand.vel().y();
+        float angularVelocity = robotCommand.w();
+
+        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+    }
+
+    bool isCommandForTeamYellow = this->settings.isyellow();
+    this->simulatorManager->sendRobotControlCommand(simCommand, isCommandForTeamYellow);
+}
+
 /* =========================================== READING/WRITING FUNCTIONS =========================================== */
 /** @brief Sends a proto::RobotCommand to the basestation
  *
@@ -382,10 +407,13 @@ void RobotHub::readBasestation() {
 
 /* =========================================== PACKET CALLBACK FUNCTIONS =========================================== */
 void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
-    for (const proto::RobotCommand &cmd : AIcmd.commands()) {
-        if (settings.serialmode())
+    if (settings.serialmode()) {
+        for (const proto::RobotCommand &cmd : AIcmd.commands()) {
             sendSerialCommand(cmd, AIcmd.extrapolatedworld());
-        commands_sent[cmd.id()]++;
+            commands_sent[cmd.id()]++;
+        }
+    } else {
+        sendSimulatorCommand(AIcmd);
     }
 }
 
@@ -395,9 +423,7 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
 //    world = _world;
 //}
 
-void RobotHub::processSettings(proto::Setting &_settings) {
-    settings = _settings;
-}
+void RobotHub::processSettings(proto::Setting &_settings) { settings = _settings; }
 
 }  // namespace robothub
 }  // namespace rtt

@@ -1,6 +1,7 @@
 //
 // Created by rolf on 19-10-20.
 //
+#include <optional>
 
 #include "Observer.h"
 

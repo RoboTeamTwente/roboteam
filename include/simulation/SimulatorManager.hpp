@@ -10,6 +10,9 @@
 
 #include <QtNetwork>
 #include <functional>
+#include <simulation/ConfigurationCommand.hpp>
+#include <simulation/Feedback.hpp>
+#include <simulation/RobotControlCommand.hpp>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -19,89 +22,6 @@ namespace rtt::robothub::simulation {
 constexpr int DEFAULT_CONFIGURATION_PORT = 10300;
 constexpr int DEFAULT_BLUE_CONTROL_PORT = 10301;
 constexpr int DEFAULT_YELLOW_CONTROL_PORT = 10302;
-
-/*  This class contains the information for moving robots.
-    It immediately stores the given information into a packet that can be sent to the simulator.
-    Robots can be controlled by either wheel speeds, local velocities or global velocties.
-    Local velocities are speeds like forward and sideway speeds, while global velocties are
-    speeds relative to the field. */
-class RobotControlCommand {
-   public:
-    void addRobotControlWithWheelSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float frontRightWheelVelocity, float backRightWheelVelocity,
-                                        float backLeftWheelVelocity, float frontLeftWheelVelocity);
-    void addRobotControlWithLocalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float forwardVelocity, float leftVelocity, float angularVelocity);
-    void addRobotControlWithGlobalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float xVelocity, float yVelocity, float angularVelocity);
-    proto::sim::RobotControl& getPacket();
-
-   private:
-    proto::sim::RobotControl controlCommand;
-};
-
-// Contains all the properties that can be changed in the simulator
-typedef struct RobotProperties {
-    // Units in meters, kilograms, degrees, m/s or m/s^2.
-    float radius = 0.09f;
-    float height = 0.15f;
-    float mass = 2.0f;
-    float maxKickSpeed = 6.5f;
-    float maxChipSpeed = 6.5f;
-    float centerToDribblerDistance = 0.09;
-    // Robot limits
-    float maxAcceleration = 3.0f;
-    float maxAngularAcceleration = 3.0f;
-    float maxDeceleration = 3.0f;
-    float maxAngularDeceleration = 3.0f;
-    float maxVelocity = 3.0f;
-    float maxAngularVelocity = 3.0f;
-    // Wheel angles. Counter-clockwise starting from dribbler
-    float frontRightWheelAngle = 300.0f;
-    float backRightWheelAngle = 210.0f;
-    float backLeftWheelAngle = 150.0f;
-    float frontLeftWheelAngle = 60.0f;
-} RobotProperties;
-
-/*  This class contains command information to configure and setup the simulator.
-    It immediately stores the given information into a packet that can be sent to the simulator.
-    Things to configure are robot positions, velocities, ball positions, physical properties of
-    the robot, simulator speed, the vision port.
-    TODO: Also add functionality to change the field geometry properties
-    TODO: GrSim ignores robotId when setting robot properties, resulting in all robots from the
-    same team having the same properties. This is grSim's fault, so go make a pull request to
-    grSim that fixes this faulty behavior. */
-class ConfigurationCommand {
-   public:
-    // VelocityInRolling transforms the velocities into spinning engergy.
-    // ByForce will set velocities accordingly to make sure the ball ends
-    // up at the specified coordinates.
-    void setBallLocation(float x, float y, float z, float xVelocity, float yVelocity, float zVelocity, bool velocityInRolling, bool teleportSafely, bool byForce);
-    // Orientation is a global rotation relative to the field.
-    // shouldBePresentOnField will make a robot (dis)appear accordingly.
-    void addRobotLocation(int id, bool isFromTeamYellow, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation, bool shouldBePresentOnField,
-                          bool byForce);
-    void setSimulationSpeed(float speed);
-    void addRobotSpecs(int id, bool isFromTeamYellow, RobotProperties& robotProperties);
-    void setVisionPort(int port);
-
-    proto::sim::SimulatorCommand& getPacket();
-
-   private:
-    proto::sim::SimulatorCommand configurationCommand;
-};
-
-typedef struct SimulationError {
-    std::string code;
-    std::string message;
-} SimulationError;
-
-typedef struct RobotControlFeedback {
-    bool isTeamYellow;
-    std::vector<int> robotsThatHaveTheBall;
-    std::vector<SimulationError> simulationErrors;
-} RobotControlFeedback;
-
-typedef struct ConfigurationFeedback {
-    std::vector<SimulationError> simulationErrors;
-} ConfigurationFeedback;
 
 typedef struct SimulatorNetworkConfiguration {
     QHostAddress simIpAddress = QHostAddress::LocalHost;

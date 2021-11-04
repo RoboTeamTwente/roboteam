@@ -5,11 +5,11 @@
 #ifndef ROBOTEAM_ROBOTHUB_UTILITIES_H
 #define ROBOTEAM_ROBOTHUB_UTILITIES_H
 
+#include <roboteam_proto/World.pb.h>
+
 #include <bitset>
 #include <iostream>
 #include <string>
-
-#include "roboteam_proto/World.pb.h"
 
 namespace rtt {
 namespace robothub {

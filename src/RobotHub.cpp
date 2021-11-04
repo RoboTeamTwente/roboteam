@@ -4,18 +4,19 @@
 
 #include "RobotHub.h"
 
+#include <roboteam_proto/State.pb.h>
+
 #include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 #include "BaseTypes.h"
-#include "LibusbUtilities.h"
-#include "Packing.h"
 #include "RobotCommand.h"
 #include "RobotFeedback.h"
 #include "RobotStateInfo.h"
-#include "roboteam_proto/State.pb.h"
+#include "basestation/LibusbUtilities.h"
+#include "basestation/Packing.h"
 
 using namespace std::chrono;
 

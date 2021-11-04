@@ -25,12 +25,14 @@ find_package(Threads REQUIRED)
 
 add_executable(roboteam_robothub
         src/RobotHub.cpp
-        src/Packing.cpp
-        src/LibusbUtilities.cpp
-        src/SimulatorManager.cpp
+        src/simulation/SimulatorManager.cpp
+        src/simulation/RobotControlCommand.cpp
+        src/simulation/ConfigurationCommand.cpp
+        src/basestation/Packing.cpp
+        src/basestation/LibusbUtilities.cpp
 )
 target_include_directories(roboteam_robothub
-        PRIVATE include/roboteam_robothub
+        PRIVATE include
         PRIVATE roboteam_embedded_messages/include
 )
 target_link_libraries(roboteam_robothub
@@ -42,11 +44,11 @@ target_link_libraries(roboteam_robothub
 )
 
 add_executable(roboteam_robothub_enumerate_usb
-        src/LibusbUtilities.cpp
-        src/EnumerateBasestations.cpp
+        src/basestation/LibusbUtilities.cpp
+        src/basestation/EnumerateBasestations.cpp
 )
 target_include_directories(roboteam_robothub_enumerate_usb
-        PRIVATE include/roboteam_robothub
+        PRIVATE include/
 )
 target_link_libraries(roboteam_robothub_enumerate_usb
         Threads::Threads

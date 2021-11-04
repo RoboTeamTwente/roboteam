@@ -4,12 +4,11 @@
 
 #ifndef RTT_ROBOTEAM_ROBOTHUB_SRC_PACKING_H_
 #define RTT_ROBOTEAM_ROBOTHUB_SRC_PACKING_H_
+#include <RobotCommand.h>
+#include <RobotFeedback.h>
 #include <roboteam_proto/RobotCommand.pb.h>
 #include <roboteam_proto/RobotFeedback.pb.h>
 #include <roboteam_proto/World.pb.h>
-
-#include "RobotCommand.h"
-#include "RobotFeedback.h"
 
 RobotCommandPayload createEmbeddedCommand(const proto::RobotCommand& proto, const proto::World& world, bool isYellow);
 

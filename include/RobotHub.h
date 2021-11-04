@@ -5,6 +5,7 @@
 #ifndef RTT_ROBOTHUB_H
 #define RTT_ROBOTHUB_H
 
+#include <constants.h>
 #include <libusb-1.0/libusb.h>
 #include <networking/Publisher.h>
 #include <networking/Subscriber.h>
@@ -12,10 +13,9 @@
 #include <roboteam_proto/RobotFeedback.pb.h>
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/State.pb.h>
+#include <utilities.h>
 
-#include "SimulatorManager.hpp"
-#include "constants.h"
-#include "utilities.h"
+#include <simulation/SimulatorManager.hpp>
 
 namespace rtt {
 namespace robothub {

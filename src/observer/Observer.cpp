@@ -1,8 +1,9 @@
 //
 // Created by rolf on 19-10-20.
 //
-
 #include "Observer.h"
+
+#include <optional>
 
 proto::State Observer::process(Time extrapolatedTo, const std::vector<proto::SSL_WrapperPacket> &visionPackets, const std::vector<proto::SSL_Referee> &refereePackets,
                                std::vector<proto::RobotData> robotData) {

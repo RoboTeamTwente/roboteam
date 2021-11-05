@@ -1,3 +1,5 @@
+#pragma once
+
 namespace rtt::robothub::simulation {
 // Contains all the properties that can be changed in the simulator
 typedef struct RobotProperties {

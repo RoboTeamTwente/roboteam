@@ -24,12 +24,13 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 add_executable(roboteam_robothub
-        src/RobotHub.cpp
         src/simulation/SimulatorManager.cpp
         src/simulation/RobotControlCommand.cpp
         src/simulation/ConfigurationCommand.cpp
         src/basestation/Packing.cpp
         src/basestation/LibusbUtilities.cpp
+        src/basestation/BasestationManager.cpp
+        src/RobotHub.cpp
 )
 target_include_directories(roboteam_robothub
         PRIVATE include

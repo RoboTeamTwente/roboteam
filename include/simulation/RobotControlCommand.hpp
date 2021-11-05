@@ -1,3 +1,5 @@
+#pragma once
+
 #include <roboteam_proto/ssl_simulation_robot_control.pb.h>
 
 namespace rtt::robothub::simulation {

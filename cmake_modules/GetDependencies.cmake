@@ -10,7 +10,7 @@ set(ZMQPP_LIBZMQ_CMAKE false)
 
 FetchContent_Declare(proj_sdl2
         GIT_REPOSITORY https://github.com/libsdl-org/SDL
-        GIT_TAG main
+        GIT_TAG 94c1276a5ff347eb9ce3ae7778f1192db2790027
         )
 
 FetchContent_Declare(proj_stx

@@ -1,9 +1,4 @@
-//
-// Created by emiel on 22-05-21.
-//
-
-#ifndef RTT_ROBOTHUB_H
-#define RTT_ROBOTHUB_H
+#pragma once
 
 #include <constants.h>
 #include <libusb-1.0/libusb.h>
@@ -18,24 +13,22 @@
 #include <simulation/SimulatorManager.hpp>
 #include <basestation/BasestationManager.hpp>
 
-namespace rtt {
-namespace robothub {
+namespace rtt::robothub {
 
-void handleRobotFeedbackFromSimulator(simulation::RobotControlFeedback& feedback);
-void handleRobotFeedbackFromBasestation(RobotFeedback& feedback);
+void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback& feedback);
+void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback);
 
 class RobotHub {
    public:
     RobotHub();
 
-    int run();
+    void printStatistics();
 
    private:
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::Setting settings;
-
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
 
@@ -46,22 +39,19 @@ class RobotHub {
 
     // std::mutex worldLock;
     proto::World world;
+    
+    int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
+    int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
 
     void subscribe();
 
-    void sendCommandsToSimulator(proto::AICommand &aiCmd);
-    void sendCommandsToBasestation(proto::AICommand &aiCmd);
+    void sendCommandsToSimulator(const proto::AICommand &aiCmd);
+    void sendCommandsToBasestation(const proto::AICommand &aiCmd);
 
     void processAIcommand(proto::AICommand &AIcmd);
     void processSettings(proto::Setting &setting);
     // void processWorldState(proto::State &state);
 
-    void printStatistics();
-    int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
-    int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
 };
 
-}  // namespace robothub
-}  // namespace rtt
-
-#endif  // RTT_ROBOTHUB_H
+}  // namespace rtt::robothub

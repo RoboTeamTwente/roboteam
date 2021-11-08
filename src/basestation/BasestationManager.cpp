@@ -22,6 +22,7 @@ BasestationManager::~BasestationManager() {
     // Stop threads
     this->shouldStopListening = true;
     this->shouldStopRunning = true;
+
     if (this->listenThread.joinable())
         this->listenThread.join();
     
@@ -35,34 +36,44 @@ BasestationManager::~BasestationManager() {
  * into a RobotCommandPayload (a packet command, using the minimum amoumt of bytes), and additional information is
  * (possibly) added to it, such as the angle of the robot in the world. If there is no connection to a basestation, the
  * packet is simply dropped.
- *
- * @param cmd Reference to the proto::RobotCommand that needs to be sent to the basestation
+ * @param payload Reference to the proto::RobotCommand that needs to be sent to the basestation
+ * @return whether or not the command successfully was sent to the basestation
  */
-void BasestationManager::sendSerialCommand(RobotCommandPayload payload) {
+bool BasestationManager::sendSerialCommand(RobotCommandPayload &payload) const {
     // Check if a connection to a basestation exists
     if (basestation_handle == nullptr) {
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
         // TODO check if sleeping here is a good idea. Will it block ZMQ? Will this fill up some queue somewhere when packets keep coming in?
         std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
-        return;
+        return false;
     }
+    payload.payload;
     int bytesSent;  // Holds the value of actual bytes sent to the basestation after transfer is complete
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
 
     if (error) {
+        // TODO: Where is the resetting of a connection?
         std::cout << "[RobotHub::sendSerialCommand] Error while sending to basestation. Resetting connection .." << std::endl;
         std::cout << "[RobotHub::sendSerialCommand] Error : " << usbutils_errorToString(error) << std::endl;
     }
+    return error;
 }
-
-void BasestationManager::setFeedbackCallback(std::function<void(RobotFeedback&)> callback) {
+/** @brief Sets the callback function
+ *  The given function is the function that will be called everytime this basestation manager
+ *  receives feedback. If the callback function is not set, no feedback will be sent to AI.
+ *  @param callback The function that will be called whenever feedback is received
+*/
+void BasestationManager::setFeedbackCallback(const std::function<void(RobotFeedback&)> &callback) {
     this->feedbackCallbackFunction = callback;
 }
 
-void BasestationManager::runManager() {
+/** @brief Runs the manager
+ *  This function will keep checking for new libusb events and handle them.
+ */
+void BasestationManager::runManager() const {
     timeval usb_event_timeout{.tv_usec = 100000};  // 100ms timeout for USB events
     
-    // TODO: Should make use of libusb_wait_for_event()
+    // TODO: Should make use of libusb_wait_for_event() instead of sleep_for
     while (!this->shouldStopRunning) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // Handle any possible USB events such as the attaching / detaching of a basestation
@@ -119,7 +130,6 @@ bool BasestationManager::setupUsbEventListeners() {
     return true;
 }
 
-/* =========================================== USB FUNCTIONS =========================================== */
 /** @brief Callback function that is triggered when a basestation is connected to the PC
  *
  * When a basestation is connected to the PC, this function claims that basestation. It first detaches the kernel
@@ -175,7 +185,7 @@ void BasestationManager::handleBasestationDetach(libusb_device *device) {
  * This function should be run in a separate thread, since it uses blocking USB reads in a while-loop. Any log messages
  * are printed to the terminal. Any robot feedback is forwarded to the rest of the system via the feedback channel.
  */
-void BasestationManager::listenToBasestation() {
+void BasestationManager::listenToBasestation() const {
     std::cout << "[RobotHub::readBasestation] Running" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
     uint8_t buffer[USB_BUFFER_SIZE_RECEIVE];
@@ -252,72 +262,4 @@ const char* FailedToSetupUsbEventListenerException::what() const noexcept {
     return this->message.c_str();
 }
 
-/** @brief Finds and opens a basestation device by looping over all connected USB devices. Unused.
- * DEPRECATED in favor of event based methods
- *
- * This function loops over all connected USB devices and searches for a basestation by looking for the correct
- * vendor-id (0x0483) and product-id (0x5740). If a basestation is found, it is opened and the handle to it is stored
- * in the 'basestation_handle' parameter. The function first detaches the kernel drivers from the basestation, then
- * claims the basestation for itself. Currently this function is not used, in favor of the event handling method, where
- * a callback is triggered when a USB device is (dis)connected from the PC. See RobotHub::startBasestation. This
- * function is kept as reference, or as backup in case the event handling method doesn't work as intended.
- *
- * @param ctx Libusb_context
- * @param basestation_handle Variable in which the basestation handle can be placed, if a basestation is found
- * @return true if a basestation is opened, false otherwise
- */
-bool BasestationManager::openBasestation(libusb_context *ctx, libusb_device_handle **basestation_handle) {
-    libusb_device *basestation_device = nullptr;
-    libusb_device **device_list;
-    int num_devices = libusb_get_device_list(ctx, &device_list);
-
-    int error;
-    for (int i = 0; i < num_devices; i++) {
-        libusb_device *device = device_list[i];
-        libusb_device_descriptor descriptor{};
-
-        error = libusb_get_device_descriptor(device, &descriptor);
-        if (error) std::cout << "[openBasestation] Error : " << usbutils_errorToString(error) << std::endl;
-        if (descriptor.idVendor == BASESTATION_VENDOR_ID && descriptor.idProduct == BASESTATION_PRODUCT_ID) {
-            basestation_device = device;
-
-            printf("[openBasestation] Basestation found. %04x:%04x (bus %d, device %d) %s\n", descriptor.idVendor, descriptor.idProduct, libusb_get_bus_number(device),
-                   libusb_get_device_address(device), usbutils_speedToString(libusb_get_device_speed(device)).c_str());
-        }
-    }
-
-    libusb_free_device_list(device_list, true);
-
-    if (basestation_device == nullptr) {
-        std::cout << "[findBasestation] Basestation not found" << std::endl;
-        return false;
-    }
-
-    error = libusb_open(basestation_device, basestation_handle);
-    if (error) {
-        std::cout << "Error while trying to open handle : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
-
-    /** libusb_set_auto_detach_kernel_driver() Enable/disable libusb's automatic kernel driver detachment. When this is
-     * enabled libusb will automatically detach the kernel driver on an interface when claiming the interface, and
-     * attach it when releasing the interface.
-     */
-    error = libusb_set_auto_detach_kernel_driver(*basestation_handle, 1);
-    if (error) {
-        std::cout << "Error while enabling auto detach : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
-
-    /** libusb_claim_interface() Claim an interface on a given device handle. You must claim the interface you wish to
-     * use before you can perform I/O on any of its endpoints.
-     */
-    error = libusb_claim_interface(*basestation_handle, 1);
-    if (error) {
-        std::cout << "Error while claiming interface : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
-
-    return true;
-}
-}
+} // namespace rtt::robothub::basestation

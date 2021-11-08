@@ -16,10 +16,12 @@ public:
     BasestationManager();
     ~BasestationManager();
 
-    void sendSerialCommand(RobotCommandPayload payload);
+    bool sendSerialCommand(RobotCommandPayload& payload) const;
 
-    void setFeedbackCallback(std::function<void(RobotFeedback&)> callback);
+    void setFeedbackCallback(const std::function<void(RobotFeedback&)> &callback);
 
+    void handleBasestationAttach(libusb_device *device);
+    void handleBasestationDetach(libusb_device *device);
 private:
     bool shouldStopRunning;
     std::thread runThread;
@@ -33,17 +35,11 @@ private:
     libusb_device_handle *basestation_handle = nullptr;
     libusb_hotplug_callback_handle callback_handle_attach;
     libusb_hotplug_callback_handle callback_handle_detach;
-public:
-    void handleBasestationAttach(libusb_device *device);
-    void handleBasestationDetach(libusb_device *device);
-private:
+
     bool setupUsbEventListeners();
 
-    void runManager();
-    void listenToBasestation();
-
-    // unused but kept for future reference
-    bool openBasestation(libusb_context *ctx, libusb_device_handle **basestation_handle);
+    void runManager() const;
+    void listenToBasestation() const;
 };
 
 class FailedToSetupUsbEventListenerException : public std::exception {

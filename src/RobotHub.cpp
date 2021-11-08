@@ -5,8 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace rtt {
-namespace robothub {
+namespace rtt::robothub {
 
 RobotHub::RobotHub() {
     std::cout << "[RobotHub] New RobotHub" << std::endl;
@@ -24,14 +23,6 @@ RobotHub::RobotHub() {
     this->basestationManager->setFeedbackCallback(handleRobotFeedbackFromBasestation);
 }
 
-int RobotHub::run() {
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        printStatistics();
-    }
-    return 0;
-}
-
 void RobotHub::subscribe() {
     // TODO: choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
 
@@ -46,7 +37,7 @@ void RobotHub::subscribe() {
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotFeedback>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
-void RobotHub::sendCommandsToSimulator(proto::AICommand &aiCmd) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
@@ -69,7 +60,7 @@ void RobotHub::sendCommandsToSimulator(proto::AICommand &aiCmd) {
     this->simulatorManager->sendRobotControlCommand(simCommand, isCommandForTeamYellow);
 }
 
-void RobotHub::sendCommandsToBasestation(proto::AICommand &aiCmd) {
+void RobotHub::sendCommandsToBasestation(const proto::AICommand &aiCmd) {
     for (const proto::RobotCommand &cmd : aiCmd.commands()) {
         // Convert the proto::RobotCommand to a RobotCommandPayload
         RobotCommandPayload payload = createEmbeddedCommand(cmd, aiCmd.extrapolatedworld(), settings.isyellow());
@@ -91,6 +82,9 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
 
 void RobotHub::processSettings(proto::Setting &_settings) { settings = _settings; }
 
+/* Unsafe function that can cause data races in commands_sent and feedback_received,
+    as it is updated from multiple threads without guards. This should not matter
+    however, as these variables are just for debugging purposes. */
 void RobotHub::printStatistics() {
     std::stringstream ss;
 
@@ -123,17 +117,22 @@ void RobotHub::printStatistics() {
     std::cout << ss.str();
 }
 
-void handleRobotFeedbackFromSimulator(simulation::RobotControlFeedback& feedback) {
+void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback& feedback) {
     std::cout << "Received robot feedback from the simulator!" << std::endl;
+    // TODO: Forward feedback to AI or something idk
 }
-void handleRobotFeedbackFromBasestation(RobotFeedback& feedback) {
+void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback) {
     std::cout << "Received robot feedback from the basestation!" << std::endl;
+    // TODO: Forward feedback to AI or something idk
 }
 
-}  // namespace robothub
-}  // namespace rtt
+}  // namespace rtt::robothub
 
 int main(int argc, char *argv[]) {
     rtt::robothub::RobotHub app;
-    return app.run();
+    
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        app.printStatistics();
+    }
 }

@@ -1,24 +1,24 @@
 [submodule "roboteam_ai"]
 	path = roboteam_ai
-	url = git@github.com:RoboTeamTwente/roboteam_ai.git
+	url = https://github.com/RoboTeamTwente/roboteam_ai
 	branch = development
 [submodule "roboteam_world"]
 	path = roboteam_world
-	url = git@github.com:RoboTeamTwente/roboteam_world.git
+	url = https://github.com/RoboTeamTwente/roboteam_world
 	branch = development
 [submodule "roboteam_robothub"]
 	path = roboteam_robothub
-	url = git@github.com:RoboTeamTwente/roboteam_robothub.git
+	url = https://github.com/RoboTeamTwente/roboteam_robothub
 	branch = development
 [submodule "roboteam_utils"]
 	path = roboteam_utils
-	url = git@github.com:RoboTeamTwente/roboteam_utils.git
+	url = https://github.com/RoboTeamTwente/roboteam_utils
 	branch = development
 [submodule "roboteam_proto"]
 	path = roboteam_proto
-	url = git@github.com:RoboTeamTwente/roboteam_proto.git
+	url = https://github.com/RoboTeamTwente/roboteam_proto
 	branch = development
 [submodule "roboteam_central_server"]
 	path = roboteam_central_server
-	url = git@github.com:RoboTeamTwente/roboteam_central_server.git
+	url = https://github.com/RoboTeamTwente/roboteam_central_server
 	branch = development

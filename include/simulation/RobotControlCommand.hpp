@@ -1,6 +1,6 @@
 #pragma once
 
-#include <roboteam_proto/ssl_simulation_robot_control.pb.h>
+#include <ssl_simulation_robot_control.pb.h>
 
 namespace rtt::robothub::simulation {
 /*  This class contains the information for moving robots.
@@ -14,9 +14,9 @@ class RobotControlCommand {
                                         float backLeftWheelVelocity, float frontLeftWheelVelocity);
     void addRobotControlWithLocalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float forwardVelocity, float leftVelocity, float angularVelocity);
     void addRobotControlWithGlobalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float xVelocity, float yVelocity, float angularVelocity);
-    proto::sim::RobotControl& getPacket();
+    proto::simulation::RobotControl& getPacket();
 
    private:
-    proto::sim::RobotControl controlCommand;
+    proto::simulation::RobotControl controlCommand;
 };
 }  // namespace rtt::robothub::simulation

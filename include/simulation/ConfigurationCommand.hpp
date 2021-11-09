@@ -1,6 +1,6 @@
 #pragma once
 
-#include <roboteam_proto/ssl_simulation_control.pb.h>
+#include <ssl_simulation_control.pb.h>
 #include <simulation/RobotProperties.hpp>
 
 namespace rtt::robothub::simulation {
@@ -26,9 +26,9 @@ class ConfigurationCommand {
     void addRobotSpecs(int id, bool isFromTeamYellow, RobotProperties& robotProperties);
     void setVisionPort(int port);
 
-    proto::sim::SimulatorCommand& getPacket();
+    proto::simulation::SimulatorCommand& getPacket();
 
    private:
-    proto::sim::SimulatorCommand configurationCommand;
+    proto::simulation::SimulatorCommand configurationCommand;
 };
 }  // namespace rtt::robothub::simulation

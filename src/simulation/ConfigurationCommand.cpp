@@ -3,7 +3,7 @@
 namespace rtt::robothub::simulation {
 void ConfigurationCommand::setBallLocation(float x, float y, float z, float xVelocity, float yVelocity, float zVelocity, bool velocityInRolling, bool teleportSafely,
                                            bool byForce) {
-    proto::sim::TeleportBall* tpBallCommand = this->configurationCommand.mutable_control()->mutable_teleport_ball();
+    proto::simulation::TeleportBall* tpBallCommand = this->configurationCommand.mutable_control()->mutable_teleport_ball();
     tpBallCommand->set_x(x);
     tpBallCommand->set_y(y);
     tpBallCommand->set_z(z);
@@ -16,9 +16,9 @@ void ConfigurationCommand::setBallLocation(float x, float y, float z, float xVel
 }
 void ConfigurationCommand::addRobotLocation(int id, bool isFromTeamYellow, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation,
                                             bool shouldBePresentOnField, bool byForce) {
-    proto::sim::TeleportRobot* tpRobotCommand = this->configurationCommand.mutable_control()->add_teleport_robot();
+    proto::simulation::TeleportRobot* tpRobotCommand = this->configurationCommand.mutable_control()->add_teleport_robot();
     tpRobotCommand->mutable_id()->set_id(id);
-    tpRobotCommand->mutable_id()->set_team(isFromTeamYellow ? proto::sim::Team::YELLOW : proto::sim::Team::BLUE);
+    tpRobotCommand->mutable_id()->set_team(isFromTeamYellow ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
     tpRobotCommand->set_x(x);
     tpRobotCommand->set_y(y);
     tpRobotCommand->set_v_x(xVelocity);
@@ -30,10 +30,10 @@ void ConfigurationCommand::addRobotLocation(int id, bool isFromTeamYellow, float
 }
 void ConfigurationCommand::setSimulationSpeed(float speed) { this->configurationCommand.mutable_control()->set_simulation_speed(speed); }
 void ConfigurationCommand::addRobotSpecs(int id, bool isFromTeamYellow, RobotProperties& robotProperties) {
-    proto::sim::RobotSpecs* specs = this->configurationCommand.mutable_config()->add_robot_specs();
+    proto::simulation::RobotSpecs* specs = this->configurationCommand.mutable_config()->add_robot_specs();
 
     specs->mutable_id()->set_id(id);
-    specs->mutable_id()->set_team(isFromTeamYellow ? proto::sim::Team::YELLOW : proto::sim::Team::BLUE);
+    specs->mutable_id()->set_team(isFromTeamYellow ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
     specs->set_radius(robotProperties.radius);
     specs->set_height(robotProperties.height);
     specs->set_mass(robotProperties.mass);
@@ -54,5 +54,5 @@ void ConfigurationCommand::addRobotSpecs(int id, bool isFromTeamYellow, RobotPro
     specs->mutable_wheel_angles()->set_front_left(robotProperties.frontLeftWheelAngle);
 }
 void ConfigurationCommand::setVisionPort(int port) { this->configurationCommand.mutable_config()->set_vision_port(port); }
-proto::sim::SimulatorCommand& ConfigurationCommand::getPacket() { return this->configurationCommand; }
+proto::simulation::SimulatorCommand& ConfigurationCommand::getPacket() { return this->configurationCommand; }
 }  // namespace rtt::robothub::simulation

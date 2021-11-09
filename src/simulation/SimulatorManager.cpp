@@ -106,19 +106,19 @@ void SimulatorManager::listenForConfigurationFeedback() {
 
 RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDatagram& datagram, bool isTeamYellow) {
     // First, parse datagram into the proto packet that it resembles
-    proto::sim::RobotControlResponse response;
+    proto::simulation::RobotControlResponse response;
     response.ParseFromArray(datagram.data().data(), datagram.data().size());
 
     // Then, put the information in an easy accessible struct
     RobotControlFeedback feedback;
     feedback.isTeamYellow = isTeamYellow;
 
-    for (const proto::sim::RobotFeedback& robotFeedback : response.feedback()) {
+    for (const proto::simulation::RobotFeedback& robotFeedback : response.feedback()) {
         // This boolean is optional, so first check if it has been set before checking if it is set to true
         if (robotFeedback.has_dribbler_ball_contact() && robotFeedback.dribbler_ball_contact()) feedback.robotsThatHaveTheBall.push_back(robotFeedback.id());
     }
 
-    for (const proto::sim::SimulatorError& simulatorError : response.errors()) {
+    for (const proto::simulation::SimulatorError& simulatorError : response.errors()) {
         SimulationError error;
         if (simulatorError.has_code()) error.code = simulatorError.code();
         if (simulatorError.has_message()) error.message = simulatorError.message();
@@ -130,12 +130,12 @@ RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDa
 
 ConfigurationFeedback SimulatorManager::getConfigurationFeedbackFromDatagram(QNetworkDatagram& datagram) {
     // First, parse datagram into the proto packet that it resembles
-    proto::sim::SimulatorResponse response;
+    proto::simulation::SimulatorResponse response;
     response.ParseFromArray(datagram.data().data(), datagram.data().size());
 
     // Then, put the information in an easy accesible struct
     ConfigurationFeedback feedback;
-    for (const proto::sim::SimulatorError& simulationError : response.errors()) {
+    for (const proto::simulation::SimulatorError& simulationError : response.errors()) {
         SimulationError error;
         if (simulationError.has_code()) error.code = simulationError.code();
         if (simulationError.has_message()) error.message = simulationError.message();

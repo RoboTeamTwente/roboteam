@@ -21,6 +21,8 @@ RobotHub::RobotHub() {
     
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback(handleRobotFeedbackFromBasestation);
+
+    this->subscribe();
 }
 
 void RobotHub::subscribe() {
@@ -44,7 +46,6 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const prot
 
     simulation::RobotControlCommand simCommand;
     for (auto robotCommand : aiCmd.commands()) {
-
         int id = robotCommand.id();
         float kick_vel = robotCommand.chipper() || robotCommand.kicker() ? robotCommand.chip_kick_vel() : 0.0f;
         float kick_angle = robotCommand.chipper() ? 45.0f : 0.0f;
@@ -53,6 +54,7 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const prot
         float forwardVelocity = 0.0f;
         float leftVelocity = 0.0f;
         float angularVelocity = 0.0f;
+
         {
             float robot_angle = 0.0f;
             std::shared_ptr<proto::WorldRobot> findBot = rtt::robothub::utils::getWorldBot(robotCommand.id(), isCommandForTeamYellow, world);
@@ -144,11 +146,11 @@ void RobotHub::printStatistics() {
 }
 
 void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback& feedback) {
-    std::cout << "Received robot feedback from the simulator!" << std::endl;
+    //std::cout << "Received robot feedback from the simulator!" << std::endl;
     // TODO: Forward feedback to AI or something idk
 }
 void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback) {
-    std::cout << "Received robot feedback from the basestation!" << std::endl;
+    //std::cout << "Received robot feedback from the basestation!" << std::endl;
     // TODO: Forward feedback to AI or something idk
 }
 

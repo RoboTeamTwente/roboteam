@@ -40,6 +40,7 @@ private:
 
     void runManager() const;
     void listenToBasestation() const;
+    void callFeedbackCallback(RobotFeedback &feedback);
 };
 
 class FailedToSetupUsbEventListenerException : public std::exception {

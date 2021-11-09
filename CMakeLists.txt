@@ -39,34 +39,32 @@ target_link_libraries(simulator_manager PUBLIC
 )
 
 # Create the make file for the basestationManager library
-#add_library(basestation_manager STATIC
-#        "src/basestation/Packing.cpp"
-#        "src/basestation/LibusbUtilities.cpp"
-#        "src/basestation/BasestationManager.cpp")
-#target_include_directories(basestation_manager PUBLIC "include")
-#target_link_libraries(basestation_manager PUBLIC
-#        Threads::Threads
-#        lib::usb)
-
-add_executable(roboteam_robothub
-        src/basestation/Packing.cpp
-        src/basestation/LibusbUtilities.cpp
-        src/basestation/BasestationManager.cpp
-        src/RobotHub.cpp
+add_library(basestation_manager STATIC
+        "src/basestation/Packing.cpp"
+        "src/basestation/LibusbUtilities.cpp"
+        "src/basestation/BasestationManager.cpp")
+target_include_directories(basestation_manager PUBLIC
+        "include"
+        "roboteam_embedded_messages/include")
+target_link_libraries(basestation_manager PUBLIC
+        Threads::Threads
+        lib::usb
+        roboteam_proto
 )
+
+# Create the make file for RobotHub, which uses the basestationManager and simulationManager library
+add_executable(roboteam_robothub "src/RobotHub.cpp")
 target_include_directories(roboteam_robothub
         PRIVATE include
-        PRIVATE roboteam_embedded_messages/include
 )
 target_link_libraries(roboteam_robothub
         PRIVATE simulator_manager
+        PRIVATE basestation_manager
         PRIVATE roboteam_proto
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Network
-        Threads::Threads
-        lib::usb
 )
 
+# Create the make file for robothub_enumerate_usb
 add_executable(roboteam_robothub_enumerate_usb
         src/basestation/LibusbUtilities.cpp
         src/basestation/EnumerateBasestations.cpp

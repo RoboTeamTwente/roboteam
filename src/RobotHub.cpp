@@ -37,26 +37,52 @@ void RobotHub::subscribe() {
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotFeedback>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World& world) {
     if (this->simulatorManager == nullptr) return;
+
+    bool isCommandForTeamYellow = this->settings.isyellow();
 
     simulation::RobotControlCommand simCommand;
     for (auto robotCommand : aiCmd.commands()) {
-        int id = robotCommand.id();
-        float kickSpeed = robotCommand.kicker() ? DEFAULT_KICK_SPEED : 0.0f;
-        float kickAngle = 0.0f;
-        float dribblerSpeed = (float)robotCommand.dribbler();
-        float xVelocity = robotCommand.vel().x();
-        float yVelocity = robotCommand.vel().y();
-        float angularVelocity = robotCommand.w();
 
-        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        int id = robotCommand.id();
+        float kick_vel = robotCommand.chipper() || robotCommand.kicker() ? robotCommand.chip_kick_vel() : 0.0f;
+        float kick_angle = robotCommand.chipper() ? 45.0f : 0.0f;
+        float dribbler_speed = robotCommand.dribbler() > 0 ? 1021.0f : 0.0f;
+        
+        float forwardVelocity = 0.0f;
+        float leftVelocity = 0.0f;
+        float angularVelocity = 0.0f;
+        {
+            float robot_angle = 0.0f;
+            std::shared_ptr<proto::WorldRobot> findBot = rtt::robothub::utils::getWorldBot(robotCommand.id(), isCommandForTeamYellow, world);
+            if(findBot){
+                robot_angle = - findBot->angle();
+            }else{
+                std::cout<<"could not find robot!"<<std::endl;
+            }
+            float forward = cosf(robot_angle) * robotCommand.vel().x() - sinf(robot_angle) * robotCommand.vel().y();
+            float left = sinf(robot_angle) * robotCommand.vel().x() + cosf(robot_angle) * robotCommand.vel().y();
+            
+            forwardVelocity = forward;
+            leftVelocity = left;
+            angularVelocity = robotCommand.w();
+        }
+        
+        simCommand.addRobotControlWithLocalSpeeds(id,
+                                                kick_vel,
+                                                kick_angle,
+                                                dribbler_speed,
+                                                forwardVelocity,
+                                                leftVelocity,
+                                                angularVelocity);
+
+        //simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
 
         // Update statistics
         this->commands_sent[id]++;
     }
 
-    bool isCommandForTeamYellow = this->settings.isyellow();
     this->simulatorManager->sendRobotControlCommand(simCommand, isCommandForTeamYellow);
 }
 
@@ -76,7 +102,7 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     if (settings.serialmode()) {
         this->sendCommandsToBasestation(AIcmd);
     } else {
-        this->sendCommandsToSimulator(AIcmd);
+        this->sendCommandsToSimulator(AIcmd, AIcmd.extrapolatedworld());
     }
 }
 

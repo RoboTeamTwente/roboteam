@@ -1,7 +1,8 @@
 #include "RobotHub.h"
 
-#include <roboteam_proto/State.pb.h>
 #include <basestation/Packing.h>
+#include <roboteam_proto/State.pb.h>
+
 #include <iostream>
 #include <sstream>
 
@@ -10,15 +11,13 @@ namespace rtt::robothub {
 RobotHub::RobotHub() {
     std::cout << "[RobotHub] New RobotHub" << std::endl;
 
-    simulation::SimulatorNetworkConfiguration config = {
-        .blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
-        .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
-        .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION
-    };
-    
+    simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
+                                                        .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
+                                                        .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
+
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback(handleRobotFeedbackFromSimulator);
-    
+
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback(handleRobotFeedbackFromBasestation);
 
@@ -39,7 +38,7 @@ void RobotHub::subscribe() {
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotFeedback>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World& world) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World &world) {
     if (this->simulatorManager == nullptr) return;
 
     bool isCommandForTeamYellow = this->settings.isyellow();
@@ -50,7 +49,7 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const prot
         float kick_vel = robotCommand.chipper() || robotCommand.kicker() ? robotCommand.chip_kick_vel() : 0.0f;
         float kick_angle = robotCommand.chipper() ? 45.0f : 0.0f;
         float dribbler_speed = robotCommand.dribbler() > 0 ? 1021.0f : 0.0f;
-        
+
         float forwardVelocity = 0.0f;
         float leftVelocity = 0.0f;
         float angularVelocity = 0.0f;
@@ -58,28 +57,22 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const prot
         {
             float robot_angle = 0.0f;
             std::shared_ptr<proto::WorldRobot> findBot = rtt::robothub::utils::getWorldBot(robotCommand.id(), isCommandForTeamYellow, world);
-            if(findBot){
-                robot_angle = - findBot->angle();
-            }else{
-                std::cout<<"could not find robot!"<<std::endl;
+            if (findBot) {
+                robot_angle = -findBot->angle();
+            } else {
+                std::cout << "could not find robot!" << std::endl;
             }
             float forward = cosf(robot_angle) * robotCommand.vel().x() - sinf(robot_angle) * robotCommand.vel().y();
             float left = sinf(robot_angle) * robotCommand.vel().x() + cosf(robot_angle) * robotCommand.vel().y();
-            
+
             forwardVelocity = forward;
             leftVelocity = left;
             angularVelocity = robotCommand.w();
         }
-        
-        simCommand.addRobotControlWithLocalSpeeds(id,
-                                                kick_vel,
-                                                kick_angle,
-                                                dribbler_speed,
-                                                forwardVelocity,
-                                                leftVelocity,
-                                                angularVelocity);
 
-        //simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        simCommand.addRobotControlWithLocalSpeeds(id, kick_vel, kick_angle, dribbler_speed, forwardVelocity, leftVelocity, angularVelocity);
+
+        // simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
 
         // Update statistics
         this->commands_sent[id]++;
@@ -92,7 +85,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &aiCmd) {
     for (const proto::RobotCommand &cmd : aiCmd.commands()) {
         // Convert the proto::RobotCommand to a RobotCommandPayload
         RobotCommandPayload payload = createEmbeddedCommand(cmd, aiCmd.extrapolatedworld(), settings.isyellow());
-        
+
         this->basestationManager->sendSerialCommand(payload);
 
         // Update statistics
@@ -145,12 +138,12 @@ void RobotHub::printStatistics() {
     std::cout << ss.str();
 }
 
-void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback& feedback) {
-    //std::cout << "Received robot feedback from the simulator!" << std::endl;
+void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
+    // std::cout << "Received robot feedback from the simulator!" << std::endl;
     // TODO: Forward feedback to AI or something idk
 }
-void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback) {
-    //std::cout << "Received robot feedback from the basestation!" << std::endl;
+void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
+    // std::cout << "Received robot feedback from the basestation!" << std::endl;
     // TODO: Forward feedback to AI or something idk
 }
 
@@ -158,7 +151,7 @@ void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback) {
 
 int main(int argc, char *argv[]) {
     rtt::robothub::RobotHub app;
-    
+
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         app.printStatistics();

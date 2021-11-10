@@ -1,8 +1,9 @@
-#include <basestation/BasestationManager.hpp>
+#include <RobotStateInfo.h>
 #include <basestation/LibusbUtilities.h>
 #include <constants.h>
+
+#include <basestation/BasestationManager.hpp>
 #include <iostream>
-#include <RobotStateInfo.h>
 
 namespace rtt::robothub::basestation {
 
@@ -10,9 +11,8 @@ BasestationManager::BasestationManager() {
     std::cout << "Hello basestation!" << std::endl;
 
     /* set up the event listeners that respond to the (dis)connecting of a basestation */
-    if (!this->setupUsbEventListeners())
-        throw FailedToSetupUsbEventListenerException("Failed to set up libusb event listeners");
-    
+    if (!this->setupUsbEventListeners()) throw FailedToSetupUsbEventListenerException("Failed to set up libusb event listeners");
+
     this->shouldStopListening = false;
     this->shouldStopRunning = false;
 
@@ -26,11 +26,9 @@ BasestationManager::~BasestationManager() {
     this->shouldStopListening = true;
     this->shouldStopRunning = true;
 
-    if (this->listenThread.joinable())
-        this->listenThread.join();
-    
-    if (this->runThread.joinable())
-        this->runThread.join();
+    if (this->listenThread.joinable()) this->listenThread.join();
+
+    if (this->runThread.joinable()) this->runThread.join();
 }
 
 /** @brief Sends a proto::RobotCommand to the basestation
@@ -65,17 +63,15 @@ bool BasestationManager::sendSerialCommand(RobotCommandPayload &payload) const {
  *  The given function is the function that will be called everytime this basestation manager
  *  receives feedback. If the callback function is not set, no feedback will be sent to AI.
  *  @param callback The function that will be called whenever feedback is received
-*/
-void BasestationManager::setFeedbackCallback(const std::function<void(RobotFeedback&)> &callback) {
-    this->feedbackCallbackFunction = callback;
-}
+ */
+void BasestationManager::setFeedbackCallback(const std::function<void(RobotFeedback &)> &callback) { this->feedbackCallbackFunction = callback; }
 
 /** @brief Runs the manager
  *  This function will keep checking for new libusb events and handle them.
  */
 void BasestationManager::runManager() const {
     timeval usb_event_timeout{.tv_usec = 100000};  // 100ms timeout for USB events
-    
+
     // TODO: Should make use of libusb_wait_for_event() instead of sleep_for
     while (!this->shouldStopRunning) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -242,9 +238,8 @@ void BasestationManager::listenToBasestation() const {
     std::cout << "[RobotHub::readBasestation] Terminating" << std::endl;
 }
 
-void BasestationManager::callFeedbackCallback(RobotFeedback & feedback) {
-    if (this->feedbackCallbackFunction != nullptr)
-        this->feedbackCallbackFunction(feedback);
+void BasestationManager::callFeedbackCallback(RobotFeedback &feedback) {
+    if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback);
 }
 
 /** @brief Callback funnction triggered when a basestation is connected */
@@ -262,11 +257,7 @@ int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_h
     return 0;
 }
 
-FailedToSetupUsbEventListenerException::FailedToSetupUsbEventListenerException(const std::string message) {
-    this->message = message;
-}
-const char* FailedToSetupUsbEventListenerException::what() const noexcept {
-    return this->message.c_str();
-}
+FailedToSetupUsbEventListenerException::FailedToSetupUsbEventListenerException(const std::string message) { this->message = message; }
+const char *FailedToSetupUsbEventListenerException::what() const noexcept { return this->message.c_str(); }
 
-} // namespace rtt::robothub::basestation
+}  // namespace rtt::robothub::basestation

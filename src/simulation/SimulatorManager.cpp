@@ -16,13 +16,13 @@ SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
 
     this->shouldStopListeningToFeedback = false;
 
-    std::cout << "SimulationManager bound on: " << std::endl 
-        << " - Blue Control Port: " << config.blueControlPort << std::endl
-        << " - Blue Feedback Port: " << config.blueFeedbackPort << std::endl
-        << " - Yellow Control Port: " << config.yellowControlPort << std::endl
-        << " - Yellow Feedback Port: " << config.yellowFeedbackPort << std::endl
-        << " - Simulation Control Port: " << config.configurationPort << std::endl
-        << " - Simulation Feedback Port: " << config.configurationFeedbackPort << std::endl;
+    std::cout << "SimulationManager bound on: " << std::endl
+              << " - Blue Control Port: " << config.blueControlPort << std::endl
+              << " - Blue Feedback Port: " << config.blueFeedbackPort << std::endl
+              << " - Yellow Control Port: " << config.yellowControlPort << std::endl
+              << " - Yellow Feedback Port: " << config.yellowFeedbackPort << std::endl
+              << " - Simulation Control Port: " << config.configurationPort << std::endl
+              << " - Simulation Feedback Port: " << config.configurationFeedbackPort << std::endl;
 
     // Spawn listening threads that handle incoming feedback
     this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(false); });

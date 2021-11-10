@@ -10,13 +10,13 @@
 #include <roboteam_proto/State.pb.h>
 #include <utilities.h>
 
-#include <simulation/SimulatorManager.hpp>
 #include <basestation/BasestationManager.hpp>
+#include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
 
-void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback& feedback);
-void handleRobotFeedbackFromBasestation(const RobotFeedback& feedback);
+void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
+void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
 
 class RobotHub {
    public:
@@ -39,19 +39,18 @@ class RobotHub {
 
     // std::mutex worldLock;
     proto::World world;
-    
+
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
 
     void subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World& world);
+    void sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World &world);
     void sendCommandsToBasestation(const proto::AICommand &aiCmd);
 
     void processAIcommand(proto::AICommand &AIcmd);
     void processSettings(proto::Setting &setting);
     // void processWorldState(proto::State &state);
-
 };
 
 }  // namespace rtt::robothub

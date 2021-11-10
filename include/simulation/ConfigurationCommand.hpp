@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ssl_simulation_control.pb.h>
+
 #include <simulation/RobotProperties.hpp>
 
 namespace rtt::robothub::simulation {

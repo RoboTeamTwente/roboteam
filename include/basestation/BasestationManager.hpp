@@ -2,9 +2,11 @@
 
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
+
 #include <thread>
-#include "RobotFeedback.h"
+
 #include "RobotCommand.h"
+#include "RobotFeedback.h"
 
 namespace rtt::robothub::basestation {
 
@@ -12,24 +14,25 @@ int hotplug_callback_attach(libusb_context *ctx, libusb_device *device, libusb_h
 int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data);
 
 class BasestationManager {
-public:
+   public:
     BasestationManager();
     ~BasestationManager();
 
-    bool sendSerialCommand(RobotCommandPayload& payload) const;
+    bool sendSerialCommand(RobotCommandPayload &payload) const;
 
-    void setFeedbackCallback(const std::function<void(RobotFeedback&)> &callback);
+    void setFeedbackCallback(const std::function<void(RobotFeedback &)> &callback);
 
     void handleBasestationAttach(libusb_device *device);
     void handleBasestationDetach(libusb_device *device);
-private:
+
+   private:
     bool shouldStopRunning;
     std::thread runThread;
     bool shouldStopListening;
     std::thread listenThread;
 
-    std::function<void(RobotFeedback&)> feedbackCallbackFunction;
-    
+    std::function<void(RobotFeedback &)> feedbackCallbackFunction;
+
     libusb_context *ctx;
     libusb_device *basestation_device = nullptr;
     libusb_device_handle *basestation_handle = nullptr;
@@ -44,10 +47,11 @@ private:
 };
 
 class FailedToSetupUsbEventListenerException : public std::exception {
-public:
+   public:
     FailedToSetupUsbEventListenerException(const std::string message);
-    const char* what() const noexcept override;
-private:
+    const char *what() const noexcept override;
+
+   private:
     std::string message;
 };
-}
+}  // namespace rtt::robothub::basestation

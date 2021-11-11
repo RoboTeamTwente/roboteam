@@ -47,8 +47,8 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, const prot
     for (auto robotCommand : aiCmd.commands()) {
         int id = robotCommand.id();
         float kick_vel = robotCommand.chipper() || robotCommand.kicker() ? robotCommand.chip_kick_vel() : 0.0f;
-        float kick_angle = robotCommand.chipper() ? 45.0f : 0.0f;
-        float dribbler_speed = robotCommand.dribbler() > 0 ? 1021.0f : 0.0f;
+        float kick_angle = robotCommand.chipper() ? DEFAULT_CHIPPER_ANGLE : 0.0f;
+        float dribbler_speed = robotCommand.dribbler() > 0 ? MAX_DRIBBLER_SPEED : 0.0f;
 
         float forwardVelocity = 0.0f;
         float leftVelocity = 0.0f;

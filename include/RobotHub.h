@@ -45,7 +45,7 @@ class RobotHub {
 
     void subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &aiCmd, const proto::World &world);
+    void sendCommandsToSimulator(const proto::AICommand &aiCmd);
     void sendCommandsToBasestation(const proto::AICommand &aiCmd);
 
     void processAIcommand(proto::AICommand &AIcmd);

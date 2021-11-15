@@ -26,12 +26,7 @@ RobotHub::RobotHub() {
 
 void RobotHub::subscribe() {
     // TODO: choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
-
     robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this);
-
-    //    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::State>>(
-    //            proto::WORLD_CHANNEL, &RobotHub::processWorldState, this
-    //    );
 
     settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this);
 
@@ -121,6 +116,7 @@ void RobotHub::printStatistics() {
 
 void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
     // std::cout << "Received robot feedback from the simulator!" << std::endl;
+    
     // TODO: Forward feedback to AI or something idk
 }
 void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {

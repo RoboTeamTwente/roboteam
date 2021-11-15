@@ -33,12 +33,8 @@ class RobotHub {
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
-    // std::unique_ptr<proto::Subscriber<proto::State>> worldStateSubscriber;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
     std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
-
-    // std::mutex worldLock;
-    proto::World world;
 
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};

@@ -20,13 +20,15 @@
 //========================================================================
 #ifndef ROBOCUP_SSL_CLIENT_H
 #define ROBOCUP_SSL_CLIENT_H
-#include <string>
-#include "netraw.h"
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_wrapper.pb.h>
 #include <roboteam_proto/messages_robocup_ssl_wrapper_legacy.pb.h>
+
+#include <string>
+
+#include "netraw.h"
 using namespace std;
 /**
         @author Author Name

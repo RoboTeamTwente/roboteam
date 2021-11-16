@@ -3,10 +3,10 @@
 //
 
 #include <filters/WorldFilter.h>
-#include <memory>
 #include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
-#include <iomanip>
 
+#include <iomanip>
+#include <memory>
 
 WorldFilter::WorldFilter() {
     blueBots.clear();
@@ -18,7 +18,7 @@ WorldFilter::WorldFilter() {
 void WorldFilter::addFrame(const proto::SSL_DetectionFrame &msg) {
     const double filterGrabDistance = 0.5;
     double timeCapture = msg.t_capture();
-    if(timeCapture > latestCaptureTime){
+    if (timeCapture > latestCaptureTime) {
         latestCaptureTime = timeCapture;
     }
     uint cameraID = msg.camera_id();
@@ -78,10 +78,10 @@ proto::World WorldFilter::getWorld() {
         proto::WorldBall worldBall = bestFilter(balls)->asWorldBall();
         world.mutable_ball()->CopyFrom(worldBall);
     }
-    for(auto feedback : feedbackFilter.getData(true)){
+    for (auto feedback : feedbackFilter.getData(true)) {
         world.mutable_yellowfeedback()->Add(std::move(feedback));
     }
-    for(auto feedback : feedbackFilter.getData(false)){
+    for (auto feedback : feedbackFilter.getData(false)) {
         world.mutable_bluefeedback()->Add(std::move(feedback));
     }
     return world;
@@ -139,33 +139,27 @@ const std::unique_ptr<BallFilter> &WorldFilter::bestFilter(const std::vector<std
     return filters[bestIndex];
 }
 
-
-void WorldFilter::setRobotParameters(const TwoTeamRobotParameters& parameters) {
-//TODO: use robot parameters for collision detection etc.
-
+void WorldFilter::setRobotParameters(const TwoTeamRobotParameters &parameters) {
+    // TODO: use robot parameters for collision detection etc.
 }
 
 void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
-    //TODO: implement geometry here.
-
+    // TODO: implement geometry here.
 }
 
-void
-WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData>& robothubData) {
-    for(const auto& data : robothubData){
+void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData> &robothubData) {
+    for (const auto &data : robothubData) {
         feedbackFilter.process(data);
     }
-    std::sort(visionFrames.begin(),visionFrames.end(),[](const proto::SSL_DetectionFrame& a, const proto::SSL_DetectionFrame&b){
-        return a.t_capture() < b.t_capture();
-    });
-    for(const auto& frame : visionFrames){
+    std::sort(visionFrames.begin(), visionFrames.end(), [](const proto::SSL_DetectionFrame &a, const proto::SSL_DetectionFrame &b) { return a.t_capture() < b.t_capture(); });
+    for (const auto &frame : visionFrames) {
         addFrame(frame);
     }
-    if(!visionFrames.empty()){
+    if (!visionFrames.empty()) {
         double latestTime = visionFrames.back().t_capture();
-        if(latestTime>lastUpdateTime){
+        if (latestTime > lastUpdateTime) {
             lastUpdateTime = latestTime;
         }
     }
-    update(lastUpdateTime,false);
+    update(lastUpdateTime, false);
 }

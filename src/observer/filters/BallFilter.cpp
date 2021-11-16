@@ -3,6 +3,7 @@
 //
 
 #include "filters/BallFilter.h"
+
 #include "Scaling.h"
 
 BallFilter::BallFilter(const proto::SSL_DetectionBall &detectionBall, double detectTime, int cameraID) : CameraFilter(detectTime, cameraID), lastPredictTime{detectTime} {

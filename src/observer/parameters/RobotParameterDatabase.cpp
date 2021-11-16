@@ -6,13 +6,13 @@
 
 TwoTeamRobotParameters RobotParameterDatabase::update(const proto::SSL_Referee &refMessage) {
     TwoTeamRobotParameters twoTeamParameters;
-    if (refMessage.blue().name() != blueName){
+    if (refMessage.blue().name() != blueName) {
         twoTeamParameters.blueChanged = true;
         blueName = refMessage.blue().name();
         blueParameters = getTeamParameters(refMessage.blue().name());
     }
 
-    if (refMessage.yellow().name() != yellowName){
+    if (refMessage.yellow().name() != yellowName) {
         twoTeamParameters.yellowChanged = true;
         yellowName = refMessage.yellow().name();
         yellowParameters = getTeamParameters(refMessage.yellow().name());
@@ -31,12 +31,12 @@ TwoTeamRobotParameters RobotParameterDatabase::getParams() const {
 }
 
 RobotParameters RobotParameterDatabase::getTeamParameters(const std::string &teamName) {
-    //These teamnames should be the same as set in
-    //https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/src/components/settings/team/TeamName.vue
-    //TODO: add teams we play against here.
-    if(teamName == "RoboTeam Twente"){
+    // These teamnames should be the same as set in
+    // https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/src/components/settings/team/TeamName.vue
+    // TODO: add teams we play against here.
+    if (teamName == "RoboTeam Twente") {
         return RobotParameters::from_rtt2020();
-    }else{
+    } else {
         return RobotParameters::from_default();
     }
 }

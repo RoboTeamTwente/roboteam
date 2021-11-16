@@ -24,6 +24,7 @@
 
 #include <math.h>
 #include <string.h>
+
 #include <algorithm>
 
 // UnusedVar can suppress gcc warnings about unused variables.

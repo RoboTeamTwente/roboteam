@@ -5,7 +5,7 @@
 #include <networking/Publisher.h>
 #include <networking/Subscriber.h>
 #include <roboteam_proto/AICommand.pb.h>
-#include <roboteam_proto/RobotFeedback.pb.h>
+#include <roboteam_proto/RobotData.pb.h>
 #include <roboteam_proto/Setting.pb.h>
 #include <roboteam_proto/State.pb.h>
 #include <utilities.h>
@@ -14,9 +14,6 @@
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
-
-void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
-void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
 
 class RobotHub {
    public:
@@ -34,7 +31,7 @@ class RobotHub {
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
-    std::unique_ptr<proto::Publisher<proto::RobotFeedback>> feedbackPublisher;
+    std::unique_ptr<proto::Publisher<proto::RobotData>> feedbackPublisher;
 
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
@@ -46,7 +43,9 @@ class RobotHub {
 
     void processAIcommand(proto::AICommand &AIcmd);
     void processSettings(proto::Setting &setting);
-    // void processWorldState(proto::State &state);
+
+    void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
+    void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
 };
 
 }  // namespace rtt::robothub

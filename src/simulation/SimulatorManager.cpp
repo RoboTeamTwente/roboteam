@@ -114,8 +114,9 @@ RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDa
     feedback.isTeamYellow = isTeamYellow;
 
     for (const proto::simulation::RobotFeedback& robotFeedback : response.feedback()) {
-        // This boolean is optional, so first check if it has been set before checking if it is set to true
-        if (robotFeedback.has_dribbler_ball_contact() && robotFeedback.dribbler_ball_contact()) feedback.robotsThatHaveTheBall.push_back(robotFeedback.id());
+        // The dribbler_ball_contact boolean is optional, so both check if it has been set and check if it is set to true
+        bool robotHasBall = robotFeedback.has_dribbler_ball_contact() && robotFeedback.dribbler_ball_contact();
+        feedback.robotIdHasBall[robotFeedback.id()] = robotHasBall;
     }
 
     for (const proto::simulation::SimulatorError& simulatorError : response.errors()) {

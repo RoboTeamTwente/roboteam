@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace rtt::robothub::simulation {
 typedef struct SimulationError {
@@ -11,7 +12,7 @@ typedef struct SimulationError {
 
 typedef struct RobotControlFeedback {
     bool isTeamYellow;
-    std::vector<int> robotsThatHaveTheBall;
+    std::map<int, bool> robotIdHasBall;
     std::vector<SimulationError> simulationErrors;
 } RobotControlFeedback;
 

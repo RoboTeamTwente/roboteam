@@ -31,4 +31,7 @@ constexpr float DEFAULT_KICK_SPEED = 5.0f;
 constexpr float DEFAULT_CHIPPER_ANGLE = 45.0f;
 constexpr float MAX_DRIBBLER_SPEED = 1021.0f;
 
+// TODO: Beun constant, no idea which value this should be
+constexpr int BATTERY_LOW_LEVEL = 1;
+
 #endif  // ROBOTEAM_CONSTANTS_H_ROBOTHUB

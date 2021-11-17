@@ -89,6 +89,7 @@ void SimulatorManager::listenForRobotControlFeedback(bool listenForTeamYellow) {
                 this->callRobotControlFeedbackCallback(f);
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -101,6 +102,7 @@ void SimulatorManager::listenForConfigurationFeedback() {
                 this->callConfigurationFeedbackCallback(f);
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 

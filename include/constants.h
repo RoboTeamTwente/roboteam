@@ -23,7 +23,7 @@ constexpr float DEFAULT_KICK_SPEED = 5.0f;
 constexpr float DEFAULT_CHIPPER_ANGLE = 45.0f;
 constexpr float MAX_DRIBBLER_SPEED = 1021.0f;
 
-constexpr int LISTEN_THREAD_COOLDOWN_MS = 10; // Small cooldown in thread between checking for new messsages
+constexpr int LISTEN_THREAD_COOLDOWN_MS = 10;  // Small cooldown in thread between checking for new messsages
 
 // TODO: Beun constant, no idea which value this should be
 constexpr int BATTERY_LOW_LEVEL = 1;

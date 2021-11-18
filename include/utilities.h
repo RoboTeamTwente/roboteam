@@ -1,10 +1,10 @@
 #pragma once
 
+#include <roboteam_proto/World.pb.h>
+
 #include <bitset>
 #include <iostream>
 #include <string>
-
-#include <roboteam_proto/World.pb.h>
 
 namespace rtt::robothub::utils {
 
@@ -84,4 +84,4 @@ static int char2int(char input) {
     return nullptr;
 }
 
-}  // namespace utils::robothub::rtt
+}  // namespace rtt::robothub::utils

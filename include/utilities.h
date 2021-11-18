@@ -5,17 +5,17 @@
 #ifndef ROBOTEAM_ROBOTHUB_UTILITIES_H
 #define ROBOTEAM_ROBOTHUB_UTILITIES_H
 
+#include <roboteam_proto/World.pb.h>
+
 #include <bitset>
 #include <iostream>
 #include <string>
-
-#include "roboteam_proto/World.pb.h"
 
 namespace rtt {
 namespace robothub {
 namespace utils {
 
-enum class Mode { SERIAL, GRSIM, UNDEFINED, SSL_SIMULATOR };
+enum class Mode { SERIAL, SIMULATOR, UNDEFINED };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';
@@ -39,8 +39,8 @@ static int char2int(char input) {
 [[maybe_unused]] /* Why static?... inline instead */ static Mode stringToMode(const std::string& type) noexcept {
     if (type == "serial") {
         return Mode::SERIAL;
-    } else if (type == "grsim") {
-        return Mode::GRSIM;
+    } else if (type == "simulator") {
+        return Mode::SIMULATOR;
     } else {
         return Mode::UNDEFINED;
     }
@@ -50,8 +50,8 @@ static int char2int(char input) {
     switch (mode) {
         case Mode::SERIAL:
             return "Serial";
-        case Mode::GRSIM:
-            return "Grsim";
+        case Mode::SIMULATOR:
+            return "Simulator";
         case Mode::UNDEFINED:
             return "Undefined";
     }

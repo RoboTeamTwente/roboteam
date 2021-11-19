@@ -1,12 +1,8 @@
-//
 // Created by rolf on 03-03-21.
-//
-
-#include "basestation/Packing.h"
+#include <basestation/Packing.h>
+#include <utilities.h>
 
 #include <cmath>
-
-#include "utilities.h"
 
 RobotCommandPayload createEmbeddedCommand(const proto::RobotCommand& proto, const proto::World& world, bool isYellow) {
     float rho = sqrtf(proto.vel().x() * proto.vel().x() + proto.vel().y() * proto.vel().y());

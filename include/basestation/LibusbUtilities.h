@@ -1,15 +1,10 @@
-//
 // Created by emiel on 21-05-21.
-//
-
-#ifndef RTT_LIBUSBUTILITIES_H
-#define RTT_LIBUSBUTILITIES_H
+#pragma once
 
 #include <cstdio>
 #include <iostream>
 
-namespace rtt {
-namespace robothub {
+namespace rtt::robothub {
 
 std::string usbutils_bmAttributes_TransferTypeToString();
 std::string usbutils_bmAttributes_SyncTypeToString(uint8_t bmAttributes);
@@ -25,7 +20,4 @@ std::string usbutils_speedToString(int speed);
 
 void usbutils_enumerate();
 
-}  // namespace robothub
-}  // namespace rtt
-
-#endif  // RTT_LIBUSBUTILITIES_H
+}  // namespace rtt::robothub

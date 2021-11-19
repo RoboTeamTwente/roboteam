@@ -1,5 +1,6 @@
-// By: Floris Heinen
-#include "simulation/SimulatorManager.hpp"
+#include <constants.h>
+
+#include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub::simulation {
 
@@ -89,7 +90,7 @@ void SimulatorManager::listenForRobotControlFeedback(bool listenForTeamYellow) {
                 this->callRobotControlFeedbackCallback(f);
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(LISTEN_THREAD_COOLDOWN_MS));
     }
 }
 
@@ -102,7 +103,7 @@ void SimulatorManager::listenForConfigurationFeedback() {
                 this->callConfigurationFeedbackCallback(f);
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(LISTEN_THREAD_COOLDOWN_MS));
     }
 }
 

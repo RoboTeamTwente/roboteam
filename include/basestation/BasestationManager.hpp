@@ -1,12 +1,11 @@
 #pragma once
 
+#include <RobotCommand.h>
+#include <RobotFeedback.h>
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
 
 #include <thread>
-
-#include "RobotCommand.h"
-#include "RobotFeedback.h"
 
 namespace rtt::robothub::basestation {
 

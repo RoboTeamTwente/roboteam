@@ -33,7 +33,7 @@ double Grid::getOffSetY() const { return offSetY; }
 
 double Grid::getRegionWidth() const { return regionWidth; }
 
-double Grid::getRegionHeight() const { return regionHeight; }
+double Grid::getRegionLength() const { return regionLength; }
 
 int Grid::getNumSegmentsX() const { return numSegmentsX; }
 

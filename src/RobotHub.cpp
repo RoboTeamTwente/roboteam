@@ -132,7 +132,6 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     proto::RobotData feedbackToBePublished;
     feedbackToBePublished.set_isyellow(this->settings.isyellow());
 
-    // TODO: Perhaps wait for all robots to return feedback to publish combined feedback message for efficiency
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);
     feedbackOfRobot->set_xsenscalibrated(feedback.XsensCalibrated);
@@ -140,9 +139,11 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     feedbackOfRobot->set_batterylow(feedback.batteryLevel <= BATTERY_LOW_LEVEL);
     feedbackOfRobot->set_hasball(feedback.hasBall);
     feedbackOfRobot->set_ballpos(feedback.ballPos);
-    feedbackOfRobot->set_x_vel(feedback.rho * std::cos(feedback.theta));  // Convert polar velocity to cartesian velocity
+    // Convert polar velocity to cartesian velocity
+    feedbackOfRobot->set_x_vel(feedback.rho * std::cos(feedback.theta));
     feedbackOfRobot->set_yaw(feedback.angle);
-    feedbackOfRobot->set_y_vel(feedback.rho * std::sin(feedback.theta));  // Convert polar velocity to cartesian velocity
+    // Convert polar velocity to cartesian velocity
+    feedbackOfRobot->set_y_vel(feedback.rho * std::sin(feedback.theta));
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked > 0);
     feedbackOfRobot->set_signalstrength((float)feedback.rssi);
 

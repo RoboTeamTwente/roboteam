@@ -14,7 +14,7 @@ packets = {
         ["theta",              16, [-math.pi, math.pi], "Direction of movement (radians)"],
         ["angle",              16, [-math.pi, math.pi], "Absolute angle (rad) / angular velocity (rad/s)"],
         ["cameraAngle",        16, [-math.pi, math.pi], "Angle of the robot as seen by camera (rad)"],
-        ["dribbler",           3,  None, "Dribbler speed"],
+        ["dribbler",           3,  [0, 1], "Dribbler speed"],
         ["kickChipPower",      3,  [0, 1], "Power of the kick or chip"],
         ["angularControl",     1,  None, "NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle"],
         ["feedback",           1,  None, "Ignore the packet. Just send feedback"],

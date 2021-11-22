@@ -43,7 +43,7 @@ typedef struct _RobotCommand {
     float      theta               ; // float   [-3.142, 3.142)      Direction of movement (radians)
     float      angle               ; // float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
     float      cameraAngle         ; // float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
-    uint32_t   dribbler            ; // integer [0, 7]               Dribbler speed
+    float      dribbler            ; // float   [0.000, 1.000)       Dribbler speed
     float      kickChipPower       ; // float   [0.000, 1.000)       Power of the kick or chip
     bool       angularControl      ; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     bool       feedback            ; // integer [0, 1]               Ignore the packet. Just send feedback
@@ -102,8 +102,9 @@ static inline float RobotCommand_get_cameraAngle(RobotCommandPayload *rcp){
     return (_cameraAngle * 0.0000958752621833) + -3.1415926535897931;
 }
 
-static inline uint32_t RobotCommand_get_dribbler(RobotCommandPayload *rcp){
-    return ((rcp->payload[11] & 0b11100000) >> 5);
+static inline float RobotCommand_get_dribbler(RobotCommandPayload *rcp){
+    uint32_t _dribbler = ((rcp->payload[11] & 0b11100000) >> 5);
+    return (_dribbler * 0.1428571428571428) + 0.0000000000000000;
 }
 
 static inline float RobotCommand_get_kickChipPower(RobotCommandPayload *rcp){
@@ -176,8 +177,9 @@ static inline void RobotCommand_set_cameraAngle(RobotCommandPayload *rcp, float 
     rcp->payload[10] = _cameraAngle;
 }
 
-static inline void RobotCommand_set_dribbler(RobotCommandPayload *rcp, uint32_t dribbler){
-    rcp->payload[11] = ((dribbler << 5) & 0b11100000) | (rcp->payload[11] & 0b00011111);
+static inline void RobotCommand_set_dribbler(RobotCommandPayload *rcp, float dribbler){
+    uint32_t _dribbler = (uint32_t)(dribbler / 0.1428571428571428);
+    rcp->payload[11] = ((_dribbler << 5) & 0b11100000) | (rcp->payload[11] & 0b00011111);
 }
 
 static inline void RobotCommand_set_kickChipPower(RobotCommandPayload *rcp, float kickChipPower){

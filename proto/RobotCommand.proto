@@ -36,7 +36,7 @@ message RobotCommand {
     float theta = 10;         // float   [-3.142, 3.142)      Direction of movement (radians)
     float angle = 11;         // float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
     float cameraAngle = 12;   // float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
-    uint32 dribbler = 13;     // integer [0, 7]               Dribbler speed
+    float dribbler = 13;      // float   [0.000, 1.000)       Dribbler speed
     float kickChipPower = 14; // float   [0.000, 1.000)       Power of the kick or chip
     bool angularControl = 15; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     bool feedback = 16;       // integer [0, 1]               Ignore the packet. Just send feedback

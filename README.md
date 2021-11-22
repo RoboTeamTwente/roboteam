@@ -47,7 +47,7 @@ send_to_robot(robotCommand.encode())
 
 # Receive from robot
 robotFeedback = RobotFeedback()
-robotFeedback.decode(<list of bytes>)
+robotFeedback.decode(<list of bytes with>)
 print(robotFeedback.robotId)
 
 if robotFeedback.remVersion != BaseTypes.LOCAL_REM_VERSION:

@@ -33,12 +33,12 @@ class RobotCommand:
     doChip = 0                # integer [0, 1]               Do a chip if ballsensor
     doForce = 0               # integer [0, 1]               Do regardless of ballsensor
     useCameraAngle = 0        # integer [0, 1]               Use the info in 'cameraAngle'
-    rho = 0                   # float   [0.000, 8.000)       Magnitude of movement (m/s)
-    theta = 0                 # float   [-3.142, 3.142)      Direction of movement (radians)
-    angle = 0                 # float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
-    cameraAngle = 0           # float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
-    dribbler = 0              # float   [0.000, 1.000)       Dribbler speed
-    kickChipPower = 0         # float   [0.000, 1.000)       Power of the kick or chip
+    rho = 0                   # float   [0.000, 8.000]       Magnitude of movement (m/s)
+    theta = 0                 # float   [-3.142, 3.142]      Direction of movement (radians)
+    angle = 0                 # float   [-3.142, 3.142]      Absolute angle (rad) / angular velocity (rad/s)
+    cameraAngle = 0           # float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
+    dribbler = 0              # float   [0.000, 1.000]       Dribbler speed
+    kickChipPower = 0         # float   [0.000, 1.000]       Power of the kick or chip
     angularControl = 0        # integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     feedback = 0              # integer [0, 1]               Ignore the packet. Just send feedback
 

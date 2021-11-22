@@ -31,14 +31,14 @@ typedef struct _RobotStateInfo {
     uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
     uint32_t   id                  ; // integer [0, 15]              Id of the robot 
     uint32_t   messageId           ; // integer [0, 15]              Id of the message
-    float      xsensAcc1           ; // float   [-50000.000, 50000.000) xsensAcc1
-    float      xsensAcc2           ; // float   [-50000.000, 50000.000) xsensAcc2
-    float      xsensYaw            ; // float   [-50000.000, 50000.000) xsensYaw
-    float      rateOfTurn          ; // float   [-50000.000, 50000.000) rateOfTurn
-    float      wheelSpeed1         ; // float   [-50000.000, 50000.000) wheelSpeed1
-    float      wheelSpeed2         ; // float   [-50000.000, 50000.000) wheelSpeed2
-    float      wheelSpeed3         ; // float   [-50000.000, 50000.000) wheelSpeed3
-    float      wheelSpeed4         ; // float   [-50000.000, 50000.000) wheelSpeed4
+    float      xsensAcc1           ; // float   [-50000.000, 50000.000] xsensAcc1
+    float      xsensAcc2           ; // float   [-50000.000, 50000.000] xsensAcc2
+    float      xsensYaw            ; // float   [-50000.000, 50000.000] xsensYaw
+    float      rateOfTurn          ; // float   [-50000.000, 50000.000] rateOfTurn
+    float      wheelSpeed1         ; // float   [-50000.000, 50000.000] wheelSpeed1
+    float      wheelSpeed2         ; // float   [-50000.000, 50000.000] wheelSpeed2
+    float      wheelSpeed3         ; // float   [-50000.000, 50000.000] wheelSpeed3
+    float      wheelSpeed4         ; // float   [-50000.000, 50000.000] wheelSpeed4
 } RobotStateInfo;
 
 // ================================ GETTERS ================================

@@ -20,7 +20,7 @@ class RobotBuzzer:
     id = 0                    # integer [0, 15]              Id of the robot
     messageId = 0             # integer [0, 15]              Id of the message
     period = 0                # integer [0, 4095]            Sound that the buzzer makes.
-    duration = 0              # float   [0.000, 5.000)       Duration of the sound
+    duration = 0              # float   [0.000, 5.000]       Duration of the sound
 
 
 

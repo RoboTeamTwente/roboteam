@@ -33,10 +33,10 @@ message RobotFeedback {
     bool ballSensorWorking = 7; // integer [0, 1]               Indicates if the ballsensor is working
     bool hasBall = 8;         // integer [0, 1]               Indicates if the ball is somewhere in front of the ballsensor
     bool capacitorCharged = 9; // integer [0, 1]               Indicates if the capacitor for kicking and chipping is charged
-    float ballPos = 10;       // float   [-0.500, 0.500)      Indicates where in front of the ballsensor the ball is
-    float rho = 11;           // float   [0.000, 8.000)       The estimated magnitude of movement (m/s)
-    float theta = 12;         // float   [-3.142, 3.142)      The estimated direction of movement (rad)
-    float angle = 13;         // float   [-3.142, 3.142)      The estimated angle (rad)
+    float ballPos = 10;       // float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
+    float rho = 11;           // float   [0.000, 8.000]       The estimated magnitude of movement (m/s)
+    float theta = 12;         // float   [-3.142, 3.142]      The estimated direction of movement (rad)
+    float angle = 13;         // float   [-3.142, 3.142]      The estimated angle (rad)
     uint32 wheelLocked = 14;  // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32 wheelBraking = 15; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     uint32 rssi = 16;         // integer [0, 15]              Signal strength of the last packet received by the robot

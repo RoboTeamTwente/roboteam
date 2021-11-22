@@ -24,12 +24,12 @@ message RobotStateInfo {
     uint32 remVersion = 2;    // integer [0, 15]              Version of roboteam_embedded_messages
     uint32 id = 3;            // integer [0, 15]              Id of the robot 
     uint32 messageId = 4;     // integer [0, 15]              Id of the message
-    float xsensAcc1 = 5;      // float   [-50000.000, 50000.000) xsensAcc1
-    float xsensAcc2 = 6;      // float   [-50000.000, 50000.000) xsensAcc2
-    float xsensYaw = 7;       // float   [-50000.000, 50000.000) xsensYaw
-    float rateOfTurn = 8;     // float   [-50000.000, 50000.000) rateOfTurn
-    float wheelSpeed1 = 9;    // float   [-50000.000, 50000.000) wheelSpeed1
-    float wheelSpeed2 = 10;   // float   [-50000.000, 50000.000) wheelSpeed2
-    float wheelSpeed3 = 11;   // float   [-50000.000, 50000.000) wheelSpeed3
-    float wheelSpeed4 = 12;   // float   [-50000.000, 50000.000) wheelSpeed4
+    float xsensAcc1 = 5;      // float   [-50000.000, 50000.000] xsensAcc1
+    float xsensAcc2 = 6;      // float   [-50000.000, 50000.000] xsensAcc2
+    float xsensYaw = 7;       // float   [-50000.000, 50000.000] xsensYaw
+    float rateOfTurn = 8;     // float   [-50000.000, 50000.000] rateOfTurn
+    float wheelSpeed1 = 9;    // float   [-50000.000, 50000.000] wheelSpeed1
+    float wheelSpeed2 = 10;   // float   [-50000.000, 50000.000] wheelSpeed2
+    float wheelSpeed3 = 11;   // float   [-50000.000, 50000.000] wheelSpeed3
+    float wheelSpeed4 = 12;   // float   [-50000.000, 50000.000] wheelSpeed4
 }

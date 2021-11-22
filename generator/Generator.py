@@ -359,7 +359,7 @@ class C_Generator(Generator):
 			if _range is not None: _type = "float"
 			else: _type = getType(n_bits, _range)
 
-			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f})".ljust(28)
+			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f}]".ljust(28)
 			else:                range_string = f"integer [0, {2**n_bits-1}]".ljust(28)
 
 			string_struct += f"    {_type.ljust(10)}"		# Add type
@@ -448,7 +448,7 @@ class Python_Generator(Generator):
 			if _range is not None: _type = "float"
 			else: _type = getType(n_bits, _range)
 
-			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f})".ljust(28)
+			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f}]".ljust(28)
 			else:                range_string = f"integer [0, {2**n_bits-1}]".ljust(28)
 
 			string_class += f"    {variable} = 0 ".ljust(30) # Add variable name
@@ -523,7 +523,7 @@ class Proto_Generator(Generator):
 
 			instance_string += f"    {_type} {variable} = {iVariable + 1}; ".ljust(30) # Add variable name
 			
-			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f})".ljust(28)
+			if _type == "float": range_string = f"float   [{_range[0]:.3f}, {_range[1]:.3f}]".ljust(28)
 			else:                range_string = f"integer [0, {2**n_bits-1}]".ljust(28)
 
 			instance_string += f"// {range_string} {desc}\n"                    # Add description

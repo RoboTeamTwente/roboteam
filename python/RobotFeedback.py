@@ -34,10 +34,10 @@ class RobotFeedback:
     ballSensorWorking = 0     # integer [0, 1]               Indicates if the ballsensor is working
     hasBall = 0               # integer [0, 1]               Indicates if the ball is somewhere in front of the ballsensor
     capacitorCharged = 0      # integer [0, 1]               Indicates if the capacitor for kicking and chipping is charged
-    ballPos = 0               # float   [-0.500, 0.500)      Indicates where in front of the ballsensor the ball is
-    rho = 0                   # float   [0.000, 8.000)       The estimated magnitude of movement (m/s)
-    theta = 0                 # float   [-3.142, 3.142)      The estimated direction of movement (rad)
-    angle = 0                 # float   [-3.142, 3.142)      The estimated angle (rad)
+    ballPos = 0               # float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
+    rho = 0                   # float   [0.000, 8.000]       The estimated magnitude of movement (m/s)
+    theta = 0                 # float   [-3.142, 3.142]      The estimated direction of movement (rad)
+    angle = 0                 # float   [-3.142, 3.142]      The estimated angle (rad)
     wheelLocked = 0           # integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     wheelBraking = 0          # integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     rssi = 0                  # integer [0, 15]              Signal strength of the last packet received by the robot

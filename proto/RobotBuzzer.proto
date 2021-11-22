@@ -19,5 +19,5 @@ message RobotBuzzer {
     uint32 id = 3;            // integer [0, 15]              Id of the robot
     uint32 messageId = 4;     // integer [0, 15]              Id of the message
     uint32 period = 5;        // integer [0, 4095]            Sound that the buzzer makes.
-    float duration = 6;       // float   [0.000, 5.000)       Duration of the sound
+    float duration = 6;       // float   [0.000, 5.000]       Duration of the sound
 }

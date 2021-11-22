@@ -39,12 +39,12 @@ typedef struct _RobotCommand {
     bool       doChip              ; // integer [0, 1]               Do a chip if ballsensor
     bool       doForce             ; // integer [0, 1]               Do regardless of ballsensor
     bool       useCameraAngle      ; // integer [0, 1]               Use the info in 'cameraAngle'
-    float      rho                 ; // float   [0.000, 8.000)       Magnitude of movement (m/s)
-    float      theta               ; // float   [-3.142, 3.142)      Direction of movement (radians)
-    float      angle               ; // float   [-3.142, 3.142)      Absolute angle (rad) / angular velocity (rad/s)
-    float      cameraAngle         ; // float   [-3.142, 3.142)      Angle of the robot as seen by camera (rad)
-    float      dribbler            ; // float   [0.000, 1.000)       Dribbler speed
-    float      kickChipPower       ; // float   [0.000, 1.000)       Power of the kick or chip
+    float      rho                 ; // float   [0.000, 8.000]       Magnitude of movement (m/s)
+    float      theta               ; // float   [-3.142, 3.142]      Direction of movement (radians)
+    float      angle               ; // float   [-3.142, 3.142]      Absolute angle (rad) / angular velocity (rad/s)
+    float      cameraAngle         ; // float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
+    float      dribbler            ; // float   [0.000, 1.000]       Dribbler speed
+    float      kickChipPower       ; // float   [0.000, 1.000]       Power of the kick or chip
     bool       angularControl      ; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     bool       feedback            ; // integer [0, 1]               Ignore the packet. Just send feedback
 } RobotCommand;

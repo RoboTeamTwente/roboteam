@@ -40,10 +40,10 @@ typedef struct _RobotFeedback {
     bool       ballSensorWorking   ; // integer [0, 1]               Indicates if the ballsensor is working
     bool       hasBall             ; // integer [0, 1]               Indicates if the ball is somewhere in front of the ballsensor
     bool       capacitorCharged    ; // integer [0, 1]               Indicates if the capacitor for kicking and chipping is charged
-    float      ballPos             ; // float   [-0.500, 0.500)      Indicates where in front of the ballsensor the ball is
-    float      rho                 ; // float   [0.000, 8.000)       The estimated magnitude of movement (m/s)
-    float      theta               ; // float   [-3.142, 3.142)      The estimated direction of movement (rad)
-    float      angle               ; // float   [-3.142, 3.142)      The estimated angle (rad)
+    float      ballPos             ; // float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
+    float      rho                 ; // float   [0.000, 8.000]       The estimated magnitude of movement (m/s)
+    float      theta               ; // float   [-3.142, 3.142]      The estimated direction of movement (rad)
+    float      angle               ; // float   [-3.142, 3.142]      The estimated angle (rad)
     uint32_t   wheelLocked         ; // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32_t   wheelBraking        ; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     uint32_t   rssi                ; // integer [0, 15]              Signal strength of the last packet received by the robot

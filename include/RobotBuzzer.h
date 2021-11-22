@@ -26,7 +26,7 @@ typedef struct _RobotBuzzer {
     uint32_t   id                  ; // integer [0, 15]              Id of the robot
     uint32_t   messageId           ; // integer [0, 15]              Id of the message
     uint32_t   period              ; // integer [0, 4095]            Sound that the buzzer makes.
-    float      duration            ; // float   [0.000, 5.000)       Duration of the sound
+    float      duration            ; // float   [0.000, 5.000]       Duration of the sound
 } RobotBuzzer;
 
 // ================================ GETTERS ================================

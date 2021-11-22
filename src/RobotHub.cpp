@@ -1,6 +1,7 @@
 #include <RobotHub.h>
 #include <basestation/Packing.h>
 
+#include <cmath>
 #include <iostream>
 #include <sstream>
 
@@ -139,9 +140,9 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     feedbackOfRobot->set_batterylow(feedback.batteryLevel <= BATTERY_LOW_LEVEL);
     feedbackOfRobot->set_hasball(feedback.hasBall);
     feedbackOfRobot->set_ballpos(feedback.ballPos);
-    // feedbackOfRobot->set_x_vel(feedback.)
+    feedbackOfRobot->set_x_vel(feedback.rho * std::cos(feedback.theta));  // Convert polar velocity to cartesian velocity
     feedbackOfRobot->set_yaw(feedback.angle);
-    // feedbackOfRobot->set_y_vel(feedback.)
+    feedbackOfRobot->set_y_vel(feedback.rho * std::sin(feedback.theta));  // Convert polar velocity to cartesian velocity
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked > 0);
     feedbackOfRobot->set_signalstrength((float)feedback.rssi);
 

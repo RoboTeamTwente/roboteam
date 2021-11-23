@@ -1,22 +1,26 @@
-#include "networking/Channel.h"
+#include <utils/Channel.hpp>
 
-proto::Channel::Channel(std::string name, std::string ip, std::string port) : name(std::move(name)), ip(std::move(ip)), port(std::move(port)) {}
+namespace rtt::net::utils {
 
-proto::Channel::Channel(const proto::Channel &other) : name(other.name), ip(other.ip), port(other.port) {}
+Channel::Channel(std::string name, std::string ip, std::string port) : name(std::move(name)), ip(std::move(ip)), port(std::move(port)) {}
 
-bool proto::Channel::operator==(const proto::Channel &other) { return name == other.name && port == other.port; }
+Channel::Channel(const Channel &other) : name(other.name), ip(other.ip), port(other.port) {}
 
-bool proto::Channel::operator!=(const proto::Channel &other) { return !(*this == other); }
+bool Channel::operator==(const Channel &other) { return name == other.name && port == other.port; }
 
-std::string proto::Channel::getSubscribeAddress() { return getAddress(ip, port); }
+bool Channel::operator!=(const Channel &other) { return !(*this == other); }
 
-std::string proto::Channel::getPublishAddress() { return getAddress("*", port); }
+std::string Channel::getSubscribeAddress() { return getAddress(ip, port); }
 
-std::string proto::Channel::getAddress(const std::string &_ip, const std::string &_port) { return "tcp://" + _ip + ":" + _port; }
+std::string Channel::getPublishAddress() { return getAddress("*", port); }
 
-std::string proto::Channel::toInfoString(bool isPublisher) {
+std::string Channel::getAddress(const std::string &_ip, const std::string &_port) { return "tcp://" + _ip + ":" + _port; }
+
+std::string Channel::toInfoString(bool isPublisher) {
     if (isPublisher) {
         return "\"" + name + "\"" + " at address: " + getPublishAddress();
     }
     return "\"" + name + "\"" + " at address: " + getSubscribeAddress();
 }
+
+} // namespace rtt::net::utils

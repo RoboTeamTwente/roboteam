@@ -1,12 +1,10 @@
-#ifndef RTT_CHANNELS_H
-#define RTT_CHANNELS_H
-
+#pragma once
 #include <map>
 #include <string>
 
-#include "Channel.h"
+#include <utils/Channel.hpp>
 
-namespace proto {
+namespace rtt::net::utils {
 
 enum ChannelType {
     UNDEFINED_CHANNEL,
@@ -22,5 +20,5 @@ enum ChannelType {
 };
 
 extern const std::map<ChannelType, Channel> CHANNELS;
-}  // namespace proto
-#endif  // RTT_CHANNELS_H
+
+}  // namespace rtt::net::utils

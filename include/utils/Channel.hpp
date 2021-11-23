@@ -1,9 +1,7 @@
-#ifndef RTT_CHANNEL_H
-#define RTT_CHANNEL_H
-
+#pragma once
 #include <string>
 
-namespace proto {
+namespace rtt::net::utils {
 
 struct Channel {
     std::string name;
@@ -25,6 +23,4 @@ struct Channel {
     std::string toInfoString(bool isPublisher);
 };
 
-}  // namespace proto
-
-#endif  // RTT_CHANNEL_H
+}  // namespace rtt::net::utils

@@ -1,7 +1,4 @@
-
-#ifndef RTT_SUBSCRIBER_H
-#define RTT_SUBSCRIBER_H
-
+#pragma once
 #include <google/protobuf/message.h>
 
 #include <functional>
@@ -10,10 +7,10 @@
 #include <zmqpp/reactor.hpp>
 #include <zmqpp/zmqpp.hpp>
 
-#include "Channel.h"
-#include "Channels.h"
+#include <utils/Channel.hpp>
+#include <utils/Channels.hpp>
 
-namespace proto {
+namespace rtt::net::utils {
 
 /*
  * Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method
@@ -153,6 +150,4 @@ class Subscriber {
         }
     }
 };
-}  // namespace proto
-
-#endif  // RTT_SUBSCRIBER_H
+}  // namespace rtt::net::utils

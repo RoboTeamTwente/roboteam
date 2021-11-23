@@ -1,7 +1,7 @@
 
-#include "networking/Channels.h"
+#include <utils/Channels.hpp>
 
-namespace proto {
+namespace rtt::net::utils {
 
 const std::map<ChannelType, Channel> CHANNELS = {{GEOMETRY_CHANNEL, {"geometry", "127.0.0.1", "5556"}},
                                                  {REFEREE_CHANNEL, {"referee", "127.0.0.1", "5557"}},
@@ -13,4 +13,4 @@ const std::map<ChannelType, Channel> CHANNELS = {{GEOMETRY_CHANNEL, {"geometry",
                                                  {SETTINGS_PRIMARY_CHANNEL, {"settings_primary", "127.0.0.1", "5563"}},
                                                  {SETTINGS_SECONDARY_CHANNEL, {"settings_secondary", "127.0.0.1", "5564"}}};
 
-}  // namespace proto
+}  // namespace rtt::net::utils

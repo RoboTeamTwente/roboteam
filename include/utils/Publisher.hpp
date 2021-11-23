@@ -1,15 +1,12 @@
-#ifndef RTT_PUBLISHER_H
-#define RTT_PUBLISHER_H
-
+#pragma once
 #include <google/protobuf/message.h>
 
 #include <string>
 #include <zmqpp/zmqpp.hpp>
 
-#include "Channel.h"
-#include "Channels.h"
+#include <utils/Channels.hpp>
 
-namespace proto {
+namespace rtt::net::utils {
 
 /*
  * Defines a publisher that publishes to a TCP channel
@@ -65,6 +62,4 @@ class Publisher {
         return socket->send(transmission, true);
     }
 };
-}  // namespace proto
-
-#endif  // RTT_PUBLISHER_H
+}  // namespace rtt::net::utils

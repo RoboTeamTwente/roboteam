@@ -1,89 +1,47 @@
 #pragma once
-#include <google/protobuf/message.h>
-
-#include <functional>
-#include <mutex>
-#include <string>
-#include <zmqpp/reactor.hpp>
-#include <zmqpp/zmqpp.hpp>
 
 #include <utils/Channel.hpp>
 #include <utils/Channels.hpp>
 
+#include <zmqpp/reactor.hpp>
+#include <zmqpp/zmqpp.hpp>
+#include <functional>
+#include <string>
+#include <thread>
+#include <memory>
+
 namespace rtt::net::utils {
 
-/*
- * Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method
- * The type of the messages passed has to be specified beforehand in the template.
- *
- * This class is designed according to RAII: creating the object immediately subscribes to the channel,
- * and deleting the object immediately unsubscribes to the channel and cleans up memory.
- *
- * @author Lukas Bos
- * @date 26-10-2019
- */
-
-template <class T_Response>
+/* Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method */
 class Subscriber {
-   private:
-    Channel channel;
-    zmqpp::context context;
-    zmqpp::socket* socket;
-    zmqpp::reactor* reactor;
-    std::thread t1;
-    bool running;
-
-   public:
+public:
     // Apply rule of 5: in all cases we cannot copy/move this object
     Subscriber(const Subscriber& copy) = delete;
     Subscriber& operator=(const Subscriber& other) = delete;
     Subscriber(const Subscriber&& copy) = delete;
     Subscriber& operator=(Subscriber&& data) = delete;
 
-   private:
-    /*
-     * Initialize the subscriber.
-     * Bind to the socket on the given channel
-     *
-     * @param channel: the channel to subscribe to
-     */
-    void init(const ChannelType& channelType, std::string custom_ip = "");
-
-   public:
-    /*
-     * Create a subscriber with a callback method that gets called when new data is available
-     * the new data will be available in the function.
-     * this constructor can be used for free function calls
-     *
-     * @param channel: the channel to subscribe to
-     * @param resp: A method pointer to a callback taking a reference to the specified response type
-     * @param instance: the context of the method, i.e. a pointer to the class the method belongs to.
-     */
-    template <class T_Instance>
-    Subscriber(const ChannelType& channelType, void (T_Instance::*subscriberCallbackMethod)(T_Response& resp), T_Instance* instance, std::string custom_ip = "");
-
-    /*
-     * Create a subscriber with a callback function that gets called when new data is available
-     * the new data will be available in the function.
-     * this constructor can be used for free function calls
-     *
-     * @param channel: the channel to subscribe to
-     * @param resp: A function pointer to a callback taking a reference to the specified response type
-     */
-    Subscriber(const ChannelType& channelType, void (*func)(T_Response& resp), std::string custom_ip = "");
-
-    /*
-     * Deletes the subscriber.
-     * First we make sure the polling thread stops and join the thread.
-     * Then we safely close the socket and delete the pointers.
-     */
+    /* Create a subscriber with a callback method that gets called when new data is available
+     * @param channel: The channel to subscribe to 
+     * @param messageCallback: The function that gets the message forwarded to */
+    explicit Subscriber(const ChannelType& channelType, const std::function<void(const std::string& message)> messageCallback);
     ~Subscriber();
 
-    /*
-     * Poll for new messages with a timeout of 167 ms.
-     * This practically means we evaluate the 'running' variable every 167ms
-     * 167 ms is approximately equivalent to the time it takes to receive 10 packets on 60hz
-     */
+private:
+    Channel channel;
+    zmqpp::context context;
+    std::unique_ptr<zmqpp::socket> socket;
+    std::unique_ptr<zmqpp::reactor> reactor;
+    zmqpp::poller* poller;
+
+    bool isPolling;
+    std::thread pollingThread;
+
+    const std::function<void(const std::string&)> messageCallback;
+
+    // Gets called everytime a message is received so it can be forwared to the message callback
+    void onMessageReceived();
+
     void poll();
 };
 }  // namespace rtt::net::utils

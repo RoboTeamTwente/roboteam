@@ -14,7 +14,6 @@
 #include "SX1280_Constants.h"
 #include "SX1280.h"
 #include "main.h"
-#include "packing.h"
 
 #define MAX_BUF_LENGTH 128
 #define AUTO_TX_TIME 120 // (us)

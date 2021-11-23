@@ -50,7 +50,6 @@ RobotFeedback robotFeedback = {0};
 RobotStateInfo robotStateInfo = {0};
 RobotStateInfoPayload robotStateInfoPayload = {0};
 
-ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
 RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -79,26 +78,10 @@ uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
-// Set the references from the received data and execute the desired actions.
-void executeCommands(ReceivedData* receivedData) {
-	stateControl_SetRef(receivedData->stateRef);
-	dribbler_SetSpeed(receivedData->dribblerRef);
-	shoot_SetPower(receivedData->shootPower);
 
-	if (receivedData->do_kick) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced){
-			shoot_Shoot(shoot_Kick);
-		}
-	}
-	else if (receivedData->do_chip) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
-			shoot_Shoot(shoot_Chip);
-		}
-	}
-}
 
-/* Upcoming new code, this will at some point replace everything with "receivedData"
-void _executeCommands(RobotCommand* robotCommand){
+
+void executeCommands(RobotCommand* robotCommand){
 	float stateReference[3];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
@@ -118,22 +101,10 @@ void _executeCommands(RobotCommand* robotCommand){
 		}
 	}
 }
-*/
 
-void clearReceivedData(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->kick_chip_forced = false;
-	receivedData->dribblerRef = 0;
-	receivedData->shootPower = 0;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-}
 
-/*
+
+
 void resetRobotCommand(RobotCommand* robotCommand){
 	robotCommand->doKick = false;
 	robotCommand->doChip = false;
@@ -148,7 +119,7 @@ void resetRobotCommand(RobotCommand* robotCommand){
 	robotCommand->angularControl = false;
 	robotCommand->feedback = false;
 }
-*/
+
 
 void printRobotStateData() {
 	Putty_printf("\n\r");
@@ -291,7 +262,7 @@ void loop(void){
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
-		packetToRoboData(&myRobotCommandPayload, &receivedData);
+		decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
 
 		toggle_Pin(LED6_pin);
 	}
@@ -314,7 +285,7 @@ void loop(void){
     if (halt) {
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
-        clearReceivedData(&receivedData);
+        resetRobotCommand(&activeRobotCommand);
 		REM_last_packet_had_correct_version = true;
     }
 
@@ -329,7 +300,7 @@ void loop(void){
     
     // Go through all commands
     if (!halt) {
-        executeCommands(&receivedData);
+        executeCommands(&activeRobotCommand);
     }
 
     // Create RobotFeedback
@@ -433,7 +404,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
 				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
 				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
-				packetToRoboData(&robotCommandPayload, &receivedData);
+				decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
 
 				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
 				continue;
@@ -522,8 +493,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		// State estimation
-		stateInfo.visionAvailable = receivedData.visionAvailable;
-		stateInfo.visionYaw = receivedData.visionYaw; // TODO check if this is scaled properly with the new REM messages
+		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
+		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
 		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
 		}

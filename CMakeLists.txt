@@ -12,8 +12,15 @@ add_subdirectory(proto)
 
 add_library(networking_utils STATIC
     "src/utils/Channel.cpp"
-    "src/utils/Channels.cpp"
-    "src/utils/Publisher.cpp"
-    "src/utils/Subscriber.cpp")
+    "src/utils/Channels.cpp")
 target_include_directories(networking_utils PUBLIC "include")
-target_link_libraries(networking_utils PUBLIC stx zmqpp)
+target_link_libraries(networking_utils PUBLIC zmqpp)
+
+add_library(networking STATIC
+    "src/RobotCommandsNetworker.cpp"
+)
+
+target_include_directories(networking PUBLIC "include")
+target_link_libraries(networking PUBLIC networking_utils networking_proto)
+
+add_subdirectory(tests)

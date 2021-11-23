@@ -1,9 +1,4 @@
-//
-// Created by mrlukasbos on 8-3-19.
-//
-
-#ifndef ROBOTEAM_ROBOTHUB_UTILITIES_H
-#define ROBOTEAM_ROBOTHUB_UTILITIES_H
+#pragma once
 
 #include <roboteam_proto/World.pb.h>
 
@@ -11,9 +6,7 @@
 #include <iostream>
 #include <string>
 
-namespace rtt {
-namespace robothub {
-namespace utils {
+namespace rtt::robothub::utils {
 
 enum class Mode { SERIAL, SIMULATOR, UNDEFINED };
 
@@ -91,8 +84,4 @@ static int char2int(char input) {
     return nullptr;
 }
 
-}  // namespace utils
-}  // namespace robothub
-}  // namespace rtt
-
-#endif  // ROBOTEAM_ROBOTHUB_UTILITIES_H
+}  // namespace rtt::robothub::utils

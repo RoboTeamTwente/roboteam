@@ -1,8 +1,7 @@
-#include "RobotHub.h"
-
+#include <RobotHub.h>
 #include <basestation/Packing.h>
-#include <roboteam_proto/State.pb.h>
 
+#include <cmath>
 #include <iostream>
 #include <sstream>
 
@@ -16,26 +15,23 @@ RobotHub::RobotHub() {
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
-    this->simulatorManager->setRobotControlFeedbackCallback(handleRobotFeedbackFromSimulator);
+    auto simulationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromSimulator, this, std::placeholders::_1);
+    this->simulatorManager->setRobotControlFeedbackCallback(simulationFeedbackCallback);
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    this->basestationManager->setFeedbackCallback(handleRobotFeedbackFromBasestation);
+    auto basestationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromBasestation, this, std::placeholders::_1);
+    this->basestationManager->setFeedbackCallback(basestationFeedbackCallback);
 
     this->subscribe();
 }
 
 void RobotHub::subscribe() {
     // TODO: choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
-
     robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this);
-
-    //    worldStateSubscriber = std::make_unique<proto::Subscriber<proto::State>>(
-    //            proto::WORLD_CHANNEL, &RobotHub::processWorldState, this
-    //    );
 
     settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this);
 
-    feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotFeedback>>(proto::FEEDBACK_PRIMARY_CHANNEL);
+    feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
 void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
@@ -119,13 +115,39 @@ void RobotHub::printStatistics() {
     std::cout << ss.str();
 }
 
-void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
-    // std::cout << "Received robot feedback from the simulator!" << std::endl;
-    // TODO: Forward feedback to AI or something idk
+void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
+    proto::RobotData feedbackToBePublished;
+    feedbackToBePublished.set_isyellow(feedback.isTeamYellow);
+
+    for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
+        proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
+        feedbackOfRobot->set_id(robotId);
+        feedbackOfRobot->set_hasball(hasBall);
+    }
+
+    this->feedbackPublisher->send(feedbackToBePublished);
 }
-void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
-    // std::cout << "Received robot feedback from the basestation!" << std::endl;
-    // TODO: Forward feedback to AI or something idk
+
+void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
+    proto::RobotData feedbackToBePublished;
+    feedbackToBePublished.set_isyellow(this->settings.isyellow());
+
+    proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
+    feedbackOfRobot->set_id(feedback.id);
+    feedbackOfRobot->set_xsenscalibrated(feedback.XsensCalibrated);
+    feedbackOfRobot->set_ballsensorisworking(feedback.ballSensorWorking);
+    feedbackOfRobot->set_batterylow(feedback.batteryLevel <= BATTERY_LOW_LEVEL);
+    feedbackOfRobot->set_hasball(feedback.hasBall);
+    feedbackOfRobot->set_ballpos(feedback.ballPos);
+    // Convert polar velocity to cartesian velocity
+    feedbackOfRobot->set_x_vel(feedback.rho * std::cos(feedback.theta));
+    feedbackOfRobot->set_yaw(feedback.angle);
+    // Convert polar velocity to cartesian velocity
+    feedbackOfRobot->set_y_vel(feedback.rho * std::sin(feedback.theta));
+    feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked > 0);
+    feedbackOfRobot->set_signalstrength((float)feedback.rssi);
+
+    this->feedbackPublisher->send(feedbackToBePublished);
 }
 
 }  // namespace rtt::robothub

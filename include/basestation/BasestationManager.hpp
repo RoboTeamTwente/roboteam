@@ -1,12 +1,11 @@
 #pragma once
 
+#include <RobotCommand.h>
+#include <RobotFeedback.h>
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
 
 #include <thread>
-
-#include "RobotCommand.h"
-#include "RobotFeedback.h"
 
 namespace rtt::robothub::basestation {
 
@@ -20,7 +19,7 @@ class BasestationManager {
 
     bool sendSerialCommand(RobotCommandPayload &payload) const;
 
-    void setFeedbackCallback(const std::function<void(RobotFeedback &)> &callback);
+    void setFeedbackCallback(const std::function<void(const RobotFeedback &)> &callback);
 
     void handleBasestationAttach(libusb_device *device);
     void handleBasestationDetach(libusb_device *device);
@@ -31,7 +30,7 @@ class BasestationManager {
     bool shouldStopListening;
     std::thread listenThread;
 
-    std::function<void(RobotFeedback &)> feedbackCallbackFunction;
+    std::function<void(const RobotFeedback &)> feedbackCallbackFunction;
 
     libusb_context *ctx;
     libusb_device *basestation_device = nullptr;
@@ -43,7 +42,7 @@ class BasestationManager {
 
     void runManager() const;
     void listenToBasestation() const;
-    void callFeedbackCallback(RobotFeedback &feedback);
+    void callFeedbackCallback(const RobotFeedback &feedback) const;
 };
 
 class FailedToSetupUsbEventListenerException : public std::exception {

@@ -1,9 +1,5 @@
-//
 // Created by emiel on 21-05-21.
-//
-
-#include "basestation/LibusbUtilities.h"
-
+#include <basestation/LibusbUtilities.h>
 #include <libusb-1.0/libusb.h>
 
 #include <bitset>

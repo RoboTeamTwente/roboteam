@@ -1,14 +1,6 @@
-//
-// Created by mrlukasbos on 12-3-19.
-//
-
-#ifndef ROBOTEAM_CONSTANTS_H_ROBOTHUB
-#define ROBOTEAM_CONSTANTS_H_ROBOTHUB
+#pragma once
 
 // define the amount of robots and the range of their IDs
-/**
- * C++11 / 14 introduce constexpr, a replacement for macros
- */
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 constexpr int BASESTATION_VENDOR_ID = 0x0483;
 constexpr int BASESTATION_PRODUCT_ID = 0x5740;
@@ -31,4 +23,7 @@ constexpr float DEFAULT_KICK_SPEED = 5.0f;
 constexpr float DEFAULT_CHIPPER_ANGLE = 45.0f;
 constexpr float MAX_DRIBBLER_SPEED = 1021.0f;
 
-#endif  // ROBOTEAM_CONSTANTS_H_ROBOTHUB
+constexpr int LISTEN_THREAD_COOLDOWN_MS = 10;  // Small cooldown in thread between checking for new messsages
+
+// TODO: Beun constant, no idea which value this should be
+constexpr int BATTERY_LOW_LEVEL = 1;

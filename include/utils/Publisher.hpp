@@ -37,29 +37,17 @@ class Publisher {
      *
      * @param channel: The channel to publish to.
      */
-    explicit Publisher(const ChannelType &channelType) : channel(CHANNELS.at(channelType)) {
-        std::cout << "Starting roboteam_proto publisher for channel " << channel.toInfoString(true) << std::endl;
-        socket = new zmqpp::socket(context, zmqpp::socket_type::pub);
-        socket->bind(channel.getPublishAddress());
-    }
+    explicit Publisher(const ChannelType &channelType);
 
     /*
      * closes the socket before deleting the publisher
      */
-    ~Publisher() {
-        std::cout << "Stopping roboteam_proto publisher for channel " << channel.toInfoString(true) << std::endl;
-        socket->close();
-        delete socket;
-    }
+    ~Publisher();
 
     /*
      * Send a message of the specified type
      * @param message: message to send. Must consist of base google::protobuf::Message to compile!
      */
-    bool send(const T &message) {
-        zmqpp::message transmission;
-        transmission << message.SerializeAsString();
-        return socket->send(transmission, true);
-    }
+    bool send(const T &message);
 };
 }  // namespace rtt::net::utils

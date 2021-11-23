@@ -47,21 +47,7 @@ class Subscriber {
      *
      * @param channel: the channel to subscribe to
      */
-    void init(const ChannelType& channelType, std::string custom_ip = "") {
-        this->channel = CHANNELS.at(channelType);
-        this->reactor = new zmqpp::reactor();
-        this->socket = new zmqpp::socket(this->context, zmqpp::socket_type::sub);
-        this->socket->subscribe("");
-
-        auto address = channel.getSubscribeAddress();
-        if (!custom_ip.empty()) {
-            std::cout << "Starting roboteam_proto subscriber with custom IP: " << custom_ip << std::endl;
-            address = channel.getAddress(custom_ip, channel.port);
-        }
-        std::cout << "Starting roboteam_proto subscriber for channel " << channel.toInfoString(false) << std::endl;
-        this->socket->connect(address);
-        running = true;
-    }
+    void init(const ChannelType& channelType, std::string custom_ip = "");
 
    public:
     /*
@@ -74,26 +60,7 @@ class Subscriber {
      * @param instance: the context of the method, i.e. a pointer to the class the method belongs to.
      */
     template <class T_Instance>
-    Subscriber(const ChannelType& channelType, void (T_Instance::*subscriberCallbackMethod)(T_Response& resp), T_Instance* instance, std::string custom_ip = "") {
-        init(channelType, custom_ip);
-
-        zmqpp::poller* poller = &reactor->get_poller();
-        auto callback = [=, this]() {
-            if (poller->has_input(*socket)) {
-                zmqpp::message response;
-                T_Response output;
-
-                socket->receive(response);
-                if (output.ParseFromString(response.get(0))) {
-                    (instance->*subscriberCallbackMethod)(output);  // call the subscriberCallback function
-                } else {
-                    std::cerr << "Received faulty protobuf packet in channel " << channel.toInfoString(false) << std::endl;
-                }
-            }
-        };
-        reactor->add(*socket, callback);
-        t1 = std::thread(&Subscriber::poll, this);
-    }
+    Subscriber(const ChannelType& channelType, void (T_Instance::*subscriberCallbackMethod)(T_Response& resp), T_Instance* instance, std::string custom_ip = "");
 
     /*
      * Create a subscriber with a callback function that gets called when new data is available
@@ -103,51 +70,20 @@ class Subscriber {
      * @param channel: the channel to subscribe to
      * @param resp: A function pointer to a callback taking a reference to the specified response type
      */
-    Subscriber(const ChannelType& channelType, void (*func)(T_Response& resp), std::string custom_ip = "") {
-        init(channelType, custom_ip);
-
-        zmqpp::poller* poller = &reactor->get_poller();
-        auto callback = [=, this]() {
-            if (poller->has_input(*socket)) {
-                zmqpp::message response;
-                T_Response output;
-
-                socket->receive(response);
-                if (output.ParseFromString(response.get(0))) {
-                    func(output);  // call the subscriberCallback function
-                } else {
-                    std::cerr << "Received faulty protobuf packet in channel " << channel.toInfoString(false) << std::endl;
-                }
-            }
-        };
-        reactor->add(*socket, callback);
-        t1 = std::thread(&Subscriber::poll, this);
-    }
+    Subscriber(const ChannelType& channelType, void (*func)(T_Response& resp), std::string custom_ip = "");
 
     /*
      * Deletes the subscriber.
      * First we make sure the polling thread stops and join the thread.
      * Then we safely close the socket and delete the pointers.
      */
-    ~Subscriber() {
-        std::cout << "Stopping roboteam_proto subscriber for channel " << channel.toInfoString(false) << std::endl;
-        running = false;
-        t1.join();
-        reactor->remove(*socket);
-        socket->close();
-        delete socket;
-        delete reactor;
-    }
+    ~Subscriber();
 
     /*
      * Poll for new messages with a timeout of 167 ms.
      * This practically means we evaluate the 'running' variable every 167ms
      * 167 ms is approximately equivalent to the time it takes to receive 10 packets on 60hz
      */
-    void poll() {
-        while (running) {
-            reactor->poll(167);
-        }
-    }
+    void poll();
 };
 }  // namespace rtt::net::utils

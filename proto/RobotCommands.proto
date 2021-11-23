@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotCommand {
+    uint32 id = 1;                  // id of robot [0,15]
+
+    float x_velocity = 2;            // (m/s) Velocity relative to the field, from goal to goal
+    float y_velocity = 3;            // (m/s) Velocity relative to the field, from sideline to sideline
+    bool rotation_as_velocity = 4;    // true if rotation is a angularVelocity, false if it is an absolute angle relative to the field
+    float rotation = 5;             // (rad/s) or (rad) depending on rotationAsVelocity
+
+    float kick_speed = 6;           // The wanted speed at which the ball should move from the robot
+    bool use_chipper = 7;           // True if the kickspeed is obtained by just chipping
+
+    float dribbler_speed = 8;        // (rpm) Rotational speed of the dribbler
+}
+
+message RobotCommands {
+    repeated RobotCommand commands = 1;
+    bool commands_are_for_team_yellow = 2;
+}

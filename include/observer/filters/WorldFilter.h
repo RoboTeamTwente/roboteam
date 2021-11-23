@@ -6,6 +6,7 @@
 #include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
 
 #include "BallFilter.h"
+#include "RobotFeedbackFilter.h"
 #include "RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
@@ -30,7 +31,7 @@ class WorldFilter {
 
     void setGeometry(const proto::SSL_GeometryData &geometry);
     void setRobotParameters(const TwoTeamRobotParameters &parameters);
-    void process(std::vector<proto::SSL_DetectionFrame> visionFrames);
+    void process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData> &robothubData);
 
    private:
     /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)
@@ -57,6 +58,7 @@ class WorldFilter {
     std::vector<std::unique_ptr<BallFilter>> balls;
     double lastUpdateTime = 0.0;
     double latestCaptureTime = 0.0;
+    RobotFeedbackFilter feedbackFilter;
     static void updateRobots(robotMap &robots, double time, bool doLastPredict, double removeFilterTime);
     static void handleRobots(robotMap &robots, const google::protobuf::RepeatedPtrField<proto::SSL_DetectionRobot> &observations, double filterGrabDistance, double timeCapture,
                              uint cameraID);

@@ -32,8 +32,8 @@ class Observer {
      * @param refereePackets All ofthe packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
-    proto::State process(Time extrapolatedTo, const std::vector<proto::SSL_WrapperPacket> &visionPackets, const std::vector<proto::SSL_Referee> &refereePackets,
-                         std::vector<proto::RobotData> robotData);
+    proto::State process(Time extrapolatedTo, const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+                         const std::vector<proto::RobotData>& robotData);
 
    private:
     RobotParameterDatabase parameterDatabase;
@@ -43,11 +43,11 @@ class Observer {
 
     void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
 
-    void updateGeometry(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+    void updateGeometry(const std::vector<proto::SSL_WrapperPacket>& visionPackets);
 
-    void updateWorld(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
+    void updateWorld(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::RobotData>& robothubData);
 
-    void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
+    void updateReferee(const std::vector<proto::SSL_Referee>& refereePackets);
 };
 
 #endif  // RTT_OBSERVER_H

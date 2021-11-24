@@ -1,23 +1,21 @@
 #include <proto/Settings.pb.h>
 
+#include <functional>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
-
-#include <functional>
 
 namespace rtt::net {
 
 class SettingsPublisher : private utils::Publisher<proto::Settings> {
-public:
+   public:
     SettingsPublisher();
 
     void publish(const proto::Settings& settings);
 };
 
 class SettingsSubscriber : private utils::Subscriber<proto::Settings> {
-public:
+   public:
     SettingsSubscriber(const std::function<void(const proto::Settings&)>& callback);
-
 };
 
-} // namespace rtt::net
+}  // namespace rtt::net

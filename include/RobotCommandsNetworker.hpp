@@ -1,23 +1,21 @@
 #include <proto/RobotCommands.pb.h>
 
+#include <functional>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
-
-#include <functional>
 
 namespace rtt::net {
 
 class RobotCommandsPublisher : private utils::Publisher<proto::RobotCommands> {
-public:
+   public:
     RobotCommandsPublisher();
 
     void publish(const proto::RobotCommands& commands);
 };
 
 class RobotCommandsSubscriber : private utils::Subscriber<proto::RobotCommands> {
-public:
+   public:
     RobotCommandsSubscriber(const std::function<void(const proto::RobotCommands&)>& callback);
-
 };
 
-} // namespace rtt::net
+}  // namespace rtt::net

@@ -1,23 +1,21 @@
 #include <proto/RobotFeedback.pb.h>
 
+#include <functional>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
-
-#include <functional>
 
 namespace rtt::net {
 
 class RobotFeedbackPublisher : private utils::Publisher<proto::RobotFeedback> {
-public:
+   public:
     RobotFeedbackPublisher();
 
     void publish(const proto::RobotFeedback& feedback);
 };
 
 class RobotFeedbackSubscriber : private utils::Subscriber<proto::RobotFeedback> {
-public:
+   public:
     RobotFeedbackSubscriber(const std::function<void(const proto::RobotFeedback&)>& callback);
-
 };
 
-} // namespace rtt::net
+}  // namespace rtt::net

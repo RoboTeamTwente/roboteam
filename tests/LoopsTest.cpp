@@ -2,10 +2,9 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-
+#include <chrono>
 #include <iostream>
 #include <memory>
-#include <chrono>
 
 using namespace rtt::net;
 
@@ -13,9 +12,7 @@ constexpr int TEST_VALUE = 69;
 
 // Robot commands loop test
 bool robotCommandsLoopTestPassed = false;
-void onRobotCommands(const proto::RobotCommands& commands) {
-    robotCommandsLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE;
-}
+void onRobotCommands(const proto::RobotCommands& commands) { robotCommandsLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
 bool testRobotCommandsLoop() {
     RobotCommandsPublisher pub;
     RobotCommandsSubscriber sub(onRobotCommands);
@@ -26,15 +23,13 @@ bool testRobotCommandsLoop() {
     command->set_id(TEST_VALUE);
     pub.publish(commands);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    
+
     return robotCommandsLoopTestPassed;
 }
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const proto::RobotFeedback& feedback) {
-    robotFeedbackLoopTestPassed = feedback.basestation_robot_feedback().id() == TEST_VALUE;
-}
+void onRobotFeedback(const proto::RobotFeedback& feedback) { robotFeedbackLoopTestPassed = feedback.basestation_robot_feedback().id() == TEST_VALUE; }
 bool testRobotFeedbackLoop() {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
@@ -45,15 +40,13 @@ bool testRobotFeedbackLoop() {
 
     pub.publish(feedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    
+
     return robotFeedbackLoopTestPassed;
 }
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::Settings& settings) {
-    settingsLoopTestPassed = settings.robothub_settings().bluecontrolport() == TEST_VALUE;
-}
+void onSettings(const proto::Settings& settings) { settingsLoopTestPassed = settings.robothub_settings().bluecontrolport() == TEST_VALUE; }
 bool testSettingsLoop() {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
@@ -64,15 +57,13 @@ bool testSettingsLoop() {
 
     pub.publish(settings);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    
+
     return settingsLoopTestPassed;
 }
 
 // World loop test
 bool worldLoopTestPassed = false;
-void onWorld(const proto::World& world) {
-    worldLoopTestPassed = world.ball().position().x() == TEST_VALUE;
-}
+void onWorld(const proto::World& world) { worldLoopTestPassed = world.ball().position().x() == TEST_VALUE; }
 bool testWorldLoop() {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);
@@ -83,7 +74,7 @@ bool testWorldLoop() {
 
     pub.publish(world);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    
+
     return worldLoopTestPassed;
 }
 

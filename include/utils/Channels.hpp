@@ -1,7 +1,6 @@
 #pragma once
 #include <map>
 #include <string>
-
 #include <utils/Channel.hpp>
 
 namespace rtt::net::utils {

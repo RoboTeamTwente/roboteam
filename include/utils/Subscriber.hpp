@@ -1,23 +1,23 @@
 #pragma once
 
-#include <utils/Channel.hpp>
-#include <utils/Channels.hpp>
-
 #include <google/protobuf/message.h>
-#include <zmqpp/reactor.hpp>
-#include <zmqpp/zmqpp.hpp>
+
 #include <functional>
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
+#include <utils/Channel.hpp>
+#include <utils/Channels.hpp>
+#include <zmqpp/reactor.hpp>
+#include <zmqpp/zmqpp.hpp>
 
 namespace rtt::net::utils {
 
 /* Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method
    There is no limit on how many subscribers can subscribe */
-template<class Message>
+template <class Message>
 class Subscriber {
-public:
+   public:
     // Apply rule of 5: in all cases we cannot copy/move this object
     Subscriber(const Subscriber& copy) = delete;
     Subscriber& operator=(const Subscriber& other) = delete;
@@ -25,15 +25,14 @@ public:
     Subscriber& operator=(Subscriber&& data) = delete;
 
     /* Create a subscriber with a callback method that gets called when new data is available
-     * @param channel: The channel to subscribe to 
+     * @param channel: The channel to subscribe to
      * @param messageCallback: The function that gets the message forwarded to */
-    explicit Subscriber(const ChannelType& channelType, const std::function<void(const Message& message)> callback)
-        : messageCallback(callback) {
+    explicit Subscriber(const ChannelType& channelType, const std::function<void(const Message& message)> callback) : messageCallback(callback) {
         // Initialize objects
         this->channel = CHANNELS.at(channelType);
         this->reactor = std::make_unique<zmqpp::reactor>();
         this->socket = std::make_unique<zmqpp::socket>(this->context, zmqpp::socket_type::sub);
-        this->socket->subscribe(""); // TODO: What does this do?
+        this->socket->subscribe("");  // TODO: What does this do?
 
         auto address = channel.getSubscribeAddress();
         this->socket->connect(address);
@@ -47,10 +46,12 @@ public:
     }
     ~Subscriber() {
         this->isPolling = false;
-        if (this->pollingThread.joinable()) { this->pollingThread.join(); }
+        if (this->pollingThread.joinable()) {
+            this->pollingThread.join();
+        }
     }
 
-private:
+   private:
     Channel channel;
     zmqpp::context context;
     std::unique_ptr<zmqpp::socket> socket;
@@ -67,7 +68,7 @@ private:
         if (this->poller->has_input(*this->socket)) {
             zmqpp::message response;
             socket->receive(response);
-            
+
             Message message;
             message.ParseFromString(response.get(0));
 

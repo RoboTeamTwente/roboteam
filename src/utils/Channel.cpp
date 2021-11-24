@@ -23,4 +23,4 @@ std::string Channel::toInfoString(bool isPublisher) {
     return "\"" + name + "\"" + " at address: " + getSubscribeAddress();
 }
 
-} // namespace rtt::net::utils
+}  // namespace rtt::net::utils

@@ -2,7 +2,6 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-
 #include <iostream>
 
 using namespace rtt::net;

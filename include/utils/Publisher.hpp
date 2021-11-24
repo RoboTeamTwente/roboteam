@@ -9,30 +9,27 @@
 
 namespace rtt::net::utils {
 
-// Defines a publisher that publishes to a TCP channel
+/* Defines a publisher that publishes protobuf messages to a TCP channel using zmqpp.
+   Only one publisher per channel per computer can exist at the same time. */
 template<class Message>
 class Publisher {
 public:
-    // Apply rule of 5: in all cases we cannot copy/move this object
+    /* Apply rule of 5: in all cases we cannot copy/move this object */
     Publisher(const Publisher &copy) = delete;
     Publisher &operator=(const Publisher &other) = delete;
     Publisher(const Publisher &&copy) = delete;
     Publisher &operator=(Publisher &&data) = delete;
 
-    /*
-     * Open a publisher and bind to the channel.
-     * @param channel: The channel to publish to.
-     */
+    /* Open a publisher and bind to the specified channel.
+     * @param channel: The channel to publish to. */
     explicit Publisher(const ChannelType &channelType) : channel(CHANNELS.at(channelType)) {
         this->socket = std::make_unique<zmqpp::socket>(this->context, zmqpp::socket_type::pub);
         this->socket->bind(this->channel.getPublishAddress());
     }
 
 protected:
-    /*
-     * Send a message of the specified type
-     * @param message: message to send. Must consist of base google::protobuf::Message to compile!
-     */
+    /* Send a message of the specified type
+     * @param message: Message to send. */
     bool send(const Message &message) {
         std::string serializedMessage = message.SerializeAsString();
         

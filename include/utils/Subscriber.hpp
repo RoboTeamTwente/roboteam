@@ -13,7 +13,8 @@
 
 namespace rtt::net::utils {
 
-/* Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method */
+/* Defines a subscriber that subscribers to a TCP channel and forwards the message to a callback function/method
+   There is no limit on how many subscribers can subscribe */
 template<class Message>
 class Subscriber {
 public:

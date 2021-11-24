@@ -18,6 +18,7 @@ target_link_libraries(networking_utils PUBLIC zmqpp)
 
 add_library(networking STATIC
     "src/RobotCommandsNetworker.cpp"
+    "src/RobotFeedbackNetworker.cpp"
 )
 
 target_include_directories(networking PUBLIC "include")

@@ -1,6 +1,6 @@
 protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
         "RobotCommands.proto"
-        "RobotFeedbacks.proto"
+        "RobotFeedback.proto"
         "Settings.proto"
     )
 

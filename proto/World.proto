@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "FieldGeometry.proto";
+
+package proto;
+
+message Vector2f {
+    float x = 1;
+    float y = 2;
+}
+
+message RobotFormfactor {
+    float radius = 1;           // Radius of robot in meters
+    float height = 2;           // Height of robot in meters
+    float front_width = 3;      // Width of the front assembly in meters
+    float dribbler_offset = 4;  // Distance of the dribbler to the center of the robot in meters
+}
+
+message Robot {
+    uint32 id = 1;
+
+    Vector2f position = 2;              // Global position of the robot in meters (center of field is [0,0])
+    float rotation = 3;                 // Rotation of the robot relative to the field, in counter clockwise radians.
+    Vector2f global_velocity = 4;       // (m/s) Estimated global velocity
+    float rotational_velocity = 5;      // (rad/s) Estimated rotational velocity, counter clockwise radians
+
+    bool has_ball = 6;                  // True if the robot has control over the ball
+    float ball_pos_on_sensor = 7;       // Position of the ball on the ballsensor
+    bool has_locked_wheel = 8;          // TODO: What does this mean
+    bool ballsensor_working = 9;        // True if the ballsensor is working
+    float signal_strenght = 10;         // The signal strength of the communication between the robot and the basestation
+    uint32 battery_level = 11;             // [0,15] The batterly level of the robot
+
+    RobotFormfactor formfactor = 12;    // The formfactor of the robot
+}
+
+message Ball {
+    Point position = 1;         // Position of the ball in meters
+    float height = 2;           // Height of the ball
+    Point global_velocity = 3;  // (m/s) Estimated velocity of the ball relative to the field
+    float height_velocity = 4;  // (m/s) Estimated vertical velocity of the ball
+    bool is_visible = 5;        // True if the ball is in the field according to World
+}
+
+/* This is meant for updating AI about the current state of the world. 
+   It contains the current status of all robots, the status of the ball and
+   the field geometry. */
+message World {
+    repeated Robot blue_robots = 1;
+    repeated Robot yellow_robots = 2;
+    Ball ball = 3;
+    FieldGeometry field_geometry = 4;
+}

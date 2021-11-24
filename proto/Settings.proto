@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotHubSettings {
+    enum RobotHubMode {
+        NEITHER = 0;
+        SIMULATOR = 1;
+        BASESTATION = 2;
+        BOTH = 3;
+    }
+    RobotHubMode robotHubMode = 1;
+
+    // Simulator settings
+    string simulatorIpAddress = 2;
+    uint32 blueControlPort = 3;
+    uint32 yellowControlPort = 4;
+    uint32 configurationControlPort = 5;
+    uint32 blueFeedbackPort = 6;
+    uint32 yellowFeedbackPort = 7;
+    uint32 configurationFeedbackPort = 8;
+}
+
+// These settings can (hopefully soon) be configured in the interface,
+// and should be sent to all components, like World, AI and RobotHub
+message Settings {
+    // Referee settings
+    string refereeIpAddress = 1;
+    uint32 refereePort = 2;
+
+    // Vision settings
+    string visionIpAddress = 3;
+    uint32 visionPort = 4;
+
+    RobotHubSettings robothub_settings = 5;
+}

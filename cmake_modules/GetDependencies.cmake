@@ -9,11 +9,6 @@ FetchContent_Declare(proj_libzmqpp
 set(ZMQ_BUILD_DRAFT_API true)
 set(ZMQPP_LIBZMQ_CMAKE false)
 
-# STX
-FetchContent_Declare(proj_stx
-        GIT_REPOSITORY https://github.com/lamarrr/STX
-        GIT_TAG master
-        )
-FetchContent_MakeAvailable(proj_libzmqpp proj_stx)
+FetchContent_MakeAvailable(proj_libzmqpp)
 
 target_include_directories(zmqpp BEFORE INTERFACE "${proj_libzmqpp_SOURCE_DIR}/src")

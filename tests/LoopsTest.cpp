@@ -1,5 +1,6 @@
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
+#include <SettingsNetworker.hpp>
 
 #include <iostream>
 #include <memory>
@@ -47,10 +48,30 @@ bool testRobotFeedbackLoop() {
     return robotFeedbackLoopTestPassed;
 }
 
+// Settings loop test
+bool settingsLoopTestPassed = false;
+void onSettings(const proto::Settings& settings) {
+    settingsLoopTestPassed = settings.robothub_settings().bluecontrolport() == TEST_VALUE;
+}
+bool testSettingsLoop() {
+    SettingsPublisher pub;
+    SettingsSubscriber sub(onSettings);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    proto::Settings settings;
+    settings.mutable_robothub_settings()->set_bluecontrolport(TEST_VALUE);
+
+    pub.publish(settings);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    
+    return settingsLoopTestPassed;
+}
+
 int main() {
     std::cout << "Starting..." << std::endl;
     std::cout << "RobotCommands loop test passed: " << (testRobotCommandsLoop() ? "true" : "false") << std::endl;
     std::cout << "RobotFeedback loop test passed: " << (testRobotFeedbackLoop() ? "true" : "false") << std::endl;
+    std::cout << "Settings loop test passed: " << (testSettingsLoop() ? "true" : "false") << std::endl;
 
     std::cout << "Done!" << std::endl;
 

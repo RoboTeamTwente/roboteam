@@ -50,6 +50,6 @@ void shoot_Shoot(shoot_types type);
 
 shoot_states shoot_GetState();
 
-void shoot_SetPower(int input);
+void shoot_SetPower(float input);
 
 #endif /* __shoot_H */

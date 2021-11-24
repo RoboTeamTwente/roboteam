@@ -11,7 +11,6 @@
 #include "SX1280.h"
 #include <stdbool.h>
 #include "PuTTY.h"
-#include "packing.h"
 
 static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
 static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback

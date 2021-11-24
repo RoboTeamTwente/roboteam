@@ -9,7 +9,6 @@
 #define INC_TESTFUNCTIONS_H_
 
 #include <stdbool.h>
-#include "packing.h"
 #include "stm32f7xx_hal.h"
 #include "PuTTY.h"
 #include "stateControl.h"

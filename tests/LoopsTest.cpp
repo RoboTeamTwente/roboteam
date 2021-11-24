@@ -1,6 +1,7 @@
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
+#include <WorldNetworker.hpp>
 
 #include <iostream>
 #include <memory>
@@ -67,11 +68,31 @@ bool testSettingsLoop() {
     return settingsLoopTestPassed;
 }
 
+// World loop test
+bool worldLoopTestPassed = false;
+void onWorld(const proto::World& world) {
+    worldLoopTestPassed = world.ball().position().x() == TEST_VALUE;
+}
+bool testWorldLoop() {
+    WorldPublisher pub;
+    WorldSubscriber sub(onWorld);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    proto::World world;
+    world.mutable_ball()->mutable_position()->set_x(TEST_VALUE);
+
+    pub.publish(world);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    
+    return worldLoopTestPassed;
+}
+
 int main() {
     std::cout << "Starting..." << std::endl;
     std::cout << "RobotCommands loop test passed: " << (testRobotCommandsLoop() ? "true" : "false") << std::endl;
     std::cout << "RobotFeedback loop test passed: " << (testRobotFeedbackLoop() ? "true" : "false") << std::endl;
     std::cout << "Settings loop test passed: " << (testSettingsLoop() ? "true" : "false") << std::endl;
+    std::cout << "World loop test passed: " << (testWorldLoop() ? "true" : "false") << std::endl;
 
     std::cout << "Done!" << std::endl;
 

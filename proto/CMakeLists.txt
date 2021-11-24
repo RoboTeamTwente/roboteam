@@ -2,6 +2,8 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
         "RobotCommands.proto"
         "RobotFeedback.proto"
         "Settings.proto"
+        "FieldGeometry.proto"
+        "World.proto"
     )
 
 add_library(networking_proto STATIC "${NET_PROTO_SRCS}" "${NET_PROTO_HDRS}")

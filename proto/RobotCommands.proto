@@ -10,10 +10,10 @@ message RobotCommand {
     bool rotation_as_velocity = 4;  // true if rotation is a angularVelocity, false if it is an absolute angle relative to the field
     float rotation = 5;             // (rad/s) or (rad) depending on rotationAsVelocity
 
-    float kick_speed = 6;           // The wanted speed at which the ball should move from the robot
-    bool use_chipper = 7;           // True if the kickspeed is obtained by just chipping
+    float kick_speed = 6;           // [0, 6.5] (m/s) The wanted speed at which the ball should move from the robot
+    bool use_chipper = 7;           // True if the ballspeed should be obtained by chipping instead of kicking
 
-    float dribbler_speed = 8;       // (rpm) Rotational speed of the dribbler
+    float dribbler_speed = 8;       // [0, 1] Rotational speed of the dribbler. 1 means full power.
 }
 
 /* This message is meant for AI to send to RobotHub. It contains commands for all

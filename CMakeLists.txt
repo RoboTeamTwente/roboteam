@@ -20,6 +20,7 @@ add_library(networking STATIC
     "src/RobotCommandsNetworker.cpp"
     "src/RobotFeedbackNetworker.cpp"
     "src/SettingsNetworker.cpp"
+    "src/WorldNetworker.cpp"
 )
 
 target_include_directories(networking PUBLIC "include")

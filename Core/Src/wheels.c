@@ -114,21 +114,21 @@ void wheels_Update(){
 		computeWheelSpeed();
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 			// Check encoder data
-			checkEncoder(wheel);
+			//checkEncoder(wheel);
 
-			if (noEncoder[wheel]) {
+			/*if (noEncoder[wheel]) {
 				// Do not use PID when there is no encoder data
 				pwm[wheel] = OMEGAtoPWM*wheelRef[wheel];
-			} else {
-				float err = wheelRef[wheel]-wheelSpeed[wheel];
+			} else {*/
+			float err = wheelRef[wheel]-wheelSpeed[wheel];
 
-				if (fabs(err) < 0.1) {
-					err = 0.0;
-					wheelsK[wheel].I = 0;
-				}
-
-				pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			if (fabs(err) < 0.1) {
+				err = 0.0;
+				wheelsK[wheel].I = 0;
 			}
+
+			pwm[wheel] = OMEGAtoPWM*(wheelRef[wheel] + PID(err, &wheelsK[wheel])); // add PID to wheels reference angular velocity and convert to pwm
+			
 		}
 
 		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
@@ -223,6 +223,8 @@ static void SetDir(){
 	set_Pin(LF_DIR_pin, direction[wheels_LF]);
 }
 
+// This is not working properly
+/*
 static void checkEncoder(wheel_names wheel) {
 	static const int threshold = 10; // Number of ticks the encoder data can be the same before detection of unconnected encoder
 
@@ -248,3 +250,4 @@ static void checkEncoder(wheel_names wheel) {
 	Aold[wheel] = A;
 	Bold[wheel] = B;
 }
+*/

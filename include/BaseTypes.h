@@ -7,7 +7,7 @@
 #ifndef __BASETYPES_H
 #define __BASETYPES_H
 
-#define LOCAL_REM_VERSION 3
+#define LOCAL_REM_VERSION 4
 
 #define PACKET_TYPE_ROBOT_COMMAND                                    0b00001111 // 15 
 #define PACKET_SIZE_ROBOT_COMMAND                                    12
@@ -27,7 +27,7 @@
 #define PACKET_RANGE_ROBOT_COMMAND_DRIBBLER_MAX                      1.
 #define PACKET_RANGE_ROBOT_COMMAND_DRIBBLER_N_BITS                   3
 #define PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_MIN               0.
-#define PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_MAX               1.
+#define PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_MAX               6.5
 #define PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_N_BITS            3
 
 #define PACKET_TYPE_ROBOT_FEEDBACK                                   0b00110011 // 51 

@@ -44,7 +44,7 @@ typedef struct _RobotCommand {
     float      angle               ; // float   [-3.142, 3.142]      Absolute angle (rad) / angular velocity (rad/s)
     float      cameraAngle         ; // float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
     float      dribbler            ; // float   [0.000, 1.000]       Dribbler speed
-    float      kickChipPower       ; // float   [0.000, 1.000]       Power of the kick or chip
+    float      kickChipPower       ; // float   [0.000, 6.500]       Speed of the ball in m/s
     bool       angularControl      ; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     bool       feedback            ; // integer [0, 1]               Ignore the packet. Just send feedback
 } RobotCommand;
@@ -109,7 +109,7 @@ static inline float RobotCommand_get_dribbler(RobotCommandPayload *rcp){
 
 static inline float RobotCommand_get_kickChipPower(RobotCommandPayload *rcp){
     uint32_t _kickChipPower = ((rcp->payload[11] & 0b00011100) >> 2);
-    return (_kickChipPower * 0.1428571428571428) + 0.0000000000000000;
+    return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
 }
 
 static inline bool RobotCommand_get_angularControl(RobotCommandPayload *rcp){
@@ -183,7 +183,7 @@ static inline void RobotCommand_set_dribbler(RobotCommandPayload *rcp, float dri
 }
 
 static inline void RobotCommand_set_kickChipPower(RobotCommandPayload *rcp, float kickChipPower){
-    uint32_t _kickChipPower = (uint32_t)(kickChipPower / 0.1428571428571428);
+    uint32_t _kickChipPower = (uint32_t)(kickChipPower / 0.9285714285714286);
     rcp->payload[11] = ((_kickChipPower << 2) & 0b00011100) | (rcp->payload[11] & 0b11100011);
 }
 

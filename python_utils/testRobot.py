@@ -163,10 +163,10 @@ while True:
 							if test == "kicker"  : cmd.doKick = True
 							if test == "chipper" : cmd.doChip = True
 							cmd.doForce = True
-							cmd.kickChipPower = 0.2
+							cmd.kickChipPower = 4
 
 					if test == "dribbler":
-						cmd.dribbler = math.floor(8 * periodFraction)
+						cmd.dribbler = periodFraction
 						log = "speed = %d" % cmd.dribbler
 
 					if test == "rotate":

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "wheels.h"
+#include "stdlib.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -35,9 +36,6 @@ static void computeWheelSpeed();
 
 //Clamps the PWM
 static void limit();
-
-//makes the PWM absolute
-static void scale();
 
 //Set the PWM for the wheels
 static void SetPWM();
@@ -133,7 +131,13 @@ void wheels_Update(){
 			}
 		}
 
-		scale();
+		for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+			// Determine direction and if pwm is negative, switch directions
+			// PWM < 0 : CounterClockWise. Direction = 0
+			// 0 < PWM : ClockWise. Direction = 1
+			direction[wheel] = 0 <= pwm[wheel];
+			pwm[wheel] = abs(pwm[wheel]);
+	}
 		limit();
 		SetDir();
 		SetPWM();
@@ -193,35 +197,6 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
-static void scale(){
-	static int Count[4] = {0};
-	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		if (Count[wheel] < 5){
-			//for ^*10 ms the wheel cannot change direction
-			//otherwise the motors drivers break
-			if (direction[wheel]== 0 && pwm[wheel]<= -1.0F){
-				pwm[wheel] *= -1;
-			} else if (!(direction[wheel]==1 && pwm[wheel]>= 1.0F)){
-				pwm[wheel] = 0;
-			}
-			Count[wheel] += 1;
-		} else {
-			// Determine direction
-			if(pwm[wheel] <= -1.0F){
-				pwm[wheel] *= -1;
-				if (direction[wheel] == 1){
-					Count[wheel] = 0;
-				}
-				direction[wheel] = 0; // turn anti-clockwise
-			} else if(pwm[wheel] >= 1.0F){
-				if (direction[wheel] == 0){
-					Count[wheel] = 0;
-				}
-				direction[wheel] = 1; // turn clockwise
-			}
-		}
-	}
-}
 
 static void limit(){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){

@@ -1,5 +1,6 @@
 
 #include <shoot.h>
+#include <BaseTypes.h>
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -8,7 +9,7 @@ static shoot_states shootState = shoot_Off;
 ///////////////////////////////////////////////////// VARIABLES
 
 static bool charged = false;	// true if the capacitor is fully charged
-static float power = 0; 		// percentage of maximum shooting power [0,1]
+static float power = 0; 		// percentage of maximum shooting power [0,6.5]
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -82,10 +83,11 @@ shoot_states shoot_GetState(){
 	return shootState;
 }
 
-void shoot_SetPower(float input){
-	power = input;
-	if(power < 0) power = 0;
-	if(1 < power) power = 1;
+void shoot_SetPower(float meters_per_second){
+    // At some point, make a formula to convert m/s to power. For now, linear relation
+    power = meters_per_second / PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_MAX;
+    if(power < 0) power = 0;
+    if(1 < power) power = 1;
 }
 
 void shoot_Shoot(shoot_types type)

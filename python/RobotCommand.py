@@ -38,7 +38,7 @@ class RobotCommand:
     angle = 0                 # float   [-3.142, 3.142]      Absolute angle (rad) / angular velocity (rad/s)
     cameraAngle = 0           # float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
     dribbler = 0              # float   [0.000, 1.000]       Dribbler speed
-    kickChipPower = 0         # float   [0.000, 1.000]       Power of the kick or chip
+    kickChipPower = 0         # float   [0.000, 6.500]       Speed of the ball in m/s
     angularControl = 0        # integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
     feedback = 0              # integer [0, 1]               Ignore the packet. Just send feedback
 
@@ -105,7 +105,7 @@ class RobotCommand:
     @staticmethod
     def get_kickChipPower(payload):
         _kickChipPower = ((payload[11] & 0b00011100) >> 2);
-        return (_kickChipPower * 0.1428571428571428) + 0.0000000000000000;
+        return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
 
     @staticmethod
     def get_angularControl(payload):
@@ -179,7 +179,7 @@ class RobotCommand:
 
     @staticmethod
     def set_kickChipPower(payload, kickChipPower):
-        _kickChipPower = int(kickChipPower / 0.1428571428571428);
+        _kickChipPower = int(kickChipPower / 0.9285714285714286);
         payload[11] = ((_kickChipPower << 2) & 0b00011100) | (payload[11] & 0b11100011);
 
     @staticmethod

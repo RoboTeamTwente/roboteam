@@ -70,10 +70,10 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
     }
 }
 
-void RobotHub::onRobotCommandsFromChannel1(proto::AICommand& commands) {
+void RobotHub::onRobotCommandsFromChannel1(proto::AICommand &commands) {
     this->processRobotCommands(commands, this->settingsFromChannel1.isyellow(), this->settingsFromChannel1.serialmode());
 }
-void RobotHub::onRobotCommandsFromChannel2(proto::AICommand& commands) {
+void RobotHub::onRobotCommandsFromChannel2(proto::AICommand &commands) {
     this->processRobotCommands(commands, this->settingsFromChannel2.isyellow(), this->settingsFromChannel2.serialmode());
 }
 
@@ -137,7 +137,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
 
 void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
-    //feedbackToBePublished.set_isyellow(this->settings.isyellow()); //TODO: Get from basestation which team it owns
+    // feedbackToBePublished.set_isyellow(this->settings.isyellow()); //TODO: Get from basestation which team it owns
 
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);

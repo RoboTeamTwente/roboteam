@@ -5,7 +5,20 @@
 
 namespace rtt::net::utils {
 
-enum ChannelType { UNDEFINED_CHANNEL, WORLD_CHANNEL, ROBOT_COMMANDS_CHANNEL, ROBOT_FEEDBACK_CHANNEL, SETTINGS_CHANNEL };
+enum ChannelType {
+    UNDEFINED_CHANNEL,
+    SETTINGS_CHANNEL,
+
+    // AI to Robothub
+    ROBOT_COMMANDS_BLUE_CHANNEL,
+    ROBOT_COMMANDS_YELLOW_CHANNEL,
+
+    // Robothub to World
+    ROBOT_FEEDBACK_CHANNEL,
+
+    // Robothub to AI
+    WORLD_CHANNEL,
+};
 
 extern const std::map<ChannelType, Channel> CHANNELS;
 

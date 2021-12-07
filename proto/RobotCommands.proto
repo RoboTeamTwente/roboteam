@@ -18,8 +18,8 @@ message RobotCommand {
 }
 
 /* This message is meant for AI to send to RobotHub. It contains commands for all
-   robots that AI wants to control, combined with of which team the robots are */
+   robots that AI wants to control. The channel on which this is sent determines
+   for which team the commands are. */
 message RobotCommands {
     repeated RobotCommand commands = 1;
-    bool commands_are_for_team_yellow = 2;
 }

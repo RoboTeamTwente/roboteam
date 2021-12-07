@@ -7,16 +7,28 @@
 
 namespace rtt::net {
 
-class RobotCommandsPublisher : private utils::Publisher<proto::RobotCommands> {
+class RobotCommandsBluePublisher : private utils::Publisher<proto::RobotCommands> {
    public:
-    RobotCommandsPublisher();
+    RobotCommandsBluePublisher();
 
     void publish(const proto::RobotCommands& commands);
 };
 
-class RobotCommandsSubscriber : private utils::Subscriber<proto::RobotCommands> {
+class RobotCommandsBlueSubscriber : private utils::Subscriber<proto::RobotCommands> {
    public:
-    RobotCommandsSubscriber(const std::function<void(const proto::RobotCommands&)>& callback);
+    RobotCommandsBlueSubscriber(const std::function<void(const proto::RobotCommands&)>& callback);
+};
+
+class RobotCommandsYellowPublisher : private utils::Publisher<proto::RobotCommands> {
+   public:
+    RobotCommandsYellowPublisher();
+
+    void publish(const proto::RobotCommands& commands);
+};
+
+class RobotCommandsYellowSubscriber : private utils::Subscriber<proto::RobotCommands> {
+   public:
+    RobotCommandsYellowSubscriber(const std::function<void(const proto::RobotCommands&)>& callback);
 };
 
 }  // namespace rtt::net

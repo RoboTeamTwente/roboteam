@@ -30,6 +30,7 @@ class RobotHub {
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber2;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
     std::unique_ptr<proto::Publisher<proto::RobotData>> feedbackPublisher;
 
@@ -38,10 +39,11 @@ class RobotHub {
 
     void subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &aiCmd);
+    void sendCommandsToSimulator(const proto::AICommand &aiCmd, bool isForTeamYellow);
     void sendCommandsToBasestation(const proto::AICommand &aiCmd);
 
     void processAIcommand(proto::AICommand &AIcmd);
+    void processAIcommand2(proto::AICommand &AIcmd);
     void processSettings(proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);

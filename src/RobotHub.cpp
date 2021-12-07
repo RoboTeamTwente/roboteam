@@ -28,16 +28,15 @@ RobotHub::RobotHub() {
 void RobotHub::subscribe() {
     // TODO: choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
     robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this);
+    robotCommandSubscriber2 = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_SECONDARY_CHANNEL, &RobotHub::processAIcommand2, this);
 
     settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this);
 
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd, bool isForTeamYellow) {
     if (this->simulatorManager == nullptr) return;
-
-    bool isCommandForTeamYellow = this->settings.isyellow();
 
     simulation::RobotControlCommand simCommand;
     for (auto robotCommand : aiCmd.commands()) {
@@ -55,7 +54,7 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
         this->commands_sent[id]++;
     }
 
-    this->simulatorManager->sendRobotControlCommand(simCommand, isCommandForTeamYellow);
+    this->simulatorManager->sendRobotControlCommand(simCommand, isForTeamYellow);
 }
 
 void RobotHub::sendCommandsToBasestation(const proto::AICommand &aiCmd) {
@@ -71,10 +70,21 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &aiCmd) {
 }
 
 void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
+    bool isForTeamYellow = this->settings.isyellow();
+
     if (settings.serialmode()) {
         this->sendCommandsToBasestation(AIcmd);
     } else {
-        this->sendCommandsToSimulator(AIcmd);
+        this->sendCommandsToSimulator(AIcmd, isForTeamYellow);
+    }
+}
+void RobotHub::processAIcommand2(proto::AICommand &AIcmd) {
+    bool isForTeamYellow = !this->settings.isyellow();
+
+    if (settings.serialmode()) {
+        this->sendCommandsToBasestation(AIcmd);
+    } else {
+        this->sendCommandsToSimulator(AIcmd, isForTeamYellow);
     }
 }
 

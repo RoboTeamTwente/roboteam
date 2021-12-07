@@ -1,3 +1,4 @@
+#pragma once
 #include <proto/RobotFeedback.pb.h>
 
 #include <functional>

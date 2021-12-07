@@ -1,3 +1,4 @@
+#pragma once
 #include <proto/Settings.pb.h>
 
 #include <functional>

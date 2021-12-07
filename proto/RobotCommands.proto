@@ -12,8 +12,9 @@ message RobotCommand {
 
     float kick_speed = 6;           // [0, 6.5] (m/s) The wanted speed at which the ball should move from the robot
     bool use_chipper = 7;           // True if the ballspeed should be obtained by chipping instead of kicking
+    bool dont_wait_for_ball = 8;    // If true, the kicker/chipper will activate even if the robot does not have the ball
 
-    float dribbler_speed = 8;       // [0, 1] Rotational speed of the dribbler. 1 means full power.
+    float dribbler_speed = 9;       // [0, 1] Rotational speed of the dribbler. 1 means full power.
 }
 
 /* This message is meant for AI to send to RobotHub. It contains commands for all

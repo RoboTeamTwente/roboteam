@@ -25,8 +25,9 @@ class RobotHub {
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
-    proto::Setting settings;
-    proto::Setting settings2;
+    proto::Setting settingsFromChannel1;
+    proto::Setting settingsFromChannel2;
+
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
 
@@ -41,13 +42,15 @@ class RobotHub {
 
     void subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &aiCmd, bool isForTeamYellow);
-    void sendCommandsToBasestation(const proto::AICommand &aiCmd);
+    void sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow);
+    void sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow);
 
-    void processAIcommand(proto::AICommand &AIcmd);
-    void processAIcommand2(proto::AICommand &AIcmd);
-    void processSettings(proto::Setting &setting);
-    void processSettings2(proto::Setting &setting);
+    void onRobotCommandsFromChannel1(proto::AICommand& commands);
+    void onRobotCommandsFromChannel2(proto::AICommand& commands);
+    void processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useSimulator);
+    
+    void onSettingsFromChannel1(proto::Setting &setting);
+    void onSettingsFromChannel2(proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);

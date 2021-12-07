@@ -26,12 +26,14 @@ class RobotHub {
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::Setting settings;
+    proto::Setting settings2;
     proto::ChannelType robotCommandChannel;
     proto::ChannelType settingsChannel;
 
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber;
     std::unique_ptr<proto::Subscriber<proto::AICommand>> robotCommandSubscriber2;
     std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber;
+    std::unique_ptr<proto::Subscriber<proto::Setting>> settingsSubscriber2;
     std::unique_ptr<proto::Publisher<proto::RobotData>> feedbackPublisher;
 
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
@@ -45,6 +47,7 @@ class RobotHub {
     void processAIcommand(proto::AICommand &AIcmd);
     void processAIcommand2(proto::AICommand &AIcmd);
     void processSettings(proto::Setting &setting);
+    void processSettings2(proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);

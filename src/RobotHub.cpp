@@ -31,6 +31,7 @@ void RobotHub::subscribe() {
     robotCommandSubscriber2 = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_SECONDARY_CHANNEL, &RobotHub::processAIcommand2, this);
 
     settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this);
+    settingsSubscriber2 = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_SECONDARY_CHANNEL, &RobotHub::processSettings2, this);
 
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
@@ -79,7 +80,7 @@ void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
     }
 }
 void RobotHub::processAIcommand2(proto::AICommand &AIcmd) {
-    bool isForTeamYellow = !this->settings.isyellow();
+    bool isForTeamYellow = this->settings2.isyellow();
 
     if (settings.serialmode()) {
         this->sendCommandsToBasestation(AIcmd);
@@ -88,7 +89,8 @@ void RobotHub::processAIcommand2(proto::AICommand &AIcmd) {
     }
 }
 
-void RobotHub::processSettings(proto::Setting &_settings) { settings = _settings; }
+void RobotHub::processSettings(proto::Setting &_settings) { this->settings = _settings; }
+void RobotHub::processSettings2(proto::Setting &_settings) { this->settings2 = _settings; }
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,
     as it is updated from multiple threads without guards. This should not matter

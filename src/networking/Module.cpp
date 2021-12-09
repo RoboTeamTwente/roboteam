@@ -6,6 +6,7 @@ Module::Module(proto::Handshake handshake) : socket{context, zmqpp::socket_type:
     socket.send(handshake.SerializeAsString());
 }
 
+/*
 stx::Result<proto::ModuleState, std::string> Module::read_next(bool dont_block) {
     zmqpp::message msg;
     std::string data{};
@@ -20,6 +21,6 @@ stx::Result<proto::ModuleState, std::string> Module::read_next(bool dont_block) 
     }
     return stx::Err(std::move(data));
 }
-
+*/
 bool Module::is_ok() const noexcept { return static_cast<bool>(socket); }
 }  // namespace rtt::networking

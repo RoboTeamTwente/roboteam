@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <cstring>
 
 ////////////////////////////////////////////////////
 // Settings for RTT logs

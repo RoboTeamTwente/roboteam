@@ -6,6 +6,7 @@
 #define RTT_GRID_H
 
 #include "Vector2.h"
+#include <vector>
 
 namespace rtt {
 class Grid {

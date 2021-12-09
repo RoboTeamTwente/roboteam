@@ -1,6 +1,7 @@
 #include "Vector2.h"
 
 #include <cmath>
+#include <cassert>
 
 #include "Angle.h"
 #include "Definitions.h"
@@ -122,19 +123,6 @@ Vector2 Vector2::operator*(const double &scalar) const { return {x * scalar, y *
 Vector2 Vector2::operator/(const Vector2 &other) const { return {this->x / other.x, this->y / other.y}; }
 
 Vector2 Vector2::operator/(const double &scalar) const { return {x / scalar, y / scalar}; }
-
-Vector2 &Vector2::operator=(const proto::Vector2f &msg) {
-    x = msg.x();
-    y = msg.y();
-    return *this;
-}
-
-Vector2::operator proto::Vector2f() const {
-    proto::Vector2f msg;
-    msg.set_x(x);
-    msg.set_y(y);
-    return msg;
-}
 
 std::ostream &Vector2::write(std::ostream &os) const { return os << "{ x = " << x << ", y = " << y << " }"; }
 

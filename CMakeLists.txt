@@ -9,7 +9,6 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Angle.cpp
         src/utils/Position.cpp
         src/utils/Mathematics.cpp
-        src/utils/normalize.cpp
         src/utils/Hungarian.cpp
         src/utils/Arc.cpp
         src/utils/Timer.cpp
@@ -32,7 +31,6 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/LineIntersectionTest.cpp
         test/utils/LineProjectionTest.cpp
         test/utils/CircleTest.cpp
-        test/utils/normaliseTest.cpp
         test/utils/PolygonTest.cpp
         test/utils/PositionTest.cpp
         test/utils/Vector2Test.cpp
@@ -46,7 +44,6 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/StaticVectorTest.cpp
         test/utils/ShadowTest.cpp
         test/utils/CircularBufferTest.cpp
-        test/utils/PubSubTest.cpp
         )
 
 add_library(roboteam_utils STATIC
@@ -57,10 +54,6 @@ add_library(roboteam_utils STATIC
 target_include_directories(roboteam_utils
         PRIVATE include/roboteam_utils
         INTERFACE include
-        )
-
-target_link_libraries(roboteam_utils
-        PUBLIC roboteam_proto
         )
 
 add_executable(utils_tests

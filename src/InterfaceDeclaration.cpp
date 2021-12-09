@@ -146,12 +146,14 @@ Interface::InterfaceSlider::InterfaceSlider(const proto::Slider& protoSlider) {
     this->min = protoSlider.min();
     this->max = protoSlider.max();
     this->interval = protoSlider.interval();
+    this->dpi = protoSlider.dpi();
 }
 
-Interface::InterfaceSlider::InterfaceSlider(const std::string text, const float min, const float max, const float interval) {
+Interface::InterfaceSlider::InterfaceSlider(const std::string text, const float min, const float max, const float interval, const int dpi) {
     this->text = text;
     this->min = min;
     this->max = max;
     this->interval = interval;
+    this->dpi = dpi;
 }
 }

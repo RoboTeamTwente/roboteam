@@ -17,6 +17,7 @@ namespace rtt::Interface {
         roboteam_utils::Timer tim;
         tim.loop([&]() {
             if (this->conn->is_ok()) {
+                this->sendVals();
                 auto read = this->conn->read_next<proto::ModuleState>();
                 if (read.is_ok()) {
                     this->handleData(std::move(read.value()));

@@ -17,20 +17,22 @@ namespace rtt::Interface {
         Q_OBJECT
     private:
         std::shared_ptr<InterfaceController> interfaceController;
+        bool initial_render = true;
+        QWidget* side_panel;
 
     public slots:
         void conditionallyEmitDeclsChanged();
         void conditionallyEmitValuesChanged();
 
+
     public:
-        explicit MainWindow(std::shared_ptr<InterfaceController> = std::make_shared<InterfaceController>(), QWidget* parent = nullptr);
-        std::weak_ptr<InterfaceController> getController();
+        explicit MainWindow(std::shared_ptr<InterfaceController>, QWidget* parent = nullptr);
 
         void run();
+
     signals:
         void declarationsChanged(std::weak_ptr<InterfaceDeclarations>);
         void valuesChanged(std::weak_ptr<InterfaceSettings>);
-        void drawRequest(); //TODO: Remote drawing
         void updateField();
 
     };

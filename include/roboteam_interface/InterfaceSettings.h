@@ -4,6 +4,8 @@
 
 #ifndef RTT_INTERFACESETTINGS_H
 #define RTT_INTERFACESETTINGS_H
+#include <utility>
+
 #include "roboteam_proto/UiOptions.pb.h"
 #include "InterfaceDeclarations.h"
 #include "InterfaceValue.h"
@@ -14,26 +16,32 @@ enum class InterfaceSettingsPrecedence { AI, IFACE };
 
 class InterfaceSettings {
    private:
-    std::map<std::string, InterfaceValue> values = {};
+    std::map<std::string, InterfaceValue> values;
 
     mutable std::mutex mtx;
 
     std::weak_ptr<InterfaceStateHandler> stateHandler;
 
-    void _unsafeSetSetting(const std::string name, const InterfaceValue newValue);
-
-    proto::UiValues _unsafeToProto(const std::map<std::string, InterfaceValue>&) const;
 
    public:
-    InterfaceSettings(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(sts) {};
+       InterfaceSettings() = delete;
+       ~InterfaceSettings() = default;
 
-    std::optional<InterfaceValue> getSetting(const std::string name) const;
-    void setSetting(const std::string name, const InterfaceValue newValue);
-    void removeSetting(const std::string name);
+       InterfaceSettings(InterfaceSettings&&) = delete;
+       InterfaceSettings& operator=(InterfaceSettings&&) = delete;
 
-    void handleData(const proto::UiValues&, InterfaceSettingsPrecedence = InterfaceSettingsPrecedence::AI);
+       InterfaceSettings(const InterfaceSettings&) = delete;
+       InterfaceSettings& operator=(const InterfaceSettings&) = delete;
 
-    proto::UiValues toProto() const;
+    explicit InterfaceSettings(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(std::move(sts)) {};
+
+    std::optional<InterfaceValue> getSetting(std::string name) const noexcept;
+    void setSetting(std::string name, InterfaceValue newValue) noexcept;
+    [[maybe_unused]] void removeSetting(std::string name) noexcept;
+
+    void handleData(const proto::UiValues&, std::weak_ptr<InterfaceDeclarations>, InterfaceSettingsPrecedence = InterfaceSettingsPrecedence::AI) noexcept;
+
+    proto::UiValues toProto() const noexcept;
 };
 }  // namespace rbtt::Interface
 

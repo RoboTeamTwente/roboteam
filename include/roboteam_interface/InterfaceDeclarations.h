@@ -8,6 +8,7 @@
 #include <roboteam_proto/UiOptions.pb.h>
 
 #include <nlohmann/json.hpp>
+#include <utility>
 
 #include "InterfaceDeclaration.h"
 #include "InterfaceStateHandler.h"
@@ -15,32 +16,43 @@
 namespace rtt::Interface {
 class InterfaceDeclarations {
    private:
-       std::vector<InterfaceDeclaration> decls = {};
+       // Duplicate path for ease of use
+       std::map<std::string, InterfaceDeclaration> decls;
 
        mutable std::mutex mtx;
 
        std::weak_ptr<InterfaceStateHandler> stateHandler;
 
-       void _unsafeAddDeclaration(InterfaceDeclaration);
-       void _unsafeRemoveDeclaration(std::string);
-
-       std::optional<InterfaceDeclaration> _unsafeGetDeclaration(std::string) const;
-
    public:
+       InterfaceDeclarations() = delete;
+       ~InterfaceDeclarations() = default;
+
+       InterfaceDeclarations(InterfaceDeclarations&&) = delete;
+       InterfaceDeclarations& operator=(InterfaceDeclarations&&) = delete;
+
+
+       InterfaceDeclarations(const InterfaceDeclarations&) = delete;
+       InterfaceDeclarations& operator=(const InterfaceDeclarations&) = delete;
+
+
        InterfaceDeclarations(const nlohmann::json&, std::weak_ptr<InterfaceStateHandler>);
-       InterfaceDeclarations(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(sts) {}
+       explicit InterfaceDeclarations(std::weak_ptr<InterfaceStateHandler> sts): stateHandler(std::move(sts)) {};
+       explicit InterfaceDeclarations(std::map<std::string, InterfaceDeclaration> vec, std::weak_ptr<InterfaceStateHandler> sts = {}) : decls(std::move(vec)), stateHandler(std::move(sts)) {};
+       explicit InterfaceDeclarations(const std::vector<InterfaceDeclaration>& vec, std::weak_ptr<InterfaceStateHandler> sts = {}): stateHandler(std::move(sts)) {
+           for (const auto& val : vec) {
+               this->decls.insert_or_assign(val.path, val);
+           }
+       }
 
-       explicit InterfaceDeclarations(const std::vector<InterfaceDeclaration> vec, std::weak_ptr<InterfaceStateHandler> sts) : decls(vec), stateHandler(sts) {};
+       [[maybe_unused]] void addDeclaration(InterfaceDeclaration) noexcept;
+       [[maybe_unused]] void removeDeclaration(std::string) noexcept;
 
-       void addDeclaration(InterfaceDeclaration);
-       void removeDeclaration(std::string);
+       std::map<std::string, InterfaceDeclaration> getDeclarations() const noexcept;
+       std::optional<InterfaceDeclaration> getDeclaration(std::string) const noexcept;
 
-       std::vector<InterfaceDeclaration> getDeclarations() const;
-       std::optional<InterfaceDeclaration> getDeclaration(std::string) const;
+       void handleData(const proto::UiOptionDeclarations&) noexcept;
 
-       void handleData(const proto::UiOptionDeclarations&);
-
-       proto::UiOptionDeclarations toProto() const;
+       proto::UiOptionDeclarations toProto() const noexcept;
 };
 
 }

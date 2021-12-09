@@ -26,6 +26,10 @@ struct InterfaceValue {
     std::variant<int64_t, bool, float, std::string> variant;
 
     proto::UiValue toProto() const;
+
+    bool operator==(const InterfaceValue& lhs) const {
+        return lhs.variant == this->variant;
+    }
 };
 void from_json(const nlohmann::json& j, InterfaceValue& p);
 void to_json(nlohmann::json& j, const InterfaceValue& p);

@@ -7,7 +7,7 @@
 
 namespace rtt::Interface {
 
-std::optional<InterfaceValue> InterfaceSettings::getSetting(const std::string name) const {
+std::optional<InterfaceValue> InterfaceSettings::getSetting(const std::string name) const noexcept {
     std::scoped_lock lck(this->mtx);
 
     if (!this->values.contains(name)) {
@@ -17,34 +17,35 @@ std::optional<InterfaceValue> InterfaceSettings::getSetting(const std::string na
     return this->values.at(name);
 }
 
-void InterfaceSettings::setSetting(const std::string name, const InterfaceValue newValue) {
+void InterfaceSettings::setSetting(const std::string name, const InterfaceValue newValue) noexcept {
     std::scoped_lock lck(this->mtx);
 
-    this->_unsafeSetSetting(name, newValue);
+    this->values.insert_or_assign(name, newValue);
 
     if (auto iptr = this->stateHandler.lock()) {
         iptr->stateDidChange();
     }
 }
 
-void InterfaceSettings::_unsafeSetSetting(const std::string name, const InterfaceValue newValue) { this->values.insert_or_assign(name, newValue); }
-
-void InterfaceSettings::handleData(const proto::UiValues& values, InterfaceSettingsPrecedence precedence) {
+void InterfaceSettings::handleData(const proto::UiValues& uiValues, std::weak_ptr<InterfaceDeclarations> declsptr, InterfaceSettingsPrecedence precedence) noexcept {
     std::scoped_lock lck(this->mtx);
 
-    // TODO: Verify if value is in declarations, and whether it is an allowed value
-    // Also, if precedence lvl == AI, we are AI and should verify that the value we are changing is modifiable by interface
+    auto decls = declsptr.lock();
 
-    values.PrintDebugString();
-    if (values.ui_values().empty()) {
-        RTT_WARNING("[Interface] Values are empty!");
+    if (uiValues.ui_values().empty()) {
         return;
     }
 
     this->values.clear();
 
-    for (const auto& entry : values.ui_values()) {
-        this->_unsafeSetSetting(entry.first, entry.second);
+    for (const auto& entry : uiValues.ui_values()) {
+        const auto declForVal = decls->getDeclaration(entry.first);
+
+        if (!declForVal.has_value()) continue;
+        if (precedence == InterfaceSettingsPrecedence::AI && declForVal->isMutable) continue; // Prevent interface from changing AI-only uiValues
+        if (precedence == InterfaceSettingsPrecedence::IFACE && !declForVal->isMutable) continue; // Prevent AI from changing interface-only uiValues
+
+        this->values.insert_or_assign(entry.first, entry.second);
     }
 
     if (auto state = this->stateHandler.lock()) {
@@ -52,26 +53,22 @@ void InterfaceSettings::handleData(const proto::UiValues& values, InterfaceSetti
     }
 
 }
-proto::UiValues InterfaceSettings::toProto() const {
+proto::UiValues InterfaceSettings::toProto() const noexcept {
     std::scoped_lock lck(this->mtx);
 
-    return this->_unsafeToProto(this->values);
-}
-
-proto::UiValues InterfaceSettings::_unsafeToProto(const std::map<std::string, InterfaceValue>& valueMap) const {
     proto::UiValues vals;
 
-    for (const auto& [key, value] : valueMap) {
+    for (const auto& [key, value] : this->values) {
         vals.mutable_ui_values()->insert({key, value.toProto()});
     }
 
     return vals;
 }
-void InterfaceSettings::removeSetting(const std::string name) {
+
+[[maybe_unused]] void InterfaceSettings::removeSetting(const std::string name) noexcept {
     std::scoped_lock lck(this->mtx);
 
     this->values.erase(name);
-
 
     if (auto state = this->stateHandler.lock()) {
         state->stateDidChange();

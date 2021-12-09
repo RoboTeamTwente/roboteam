@@ -50,9 +50,23 @@ namespace rtt::Interface  {
                 return;
             }
 
+            state.PrintDebugString();
+
             const auto handshake = state.handshakes(0);
+
             this->decls->handleData(handshake.declarations());
-            this->vals->handleData(handshake.values());
+            this->vals->handleData(handshake.values(), decls);
+        }
+
+        void sendVals() {
+            proto::ModuleState mod;
+            proto::Handshake hand;
+            hand.mutable_values()->CopyFrom(this->vals.get()->toProto());
+            hand.set_module_name("_DEFAULT");
+            hand.mutable_declarations()->CopyFrom(this->decls.get()->toProto());
+            mod.mutable_handshakes()->Add(std::move(hand));
+
+            this->conn->write(std::move(mod));
         }
 
 

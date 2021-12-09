@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication roboteam_interface(argc, argv);
-    auto ctrl = std::make_unique<rtt::Interface::InterfaceController>();
+    auto ctrl = std::make_shared<rtt::Interface::InterfaceController>();
     ctrl->run();
 
     rtt::Interface::MainWindow window(std::move(ctrl));
@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
     window.setWindowState(Qt::WindowState::WindowMaximized);
     window.show();
     window.setWindowTitle("Hello, world!");
-
 
 
     return roboteam_interface.exec();

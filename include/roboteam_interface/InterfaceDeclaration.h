@@ -15,10 +15,11 @@ struct InterfaceSlider {
     float min;
     float max;
     float interval;
+    int dpi;
 
     InterfaceSlider() = default;
     InterfaceSlider(const proto::Slider&);
-    InterfaceSlider(const std::string, const float, const float, const float);
+    InterfaceSlider(const std::string, const float, const float, const float, const int);
 
     proto::Slider toProto() const {
         proto::Slider slider;
@@ -27,11 +28,20 @@ struct InterfaceSlider {
         slider.set_min(this->min);
         slider.set_max(this->max);
         slider.set_interval(this->interval);
+        slider.set_dpi(this->dpi);
 
         return slider;
     }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceSlider, text, min, max, interval);
+    bool operator==(const InterfaceSlider& lhs) const {
+        return lhs.text == this->text &&
+        lhs.min == this->min &&
+        lhs.max == this->max &&
+        lhs.interval == this->interval &&
+            lhs.dpi == this->dpi;
+    }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceSlider, text, min, max, interval, dpi);
 };
 
 struct InterfaceCheckbox {
@@ -47,6 +57,10 @@ struct InterfaceCheckbox {
         checkbox.set_text(this->text);
 
         return checkbox;
+    }
+
+    bool operator==(const InterfaceCheckbox& lhs) const {
+        return lhs.text == this->text;
     }
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceCheckbox, text);
@@ -69,6 +83,11 @@ struct InterfaceDropdown {
         return dropdown;
     }
 
+    bool operator==(const InterfaceDropdown& lhs) const {
+        return lhs.text == this->text &&
+        lhs.options == this->options;
+    }
+
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceDropdown, text, options);
 
 };
@@ -87,6 +106,10 @@ struct InterfaceRadio {
         return radio;
     }
 
+    bool operator==(const InterfaceRadio& lhs) const {
+        return lhs.options == this->options;
+    }
+
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceRadio, options);
 };
 
@@ -103,6 +126,10 @@ struct InterfaceText {
         txtField.set_text(text);
 
         return txtField;
+    }
+
+    bool operator==(const InterfaceText& lhs) const {
+        return lhs.text == this->text;
     }
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceText, text);
@@ -127,6 +154,13 @@ struct InterfaceDeclaration {
     InterfaceDeclaration() = default;
     InterfaceDeclaration(const proto::UiOptionDeclaration&);
     InterfaceDeclaration(const std::string, const std::string, const bool, const InterfaceValue, const InterfaceOptions);
+
+    bool operator==(const InterfaceDeclaration& lhs) const {
+        return lhs.path == this->path &&
+        lhs.description == this->description &&
+        lhs.isMutable == this->isMutable &&
+        lhs.options == this->options;
+    }
 };
 
 void from_json(const nlohmann::json& json, InterfaceDeclaration& declaration);

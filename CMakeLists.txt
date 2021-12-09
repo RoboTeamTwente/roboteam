@@ -40,7 +40,6 @@ target_link_libraries(simulator_manager PUBLIC
 
 # Create the make file for the basestationManager library
 add_library(basestation_manager STATIC
-        "src/basestation/Packing.cpp"
         "src/basestation/LibusbUtilities.cpp"
         "src/basestation/BasestationManager.cpp")
 target_include_directories(basestation_manager PUBLIC
@@ -49,7 +48,6 @@ target_include_directories(basestation_manager PUBLIC
 target_link_libraries(basestation_manager PUBLIC
         Threads::Threads
         lib::usb
-        roboteam_proto
 )
 
 # Create the make file for RobotHub, which uses the basestationManager and simulationManager library
@@ -60,8 +58,7 @@ target_include_directories(roboteam_robothub
 target_link_libraries(roboteam_robothub
         PRIVATE simulator_manager
         PRIVATE basestation_manager
-        PRIVATE roboteam_proto
-        PRIVATE roboteam_utils
+        PRIVATE roboteam_networking
 )
 
 # Create the make file for robothub_enumerate_usb

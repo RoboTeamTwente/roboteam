@@ -40,7 +40,7 @@ BasestationManager::~BasestationManager() {
  * @param payload Reference to the proto::RobotCommand that needs to be sent to the basestation
  * @return whether or not the command successfully was sent to the basestation
  */
-bool BasestationManager::sendSerialCommand(RobotCommandPayload &payload) const {
+bool BasestationManager::sendSerialCommand(RobotCommand &command) const {
     // Check if a connection to a basestation exists
     if (basestation_handle == nullptr) {
         std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
@@ -48,6 +48,10 @@ bool BasestationManager::sendSerialCommand(RobotCommandPayload &payload) const {
         std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
         return false;
     }
+
+    RobotCommandPayload payload;
+    encodeRobotCommand(&payload, &command);
+
     int bytesSent;  // Holds the value of actual bytes sent to the basestation after transfer is complete
     int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
 

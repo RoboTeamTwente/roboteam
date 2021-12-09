@@ -27,20 +27,20 @@ RobotHub::RobotHub() {
 
 void RobotHub::subscribe() {
     // TODO: choose either _PRIMARY_CHANNEL or _SECONDARY_CHANNEL based on some flag somewhere
-    robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::processAIcommand, this);
+    robotCommandSubscriber = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_PRIMARY_CHANNEL, &RobotHub::onRobotCommandsFromChannel1, this);
+    robotCommandSubscriber2 = std::make_unique<proto::Subscriber<proto::AICommand>>(proto::ROBOT_COMMANDS_SECONDARY_CHANNEL, &RobotHub::onRobotCommandsFromChannel2, this);
 
-    settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::processSettings, this);
+    settingsSubscriber = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_PRIMARY_CHANNEL, &RobotHub::onSettingsFromChannel1, this);
+    settingsSubscriber2 = std::make_unique<proto::Subscriber<proto::Setting>>(proto::SETTINGS_SECONDARY_CHANNEL, &RobotHub::onSettingsFromChannel2, this);
 
     feedbackPublisher = std::make_unique<proto::Publisher<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL);
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow) {
     if (this->simulatorManager == nullptr) return;
 
-    bool isCommandForTeamYellow = this->settings.isyellow();
-
     simulation::RobotControlCommand simCommand;
-    for (auto robotCommand : aiCmd.commands()) {
+    for (auto robotCommand : commands.commands()) {
         int id = robotCommand.id();
         float kickSpeed = robotCommand.chipper() || robotCommand.kicker() ? robotCommand.chip_kick_vel() : 0.0f;
         float kickAngle = robotCommand.chipper() ? DEFAULT_CHIPPER_ANGLE : 0.0f;
@@ -55,30 +55,38 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &aiCmd) {
         this->commands_sent[id]++;
     }
 
-    this->simulatorManager->sendRobotControlCommand(simCommand, isCommandForTeamYellow);
+    this->simulatorManager->sendRobotControlCommand(simCommand, toTeamYellow);
 }
 
-void RobotHub::sendCommandsToBasestation(const proto::AICommand &aiCmd) {
-    for (const proto::RobotCommand &cmd : aiCmd.commands()) {
+void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow) {
+    for (const proto::RobotCommand &command : commands.commands()) {
         // Convert the proto::RobotCommand to a RobotCommandPayload
-        RobotCommandPayload payload = createEmbeddedCommand(cmd, aiCmd.extrapolatedworld(), settings.isyellow());
+        RobotCommandPayload payload = createEmbeddedCommand(command, commands.extrapolatedworld(), toTeamYellow);
 
         this->basestationManager->sendSerialCommand(payload);
 
         // Update statistics
-        commands_sent[cmd.id()]++;
+        commands_sent[command.id()]++;
     }
 }
 
-void RobotHub::processAIcommand(proto::AICommand &AIcmd) {
-    if (settings.serialmode()) {
-        this->sendCommandsToBasestation(AIcmd);
+void RobotHub::onRobotCommandsFromChannel1(proto::AICommand &commands) {
+    this->processRobotCommands(commands, this->settingsFromChannel1.isyellow(), this->settingsFromChannel1.serialmode());
+}
+void RobotHub::onRobotCommandsFromChannel2(proto::AICommand &commands) {
+    this->processRobotCommands(commands, this->settingsFromChannel2.isyellow(), this->settingsFromChannel2.serialmode());
+}
+
+void RobotHub::processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useBasestation) {
+    if (useBasestation) {
+        this->sendCommandsToBasestation(commands, forTeamYellow);
     } else {
-        this->sendCommandsToSimulator(AIcmd);
+        this->sendCommandsToSimulator(commands, forTeamYellow);
     }
 }
 
-void RobotHub::processSettings(proto::Setting &_settings) { settings = _settings; }
+void RobotHub::onSettingsFromChannel1(proto::Setting &settings) { this->settingsFromChannel1 = settings; }
+void RobotHub::onSettingsFromChannel2(proto::Setting &settings) { this->settingsFromChannel2 = settings; }
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,
     as it is updated from multiple threads without guards. This should not matter
@@ -111,7 +119,6 @@ void RobotHub::printStatistics() {
         }
         ss << std::endl;
     }
-
     std::cout << ss.str();
 }
 
@@ -130,7 +137,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
 
 void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(this->settings.isyellow());
+    // feedbackToBePublished.set_isyellow(this->settings.isyellow()); //TODO: Get from basestation which team it owns
 
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);

@@ -47,7 +47,7 @@ class RobotHub {
 
     void onRobotCommandsFromChannel1(proto::AICommand &commands);
     void onRobotCommandsFromChannel2(proto::AICommand &commands);
-    void processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useSimulator);
+    void processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useBasestation);
 
     void onSettingsFromChannel1(proto::Setting &setting);
     void onSettingsFromChannel2(proto::Setting &setting);

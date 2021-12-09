@@ -77,11 +77,11 @@ void RobotHub::onRobotCommandsFromChannel2(proto::AICommand &commands) {
     this->processRobotCommands(commands, this->settingsFromChannel2.isyellow(), this->settingsFromChannel2.serialmode());
 }
 
-void RobotHub::processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useSimulator) {
-    if (useSimulator) {
-        this->sendCommandsToSimulator(commands, forTeamYellow);
-    } else {
+void RobotHub::processRobotCommands(proto::AICommand &commands, bool forTeamYellow, bool useBasestation) {
+    if (useBasestation) {
         this->sendCommandsToBasestation(commands, forTeamYellow);
+    } else {
+        this->sendCommandsToSimulator(commands, forTeamYellow);
     }
 }
 

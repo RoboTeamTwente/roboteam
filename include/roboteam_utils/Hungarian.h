@@ -1,48 +1,77 @@
-///////////////////////////////////////////////////////////////////////////////
-// Hungarian.h: Header file for Class Hungarian.
-//
-// This is a C++ wrapper with slight modification of a hungarian algorithm implementation by Markus Buehren.
-// The original implementation is a few mex-functions for use in MATLAB, found here:
-// http://www.mathworks.com/matlabcentral/fileexchange/6543-functions-for-the-rectangular-assignment-problem
-//
-// Both this code and the orignal code are published under the BSD license.
-// by Cong Ma, 2016
-//
-
 #ifndef HUNGARIAN_H
 #define HUNGARIAN_H
 
 #include <iostream>
 #include <vector>
-#include "Vector2.h"
-
-using namespace std;
+#include <bits/stdc++.h>
 
 namespace rtt {
+    using namespace std;
+    using Matrix = vector<vector<double>>;
 
-class Hungarian {
-   public:
-    Hungarian() = default;
-    static double Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignment);
-    static std::vector<std::pair<Vector2, Vector2>> getOptimalPairs(std::vector<Vector2> set1, std::vector<Vector2> set2);
-    static std::unordered_map<int, Vector2> getOptimalPairsIdentified(const std::unordered_map<int, Vector2>& positions, std::vector<Vector2> targetLocations);
+    class Hungarian {
+    public:
+        Hungarian() = default;
+        ~Hungarian() = default;
 
- private:
-    static bool validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2);
-    static void assignmentoptimal(int* assignment, double* cost, double* distMatrix, int nOfRows, int nOfColumns);
-  static void buildassignmentvector(int* assignment, bool* starMatrix, int nOfRows, int nOfColumns);
-  static void computeassignmentcost(int* assignment, double* cost, double* distMatrix, int nOfRows);
-  static void step2a(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows, int nOfColumns,
-                int minDim);
-  static void step2b(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows, int nOfColumns,
-                int minDim);
-  static void step3(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows, int nOfColumns,
-               int minDim);
-  static void step4(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows, int nOfColumns,
-               int minDim, int row, int col);
-  static void step5(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows, int nOfColumns,
-               int minDim);
-};
+        vector<int> Solve(const Matrix& cost);
 
-}  // namespace rtt
+    private:
+        void initVariables(const Matrix& cost);
+
+        void printCost();
+
+        void printMask();
+
+        void printAssignment();
+
+        void rowSubtraction();
+
+        void starZeros();
+
+        void coverStars();
+
+        void primeUncoveredZeros();
+
+        void findZero(int& row, int& col);
+
+        bool starRow(int row);
+
+        void findStarCol(int row, int& col);
+
+        void starPrimes();
+
+        void findStarRow(int col, int& row);
+
+        void findPrimeCol(int row, int& col);
+
+        void augmentPath();
+
+        void clearCovers();
+
+        void clearPrimes();
+
+        void findMinCost();
+
+        void returnAssignments();
+
+        int step{ 1 };
+        bool optimal{ false };
+
+        int numRobots{};
+        int numRoles{};
+        Matrix m_cost;
+
+        vector<bool> RowCover;
+        vector<bool> ColCover;
+        Matrix mask;
+
+        int path_row_0{};
+        int path_col_0{};
+        int pathCount{};
+        vector<vector<int>> path; // SHOULD NOT BE SQUARE
+
+        vector<int> m_assignment;
+    };
+} // namespace rtt
 #endif

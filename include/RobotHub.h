@@ -8,9 +8,6 @@
 #include <WorldNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 
-#include <proto/RobotCommands.pb.h>
-#include <proto/RobotFeedback.pb.h>
-#include <proto/Settings.pb.h>
 #include <utilities.h>
 #include <memory>
 #include <functional>
@@ -33,7 +30,7 @@ class RobotHub {
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
-    proto::Settings settings;
+    proto::Setting settings;
     RobotHubMode mode;
     proto::World world;
 
@@ -48,14 +45,14 @@ class RobotHub {
 
     void subscribe();
 
-    void sendCommandsToSimulator(const proto::RobotCommands &commands, bool toTeamYellow);
-    void sendCommandsToBasestation(const proto::RobotCommands &commands, bool toTeamYellow);
+    void sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow);
+    void sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow);
 
-    void onBlueRobotCommands(const proto::RobotCommands& commands);
-    void onYellowRobotCommands(const proto::RobotCommands& commands);
-    void processRobotCommands(const proto::RobotCommands &commands, bool forTeamYellow, RobotHubMode mode);
+    void onBlueRobotCommands(const proto::AICommand& commands);
+    void onYellowRobotCommands(const proto::AICommand& commands);
+    void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode);
 
-    void onSettingsFromChannel1(const proto::Settings &setting);
+    void onSettingsFromChannel1(const proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);

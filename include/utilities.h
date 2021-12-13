@@ -55,7 +55,7 @@ static int char2int(char input) {
 
 // Copy of getWorldBot() because I don't want to pull in tactics as a
 // dependency. If this function is moved to utils, we can use that
-[[maybe_unused]] static std::shared_ptr<proto::Robot> getWorldBot(unsigned int id, bool teamYellow, const proto::World& world) {
+[[maybe_unused]] static std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, bool teamYellow, const proto::World& world) {
     /** Heavily inefficient, copying over all the robots :(
      * If this was C++20 I would've picked std::span, but for now just use
      * yellow() / blue()
@@ -71,15 +71,15 @@ static int char2int(char input) {
 
     // Prevent a copy.
 
-    auto& robots = teamYellow ? world.yellow_robots() : world.blue_robots();
+    auto& robots = teamYellow ? world.yellow() : world.blue();
 
     // https://en.cppreference.com/w/cpp/algorithm/find
     // Should do that instead, but whatever, doesn't really matter in terms of
     // performance
     for (const auto& bot : robots) {
-        proto::Robot a = bot;
+        proto::WorldRobot a = bot;
         if (bot.id() == id) {
-            return std::make_shared<proto::Robot>(bot);
+            return std::make_shared<proto::WorldRobot>(bot);
         }
     }
     return nullptr;

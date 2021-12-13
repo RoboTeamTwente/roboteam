@@ -2,41 +2,32 @@ syntax = "proto3";
 
 package proto;
 
-// Feedback of a single robot originating from a basestation
-message BasestationRobotFeedback {
+// Feedback of a single robot. Simulators can only set 'id' and 'has_ball'
+message RobotFeedback {
     uint32 id = 1;
 
-    bool xSensIsCalibrated = 2;
-    bool ballSensorIsWorking = 3;
-    bool hasBall = 4;
-    float ballPosition = 5;         // [-0.5, 0.5) Position of ball relative to ballsensor
-    bool capacitorIsCharged = 6;
+    bool has_ball = 2;
+    
+    bool is_from_basestation = 3;   // If true, all fields below are also set
+    float ball_position = 4;        // [-0.5, 0.5) Position of ball relative to ballsensor
+    bool ball_sensor_is_working = 5;
+    bool xsens_is_calibrated = 6;
+    bool capacitor_is_charged = 7;
 
-    float speed = 7;                // [0.0, 8.0) (m/s) Estimated speed of the movement
-    float direction = 8;            // [-PI, PI) (rad) Estimated direction of the movement;
-    float angle = 9;                // [-PI, PI) (rad) Estimated angle of the robot;
+    float speed = 8;                // [0.0, 8.0) (m/s) Estimated speed of the movement
+    float direction = 9;            // [-PI, PI) (rad) Estimated direction of the movement;
+    float angle = 10;                // [-PI, PI) (rad) Estimated angle of the robot;
 
-    uint32 batteryLevel = 10;       // [0,15] Voltage level of the battery
-    uint32 signalStrength = 11;     // [0,15] Signal strength
-    bool hasLockedWheel = 12;
+    uint32 battery_level = 11;      // [0,15] Voltage level of the battery
+    uint32 signal_strength = 12;    // [0,15] Signal strength
+    bool has_locked_wheel = 13;
 }
 
-// Feedback of multiple robots originating from a simulator
-message SimulatorRobotFeedback {
-    message Robot {
-        uint32 id = 1;
-        bool hasBall = 2;
-    }
-    repeated Robot robots = 1;
-}
-
-/* This message should be published by RobotHub, and contains either:
-    - feedback of a single robot from a basestation, or:
-    - feedback of multiple robots from a simulator */
-message RobotFeedback {
-    bool feedbackFromTeamYellow = 1;
-    oneof feedback {
-        SimulatorRobotFeedback simulator_robot_feedback = 2;
-        BasestationRobotFeedback basestation_robot_feedback = 3;
-    }
+/* This message will be published by RobotHub, and contains either feedback from
+    a basestation or feedback from a simulator. A basestation will only send
+    feedback of one robot at a time, while simulators (usually) send feedback of
+    all the robots that received a command. */
+message RobotsFeedback {
+    bool is_from_team_yellow = 1;
+    repeated RobotFeedback robot_feedback = 2;
 }

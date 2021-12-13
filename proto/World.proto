@@ -1,19 +1,18 @@
 syntax = "proto3";
 
-import "FieldGeometry.proto";
+import "ssl_gc_referee_message.proto";
+import "ssl_vision_wrapper.proto";
+import "ssl_vision_geometry.proto";
 
 package proto;
 
-message Vector2f {
-    float x = 1;
-    float y = 2;
-}
-
 message RobotFormfactor {
-    float radius = 1;           // Radius of robot in meters
-    float height = 2;           // Height of robot in meters
-    float front_width = 3;      // Width of the front assembly in meters
-    float dribbler_offset = 4;  // Distance of the dribbler to the center of the robot in meters
+    float radius = 1;               // Radius of robot in meters
+    float height = 2;               // Height of robot in meters
+    float front_width = 3;          // Width of the front assembly in meters
+    float dribbler_width = 4;       // Width of the dribbler in meters
+    float dribbler_distance = 5;    // Distance of the dribbler to the center of the robot in meters
+    float angle_offset = 6;          // Offset of the robots marker compared to robots rotation
 }
 
 message Robot {
@@ -26,28 +25,43 @@ message Robot {
 
     bool has_ball = 6;                  // True if the robot has control over the ball
     float ball_pos_on_sensor = 7;       // Position of the ball on the ballsensor
-    bool has_locked_wheel = 8;          // TODO: What does this mean
-    bool ballsensor_working = 9;        // True if the ballsensor is working
-    float signal_strenght = 10;         // The signal strength of the communication between the robot and the basestation
-    uint32 battery_level = 11;             // [0,15] The batterly level of the robot
+    bool ballsensor_working = 8;        // True if the ballsensor is working
+    bool xsens_is_calibrated = 9;       // True if xsens is callibrated
+    bool capacitor_is_charged = 10;     // True if the capacitor is charged
 
-    RobotFormfactor formfactor = 12;    // The formfactor of the robot
+    bool has_locked_wheel = 11;         // TODO: What does this mean
+    float signal_strenght = 12;         // The signal strength of the communication between the robot and the basestation
+    uint32 battery_level = 13;          // [0,15] The batterly level of the robot
+
+    RobotFormfactor formfactor = 14;    // The formfactor of the robot
 }
 
 message Ball {
-    Point position = 1;         // Position of the ball in meters
-    float height = 2;           // Height of the ball
-    Point global_velocity = 3;  // (m/s) Estimated velocity of the ball relative to the field
-    float height_velocity = 4;  // (m/s) Estimated vertical velocity of the ball
-    bool is_visible = 5;        // True if the ball is in the field according to World
+    Vector2f position = 1;          // Position of the ball in meters
+    float height = 2;               // Height of the ball
+    Vector2f global_velocity = 3;   // (m/s) Estimated velocity of the ball relative to the field
+    float height_velocity = 4;      // (m/s) Estimated vertical velocity of the ball
+    bool is_visible = 5;            // True if the ball is in the field according to World
 }
 
 /* This is meant for updating AI about the current state of the world. 
    It contains the current status of all robots, the status of the ball and
    the field geometry. */
-message World {
+message WorldState {
     repeated Robot blue_robots = 1;
     repeated Robot yellow_robots = 2;
     Ball ball = 3;
-    FieldGeometry field_geometry = 4;
+
+    uint64 time = 4;                    // TODO: Find out if this field is necessary
+}
+
+message World {
+    WorldState last_seen_world = 1;
+    WorldState command_extrapolated_world = 2;
+    WorldState ball_camera_world = 3;
+
+    SSL_GeometryData field = 4;         //TODO: later change to a custom field type
+    Referee referee = 5;                //TODO: later change to a custom referee type
+    repeated SSL_WrapperPacket processed_vision_packets = 6;
+    repeated Referee processed_referee_packets = 7;
 }

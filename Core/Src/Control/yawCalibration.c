@@ -83,7 +83,7 @@ static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset
 
 	static bool calibrationNeeded = false;
 	static int checkCounter = 0;
-	if (fabs(constrainAngle(visionYaw - (xsensYaw + yawOffset))) > M_PI/180) { // require 1 degree accuracy
+	if (fabs(constrainAngle(visionYaw - (xsensYaw + yawOffset))) > M_PI/180/4) { // require 0.25 degree accuracy
 		checkCounter++;
 	} else {
 		checkCounter = 0;

@@ -3,10 +3,15 @@
 #set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+qt_wrap_cpp(IFACE_MOC ../include/roboteam_interface/InterfaceFieldScene.h
+        ../include/roboteam_interface/InterfaceSyncedCheckbox.h
+        ../include/roboteam_interface/InterfaceSyncedDropdown.h
+        ../include/roboteam_interface/InterfaceSyncedRadio.h
+        ../include/roboteam_interface/InterfaceSyncedSlider.h
+        ../include/roboteam_interface/InterfaceSyncedText.h
+        ../include/roboteam_interface/MainWindow.h)
 
 #set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-qt5_wrap_cpp(IFACE_SRC ../include/roboteam_interface/MainWindow.h ../include/roboteam_interface/InterfaceFieldWidget.h ../include/roboteam_interface/InterfaceSyncedCheckbox.h ../include/roboteam_interface/InterfaceSyncedSlider.h ../include/roboteam_interface/InterfaceSyncedText.h ../include/roboteam_interface/InterfaceSyncedDropdown.h ../include/roboteam_interface/InterfaceSyncedRadio.h)
 
 add_library(roboteam_interface_lib
         InterfaceDeclaration.cpp
@@ -14,15 +19,17 @@ add_library(roboteam_interface_lib
         InterfaceSettings.cpp
         InterfaceValue.cpp
         InterfaceController.cpp
+        InterfaceFieldScene.cpp
+        InterfaceFieldRenderer.cpp
         MainWindow.cpp
-        InterfaceDeclarationsRenderer.cpp
-        InterfaceFieldWidget.cpp
         InterfaceSyncedCheckbox.cpp
         InterfaceSyncedSlider.cpp
         InterfaceSyncedDropdown.cpp
         InterfaceSyncedRadio.cpp
         InterfaceSyncedText.cpp
-        ${IFACE_SRC}
+        InterfaceFieldStateStore.cpp
+        InterfaceRobotItem.cpp
+        ${IFACE_MOC}
         )
 
 

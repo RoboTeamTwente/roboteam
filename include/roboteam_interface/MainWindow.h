@@ -28,8 +28,6 @@ namespace rtt::Interface {
     public:
         explicit MainWindow(std::shared_ptr<InterfaceController>, QWidget* parent = nullptr);
 
-        void run();
-
     signals:
         void declarationsChanged(std::weak_ptr<InterfaceDeclarations>);
         void valuesChanged(std::weak_ptr<InterfaceSettings>);

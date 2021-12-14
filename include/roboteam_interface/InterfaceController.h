@@ -12,6 +12,7 @@
 #include "InterfaceDeclarations.h"
 #include "InterfaceSettings.h"
 #include "InterfaceStateHandler.h"
+#include "InterfaceFieldStateStore.h"
 
 namespace rtt::Interface  {
     class InterfaceController {
@@ -21,6 +22,7 @@ namespace rtt::Interface  {
 
         std::shared_ptr<InterfaceStateHandler> declState;
         std::shared_ptr<InterfaceStateHandler> valueState;
+        std::shared_ptr<InterfaceFieldStateStore> fieldState;
 
         std::unique_ptr<networking::PairReceiver<16971>> conn = std::make_unique<networking::PairReceiver<16971>>();
 
@@ -36,11 +38,14 @@ namespace rtt::Interface  {
 
             decls = std::make_shared<InterfaceDeclarations>(declState);
             vals = std::make_shared<InterfaceSettings>(valueState);
+            fieldState = std::make_shared<InterfaceFieldStateStore>();
         }
 
         std::weak_ptr<InterfaceStateHandler> getDeclarationsChangeTracker() {return declState;}
         std::weak_ptr<InterfaceStateHandler> getSettingsChangeTracker() {return valueState;}
 
+
+        std::weak_ptr<InterfaceFieldStateStore> getFieldState() {return fieldState;}
         std::weak_ptr<InterfaceDeclarations> getDeclarations() const {return decls;}
         std::weak_ptr<InterfaceSettings> getValues() const {return vals;}
 
@@ -56,17 +61,11 @@ namespace rtt::Interface  {
 
             this->decls->handleData(handshake.declarations());
             this->vals->handleData(handshake.values(), decls);
+            this->fieldState->setState(state.system_state());
         }
 
         void sendVals() {
-            proto::ModuleState mod;
-            proto::Handshake hand;
-            hand.mutable_values()->CopyFrom(this->vals.get()->toProto());
-            hand.set_module_name("_DEFAULT");
-            hand.mutable_declarations()->CopyFrom(this->decls.get()->toProto());
-            mod.mutable_handshakes()->Add(std::move(hand));
-
-            this->conn->write(std::move(mod));
+            this->conn->write(this->vals.get()->toProto(), true);
         }
 
 

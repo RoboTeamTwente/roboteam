@@ -9,10 +9,12 @@
 #include <thread>
 #include <InterfaceDeclarationsRenderer.h>
 #include "InterfaceFieldWidget.h"
+#include "InterfaceFieldScene.h"
+#include <QGraphicsScene>
 #include <QSplitter>
 
 namespace rtt::Interface {
-    MainWindow::MainWindow(std::shared_ptr<InterfaceController> ctrl, QWidget* parent): QMainWindow(parent), interfaceController(std::move(ctrl)) {
+    MainWindow::MainWindow(std::shared_ptr<InterfaceController> ctrl, QWidget* parent): QMainWindow(parent), interfaceController(ctrl) {
         setMinimumWidth(800);
         setMinimumHeight(600);
         setCentralWidget(new QWidget());
@@ -22,9 +24,24 @@ namespace rtt::Interface {
         QSplitter* tmp_panel = new QSplitter();
         side_panel = tmp_panel;
 
+        InterfaceFieldScene view(ctrl->getFieldState());
+        view.setMinimumSize(1280, 720);
+        view.setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        QGraphicsScene scene;
+        view.setScene(&scene);
+        view.setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        QVBoxLayout fieldLayout;
+
+        fieldLayout.addWidget(&view);
+        auto intWidget = new QWidget;
+        intWidget->setMinimumSize(1280, 720);
+        intWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        intWidget->setLayout(&fieldLayout);
+
+
         tmp_panel->setOrientation(Qt::Vertical);
 
-        splitter->addWidget(new InterfaceFieldWidget());
+        splitter->addWidget(intWidget);
         splitter->addWidget(side_panel);
 
         layout->addWidget(splitter);
@@ -50,7 +67,7 @@ namespace rtt::Interface {
                 if (initial_render){
                     InterfaceDeclarationsRenderer r;
 
-                    r.render(this, this->interfaceController, side_panel);
+//                    r.render(this, this->interfaceController, side_panel);
 
                     initial_render = false;
                 }

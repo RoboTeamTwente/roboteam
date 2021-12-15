@@ -32,7 +32,7 @@ int stateControl_Init(){
 		// 50 W
 		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
 		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
+		initPID(&stateK[body_w], 20.0, 5.0, 0.0);
 	} else {
 		// 30 W
 		initPID(&stateK[body_x], 0.1, 0.0, 0.0);

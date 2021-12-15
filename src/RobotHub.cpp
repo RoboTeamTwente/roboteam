@@ -15,6 +15,10 @@ RobotHub::RobotHub() {
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
 
+    if (!this->subscribe()) {
+        throw FailedToInitializeNetworkersException();
+    }
+
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     auto simulationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromSimulator, this, std::placeholders::_1);
     this->simulatorManager->setRobotControlFeedbackCallback(simulationFeedbackCallback);
@@ -22,21 +26,25 @@ RobotHub::RobotHub() {
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     auto basestationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromBasestation, this, std::placeholders::_1);
     this->basestationManager->setFeedbackCallback(basestationFeedbackCallback);
-
-    this->subscribe();
 }
 
-void RobotHub::subscribe() {
+bool RobotHub::subscribe() {
     auto blueCommandsCallback = std::bind(&RobotHub::onBlueRobotCommands, this, std::placeholders::_1);
     this->robotCommandsBlueSubscriber = std::make_unique<rtt::net::RobotCommandsBlueSubscriber>(blueCommandsCallback);
     
     auto yellowCommandsCallback = std::bind(&RobotHub::onYellowRobotCommands, this, std::placeholders::_1);
     this->robotCommandsYellowSubscriber = std::make_unique<rtt::net::RobotCommandsYellowSubscriber>(yellowCommandsCallback);
 
-    auto settingsCallback = std::bind(&RobotHub::onSettingsFromChannel1, this, std::placeholders::_1);
+    auto settingsCallback = std::bind(&RobotHub::onSettings, this, std::placeholders::_1);
     this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>(settingsCallback);
 
     this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
+
+    // All networkers should not be a nullptr
+    return this->robotCommandsBlueSubscriber    != nullptr
+        && this->robotCommandsYellowSubscriber  != nullptr
+        && this->settingsSubscriber             != nullptr
+        && this->robotFeedbackPublisher         != nullptr;
 }
 
 void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow) {
@@ -129,7 +137,10 @@ void RobotHub::processRobotCommands(const proto::AICommand &commands, bool forTe
     }
 }
 
-void RobotHub::onSettingsFromChannel1(const proto::Setting &settings) { this->settings = settings; }
+void RobotHub::onSettings(const proto::Setting &settings) {
+    this->settings = settings;
+    this->mode = settings.serialmode() ? RobotHubMode::BASESTATION : RobotHubMode::SIMULATOR;
+}
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,
     as it is updated from multiple threads without guards. This should not matter
@@ -177,7 +188,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
         feedbackOfRobot->set_hasball(hasBall);
     }
 
-    this->robotFeedbackPublisher->publish(feedbackToBePublished);
+    this->sendRobotFeedback(feedbackToBePublished);
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
@@ -198,7 +209,15 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     feedbackOfRobot->set_signalstrength(feedback.rssi);
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
 
-    this->robotFeedbackPublisher->publish(feedbackToBePublished);
+    this->sendRobotFeedback(feedbackToBePublished);
+}
+
+bool RobotHub::sendRobotFeedback(const proto::RobotData& feedback) {
+    return this->robotFeedbackPublisher->publish(feedback);
+}
+
+const char* FailedToInitializeNetworkersException::what() const throw() {
+    return "Failed to initialize networker(s). Is another RobotHub running?";
 }
 
 }  // namespace rtt::robothub

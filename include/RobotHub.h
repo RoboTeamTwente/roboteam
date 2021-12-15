@@ -10,6 +10,7 @@
 
 #include <utilities.h>
 #include <memory>
+#include <exception>
 #include <functional>
 #include <basestation/BasestationManager.hpp>
 #include <simulation/SimulatorManager.hpp>
@@ -43,7 +44,7 @@ class RobotHub {
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
 
-    void subscribe();
+    bool subscribe();
 
     void sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow);
     void sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow);
@@ -52,10 +53,15 @@ class RobotHub {
     void onYellowRobotCommands(const proto::AICommand& commands);
     void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode);
 
-    void onSettingsFromChannel1(const proto::Setting &setting);
+    void onSettings(const proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
+    bool sendRobotFeedback(const proto::RobotData& feedback);
+};
+
+class FailedToInitializeNetworkersException : public std::exception {
+    virtual const char* what() const throw();
 };
 
 }  // namespace rtt::robothub

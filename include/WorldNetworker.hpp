@@ -1,22 +1,22 @@
 #pragma once
-#include <proto/World.pb.h>
-
-#include <functional>
+#include <proto/State.pb.h>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
 
+#include <functional>
+
 namespace rtt::net {
 
-class WorldPublisher : private utils::Publisher<proto::World> {
+class WorldPublisher : private utils::Publisher<proto::State> {
    public:
     WorldPublisher();
 
-    void publish(const proto::World& world);
+    bool publish(const proto::State& world);
 };
 
-class WorldSubscriber : private utils::Subscriber<proto::World> {
+class WorldSubscriber : private rtt::net::utils::Subscriber<proto::State> {
    public:
-    WorldSubscriber(const std::function<void(const proto::World&)>& callback);
+    WorldSubscriber(const std::function<void(const proto::State&)>& callback);
 };
 
 }  // namespace rtt::net

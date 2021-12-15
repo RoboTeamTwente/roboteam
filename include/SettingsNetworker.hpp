@@ -1,5 +1,5 @@
 #pragma once
-#include <proto/Settings.pb.h>
+#include <proto/Setting.pb.h>
 
 #include <functional>
 #include <utils/Publisher.hpp>
@@ -7,16 +7,16 @@
 
 namespace rtt::net {
 
-class SettingsPublisher : private utils::Publisher<proto::Settings> {
+class SettingsPublisher : private utils::Publisher<proto::Setting> {
    public:
     SettingsPublisher();
 
-    void publish(const proto::Settings& settings);
+    bool publish(const proto::Setting& settings);
 };
 
-class SettingsSubscriber : private utils::Subscriber<proto::Settings> {
+class SettingsSubscriber : private utils::Subscriber<proto::Setting> {
    public:
-    SettingsSubscriber(const std::function<void(const proto::Settings&)>& callback);
+    SettingsSubscriber(const std::function<void(const proto::Setting&)>& callback);
 };
 
 }  // namespace rtt::net

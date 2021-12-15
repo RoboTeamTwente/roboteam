@@ -2,18 +2,18 @@
 
 namespace rtt::net {
 
-RobotCommandsBluePublisher::RobotCommandsBluePublisher() : utils::Publisher<proto::RobotCommands>(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL) {}
+RobotCommandsBluePublisher::RobotCommandsBluePublisher() : utils::Publisher<proto::AICommand>(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL) {}
 
-void RobotCommandsBluePublisher::publish(const proto::RobotCommands& commands) { this->send(commands); }
+bool RobotCommandsBluePublisher::publish(const proto::AICommand& commands) { return this->send(commands); }
 
-RobotCommandsBlueSubscriber::RobotCommandsBlueSubscriber(const std::function<void(const proto::RobotCommands&)>& callback)
-    : utils::Subscriber<proto::RobotCommands>(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL, callback) {}
+RobotCommandsBlueSubscriber::RobotCommandsBlueSubscriber(const std::function<void(const proto::AICommand&)>& callback)
+    : utils::Subscriber<proto::AICommand>(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL, callback) {}
 
-RobotCommandsYellowPublisher::RobotCommandsYellowPublisher() : utils::Publisher<proto::RobotCommands>(utils::ChannelType::ROBOT_COMMANDS_YELLOW_CHANNEL) {}
+RobotCommandsYellowPublisher::RobotCommandsYellowPublisher() : utils::Publisher<proto::AICommand>(utils::ChannelType::ROBOT_COMMANDS_YELLOW_CHANNEL) {}
 
-void RobotCommandsYellowPublisher::publish(const proto::RobotCommands& commands) { this->send(commands); }
+bool RobotCommandsYellowPublisher::publish(const proto::AICommand& commands) { return this->send(commands); }
 
-RobotCommandsYellowSubscriber::RobotCommandsYellowSubscriber(const std::function<void(const proto::RobotCommands&)>& callback)
-    : utils::Subscriber<proto::RobotCommands>(utils::ChannelType::ROBOT_COMMANDS_YELLOW_CHANNEL, callback) {}
+RobotCommandsYellowSubscriber::RobotCommandsYellowSubscriber(const std::function<void(const proto::AICommand&)>& callback)
+    : utils::Subscriber<proto::AICommand>(utils::ChannelType::ROBOT_COMMANDS_YELLOW_CHANNEL, callback) {}
 
 }  // namespace rtt::net

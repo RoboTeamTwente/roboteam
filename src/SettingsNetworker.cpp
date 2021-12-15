@@ -2,11 +2,11 @@
 
 namespace rtt::net {
 
-SettingsPublisher::SettingsPublisher() : utils::Publisher<proto::Settings>(utils::ChannelType::SETTINGS_CHANNEL) {}
+SettingsPublisher::SettingsPublisher() : utils::Publisher<proto::Setting>(utils::ChannelType::SETTINGS_CHANNEL) {}
 
-void SettingsPublisher::publish(const proto::Settings& settings) { this->send(settings); }
+bool SettingsPublisher::publish(const proto::Setting& settings) { return this->send(settings); }
 
-SettingsSubscriber::SettingsSubscriber(const std::function<void(const proto::Settings&)>& callback)
-    : utils::Subscriber<proto::Settings>(utils::ChannelType::SETTINGS_CHANNEL, callback) {}
+SettingsSubscriber::SettingsSubscriber(const std::function<void(const proto::Setting&)>& callback)
+    : utils::Subscriber<proto::Setting>(utils::ChannelType::SETTINGS_CHANNEL, callback) {}
 
 }  // namespace rtt::net

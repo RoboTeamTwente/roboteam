@@ -2,11 +2,11 @@
 
 namespace rtt::net {
 
-RobotFeedbackPublisher::RobotFeedbackPublisher() : utils::Publisher<proto::RobotFeedback>(utils::ChannelType::ROBOT_FEEDBACK_CHANNEL) {}
+RobotFeedbackPublisher::RobotFeedbackPublisher() : utils::Publisher<proto::RobotData>(utils::ChannelType::ROBOT_FEEDBACK_CHANNEL) {}
 
-void RobotFeedbackPublisher::publish(const proto::RobotFeedback& feedback) { this->send(feedback); }
+bool RobotFeedbackPublisher::publish(const proto::RobotData& feedback) { return this->send(feedback); }
 
-RobotFeedbackSubscriber::RobotFeedbackSubscriber(const std::function<void(const proto::RobotFeedback&)>& callback)
-    : utils::Subscriber<proto::RobotFeedback>(utils::ChannelType::ROBOT_FEEDBACK_CHANNEL, callback) {}
+RobotFeedbackSubscriber::RobotFeedbackSubscriber(const std::function<void(const proto::RobotData&)>& callback)
+    : utils::Subscriber<proto::RobotData>(utils::ChannelType::ROBOT_FEEDBACK_CHANNEL, callback) {}
 
 }  // namespace rtt::net

@@ -13,7 +13,7 @@ add_executable(roboteam_observer
 target_link_libraries(roboteam_observer
         PRIVATE observer_lib
         PRIVATE observer_net_lib
-        PRIVATE roboteam_proto
+        PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         )
@@ -39,7 +39,7 @@ add_library(observer_lib STATIC
 
 target_link_libraries(observer_lib
         PUBLIC observer_data_lib
-        PUBLIC roboteam_proto
+        PUBLIC roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Eigen3::Eigen
         )
@@ -76,8 +76,8 @@ target_include_directories(observer_net_lib
         )
 
 target_link_libraries(observer_net_lib
-        PUBLIC roboteam_proto
-        )
+        PUBLIC roboteam_networking
+)
 
 # -- DATA --
 
@@ -91,4 +91,5 @@ target_include_directories(observer_data_lib
         )
 
 target_link_libraries(observer_data_lib
-        PUBLIC roboteam_proto)
+        PUBLIC roboteam_networking
+)

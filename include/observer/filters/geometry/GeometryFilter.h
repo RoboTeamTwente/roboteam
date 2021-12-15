@@ -5,7 +5,7 @@
 #ifndef RTT_GEOMETRYFILTER_H
 #define RTT_GEOMETRYFILTER_H
 
-#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
+#include <proto/messages_robocup_ssl_geometry.pb.h>
 class GeometryFilter {
    public:
     bool process(const proto::SSL_GeometryData& geometryData);

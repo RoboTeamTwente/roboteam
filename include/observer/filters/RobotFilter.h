@@ -5,8 +5,8 @@
 #ifndef RTT_ROBOTFILTER_H
 #define RTT_ROBOTFILTER_H
 
-#include <roboteam_proto/WorldRobot.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/WorldRobot.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 
 #include "CameraFilter.h"
 #include "KalmanFilter.h"

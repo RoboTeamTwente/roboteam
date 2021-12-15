@@ -5,7 +5,7 @@
 #ifndef RTT_ROBOTPARAMETERDATABASE_H
 #define RTT_ROBOTPARAMETERDATABASE_H
 #include <data/RobotParameters.h>
-#include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
+#include <proto/messages_robocup_ssl_referee.pb.h>
 struct TwoTeamRobotParameters {
     bool blueChanged = false;
     bool yellowChanged = false;

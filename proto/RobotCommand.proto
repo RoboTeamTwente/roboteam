@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "Vector2f.proto";
+package proto;
+
+message RobotCommand {
+    uint32 id = 1;
+    Vector2f vel = 3;
+    float w = 4;
+    bool use_angle = 5;
+    uint32 dribbler = 6;
+
+    bool kicker = 7;
+    bool chipper = 8;
+
+    bool chip_kick_forced = 9;
+    float chip_kick_vel = 10;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+package proto.RoboCup2014Legacy.Wrapper;
+
+import "messages_robocup_ssl_detection.proto";
+import "messages_robocup_ssl_geometry_legacy.proto";
+
+message SSL_WrapperPacket {
+  SSL_DetectionFrame detection = 1;
+  RoboCup2014Legacy.Geometry.SSL_GeometryData geometry = 2;
+}

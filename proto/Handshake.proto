@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto;
+
+import "UiOptions.proto";
+
+message Handshake {
+    string name = 1;
+    repeated UiOption options = 2;
+}
+
+message HandshakeAccumulation {
+    repeated Handshake handshakes = 1;
+}

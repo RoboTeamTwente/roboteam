@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotParameters{
+    float radius = 1;
+    float height = 2;
+    float front_width = 3;
+    float dribbler_width = 4;
+    float angle_offset = 5;
+}
+
+message TeamParameters{
+    bool didChange = 1;
+    RobotParameters parameters = 2;
+}

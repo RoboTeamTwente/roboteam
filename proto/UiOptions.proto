@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package proto;
+
+message Slider {
+    string text = 1;
+    float min = 2;
+    float max = 3;
+    float interval = 4;
+    float default = 5;
+}
+
+message Checkbox {
+    string text = 1;
+    bool default = 2;
+}
+
+message Dropdown {
+    string text = 1;
+    int64 default = 2;
+    repeated string options = 3;
+}
+
+message RadioButton {
+    int64 default = 1;
+    repeated string options = 2;
+}
+
+message TextField {
+    string text = 1;
+}
+
+message UiOption {
+    string name = 1;
+    oneof ui_elements {
+        Slider slider = 2;
+        Checkbox checkbox = 3;
+        Dropdown dropdown = 4;
+        RadioButton radiobutton = 5;
+        TextField textfield = 6;
+    }
+}
+
+message PossibleUiValue {
+    oneof ui_value {
+        float float_value = 1;
+        bool bool_value = 2;
+        int64 integer_value = 3;
+        string text_value = 4;
+    }
+}
+
+message UiSettings {
+    // maps UiOption::name to the value it currently contains.
+    map<string, PossibleUiValue> ui_values = 1;
+}

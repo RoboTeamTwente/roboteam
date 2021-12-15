@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "RobotCommand.proto";
+import "World.proto";
+
+package proto;
+
+message AICommand {
+    repeated RobotCommand commands = 1;
+    World extrapolatedWorld = 2;
+}

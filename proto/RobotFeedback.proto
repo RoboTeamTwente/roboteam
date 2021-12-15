@@ -2,32 +2,20 @@ syntax = "proto3";
 
 package proto;
 
-// Feedback of a single robot. Simulators can only set 'id' and 'has_ball'
 message RobotFeedback {
     uint32 id = 1;
-
-    bool has_ball = 2;
-    
-    bool is_from_basestation = 3;   // If true, all fields below are also set
-    float ball_position = 4;        // [-0.5, 0.5) Position of ball relative to ballsensor
-    bool ball_sensor_is_working = 5;
-    bool xsens_is_calibrated = 6;
-    bool capacitor_is_charged = 7;
-
-    float speed = 8;                // [0.0, 8.0) (m/s) Estimated speed of the movement
-    float direction = 9;            // [-PI, PI) (rad) Estimated direction of the movement;
-    float angle = 10;                // [-PI, PI) (rad) Estimated angle of the robot;
-
-    uint32 battery_level = 11;      // [0,15] Voltage level of the battery
-    uint32 signal_strength = 12;    // [0,15] Signal strength
-    bool has_locked_wheel = 13;
+    bool xSensCalibrated = 2;
+    bool ballSensorIsWorking = 3;
+    bool batteryLow = 4;
+    bool hasBall = 5;
+    float ballPos = 6;
+    float x_vel = 10;
+    float yaw = 11;
+    float y_vel = 12;
+    bool hasLockedWheel = 13;
+    float signalStrength = 14;
 }
 
-/* This message will be published by RobotHub, and contains either feedback from
-    a basestation or feedback from a simulator. A basestation will only send
-    feedback of one robot at a time, while simulators (usually) send feedback of
-    all the robots that received a command. */
-message RobotsFeedback {
-    bool is_from_team_yellow = 1;
-    repeated RobotFeedback robot_feedback = 2;
-}
+
+
+

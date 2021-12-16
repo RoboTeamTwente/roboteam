@@ -14,10 +14,6 @@
 	path = roboteam_utils
 	url = git@github.com:RoboTeamTwente/roboteam_utils.git
 	branch = development
-[submodule "roboteam_proto"]
-	path = roboteam_proto
-	url = git@github.com:RoboTeamTwente/roboteam_proto.git
-	branch = development
 [submodule "roboteam_central_server"]
 	path = roboteam_central_server
 	url = git@github.com:RoboTeamTwente/roboteam_central_server.git

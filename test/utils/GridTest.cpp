@@ -18,7 +18,7 @@ TEST(Grid, numStepsTest) {
     for (auto nestedPoints : grid.getPoints()) {
         sizeOfGrid += nestedPoints.size();
     }
-    EXPECT_EQ(sizeOfGrid, (grid.getNumSegmentsX() + 1) * (grid.getNumSegmentsY() + 1));
+    EXPECT_EQ(sizeOfGrid, (grid.getNumPointsX() * grid.getNumPointsY()));
 }
 
 // Test to see if any of the points in the grid are not within the allowed region
@@ -37,11 +37,26 @@ TEST(Grid, getters) {
     EXPECT_EQ(grid.getOffSetX(), 1);
     EXPECT_EQ(grid.getOffSetY(), 2);
     EXPECT_EQ(grid.getRegionWidth(), 3);
-    EXPECT_EQ(grid.getRegionHeight(), 4);
-    EXPECT_EQ(grid.getNumSegmentsX(), 5);
-    EXPECT_EQ(grid.getNumSegmentsY(), 6);
-    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 3 / 5.0);  // TOOD: possible bugs? Is the grid defined to be inclusive edge or not?
-    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 4 / 6.0);
+    EXPECT_EQ(grid.getRegionLength(), 4);
+    EXPECT_EQ(grid.getNumPointsX(), 5);
+    EXPECT_EQ(grid.getNumPointsY(), 6);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 4 / 5.0);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 3 / 6.0);
 }
 
+// Test whether the points are equally spaced in the region (average should be in the center of the grid)
+TEST(Grid, spreadTest) {
+    Grid grid = Grid(-3, -2, 4, 6, 5, 3);
+    double totalX = 0;
+    double totalY = 0;
+    for (auto nestedPoints : grid.getPoints()) {
+        for (auto point : nestedPoints){
+            totalX += point.x;
+            totalY += point.y;
+        }
+    }
+    // As floating point errors are accumulated above, these numbers won't be the exact same (even DOUBLE_EQ won't accept the error). An accuracy of 1e-10 is required
+    EXPECT_NEAR(totalX/5.0, 0.0, 1e-10);
+    EXPECT_NEAR(totalY/3.0, 0.0, 1e-10);
+}
 }  // namespace rtt

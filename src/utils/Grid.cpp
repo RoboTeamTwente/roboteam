@@ -4,18 +4,19 @@
 
 #include "Grid.h"
 namespace rtt {
-Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionHeight, int numSegmentsX, int numSegmentsY)
-    : offSetX{offSetX}, offSetY{offSetY}, regionWidth{regionWidth}, regionHeight{regionHeight}, numSegmentsX{numSegmentsX}, numSegmentsY{numSegmentsY} {
-    this->stepSizeX = regionWidth / numSegmentsX;
-    this->stepSizeY = regionHeight / numSegmentsY;
+Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numSegmentsX, int numSegmentsY)
+    : offSetX{offSetX}, offSetY{offSetY}, regionWidth{regionWidth}, regionLength{regionLength}, numSegmentsX{numSegmentsX}, numSegmentsY{numSegmentsY} {
+    this->stepSizeX = regionLength / numSegmentsX;
+    this->stepSizeY = regionWidth / numSegmentsY;
+
     for (int i = 0; i <= numSegmentsX; i++) {
         std::vector<Vector2> a;
         points.emplace_back(a);
     }
 
-    for (int i = 0; i <= numSegmentsX; i++) {
-        for (int j = 0; j <= numSegmentsY; j++) {
-            points[i].emplace_back(Vector2(offSetX + stepSizeX * i, offSetY + stepSizeY * j));
+    for (int i = 0; i < numSegmentsX; i++) {
+        for (int j = 0; j < numSegmentsY; j++) {
+            points[i].emplace_back(Vector2(offSetX + stepSizeX * i + stepSizeX / 2, offSetY + stepSizeY * j + stepSizeY / 2));
         }
     }
 }
@@ -33,7 +34,7 @@ double Grid::getOffSetY() const { return offSetY; }
 
 double Grid::getRegionWidth() const { return regionWidth; }
 
-double Grid::getRegionHeight() const { return regionHeight; }
+double Grid::getRegionLength() const { return regionLength; }
 
 int Grid::getNumSegmentsX() const { return numSegmentsX; }
 

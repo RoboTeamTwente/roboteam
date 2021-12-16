@@ -11,40 +11,41 @@
 
 namespace roboteam_utils {
 
-    class Timer {
-    private:
-        bool running = true;
-        std::array<std::chrono::milliseconds, 10000> lastTickedTime = { std::chrono::milliseconds(0) };
-        int lastTickedTimeIteration = 0;
-    public:
-        explicit Timer() = default;
+class Timer {
+   private:
+    bool running = true;
+    std::array<std::chrono::milliseconds, 10000> lastTickedTime = {std::chrono::milliseconds(0)};
+    int lastTickedTimeIteration = 0;
 
-        /*
-        * Starts a loop in the current thread at a given rate (Hz) for a given function
-        */
-        void loop(std::function<void(void)> func, int rate);
+   public:
+    explicit Timer() = default;
 
-        /*
-         * Limit a function to be called at a maximum specified rate
-         */
-        void limit(std::function<void(void)> func, int rate);
+    /*
+     * Starts a loop in the current thread at a given rate (Hz) for a given function
+     */
+    void loop(std::function<void(void)> func, int rate);
 
-        /*
-         * Execute the function and return it's duration
-         */
-        static std::chrono::milliseconds measure(std::function<void(void)> func);
+    /*
+     * Limit a function to be called at a maximum specified rate
+     */
+    void limit(std::function<void(void)> func, int rate);
 
-        /*
-        * Get the current time in milliseconds
-        */
-        static std::chrono::milliseconds getCurrentTime();
+    /*
+     * Execute the function and return it's duration
+     */
+    static std::chrono::milliseconds measure(std::function<void(void)> func);
 
-        /*
-         * Stop the timer and break out of the loop
-         */
-        void stop();
-    };
+    /*
+     * Get the current time in milliseconds
+     */
+    static std::chrono::milliseconds getCurrentTime();
 
-} // roboteam_utils
+    /*
+     * Stop the timer and break out of the loop
+     */
+    void stop();
+};
 
-#endif //RTT_TIMER_H
+}  // namespace roboteam_utils
+
+#endif  // RTT_TIMER_H

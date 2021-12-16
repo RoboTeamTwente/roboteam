@@ -1,7 +1,9 @@
-#include "roboteam_utils/Vector2.h"
 #include <gtest/gtest.h>
-#include <cmath>
 #include <roboteam_utils/Angle.h>
+
+#include <cmath>
+
+#include "roboteam_utils/Vector2.h"
 using namespace rtt;
 
 TEST(VectorTests, instantiation) {
@@ -14,10 +16,10 @@ TEST(VectorTests, instantiation) {
     ASSERT_DOUBLE_EQ(tenten.y, 10);
     ASSERT_DOUBLE_EQ(fivezero.x, 5);
     ASSERT_DOUBLE_EQ(fivezero.y, 0);
-    Angle ang=M_PI_2;
+    Angle ang = M_PI_2;
     Vector2 vec(ang);
-    ASSERT_NEAR(vec.x,0,1e-15);
-    ASSERT_NEAR(vec.y,1,1e-15);
+    ASSERT_NEAR(vec.x, 0, 1e-15);
+    ASSERT_NEAR(vec.y, 1, 1e-15);
 }
 
 TEST(VectorTests, operators) {
@@ -47,34 +49,34 @@ TEST(VectorTests, math) {
     Vector2 def;
     Vector2 tenten(10, 10);
     Vector2 fivezero(5, 0);
-    
+
     ASSERT_DOUBLE_EQ(def.length(), 0);
     ASSERT_DOUBLE_EQ(tenten.length(), SQRT200);
     ASSERT_DOUBLE_EQ(fivezero.length(), 5);
-    
+
     ASSERT_DOUBLE_EQ(def.normalize().x, 0);
     ASSERT_DOUBLE_EQ(def.normalize().y, 0);
     ASSERT_DOUBLE_EQ(tenten.normalize().x, 10 / SQRT200);
     ASSERT_DOUBLE_EQ(tenten.normalize().y, 10 / SQRT200);
     ASSERT_DOUBLE_EQ(fivezero.normalize().x, 1);
     ASSERT_DOUBLE_EQ(fivezero.normalize().y, 0);
-    
+
     ASSERT_DOUBLE_EQ(def.scale(3.5).x, 0);
     ASSERT_DOUBLE_EQ(def.scale(3.5).y, 0);
     ASSERT_DOUBLE_EQ(tenten.scale(3.5).x, 35);
     ASSERT_DOUBLE_EQ(tenten.scale(3.5).y, 35);
     ASSERT_DOUBLE_EQ(fivezero.scale(3.5).x, 17.5);
     ASSERT_DOUBLE_EQ(fivezero.scale(3.5).y, 0);
-    
+
     ASSERT_DOUBLE_EQ(def.dist(tenten), SQRT200);
     ASSERT_DOUBLE_EQ(tenten.dist(fivezero), 11.1803398874989485);
-    
+
     ASSERT_DOUBLE_EQ(def.dot(tenten), 0);
     ASSERT_DOUBLE_EQ(tenten.dot(fivezero), 50);
-    
-    //ASSERT_DOUBLE_EQ(M_PI_4, tenten.angle()); //TODO: somehow is not compiling on macOS
+
+    // ASSERT_DOUBLE_EQ(M_PI_4, tenten.angle()); //TODO: somehow is not compiling on macOS
     ASSERT_DOUBLE_EQ(0, fivezero.angle());
-    
+
     Vector2 proj = fivezero.project(def, tenten);
     ASSERT_DOUBLE_EQ(2.5, proj.x);
     ASSERT_DOUBLE_EQ(2.5, proj.y);
@@ -102,16 +104,16 @@ TEST(VectorTests, moreOperators) {
     EXPECT_DOUBLE_EQ(b.y, 2);
 
     Vector2 z = b / 2;
-    EXPECT_DOUBLE_EQ(z.x,1.5);
-    EXPECT_DOUBLE_EQ(z.y,1);
+    EXPECT_DOUBLE_EQ(z.x, 1.5);
+    EXPECT_DOUBLE_EQ(z.y, 1);
 
     z = b + 1;
-    EXPECT_DOUBLE_EQ(z.x,4);
-    EXPECT_DOUBLE_EQ(z.y,3);
+    EXPECT_DOUBLE_EQ(z.x, 4);
+    EXPECT_DOUBLE_EQ(z.y, 3);
 
     z = b - 1;
-    EXPECT_DOUBLE_EQ(z.x,2);
-    EXPECT_DOUBLE_EQ(z.y,1);
+    EXPECT_DOUBLE_EQ(z.x, 2);
+    EXPECT_DOUBLE_EQ(z.y, 1);
 
     b *= a;
     EXPECT_DOUBLE_EQ(b.x, 3);
@@ -149,7 +151,7 @@ TEST(VectorTests, protoVector) {
     EXPECT_DOUBLE_EQ(b.x, f.x);
     EXPECT_DOUBLE_EQ(b.y, f.y);
     std::cout << checkF << std::endl;  // testing print functionality
-} 
+}
 
 TEST(VectorTests, rotateAroundPoint) {
     // Rotate Pi around origin
@@ -214,7 +216,7 @@ TEST(VectorTests, lerp) {
     EXPECT_DOUBLE_EQ(origin.y, 0);
 }
 
-TEST(VectorTests,nan){
+TEST(VectorTests, nan) {
     Vector2 test(0, 0);
     EXPECT_TRUE(test.isNotNaN());
     double nan = std::numeric_limits<double>::quiet_NaN();

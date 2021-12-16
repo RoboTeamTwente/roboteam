@@ -11,20 +11,20 @@ namespace rtt {
     class Grid {
     public:
         /**
-         * A Grid is a 2D vector of Vector2 points.
+         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered (avg x and y will be 0) in the given range.
          * @param offSetX the distance you want to horizontally shift the grid from 0 (where 0 is left edge)
          * @param offSetY the distance you want to vertically shift the grid from 0 (where 0 is bottom edge)
          * @param regionWidth the width of the region you want the grid to encompass
-         * @param regionHeight the height of the region you want the grid to encompass
+         * @param regionLength the length of the region you want the grid to encompass
          * @param numStepsX number of segments to divide the grid into in x direction
          * @param numStepsY number of segments to divide the grid into in y direction
          */
-        Grid(double offSetX, double offSetY, double regionWidth, double regionHeight, int numSegmentsX, int numSegmentsY);
+        Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numSegmentsX, int numSegmentsY);
 
         [[nodiscard]] double getOffSetX() const;
         [[nodiscard]] double getOffSetY() const;
         [[nodiscard]] double getRegionWidth() const;
-        [[nodiscard]] double getRegionHeight() const;
+        [[nodiscard]] double getRegionLength() const;
         [[nodiscard]] int getNumSegmentsX() const;
         [[nodiscard]] int getNumSegmentsY() const;
         [[nodiscard]] double getStepSizeX() const;
@@ -39,7 +39,7 @@ namespace rtt {
         double offSetX;
         double offSetY;
         double regionWidth;
-        double regionHeight;
+        double regionLength;
         int numSegmentsX;
         int numSegmentsY;
         double stepSizeX;
@@ -47,4 +47,4 @@ namespace rtt {
     };
 }
 
-#endif //RTT_GRID_H
+#endif  // RTT_GRID_H

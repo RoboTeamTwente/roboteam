@@ -19,5 +19,4 @@
  */
 constexpr static double RTT_PRECISION_LIMIT = 1e-5;
 
-
-#endif //RTT_DEFINITIONS_H
+#endif  // RTT_DEFINITIONS_H

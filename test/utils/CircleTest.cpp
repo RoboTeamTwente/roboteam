@@ -3,7 +3,9 @@
 //
 
 #include <gtest/gtest.h>
+
 #include <cmath>
+
 #include "roboteam_utils/Circle.h"
 
 TEST(CircleTests, instantiation) {

@@ -9,16 +9,16 @@
 #include <zmqpp/zmqpp.hpp>
 
 namespace rtt::networking {
-    struct Module {
-        zmqpp::context context;
-        zmqpp::socket socket;
+struct Module {
+    zmqpp::context context;
+    zmqpp::socket socket;
 
-        Module(proto::Handshake handshake);
+    Module(proto::Handshake handshake);
 
-        stx::Result<proto::ModuleState, std::string> read_next(bool dont_block = true);
+    stx::Result<proto::ModuleState, std::string> read_next(bool dont_block = true);
 
-        bool is_ok() const noexcept;
-    };
+    bool is_ok() const noexcept;
+};
 }  // namespace rtt::networking
 
 #endif

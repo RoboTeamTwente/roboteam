@@ -2,8 +2,10 @@
 // Created by rolf on 22-01-20.
 //
 #include "Rectangle.h"
+
 #include <cmath>
 #include <optional>
+
 #include "Line.h"
 #include "LineSegment.h"
 #include "Polygon.h"
@@ -137,4 +139,4 @@ std::ostream &Rectangle::write(std::ostream &os) const { return os << "Rect: " <
 
 std::ostream &operator<<(std::ostream &out, const Rectangle &rect) { return rect.write(out); }
 
- }  // namespace rtt
+}  // namespace rtt

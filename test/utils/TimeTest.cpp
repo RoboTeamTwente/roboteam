@@ -2,8 +2,8 @@
 // Created by rolf on 19-08-20.
 //
 
-#include <roboteam_utils/Time.h>
 #include <gtest/gtest.h>
+#include <roboteam_utils/Time.h>
 
 TEST(TimeTests, constructors) {
     Time empty;
@@ -51,7 +51,7 @@ TEST(TimeTests, operators) {
 TEST(TimeTests, booleans) {
     long nanosecs = 1037450000;
     Time time(nanosecs), time2(nanosecs);
-    Time time3((long) 1037450001);
+    Time time3((long)1037450001);
     EXPECT_TRUE(time == time2);
     EXPECT_FALSE(time != time2);
 
@@ -74,16 +74,16 @@ TEST(TimeTests, booleans) {
     EXPECT_TRUE(time <= time3);
     EXPECT_TRUE(time <= time2);
 }
-TEST(TimeTests,doubleConstructor){
+TEST(TimeTests, doubleConstructor) {
     double duration = 3.482930;
     Time time(duration);
-    EXPECT_DOUBLE_EQ(time.asSeconds(),duration);
+    EXPECT_DOUBLE_EQ(time.asSeconds(), duration);
 }
 
-TEST(TimeTests,minusBug){
+TEST(TimeTests, minusBug) {
     Time one(1.01);
     Time two(2.01);
     Time three = two - one;
-    EXPECT_DOUBLE_EQ((two-one).asSeconds(),1.0);
-    EXPECT_DOUBLE_EQ(three.asSeconds(),1.0);
+    EXPECT_DOUBLE_EQ((two - one).asSeconds(), 1.0);
+    EXPECT_DOUBLE_EQ(three.asSeconds(), 1.0);
 }

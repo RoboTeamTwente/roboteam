@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+
 #include "roboteam_utils/LineSegment.h"
 #include "roboteam_utils/Shadow.h"
 #include "roboteam_utils/Vector2.h"

@@ -1,5 +1,7 @@
-#include <optional>
 #include "Line.h"
+
+#include <optional>
+
 #include "LineSegment.h"
 #include "Print.h"
 
@@ -8,8 +10,9 @@ Line::Line(const Vector2 &v1, const Vector2 &v2) {
     this->v1 = v1;
     this->v2 = v2;
     if (v1 == v2) {
-        RTT_WARNING("Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
-                     "the LineSegment class instead.");
+        RTT_WARNING(
+            "Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
+            "the LineSegment class instead.");
     }
 }
 
@@ -17,8 +20,9 @@ Line::Line(const LineSegment &other) noexcept {
     v1 = other.start;
     v2 = other.end;
     if (v1 == v2) {
-        RTT_WARNING("Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
-                     "the LineSegment class instead.");
+        RTT_WARNING(
+            "Warning: you created an undefined line, because v1 == v2. Note that Lines have an infinite length. If you want to have a Line with finite length then use "
+            "the LineSegment class instead.");
     }
 }
 

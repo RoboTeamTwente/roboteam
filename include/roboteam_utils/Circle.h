@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <vector>
+
 #include "Line.h"
 #include "LineSegment.h"
 #include "Rectangle.h"

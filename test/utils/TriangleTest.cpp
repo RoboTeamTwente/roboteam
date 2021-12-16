@@ -3,9 +3,10 @@
 //
 
 #include <gtest/gtest.h>
-#include "roboteam_utils/Triangle.h"
-#include "roboteam_utils/LineSegment.h"
+
 #include "roboteam_utils/Line.h"
+#include "roboteam_utils/LineSegment.h"
+#include "roboteam_utils/Triangle.h"
 namespace rtt {
 TEST(Triangle, basic) {
     Vector2 point1(1, 1);
@@ -25,18 +26,18 @@ TEST(Triangle, basic) {
     }
 }
 
-TEST(Triangle, area){
+TEST(Triangle, area) {
     Vector2 point1(1, 1);
     Vector2 point2(3, 1);
     Vector2 point3(2, 4);
     Triangle triangle(point1, point2, point3);
     EXPECT_DOUBLE_EQ(triangle.area(), 3.0);
 
-    Vector2 point4(5,1);
-    Triangle zeroArea(point1,point2,point4);
-    EXPECT_DOUBLE_EQ(zeroArea.area(),0.0);
+    Vector2 point4(5, 1);
+    Triangle zeroArea(point1, point2, point4);
+    EXPECT_DOUBLE_EQ(zeroArea.area(), 0.0);
 }
-TEST(Triangle, contains){
+TEST(Triangle, contains) {
     Vector2 point1(1, 1);
     Vector2 point2(3, 1);
     Vector2 point3(2, 4);
@@ -44,27 +45,27 @@ TEST(Triangle, contains){
     EXPECT_TRUE(triangle.contains(point1));
     EXPECT_TRUE(triangle.contains(point2));
     EXPECT_TRUE(triangle.contains(point3));
-    EXPECT_TRUE(triangle.contains((point1+point2)*0.5));
-    EXPECT_TRUE(triangle.contains((point2+point3)*0.5));
-    EXPECT_TRUE(triangle.contains((point3+point1)*0.5));
-    EXPECT_TRUE(triangle.contains((point1+point2+point3)/3));
-    EXPECT_FALSE(triangle.contains(Vector2(1,0)));
+    EXPECT_TRUE(triangle.contains((point1 + point2) * 0.5));
+    EXPECT_TRUE(triangle.contains((point2 + point3) * 0.5));
+    EXPECT_TRUE(triangle.contains((point3 + point1) * 0.5));
+    EXPECT_TRUE(triangle.contains((point1 + point2 + point3) / 3));
+    EXPECT_FALSE(triangle.contains(Vector2(1, 0)));
 }
-//Can be better but this relies on line segment and line intersections which are very heavily tested so there is no need to overtest
-TEST(Triangle,intersections){
+// Can be better but this relies on line segment and line intersections which are very heavily tested so there is no need to overtest
+TEST(Triangle, intersections) {
     Vector2 point1(1, 1);
     Vector2 point2(3, 1);
     Vector2 point3(2, 4);
     Triangle triangle(point1, point2, point3);
-    Line testLine(Vector2(1,2),Vector2(1,3));
-    LineSegment segment(Vector2(1,2),Vector2(1,3));
-    LineSegment second(Vector2(1,0),Vector2(1,3));
+    Line testLine(Vector2(1, 2), Vector2(1, 3));
+    LineSegment segment(Vector2(1, 2), Vector2(1, 3));
+    LineSegment second(Vector2(1, 0), Vector2(1, 3));
     EXPECT_TRUE(triangle.doesIntersect(testLine));
     EXPECT_FALSE(triangle.doesIntersect(segment));
     EXPECT_TRUE(triangle.doesIntersect(second));
 
-    EXPECT_GT(triangle.intersects(testLine).size(),0);
-    EXPECT_GT(triangle.intersects(second).size(),0);
-    EXPECT_EQ(triangle.intersects(segment).size(),0);
+    EXPECT_GT(triangle.intersects(testLine).size(), 0);
+    EXPECT_GT(triangle.intersects(second).size(), 0);
+    EXPECT_EQ(triangle.intersects(segment).size(), 0);
 }
-}
+}  // namespace rtt

@@ -1,10 +1,9 @@
+#include <RobotCommand.h>
 #include <RobotHub.h>
 
 #include <cmath>
 #include <iostream>
 #include <sstream>
-
-#include <RobotCommand.h>
 
 namespace rtt::robothub {
 
@@ -31,7 +30,7 @@ RobotHub::RobotHub() {
 bool RobotHub::subscribe() {
     auto blueCommandsCallback = std::bind(&RobotHub::onBlueRobotCommands, this, std::placeholders::_1);
     this->robotCommandsBlueSubscriber = std::make_unique<rtt::net::RobotCommandsBlueSubscriber>(blueCommandsCallback);
-    
+
     auto yellowCommandsCallback = std::bind(&RobotHub::onYellowRobotCommands, this, std::placeholders::_1);
     this->robotCommandsYellowSubscriber = std::make_unique<rtt::net::RobotCommandsYellowSubscriber>(yellowCommandsCallback);
 
@@ -41,10 +40,8 @@ bool RobotHub::subscribe() {
     this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
 
     // All networkers should not be a nullptr
-    return this->robotCommandsBlueSubscriber    != nullptr
-        && this->robotCommandsYellowSubscriber  != nullptr
-        && this->settingsSubscriber             != nullptr
-        && this->robotFeedbackPublisher         != nullptr;
+    return this->robotCommandsBlueSubscriber != nullptr && this->robotCommandsYellowSubscriber != nullptr && this->settingsSubscriber != nullptr &&
+           this->robotFeedbackPublisher != nullptr;
 }
 
 void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow) {
@@ -55,7 +52,7 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool to
         int id = robotCommand.id();
         float kickSpeed = robotCommand.chip_kick_vel();
         float kickAngle = robotCommand.chipper() ? DEFAULT_CHIPPER_ANGLE : 0.0f;
-        float dribblerSpeed = (robotCommand.dribbler() > 0 ? MAX_DRIBBLER_SPEED : 0.0); // dribbler_speed is range of 0 to 1
+        float dribblerSpeed = (robotCommand.dribbler() > 0 ? MAX_DRIBBLER_SPEED : 0.0);  // dribbler_speed is range of 0 to 1
         float xVelocity = robotCommand.vel().x();
         float yVelocity = robotCommand.vel().y();
         // TODO: Check if there is angular velocity
@@ -87,7 +84,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
         command.doChip = protoCommand.chipper();
         command.doForce = protoCommand.chip_kick_forced();
         command.kickChipPower = protoCommand.chip_kick_vel();
-        command.dribbler = (float) protoCommand.dribbler();
+        command.dribbler = (float)protoCommand.dribbler();
 
         command.rho = rho;
         command.theta = theta;
@@ -102,7 +99,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
             command.useCameraAngle = false;
             command.cameraAngle = 0.0;
         }
-        
+
         command.feedback = false;
 
         this->basestationManager->sendSerialCommand(command);
@@ -112,12 +109,8 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
     }
 }
 
-void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) {
-    this->processRobotCommands(commands, false, this->mode);
-}
-void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) {
-    this->processRobotCommands(commands, true, this->mode);
-}
+void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, false, this->mode); }
+void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, true, this->mode); }
 
 void RobotHub::processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode) {
     switch (mode) {
@@ -180,7 +173,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     proto::RobotData feedbackToBePublished;
     feedbackToBePublished.set_isyellow(feedback.isTeamYellow);
 
-    //proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
+    // proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
 
     for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
         proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
@@ -193,7 +186,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
 
 void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
-    //TODO: Get from basestation which color
+    // TODO: Get from basestation which color
 
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);
@@ -201,24 +194,20 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     feedbackOfRobot->set_ballsensorisworking(feedback.ballSensorWorking);
     feedbackOfRobot->set_hasball(feedback.hasBall);
     feedbackOfRobot->set_ballpos(feedback.ballPos);
-    //feedbackOfRobot->set_capacitorcharged(feedback.capacitorCharged); // Not yet added to proto
+    // feedbackOfRobot->set_capacitorcharged(feedback.capacitorCharged); // Not yet added to proto
     feedbackOfRobot->set_x_vel(std::cos(feedback.theta) * feedback.rho);
     feedbackOfRobot->set_y_vel(std::sin(feedback.theta) * feedback.rho);
     feedbackOfRobot->set_yaw(feedback.angle);
-    //feedbackOfRobot->set_batterylevel(feedback.batteryLevel); // Not in proto yet
+    // feedbackOfRobot->set_batterylevel(feedback.batteryLevel); // Not in proto yet
     feedbackOfRobot->set_signalstrength(feedback.rssi);
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
 
     this->sendRobotFeedback(feedbackToBePublished);
 }
 
-bool RobotHub::sendRobotFeedback(const proto::RobotData& feedback) {
-    return this->robotFeedbackPublisher->publish(feedback);
-}
+bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) { return this->robotFeedbackPublisher->publish(feedback); }
 
-const char* FailedToInitializeNetworkersException::what() const throw() {
-    return "Failed to initialize networker(s). Is another RobotHub running?";
-}
+const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 
 }  // namespace rtt::robothub
 

@@ -2,24 +2,21 @@
 
 #include <constants.h>
 #include <libusb-1.0/libusb.h>
+#include <utilities.h>
 
 #include <RobotCommandsNetworker.hpp>
+#include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-#include <RobotFeedbackNetworker.hpp>
-
-#include <utilities.h>
-#include <memory>
+#include <basestation/BasestationManager.hpp>
 #include <exception>
 #include <functional>
-#include <basestation/BasestationManager.hpp>
+#include <memory>
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
 
-enum class RobotHubMode {
-    NEITHER, SIMULATOR, BASESTATION, BOTH
-};
+enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
 
 class RobotHub {
    public:
@@ -49,19 +46,19 @@ class RobotHub {
     void sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow);
     void sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow);
 
-    void onBlueRobotCommands(const proto::AICommand& commands);
-    void onYellowRobotCommands(const proto::AICommand& commands);
+    void onBlueRobotCommands(const proto::AICommand &commands);
+    void onYellowRobotCommands(const proto::AICommand &commands);
     void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode);
 
     void onSettings(const proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
-    bool sendRobotFeedback(const proto::RobotData& feedback);
+    bool sendRobotFeedback(const proto::RobotData &feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {
-    virtual const char* what() const throw();
+    virtual const char *what() const throw();
 };
 
 }  // namespace rtt::robothub

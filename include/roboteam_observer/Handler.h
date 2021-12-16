@@ -6,17 +6,15 @@
 
 #include <RobotFeedbackNetworker.hpp>
 #include <WorldNetworker.hpp>
-
-#include <memory>
-#include <vector>
-#include <utility>
 #include <exception>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include "RobocupReceiver.h"
 
 class Handler {
    private:
-    
     std::unique_ptr<rtt::net::RobotFeedbackSubscriber> feedbackSubscriber;
     std::unique_ptr<rtt::net::WorldPublisher> worldPublisher;
 

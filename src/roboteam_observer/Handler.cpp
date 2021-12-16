@@ -27,7 +27,7 @@ void Handler::start() {
             }
 
             auto state = observer.process(Time::now(), vision_packets, referee_packets, robothub_info);  // TODO: fix time extrapolation
-            
+
             this->worldPublisher->publish(state);
             // TODO: Try resending if failed to send message
         },
@@ -40,8 +40,7 @@ bool Handler::initializeNetworkers() {
     auto feedbackCallback = std::bind(&Handler::robotDataCallBack, this, std::placeholders::_1);
     this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>(feedbackCallback);
 
-    return this->worldPublisher != nullptr
-        && this->feedbackSubscriber != nullptr;
+    return this->worldPublisher != nullptr && this->feedbackSubscriber != nullptr;
 }
 
 bool Handler::setupSSLClients() {
@@ -89,9 +88,5 @@ void Handler::robotDataCallBack(const proto::RobotData& data) {
     receivedRobotData.push_back(data);
 }
 
-const char* FailedToInitializeNetworkersException::what() const throw() {
-    return "Failed to initialize networker(s). Is another observer running?";
-}
-const char* FailedToSetupSSLClients::what() const throw() {
-    return "Failed to setup SSL client(s). Is another observer running?";
-}
+const char* FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another observer running?"; }
+const char* FailedToSetupSSLClients::what() const throw() { return "Failed to setup SSL client(s). Is another observer running?"; }

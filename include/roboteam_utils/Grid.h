@@ -11,7 +11,7 @@ namespace rtt {
     class Grid {
     public:
         /**
-         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered (avg x and y will be 0) in the given range.
+         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered in the given range.
          * @param offSetX the distance you want to horizontally shift the grid from 0 (where 0 is left edge)
          * @param offSetY the distance you want to vertically shift the grid from 0 (where 0 is bottom edge)
          * @param regionWidth the width of the region you want the grid to encompass (y-direction)

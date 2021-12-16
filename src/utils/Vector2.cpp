@@ -1,7 +1,7 @@
 #include "Vector2.h"
 
-#include <cmath>
 #include <cassert>
+#include <cmath>
 
 #include "Angle.h"
 #include "Definitions.h"

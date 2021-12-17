@@ -12,19 +12,18 @@
 
 class Handler {
    private:
-    std::unique_ptr<proto::Publisher<proto::State>> pub_state = nullptr;
+    std::unique_ptr<proto::Publisher<proto::State>> pub_state;
 
-    RobocupReceiver<proto::SSL_WrapperPacket> * vision_client = nullptr;
-    RobocupReceiver<proto::SSL_Referee> * referee_client = nullptr;
+    std::unique_ptr<RobocupReceiver<proto::SSL_WrapperPacket>> vision_client;
+    std::unique_ptr<RobocupReceiver<proto::SSL_Referee>> referee_client;
 
-    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback = nullptr;
-    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback_2 = nullptr;
+    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback;
+    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback_2;
     Observer observer;
     std::vector<proto::RobotData> receivedRobotData;
     std::mutex sub_mutex;
    public:
     Handler() = default;
-    ~Handler();
 
     /*
      * Setup a world with a kalmanfilter, and initialize the publishers for publishing data.

@@ -42,8 +42,8 @@ void Handler::setupSSLClients() {
     const QString SSL_VISION_SOURCE_IP = "224.5.23.2";
     const QString SSL_REFEREE_SOURCE_IP = "224.5.23.1";
     
-    vision_client = new RobocupReceiver<proto::SSL_WrapperPacket>(QHostAddress(SSL_VISION_SOURCE_IP),DEFAULT_VISION_PORT);
-    referee_client = new RobocupReceiver<proto::SSL_Referee>(QHostAddress(SSL_REFEREE_SOURCE_IP),DEFAULT_REFEREE_PORT);
+    this->vision_client = std::make_unique<RobocupReceiver<proto::SSL_WrapperPacket>>(QHostAddress(SSL_VISION_SOURCE_IP),DEFAULT_VISION_PORT);
+    this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(QHostAddress(SSL_REFEREE_SOURCE_IP),DEFAULT_REFEREE_PORT);
 
     std::cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << std::endl;
     std::cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << std::endl;
@@ -74,8 +74,3 @@ void Handler::robotDataCallBack(proto::RobotData& data) {
     std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(data);
 }
-Handler::~Handler() {
-  delete referee_client;
-  delete vision_client;
-}
-

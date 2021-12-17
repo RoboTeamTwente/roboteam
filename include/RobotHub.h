@@ -29,7 +29,7 @@ class RobotHub {
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::Setting settings;
-    RobotHubMode mode;
+    utils::RobotHubMode mode;
     proto::World world;
 
     std::unique_ptr<rtt::net::RobotCommandsBlueSubscriber> robotCommandsBlueSubscriber;
@@ -48,7 +48,7 @@ class RobotHub {
 
     void onBlueRobotCommands(const proto::AICommand &commands);
     void onYellowRobotCommands(const proto::AICommand &commands);
-    void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode);
+    void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, utils::RobotHubMode mode);
 
     void onSettings(const proto::Setting &setting);
 

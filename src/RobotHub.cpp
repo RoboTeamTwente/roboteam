@@ -8,8 +8,6 @@
 namespace rtt::robothub {
 
 RobotHub::RobotHub() {
-    std::cout << "[RobotHub] New RobotHub" << std::endl;
-
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
@@ -17,6 +15,9 @@ RobotHub::RobotHub() {
     if (!this->subscribe()) {
         throw FailedToInitializeNetworkersException();
     }
+    
+    this->mode = utils::RobotHubMode::NEITHER;
+    std::cout << "[RobotHub]: Starting with default mode of: " << utils::modeToString(this->mode) << std::endl;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     auto simulationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromSimulator, this, std::placeholders::_1);
@@ -112,27 +113,36 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
 void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, false, this->mode); }
 void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, true, this->mode); }
 
-void RobotHub::processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, RobotHubMode mode) {
+void RobotHub::processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, utils::RobotHubMode mode) {
     switch (mode) {
-        case RobotHubMode::SIMULATOR:
+        case utils::RobotHubMode::SIMULATOR:
             this->sendCommandsToSimulator(commands, forTeamYellow);
             break;
-        case RobotHubMode::BASESTATION:
+        case utils::RobotHubMode::BASESTATION:
             this->sendCommandsToBasestation(commands, forTeamYellow);
             break;
-        case RobotHubMode::BOTH:
+        case utils::RobotHubMode::BOTH:
             this->sendCommandsToSimulator(commands, forTeamYellow);
             this->sendCommandsToBasestation(commands, forTeamYellow);
+            break;
+        case utils::RobotHubMode::NEITHER:
+            // Do not handle commands
             break;
         default:
-            std::cout << "WARNING: Unknown robothub mode" << std::endl;
+            std::cout << "[RobotHub]: Warning: Unknown robothub mode" << std::endl;
             break;
     }
 }
 
 void RobotHub::onSettings(const proto::Setting &settings) {
     this->settings = settings;
-    this->mode = settings.serialmode() ? RobotHubMode::BASESTATION : RobotHubMode::SIMULATOR;
+
+    utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
+    if (newMode != this->mode) {
+        std::cout << "[RobotHub]: Changed robothub mode from: " << utils::modeToString(this->mode) << " to: " << utils::modeToString(newMode) << std::endl;
+    }
+
+    this->mode = newMode;
 }
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,

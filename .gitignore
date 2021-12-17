@@ -12,6 +12,9 @@ USB_DEVICE
 startup
 STM32F767ZITx_FLASH.ld
 python_utils/rem
+
+python_utils/*.csv
+
 # Prerequisites
 *.d
 

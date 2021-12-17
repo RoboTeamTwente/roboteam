@@ -7,6 +7,7 @@
 
 #include <roboteam_utils/Time.h>
 #include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
+#include <optional>
 
 /*
  * @brief A class which filters the referee information into one coherent message.

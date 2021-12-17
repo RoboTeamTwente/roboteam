@@ -7,6 +7,7 @@
 
 #include "CameraRobotFilter.h"
 #include "observer/filters/vision/robot/RobotObservation.h"
+#include <optional>
 class RobotFilter  {
  public:
   explicit RobotFilter(const RobotObservation &observation);

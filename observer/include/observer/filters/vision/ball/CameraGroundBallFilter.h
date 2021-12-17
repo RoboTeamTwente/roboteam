@@ -8,6 +8,7 @@
 #include "FilteredBall.h"
 #include "BallObservation.h"
 #include "GroundBallExtendedKalmanFilter.h"
+#include <optional>
 
 struct CameraGroundBallPrediction{
   Eigen::Vector2d position;

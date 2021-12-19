@@ -22,7 +22,18 @@ void Handler::start() {
             }
 
             auto state = observer.process(Time::now(),vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
-            while(!pub_state->send(state)); //TODO: try sending for a max limit amount of times
+            std::size_t iterations = 0;
+            bool sent = false;
+            while(iterations < 10){
+              if(pub_state->send(state)){
+                sent = true;
+                break;
+              }
+              iterations++;
+            }
+            if(!sent){
+              std::cout<<"could not send data on publisher!"<<std::endl;
+            }
         },
         100);
 }

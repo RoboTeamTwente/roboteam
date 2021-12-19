@@ -11,6 +11,7 @@
 #include <optional>
 
 struct CameraGroundBallPrediction{
+  CameraGroundBallPrediction(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time);
   Eigen::Vector2d position;
   Eigen::Vector2d velocity;
   Time time;

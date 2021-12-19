@@ -12,6 +12,7 @@
 #include "FilteredBall.h"
 
 struct GroundBallPrediction{
+  GroundBallPrediction(CameraGroundBallPrediction prediction,bool hadRequestedCamera);
   CameraGroundBallPrediction prediction;
   bool hadRequestedCamera;
 };

@@ -4,6 +4,8 @@
 
 #include "filters/vision/ball/BallFilter.h"
 
+#include <utility>
+
 
 BallFilter::BallFilter(const BallObservation &observation) :
     groundFilters{std::make_pair(observation.cameraID,CameraGroundBallFilter(observation))}{
@@ -12,20 +14,12 @@ BallFilter::BallFilter(const BallObservation &observation) :
 GroundBallPrediction BallFilter::predictCam(int cameraID, Time until) const {
   auto camera_filter = groundFilters.find(cameraID);
   if(camera_filter != groundFilters.end()){
-    GroundBallPrediction prediction;
-    //TODO: constructor
-    prediction.prediction = camera_filter->second.predict(until);
-    prediction.hadRequestedCamera = true;
+    GroundBallPrediction prediction(camera_filter->second.predict(until),true);
     return prediction;
   }
   // no information for this camera available; we merge data from available camera's
   FilteredBall estimate = mergeBalls(until);
-  GroundBallPrediction prediction;
-  //TODO; constructor
-  prediction.prediction.position = estimate.position;
-  prediction.prediction.velocity = estimate.velocity;
-  prediction.prediction.time = until;
-  prediction.hadRequestedCamera = false;
+  GroundBallPrediction prediction(CameraGroundBallPrediction(estimate.position,estimate.velocity,until),false);
   return prediction;
 }
 bool BallFilter::processDetections(const CameraGroundBallPredictionObservationPair &detections, int cameraID) {
@@ -73,3 +67,7 @@ double BallFilter::getHealth() const {
     maxHealth = fmax(filter.second.getHealth(), maxHealth);
   }
   return maxHealth;}
+GroundBallPrediction::GroundBallPrediction(CameraGroundBallPrediction prediction, bool hadRequestedCamera) :
+prediction{std::move(prediction)},hadRequestedCamera{hadRequestedCamera}{
+
+}

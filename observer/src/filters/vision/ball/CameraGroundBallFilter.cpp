@@ -4,6 +4,8 @@
 
 #include <filters/vision/ball/CameraGroundBallFilter.h>
 
+#include <utility>
+
 void CameraGroundBallFilter::update(const BallObservation &observation) {
   ekf.update(observation.position);
   objectSeen(observation.timeCaptured);
@@ -65,4 +67,7 @@ FilteredBall CameraGroundBallFilter::getEstimate(Time time) const {
   return ball;
 }
 
+CameraGroundBallPrediction::CameraGroundBallPrediction(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time) :
+position{std::move(pos)},velocity{std::move(vel)},time{time}{
 
+}

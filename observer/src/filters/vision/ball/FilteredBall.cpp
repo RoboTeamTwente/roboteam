@@ -3,6 +3,8 @@
 //
 
 #include "filters/vision/ball/FilteredBall.h"
+
+#include <utility>
 proto::WorldBall FilteredBall::asWorldBall() const {
   proto::WorldBall proto_ball;
   proto_ball.mutable_vel()->set_x(velocity.x());
@@ -19,4 +21,12 @@ proto::WorldBall FilteredBall::asWorldBall() const {
   proto_ball.set_area(0);
 
   return proto_ball;
+}
+FilteredBall::FilteredBall(Eigen::Vector2d pos,
+                           Eigen::Vector2d vel,
+                           double health,
+                           double posUncertainty,
+                           double velocityUncertainty) :
+                           position{std::move(pos)},velocity{std::move(vel)},health{health},posUncertainty{posUncertainty},velocityUncertainty{velocityUncertainty}{
+
 }

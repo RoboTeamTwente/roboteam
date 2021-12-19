@@ -31,7 +31,7 @@ class WorldFilter {
    */
   void updateGeometry(const proto::SSL_GeometryData& geometry);
 
-  void updateRobotParameters(const TwoTeamRobotParameters& robotInfo); //TODO: link to interface
+  void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
  private:
   typedef std::map<RobotID, std::vector<RobotFilter>> robotMap;

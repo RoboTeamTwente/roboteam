@@ -45,7 +45,6 @@ FilteredBall BallFilter::mergeBalls(Time time) const {
   ball.posUncertainty = 0.0;
   ball.velocityUncertainty = 0.0;
   constexpr double mergeFactor = 1.5;
-  //TODO default constructor
   for(const auto& filter : groundFilters){
     FilteredBall estimate = filter.second.getEstimate(time);
     double weight = 100.0 / estimate.health;

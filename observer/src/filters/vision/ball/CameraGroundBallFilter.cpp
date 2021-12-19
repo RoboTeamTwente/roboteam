@@ -57,13 +57,11 @@ CameraGroundBallPrediction CameraGroundBallFilter::predict(Time time) const {
   return prediction;
 }
 FilteredBall CameraGroundBallFilter::getEstimate(Time time) const {
-  //TODO: make constructor
-  FilteredBall ball;
-  ball.position = ekf.getPositionEstimate(time);
-  ball.velocity = ekf.getVelocityEstimate(time);
-  ball.health = getHealth();
-  ball.posUncertainty = ekf.getPositionUncertainty().norm();
-  ball.velocityUncertainty = ekf.getVelocityUncertainty().norm();
+  FilteredBall ball(ekf.getPositionEstimate(time),
+                    ekf.getVelocityEstimate(time),
+                    getHealth(),
+                    ekf.getPositionUncertainty().norm(),
+                    ekf.getVelocityUncertainty().norm());
   return ball;
 }
 

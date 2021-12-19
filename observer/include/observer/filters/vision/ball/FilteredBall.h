@@ -9,6 +9,8 @@
 #include <roboteam_proto/WorldBall.pb.h>
 struct FilteredBall {
   [[nodiscard]] proto::WorldBall asWorldBall() const;
+  FilteredBall(Eigen::Vector2d pos, Eigen::Vector2d vel, double health, double posUncertainty, double velocityUncertainty);
+  FilteredBall() = default;
   Eigen::Vector2d position;
   Eigen::Vector2d velocity;
   double health;

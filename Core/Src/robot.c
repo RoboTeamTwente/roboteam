@@ -104,7 +104,6 @@ void executeCommands(RobotCommand* robotCommand){
 
 
 
-
 void resetRobotCommand(RobotCommand* robotCommand){
 	robotCommand->doKick = false;
 	robotCommand->doChip = false;
@@ -352,7 +351,7 @@ void loop(void){
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 		
-        // Check if ballsesnor connection is still correct
+        // Check if ballsensor connection is still correct
         if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
@@ -387,7 +386,7 @@ void loop(void){
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
 /* This function is triggered after calling HAL_SPI_TransmitReceive_IT */
 /* Since we transmit everything using blocking mode, this function should only be called when we receive something */
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {

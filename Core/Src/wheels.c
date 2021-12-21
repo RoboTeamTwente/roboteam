@@ -193,6 +193,17 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
+static void limit(){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+	// Limit PWM
+		if(pwm[wheel] < PWM_CUTOFF){
+			pwm[wheel] = 0.0F;
+		} else if(pwm[wheel] > MAX_PWM){
+			pwm[wheel] = MAX_PWM;
+		}
+	}
+}
+
 static void scale(){
 	static int Count[4] = {0};
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
@@ -219,17 +230,6 @@ static void scale(){
 				}
 				direction[wheel] = 1; // turn clockwise
 			}
-		}
-	}
-}
-
-static void limit(){
-	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-	// Limit PWM
-		if(pwm[wheel] < PWM_CUTOFF){
-			pwm[wheel] = 0.0F;
-		} else if(pwm[wheel] > MAX_PWM){
-			pwm[wheel] = MAX_PWM;
 		}
 	}
 }

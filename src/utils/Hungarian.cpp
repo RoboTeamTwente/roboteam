@@ -1,289 +1,393 @@
+///////////////////////////////////////////////////////////////////////////////
+// Hungarian.cpp: Implementation file for Class Hungarian.
+//
+// This is a C++ wrapper with slight modification of a hungarian algorithm implementation by Markus Buehren.
+// The original implementation is a few mex-functions for use in MATLAB, found here:
+// http://www.mathworks.com/matlabcentral/fileexchange/6543-functions-for-the-rectangular-assignment-problem
+//
+// Both this code and the orignal code are published under the BSD license.
+// by Cong Ma, 2016
+//
+
 #include "Hungarian.h"
+
+#include <cfloat>  // for DBL_MAX
+#include <cmath>   // for fabs()
+#include <cstdlib>
 
 namespace rtt {
 
-vector<int> Hungarian::Solve(const Matrix& cost) {
-    initVariables(cost);
-    while (!optimal) {
-        switch (step) {
-            case 1:
-                rowSubtraction();
-                break;
-            case 2:
-                starZeros();
-                break;
-            case 3:
-                coverStars();
-                break;
-            case 4:
-                primeUncoveredZeros();
-                break;
-            case 5:
-                starPrimes();
-                break;
-            case 6:
-                findMinCost();
-                break;
-            case 7:
-                optimal = true;
-                returnAssignments();
-                break;
-            default:
-                break;
-        }
+// This function maps two sets of points and returns pairs of sets that give the shortest total distance
+// If you want to have the resulting pair of points for a specific pair
+std::unordered_map<int, Vector2> Hungarian::getOptimalPairsIdentified(const std::unordered_map<int, Vector2>& positions, std::vector<Vector2> targetLocations) {
+    std::vector<int> identifiers;
+    std::vector<Vector2> robotLocations;
+
+    // the robotIds and robotLocations have the same sorting and stay mapped
+    for (auto& position : positions) {
+        identifiers.push_back(position.first);
+        robotLocations.push_back(position.second);
     }
-    return m_assignment;
+
+    auto positionPairs = getOptimalPairs(robotLocations, std::move(targetLocations));
+    std::unordered_map<int, Vector2> output;
+    for (unsigned int i = 0; i < positionPairs.size(); i++) {
+        output.insert(std::make_pair(identifiers.at(i), positionPairs.at(i).second));
+    }
+    return output;
 }
 
-void Hungarian::initVariables(const Matrix& cost) {
-    numRoles = static_cast<int>(cost.size());      // number of columns
-    numRobots = static_cast<int>(cost[0].size());  // number of rows
+bool Hungarian::validateInput(std::vector<Vector2> const& set1, std::vector<Vector2> const& set2) {
+    if (set1.size() > set2.size()) {
+        std::cerr << "wrong input for hungarian: more robots than positions" << std::endl;
+        return false;
+    } else if (set1.empty() || set2.empty()) {
+        std::cerr << "wrong input for hungarian: 0" << std::endl;
+        return false;
+    }
 
-    ColCover.resize(numRoles);
-    RowCover.resize(numRobots);
-
-    path.resize(numRobots * 2, vector<int>(numRobots * 2));
-    mask.resize(numRoles, vector<double>(numRobots));
-    m_cost.resize(numRoles, vector<double>(numRobots));
-    m_cost = cost;
-
-    m_assignment.resize(numRoles);
+    return true;
 }
 
-void Hungarian::printCost() {
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            std::cout << m_cost[role][robot] << " ";
+std::vector<std::pair<Vector2, Vector2>> Hungarian::getOptimalPairs(std::vector<Vector2> set1, std::vector<Vector2> set2) {
+    if (validateInput(set1, set2)) {
+        // compute a distance matrix, initialize it with zeros
+        std::vector<std::vector<double>> distanceMatrix(set1.size(), std::vector<double>(set2.size()));
+        for (unsigned int i = 0; i < set1.size(); i++) {
+            for (unsigned int j = 0; j < set2.size(); j++) {
+                distanceMatrix.at(i).at(j) = set1[i].dist(set2[j]);
+            }
         }
-        std::cout << std::endl;
+
+        // this function mutates 'assignments'
+        std::vector<int> assignments;
+        Solve(distanceMatrix, assignments);
+
+        std::vector<std::pair<Vector2, Vector2>> solutionPairs;
+        for (unsigned int i = 0; i < assignments.size(); i++) {
+            solutionPairs.push_back({set1.at(i), set2.at(assignments.at(i))});
+        }
+        return solutionPairs;
+    }
+    return {};
+}
+
+//********************************************************//
+// A single function wrapper for solving assignment problem.
+//********************************************************//
+double Hungarian::Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignment) {
+    unsigned long nRows = DistMatrix.size();
+    unsigned long nCols = DistMatrix[0].size();
+
+    auto* distMatrixIn = new double[nRows * nCols];
+    int* assignment = new int[nRows];
+    double cost = 0.0;
+
+    // Fill in the distMatrixIn. Mind the index is "i + nRows * j".
+    // Here the cost matrix of size MxN is defined as a double precision array of N*M elements.
+    // In the solving functions matrices are seen to be saved MATLAB-internally in row-order.
+    // (i.e. the matrix [1 2; 3 4] will be stored as a vector [1 3 2 4], NOT [1 2 3 4]).
+    for (unsigned int i = 0; i < nRows; i++)
+        for (unsigned int j = 0; j < nCols; j++) distMatrixIn[i + nRows * j] = DistMatrix[i][j];
+
+    // call solving function
+    assignmentoptimal(assignment, &cost, distMatrixIn, static_cast<int>(nRows), static_cast<int>(nCols));
+
+    Assignment.clear();
+    for (unsigned int r = 0; r < nRows; r++) Assignment.push_back(assignment[r]);
+
+    delete[] distMatrixIn;
+    delete[] assignment;
+    return cost;
+}
+
+//********************************************************//
+// Solve optimal solution for assignment problem using Munkres algorithm, also known as Hungarian Algorithm.
+//********************************************************//
+void Hungarian::assignmentoptimal(int* assignment, double* cost, double* distMatrixIn, int nOfRows, int nOfColumns) {
+    double *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;
+    bool *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
+    int nOfElements, minDim, row, col;
+
+    /* initialization */
+    *cost = 0;
+    for (row = 0; row < nOfRows; row++) assignment[row] = -1;
+
+    /* generate working copy of distance Matrix */
+    /* check if all matrix elements are positive */
+    nOfElements = nOfRows * nOfColumns;
+    distMatrix = (double*)malloc(nOfElements * sizeof(double));
+    distMatrixEnd = distMatrix + nOfElements;
+
+    for (row = 0; row < nOfElements; row++) {
+        value = distMatrixIn[row];
+        if (value < 0) cerr << "All matrix elements have to be non-negative." << endl;
+        distMatrix[row] = value;
+    }
+
+    /* memory allocation */
+    coveredColumns = (bool*)calloc(static_cast<size_t>(nOfColumns), sizeof(bool));
+    coveredRows = (bool*)calloc(static_cast<size_t>(nOfRows), sizeof(bool));
+    starMatrix = (bool*)calloc(static_cast<size_t>(nOfElements), sizeof(bool));
+    primeMatrix = (bool*)calloc(static_cast<size_t>(nOfElements), sizeof(bool));
+    newStarMatrix = (bool*)calloc(static_cast<size_t>(nOfElements), sizeof(bool)); /* used in step4 */
+
+    /* preliminary steps */
+    if (nOfRows <= nOfColumns) {
+        minDim = nOfRows;
+
+        for (row = 0; row < nOfRows; row++) {
+            /* find the smallest element in the row */
+            distMatrixTemp = distMatrix + row;
+            minValue = *distMatrixTemp;
+            distMatrixTemp += nOfRows;
+            while (distMatrixTemp < distMatrixEnd) {
+                value = *distMatrixTemp;
+                if (value < minValue) minValue = value;
+                distMatrixTemp += nOfRows;
+            }
+
+            /* subtract the smallest element from each element of the row */
+            distMatrixTemp = distMatrix + row;
+            while (distMatrixTemp < distMatrixEnd) {
+                *distMatrixTemp -= minValue;
+                distMatrixTemp += nOfRows;
+            }
+        }
+
+        /* Steps 1 and 2a */
+        for (row = 0; row < nOfRows; row++)
+            for (col = 0; col < nOfColumns; col++)
+                if (fabs(distMatrix[row + nOfRows * col]) < DBL_EPSILON)
+                    if (!coveredColumns[col]) {
+                        starMatrix[row + nOfRows * col] = true;
+                        coveredColumns[col] = true;
+                        break;
+                    }
+    } else /* if(nOfRows > nOfColumns) */
+    {
+        minDim = nOfColumns;
+
+        for (col = 0; col < nOfColumns; col++) {
+            /* find the smallest element in the column */
+            distMatrixTemp = distMatrix + nOfRows * col;
+            columnEnd = distMatrixTemp + nOfRows;
+
+            minValue = *distMatrixTemp++;
+            while (distMatrixTemp < columnEnd) {
+                value = *distMatrixTemp++;
+                if (value < minValue) minValue = value;
+            }
+
+            /* subtract the smallest element from each element of the column */
+            distMatrixTemp = distMatrix + nOfRows * col;
+            while (distMatrixTemp < columnEnd) *distMatrixTemp++ -= minValue;
+        }
+
+        /* Steps 1 and 2a */
+        for (col = 0; col < nOfColumns; col++)
+            for (row = 0; row < nOfRows; row++)
+                if (fabs(distMatrix[row + nOfRows * col]) < DBL_EPSILON)
+                    if (!coveredRows[row]) {
+                        starMatrix[row + nOfRows * col] = true;
+                        coveredColumns[col] = true;
+                        coveredRows[row] = true;
+                        break;
+                    }
+        for (row = 0; row < nOfRows; row++) coveredRows[row] = false;
+    }
+
+    /* move to step 2b */
+    step2b(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
+
+    /* compute cost and remove invalid assignments */
+    computeassignmentcost(assignment, cost, distMatrixIn, nOfRows);
+
+    /* free allocated memory */
+    free(distMatrix);
+    free(coveredColumns);
+    free(coveredRows);
+    free(starMatrix);
+    free(primeMatrix);
+    free(newStarMatrix);
+}
+
+/********************************************************/
+void Hungarian::buildassignmentvector(int* assignment, bool* starMatrix, int nOfRows, int nOfColumns) {
+    int row, col;
+
+    for (row = 0; row < nOfRows; row++)
+        for (col = 0; col < nOfColumns; col++)
+            if (starMatrix[row + nOfRows * col]) {
+                assignment[row] = col;
+                break;
+            }
+}
+
+/********************************************************/
+void Hungarian::computeassignmentcost(int* assignment, double* cost, double* distMatrix, int nOfRows) {
+    int row, col;
+
+    for (row = 0; row < nOfRows; row++) {
+        col = assignment[row];
+        if (col >= 0) *cost += distMatrix[row + nOfRows * col];
     }
 }
 
-void Hungarian::printMask() {
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            std::cout << mask[role][robot] << " ";
-        }
-        std::cout << std::endl;
-    }
-}
+/********************************************************/
+void Hungarian::step2a(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                       int nOfColumns, int minDim) {
+    bool *starMatrixTemp, *columnEnd;
+    int col;
 
-void Hungarian::printAssignment() {
-    for (auto i{0}; i < numRoles; ++i) {
-        cout << m_assignment[i] << " ";
-    }
-    cout << endl;
-}
-
-void Hungarian::rowSubtraction() {
-    double min_in_row;
-    for (auto robot{0}; robot < numRobots; ++robot) {
-        // find the lowest cost in a row
-        min_in_row = m_cost[0][robot];
-        for (auto role{1}; role < numRoles; ++role) {
-            if (m_cost[role][robot] < min_in_row) min_in_row = m_cost[role][robot];
-        }
-        // then subtract it from all other cost in the same row
-        for (auto role{0}; role < numRoles; ++role) {
-            m_cost[role][robot] -= min_in_row;
-        }
-    }
-    step = 2;
-}
-
-void Hungarian::starZeros() {
-    // search for zero costs and mark them in the mask matrix if the row and column has not been covered yet
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (m_cost[role][robot] == 0 && !RowCover[robot] && !ColCover[role]) {
-                mask[role][robot] = 1;  // star
-                RowCover[robot] = true;
-                ColCover[role] = true;
+    /* cover every column containing a starred zero */
+    for (col = 0; col < nOfColumns; col++) {
+        starMatrixTemp = starMatrix + nOfRows * col;
+        columnEnd = starMatrixTemp + nOfRows;
+        while (starMatrixTemp < columnEnd) {
+            if (*starMatrixTemp++) {
+                coveredColumns[col] = true;
+                break;
             }
         }
     }
-    clearCovers();
-    step = 3;
+
+    /* move to step 3 */
+    step2b(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
 
-void Hungarian::coverStars() {
-    // check if all columns are assigned to a row in the mask matrix (i.e. if every role has a robot assigned)
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (mask[role][robot] == 1) ColCover[role] = true;
-        }
-    }
-    int role_count{0};
-    for (int role{0}; role < numRoles; ++role) {
-        if (ColCover[role]) ++role_count;
-    }
-    if (role_count == numRoles)
-        step = 7;  // successfully optimized assignment
-    else
-        step = 4;
-}
+/********************************************************/
+void Hungarian::step2b(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                       int nOfColumns, int minDim) {
+    int col, nOfCoveredColumns;
 
-void Hungarian::primeUncoveredZeros() {
-    int robot{-1};
-    int role{-1};
-    bool primed{false};
+    /* count covered columns */
+    nOfCoveredColumns = 0;
+    for (col = 0; col < nOfColumns; col++)
+        if (coveredColumns[col]) nOfCoveredColumns++;
 
-    while (!primed) {
-        findZero(robot, role);
-        if (robot == -1) {  // if no zeros were found there is nothing left to prime
-            primed = true;
-            step = 6;
-        } else {
-            mask[role][robot] = 2;  // mark as primed in mask matrix
-            if (starRow(robot)) {   // if there is a stared zero in the same row as the primed zero
-                // change the stared zero's cover to overlap with the primed zero's cover
-                findStarCol(robot, role);
-                RowCover[robot] = true;
-                ColCover[role] = false;
-            } else {
-                // save the smallest uncovered value and move on
-                path_row_0 = robot;
-                path_col_0 = role;
-                primed = true;
-                step = 5;
-            }
-        }
+    if (nOfCoveredColumns == minDim) {
+        /* algorithm finished */
+        buildassignmentvector(assignment, starMatrix, nOfRows, nOfColumns);
+    } else {
+        /* move to step 3 */
+        step3(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
     }
 }
 
-void Hungarian::findZero(int& row, int& col) {
-    bool found{false};
-    // reset input in case this is not the first while(!primed) iteration
-    row = -1;
-    col = -1;
-    // return the coordinates of the first uncovered zero found in the cost matrix
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (m_cost[role][robot] == 0 && !RowCover[robot] && !ColCover[role]) {
-                row = robot;
-                col = role;
-                found = true;
-                break;
-            }
-        }
-        if (found) break;
+/********************************************************/
+void Hungarian::step3(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim) {
+    bool zerosFound;
+    int row, col, starCol;
+
+    zerosFound = true;
+    while (zerosFound) {
+        zerosFound = false;
+        for (col = 0; col < nOfColumns; col++)
+            if (!coveredColumns[col])
+                for (row = 0; row < nOfRows; row++)
+                    if ((!coveredRows[row]) && (fabs(distMatrix[row + nOfRows * col]) < DBL_EPSILON)) {
+                        /* prime zero */
+                        primeMatrix[row + nOfRows * col] = true;
+
+                        /* find starred zero in current row */
+                        for (starCol = 0; starCol < nOfColumns; starCol++)
+                            if (starMatrix[row + nOfRows * starCol]) break;
+
+                        if (starCol == nOfColumns) /* no starred zero found */
+                        {
+                            /* move to step 4 */
+                            step4(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim, row, col);
+                            return;
+                        } else {
+                            coveredRows[row] = true;
+                            coveredColumns[starCol] = false;
+                            zerosFound = true;
+                            break;
+                        }
+                    }
     }
+
+    /* move to step 5 */
+    step5(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
 
-bool Hungarian::starRow(int row) {
-    // returns whether the mask matrix has a star in a given row
-    bool found{false};
-    for (int role{0}; role < numRoles; ++role) {
-        if (mask[role][row] == 1) found = true;
+/********************************************************/
+void Hungarian::step4(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim, int row, int col) {
+    int n, starRow, starCol, primeRow, primeCol;
+    int nOfElements = nOfRows * nOfColumns;
+
+    /* generate temporary copy of starMatrix */
+    for (n = 0; n < nOfElements; n++) newStarMatrix[n] = starMatrix[n];
+
+    /* star current zero */
+    newStarMatrix[row + nOfRows * col] = true;
+
+    /* find starred zero in current column */
+    starCol = col;
+    for (starRow = 0; starRow < nOfRows; starRow++)
+        if (starMatrix[starRow + nOfRows * starCol]) break;
+
+    while (starRow < nOfRows) {
+        /* unstar the starred zero */
+        newStarMatrix[starRow + nOfRows * starCol] = false;
+
+        /* find primed zero in current row */
+        primeRow = starRow;
+        for (primeCol = 0; primeCol < nOfColumns; primeCol++)
+            if (primeMatrix[primeRow + nOfRows * primeCol]) break;
+
+        /* star the primed zero */
+        newStarMatrix[primeRow + nOfRows * primeCol] = true;
+
+        /* find starred zero in current column */
+        starCol = primeCol;
+        for (starRow = 0; starRow < nOfRows; starRow++)
+            if (starMatrix[starRow + nOfRows * starCol]) break;
     }
-    return found;
+
+    /* use temporary copy as new starMatrix */
+    /* delete all primes, uncover all rows */
+    for (n = 0; n < nOfElements; n++) {
+        primeMatrix[n] = false;
+        starMatrix[n] = newStarMatrix[n];
+    }
+    for (n = 0; n < nOfRows; n++) coveredRows[n] = false;
+
+    /* move to step 2a */
+    step2a(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
 
-void Hungarian::findStarCol(int row, int& col) {
-    // returns the column of a stared zero in a given row
-    col = -1;
-    for (int role{0}; role < numRoles; ++role) {
-        if (mask[role][row] == 1) col = role;
-    }
+/********************************************************/
+void Hungarian::step5(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
+                      int nOfColumns, int minDim) {
+    double h, value;
+    int row, col;
+
+    /* find smallest uncovered element h */
+    h = DBL_MAX;
+    for (row = 0; row < nOfRows; row++)
+        if (!coveredRows[row])
+            for (col = 0; col < nOfColumns; col++)
+                if (!coveredColumns[col]) {
+                    value = distMatrix[row + nOfRows * col];
+                    if (value < h) h = value;
+                }
+
+    /* add h to each covered row */
+    for (row = 0; row < nOfRows; row++)
+        if (coveredRows[row])
+            for (col = 0; col < nOfColumns; col++) distMatrix[row + nOfRows * col] += h;
+
+    /* subtract h from each uncovered column */
+    for (col = 0; col < nOfColumns; col++)
+        if (!coveredColumns[col])
+            for (row = 0; row < nOfRows; row++) distMatrix[row + nOfRows * col] -= h;
+
+    /* move to step 3 */
+    step3(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);
 }
 
-void Hungarian::starPrimes() {
-    bool done{false};
-    int robot{-1};
-    int role{-1};
-
-    pathCount = 1;
-    path[pathCount - 1][0] = path_row_0;
-    path[pathCount - 1][1] = path_col_0;
-
-    while (!done) {
-        findStarRow(path[pathCount - 1][1], robot);
-        if (robot > -1) {
-            ++pathCount;
-            path[pathCount - 1][0] = robot;
-            path[pathCount - 1][1] = path[pathCount - 2][1];
-        } else
-            done = true;
-        if (!done) {
-            findPrimeCol(path[pathCount - 1][0], role);
-            ++pathCount;
-            path[pathCount - 1][0] = path[pathCount - 2][0];
-            path[pathCount - 1][1] = role;
-        }
-    }
-    augmentPath();
-    clearCovers();
-    clearPrimes();
-    step = 3;
-}
-
-void Hungarian::findStarRow(int col, int& row) {
-    // returns the row of a stared zero in a given column
-    row = -1;
-    for (int robot{0}; robot < numRobots; ++robot) {
-        if (mask[col][robot] == 1) row = robot;
-    }
-}
-
-void Hungarian::findPrimeCol(int row, int& col) {
-    // returns the column of a primed zero in a given row
-    for (int role{0}; role < numRoles; ++role) {
-        if (mask[role][row] == 2) col = role;
-    }
-}
-
-void Hungarian::augmentPath() {
-    for (int p{0}; p < pathCount; ++p) {
-        if (mask[path[p][1]][path[p][0]] == 1)
-            mask[path[p][1]][path[p][0]] = 0;
-        else
-            mask[path[p][1]][path[p][0]] = 1;
-    }
-}
-
-void Hungarian::clearCovers() {
-    // reset all covered rows and columns
-    for (int robot{0}; robot < numRobots; ++robot) {
-        RowCover[robot] = false;
-    }
-    for (int role{0}; role < numRoles; ++role) {
-        ColCover[role] = false;
-    }
-}
-
-void Hungarian::clearPrimes() {
-    // reset all primes stored in the mask matrix
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (mask[role][robot] == 2) mask[role][robot] = 0;
-        }
-    }
-}
-
-void Hungarian::findMinCost() {
-    // find the lowest uncovered cost
-    double minCost{INT_MAX};
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (!RowCover[robot] && !ColCover[role] && minCost > m_cost[role][robot]) minCost = m_cost[role][robot];
-        }
-    }
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            // add the lowest cost to all covered rows
-            if (RowCover[robot]) m_cost[role][robot] += minCost;
-            // subtract the lowest cost from all uncovered columns
-            if (!ColCover[role]) m_cost[role][robot] -= minCost;
-        }
-    }
-    step = 4;
-}
-
-void Hungarian::returnAssignments() {
-    for (auto role{0}; role < numRoles; ++role) {
-        for (auto robot{0}; robot < numRobots; ++robot) {
-            if (mask[role][robot] == 1) m_assignment[role] = robot;
-        }
-    }
-}
 }  // namespace rtt

@@ -8,7 +8,7 @@ message RobotCommand {
     Vector2f vel = 3;
     float w = 4;
     bool use_angle = 5;
-    uint32 dribbler = 6;
+    float dribbler = 6;
 
     bool kicker = 7;
     bool chipper = 8;

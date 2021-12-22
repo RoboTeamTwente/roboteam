@@ -1,8 +1,6 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include <roboteam_proto/Vector2f.pb.h>
-
 #include <iostream>
 
 namespace rtt {
@@ -32,8 +30,6 @@ class Vector2 {
     constexpr Vector2 &operator=(Vector2 const &) = default;
 
     constexpr Vector2(const double x, const double y) : x{x}, y{y} {}
-
-    Vector2(const proto::Vector2f &msg) : Vector2(msg.x(), msg.y()) {}
 
     explicit Vector2(rtt::Angle &angle, const double &length = 1.0);
 
@@ -215,16 +211,6 @@ class Vector2 {
      * \brief Scales this method by the inverse of a scalar.
      */
     Vector2 operator/(const double &other) const;
-
-    /**
-     * \brief Set the values of this vector to the ones in the given protobuf vector.
-     */
-    Vector2 &operator=(const proto::Vector2f &msg);
-
-    /**
-     * \brief Casts or implicitly converts this vector to a ROS one.
-     */
-    operator proto::Vector2f() const;
 
     /**
      * \brief Writes a textual representation of this vector to the given output stream.

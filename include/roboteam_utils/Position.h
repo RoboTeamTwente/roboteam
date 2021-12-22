@@ -1,8 +1,6 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include <roboteam_proto/WorldRobot.pb.h>
-
 #include "Vector2.h"
 
 namespace rtt {
@@ -26,11 +24,6 @@ class Position {
      * \brief Get a Position using a Vector2 for the location, and a double for the rotation.
      */
     constexpr Position(Vector2 loc, double rot = 0) : x(loc.x), y(loc.y), rot(rot) {}
-
-    /**
-     * \brief Get a Position by reading values from a WorldRobot message.
-     */
-    Position(const proto::WorldRobot &robotMsg) : Position(Vector2(robotMsg.pos()), robotMsg.angle()) {}
 
     /**
      * \brief Get the (x, y) coordinates of this position.

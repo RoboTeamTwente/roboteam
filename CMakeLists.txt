@@ -9,7 +9,6 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Angle.cpp
         src/utils/Position.cpp
         src/utils/Mathematics.cpp
-        src/utils/normalize.cpp
         src/utils/Hungarian.cpp
         src/utils/Arc.cpp
         src/utils/Timer.cpp
@@ -32,7 +31,6 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/LineIntersectionTest.cpp
         test/utils/LineProjectionTest.cpp
         test/utils/CircleTest.cpp
-        test/utils/normaliseTest.cpp
         test/utils/PolygonTest.cpp
         test/utils/PositionTest.cpp
         test/utils/Vector2Test.cpp
@@ -46,7 +44,6 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/StaticVectorTest.cpp
         test/utils/ShadowTest.cpp
         test/utils/CircularBufferTest.cpp
-        test/utils/PubSubTest.cpp
         )
 
 add_library(roboteam_utils STATIC
@@ -59,11 +56,6 @@ target_include_directories(roboteam_utils
         INTERFACE include
         )
 
-target_link_libraries(roboteam_utils
-        PUBLIC roboteam_proto
-        PUBLIC utils_networking_lib
-        )
-
 add_executable(utils_tests
         ${ROBOTEAM_UTILS_TEST_SRC}
         )
@@ -71,23 +63,4 @@ add_executable(utils_tests
 target_link_libraries(utils_tests
         PRIVATE roboteam_utils
         PRIVATE gtest
-        )
-
-# -- NETWORKING --
-
-add_library(utils_networking_lib STATIC
-        src/networking/Channel.cpp
-        src/networking/Channels.cpp
-        src/networking/Module.cpp
-        )
-
-target_include_directories(utils_networking_lib
-        PUBLIC include
-        PRIVATE include/networking
-        )
-
-target_link_libraries(utils_networking_lib
-        PUBLIC stx
-        PUBLIC roboteam_proto
-        PUBLIC zmqpp
         )

@@ -5,6 +5,8 @@
 #ifndef RTT_GRID_H
 #define RTT_GRID_H
 
+#include <vector>
+
 #include "Vector2.h"
 
 namespace rtt {
@@ -45,6 +47,6 @@ namespace rtt {
         double stepSizeX;
         double stepSizeY;
     };
-}
+} // namespace rtt
 
 #endif  // RTT_GRID_H

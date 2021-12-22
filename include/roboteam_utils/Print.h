@@ -1,6 +1,7 @@
 #ifndef RTT_ROBOTEAM_AI_SRC_UTILITIES_PRINT_H_
 #define RTT_ROBOTEAM_AI_SRC_UTILITIES_PRINT_H_
 
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 

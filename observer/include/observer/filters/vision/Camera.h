@@ -6,7 +6,7 @@
 #define RTT_CAMERA_H
 
 #include <Eigen/Dense>
-#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
+#include <proto/messages_robocup_ssl_geometry.pb.h>
 
 /**
  * @author Rolf

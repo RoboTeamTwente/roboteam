@@ -1,9 +1,9 @@
 #ifndef ROBOTEAM_WORLD_KALMANFILTER_H
 #define ROBOTEAM_WORLD_KALMANFILTER_H
 
-#include <roboteam_proto/World.pb.h>
-#include <roboteam_proto/WorldRobot.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
+#include <proto/World.pb.h>
+#include <proto/WorldRobot.pb.h>
+#include <proto/messages_robocup_ssl_geometry.pb.h>
 
 #include "observer/filters/vision/ball/BallFilter.h"
 #include "observer/filters/vision/robot/RobotFilter.h"

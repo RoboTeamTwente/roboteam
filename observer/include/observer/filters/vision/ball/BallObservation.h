@@ -7,7 +7,7 @@
 
 #include <roboteam_utils/Time.h>
 #include <Eigen/Dense>
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 
 struct BallObservation {
   explicit BallObservation(int cameraID, Time timeCaptured, Time timeSent, const proto::SSL_DetectionBall& detectionBall);

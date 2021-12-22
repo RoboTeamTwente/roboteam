@@ -29,7 +29,7 @@ add_library(observer STATIC
         )
 
 target_link_libraries(observer
-        PUBLIC roboteam_proto
+        PUBLIC roboteam_networking
         PRIVATE roboteam_utils
         PUBLIC Eigen3::Eigen
         )

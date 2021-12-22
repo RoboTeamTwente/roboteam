@@ -12,7 +12,7 @@ add_executable(roboteam_observer
         )
 target_link_libraries(roboteam_observer
         PRIVATE observer
-        PRIVATE roboteam_proto
+        PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         )

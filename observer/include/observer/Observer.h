@@ -5,10 +5,10 @@
 #ifndef RTT_OBSERVER_H
 #define RTT_OBSERVER_H
 
-#include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_wrapper.pb.h>
-#include <roboteam_proto/RobotData.pb.h>
-#include <roboteam_proto/State.pb.h>
+#include <proto/messages_robocup_ssl_referee.pb.h>
+#include <proto/messages_robocup_ssl_wrapper.pb.h>
+#include <proto/RobotData.pb.h>
+#include <proto/State.pb.h>
 #include <roboteam_utils/Time.h>
 
 #include "filters/vision/VisionFilter.h"

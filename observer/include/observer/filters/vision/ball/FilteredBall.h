@@ -6,7 +6,7 @@
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_BALL_FILTEREDBALL_H_
 
 #include <Eigen/Dense>
-#include <roboteam_proto/WorldBall.pb.h>
+#include <proto/WorldBall.pb.h>
 struct FilteredBall {
   [[nodiscard]] proto::WorldBall asWorldBall() const;
   FilteredBall(Eigen::Vector2d pos, Eigen::Vector2d vel, double health, double posUncertainty, double velocityUncertainty);

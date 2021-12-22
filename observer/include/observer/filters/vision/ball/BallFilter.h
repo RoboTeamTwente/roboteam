@@ -5,8 +5,8 @@
 #ifndef RTT_BALLFILTER_H
 #define RTT_BALLFILTER_H
 
-#include <roboteam_proto/WorldBall.pb.h>
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/WorldBall.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 #include "BallObservation.h"
 #include "CameraGroundBallFilter.h"
 #include "FilteredBall.h"

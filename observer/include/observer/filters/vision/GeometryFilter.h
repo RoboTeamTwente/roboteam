@@ -6,7 +6,7 @@
 #define RTT_GEOMETRYFILTER_H
 
 
-#include <roboteam_proto/messages_robocup_ssl_geometry.pb.h>
+#include <proto/messages_robocup_ssl_geometry.pb.h>
 /**
  * @brief A class which filters the geometry from multiple camera's/sources and merges it to a single geometry correctly.
  */

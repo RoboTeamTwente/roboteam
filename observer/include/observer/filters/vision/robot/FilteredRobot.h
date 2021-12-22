@@ -7,7 +7,7 @@
 
 
 #include "RobotPos.h"
-#include <roboteam_proto/WorldRobot.pb.h>
+#include <proto/WorldRobot.pb.h>
 struct FilteredRobot {
   explicit FilteredRobot(TeamRobotID id,
                 RobotPos position,

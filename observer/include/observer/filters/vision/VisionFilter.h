@@ -7,7 +7,7 @@
 #include "GeometryFilter.h"
 #include "WorldFilter.h"
 #include "roboteam_utils/Time.h"
-#include "roboteam_proto/messages_robocup_ssl_wrapper.pb.h"
+#include "proto/messages_robocup_ssl_wrapper.pb.h"
 
 /**
  * @author Rolf

@@ -5,7 +5,7 @@
 #ifndef RTT_ROBOTPARAMETERS_H
 #define RTT_ROBOTPARAMETERS_H
 
-#include <roboteam_proto/RobotParameters.pb.h>
+#include <proto/RobotParameters.pb.h>
 
 class RobotParameters {
 public:

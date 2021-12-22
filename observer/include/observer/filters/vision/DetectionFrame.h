@@ -6,7 +6,7 @@
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_DETECTIONFRAME_H_
 #include "robot/RobotObservation.h"
 #include "ball/BallObservation.h"
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 struct DetectionFrame {
   explicit DetectionFrame(const proto::SSL_DetectionFrame& protoFrame);
   int cameraID;

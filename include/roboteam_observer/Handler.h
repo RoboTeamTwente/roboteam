@@ -1,24 +1,28 @@
 #ifndef WORLDHANDLER_H
 #define WORLDHANDLER_H
 
-#include <roboteam_proto/RobotData.pb.h>
-#include <roboteam_proto/State.pb.h>
-#include <networking/Publisher.h>
-#include <networking/Subscriber.h>
+#include <proto/RobotData.pb.h>
+#include <proto/State.pb.h>
+
+#include <RobotFeedbackNetworker.hpp>
+#include <WorldNetworker.hpp>
+
 #include <observer/Observer.h>
 #include <utility>
 #include "RobocupReceiver.h"
+#include <memory>
+#include <vector>
+#include <exception>
 
 
 class Handler {
    private:
-    std::unique_ptr<proto::Publisher<proto::State>> pub_state;
+    std::unique_ptr<rtt::net::RobotFeedbackSubscriber> feedbackSubscriber;
+    std::unique_ptr<rtt::net::WorldPublisher> worldPublisher;
 
     std::unique_ptr<RobocupReceiver<proto::SSL_WrapperPacket>> vision_client;
     std::unique_ptr<RobocupReceiver<proto::SSL_Referee>> referee_client;
 
-    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback;
-    std::unique_ptr<proto::Subscriber<proto::RobotData>> sub_feedback_2;
     Observer observer;
     std::vector<proto::RobotData> receivedRobotData;
     std::mutex sub_mutex;
@@ -28,12 +32,20 @@ class Handler {
     /*
      * Setup a world with a kalmanfilter, and initialize the publishers for publishing data.
      */
-    void init();
+    bool initializeNetworkers();
+    bool setupSSLClients();
+
     void start();
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::SSL_Referee> receiveRefereePackets();
-    void setupSSLClients();
-    void robotDataCallBack(proto::RobotData& data);
+    void robotDataCallBack(const proto::RobotData& data);
+};
+
+class FailedToInitializeNetworkersException : public std::exception {
+    const char* what() const throw();
+};
+class FailedToSetupSSLClients : public std::exception {
+    const char* what() const throw();
 };
 
 

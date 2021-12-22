@@ -3,7 +3,7 @@
 //
 
 #include <filters/WorldFilter.h>
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 
 #include <iomanip>
 #include <memory>

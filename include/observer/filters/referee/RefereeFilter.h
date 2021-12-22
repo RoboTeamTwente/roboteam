@@ -5,7 +5,7 @@
 #ifndef RTT_REFEREEFILTER_H
 #define RTT_REFEREEFILTER_H
 
-#include <roboteam_proto/messages_robocup_ssl_referee.pb.h>
+#include <proto/messages_robocup_ssl_referee.pb.h>
 #include <roboteam_utils/Time.h>
 
 #include <optional>

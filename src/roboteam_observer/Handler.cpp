@@ -1,13 +1,17 @@
 #include "Handler.h"
 
-#include <roboteam_proto/messages_robocup_ssl_wrapper.pb.h>
+#include <proto/messages_robocup_ssl_wrapper.pb.h>
 #include <roboteam_utils/Timer.h>
 
 #include <sstream>
 
 void Handler::start() {
-    init();
-    setupSSLClients();
+    if (!initializeNetworkers()) {
+        throw FailedToInitializeNetworkersException();
+    }
+    if (!this->setupSSLClients()) {
+        throw FailedToSetupSSLClients();
+    }
 
     roboteam_utils::Timer t;
 
@@ -23,35 +27,43 @@ void Handler::start() {
             }
 
             auto state = observer.process(Time::now(), vision_packets, referee_packets, robothub_info);  // TODO: fix time extrapolation
-            while (!pub_state->send(state))
-                ;  // TODO: try sending for a max limit amount of times
+
+            this->worldPublisher->publish(state);
+            // TODO: Try resending if failed to send message
         },
         100);
 }
 
-void Handler::init() {
-    pub_state = std::make_unique<proto::Publisher<proto::State>>(proto::WORLD_CHANNEL);
-    // TODO: update channel type
-    sub_feedback = std::make_unique<proto::Subscriber<proto::RobotData>>(proto::FEEDBACK_PRIMARY_CHANNEL, &Handler::robotDataCallBack, this);
-    sub_feedback_2 = std::make_unique<proto::Subscriber<proto::RobotData>>(proto::FEEDBACK_SECONDARY_CHANNEL, &Handler::robotDataCallBack, this);
+bool Handler::initializeNetworkers() {
+    this->worldPublisher = std::make_unique<rtt::net::WorldPublisher>();
+
+    auto feedbackCallback = std::bind(&Handler::robotDataCallBack, this, std::placeholders::_1);
+    this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>(feedbackCallback);
+
+    return this->worldPublisher != nullptr && this->feedbackSubscriber != nullptr;
 }
 
-void Handler::setupSSLClients() {
+bool Handler::setupSSLClients() {
+    bool success = true;
     constexpr quint16 DEFAULT_VISION_PORT = 10006;
     constexpr quint16 DEFAULT_REFEREE_PORT = 10003;
 
     const QString SSL_VISION_SOURCE_IP = "224.5.23.2";
     const QString SSL_REFEREE_SOURCE_IP = "224.5.23.1";
 
-    vision_client = new RobocupReceiver<proto::SSL_WrapperPacket>(QHostAddress(SSL_VISION_SOURCE_IP), DEFAULT_VISION_PORT);
-    referee_client = new RobocupReceiver<proto::SSL_Referee>(QHostAddress(SSL_REFEREE_SOURCE_IP), DEFAULT_REFEREE_PORT);
+    this->vision_client = std::make_unique<RobocupReceiver<proto::SSL_WrapperPacket>>(QHostAddress(SSL_VISION_SOURCE_IP), DEFAULT_VISION_PORT);
+    this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(QHostAddress(SSL_REFEREE_SOURCE_IP), DEFAULT_REFEREE_PORT);
+    success = vision_client != nullptr && referee_client != nullptr;
 
     cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << endl;
     cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << endl;
 
-    vision_client->connect();
-    referee_client->connect();
+    success = success && vision_client->connect();
+    success = success && referee_client->connect();
+
     this_thread::sleep_for(chrono::microseconds(10000));
+
+    return success;
 }
 
 std::vector<proto::SSL_WrapperPacket> Handler::receiveVisionPackets() {
@@ -71,11 +83,10 @@ std::vector<proto::SSL_Referee> Handler::receiveRefereePackets() {
     return receivedPackets;
 }
 
-void Handler::robotDataCallBack(proto::RobotData& data) {
+void Handler::robotDataCallBack(const proto::RobotData& data) {
     std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(data);
 }
-Handler::~Handler() {
-    delete referee_client;
-    delete vision_client;
-}
+
+const char* FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another observer running?"; }
+const char* FailedToSetupSSLClients::what() const throw() { return "Failed to setup SSL client(s). Is another observer running?"; }

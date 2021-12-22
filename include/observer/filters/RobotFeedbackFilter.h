@@ -5,8 +5,8 @@
 #ifndef RTT_ROBOTFEEDBACKFILTER_H
 #define RTT_ROBOTFEEDBACKFILTER_H
 
-#include <roboteam_proto/RobotData.pb.h>
-#include <roboteam_proto/RobotFeedback.pb.h>
+#include <proto/RobotData.pb.h>
+#include <proto/RobotFeedback.pb.h>
 
 #include <map>
 

@@ -4,7 +4,7 @@
 
 #ifndef RTT_BALLOBSERVATION_H
 #define RTT_BALLOBSERVATION_H
-#include <roboteam_proto/messages_robocup_ssl_detection.pb.h>
+#include <proto/messages_robocup_ssl_detection.pb.h>
 /**
  * A struct to keep Ball Data and time as one observation.
  */

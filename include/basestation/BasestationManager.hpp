@@ -3,8 +3,8 @@
 #include <RobotCommand.h>
 #include <RobotFeedback.h>
 #include <libusb-1.0/libusb.h>
-#include <utilities.h>
 
+#include <functional>
 #include <thread>
 
 namespace rtt::robothub::basestation {
@@ -17,7 +17,7 @@ class BasestationManager {
     BasestationManager();
     ~BasestationManager();
 
-    bool sendSerialCommand(RobotCommandPayload &payload) const;
+    bool sendSerialCommand(RobotCommand &command) const;
 
     void setFeedbackCallback(const std::function<void(const RobotFeedback &)> &callback);
 

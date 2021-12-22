@@ -1,6 +1,6 @@
 #pragma once
 
-#include <roboteam_proto/World.pb.h>
+#include <proto/World.pb.h>
 
 #include <bitset>
 #include <iostream>
@@ -8,7 +8,7 @@
 
 namespace rtt::robothub::utils {
 
-enum class Mode { SERIAL, SIMULATOR, UNDEFINED };
+enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';
@@ -29,33 +29,34 @@ static int char2int(char input) {
  * compiletime Try stick to using constexpr as much as possible, you're using
  * C++17 so might aswel use modern features
  */
-[[maybe_unused]] /* Why static?... inline instead */ static Mode stringToMode(const std::string& type) noexcept {
-    if (type == "serial") {
-        return Mode::SERIAL;
-    } else if (type == "simulator") {
-        return Mode::SIMULATOR;
+[[maybe_unused]] /* Why static?... inline instead */ static RobotHubMode stringToMode(const std::string& type) noexcept {
+    if (type == "Basestation") {
+        return RobotHubMode::BASESTATION;
+    } else if (type == "Simulator") {
+        return RobotHubMode::SIMULATOR;
+    } else if (type == "Both") {
+        return RobotHubMode::BOTH;
     } else {
-        return Mode::UNDEFINED;
+        return RobotHubMode::NEITHER;
     }
 }
 
-[[maybe_unused]] static std::string modeToString(Mode mode) noexcept {
+[[maybe_unused]] static std::string modeToString(RobotHubMode mode) noexcept {
     switch (mode) {
-        case Mode::SERIAL:
-            return "Serial";
-        case Mode::SIMULATOR:
+        case RobotHubMode::BASESTATION:
+            return "Basestation";
+        case RobotHubMode::SIMULATOR:
             return "Simulator";
-        case Mode::UNDEFINED:
-            return "Undefined";
+        case RobotHubMode::BOTH:
+            return "Both";
+        default:
+            return "Neither";
     }
-    // should never hit this:
-    // Just to surpress compiler warnings
-    return "";
 }
 
 // Copy of getWorldBot() because I don't want to pull in tactics as a
 // dependency. If this function is moved to utils, we can use that
-[[maybe_unused]] static std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, bool ourTeam, const proto::World& world) {
+[[maybe_unused]] static std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, bool teamYellow, const proto::World& world) {
     /** Heavily inefficient, copying over all the robots :(
      * If this was C++20 I would've picked std::span, but for now just use
      * yellow() / blue()
@@ -71,12 +72,13 @@ static int char2int(char input) {
 
     // Prevent a copy.
 
-    auto& robots = ourTeam ? world.yellow() : world.blue();
+    auto& robots = teamYellow ? world.yellow() : world.blue();
 
     // https://en.cppreference.com/w/cpp/algorithm/find
     // Should do that instead, but whatever, doesn't really matter in terms of
     // performance
     for (const auto& bot : robots) {
+        proto::WorldRobot a = bot;
         if (bot.id() == id) {
             return std::make_shared<proto::WorldRobot>(bot);
         }

@@ -70,14 +70,14 @@ std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return c
 
 double sq(double x) { return x * x; }
 
-std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::Circle circle, rtt::LineSegment line) {
+std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::LineSegment line) {
     std::vector<rtt::Vector2> res;
     constexpr double eps = 1e-16;
     bool segment = true;
 
-    double x0 = circle.center.x;  // cp.first;
-    double y0 = circle.center.y;  // cp.second;
-    double r = circle.radius;
+    double x0 = this->center.x;  // cp.first;
+    double y0 = this->center.y;  // cp.second;
+    double r = this->radius;
     double x1 = line.start.x;  // p1.first;
     double y1 = line.start.y;  // p1.second;
     double x2 = line.end.x;    // p2.first;

@@ -96,8 +96,6 @@ packets = {
         ["bot15_sent", 8, None, "Packets sent to robot with ID 15"],
         ["bot15_rcvd", 8, None, "Packets received from robot with ID 15"],
     ],
-
-
     "BasestationGetStatistics" : [
         ["header",     8, None, "Header byte indicating the type of packet"]
     ],
@@ -109,5 +107,18 @@ packets = {
         ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
         ["id",         4, None, "Id of the robot"],
         ["message_length", 8, None, "Length of the following message"]
+    ],
+    "BasestationGetConfiguration" : [
+        ["header",     8, None, "Header byte indicating the type of packet"]
+    ],
+    "BasestationConfiguration" : [
+        ["header",     8, None, "Header byte indicating the type of packet"],
+        ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
+        ["channel",    1, None, "Channel on which the basestation and robots communicate"]
+    ],
+    "BasestationSetConfiguration" : [
+        ["header",     8, None, "Header byte indicating the type of packet"],
+        ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
+        ["channel",    1, None, "Channel on which the basestation and robots communicate"]
     ]
 }

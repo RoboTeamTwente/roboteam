@@ -49,11 +49,8 @@ CameraGroundBallFilter::CameraGroundBallFilter(const BallObservation &observatio
   ekf = GroundBallExtendedKalmanFilter(startState,startCovariance,BALL_MODEL_ERROR,BALL_MEASUREMENT_ERROR,observation.timeCaptured);
 }
 CameraGroundBallPrediction CameraGroundBallFilter::predict(Time time) const {
-  CameraGroundBallPrediction prediction;
-  prediction.time = time;
   const auto& estimate = ekf.getStateEstimate(time);
-  prediction.position = estimate.head<2>();
-  prediction.velocity = estimate.tail<2>();
+  CameraGroundBallPrediction prediction(estimate.head<2>(),estimate.tail<2>(),time);
   return prediction;
 }
 FilteredBall CameraGroundBallFilter::getEstimate(Time time) const {

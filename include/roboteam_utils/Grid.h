@@ -11,22 +11,22 @@ namespace rtt {
     class Grid {
     public:
         /**
-         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered (avg x and y will be 0) in the given range.
+         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered in the given range.
          * @param offSetX the distance you want to horizontally shift the grid from 0 (where 0 is left edge)
          * @param offSetY the distance you want to vertically shift the grid from 0 (where 0 is bottom edge)
-         * @param regionWidth the width of the region you want the grid to encompass
-         * @param regionLength the length of the region you want the grid to encompass
+         * @param regionWidth the width of the region you want the grid to encompass (y-direction)
+         * @param regionLength the length of the region you want the grid to encompass (x-direction)
          * @param numStepsX number of segments to divide the grid into in x direction
          * @param numStepsY number of segments to divide the grid into in y direction
          */
-        Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numSegmentsX, int numSegmentsY);
+        Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numPointsX, int numPointsY);
 
         [[nodiscard]] double getOffSetX() const;
         [[nodiscard]] double getOffSetY() const;
         [[nodiscard]] double getRegionWidth() const;
         [[nodiscard]] double getRegionLength() const;
-        [[nodiscard]] int getNumSegmentsX() const;
-        [[nodiscard]] int getNumSegmentsY() const;
+        [[nodiscard]] int getNumPointsX() const;
+        [[nodiscard]] int getNumPointsY() const;
         [[nodiscard]] double getStepSizeX() const;
         [[nodiscard]] double getStepSizeY() const;
         [[nodiscard]] const std::vector<std::vector<Vector2>> &getPoints() const;
@@ -40,8 +40,8 @@ namespace rtt {
         double offSetY;
         double regionWidth;
         double regionLength;
-        int numSegmentsX;
-        int numSegmentsY;
+        int numPointsX;
+        int numPointsY;
         double stepSizeX;
         double stepSizeY;
     };

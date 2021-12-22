@@ -197,6 +197,16 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
+static void limit(){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+	// Limit PWM
+		if(pwm[wheel] < PWM_CUTOFF){
+			pwm[wheel] = 0.0F;
+		} else if(pwm[wheel] > MAX_PWM){
+			pwm[wheel] = MAX_PWM;
+		}
+	}
+}
 
 static void SetPWM(){
 	set_PWM(PWM_RF, pwm[wheels_RF]);

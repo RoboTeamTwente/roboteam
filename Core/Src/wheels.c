@@ -197,7 +197,6 @@ static void computeWheelSpeed(){
 	ResetEncoder();
 }
 
-
 static void limit(){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 	// Limit PWM

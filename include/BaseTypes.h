@@ -7,7 +7,7 @@
 #ifndef __BASETYPES_H
 #define __BASETYPES_H
 
-#define LOCAL_REM_VERSION 4
+#define LOCAL_REM_VERSION 5
 
 #define PACKET_TYPE_ROBOT_COMMAND                                    0b00001111 // 15 
 #define PACKET_SIZE_ROBOT_COMMAND                                    12
@@ -89,5 +89,14 @@
 
 #define PACKET_TYPE_ROBOT_LOG                                        0b10010110 // 150 
 #define PACKET_SIZE_ROBOT_LOG                                        3
+
+#define PACKET_TYPE_BASESTATION_GET_CONFIGURATION                    0b10011001 // 153 
+#define PACKET_SIZE_BASESTATION_GET_CONFIGURATION                    1
+
+#define PACKET_TYPE_BASESTATION_CONFIGURATION                        0b10100101 // 165 
+#define PACKET_SIZE_BASESTATION_CONFIGURATION                        2
+
+#define PACKET_TYPE_BASESTATION_SET_CONFIGURATION                    0b10101010 // 170 
+#define PACKET_SIZE_BASESTATION_SET_CONFIGURATION                    2
 
 #endif /*__BASETYPES_H*/

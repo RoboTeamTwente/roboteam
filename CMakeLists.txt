@@ -41,6 +41,7 @@ target_link_libraries(simulator_manager PUBLIC
 # Create the make file for the basestationManager library
 add_library(basestation_manager STATIC
         "src/basestation/LibusbUtilities.cpp"
+        "src/basestation/Basestation.cpp"
         "src/basestation/BasestationManager.cpp")
 target_include_directories(basestation_manager PUBLIC
         "include"

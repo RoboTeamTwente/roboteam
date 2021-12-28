@@ -32,9 +32,9 @@ private:
     libusb_device_handle* device_handle;
 };
 
-class FailedToInitializeException : public std::exception {
+class FailedToOpenDeviceException : public std::exception {
 public:
-    FailedToInitializeException(const std::string& message);
+    FailedToOpenDeviceException(const std::string& message);
     const char* what() const noexcept;
 private:
     const std::string message;

@@ -21,19 +21,19 @@ Basestation::Basestation(const libusb_device* device) {
     // TODO: Make use of error codes for more accurate debugging
     error = libusb_open(this->device, &this->device_handle);
     if (error)
-        throw FailedToInitializeException("Failed to open libusb device");
+        throw FailedToOpenDeviceException("Failed to open libusb device");
 
     // TODO: Figure out if this is necessary
     error = libusb_set_auto_detach_kernel_driver(this->device_handle, true);
     if (error) {
         libusb_close(this->device_handle);
-        throw FailedToInitializeException("Failed to set auto detach kernel driver");
+        throw FailedToOpenDeviceException("Failed to set auto detach kernel driver");
     }
 
     error = libusb_claim_interface(this->device_handle, INTERFACE_NUMBER);
     if (error) {
         libusb_close(this->device_handle);
-        throw FailedToInitializeException("Failed to claim interface");
+        throw FailedToOpenDeviceException("Failed to claim interface");
     }
 }
 
@@ -90,9 +90,9 @@ bool Basestation::equals(const libusb_device* other) const {
     // TODO: Check if pointers to device match if they point to the same basestation
 }
 
-FailedToInitializeException::FailedToInitializeException(const std::string& message) : message(message) {}
+FailedToOpenDeviceException::FailedToOpenDeviceException(const std::string& message) : message(message) {}
 
-const char* FailedToInitializeException::what() const noexcept {
+const char* FailedToOpenDeviceException::what() const noexcept {
     return this->message.c_str();
 }
 

@@ -8,14 +8,14 @@ namespace rtt::robothub::basestation {
 
 constexpr int BASESTATION_VENDOR_ID = 1155;
 constexpr int BASESTATION_PRODUCT_ID = 22336;
-constexpr int INTERFACE_NUMBER = 1;
+constexpr int USB_INTERFACE_NUMBER = 1;
 constexpr unsigned char TRANSFER_IN_BUFFER_ENDPOINT = 0x01;
 constexpr unsigned char TRANSFER_OUT_BUFFER_ENDPOINT = 0x81;
-constexpr unsigned int TRANSFER_TIMEOUT_MS = 500;
 constexpr int TRANSFER_IN_BUFFER_SIZE = 4096;
-constexpr int INCOMING_MESSAGE_TIMEOUT_MS = 100;
+constexpr unsigned int TRANSFER_TIMEOUT_MS = 500;
+constexpr unsigned int INCOMING_MESSAGE_TIMEOUT_MS = 100;
 
-Basestation::Basestation(const libusb_device* device) {
+Basestation::Basestation(libusb_device* device) : device(device) {
     int error;
 
     // TODO: Make use of error codes for more accurate debugging
@@ -30,11 +30,14 @@ Basestation::Basestation(const libusb_device* device) {
         throw FailedToOpenDeviceException("Failed to set auto detach kernel driver");
     }
 
-    error = libusb_claim_interface(this->device_handle, INTERFACE_NUMBER);
+    error = libusb_claim_interface(this->device_handle, USB_INTERFACE_NUMBER);
     if (error) {
         libusb_close(this->device_handle);
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
+
+    this->address = libusb_get_device_address(this->device);
+    std::cout << "Opened basestation on address: " << (int) this->address << std::endl;
 }
 
 Basestation::~Basestation() {
@@ -82,12 +85,21 @@ BasestationMessage Basestation::readIncomingMessage() const {
     return message;
 }
 
-bool Basestation::equals(const Basestation& other) const {
-    return this->address == other.address;
+bool Basestation::operator ==(libusb_device* otherDevice) const {
+    uint8_t otherAddress = libusb_get_device_address(otherDevice);
+    return this->address == otherAddress;
 }
-bool Basestation::equals(const libusb_device* other) const {
-    return this->device == other;
-    // TODO: Check if pointers to device match if they point to the same basestation
+
+bool Basestation::isDeviceABasestation(libusb_device* device) {
+    libusb_device_descriptor descriptor;
+    int r = libusb_get_device_descriptor(device, &descriptor);
+    if (r < 0) {
+        std::cout << "Failed to get device descriptor!" << std::endl;
+        return false;
+    }
+
+    return descriptor.idVendor == BASESTATION_VENDOR_ID
+        && descriptor.idProduct == BASESTATION_PRODUCT_ID;
 }
 
 FailedToOpenDeviceException::FailedToOpenDeviceException(const std::string& message) : message(message) {}

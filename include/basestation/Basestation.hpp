@@ -17,15 +17,16 @@ typedef struct BasestationMessage {
 
 class Basestation {
 public:
-    Basestation(const libusb_device* device);
+    explicit Basestation(libusb_device* device);
     ~Basestation();
 
     bool sendMessageToBasestation(const BasestationMessage& message) const;
     BasestationMessage readIncomingMessage() const;
 
-    bool equals(const Basestation& other) const;
-    bool equals(const libusb_device* other) const;
+    bool operator == (libusb_device* device) const;
 
+    static bool isDeviceABasestation(libusb_device* device);
+    
 private:
     libusb_device* device;
     uint8_t address;

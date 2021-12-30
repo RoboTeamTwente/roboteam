@@ -103,7 +103,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
 
         command.feedback = false;
 
-        this->basestationManager->sendSerialCommand(command);
+        this->basestationManager->sendRobotCommand(command, toTeamYellow);
 
         // Update statistics
         commands_sent[protoCommand.id()]++;

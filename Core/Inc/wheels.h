@@ -28,16 +28,17 @@ void wheels_Stop();
 
 void wheels_Update();
 
-void wheels_SetRef(float input[4]);
+void wheels_SetSpeeds(float* speeds);
 
-float* wheels_GetState();
+void wheels_GetMeasuredSpeeds(float* speeds);
 
-int* wheels_GetPWM();
+void wheels_GetPWM(uint32_t* pwms);
 
 // Returns whether brakes are activated
-bool wheels_IsBraking();
+bool wheels_GetWheelsBraking();
 
 // Activate or deactivate braking
-void wheels_Brake(bool brake);
+void wheels_Brake();
+void wheels_Unbrake();
 
 #endif /* WHEELS_H_ */

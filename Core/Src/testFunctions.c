@@ -161,7 +161,7 @@ status executeWheelsTest() {
 			break;
 		}
 	}
-	wheels_SetRef(wheelRef);
+	wheels_SetSpeeds(wheelRef);
 
 	if (timeDiff >= 4 * (RUN_TIME + PAUSE_TIME) && prevTimeDiff < 4 * (RUN_TIME + PAUSE_TIME)) {
 		checkWheels(avgPWM, cnt, wheelEncoders);
@@ -319,10 +319,14 @@ status executeSquareDrive() {
 }
 
 void recordWheelData(wheel_names wheel, int avgPWM[4], int cnt[4], float wheelEncoders[4], float wheelRef[4]) {
-	avgPWM[wheel] += fabs(wheels_GetPWM()[wheel]);
+	uint32_t wheel_PWMs[4];
+	wheels_GetPWM(wheel_PWMs);
+	avgPWM[wheel] += fabs(wheel_PWMs[wheel]);
 	cnt[wheel]++;
 	wheelRef[wheel] = WHEEL_TEST_SPEED;
-	wheelEncoders[wheel] += fabs(wheels_GetState()[wheel]);
+	float wheel_measured_speeds[4];
+	wheels_GetMeasuredSpeeds(wheel_measured_speeds);
+	wheelEncoders[wheel] += fabs(wheel_measured_speeds[wheel]);
 }
 
 void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]) {

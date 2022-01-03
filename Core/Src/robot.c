@@ -125,7 +125,7 @@ void printRobotStateData() {
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
 	Putty_printf("halt? %u\n\r", halt);
-	Putty_printf("Braking? %u\n\r", wheels_IsBraking());
+	Putty_printf("Braking? %u\n\r", wheels_GetWheelsBraking());
 	Putty_printf("velocity (Kalman):\n\r");
 	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
 	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
@@ -135,20 +135,25 @@ void printRobotStateData() {
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
 	Putty_printf("Xsens rate of turn: %f rad/s\n\r", MTi->gyr[2]);
 	Putty_printf("wheel refs:\n\r");
+	
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
 	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
 	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", wheels_GetState()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", wheels_GetState()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", wheels_GetState()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", wheels_GetState()[wheels_LF]);
+	float measured_wheel_speeds[4];
+	wheels_GetMeasuredSpeeds(measured_wheel_speeds);
+	Putty_printf("  RF: %f rad/s\n\r", measured_wheel_speeds[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", measured_wheel_speeds[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", measured_wheel_speeds[wheels_LB]);
+	Putty_printf("  LF: %f rad/s\n\r", measured_wheel_speeds[wheels_LF]);
 	Putty_printf("wheel pwm:\n\r");
-	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	uint32_t wheel_PWMs[4];
+	wheels_GetPWM(wheel_PWMs);
+	Putty_printf("  RF: %d \n\r", wheel_PWMs[wheels_RF]);
+	Putty_printf("  RB: %d \n\r", wheel_PWMs[wheels_RB]);
+	Putty_printf("  LB: %d \n\r", wheel_PWMs[wheels_LB]);
+	Putty_printf("  LF: %d \n\r", wheel_PWMs[wheels_LF]);
 }
 
 void printRobotCommand(RobotCommand* rc){
@@ -292,7 +297,7 @@ void loop(void){
     // Unbrake wheels when Xsens calibration is done
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
-        wheels_Brake(false);
+        wheels_Unbrake();
     }
 
     // Update test (if active)
@@ -318,7 +323,7 @@ void loop(void){
     robotFeedback.rho = sqrt(vx*vx + vy*vy);
     robotFeedback.angle = stateEstimation_GetState()[body_w];
     robotFeedback.theta = atan2(vy, -vx);
-    robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
+    robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
     
 	if(SEND_ROBOT_STATE_INFO){
@@ -375,7 +380,7 @@ void loop(void){
 
     // LED0 done in PuTTY prints above
     set_Pin(LED1_pin, !xsens_CalibrationDone);
-    set_Pin(LED2_pin, wheels_IsBraking());
+    set_Pin(LED2_pin, wheels_GetWheelsBraking());
     set_Pin(LED3_pin, halt);
     set_Pin(LED4_pin, ballPosition.canKickBall);
     // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
@@ -495,9 +500,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		// State estimation
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
 		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
-		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-		}
+		
+		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
 
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
@@ -509,7 +513,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateControl_SetState(stateEstimation_GetState());
 		stateControl_Update();
 
-		wheels_SetRef(stateControl_GetWheelRef());
+		wheels_SetSpeeds( stateControl_GetWheelRef() );
 		wheels_Update();
 
 	}

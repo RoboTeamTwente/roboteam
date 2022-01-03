@@ -190,7 +190,7 @@ void init(void){
 
 
 	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = read_Pin(IN1_pin);
+	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
 	Putty_printf("SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
 
 	/* Initialize buzzer */

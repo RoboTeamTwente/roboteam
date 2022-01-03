@@ -23,7 +23,7 @@ int stateEstimation_DeInit(){
 }
 
 void stateEstimation_Update(StateInfo* input) {
-	float vel[2] = {0.0f};
+	float vel[3] = {0.0f};
 	wheels2Body(input->wheelSpeeds, vel);
 
 	kalman_CalculateK();

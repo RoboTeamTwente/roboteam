@@ -29,8 +29,10 @@ void kalman_CalculateK();
 
 void kalman_GetState(float state[4]);
 
-void kalman_GetGain(float gain[4][4]);
+// seems to be not used
+void kalman_GetK(float gain[4][4]);
 
+// seems to be not used
 void kalman_GetP(float P[16]);
 
 #endif /* KALMAN_KALMAN_H_*/

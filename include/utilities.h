@@ -1,14 +1,16 @@
 #pragma once
 
-#include <proto/World.pb.h>
-
-#include <bitset>
 #include <iostream>
 #include <string>
+#include <memory>
 
 namespace rtt::robothub::utils {
 
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
+
+enum class TeamColor {
+    YELLOW = true, BLUE = false
+};
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';
@@ -54,13 +56,14 @@ static int char2int(char input) {
     }
 }
 
+/*
 // Copy of getWorldBot() because I don't want to pull in tactics as a
 // dependency. If this function is moved to utils, we can use that
 [[maybe_unused]] static std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, bool teamYellow, const proto::World& world) {
     /** Heavily inefficient, copying over all the robots :(
      * If this was C++20 I would've picked std::span, but for now just use
      * yellow() / blue()
-     */
+     *
     // if (ourTeam) {
     //     robots = std::vector<roboteam_proto::WorldRobot>(
     //     world.yellow().begin(),  world.yellow().end());
@@ -85,5 +88,6 @@ static int char2int(char input) {
     }
     return nullptr;
 }
+*/
 
 }  // namespace rtt::robothub::utils

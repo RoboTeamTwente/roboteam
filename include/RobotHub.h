@@ -8,11 +8,13 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
+
 #include <basestation/BasestationManager.hpp>
+#include <simulation/SimulatorManager.hpp>
+
 #include <exception>
 #include <functional>
 #include <memory>
-#include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
 
@@ -43,12 +45,12 @@ class RobotHub {
 
     bool subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow);
-    void sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow);
+    void sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color);
+    void sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color);
 
     void onBlueRobotCommands(const proto::AICommand &commands);
     void onYellowRobotCommands(const proto::AICommand &commands);
-    void processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, utils::RobotHubMode mode);
+    void processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode);
 
     void onSettings(const proto::Setting &setting);
 
@@ -60,5 +62,7 @@ class RobotHub {
 class FailedToInitializeNetworkersException : public std::exception {
     virtual const char *what() const throw();
 };
+
+std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World& world);
 
 }  // namespace rtt::robothub

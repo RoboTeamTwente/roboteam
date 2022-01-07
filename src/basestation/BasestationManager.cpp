@@ -1,8 +1,8 @@
-#include <RobotStateInfo.h>
-#include <basestation/LibusbUtilities.h>
-#include <constants.h>
-
 #include <basestation/BasestationManager.hpp>
+
+#include <BasestationGetStatistics.h> // REM command
+
+#include <constants.h>
 #include <iostream>
 
 namespace rtt::robothub::basestation {
@@ -13,6 +13,8 @@ BasestationManager::BasestationManager() {
     if (error) {
         throw FailedToInitializeLibUsb("Failed to initialize libusb"); // TODO: Handle error code
     }
+
+    this->basestationCollection = std::make_unique<BasestationCollection>();
 
     this->shouldListenForBasestationPlugs = true;
     this->basestationPlugsListener = std::thread(&BasestationManager::listenForBasestationPlugs, this);
@@ -27,61 +29,52 @@ BasestationManager::~BasestationManager() {
 
     // In destructor of basestations, the device is closed. This needs to be done
     // before libusb_exit() is called, so delete all basestation objects.
-    this->basestations.clear();
+    this->basestationCollection = nullptr; // TODO: Make nice
 
     libusb_exit(this->usb_context);
 }
 
-bool BasestationManager::sendRobotCommand(const RobotCommand& command, bool toTeamYellow) {
-    // For now, just pick the first basestation.
-    // TODO: Make sure the right basestation is picked from the list
-    auto basestation = this->basestations.size() > 0 ? this->basestations[0] : nullptr;
-    if (basestation != nullptr) {
-        RobotCommand copy = command;
-        
-        BasestationMessage message;
-        RobotCommandPayload payload;
-        encodeRobotCommand(&payload, &copy);
+bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
+    RobotCommand copy = command; // TODO: Make encodeRobotCommand use const so copy is unecessary
+    
+    BasestationMessage message;
+    RobotCommandPayload payload;
+    encodeRobotCommand(&payload, &copy);
 
-        message.payload = payload.payload;
-        message.payload_size = PACKET_SIZE_ROBOT_COMMAND;
+    message.payload = payload.payload;
+    message.payload_size = PACKET_SIZE_ROBOT_COMMAND;
 
-        return basestation->sendMessageToBasestation(message);
-    }
+    return this->basestationCollection->sendMessageToBasestation(message, color);
+}
 
-    return false;
+bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
+    RobotBuzzer copy = command;
+
+    BasestationMessage message;
+    RobotBuzzerPayload payload;
+    encodeRobotBuzzer(&payload, &copy);
+
+    message.payload = payload.payload;
+    message.payload_size = PACKET_SIZE_ROBOT_BUZZER;
+
+    return this->basestationCollection->sendMessageToBasestation(message, color);
+}
+
+bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
+    BasestationGetStatistics command;
+
+    BasestationMessage message;
+    BasestationGetStatisticsPayload payload;
+    encodeBasestationGetStatistics(&payload, &command);
+
+    message.payload = payload.payload;
+    message.payload_size = PACKET_SIZE_BASESTATION_GET_STATISTICS;
+
+    return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
 void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback &)>& callback) {
     this->feedbackCallbackFunction = callback;
-}
-
-void BasestationManager::updateBasestationsList(const std::vector<libusb_device*>& pluggedBasestationDevices) {
-    // Remove basestations that are not plugged in anymore
-    auto iterator = this->basestations.begin();
-    while (iterator != this->basestations.end()) {
-        auto basestation = *iterator;
-        if (!basestationIsInDeviceList(basestation, pluggedBasestationDevices)) {
-            // This basestation is not plugged in anymore -> remove it
-            iterator = this->basestations.erase(iterator);
-        } else {
-            ++iterator;
-        }
-    }
-
-    // Add plugged in basestations that are not in the list yet
-    for (libusb_device* pluggedBasestationDevices : pluggedBasestationDevices) {
-        if (!deviceIsInBasestationList(pluggedBasestationDevices, this->basestations)) {
-            // This basestation is plugged in but not in the list -> add it
-            try {
-                auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevices);
-                this->basestations.push_back(newBasestation);
-            } catch (FailedToOpenDeviceException e) {
-                std::cout << "Error: " << e.what() << std::endl;
-                std::cout << "Did you edit your user permissions?" << std::endl;
-            }
-        }
-    }
 }
 
 void BasestationManager::listenForBasestationPlugs() {
@@ -93,37 +86,12 @@ void BasestationManager::listenForBasestationPlugs() {
         ssize_t device_count = libusb_get_device_list(this->usb_context, &device_list);
 
         std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
-        this->updateBasestationsList(basestationDevices);
-
+        
+        this->basestationCollection->updateBasestationList(basestationDevices);
+        
         // Free the list of devices
         libusb_free_device_list(device_list, true);
     }
-}
-
-bool BasestationManager::deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
-    bool deviceIsInList = false;
-
-    for (auto basestation : basestations) {
-        if (*basestation == device) {
-            deviceIsInList = true;
-            break;
-        }
-    }
-
-    return deviceIsInList;
-}
-
-bool BasestationManager::basestationIsInDeviceList(std::shared_ptr<Basestation> basestation, const std::vector<libusb_device*>& devices) {
-    bool basestationIsInList = false;
-
-    for (auto device : devices) {
-        if (*basestation == device) {
-            basestationIsInList = true;
-            break;
-        }
-    }
-
-    return basestationIsInList;
 }
 
 std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device** devices, int device_count) {

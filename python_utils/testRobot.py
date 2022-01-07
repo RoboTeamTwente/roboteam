@@ -17,8 +17,8 @@ from roboteam_embedded_messages.python.RobotStateInfo import RobotStateInfo
 
 
 
-robotStateInfoFile = open(f"robotStateInfo_{int(time.time())}.csv", "w")
-robotFeedbackFile = open(f"robotFeedback_{int(time.time())}.csv", "w")
+# robotStateInfoFile = open(f"robotStateInfo_{int(time.time())}.csv", "w")
+# robotFeedbackFile = open(f"robotFeedback_{int(time.time())}.csv", "w")
 
 
 
@@ -49,12 +49,22 @@ def drawProgressBar(progress):
 	return string
 
 def rotate(origin, point, angle):
-    ox, oy = origin
-    px, py = point
+	ox, oy = origin
+	px, py = point
 
-    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
-    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-    return qx, qy
+	qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+	qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+	return qx, qy
+
+def normalize_angle(angle):
+	pi2 = 2*math.pi
+	# reduce the angle  
+	angle = angle % (pi2)
+	# force it to be the positive remainder, so that 0 <= angle < 360  
+	angle = (angle + pi2) % pi2
+	# force into the minimum absolute value residue class, so that -180 < angle <= 180  
+	if (angle > math.pi): angle -= pi2
+	return angle
 
 testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate"]
 
@@ -93,7 +103,7 @@ rate_of_turn_avg = 0
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 500
+periodLength = 300
 packetHz = 60
 
 totalCommandsSent = 0
@@ -163,10 +173,10 @@ while True:
 							if test == "kicker"  : cmd.doKick = True
 							if test == "chipper" : cmd.doChip = True
 							cmd.doForce = True
-							cmd.kickChipPower = 4
+							cmd.kickChipPower = 0.2
 
 					if test == "dribbler":
-						cmd.dribbler = periodFraction
+						cmd.dribbler = math.floor(8 * periodFraction)
 						log = "speed = %d" % cmd.dribbler
 
 					if test == "rotate":
@@ -243,8 +253,8 @@ while True:
 
 				if RobotStateInfo.get_id(packet) == robotId:
 					robotStateInfo.decode(packet)
-					robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensYaw} {robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4}\n")
-					robotStateInfoFile.flush()
+					# robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensYaw} {robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4}\n")
+					# robotStateInfoFile.flush()
 
 				else:
 					print("Error : Received StateInfo from robot %d ???" % RobotFeedback.get_id(packet))
@@ -300,6 +310,11 @@ while True:
 				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)
 				cv2.line(img, (250, 250), (int(px), int(py)), (1, 1, 1), 1)
 				cv2.circle(img, (int(px), int(py)), 5, (1, 1, 1), -1)
+
+				# Commanded yaw
+				px, py = rotate((250, 250), (250, 150), -cmd.angle)
+				cv2.line(img, (250, 250), (int(px), int(py)), (0, 1, 0), 1)
+				cv2.circle(img, (int(px), int(py)), 5, (0, 1, 0), -1)
 				
 				# XSens rate of turn
 				rate_of_turn_avg = rate_of_turn_avg * 0.99 + robotStateInfo.rateOfTurn * 0.01
@@ -333,7 +348,8 @@ while True:
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (.15, .15, 1), 10)
 				rx, ry = rotate((170, 170), (170, 170 + wheel_speeds_exp[3] * 80), 30 * np.pi / 180.)
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (1, 1, 1), 4)
-				
+			
+
 			cv2.imshow("img", img)
 			if cv2.waitKey(1) == 27: exit()
 

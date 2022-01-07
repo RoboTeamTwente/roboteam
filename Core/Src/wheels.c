@@ -29,16 +29,16 @@ static void getEncoderData(int16_t output_array[4]);
 static void resetWheelEncoders();
 
 // Calculates angular velocity in rad/s for each wheel based on their encoder values
-static void computeWheelSpeeds(float* speeds);
+static void computeWheelSpeeds(float speeds[4]);
 
 // Clamps PWM values between PWM_CUTOFF and MAX_PWM
-static void limitWheelPWMs(uint32_t* pwms);
+static void limitWheelPWMs(uint32_t pwms[4]);
 
 // Sets the wheel PWMs
-static void setWheelPWMs(uint32_t* pwms);
+static void setWheelPWMs(uint32_t pwms[4]);
 
 // Sets the direction of the wheels
-static void setWheelDirections(bool* directions);
+static void setWheelDirections(bool directions[4]);
 
 
 
@@ -176,8 +176,8 @@ void wheels_Update(){
 		wheel_pwms[wheel] = abs(wheel_speed);
 	}
 
-	setWheelDirections( wheels_commanded_directions );
-	setWheelPWMs( wheel_pwms );
+	setWheelDirections(wheels_commanded_directions);
+	setWheelPWMs(wheel_pwms);
 }
 
 /**
@@ -186,7 +186,7 @@ void wheels_Update(){
  * @param speeds float[4]{RF, RB, LB, LF} commanded wheels speeds, in rad/s. These values are stored in the file-local
  * variable 'wheels_commanded_speeds'. This variable will later be used in wheels_Update() to control the wheels.
  */
-void wheels_SetSpeeds(const float* speeds){
+void wheels_SetSpeeds(const float speeds[4]){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		wheels_commanded_speeds[wheel] = speeds[wheel];
 	}
@@ -197,7 +197,7 @@ void wheels_SetSpeeds(const float* speeds){
  * 
  * @param speeds float[4]{RF, RB, LB, LF} output array in which the measured speeds will be stored
  */
-void wheels_GetMeasuredSpeeds(float* speeds) {
+void wheels_GetMeasuredSpeeds(float speeds[4]) {
 	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
 		speeds[wheel] = wheels_measured_speeds[wheel];
@@ -209,7 +209,7 @@ void wheels_GetMeasuredSpeeds(float* speeds) {
  * 
  * @param pwms uint32_t[4]{RF, RB, LB, LF} output array in which the wheel PWMs will be stored
  */
-void wheels_GetPWM(uint32_t* pwms) {
+void wheels_GetPWM(uint32_t pwms[4]) {
 	pwms[wheels_RF] = get_PWM(PWM_RF);
 	pwms[wheels_RB] = get_PWM(PWM_RB);
 	pwms[wheels_LB] = get_PWM(PWM_LB);
@@ -263,7 +263,7 @@ void wheels_Unbrake(){
  * 
  * @param output_array int16_t[4]{RF, RB, LB, LF} output array in which the current encoder values will be placed
  */
-static void getEncoderData(int16_t* output_array){
+static void getEncoderData(int16_t output_array[4]){
 	output_array[wheels_RF] = __HAL_TIM_GET_COUNTER(ENC_RF);
 	output_array[wheels_RB] = __HAL_TIM_GET_COUNTER(ENC_RB);
 	output_array[wheels_LB] = __HAL_TIM_GET_COUNTER(ENC_LB);
@@ -289,7 +289,7 @@ static void resetWheelEncoders() {
  * 
  * @param speeds float[4]{RF, RB, LB, LF} output array in which the calculated wheels speeds will be placed
  */
-static void computeWheelSpeeds(float* speeds){
+static void computeWheelSpeeds(float speeds[4]){
 	int16_t encoder_values[4] = {0};
 	getEncoderData(encoder_values);
 	resetWheelEncoders();
@@ -310,7 +310,7 @@ static void computeWheelSpeeds(float* speeds){
  * 
  * @param pwms uint32_t[4]{RF, RB, LB, LF} PWM values which will be clamped
  */
-static void limitWheelPWMs(uint32_t* pwms){
+static void limitWheelPWMs(uint32_t pwms[4]){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		if(pwms[wheel] < PWM_CUTOFF)  pwms[wheel] = 0;
 		if(MAX_PWM     < pwms[wheel]) pwms[wheel] = MAX_PWM;
@@ -322,7 +322,7 @@ static void limitWheelPWMs(uint32_t* pwms){
  * 
  * @param pwms uint32_t[4]{RF, RB, LB, LF} wheel PWMs
  */
-static void setWheelPWMs(uint32_t* pwms){
+static void setWheelPWMs(uint32_t pwms[4]){
 
 	limitWheelPWMs(pwms);
 
@@ -337,7 +337,7 @@ static void setWheelPWMs(uint32_t* pwms){
  * 
  * @param directions bool[4]{RF, RB, LB, LF} wheel directions with false being CCW, true being CW
  */
-static void setWheelDirections(bool* directions){
+static void setWheelDirections(bool directions[4]){
 	set_Pin(RF_DIR_pin, directions[wheels_RF]);
 	set_Pin(RB_DIR_pin, directions[wheels_RB]);
 	set_Pin(LB_DIR_pin, directions[wheels_LB]);

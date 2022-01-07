@@ -38,11 +38,11 @@ void wheels_Stop();
 // Updates the wheels towards the commanded wheel speeds using the encoders and a PID controller.
 void wheels_Update();
 // Stores the commanded wheel speeds, in rad/s, to be used in the next wheels_Update() call
-void wheels_SetSpeeds(const float* speeds);
+void wheels_SetSpeeds(const float speeds[4]);
 // Get the last measured wheel speeds in rad/s
-void wheels_GetMeasuredSpeeds(float* speeds);
+void wheels_GetMeasuredSpeeds(float speeds[4]);
 // Get the current wheel PWMs
-void wheels_GetPWM(uint32_t* pwms);
+void wheels_GetPWM(uint32_t pwms[4]);
 // Get the current status of the brakes
 bool wheels_GetWheelsBraking();
 // Enable the brakes

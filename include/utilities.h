@@ -9,7 +9,7 @@ namespace rtt::robothub::utils {
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
 
 enum class TeamColor {
-    YELLOW = true, BLUE = false
+    UNDEFINED, YELLOW, BLUE
 };
 
 static int char2int(char input) {

@@ -42,6 +42,7 @@ target_link_libraries(simulator_manager PUBLIC
 add_library(basestation_manager STATIC
         "src/basestation/LibusbUtilities.cpp"
         "src/basestation/Basestation.cpp"
+        "src/basestation/BasestationCollection.cpp"
         "src/basestation/BasestationManager.cpp")
 target_include_directories(basestation_manager PUBLIC
         "include"

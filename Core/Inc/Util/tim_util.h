@@ -11,11 +11,11 @@
 #include "stm32f7xx_hal.h"
 
 // Timers (clocks still need to be defined: wheel_control, KickChip, Geneva)
-extern TIM_HandleTypeDef htim1;		// encoder RF
+extern TIM_HandleTypeDef htim1;		// encoder RF		16 bit
 extern TIM_HandleTypeDef htim2;		// encoder Geneva
-extern TIM_HandleTypeDef htim3;		// encoder LB
-extern TIM_HandleTypeDef htim4;		// encoder RB
-extern TIM_HandleTypeDef htim5;		// encoder LF
+extern TIM_HandleTypeDef htim3;		// encoder LB		16 bit
+extern TIM_HandleTypeDef htim4;		// encoder RB		16 bit
+extern TIM_HandleTypeDef htim5;		// encoder LF		32 bit
 extern TIM_HandleTypeDef htim6;		// Geneva
 extern TIM_HandleTypeDef htim7;		// Control
 extern TIM_HandleTypeDef htim8;		// PWM (CH1: RB, CH2: RF, CH3: Dribbler, CH4: Geneva)
@@ -67,5 +67,8 @@ inline void set_PWM(PWM_struct PWM, uint32_t Value){
 	__HAL_TIM_SET_COMPARE(PWM.TIM , PWM.Channel, Value);
 }
 
+inline uint32_t get_PWM(PWM_struct PWM){
+	return __HAL_TIM_GET_COMPARE(PWM.TIM , PWM.Channel);
+}
 
 #endif //UTILS_TIM_UTIL_H_

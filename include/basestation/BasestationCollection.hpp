@@ -1,27 +1,21 @@
 #pragma once
 
-#include <basestation/Basestation.hpp>
-#include <utilities.h>
 #include <libusb-1.0/libusb.h>
+#include <utilities.h>
 
-#include <vector>
+#include <basestation/Basestation.hpp>
+#include <chrono>
+#include <functional>
 #include <memory>
 #include <thread>
-#include <functional>
-#include <array>
-#include <chrono>
+#include <vector>
 
 namespace rtt::robothub::basestation {
 
-enum class TeamColorUsage {
-    ONLY_YELLOW,
-    ONLY_BLUE,
-    YELLOW_AND_BLUE,
-    NEITHER_YELLOW_NOR_BLUE
-};
+enum class TeamColorUsage { ONLY_YELLOW, ONLY_BLUE, YELLOW_AND_BLUE, NEITHER_YELLOW_NOR_BLUE };
 
 class BasestationCollection {
-public:
+   public:
     BasestationCollection();
     ~BasestationCollection();
 
@@ -33,7 +27,7 @@ public:
 
     void printCollection() const;
 
-private:
+   private:
     std::vector<std::shared_ptr<Basestation>> basestations;
     std::shared_ptr<Basestation> blueBasestation;
     std::shared_ptr<Basestation> yellowBasestation;
@@ -52,7 +46,7 @@ private:
     void selectBasestationAtColor(std::shared_ptr<Basestation> basestation, utils::TeamColor color);
     void unselectBasestationAtColor(utils::TeamColor color);
 
-    std::mutex messageCallbackMutex; // Guards the messageFromBasestationCallback
+    std::mutex messageCallbackMutex;  // Guards the messageFromBasestationCallback
     void onMessageFromBasestation(const BasestationMessage& message, utils::TeamColor color);
     std::function<void(const BasestationMessage&, utils::TeamColor color)> messageFromBasestationCallback;
 
@@ -62,4 +56,4 @@ private:
     static bool deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations);
 };
 
-} // namespace rtt::robothub::basestation
+}  // namespace rtt::robothub::basestation

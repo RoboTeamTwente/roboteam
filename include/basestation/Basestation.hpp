@@ -3,9 +3,9 @@
 #include <libusb-1.0/libusb.h>
 
 #include <exception>
+#include <functional>
 #include <string>
 #include <thread>
-#include <functional>
 
 namespace rtt::robothub::basestation {
 
@@ -14,16 +14,14 @@ typedef struct BasestationMessage {
     uint8_t* payload = nullptr;
 } BasestationMessage;
 
-enum class WirelessChannel {
-    BLUE_CHANNEL, YELLOW_CHANNEL, UNKNOWN
-};
+enum class WirelessChannel { BLUE_CHANNEL, YELLOW_CHANNEL, UNKNOWN };
 
 class Basestation {
-public:
+   public:
     explicit Basestation(libusb_device* device);
     ~Basestation();
 
-    bool operator == (libusb_device* device) const;
+    bool operator==(libusb_device* device) const;
 
     bool sendMessageToBasestation(const BasestationMessage& message) const;
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&)> callback);
@@ -35,13 +33,14 @@ public:
     static bool isDeviceABasestation(libusb_device* device);
     static bool wirelessChannelToREMChannel(WirelessChannel channel);
     static WirelessChannel remChannelToWirelessChannel(bool remChannel);
-private:
+
+   private:
     libusb_device* device;
     uint8_t address;
     libusb_device_handle* device_handle;
 
-    WirelessChannel wantedChannel; // Settable by everyone else
-    WirelessChannel currentlyUsedChannel; // Only settable by basestation
+    WirelessChannel wantedChannel;         // Settable by everyone else
+    WirelessChannel currentlyUsedChannel;  // Only settable by basestation
 
     bool shouldListenForIncomingMessages;
     std::thread incomingMessageListenerThread;
@@ -54,11 +53,12 @@ private:
 };
 
 class FailedToOpenDeviceException : public std::exception {
-public:
+   public:
     FailedToOpenDeviceException(const std::string& message);
     const char* what() const noexcept;
-private:
+
+   private:
     const std::string message;
 };
 
-} // namespace rtt::robothub::basestation
+}  // namespace rtt::robothub::basestation

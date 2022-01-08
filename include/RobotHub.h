@@ -1,6 +1,5 @@
 #pragma once
 
-#include <constants.h>
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
 
@@ -8,15 +7,15 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-
 #include <basestation/BasestationManager.hpp>
-#include <simulation/SimulatorManager.hpp>
-
 #include <exception>
 #include <functional>
 #include <memory>
+#include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
+
+constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
 
@@ -63,6 +62,6 @@ class FailedToInitializeNetworkersException : public std::exception {
     virtual const char *what() const throw();
 };
 
-std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World& world);
+std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world);
 
 }  // namespace rtt::robothub

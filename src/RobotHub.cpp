@@ -7,6 +7,13 @@
 
 namespace rtt::robothub {
 
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL = 30011;
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL = 30012;
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
+
+constexpr float DEFAULT_CHIPPER_ANGLE = 45.0f;
+constexpr float MAX_DRIBBLER_SPEED = 1021.0f;
+
 RobotHub::RobotHub() {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
@@ -15,7 +22,7 @@ RobotHub::RobotHub() {
     if (!this->subscribe()) {
         throw FailedToInitializeNetworkersException();
     }
-    
+
     this->mode = utils::RobotHubMode::NEITHER;
     std::cout << "[RobotHub]: Starting with default mode of: " << utils::modeToString(this->mode) << std::endl;
 
@@ -67,8 +74,6 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::
 
     this->simulatorManager->sendRobotControlCommand(simCommand, color);
 }
-
-
 
 void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color) {
     for (const proto::RobotCommand &protoCommand : commands.commands()) {
@@ -219,7 +224,7 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
 
 // Copy of getWorldBot() because I don't want to pull in tactics as a
 // dependency. If this function is moved to utils, we can use that
-std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World& world) {
+std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world) {
     /** Heavily inefficient, copying over all the robots :(
      * If this was C++20 I would've picked std::span, but for now just use
      * yellow() / blue()
@@ -235,12 +240,12 @@ std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor
 
     // Prevent a copy.
 
-    auto& robots = color == utils::TeamColor::YELLOW ? world.yellow() : world.blue();
+    auto &robots = color == utils::TeamColor::YELLOW ? world.yellow() : world.blue();
 
     // https://en.cppreference.com/w/cpp/algorithm/find
     // Should do that instead, but whatever, doesn't really matter in terms of
     // performance
-    for (const auto& bot : robots) {
+    for (const auto &bot : robots) {
         proto::WorldRobot a = bot;
         if (bot.id() == id) {
             return std::make_shared<proto::WorldRobot>(bot);

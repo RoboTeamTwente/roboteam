@@ -1,21 +1,20 @@
-#include <basestation/BasestationCollection.hpp>
-
 #include <BasestationConfiguration.h>
 
-#include <iostream>
 #include <algorithm>
+#include <basestation/BasestationCollection.hpp>
 #include <chrono>
+#include <iostream>
 #include <string>
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTILL_BASESTATION_IS_UNSELECTED_S = 3; // 3 seconds with no interaction
+constexpr int TIME_UNTILL_BASESTATION_IS_UNSELECTED_S = 3;  // 3 seconds with no interaction
 constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 500;
 
 BasestationCollection::BasestationCollection() {
     this->blueBasestation = nullptr;
     this->yellowBasestation = nullptr;
-    
+
     this->currentTeamColorUsage = TeamColorUsage::NEITHER_YELLOW_NOR_BLUE;
     // Set the last use of basestations to a few seconds before, so this class does not think they were used
     this->lastUseOfBlueBasestation = std::chrono::steady_clock::now() - std::chrono::steady_clock::duration(std::chrono::seconds(TIME_UNTILL_BASESTATION_IS_UNSELECTED_S));
@@ -46,10 +45,8 @@ void BasestationCollection::updateBasestationList(const std::vector<libusb_devic
             iterator = this->basestations.erase(iterator);
 
             // Remove basestation from team selection
-            if (basestation == this->blueBasestation)
-                this->blueBasestation = nullptr;
-            if (basestation == this->yellowBasestation)
-                this->yellowBasestation = nullptr;
+            if (basestation == this->blueBasestation) this->blueBasestation = nullptr;
+            if (basestation == this->yellowBasestation) this->yellowBasestation = nullptr;
 
         } else {
             ++iterator;
@@ -93,9 +90,9 @@ void BasestationCollection::setIncomingMessageCallback(std::function<void(const 
 
 void BasestationCollection::printCollection() const {
     const std::string yes = "yes";
-    const std::string no =  "no ";
-    const std::string yellow =  "yellow ";
-    const std::string blue =    "blue   ";
+    const std::string no = "no ";
+    const std::string yellow = "yellow ";
+    const std::string blue = "blue   ";
     const std::string unknown = "unknown";
 
     std::string yellowFilled = this->yellowBasestation != nullptr ? yes : no;
@@ -113,7 +110,7 @@ void BasestationCollection::printCollection() const {
     if (this->blueBasestation != nullptr) {
         if (this->blueBasestation->getCurrentUsedChannel() == WirelessChannel::BLUE_CHANNEL) {
             blueChannel = blue;
-        } else if(this->blueBasestation->getCurrentUsedChannel() == WirelessChannel::YELLOW_CHANNEL) {
+        } else if (this->blueBasestation->getCurrentUsedChannel() == WirelessChannel::YELLOW_CHANNEL) {
             blueChannel = yellow;
         }
     }
@@ -156,7 +153,8 @@ void BasestationCollection::updateTeamColorUsage(utils::TeamColor usedBasestatio
         case utils::TeamColor::BLUE: {
             this->lastUseOfBlueBasestation = now;
             break;
-        } case utils::TeamColor::YELLOW: {
+        }
+        case utils::TeamColor::YELLOW: {
             this->lastUseOfYellowBasestation = now;
             break;
         }
@@ -175,19 +173,22 @@ void BasestationCollection::updateBasestationSelection() {
                 this->blueBasestation = nullptr;
                 this->yellowBasestation = nullptr;
                 break;
-            } case TeamColorUsage::ONLY_BLUE: {
+            }
+            case TeamColorUsage::ONLY_BLUE: {
                 this->yellowBasestation = nullptr;
                 if (!hasBlueBasestation) {
                     this->trySelectBasestationOfColor(utils::TeamColor::BLUE);
                 }
                 break;
-            } case TeamColorUsage::ONLY_YELLOW: {
+            }
+            case TeamColorUsage::ONLY_YELLOW: {
                 this->blueBasestation = nullptr;
                 if (!hasYellowBasestation) {
                     this->trySelectBasestationOfColor(utils::TeamColor::YELLOW);
                 }
                 break;
-            } case TeamColorUsage::YELLOW_AND_BLUE: {
+            }
+            case TeamColorUsage::YELLOW_AND_BLUE: {
                 if (!hasBlueBasestation) {
                     this->trySelectBasestationOfColor(utils::TeamColor::BLUE);
                 }
@@ -220,8 +221,8 @@ bool BasestationCollection::trySelectBasestationOfColor(utils::TeamColor color) 
 
     // Find a basestation that uses the channel of the color we need, and is not waiting on a frequency change
     auto basestationWithRightChannel = std::find_if(unselectedBasestations.begin(), unselectedBasestations.end(), [color](const std::shared_ptr<Basestation>& basestation) {
-        return wirelessChannelMatchesTeamColor(basestation->getCurrentUsedChannel(), color)
-        && !basestation->isWaitingForChannelChange(); // If we earlier on requested this one to change, do not use this one, as its frequency might change later
+        return wirelessChannelMatchesTeamColor(basestation->getCurrentUsedChannel(), color) &&
+               !basestation->isWaitingForChannelChange();  // If we earlier on requested this one to change, do not use this one, as its frequency might change later
     });
 
     if (basestationWithRightChannel != std::end(unselectedBasestations)) {
@@ -233,7 +234,7 @@ bool BasestationCollection::trySelectBasestationOfColor(utils::TeamColor color) 
         // TODO: Prefer to ask a basestation that does not have a known frequency yet
 
         auto basestationToAskFrequencyChange = std::find_if(unselectedBasestations.begin(), unselectedBasestations.end(), [](const std::shared_ptr<Basestation>& basestation) {
-            return !basestation->isWaitingForChannelChange(); // Pick a basestation that is not already waiting for a new channel
+            return !basestation->isWaitingForChannelChange();  // Pick a basestation that is not already waiting for a new channel
         });
 
         if (basestationToAskFrequencyChange != std::end(unselectedBasestations)) {
@@ -258,9 +259,7 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
 void BasestationCollection::selectBasestationAtColor(std::shared_ptr<Basestation> basestation, utils::TeamColor color) {
     this->unselectBasestationAtColor(color);
 
-    auto callback = [&](const BasestationMessage& message){
-        this->onMessageFromBasestation(message, color);
-    };
+    auto callback = [&](const BasestationMessage& message) { this->onMessageFromBasestation(message, color); };
 
     switch (color) {
         case utils::TeamColor::BLUE:
@@ -282,7 +281,8 @@ void BasestationCollection::unselectBasestationAtColor(utils::TeamColor color) {
                 this->blueBasestation = nullptr;
             }
             break;
-        } case utils::TeamColor::YELLOW: {
+        }
+        case utils::TeamColor::YELLOW: {
             if (this->yellowBasestation != nullptr) {
                 this->yellowBasestation->setIncomingMessageCallback(nullptr);
                 this->yellowBasestation = nullptr;
@@ -308,8 +308,7 @@ WirelessChannel BasestationCollection::getWirelessChannelCorrespondingTeamColor(
 }
 
 bool BasestationCollection::wirelessChannelMatchesTeamColor(WirelessChannel channel, utils::TeamColor color) {
-    return (channel == WirelessChannel::BLUE_CHANNEL && color == utils::TeamColor::BLUE)
-    || (channel == WirelessChannel::YELLOW_CHANNEL && color == utils::TeamColor::YELLOW);
+    return (channel == WirelessChannel::BLUE_CHANNEL && color == utils::TeamColor::BLUE) || (channel == WirelessChannel::YELLOW_CHANNEL && color == utils::TeamColor::YELLOW);
 }
 
 bool BasestationCollection::deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
@@ -338,4 +337,4 @@ bool BasestationCollection::basestationIsInDeviceList(std::shared_ptr<Basestatio
     return basestationIsInList;
 }
 
-} // namespace rtt::robothub::basestation
+}  // namespace rtt::robothub::basestation

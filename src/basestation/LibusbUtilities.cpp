@@ -3,9 +3,9 @@
 #include <libusb-1.0/libusb.h>
 
 #include <bitset>
+#include <iostream>
 
-namespace rtt {
-namespace robothub {
+namespace rtt::robothub::basestation {
 
 std::string usbutils_bmAttributes_TransferTypeToString(uint8_t bmAttributes) {
     uint8_t transferType = bmAttributes & 0b00000011;
@@ -325,5 +325,4 @@ void usbutils_enumerate() {
     libusb_free_device_list(list, true);
     libusb_exit(ctx);
 }
-}  // namespace robothub
-}  // namespace rtt
+}  // namespace rtt::robothub::basestation

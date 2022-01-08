@@ -1,8 +1,6 @@
+#include <BasestationGetStatistics.h>  // REM command
+
 #include <basestation/BasestationManager.hpp>
-
-#include <BasestationGetStatistics.h> // REM command
-
-#include <constants.h>
 #include <iostream>
 
 namespace rtt::robothub::basestation {
@@ -11,7 +9,7 @@ BasestationManager::BasestationManager() {
     int error;
     error = libusb_init(&this->usb_context);
     if (error) {
-        throw FailedToInitializeLibUsb("Failed to initialize libusb"); // TODO: Handle error code
+        throw FailedToInitializeLibUsb("Failed to initialize libusb");
     }
 
     this->basestationCollection = std::make_unique<BasestationCollection>();
@@ -29,14 +27,14 @@ BasestationManager::~BasestationManager() {
 
     // In destructor of basestations, the device is closed. This needs to be done
     // before libusb_exit() is called, so delete all basestation objects.
-    this->basestationCollection = nullptr; // TODO: Make nice
+    this->basestationCollection = nullptr;
 
     libusb_exit(this->usb_context);
 }
 
 bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
-    RobotCommand copy = command; // TODO: Make encodeRobotCommand use const so copy is unecessary
-    
+    RobotCommand copy = command;  // TODO: Make encodeRobotCommand use const so copy is unecessary
+
     BasestationMessage message;
     RobotCommandPayload payload;
     encodeRobotCommand(&payload, &copy);
@@ -73,22 +71,20 @@ bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback &)>& callback) {
-    this->feedbackCallbackFunction = callback;
-}
+void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&)>& callback) { this->feedbackCallbackFunction = callback; }
 
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        
+
         // Get a list of devices
         libusb_device** device_list;
         ssize_t device_count = libusb_get_device_list(this->usb_context, &device_list);
 
         std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
-        
+
         this->basestationCollection->updateBasestationList(basestationDevices);
-        
+
         // Free the list of devices
         libusb_free_device_list(device_list, true);
     }
@@ -106,7 +102,7 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
     return basestations;
 }
 
-void BasestationManager::callFeedbackCallback(const RobotFeedback &feedback) const {
+void BasestationManager::callFeedbackCallback(const RobotFeedback& feedback) const {
     if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback);
 }
 

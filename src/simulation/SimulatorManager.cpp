@@ -1,8 +1,8 @@
-#include <constants.h>
-
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub::simulation {
+
+constexpr int LISTEN_THREAD_COOLDOWN_MS = 10;  // Small cooldown in thread between checking for new messsages
 
 SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
     this->networkConfiguration = config;
@@ -40,10 +40,12 @@ int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlC
         case utils::TeamColor::YELLOW: {
             bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->yellowControlSocket, this->networkConfiguration.yellowControlPort);
             break;
-        } case utils::TeamColor::BLUE: {
+        }
+        case utils::TeamColor::BLUE: {
             bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->blueControlSocket, this->networkConfiguration.blueControlPort);
             break;
-        } default: {
+        }
+        default: {
             bytesSent = 0;
         }
     }

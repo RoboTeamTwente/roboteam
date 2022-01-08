@@ -1,10 +1,9 @@
 // Created by emiel on 21-05-21.
 #pragma once
 
-#include <cstdio>
-#include <iostream>
+#include <string>
 
-namespace rtt::robothub {
+namespace rtt::robothub::basestation {
 
 std::string usbutils_bmAttributes_TransferTypeToString();
 std::string usbutils_bmAttributes_SyncTypeToString(uint8_t bmAttributes);
@@ -20,4 +19,4 @@ std::string usbutils_speedToString(int speed);
 
 void usbutils_enumerate();
 
-}  // namespace rtt::robothub
+}  // namespace rtt::robothub::basestation

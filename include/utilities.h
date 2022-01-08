@@ -1,16 +1,14 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
 namespace rtt::robothub::utils {
 
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
 
-enum class TeamColor {
-    UNDEFINED, YELLOW, BLUE
-};
+enum class TeamColor { UNDEFINED, YELLOW, BLUE };
 
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';

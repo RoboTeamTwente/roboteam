@@ -7,6 +7,8 @@
 
 #include "BaseTypes.h"
 #include "BasestationStatistics.h"
+#include "BasestationConfiguration.h"
+#include "BasestationSetConfiguration.h"
 #include "RobotCommand.h"
 #include "RobotFeedback.h"
 #include "RobotStateInfo.h"
@@ -37,7 +39,8 @@ char logBuffer[100];
 uint8_t sendBuffer[MAX_PACKET_SIZE];
 
 /* Flags */
-volatile bool flagHandleStatistics = false; 
+volatile bool flagHandleStatistics = false;
+volatile bool flagHandleConfiguration = false;
 
 // screenCounter acts as a timer for updating the screen
 uint32_t screenCounter = 0;
@@ -51,10 +54,10 @@ void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
     
     LOG("[init] Initializing SX_TX\n");
-    SX_TX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, &hspi1, 0);
+    SX_TX = Wireless_Init(WIRELESS_YELLOW_COMMAND_CHANNEL, &hspi1, 0);
     
     LOG("[init] Initializing SX_RX\n");
-    SX_RX = Wireless_Init(WIRELESS_FEEDBACK_CHANNEL, &hspi2, 1);
+    SX_RX = Wireless_Init(WIRELESS_YELLOW_FEEDBACK_CHANNEL, &hspi2, 1);
 
     // Set SX_RX syncword to basestation syncword
     SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
@@ -117,6 +120,20 @@ void loop(){
   if(flagHandleStatistics){
     // handleStatistics();
     flagHandleStatistics = false;
+  }
+
+  if (flagHandleConfiguration) {
+    // TODO: Make a nice function for this
+    BasestationConfiguration configuration;
+    configuration.header = PACKET_TYPE_BASESTATION_CONFIGURATION;
+    configuration.remVersion = LOCAL_REM_VERSION;
+    configuration.channel = getCurrentChannel();
+
+    BasestationConfigurationPayload payload;
+    encodeBasestationConfiguration(&payload, &configuration);
+
+    HexOut(payload.payload, PACKET_SIZE_BASESTATION_CONFIGURATION);
+    flagHandleConfiguration = false;
   }
 
 
@@ -295,6 +312,18 @@ void handleRobotBuzzer(uint8_t* packet_buffer){
   buffer_RobotBuzzer[robot_id].counter++;
 }
 
+void handleBasestationSetConfiguration(uint8_t* packet_buffer){
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = BasestationSetConfiguration_get_remVersion((BasestationSetConfigurationPayload*) packet_buffer);
+  //uint8_t packet_rem_version = RobotBuzzer_get_remVersion((RobotBuzzerPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleBasestationSetConfiguration] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
+  WIRELESS_CHANNEL newChannel = BasestationSetConfiguration_get_channel((BasestationSetConfigurationPayload*) packet_buffer);
+  updateChannel(newChannel);
+}
 
 /**
  * @brief Handles sending basestation statistics over USB.
@@ -354,6 +383,16 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
       case PACKET_TYPE_ROBOT_STATE_INFO:
         handleRobotStateInfo(packet_buffer + bytes_processed);
         bytes_processed += PACKET_SIZE_ROBOT_STATE_INFO;
+        break;
+      
+      case PACKET_TYPE_BASESTATION_SET_CONFIGURATION:
+        handleBasestationSetConfiguration(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_BASESTATION_SET_CONFIGURATION;
+        break;
+
+      case PACKET_TYPE_BASESTATION_GET_CONFIGURATION:
+        bytes_processed += PACKET_SIZE_BASESTATION_GET_CONFIGURATION;
+        flagHandleConfiguration = true;
         break;
 
       default:

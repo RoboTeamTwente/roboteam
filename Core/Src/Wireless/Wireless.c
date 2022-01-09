@@ -22,6 +22,8 @@ uint8_t SXTX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 
+volatile WIRELESS_CHANNEL currentChannel = YELLOW_CHANNEL;
+
 // init structs
 SX1280_Settings set = {
         .frequency = 2400000000,
@@ -162,4 +164,26 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
 void Wireless_DMA_Handler(SX1280* SX){
     DMA_Callback(SX);
     SX->expect_packet = false;
+}
+
+void updateChannel(WIRELESS_CHANNEL channel) {
+    SX1280* SX_transmit = &SX1280_TX_struct;
+    SX1280* SX_receive = &SX1280_RX_struct;
+
+    switch (channel) {
+        case YELLOW_CHANNEL: {
+            setChannel(SX_transmit, WIRELESS_YELLOW_COMMAND_CHANNEL);
+            setChannel(SX_receive, WIRELESS_YELLOW_FEEDBACK_CHANNEL);
+            currentChannel = YELLOW_CHANNEL;
+            break;
+        } case BLUE_CHANNEL:
+            setChannel(SX_transmit, WIRELESS_BLUE_COMMAND_CHANNEL);
+            setChannel(SX_receive, WIRELESS_BLUE_FEEDBACK_CHANNEL);
+            currentChannel = BLUE_CHANNEL;
+            break;
+    }
+}
+
+WIRELESS_CHANNEL getCurrentChannel() {
+    return currentChannel;
 }

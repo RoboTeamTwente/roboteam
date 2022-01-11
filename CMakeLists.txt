@@ -13,7 +13,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 include(LocateQt5)
 include(FindSodium)
-include(GetDependencies)
+include(GetSDL)
+include(GetWebsocket)
+include(GetZmqpp)
 include(BuildLibusb)
 
 # internal projects

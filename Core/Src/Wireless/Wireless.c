@@ -22,7 +22,7 @@ uint8_t SXTX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 uint8_t SXRX_RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(4)));
 
-volatile WIRELESS_CHANNEL currentChannel = YELLOW_CHANNEL;
+volatile static WIRELESS_CHANNEL currentChannel = YELLOW_CHANNEL;
 
 // init structs
 SX1280_Settings set = {

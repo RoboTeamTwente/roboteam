@@ -20,7 +20,7 @@ bool Triangle::contains(const Vector2 &point) const {
     }
     return ((((corner3.x - corner2.x) * (point.y - corner2.y) - (corner3.y - corner2.y) * (point.x - corner2.x)) >= 0) == s_ab);
 }
-double Triangle::area() const { return abs((corner1.x * (corner2.y - corner3.y) + corner2.x * (corner3.y - corner1.y) + corner3.x * (corner1.y - corner2.y)) * 0.5); }
+double Triangle::area() const { return fabs((corner1.x * (corner2.y - corner3.y) + corner2.x * (corner3.y - corner1.y) + corner3.x * (corner1.y - corner2.y)) * 0.5); }
 std::vector<LineSegment> Triangle::lines() const { return std::vector<LineSegment>({LineSegment(corner1, corner2), LineSegment(corner2, corner3), LineSegment(corner3, corner1)}); }
 std::vector<Vector2> Triangle::corners() const { return std::vector<Vector2>({corner1, corner2, corner3}); }
 bool Triangle::doesIntersect(const Line &line) const {

@@ -43,7 +43,7 @@ TEST(Random, gaussian) {
         }
         sum /= (double)n;
         double sigma = 1 / sqrt(n);
-        successes += (abs(sum) <= 2 * sigma);  // 95 % confidence interval.
+        successes += (fabs(sum) <= 2 * sigma);  // 95 % confidence interval.
     }
     EXPECT_GE(successes, 90);  // Leave some width for 95% confidence interval.
     // The actual value is 94, which is a good indication everything works as intended.

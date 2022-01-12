@@ -127,7 +127,7 @@ void loop(){
     BasestationConfiguration configuration;
     configuration.header = PACKET_TYPE_BASESTATION_CONFIGURATION;
     configuration.remVersion = LOCAL_REM_VERSION;
-    configuration.channel = getCurrentChannel();
+    configuration.channel = SX1280_getCurrentChannel();
 
     BasestationConfigurationPayload payload;
     encodeBasestationConfiguration(&payload, &configuration);
@@ -322,7 +322,7 @@ void handleBasestationSetConfiguration(uint8_t* packet_buffer){
   }
 
   WIRELESS_CHANNEL newChannel = BasestationSetConfiguration_get_channel((BasestationSetConfigurationPayload*) packet_buffer);
-  updateChannel(newChannel);
+  SX1280_updateChannel(newChannel);
 }
 
 /**

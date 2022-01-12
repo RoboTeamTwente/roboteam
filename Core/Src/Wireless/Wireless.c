@@ -166,7 +166,7 @@ void Wireless_DMA_Handler(SX1280* SX){
     SX->expect_packet = false;
 }
 
-void updateChannel(WIRELESS_CHANNEL channel) {
+void SX1280_updateChannel(WIRELESS_CHANNEL channel) {
     SX1280* SX_transmit = &SX1280_TX_struct;
     SX1280* SX_receive = &SX1280_RX_struct;
 
@@ -184,6 +184,6 @@ void updateChannel(WIRELESS_CHANNEL channel) {
     }
 }
 
-WIRELESS_CHANNEL getCurrentChannel() {
+WIRELESS_CHANNEL SX1280_getCurrentChannel() {
     return currentChannel;
 }

@@ -30,8 +30,8 @@ bool Angle::rotateDirection(const Angle &other) const noexcept {
 }
 
 double Angle::shortestAngleDiff(Angle const &other) const noexcept {
-    double thisDiff = abs((*this - other).angle);
-    double otherDiff = abs((other - *this).angle);
+    double thisDiff = fabs((*this - other).angle);
+    double otherDiff = fabs((other - *this).angle);
     return std::min(thisDiff, otherDiff);
 }
 

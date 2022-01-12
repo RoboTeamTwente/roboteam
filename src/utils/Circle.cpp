@@ -6,13 +6,13 @@
 
 namespace rtt {
 
-bool Circle::doesIntersectOrContain(const Vector2 &other) { return std::abs((center - other).length()) <= radius; }
+bool Circle::doesIntersectOrContain(const Vector2 &other) { return fabs((center - other).length()) <= radius; }
 
 bool Circle::doesIntersectOrContain(const Line &other) { return other.distanceToLine(center) <= radius; }
 
 bool Circle::doesIntersectOrContain(const LineSegment &other) { return other.distanceToLine(center) <= radius; }
 
-bool Circle::doesIntersectOrContain(const Circle &other) { return std::abs((center - other.center).length()) <= (radius + other.radius); }
+bool Circle::doesIntersectOrContain(const Circle &other) { return fabs((center - other.center).length()) <= (radius + other.radius); }
 
 bool Circle::doesIntersectOrContain(const Rectangle &other) {
     // https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
@@ -23,8 +23,8 @@ bool Circle::doesIntersectOrContain(const Rectangle &other) {
     double rectWidth = other.width();
     double rectHeight = other.height();
 
-    distanceToCircle.x = abs(center.x - rectCenter.x);
-    distanceToCircle.y = abs(center.y - rectCenter.y);
+    distanceToCircle.x = fabs(center.x - rectCenter.x);
+    distanceToCircle.y = fabs(center.y - rectCenter.y);
 
     if (distanceToCircle.x > (rectWidth / 2 + radius)) return false;
     if (distanceToCircle.y > (rectHeight / 2 + radius)) return false;
@@ -59,10 +59,10 @@ Circle Circle::operator-(const Vector2 &other) const { return {center - other, r
 Circle Circle::operator+=(const Vector2 &other) { return {center += other, radius}; }
 Circle Circle::operator-=(const Vector2 &other) { return {center -= other, radius}; }
 
-Circle Circle::operator*(double scale) const { return {center, radius * std::abs(scale)}; }
-Circle Circle::operator/(double scale) const { return {center, radius / std::abs(scale)}; }
-Circle Circle::operator*=(double scale) { return {center, radius *= std::abs(scale)}; }
-Circle Circle::operator/=(double scale) { return {center, radius /= std::abs(scale)}; }
+Circle Circle::operator*(double scale) const { return {center, radius * fabs(scale)}; }
+Circle Circle::operator/(double scale) const { return {center, radius / fabs(scale)}; }
+Circle Circle::operator*=(double scale) { return {center, radius *= fabs(scale)}; }
+Circle Circle::operator/=(double scale) { return {center, radius /= fabs(scale)}; }
 
 std::ostream &Circle::write(std::ostream &os) const { return os << "Circle({" << center.x << ", " << center.y << "}, " << radius << ")"; }
 
@@ -88,7 +88,7 @@ std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::LineSegment li
     double a = A * A + B * B;
     double b, c;
     bool bnz = true;
-    if (abs(B) >= eps) {
+    if (fabs(B) >= eps) {
         b = 2 * (A * C + A * B * y0 - sq(B) * x0);
         c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
     } else {
@@ -107,7 +107,7 @@ std::vector<Vector2> Circle::intersectsCircleWithLineSegment(rtt::LineSegment li
         double d2 = sqrt(sq(x - x1) + sq(y - y1));    // distance from point to one end
         double d3 = sqrt(sq(x2 - x) + sq(y2 - y));    // distance from point to other end
         double delta = d1 - d2 - d3;
-        return abs(delta) < eps;  // true if delta is less than a small tolerance
+        return fabs(delta) < eps;  // true if delta is less than a small tolerance
     };
 
     auto fx = [A, B, C](double x) { return -(A * x + C) / B; };

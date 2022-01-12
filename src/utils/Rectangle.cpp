@@ -39,8 +39,8 @@ double Rectangle::minX() const { return fmin(corner1.x, corner2.x); }
 double Rectangle::maxX() const { return fmax(corner1.x, corner2.x); }
 double Rectangle::minY() const { return fmin(corner1.y, corner2.y); }
 double Rectangle::maxY() const { return fmax(corner1.y, corner2.y); }
-double Rectangle::width() const { return std::abs(corner1.x - corner2.x); }
-double Rectangle::height() const { return std::abs(corner1.y - corner2.y); }
+double Rectangle::width() const { return fabs(corner1.x - corner2.x); }
+double Rectangle::height() const { return fabs(corner1.y - corner2.y); }
 
 std::vector<Vector2> Rectangle::corners() const {
     std::vector<Vector2> corners = {Vector2(minX(), minY()), Vector2(minX(), maxY()), Vector2(maxX(), maxY()), Vector2(maxX(), minY())};

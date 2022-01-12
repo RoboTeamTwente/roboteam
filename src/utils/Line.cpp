@@ -1,5 +1,6 @@
 #include "Line.h"
 
+#include <cmath>
 #include <optional>
 
 #include "LineSegment.h"
@@ -37,7 +38,7 @@ Vector2 Line::project(const Vector2 &point) const {
 bool Line::isOnLine(const Vector2 &point) const {
     Vector2 A = v2 - v1;
     Vector2 B = point - v1;
-    return abs(A.cross(B)) < RTT_PRECISION_LIMIT;
+    return fabs(A.cross(B)) < RTT_PRECISION_LIMIT;
 }
 
 std::optional<Vector2> Line::intersect(const Line &line) const {
@@ -55,7 +56,7 @@ std::optional<Vector2> Line::intersect(const Vector2 p1, const Vector2 p2, const
     Vector2 A = p1 - p2;
     Vector2 B = q1 - q2;
     double denom = A.cross(B);
-    if (abs(denom) >= RTT_PRECISION_LIMIT) {
+    if (fabs(denom) >= RTT_PRECISION_LIMIT) {
         Vector2 C = p1 - q1;
         double numer = C.cross(A);
         double u = numer / denom;

@@ -4,6 +4,7 @@
 
 #include "Polygon.h"
 
+#include <cmath>
 #include <numeric>
 #include <optional>
 #include <utility>
@@ -122,7 +123,7 @@ std::vector<Vector2> Polygon::intersections(const LineSegment &line) const {
 
 // https://en.wikipedia.org/wiki/Shoelace_formula
 //  area is well defined only for simple polygons
-double Polygon::area() const { return 0.5 * abs(doubleSignedArea()); }
+double Polygon::area() const { return 0.5 * fabs(doubleSignedArea()); }
 
 double Polygon::doubleSignedArea() const {
     int n = vertices.size();

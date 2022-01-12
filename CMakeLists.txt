@@ -13,7 +13,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 include(LocateQt5)
 include(FindSodium)
-include(GetDependencies)
+include(GetSDL)
+include(GetWebsocket)
+include(GetZmqpp)
 include(BuildLibusb)
 
 # internal projects
@@ -22,4 +24,3 @@ add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
 add_subdirectory(roboteam_world)
-add_subdirectory(roboteam_central_server)

@@ -18,8 +18,6 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "WorldRobot.proto"
     "Setting.proto"
     "RobotParameters.proto"
-    "Handshake.proto"
-    "UiOptions.proto"
     "AICommand.proto"
 )
 

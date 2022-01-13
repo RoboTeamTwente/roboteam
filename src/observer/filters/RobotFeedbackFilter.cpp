@@ -6,6 +6,7 @@
 
 void RobotFeedbackFilter::process(const proto::RobotData& data) {
     auto& map = data.isyellow() ? lastYellowFeedback : lastBlueFeedback;
+    map.clear();
     for (const auto& feedback : data.receivedfeedback()) {
         map[feedback.id()] = feedback;
     }

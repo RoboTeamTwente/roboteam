@@ -41,7 +41,7 @@ target_link_libraries(simulator_manager PUBLIC
 # Create the make file for the basestationManager library
 add_library(basestation_manager STATIC
         "src/basestation/LibusbUtilities.cpp"
-        "src/basestation/BasestationManager.cpp")
+        "src/basestation/BasestationManager.cpp" test/sendFormationToSimulator.cpp)
 target_include_directories(basestation_manager PUBLIC
         "include"
         "roboteam_embedded_messages/include")
@@ -73,3 +73,10 @@ target_link_libraries(roboteam_robothub_enumerate_usb
         Threads::Threads
         lib::usb
 )
+
+# Create make file for simulation formation test
+add_executable(test_formation
+        test/sendFormationToSimulator.cpp
+)
+
+target_link_libraries(test_formation PUBLIC simulator_manager)

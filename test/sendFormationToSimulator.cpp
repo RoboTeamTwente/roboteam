@@ -2,12 +2,9 @@
 // Created by tijmen on 13-01-22.
 //
 
-#include <iostream>
 #include <simulation/SimulatorManager.hpp>
 
 int main () {
-
-    std::cout << "Hello World!";
 
     using namespace rtt::robothub::simulation;
 

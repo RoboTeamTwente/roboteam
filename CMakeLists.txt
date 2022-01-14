@@ -73,3 +73,10 @@ target_link_libraries(roboteam_robothub_enumerate_usb
         Threads::Threads
         lib::usb
 )
+
+# Create make file for simulation formation test
+add_executable(test_formation
+        test/sendFormationToSimulator.cpp
+)
+
+target_link_libraries(test_formation PUBLIC simulator_manager)

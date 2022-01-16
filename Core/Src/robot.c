@@ -223,7 +223,15 @@ void init(void){
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	Putty_printf("Initializing wireless\n");
-    SX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, COMM_SPI);
+
+	if(read_Pin(IN2_pin)){
+		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
+		Putty_printf("Listening on BLUE CHANNEL\n");
+	}else{
+		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
+		Putty_printf("Listening on YELLOW CHANNEL\n");
+	}
+    
 	SX->SX_settings->syncWords[0] = robot_syncWord[ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);

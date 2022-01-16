@@ -19,6 +19,8 @@ static bool isWirelessTransmitting = false; // boolean to check whether we are t
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 uint8_t RX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
 
+volatile static WIRELESS_CHANNEL current_channel = YELLOW_CHANNEL;
+
 SX1280 SX1280_struct;
 SX1280* SX; // pointer to the datastruct
 
@@ -46,8 +48,10 @@ SX1280_Settings set = {
 };
 SX1280_Packet_Status PacketStat;
 
-SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
+SX1280 * Wireless_Init(WIRELESS_CHANNEL channel, SPI_HandleTypeDef * WirelessSpi){
 	SX1280 * SX = &SX1280_struct;// pointer to the global struct
+
+    current_channel = channel;
 
     SX->SPI_used = false;
 
@@ -69,7 +73,8 @@ SX1280 * Wireless_Init(float channel, SPI_HandleTypeDef * WirelessSpi){
 
     // link settings
     SX->SX_settings = &set;
-    SX->SX_settings->channel = channel;
+    if (current_channel == YELLOW_CHANNEL) SX->SX_settings->channel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+    if (current_channel == BLUE_CHANNEL  ) SX->SX_settings->channel = WIRELESS_BLUE_COMMAND_CHANNEL;
     SX->Packet_status = &PacketStat;
 
     SX1280Setup(SX); // SX1280 init procedure
@@ -127,7 +132,8 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	isWirelessTransmitting = false;
     	//toggle_Pin(LED5_pin);
     	// start listening for a packet again
-    	setChannel(SX, WIRELESS_COMMAND_CHANNEL); // set to channel 40 for basestation to robot
+        if (current_channel == YELLOW_CHANNEL) setChannel(SX, WIRELESS_YELLOW_COMMAND_CHANNEL);
+        if (current_channel == BLUE_CHANNEL  ) setChannel(SX, WIRELESS_BLUE_COMMAND_CHANNEL);
 		SX->SX_settings->syncWords[0] = robot_syncWord[get_Id()];
 		setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
 
@@ -149,7 +155,8 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     		if (wirelessFeedback && !isWirelessTransmitting) {
     			// feedback enabled, transmit a packet to basestation
     			isWirelessTransmitting = true;
-    			setChannel(SX, WIRELESS_FEEDBACK_CHANNEL); // set to channel 40 for feedback to basestation
+                if (current_channel == YELLOW_CHANNEL) setChannel(SX, WIRELESS_YELLOW_FEEDBACK_CHANNEL);
+                if (current_channel == BLUE_CHANNEL  ) setChannel(SX, WIRELESS_BLUE_FEEDBACK_CHANNEL);
     			SX->SX_settings->syncWords[0] = robot_syncWord[16]; // 0x82108610 for basestation Rx
     			setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     			SendPacket(SX, data, Nbytes);

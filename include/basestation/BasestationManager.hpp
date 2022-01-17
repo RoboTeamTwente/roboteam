@@ -22,10 +22,12 @@ class BasestationManager {
     bool sendRobotBuzzerCommand(const RobotBuzzer &command, utils::TeamColor color) const;
     bool sendBasestationStatisticsRequest(utils::TeamColor color) const;
 
-    void setFeedbackCallback(const std::function<void(const RobotFeedback &)> &callback);
+    void setFeedbackCallback(const std::function<void(const RobotFeedback &, utils::TeamColor color)> &callback);
+
+    void printStatus() const;
 
    private:
-    libusb_context *usb_context;
+    libusb_context *usbContext;
 
     bool shouldListenForBasestationPlugs;
     std::thread basestationPlugsListener;
@@ -33,8 +35,10 @@ class BasestationManager {
 
     std::unique_ptr<BasestationCollection> basestationCollection;
 
-    std::function<void(const RobotFeedback &)> feedbackCallbackFunction;
-    void callFeedbackCallback(const RobotFeedback &feedback) const;
+    void handleIncomingMessage(const BasestationMessage &message, utils::TeamColor basestationColor) const;
+
+    std::function<void(const RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
+    void callFeedbackCallback(const RobotFeedback &feedback, utils::TeamColor color) const;
 
     static std::vector<libusb_device *> filterBasestationDevices(libusb_device **devices, int device_count);
 };

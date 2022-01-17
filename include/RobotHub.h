@@ -54,7 +54,7 @@ class RobotHub {
     void onSettings(const proto::Setting &setting);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
-    void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback);
+    void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor team);
     bool sendRobotFeedback(const proto::RobotData &feedback);
 };
 

@@ -1,18 +1,19 @@
 #include <BasestationGetStatistics.h>  // REM command
 
 #include <basestation/BasestationManager.hpp>
-#include <iostream>
+#include <cstring>
 
 namespace rtt::robothub::basestation {
 
 BasestationManager::BasestationManager() {
     int error;
-    error = libusb_init(&this->usb_context);
+    error = libusb_init(&this->usbContext);
     if (error) {
         throw FailedToInitializeLibUsb("Failed to initialize libusb");
     }
 
     this->basestationCollection = std::make_unique<BasestationCollection>();
+    this->basestationCollection->setIncomingMessageCallback([&](const BasestationMessage& message, utils::TeamColor color) { this->handleIncomingMessage(message, color); });
 
     this->shouldListenForBasestationPlugs = true;
     this->basestationPlugsListener = std::thread(&BasestationManager::listenForBasestationPlugs, this);
@@ -25,22 +26,22 @@ BasestationManager::~BasestationManager() {
         this->basestationPlugsListener.join();
     }
 
-    // In destructor of basestations, the device is closed. This needs to be done
-    // before libusb_exit() is called, so delete all basestation objects.
+    // In destructor of basestation objects, the usb device is closed. This needs to be done
+    // before libusb_exit() is called, so delete all basestation objects now
     this->basestationCollection = nullptr;
 
-    libusb_exit(this->usb_context);
+    libusb_exit(this->usbContext);
 }
 
 bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
-    RobotCommand copy = command;  // TODO: Make encodeRobotCommand use const so copy is unecessary
+    RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
-    BasestationMessage message;
     RobotCommandPayload payload;
     encodeRobotCommand(&payload, &copy);
 
-    message.payload = payload.payload;
-    message.payload_size = PACKET_SIZE_ROBOT_COMMAND;
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_ROBOT_COMMAND;
+    std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
@@ -48,12 +49,12 @@ bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::Te
 bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
     RobotBuzzer copy = command;
 
-    BasestationMessage message;
     RobotBuzzerPayload payload;
     encodeRobotBuzzer(&payload, &copy);
 
-    message.payload = payload.payload;
-    message.payload_size = PACKET_SIZE_ROBOT_BUZZER;
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_ROBOT_BUZZER;
+    std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
@@ -61,17 +62,17 @@ bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, util
 bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
     BasestationGetStatistics command;
 
-    BasestationMessage message;
     BasestationGetStatisticsPayload payload;
     encodeBasestationGetStatistics(&payload, &command);
 
-    message.payload = payload.payload;
-    message.payload_size = PACKET_SIZE_BASESTATION_GET_STATISTICS;
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_BASESTATION_GET_STATISTICS;
+    std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&)>& callback) { this->feedbackCallbackFunction = callback; }
+void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
 
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
@@ -79,7 +80,7 @@ void BasestationManager::listenForBasestationPlugs() {
 
         // Get a list of devices
         libusb_device** device_list;
-        ssize_t device_count = libusb_get_device_list(this->usb_context, &device_list);
+        ssize_t device_count = libusb_get_device_list(this->usbContext, &device_list);
 
         std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
 
@@ -89,6 +90,8 @@ void BasestationManager::listenForBasestationPlugs() {
         libusb_free_device_list(device_list, true);
     }
 }
+
+void BasestationManager::printStatus() const { this->basestationCollection->printCollection(); }
 
 std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device** devices, int device_count) {
     std::vector<libusb_device*> basestations;
@@ -102,8 +105,23 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
     return basestations;
 }
 
-void BasestationManager::callFeedbackCallback(const RobotFeedback& feedback) const {
-    if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback);
+void BasestationManager::handleIncomingMessage(const BasestationMessage& message, utils::TeamColor color) const {
+    switch (message.payloadBuffer[0]) {
+        case PACKET_TYPE_ROBOT_FEEDBACK: {
+            RobotFeedbackPayload payload;
+            std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
+
+            RobotFeedback feedback;
+            decodeRobotFeedback(&feedback, &payload);
+
+            this->callFeedbackCallback(feedback, color);
+            break;
+        }  // TODO: Other packets can be handled as well, like basestation statistics
+    }
+}
+
+void BasestationManager::callFeedbackCallback(const RobotFeedback& feedback, utils::TeamColor color) const {
+    if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback, color);
 }
 
 FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string message) : message(message) {}

@@ -27,12 +27,10 @@ RobotHub::RobotHub() {
     std::cout << "[RobotHub]: Starting with default mode of: " << utils::modeToString(this->mode) << std::endl;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
-    auto simulationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromSimulator, this, std::placeholders::_1);
-    this->simulatorManager->setRobotControlFeedbackCallback(simulationFeedbackCallback);
+    this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    auto basestationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromBasestation, this, std::placeholders::_1);
-    this->basestationManager->setFeedbackCallback(basestationFeedbackCallback);
+    this->basestationManager->setFeedbackCallback([&](const RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
 bool RobotHub::subscribe() {
@@ -156,6 +154,13 @@ void RobotHub::onSettings(const proto::Setting &settings) {
     as it is updated from multiple threads without guards. This should not matter
     however, as these variables are just for debugging purposes. */
 void RobotHub::printStatistics() {
+    if (this->basestationManager == nullptr) {
+        std::cout << "Basestation manager is not initialized" << std::endl;
+        return;
+    }
+
+    this->basestationManager->printStatus();
+
     std::stringstream ss;
 
     const int amountOfColumns = 4;
@@ -201,9 +206,9 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     this->sendRobotFeedback(feedbackToBePublished);
 }
 
-void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
+void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor basestationColor) {
     proto::RobotData feedbackToBePublished;
-    // TODO: Get from basestation which color
+    feedbackToBePublished.set_isyellow(basestationColor == utils::TeamColor::YELLOW);
 
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);

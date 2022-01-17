@@ -1,96 +1,89 @@
-#include <BasestationConfiguration.h>  // REM packet
-#include <RobotCommand.h>              //REM packet
+#include <BasestationConfiguration.h>     // REM packet
+#include <BasestationGetConfiguration.h>  // REM packet
+#include <RobotCommand.h>                 //REM packet
 #include <basestation/LibusbUtilities.h>
 
 #include <basestation/Basestation.hpp>
 #include <chrono>
+#include <cstring>
 #include <iostream>
 
 namespace rtt::robothub::basestation {
 
-constexpr int BASESTATION_VENDOR_ID = 1155;
-constexpr int BASESTATION_PRODUCT_ID = 22336;
-constexpr int USB_INTERFACE_NUMBER = 1;
-constexpr unsigned char TRANSFER_IN_BUFFER_ENDPOINT = 0x01;
-constexpr unsigned char TRANSFER_OUT_BUFFER_ENDPOINT = 0x81;
-constexpr int TRANSFER_IN_BUFFER_SIZE = 4096;
-constexpr unsigned int TRANSFER_TIMEOUT_MS = 500;
-constexpr unsigned int INCOMING_MESSAGE_TIMEOUT_MS = 100;
-constexpr unsigned int INCOMING_MESSAGE_ERROR_PAUSE_MS = 100;
+constexpr uint16_t BASESTATION_VENDOR_ID = 1155;             // Vendor id all basestations share
+constexpr uint16_t BASESTATION_PRODUCT_ID = 22336;           // Product id all basestations share
+constexpr int BASESTATION_USB_INTERFACE_NUMBER = 1;          // USB interface we use for connecting with a basestation
+constexpr uint8_t TRANSFER_IN_BUFFER_ENDPOINT = 129;         // Endpoint used for reading messages
+constexpr uint8_t TRANSFER_OUT_BUFFER_ENDPOINT = 1;          // Endpoint used for writing messages
+constexpr unsigned int TRANSFER_IN_TIMEOUT_MS = 100;         // Timeout for reading messages
+constexpr unsigned int TRANSFER_OUT_TIMEOUT_MS = 500;        // Timeout for writing messages
+constexpr unsigned int PAUSE_ON_TRANSFER_IN_ERROR_MS = 100;  // Pause every time a read fails
 
 Basestation::Basestation(libusb_device* device) : device(device) {
     int error;
 
-    error = libusb_open(this->device, &this->device_handle);
+    // Open the basestation device, creating the handle we can perform IO on
+    error = libusb_open(this->device, &this->deviceHandle);
     if (error) throw FailedToOpenDeviceException("Failed to open libusb device");
 
-    error = libusb_set_auto_detach_kernel_driver(this->device_handle, true);
+    error = libusb_set_auto_detach_kernel_driver(this->deviceHandle, true);
     if (error) {
-        libusb_close(this->device_handle);
+        libusb_close(this->deviceHandle);
         throw FailedToOpenDeviceException("Failed to set auto detach kernel driver");
     }
-    error = libusb_claim_interface(this->device_handle, USB_INTERFACE_NUMBER);
+    // error = libusb_detach_kernel_driver(this->device_handle, BASESTATION_USB_INTERFACE_NUMBER);
+    // if (error) {
+    //     std::cout << "Could not detach kernel driver!" << std::endl;
+    // } // TODO: Check if this is necessary
+
+    // Claim the interface, so no other programs are connecting with the basestation
+    error = libusb_claim_interface(this->deviceHandle, BASESTATION_USB_INTERFACE_NUMBER);
     if (error) {
-        libusb_close(this->device_handle);
+        libusb_close(this->deviceHandle);
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
+    // TODO: Use serial id instead of address to identify basestations
     // Set address, because this can be used to compare basestations
     this->address = libusb_get_device_address(this->device);
     std::cout << "Opened basestation on address: " << (int)this->address << std::endl;
 
-    this->currentlyUsedChannel = WirelessChannel::UNKNOWN;
+    this->channel = WirelessChannel::UNKNOWN;
 
     // Start listen thread for incoming messages
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
+
+    // Current used channel is UNKNOWN, so already send a message that requests this channel
+    if (!this->requestChannelOfBasestation()) {
+        std::cout << "Could not send request for channel of basestation. You might want to replug this device" << std::endl;
+    }
 }
 
 Basestation::~Basestation() {
+    // Stop the listen thread that reads messages of the basestation
     this->shouldListenForIncomingMessages = false;
     if (this->incomingMessageListenerThread.joinable()) {
         this->incomingMessageListenerThread.join();
     }
 
-    libusb_close(this->device_handle);
+    // Close the usb device
+    libusb_close(this->deviceHandle);
+    std::cout << "Closed basestation!" << std::endl;
 }
 
 bool Basestation::operator==(libusb_device* otherDevice) const {
+    // Compare the address of the other device with this device, as it *should* uniquely identify them
+    // TODO: Compare the devices serial number instead
     uint8_t otherAddress = libusb_get_device_address(otherDevice);
     return this->address == otherAddress;
 }
 
-bool Basestation::sendMessageToBasestation(const BasestationMessage& message) const {
-    int bytesSent;
-    int error = libusb_bulk_transfer(this->device_handle, TRANSFER_OUT_BUFFER_ENDPOINT, message.payload, message.payload_size, &bytesSent, TRANSFER_TIMEOUT_MS);
-
-    if (error) {
-        std::cout << "Failed to send message to basestation" << std::endl;
-        return false;
-    }
-    return true;
-}
+bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
 void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&)> callback) { this->incomingMessageCallback = callback; }
 
-WirelessChannel Basestation::getCurrentUsedChannel() const { return this->currentlyUsedChannel; }
-
-bool Basestation::requestChannelChange(WirelessChannel newChannel) {
-    if (newChannel == WirelessChannel::UNKNOWN) {
-        return false;  // We cannot ask for an unknown channel
-    }
-    if (this->isWaitingForChannelChange()) {
-        return false;  // We were already waiting for a channel change, so do not request again for a change
-    }
-    if (newChannel == this->currentlyUsedChannel) {
-        return false;  // Why send a channel change request if the frequency is already used
-    }
-
-    this->wantedChannel = newChannel;
-    return this->sendConfigurationCommand(newChannel);
-}
-
-bool Basestation::isWaitingForChannelChange() const { return this->wantedChannel != this->currentlyUsedChannel; }
+WirelessChannel Basestation::getChannel() const { return this->channel; }
 
 bool Basestation::isDeviceABasestation(libusb_device* device) {
     libusb_device_descriptor descriptor;
@@ -116,66 +109,105 @@ bool Basestation::wirelessChannelToREMChannel(WirelessChannel channel) {
             remChannel = false;
             break;
     }
+
     return remChannel;
 }
 
 WirelessChannel Basestation::remChannelToWirelessChannel(bool channel) { return channel ? WirelessChannel::BLUE_CHANNEL : WirelessChannel::YELLOW_CHANNEL; }
 
+std::string Basestation::wirelessChannelToString(WirelessChannel channel) {
+    switch (channel) {
+        case WirelessChannel::BLUE_CHANNEL:
+            return "blue channel";
+        case WirelessChannel::YELLOW_CHANNEL:
+            return "yellow channel";
+        default:
+            return "unknown channel";
+    }
+}
+
 void Basestation::listenForIncomingMessages() {
+    // The incoming data will be written to this message object
+    BasestationMessage incomingMessage;
+
     while (this->shouldListenForIncomingMessages) {
-        BasestationMessage message = {.payload_size = 0, .payload = nullptr};
-
-        int error =
-            libusb_bulk_transfer(this->device_handle, TRANSFER_IN_BUFFER_ENDPOINT, message.payload, TRANSFER_IN_BUFFER_SIZE, &message.payload_size, INCOMING_MESSAGE_TIMEOUT_MS);
-
-        if (error != LIBUSB_SUCCESS && error != LIBUSB_ERROR_TIMEOUT) {
-            std::cout << "Error while reading message: " << usbutils_errorToString(error) << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(INCOMING_MESSAGE_ERROR_PAUSE_MS));
-            continue;
-        }
-        if (message.payload_size > 0) {
-            this->handleIncomingMessage(message);
+        bool hasReadMessage = this->readBasestationMessage(incomingMessage);
+        if (hasReadMessage) {
+            this->handleIncomingMessage(incomingMessage);
+        } else {
+            // If an error occured, try waiting a while before reading again
+            std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_ON_TRANSFER_IN_ERROR_MS));
         }
     }
 }
 
 // Assumes a payload size bigger than 0
 void Basestation::handleIncomingMessage(const BasestationMessage& message) {
-    // If a used frequency is received, update the basestations currentlyUsedChannel
-    if (message.payload[0] == PACKET_TYPE_BASESTATION_CONFIGURATION) {
-        BasestationConfigurationPayload* configPayload = (BasestationConfigurationPayload*)message.payload;
-        BasestationConfiguration configuration;
-        decodeBasestationConfiguration(&configuration, configPayload);
+    // If a basestation configuration is received, update channel of this basestation class
+    if (message.payloadBuffer[0] == PACKET_TYPE_BASESTATION_CONFIGURATION) {
+        BasestationConfigurationPayload configurationPayload;
+        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_BASESTATION_CONFIGURATION);
 
-        WirelessChannel usedChannel = configuration.channel ? WirelessChannel::YELLOW_CHANNEL : WirelessChannel::BLUE_CHANNEL;
-        this->updateCurrentlyUsedChannel(usedChannel);
+        BasestationConfiguration basestationConfiguration;
+        decodeBasestationConfiguration(&basestationConfiguration, &configurationPayload);
+
+        WirelessChannel usedChannel = Basestation::remChannelToWirelessChannel(basestationConfiguration.channel);
+        this->channel = usedChannel;
     }
 
+    // And in any case, just forward the message to the callback
     if (this->incomingMessageCallback != nullptr) {
         this->incomingMessageCallback(message);
     }
 }
 
-void Basestation::updateCurrentlyUsedChannel(WirelessChannel newChannel) {
-    if (this->wantedChannel == WirelessChannel::UNKNOWN) {
-        // This is the first time we know what frequency the basestation is, so set the wanted frequency to the same thing
-        this->wantedChannel = newChannel;
-    }
-    this->currentlyUsedChannel = newChannel;
+bool Basestation::requestChannelOfBasestation() {
+    BasestationGetConfiguration getConfigurationCommand;
+    getConfigurationCommand.header = PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
+
+    BasestationGetConfigurationPayload getConfigurationPayload;
+    encodeBasestationGetConfiguration(&getConfigurationPayload, &getConfigurationCommand);
+
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_BASESTATION_GET_CONFIGURATION;
+    std::memcpy(message.payloadBuffer, getConfigurationPayload.payload, message.payloadSize);
+
+    bool sentMessage = this->writeBasestationMessage(message);
+    return sentMessage;
 }
 
-bool Basestation::sendConfigurationCommand(WirelessChannel newChannel) {
-    BasestationConfiguration configurationCommand;
-    configurationCommand.header = PACKET_TYPE_BASESTATION_CONFIGURATION;
-    configurationCommand.remVersion = LOCAL_REM_VERSION;
-    configurationCommand.channel = Basestation::wirelessChannelToREMChannel(newChannel);
+bool Basestation::readBasestationMessage(BasestationMessage& message) const {
+    int error =
+        libusb_bulk_transfer(this->deviceHandle, TRANSFER_IN_BUFFER_ENDPOINT, message.payloadBuffer, BASESTATION_MESSAGE_BUFFER_SIZE, &message.payloadSize, TRANSFER_IN_TIMEOUT_MS);
 
-    BasestationConfigurationPayload commandPayload;
-    encodeBasestationConfiguration(&commandPayload, &configurationCommand);
+    switch (error) {
+        case LIBUSB_SUCCESS:
+            // Nothing went wrong, so do not send any debug message
+            break;
+        case LIBUSB_ERROR_TIMEOUT: {
+            std::cout << "WARNING: Timed out while reading message. Are messages too big?" << std::endl;
+            break;
+        }
+        case LIBUSB_ERROR_NO_DEVICE: {
+            std::cout << "WARNING: No device found. Did you unplug the device? " << std::endl;
+            break;
+        }
+        default: {
+            std::cout << "ERROR: Failed to read message: " << usbutils_errorToString(error) << std::endl;
+        }
+    }
 
-    BasestationMessage message = {.payload_size = PACKET_SIZE_BASESTATION_CONFIGURATION, .payload = commandPayload.payload};
+    return error == LIBUSB_SUCCESS;
+}
+bool Basestation::writeBasestationMessage(BasestationMessage& message) const {
+    int bytesSent = 0;
 
-    return this->sendMessageToBasestation(message);
+    int error = libusb_bulk_transfer(this->deviceHandle, TRANSFER_OUT_BUFFER_ENDPOINT, message.payloadBuffer, message.payloadSize, &bytesSent, TRANSFER_OUT_TIMEOUT_MS);
+    if (error) {
+        std::cout << "ERROR: Failed to send message: " << usbutils_errorToString(error) << std::endl;
+    }
+
+    return error == LIBUSB_SUCCESS;
 }
 
 FailedToOpenDeviceException::FailedToOpenDeviceException(const std::string& message) : message(message) {}

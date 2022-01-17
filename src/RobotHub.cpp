@@ -79,7 +79,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils
 
         float rho = sqrtf(protoCommand.vel().x() * protoCommand.vel().x() + protoCommand.vel().y() * protoCommand.vel().y());
         float theta = atan2f(protoCommand.vel().y(), protoCommand.vel().x());
-        auto bot = getWorldBot(protoCommand.id(), color, world);
+        auto bot = getWorldBot(protoCommand.id(), color, commands.extrapolatedworld());
 
         RobotCommand command;
         command.header = PACKET_TYPE_ROBOT_COMMAND;
@@ -227,6 +227,7 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback,
     this->sendRobotFeedback(feedbackToBePublished);
 }
 
+// TODO: Get rid of this function: It is crap!
 // Copy of getWorldBot() because I don't want to pull in tactics as a
 // dependency. If this function is moved to utils, we can use that
 std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world) {

@@ -31,12 +31,10 @@ class RobotHub {
 
     proto::Setting settings;
     utils::RobotHubMode mode;
-    proto::World world;
 
     std::unique_ptr<rtt::net::RobotCommandsBlueSubscriber> robotCommandsBlueSubscriber;
     std::unique_ptr<rtt::net::RobotCommandsYellowSubscriber> robotCommandsYellowSubscriber;
     std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
-    std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber;
     std::unique_ptr<rtt::net::RobotFeedbackPublisher> robotFeedbackPublisher;
 
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};

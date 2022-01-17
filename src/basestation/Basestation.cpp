@@ -181,8 +181,8 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
         libusb_bulk_transfer(this->deviceHandle, TRANSFER_IN_BUFFER_ENDPOINT, message.payloadBuffer, BASESTATION_MESSAGE_BUFFER_SIZE, &message.payloadSize, TRANSFER_IN_TIMEOUT_MS);
 
     switch (error) {
-        case LIBUSB_SUCCESS:
-            // Nothing went wrong, so do not send any debug message
+        case LIBUSB_SUCCESS: case LIBUSB_ERROR_TIMEOUT:
+            // Either received a message correctly, or received nothing at all, so do not send any debug message
             break;
         case LIBUSB_ERROR_NO_DEVICE: {
             std::cout << "WARNING: No device found. Did you unplug the device? " << std::endl;

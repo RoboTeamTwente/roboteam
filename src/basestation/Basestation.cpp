@@ -184,10 +184,6 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
         case LIBUSB_SUCCESS:
             // Nothing went wrong, so do not send any debug message
             break;
-        case LIBUSB_ERROR_TIMEOUT: {
-            std::cout << "WARNING: Timed out while reading message. Are messages too big?" << std::endl;
-            break;
-        }
         case LIBUSB_ERROR_NO_DEVICE: {
             std::cout << "WARNING: No device found. Did you unplug the device? " << std::endl;
             break;

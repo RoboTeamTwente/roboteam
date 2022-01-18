@@ -2,7 +2,7 @@
 /* Description: Makes the dribbler spin
  *
  * Instructions:
- * 1) set speed (1(off)-7(max))
+ * 1) set speed (0(off)-1(max))
  *
  * Extra functions:
  *
@@ -23,6 +23,6 @@ void dribbler_Init();
 
 void dribbler_DeInit();
 
-void dribbler_SetSpeed(int speed);
+void dribbler_SetSpeed(float speed);
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

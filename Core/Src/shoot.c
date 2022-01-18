@@ -1,5 +1,6 @@
 
 #include <shoot.h>
+#include <BaseTypes.h>
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -8,7 +9,7 @@ static shoot_states shootState = shoot_Off;
 ///////////////////////////////////////////////////// VARIABLES
 
 static bool charged = false;	// true if the capacitor is fully charged
-static int power = 100; 			// percentage of maximum shooting power
+static float power = 0; 		// percentage of maximum shooting power [0,6.5]
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -82,14 +83,11 @@ shoot_states shoot_GetState(){
 	return shootState;
 }
 
-void shoot_SetPower(int input){
-	if(input < 1){
-		power = 1;
-	}else if(input > 100){
-		power = 100;
-	}else {
-		power = input;
-	}
+void shoot_SetPower(float meters_per_second){
+    // At some point, make a formula to convert m/s to power. For now, linear relation
+    power = meters_per_second / PACKET_RANGE_ROBOT_COMMAND_KICK_CHIP_POWER_MAX;
+    if(power < 0) power = 0;
+    if(1 < power) power = 1;
 }
 
 void shoot_Shoot(shoot_types type)
@@ -98,8 +96,8 @@ void shoot_Shoot(shoot_types type)
 	{
 //		Putty_printf("shooting! power = %d \n\r", power);
 		shootState = shoot_Shooting;
-		set_Pin(Charge_pin, 0); 								// Disable shoot_Charging
-		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 				// Kick/Chip on
+		set_Pin(Charge_pin, 0); 									// Disable shoot_Charging
+		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 		// Kick/Chip on
 
 		resetTimer(calculateShootingTime(type));
 	}
@@ -118,13 +116,13 @@ void resetTimer(int timePeriod)
 
 int calculateShootingTime(shoot_types type) {
 	if (type == shoot_Kick) {
-		int kickTime = MIN_KICK_TIME + (power/100.0) * MAX_KICK_TIME;
+		int kickTime = MIN_KICK_TIME + power * (MAX_KICK_TIME-MIN_KICK_TIME);
 		if(kickTime < MIN_KICK_TIME) kickTime = MIN_KICK_TIME;
 		if(MAX_KICK_TIME < kickTime) kickTime = MAX_KICK_TIME;
 		return kickTime;
 
 	} else if (type == shoot_Chip) {
-		int chipTime = MIN_CHIP_TIME + (power/100.0) * MAX_CHIP_TIME;
+		int chipTime = MIN_CHIP_TIME + power * (MAX_KICK_TIME-MIN_KICK_TIME);
 		if(chipTime < MIN_CHIP_TIME) chipTime = MIN_CHIP_TIME;
 		if(MAX_CHIP_TIME < chipTime) chipTime = MAX_CHIP_TIME;
 		return chipTime;

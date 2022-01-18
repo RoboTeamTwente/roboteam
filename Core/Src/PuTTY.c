@@ -133,7 +133,7 @@ static void Putty_HandleCommand(char *input)
         test_RunTest(normal);
 		float wheel = strtol(input + 1 + strlen("wheels"), NULL, 10);
 		float wheelref[4] = {wheel, wheel, wheel, wheel};
-		wheels_SetRef(wheelref);
+		wheels_SetSpeeds(wheelref);
 	}else if(!strcmp(input, "help")){
 		Putty_UpdateHelpPrint(true);
 	}else if(!strcmp(input, "make robots")){

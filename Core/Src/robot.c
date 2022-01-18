@@ -49,7 +49,6 @@ RobotFeedback robotFeedback = {0};
 RobotStateInfo robotStateInfo = {0};
 RobotStateInfoPayload robotStateInfoPayload = {0};
 
-ReceivedData receivedData = {{0.0}, false, 0.0f, 0, 0, false, false};
 
 RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -78,26 +77,10 @@ uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
-// Set the references from the received data and execute the desired actions.
-void executeCommands(ReceivedData* receivedData) {
-	stateControl_SetRef(receivedData->stateRef);
-	dribbler_SetSpeed(receivedData->dribblerRef);
-	shoot_SetPower(receivedData->shootPower);
 
-	if (receivedData->do_kick) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced){
-			shoot_Shoot(shoot_Kick);
-		}
-	}
-	else if (receivedData->do_chip) {
-		if (ballPosition.canKickBall || receivedData->kick_chip_forced) {
-			shoot_Shoot(shoot_Chip);
-		}
-	}
-}
 
-/* Upcoming new code, this will at some point replace everything with "receivedData"
-void _executeCommands(RobotCommand* robotCommand){
+
+void executeCommands(RobotCommand* robotCommand){
 	float stateReference[3];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
@@ -117,22 +100,7 @@ void _executeCommands(RobotCommand* robotCommand){
 		}
 	}
 }
-*/
 
-void clearReceivedData(ReceivedData* receivedData) {
-	receivedData->do_chip = false;
-	receivedData->do_kick = false;
-	receivedData->kick_chip_forced = false;
-	receivedData->dribblerRef = 0;
-	receivedData->shootPower = 0;
-	receivedData->stateRef[body_x] = 0.0f;
-	receivedData->stateRef[body_y] = 0.0f;
-	receivedData->stateRef[body_w] = 0.0f;
-	receivedData->visionAvailable = false;
-	receivedData->visionYaw = 0.0f;
-}
-
-/*
 void resetRobotCommand(RobotCommand* robotCommand){
 	robotCommand->doKick = false;
 	robotCommand->doChip = false;
@@ -147,13 +115,12 @@ void resetRobotCommand(RobotCommand* robotCommand){
 	robotCommand->angularControl = false;
 	robotCommand->feedback = false;
 }
-*/
 
 void printRobotStateData() {
 	Putty_printf("\n\r");
 	Putty_printf("-------Robot state data--------\n\r");
 	Putty_printf("halt? %u\n\r", halt);
-	Putty_printf("Braking? %u\n\r", wheels_IsBraking());
+	Putty_printf("Braking? %u\n\r", wheels_GetWheelsBraking());
 	Putty_printf("velocity (Kalman):\n\r");
 	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
 	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
@@ -163,20 +130,25 @@ void printRobotStateData() {
 	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
 	Putty_printf("Xsens rate of turn: %f rad/s\n\r", MTi->gyr[2]);
 	Putty_printf("wheel refs:\n\r");
+	
 	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
 	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
 	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
 	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
 	Putty_printf("wheel speeds (encoders):\n\r");
-	Putty_printf("  RF: %f rad/s\n\r", wheels_GetState()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", wheels_GetState()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", wheels_GetState()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", wheels_GetState()[wheels_LF]);
+	float measured_wheel_speeds[4];
+	wheels_GetMeasuredSpeeds(measured_wheel_speeds);
+	Putty_printf("  RF: %f rad/s\n\r", measured_wheel_speeds[wheels_RF]);
+	Putty_printf("  RB: %f rad/s\n\r", measured_wheel_speeds[wheels_RB]);
+	Putty_printf("  LB: %f rad/s\n\r", measured_wheel_speeds[wheels_LB]);
+	Putty_printf("  LF: %f rad/s\n\r", measured_wheel_speeds[wheels_LF]);
 	Putty_printf("wheel pwm:\n\r");
-	Putty_printf("  RF: %d \n\r", wheels_GetPWM()[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheels_GetPWM()[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheels_GetPWM()[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheels_GetPWM()[wheels_LF]);
+	uint32_t wheel_PWMs[4];
+	wheels_GetPWM(wheel_PWMs);
+	Putty_printf("  RF: %d \n\r", wheel_PWMs[wheels_RF]);
+	Putty_printf("  RB: %d \n\r", wheel_PWMs[wheels_RB]);
+	Putty_printf("  LB: %d \n\r", wheel_PWMs[wheels_LB]);
+	Putty_printf("  LF: %d \n\r", wheel_PWMs[wheels_LF]);
 }
 
 void printRobotCommand(RobotCommand* rc){
@@ -213,7 +185,7 @@ void init(void){
 
 
 	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = read_Pin(IN1_pin);
+	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
 	Putty_printf("SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
 
 	/* Initialize buzzer */
@@ -247,7 +219,15 @@ void init(void){
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	Putty_printf("Initializing wireless\n");
-    SX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, COMM_SPI);
+
+	if(read_Pin(IN2_pin)){
+		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
+		Putty_printf("Listening on BLUE CHANNEL\n");
+	}else{
+		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
+		Putty_printf("Listening on YELLOW CHANNEL\n");
+	}
+    
 	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
     setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
@@ -290,7 +270,7 @@ void loop(void){
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
-		packetToRoboData(&myRobotCommandPayload, &receivedData);
+		decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
 
 		toggle_Pin(LED6_pin);
 	}
@@ -313,14 +293,14 @@ void loop(void){
     if (halt) {
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
-        clearReceivedData(&receivedData);
+        resetRobotCommand(&activeRobotCommand);
 		REM_last_packet_had_correct_version = true;
     }
 
     // Unbrake wheels when Xsens calibration is done
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
-        wheels_Brake(false);
+        wheels_Unbrake();
     }
 
     // Update test (if active)
@@ -328,7 +308,7 @@ void loop(void){
     
     // Go through all commands
     if (!halt) {
-        executeCommands(&receivedData);
+        executeCommands(&activeRobotCommand);
     }
 
     // Create RobotFeedback
@@ -346,7 +326,7 @@ void loop(void){
     robotFeedback.rho = sqrt(vx*vx + vy*vy);
     robotFeedback.angle = stateEstimation_GetState()[body_w];
     robotFeedback.theta = atan2(vy, -vx);
-    robotFeedback.wheelBraking = wheels_IsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
+    robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
     
 	if(SEND_ROBOT_STATE_INFO){
@@ -382,7 +362,7 @@ void loop(void){
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 		
-        // Check if ballsesnor connection is still correct
+        // Check if ballsensor connection is still correct
         if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
@@ -407,7 +387,7 @@ void loop(void){
 
     // LED0 done in PuTTY prints above
     set_Pin(LED1_pin, !xsens_CalibrationDone);
-    set_Pin(LED2_pin, wheels_IsBraking());
+    set_Pin(LED2_pin, wheels_GetWheelsBraking());
     set_Pin(LED3_pin, halt);
     set_Pin(LED4_pin, ballPosition.canKickBall);
     // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
@@ -419,7 +399,7 @@ void loop(void){
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
 /* This function is triggered after calling HAL_SPI_TransmitReceive_IT */
 /* Since we transmit everything using blocking mode, this function should only be called when we receive something */
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->SPI->Instance) {
@@ -436,7 +416,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
 				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
 				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
-				packetToRoboData(&robotCommandPayload, &receivedData);
+				decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
 
 				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
 				continue;
@@ -525,11 +505,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		// State estimation
-		stateInfo.visionAvailable = receivedData.visionAvailable;
-		stateInfo.visionYaw = receivedData.visionYaw; // TODO check if this is scaled properly with the new REM messages
-		for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++) {
-			stateInfo.wheelSpeeds[wheel] = wheels_GetState()[wheel];
-		}
+		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
+		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
+		
+		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
 
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
@@ -541,7 +520,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateControl_SetState(stateEstimation_GetState());
 		stateControl_Update();
 
-		wheels_SetRef(stateControl_GetWheelRef());
+		wheels_SetSpeeds( stateControl_GetWheelRef() );
 		wheels_Update();
 
 	}

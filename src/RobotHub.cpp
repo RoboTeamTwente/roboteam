@@ -11,8 +11,9 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL = 30011;
 constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL = 30012;
 constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 
-constexpr float DEFAULT_CHIPPER_ANGLE = 45.0f;
-constexpr float MAX_DRIBBLER_SPEED = 1021.0f;
+// These two values are properties of our physical robots. We use these in commands for simulators
+constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f; // The angle at which the chipper shoots
+constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f; // The theoretical maximum speed of the dribblers
 
 RobotHub::RobotHub() {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
@@ -57,8 +58,8 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::
     for (auto robotCommand : commands.commands()) {
         int id = robotCommand.id();
         float kickSpeed = robotCommand.chip_kick_vel();
-        float kickAngle = robotCommand.chipper() ? DEFAULT_CHIPPER_ANGLE : 0.0f;
-        float dribblerSpeed = (robotCommand.dribbler() > 0 ? MAX_DRIBBLER_SPEED : 0.0);  // dribbler_speed is range of 0 to 1
+        float kickAngle = robotCommand.chipper() ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
+        float dribblerSpeed = (robotCommand.dribbler() > 0 ? SIM_MAX_DRIBBLER_SPEED_RPM : 0.0);  // dribbler_speed is range of 0 to 1
         float xVelocity = robotCommand.vel().x();
         float yVelocity = robotCommand.vel().y();
         // TODO: Check if there is angular velocity
@@ -193,7 +194,7 @@ void RobotHub::printStatistics() {
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW ? true : false);
+    feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW);
 
     // proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
 

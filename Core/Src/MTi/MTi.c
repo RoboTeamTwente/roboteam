@@ -12,6 +12,7 @@
 #include "MTi.h"
 #include <string.h>
 #include "gpio_util.h"
+#include "logging.h"
 
 #define TIME_OUT 1000U
 
@@ -95,7 +96,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	};
 	MTi->XBParser = XbusParser_create(&XBP_callback);
     if(MTi->XBParser == NULL){
-		MTi_printf("failed create Xparser");
+		LOG("[XSens:"STRINGIZE(__LINE__)"] Failed to create XBParser\n");
 		return NULL;
 	}
 
@@ -107,7 +108,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	//HAL_Delay(1);
 
 	if(WaitForAck(MTi, XMID_WakeUp)){
-		MTi_printf("failed go to config");
+		LOG("[XSens:"STRINGIZE(__LINE__)"] Failed WakeUp\n");
 		return NULL;
 	}
 	uint8_t txbuf[6];
@@ -133,12 +134,12 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	HAL_SPI_TransmitReceive(MTi->SPI, txbuf, rxbuf, 6, 100);
 	set_Pin(MTi->CS_pin, true);
 	MTi->SPI_busy = false;
-	MTi_printf("settings: %u", rxbuf[5]);
+	if(MT_DEBUG) LOG_printf("[XSens:"STRINGIZE(__LINE__)"] Settings: %u\n", rxbuf[5]);
 
 	HAL_Delay(1);
 	MTi_GoToConfig(MTi);
 	if(WaitForAck(MTi,XMID_GoToConfigAck)){
-		MTi_printf("failed go to config");
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed GoToConfig()\n");
 		return NULL;
 	}
 	// set measurement configurations
@@ -153,7 +154,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	}
 
 	if(WaitForAck(MTi,XMID_ReqOutputConfigurationAck)){
-		MTi_printf("config ack failed");
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed ReqOutputConfigurationAck");
 	}
 
 	// set filter profile defined in XsFilterProfile
@@ -161,42 +162,41 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	// 3 = assumes stable magnetic field, 4 = high dynamic magnetic field (unreferenced heading)
 	HAL_Delay(1);
 	if(MTi_SetFilterProfile(MTi, filter_type)){
-		MTi_printf("failed SetFilter");
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed SetFilterProfile()");
 		return NULL;
 	}
 	// set MTi to measure state
 	HAL_Delay(1);
 	if(MTi_GoToMeasure(MTi)){
-		MTi_printf("failed go to measure");
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed GoToMeasure()");
 		return NULL;
 	}
 	MTi->init_phase = false;
 	HAL_Delay(100);
 	// calibrate rotation sensor for calibrate_time seconds
 	if(MTi_NoRotation(MTi,calibrate_time)){
-		MTi_printf("failed set no rotation");
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed NoRotation()");
  		return NULL;
 	}
 
 	HAL_Delay(1);
 	if(MTi_UseIcc(MTi) == Xsens_OK) {
 		MTi->started_icc = true;
-		MTi_printf("ICC started");
-	}
-	else {
-		MTi_printf("ICC failed");
+	} else {
+		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed UseIcc()");
 		return NULL;
 	}
 
-	HAL_Delay(1);
-	if(MTi_UseIcc(MTi) == Xsens_OK) {
-		MTi->started_icc = true;
-		MTi_printf("ICC started");
-	}
-	else {
-		MTi_printf("ICC failed");
-		return NULL;
-	}
+	/* Uncommented this because it's double? */
+	// HAL_Delay(1);
+	// if(MTi_UseIcc(MTi) == Xsens_OK) {
+	// 	MTi->started_icc = true;
+	// 	MTi_printf("ICC started");
+	// }
+	// else {
+	// 	MTi_printf("ICC failed");
+	// 	return NULL;
+	// }
 
 	// set settings
 	HAL_Delay(1);
@@ -430,24 +430,24 @@ static Xsens_Status processAck(MTi_data* MTi){
 	// process ack
 	switch (XMID){
 	case XMID_SetNoRotationAck:
-		if (MT_DEBUG) MTi_printf("SetNoRotationAck");
+		if (MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] SetNoRotationAck\n");
 		break;
 	case XMID_ReqFilterProfileAck:
-		if (MT_DEBUG) MTi_printf("Req/Set FilterProfileAck"); // request and set share the same value
+		if (MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] Req/Set FilterProfileAck\n"); // request and set share the same value
 		break;
 	case XMID_IccCommandAck:
-		if (MT_DEBUG) MTi_printf("IccCommandAck");
+		if (MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] IccCommandAck\n");
 		break;
 	case XMID_GoToConfigAck:
-		if (MT_DEBUG) MTi_printf("In config state");
+		if (MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] In config state\n");
 		MTi->Xstate = Xsens_Config;
 		break;
 	case XMID_GoToMeasurementAck:
-		if(MT_DEBUG) MTi_printf("In measurement state");
+		if(MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] In measurement state\n");
 		MTi->Xstate = Xsens_Measure;
 		break;
 	case XMID_WakeUp:
-		if(MT_DEBUG) MTi_printf("woke up");
+		if(MT_DEBUG) LOG("[Xsens:"STRINGIZE(__LINE__)"] woke up\n");
 		// send Ack back to MTi to confirm
 		struct XbusMessage XbusMes = { XMID_WakeUpAck};
 		SendXbusMessage(MTi, XbusMes);
@@ -458,7 +458,7 @@ static Xsens_Status processAck(MTi_data* MTi){
 		PrintOutputConfig(MTi->ReceivedMessageStorage);
 		break;
 	default:
-		MTi_printf("received an uknown message of type: %u", XMID);
+		LOG_printf("[Xsens:"STRINGIZE(__LINE__)"] Unknown message type: %u", XMID);
 		break;
 	}
 	return Xsens_OK;
@@ -467,42 +467,42 @@ static Xsens_Status processAck(MTi_data* MTi){
 static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
 	if (!message) return Xsens_Failed_Debug;
 	if(MT_DEBUG){
-		Putty_printf("MTiPrintOutputConfig:\n\r");
+		LOG("[XSens] PrintOutputConfig:\n");
 		uint16_t data = 0;
 		if((data = XbusMessage_getOutputFreq(XDI_Temperature, message)))
-			Putty_printf("XDI_Temperature:%u\n\r", data);
+			LOG_printf("[XSens] XDI_Temperature:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_UtcTime, message)))
-			Putty_printf("XDI_UtcTime:%u\n\r", data);
+			LOG_printf("[XSens] XDI_UtcTime:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_PacketCounter, message)))
-			Putty_printf("XDI_PacketCounter:%u\n\r", data);
+			LOG_printf("[XSens] XDI_PacketCounter:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_SampleTimeFine, message)))
-			Putty_printf("XDI_SampleTimeFine:%u\n\r", data);
+			LOG_printf("[XSens] XDI_SampleTimeFine:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_SampleTimeCoarse, message)))
-			Putty_printf("XDI_SampleTimeCoarse:%u\n\r", data);
+			LOG_printf("[XSens] XDI_SampleTimeCoarse:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_Quaternion, message)))
-			Putty_printf("XDI_Quaternion:%u\n\r", data);
+			LOG_printf("[XSens] XDI_Quaternion:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_RotationMatrix, message)))
-			Putty_printf("XDI_RotationMatrix:%u\n\r", data);
+			LOG_printf("[XSens] XDI_RotationMatrix:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_DeltaV, message)))
-			Putty_printf("XDI_DeltaV:%u\n\r", data);
+			LOG_printf("[XSens] XDI_DeltaV:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_Acceleration, message)))
-			Putty_printf("XDI_Acceleration:%x\n\r", data);
+			LOG_printf("[XSens] XDI_Acceleration:%x\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_FreeAcceleration, message)))
-			Putty_printf("XDI_FreeAcceleration:%u\n\r", data);
+			LOG_printf("[XSens] XDI_FreeAcceleration:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_AccelerationHR, message)))
-			Putty_printf("XDI_AccelerationHR:%u\n\r", data);
+			LOG_printf("[XSens] XDI_AccelerationHR:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_RateOfTurn, message)))
-			Putty_printf("XDI_RateOfTurn:%u\n\r", data);
+			LOG_printf("[XSens] XDI_RateOfTurn:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_DeltaQ, message)))
-			Putty_printf("XDI_DeltaQ:%u\n\r", data);
+			LOG_printf("[XSens] XDI_DeltaQ:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_RateOfTurnHR, message)))
-			Putty_printf("XDI_RateOfTurnHR:%u\n\r", data);
+			LOG_printf("[XSens] XDI_RateOfTurnHR:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_MagneticField, message)))
-			Putty_printf("XDI_MagneticField:%u\n\r", data);
+			LOG_printf("[XSens] XDI_MagneticField:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_StatusByte, message)))
-			Putty_printf("XDI_StatusByte:%u\n\r", data);
+			LOG_printf("[XSens] XDI_StatusByte:%u\n\r", data);
 		if((data = XbusMessage_getOutputFreq(XDI_StatusWord, message)))
-			Putty_printf("XDI_StatusWord:%u\n\r", data);
+			LOG_printf("[XSens] XDI_StatusWord:%u\n\r", data);
 	}
 	return Xsens_OK;
 }
@@ -510,7 +510,7 @@ static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
 static inline void ErrorHandler(struct XbusMessage const* message){
 	if (!message)
 		return;
-	Putty_printf("MTi: ERROR: %02x", *(uint8_t*)message->data);
+	LOG_printf("[XSens] Error: %02x", *(uint8_t*)message->data);
 }
 
 static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
@@ -523,13 +523,13 @@ static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	return timedout ? Xsens_Failed_Receive : Xsens_OK;
 }
 
-static inline void MTi_printf(char* format, ...){
-	if(MT_DEBUG){
-		char mes[100];
-		va_list aptr;
-		va_start(aptr, format); // give starting point of additional arguments
-	    vsprintf(mes, format, aptr); // Copies and turns into string
-	    va_end(aptr); // close list
-	    Putty_printf("MTi: %s\n\r", mes);
-	}
-}
+// static inline void MTi_printf(char* format, ...){
+// 	if(MT_DEBUG){
+// 		char mes[100];
+// 		va_list aptr;
+// 		va_start(aptr, format); // give starting point of additional arguments
+// 	    vsprintf(mes, format, aptr); // Copies and turns into string
+// 	    va_end(aptr); // close list
+// 	    LOG_printf("MTi: %s\n\r", mes);
+// 	}
+// }

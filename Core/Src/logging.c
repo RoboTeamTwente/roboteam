@@ -4,12 +4,12 @@
 #include "peripheral_util.h"
 #include "robot.h"
 
-#include <stdarg.h>  // LOG_printf formatting in putty_printf
+#include <stdarg.h>  // LOG_printf formatting
 
 // Static to make it private to this file
 // Buffer used by vsprintf
 static char printf_buffer[1024]; 
-static char log_bugger[1024];
+static char log_buffer[1024];
 static RobotLogPayload robotLogPayload;
 
 void LOG_printf(char *format, ...)
@@ -47,11 +47,15 @@ void LOG(char *message){
     uint8_t robotlog_length = 3; // TODO Replace '3' with something dynamic, so that its always correct even if the RobotLog packet changes                                                                  
     
     // Copy the RobotLog packet into the buffer
-    memcpy(log_bugger, &robotLogPayload, robotlog_length);
+    memcpy(log_buffer, &robotLogPayload, robotlog_length);
     // Copy the message into the buffer, next to the RobotLog packet
-    memcpy(log_bugger + robotlog_length, message, message_length);
+    memcpy(log_buffer + robotlog_length, message, message_length);
     // Wait until the UART interface is free to use
     while(UART_PC->gState != HAL_UART_STATE_READY);
+    // Disabling and enabling all interrupts seems to fix the code from hanging when this code is called from an IRQ
+    __disable_irq();
     // Transmit the data to the computer
-    HAL_UART_Transmit_DMA(UART_PC, log_bugger, robotlog_length + message_length);
+    HAL_UART_Transmit(UART_PC, log_buffer, robotlog_length + message_length, 10);
+    __enable_irq();
+    // HAL_UART_Transmit_DMA(UART_PC, log_buffer, robotlog_length + message_length);
 }

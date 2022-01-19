@@ -6,7 +6,7 @@
 #include "peripheral_util.h"
 #include "robot.h"
 #include "PuTTY.h"
-
+#include "logging.h"
 #include "main.h"
 
 // Buffer to move received packets in to
@@ -19,6 +19,7 @@ uint8_t REM_buffer[100];
  * @param huart The UART to start the first read on. Generally UART_PC.
  */
 void REM_UARTinit(UART_HandleTypeDef *huart){
+    LOG("[REM_UARTinit]\n");
     HAL_UART_Receive_IT(huart, REM_buffer, 1);
 }
 

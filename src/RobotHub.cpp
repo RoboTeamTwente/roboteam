@@ -7,6 +7,14 @@
 
 namespace rtt::robothub {
 
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL = 30011;
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL = 30012;
+constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
+
+// These two values are properties of our physical robots. We use these in commands for simulators
+constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f; // The angle at which the chipper shoots
+constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f; // The theoretical maximum speed of the dribblers
+
 RobotHub::RobotHub() {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
@@ -15,17 +23,15 @@ RobotHub::RobotHub() {
     if (!this->subscribe()) {
         throw FailedToInitializeNetworkersException();
     }
-    
+
     this->mode = utils::RobotHubMode::NEITHER;
     std::cout << "[RobotHub]: Starting with default mode of: " << utils::modeToString(this->mode) << std::endl;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
-    auto simulationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromSimulator, this, std::placeholders::_1);
-    this->simulatorManager->setRobotControlFeedbackCallback(simulationFeedbackCallback);
+    this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    auto basestationFeedbackCallback = std::bind(&RobotHub::handleRobotFeedbackFromBasestation, this, std::placeholders::_1);
-    this->basestationManager->setFeedbackCallback(basestationFeedbackCallback);
+    this->basestationManager->setFeedbackCallback([&](const RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
 bool RobotHub::subscribe() {
@@ -45,15 +51,15 @@ bool RobotHub::subscribe() {
            this->robotFeedbackPublisher != nullptr;
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool toTeamYellow) {
+void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color) {
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
     for (auto robotCommand : commands.commands()) {
         int id = robotCommand.id();
         float kickSpeed = robotCommand.chip_kick_vel();
-        float kickAngle = robotCommand.chipper() ? DEFAULT_CHIPPER_ANGLE : 0.0f;
-        float dribblerSpeed = (robotCommand.dribbler() > 0 ? MAX_DRIBBLER_SPEED : 0.0);  // dribbler_speed is range of 0 to 1
+        float kickAngle = robotCommand.chipper() ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
+        float dribblerSpeed = (robotCommand.dribbler() > 0 ? SIM_MAX_DRIBBLER_SPEED_RPM : 0.0);  // dribbler_speed is range of 0 to 1
         float xVelocity = robotCommand.vel().x();
         float yVelocity = robotCommand.vel().y();
         // TODO: Check if there is angular velocity
@@ -65,16 +71,16 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, bool to
         this->commands_sent[id]++;
     }
 
-    this->simulatorManager->sendRobotControlCommand(simCommand, toTeamYellow);
+    this->simulatorManager->sendRobotControlCommand(simCommand, color);
 }
 
-void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool toTeamYellow) {
+void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color) {
     for (const proto::RobotCommand &protoCommand : commands.commands()) {
         // Convert the proto::RobotCommand to a RobotCommand for the basestation
 
         float rho = sqrtf(protoCommand.vel().x() * protoCommand.vel().x() + protoCommand.vel().y() * protoCommand.vel().y());
         float theta = atan2f(protoCommand.vel().y(), protoCommand.vel().x());
-        auto bot = rtt::robothub::utils::getWorldBot(protoCommand.id(), toTeamYellow, world);
+        auto bot = getWorldBot(protoCommand.id(), color, commands.extrapolatedworld());
 
         RobotCommand command;
         command.header = PACKET_TYPE_ROBOT_COMMAND;
@@ -103,27 +109,27 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, bool 
 
         command.feedback = false;
 
-        this->basestationManager->sendSerialCommand(command);
+        this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
         commands_sent[protoCommand.id()]++;
     }
 }
 
-void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, false, this->mode); }
-void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, true, this->mode); }
+void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::BLUE, this->mode); }
+void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::YELLOW, this->mode); }
 
-void RobotHub::processRobotCommands(const proto::AICommand &commands, bool forTeamYellow, utils::RobotHubMode mode) {
+void RobotHub::processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode) {
     switch (mode) {
         case utils::RobotHubMode::SIMULATOR:
-            this->sendCommandsToSimulator(commands, forTeamYellow);
+            this->sendCommandsToSimulator(commands, color);
             break;
         case utils::RobotHubMode::BASESTATION:
-            this->sendCommandsToBasestation(commands, forTeamYellow);
+            this->sendCommandsToBasestation(commands, color);
             break;
         case utils::RobotHubMode::BOTH:
-            this->sendCommandsToSimulator(commands, forTeamYellow);
-            this->sendCommandsToBasestation(commands, forTeamYellow);
+            this->sendCommandsToSimulator(commands, color);
+            this->sendCommandsToBasestation(commands, color);
             break;
         case utils::RobotHubMode::NEITHER:
             // Do not handle commands
@@ -149,6 +155,13 @@ void RobotHub::onSettings(const proto::Setting &settings) {
     as it is updated from multiple threads without guards. This should not matter
     however, as these variables are just for debugging purposes. */
 void RobotHub::printStatistics() {
+    if (this->basestationManager == nullptr) {
+        std::cout << "Basestation manager is not initialized" << std::endl;
+        return;
+    }
+
+    this->basestationManager->printStatus();
+
     std::stringstream ss;
 
     const int amountOfColumns = 4;
@@ -181,7 +194,7 @@ void RobotHub::printStatistics() {
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(feedback.isTeamYellow);
+    feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW);
 
     // proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
 
@@ -194,9 +207,9 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     this->sendRobotFeedback(feedbackToBePublished);
 }
 
-void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback) {
+void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor basestationColor) {
     proto::RobotData feedbackToBePublished;
-    // TODO: Get from basestation which color
+    feedbackToBePublished.set_isyellow(basestationColor == utils::TeamColor::YELLOW);
 
     proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
     feedbackOfRobot->set_id(feedback.id);
@@ -213,6 +226,39 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback)
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
 
     this->sendRobotFeedback(feedbackToBePublished);
+}
+
+// TODO: Get rid of this function: It is crap!
+// Copy of getWorldBot() because I don't want to pull in tactics as a
+// dependency. If this function is moved to utils, we can use that
+std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world) {
+    /** Heavily inefficient, copying over all the robots :(
+     * If this was C++20 I would've picked std::span, but for now just use
+     * yellow() / blue()
+     */
+    // if (ourTeam) {
+    //     robots = std::vector<roboteam_proto::WorldRobot>(
+    //     world.yellow().begin(),  world.yellow().end());
+    // } else {
+    //     robots =
+    //     std::vector<roboteam_proto::WorldRobot>(world.blue().begin(),
+    //     world.blue().end());
+    // }
+
+    // Prevent a copy.
+
+    auto &robots = color == utils::TeamColor::YELLOW ? world.yellow() : world.blue();
+
+    // https://en.cppreference.com/w/cpp/algorithm/find
+    // Should do that instead, but whatever, doesn't really matter in terms of
+    // performance
+    for (const auto &bot : robots) {
+        proto::WorldRobot a = bot;
+        if (bot.id() == id) {
+            return std::make_shared<proto::WorldRobot>(bot);
+        }
+    }
+    return nullptr;
 }
 
 bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) { return this->robotFeedbackPublisher->publish(feedback); }

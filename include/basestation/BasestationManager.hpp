@@ -1,56 +1,54 @@
 #pragma once
 
-#include <RobotCommand.h>
-#include <RobotFeedback.h>
+#include <RobotBuzzer.h>    // REM command
+#include <RobotCommand.h>   // REM command
+#include <RobotFeedback.h>  // REM command
 #include <libusb-1.0/libusb.h>
+#include <utilities.h>
 
+#include <basestation/BasestationCollection.hpp>
 #include <functional>
+#include <memory>
 #include <thread>
 
 namespace rtt::robothub::basestation {
-
-int hotplug_callback_attach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data);
-int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data);
 
 class BasestationManager {
    public:
     BasestationManager();
     ~BasestationManager();
 
-    bool sendSerialCommand(RobotCommand &command) const;
+    bool sendRobotCommand(const RobotCommand &command, utils::TeamColor color) const;
+    bool sendRobotBuzzerCommand(const RobotBuzzer &command, utils::TeamColor color) const;
+    bool sendBasestationStatisticsRequest(utils::TeamColor color) const;
 
-    void setFeedbackCallback(const std::function<void(const RobotFeedback &)> &callback);
+    void setFeedbackCallback(const std::function<void(const RobotFeedback &, utils::TeamColor color)> &callback);
 
-    void handleBasestationAttach(libusb_device *device);
-    void handleBasestationDetach(libusb_device *device);
+    void printStatus() const;
 
    private:
-    bool shouldStopRunning;
-    std::thread runThread;
-    bool shouldStopListening;
-    std::thread listenThread;
+    libusb_context *usbContext;
 
-    std::function<void(const RobotFeedback &)> feedbackCallbackFunction;
+    bool shouldListenForBasestationPlugs;
+    std::thread basestationPlugsListener;
+    void listenForBasestationPlugs();
 
-    libusb_context *ctx;
-    libusb_device *basestation_device = nullptr;
-    libusb_device_handle *basestation_handle = nullptr;
-    libusb_hotplug_callback_handle callback_handle_attach;
-    libusb_hotplug_callback_handle callback_handle_detach;
+    std::unique_ptr<BasestationCollection> basestationCollection;
 
-    bool setupUsbEventListeners();
+    void handleIncomingMessage(const BasestationMessage &message, utils::TeamColor basestationColor) const;
 
-    void runManager() const;
-    void listenToBasestation() const;
-    void callFeedbackCallback(const RobotFeedback &feedback) const;
+    std::function<void(const RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
+    void callFeedbackCallback(const RobotFeedback &feedback, utils::TeamColor color) const;
+
+    static std::vector<libusb_device *> filterBasestationDevices(libusb_device **devices, int device_count);
 };
 
-class FailedToSetupUsbEventListenerException : public std::exception {
+class FailedToInitializeLibUsb : public std::exception {
    public:
-    FailedToSetupUsbEventListenerException(const std::string message);
+    FailedToInitializeLibUsb(const std::string message);
     const char *what() const noexcept override;
 
    private:
-    std::string message;
+    const std::string message;
 };
 }  // namespace rtt::robothub::basestation

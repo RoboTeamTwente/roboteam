@@ -1,267 +1,130 @@
-#include <RobotStateInfo.h>
-#include <basestation/LibusbUtilities.h>
-#include <constants.h>
+#include <BasestationGetStatistics.h>  // REM command
 
 #include <basestation/BasestationManager.hpp>
-#include <iostream>
+#include <cstring>
 
 namespace rtt::robothub::basestation {
 
 BasestationManager::BasestationManager() {
-    std::cout << "Hello basestation!" << std::endl;
+    int error;
+    error = libusb_init(&this->usbContext);
+    if (error) {
+        throw FailedToInitializeLibUsb("Failed to initialize libusb");
+    }
 
-    /* set up the event listeners that respond to the (dis)connecting of a basestation */
-    if (!this->setupUsbEventListeners()) throw FailedToSetupUsbEventListenerException("Failed to set up libusb event listeners");
+    this->basestationCollection = std::make_unique<BasestationCollection>();
+    this->basestationCollection->setIncomingMessageCallback([&](const BasestationMessage& message, utils::TeamColor color) { this->handleIncomingMessage(message, color); });
 
-    this->shouldStopListening = false;
-    this->shouldStopRunning = false;
-
-    /* Start basestation reading thread */
-    this->listenThread = std::thread(&BasestationManager::listenToBasestation, this);
-    this->runThread = std::thread(&BasestationManager::runManager, this);
+    this->shouldListenForBasestationPlugs = true;
+    this->basestationPlugsListener = std::thread(&BasestationManager::listenForBasestationPlugs, this);
 }
 
 BasestationManager::~BasestationManager() {
     // Stop threads
-    this->shouldStopListening = true;
-    this->shouldStopRunning = true;
+    this->shouldListenForBasestationPlugs = false;
+    if (this->basestationPlugsListener.joinable()) {
+        this->basestationPlugsListener.join();
+    }
 
-    if (this->listenThread.joinable()) this->listenThread.join();
+    // In destructor of basestation objects, the usb device is closed. This needs to be done
+    // before libusb_exit() is called, so delete all basestation objects now
+    this->basestationCollection = nullptr;
 
-    if (this->runThread.joinable()) this->runThread.join();
+    libusb_exit(this->usbContext);
 }
 
-/** @brief Sends a proto::RobotCommand to the basestation
- *
- * This function takes a proto::RobotCommand that needs to be sent to the basestation. The command is first converted
- * into a RobotCommandPayload (a packet command, using the minimum amoumt of bytes), and additional information is
- * (possibly) added to it, such as the angle of the robot in the world. If there is no connection to a basestation, the
- * packet is simply dropped.
- * @param payload Reference to the proto::RobotCommand that needs to be sent to the basestation
- * @return whether or not the command successfully was sent to the basestation
- */
-bool BasestationManager::sendSerialCommand(RobotCommand &command) const {
-    // Check if a connection to a basestation exists
-    if (basestation_handle == nullptr) {
-        std::cout << "[RobotHub::sendSerialCommand] Basestation not present!" << std::endl;
-        // TODO check if sleeping here is a good idea. Will it block ZMQ? Will this fill up some queue somewhere when packets keep coming in?
-        std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
-        return false;
-    }
+bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
+    RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
     RobotCommandPayload payload;
-    encodeRobotCommand(&payload, &command);
+    encodeRobotCommand(&payload, &copy);
 
-    int bytesSent;  // Holds the value of actual bytes sent to the basestation after transfer is complete
-    int error = libusb_bulk_transfer(basestation_handle, 0x01, payload.payload, PACKET_SIZE_ROBOT_COMMAND, &bytesSent, 500);
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_ROBOT_COMMAND;
+    std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
-    if (error) {
-        // TODO: Where is the resetting of a connection?
-        std::cout << "[RobotHub::sendSerialCommand] Error while sending to basestation. Resetting connection .." << std::endl;
-        std::cout << "[RobotHub::sendSerialCommand] Error : " << usbutils_errorToString(error) << std::endl;
-    }
-    return error;
-}
-/** @brief Sets the callback function
- *  The given function is the function that will be called everytime this basestation manager
- *  receives feedback. If the callback function is not set, no feedback will be sent to AI.
- *  @param callback The function that will be called whenever feedback is received
- */
-void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback &)> &callback) { this->feedbackCallbackFunction = callback; }
-
-/** @brief Runs the manager
- *  This function will keep checking for new libusb events and handle them.
- */
-void BasestationManager::runManager() const {
-    timeval usb_event_timeout{.tv_usec = 100000};  // 100ms timeout for USB events
-
-    // TODO: Should make use of libusb_wait_for_event() instead of sleep_for
-    while (!this->shouldStopRunning) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        // Handle any possible USB events such as the attaching / detaching of a basestation
-        libusb_handle_events_timeout(ctx, &usb_event_timeout);
-    }
+    return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-/** @brief sets up the event listeners that respond to the (dis)connecting of a basestation.
- *
- * This function sets up event listeners that respond to the (dis)connecting of a basestation. These listeners trigger
- * functions that automatically claim and release any basestation. Event handlers are preferred over manually
- * enumerating all USB devices to search for a basestation, since manual enumeration does not work nicely when
- * attaching / detaching a basestation. The event listener responsible for listening to the attachment of a basestation
- * immediately triggers once as initialization if a basestation is present. This means that the order of connecting a
- * basestation and running RobotHub is not important. The listeners know that a basestation (dis)connected based on
- * its vendor-id (0x0483) and product-id (0x5740).
- *
- * @return true if everything went smoothly, false otherwise
- */
-bool BasestationManager::setupUsbEventListeners() {
-    int error;
+bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
+    RobotBuzzer copy = command;
 
-    /* Initialize USB context */
-    error = libusb_init(&ctx);
-    if (error) {
-        std::cout << "[RobotHub::startBasestation] Error on libusb_init : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
+    RobotBuzzerPayload payload;
+    encodeRobotBuzzer(&payload, &copy);
 
-    /* Set logging level */
-    error = libusb_set_option(ctx, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
-    if (error) {
-        std::cout << "[RobotHub::startBasestation] Error on libusb_set_option : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_ROBOT_BUZZER;
+    std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
-    /* Subscribe to detach event */
-    error = libusb_hotplug_register_callback(ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, LIBUSB_HOTPLUG_NO_FLAGS, BASESTATION_VENDOR_ID, BASESTATION_PRODUCT_ID,
-                                             LIBUSB_HOTPLUG_MATCH_ANY, hotplug_callback_detach, (void *)this, &callback_handle_detach);
-    if (error) {
-        std::cout << "[RobotHub::startBasestation] Error on libusb_hotplug_register_callback detach : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
-
-    /* Subscribe to attach event */
-    /* pass LIBUSB_HOTPLUG_ENUMERATE to immediately attach a basestation if already plugged into the PC */
-    error = libusb_hotplug_register_callback(ctx, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_ENUMERATE, BASESTATION_VENDOR_ID, BASESTATION_PRODUCT_ID,
-                                             LIBUSB_HOTPLUG_MATCH_ANY, hotplug_callback_attach, (void *)this, &callback_handle_attach);
-    if (error) {
-        std::cout << "[RobotHub::startBasestation] Error on libusb_hotplug_register_callback attach : " << usbutils_errorToString(error) << std::endl;
-        return false;
-    }
-
-    return true;
+    return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-/** @brief Callback function that is triggered when a basestation is connected to the PC
- *
- * When a basestation is connected to the PC, this function claims that basestation. It first detaches the kernel
- * drivers, and then claims the correct interface. It stores the handle to the basestation in the basestation_handle
- * variable. The reading-thread automatically starts reading from the basestation.
- */
-void BasestationManager::handleBasestationAttach(libusb_device *device) {
-    basestation_device = device;
+bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
+    BasestationGetStatistics command;
 
-    int error;
-    error = libusb_open(basestation_device, &basestation_handle);
-    if (error) {
-        std::cout << "[RobotHub::handleBasestationAttach] Error while trying to open handle : " << usbutils_errorToString(error) << std::endl;
-        return;
-    }
+    BasestationGetStatisticsPayload payload;
+    encodeBasestationGetStatistics(&payload, &command);
 
-    /** libusb_set_auto_detach_kernel_driver() Enable/disable libusb's automatic kernel driver detachment. When this is
-     * enabled libusb will automatically detach the kernel driver on an interface when claiming the interface, and
-     * attach it when releasing the interface.
-     */
-    error = libusb_set_auto_detach_kernel_driver(basestation_handle, 1);
-    if (error) {
-        std::cout << "[RobotHub::handleBasestationAttach] Error while enabling auto detach : " << usbutils_errorToString(error) << std::endl;
-        return;
-    }
-    /** libusb_claim_interface() Claim an interface on a given device handle. You must claim the interface you wish to
-     * use before you can perform I/O on any of its endpoints.
-     */
-    error = libusb_claim_interface(basestation_handle, 1);
-    if (error) {
-        std::cout << "[RobotHub::handleBasestationAttach] Error while claiming interface : " << usbutils_errorToString(error) << std::endl;
-        basestation_handle = nullptr;
-        return;
-    }
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_BASESTATION_GET_STATISTICS;
+    std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
-    std::cout << "[RobotHub::handleBasestationAttach] Basestation opened" << std::endl;
+    return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-/** @brief Callback function that is triggered when a basestation is disconnected from the PC
- *
- * When a basestation is disconnected from the PC, the corresponding handle is reset. This causes the reading-thread to
- * sleep instead of hogging the CPU with nonstop device errors.
- */
-void BasestationManager::handleBasestationDetach(libusb_device *device) {
-    std::cout << "[RobotHub::handleBasestationDetach] " << std::endl;
-    libusb_release_interface(basestation_handle, 1);
-    libusb_close(basestation_handle);
-    basestation_handle = nullptr;
+void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
+
+void BasestationManager::listenForBasestationPlugs() {
+    while (this->shouldListenForBasestationPlugs) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        // Get a list of devices
+        libusb_device** device_list;
+        ssize_t device_count = libusb_get_device_list(this->usbContext, &device_list);
+
+        std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
+
+        this->basestationCollection->updateBasestationList(basestationDevices);
+
+        // Free the list of devices
+        libusb_free_device_list(device_list, true);
+    }
 }
 
-/** @brief Receives and handles any packets coming from a basestation
- *
- * This function should be run in a separate thread, since it uses blocking USB reads in a while-loop. Any log messages
- * are printed to the terminal. Any robot feedback is forwarded to the rest of the system via the feedback channel.
- */
-void BasestationManager::listenToBasestation() const {
-    std::cout << "[RobotHub::readBasestation] Running" << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
-    uint8_t buffer[USB_BUFFER_SIZE_RECEIVE];
-    int bytes_received = 0;
+void BasestationManager::printStatus() const { this->basestationCollection->printCollection(); }
 
-    while (!this->shouldStopListening) {
-        /* Check if the basestation is connected. Sleep if not */
-        if (basestation_handle == nullptr) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
-            continue;
+std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device** devices, int device_count) {
+    std::vector<libusb_device*> basestations;
+    for (int i = 0; i < device_count; ++i) {
+        libusb_device* device = devices[i];
+
+        if (Basestation::isDeviceABasestation(device)) {
+            basestations.push_back(device);
         }
+    }
+    return basestations;
+}
 
-        /* Read bytes from the basestation. At most USB_BUFFER_SIZE_RECEIVE bytes */
-        int error = libusb_bulk_transfer(basestation_handle, 0x81, buffer, USB_BUFFER_SIZE_RECEIVE, &bytes_received, THREAD_READ_TIMEOUT_MS);
-        if (error != LIBUSB_SUCCESS and error != LIBUSB_ERROR_TIMEOUT) {
-            std::cout << "[BasestationReader::run] Error receiving : " << usbutils_errorToString(error) << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_NO_BASESTATION_MS));
-            continue;
-        }
-        // If a timeout occurs, the number of bytes received is 0. In that case, continue.
-        if (bytes_received == 0) continue;
+void BasestationManager::handleIncomingMessage(const BasestationMessage& message, utils::TeamColor color) const {
+    switch (message.payloadBuffer[0]) {
+        case PACKET_TYPE_ROBOT_FEEDBACK: {
+            RobotFeedbackPayload payload;
+            std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
 
-        if (buffer[0] == PACKET_TYPE_BASESTATION_LOG) {
-            printf("[Basestation] ");
-            for (int i = 1; i < bytes_received; i++) printf("%c", buffer[i]);
-        }
-
-        if (buffer[0] == PACKET_TYPE_BASESTATION_STATISTICS) {
-            std::cout << "[RobotHub::readBasestation] Statistics" << std::endl;
-        }
-
-        if (buffer[0] == PACKET_TYPE_ROBOT_FEEDBACK) {
             RobotFeedback feedback;
-            decodeRobotFeedback(&feedback, (RobotFeedbackPayload *)buffer);
-            this->callFeedbackCallback(feedback);
-            // TODO: Make autogenerated
-            //            proto::RobotFeedback protoFeedback;
-            //            protoFeedback.set_id(feedback.id);
-            //            protoFeedback.set_hasball(feedback.hasBall);
-            //            protoFeedback.set_x_vel(feedback.rho);
-            //
-            //            feedbackPublisher->send(protoFeedback);
-            //            std::cout << "feedback sent!" << std::endl;
-        }
+            decodeRobotFeedback(&feedback, &payload);
 
-        if (buffer[0] == PACKET_TYPE_ROBOT_STATE_INFO) {
-            RobotStateInfo rsi;
-            decodeRobotStateInfo(&rsi, (RobotStateInfoPayload *)buffer);
-        }
+            this->callFeedbackCallback(feedback, color);
+            break;
+        }  // TODO: Other packets can be handled as well, like basestation statistics
     }
-
-    std::cout << "[RobotHub::readBasestation] Terminating" << std::endl;
 }
 
-void BasestationManager::callFeedbackCallback(const RobotFeedback &feedback) const {
-    if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback);
+void BasestationManager::callFeedbackCallback(const RobotFeedback& feedback, utils::TeamColor color) const {
+    if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback, color);
 }
 
-/** @brief Callback funnction triggered when a basestation is connected */
-int hotplug_callback_attach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data) {
-    std::cout << "[hotplug_callback_attach] Event triggered!" << std::endl;
-    auto *basestationManager = (rtt::robothub::basestation::BasestationManager *)(user_data);
-    basestationManager->handleBasestationAttach(device);
-    return 0;
-}
-/** @brief Callback funnction triggered when a basestation is disconnected */
-int hotplug_callback_detach(libusb_context *ctx, libusb_device *device, libusb_hotplug_event event, void *user_data) {
-    std::cout << "[hotplug_callback_detach] Event triggered!" << std::endl;
-    auto *basestationManager = (rtt::robothub::basestation::BasestationManager *)(user_data);
-    basestationManager->handleBasestationDetach(device);
-    return 0;
-}
-
-FailedToSetupUsbEventListenerException::FailedToSetupUsbEventListenerException(const std::string message) { this->message = message; }
-const char *FailedToSetupUsbEventListenerException::what() const noexcept { return this->message.c_str(); }
+FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string message) : message(message) {}
+const char* FailedToInitializeLibUsb::what() const noexcept { return this->message.c_str(); }
 
 }  // namespace rtt::robothub::basestation

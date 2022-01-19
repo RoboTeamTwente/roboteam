@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utilities.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -11,7 +13,7 @@ typedef struct SimulationError {
 } SimulationError;
 
 typedef struct RobotControlFeedback {
-    bool isTeamYellow;
+    utils::TeamColor color;
     std::map<int, bool> robotIdHasBall;
     std::vector<SimulationError> simulationErrors;
 } RobotControlFeedback;

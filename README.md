@@ -4,7 +4,7 @@ Hi there! Some useful things to know for using the RobotHub package and peripher
 
 ## User rights
 
-On vanilla Ubuntu you can only use the serial port if you are in the dialout group, or something similar. However, by default this is not true. So you need to add yourself to the dialout group (or if that doesn't work, google a bit for a similar solution).
+On vanilla Ubuntu you can only use the serial port if you are in the dialout group, or something similar. However, by default this is not true. So you need to add yourself to the dialout group (or if that doesn't work, google a bit for a similar solution. For arch this group is callec uucp instead).
 
 `sudo adduser $USER dialout`
 

@@ -1,8 +1,8 @@
-#include <constants.h>
-
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub::simulation {
+
+constexpr int LISTEN_THREAD_COOLDOWN_MS = 10;  // Small cooldown in thread between checking for new messsages
 
 SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
     this->networkConfiguration = config;
@@ -26,20 +26,28 @@ SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
               << " - Simulation Feedback Port: " << config.configurationFeedbackPort << std::endl;
 
     // Spawn listening threads that handle incoming feedback
-    this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(false); });
-    this->yellowFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(true); });
+    this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(utils::TeamColor::BLUE); });
+    this->yellowFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(utils::TeamColor::YELLOW); });
     this->configurationFeedbackListenThread = std::thread([this] { listenForConfigurationFeedback(); });
 }
 
 SimulatorManager::~SimulatorManager() { this->stopFeedbackListeningThreads(); }
 
-int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, bool forTeamYellow) {
+int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, utils::TeamColor color) {
     int bytesSent;
 
-    if (forTeamYellow) {
-        bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->yellowControlSocket, this->networkConfiguration.yellowControlPort);
-    } else {
-        bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->blueControlSocket, this->networkConfiguration.blueControlPort);
+    switch (color) {
+        case utils::TeamColor::YELLOW: {
+            bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->yellowControlSocket, this->networkConfiguration.yellowControlPort);
+            break;
+        }
+        case utils::TeamColor::BLUE: {
+            bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->blueControlSocket, this->networkConfiguration.blueControlPort);
+            break;
+        }
+        default: {
+            bytesSent = 0;
+        }
     }
 
     return bytesSent;
@@ -78,15 +86,15 @@ void SimulatorManager::callConfigurationFeedbackCallback(ConfigurationFeedback& 
     if (this->configurationFeedbackCallback != nullptr) this->configurationFeedbackCallback(feedback);
 }
 
-void SimulatorManager::listenForRobotControlFeedback(bool listenForTeamYellow) {
+void SimulatorManager::listenForRobotControlFeedback(utils::TeamColor color) {
     // Select the socket that is used by the team
-    QUdpSocket& teamSocket = listenForTeamYellow ? this->yellowControlSocket : this->blueControlSocket;
+    QUdpSocket& teamSocket = (color == utils::TeamColor::YELLOW) ? this->yellowControlSocket : this->blueControlSocket;
 
     while (!this->shouldStopListeningToFeedback) {
         while (teamSocket.hasPendingDatagrams()) {
             QNetworkDatagram datagram = teamSocket.receiveDatagram();
             if (datagram.isValid()) {
-                RobotControlFeedback f = this->getControlFeedbackFromDatagram(datagram, listenForTeamYellow);
+                RobotControlFeedback f = this->getControlFeedbackFromDatagram(datagram, color);
                 this->callRobotControlFeedbackCallback(f);
             }
         }
@@ -107,14 +115,14 @@ void SimulatorManager::listenForConfigurationFeedback() {
     }
 }
 
-RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDatagram& datagram, bool isTeamYellow) {
+RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDatagram& datagram, utils::TeamColor color) {
     // First, parse datagram into the proto packet that it resembles
     proto::simulation::RobotControlResponse response;
     response.ParseFromArray(datagram.data().data(), datagram.data().size());
 
     // Then, put the information in an easy accessible struct
     RobotControlFeedback feedback;
-    feedback.isTeamYellow = isTeamYellow;
+    feedback.color = color;
 
     for (const proto::simulation::RobotFeedback& robotFeedback : response.feedback()) {
         // The dribbler_ball_contact boolean is optional, so both check if it has been set and check if it is set to true

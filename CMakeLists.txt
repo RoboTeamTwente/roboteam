@@ -3,8 +3,6 @@ project(roboteam_robothub)
 
 # Needed for the documentation generator.
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
-
 set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O0")
 
 # for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
@@ -41,6 +39,8 @@ target_link_libraries(simulator_manager PUBLIC
 # Create the make file for the basestationManager library
 add_library(basestation_manager STATIC
         "src/basestation/LibusbUtilities.cpp"
+        "src/basestation/Basestation.cpp"
+        "src/basestation/BasestationCollection.cpp"
         "src/basestation/BasestationManager.cpp")
 target_include_directories(basestation_manager PUBLIC
         "include"

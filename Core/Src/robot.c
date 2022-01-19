@@ -35,7 +35,7 @@
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
 static bool SEND_ROBOT_STATE_INFO = false;
-static const bool USE_PUTTY = true;
+static const bool USE_PUTTY = false;
 
 SX1280* SX;
 MTi_data* MTi;
@@ -117,55 +117,41 @@ void resetRobotCommand(RobotCommand* robotCommand){
 }
 
 void printRobotStateData() {
-	Putty_printf("\n\r");
-	Putty_printf("-------Robot state data--------\n\r");
-	Putty_printf("halt? %u\n\r", halt);
-	Putty_printf("Braking? %u\n\r", wheels_GetWheelsBraking());
-	Putty_printf("velocity (Kalman):\n\r");
-	Putty_printf("  x: %f m/s\n\r", stateEstimation_GetState()[body_x]);
-	Putty_printf("  y: %f m/s\n\r", stateEstimation_GetState()[body_y]);
-	Putty_printf("acceleration (xsens):\n\r");
-	Putty_printf("  x: %f m/s^2\n\r", MTi->acc[body_x]);
-	Putty_printf("  y: %f m/s^2\n\r", MTi->acc[body_y]);
-	Putty_printf("yaw (calibrated): %f rad\n\r", stateEstimation_GetState()[body_w]);
-	Putty_printf("Xsens rate of turn: %f rad/s\n\r", MTi->gyr[2]);
-	Putty_printf("wheel refs:\n\r");
-	
-	Putty_printf("  RF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", stateControl_GetWheelRef()[wheels_LF]);
-	Putty_printf("wheel speeds (encoders):\n\r");
-	float measured_wheel_speeds[4];
-	wheels_GetMeasuredSpeeds(measured_wheel_speeds);
-	Putty_printf("  RF: %f rad/s\n\r", measured_wheel_speeds[wheels_RF]);
-	Putty_printf("  RB: %f rad/s\n\r", measured_wheel_speeds[wheels_RB]);
-	Putty_printf("  LB: %f rad/s\n\r", measured_wheel_speeds[wheels_LB]);
-	Putty_printf("  LF: %f rad/s\n\r", measured_wheel_speeds[wheels_LF]);
-	Putty_printf("wheel pwm:\n\r");
+	// The need for IWDG_Refresh(iwdg) worries me, since it means this function
+	// takes a VERY long time. Might screw with other stuff that comes after at
+	// wherever this function is called.
+
+	LOG("-------Robot state data--------\n");
+	LOG_printf("halt=%u  braking=%u\n", halt, wheels_GetWheelsBraking());
+	IWDG_Refresh(iwdg);
+
+	LOG_printf("Wheels refs   RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
+	stateControl_GetWheelRef()[wheels_RF], stateControl_GetWheelRef()[wheels_RB], 
+	stateControl_GetWheelRef()[wheels_LB], stateControl_GetWheelRef()[wheels_LF]);
+	IWDG_Refresh(iwdg);
+
 	uint32_t wheel_PWMs[4];
 	wheels_GetPWM(wheel_PWMs);
-	Putty_printf("  RF: %d \n\r", wheel_PWMs[wheels_RF]);
-	Putty_printf("  RB: %d \n\r", wheel_PWMs[wheels_RB]);
-	Putty_printf("  LB: %d \n\r", wheel_PWMs[wheels_LB]);
-	Putty_printf("  LF: %d \n\r", wheel_PWMs[wheels_LF]);
-}
+	LOG_printf("Wheels pwms   RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
+	wheel_PWMs[wheels_RF], wheel_PWMs[wheels_RB], 
+	wheel_PWMs[wheels_LB], wheel_PWMs[wheels_LF]);
+	IWDG_Refresh(iwdg);
 
-void printRobotCommand(RobotCommand* rc){
-	Putty_printf("======== RobotCommand ========\r\n");
-	Putty_printf("            id : %d\r\n", rc->id);
-	Putty_printf("        doKick : %d\r\n", rc->doKick);
-	Putty_printf("        doChip : %d\r\n", rc->doChip);
-	Putty_printf("       doForce : %d\r\n", rc->doForce);
-	Putty_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
-	Putty_printf("           rho : %.4f\r\n", rc->rho);
-	Putty_printf("         theta : %.4f\r\n", rc->theta);
-	Putty_printf("         angle : %.4f\r\n", rc->angle);
-	Putty_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
-	Putty_printf("      dribbler : %d\r\n", rc->dribbler);
-	Putty_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	Putty_printf("angularControl : %d\r\n", rc->angularControl);
-	Putty_printf("      feedback : %d\r\n", rc->feedback);
+	float measured_wheel_speeds[4];
+	wheels_GetMeasuredSpeeds(measured_wheel_speeds);
+	LOG_printf("Wheels rad/s  RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
+	measured_wheel_speeds[wheels_RF], measured_wheel_speeds[wheels_RB], 
+	measured_wheel_speeds[wheels_LB], measured_wheel_speeds[wheels_LF]);
+	IWDG_Refresh(iwdg);
+
+	LOG_printf("XSens   x=%.2f m/s^2  y=%.2f m/s^2  yaw=%.2f  omega=%.2f rad/s\n", 
+	MTi->acc[body_x], MTi->acc[body_y], 
+	stateEstimation_GetState()[body_w], MTi->gyr[2]);
+	IWDG_Refresh(iwdg);
+	
+	LOG_printf("Kalman  x=%.2f m/s  y=%.2f m/s\n", 
+	stateEstimation_GetState()[body_x], stateEstimation_GetState()[body_y]);
+	IWDG_Refresh(iwdg);
 }
 
 
@@ -179,14 +165,16 @@ void init(void){
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
-	ROBOT_ID = get_Id();
-	Putty_printf("ROBOT_ID: %d\n", ROBOT_ID);
-	set_Pin(LED0_pin, 1);
+	LOG("[init] Last programmed on " __DATE__ "\n");
 
+	/* Read ID from switches */
+	ROBOT_ID = get_Id();
+	LOG_printf("[init] ROBOT_ID %d\n", ROBOT_ID);
+	set_Pin(LED0_pin, 1);
 
 	/* Read jumper */
 	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
-	Putty_printf("SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
+	// LOG_printf("[init] SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -212,20 +200,17 @@ void init(void){
     stateEstimation_Init();
     shoot_Init();
     dribbler_Init();
-    if(ballSensor_Init())
-		Putty_printf("Ballsensor initialized\n");	
+    if(ballSensor_Init()) LOG("Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
 		
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
-	Putty_printf("Initializing wireless\n");
-
 	if(read_Pin(IN2_pin)){
 		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
-		Putty_printf("Listening on BLUE CHANNEL\n");
+		LOG("[init] BLUE CHANNEL\n");
 	}else{
 		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
-		Putty_printf("Listening on YELLOW CHANNEL\n");
+		LOG("[init] YELLOW CHANNEL\n");
 	}
     
 	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
@@ -234,23 +219,30 @@ void init(void){
 	set_Pin(LED4_pin, 1);
 
 	/* Initialize the XSens chip */
-	Putty_printf("Initializing XSens\n");
+	LOG("[init] Initializing XSens\n");
     MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
     if(MTi == NULL){
-		Putty_printf("Failed to initialize XSens\n");
+		LOG("[init] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
 	}
 	set_Pin(LED5_pin, 1);
 
-	Putty_printf("Initialized\n");
-    IWDG_Init(iwdg); // Initialize watchdog (resets system after it has crashed)
+	LOG("[init] Initialized\n");
+    
+	/* Initialize watchdog (resets system after it has crashed) */
+	IWDG_Init(iwdg); 
 
-	// Turn of all leds. Will now be used to indicate robot status
+	/* Turn of all leds. Will now be used to indicate robot status */
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
 	buzzer_Play_ID(ROBOT_ID);
 	
 	timestamp_initialized = HAL_GetTick();
+
+	/* Set the heartbeat timers */
+	heartbeat_17ms   = timestamp_initialized + 17;
+	heartbeat_100ms  = timestamp_initialized + 100;
+	heartbeat_1000ms = timestamp_initialized + 1000;
 }
 
 
@@ -344,20 +336,24 @@ void loop(void){
 	}
 
     // Heartbeat every 17ms	
-	if(heartbeat_17ms + 17 < HAL_GetTick()){
-		heartbeat_17ms += 17;
+	if(heartbeat_17ms < HAL_GetTick()){
+		uint32_t now = HAL_GetTick();
+		while (heartbeat_17ms < now) heartbeat_17ms += 17;
 	}	
 
     // Heartbeat every 100ms	
-	if(heartbeat_100ms + 100 < HAL_GetTick()){
-		heartbeat_100ms += 100;
+	if(heartbeat_100ms < HAL_GetTick()){
+		uint32_t now = HAL_GetTick();
+		while (heartbeat_100ms < now) heartbeat_100ms += 100;
 	}
 
 	// Heartbeat every 1000ms
-	if(heartbeat_1000ms + 1000 < HAL_GetTick()){
-		heartbeat_1000ms += 1000;
+	if(heartbeat_1000ms < HAL_GetTick()){
+		uint32_t now = HAL_GetTick();
+		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
 		
-		LOG("Hello\n");
+		LOG("Tick\n");
+		// if(xsens_CalibrationDone) printRobotStateData();
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
@@ -369,8 +365,6 @@ void loop(void){
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
         }
-
-		// printRobotStateData();
     }
 
     /*

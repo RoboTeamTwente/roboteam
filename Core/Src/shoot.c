@@ -1,4 +1,3 @@
-
 #include <shoot.h>
 #include <BaseTypes.h>
 
@@ -92,9 +91,7 @@ void shoot_SetPower(float meters_per_second){
 
 void shoot_Shoot(shoot_types type)
 {
-	if(shootState == shoot_Ready)
-	{
-//		Putty_printf("shooting! power = %d \n\r", power);
+	if(shootState == shoot_Ready){
 		shootState = shoot_Shooting;
 		set_Pin(Charge_pin, 0); 									// Disable shoot_Charging
 		set_Pin(type == shoot_Kick ? Kick_pin : Chip_pin, 1); 		// Kick/Chip on

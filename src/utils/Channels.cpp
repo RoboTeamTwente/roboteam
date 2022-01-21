@@ -11,7 +11,9 @@ const std::map<ChannelType, Channel> CHANNELS = {
 
     {ROBOT_FEEDBACK_CHANNEL, {"robot_feedback", "127.0.0.1", "5561"}},
 
-    {WORLD_CHANNEL, {"world", "127.0.0.1", "5558"}}
+    {WORLD_CHANNEL, {"world", "127.0.0.1", "5558"}},
+
+    {SIMULATION_CONFIGURATION_CHANNEL, {"simulation_configuration", "127.0.0.1", "5562"}}
 };
 
 }  // namespace rtt::net::utils

@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+import "Vector2f.proto";
+
+package proto;
+
+// Ball location
+message SimulationBallLocation {
+    float x = 1; // Center of field is 0.0, from goal to goal in meters
+    float y = 2; // Center of field is 0.0, form sideline to sideline in meters
+    float z = 3; // Field is at 0.0, from underground to the sky in meters
+    float xVelocity = 4;
+    float yVelocity = 5;
+    float zVelocity = 6;
+    bool velocityInRolling = 7; // Will convert the given velocity into rolling speed
+    bool teleportSafely = 8; // Will make sure other robots are moved out of the way, and will not collide with it
+    bool byForce = 9; // Will make sure the ball eventually ends up at the given coordinates by setting a velocity
+}
+
+// Robot location
+message SimulationRobotLocation {
+    uint32 id = 1;
+    bool isTeamYellow = 2; // TODO: Make use of enums
+    float x = 3; // Center of field is 0.0, from goal to goal in meters
+    float y = 4; // Center of field is 0.0, form sideline to sideline in meters
+    float xVelocity = 5;
+    float yVelocity = 6;
+    float angularVelocity = 7; // In radians per second
+    float orientation = 8; // In radians, counter-clockwise, starting at +x(right)
+    bool presentOnField = 9; // Can make robot disappear
+}
+
+// Robot properties
+message SimulationRobotProperties {
+    uint32 id = 1;
+    bool isTeamYellow = 2; // TODO: Make use of enums
+    // Units in meters, kilograms, radians, m/s or m/s^2.
+    float radius = 3;
+    float height = 4;
+    float mass = 5;
+    float maxKickSpeed = 6;
+    float maxChipSpeed = 7;
+    float centerToDribblerDistance = 8;
+    // Robot limits
+    float maxAcceleration = 9;
+    float maxAngularAcceleration = 10;
+    float maxDeceleration = 11;
+    float maxAngularDeceleration = 12;
+    float maxVelocity = 13;
+    float maxAngularVelocity = 14;
+    // Wheel angles. Counter-clockwise starting from dribbler
+    float frontRightWheelAngle = 15;
+    float backRightWheelAngle = 16;
+    float backLeftWheelAngle = 17;
+    float frontLeftWheelAngle = 18;
+}
+
+message SimulationConfiguration {
+    SimulationBallLocation ballLocation = 1;
+    repeated SimulationRobotLocation robotLocation = 2;
+    repeated SimulationRobotProperties robotProperties = 3;
+    float simulationSpeed = 4;
+    uint32 visionPort = 5;
+
+    // TODO: Add field geometry to this configuration
+}

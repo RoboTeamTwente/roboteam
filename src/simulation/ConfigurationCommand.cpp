@@ -14,11 +14,11 @@ void ConfigurationCommand::setBallLocation(float x, float y, float z, float xVel
     tpBallCommand->set_teleport_safely(teleportSafely);
     tpBallCommand->set_by_force(byForce);
 }
-void ConfigurationCommand::addRobotLocation(int id, bool isFromTeamYellow, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation,
+void ConfigurationCommand::addRobotLocation(int id, utils::TeamColor color, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation,
                                             bool shouldBePresentOnField, bool byForce) {
     proto::simulation::TeleportRobot* tpRobotCommand = this->configurationCommand.mutable_control()->add_teleport_robot();
     tpRobotCommand->mutable_id()->set_id(id);
-    tpRobotCommand->mutable_id()->set_team(isFromTeamYellow ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
+    tpRobotCommand->mutable_id()->set_team(color == utils::TeamColor::YELLOW ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
     tpRobotCommand->set_x(x);
     tpRobotCommand->set_y(y);
     tpRobotCommand->set_v_x(xVelocity);
@@ -29,11 +29,11 @@ void ConfigurationCommand::addRobotLocation(int id, bool isFromTeamYellow, float
     tpRobotCommand->set_by_force(byForce);
 }
 void ConfigurationCommand::setSimulationSpeed(float speed) { this->configurationCommand.mutable_control()->set_simulation_speed(speed); }
-void ConfigurationCommand::addRobotSpecs(int id, bool isFromTeamYellow, RobotProperties& robotProperties) {
+void ConfigurationCommand::addRobotSpecs(int id, utils::TeamColor color, RobotProperties& robotProperties) {
     proto::simulation::RobotSpecs* specs = this->configurationCommand.mutable_config()->add_robot_specs();
 
     specs->mutable_id()->set_id(id);
-    specs->mutable_id()->set_team(isFromTeamYellow ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
+    specs->mutable_id()->set_team(color == utils::TeamColor::YELLOW ? proto::simulation::Team::YELLOW : proto::simulation::Team::BLUE);
     specs->set_radius(robotProperties.radius);
     specs->set_height(robotProperties.height);
     specs->set_mass(robotProperties.mass);

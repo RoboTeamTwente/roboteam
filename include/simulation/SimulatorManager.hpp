@@ -7,13 +7,14 @@
 #include <ssl_simulation_robot_control.pb.h>
 #include <ssl_simulation_robot_feedback.pb.h>
 #include <ssl_vision_geometry.pb.h>
+
+#include <simulation/ConfigurationCommand.hpp>
+#include <simulation/Feedback.hpp>
+#include <simulation/RobotControlCommand.hpp>
 #include <utilities.h>
 
 #include <QtNetwork>
 #include <functional>
-#include <simulation/ConfigurationCommand.hpp>
-#include <simulation/Feedback.hpp>
-#include <simulation/RobotControlCommand.hpp>
 #include <stdexcept>
 #include <string>
 #include <thread>

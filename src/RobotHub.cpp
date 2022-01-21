@@ -44,6 +44,10 @@ bool RobotHub::subscribe() {
     auto settingsCallback = std::bind(&RobotHub::onSettings, this, std::placeholders::_1);
     this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>(settingsCallback);
 
+    this->simulationConfigurationSubscriber = std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration& config){
+        this->onSimulationConfiguration(config);
+    });
+
     this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
 
     // All networkers should not be a nullptr
@@ -213,7 +217,8 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
         );
     }
 
-    this->simulatorManager->sendConfigurationCommand(configCommand);
+    int bytesSent = this->simulatorManager->sendConfigurationCommand(configCommand);
+    // TODO: Put these bytes sent into nice statistics output (low priority)
 }
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,

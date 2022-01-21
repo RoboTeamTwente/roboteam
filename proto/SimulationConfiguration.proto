@@ -28,6 +28,7 @@ message SimulationRobotLocation {
     float angular_velocity = 7; // In radians per second
     float orientation = 8; // In radians, counter-clockwise, starting at +x(right)
     bool present_on_field = 9; // Can make robot disappear
+    bool by_force = 10; // Will make sure the robot eventually ends up at the given coordinates by setting a velocity
 }
 
 // Robot properties
@@ -57,7 +58,7 @@ message SimulationRobotProperties {
 
 message SimulationConfiguration {
     SimulationBallLocation ball_location = 1;
-    repeated SimulationRobotLocation robot_location = 2;
+    repeated SimulationRobotLocation robot_locations = 2;
     repeated SimulationRobotProperties robot_properties = 3;
     float simulation_speed = 4;
     uint32 vision_port = 5;

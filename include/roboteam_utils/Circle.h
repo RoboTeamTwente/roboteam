@@ -46,11 +46,7 @@ class Circle {
      * @return A vector of points where the circle intersects with the object
      * @return An empty vector if the circle does not intersect with the object
      */
-    [[nodiscard]] std::vector<Vector2> intersects(const Vector2& other);
-    [[nodiscard]] std::vector<Vector2> intersects(const Line& other);
-    [[nodiscard]] std::vector<Vector2> intersects(const LineSegment& other);
-    [[nodiscard]] std::vector<Vector2> intersects(const Circle& other);
-    [[nodiscard]] std::vector<Vector2> intersects(const Rectangle& other);
+    [[nodiscard]] std::vector<Vector2> intersects(const LineSegment& other) const;
 
     /**
      * @brief Checks whether the circle intersects with the given object
@@ -70,8 +66,17 @@ class Circle {
      * @param other The point which to project onto this circle
      * @return The location where the point is projected onto the circle
      */
-    Vector2 project(const Vector2& point);
+    [[nodiscard]] Vector2 project(const Vector2& point) const;
 
+    /**Move this circle by a certain amount
+     * @param by
+     */
+    void move(const Vector2& by);
+    /**
+     * @brief check if a point is contained within this circle
+     * @return true if point is on or within the radius
+     */
+    [[nodiscard]] bool contains(const Vector2& point) const;
     /** @brief Check if two circles are equal by comparing the centers and radii */
     bool operator==(const Circle& other) const;
     bool operator!=(const Circle& other) const;

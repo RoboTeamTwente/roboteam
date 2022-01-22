@@ -5,6 +5,7 @@
 
 #include "LineSegment.h"
 #include "Print.h"
+#include <cmath>
 
 namespace rtt {
 Line::Line(const Vector2 &v1, const Vector2 &v2) {

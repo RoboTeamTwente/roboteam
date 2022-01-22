@@ -21,6 +21,8 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/HalfLine.cpp
         src/utils/Grid.cpp
         src/utils/Shadow.cpp
+        src/utils/Polynomial.cpp
+        src/utils/RobotShape.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC
@@ -44,6 +46,7 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/StaticVectorTest.cpp
         test/utils/ShadowTest.cpp
         test/utils/CircularBufferTest.cpp
+        test/utils/RobotShapeTest.cpp
         )
 
 add_library(roboteam_utils STATIC
@@ -63,4 +66,5 @@ add_executable(utils_tests
 target_link_libraries(utils_tests
         PRIVATE roboteam_utils
         PRIVATE gtest
+        PRIVATE pthread
         )

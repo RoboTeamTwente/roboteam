@@ -115,7 +115,8 @@ class Angle {
      */
     Angle &operator=(double scalar) noexcept;
 
-   private:
+    double getValue() const noexcept;
+ private:
     double angle;  // The current angle value, which is a value in the range [-PI, PI).
 
     /**
@@ -123,6 +124,7 @@ class Angle {
      * @return A reference to this normalized Angle instance.
      */
     Angle normalize() noexcept;
+
 };
 
 }  // namespace rtt

@@ -138,21 +138,6 @@ TEST(VectorTests, moreOperators) {
     EXPECT_DOUBLE_EQ(b.y, 6);
 }
 
-TEST(VectorTests, protoVector) {
-    Vector2 f(3, 4);
-    proto::Vector2f x = f;
-    EXPECT_DOUBLE_EQ(x.x(), f.x);
-    EXPECT_DOUBLE_EQ(x.y(), f.y);
-    Vector2 checkF = x;
-    Vector2 b = Vector2(1, 1);
-    b = x;
-    EXPECT_DOUBLE_EQ(checkF.x, f.x);
-    EXPECT_DOUBLE_EQ(checkF.y, f.y);
-    EXPECT_DOUBLE_EQ(b.x, f.x);
-    EXPECT_DOUBLE_EQ(b.y, f.y);
-    std::cout << checkF << std::endl;  // testing print functionality
-}
-
 TEST(VectorTests, rotateAroundPoint) {
     // Rotate Pi around origin
     Vector2 f0(1, 1);

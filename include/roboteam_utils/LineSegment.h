@@ -22,6 +22,10 @@ class LineSegment {
     Vector2 end;    // Another ending of this LineSegment (which we define as the end of this LineSegment).
 
     /**
+     * Default constructor; creates a line with both start and end at (0,0) (from Vector's default constructor)
+     */
+    LineSegment() = default;
+    /**
      * Creates a new LineSegment instance by giving 2 points which represents the locations between which the LineSegment is created.
      *
      * @param start One of the endings of this LineSegment.
@@ -122,6 +126,31 @@ class LineSegment {
      */
     [[nodiscard]] bool operator==(const LineSegment &other) const;
 
+    /**
+     * @return Returns the vector which represents the direction in which the line points, e.g. end-start
+     */
+    [[nodiscard]] Vector2 direction() const;
+
+
+    /**
+      * Moves the line's start and end points by the given vector
+      */
+    void move(const Vector2& by);
+
+    /**
+     * Computes the intersection of two line segments.
+     * If the two lines are colinear and have a overlapping line segment, it returns the point closest to the start of this line segment
+     * @param segment
+     * @return the closest intersection point
+     */
+    [[nodiscard]] std::optional<Vector2> firstIntersects(const LineSegment &segment) const;
+
+    /**
+     * Does the same thing as doesIntersect(), but is a bit more numerically precise.
+     * @param line
+     * @return
+     */
+    [[nodiscard]] bool preciseDoesIntersect(const LineSegment&line) const;
    private:
     /**
      * Check whether a given point lies on this LineSegment, given that this LineSegment has length > 0 and that the given point lies on the infinite Line expansion of this

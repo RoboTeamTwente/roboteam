@@ -1,4 +1,8 @@
 #include "LineSegment.h"
+#include "Line.h"
+#include "HalfLine.h"
+#include <cmath>
+
 
 #include <optional>
 
@@ -134,4 +138,82 @@ bool LineSegment::isOnFiniteLine(const Vector2 &point) const {
 
 bool LineSegment::operator==(const LineSegment &other) const { return ((start == other.start && end == other.end) || (start == other.end && end == other.start)); }
 
+Vector2 LineSegment::direction() const {
+    return end-start;
+}
+
+    void LineSegment::move(const Vector2 &by) {
+    start+=by;
+    end+=by;
+    }
+
+std::optional<Vector2> LineSegment::firstIntersects(const LineSegment &line) const {
+    // These copies will get optimized away but make it easier to read w.r.t the stackoverflow link
+    Vector2 p = start;
+    Vector2 r = direction();
+    Vector2 q = line.start;
+    Vector2 s = line.direction();
+
+    double uDenom = r.cross(s);
+    double uNumer = (q - p).cross(r);
+    if (uDenom == 0) {
+        if (uNumer == 0) {
+            // Lines are colinear;
+            // if the interval between t0 and t1 intersects [0,1] they lines overlap on this interval
+            double t0 = (q - p).dot(r) / (r.dot(r));
+            double t1 = t0 + s.dot(r) / (r.dot(r));
+            if (t0 < 0) {
+                if (t1 >= 0) {
+                    // interval overlaps, we pick closest point which is from the start to the end of the line (p+0*r);
+                    return p;
+                }
+            } else if (t0 > 1) {
+                if (t1 <= 1) {
+                    return p + r;  // Similar but now we have the end of the line
+                }
+            } else {
+                // we return the point closest to the start of p
+                return p + r * fmax(fmin(t0,t1),0);
+            }
+            return std::nullopt;  // there was no intersection with the interval [0,1] so the lineas are colinear but have no overlap
+        } else {
+            return std::nullopt;  // Lines are parallel and nonintersecting
+        }
+    } else {
+        // if we find t and u such that p+tr=q+us for t and u between 0 and 1, we have found a valid intersection.
+        double u = uNumer / uDenom;
+        if (u >= 0 && u <= 1) {
+            double t = (q - p).cross(s) / uDenom;
+            if (t >= 0 && t <= 1) {
+                return p + r * t;  // we found a intersection point!
+            }
+        }
+    }
+    return std::nullopt;
+}
+bool LineSegment::preciseDoesIntersect(const LineSegment&line) const{
+    Vector2 p = start, q = line.start, r = direction(), s = line.direction();
+    double denom = r.cross(s);
+    double numer = (q - p).cross(r);
+    if (denom == 0) {
+        if (numer == 0) {
+            // lines are colinear
+            double t0 = (q - p).dot(r) / r.length2();
+            double t1 = t0 + s.dot(r) / r.length2();
+            if (t0 < 0) {
+                return t1 >= 0;
+            } else if (t0 > 1) {
+                return t1 <= 1;
+            }
+            return true;
+        }
+    } else {
+        double u = numer / denom;
+        if (!(u < 0 || u > 1)) {  // check if it's on the segment
+            double t = (q - p).cross(s) / denom;
+            return (!(t < 0 || t > 1));  // check if it's on the segment
+        }
+    }
+    return false;
+}
 }  // namespace rtt

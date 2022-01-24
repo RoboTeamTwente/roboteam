@@ -15,6 +15,7 @@ void RobotFeedbackFilter::process(const proto::RobotData& data) {
 std::vector<proto::RobotFeedback> RobotFeedbackFilter::getData(bool teamIsYellow) const {
     std::vector<proto::RobotFeedback> feedback;
     const auto& map = teamIsYellow ? lastYellowFeedback : lastBlueFeedback;
+    feedback.reserve(map.size());
     for (const auto& elem : map) {
         feedback.emplace_back(elem.second);
     }

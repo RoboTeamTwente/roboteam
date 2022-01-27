@@ -7,6 +7,7 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
+#include <SimulationConfigurationNetworker.hpp>
 #include <basestation/BasestationManager.hpp>
 #include <exception>
 #include <functional>
@@ -36,6 +37,7 @@ class RobotHub {
     std::unique_ptr<rtt::net::RobotCommandsYellowSubscriber> robotCommandsYellowSubscriber;
     std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
     std::unique_ptr<rtt::net::RobotFeedbackPublisher> robotFeedbackPublisher;
+    std::unique_ptr<rtt::net::SimulationConfigurationSubscriber> simulationConfigurationSubscriber;
 
     int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
     int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
@@ -50,6 +52,8 @@ class RobotHub {
     void processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode);
 
     void onSettings(const proto::Setting &setting);
+
+    void onSimulationConfiguration(const proto::SimulationConfiguration &configuration);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor team);

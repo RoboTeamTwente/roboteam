@@ -44,6 +44,10 @@ bool RobotHub::subscribe() {
     auto settingsCallback = std::bind(&RobotHub::onSettings, this, std::placeholders::_1);
     this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>(settingsCallback);
 
+    this->simulationConfigurationSubscriber = std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration& config){
+        this->onSimulationConfiguration(config);
+    });
+
     this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
 
     // All networkers should not be a nullptr
@@ -149,6 +153,72 @@ void RobotHub::onSettings(const proto::Setting &settings) {
     }
 
     this->mode = newMode;
+}
+
+void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &configuration) {
+    simulation::ConfigurationCommand configCommand;
+    
+    if (configuration.has_ball_location()) {
+        const auto& ballLocation = configuration.ball_location();
+        configCommand.setBallLocation(
+            ballLocation.x(),
+            ballLocation.y(),
+            ballLocation.z(),
+            ballLocation.x_velocity(),
+            ballLocation.y_velocity(),
+            ballLocation.z_velocity(),
+            ballLocation.velocity_in_rolling(),
+            ballLocation.teleport_safely(),
+            ballLocation.by_force()
+        );
+    }
+
+    for (const auto& robotLocation : configuration.robot_locations()) {
+        configCommand.addRobotLocation(
+            robotLocation.id(),
+            robotLocation.is_team_yellow() ? utils::TeamColor::YELLOW : utils::TeamColor::BLUE,
+            robotLocation.x(),
+            robotLocation.y(),
+            robotLocation.x_velocity(),
+            robotLocation.y_velocity(),
+            robotLocation.angular_velocity(),
+            robotLocation.orientation(),
+            robotLocation.present_on_field(),
+            robotLocation.by_force()
+        );
+    }
+
+    for (const auto& robotProperties : configuration.robot_properties()) {
+        simulation::RobotProperties propertyValues = {
+            .radius = robotProperties.radius(),
+            .height = robotProperties.height(),
+            .mass = robotProperties.mass(),
+            .maxKickSpeed = robotProperties.max_kick_speed(),
+            .maxChipSpeed = robotProperties.max_chip_speed(),
+            .centerToDribblerDistance = robotProperties.center_to_dribbler_distance(),
+            // Movement limits
+            .maxAcceleration = robotProperties.max_acceleration(),
+            .maxAngularAcceleration = robotProperties.max_angular_acceleration(),
+            .maxDeceleration = robotProperties.max_deceleration(),
+            .maxAngularDeceleration = robotProperties.max_angular_deceleration(),
+            .maxVelocity = robotProperties.max_velocity(),
+            .maxAngularVelocity = robotProperties.max_angular_velocity(),
+            // Wheel angles
+            .frontRightWheelAngle = robotProperties.front_right_wheel_angle(),
+            .backRightWheelAngle = robotProperties.back_right_wheel_angle(),
+            .backLeftWheelAngle = robotProperties.back_left_wheel_angle(),
+            .frontLeftWheelAngle = robotProperties.front_left_wheel_angle()
+        };
+        
+        configCommand.addRobotSpecs(
+            robotProperties.id(),
+            robotProperties.is_team_yellow() ? utils::TeamColor::YELLOW : utils::TeamColor::BLUE,
+            propertyValues
+        );
+    }
+
+    int bytesSent = this->simulatorManager->sendConfigurationCommand(configCommand);
+    // TODO: Put these bytes sent into nice statistics output (low priority)
 }
 
 /* Unsafe function that can cause data races in commands_sent and feedback_received,

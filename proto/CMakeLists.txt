@@ -19,6 +19,7 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "Setting.proto"
     "RobotParameters.proto"
     "AICommand.proto"
+    "SimulationConfiguration.proto"
 )
 
 add_library(roboteam_networking_proto STATIC "${NET_PROTO_SRCS}" "${NET_PROTO_HDRS}")

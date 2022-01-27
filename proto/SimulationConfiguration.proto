@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "Vector2f.proto";
+
+package proto;
+
+// Ball location
+message SimulationBallLocation {
+    float x = 1; // Center of field is 0.0, from goal to goal in meters
+    float y = 2; // Center of field is 0.0, form sideline to sideline in meters
+    float z = 3; // Field is at 0.0, from underground to the sky in meters
+    float x_velocity = 4;
+    float y_velocity = 5;
+    float z_velocity = 6;
+    bool velocity_in_rolling = 7; // Will convert the given velocity into rolling speed
+    bool teleport_safely = 8; // Will make sure other robots are moved out of the way, and will not collide with it
+    bool by_force = 9; // Will make sure the ball eventually ends up at the given coordinates by setting a velocity
+}
+
+// Robot location
+message SimulationRobotLocation {
+    uint32 id = 1;
+    bool is_team_yellow = 2; // TODO: Make use of enums
+    float x = 3; // Center of field is 0.0, from goal to goal in meters
+    float y = 4; // Center of field is 0.0, form sideline to sideline in meters
+    float x_velocity = 5;
+    float y_velocity = 6;
+    float angular_velocity = 7; // In radians per second
+    float orientation = 8; // In radians, counter-clockwise, starting at +x(right)
+    bool present_on_field = 9; // Can make robot disappear
+    bool by_force = 10; // Will make sure the robot eventually ends up at the given coordinates by setting a velocity
+}
+
+// Robot properties
+message SimulationRobotProperties {
+    uint32 id = 1;
+    bool is_team_yellow = 2; // TODO: Make use of enums
+    // Units in meters, kilograms, radians, m/s or m/s^2.
+    float radius = 3;
+    float height = 4;
+    float mass = 5;
+    float max_kick_speed = 6;
+    float max_chip_speed = 7;
+    float center_to_dribbler_distance = 8;
+    // Robot limits
+    float max_acceleration = 9;
+    float max_angular_acceleration = 10;
+    float max_deceleration = 11;
+    float max_angular_deceleration = 12;
+    float max_velocity = 13;
+    float max_angular_velocity = 14;
+    // Wheel angles. Counter-clockwise starting from dribbler
+    float front_right_wheel_angle = 15;
+    float back_right_wheel_angle = 16;
+    float back_left_wheel_angle = 17;
+    float front_left_wheel_angle = 18;
+}
+
+message SimulationConfiguration {
+    SimulationBallLocation ball_location = 1;
+    repeated SimulationRobotLocation robot_locations = 2;
+    repeated SimulationRobotProperties robot_properties = 3;
+    float simulation_speed = 4;
+    uint32 vision_port = 5;
+
+    // TODO: Add field geometry to this configuration
+}

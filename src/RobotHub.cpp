@@ -169,8 +169,8 @@ void RobotHub::printStatistics() {
         for (int j = 0; j < amountOfColumns; j++) {
             const int robotId = i + j;
             if (robotId < MAX_AMOUNT_OF_ROBOTS) {
-                int nSent = commands_sent[robotId];
-                int nReceived = feedback_received[robotId];
+                int nSent = this->commands_sent[robotId];
+                int nReceived = this->feedback_received[robotId];
                 commands_sent[robotId] = 0;
                 feedback_received[robotId] = 0;
 
@@ -202,6 +202,9 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
         proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
         feedbackOfRobot->set_id(robotId);
         feedbackOfRobot->set_hasball(hasBall);
+
+        // Increment the feedback counter of this robot
+        this->feedback_received[robotId]++;
     }
 
     this->sendRobotFeedback(feedbackToBePublished);
@@ -226,6 +229,9 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback,
     feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
 
     this->sendRobotFeedback(feedbackToBePublished);
+
+    // Increment the feedback counter of this robot
+    this->feedback_received[feedback.id]++;
 }
 
 // TODO: Get rid of this function: It is crap!

@@ -59,7 +59,7 @@ add_executable(observer_lib_tests
         )
 
 target_link_libraries(observer_lib_tests
-        PRIVATE observer
+        PRIVATE observer_lib
         PRIVATE gtest
         )
 

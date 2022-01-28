@@ -46,6 +46,7 @@ class BasestationCollection {
     std::function<void(const BasestationMessage&, utils::TeamColor color)> messageFromBasestationCallback;
 
     static WirelessChannel getWirelessChannelCorrespondingTeamColor(utils::TeamColor color);
+    static utils::TeamColor getTeamColorCorrespondingWirelessChannel(WirelessChannel channel);
     static bool basestationIsInDeviceList(std::shared_ptr<Basestation> basestation, const std::vector<libusb_device*>& devices);
     static bool deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations);
 };

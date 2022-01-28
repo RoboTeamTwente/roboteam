@@ -120,6 +120,7 @@ void BasestationCollection::printCollection() const {
 
 void BasestationCollection::updateBasestationSelection() {
     while (this->shouldUpdateBasestationSelection) {
+
         if (this->yellowBasestation == nullptr) {
             this->trySelectBasestationOfColor(utils::TeamColor::YELLOW);
         }
@@ -135,7 +136,10 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getUnselectedBa
     std::vector<std::shared_ptr<Basestation>> unselectedBasestations;
 
     for (const auto& basestation : this->basestations) {
-        if (basestation != this->blueBasestation && basestation != this->yellowBasestation) {
+
+        if (!basestation->operator==(this->blueBasestation)
+         && !basestation->operator==(this->yellowBasestation)) {
+            // This basestation is neither selected as blue nor yellow basestation
             unselectedBasestations.push_back(basestation);
         }
     }
@@ -170,7 +174,10 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
 void BasestationCollection::selectBasestationOfColor(std::shared_ptr<Basestation> basestation, utils::TeamColor color) {
     this->unselectBasestationOfColor(color);
 
-    auto callback = [&](const BasestationMessage& message) { this->onMessageFromBasestation(message, color); };
+    auto callback = [&](const BasestationMessage& message, WirelessChannel channel) {
+        utils::TeamColor colorOfBasestation = BasestationCollection::getTeamColorCorrespondingWirelessChannel(channel);
+        this->onMessageFromBasestation(message, colorOfBasestation);
+    };
 
     switch (color) {
         case utils::TeamColor::BLUE:
@@ -219,6 +226,17 @@ WirelessChannel BasestationCollection::getWirelessChannelCorrespondingTeamColor(
     }
 
     return matchingWirelessChannel;
+}
+
+utils::TeamColor BasestationCollection::getTeamColorCorrespondingWirelessChannel(WirelessChannel channel) {
+    switch (channel) {
+        case WirelessChannel::YELLOW_CHANNEL:
+            return utils::TeamColor::YELLOW;
+        case WirelessChannel::BLUE_CHANNEL:
+            return utils::TeamColor::BLUE;
+        default:
+            return utils::TeamColor::YELLOW;
+    }
 }
 
 bool BasestationCollection::deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations) {

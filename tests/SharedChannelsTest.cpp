@@ -8,9 +8,13 @@ using namespace rtt::net;
 
 int main() {
     try {
-        RobotCommandsPublisher commandsPub;
-        RobotCommandsSubscriber commandsSub1(nullptr);
-        RobotCommandsSubscriber commandsSub2(nullptr);
+        RobotCommandsBluePublisher blueCommandsPub;
+        RobotCommandsBlueSubscriber blueCommandsSub1(nullptr);
+        RobotCommandsBlueSubscriber blueCommandsSub2(nullptr);
+
+        RobotCommandsYellowPublisher yellowCommandsPub;
+        RobotCommandsYellowSubscriber yellowCommandsSub1(nullptr);
+        RobotCommandsYellowSubscriber yellowCommandsSub2(nullptr);
 
         RobotFeedbackPublisher feedbackPub;
         RobotFeedbackSubscriber feedbackSub1(nullptr);

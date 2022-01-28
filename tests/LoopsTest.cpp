@@ -11,32 +11,48 @@ using namespace rtt::net;
 constexpr int TEST_VALUE = 69;
 
 // Robot commands loop test
-bool robotCommandsLoopTestPassed = false;
-void onRobotCommands(const proto::RobotCommands& commands) { robotCommandsLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
+bool robotCommandsBlueLoopTestPassed = false;
+bool robotCommandsYellowLoopTestPassed = false;
+void onRobotCommandsBlue(const proto::AICommand& commands) { robotCommandsBlueLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
+void onRobotCommandsYellow(const proto::AICommand& commands) { robotCommandsYellowLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
+
 bool testRobotCommandsLoop() {
-    RobotCommandsPublisher pub;
-    RobotCommandsSubscriber sub(onRobotCommands);
+    RobotCommandsBluePublisher pubBlue;
+    RobotCommandsYellowPublisher pubYellow;
+
+    auto callbackBlue = [](const proto::AICommand& commands) {
+        onRobotCommandsBlue(commands);
+    };
+    auto callbackYellow = [](const proto::AICommand& commands) {
+        onRobotCommandsYellow(commands);
+    };
+    RobotCommandsBlueSubscriber subBlue(onRobotCommandsBlue);
+    RobotCommandsYellowSubscriber subYellow(onRobotCommandsYellow);
+
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    proto::RobotCommands commands;
+    proto::AICommand commands;
     proto::RobotCommand* command = commands.add_commands();
     command->set_id(TEST_VALUE);
-    pub.publish(commands);
+
+    pubBlue.publish(commands);
+    pubYellow.publish(commands);
+
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    return robotCommandsLoopTestPassed;
+    return robotCommandsBlueLoopTestPassed && robotCommandsYellowLoopTestPassed;
 }
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const proto::RobotFeedback& feedback) { robotFeedbackLoopTestPassed = feedback.basestation_robot_feedback().id() == TEST_VALUE; }
+void onRobotFeedback(const proto::RobotData& feedback) { robotFeedbackLoopTestPassed = feedback.receivedfeedback().Get(0).id() == TEST_VALUE; }
 bool testRobotFeedbackLoop() {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    proto::RobotFeedback feedback;
-    feedback.mutable_basestation_robot_feedback()->set_id(TEST_VALUE);
+    proto::RobotData feedback;
+    feedback.add_receivedfeedback()->set_id(TEST_VALUE);
 
     pub.publish(feedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -46,14 +62,14 @@ bool testRobotFeedbackLoop() {
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::Settings& settings) { settingsLoopTestPassed = settings.robothub_settings().bluecontrolport() == TEST_VALUE; }
+void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = settings.visionport() == TEST_VALUE; }
 bool testSettingsLoop() {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    proto::Settings settings;
-    settings.mutable_robothub_settings()->set_bluecontrolport(TEST_VALUE);
+    proto::Setting settings;
+    settings.set_visionport(TEST_VALUE);
 
     pub.publish(settings);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -63,14 +79,14 @@ bool testSettingsLoop() {
 
 // World loop test
 bool worldLoopTestPassed = false;
-void onWorld(const proto::World& world) { worldLoopTestPassed = world.ball().position().x() == TEST_VALUE; }
+void onWorld(const proto::State& world) { worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE; }
 bool testWorldLoop() {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    proto::World world;
-    world.mutable_ball()->mutable_position()->set_x(TEST_VALUE);
+    proto::State world;
+    world.mutable_ball_camera_world()->mutable_ball()->mutable_pos()->set_x(TEST_VALUE);
 
     pub.publish(world);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

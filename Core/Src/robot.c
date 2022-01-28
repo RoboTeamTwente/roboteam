@@ -43,12 +43,15 @@ MTi_data* MTi;
 uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
 uint8_t message_buffer_out[127];
 
-RobotCommandPayload robotCommandPayload = {0};
-RobotBuzzerPayload robotBuzzerPayload = {0};
-RobotFeedback robotFeedback = {0};
-RobotStateInfo robotStateInfo = {0};
-RobotStateInfoPayload robotStateInfoPayload = {0};
 
+char dibs[499404];
+
+/* File-local containers */
+static RobotCommandPayload robotCommandPayload = {0};
+static RobotBuzzerPayload robotBuzzerPayload = {0};
+static RobotFeedback robotFeedback = {0};
+static RobotStateInfo robotStateInfo = {0};
+static RobotStateInfoPayload robotStateInfoPayload = {0};
 
 RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -66,6 +69,8 @@ volatile uint32_t counter_htim6 = 0;
 volatile uint32_t counter_htim7 = 0;
 volatile uint32_t counter_htim10 = 0;
 volatile uint32_t counter_htim11 = 0;
+volatile uint32_t counter_RobotCommand = 0;
+volatile uint32_t counter_RobotBuzzer = 0;
 uint32_t timestamp_initialized = 0;
 
 
@@ -262,8 +267,6 @@ void loop(void){
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
-		decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
-
 		toggle_Pin(LED6_pin);
 	}
 
@@ -286,6 +289,7 @@ void loop(void){
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         resetRobotCommand(&activeRobotCommand);
+		executeCommands(&activeRobotCommand);
 		REM_last_packet_had_correct_version = true;
     }
 
@@ -339,6 +343,10 @@ void loop(void){
 	if(heartbeat_17ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_17ms < now) heartbeat_17ms += 17;
+
+		encodeRobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO, 2);
+		HAL_UART_Transmit_DMA(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO);
 	}	
 
     // Heartbeat every 100ms	
@@ -352,9 +360,6 @@ void loop(void){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
 		
-		LOG("Tick\n");
-		// if(xsens_CalibrationDone) printRobotStateData();
-
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 		
@@ -388,6 +393,9 @@ void loop(void){
     // LED6 done in Wireless.c
 }
 
+void robot_setRobotCommandPayload(RobotCommandPayload* rcp){
+	decodeRobotCommand(&activeRobotCommand, rcp);
+}
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
@@ -408,6 +416,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 			uint8_t packet_header = message_buffer_in[total_bytes_processed];
 
 			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
+				counter_RobotCommand++;
 				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
 				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
 				decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
@@ -417,6 +426,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 			}
 
 			if(packet_header == PACKET_TYPE_ROBOT_BUZZER){
+				counter_RobotBuzzer++;
 				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
 				REM_last_packet_had_correct_version &= RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
 				uint16_t period = RobotBuzzer_get_period(rbp);
@@ -488,6 +498,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
+		// State estimation		
+		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
+		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
+		
+		wheels_Update();
+		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
+		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+		stateInfo.rateOfTurn = MTi->gyr[2];
+		stateEstimation_Update(&stateInfo);
+
+
+
 		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
             return;
@@ -498,17 +522,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			return;
 		}
 
-		// State estimation
-		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
-		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
+		// // State estimation
+		// stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
+		// stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
 		
-		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
-
-		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-		stateInfo.rateOfTurn = MTi->gyr[2];
-		stateEstimation_Update(&stateInfo);
+		// wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
+		// stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
+		// stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
+		// stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
+		// stateInfo.rateOfTurn = MTi->gyr[2];
+		// stateEstimation_Update(&stateInfo);
 
 		// State control
 		stateControl_SetState(stateEstimation_GetState());

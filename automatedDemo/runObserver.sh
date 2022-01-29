@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Starting RobotHub"
+echo "Starting Observer"
 
 while :
 do

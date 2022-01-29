@@ -1,9 +1,7 @@
 #!/bin/sh
 
-echo "Configuring Cmake"
-cmake -B build -S ../
+num_of_cores=7
 
-num_of_cores=3
-
-echo "Making Observer"
+echo "Making Observer with $num_of_cores threads"
 make -C build/ roboteam_observer -j$num_of_cores
+

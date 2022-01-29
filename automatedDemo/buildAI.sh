@@ -1,9 +1,6 @@
 #!/bin/sh
 
-echo "Configuring Cmake"
-cmake -B build -S ../
+num_of_cores=7
 
-num_of_cores=3
-
-echo "Making AI"
+echo "Making AI with $num_of_cores threads"
 make -C build/ roboteam_ai -j$num_of_cores

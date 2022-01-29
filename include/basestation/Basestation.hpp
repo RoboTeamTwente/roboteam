@@ -6,6 +6,7 @@
 #include <functional>
 #include <string>
 #include <thread>
+#include <memory>
 
 namespace rtt::robothub::basestation {
 
@@ -24,9 +25,10 @@ class Basestation {
 
     // Compares the underlying device of this basestation with the given device
     bool operator==(libusb_device* device) const;
+    bool operator==(std::shared_ptr<Basestation> otherBasestation) const;
 
     bool sendMessageToBasestation(BasestationMessage& message) const;
-    void setIncomingMessageCallback(std::function<void(const BasestationMessage&)> callback);
+    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, WirelessChannel)> callback);
 
     WirelessChannel getChannel() const;
 
@@ -47,7 +49,7 @@ class Basestation {
     std::thread incomingMessageListenerThread;
     void listenForIncomingMessages();
     void handleIncomingMessage(const BasestationMessage& message);
-    std::function<void(const BasestationMessage&)> incomingMessageCallback;
+    std::function<void(const BasestationMessage&, WirelessChannel)> incomingMessageCallback;
 
     // Sends a message to the basestation that asks what its channel is
     bool requestChannelOfBasestation();

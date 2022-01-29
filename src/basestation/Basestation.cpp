@@ -78,10 +78,14 @@ bool Basestation::operator==(libusb_device* otherDevice) const {
     uint8_t otherAddress = libusb_get_device_address(otherDevice);
     return this->address == otherAddress;
 }
+bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
+    return otherBasestation != nullptr
+        && this->address == otherBasestation->address;
+}
 
 bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
-void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&)> callback) { this->incomingMessageCallback = callback; }
+void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, WirelessChannel)> callback) { this->incomingMessageCallback = callback; }
 
 WirelessChannel Basestation::getChannel() const { return this->channel; }
 
@@ -157,7 +161,7 @@ void Basestation::handleIncomingMessage(const BasestationMessage& message) {
 
     // And in any case, just forward the message to the callback
     if (this->incomingMessageCallback != nullptr) {
-        this->incomingMessageCallback(message);
+        this->incomingMessageCallback(message, this->channel);
     }
 }
 

@@ -12,12 +12,18 @@ static char printf_buffer[1024];
 static char log_buffer[1024];
 static RobotLogPayload robotLogPayload;
 
+typedef struct _Message {
+    uint8_t payload[127];
+} Message;
+
+static Message message_buffer[100];
+
 void LOG_printf(char *format, ...)
 {
 	// Place variables into string
 	va_list aptr; 
 	va_start(aptr, format); // Give starting point of additional arguments
-    vsprintf(printf_buffer, format, aptr); // Copies and turns into string
+    vsprsintf(printf_buffer, format, aptr); // Copies and turns into string
     va_end(aptr); // Close list
     // Print the message
     LOG(printf_buffer);
@@ -44,18 +50,17 @@ void LOG(char *message){
     RobotLog_set_id(&robotLogPayload, ROBOT_ID);                  // 4 bits
     RobotLog_set_message_length(&robotLogPayload, message_length);// 8 bits
                                                                   // = 3 bytes
-    uint8_t robotlog_length = 3; // TODO Replace '3' with something dynamic, so that its always correct even if the RobotLog packet changes                                                                  
-    
+
     // Copy the RobotLog packet into the buffer
-    memcpy(log_buffer, &robotLogPayload, robotlog_length);
+    memcpy(log_buffer, &robotLogPayload, PACKET_SIZE_ROBOT_LOG);
     // Copy the message into the buffer, next to the RobotLog packet
-    memcpy(log_buffer + robotlog_length, message, message_length);
+    memcpy(log_buffer + PACKET_SIZE_ROBOT_LOG, message, message_length);
     // Wait until the UART interface is free to use
     while(UART_PC->gState != HAL_UART_STATE_READY);
     // Disabling and enabling all interrupts seems to fix the code from hanging when this code is called from an IRQ
     __disable_irq();
     // Transmit the data to the computer
-    HAL_UART_Transmit(UART_PC, log_buffer, robotlog_length + message_length, 10);
+    HAL_UART_Transmit(UART_PC, log_buffer, PACKET_SIZE_ROBOT_LOG + message_length, 10);
     __enable_irq();
     // HAL_UART_Transmit_DMA(UART_PC, log_buffer, robotlog_length + message_length);
 }

@@ -43,10 +43,7 @@ Basestation::Basestation(libusb_device* device) : device(device) {
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
-    // TODO: Use serial id instead of address to identify basestations
-    // Set address, because this can be used to compare basestations
-    this->address = libusb_get_device_address(this->device);
-    std::cout << "Opened basestation on address: " << (int)this->address << std::endl;
+    this->serialIdentifier = Basestation::getSerialIdentifierOfDevice(this->device);
 
     this->channel = WirelessChannel::UNKNOWN;
 
@@ -73,14 +70,13 @@ Basestation::~Basestation() {
 }
 
 bool Basestation::operator==(libusb_device* otherDevice) const {
-    // Compare the address of the other device with this device, as it *should* uniquely identify them
-    // TODO: Compare the devices serial number instead
-    uint8_t otherAddress = libusb_get_device_address(otherDevice);
-    return this->address == otherAddress;
+    // Compare the serial identifier of the other device with this device
+    uint8_t otherSerialIdentifier = Basestation::getSerialIdentifierOfDevice(otherDevice);
+    return this->serialIdentifier == otherSerialIdentifier;
 }
 bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
     return otherBasestation != nullptr
-        && this->address == otherBasestation->address;
+        && this->serialIdentifier == otherBasestation->serialIdentifier;
 }
 
 bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
@@ -208,6 +204,12 @@ bool Basestation::writeBasestationMessage(BasestationMessage& message) const {
     }
 
     return error == LIBUSB_SUCCESS;
+}
+
+uint8_t Basestation::getSerialIdentifierOfDevice(libusb_device* device) {
+    libusb_device_descriptor deviceDescriptor = {};
+    libusb_get_device_descriptor(device, &deviceDescriptor);
+    return deviceDescriptor.iSerialNumber;
 }
 
 FailedToOpenDeviceException::FailedToOpenDeviceException(const std::string& message) : message(message) {}

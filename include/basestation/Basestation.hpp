@@ -40,10 +40,10 @@ class Basestation {
     static std::string wirelessChannelToString(WirelessChannel channel);
 
    private:
-    libusb_device* device;               // Corresponds to the basestation itself
-    uint8_t address;                     // USB address the basestation is connected to
-    libusb_device_handle* deviceHandle;  // Handle on which IO can be performed
-    WirelessChannel channel;             // Channel at which the basestation sends messages to robots
+    libusb_device* device;              // Corresponds to the basestation itself
+    libusb_device_handle* deviceHandle; // Handle on which IO can be performed
+    WirelessChannel channel;            // Channel at which the basestation sends messages to robots
+    uint8_t serialIdentifier;           // Unique identifier of basestations, used for comparing
 
     bool shouldListenForIncomingMessages;
     std::thread incomingMessageListenerThread;
@@ -58,6 +58,8 @@ class Basestation {
     bool readBasestationMessage(BasestationMessage& message) const;
     // Writes the given message directly to the basestation
     bool writeBasestationMessage(BasestationMessage& message) const;
+
+    static uint8_t getSerialIdentifierOfDevice(libusb_device* device);
 };
 
 class FailedToOpenDeviceException : public std::exception {

@@ -298,6 +298,9 @@ void loop(void){
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         resetRobotCommand(&activeRobotCommand);
+		// Quick fix to also stop the dribbler from rotating when the command is reset
+		// TODO maybe move executeCommand to TIMER_7?
+		dribbler_SetSpeed(0);
 		REM_last_packet_had_correct_version = true;
     }
 

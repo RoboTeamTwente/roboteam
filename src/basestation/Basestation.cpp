@@ -1,6 +1,3 @@
-#include <BasestationConfiguration.h>     // REM packet
-#include <BasestationGetConfiguration.h>  // REM packet
-#include <RobotCommand.h>                 //REM packet
 #include <basestation/LibusbUtilities.h>
 
 #include <basestation/Basestation.hpp>
@@ -20,6 +17,10 @@ constexpr unsigned int TRANSFER_OUT_TIMEOUT_MS = 500;        // Timeout for writ
 constexpr unsigned int PAUSE_ON_TRANSFER_IN_ERROR_MS = 100;  // Pause every time a read fails
 
 Basestation::Basestation(libusb_device* device) : device(device) {
+    if (!Basestation::isDeviceABasestation(device)) {
+        throw FailedToOpenDeviceException("Device is not a basestation");
+    }
+
     int error;
 
     // Open the basestation device, creating the handle we can perform IO on
@@ -31,10 +32,6 @@ Basestation::Basestation(libusb_device* device) : device(device) {
         libusb_close(this->deviceHandle);
         throw FailedToOpenDeviceException("Failed to set auto detach kernel driver");
     }
-    // error = libusb_detach_kernel_driver(this->device_handle, BASESTATION_USB_INTERFACE_NUMBER);
-    // if (error) {
-    //     std::cout << "Could not detach kernel driver!" << std::endl;
-    // } // TODO: Check if this is necessary
 
     // Claim the interface, so no other programs are connecting with the basestation
     error = libusb_claim_interface(this->deviceHandle, BASESTATION_USB_INTERFACE_NUMBER);
@@ -43,18 +40,11 @@ Basestation::Basestation(libusb_device* device) : device(device) {
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
-    this->serialIdentifier = Basestation::getSerialIdentifierOfDevice(this->device);
-
-    this->channel = WirelessChannel::UNKNOWN;
+    this->serialID = Basestation::getSerialIdentifierOfDevice(this->device);
 
     // Start listen thread for incoming messages
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
-
-    // Current used channel is UNKNOWN, so already send a message that requests this channel
-    if (!this->requestChannelOfBasestation()) {
-        std::cout << "Could not send request for channel of basestation. You might want to replug this device" << std::endl;
-    }
 }
 
 Basestation::~Basestation() {
@@ -71,19 +61,24 @@ Basestation::~Basestation() {
 
 bool Basestation::operator==(libusb_device* otherDevice) const {
     // Compare the serial identifier of the other device with this device
-    uint8_t otherSerialIdentifier = Basestation::getSerialIdentifierOfDevice(otherDevice);
-    return this->serialIdentifier == otherSerialIdentifier;
+    uint8_t otherSerialID = Basestation::getSerialIdentifierOfDevice(otherDevice);
+    return this->serialID == otherSerialID;
+}
+bool Basestation::operator==(uint8_t otherBasestationSerialID) const {
+    return otherBasestationSerialID == this->serialID;
 }
 bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
     return otherBasestation != nullptr
-        && this->serialIdentifier == otherBasestation->serialIdentifier;
+        && this->serialID == otherBasestation->serialID;
 }
 
 bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
-void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, WirelessChannel)> callback) { this->incomingMessageCallback = callback; }
+void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, uint8_t serialID)> callback) { this->incomingMessageCallback = callback; }
 
-WirelessChannel Basestation::getChannel() const { return this->channel; }
+uint8_t Basestation::getSerialID() const {
+    return this->serialID;
+}
 
 bool Basestation::isDeviceABasestation(libusb_device* device) {
     libusb_device_descriptor descriptor;
@@ -96,84 +91,23 @@ bool Basestation::isDeviceABasestation(libusb_device* device) {
     return descriptor.idVendor == BASESTATION_VENDOR_ID && descriptor.idProduct == BASESTATION_PRODUCT_ID;
 }
 
-bool Basestation::wirelessChannelToREMChannel(WirelessChannel channel) {
-    bool remChannel;
-    switch (channel) {
-        case WirelessChannel::BLUE_CHANNEL:
-            remChannel = true;
-            break;
-        case WirelessChannel::YELLOW_CHANNEL:
-            remChannel = false;
-            break;
-        default:
-            remChannel = false;
-            break;
-    }
-
-    return remChannel;
-}
-
-WirelessChannel Basestation::remChannelToWirelessChannel(bool channel) { return channel ? WirelessChannel::BLUE_CHANNEL : WirelessChannel::YELLOW_CHANNEL; }
-
-std::string Basestation::wirelessChannelToString(WirelessChannel channel) {
-    switch (channel) {
-        case WirelessChannel::BLUE_CHANNEL:
-            return "blue channel";
-        case WirelessChannel::YELLOW_CHANNEL:
-            return "yellow channel";
-        default:
-            return "unknown channel";
-    }
-}
-
 void Basestation::listenForIncomingMessages() {
-    // The incoming data will be written to this message object
+    // The incoming data will keep being written to this message object over and over
     BasestationMessage incomingMessage;
 
     while (this->shouldListenForIncomingMessages) {
         bool hasReadMessage = this->readBasestationMessage(incomingMessage);
         if (hasReadMessage) {
-            this->handleIncomingMessage(incomingMessage);
+            // TODO: Protect callback with mutex. Other threads are theoretically able to set the callback to nullptr,
+            // so at this point, calling the callback could result in error.
+            if (this->incomingMessageCallback != nullptr) {
+                this->incomingMessageCallback(incomingMessage, this->serialID);
+            }
         } else {
             // If an error occured, try waiting a while before reading again
             std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_ON_TRANSFER_IN_ERROR_MS));
         }
     }
-}
-
-// Assumes a payload size bigger than 0
-void Basestation::handleIncomingMessage(const BasestationMessage& message) {
-    // If a basestation configuration is received, update channel of this basestation class
-    if (message.payloadBuffer[0] == PACKET_TYPE_BASESTATION_CONFIGURATION) {
-        BasestationConfigurationPayload configurationPayload;
-        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_BASESTATION_CONFIGURATION);
-
-        BasestationConfiguration basestationConfiguration;
-        decodeBasestationConfiguration(&basestationConfiguration, &configurationPayload);
-
-        WirelessChannel usedChannel = Basestation::remChannelToWirelessChannel(basestationConfiguration.channel);
-        this->channel = usedChannel;
-    }
-
-    // And in any case, just forward the message to the callback
-    if (this->incomingMessageCallback != nullptr) {
-        this->incomingMessageCallback(message, this->channel);
-    }
-}
-
-bool Basestation::requestChannelOfBasestation() {
-    BasestationGetConfiguration getConfigurationCommand;
-    getConfigurationCommand.header = PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
-
-    BasestationGetConfigurationPayload getConfigurationPayload;
-    encodeBasestationGetConfiguration(&getConfigurationPayload, &getConfigurationCommand);
-
-    BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_BASESTATION_GET_CONFIGURATION;
-    std::memcpy(message.payloadBuffer, getConfigurationPayload.payload, message.payloadSize);
-
-    bool sentMessage = this->writeBasestationMessage(message);
-    return sentMessage;
 }
 
 bool Basestation::readBasestationMessage(BasestationMessage& message) const {

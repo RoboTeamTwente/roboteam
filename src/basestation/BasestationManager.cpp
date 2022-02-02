@@ -84,7 +84,7 @@ void BasestationManager::listenForBasestationPlugs() {
 
         std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
 
-        this->basestationCollection->updateBasestationList(basestationDevices);
+        this->basestationCollection->updateBasestationCollection(basestationDevices);
 
         // Free the list of devices
         libusb_free_device_list(device_list, true);

@@ -36,6 +36,7 @@ class Basestation {
    private:
     libusb_device* device;              // Corresponds to the basestation itself
     libusb_device_handle* deviceHandle; // Handle on which IO can be performed
+    // TODO: Make identifier object that combines serial ID and usb port address
     uint8_t serialID;                   // Unique identifier of basestations, used for comparing
 
     bool shouldListenForIncomingMessages;

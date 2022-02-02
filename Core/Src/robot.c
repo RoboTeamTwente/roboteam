@@ -43,9 +43,6 @@ MTi_data* MTi;
 uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
 uint8_t message_buffer_out[127];
 
-
-char dibs[499404];
-
 /* File-local containers */
 static RobotCommandPayload robotCommandPayload = {0};
 static RobotBuzzerPayload robotBuzzerPayload = {0};
@@ -170,12 +167,16 @@ void init(void){
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
-	LOG("[init] Last programmed on " __DATE__ "\n");
-
 	/* Read ID from switches */
-	ROBOT_ID = get_Id();
-	LOG_printf("[init] ROBOT_ID %d\n", ROBOT_ID);
+	ROBOT_ID = get_Id();	
 	set_Pin(LED0_pin, 1);
+
+	LOG_init();
+
+	LOG("[init] Last programmed on " __DATE__ "\n");
+	LOG_printf("[init] ROBOT_ID %d\n", ROBOT_ID);
+
+	LOG_sendAll();
 
 	/* Read jumper */
 	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
@@ -207,7 +208,6 @@ void init(void){
     dribbler_Init();
     if(ballSensor_Init()) LOG("Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
-		
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	if(read_Pin(IN2_pin)){
@@ -217,6 +217,7 @@ void init(void){
 		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
 		LOG("[init] YELLOW CHANNEL\n");
 	}
+	LOG_sendAll();
     
 	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
     setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
@@ -231,10 +232,12 @@ void init(void){
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
 	}
+	
 	set_Pin(LED5_pin, 1);
 
 	LOG("[init] Initialized\n");
-    
+	LOG_sendAll();
+
 	/* Initialize watchdog (resets system after it has crashed) */
 	IWDG_Init(iwdg); 
 
@@ -258,10 +261,7 @@ void loop(void){
 	counter_loop++;
 
 	/* Send anything in the log buffer over UART */
-	if(0 < strlen(logBuffer)){
-		HAL_UART_Transmit(UART_PC, (uint8_t*) logBuffer, strlen(logBuffer), 10);
-		logBuffer[0] = '\0';
-	}
+	// LOG_send();
 	
 	// If a RobotCommand came in via UART
 	if(robotCommandIsFresh == 1){
@@ -344,9 +344,9 @@ void loop(void){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_17ms < now) heartbeat_17ms += 17;
 
-		encodeRobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+		// encodeRobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
 		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO, 2);
-		HAL_UART_Transmit_DMA(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO);
+		// HAL_UART_Transmit_DMA(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO);
 	}	
 
     // Heartbeat every 100ms	

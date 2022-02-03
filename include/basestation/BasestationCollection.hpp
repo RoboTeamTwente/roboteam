@@ -51,6 +51,8 @@ class BasestationCollection {
     bool shouldUpdateBasestationSelection;
     std::thread basestationSelectionUpdaterThread;
     void updateBasestationSelection();
+    void removeOldBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices);
+    void addNewBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices);
 
     void askChannelOfBasestationsWithUnknownChannel();
     // Gets list of basestations that could be selected as the blue or yellow basestation

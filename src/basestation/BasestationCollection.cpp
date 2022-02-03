@@ -22,9 +22,12 @@ BasestationCollection::~BasestationCollection() {
     }
 }
 
-// Updates current basestations list by comparing it with the given plugged-in basestation devices list
 void BasestationCollection::updateBasestationCollection(const std::vector<libusb_device*>& pluggedBasestationDevices) {
-    // Remove basestations that are not plugged in anymore
+    this->removeOldBasestations(pluggedBasestationDevices);
+    this->addNewBasestations(pluggedBasestationDevices);
+}
+
+void BasestationCollection::removeOldBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices) {
     auto iterator = this->basestations.begin();
     while (iterator != this->basestations.end()) {
         auto basestation = *iterator;
@@ -45,7 +48,9 @@ void BasestationCollection::updateBasestationCollection(const std::vector<libusb
             ++iterator;
         }
     }
+}
 
+void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices) {
     auto callbackForNewBasestations = [&](const BasestationMessage& message, uint8_t serialID) {
         this->onMessageFromBasestation(message, serialID);
     };

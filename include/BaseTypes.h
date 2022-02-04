@@ -7,6 +7,8 @@
 #ifndef __BASETYPES_H
 #define __BASETYPES_H
 
+#include <stdint.h>
+
 #define LOCAL_REM_VERSION 5
 
 #define PACKET_TYPE_ROBOT_COMMAND                                    0b00001111 // 15 
@@ -99,7 +101,7 @@
 #define PACKET_TYPE_BASESTATION_SET_CONFIGURATION                    0b10101010 // 170 
 #define PACKET_SIZE_BASESTATION_SET_CONFIGURATION                    2
 
-uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
+static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_ROBOT_COMMAND                                   ) return PACKET_SIZE_ROBOT_COMMAND                                   ;
     if(type == PACKET_TYPE_ROBOT_FEEDBACK                                  ) return PACKET_SIZE_ROBOT_FEEDBACK                                  ;
     if(type == PACKET_TYPE_ROBOT_STATE_INFO                                ) return PACKET_SIZE_ROBOT_STATE_INFO                                ;

@@ -112,6 +112,8 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 		begin_string += "#ifndef __BASETYPES_H\n"
 		begin_string += "#define __BASETYPES_H\n"
 		begin_string += "\n"
+		begin_string += "#include <stdint.h>\n"
+		begin_string += "\n"
 		return begin_string
 
 	def to_end(self):
@@ -121,7 +123,7 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 		return f"#define {variable_name} {value}"
 
 	def to_type_size_mapping(self, type_to_size):
-		function = """uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){\n"""
+		function = """static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){\n"""
 		for _type, size in type_to_size:
 			function += f"    if(type == {_type}) return {size};\n"
 		function += """    return 0;\n"""

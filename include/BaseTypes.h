@@ -99,4 +99,19 @@
 #define PACKET_TYPE_BASESTATION_SET_CONFIGURATION                    0b10101010 // 170 
 #define PACKET_SIZE_BASESTATION_SET_CONFIGURATION                    2
 
+uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
+    if(type == PACKET_TYPE_ROBOT_COMMAND                                   ) return PACKET_SIZE_ROBOT_COMMAND                                   ;
+    if(type == PACKET_TYPE_ROBOT_FEEDBACK                                  ) return PACKET_SIZE_ROBOT_FEEDBACK                                  ;
+    if(type == PACKET_TYPE_ROBOT_STATE_INFO                                ) return PACKET_SIZE_ROBOT_STATE_INFO                                ;
+    if(type == PACKET_TYPE_ROBOT_BUZZER                                    ) return PACKET_SIZE_ROBOT_BUZZER                                    ;
+    if(type == PACKET_TYPE_BASESTATION_STATISTICS                          ) return PACKET_SIZE_BASESTATION_STATISTICS                          ;
+    if(type == PACKET_TYPE_BASESTATION_GET_STATISTICS                      ) return PACKET_SIZE_BASESTATION_GET_STATISTICS                      ;
+    if(type == PACKET_TYPE_BASESTATION_LOG                                 ) return PACKET_SIZE_BASESTATION_LOG                                 ;
+    if(type == PACKET_TYPE_ROBOT_LOG                                       ) return PACKET_SIZE_ROBOT_LOG                                       ;
+    if(type == PACKET_TYPE_BASESTATION_GET_CONFIGURATION                   ) return PACKET_SIZE_BASESTATION_GET_CONFIGURATION                   ;
+    if(type == PACKET_TYPE_BASESTATION_CONFIGURATION                       ) return PACKET_SIZE_BASESTATION_CONFIGURATION                       ;
+    if(type == PACKET_TYPE_BASESTATION_SET_CONFIGURATION                   ) return PACKET_SIZE_BASESTATION_SET_CONFIGURATION                   ;
+    return 0;
+}
+
 #endif /*__BASETYPES_H*/

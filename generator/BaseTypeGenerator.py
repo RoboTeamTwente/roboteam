@@ -49,18 +49,21 @@ class BaseTypeGenerator:
 
 		file_string += self.to_constant("LOCAL_REM_VERSION", version) + "\n\n"
 
+		type_to_size = []
+
 		for iPacket, packet_name in enumerate(packets.keys()):
 			variables = packets[packet_name]
 			total_bits = sum([variable[1] for variable in variables])
 			total_bytes = math.ceil(total_bits / 8)
-			
 			PACKET_NAME = CamelCaseToUpper(packet_name)
 
-			VARIABLE_NAME = f"PACKET_TYPE{PACKET_NAME}".ljust(60)
-			file_string += f"{self.to_constant(VARIABLE_NAME, codewords[iPacket])} {c} {str(int(codewords[iPacket], 2))} \n"
+			VARIABLE_NAME_TYPE = f"PACKET_TYPE{PACKET_NAME}".ljust(60)
+			file_string += f"{self.to_constant(VARIABLE_NAME_TYPE, codewords[iPacket])} {c} {str(int(codewords[iPacket], 2))} \n"
 
-			VARIABLE_NAME = f"PACKET_SIZE{PACKET_NAME}".ljust(60)
-			file_string += self.to_constant(VARIABLE_NAME, total_bytes) + "\n"
+			VARIABLE_NAME_SIZE = f"PACKET_SIZE{PACKET_NAME}".ljust(60)
+			file_string += self.to_constant(VARIABLE_NAME_SIZE, total_bytes) + "\n"
+
+			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
 
 			for variable, n_bits, _range, _ in variables:
 				if _range is None: continue
@@ -71,8 +74,11 @@ class BaseTypeGenerator:
 
 			file_string += "\n"
 
-		file_string += self.to_end()
+		file_string += self.to_type_size_mapping(type_to_size)
+		file_string += "\n"
 
+		file_string += self.to_end()
+		
 		return file_string
 
 	def begin_block_comment(self):
@@ -88,6 +94,9 @@ class BaseTypeGenerator:
 		return ""
 
 	def to_constant(self, variable_name, value):
+		raise NotImplementedError()
+
+	def to_type_size_mapping(self, type_to_size):
 		raise NotImplementedError()
 
 class C_BaseTypeGenerator(BaseTypeGenerator):
@@ -111,6 +120,14 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 	def to_constant(self, variable_name, value):
 		return f"#define {variable_name} {value}"
 
+	def to_type_size_mapping(self, type_to_size):
+		function = """uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){\n"""
+		for _type, size in type_to_size:
+			function += f"    if(type == {_type}) return {size};\n"
+		function += """    return 0;\n"""
+		function += """}\n"""
+		return function
+
 class Python_BaseTypeGenerator(BaseTypeGenerator):
 	def begin_block_comment(self):
 		return '"""'
@@ -122,7 +139,13 @@ class Python_BaseTypeGenerator(BaseTypeGenerator):
 	def to_constant(self, variable_name, value):
 		return f"{variable_name} = {value}"
 
-
+	def to_type_size_mapping(self, type_to_size):
+		function = """def PACKET_TYPE_TO_SIZE(type):\n"""
+		for _type, size in type_to_size:
+			function += f"    if type == {_type}: return {size}\n"
+		function += """    return 0\n"""
+		function += """\n"""
+		return function
 
 # codewords = [
 # 	              "0b00001111", "0b00110011", "0b00111100",
@@ -281,7 +304,8 @@ if __name__ == "__main__":
 	gp = Python_BaseTypeGenerator()
 
 	print("\n")
-	print(gc.generate(packets))
+	print(gc.generate(packets, 0))
+	# gc.generate(packets, 0)
 
-	print("\n")
-	print(gp.generate(packets))
+	# print("\n")
+	# print(gp.generate(packets))

@@ -34,7 +34,7 @@
 #define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
 
 static bool SEND_ROBOT_STATE_INFO = false;
-static const bool USE_PUTTY = true;
+static const bool USE_PUTTY = false;
 
 SX1280* SX;
 MTi_data* MTi;

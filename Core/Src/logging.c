@@ -14,7 +14,14 @@
 static char printf_buffer[1024]; 
 static char log_buffer[1024];
 
+static uint8_t LOG_RAW_REM_SUPPORTED[] = {
+    PACKET_TYPE_ROBOT_COMMAND,
+    PACKET_TYPE_ROBOT_FEEDBACK,
+    PACKET_TYPE_ROBOT_STATE_INFO
+};
+
 typedef struct _MessageContainer {
+    uint8_t length;
     uint8_t payload[127];
 } MessageContainer;
 
@@ -29,10 +36,6 @@ void LOG_init(){
     buffer_indexer = CircularBuffer_init(true, LOG_MAX_MESSAGES);
 
     while(HAL_UART_GetState(UART_PC) != HAL_UART_STATE_READY);
-
-    sprintf(log_buffer, "LOG_init!\n");
-    while(UART_PC->gState != HAL_UART_STATE_READY);
-    HAL_UART_Transmit(UART_PC, log_buffer, strlen(log_buffer), 50);
 
     log_initialized = true;
 }
@@ -63,32 +66,29 @@ void LOG(char *message){
 
     // Get message length
     uint32_t message_length = strlen(message);  
-    // Clip the message length to 127, as to not overflow the MessageContainer buffer
-    if(127 < message_length) message_length = 127;
+    // Clip the message length to 127 - PACKET_SIZE_ROBOT_LOG, as to not overflow the MessageContainer buffer
+    if(127 - PACKET_SIZE_ROBOT_LOG < message_length) message_length = 127 - PACKET_SIZE_ROBOT_LOG;
     // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the RobotLog_message_length field)
     message[message_length-1] = '\n';
 
-    MessageContainer* message_container = &message_buffer[buffer_indexer->indexWrite];
+    // Get the current write position, and increment ASAP, to (hopefully) prevent race conditions
+    uint32_t index_write = buffer_indexer->indexWrite;
     CircularBuffer_write(buffer_indexer, NULL, 1);
+    
+    // Get the message container and its payload
+    MessageContainer* message_container = &message_buffer[index_write];
     uint8_t* payload = message_container->payload;
 
     RobotLog_set_header((RobotLogPayload*) payload, PACKET_TYPE_ROBOT_LOG);  // 8 bits
     RobotLog_set_remVersion((RobotLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
     RobotLog_set_id((RobotLogPayload*) payload, ROBOT_ID);                   // 4 bits
     RobotLog_set_message_length((RobotLogPayload*) payload, message_length); // 8 bits
-                                                                                       // = 3 bytes
+                                                                            // = 3 bytes
  
     // Copy the message into the message container, next to the RobotLog header
     memcpy(payload + PACKET_SIZE_ROBOT_LOG, message, message_length);
+    message_container->length = PACKET_SIZE_ROBOT_LOG + message_length;
     
-    // // Wait until the UART interface is free to use
-    // while(UART_PC->gState != HAL_UART_STATE_READY);
-    // // Disabling and enabling all interrupts seems to fix the code from hanging when this code is called from an IRQ
-    // __disable_irq();
-    // // Transmit the data to the computer
-    // HAL_UART_Transmit(UART_PC, log_buffer, PACKET_SIZE_ROBOT_LOG + message_length, 10);
-    // __enable_irq();
-    // // HAL_UART_Transmit_DMA(UART_PC, log_buffer, robotlog_length + message_length);
 }
 
 void LOG_send(){
@@ -100,8 +100,7 @@ void LOG_send(){
     if(CircularBuffer_spaceFilled(buffer_indexer) == 0) return;
 
     MessageContainer* message_container = &message_buffer[buffer_indexer->indexRead];
-    uint32_t message_length = RobotLog_get_message_length((RobotLogPayload*) message_container);
-    HAL_UART_Transmit_DMA(UART_PC, message_container, PACKET_SIZE_ROBOT_LOG + message_length);
+    HAL_UART_Transmit_DMA(UART_PC, message_container->payload, message_container->length);
     CircularBuffer_read(buffer_indexer, NULL, 1);
 
 }

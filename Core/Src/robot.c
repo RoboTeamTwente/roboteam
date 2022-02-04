@@ -173,9 +173,10 @@ void init(void){
 
 	LOG_init();
 
-	LOG("[init] Last programmed on " __DATE__ "\n");
-	LOG_printf("[init] ROBOT_ID %d\n", ROBOT_ID);
-
+	LOG("[init:"STRINGIZE(__LINE__)"] Last programmed on " __DATE__ "\n");
+	LOG("[init:"STRINGIZE(__LINE__)"] GIT: " STRINGIZE(__GIT_STRING__) "\n");
+	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d;\n", LOCAL_REM_VERSION);
+	LOG_printf("[init:"STRINGIZE(__LINE__)"] ROBOT_ID: %d\n", ROBOT_ID);
 	LOG_sendAll();
 
 	/* Read jumper */
@@ -186,6 +187,11 @@ void init(void){
 	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
 	set_Pin(LED1_pin, 1);
+
+	// if(!__GIT_DEVELOPMENT__){
+	// 	buzzer_Play_WarningTwo();
+	// 	HAL_Delay(3000);
+	// }
 
 	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
 	if(USE_PUTTY){
@@ -206,16 +212,16 @@ void init(void){
     stateEstimation_Init();
     shoot_Init();
     dribbler_Init();
-    if(ballSensor_Init()) LOG("Ballsensor initialized\n");
+    if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	if(read_Pin(IN2_pin)){
 		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
-		LOG("[init] BLUE CHANNEL\n");
+		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
 		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
-		LOG("[init] YELLOW CHANNEL\n");
+		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
 	}
 	LOG_sendAll();
     
@@ -225,17 +231,17 @@ void init(void){
 	set_Pin(LED4_pin, 1);
 
 	/* Initialize the XSens chip */
-	LOG("[init] Initializing XSens\n");
+	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
     MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
     if(MTi == NULL){
-		LOG("[init] Failed to initialize XSens\n");
+		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
 	}
 	
 	set_Pin(LED5_pin, 1);
 
-	LOG("[init] Initialized\n");
+	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 	LOG_sendAll();
 
 	/* Initialize watchdog (resets system after it has crashed) */

@@ -467,7 +467,7 @@ static Xsens_Status processAck(MTi_data* MTi){
 static Xsens_Status PrintOutputConfig(struct XbusMessage* message){
 	if (!message) return Xsens_Failed_Debug;
 	if(MT_DEBUG){
-		LOG("[XSens] PrintOutputConfig:\n");
+		LOG("[XSens:"STRINGIZE(__LINE__)"] PrintOutputConfig:\n");
 		uint16_t data = 0;
 		if((data = XbusMessage_getOutputFreq(XDI_Temperature, message)))
 			LOG_printf("[XSens] XDI_Temperature:%u\n\r", data);

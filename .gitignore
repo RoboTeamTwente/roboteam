@@ -16,3 +16,4 @@ Drivers
 *.ld
 
 python_utils/rem/*
+*.code-workspace

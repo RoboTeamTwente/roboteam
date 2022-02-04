@@ -56,7 +56,7 @@ void wheels_Init(){
 
 	/* Initialize wheel controllers */
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		initPID(&wheelsK[wheel], 7.0, 0.0, 0.0);
+		initPID(&wheelsK[wheel], 4.5, 0.0, 0.0);
 	}
 
 	/* Set PWM of wheels to 0, to prevent robot from suddenly shooting forward */

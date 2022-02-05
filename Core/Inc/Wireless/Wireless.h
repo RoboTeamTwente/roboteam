@@ -19,6 +19,18 @@
 #define WIRELESS_DEFAULT_FEEDBACK_CHANNEL -5	// 2.395 GHz
 #define WIRELESS_DEFAULT_COMMAND_CHANNEL -15 // 2.385 GHz
 
+#define WIRELESS_YELLOW_CHANNELS 0
+#define WIRELESS_BLUE_CHANNELS 1
+
+#define WIRELESS_YELLOW_FEEDBACK_CHANNEL -5 // 2.395 GHz
+#define WIRELESS_YELLOW_COMMAND_CHANNEL -15 // 2.385 GHz
+#define WIRELESS_BLUE_FEEDBACK_CHANNEL -25
+#define WIRELESS_BLUE_COMMAND_CHANNEL -35
+
+typedef enum WIRELESS_CHANNEL {
+    YELLOW_CHANNEL = 0,
+    BLUE_CHANNEL = 1
+} WIRELESS_CHANNEL;
 
 extern uint32_t robot_syncWord[];
 
@@ -118,5 +130,8 @@ Wireless_Error WaitForPacketContinuous(Wireless* w);
 // Callback functions for Hardware entry
 Wireless_Error Wireless_IRQ_Handler(Wireless* w);
 Wireless_Error Wireless_DMA_Handler(Wireless* w);
+
+void SX1280_updateChannel(WIRELESS_CHANNEL channel);
+WIRELESS_CHANNEL SX1280_getCurrentChannel();
 
 #endif /* WIRELESS_WIRELESS_H_ */

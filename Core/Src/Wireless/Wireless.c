@@ -69,6 +69,8 @@ uint32_t robot_syncWord[] = {
 0xC39CE79C, 0xC7BDEFBD, 0xCBDEF7DE, 0xCFFFFFFF
 };
 
+volatile static WIRELESS_CHANNEL currentChannel = YELLOW_CHANNEL;
+
 // init structs
 const SX1280_Settings SX1280_DEFAULT_SETTINGS = {
         .TXpower = 31, // -18 + txPower = transmit power in dBm (13dBm max)

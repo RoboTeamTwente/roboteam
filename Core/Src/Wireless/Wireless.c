@@ -170,9 +170,30 @@ Wireless_Error Wireless_setPrintCallback(Wireless* w, Wireless_printf* func){
 }
 
 // runtime settings functions
-Wireless_Error Wireless_setChannelPair(Wireless* w, int32_t TXchannel, int32_t RXchannel){
-    w->TXchannel = TXchannel;
-    w->RXchannel = RXchannel;
+Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
+    switch (channel){
+    case YELLOW_CHANNEL:
+        w->TXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
+        w->RXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        break;
+    case BLUE_CHANNEL:
+        w->TXchannel = WIRELESS_BLUE_FEEDBACK_CHANNEL;
+        w->RXchannel = WIRELESS_BLUE_COMMAND_CHANNEL;
+        break;
+    default:
+        w->TXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
+        w->RXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        break;
+    }
+    // If the robot was in receiving mode, switch to the new frequency and continue receiving
+    if(w->state == WIRELESS_RECEIVING){
+        setChannel(w->Interface, w->RXchannel);
+        if(w->continuousreceive){
+            WaitForPacketContinuous(w);
+        }else{
+            WaitForPacket(w);
+        }
+    }
     return WIRELESS_OK;
 }
 
@@ -299,24 +320,29 @@ Wireless_Error ReadPacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Read
 // write to buffer before calling TransmitPacket, otherwise the previous packet will be send
 Wireless_Error TransmitPacket(Wireless* w){
     w->state = WIRELESS_TRANSMITTING;
+    setChannel(w->Interface, w->TXchannel);
     setTX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
+    return WIRELESS_OK;
 }
 Wireless_Error WaitForPacket(Wireless* w){
     w->state = WIRELESS_RECEIVING;
     w->continuousreceive = false;
+    setChannel(w->Interface, w->RXchannel);
     setRX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
+    return WIRELESS_OK;
 }
 Wireless_Error WaitForPacketContinuous(Wireless* w){
     w->state = WIRELESS_RECEIVING;
     w->continuousreceive = true;
+    setChannel(w->Interface, w->RXchannel);
     setRX(w->Interface, w->Settings.periodBase, 0xFFFF);
+    return WIRELESS_OK;
 }
 
 // -------------------------------------------- Handlers
 Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     uint16_t irq;
     SX1280_Packet_Status ps;
-    SX1280_RX_Buffer_Status bs;
     getIRQ(w->Interface, &irq);
     
     clearIRQ(w->Interface,IRQ_ALL);
@@ -433,4 +459,5 @@ Wireless_Error validateCommand(Wireless* w){
     default:
         break;
     }
+    return WIRELESS_OK;
 }

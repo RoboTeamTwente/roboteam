@@ -121,7 +121,7 @@ void init(){
       //TODO: What do?
       while(1);
     }
-    Wireless_setChannelPair(SX_TX, WIRELESS_DEFAULT_COMMAND_CHANNEL, WIRELESS_DEFAULT_FEEDBACK_CHANNEL);
+    Wireless_setChannel(SX_TX, YELLOW_CHANNEL);
     
     // Init SX_RX
     LOG("[init] Initializing SX_RX\n");
@@ -135,7 +135,7 @@ void init(){
       while(1);
     }
     // TODO: Use proper defines
-    Wireless_setChannelPair(SX_RX, WIRELESS_DEFAULT_COMMAND_CHANNEL, WIRELESS_DEFAULT_FEEDBACK_CHANNEL);
+    Wireless_setChannel(SX_RX, YELLOW_CHANNEL);
     // Set SX_RX syncword to basestation syncword
     uint32_t syncwords[2] = {robot_syncWord[16],0};
     Wireless_setRXSyncwords(SX_RX, syncwords);
@@ -400,7 +400,8 @@ void handleBasestationSetConfiguration(uint8_t* packet_buffer){
   }
 
   WIRELESS_CHANNEL newChannel = BasestationSetConfiguration_get_channel((BasestationSetConfigurationPayload*) packet_buffer);
-  SX1280_updateChannel(newChannel);
+  Wireless_setChannel(SX_TX, newChannel);
+  Wireless_setChannel(SX_RX, newChannel);
 }
 
 /**

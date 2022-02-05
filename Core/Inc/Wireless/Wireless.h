@@ -111,7 +111,7 @@ Wireless_Error Wireless_setPrint_Callback(Wireless* w, Wireless_printf* func);
 Wireless_Error Wireless_setIRQ_Callbacks(Wireless* w, Wireless_IRQcallbacks* irqcallbacks);
 
 // runtime settings functions
-Wireless_Error Wireless_setChannelPair(Wireless* w, int32_t TXchannel, int32_t RXchannel);
+Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel);
 Wireless_Error Wireless_setTXSyncword(Wireless* w, uint32_t syncword);
 Wireless_Error Wireless_setRXSyncwords(Wireless* w, uint32_t syncwords[2]);
 

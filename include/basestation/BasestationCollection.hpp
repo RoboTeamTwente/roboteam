@@ -34,18 +34,28 @@ class BasestationCollection {
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback);
 
     // Prints the current status of the collection directly to the console
-    void printCollection() const;
+    void printCollection();
 
    private:
     // Collection and selection of basestations
+    std::mutex basestationsMutex; // Guards the basestations vector
     std::vector<std::shared_ptr<Basestation>> basestations; // All basestations
+    std::vector<std::shared_ptr<Basestation>> getAllBasestations();
+
+    std::mutex basestationSelectionMutex; // Guards both selected basestations
     std::shared_ptr<Basestation> yellowBasestation; // Basestation selected for yellow team
     std::shared_ptr<Basestation> blueBasestation; // Basestation selected for blue team
-    // TODO: Make basestations and yellow and blue basestation thread safe
+
+    std::shared_ptr<Basestation> getSelectedBasestation(utils::TeamColor colorOfBasestation);
+    void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
 
     // Keeps track of which basestation has which wireless channel
-    std::map<uint8_t, WirelessChannel> basestationIdToWirelessChannel;
-    WirelessChannel getWirelessChannelOfBasestation(uint8_t serialId) const;
+    std::map<uint8_t, WirelessChannel> basestationIdToChannel;
+    std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
+    
+    WirelessChannel getChannelOfBasestation(uint8_t serialId);
+    void setChannelOfBasestation(uint8_t serialId, WirelessChannel newChannel);
+    void removeBasestationIdToChannelEntry(uint8_t serialId);
 
     // Updating the basestation selection
     bool shouldUpdateBasestationSelection;
@@ -56,7 +66,7 @@ class BasestationCollection {
 
     void askChannelOfBasestationsWithUnknownChannel();
     // Gets list of basestations that could be selected as the blue or yellow basestation
-    std::vector<std::shared_ptr<Basestation>> getSelectableBasestations() const;
+    std::vector<std::shared_ptr<Basestation>> getSelectableBasestations();
     // Sends a channel change request to the given basestation to change to the given channel
     bool sendChannelChangeRequest(std::shared_ptr<Basestation> basestation, WirelessChannel newChannel);
 

@@ -50,12 +50,12 @@ class BasestationCollection {
     void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
 
     // Keeps track of which basestation has which wireless channel
-    std::map<uint8_t, WirelessChannel> basestationIdToChannel;
+    std::map<const BasestationIdentifier&, WirelessChannel> basestationIdToChannel;
     std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
     
-    WirelessChannel getChannelOfBasestation(uint8_t serialId);
-    void setChannelOfBasestation(uint8_t serialId, WirelessChannel newChannel);
-    void removeBasestationIdToChannelEntry(uint8_t serialId);
+    WirelessChannel getChannelOfBasestation(const BasestationIdentifier& basestationId);
+    void setChannelOfBasestation(const BasestationIdentifier& basestationId, WirelessChannel newChannel);
+    void removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId);
 
     // Updating the basestation selection
     bool shouldUpdateBasestationSelection;
@@ -75,7 +75,7 @@ class BasestationCollection {
     bool unselectIncorrectlySelectedBasestations(); // Returns whether it unselected basestations
 
     std::mutex messageCallbackMutex; // Guards the messageFromBasestationCallback
-    void onMessageFromBasestation(const BasestationMessage& message, uint8_t serialID);
+    void onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId);
     std::function<void(const BasestationMessage&, utils::TeamColor color)> messageFromBasestationCallback;
 
     static WirelessChannel getWirelessChannelCorrespondingTeamColor(utils::TeamColor color);

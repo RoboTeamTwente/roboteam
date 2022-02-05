@@ -16,7 +16,19 @@ constexpr unsigned int TRANSFER_IN_TIMEOUT_MS = 100;         // Timeout for read
 constexpr unsigned int TRANSFER_OUT_TIMEOUT_MS = 500;        // Timeout for writing messages
 constexpr unsigned int PAUSE_ON_TRANSFER_IN_ERROR_MS = 100;  // Pause every time a read fails
 
-Basestation::Basestation(libusb_device* device) : device(device) {
+bool BasestationIdentifier::operator==(const BasestationIdentifier& other) const {
+    return this->usbAddress == other.usbAddress
+        && this->serialIdentifier == other.serialIdentifier;
+}
+bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const {
+    if (this->usbAddress == other.usbAddress) {
+        return this->serialIdentifier < other.serialIdentifier;
+    } else {
+        return this->usbAddress < other.usbAddress;
+    }
+}
+
+Basestation::Basestation(libusb_device* device) : device(device), identifier(getIdentifierOfDevice(device)) {
     if (!Basestation::isDeviceABasestation(device)) {
         throw FailedToOpenDeviceException("Device is not a basestation");
     }
@@ -40,8 +52,6 @@ Basestation::Basestation(libusb_device* device) : device(device) {
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
-    this->serialID = Basestation::getSerialIdentifierOfDevice(this->device);
-
     // Start listen thread for incoming messages
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
@@ -61,23 +71,24 @@ Basestation::~Basestation() {
 
 bool Basestation::operator==(libusb_device* otherDevice) const {
     // Compare the serial identifier of the other device with this device
-    uint8_t otherSerialID = Basestation::getSerialIdentifierOfDevice(otherDevice);
-    return this->serialID == otherSerialID;
+    BasestationIdentifier otherIdentifier = Basestation::getIdentifierOfDevice(otherDevice);
+
+    return this->identifier == otherIdentifier;
 }
-bool Basestation::operator==(uint8_t otherBasestationSerialID) const {
-    return otherBasestationSerialID == this->serialID;
+bool Basestation::operator==(const BasestationIdentifier& otherBasestationIdentifier) const {
+    return this->identifier == otherBasestationIdentifier;
 }
 bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
     return otherBasestation != nullptr
-        && this->serialID == otherBasestation->serialID;
+        && this->identifier == otherBasestation->identifier;
 }
 
 bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
-void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, uint8_t serialID)> callback) { this->incomingMessageCallback = callback; }
+void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback) { this->incomingMessageCallback = callback; }
 
-uint8_t Basestation::getSerialID() const {
-    return this->serialID;
+const BasestationIdentifier& Basestation::getIdentifier() const {
+    return this->identifier;
 }
 
 bool Basestation::isDeviceABasestation(libusb_device* device) {
@@ -101,7 +112,7 @@ void Basestation::listenForIncomingMessages() {
             // TODO: Protect callback with mutex. Other threads are theoretically able to set the callback to nullptr,
             // so at this point, calling the callback could result in error.
             if (this->incomingMessageCallback != nullptr) {
-                this->incomingMessageCallback(incomingMessage, this->serialID);
+                this->incomingMessageCallback(incomingMessage, this->identifier);
             }
         } else {
             // If an error occured, try waiting a while before reading again
@@ -140,10 +151,16 @@ bool Basestation::writeBasestationMessage(BasestationMessage& message) const {
     return error == LIBUSB_SUCCESS;
 }
 
-uint8_t Basestation::getSerialIdentifierOfDevice(libusb_device* device) {
+const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* device) {
     libusb_device_descriptor deviceDescriptor = {};
     libusb_get_device_descriptor(device, &deviceDescriptor);
-    return deviceDescriptor.iSerialNumber;
+
+    const BasestationIdentifier identifier = {
+        .usbAddress = libusb_get_device_address(device),
+        .serialIdentifier = deviceDescriptor.iSerialNumber
+    };
+
+    return identifier;
 }
 
 FailedToOpenDeviceException::FailedToOpenDeviceException(const std::string& message) : message(message) {}

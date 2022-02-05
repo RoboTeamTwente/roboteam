@@ -16,6 +16,14 @@ typedef struct BasestationMessage {
     uint8_t payloadBuffer[BASESTATION_MESSAGE_BUFFER_SIZE];
 } BasestationMessage;
 
+typedef struct BasestationIdentifier {
+    uint8_t usbAddress;
+    uint8_t serialIdentifier;
+
+    bool operator==(const BasestationIdentifier& other) const;
+    bool operator<(const BasestationIdentifier& other) const;
+} BasestationIdentifier;
+
 class Basestation {
    public:
     explicit Basestation(libusb_device* device);
@@ -23,33 +31,32 @@ class Basestation {
 
     // Compares the underlying device of this basestation with the given device
     bool operator==(libusb_device* device) const;
-    bool operator==(uint8_t otherBasestationSerialID) const; // Assumes serial id is that of a basestation device
+    bool operator==(const BasestationIdentifier& otherBasestationID) const;
     bool operator==(std::shared_ptr<Basestation> otherBasestation) const;
 
     bool sendMessageToBasestation(BasestationMessage& message) const;
-    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, uint8_t basestationID)> callback);
+    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback);
 
-    uint8_t getSerialID() const;
+    const BasestationIdentifier& getIdentifier() const;
 
     static bool isDeviceABasestation(libusb_device* device);
 
    private:
     libusb_device* device;              // Corresponds to the basestation itself
     libusb_device_handle* deviceHandle; // Handle on which IO can be performed
-    // TODO: Make identifier object that combines serial ID and usb port address
-    uint8_t serialID;                   // Unique identifier of basestations, used for comparing
+    const BasestationIdentifier identifier;   // An identifier object that uniquely represents this basestation
 
     bool shouldListenForIncomingMessages;
     std::thread incomingMessageListenerThread;
     void listenForIncomingMessages();
-    std::function<void(const BasestationMessage&, uint8_t basestationIdentifier)> incomingMessageCallback;
+    std::function<void(const BasestationMessage&, const BasestationIdentifier&)> incomingMessageCallback;
 
     // Reads a message directly from the basestation and stores it in the given message
     bool readBasestationMessage(BasestationMessage& message) const;
     // Writes the given message directly to the basestation
     bool writeBasestationMessage(BasestationMessage& message) const;
 
-    static uint8_t getSerialIdentifierOfDevice(libusb_device* device);
+    static const BasestationIdentifier getIdentifierOfDevice(libusb_device* device);
 };
 
 class FailedToOpenDeviceException : public std::exception {

@@ -36,6 +36,61 @@ char logBuffer[100];
 // global buffer that holds a single transmission that can be sent to the robot. Used in the timer1 callback
 uint8_t sendBuffer[MAX_PACKET_SIZE];
 
+/* SX data */
+// TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
+extern SX1280_Settings SX1280_DEFAULT_SETTINGS;
+static Wireless SX1280_TX = {0};
+static Wireless SX1280_RX = {0};
+static Wireless* SX_TX = &SX1280_TX;
+static Wireless* SX_RX = &SX1280_RX;
+static uint8_t SXTX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+static uint8_t SXTX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+static uint8_t SXRX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+static uint8_t SXRX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+
+static WirelessPacket txPacket;
+static WirelessPacket rxPacket;
+
+// The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
+SX1280_Interface SX_TX_Interface = {.SPI= &hspi1, .TXbuf= SXTX_TX_buffer, .RXbuf= SXTX_RX_buffer, .logger=NULL,};
+SX1280_Interface SX_RX_Interface = {.SPI= &hspi2, .TXbuf= SXRX_TX_buffer, .RXbuf= SXRX_RX_buffer, .logger=NULL,};
+
+void Wireless_Writepacket_Cplt(void){
+  TransmitPacket(SX_TX);
+}
+void Wireless_Readpacket_Cplt(void){
+  //handlePacket(..., SX_RX->payloadLength);
+  toggle_pin(LD_RX);
+};
+
+void Wireless_TXDone(SX1280_Packet_Status *status){
+  toggle_pin(LD_TX);
+}
+
+void Wireless_RXDone(SX1280_Packet_Status *status){
+  /* It is possible that random noise can trigger the syncword. 
+    * Syncword is 32 bits. Noise comes in at 2.4GHz. Syncword resets when wrong bit is received.
+    * Expected length of wrong syncword is 1*0.5 + 2*0.25 + 3*0.125 + ... = 2
+    * 2^32 combinations / (2400000000 / 2) syncwords = correct syncword every 3.57 seconds purely from noise
+  */
+  // Correct syncword from noise have a very weak signal 
+  // Threshold is at -160/2 = -80 dBm
+  if (status->RSSISync < 160) {
+    ReadPacket_DMA(SX_RX, &rxPacket, &Wireless_Readpacket_Cplt);
+    // not necessary to force WaitForPacket() here when configured in Rx Continuous mode
+  }
+}
+
+void Wireless_RXTXTimeout(void){
+  // Did not receive packet from robot. Should never be triggered, since the receiving SX is in continuous receiving mode
+  toggle_pin(LD_LED3);
+}
+
+Wireless_IRQcallbacks SXTX_IRQcallbacks = {.txdone= &Wireless_TXDone, .rxdone= NULL,              .rxtxtimeout= &Wireless_RXTXTimeout};
+Wireless_IRQcallbacks SXRX_IRQcallbacks = {.txdone= NULL,             .rxdone= &Wireless_RXDone,  .rxtxtimeout= &Wireless_RXTXTimeout};
+
+
+
 /* Flags */
 volatile bool flagHandleStatistics = false; 
 
@@ -50,17 +105,40 @@ uint32_t heartbeat_1000ms = 0;
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
     
+    // Init SX_TX
     LOG("[init] Initializing SX_TX\n");
-    SX_TX = Wireless_Init(WIRELESS_COMMAND_CHANNEL, &hspi1, 0);
+    Wireless_Error err;
+    SX_TX_Interface.BusyPin = SX_TX_BUSY;
+    SX_TX_Interface.CS= SX_TX_CS;
+    SX_TX_Interface.Reset= SX_TX_RST;
+    err = Wireless_setPrint_Callback(SX_TX, NULL);
+    err = Wireless_Init(SX_TX, SX1280_DEFAULT_SETTINGS, &SX_TX_Interface);
+    err = Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
+    if(err != WIRELESS_OK){
+      //TODO: What do?
+      while(1);
+    }
+    Wireless_setChannelPair(SX_TX, WIRELESS_DEFAULT_COMMAND_CHANNEL, WIRELESS_DEFAULT_FEEDBACK_CHANNEL);
     
+    // Init SX_RX
     LOG("[init] Initializing SX_RX\n");
-    SX_RX = Wireless_Init(WIRELESS_FEEDBACK_CHANNEL, &hspi2, 1);
-
+    SX_RX_Interface.BusyPin= SX_RX_BUSY;
+    SX_RX_Interface.CS= SX_RX_CS;
+    SX_RX_Interface.Reset= SX_RX_RST;
+    err = Wireless_Init(SX_RX, SX1280_DEFAULT_SETTINGS, &SX_RX_Interface);
+    err = Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
+    if(err != WIRELESS_OK){
+      //TODO: What do?
+      while(1);
+    }
+    // TODO: Use proper defines
+    Wireless_setChannelPair(SX_RX, WIRELESS_DEFAULT_COMMAND_CHANNEL, WIRELESS_DEFAULT_FEEDBACK_CHANNEL);
     // Set SX_RX syncword to basestation syncword
-    SX_RX->SX_settings->syncWords[0] = robot_syncWord[16];
-    setSyncWords(SX_RX, SX_RX->SX_settings->syncWords[0], 0x00, 0x00);
+    uint32_t syncwords[2] = {robot_syncWord[16],0};
+    Wireless_setRXSyncwords(SX_RX, syncwords);
+
     // Start listening on the SX_RX for packets from the robots
-    setRX(SX_RX, SX_RX->SX_settings->periodBase, 0xFFFF);
+    WaitForPacketContinuous(SX_RX);
 
     // Start the timer that is responsible for sending packets to the robots
     // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
@@ -369,14 +447,12 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
 
 /* Triggers when a call to HAL_SPI_TransmitReceive_DMA or HAL_SPI_TransmitReceive_IT (both non-blocking) completes */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
-  if(hspi->Instance == SX_TX->SPI->Instance){
+  if(hspi->Instance == SX_TX->Interface->SPI->Instance){
     Wireless_DMA_Handler(SX_TX);
     // SX_TX should never receive a packet so that's why we don't call handlePacket here.
 	}
-	if(hspi->Instance == SX_RX->SPI->Instance) {
+	if(hspi->Instance == SX_RX->Interface->SPI->Instance) {
     Wireless_DMA_Handler(SX_RX);
-    // First 3 bytes in the buffer are SX1280 status bytes, therefore +3
-    handlePacket(SX_RX->RXbuf+3, SX_RX->payloadLength);
 	}
 }
 
@@ -385,11 +461,11 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {  
   // SX that sends packets wants to tell us something
   if (GPIO_Pin == SX_TX_IRQ.PIN) {
-    Wireless_IRQ_Handler(SX_TX, 0, 0);
+    Wireless_IRQ_Handler(SX_TX);
   }
   // SX that receives packets wants to tell us something
   if (GPIO_Pin == SX_RX_IRQ.PIN) {
-    Wireless_IRQ_Handler(SX_RX, 0, 0);
+    Wireless_IRQ_Handler(SX_RX);
     toggle_pin(LD_LED1);
   } 
 }
@@ -418,7 +494,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(buffer_RobotCommand[idCounter].isNewPacket 
     && total_packet_length + PACKET_SIZE_ROBOT_COMMAND < MAX_PACKET_SIZE){
       buffer_RobotCommand[idCounter].isNewPacket = false;
-      memcpy(sendBuffer + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, PACKET_SIZE_ROBOT_COMMAND);
+      memcpy(txPacket.message + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, PACKET_SIZE_ROBOT_COMMAND);
       total_packet_length += PACKET_SIZE_ROBOT_COMMAND;
     }
 
@@ -426,7 +502,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(buffer_RobotBuzzer[idCounter].isNewPacket
     && total_packet_length + PACKET_SIZE_ROBOT_BUZZER < MAX_PACKET_SIZE){
       buffer_RobotBuzzer[idCounter].isNewPacket = false;
-      memcpy(sendBuffer + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, PACKET_SIZE_ROBOT_BUZZER);
+      memcpy(txPacket.message + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, PACKET_SIZE_ROBOT_BUZZER);
       total_packet_length += PACKET_SIZE_ROBOT_BUZZER;
     }
     
@@ -434,9 +510,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(0 < total_packet_length){
       if(!isTransmitting){
         isTransmitting = true;
-        SX_TX->SX_settings->syncWords[0] = robot_syncWord[idCounter];
-        setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
-        SendPacket(SX_TX, sendBuffer, total_packet_length);
+        txPacket.payloadLength = total_packet_length;
+        Wireless_setTXSyncword(SX_TX,robot_syncWord[idCounter]);
+        WritePacket_DMA(SX_TX, &txPacket, &Wireless_Writepacket_Cplt);
       }
     }
 

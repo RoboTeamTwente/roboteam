@@ -128,6 +128,7 @@ void init(){
     SX_RX_Interface.BusyPin= SX_RX_BUSY;
     SX_RX_Interface.CS= SX_RX_CS;
     SX_RX_Interface.Reset= SX_RX_RST;
+    err = Wireless_setPrint_Callback(SX_TX, NULL);
     err = Wireless_Init(SX_RX, SX1280_DEFAULT_SETTINGS, &SX_RX_Interface);
     err = Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
     if(err != WIRELESS_OK){
@@ -205,7 +206,7 @@ void loop(){
     BasestationConfiguration configuration;
     configuration.header = PACKET_TYPE_BASESTATION_CONFIGURATION;
     configuration.remVersion = LOCAL_REM_VERSION;
-    configuration.channel = SX1280_getCurrentChannel();
+    configuration.channel = Wireless_getChannel(SX_TX);
 
     BasestationConfigurationPayload payload;
     encodeBasestationConfiguration(&payload, &configuration);

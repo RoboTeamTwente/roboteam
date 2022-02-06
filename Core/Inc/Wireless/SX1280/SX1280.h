@@ -116,6 +116,6 @@ void DMA_Callback(SX1280_Interface* SX, uint8_t* dest, uint8_t Nbytes);
 ////////////////////////////////////// private functions
 // Helper functions to Send/Receive data over SPI
 SX1280_Error SendData(SX1280_Interface* interface, uint8_t Nbytes);
-bool SendData_DMA(SX1280_Interface* SX, uint8_t Nbytes);
+SX1280_Error SendData_DMA(SX1280_Interface* SX, uint8_t Nbytes);
 
 #endif // __SX1280_H

@@ -60,6 +60,7 @@ bool writeRegister(SX1280_Interface* interface, uint16_t address, void* data, ui
     memcpy(ptr,data,Nbytes);
     SendData(interface,Nbytes+3);
     UNLOCK(interface)
+    return true;
 }
 
 void readRegister(SX1280_Interface* interface, uint16_t address, uint8_t* data, uint8_t Nbytes){
@@ -379,7 +380,7 @@ void getIRQ(SX1280_Interface* interface, uint16_t* irq){
     *ptr++ = GET_IRQ_STATUS;
     memset(ptr,0,3);
     SendData(interface,4);
-    irq = (interface->RXbuf[2] << 8) | interface->RXbuf[3];
+    *irq = (interface->RXbuf[2] << 8) | interface->RXbuf[3];
     UNLOCK(interface)
     return;
 }
@@ -415,7 +416,6 @@ void setSyncSensitivity (SX1280_Interface* interface, uint8_t syncSensitivity) {
 }
 
 SX1280_Error setSyncWord(SX1280_Interface* interface, uint8_t index, uint32_t syncWord) {
-	bool success = true;
     uint16_t address = SYNCWORD1;
     switch(index){
         case 1: address = SYNCWORD1; break;
@@ -436,12 +436,12 @@ void setSyncWordTolerance(SX1280_Interface* interface, uint8_t syncWordTolerance
 void setCrcSeed(SX1280_Interface* interface, uint16_t seed){
     // Flip byte order to match how SX expects the data (Big Endian <-> Little Endian)
 	uint16_t tmp = ((seed << 8) & 0xFF00) | ((seed >> 8) & 0x00FF);
-    writeRegister(interface, CRC_INIT_MSB, &seed, 2);
+    writeRegister(interface, CRC_INIT_MSB, &tmp, 2);
 }
 void setCrcPoly(SX1280_Interface* interface, uint16_t poly){
     // Flip byte order to match how SX expects the data (Big Endian <-> Little Endian)
     uint16_t tmp = ((poly << 8) & 0xFF00) | ((poly >> 8) & 0x00FF);
-	writeRegister(interface, CRC_POLY_MSB, &poly, 2);
+	writeRegister(interface, CRC_POLY_MSB, &tmp, 2);
 }
 
 // ---------- Callback Functions
@@ -461,7 +461,7 @@ void DMA_Callback(SX1280_Interface* interface, uint8_t* dest, uint8_t Nbytes){
 // NOTE: Assumes callee has control of active_transfer
 SX1280_Error SendData(SX1280_Interface* interface, uint8_t Nbytes){
 	while(read_pin(interface->BusyPin)) {}
-    SX1280_Error ret;
+    SX1280_Error ret = SX1280_OK;
     
     // wait till ready
     while(interface->SPI->State != HAL_SPI_STATE_READY){}
@@ -469,6 +469,9 @@ SX1280_Error SendData(SX1280_Interface* interface, uint8_t Nbytes){
     set_pin(interface->CS, LOW);
     HAL_StatusTypeDef stat = HAL_SPI_TransmitReceive(interface->SPI, interface->TXbuf, interface->RXbuf, Nbytes, 100);
     set_pin(interface->CS, HIGH);
+    if(stat == HAL_ERROR || stat == HAL_TIMEOUT){
+        ret = SX1280_FAIL;
+    }
 
     // wait for interface to process command
     while(read_pin(interface->BusyPin)) {}
@@ -476,7 +479,7 @@ SX1280_Error SendData(SX1280_Interface* interface, uint8_t Nbytes){
 }
 
 // NOTE: Assumes callee has control of active_transfer
-bool SendData_DMA(SX1280_Interface* interface, uint8_t Nbytes){
+SX1280_Error SendData_DMA(SX1280_Interface* interface, uint8_t Nbytes){
 	while(read_pin(interface->BusyPin)) {}
 	HAL_StatusTypeDef ret;
 	// wait till ready
@@ -484,5 +487,8 @@ bool SendData_DMA(SX1280_Interface* interface, uint8_t Nbytes){
     // send/receive data
     set_pin(interface->CS, LOW);
     ret = HAL_SPI_TransmitReceive_DMA(interface->SPI, interface->TXbuf, interface->RXbuf, Nbytes);
+    if(ret == HAL_ERROR){
+        ret = SX1280_FAIL;
+    }
     return ret == HAL_OK;
 }

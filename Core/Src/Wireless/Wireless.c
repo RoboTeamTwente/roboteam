@@ -163,9 +163,15 @@ Wireless_Error Wireless_Init(Wireless* w, SX1280_Settings set, SX1280_Interface*
     return WIRELESS_OK;
 };
 
-Wireless_Error Wireless_setPrintCallback(Wireless* w, Wireless_printf* func){
+Wireless_Error Wireless_setPrint_Callback(Wireless* w, Wireless_printf* func){
     // assume input is correct. There is no way to check, other than a compile error
     w->printf = func;
+    return WIRELESS_OK;
+}
+
+Wireless_Error Wireless_setIRQ_Callbacks(Wireless* w, Wireless_IRQcallbacks* irqcallbacks){
+    // assume input is correct. There is no way to check, other than a compile error
+    w->irqcallbacks = irqcallbacks;
     return WIRELESS_OK;
 }
 
@@ -195,6 +201,14 @@ Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
         }
     }
     return WIRELESS_OK;
+}
+WIRELESS_CHANNEL Wireless_getChannel(Wireless* w){
+    if(w->TXchannel == WIRELESS_YELLOW_COMMAND_CHANNEL){
+        return YELLOW_CHANNEL;
+    }else{
+        return BLUE_CHANNEL;
+    }
+    return BLUE_CHANNEL;
 }
 
 Wireless_Error Wireless_setTXSyncword(Wireless* w, uint32_t syncword){

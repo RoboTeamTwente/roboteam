@@ -112,6 +112,7 @@ Wireless_Error Wireless_setIRQ_Callbacks(Wireless* w, Wireless_IRQcallbacks* irq
 
 // runtime settings functions
 Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel);
+WIRELESS_CHANNEL Wireless_getChannel(Wireless* w);
 Wireless_Error Wireless_setTXSyncword(Wireless* w, uint32_t syncword);
 Wireless_Error Wireless_setRXSyncwords(Wireless* w, uint32_t syncwords[2]);
 
@@ -130,8 +131,5 @@ Wireless_Error WaitForPacketContinuous(Wireless* w);
 // Callback functions for Hardware entry
 Wireless_Error Wireless_IRQ_Handler(Wireless* w);
 Wireless_Error Wireless_DMA_Handler(Wireless* w);
-
-void SX1280_updateChannel(WIRELESS_CHANNEL channel);
-WIRELESS_CHANNEL SX1280_getCurrentChannel();
 
 #endif /* WIRELESS_WIRELESS_H_ */

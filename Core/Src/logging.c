@@ -6,18 +6,12 @@
 
 #include "CircularBuffer.h"
 
-#include <stdarg.h>  // LOG_printf formatting
+#include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
 
 // Buffer used by vsprintf. Static to make it private to this file
 static char printf_buffer[1024];
-
-static uint8_t LOG_RAW_REM_SUPPORTED[] = {
-    PACKET_TYPE_ROBOT_COMMAND,
-    PACKET_TYPE_ROBOT_FEEDBACK,
-    PACKET_TYPE_ROBOT_STATE_INFO
-};
 
 typedef struct _MessageContainer {
     uint8_t length;
@@ -33,7 +27,7 @@ void LOG_init(){
     if(log_initialized) return;
     // Create buffer indexer
     buffer_indexer = CircularBuffer_init(true, LOG_MAX_MESSAGES);
-
+    // Wait for UART to be ready
     while(HAL_UART_GetState(UART_PC) != HAL_UART_STATE_READY);
 
     log_initialized = true;
@@ -47,7 +41,7 @@ void LOG_printf(char *format, ...){
 	va_start(aptr, format); // Give starting point of additional arguments
     vsnprintf(printf_buffer, 1024, format, aptr); // Copies and turns into string
     va_end(aptr); // Close list
-    // Print the message
+    // Add the message to the buffer
     LOG(printf_buffer);
 }
 

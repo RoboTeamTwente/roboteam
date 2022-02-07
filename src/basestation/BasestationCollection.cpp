@@ -486,9 +486,9 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
         const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
         const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
         
-        if (selectedYellowCopy->operator==(basestationId)) {
+        if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
             this->messageFromBasestationCallback(message, utils::TeamColor::YELLOW);
-        } else if (selectedBlueCopy->operator==(basestationId)) {
+        } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
             this->messageFromBasestationCallback(message, utils::TeamColor::BLUE);
         }
     }

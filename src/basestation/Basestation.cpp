@@ -27,6 +27,11 @@ bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const 
         return this->usbAddress < other.usbAddress;
     }
 }
+std::string BasestationIdentifier::toString() const {
+    int address = (int) this->usbAddress;
+    int id = (int) this->serialIdentifier;
+    return "serial id: " + std::to_string(id) + ", address: " + std::to_string(address);
+}
 
 Basestation::Basestation(libusb_device* device) : device(device), identifier(getIdentifierOfDevice(device)) {
     if (!Basestation::isDeviceABasestation(device)) {
@@ -52,6 +57,8 @@ Basestation::Basestation(libusb_device* device) : device(device), identifier(get
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
+    std::cout << "Opened basestation(" << this->identifier.toString() << ")" << std::endl;
+
     // Start listen thread for incoming messages
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
@@ -66,7 +73,7 @@ Basestation::~Basestation() {
 
     // Close the usb device
     libusb_close(this->deviceHandle);
-    std::cout << "Closed basestation!" << std::endl;
+    std::cout << "Closed basestation(" << this->identifier.toString() << ")" << std::endl;
 }
 
 bool Basestation::operator==(libusb_device* otherDevice) const {

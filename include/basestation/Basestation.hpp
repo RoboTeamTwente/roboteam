@@ -22,6 +22,7 @@ typedef struct BasestationIdentifier {
 
     bool operator==(const BasestationIdentifier& other) const;
     bool operator<(const BasestationIdentifier& other) const;
+    std::string toString() const;
 } BasestationIdentifier;
 
 class Basestation {

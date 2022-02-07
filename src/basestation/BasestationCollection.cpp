@@ -8,7 +8,7 @@
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTILL_BASESTATION_IS_UNSELECTED_S = 3;  // 3 seconds with no interaction
+constexpr int TIME_UNTILL_BASESTATION_IS_UNWANTED_S = 3;  // 3 seconds with no interaction
 constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 500;
 
 BasestationCollection::BasestationCollection() {
@@ -86,6 +86,9 @@ bool BasestationCollection::sendMessageToBasestation(BasestationMessage& message
     if (basestation != nullptr) {
         sentMessage = basestation->sendMessageToBasestation(message);
     }
+
+    // Update our basestations usage
+    this->updateWantedBasestations(teamColor);
 
     return sentMessage;
 }
@@ -211,20 +214,58 @@ void BasestationCollection::removeBasestationIdToChannelEntry(const BasestationI
     this->basestationIdToChannel.erase(basestationId);
 }
 
+WantedBasestations BasestationCollection::getWantedBasestations() const {
+    auto now = std::chrono::steady_clock::now();
+
+    // Calculate how long ago the basestations were used
+    auto timeAfterLastYellowUsage = std::chrono::duration_cast<std::chrono::seconds>(now - this->lastRequestForYellowBasestation).count();
+    auto timeAfterLastBlueUsage = std::chrono::duration_cast<std::chrono::seconds>(now - this->lastRequestForBlueBasestation).count();
+
+    // If they were used recently enough, we say we still want them
+    bool wantsYellowBasestation = timeAfterLastYellowUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
+    bool wantsBlueBasestation = timeAfterLastBlueUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
+
+    WantedBasestations wantedBasestations;
+
+    if (wantsYellowBasestation && wantsBlueBasestation) {
+        wantedBasestations = WantedBasestations::YELLOW_AND_BLUE;
+    } else if (wantsYellowBasestation) {
+        wantedBasestations = WantedBasestations::ONLY_YELLOW;
+    } else if (wantsBlueBasestation) {
+        wantedBasestations = WantedBasestations::ONLY_BLUE;
+    } else {
+        wantedBasestations = WantedBasestations::NEITHER_YELLOW_NOR_BLUE;
+    }
+
+    return wantedBasestations;
+}
+
+void BasestationCollection::updateWantedBasestations(utils::TeamColor requestedBasestationColor) {
+    auto now = std::chrono::steady_clock::now();
+
+    switch (requestedBasestationColor) {
+        case utils::TeamColor::YELLOW:
+            this->lastRequestForYellowBasestation = now;
+            break;
+        case utils::TeamColor::BLUE:
+            this->lastRequestForBlueBasestation = now;
+            break;
+    }
+}
+
 void BasestationCollection::updateBasestationSelection() {
     while (this->shouldUpdateBasestationSelection) {
         
-        bool hadWrongSelection = this->unselectIncorrectlySelectedBasestations();
-        if (hadWrongSelection) {
+        int wrongBasestations = this->unselectIncorrectlySelectedBasestations();
+        if (wrongBasestations > 0) {
             std::cout << "Warning: Incorrect basestations were selected!" << std::endl;
         }
 
         this->askChannelOfBasestationsWithUnknownChannel();
+        
+        this->unselectUnwantedBasestations();
 
-        bool needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
-        bool needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
-
-        this->selectBasestations(needsToSelectYellowBasestation, needsToSelectBlueBasestation);
+        this->selectWantedBasestations();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(BASESTATION_SELECTION_UPDATE_FREQUENCY_MS));
     }
@@ -292,6 +333,62 @@ bool BasestationCollection::sendChannelChangeRequest(std::shared_ptr<Basestation
     return sentSuccesfully;
 }
 
+int BasestationCollection::unselectUnwantedBasestations() {
+    bool hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr;
+    bool hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr;
+
+    int unselectedBasestations = 0;
+
+    switch (this->getWantedBasestations()) {
+        case WantedBasestations::NEITHER_YELLOW_NOR_BLUE: {
+            if (hasYellowBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                unselectedBasestations++;
+            }
+            if (hasBlueBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                unselectedBasestations++;
+            }
+            break;
+        } case WantedBasestations::ONLY_YELLOW: {
+            if (hasBlueBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                unselectedBasestations++;
+            }
+            break;
+        } case WantedBasestations::ONLY_BLUE: {
+            if (hasYellowBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                unselectedBasestations++;
+            }
+            break;
+        }
+    }
+
+    return unselectedBasestations;
+}
+
+int BasestationCollection::selectWantedBasestations() {
+    bool needsToSelectYellowBasestation = false;
+    bool needsToSelectBlueBasestation = false;
+    
+    switch (this->getWantedBasestations()) {
+        case WantedBasestations::YELLOW_AND_BLUE:
+            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
+            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
+            break;
+        case WantedBasestations::ONLY_YELLOW:
+            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
+            break;
+        case WantedBasestations::ONLY_BLUE:
+            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
+            break;
+    }
+
+    int selectedBasestations = this->selectBasestations(needsToSelectYellowBasestation, needsToSelectBlueBasestation);
+    return selectedBasestations;
+}
+
 int BasestationCollection::selectBasestations(bool needYellowBasestation, bool needBlueBasestation) {
     // Fist get basestations that aren't already selected as the blue or yellow basestation
     auto selectableBasestations = this->getSelectableBasestations();
@@ -349,8 +446,8 @@ int BasestationCollection::selectBasestations(bool needYellowBasestation, bool n
     return numberOfSelectedBasestations;
 }
 
-bool BasestationCollection::unselectIncorrectlySelectedBasestations() {
-    bool unselectedBasestations = false;
+int BasestationCollection::unselectIncorrectlySelectedBasestations() {
+    int unselectedBasestations = 0;
     
     const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
     const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
@@ -358,12 +455,12 @@ bool BasestationCollection::unselectIncorrectlySelectedBasestations() {
     if (selectedYellowCopy != nullptr && this->getChannelOfBasestation(selectedYellowCopy->getIdentifier()) != WirelessChannel::YELLOW_CHANNEL) {
         // The yellow basestation is not actually yellow, so unselect it
         this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
-        unselectedBasestations = true;
+        unselectedBasestations++;
     }
     if (selectedBlueCopy != nullptr && this->getChannelOfBasestation(selectedBlueCopy->getIdentifier()) != WirelessChannel::BLUE_CHANNEL) {
         // The blue basestation is not actually blue, so unselect it
         this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
-        unselectedBasestations = true;
+        unselectedBasestations++;
     }
     return unselectedBasestations;
 }

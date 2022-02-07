@@ -16,6 +16,9 @@ namespace rtt::robothub::basestation {
 // An enum that represents on which channel a basestation emits messages with robots
 enum class WirelessChannel : unsigned int { YELLOW_CHANNEL = 0, BLUE_CHANNEL = 1, UNKNOWN = 2 };
 
+// Represents which combination of basestations is wanted
+enum class WantedBasestations { ONLY_YELLOW, ONLY_BLUE, YELLOW_AND_BLUE, NEITHER_YELLOW_NOR_BLUE };
+
 /* This class will take any collection of basestations, and will pick two basestations that
    can send messages to the blue and the yellow robots. It does this by asking the basestations
    what channel they currently use, and if necessary, request them to change it. */
@@ -50,12 +53,20 @@ class BasestationCollection {
     void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
 
     // Keeps track of which basestation has which wireless channel
-    std::map<const BasestationIdentifier&, WirelessChannel> basestationIdToChannel;
+    std::map<const BasestationIdentifier, WirelessChannel> basestationIdToChannel;
     std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
     
     WirelessChannel getChannelOfBasestation(const BasestationIdentifier& basestationId);
     void setChannelOfBasestation(const BasestationIdentifier& basestationId, WirelessChannel newChannel);
     void removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId);
+
+    // Keeps track of which basestations are actually used
+    std::chrono::time_point<std::chrono::steady_clock> lastRequestForYellowBasestation;
+    std::chrono::time_point<std::chrono::steady_clock> lastRequestForBlueBasestation;
+    // This will update the lastRequestFor variables to the current time
+    void updateWantedBasestations(utils::TeamColor lastRequestedBasestation);
+    // Will return which basestations are being used, or requested if not selected yet
+    WantedBasestations getWantedBasestations() const;
 
     // Updating the basestation selection
     bool shouldUpdateBasestationSelection;
@@ -70,9 +81,10 @@ class BasestationCollection {
     // Sends a channel change request to the given basestation to change to the given channel
     bool sendChannelChangeRequest(std::shared_ptr<Basestation> basestation, WirelessChannel newChannel);
 
-    // Will try to select for the given colors, returns the amount of basestations it selected
-    int selectBasestations(bool selectYellowBasestation, bool selectBlueBasestation);
-    bool unselectIncorrectlySelectedBasestations(); // Returns whether it unselected basestations
+    int unselectUnwantedBasestations(); // Unselect basestations that are not used
+    int unselectIncorrectlySelectedBasestations(); // Unselect basestations that have the wrong channel
+    int selectWantedBasestations(); // Select basestations that we need
+    int selectBasestations(bool selectYellowBasestation, bool selectBlueBasestation); // Will try to select the given basestations
 
     std::mutex messageCallbackMutex; // Guards the messageFromBasestationCallback
     void onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId);

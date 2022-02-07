@@ -11,8 +11,7 @@
 #include <stdio.h>
 
 // Buffer used by vsprintf. Static to make it private to this file
-static char printf_buffer[1024]; 
-static char log_buffer[1024];
+static char printf_buffer[1024];
 
 static uint8_t LOG_RAW_REM_SUPPORTED[] = {
     PACKET_TYPE_ROBOT_COMMAND,
@@ -46,7 +45,7 @@ void LOG_printf(char *format, ...){
 	// Place variables into string
 	va_list aptr; 
 	va_start(aptr, format); // Give starting point of additional arguments
-    vsprintf(printf_buffer, format, aptr); // Copies and turns into string
+    vsnprintf(printf_buffer, 1024, format, aptr); // Copies and turns into string
     va_end(aptr); // Close list
     // Print the message
     LOG(printf_buffer);

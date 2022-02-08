@@ -15,6 +15,7 @@ add_library(roboteam_networking_utils STATIC
     "src/utils/Channels.cpp")
 target_include_directories(roboteam_networking_utils PUBLIC "include")
 target_link_libraries(roboteam_networking_utils PUBLIC zmqpp)
+target_compile_options(roboteam_networking_utils PRIVATE "${COMPILER_FLAGS}")
 
 add_library(roboteam_networking STATIC
     "src/RobotCommandsNetworker.cpp"
@@ -26,5 +27,6 @@ add_library(roboteam_networking STATIC
 
 target_include_directories(roboteam_networking PUBLIC "include")
 target_link_libraries(roboteam_networking PUBLIC roboteam_networking_utils roboteam_networking_proto)
+target_compile_options(roboteam_networking PRIVATE "${COMPILER_FLAGS}")
 
 add_subdirectory(tests)

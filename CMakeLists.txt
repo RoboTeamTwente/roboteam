@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(roboteam_robothub)
 
-# Needed for the documentation generator.
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS} -O0")
-
 # for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
 if(APPLE)
     set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
@@ -35,6 +31,7 @@ target_link_libraries(simulator_manager PUBLIC
         simulation_manager_proto
         Qt5::Network
 )
+target_compile_options(simulator_manager PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for the basestationManager library
 add_library(basestation_manager STATIC
@@ -49,6 +46,7 @@ target_link_libraries(basestation_manager PUBLIC
         Threads::Threads
         lib::usb
 )
+target_compile_options(basestation_manager PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for RobotHub, which uses the basestationManager and simulationManager library
 add_executable(roboteam_robothub "src/RobotHub.cpp")
@@ -60,6 +58,7 @@ target_link_libraries(roboteam_robothub
         PRIVATE basestation_manager
         PRIVATE roboteam_networking
 )
+target_compile_options(roboteam_robothub PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for robothub_enumerate_usb
 add_executable(roboteam_robothub_enumerate_usb
@@ -73,10 +72,11 @@ target_link_libraries(roboteam_robothub_enumerate_usb
         Threads::Threads
         lib::usb
 )
+target_compile_options(roboteam_robothub_enumerate_usb PRIVATE "${COMPILER_FLAGS}")
 
 # Create make file for simulation formation test
 add_executable(test_formation
         test/sendFormationToSimulator.cpp
 )
-
 target_link_libraries(test_formation PUBLIC simulator_manager)
+target_compile_options(test_formation PRIVATE "${COMPILER_FLAGS}")

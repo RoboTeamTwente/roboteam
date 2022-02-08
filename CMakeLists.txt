@@ -4,7 +4,6 @@ project(roboteam_world)
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Network)
 
-
 add_executable(roboteam_observer
         src/roboteam_observer/main.cpp
         src/roboteam_observer/Handler.cpp
@@ -22,6 +21,7 @@ target_include_directories(roboteam_observer
         PRIVATE include/roboteam_observer
         INTERFACE include
         )
+target_compile_options(roboteam_observer PRIVATE "${COMPILER_FLAGS}")
 
 # -- OBSERVER LIB --
 
@@ -50,6 +50,7 @@ target_include_directories(observer_lib
         )
 
 set_target_properties(observer_lib PROPERTIES UNITY_BUILD FALSE)
+target_compile_options(observer_lib PRIVATE "${COMPILER_FLAGS}")
 
 # -- OBSERVER_TESTS --
 
@@ -62,6 +63,7 @@ target_link_libraries(observer_lib_tests
         PRIVATE observer_lib
         PRIVATE gtest
         )
+target_compile_options(observer_lib_tests PRIVATE "${COMPILER_FLAGS}")
 
 # -- NET --
 
@@ -78,6 +80,7 @@ target_include_directories(observer_net_lib
 target_link_libraries(observer_net_lib
         PUBLIC roboteam_networking
 )
+target_compile_options(observer_net_lib PRIVATE "${COMPILER_FLAGS}")
 
 # -- DATA --
 
@@ -93,3 +96,4 @@ target_include_directories(observer_data_lib
 target_link_libraries(observer_data_lib
         PUBLIC roboteam_networking
 )
+target_compile_options(observer_data_lib PRIVATE "${COMPILER_FLAGS}")

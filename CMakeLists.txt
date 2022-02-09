@@ -6,7 +6,7 @@ set(CPP_STANDARD_FLAG "-std=c++20")
 set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Wall" "-g" "-O0")
 set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast")
 
-# Specify manually which compiler arguments we want to use, either DEBUG or RELEASE ones
+# Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake
 if (CMAKE_BUILD_TYPE MATCHES RELEASE)
     message("Building in release mode")
@@ -29,7 +29,7 @@ include(GetWebsocket) # ?
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
 
-# This will create a file in the build folder that contains the commands used for compiling
+# This will create a file in the build folder that contains the commands used for compiling, useful for debugging
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # internal projects

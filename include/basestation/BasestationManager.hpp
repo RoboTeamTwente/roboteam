@@ -23,9 +23,9 @@ class BasestationManager {
     BasestationManager();
     ~BasestationManager();
 
-    bool sendRobotCommand(const RobotCommand &command, utils::TeamColor color) const;
-    bool sendRobotBuzzerCommand(const RobotBuzzer &command, utils::TeamColor color) const;
-    bool sendBasestationStatisticsRequest(utils::TeamColor color) const;
+    int sendRobotCommand(const RobotCommand &command, utils::TeamColor color) const;
+    int sendRobotBuzzerCommand(const RobotBuzzer &command, utils::TeamColor color) const;
+    int sendBasestationStatisticsRequest(utils::TeamColor color) const;
 
     void setFeedbackCallback(const std::function<void(const RobotFeedback &, utils::TeamColor color)> &callback);
 

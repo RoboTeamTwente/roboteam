@@ -145,18 +145,16 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils
 
         command.feedback = false;
 
-        bool sentCommand = this->basestationManager->sendRobotCommand(command, color);
+        int bytesSent = this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
         this->statistics.incrementCommandsReceivedCounter(command.id, color);
 
-        // Update bytes sent/packets dropped statistics
-        if (sentCommand) {
-            // TODO: Make this bytes instead of packets sent
+        if (bytesSent > 0) {
             if (color == utils::TeamColor::YELLOW) {
-                this->statistics.yellowTeamBytesSent++;
+                this->statistics.yellowTeamBytesSent += bytesSent;
             } else {
-                this->statistics.blueTeamBytesSent++;
+                this->statistics.blueTeamBytesSent += bytesSent;
             }
         } else {
             if (color == utils::TeamColor::YELLOW) {

@@ -90,7 +90,7 @@ bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) cons
         && this->identifier == otherBasestation->identifier;
 }
 
-bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
+int Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
 void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback) { this->incomingMessageCallback = callback; }
 
@@ -147,7 +147,7 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
 
     return error == LIBUSB_SUCCESS;
 }
-bool Basestation::writeBasestationMessage(BasestationMessage& message) const {
+int Basestation::writeBasestationMessage(BasestationMessage& message) const {
     int bytesSent = 0;
 
     int error = libusb_bulk_transfer(this->deviceHandle, TRANSFER_OUT_BUFFER_ENDPOINT, message.payloadBuffer, message.payloadSize, &bytesSent, TRANSFER_OUT_TIMEOUT_MS);
@@ -155,7 +155,11 @@ bool Basestation::writeBasestationMessage(BasestationMessage& message) const {
         std::cout << "ERROR: Failed to send message: " << usbutils_errorToString(error) << std::endl;
     }
 
-    return error == LIBUSB_SUCCESS;
+    if (bytesSent <= 0 || error != LIBUSB_SUCCESS) {
+        bytesSent = -1;
+    }
+
+    return bytesSent;
 }
 
 const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* device) {

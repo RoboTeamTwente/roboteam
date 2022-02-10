@@ -79,18 +79,18 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
     }
 }
 
-bool BasestationCollection::sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor) {
+int BasestationCollection::sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor) {
     const auto& basestation = teamColor == utils::TeamColor::YELLOW ? this->getSelectedBasestation(utils::TeamColor::YELLOW) : this->getSelectedBasestation(utils::TeamColor::BLUE);
 
-    bool sentMessage = false;
+    int bytesSent = -1;
     if (basestation != nullptr) {
-        sentMessage = basestation->sendMessageToBasestation(message);
+        bytesSent = basestation->sendMessageToBasestation(message);
     }
 
     // Update our basestations usage
     this->updateWantedBasestations(teamColor);
 
-    return sentMessage;
+    return bytesSent;
 }
 
 void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback) {
@@ -104,7 +104,7 @@ const BasestationCollectionStatus BasestationCollection::getStatus() {
         .hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr,
         .amountOfBasestations = (int) basestations.size()
     };
-    
+
     return status;
 }
 

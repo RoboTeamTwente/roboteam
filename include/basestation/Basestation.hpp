@@ -35,7 +35,8 @@ class Basestation {
     bool operator==(const BasestationIdentifier& otherBasestationID) const;
     bool operator==(std::shared_ptr<Basestation> otherBasestation) const;
 
-    bool sendMessageToBasestation(BasestationMessage& message) const;
+    // Sends message to basestation. Returns bytes sent, -1 for error
+    int sendMessageToBasestation(BasestationMessage& message) const;
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback);
 
     const BasestationIdentifier& getIdentifier() const;
@@ -52,10 +53,10 @@ class Basestation {
     void listenForIncomingMessages();
     std::function<void(const BasestationMessage&, const BasestationIdentifier&)> incomingMessageCallback;
 
-    // Reads a message directly from the basestation and stores it in the given message
+    // Reads a message directly from the basestation and stores it in the given message. Returns success
     bool readBasestationMessage(BasestationMessage& message) const;
-    // Writes the given message directly to the basestation
-    bool writeBasestationMessage(BasestationMessage& message) const;
+    // Writes the given message directly to the basestation. Returns bytes sent
+    int writeBasestationMessage(BasestationMessage& message) const;
 
     static const BasestationIdentifier getIdentifierOfDevice(libusb_device* device);
 };

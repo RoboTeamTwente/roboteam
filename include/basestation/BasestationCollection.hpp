@@ -37,8 +37,8 @@ class BasestationCollection {
     // This function makes sure the collection is up to date. Call this function frequently
     void updateBasestationCollection(const std::vector<libusb_device*>& pluggedBasestationDevices);
 
-    // Sends a message to the basestation of the given team. Returns success
-    bool sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor);
+    // Sends a message to the basestation of the given team. Returns bytes sent, -1 if error
+    int sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor);
 
     // Set a callback function to receive all messages from the two basestations of the teams
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback);

@@ -33,7 +33,7 @@ BasestationManager::~BasestationManager() {
     libusb_exit(this->usbContext);
 }
 
-bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
     RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
     RobotCommandPayload payload;
@@ -43,10 +43,11 @@ bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::Te
     message.payloadSize = PACKET_SIZE_ROBOT_COMMAND;
     std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
-bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
     RobotBuzzer copy = command;
 
     RobotBuzzerPayload payload;
@@ -56,10 +57,11 @@ bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, util
     message.payloadSize = PACKET_SIZE_ROBOT_BUZZER;
     std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
-bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
+int BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
     BasestationGetStatistics command;
 
     BasestationGetStatisticsPayload payload;
@@ -69,7 +71,8 @@ bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color
     message.payloadSize = PACKET_SIZE_BASESTATION_GET_STATISTICS;
     std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
 void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }

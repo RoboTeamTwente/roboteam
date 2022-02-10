@@ -33,9 +33,13 @@ RobotHub::RobotHub() {
     this->basestationManager->setFeedbackCallback([&](const RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
-RobotHubStatistics& RobotHub::getStatistics() {
+const RobotHubStatistics& RobotHub::getStatistics() {
     this->statistics.basestationManagerStatus = this->basestationManager->getStatus();
     return this->statistics;
+}
+
+void RobotHub::resetStatistics() {
+    this->statistics.resetValues();
 }
 
 bool RobotHub::initializeNetworkers() {
@@ -335,7 +339,7 @@ std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor
     return nullptr;
 }
 
-bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) { return this->robotFeedbackPublisher->publish(feedback); }
+bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) const { return this->robotFeedbackPublisher->publish(feedback); }
 
 const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 
@@ -346,8 +350,7 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        auto& statistics = app.getStatistics();
-        statistics.print();
-        statistics.resetValues();
+        app.getStatistics().print();
+        app.resetStatistics();
     }
 }

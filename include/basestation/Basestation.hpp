@@ -22,29 +22,29 @@ typedef struct BasestationIdentifier {
 
     bool operator==(const BasestationIdentifier& other) const;
     bool operator<(const BasestationIdentifier& other) const;
-    std::string toString() const;
+    const std::string toString() const;
 } BasestationIdentifier;
 
 class Basestation {
    public:
-    explicit Basestation(libusb_device* device);
+    explicit Basestation(libusb_device* const device);
     ~Basestation();
 
     // Compares the underlying device of this basestation with the given device
-    bool operator==(libusb_device* device) const;
+    bool operator==(libusb_device* const device) const;
     bool operator==(const BasestationIdentifier& otherBasestationID) const;
-    bool operator==(std::shared_ptr<Basestation> otherBasestation) const;
+    bool operator==(const std::shared_ptr<Basestation>& otherBasestation) const;
 
     // Sends message to basestation. Returns bytes sent, -1 for error
     int sendMessageToBasestation(BasestationMessage& message) const;
-    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback);
+    void setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback);
 
     const BasestationIdentifier& getIdentifier() const;
 
-    static bool isDeviceABasestation(libusb_device* device);
+    static bool isDeviceABasestation(libusb_device* const device);
 
    private:
-    libusb_device* device;              // Corresponds to the basestation itself
+    libusb_device* const device;              // Corresponds to the basestation itself
     libusb_device_handle* deviceHandle; // Handle on which IO can be performed
     const BasestationIdentifier identifier;   // An identifier object that uniquely represents this basestation
 
@@ -58,7 +58,7 @@ class Basestation {
     // Writes the given message directly to the basestation. Returns bytes sent
     int writeBasestationMessage(BasestationMessage& message) const;
 
-    static const BasestationIdentifier getIdentifierOfDevice(libusb_device* device);
+    static const BasestationIdentifier getIdentifierOfDevice(libusb_device* const device);
 };
 
 class FailedToOpenDeviceException : public std::exception {

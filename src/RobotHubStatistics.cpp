@@ -36,7 +36,7 @@ void RobotHubStatistics::resetValues() {
     this->feedbackPacketsDropped = 0;
 }
 
-void RobotHubStatistics::print() {
+void RobotHubStatistics::print() const {
     std::array<std::string, MAX_ROBOT_STATISTICS> y; // Contains the strings for yellow robots
     std::array<std::string, MAX_ROBOT_STATISTICS> b; // Contains the strings for blue robots
 
@@ -96,7 +96,7 @@ std::string RobotHubStatistics::getRobotStats(int robotId, utils::TeamColor team
     return stats;
 }
 
-std::string RobotHubStatistics::getRunTime() {
+std::string RobotHubStatistics::getRunTime() const {
     auto now = std::chrono::steady_clock::now();
     int64_t runTime = std::chrono::duration_cast<std::chrono::seconds>(now - this->startTime).count();
 
@@ -119,21 +119,21 @@ std::string RobotHubStatistics::getRunTime() {
     return text;
 }
 
-std::string RobotHubStatistics::getRobotHubMode() {
+std::string RobotHubStatistics::getRobotHubMode() const {
     std::string mode = utils::modeToString(this->robotHubMode);
     std::string text = RobotHubStatistics::string_format("%-11s", mode.c_str());
     return text;
 }
 
-std::string RobotHubStatistics::getAmountOfBasestations() {
+std::string RobotHubStatistics::getAmountOfBasestations() const {
     return RobotHubStatistics::string_format("%-9d", this->basestationManagerStatus.basestationCollection.amountOfBasestations);
 }
 
-std::string RobotHubStatistics::getWantedBasestations() {
+std::string RobotHubStatistics::getWantedBasestations() const {
     std::string basestations = wantedBasestationsToString(this->basestationManagerStatus.basestationCollection.wantedBasestations);
     return RobotHubStatistics::string_format("%-9s", basestations.c_str());
 }
-std::string RobotHubStatistics::getSelectedBasestations() {
+std::string RobotHubStatistics::getSelectedBasestations() const {
     std::string basestations;
 
     if (this->basestationManagerStatus.basestationCollection.hasYellowBasestation && this->basestationManagerStatus.basestationCollection.hasBlueBasestation) {
@@ -148,7 +148,7 @@ std::string RobotHubStatistics::getSelectedBasestations() {
 
     return RobotHubStatistics::string_format("%-9s", basestations.c_str());
 }
-std::string RobotHubStatistics::numberToSideBox(int n) {
+std::string RobotHubStatistics::numberToSideBox(int n) const {
     return RobotHubStatistics::string_format("%7d", n);
 }
 

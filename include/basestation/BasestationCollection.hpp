@@ -44,26 +44,26 @@ class BasestationCollection {
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback);
 
     // Prints the current status of the collection directly to the console
-    const BasestationCollectionStatus getStatus();
+    const BasestationCollectionStatus getStatus() const;
 
    private:
     // Collection and selection of basestations
-    std::mutex basestationsMutex; // Guards the basestations vector
+    mutable std::mutex basestationsMutex; // Guards the basestations vector
     std::vector<std::shared_ptr<Basestation>> basestations; // All basestations
-    std::vector<std::shared_ptr<Basestation>> getAllBasestations();
+    std::vector<std::shared_ptr<Basestation>> getAllBasestations() const;
 
-    std::mutex basestationSelectionMutex; // Guards both selected basestations
+    mutable std::mutex basestationSelectionMutex; // Guards both selected basestations
     std::shared_ptr<Basestation> yellowBasestation; // Basestation selected for yellow team
     std::shared_ptr<Basestation> blueBasestation; // Basestation selected for blue team
 
-    std::shared_ptr<Basestation> getSelectedBasestation(utils::TeamColor colorOfBasestation);
+    std::shared_ptr<Basestation> getSelectedBasestation(utils::TeamColor colorOfBasestation) const;
     void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
 
     // Keeps track of which basestation has which wireless channel
     std::map<const BasestationIdentifier, WirelessChannel> basestationIdToChannel;
-    std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
+    mutable std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
     
-    WirelessChannel getChannelOfBasestation(const BasestationIdentifier& basestationId);
+    WirelessChannel getChannelOfBasestation(const BasestationIdentifier& basestationId) const;
     void setChannelOfBasestation(const BasestationIdentifier& basestationId, WirelessChannel newChannel);
     void removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId);
 
@@ -82,11 +82,11 @@ class BasestationCollection {
     void removeOldBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices);
     void addNewBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices);
 
-    void askChannelOfBasestationsWithUnknownChannel();
+    void askChannelOfBasestationsWithUnknownChannel() const;
     // Gets list of basestations that could be selected as the blue or yellow basestation
-    std::vector<std::shared_ptr<Basestation>> getSelectableBasestations();
+    std::vector<std::shared_ptr<Basestation>> getSelectableBasestations() const;
     // Sends a channel change request to the given basestation to change to the given channel
-    bool sendChannelChangeRequest(std::shared_ptr<Basestation> basestation, WirelessChannel newChannel);
+    bool sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel);
 
     int unselectUnwantedBasestations(); // Unselect basestations that are not used
     int unselectIncorrectlySelectedBasestations(); // Unselect basestations that have the wrong channel
@@ -99,8 +99,8 @@ class BasestationCollection {
 
     static WirelessChannel getWirelessChannelCorrespondingTeamColor(utils::TeamColor color);
     static utils::TeamColor getTeamColorCorrespondingWirelessChannel(WirelessChannel channel);
-    static bool basestationIsInDeviceList(std::shared_ptr<Basestation> basestation, const std::vector<libusb_device*>& devices);
-    static bool deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations);
+    static bool basestationIsInDeviceList(const std::shared_ptr<Basestation>& basestation, const std::vector<libusb_device*>& devices);
+    static bool deviceIsInBasestationList(libusb_device* const device, const std::vector<std::shared_ptr<Basestation>>& basestations);
 
     // Converts a WirelessChannel to a value that can be used in REM
     static bool wirelessChannelToREMChannel(WirelessChannel channel);

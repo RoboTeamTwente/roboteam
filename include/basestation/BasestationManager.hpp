@@ -32,7 +32,7 @@ class BasestationManager {
     const BasestationManagerStatus getStatus() const;
 
    private:
-    libusb_context *usbContext;
+    libusb_context * usbContext;
 
     bool shouldListenForBasestationPlugs;
     std::thread basestationPlugsListener;
@@ -45,7 +45,7 @@ class BasestationManager {
     std::function<void(const RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
     void callFeedbackCallback(const RobotFeedback &feedback, utils::TeamColor color) const;
 
-    static std::vector<libusb_device *> filterBasestationDevices(libusb_device **devices, int device_count);
+    static std::vector<libusb_device*> filterBasestationDevices(libusb_device *const*const devices, int device_count);
 };
 
 class FailedToInitializeLibUsb : public std::exception {

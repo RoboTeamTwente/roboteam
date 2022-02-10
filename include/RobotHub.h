@@ -25,7 +25,8 @@ class RobotHub {
    public:
     RobotHub();
 
-    RobotHubStatistics& getStatistics();
+    const RobotHubStatistics& getStatistics();
+    void resetStatistics();
 
    private:
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
@@ -56,7 +57,7 @@ class RobotHub {
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor team);
-    bool sendRobotFeedback(const proto::RobotData &feedback);
+    bool sendRobotFeedback(const proto::RobotData &feedback) const;
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

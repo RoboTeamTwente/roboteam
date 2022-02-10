@@ -30,7 +30,7 @@ public:
     void incrementCommandsReceivedCounter(int id, utils::TeamColor color);
     void incrementFeedbackReceivedCounter(int id, utils::TeamColor color);
 
-    void print();
+    void print() const;
 private:
     std::chrono::time_point<std::chrono::steady_clock> startTime;
 
@@ -41,13 +41,13 @@ private:
     std::array<int, MAX_ROBOT_STATISTICS> blueFeedbackReceived;
     
     std::string getRobotStats(int id, utils::TeamColor team) const;
-    std::string getRunTime();
-    std::string getRobotHubMode();
-    std::string getAmountOfBasestations();
-    std::string getWantedBasestations();
-    std::string getSelectedBasestations();
+    std::string getRunTime() const;
+    std::string getRobotHubMode() const;
+    std::string getAmountOfBasestations() const;
+    std::string getWantedBasestations() const;
+    std::string getSelectedBasestations() const;
 
-    std::string numberToSideBox(int n);
+    std::string numberToSideBox(int n) const;
 
     template<typename ... Args>
     static std::string string_format( const std::string& format, Args ... args );

@@ -61,7 +61,7 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
     };
 
     // Add plugged in basestations that are not in the list yet
-    for (libusb_device* pluggedBasestationDevices : pluggedBasestationDevices) {
+    for (libusb_device * const pluggedBasestationDevices : pluggedBasestationDevices) {
         if (!deviceIsInBasestationList(pluggedBasestationDevices, this->basestations)) {
             // This basestation is plugged in but not in the list -> add it
             try {
@@ -97,7 +97,7 @@ void BasestationCollection::setIncomingMessageCallback(std::function<void(const 
     this->messageFromBasestationCallback = callback;
 }
 
-const BasestationCollectionStatus BasestationCollection::getStatus() {
+const BasestationCollectionStatus BasestationCollection::getStatus() const {
     const BasestationCollectionStatus status {
         .wantedBasestations = this->getWantedBasestations(),
         .hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr,
@@ -108,7 +108,7 @@ const BasestationCollectionStatus BasestationCollection::getStatus() {
     return status;
 }
 
-std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestations() {
+std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestations() const {
     // First, lock the original basestations list
     std::scoped_lock<std::mutex> lock(this->basestationsMutex);
 
@@ -120,7 +120,7 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestati
     return copyVector;
 }
 
-std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(utils::TeamColor colorOfBasestation) {
+std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(utils::TeamColor colorOfBasestation) const {
     std::shared_ptr<Basestation> basestation;
 
     std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
@@ -149,7 +149,7 @@ void BasestationCollection::setSelectedBasestation(std::shared_ptr<Basestation> 
     }
 }
 
-WirelessChannel BasestationCollection::getChannelOfBasestation(const BasestationIdentifier& basestationId) {
+WirelessChannel BasestationCollection::getChannelOfBasestation(const BasestationIdentifier& basestationId) const {
     WirelessChannel channel = WirelessChannel::UNKNOWN;
 
     // Lock the map for thread safety
@@ -233,7 +233,7 @@ void BasestationCollection::updateBasestationSelection() {
     }
 }
 
-void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() {
+void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     // Create the channel request message
     BasestationGetConfiguration getConfigurationMessage;
     getConfigurationMessage.header = PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
@@ -246,7 +246,7 @@ void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() {
     std::memcpy(&message.payloadBuffer, &getConfigurationPayload.payload, message.payloadSize);
     
     // Send it to every basestation with unknown channel
-    for (auto basestation : this->getAllBasestations()) {
+    for (const auto& basestation : this->getAllBasestations()) {
         WirelessChannel channel = this->getChannelOfBasestation(basestation->getIdentifier());
         if (channel == WirelessChannel::UNKNOWN) {
             basestation->sendMessageToBasestation(message);
@@ -254,7 +254,7 @@ void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() {
     }
 }
 
-std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBasestations() {
+std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBasestations() const {
     const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
     const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
     
@@ -273,7 +273,7 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBa
     return std::move(selectableBasestations);
 }
 
-bool BasestationCollection::sendChannelChangeRequest(std::shared_ptr<Basestation> basestation, WirelessChannel newChannel) {
+bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
 
     BasestationSetConfiguration setConfigurationCommand;
     setConfigurationCommand.header = PACKET_TYPE_BASESTATION_SET_CONFIGURATION;
@@ -485,10 +485,10 @@ utils::TeamColor BasestationCollection::getTeamColorCorrespondingWirelessChannel
     }
 }
 
-bool BasestationCollection::basestationIsInDeviceList(std::shared_ptr<Basestation> basestation, const std::vector<libusb_device*>& devices) {
+bool BasestationCollection::basestationIsInDeviceList(const std::shared_ptr<Basestation>& basestation, const std::vector<libusb_device*>& devices) {
     bool basestationIsInList = false;
 
-    for (auto device : devices) {
+    for (const auto& device : devices) {
         if (*basestation == device) {
             basestationIsInList = true;
             break;
@@ -498,10 +498,10 @@ bool BasestationCollection::basestationIsInDeviceList(std::shared_ptr<Basestatio
     return basestationIsInList;
 }
 
-bool BasestationCollection::deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
+bool BasestationCollection::deviceIsInBasestationList(libusb_device* const device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
     bool deviceIsInList = false;
 
-    for (auto basestation : basestations) {
+    for (const auto& basestation : basestations) {
         if (*basestation == device) {
             deviceIsInList = true;
             break;

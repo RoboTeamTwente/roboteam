@@ -27,13 +27,13 @@ bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const 
         return this->usbAddress < other.usbAddress;
     }
 }
-std::string BasestationIdentifier::toString() const {
+const std::string BasestationIdentifier::toString() const {
     int address = (int) this->usbAddress;
     int id = (int) this->serialIdentifier;
     return "serial id: " + std::to_string(id) + ", address: " + std::to_string(address);
 }
 
-Basestation::Basestation(libusb_device* device) : device(device), identifier(getIdentifierOfDevice(device)) {
+Basestation::Basestation(libusb_device* const device) : device(device), identifier(getIdentifierOfDevice(device)) {
     if (!Basestation::isDeviceABasestation(device)) {
         throw FailedToOpenDeviceException("Device is not a basestation");
     }
@@ -85,20 +85,20 @@ bool Basestation::operator==(libusb_device* otherDevice) const {
 bool Basestation::operator==(const BasestationIdentifier& otherBasestationIdentifier) const {
     return this->identifier == otherBasestationIdentifier;
 }
-bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
+bool Basestation::operator==(const std::shared_ptr<Basestation>& otherBasestation) const {
     return otherBasestation != nullptr
         && this->identifier == otherBasestation->identifier;
 }
 
 int Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
-void Basestation::setIncomingMessageCallback(std::function<void(const BasestationMessage&, const BasestationIdentifier&)> callback) { this->incomingMessageCallback = callback; }
+void Basestation::setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback) { this->incomingMessageCallback = callback; }
 
 const BasestationIdentifier& Basestation::getIdentifier() const {
     return this->identifier;
 }
 
-bool Basestation::isDeviceABasestation(libusb_device* device) {
+bool Basestation::isDeviceABasestation(libusb_device * const device) {
     libusb_device_descriptor descriptor;
     int r = libusb_get_device_descriptor(device, &descriptor);
     if (r < 0) {
@@ -162,7 +162,7 @@ int Basestation::writeBasestationMessage(BasestationMessage& message) const {
     return bytesSent;
 }
 
-const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* device) {
+const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* const device) {
     libusb_device_descriptor deviceDescriptor = {};
     libusb_get_device_descriptor(device, &deviceDescriptor);
 

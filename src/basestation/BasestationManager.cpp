@@ -95,14 +95,12 @@ void BasestationManager::listenForBasestationPlugs() {
 }
 
 const BasestationManagerStatus BasestationManager::getStatus() const {
-    const BasestationManagerStatus status = {
-        .basestationCollection = this->basestationCollection->getStatus()
-    };
+    const BasestationManagerStatus status = {.basestationCollection = this->basestationCollection->getStatus()};
 
     return status;
 }
 
-std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device*const*const devices, int device_count) {
+std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device* const* const devices, int device_count) {
     std::vector<libusb_device*> basestations;
     for (int i = 0; i < device_count; ++i) {
         libusb_device* const device = devices[i];

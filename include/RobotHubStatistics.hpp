@@ -1,17 +1,18 @@
 #pragma once
 
-#include <basestation/BasestationManager.hpp>
 #include <utilities.h>
-#include <string>
-#include <chrono>
+
 #include <array>
+#include <basestation/BasestationManager.hpp>
+#include <chrono>
+#include <string>
 
 namespace rtt::robothub {
 
 constexpr int MAX_ROBOT_STATISTICS = 16;
 
 class RobotHubStatistics {
-public:
+   public:
     RobotHubStatistics();
 
     void resetValues();
@@ -31,15 +32,16 @@ public:
     void incrementFeedbackReceivedCounter(int id, utils::TeamColor color);
 
     void print() const;
-private:
+
+   private:
     std::chrono::time_point<std::chrono::steady_clock> startTime;
 
     std::array<int, MAX_ROBOT_STATISTICS> yellowCommandsSent;
     std::array<int, MAX_ROBOT_STATISTICS> yellowFeedbackReceived;
-    
+
     std::array<int, MAX_ROBOT_STATISTICS> blueCommandsSent;
     std::array<int, MAX_ROBOT_STATISTICS> blueFeedbackReceived;
-    
+
     std::string getRobotStats(int id, utils::TeamColor team) const;
     std::string getRunTime() const;
     std::string getRobotHubMode() const;
@@ -49,10 +51,10 @@ private:
 
     std::string numberToSideBox(int n) const;
 
-    template<typename ... Args>
-    static std::string string_format( const std::string& format, Args ... args );
+    template <typename... Args>
+    static std::string string_format(const std::string& format, Args... args);
 
     static std::string wantedBasestationsToString(basestation::WantedBasestations wantedBasestations);
 };
 
-} // namespace rtt::robothub
+}  // namespace rtt::robothub

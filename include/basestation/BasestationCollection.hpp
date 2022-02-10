@@ -5,11 +5,11 @@
 
 #include <basestation/Basestation.hpp>
 #include <functional>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <vector>
-#include <map>
 
 namespace rtt::robothub::basestation {
 
@@ -20,10 +20,10 @@ enum class WirelessChannel : unsigned int { YELLOW_CHANNEL = 0, BLUE_CHANNEL = 1
 enum class WantedBasestations { ONLY_YELLOW, ONLY_BLUE, YELLOW_AND_BLUE, NEITHER_YELLOW_NOR_BLUE };
 
 typedef struct BasestationCollectionStatus {
-   WantedBasestations wantedBasestations;
-   bool hasYellowBasestation;
-   bool hasBlueBasestation;
-   int amountOfBasestations;
+    WantedBasestations wantedBasestations;
+    bool hasYellowBasestation;
+    bool hasBlueBasestation;
+    int amountOfBasestations;
 } BasestationCollectionStatus;
 
 /* This class will take any collection of basestations, and will pick two basestations that
@@ -48,21 +48,21 @@ class BasestationCollection {
 
    private:
     // Collection and selection of basestations
-    mutable std::mutex basestationsMutex; // Guards the basestations vector
-    std::vector<std::shared_ptr<Basestation>> basestations; // All basestations
+    mutable std::mutex basestationsMutex;                    // Guards the basestations vector
+    std::vector<std::shared_ptr<Basestation>> basestations;  // All basestations
     std::vector<std::shared_ptr<Basestation>> getAllBasestations() const;
 
-    mutable std::mutex basestationSelectionMutex; // Guards both selected basestations
-    std::shared_ptr<Basestation> yellowBasestation; // Basestation selected for yellow team
-    std::shared_ptr<Basestation> blueBasestation; // Basestation selected for blue team
+    mutable std::mutex basestationSelectionMutex;    // Guards both selected basestations
+    std::shared_ptr<Basestation> yellowBasestation;  // Basestation selected for yellow team
+    std::shared_ptr<Basestation> blueBasestation;    // Basestation selected for blue team
 
     std::shared_ptr<Basestation> getSelectedBasestation(utils::TeamColor colorOfBasestation) const;
     void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
 
     // Keeps track of which basestation has which wireless channel
     std::map<const BasestationIdentifier, WirelessChannel> basestationIdToChannel;
-    mutable std::mutex basestationIdToChannelMutex; // Guards the basestationIdToChannel map
-    
+    mutable std::mutex basestationIdToChannelMutex;  // Guards the basestationIdToChannel map
+
     WirelessChannel getChannelOfBasestation(const BasestationIdentifier& basestationId) const;
     void setChannelOfBasestation(const BasestationIdentifier& basestationId, WirelessChannel newChannel);
     void removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId);
@@ -88,12 +88,12 @@ class BasestationCollection {
     // Sends a channel change request to the given basestation to change to the given channel
     bool sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel);
 
-    int unselectUnwantedBasestations(); // Unselect basestations that are not used
-    int unselectIncorrectlySelectedBasestations(); // Unselect basestations that have the wrong channel
-    int selectWantedBasestations(); // Select basestations that we need
-    int selectBasestations(bool selectYellowBasestation, bool selectBlueBasestation); // Will try to select the given basestations
+    int unselectUnwantedBasestations();                                                // Unselect basestations that are not used
+    int unselectIncorrectlySelectedBasestations();                                     // Unselect basestations that have the wrong channel
+    int selectWantedBasestations();                                                    // Select basestations that we need
+    int selectBasestations(bool selectYellowBasestation, bool selectBlueBasestation);  // Will try to select the given basestations
 
-    std::mutex messageCallbackMutex; // Guards the messageFromBasestationCallback
+    std::mutex messageCallbackMutex;  // Guards the messageFromBasestationCallback
     void onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId);
     std::function<void(const BasestationMessage&, utils::TeamColor color)> messageFromBasestationCallback;
 

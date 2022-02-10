@@ -4,9 +4,9 @@
 
 #include <exception>
 #include <functional>
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
 
 namespace rtt::robothub::basestation {
 
@@ -44,9 +44,9 @@ class Basestation {
     static bool isDeviceABasestation(libusb_device* const device);
 
    private:
-    libusb_device* const device;              // Corresponds to the basestation itself
-    libusb_device_handle* deviceHandle; // Handle on which IO can be performed
-    const BasestationIdentifier identifier;   // An identifier object that uniquely represents this basestation
+    libusb_device* const device;             // Corresponds to the basestation itself
+    libusb_device_handle* deviceHandle;      // Handle on which IO can be performed
+    const BasestationIdentifier identifier;  // An identifier object that uniquely represents this basestation
 
     bool shouldListenForIncomingMessages;
     std::thread incomingMessageListenerThread;

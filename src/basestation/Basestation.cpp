@@ -17,8 +17,7 @@ constexpr unsigned int TRANSFER_OUT_TIMEOUT_MS = 500;        // Timeout for writ
 constexpr unsigned int PAUSE_ON_TRANSFER_IN_ERROR_MS = 100;  // Pause every time a read fails
 
 bool BasestationIdentifier::operator==(const BasestationIdentifier& other) const {
-    return this->usbAddress == other.usbAddress
-        && this->serialIdentifier == other.serialIdentifier;
+    return this->usbAddress == other.usbAddress && this->serialIdentifier == other.serialIdentifier;
 }
 bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const {
     if (this->usbAddress == other.usbAddress) {
@@ -28,8 +27,8 @@ bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const 
     }
 }
 const std::string BasestationIdentifier::toString() const {
-    int address = (int) this->usbAddress;
-    int id = (int) this->serialIdentifier;
+    int address = (int)this->usbAddress;
+    int id = (int)this->serialIdentifier;
     return "serial id: " + std::to_string(id) + ", address: " + std::to_string(address);
 }
 
@@ -82,23 +81,18 @@ bool Basestation::operator==(libusb_device* otherDevice) const {
 
     return this->identifier == otherIdentifier;
 }
-bool Basestation::operator==(const BasestationIdentifier& otherBasestationIdentifier) const {
-    return this->identifier == otherBasestationIdentifier;
-}
-bool Basestation::operator==(const std::shared_ptr<Basestation>& otherBasestation) const {
-    return otherBasestation != nullptr
-        && this->identifier == otherBasestation->identifier;
-}
+bool Basestation::operator==(const BasestationIdentifier& otherBasestationIdentifier) const { return this->identifier == otherBasestationIdentifier; }
+bool Basestation::operator==(const std::shared_ptr<Basestation>& otherBasestation) const { return otherBasestation != nullptr && this->identifier == otherBasestation->identifier; }
 
 int Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
-void Basestation::setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback) { this->incomingMessageCallback = callback; }
-
-const BasestationIdentifier& Basestation::getIdentifier() const {
-    return this->identifier;
+void Basestation::setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback) {
+    this->incomingMessageCallback = callback;
 }
 
-bool Basestation::isDeviceABasestation(libusb_device * const device) {
+const BasestationIdentifier& Basestation::getIdentifier() const { return this->identifier; }
+
+bool Basestation::isDeviceABasestation(libusb_device* const device) {
     libusb_device_descriptor descriptor;
     int r = libusb_get_device_descriptor(device, &descriptor);
     if (r < 0) {
@@ -133,7 +127,8 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
         libusb_bulk_transfer(this->deviceHandle, TRANSFER_IN_BUFFER_ENDPOINT, message.payloadBuffer, BASESTATION_MESSAGE_BUFFER_SIZE, &message.payloadSize, TRANSFER_IN_TIMEOUT_MS);
 
     switch (error) {
-        case LIBUSB_SUCCESS: case LIBUSB_ERROR_TIMEOUT:
+        case LIBUSB_SUCCESS:
+        case LIBUSB_ERROR_TIMEOUT:
             // Either received a message correctly, or received nothing at all, so do not send any debug message
             break;
         case LIBUSB_ERROR_NO_DEVICE: {
@@ -166,10 +161,7 @@ const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* co
     libusb_device_descriptor deviceDescriptor = {};
     libusb_get_device_descriptor(device, &deviceDescriptor);
 
-    const BasestationIdentifier identifier = {
-        .usbAddress = libusb_get_device_address(device),
-        .serialIdentifier = deviceDescriptor.iSerialNumber
-    };
+    const BasestationIdentifier identifier = {.usbAddress = libusb_get_device_address(device), .serialIdentifier = deviceDescriptor.iSerialNumber};
 
     return identifier;
 }

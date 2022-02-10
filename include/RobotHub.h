@@ -2,13 +2,13 @@
 
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
-#include <RobotHubStatistics.hpp>
 
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
+#include <RobotHubStatistics.hpp>
 #include <SettingsNetworker.hpp>
-#include <WorldNetworker.hpp>
 #include <SimulationConfigurationNetworker.hpp>
+#include <WorldNetworker.hpp>
 #include <basestation/BasestationManager.hpp>
 #include <exception>
 #include <functional>
@@ -25,7 +25,7 @@ class RobotHub {
    public:
     RobotHub();
 
-    const RobotHubStatistics& getStatistics();
+    const RobotHubStatistics &getStatistics();
     void resetStatistics();
 
    private:
@@ -48,7 +48,7 @@ class RobotHub {
     void sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color);
     void sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color);
 
-    std::mutex onRobotCommandsMutex; // Guards the onRobotCommands function, as this can be called from two callback threads
+    std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
     void onRobotCommands(const proto::AICommand &commands, utils::TeamColor color);
 
     void onSettings(const proto::Setting &setting);

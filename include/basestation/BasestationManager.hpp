@@ -13,6 +13,11 @@
 
 namespace rtt::robothub::basestation {
 
+// Contains the status of the basestation manager. Currently only has the status of its collection
+typedef struct BasestationManagerStatus {
+    BasestationCollectionStatus basestationCollection;
+} BasestationManagerStatus;
+
 class BasestationManager {
    public:
     BasestationManager();
@@ -24,7 +29,7 @@ class BasestationManager {
 
     void setFeedbackCallback(const std::function<void(const RobotFeedback &, utils::TeamColor color)> &callback);
 
-    void printStatus() const;
+    const BasestationManagerStatus getStatus() const;
 
    private:
     libusb_context *usbContext;

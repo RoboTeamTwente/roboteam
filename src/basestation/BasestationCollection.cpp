@@ -8,8 +8,8 @@
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTILL_BASESTATION_IS_UNWANTED_S = 3;  // 3 seconds with no interaction
-constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 500;
+constexpr int TIME_UNTILL_BASESTATION_IS_UNWANTED_S = 1;  // 1 second with no interaction
+constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 420; // Why 420? No reason at all...
 
 BasestationCollection::BasestationCollection() {
     this->shouldUpdateBasestationSelection = true;
@@ -97,53 +97,15 @@ void BasestationCollection::setIncomingMessageCallback(std::function<void(const 
     this->messageFromBasestationCallback = callback;
 }
 
-void BasestationCollection::printCollection() {
-    const std::string yes = "yes    ";
-    const std::string no =  "no     ";
-    const std::string yellow =  "yellow ";
-    const std::string blue =    "blue   ";
-    const std::string unknown = "unknown";
-
-    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
-
-    std::string yellowFilled = selectedYellowCopy != nullptr ? yes : no;
-    std::string yellowChannel = unknown;
-    if (selectedYellowCopy != nullptr) {
-        WirelessChannel channel = this->getChannelOfBasestation(selectedYellowCopy->getIdentifier());
-        if (channel == WirelessChannel::BLUE_CHANNEL) {
-            yellowChannel = blue;
-        } else if (channel == WirelessChannel::YELLOW_CHANNEL) {
-            yellowChannel = yellow;
-        }
-    }
-
-    const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
-
-    std::string blueFilled = selectedBlueCopy != nullptr ? yes : no;
-    std::string blueChannel = unknown;
-    if (selectedBlueCopy != nullptr) {
-        WirelessChannel channel = this->getChannelOfBasestation(selectedBlueCopy->getIdentifier());
-        if (channel == WirelessChannel::BLUE_CHANNEL) {
-            blueChannel = blue;
-        } else if (channel == WirelessChannel::YELLOW_CHANNEL) {
-            blueChannel = yellow;
-        }
-    }
-
-    auto selectableBasestations = this->getSelectableBasestations();
-    int remaining = selectableBasestations.size();
-
-    std::cout << "==== Yellow slot ====== Blue slot =====" << std::endl
-              << "| filled:  " << yellowFilled << " | filled:  " << blueFilled << " |" << std::endl
-              << "| channel: " << yellowChannel << " | channel: " << blueChannel << " |" << std::endl
-              << "|----- Remaining: " << remaining << ", Waiting: ? ------|" << std::endl;
-
-    int i = 0;
-    for (const auto& basestation : this->getSelectableBasestations()) {
-        auto channel = this->getChannelOfBasestation(basestation->getIdentifier());
-        std::cout << "|- " << i << ": " << BasestationCollection::wirelessChannelToString(channel) << std::endl;
-    }
-    std::cout << std::endl;
+const BasestationCollectionStatus BasestationCollection::getStatus() {
+    const BasestationCollectionStatus status {
+        .wantedBasestations = this->getWantedBasestations(),
+        .hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr,
+        .hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr,
+        .amountOfBasestations = (int) basestations.size()
+    };
+    
+    return status;
 }
 
 std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestations() {

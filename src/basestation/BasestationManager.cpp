@@ -91,7 +91,13 @@ void BasestationManager::listenForBasestationPlugs() {
     }
 }
 
-void BasestationManager::printStatus() const { this->basestationCollection->printCollection(); }
+const BasestationManagerStatus BasestationManager::getStatus() const {
+    const BasestationManagerStatus status = {
+        .basestationCollection = this->basestationCollection->getStatus()
+    };
+
+    return status;
+}
 
 std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device** devices, int device_count) {
     std::vector<libusb_device*> basestations;

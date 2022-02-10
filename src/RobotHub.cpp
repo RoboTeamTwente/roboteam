@@ -20,12 +20,11 @@ RobotHub::RobotHub() {
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
 
-    if (!this->subscribe()) {
+    if (!this->initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
     }
 
     this->mode = utils::RobotHubMode::NEITHER;
-    std::cout << "[RobotHub]: Starting with default mode of: " << utils::modeToString(this->mode) << std::endl;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
@@ -34,29 +33,45 @@ RobotHub::RobotHub() {
     this->basestationManager->setFeedbackCallback([&](const RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
-bool RobotHub::subscribe() {
-    auto blueCommandsCallback = std::bind(&RobotHub::onBlueRobotCommands, this, std::placeholders::_1);
-    this->robotCommandsBlueSubscriber = std::make_unique<rtt::net::RobotCommandsBlueSubscriber>(blueCommandsCallback);
+RobotHubStatistics& RobotHub::getStatistics() {
+    this->statistics.basestationManagerStatus = this->basestationManager->getStatus();
+    return this->statistics;
+}
 
-    auto yellowCommandsCallback = std::bind(&RobotHub::onYellowRobotCommands, this, std::placeholders::_1);
-    this->robotCommandsYellowSubscriber = std::make_unique<rtt::net::RobotCommandsYellowSubscriber>(yellowCommandsCallback);
+bool RobotHub::initializeNetworkers() {
+    bool successfullyInitialized;
 
-    auto settingsCallback = std::bind(&RobotHub::onSettings, this, std::placeholders::_1);
-    this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>(settingsCallback);
+    try {
+        this->robotCommandsBlueSubscriber = std::make_unique<rtt::net::RobotCommandsBlueSubscriber>([&](const proto::AICommand& commands) {
+            this->onRobotCommands(commands, utils::TeamColor::BLUE);
+        });
 
-    this->simulationConfigurationSubscriber = std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration& config){
-        this->onSimulationConfiguration(config);
-    });
+        this->robotCommandsYellowSubscriber = std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const proto::AICommand& commands) {
+            this->onRobotCommands(commands, utils::TeamColor::YELLOW);
+        });
 
-    this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
+        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting& settings) {
+            this->onSettings(settings);
+        });
 
-    // All networkers should not be a nullptr
-    return this->robotCommandsBlueSubscriber != nullptr && this->robotCommandsYellowSubscriber != nullptr && this->settingsSubscriber != nullptr &&
-           this->robotFeedbackPublisher != nullptr;
+        this->simulationConfigurationSubscriber = std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration& config){
+            this->onSimulationConfiguration(config);
+        });
+
+        this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
+
+        successfullyInitialized = true;
+    } catch (const std::exception& e) { // TODO: Figure out the exception
+        successfullyInitialized = false;
+    }
+
+    return successfullyInitialized;
 }
 
 void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color) {
     if (this->simulatorManager == nullptr) return;
+
+    std::vector<int> robotIdsOfCommand; // Keeps track to which robots we will send a command
 
     simulation::RobotControlCommand simCommand;
     for (auto robotCommand : commands.commands()) {
@@ -71,11 +86,28 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::
 
         simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
 
-        // Update statistics
-        this->commands_sent[id]++;
+        robotIdsOfCommand.push_back(id);
+
+        // Update received commands stats
+        this->statistics.incrementCommandsReceivedCounter(id, color);
     }
 
-    this->simulatorManager->sendRobotControlCommand(simCommand, color);
+    int bytesSent = this->simulatorManager->sendRobotControlCommand(simCommand, color);
+
+    // Update bytes sent/packets dropped statistics
+    if (bytesSent > 0) {
+        if (color == utils::TeamColor::YELLOW) {
+            this->statistics.yellowTeamBytesSent += bytesSent;
+        } else {
+            this->statistics.blueTeamBytesSent += bytesSent;
+        }
+    } else {
+        if (color == utils::TeamColor::YELLOW) {
+            this->statistics.yellowTeamPacketsDropped++;
+        } else {
+            this->statistics.blueTeamPacketsDropped++;
+        }
+    }
 }
 
 void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color) {
@@ -113,26 +145,37 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils
 
         command.feedback = false;
 
-        this->basestationManager->sendRobotCommand(command, color);
+        bool sentCommand = this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
-        commands_sent[protoCommand.id()]++;
+        this->statistics.incrementCommandsReceivedCounter(command.id, color);
+
+        // Update bytes sent/packets dropped statistics
+        if (sentCommand) {
+            // TODO: Make this bytes instead of packets sent
+            if (color == utils::TeamColor::YELLOW) {
+                this->statistics.yellowTeamBytesSent++;
+            } else {
+                this->statistics.blueTeamBytesSent++;
+            }
+        } else {
+            if (color == utils::TeamColor::YELLOW) {
+                this->statistics.yellowTeamPacketsDropped++;
+            } else {
+                this->statistics.blueTeamPacketsDropped++;
+            }
+        }
     }
 }
 
-void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::BLUE, this->mode); }
-void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::YELLOW, this->mode); }
+void RobotHub::onRobotCommands(const proto::AICommand &commands, utils::TeamColor color) {
+    std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
 
-void RobotHub::processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode) {
-    switch (mode) {
+    switch (this->mode) {
         case utils::RobotHubMode::SIMULATOR:
             this->sendCommandsToSimulator(commands, color);
             break;
         case utils::RobotHubMode::BASESTATION:
-            this->sendCommandsToBasestation(commands, color);
-            break;
-        case utils::RobotHubMode::BOTH:
-            this->sendCommandsToSimulator(commands, color);
             this->sendCommandsToBasestation(commands, color);
             break;
         case utils::RobotHubMode::NEITHER:
@@ -148,11 +191,9 @@ void RobotHub::onSettings(const proto::Setting &settings) {
     this->settings = settings;
 
     utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
-    if (newMode != this->mode) {
-        std::cout << "[RobotHub]: Changed robothub mode from: " << utils::modeToString(this->mode) << " to: " << utils::modeToString(newMode) << std::endl;
-    }
 
     this->mode = newMode;
+    this->statistics.robotHubMode = newMode;
 }
 
 void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &configuration) {
@@ -221,47 +262,6 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
     // TODO: Put these bytes sent into nice statistics output (low priority)
 }
 
-/* Unsafe function that can cause data races in commands_sent and feedback_received,
-    as it is updated from multiple threads without guards. This should not matter
-    however, as these variables are just for debugging purposes. */
-void RobotHub::printStatistics() {
-    if (this->basestationManager == nullptr) {
-        std::cout << "Basestation manager is not initialized" << std::endl;
-        return;
-    }
-
-    this->basestationManager->printStatus();
-
-    std::stringstream ss;
-
-    const int amountOfColumns = 4;
-    for (int i = 0; i < MAX_AMOUNT_OF_ROBOTS; i += amountOfColumns) {
-        for (int j = 0; j < amountOfColumns; j++) {
-            const int robotId = i + j;
-            if (robotId < MAX_AMOUNT_OF_ROBOTS) {
-                int nSent = this->commands_sent[robotId];
-                int nReceived = this->feedback_received[robotId];
-                commands_sent[robotId] = 0;
-                feedback_received[robotId] = 0;
-
-                if (robotId < 10) ss << " ";
-                ss << robotId;
-                ss << "(";
-                if (nSent < 100) ss << " ";
-                if (nSent < 10) ss << " ";
-                ss << nSent;
-                ss << ":";
-                if (nReceived < 100) ss << " ";
-                if (nReceived < 10) ss << " ";
-                ss << nReceived;
-                ss << ") | ";
-            }
-        }
-        ss << std::endl;
-    }
-    std::cout << ss.str();
-}
-
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
     proto::RobotData feedbackToBePublished;
     feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW);
@@ -274,7 +274,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
         feedbackOfRobot->set_hasball(hasBall);
 
         // Increment the feedback counter of this robot
-        this->feedback_received[robotId]++;
+        this->statistics.incrementFeedbackReceivedCounter(robotId, feedback.color);
     }
 
     this->sendRobotFeedback(feedbackToBePublished);
@@ -301,7 +301,7 @@ void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback,
     this->sendRobotFeedback(feedbackToBePublished);
 
     // Increment the feedback counter of this robot
-    this->feedback_received[feedback.id]++;
+    this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
 }
 
 // TODO: Get rid of this function: It is crap!
@@ -348,6 +348,8 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        app.printStatistics();
+        auto& statistics = app.getStatistics();
+        statistics.print();
+        statistics.resetValues();
     }
 }

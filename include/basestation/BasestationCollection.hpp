@@ -19,6 +19,13 @@ enum class WirelessChannel : unsigned int { YELLOW_CHANNEL = 0, BLUE_CHANNEL = 1
 // Represents which combination of basestations is wanted
 enum class WantedBasestations { ONLY_YELLOW, ONLY_BLUE, YELLOW_AND_BLUE, NEITHER_YELLOW_NOR_BLUE };
 
+typedef struct BasestationCollectionStatus {
+   WantedBasestations wantedBasestations;
+   bool hasYellowBasestation;
+   bool hasBlueBasestation;
+   int amountOfBasestations;
+} BasestationCollectionStatus;
+
 /* This class will take any collection of basestations, and will pick two basestations that
    can send messages to the blue and the yellow robots. It does this by asking the basestations
    what channel they currently use, and if necessary, request them to change it. */
@@ -37,7 +44,7 @@ class BasestationCollection {
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback);
 
     // Prints the current status of the collection directly to the console
-    void printCollection();
+    const BasestationCollectionStatus getStatus();
 
    private:
     // Collection and selection of basestations

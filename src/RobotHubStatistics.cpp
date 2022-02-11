@@ -1,7 +1,7 @@
 #include <RobotHubStatistics.hpp>
 #include <chrono>
-#include <iostream>
 #include <sstream>
+#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub {
 
@@ -66,7 +66,7 @@ void RobotHubStatistics::print() const {
        << "┃" << b[3] << " │" << b[7] << " │ " << b[11] << " │ " << b[15] << " ┃ Feedback:    " << this->numberToSideBox(this->feedbackPacketsDropped) << " ┃" << std::endl
        << "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━┛" << std::endl;
 
-    std::cout << ss.str();
+    RTT_INFO("\n", ss.str())
 }
 
 void RobotHubStatistics::incrementCommandsReceivedCounter(int id, utils::TeamColor color) {

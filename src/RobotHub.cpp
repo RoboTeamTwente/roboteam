@@ -1,8 +1,8 @@
 #include <RobotCommand.h>
 #include <RobotHub.h>
+#include <roboteam_utils/Print.h>
 
 #include <cmath>
-#include <iostream>
 #include <sstream>
 
 namespace rtt::robothub {
@@ -177,7 +177,7 @@ void RobotHub::onRobotCommands(const proto::AICommand &commands, utils::TeamColo
             // Do not handle commands
             break;
         default:
-            std::cout << "[RobotHub]: Warning: Unknown robothub mode" << std::endl;
+            RTT_WARNING("Unknown robothub mode")
             break;
     }
 }

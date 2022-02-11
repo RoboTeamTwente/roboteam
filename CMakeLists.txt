@@ -34,6 +34,7 @@ target_include_directories(simulator_manager PUBLIC "include")
 target_link_libraries(simulator_manager PUBLIC
         simulation_manager_proto
         Qt5::Network
+        roboteam_utils
 )
 
 # Create the make file for the basestationManager library
@@ -48,6 +49,7 @@ target_include_directories(basestation_manager PUBLIC
 target_link_libraries(basestation_manager PUBLIC
         Threads::Threads
         lib::usb
+        roboteam_utils
 )
 
 # Create the make file for RobotHub, which uses the basestationManager and simulationManager library
@@ -59,6 +61,7 @@ target_link_libraries(roboteam_robothub
         PRIVATE simulator_manager
         PRIVATE basestation_manager
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
 )
 
 # Create the make file for robothub_enumerate_usb

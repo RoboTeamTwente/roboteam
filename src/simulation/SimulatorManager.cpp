@@ -1,5 +1,7 @@
 #include <simulation/SimulatorManager.hpp>
 
+#include <roboteam_utils/Print.h>
+
 namespace rtt::robothub::simulation {
 
 constexpr int LISTEN_THREAD_COOLDOWN_MS = 10;  // Small cooldown in thread between checking for new messsages
@@ -17,13 +19,14 @@ SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
 
     this->shouldStopListeningToFeedback = false;
 
-    std::cout << "SimulationManager bound on: " << std::endl
-              << " - Blue Control Port: " << config.blueControlPort << std::endl
-              << " - Blue Feedback Port: " << config.blueFeedbackPort << std::endl
-              << " - Yellow Control Port: " << config.yellowControlPort << std::endl
-              << " - Yellow Feedback Port: " << config.yellowFeedbackPort << std::endl
-              << " - Simulation Control Port: " << config.configurationPort << std::endl
-              << " - Simulation Feedback Port: " << config.configurationFeedbackPort << std::endl;
+    RTT_INFO("\n"
+             "SimulationManager bound on:", "\n",
+             " - Blue Control Port: ", config.blueControlPort, "\n",
+             " - Blue Feedback Port: ", config.blueFeedbackPort, "\n",
+             " - Yellow Control Port: ", config.yellowControlPort, "\n",
+             " - Yellow Feedback Port: ", config.yellowFeedbackPort, "\n",
+             " - Simulation Control Port: ", config.configurationPort, "\n",
+             " - Simulation Feedback Port: ", config.configurationFeedbackPort)
 
     // Spawn listening threads that handle incoming feedback
     this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(utils::TeamColor::BLUE); });

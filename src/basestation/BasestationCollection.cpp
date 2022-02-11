@@ -4,7 +4,7 @@
 
 #include <basestation/BasestationCollection.hpp>
 #include <cstring>
-#include <iostream>
+#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
 
@@ -70,8 +70,8 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
                 std::scoped_lock<std::mutex> lock(this->basestationsMutex);
                 this->basestations.push_back(newBasestation);
             } catch (FailedToOpenDeviceException e) {
-                std::cout << "Error: " << e.what() << std::endl;
-                std::cout << "Did you edit your PC's user permissions?" << std::endl;
+                RTT_ERROR(e.what())
+                RTT_INFO("Did you edit your PC's user permissions?")
             }
         }
     }
@@ -215,7 +215,7 @@ void BasestationCollection::updateBasestationSelection() {
     while (this->shouldUpdateBasestationSelection) {
         int wrongBasestations = this->unselectIncorrectlySelectedBasestations();
         if (wrongBasestations > 0) {
-            std::cout << "Warning: Incorrect basestations were selected!" << std::endl;
+            RTT_WARNING("Selected basestation(s) had incorrect channel(s)")
         }
 
         this->askChannelOfBasestationsWithUnknownChannel();

@@ -3,7 +3,8 @@
 #include <basestation/Basestation.hpp>
 #include <chrono>
 #include <cstring>
-#include <iostream>
+
+#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
 
@@ -56,11 +57,11 @@ Basestation::Basestation(libusb_device* const device) : device(device), identifi
         throw FailedToOpenDeviceException("Failed to claim interface");
     }
 
-    std::cout << "Opened basestation(" << this->identifier.toString() << ")" << std::endl;
-
     // Start listen thread for incoming messages
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
+
+    RTT_DEBUG("Opened basestation(", this->identifier.toString(), ")")
 }
 
 Basestation::~Basestation() {
@@ -72,7 +73,7 @@ Basestation::~Basestation() {
 
     // Close the usb device
     libusb_close(this->deviceHandle);
-    std::cout << "Closed basestation(" << this->identifier.toString() << ")" << std::endl;
+    RTT_DEBUG("Closed basestation(", this->identifier.toString(), ")")
 }
 
 bool Basestation::operator==(libusb_device* otherDevice) const {
@@ -96,7 +97,7 @@ bool Basestation::isDeviceABasestation(libusb_device* const device) {
     libusb_device_descriptor descriptor;
     int r = libusb_get_device_descriptor(device, &descriptor);
     if (r < 0) {
-        std::cout << "Error: Failed to get device descriptor" << std::endl;
+        RTT_ERROR("Failed to get device descriptor")
         return false;
     }
 
@@ -132,11 +133,11 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
             // Either received a message correctly, or received nothing at all, so do not send any debug message
             break;
         case LIBUSB_ERROR_NO_DEVICE: {
-            std::cout << "WARNING: No device found. Did you unplug the device? " << std::endl;
+            RTT_WARNING("Cannot reach the basestation. Did you unplug the device?")
             break;
         }
         default: {
-            std::cout << "ERROR: Failed to read message: " << usbutils_errorToString(error) << std::endl;
+            RTT_ERROR("Failed to read message: ", usbutils_errorToString(error))
         }
     }
 
@@ -147,7 +148,7 @@ int Basestation::writeBasestationMessage(BasestationMessage& message) const {
 
     int error = libusb_bulk_transfer(this->deviceHandle, TRANSFER_OUT_BUFFER_ENDPOINT, message.payloadBuffer, message.payloadSize, &bytesSent, TRANSFER_OUT_TIMEOUT_MS);
     if (error) {
-        std::cout << "ERROR: Failed to send message: " << usbutils_errorToString(error) << std::endl;
+        RTT_ERROR("Failed to send message: ", usbutils_errorToString(error))
     }
 
     if (bytesSent <= 0 || error != LIBUSB_SUCCESS) {

@@ -1,7 +1,8 @@
+#include <roboteam_utils/Print.h>
+
 #include <RobotHubStatistics.hpp>
 #include <chrono>
 #include <sstream>
-#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub {
 

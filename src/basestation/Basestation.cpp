@@ -1,10 +1,9 @@
 #include <basestation/LibusbUtilities.h>
+#include <roboteam_utils/Print.h>
 
 #include <basestation/Basestation.hpp>
 #include <chrono>
 #include <cstring>
-
-#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
 

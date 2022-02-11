@@ -1,10 +1,10 @@
 #include <BasestationConfiguration.h>     // REM packet
 #include <BasestationGetConfiguration.h>  // REM packet
 #include <BasestationSetConfiguration.h>  // REM packet
+#include <roboteam_utils/Print.h>
 
 #include <basestation/BasestationCollection.hpp>
 #include <cstring>
-#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
 

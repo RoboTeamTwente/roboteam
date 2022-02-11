@@ -71,6 +71,11 @@ Basestation::~Basestation() {
         this->incomingMessageListenerThread.join();
     }
 
+    int error = libusb_release_interface(this->deviceHandle, BASESTATION_USB_INTERFACE_NUMBER);
+    if (error) {
+        RTT_ERROR("Failed to release interface")
+    }
+
     // Close the usb device
     libusb_close(this->deviceHandle);
     RTT_DEBUG("Closed basestation(", this->identifier.toString(), ")")

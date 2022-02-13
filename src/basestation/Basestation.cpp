@@ -70,6 +70,7 @@ Basestation::~Basestation() {
         this->incomingMessageListenerThread.join();
     }
 
+    // Release the interface so other programs can claim it
     int error = libusb_release_interface(this->deviceHandle, BASESTATION_USB_INTERFACE_NUMBER);
     if (error) {
         RTT_ERROR("Failed to release interface")

@@ -77,6 +77,12 @@ target_link_libraries(roboteam_robothub_enumerate_usb
         lib::usb
 )
 
+# Create the make file for test/sendRobotCommands.cpp
+add_executable(test_sendRobotCommands
+        "test/SendRobotCommands.cpp"
+)
+target_link_libraries(test_sendRobotCommands PRIVATE roboteam_networking)
+
 # Create make file for simulation formation test
 add_executable(test_formation
         test/sendFormationToSimulator.cpp

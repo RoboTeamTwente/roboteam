@@ -11,6 +11,11 @@ include(GetWebsocket) # ?
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
+include(GetGoogleTest) # For testing
+
+# Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
+include(GoogleTest)
+enable_testing()
 
 # Testing compiler cxx support
 check_cxx_compiler_flag(-std=c++20 COMPILER_SUPPORTS_CXX_20)
@@ -56,5 +61,3 @@ add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
 add_subdirectory(roboteam_world)
-
-enable_testing()

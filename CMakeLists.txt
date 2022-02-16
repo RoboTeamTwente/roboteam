@@ -26,7 +26,6 @@ set(ROBOTEAM_UTILS_SRC
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC
-        test/utils/main.cpp
         test/utils/AngleTest.cpp
         test/utils/ArcTest.cpp
         test/utils/LineTest.cpp
@@ -68,10 +67,10 @@ add_executable(roboteam_utils_tests
         )
 
 target_link_libraries(roboteam_utils_tests
+        PRIVATE roboteam_utils
         PRIVATE GTest::gtest
         PRIVATE GTest::gtest_main
         PRIVATE pthread
-        PRIVATE roboteam_utils
         )
 
 target_compile_options(roboteam_utils_tests PRIVATE "${COMPILER_FLAGS}")

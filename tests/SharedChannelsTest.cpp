@@ -3,11 +3,12 @@
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
 #include <iostream>
+#include <gtest/gtest.h>
 
 using namespace rtt::net;
 
-int main() {
-    try {
+TEST(RTTCMDPub, nullptrDontCrash) {
+    EXPECT_NO_THROW(
         RobotCommandsBluePublisher blueCommandsPub;
         RobotCommandsBlueSubscriber blueCommandsSub1(nullptr);
         RobotCommandsBlueSubscriber blueCommandsSub2(nullptr);
@@ -27,9 +28,5 @@ int main() {
         WorldPublisher worldPub;
         WorldSubscriber worldSub1(nullptr);
         WorldSubscriber worldSub2(nullptr);
-
-        std::cout << "Test passed!" << std::endl;
-    } catch (std::exception e) {
-        std::cout << "Test failed!" << std::endl;
-    }
+    );
 }

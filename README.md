@@ -145,20 +145,21 @@ $ sudo -s /bin/bash -c "git clone https://github.com/google/googletest.git /opt/
     make install"
 ```
 
-## Installation on macOS (tested on macOS 11.4 Big Sur)
+## Installation on macOS (tested on macOS 12.2.1 Monterey)
 Make sure you already have the following:
 - XCode
 - XCode Command Line Tools (Run XCode once, then `xcode-select --install`)
 - Homebrew
 
+
+Install remaining dependencies
 ```
-$ brew install cmake zmq armadillo libsodium qt@5 googletest
-$ brew install protobuf --HEAD     # As of 3.17.3, protobuf is is broken and neeeds to be compiled from HEAD
+$ brew install cmake zmq armadillo libsodium qt@5 protobuf llvm
 ```
 
-Create a sparse disk image with a case-sensitive FS to hold the source code
+Create a sparse (bundle) disk image with a case-sensitive FS to hold the source code
 ```
-$ hdiutil create -size 2g -volname rbtt-workspace -layout GPTSPUD -fs "Case-sensitive APFS" -type SPARSE -nospotlight ~/Desktop/rbtt-workspace
+$ hdiutil create -size 2g -volname rbtt-workspace -layout GPTSPUD -fs "Case-sensitive APFS" -type SPARSEBUNDLE -nospotlight ~/Desktop/rbtt-workspace
 $ hdiutil attach ~/Desktop/rbtt-workspace
 $ cd /Volumes/rbtt_workspace/
 $ git clone git@github.com:RoboTeamTwente/roboteam_suite.git
@@ -166,6 +167,19 @@ $ cd roboteam_suite/
 $ git submodule update --init --recursive
 $ git submodule foreach git checkout development
 ```
+
+Select a newer clang to be used to compile RBTT software
+
+1. Open CLion
+2. Go to Preferences -> Build, Execution, Deployment -> Toolchains -> Default
+3. Change C Compiler to:  `/usr/local/Cellar/llvm/13.0.1/bin/clang`
+4. Change C++ Compiler to: `/usr/local/Cellar/llvm/13.0.1/bin/clang++`
+
+Notes:
+* C(++) Compiler paths may differ based on installed version. Verify the version with `$ brew info llvm`
+* Toolchains may vary if you changed the default CLion settings. If you want to deviate from this readme, ensure the compiler selected in the toolchain used to compile RBTT software has support for C++20 
+
+
 
 ### Code Style Formatting
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder.

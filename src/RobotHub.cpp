@@ -308,7 +308,10 @@ std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor
     return nullptr;
 }
 
-bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) const { return this->robotFeedbackPublisher->publish(feedback); }
+bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) {
+    this->statistics.feedbackBytesSent += (int) feedback.ByteSizeLong();
+    return this->robotFeedbackPublisher->publish(feedback);
+}
 
 const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 

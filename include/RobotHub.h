@@ -57,7 +57,7 @@ class RobotHub {
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor team);
-    bool sendRobotFeedback(const proto::RobotData &feedback) const;
+    bool sendRobotFeedback(const proto::RobotData &feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

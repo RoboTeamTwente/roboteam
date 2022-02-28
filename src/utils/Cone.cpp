@@ -5,6 +5,7 @@
 #include "GeometryFieldSize.pb.h"
 #include "roboteam_utils/Mathematics.h"
 #include "roboteam_utils/Vector2.h"
+#include <Print.h>
 
 namespace rtt {
 
@@ -93,7 +94,7 @@ Vector2 Cone::ClosestPointOnSide(Vector2 point, Vector2 closeTo) const noexcept 
 
 Vector2 Cone::SecondClosestPointOnSide(Vector2 point) const noexcept {
     if (!IsWithinCone(point)) {
-        std::cout << "This point is not inside the cone" << std::endl;
+        RTT_WARNING("This point is not inside the cone")
         return point;
     }
     Vector2 vectorToPoint = point - start;
@@ -118,7 +119,7 @@ Vector2 Cone::SecondClosestPointOnSide(Vector2 point) const noexcept {
 
 Vector2 Cone::ClosestPointOnSideTwoCones(Cone otherCone, Vector2 point, Vector2 closeTo) const noexcept {
     if (!(this->IsWithinCone(point) && otherCone.IsWithinCone(point))) {
-        std::cout << "This point is not inside either of the cones" << std::endl;
+        RTT_WARNING("This point is not inside either of the cones")
 
         return point;
     }
@@ -160,7 +161,7 @@ bool Cone::DoConesOverlap(Cone otherCone) const noexcept {
 
 Cone Cone::MergeCones(Cone otherCone) const noexcept {
     if (!DoConesOverlap(otherCone)) {
-        std::cout << "no overlap" << std::endl;
+        RTT_WARNING("No overlap in cones")
         return *this;
     }
 

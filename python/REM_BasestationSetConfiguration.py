@@ -7,7 +7,7 @@
 """
 
 import numpy as np
-from . import BaseTypes
+from . import REM_BaseTypes
 
 
 
@@ -46,7 +46,7 @@ class REM_BasestationSetConfiguration:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_SET_CONFIGURATION, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_SET_CONFIGURATION, dtype=np.uint8)
         REM_BasestationSetConfiguration.set_header              (payload, self.header)
         REM_BasestationSetConfiguration.set_remVersion          (payload, self.remVersion)
         REM_BasestationSetConfiguration.set_channel             (payload, self.channel)

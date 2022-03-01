@@ -38,7 +38,7 @@
 """
 
 import numpy as np
-from . import BaseTypes
+from . import REM_BaseTypes
 
 
 
@@ -388,7 +388,7 @@ class REM_BasestationStatistics:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_STATISTICS, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_STATISTICS, dtype=np.uint8)
         REM_BasestationStatistics.set_header              (payload, self.header)
         REM_BasestationStatistics.set_remVersion          (payload, self.remVersion)
         REM_BasestationStatistics.set_bot0_sent           (payload, self.bot0_sent)

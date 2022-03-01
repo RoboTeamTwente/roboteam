@@ -8,7 +8,7 @@
 """
 
 import numpy as np
-from . import BaseTypes
+from . import REM_BaseTypes
 
 
 
@@ -56,7 +56,7 @@ class REM_RobotLog:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(BaseTypes.PACKET_SIZE_R_E_M__ROBOT_LOG, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__ROBOT_LOG, dtype=np.uint8)
         REM_RobotLog.set_header              (payload, self.header)
         REM_RobotLog.set_remVersion          (payload, self.remVersion)
         REM_RobotLog.set_id                  (payload, self.id)

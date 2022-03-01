@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "BaseTypes.h"
+#include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationSetConfigurationPayload {
     uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_SET_CONFIGURATION];

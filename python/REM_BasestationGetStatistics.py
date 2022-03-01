@@ -5,7 +5,7 @@
 """
 
 import numpy as np
-from . import BaseTypes
+from . import REM_BaseTypes
 
 
 
@@ -26,7 +26,7 @@ class REM_BasestationGetStatistics:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_GET_STATISTICS, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__BASESTATION_GET_STATISTICS, dtype=np.uint8)
         REM_BasestationGetStatistics.set_header              (payload, self.header)
         return payload
 

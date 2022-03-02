@@ -10,7 +10,7 @@
 
 #include "FT812Q_Drawing.h"
 #include "packet_buffers.h"
-#include "RobotFeedback.h"
+#include "REM_RobotFeedback.h"
 
 
 /* DATA */
@@ -93,15 +93,15 @@ void drawBasestation(bool USBstatus){
 }
 
 uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
-	RobotFeedbackPayload *rfp = &buffer_RobotFeedback[id].packet;
+	REM_RobotFeedbackPayload *rfp = &buffer_RobotFeedback[id].packet;
 
 	// /* CALCULATE DATA */
-	float angle				= RobotFeedback_get_angle(rfp);
+	float angle				= REM_RobotFeedback_get_angle(rfp);
 	char angle_char[5];
 	sprintf(angle_char, "%.2f", angle);
 
-	float theta				= RobotFeedback_get_theta(rfp);
-	float rho 				= RobotFeedback_get_rho(rfp);
+	float theta				= REM_RobotFeedback_get_theta(rfp);
+	float rho 				= REM_RobotFeedback_get_rho(rfp);
 
 	float x_vel 				= rho * cos(theta);
 	float y_vel 				= rho * sin(theta);

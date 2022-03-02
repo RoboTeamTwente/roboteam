@@ -6,7 +6,6 @@
  */
 
 #include "basestation.h"
-#include "BaseTypes.h"
 #include "Wireless.h"
 #include "SX1280_Constants.h"
 #include "gpio_util.h"

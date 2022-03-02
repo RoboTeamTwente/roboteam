@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RobotBuzzer.h>    // REM command
-#include <RobotCommand.h>   // REM command
-#include <RobotFeedback.h>  // REM command
+#include <REM_RobotBuzzer.h>
+#include <REM_RobotCommand.h>
+#include <REM_RobotFeedback.h>
 #include <libusb-1.0/libusb.h>
 #include <utilities.h>
 
@@ -18,11 +18,11 @@ class BasestationManager {
     BasestationManager();
     ~BasestationManager();
 
-    bool sendRobotCommand(const RobotCommand &command, utils::TeamColor color) const;
-    bool sendRobotBuzzerCommand(const RobotBuzzer &command, utils::TeamColor color) const;
+    bool sendRobotCommand(const REM_RobotCommand &command, utils::TeamColor color) const;
+    bool sendRobotBuzzerCommand(const REM_RobotBuzzer &command, utils::TeamColor color) const;
     bool sendBasestationStatisticsRequest(utils::TeamColor color) const;
 
-    void setFeedbackCallback(const std::function<void(const RobotFeedback &, utils::TeamColor color)> &callback);
+    void setFeedbackCallback(const std::function<void(const REM_RobotFeedback &, utils::TeamColor color)> &callback);
 
     void printStatus() const;
 
@@ -37,8 +37,8 @@ class BasestationManager {
 
     void handleIncomingMessage(const BasestationMessage &message, utils::TeamColor basestationColor) const;
 
-    std::function<void(const RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
-    void callFeedbackCallback(const RobotFeedback &feedback, utils::TeamColor color) const;
+    std::function<void(const REM_RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
+    void callFeedbackCallback(const REM_RobotFeedback &feedback, utils::TeamColor color) const;
 
     static std::vector<libusb_device *> filterBasestationDevices(libusb_device **devices, int device_count);
 };

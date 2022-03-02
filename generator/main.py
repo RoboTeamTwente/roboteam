@@ -55,12 +55,12 @@ for packet_name in packets:
 basetypegenerator_c = BaseTypeGenerator.C_BaseTypeGenerator()
 basetypegenerator_python = BaseTypeGenerator.Python_BaseTypeGenerator()
 
-filename = "BaseTypes.h"
+filename = "REM_BaseTypes.h"
 with open(os.path.join("generated_c", filename), "w") as file:
 	file.write(basetypegenerator_c.generate(packets, version))
 print(f"Generated file {filename}")
 
-filename = "BaseTypes.py"
+filename = "REM_BaseTypes.py"
 with open(os.path.join("generated_python", filename), "w") as file:
 	file.write(basetypegenerator_python.generate(packets, version))
 print(f"Generated file {filename}")

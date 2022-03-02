@@ -11,8 +11,11 @@ def upperFirst(word):
 # RobotCommand => rc
 def CamelCaseToAbbrev(word):
 	return ''.join([letter for letter in word if letter.isupper()]).lower()
-# RobotCommand => _ROBOT_COMMAND
+# REM_RobotCommand => _REM_ROBOT_COMMAND
 def CamelCaseToUpper(word):
+	if (word.startswith("REM_")):
+		word = "Rem" + word[4:]
+
 	return ''.join(['_'*char.isupper() + char.upper() for char in word])
 
 def stripBrackets(string):
@@ -331,7 +334,7 @@ class C_Generator(Generator):
 		begin_string += "\n"
 		begin_string += f"#include <stdbool.h>\n"
 		begin_string += f"#include <stdint.h>\n"
-		begin_string += f"#include \"BaseTypes.h\"\n"
+		begin_string += f"#include \"REM_BaseTypes.h\"\n"
 		return begin_string
 
 	def to_end(self, packet_name):
@@ -425,7 +428,7 @@ class Python_Generator(Generator):
 	
 	def to_begin(self, packet_name):
 		begin_string  = "import numpy as np\n"
-		begin_string += "from . import BaseTypes\n"
+		begin_string += "from . import REM_BaseTypes\n"
 		return begin_string 
 
 	def to_end(self, packet_name):
@@ -474,7 +477,7 @@ class Python_Generator(Generator):
 
 	def to_encode(self, packet_name, variables):
 		function_string =  f"    def encode(self):\n"
-		function_string += f"        payload = np.zeros(BaseTypes.PACKET_SIZE{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
+		function_string += f"        payload = np.zeros(REM_BaseTypes.PACKET_SIZE{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
 		for variable, n_bits, _, _ in variables:
 			function_string += f"        {packet_name}.set_{variable:<20}(payload, self.{variable})\n"
 		function_string += "        return payload\n"

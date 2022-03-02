@@ -2,11 +2,11 @@
 #define __ROBOT__H_
 
 #include <unistd.h>
-#include "RobotCommand.h"
+#include "REM_RobotCommand.h"
 
 // These three are currently a callback hack for the REM implementation
-RobotCommandPayload myRobotCommandPayload;
-RobotCommand myRobotCommand;
+REM_RobotCommandPayload myRobotCommandPayload;
+REM_RobotCommand myRobotCommand;
 volatile uint8_t robotCommandIsFresh;
 
 void print(char _out[]);

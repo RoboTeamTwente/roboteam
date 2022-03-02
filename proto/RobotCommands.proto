@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotCommand {
+    uint32 id = 1;
+
+    float velocity_x = 2;
+    float velocity_y = 3;
+    float angle = 4;
+    float angular_velocity = 5;
+    bool use_angular_velocity = 6;
+
+    float camera_angle_of_robot = 7;
+    bool camera_angle_of_robot_is_set = 8;
+
+    float kick_speed = 9;
+    bool wait_for_ball = 10;
+    bool chip_instead_of_kick = 11;
+
+    float dribbler_speed = 12;
+    bool ignore_packet = 13;
+}
+
+message RobotCommands {
+    repeated RobotCommand robot_commands = 1;
+}

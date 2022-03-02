@@ -1,34 +1,46 @@
 #pragma once
-#include <proto/AICommand.pb.h>
 
+#include <string>
 #include <functional>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
 
+#include <roboteam_utils/RobotCommands.hpp> // The general data format of robot commands in rtt_utils
+
 namespace rtt::net {
 
-class RobotCommandsBluePublisher : private utils::Publisher<proto::AICommand> {
+class RobotCommandsBluePublisher : private utils::Publisher {
    public:
     RobotCommandsBluePublisher();
 
-    bool publish(const proto::AICommand& commands);
+    // Publishes the given robot commands on the blue channel. Returns success
+    bool publish(const rtt::RobotCommands& commands);
 };
 
-class RobotCommandsBlueSubscriber : private utils::Subscriber<proto::AICommand> {
+class RobotCommandsBlueSubscriber : private utils::Subscriber {
    public:
-    RobotCommandsBlueSubscriber(const std::function<void(const proto::AICommand&)>& callback);
+    RobotCommandsBlueSubscriber(const std::function<void(const rtt::RobotCommands&)>& callback);
+
+   private:
+    void onPublishedMessage(const std::string& message);
+    const std::function<void(const rtt::RobotCommands&)> callback;
 };
 
-class RobotCommandsYellowPublisher : private utils::Publisher<proto::AICommand> {
+class RobotCommandsYellowPublisher : private utils::Publisher {
    public:
     RobotCommandsYellowPublisher();
 
-    bool publish(const proto::AICommand& commands);
+    // Publishes the given robot commands on the yellow channel. Returns success
+    bool publish(const rtt::RobotCommands& commands);
 };
 
-class RobotCommandsYellowSubscriber : private utils::Subscriber<proto::AICommand> {
+class RobotCommandsYellowSubscriber : private utils::Subscriber {
    public:
-    RobotCommandsYellowSubscriber(const std::function<void(const proto::AICommand&)>& callback);
+    RobotCommandsYellowSubscriber(const std::function<void(const rtt::RobotCommands&)>& callback);
+
+   private:
+    void onPublishedMessage(const std::string& message);
+    const std::function<void(const rtt::RobotCommands&)> callback;
 };
 
 }  // namespace rtt::net

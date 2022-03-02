@@ -1,6 +1,3 @@
-#include <BasestationConfiguration.h>     // REM packet
-#include <BasestationSetConfiguration.h>  // REM packet
-
 #include <basestation/BasestationCollection.hpp>
 #include <iostream>
 

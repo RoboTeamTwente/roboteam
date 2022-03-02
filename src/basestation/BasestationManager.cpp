@@ -1,4 +1,4 @@
-#include <BasestationGetStatistics.h>  // REM command
+#include <REM_BasestationGetStatistics.h>
 
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
@@ -33,46 +33,46 @@ BasestationManager::~BasestationManager() {
     libusb_exit(this->usbContext);
 }
 
-bool BasestationManager::sendRobotCommand(const RobotCommand& command, utils::TeamColor color) const {
-    RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
+bool BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils::TeamColor color) const {
+    REM_RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
-    RobotCommandPayload payload;
-    encodeRobotCommand(&payload, &copy);
+    REM_RobotCommandPayload payload;
+    encodeREM_RobotCommand(&payload, &copy);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_ROBOT_COMMAND;
+    message.payloadSize = PACKET_SIZE_REM_ROBOT_COMMAND;
     std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-bool BasestationManager::sendRobotBuzzerCommand(const RobotBuzzer& command, utils::TeamColor color) const {
-    RobotBuzzer copy = command;
+bool BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, utils::TeamColor color) const {
+    REM_RobotBuzzer copy = command;
 
-    RobotBuzzerPayload payload;
-    encodeRobotBuzzer(&payload, &copy);
+    REM_RobotBuzzerPayload payload;
+    encodeREM_RobotBuzzer(&payload, &copy);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_ROBOT_BUZZER;
+    message.payloadSize = PACKET_SIZE_REM_ROBOT_BUZZER;
     std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
 bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
-    BasestationGetStatistics command;
+    REM_BasestationGetStatistics command;
 
-    BasestationGetStatisticsPayload payload;
-    encodeBasestationGetStatistics(&payload, &command);
+    REM_BasestationGetStatisticsPayload payload;
+    encodeREM_BasestationGetStatistics(&payload, &command);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_BASESTATION_GET_STATISTICS;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_STATISTICS;
     std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
     return this->basestationCollection->sendMessageToBasestation(message, color);
 }
 
-void BasestationManager::setFeedbackCallback(const std::function<void(const RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
+void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
 
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
@@ -107,12 +107,12 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
 
 void BasestationManager::handleIncomingMessage(const BasestationMessage& message, utils::TeamColor color) const {
     switch (message.payloadBuffer[0]) {
-        case PACKET_TYPE_ROBOT_FEEDBACK: {
-            RobotFeedbackPayload payload;
+        case PACKET_TYPE_REM_ROBOT_FEEDBACK: {
+            REM_RobotFeedbackPayload payload;
             std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
 
-            RobotFeedback feedback;
-            decodeRobotFeedback(&feedback, &payload);
+            REM_RobotFeedback feedback;
+            decodeREM_RobotFeedback(&feedback, &payload);
 
             this->callFeedbackCallback(feedback, color);
             break;
@@ -120,7 +120,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
     }
 }
 
-void BasestationManager::callFeedbackCallback(const RobotFeedback& feedback, utils::TeamColor color) const {
+void BasestationManager::callFeedbackCallback(const REM_RobotFeedback& feedback, utils::TeamColor color) const {
     if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback, color);
 }
 

@@ -1,6 +1,6 @@
-#include <BasestationConfiguration.h>     // REM packet
-#include <BasestationGetConfiguration.h>  // REM packet
-#include <RobotCommand.h>                 //REM packet
+#include <REM_BasestationConfiguration.h>
+#include <REM_BasestationGetConfiguration.h>
+#include <REM_RobotCommand.h>
 #include <basestation/LibusbUtilities.h>
 
 #include <basestation/Basestation.hpp>
@@ -148,12 +148,12 @@ void Basestation::listenForIncomingMessages() {
 // Assumes a payload size bigger than 0
 void Basestation::handleIncomingMessage(const BasestationMessage& message) {
     // If a basestation configuration is received, update channel of this basestation class
-    if (message.payloadBuffer[0] == PACKET_TYPE_BASESTATION_CONFIGURATION) {
-        BasestationConfigurationPayload configurationPayload;
-        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_BASESTATION_CONFIGURATION);
+    if (message.payloadBuffer[0] == PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+        REM_BasestationConfigurationPayload configurationPayload;
+        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
 
-        BasestationConfiguration basestationConfiguration;
-        decodeBasestationConfiguration(&basestationConfiguration, &configurationPayload);
+        REM_BasestationConfiguration basestationConfiguration;
+        decodeREM_BasestationConfiguration(&basestationConfiguration, &configurationPayload);
 
         WirelessChannel usedChannel = Basestation::remChannelToWirelessChannel(basestationConfiguration.channel);
         this->channel = usedChannel;
@@ -166,14 +166,14 @@ void Basestation::handleIncomingMessage(const BasestationMessage& message) {
 }
 
 bool Basestation::requestChannelOfBasestation() {
-    BasestationGetConfiguration getConfigurationCommand;
-    getConfigurationCommand.header = PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
+    REM_BasestationGetConfiguration getConfigurationCommand;
+    getConfigurationCommand.header = PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
 
-    BasestationGetConfigurationPayload getConfigurationPayload;
-    encodeBasestationGetConfiguration(&getConfigurationPayload, &getConfigurationCommand);
+    REM_BasestationGetConfigurationPayload getConfigurationPayload;
+    encodeREM_BasestationGetConfiguration(&getConfigurationPayload, &getConfigurationCommand);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_BASESTATION_GET_CONFIGURATION;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
     std::memcpy(message.payloadBuffer, getConfigurationPayload.payload, message.payloadSize);
 
     bool sentMessage = this->writeBasestationMessage(message);

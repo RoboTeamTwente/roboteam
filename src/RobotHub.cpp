@@ -1,4 +1,4 @@
-#include <RobotCommand.h>
+#include <REM_RobotCommand.h>
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
 
@@ -30,7 +30,7 @@ RobotHub::RobotHub() {
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    this->basestationManager->setFeedbackCallback([&](const RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
+    this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -115,8 +115,8 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils
         float theta = atan2f(protoCommand.vel().y(), protoCommand.vel().x());
         auto bot = getWorldBot(protoCommand.id(), color, commands.extrapolatedworld());
 
-        RobotCommand command;
-        command.header = PACKET_TYPE_ROBOT_COMMAND;
+        REM_RobotCommand command;
+        command.header = PACKET_TYPE_REM_ROBOT_COMMAND;
         command.remVersion = LOCAL_REM_VERSION;
         command.id = protoCommand.id();
 
@@ -251,7 +251,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     this->sendRobotFeedback(feedbackToBePublished);
 }
 
-void RobotHub::handleRobotFeedbackFromBasestation(const RobotFeedback &feedback, utils::TeamColor basestationColor) {
+void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, utils::TeamColor basestationColor) {
     proto::RobotData feedbackToBePublished;
     feedbackToBePublished.set_isyellow(basestationColor == utils::TeamColor::YELLOW);
 

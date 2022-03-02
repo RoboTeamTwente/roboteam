@@ -1,6 +1,6 @@
-#include <BasestationConfiguration.h>     // REM packet
-#include <BasestationGetConfiguration.h>  // REM packet
-#include <BasestationSetConfiguration.h>  // REM packet
+#include <REM_BasestationConfiguration.h>
+#include <REM_BasestationGetConfiguration.h>
+#include <REM_BasestationSetConfiguration.h>
 #include <roboteam_utils/Print.h>
 
 #include <basestation/BasestationCollection.hpp>
@@ -230,14 +230,14 @@ void BasestationCollection::updateBasestationSelection() {
 
 void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     // Create the channel request message
-    BasestationGetConfiguration getConfigurationMessage;
-    getConfigurationMessage.header = PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
+    REM_BasestationGetConfiguration getConfigurationMessage;
+    getConfigurationMessage.header = PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
 
-    BasestationGetConfigurationPayload getConfigurationPayload;
-    encodeBasestationGetConfiguration(&getConfigurationPayload, &getConfigurationMessage);
+    REM_BasestationGetConfigurationPayload getConfigurationPayload;
+    encodeREM_BasestationGetConfiguration(&getConfigurationPayload, &getConfigurationMessage);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_BASESTATION_GET_CONFIGURATION;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
     std::memcpy(&message.payloadBuffer, &getConfigurationPayload.payload, message.payloadSize);
 
     // Send it to every basestation with unknown channel
@@ -267,16 +267,16 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBa
 }
 
 bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
-    BasestationSetConfiguration setConfigurationCommand;
-    setConfigurationCommand.header = PACKET_TYPE_BASESTATION_SET_CONFIGURATION;
+    REM_BasestationSetConfiguration setConfigurationCommand;
+    setConfigurationCommand.header = PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION;
     setConfigurationCommand.remVersion = LOCAL_REM_VERSION;
     setConfigurationCommand.channel = BasestationCollection::wirelessChannelToREMChannel(newChannel);
 
-    BasestationSetConfigurationPayload setConfigurationPayload;
-    encodeBasestationSetConfiguration(&setConfigurationPayload, &setConfigurationCommand);
+    REM_BasestationSetConfigurationPayload setConfigurationPayload;
+    encodeREM_BasestationSetConfiguration(&setConfigurationPayload, &setConfigurationCommand);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_BASESTATION_SET_CONFIGURATION;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION;
     std::memcpy(&message.payloadBuffer, &setConfigurationPayload.payload, message.payloadSize);
 
     bool sentSuccesfully = basestation->sendMessageToBasestation(message);
@@ -424,12 +424,12 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
     // If this message contains what channel the basestation has, parse it and update our map
-    if (message.payloadBuffer[0] == PACKET_TYPE_BASESTATION_CONFIGURATION) {
-        BasestationConfigurationPayload configurationPayload;
-        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_BASESTATION_CONFIGURATION);
+    if (message.payloadBuffer[0] == PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+        REM_BasestationConfigurationPayload configurationPayload;
+        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
 
-        BasestationConfiguration basestationConfiguration;
-        decodeBasestationConfiguration(&basestationConfiguration, &configurationPayload);
+        REM_BasestationConfiguration basestationConfiguration;
+        decodeREM_BasestationConfiguration(&basestationConfiguration, &configurationPayload);
 
         WirelessChannel usedChannel = BasestationCollection::remChannelToWirelessChannel(basestationConfiguration.channel);
         this->setChannelOfBasestation(basestationId, usedChannel);

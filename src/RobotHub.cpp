@@ -55,75 +55,72 @@ bool RobotHub::subscribe() {
            this->robotFeedbackPublisher != nullptr;
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color) {
+void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color) {
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
-    for (auto robotCommand : commands.commands()) {
-        int id = robotCommand.id();
-        float kickSpeed = robotCommand.chip_kick_vel();
-        float kickAngle = robotCommand.chipper() ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
-        float dribblerSpeed = (robotCommand.dribbler() > 0 ? SIM_MAX_DRIBBLER_SPEED_RPM : 0.0);  // dribbler_speed is range of 0 to 1
-        float xVelocity = robotCommand.vel().x();
-        float yVelocity = robotCommand.vel().y();
-        // TODO: Check if there is angular velocity
-        float angularVelocity = robotCommand.w();
+    for (const auto& command : commands) {
+        float kickAngle = command.kickType == KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
+        float dribblerSpeed = command.dribblerSpeed > 0 ? SIM_MAX_DRIBBLER_SPEED_RPM : 0.0;  // dribbler_speed is range of 0 to 1
 
-        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        if (!command.useAngularVelocity) {
+            std::cout << "ERROR: AI sent absolute angles, but Simulator requires angular velocities: Aborting command" << std::endl;
+            return;
+        }
+
+        simCommand.addRobotControlWithGlobalSpeeds(
+            command.id,
+            command.kickSpeed,
+            kickAngle,
+            dribblerSpeed,
+            command.velocity.x,
+            command.velocity.y,
+            command.targetAngularVelocity);
 
         // Update statistics
-        this->commands_sent[id]++;
+        this->commands_sent[command.id]++;
     }
 
     this->simulatorManager->sendRobotControlCommand(simCommand, color);
 }
 
-void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color) {
-    for (const proto::RobotCommand &protoCommand : commands.commands()) {
+void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color) {
+    for (const auto &command : commands) {
         // Convert the proto::RobotCommand to a RobotCommand for the basestation
 
-        float rho = sqrtf(protoCommand.vel().x() * protoCommand.vel().x() + protoCommand.vel().y() * protoCommand.vel().y());
-        float theta = atan2f(protoCommand.vel().y(), protoCommand.vel().x());
-        auto bot = getWorldBot(protoCommand.id(), color, commands.extrapolatedworld());
+        REM_RobotCommand remCommand;
+        remCommand.header = PACKET_TYPE_REM_ROBOT_COMMAND;
+        remCommand.remVersion = LOCAL_REM_VERSION;
+        remCommand.id = command.id;
 
-        REM_RobotCommand command;
-        command.header = PACKET_TYPE_REM_ROBOT_COMMAND;
-        command.remVersion = LOCAL_REM_VERSION;
-        command.id = protoCommand.id();
+        remCommand.doKick = command.kickSpeed > 0.0;
+        remCommand.doChip = command.kickType == KickType::CHIP;
+        remCommand.doForce = !command.waitForBall;
+        remCommand.kickChipPower = command.kickSpeed;
+        remCommand.dribbler = command.dribblerSpeed;
 
-        command.doKick = protoCommand.kicker();
-        command.doChip = protoCommand.chipper();
-        command.doForce = protoCommand.chip_kick_forced();
-        command.kickChipPower = protoCommand.chip_kick_vel();
-        command.dribbler = (float)protoCommand.dribbler();
+        remCommand.rho = command.velocity.length();
+        remCommand.theta = command.velocity.angle();
 
-        command.rho = rho;
-        command.theta = theta;
+        remCommand.angularControl = !command.useAngularVelocity;
+        remCommand.angle = command.useAngularVelocity ? static_cast<float>(command.targetAngularVelocity) : static_cast<float>(command.targetAngle);
 
-        command.angularControl = protoCommand.use_angle();
-        command.angle = protoCommand.w();
+        remCommand.useCameraAngle = command.cameraAngleOfRobotIsSet;
+        remCommand.cameraAngle = command.cameraAngleOfRobot;
 
-        if (bot != nullptr) {
-            command.useCameraAngle = true;
-            command.cameraAngle = bot->angle();
-        } else {
-            command.useCameraAngle = false;
-            command.cameraAngle = 0.0;
-        }
+        remCommand.feedback = command.ignorePacket;
 
-        command.feedback = false;
-
-        this->basestationManager->sendRobotCommand(command, color);
+        this->basestationManager->sendRobotCommand(remCommand, color);
 
         // Update statistics
-        commands_sent[protoCommand.id()]++;
+        commands_sent[command.id]++;
     }
 }
 
-void RobotHub::onBlueRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::BLUE, this->mode); }
-void RobotHub::onYellowRobotCommands(const proto::AICommand &commands) { this->processRobotCommands(commands, utils::TeamColor::YELLOW, this->mode); }
+void RobotHub::onBlueRobotCommands(const rtt::RobotCommands &commands) { this->processRobotCommands(commands, utils::TeamColor::BLUE, this->mode); }
+void RobotHub::onYellowRobotCommands(const rtt::RobotCommands &commands) { this->processRobotCommands(commands, utils::TeamColor::YELLOW, this->mode); }
 
-void RobotHub::processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode) {
+void RobotHub::processRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color, utils::RobotHubMode mode) {
     switch (mode) {
         case utils::RobotHubMode::SIMULATOR:
             this->sendCommandsToSimulator(commands, color);

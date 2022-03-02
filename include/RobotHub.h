@@ -13,6 +13,7 @@
 #include <functional>
 #include <memory>
 #include <simulation/SimulatorManager.hpp>
+#include <roboteam_utils/RobotCommands.hpp>
 
 namespace rtt::robothub {
 
@@ -44,12 +45,12 @@ class RobotHub {
 
     bool subscribe();
 
-    void sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color);
-    void sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color);
+    void sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color);
+    void sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color);
 
-    void onBlueRobotCommands(const proto::AICommand &commands);
-    void onYellowRobotCommands(const proto::AICommand &commands);
-    void processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode);
+    void onBlueRobotCommands(const rtt::RobotCommands &commands);
+    void onYellowRobotCommands(const rtt::RobotCommands &commands);
+    void processRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color, utils::RobotHubMode mode);
 
     void onSettings(const proto::Setting &setting);
 

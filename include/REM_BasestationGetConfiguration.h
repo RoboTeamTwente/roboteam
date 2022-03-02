@@ -4,15 +4,15 @@
 11111111 header
 */
 
-#ifndef __R_E_M__BASESTATION_GET_CONFIGURATION_H
-#define __R_E_M__BASESTATION_GET_CONFIGURATION_H
+#ifndef __REM_BASESTATION_GET_CONFIGURATION_H
+#define __REM_BASESTATION_GET_CONFIGURATION_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationGetConfigurationPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_GET_CONFIGURATION];
+    uint8_t payload[PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION];
 } REM_BasestationGetConfigurationPayload;
 
 typedef struct _REM_BasestationGetConfiguration {
@@ -39,4 +39,4 @@ static inline void decodeREM_BasestationGetConfiguration(REM_BasestationGetConfi
     rembgc->header       = REM_BasestationGetConfiguration_get_header(rembgcp);
 }
 
-#endif /*__R_E_M__BASESTATION_GET_CONFIGURATION_H*/
+#endif /*__REM_BASESTATION_GET_CONFIGURATION_H*/

@@ -6,15 +6,15 @@
 -------- ----1--- channel
 */
 
-#ifndef __R_E_M__BASESTATION_CONFIGURATION_H
-#define __R_E_M__BASESTATION_CONFIGURATION_H
+#ifndef __REM_BASESTATION_CONFIGURATION_H
+#define __REM_BASESTATION_CONFIGURATION_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationConfigurationPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_CONFIGURATION];
+    uint8_t payload[PACKET_SIZE_REM_BASESTATION_CONFIGURATION];
 } REM_BasestationConfigurationPayload;
 
 typedef struct _REM_BasestationConfiguration {
@@ -63,4 +63,4 @@ static inline void decodeREM_BasestationConfiguration(REM_BasestationConfigurati
     rembc->channel       = REM_BasestationConfiguration_get_channel(rembcp);
 }
 
-#endif /*__R_E_M__BASESTATION_CONFIGURATION_H*/
+#endif /*__REM_BASESTATION_CONFIGURATION_H*/

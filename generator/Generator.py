@@ -11,8 +11,11 @@ def upperFirst(word):
 # RobotCommand => rc
 def CamelCaseToAbbrev(word):
 	return ''.join([letter for letter in word if letter.isupper()]).lower()
-# RobotCommand => _ROBOT_COMMAND
+# REM_RobotCommand => _REM_ROBOT_COMMAND
 def CamelCaseToUpper(word):
+	if (word.startswith("REM_")):
+		word = "Rem" + word[4:]
+
 	return ''.join(['_'*char.isupper() + char.upper() for char in word])
 
 def stripBrackets(string):

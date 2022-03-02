@@ -187,7 +187,7 @@ class REM_RobotFeedback:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__ROBOT_FEEDBACK, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK, dtype=np.uint8)
         REM_RobotFeedback.set_header              (payload, self.header)
         REM_RobotFeedback.set_remVersion          (payload, self.remVersion)
         REM_RobotFeedback.set_id                  (payload, self.id)

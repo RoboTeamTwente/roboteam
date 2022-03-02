@@ -19,15 +19,15 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 feedback
 */
 
-#ifndef __R_E_M__ROBOT_COMMAND_H
-#define __R_E_M__ROBOT_COMMAND_H
+#ifndef __REM_ROBOT_COMMAND_H
+#define __REM_ROBOT_COMMAND_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotCommandPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__ROBOT_COMMAND];
+    uint8_t payload[PACKET_SIZE_REM_ROBOT_COMMAND];
 } REM_RobotCommandPayload;
 
 typedef struct _REM_RobotCommand {
@@ -235,4 +235,4 @@ static inline void decodeREM_RobotCommand(REM_RobotCommand *remrc, REM_RobotComm
     remrc->feedback      = REM_RobotCommand_get_feedback(remrcp);
 }
 
-#endif /*__R_E_M__ROBOT_COMMAND_H*/
+#endif /*__REM_ROBOT_COMMAND_H*/

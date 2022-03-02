@@ -4,8 +4,10 @@ from packets import packets
 from datetime import datetime
 
 
-# RobotCommand => _ROBOT_COMMAND
+# REM_RobotCommand => _REM_ROBOT_COMMAND
 def CamelCaseToUpper(word):
+	if (word.startswith("REM_")):
+		word = "Rem" + word[4:]
 	return ''.join(['_'*char.isupper() + char.upper() for char in word])
 
 

@@ -4,15 +4,15 @@
 11111111 header
 */
 
-#ifndef __R_E_M__BASESTATION_LOG_H
-#define __R_E_M__BASESTATION_LOG_H
+#ifndef __REM_BASESTATION_LOG_H
+#define __REM_BASESTATION_LOG_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationLogPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_LOG];
+    uint8_t payload[PACKET_SIZE_REM_BASESTATION_LOG];
 } REM_BasestationLogPayload;
 
 typedef struct _REM_BasestationLog {
@@ -39,4 +39,4 @@ static inline void decodeREM_BasestationLog(REM_BasestationLog *rembl, REM_Bases
     rembl->header        = REM_BasestationLog_get_header(remblp);
 }
 
-#endif /*__R_E_M__BASESTATION_LOG_H*/
+#endif /*__REM_BASESTATION_LOG_H*/

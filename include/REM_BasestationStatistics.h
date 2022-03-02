@@ -37,15 +37,15 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 1111---- bot15_rcvd
 */
 
-#ifndef __R_E_M__BASESTATION_STATISTICS_H
-#define __R_E_M__BASESTATION_STATISTICS_H
+#ifndef __REM_BASESTATION_STATISTICS_H
+#define __REM_BASESTATION_STATISTICS_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationStatisticsPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_STATISTICS];
+    uint8_t payload[PACKET_SIZE_REM_BASESTATION_STATISTICS];
 } REM_BasestationStatisticsPayload;
 
 typedef struct _REM_BasestationStatistics {
@@ -467,4 +467,4 @@ static inline void decodeREM_BasestationStatistics(REM_BasestationStatistics *re
     rembs->bot15_rcvd    = REM_BasestationStatistics_get_bot15_rcvd(rembsp);
 }
 
-#endif /*__R_E_M__BASESTATION_STATISTICS_H*/
+#endif /*__REM_BASESTATION_STATISTICS_H*/

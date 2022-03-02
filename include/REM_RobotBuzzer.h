@@ -9,15 +9,15 @@
 -------- -------- -------- -------- 11111111 11111111 duration
 */
 
-#ifndef __R_E_M__ROBOT_BUZZER_H
-#define __R_E_M__ROBOT_BUZZER_H
+#ifndef __REM_ROBOT_BUZZER_H
+#define __REM_ROBOT_BUZZER_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotBuzzerPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__ROBOT_BUZZER];
+    uint8_t payload[PACKET_SIZE_REM_ROBOT_BUZZER];
 } REM_RobotBuzzerPayload;
 
 typedef struct _REM_RobotBuzzer {
@@ -103,4 +103,4 @@ static inline void decodeREM_RobotBuzzer(REM_RobotBuzzer *remrb, REM_RobotBuzzer
     remrb->duration      = REM_RobotBuzzer_get_duration(remrbp);
 }
 
-#endif /*__R_E_M__ROBOT_BUZZER_H*/
+#endif /*__REM_ROBOT_BUZZER_H*/

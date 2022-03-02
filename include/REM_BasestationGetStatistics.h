@@ -4,15 +4,15 @@
 11111111 header
 */
 
-#ifndef __R_E_M__BASESTATION_GET_STATISTICS_H
-#define __R_E_M__BASESTATION_GET_STATISTICS_H
+#ifndef __REM_BASESTATION_GET_STATISTICS_H
+#define __REM_BASESTATION_GET_STATISTICS_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationGetStatisticsPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__BASESTATION_GET_STATISTICS];
+    uint8_t payload[PACKET_SIZE_REM_BASESTATION_GET_STATISTICS];
 } REM_BasestationGetStatisticsPayload;
 
 typedef struct _REM_BasestationGetStatistics {
@@ -39,4 +39,4 @@ static inline void decodeREM_BasestationGetStatistics(REM_BasestationGetStatisti
     rembgs->header       = REM_BasestationGetStatistics_get_header(rembgsp);
 }
 
-#endif /*__R_E_M__BASESTATION_GET_STATISTICS_H*/
+#endif /*__REM_BASESTATION_GET_STATISTICS_H*/

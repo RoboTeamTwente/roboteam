@@ -7,15 +7,15 @@
 -------- -------- 11111111 message_length
 */
 
-#ifndef __R_E_M__ROBOT_LOG_H
-#define __R_E_M__ROBOT_LOG_H
+#ifndef __REM_ROBOT_LOG_H
+#define __REM_ROBOT_LOG_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotLogPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__ROBOT_LOG];
+    uint8_t payload[PACKET_SIZE_REM_ROBOT_LOG];
 } REM_RobotLogPayload;
 
 typedef struct _REM_RobotLog {
@@ -75,4 +75,4 @@ static inline void decodeREM_RobotLog(REM_RobotLog *remrl, REM_RobotLogPayload *
     remrl->message_length= REM_RobotLog_get_message_length(remrlp);
 }
 
-#endif /*__R_E_M__ROBOT_LOG_H*/
+#endif /*__REM_ROBOT_LOG_H*/

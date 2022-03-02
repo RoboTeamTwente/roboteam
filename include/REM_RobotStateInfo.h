@@ -15,15 +15,15 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 11111111 11111111 11111111 1111---- wheelSpeed4
 */
 
-#ifndef __R_E_M__ROBOT_STATE_INFO_H
-#define __R_E_M__ROBOT_STATE_INFO_H
+#ifndef __REM_ROBOT_STATE_INFO_H
+#define __REM_ROBOT_STATE_INFO_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotStateInfoPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__ROBOT_STATE_INFO];
+    uint8_t payload[PACKET_SIZE_REM_ROBOT_STATE_INFO];
 } REM_RobotStateInfoPayload;
 
 typedef struct _REM_RobotStateInfo {
@@ -219,4 +219,4 @@ static inline void decodeREM_RobotStateInfo(REM_RobotStateInfo *remrsi, REM_Robo
     remrsi->wheelSpeed4  = REM_RobotStateInfo_get_wheelSpeed4(remrsip);
 }
 
-#endif /*__R_E_M__ROBOT_STATE_INFO_H*/
+#endif /*__REM_ROBOT_STATE_INFO_H*/

@@ -184,7 +184,7 @@ class REM_RobotStateInfo:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_R_E_M__ROBOT_STATE_INFO, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO, dtype=np.uint8)
         REM_RobotStateInfo.set_header              (payload, self.header)
         REM_RobotStateInfo.set_remVersion          (payload, self.remVersion)
         REM_RobotStateInfo.set_id                  (payload, self.id)

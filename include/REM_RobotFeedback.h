@@ -19,15 +19,15 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- rssi
 */
 
-#ifndef __R_E_M__ROBOT_FEEDBACK_H
-#define __R_E_M__ROBOT_FEEDBACK_H
+#ifndef __REM_ROBOT_FEEDBACK_H
+#define __REM_ROBOT_FEEDBACK_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotFeedbackPayload {
-    uint8_t payload[PACKET_SIZE_R_E_M__ROBOT_FEEDBACK];
+    uint8_t payload[PACKET_SIZE_REM_ROBOT_FEEDBACK];
 } REM_RobotFeedbackPayload;
 
 typedef struct _REM_RobotFeedback {
@@ -230,4 +230,4 @@ static inline void decodeREM_RobotFeedback(REM_RobotFeedback *remrf, REM_RobotFe
     remrf->rssi          = REM_RobotFeedback_get_rssi(remrfp);
 }
 
-#endif /*__R_E_M__ROBOT_FEEDBACK_H*/
+#endif /*__REM_ROBOT_FEEDBACK_H*/

@@ -19,7 +19,7 @@ class RobotFeedbackSubscriber : private utils::Subscriber {
    public:
     RobotFeedbackSubscriber(const std::function<void(const proto::RobotData&)>& callback);
 
-private:
+   private:
     void onPublishedMessage(const std::string& message);
     const std::function<void(const proto::RobotData&)> callback;
 };

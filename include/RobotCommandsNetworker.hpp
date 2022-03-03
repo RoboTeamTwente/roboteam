@@ -1,11 +1,10 @@
 #pragma once
 
-#include <string>
 #include <functional>
+#include <roboteam_utils/RobotCommands.hpp>  // The general data format of robot commands in rtt_utils
+#include <string>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
-
-#include <roboteam_utils/RobotCommands.hpp> // The general data format of robot commands in rtt_utils
 
 namespace rtt::net {
 

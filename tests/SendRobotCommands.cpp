@@ -2,10 +2,9 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-
+#include <chrono>
 #include <iostream>
 #include <memory>
-#include <chrono>
 
 using namespace rtt::net;
 
@@ -29,7 +28,6 @@ proto::Setting getRobotHubBasestationModePacket() {
 }
 
 void onFeedback(const proto::RobotData& robotFeedback) {
-
     int amountOfFeedback = robotFeedback.receivedfeedback().size();
     bool isYellow = robotFeedback.isyellow();
 
@@ -46,13 +44,12 @@ void onFeedback(const proto::RobotData& robotFeedback) {
 }
 
 void onWorld(const proto::State& world) {
-
     for (const auto& robot : world.last_seen_world().yellowfeedback()) {
-        //std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+        // std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
     }
 
     for (const auto& robot : world.last_seen_world().bluefeedback()) {
-        //std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+        // std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
     }
 }
 
@@ -60,7 +57,7 @@ int main() {
     auto settingsPub = std::make_unique<SettingsPublisher>();
     auto commandsBluePub = std::make_unique<RobotCommandsBluePublisher>();
     auto commandsYellowPub = std::make_unique<RobotCommandsYellowPublisher>();
-    
+
     auto feedbackSub = std::make_unique<RobotFeedbackSubscriber>(onFeedback);
     auto worldSub = std::make_unique<WorldSubscriber>(onWorld);
 

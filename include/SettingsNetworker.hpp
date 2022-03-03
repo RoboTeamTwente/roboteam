@@ -19,7 +19,7 @@ class SettingsSubscriber : private utils::Subscriber {
    public:
     SettingsSubscriber(const std::function<void(const proto::Setting&)>& callback);
 
-private:
+   private:
     void onPublishedMessage(const std::string& message);
     const std::function<void(const proto::Setting&)> callback;
 };

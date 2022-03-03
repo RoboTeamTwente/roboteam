@@ -14,4 +14,4 @@ bool Publisher::send(const std::string& message) {
     return socket->send(transmission, true);
 }
 
-} // namespace rtt::net::utils
+}  // namespace rtt::net::utils

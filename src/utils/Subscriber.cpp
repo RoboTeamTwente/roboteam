@@ -6,7 +6,7 @@ Subscriber::Subscriber(const ChannelType& channelType, const std::function<void(
     if (callback == nullptr) {
         throw InvalidCallbackException("Given callback was nullptr");
     }
-    
+
     // Initialize objects
     this->channel = CHANNELS.at(channelType);
     this->reactor = std::make_unique<zmqpp::reactor>();
@@ -47,8 +47,6 @@ void Subscriber::poll() {
 
 InvalidCallbackException::InvalidCallbackException(const std::string& message) : message(message) {}
 
-const char* InvalidCallbackException::what() const noexcept {
-    return this->message.c_str();
-}
+const char* InvalidCallbackException::what() const noexcept { return this->message.c_str(); }
 
-} // namespace rtt::net::utils
+}  // namespace rtt::net::utils

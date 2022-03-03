@@ -2,11 +2,11 @@
 
 #include <google/protobuf/message.h>
 
+#include <exception>
 #include <functional>
 #include <memory>
 #include <string>
 #include <thread>
-#include <exception>
 #include <utils/Channel.hpp>
 #include <utils/Channels.hpp>
 #include <zmqpp/reactor.hpp>

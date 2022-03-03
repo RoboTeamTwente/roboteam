@@ -13,7 +13,7 @@ enum class KickType {
 };
 
 typedef struct RobotCommand {
-    unsigned int id = -1;           // [0,15] The id of robot
+    int id;           // [0,15] The id of robot
     
     // Positioning related variables
     Vector2 velocity;               // (m/s) Target velocity of the robot

@@ -13,7 +13,7 @@ constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 
 rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
     rtt::RobotCommands commands;
-    for (unsigned int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 16; ++i) {
         commands.push_back({.id = i});
     }
     return commands;

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <ssl_simulation_control.pb.h>
+#include <utilities.h>
 
 #include <simulation/RobotProperties.hpp>
-#include <utilities.h>
 
 namespace rtt::robothub::simulation {
 /*  This class contains command information to configure and setup the simulator.

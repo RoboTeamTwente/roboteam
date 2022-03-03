@@ -117,7 +117,6 @@ void BasestationCollection::printCollection() const {
 
 void BasestationCollection::updateBasestationSelection() {
     while (this->shouldUpdateBasestationSelection) {
-
         if (this->yellowBasestation == nullptr) {
             this->trySelectBasestationOfColor(utils::TeamColor::YELLOW);
         }
@@ -133,9 +132,7 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getUnselectedBa
     std::vector<std::shared_ptr<Basestation>> unselectedBasestations;
 
     for (const auto& basestation : this->basestations) {
-
-        if (!basestation->operator==(this->blueBasestation)
-         && !basestation->operator==(this->yellowBasestation)) {
+        if (!basestation->operator==(this->blueBasestation) && !basestation->operator==(this->yellowBasestation)) {
             // This basestation is neither selected as blue nor yellow basestation
             unselectedBasestations.push_back(basestation);
         }

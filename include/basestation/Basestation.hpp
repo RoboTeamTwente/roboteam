@@ -4,9 +4,9 @@
 
 #include <exception>
 #include <functional>
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
 
 namespace rtt::robothub::basestation {
 

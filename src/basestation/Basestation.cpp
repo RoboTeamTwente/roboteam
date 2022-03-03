@@ -78,10 +78,7 @@ bool Basestation::operator==(libusb_device* otherDevice) const {
     uint8_t otherAddress = libusb_get_device_address(otherDevice);
     return this->address == otherAddress;
 }
-bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const {
-    return otherBasestation != nullptr
-        && this->address == otherBasestation->address;
-}
+bool Basestation::operator==(std::shared_ptr<Basestation> otherBasestation) const { return otherBasestation != nullptr && this->address == otherBasestation->address; }
 
 bool Basestation::sendMessageToBasestation(BasestationMessage& message) const { return this->writeBasestationMessage(message); }
 
@@ -185,7 +182,8 @@ bool Basestation::readBasestationMessage(BasestationMessage& message) const {
         libusb_bulk_transfer(this->deviceHandle, TRANSFER_IN_BUFFER_ENDPOINT, message.payloadBuffer, BASESTATION_MESSAGE_BUFFER_SIZE, &message.payloadSize, TRANSFER_IN_TIMEOUT_MS);
 
     switch (error) {
-        case LIBUSB_SUCCESS: case LIBUSB_ERROR_TIMEOUT:
+        case LIBUSB_SUCCESS:
+        case LIBUSB_ERROR_TIMEOUT:
             // Either received a message correctly, or received nothing at all, so do not send any debug message
             break;
         case LIBUSB_ERROR_NO_DEVICE: {

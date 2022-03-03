@@ -6,14 +6,14 @@
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
-#include <WorldNetworker.hpp>
 #include <SimulationConfigurationNetworker.hpp>
+#include <WorldNetworker.hpp>
 #include <basestation/BasestationManager.hpp>
 #include <exception>
 #include <functional>
 #include <memory>
-#include <simulation/SimulatorManager.hpp>
 #include <roboteam_utils/RobotCommands.hpp>
+#include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
 

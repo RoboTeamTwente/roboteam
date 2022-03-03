@@ -12,41 +12,11 @@ using namespace rtt::net;
 constexpr int ID = 0;
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 
-proto::AICommand getEmptyRobotCommand(int id) {
-    proto::AICommand commands;
-
-    auto* command = commands.add_commands();
-    command->set_id(id);
-    command->mutable_vel()->set_x(0);
-    command->mutable_vel()->set_y(0);
-    command->set_w(0);
-    command->set_use_angle(false);
-    command->set_dribbler(false);
-    command->set_kicker(false);
-    command->set_chipper(false);
-    command->set_chip_kick_forced(false);
-    command->set_chip_kick_vel(false);
-
-    return commands;
-}
-
-proto::AICommand getEmptyRobotCommandToAllRobots() {
-    proto::AICommand commands;
-
-    for (int i = 0; i < 16; ++i) {
-        auto* command = commands.add_commands();
-        command->set_id(i);
-        command->mutable_vel()->set_x(0);
-        command->mutable_vel()->set_y(0);
-        command->set_w(0);
-        command->set_use_angle(false);
-        command->set_dribbler(false);
-        command->set_kicker(false);
-        command->set_chipper(false);
-        command->set_chip_kick_forced(false);
-        command->set_chip_kick_vel(false);
+rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
+    rtt::RobotCommands commands;
+    for (unsigned int i = 0; i < 16; ++i) {
+        commands.push_back({.id = i});
     }
-
     return commands;
 }
 
@@ -94,7 +64,6 @@ int main() {
     auto feedbackSub = std::make_unique<RobotFeedbackSubscriber>(onFeedback);
     auto worldSub = std::make_unique<WorldSubscriber>(onWorld);
 
-    auto singleCommand = getEmptyRobotCommand(0);
     auto teamCommand = getEmptyRobotCommandToAllRobots();
 
     // First, send settings message to robothub that it needs to forward messages to the basestation

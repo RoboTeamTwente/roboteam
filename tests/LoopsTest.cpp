@@ -5,40 +5,36 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <roboteam_utils/RobotCommands.hpp>
 
 using namespace rtt::net;
 
 constexpr int TEST_VALUE = 69;
+constexpr int PAUSE_MS = 50;
 
 // Robot commands loop test
 bool robotCommandsBlueLoopTestPassed = false;
 bool robotCommandsYellowLoopTestPassed = false;
-void onRobotCommandsBlue(const proto::AICommand& commands) { robotCommandsBlueLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
-void onRobotCommandsYellow(const proto::AICommand& commands) { robotCommandsYellowLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
+void onRobotCommandsBlue(const rtt::RobotCommands& commands) { robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE; }
+void onRobotCommandsYellow(const rtt::RobotCommands& commands) { robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE; }
 
 bool testRobotCommandsLoop() {
     RobotCommandsBluePublisher pubBlue;
     RobotCommandsYellowPublisher pubYellow;
 
-    auto callbackBlue = [](const proto::AICommand& commands) {
-        onRobotCommandsBlue(commands);
-    };
-    auto callbackYellow = [](const proto::AICommand& commands) {
-        onRobotCommandsYellow(commands);
-    };
     RobotCommandsBlueSubscriber subBlue(onRobotCommandsBlue);
     RobotCommandsYellowSubscriber subYellow(onRobotCommandsYellow);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    proto::AICommand commands;
-    proto::RobotCommand* command = commands.add_commands();
-    command->set_id(TEST_VALUE);
+    rtt::RobotCommands commands;
+
+    commands.push_back({.id = TEST_VALUE});
 
     pubBlue.publish(commands);
     pubYellow.publish(commands);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     return robotCommandsBlueLoopTestPassed && robotCommandsYellowLoopTestPassed;
 }
@@ -49,13 +45,13 @@ void onRobotFeedback(const proto::RobotData& feedback) { robotFeedbackLoopTestPa
 bool testRobotFeedbackLoop() {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     proto::RobotData feedback;
     feedback.add_receivedfeedback()->set_id(TEST_VALUE);
 
     pub.publish(feedback);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     return robotFeedbackLoopTestPassed;
 }
@@ -66,13 +62,13 @@ void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = setti
 bool testSettingsLoop() {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     proto::Setting settings;
     settings.set_visionport(TEST_VALUE);
 
     pub.publish(settings);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     return settingsLoopTestPassed;
 }
@@ -83,13 +79,13 @@ void onWorld(const proto::State& world) { worldLoopTestPassed = world.ball_camer
 bool testWorldLoop() {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     proto::State world;
     world.mutable_ball_camera_world()->mutable_ball()->mutable_pos()->set_x(TEST_VALUE);
 
     pub.publish(world);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     return worldLoopTestPassed;
 }

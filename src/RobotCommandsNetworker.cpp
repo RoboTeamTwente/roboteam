@@ -11,20 +11,20 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
         auto protoCommand = protoCommands.add_robot_commands();
 
         protoCommand->set_id(command.id);
-        protoCommand->set_velocity_x((float)command.velocity.x);
-        protoCommand->set_velocity_y((float)command.velocity.y);
-        protoCommand->set_angle((float)command.targetAngle.getValue());
-        protoCommand->set_angular_velocity((float)command.targetAngularVelocity);
+        protoCommand->set_velocity_x(command.velocity.x);
+        protoCommand->set_velocity_y(command.velocity.y);
+        protoCommand->set_angle(command.targetAngle.getValue());
+        protoCommand->set_angular_velocity(command.targetAngularVelocity);
         protoCommand->set_use_angular_velocity(command.useAngularVelocity);
 
-        protoCommand->set_camera_angle_of_robot((float)command.cameraAngleOfRobot.getValue());
+        protoCommand->set_camera_angle_of_robot(command.cameraAngleOfRobot.getValue());
         protoCommand->set_camera_angle_of_robot_is_set(command.cameraAngleOfRobotIsSet);
 
-        protoCommand->set_kick_speed((float)command.kickSpeed);
+        protoCommand->set_kick_speed(command.kickSpeed);
         protoCommand->set_wait_for_ball(command.waitForBall);
         protoCommand->set_chip_instead_of_kick(command.kickType == KickType::CHIP);
 
-        protoCommand->set_dribbler_speed((float)command.dribblerSpeed);
+        protoCommand->set_dribbler_speed(command.dribblerSpeed);
         protoCommand->set_ignore_packet(command.ignorePacket);
     }
 

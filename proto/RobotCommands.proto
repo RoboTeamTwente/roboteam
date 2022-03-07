@@ -3,23 +3,23 @@ syntax = "proto3";
 package proto;
 
 message RobotCommand {
-    int32 id = 1;
+    int32 id = 1;   // [0, 15] Id of robot
 
-    double velocity_x = 2;
-    double velocity_y = 3;
-    double angle = 4;
-    double angular_velocity = 5;
-    bool use_angular_velocity = 6;
+    double velocity_x = 2;          // (m/s) Target x velocity of the robot
+    double velocity_y = 3;          // (m/s) Target y velocity of the robot
+    double angle = 4;               // (rad) [-PI, PI] Target angle
+    double angular_velocity = 5;    // (rad/s) Target angular velocity
+    bool use_angular_velocity = 6;  // If true, the angular velocity has priority over angle
 
-    double camera_angle_of_robot = 7;
-    bool camera_angle_of_robot_is_set = 8;
+    double camera_angle_of_robot = 7;       // (rad) Angle of robot according to camera
+    bool camera_angle_of_robot_is_set = 8;  // If true, the camera angle can be used
 
-    double kick_speed = 9;
-    bool wait_for_ball = 10;
-    bool chip_instead_of_kick = 11;
+    double kick_speed = 9;          // (m/s) Target speed of the ball after kicking
+    bool wait_for_ball = 10;        // If true, the robot will wait with kicking until it has the ball
+    bool chip_instead_of_kick = 11; // If true, the target speed will be acquired with chipping instead
 
-    double dribbler_speed = 12;
-    bool ignore_packet = 13;
+    double dribbler_speed = 12; // [0, 1] Speed of the dribbler
+    bool ignore_packet = 13;    // If true, the robot will ignore this packet, but will reply with feedback
 }
 
 message RobotCommands {

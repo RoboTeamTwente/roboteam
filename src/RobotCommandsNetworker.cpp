@@ -12,7 +12,7 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
 
         protoCommand->set_id(command.id);
         protoCommand->set_velocity_x((float)command.velocity.x);
-        protoCommand->set_velocity_x((float)command.velocity.y);
+        protoCommand->set_velocity_y((float)command.velocity.y);
         protoCommand->set_angle((float)command.targetAngle.getValue());
         protoCommand->set_angular_velocity((float)command.targetAngularVelocity);
         protoCommand->set_use_angular_velocity(command.useAngularVelocity);

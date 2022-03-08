@@ -14,4 +14,6 @@ void print(char _out[]);
 void init(void);
 void loop(void);
 
+bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length);
+
 #endif /* __ROBOT__H_ */

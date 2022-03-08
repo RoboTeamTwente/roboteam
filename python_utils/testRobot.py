@@ -10,10 +10,10 @@ import sys
 import shutil
 import multiprocessing
 
-import roboteam_embedded_messages.python.BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.RobotCommand import RobotCommand
-from roboteam_embedded_messages.python.RobotFeedback import RobotFeedback
-from roboteam_embedded_messages.python.RobotStateInfo import RobotStateInfo
+import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand as RobotCommand
+from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback as RobotFeedback
+from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo as RobotStateInfo
 
 
 
@@ -151,7 +151,7 @@ while True:
 
 				# Create new empty robot command
 				cmd = RobotCommand()
-				cmd.header = BaseTypes.PACKET_TYPE_ROBOT_COMMAND
+				cmd.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
 				cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
 				cmd.id = robotId
 
@@ -237,9 +237,9 @@ while True:
 			packetType = packet_type[0]
 
 			# Parse packet based on packet type
-			if packetType == BaseTypes.PACKET_TYPE_ROBOT_FEEDBACK:
+			if packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
 				feedbackTimestamp = time.time()
-				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_FEEDBACK - 1)
+				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
 
 				if RobotFeedback.get_id(packet) == robotId:
 					robotFeedback.decode(packet)
@@ -247,9 +247,9 @@ while True:
 				else:
 					print("Error : Received feedback from robot %d ???" % RobotFeedback.get_id(packet))
 	
-			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_STATE_INFO:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
 				stateInfoTimestamp = time.time()
-				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_STATE_INFO - 1)
+				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
 
 				if RobotStateInfo.get_id(packet) == robotId:
 					robotStateInfo.decode(packet)
@@ -259,11 +259,11 @@ while True:
 				else:
 					print("Error : Received StateInfo from robot %d ???" % RobotFeedback.get_id(packet))
 
-			elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
 				lastBasestationLog = logmessage[:-1] + " "*20
 
-			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_LOG:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
 				logmessage = basestation.readline().decode()
 				print("[BOT]", logmessage)
 				# lastBasestationLog = logmessage[:-1] + " "*20

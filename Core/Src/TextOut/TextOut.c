@@ -18,11 +18,11 @@ uint8_t TxBuffer[1024];
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /**
- * @brief Sends a log message over USB using the PACKET_TYPE_BASESTATION_LOG header.
+ * @brief Sends a log message over USB using the PACKET_TYPE_REM_BASESTATION_LOG header.
  * The log must always end with \n, which the function enforces.
  * 
  * TODO The entire message is now copied into another buffer, to prepend the 
- * PACKET_TYPE_BASESTATION_LOG header. This is inefficient. Is there a more efficient
+ * PACKET_TYPE_REM_BASESTATION_LOG header. This is inefficient. Is there a more efficient
  * way or would that be premature optimization? How inefficient is this?
  * 
  * @param message The message to send over the USB

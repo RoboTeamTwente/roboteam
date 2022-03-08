@@ -61,24 +61,24 @@ while True:
 			packetType = packet_type[0]
 
 			# Parse packet based on packet type
-			if packetType == BaseTypes.PACKET_TYPE_ROBOT_FEEDBACK:
+			if packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
 				feedbackTimestamp = time.time()
-				packet = packet_type + serial_connection.read(BaseTypes.PACKET_SIZE_ROBOT_FEEDBACK - 1)
+				packet = packet_type + serial_connection.read(BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
 				# robotFeedback.decode(packet)
-				print("[PACKET_TYPE_ROBOT_FEEDBACK]")
+				print("[PACKET_TYPE_REM_ROBOT_FEEDBACK]")
 
-			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_STATE_INFO:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
 				stateInfoTimestamp = time.time()
-				packet = packet_type + serial_connection.read(BaseTypes.PACKET_SIZE_ROBOT_STATE_INFO - 1)
+				packet = packet_type + serial_connection.read(BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
 				# robotStateInfo.decode(packet)
 				print("[ROBOT_STATE_INFO]")
 
-			elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = serial_connection.readline().decode()
 				print("[BASESTATION]", logmessage)
 
 
-			elif packetType == BaseTypes.PACKET_TYPE_ROBOT_LOG:
+			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
 				logmessage = serial_connection.readline().decode()
 				print("[BOT]", logmessage)
 

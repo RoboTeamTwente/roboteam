@@ -65,7 +65,7 @@ except Exception as e:
 	exit()
 
 
-buzzPacket.header = BaseTypes.PACKET_TYPE_ROBOT_BUZZER
+buzzPacket.header = BaseTypes.PACKET_TYPE_REM_ROBOT_BUZZER
 buzzPacket.remVersion = BaseTypes.LOCAL_REM_VERSION
 buzzPacket.id = robotId
 
@@ -107,7 +107,7 @@ while True:
 
 			packetType = packet_type[0]
 
-			if packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
+			if packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				msg = basestation.readline().decode()
 				print("[LOG]", msg, end="")
 

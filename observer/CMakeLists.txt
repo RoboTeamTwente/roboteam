@@ -37,24 +37,24 @@ target_include_directories(observer
         PRIVATE include/observer
         PUBLIC include
         )
-target_compile_options(observer
-        PUBLIC
-        -O3
-        -std=c++11
-        )
+target_compile_options(observer PRIVATE "${COMPILER_FLAGS}")
 
-
-add_executable(observer_tests
-        test/main.cpp
-        test/KalmanFilterTest.cpp
-        )
-
-target_link_libraries(observer_tests
-        PRIVATE observer
-        PRIVATE gtest
-        )
-target_compile_options(observer_tests
-        PRIVATE
-        -O0
-        -g
-        )
+# -- TESTS --
+# // TODO: Get this to work @Rolf
+#add_executable(roboteam_observer_tests
+#        test/main.cpp
+#        test/KalmanFilterTest.cpp
+#        )
+#
+#target_include_directories(roboteam_observer_tests
+#        PRIVATE include
+#        )
+#
+#target_link_libraries(roboteam_observer_tests
+#        PRIVATE observer
+#        PRIVATE GTest::gtest
+#        PRIVATE GTest::gtest_main
+#        )
+#target_compile_options(roboteam_observer_tests PRIVATE "${COMPILER_FLAGS}")
+#
+#gtest_discover_tests(roboteam_observer_tests)

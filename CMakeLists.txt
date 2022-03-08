@@ -21,7 +21,4 @@ target_include_directories(roboteam_observer
         INTERFACE include
         )
 
-set_target_properties(roboteam_observer PROPERTIES
-        CMAKE_CXX_STANDARD 20
-        CMAKE_CXX_STANDARD_REQUIRED 1
-        )
+target_compile_options(roboteam_observer PRIVATE "${COMPILER_FLAGS}")

@@ -395,8 +395,52 @@ void loop(void){
     set_Pin(LED4_pin, ballPosition.canKickBall);
     // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
     // LED6 done in Wireless.c
+
+	
 }
 
+void handleRobotCommand(uint8_t* packet_buffer){
+	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
+	REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
+	decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
+}
+
+void handleRobotBuzzer(uint8_t* packet_buffer){
+	REM_RobotBuzzerPayload* rbp = (REM_RobotBuzzerPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
+	uint16_t period = REM_RobotBuzzer_get_period(rbp);
+	float duration = REM_RobotBuzzer_get_duration(rbp);
+	buzzer_Play_note(period, duration);
+}
+
+bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
+	uint8_t total_bytes_processed = 0;
+	uint8_t packet_header;
+
+	while(total_bytes_processed < packet_length){
+
+		packet_header = message_buffer_in[total_bytes_processed];
+
+		switch(packet_header){
+
+			case PACKET_TYPE_REM_ROBOT_COMMAND:
+				handleRobotCommand(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
+				break;
+
+			case PACKET_TYPE_REM_ROBOT_BUZZER: 
+				handleRobotBuzzer(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+				break;
+			
+			default:
+				sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
+				return false;
+		}
+	}
+
+	return true;
+}
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
@@ -410,35 +454,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 		Wireless_DMA_Handler(SX, message_buffer_in);
 
 		uint8_t total_packet_length = SX->payloadLength;
-		uint8_t total_bytes_processed = 0;
-
-		while(total_bytes_processed < total_packet_length){
-				
-			uint8_t packet_header = message_buffer_in[total_bytes_processed];
-
-			if(packet_header == PACKET_TYPE_REM_ROBOT_COMMAND){
-				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_REM_ROBOT_COMMAND);
-				REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
-				decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
-
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
-				continue;
-			}
-
-			if(packet_header == PACKET_TYPE_REM_ROBOT_BUZZER){
-				REM_RobotBuzzerPayload* rbp = (REM_RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
-				REM_last_packet_had_correct_version &= REM_RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
-				uint16_t period = REM_RobotBuzzer_get_period(rbp);
-				float duration = REM_RobotBuzzer_get_duration(rbp);
-				buzzer_Play_note(period, duration);
-
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
-				continue;
-			}
-
-			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, packet_header);
-			break;
-		}
+		handlePacket(message_buffer_in, total_packet_length);
 	}
 
 	// If we received data from the XSens

@@ -13,6 +13,7 @@
 #include <functional>
 #include <memory>
 #include <roboteam_utils/RobotCommands.hpp>
+#include <roboteam_utils/RobotFeedback.hpp>
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
@@ -58,7 +59,7 @@ class RobotHub {
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, utils::TeamColor team);
-    bool sendRobotFeedback(const proto::RobotData &feedback);
+    bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

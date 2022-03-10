@@ -228,42 +228,56 @@ void RobotHub::printStatistics() {
 }
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
-    proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW);
+    rtt::RobotsFeedback robotsFeedback;
+    robotsFeedback.source = rtt::RobotFeedbackSource::BASESTATION;
+    robotsFeedback.team = feedback.color == utils::TeamColor::YELLOW ? rtt::Team::YELLOW : rtt::Team::BLUE;
 
-    // proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
-
-    for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
-        proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
-        feedbackOfRobot->set_id(robotId);
-        feedbackOfRobot->set_hasball(hasBall);
+    for (auto const&[robotId, hasBall] : feedback.robotIdHasBall) {
+        rtt::RobotFeedback robotFeedback = {
+            .id = robotId,
+            .hasBall = hasBall,
+            .ballPosition = 0,
+            .ballSensorIsWorking = true,
+            .velocity = { 0, 0 },
+            .angle = 0,
+            .xSensIsCalibrated = true,
+            .capacitorIsCharged = true,
+            .wheelLocked = 0,
+            .wheelBraking = 0,
+            .batteryLevel = 0,
+            .signalStrength = 0
+        };
+        robotsFeedback.feedback.push_back(robotFeedback);
 
         // Increment the feedback counter of this robot
         this->feedback_received[robotId]++;
     }
 
-    this->sendRobotFeedback(feedbackToBePublished);
+    this->sendRobotFeedback(robotsFeedback);
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, utils::TeamColor basestationColor) {
-    proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(basestationColor == utils::TeamColor::YELLOW);
+    rtt::RobotsFeedback robotsFeedback;
+    robotsFeedback.source = rtt::RobotFeedbackSource::BASESTATION;
+    robotsFeedback.team = basestationColor == utils::TeamColor::YELLOW ? rtt::Team::YELLOW : rtt::Team::BLUE;
 
-    proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
-    feedbackOfRobot->set_id(feedback.id);
-    feedbackOfRobot->set_xsenscalibrated(feedback.XsensCalibrated);
-    feedbackOfRobot->set_ballsensorisworking(feedback.ballSensorWorking);
-    feedbackOfRobot->set_hasball(feedback.hasBall);
-    feedbackOfRobot->set_ballpos(feedback.ballPos);
-    // feedbackOfRobot->set_capacitorcharged(feedback.capacitorCharged); // Not yet added to proto
-    feedbackOfRobot->set_x_vel(std::cos(feedback.theta) * feedback.rho);
-    feedbackOfRobot->set_y_vel(std::sin(feedback.theta) * feedback.rho);
-    feedbackOfRobot->set_yaw(feedback.angle);
-    // feedbackOfRobot->set_batterylevel(feedback.batteryLevel); // Not in proto yet
-    feedbackOfRobot->set_signalstrength(feedback.rssi);
-    feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
+    rtt::RobotFeedback robotFeedback = {
+        .id = static_cast<int>(feedback.id),
+        .hasBall = feedback.hasBall,
+        .ballPosition = feedback.ballPos,
+        .ballSensorIsWorking = feedback.ballSensorWorking,
+        .velocity = Vector2(Angle(feedback.theta), feedback.rho),
+        .angle = Angle(feedback.angle),
+        .xSensIsCalibrated = feedback.XsensCalibrated,
+        .capacitorIsCharged = feedback.capacitorCharged,
+        .wheelLocked = static_cast<int>(feedback.wheelLocked),
+        .wheelBraking = static_cast<int>(feedback.wheelBraking),
+        .batteryLevel = static_cast<int>(feedback.batteryLevel),
+        .signalStrength = static_cast<int>(feedback.rssi)
+    };
+    robotsFeedback.feedback.push_back(robotFeedback);
 
-    this->sendRobotFeedback(feedbackToBePublished);
+    this->sendRobotFeedback(robotsFeedback);
 
     // Increment the feedback counter of this robot
     this->feedback_received[feedback.id]++;
@@ -302,7 +316,7 @@ std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor
     return nullptr;
 }
 
-bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) { return this->robotFeedbackPublisher->publish(feedback); }
+bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) { return this->robotFeedbackPublisher->publish(feedback); }
 
 const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 

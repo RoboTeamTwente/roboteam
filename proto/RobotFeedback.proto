@@ -2,18 +2,36 @@ syntax = "proto3";
 
 package proto;
 
+enum RobotTeam { // I would have preferred the message name of "Team", but that clashed with the Team message of SSL
+    YELLOW_TEAM = 0;
+    BLUE_TEAM = 1;
+}
+
+enum RobotFeedbackSource {
+    SIMULATOR = 0;
+    BASESTATION = 1;
+}
+
 message RobotFeedback {
-    uint32 id = 1;
-    bool xSensCalibrated = 2;
-    bool ballSensorIsWorking = 3;
-    bool batteryLow = 4;
-    bool hasBall = 5;
-    float ballPos = 6;
-    float x_vel = 10;
-    float yaw = 11;
-    float y_vel = 12;
-    bool hasLockedWheel = 13;
-    float signalStrength = 14;
+    int32 id = 1;                       // ID of the robot
+    bool has_ball = 2;                  // The robot has the ball
+    float ball_position = 3;            // [-0.5, 0.5] The position of the ball relative to the sensor
+    bool ball_sensor_is_working = 4;    // The sensor is working
+    double estimated_velocity_x = 5;    // The x velocity according to the robot
+    double estimated_velocity_y = 6;    // The y velocity according to the robot
+    double estimated_angle = 7;         // [-PI, PI] (rad) The angle according to the robot
+    bool xsens_is_calibrated = 8;       // The xSens is calibrated
+    bool capacitor_is_charged = 9;      // The capacitor is charged
+    int32 wheels_locked = 10;           // Indicates which wheels are locked. One bit per wheel
+    int32 wheels_braking = 11;          // Indicates which wheels are braking. One bit per wheel
+    float battery_level = 12;           // Battery level of the robot // TODO: Figure out if this is voltage or percentage
+    int32 signal_strength = 13;         // Signal strength of the robot
+}
+
+message RobotsFeedback {
+    RobotTeam team = 1;
+    RobotFeedbackSource source = 2;
+    repeated RobotFeedback robots_feedback = 3;
 }
 
 

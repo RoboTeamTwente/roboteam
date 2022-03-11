@@ -7,9 +7,9 @@ import utils
 import serial 
 import numpy as np
 
-import roboteam_embedded_messages.python.BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.RobotCommand import RobotCommand
-from roboteam_embedded_messages.python.RobotBuzzer import RobotBuzzer
+import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand as RobotCommand
+from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer as RobotBuzzer
 
 robotCommand = RobotCommand()
 robotBuzzer = RobotBuzzer()
@@ -20,6 +20,8 @@ basestation = None
 
 robot_id = 15
 absolute_angle = 0
+
+KICK_SPEED = 3
 
 class JoystickWrapper:
 	def __init__(self, controller):
@@ -64,13 +66,13 @@ class JoystickWrapper:
 		self.command.doChip = False
 
 		if self.controller.button_a._value and not self.A:
-			self.command.kickChipPower = .3
+			self.command.kickChipPower = KICK_SPEED
 			self.command.doChip = True
 			self.command.doForce = True
 		self.A = self.controller.button_a._value
 
 		if self.controller.button_b._value and not self.B:
-			self.command.kickChipPower = .3
+			self.command.kickChipPower = KICK_SPEED
 			self.command.doKick = True
 			self.command.doForce = True
 		self.B = self.controller.button_b._value
@@ -113,7 +115,8 @@ class JoystickWrapper:
 			buzzer_command.period = int(buzzer_value * 1000)
 			buzzer_command.duration = 0.1
 
-			message = np.concatenate( (self.command.encode(), buzzer_command.encode()) )
+			message = self.command.encode()
+			#message = np.concatenate( (self.command.encode(), buzzer_command.encode()) )
 			print(message)
 			return message
 

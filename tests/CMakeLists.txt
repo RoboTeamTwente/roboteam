@@ -1,8 +1,0 @@
-add_executable(roboteam_networking_loopsTest "LoopsTest.cpp")
-target_link_libraries(roboteam_networking_loopsTest PUBLIC roboteam_networking)
-
-add_executable(roboteam_networking_sharedChannelTest "SharedChannelsTest.cpp")
-target_link_libraries(roboteam_networking_sharedChannelTest PUBLIC roboteam_networking)
-
-add_executable(roboteam_networking_sendRobotCommands "SendRobotCommands.cpp")
-target_link_libraries(roboteam_networking_sendRobotCommands PUBLIC roboteam_networking)

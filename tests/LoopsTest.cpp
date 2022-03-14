@@ -3,9 +3,8 @@
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
 #include <chrono>
-#include <iostream>
 #include <memory>
-#include <roboteam_utils/RobotCommands.hpp>
+#include <gtest/gtest.h>
 
 using namespace rtt::net;
 
@@ -18,7 +17,7 @@ bool robotCommandsYellowLoopTestPassed = false;
 void onRobotCommandsBlue(const rtt::RobotCommands& commands) { robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE; }
 void onRobotCommandsYellow(const rtt::RobotCommands& commands) { robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE; }
 
-bool testRobotCommandsLoop() {
+TEST(RTTChannels, testRobotCommandsLoop) {
     RobotCommandsBluePublisher pubBlue;
     RobotCommandsYellowPublisher pubYellow;
 
@@ -36,13 +35,15 @@ bool testRobotCommandsLoop() {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    return robotCommandsBlueLoopTestPassed && robotCommandsYellowLoopTestPassed;
+
+    EXPECT_TRUE(robotCommandsBlueLoopTestPassed);
+    EXPECT_TRUE(robotCommandsYellowLoopTestPassed);
 }
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
 void onRobotFeedback(const proto::RobotData& feedback) { robotFeedbackLoopTestPassed = feedback.receivedfeedback().Get(0).id() == TEST_VALUE; }
-bool testRobotFeedbackLoop() {
+TEST(RTTChannels, testRobotFeedbackLoop) {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -53,13 +54,13 @@ bool testRobotFeedbackLoop() {
     pub.publish(feedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    return robotFeedbackLoopTestPassed;
+    EXPECT_TRUE(robotFeedbackLoopTestPassed);
 }
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
 void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = settings.visionport() == TEST_VALUE; }
-bool testSettingsLoop() {
+TEST(RTTChannels, testSettingsLoop) {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -70,13 +71,13 @@ bool testSettingsLoop() {
     pub.publish(settings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    return settingsLoopTestPassed;
+    EXPECT_TRUE(settingsLoopTestPassed);
 }
 
 // World loop test
 bool worldLoopTestPassed = false;
 void onWorld(const proto::State& world) { worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE; }
-bool testWorldLoop() {
+TEST(RTTChannels, testWorldLoop) {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -87,17 +88,5 @@ bool testWorldLoop() {
     pub.publish(world);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    return worldLoopTestPassed;
-}
-
-int main() {
-    std::cout << "Starting..." << std::endl;
-    std::cout << "RobotCommands loop test passed: " << (testRobotCommandsLoop() ? "true" : "false") << std::endl;
-    std::cout << "RobotFeedback loop test passed: " << (testRobotFeedbackLoop() ? "true" : "false") << std::endl;
-    std::cout << "Settings loop test passed: " << (testSettingsLoop() ? "true" : "false") << std::endl;
-    std::cout << "World loop test passed: " << (testWorldLoop() ? "true" : "false") << std::endl;
-
-    std::cout << "Done!" << std::endl;
-
-    return 0;
+    EXPECT_TRUE(worldLoopTestPassed);
 }

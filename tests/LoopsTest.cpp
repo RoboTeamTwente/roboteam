@@ -6,6 +6,13 @@
 #include <memory>
 #include <gtest/gtest.h>
 
+/* These tests will check if you send something with a publisher of type X,
+ * you will receive the same data with the subscriber of X.
+ * This ensures that all publishers and subscribers:
+ * - Are on the correct channel
+ * - Are able to send the correct data
+ * */
+
 using namespace rtt::net;
 
 constexpr int TEST_VALUE = 69;

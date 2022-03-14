@@ -5,6 +5,13 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+/* Each computer can only have a single publisher per channel.
+ * To make sure all publishers do not accidentally share a channel,
+ * this test will create all of them at the same time.
+ * For completeness sake, this also takes into account multiple
+ * subscribers.
+ * */
+
 using namespace rtt::net;
 
 void sharedOnRobotCommands(const rtt::RobotCommands& command) {}

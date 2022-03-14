@@ -49,16 +49,18 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const proto::RobotData& feedback) { robotFeedbackLoopTestPassed = feedback.receivedfeedback().Get(0).id() == TEST_VALUE; }
+void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) { robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE; }
 TEST(RTTChannels, testRobotFeedbackLoop) {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    proto::RobotData feedback;
-    feedback.add_receivedfeedback()->set_id(TEST_VALUE);
+    rtt::RobotsFeedback feedbacks;
+    feedbacks.feedback.push_back({
+        .id = TEST_VALUE
+    });
 
-    pub.publish(feedback);
+    pub.publish(feedbacks);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     EXPECT_TRUE(robotFeedbackLoopTestPassed);

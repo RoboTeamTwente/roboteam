@@ -13,18 +13,23 @@
 
 namespace rtt::robothub::basestation {
 
+// Contains the status of the basestation manager. Currently only has the status of its collection
+typedef struct BasestationManagerStatus {
+    BasestationCollectionStatus basestationCollection;
+} BasestationManagerStatus;
+
 class BasestationManager {
    public:
     BasestationManager();
     ~BasestationManager();
 
-    bool sendRobotCommand(const REM_RobotCommand &command, utils::TeamColor color) const;
-    bool sendRobotBuzzerCommand(const REM_RobotBuzzer &command, utils::TeamColor color) const;
-    bool sendBasestationStatisticsRequest(utils::TeamColor color) const;
+    int sendRobotCommand(const REM_RobotCommand &command, utils::TeamColor color) const;
+    int sendRobotBuzzerCommand(const REM_RobotBuzzer &command, utils::TeamColor color) const;
+    int sendBasestationStatisticsRequest(utils::TeamColor color) const;
 
     void setFeedbackCallback(const std::function<void(const REM_RobotFeedback &, utils::TeamColor color)> &callback);
 
-    void printStatus() const;
+    const BasestationManagerStatus getStatus() const;
 
    private:
     libusb_context *usbContext;
@@ -40,7 +45,7 @@ class BasestationManager {
     std::function<void(const REM_RobotFeedback &, utils::TeamColor)> feedbackCallbackFunction;
     void callFeedbackCallback(const REM_RobotFeedback &feedback, utils::TeamColor color) const;
 
-    static std::vector<libusb_device *> filterBasestationDevices(libusb_device **devices, int device_count);
+    static std::vector<libusb_device *> filterBasestationDevices(libusb_device *const *const devices, int device_count);
 };
 
 class FailedToInitializeLibUsb : public std::exception {

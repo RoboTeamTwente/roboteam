@@ -4,9 +4,9 @@
 
 #include <exception>
 #include <functional>
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
 
 namespace rtt::robothub::basestation {
 
@@ -16,48 +16,49 @@ typedef struct BasestationMessage {
     uint8_t payloadBuffer[BASESTATION_MESSAGE_BUFFER_SIZE];
 } BasestationMessage;
 
-enum class WirelessChannel : unsigned int { YELLOW_CHANNEL = 0, BLUE_CHANNEL = 1, UNKNOWN = 2 };
+typedef struct BasestationIdentifier {
+    uint8_t usbAddress;
+    uint8_t serialIdentifier;
+
+    bool operator==(const BasestationIdentifier& other) const;
+    bool operator<(const BasestationIdentifier& other) const;
+    const std::string toString() const;
+} BasestationIdentifier;
 
 class Basestation {
    public:
-    explicit Basestation(libusb_device* device);
+    explicit Basestation(libusb_device* const device);
     ~Basestation();
 
     // Compares the underlying device of this basestation with the given device
-    bool operator==(libusb_device* device) const;
-    bool operator==(std::shared_ptr<Basestation> otherBasestation) const;
+    bool operator==(libusb_device* const device) const;
+    bool operator==(const BasestationIdentifier& otherBasestationID) const;
+    bool operator==(const std::shared_ptr<Basestation>& otherBasestation) const;
 
-    bool sendMessageToBasestation(BasestationMessage& message) const;
-    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, WirelessChannel)> callback);
+    // Sends message to basestation. Returns bytes sent, -1 for error
+    int sendMessageToBasestation(BasestationMessage& message) const;
+    void setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback);
 
-    WirelessChannel getChannel() const;
+    const BasestationIdentifier& getIdentifier() const;
 
-    static bool isDeviceABasestation(libusb_device* device);
-    // Converts a WirelessChannel to a value that can be used in REM
-    static bool wirelessChannelToREMChannel(WirelessChannel channel);
-    // Converts a wireless channel value from REM to a WirelessChannel
-    static WirelessChannel remChannelToWirelessChannel(bool remChannel);
-    static std::string wirelessChannelToString(WirelessChannel channel);
+    static bool isDeviceABasestation(libusb_device* const device);
 
    private:
-    libusb_device* device;               // Corresponds to the basestation itself
-    uint8_t address;                     // USB address the basestation is connected to
-    libusb_device_handle* deviceHandle;  // Handle on which IO can be performed
-    WirelessChannel channel;             // Channel at which the basestation sends messages to robots
+    libusb_device* const device;             // Corresponds to the basestation itself
+    libusb_device_handle* deviceHandle;      // Handle on which IO can be performed
+    const BasestationIdentifier identifier;  // An identifier object that uniquely represents this basestation
 
     bool shouldListenForIncomingMessages;
     std::thread incomingMessageListenerThread;
     void listenForIncomingMessages();
-    void handleIncomingMessage(const BasestationMessage& message);
-    std::function<void(const BasestationMessage&, WirelessChannel)> incomingMessageCallback;
+    std::function<void(const BasestationMessage&, const BasestationIdentifier&)> incomingMessageCallback;
 
-    // Sends a message to the basestation that asks what its channel is
-    bool requestChannelOfBasestation();
-
-    // Reads a message directly from the basestation and stores it in the given message
+    // Reads a message directly from the basestation and stores it in the given message. Returns success
     bool readBasestationMessage(BasestationMessage& message) const;
-    // Writes the given message directly to the basestation
-    bool writeBasestationMessage(BasestationMessage& message) const;
+    // Writes the given message directly to the basestation. Returns bytes sent
+    int writeBasestationMessage(BasestationMessage& message) const;
+
+    static const BasestationIdentifier getIdentifierOfDevice(libusb_device* const device);
 };
 
 class FailedToOpenDeviceException : public std::exception {

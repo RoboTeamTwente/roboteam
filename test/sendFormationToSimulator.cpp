@@ -2,17 +2,15 @@
 // Created by tijmen on 13-01-22.
 //
 
-#include <simulation/SimulatorManager.hpp>
 #include <utilities.h>
 
-int main () {
+#include <simulation/SimulatorManager.hpp>
 
+int main() {
     using namespace rtt::robothub::simulation;
 
     // GrSim does not allow a bidirectional udp connection, so it uses different ports for the feedback
-    SimulatorNetworkConfiguration config = { .blueFeedbackPort = 30011,
-                                             .yellowFeedbackPort = 30012,
-                                             .configurationFeedbackPort = 30013 };
+    SimulatorNetworkConfiguration config = {.blueFeedbackPort = 30011, .yellowFeedbackPort = 30012, .configurationFeedbackPort = 30013};
 
     std::unique_ptr<SimulatorManager> manager;
 
@@ -37,12 +35,10 @@ int main () {
 
     configurationCommand.setBallLocation(0, 0, 0, 0, 0, 0, false, false, false);
 
-    for(int i = 4; i < 11; i++) {
+    for (int i = 4; i < 11; i++) {
         configurationCommand.addRobotLocation(i, rtt::robothub::utils::TeamColor::YELLOW, 0, 0, 0, 0, 0, 0, false, false);
         configurationCommand.addRobotLocation(i, rtt::robothub::utils::TeamColor::BLUE, 0, 0, 0, 0, 0, 0, false, false);
     }
 
-
     manager->sendConfigurationCommand(configurationCommand);
-
 }

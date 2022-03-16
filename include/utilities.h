@@ -6,7 +6,7 @@
 
 namespace rtt::robothub::utils {
 
-enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
+enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
 enum class TeamColor { YELLOW, BLUE };
 
@@ -45,8 +45,6 @@ static int char2int(char input) {
         return RobotHubMode::BASESTATION;
     } else if (type == "Simulator") {
         return RobotHubMode::SIMULATOR;
-    } else if (type == "Both") {
-        return RobotHubMode::BOTH;
     } else {
         return RobotHubMode::NEITHER;
     }
@@ -58,10 +56,10 @@ static int char2int(char input) {
             return "Basestation";
         case RobotHubMode::SIMULATOR:
             return "Simulator";
-        case RobotHubMode::BOTH:
-            return "Both";
-        default:
+        case RobotHubMode::NEITHER:
             return "Neither";
+        default:
+            return "Unknown";
     }
 }
 

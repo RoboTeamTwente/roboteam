@@ -33,7 +33,7 @@ BasestationManager::~BasestationManager() {
     libusb_exit(this->usbContext);
 }
 
-bool BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils::TeamColor color) const {
     REM_RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
     REM_RobotCommandPayload payload;
@@ -43,10 +43,11 @@ bool BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils
     message.payloadSize = PACKET_SIZE_REM_ROBOT_COMMAND;
     std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
-bool BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, utils::TeamColor color) const {
     REM_RobotBuzzer copy = command;
 
     REM_RobotBuzzerPayload payload;
@@ -56,10 +57,11 @@ bool BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, 
     message.payloadSize = PACKET_SIZE_REM_ROBOT_BUZZER;
     std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
-bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
+int BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
     REM_BasestationGetStatistics command;
 
     REM_BasestationGetStatisticsPayload payload;
@@ -69,7 +71,8 @@ bool BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color
     message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_STATISTICS;
     std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
-    return this->basestationCollection->sendMessageToBasestation(message, color);
+    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
+    return bytesSent;
 }
 
 void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
@@ -84,19 +87,23 @@ void BasestationManager::listenForBasestationPlugs() {
 
         std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
 
-        this->basestationCollection->updateBasestationList(basestationDevices);
+        this->basestationCollection->updateBasestationCollection(basestationDevices);
 
         // Free the list of devices
         libusb_free_device_list(device_list, true);
     }
 }
 
-void BasestationManager::printStatus() const { this->basestationCollection->printCollection(); }
+const BasestationManagerStatus BasestationManager::getStatus() const {
+    const BasestationManagerStatus status = {.basestationCollection = this->basestationCollection->getStatus()};
 
-std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device** devices, int device_count) {
+    return status;
+}
+
+std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_device* const* const devices, int device_count) {
     std::vector<libusb_device*> basestations;
     for (int i = 0; i < device_count; ++i) {
-        libusb_device* device = devices[i];
+        libusb_device* const device = devices[i];
 
         if (Basestation::isDeviceABasestation(device)) {
             basestations.push_back(device);

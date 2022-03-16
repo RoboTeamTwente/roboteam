@@ -5,9 +5,10 @@
 
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
+#include <RobotHubStatistics.hpp>
 #include <SettingsNetworker.hpp>
-#include <WorldNetworker.hpp>
 #include <SimulationConfigurationNetworker.hpp>
+#include <WorldNetworker.hpp>
 #include <basestation/BasestationManager.hpp>
 #include <exception>
 #include <functional>
@@ -18,13 +19,14 @@ namespace rtt::robothub {
 
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 
-enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION, BOTH };
+enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
 class RobotHub {
    public:
     RobotHub();
 
-    void printStatistics();
+    const RobotHubStatistics &getStatistics();
+    void resetStatistics();
 
    private:
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
@@ -33,23 +35,21 @@ class RobotHub {
     proto::Setting settings;
     utils::RobotHubMode mode;
 
+    RobotHubStatistics statistics;
+
     std::unique_ptr<rtt::net::RobotCommandsBlueSubscriber> robotCommandsBlueSubscriber;
     std::unique_ptr<rtt::net::RobotCommandsYellowSubscriber> robotCommandsYellowSubscriber;
     std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
     std::unique_ptr<rtt::net::RobotFeedbackPublisher> robotFeedbackPublisher;
     std::unique_ptr<rtt::net::SimulationConfigurationSubscriber> simulationConfigurationSubscriber;
 
-    int commands_sent[MAX_AMOUNT_OF_ROBOTS] = {};
-    int feedback_received[MAX_AMOUNT_OF_ROBOTS] = {};
-
-    bool subscribe();
+    bool initializeNetworkers();
 
     void sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color);
     void sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color);
 
-    void onBlueRobotCommands(const proto::AICommand &commands);
-    void onYellowRobotCommands(const proto::AICommand &commands);
-    void processRobotCommands(const proto::AICommand &commands, utils::TeamColor color, utils::RobotHubMode mode);
+    std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
+    void onRobotCommands(const proto::AICommand &commands, utils::TeamColor color);
 
     void onSettings(const proto::Setting &setting);
 

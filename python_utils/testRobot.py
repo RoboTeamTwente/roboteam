@@ -176,7 +176,7 @@ while True:
 							cmd.kickChipPower = 0.2
 
 					if test == "dribbler":
-						cmd.dribbler = math.floor(8 * periodFraction)
+						cmd.dribbler = periodFraction
 						log = "speed = %d" % cmd.dribbler
 
 					if test == "rotate":

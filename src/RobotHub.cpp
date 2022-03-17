@@ -115,8 +115,8 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
         command.remVersion = LOCAL_REM_VERSION;
         command.id = robotCommand.id;
 
-        command.doKick = robotCommand.kickType == KickType::NORMAL;
-        command.doChip = robotCommand.kickType == KickType::CHIP;
+        command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::NORMAL;
+        command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
         command.dribbler = static_cast<float>(robotCommand.dribblerSpeed);
@@ -125,13 +125,15 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
         command.theta = static_cast<float>(robotCommand.velocity.angle());
 
         command.angularControl = !robotCommand.useAngularVelocity;
-        command.angle = robotCommand.useAngularVelocity ? static_cast<float>(robotCommand.targetAngularVelocity) : static_cast<float>(robotCommand.targetAngle);
+        command.angle = robotCommand.useAngularVelocity ? static_cast<float>(robotCommand.targetAngularVelocity) : static_cast<float>(robotCommand.targetAngle.getValue());
         if (robotCommand.useAngularVelocity) {
             RTT_WARNING("Robot command used angular velocity, but robots do not support that yet")
         }
 
         if (robotCommand.cameraAngleOfRobotIsSet) {
             command.cameraAngle = static_cast<float>(robotCommand.cameraAngleOfRobot);
+        } else {
+            command.cameraAngle = 0.0f;
         }
 
         command.feedback = robotCommand.ignorePacket;

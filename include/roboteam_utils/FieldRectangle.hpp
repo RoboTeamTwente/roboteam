@@ -1,6 +1,8 @@
 #pragma once
 
-#include <Vector2.h>
+#include <roboteam_utils/Vector2.h>
+#include <roboteam_utils/LineSegment.h>
+#include <roboteam_utils/Polygon.h>
 
 namespace rtt {
 /* A more optimized rectangle class that is used for representing a field.
@@ -9,16 +11,20 @@ namespace rtt {
 class FieldRectangle {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
-    constexpr FieldRectangle();
+    FieldRectangle();
     // Creates a rectangle from a top, right, bottom and left boundary
-    constexpr FieldRectangle(double top, double right, double bottom, double left);
+    FieldRectangle(double top, double right, double bottom, double left);
     // Creates a rectangle from any two opposing corners
-    constexpr FieldRectangle(const Vector2& pointA, const Vector2& pointB);
+    FieldRectangle(const Vector2& pointA, const Vector2& pointB);
 
     bool operator==(const FieldRectangle& other) const;
 
     // Checks if the given point is inside the rectangle
     bool contains(const Vector2& point) const;
+    // Checks if the given point is inside the rectangle, taken into account the margin from the outsides
+    bool contains(const Vector2& point, double margin) const;
+
+    Polygon asPolygon(double margin = 0) const;
 
     double getTop() const;
     double getRight() const;
@@ -26,7 +32,15 @@ public:
     double getLeft() const;
     double getWidth() const;
     double getHeight() const;
-    const Vector2 getCenter() const;
+    Vector2 getCenter() const;
+    Vector2 getTopLeft() const;
+    Vector2 getTopRight() const;
+    Vector2 getBottomLeft() const;
+    Vector2 getBottomRight() const;
+    LineSegment getTopSide() const;
+    LineSegment getRightSide() const;
+    LineSegment getBottomSide() const;
+    LineSegment getLeftSide() const;
 
 private:
     double top;

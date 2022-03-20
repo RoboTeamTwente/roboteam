@@ -1,9 +1,9 @@
 #pragma once
 
-#include <FieldRectangle.hpp>
-#include <Vector2.h>
-#include <Grid.h>
-#include <Circle.h>
+#include <roboteam_utils/FieldRectangle.hpp>
+#include <roboteam_utils/Vector2.h>
+#include <roboteam_utils/Grid.h>
+#include <roboteam_utils/Circle.h>
 
 #include <vector>
 
@@ -11,6 +11,7 @@ namespace rtt {
 /* This type represents a field, containing a set of rectangles,
  * points and circles. */
 typedef struct Field {
+
     Vector2 leftPenaltyPoint;   // Place of left penalty point
     Vector2 rightPenaltyPoint;  // Place of right penalty point
 

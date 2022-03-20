@@ -8,7 +8,7 @@
 namespace rtt {
 
 enum class KickType {
-    NORMAL, // Horizontal kicking
+    KICK,   // Horizontal kicking
     CHIP    // Diagonally in the air kicking
 };
 

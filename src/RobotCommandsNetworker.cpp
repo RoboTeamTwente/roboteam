@@ -46,7 +46,7 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
 
                                           .kickSpeed = protoCommand.kick_speed(),
                                           .waitForBall = protoCommand.wait_for_ball(),
-                                          .kickType = protoCommand.chip_instead_of_kick() ? KickType::CHIP : KickType::NORMAL,
+                                          .kickType = protoCommand.chip_instead_of_kick() ? KickType::CHIP : KickType::KICK,
 
                                           .dribblerSpeed = protoCommand.dribbler_speed(),
                                           .ignorePacket = protoCommand.ignore_packet()};

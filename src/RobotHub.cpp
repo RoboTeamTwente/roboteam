@@ -130,11 +130,8 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
             RTT_WARNING("Robot command used angular velocity, but robots do not support that yet")
         }
 
-        if (robotCommand.cameraAngleOfRobotIsSet) {
-            command.cameraAngle = static_cast<float>(robotCommand.cameraAngleOfRobot);
-        } else {
-            command.cameraAngle = 0.0f;
-        }
+        command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
+        command.angle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
 
         command.feedback = robotCommand.ignorePacket;
 

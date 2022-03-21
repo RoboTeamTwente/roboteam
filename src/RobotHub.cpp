@@ -131,7 +131,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
         }
 
         command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
-        command.angle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
+        command.cameraAngle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
 
         command.feedback = robotCommand.ignorePacket;
 

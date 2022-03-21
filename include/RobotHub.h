@@ -45,11 +45,11 @@ class RobotHub {
 
     bool initializeNetworkers();
 
-    void sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color);
-    void sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color);
+    void sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color);
+    void sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color);
 
     std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
-    void onRobotCommands(const proto::AICommand &commands, utils::TeamColor color);
+    void onRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color);
 
     void onSettings(const proto::Setting &setting);
 
@@ -63,7 +63,5 @@ class RobotHub {
 class FailedToInitializeNetworkersException : public std::exception {
     virtual const char *what() const throw();
 };
-
-std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world);
 
 }  // namespace rtt::robothub

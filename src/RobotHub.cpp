@@ -45,10 +45,10 @@ bool RobotHub::initializeNetworkers() {
 
     try {
         this->robotCommandsBlueSubscriber =
-            std::make_unique<rtt::net::RobotCommandsBlueSubscriber>([&](const proto::AICommand &commands) { this->onRobotCommands(commands, utils::TeamColor::BLUE); });
+            std::make_unique<rtt::net::RobotCommandsBlueSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, utils::TeamColor::BLUE); });
 
         this->robotCommandsYellowSubscriber =
-            std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const proto::AICommand &commands) { this->onRobotCommands(commands, utils::TeamColor::YELLOW); });
+            std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, utils::TeamColor::YELLOW); });
 
         this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &settings) { this->onSettings(settings); });
 
@@ -65,25 +65,24 @@ bool RobotHub::initializeNetworkers() {
     return successfullyInitialized;
 }
 
-void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::TeamColor color) {
+void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color) {
     if (this->simulatorManager == nullptr) return;
 
-    std::vector<int> robotIdsOfCommand;  // Keeps track to which robots we will send a command
-
     simulation::RobotControlCommand simCommand;
-    for (auto robotCommand : commands.commands()) {
-        int id = robotCommand.id();
-        float kickSpeed = robotCommand.chip_kick_vel();
-        float kickAngle = robotCommand.chipper() ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
-        float dribblerSpeed = (robotCommand.dribbler() > 0 ? SIM_MAX_DRIBBLER_SPEED_RPM : 0.0);  // dribbler_speed is range of 0 to 1
-        float xVelocity = robotCommand.vel().x();
-        float yVelocity = robotCommand.vel().y();
-        // TODO: Check if there is angular velocity
-        float angularVelocity = robotCommand.w();
+    for (const auto &robotCommand : commands) {
+        int id = robotCommand.id;
+        float kickSpeed = static_cast<float>(robotCommand.kickSpeed);
+        float kickAngle = robotCommand.kickType == rtt::KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
+        float dribblerSpeed = static_cast<float>(robotCommand.dribblerSpeed) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerSpeed is range of 0 to 1
+        float xVelocity = static_cast<float>(robotCommand.velocity.x);
+        float yVelocity = static_cast<float>(robotCommand.velocity.y);
+        float angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
+
+        if (!robotCommand.useAngularVelocity) {
+            RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
+        }
 
         simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
-
-        robotIdsOfCommand.push_back(id);
 
         // Update received commands stats
         this->statistics.incrementCommandsReceivedCounter(id, color);
@@ -107,45 +106,39 @@ void RobotHub::sendCommandsToSimulator(const proto::AICommand &commands, utils::
     }
 }
 
-void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils::TeamColor color) {
-    for (const proto::RobotCommand &protoCommand : commands.commands()) {
-        // Convert the proto::RobotCommand to a RobotCommand for the basestation
-
-        float rho = sqrtf(protoCommand.vel().x() * protoCommand.vel().x() + protoCommand.vel().y() * protoCommand.vel().y());
-        float theta = atan2f(protoCommand.vel().y(), protoCommand.vel().x());
-        auto bot = getWorldBot(protoCommand.id(), color, commands.extrapolatedworld());
+void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color) {
+    for (const auto &robotCommand : commands) {
+        // Convert the RobotCommand to a command for the basestation
 
         REM_RobotCommand command;
         command.header = PACKET_TYPE_REM_ROBOT_COMMAND;
         command.remVersion = LOCAL_REM_VERSION;
-        command.id = protoCommand.id();
+        command.id = robotCommand.id;
 
-        command.doKick = protoCommand.kicker();
-        command.doChip = protoCommand.chipper();
-        command.doForce = protoCommand.chip_kick_forced();
-        command.kickChipPower = protoCommand.chip_kick_vel();
-        command.dribbler = (float)protoCommand.dribbler();
+        command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::KICK;
+        command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
+        command.doForce = !robotCommand.waitForBall;
+        command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
+        command.dribbler = static_cast<float>(robotCommand.dribblerSpeed);
 
-        command.rho = rho;
-        command.theta = theta;
+        command.rho = static_cast<float>(robotCommand.velocity.length());
+        command.theta = static_cast<float>(robotCommand.velocity.angle());
 
-        command.angularControl = protoCommand.use_angle();
-        command.angle = protoCommand.w();
-
-        if (bot != nullptr) {
-            command.useCameraAngle = true;
-            command.cameraAngle = bot->angle();
-        } else {
-            command.useCameraAngle = false;
-            command.cameraAngle = 0.0;
+        command.angularControl = !robotCommand.useAngularVelocity;
+        command.angle = robotCommand.useAngularVelocity ? static_cast<float>(robotCommand.targetAngularVelocity) : static_cast<float>(robotCommand.targetAngle.getValue());
+        if (robotCommand.useAngularVelocity) {
+            RTT_WARNING("Robot command used angular velocity, but robots do not support that yet")
         }
 
-        command.feedback = false;
+        command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
+        command.cameraAngle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
+
+        command.feedback = robotCommand.ignorePacket;
 
         int bytesSent = this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
-        this->statistics.incrementCommandsReceivedCounter(command.id, color);
+        this->statistics.incrementCommandsReceivedCounter(robotCommand.id, color);
 
         if (bytesSent > 0) {
             if (color == utils::TeamColor::YELLOW) {
@@ -163,7 +156,7 @@ void RobotHub::sendCommandsToBasestation(const proto::AICommand &commands, utils
     }
 }
 
-void RobotHub::onRobotCommands(const proto::AICommand &commands, utils::TeamColor color) {
+void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color) {
     std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
 
     switch (this->mode) {
@@ -177,7 +170,7 @@ void RobotHub::onRobotCommands(const proto::AICommand &commands, utils::TeamColo
             // Do not handle commands
             break;
         default:
-            RTT_WARNING("Unknown robothub mode")
+            RTT_WARNING("Unknown RobotHub mode")
             break;
     }
 }
@@ -275,41 +268,8 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
     this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
 }
 
-// TODO: Get rid of this function: It is crap!
-// Copy of getWorldBot() because I don't want to pull in tactics as a
-// dependency. If this function is moved to utils, we can use that
-std::shared_ptr<proto::WorldRobot> getWorldBot(unsigned int id, utils::TeamColor color, const proto::World &world) {
-    /** Heavily inefficient, copying over all the robots :(
-     * If this was C++20 I would've picked std::span, but for now just use
-     * yellow() / blue()
-     */
-    // if (ourTeam) {
-    //     robots = std::vector<roboteam_proto::WorldRobot>(
-    //     world.yellow().begin(),  world.yellow().end());
-    // } else {
-    //     robots =
-    //     std::vector<roboteam_proto::WorldRobot>(world.blue().begin(),
-    //     world.blue().end());
-    // }
-
-    // Prevent a copy.
-
-    auto &robots = color == utils::TeamColor::YELLOW ? world.yellow() : world.blue();
-
-    // https://en.cppreference.com/w/cpp/algorithm/find
-    // Should do that instead, but whatever, doesn't really matter in terms of
-    // performance
-    for (const auto &bot : robots) {
-        proto::WorldRobot a = bot;
-        if (bot.id() == id) {
-            return std::make_shared<proto::WorldRobot>(bot);
-        }
-    }
-    return nullptr;
-}
-
 bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) {
-    this->statistics.feedbackBytesSent += (int) feedback.ByteSizeLong();
+    this->statistics.feedbackBytesSent += static_cast<int>(feedback.ByteSizeLong());
     return this->robotFeedbackPublisher->publish(feedback);
 }
 

@@ -4,6 +4,32 @@
 
 namespace rtt::net {
 
+proto::RobotCommand::KickType kickTypeToProto(rtt::KickType kickType) {
+    switch (kickType) {
+        case rtt::KickType::NO_KICK:
+            return proto::RobotCommand_KickType_NO_KICK;
+        case rtt::KickType::KICK:
+            return proto::RobotCommand_KickType_KICK;
+        case rtt::KickType::CHIP:
+            return proto::RobotCommand_KickType_CHIP;
+        default:
+            return proto::RobotCommand_KickType_NO_KICK;
+    }
+}
+
+rtt::KickType protoToKickType(proto::RobotCommand::KickType kickType) {
+    switch (kickType) {
+        case proto::RobotCommand_KickType_NO_KICK:
+            return rtt::KickType::NO_KICK;
+        case proto::RobotCommand_KickType_KICK:
+            return rtt::KickType::KICK;
+        case proto::RobotCommand_KickType_CHIP:
+            return rtt::KickType::CHIP;
+        default:
+            return rtt::KickType::NO_KICK;
+    }
+}
+
 proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
     proto::RobotCommands protoCommands;
 
@@ -22,7 +48,7 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
 
         protoCommand->set_kick_speed(command.kickSpeed);
         protoCommand->set_wait_for_ball(command.waitForBall);
-        protoCommand->set_chip_instead_of_kick(command.kickType == KickType::CHIP);
+        protoCommand->set_kick_type(kickTypeToProto(command.kickType));
 
         protoCommand->set_dribbler_speed(command.dribblerSpeed);
         protoCommand->set_ignore_packet(command.ignorePacket);
@@ -46,7 +72,7 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
 
                                           .kickSpeed = protoCommand.kick_speed(),
                                           .waitForBall = protoCommand.wait_for_ball(),
-                                          .kickType = protoCommand.chip_instead_of_kick() ? KickType::CHIP : KickType::KICK,
+                                          .kickType = protoToKickType(protoCommand.kick_type()),
 
                                           .dribblerSpeed = protoCommand.dribbler_speed(),
                                           .ignorePacket = protoCommand.ignore_packet()};

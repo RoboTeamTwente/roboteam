@@ -16,7 +16,13 @@ message RobotCommand {
 
     double kick_speed = 9;          // (m/s) Target speed of the ball after kicking
     bool wait_for_ball = 10;        // If true, the robot will wait with kicking until it has the ball
-    bool chip_instead_of_kick = 11; // If true, the target speed will be acquired with chipping instead
+
+    enum KickType {
+        NO_KICK = 0;
+        KICK = 1;
+        CHIP = 2;
+    }
+    KickType kick_type = 11;        // Decides if and how the ball should be kicked
 
     double dribbler_speed = 12; // [0, 1] Speed of the dribbler
     bool ignore_packet = 13;    // If true, the robot will ignore this packet, but will reply with feedback

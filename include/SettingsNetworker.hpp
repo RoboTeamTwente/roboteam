@@ -7,16 +7,21 @@
 
 namespace rtt::net {
 
-class SettingsPublisher : private utils::Publisher<proto::Setting> {
+class SettingsPublisher : private utils::Publisher {
    public:
     SettingsPublisher();
 
+    // Publishes the given settings. Returns success
     bool publish(const proto::Setting& settings);
 };
 
-class SettingsSubscriber : private utils::Subscriber<proto::Setting> {
+class SettingsSubscriber : private utils::Subscriber {
    public:
     SettingsSubscriber(const std::function<void(const proto::Setting&)>& callback);
+
+   private:
+    void onPublishedMessage(const std::string& message);
+    const std::function<void(const proto::Setting&)> callback;
 };
 
 }  // namespace rtt::net

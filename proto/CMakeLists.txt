@@ -8,7 +8,7 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "messages_robocup_ssl_referee.proto"
     "messages_robocup_ssl_wrapper.proto"
     "messages_robocup_ssl_wrapper_legacy.proto"
-    "RobotCommand.proto"
+    "RobotCommands.proto"
     "RobotData.proto"
     "RobotFeedback.proto"
     "State.proto"
@@ -18,7 +18,6 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "WorldRobot.proto"
     "Setting.proto"
     "RobotParameters.proto"
-    "AICommand.proto"
     "SimulationConfiguration.proto"
 )
 

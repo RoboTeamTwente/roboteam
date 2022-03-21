@@ -2,51 +2,20 @@
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-
+#include <chrono>
 #include <iostream>
 #include <memory>
-#include <chrono>
 
 using namespace rtt::net;
 
 constexpr int ID = 0;
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 
-proto::AICommand getEmptyRobotCommand(int id) {
-    proto::AICommand commands;
-
-    auto* command = commands.add_commands();
-    command->set_id(id);
-    command->mutable_vel()->set_x(0);
-    command->mutable_vel()->set_y(0);
-    command->set_w(0);
-    command->set_use_angle(false);
-    command->set_dribbler(false);
-    command->set_kicker(false);
-    command->set_chipper(false);
-    command->set_chip_kick_forced(false);
-    command->set_chip_kick_vel(false);
-
-    return commands;
-}
-
-proto::AICommand getEmptyRobotCommandToAllRobots() {
-    proto::AICommand commands;
-
+rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
+    rtt::RobotCommands commands;
     for (int i = 0; i < 16; ++i) {
-        auto* command = commands.add_commands();
-        command->set_id(i);
-        command->mutable_vel()->set_x(0);
-        command->mutable_vel()->set_y(0);
-        command->set_w(0);
-        command->set_use_angle(false);
-        command->set_dribbler(false);
-        command->set_kicker(false);
-        command->set_chipper(false);
-        command->set_chip_kick_forced(false);
-        command->set_chip_kick_vel(false);
+        commands.push_back({.id = i});
     }
-
     return commands;
 }
 
@@ -59,7 +28,6 @@ proto::Setting getRobotHubBasestationModePacket() {
 }
 
 void onFeedback(const proto::RobotData& robotFeedback) {
-
     int amountOfFeedback = robotFeedback.receivedfeedback().size();
     bool isYellow = robotFeedback.isyellow();
 
@@ -76,13 +44,12 @@ void onFeedback(const proto::RobotData& robotFeedback) {
 }
 
 void onWorld(const proto::State& world) {
-
     for (const auto& robot : world.last_seen_world().yellowfeedback()) {
-        //std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+        // std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
     }
 
     for (const auto& robot : world.last_seen_world().bluefeedback()) {
-        //std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+        // std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
     }
 }
 
@@ -90,11 +57,10 @@ int main() {
     auto settingsPub = std::make_unique<SettingsPublisher>();
     auto commandsBluePub = std::make_unique<RobotCommandsBluePublisher>();
     auto commandsYellowPub = std::make_unique<RobotCommandsYellowPublisher>();
-    
+
     auto feedbackSub = std::make_unique<RobotFeedbackSubscriber>(onFeedback);
     auto worldSub = std::make_unique<WorldSubscriber>(onWorld);
 
-    auto singleCommand = getEmptyRobotCommand(0);
     auto teamCommand = getEmptyRobotCommandToAllRobots();
 
     // First, send settings message to robothub that it needs to forward messages to the basestation

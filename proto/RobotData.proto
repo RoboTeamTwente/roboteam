@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "RobotCommand.proto";
+import "RobotCommands.proto";
 import "RobotFeedback.proto";
 
 package proto;

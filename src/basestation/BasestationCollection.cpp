@@ -1,15 +1,17 @@
+#include <REM_BasestationConfiguration.h>
+#include <REM_BasestationGetConfiguration.h>
+#include <REM_BasestationSetConfiguration.h>
+#include <roboteam_utils/Print.h>
+
 #include <basestation/BasestationCollection.hpp>
-#include <iostream>
+#include <cstring>
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTILL_BASESTATION_IS_UNSELECTED_S = 3;  // 3 seconds with no interaction
-constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 500;
+constexpr int TIME_UNTILL_BASESTATION_IS_UNWANTED_S = 1;        // 1 second with no interaction
+constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 420;  // Why 420? No reason at all...
 
 BasestationCollection::BasestationCollection() {
-    this->blueBasestation = nullptr;
-    this->yellowBasestation = nullptr;
-
     this->shouldUpdateBasestationSelection = true;
     this->basestationSelectionUpdaterThread = std::thread(&BasestationCollection::updateBasestationSelection, this);
 }
@@ -18,188 +20,433 @@ BasestationCollection::~BasestationCollection() {
     if (this->basestationSelectionUpdaterThread.joinable()) {
         this->basestationSelectionUpdaterThread.join();
     }
-
-    this->unselectBasestationOfColor(utils::TeamColor::BLUE);
-    this->unselectBasestationOfColor(utils::TeamColor::YELLOW);
-
-    this->basestations.clear();
 }
 
-// Updates current basestations list by comparing it with the given plugged-in basestation devices list
-void BasestationCollection::updateBasestationList(const std::vector<libusb_device*>& pluggedBasestationDevices) {
-    // Remove basestations that are not plugged in anymore
+void BasestationCollection::updateBasestationCollection(const std::vector<libusb_device*>& pluggedBasestationDevices) {
+    this->removeOldBasestations(pluggedBasestationDevices);
+    this->addNewBasestations(pluggedBasestationDevices);
+}
+
+void BasestationCollection::removeOldBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices) {
     auto iterator = this->basestations.begin();
     while (iterator != this->basestations.end()) {
         auto basestation = *iterator;
 
         if (!basestationIsInDeviceList(basestation, pluggedBasestationDevices)) {
             // This basestation is not plugged in anymore -> remove it
+
+            // Remove basestation from the selection if it was in there
+            auto selectedYellow = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+            if (basestation->operator==(selectedYellow)) this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+
+            auto selectedBlue = this->getSelectedBasestation(utils::TeamColor::BLUE);
+            if (basestation->operator==(selectedBlue)) this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+
+            // Remove its serial id from wireless channel map
+            this->removeBasestationIdToChannelEntry(basestation->getIdentifier());
+
+            // Fist, obtain the basestations mutex, because we will edit the vector, which might be read by other threads
+            std::scoped_lock<std::mutex> lock(this->basestationsMutex);
+            // Remove basestation from list
             iterator = this->basestations.erase(iterator);
-            // Remove basestation from team selection
-            if (basestation == this->blueBasestation) this->unselectBasestationOfColor(utils::TeamColor::BLUE);
-            if (basestation == this->yellowBasestation) this->unselectBasestationOfColor(utils::TeamColor::YELLOW);
         } else {
             ++iterator;
         }
     }
+}
+
+void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices) {
+    auto callbackForNewBasestations = [&](const BasestationMessage& message, BasestationIdentifier basestationId) { this->onMessageFromBasestation(message, basestationId); };
 
     // Add plugged in basestations that are not in the list yet
-    for (libusb_device* pluggedBasestationDevices : pluggedBasestationDevices) {
+    for (libusb_device* const pluggedBasestationDevices : pluggedBasestationDevices) {
         if (!deviceIsInBasestationList(pluggedBasestationDevices, this->basestations)) {
             // This basestation is plugged in but not in the list -> add it
             try {
                 auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevices);
+                newBasestation->setIncomingMessageCallback(callbackForNewBasestations);
+
+                // Lock the basestations list so we can safely add this basestation
+                std::scoped_lock<std::mutex> lock(this->basestationsMutex);
                 this->basestations.push_back(newBasestation);
             } catch (FailedToOpenDeviceException e) {
-                std::cout << "Error: " << e.what() << std::endl;
-                std::cout << "Did you edit your PC's user permissions?" << std::endl;
+                RTT_ERROR(e.what())
+                RTT_INFO("Did you edit your PC's user permissions?")
             }
         }
     }
 }
 
-bool BasestationCollection::sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor) {
-    const auto& basestation = teamColor == utils::TeamColor::YELLOW ? this->yellowBasestation : this->blueBasestation;
+int BasestationCollection::sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor) {
+    const auto& basestation = teamColor == utils::TeamColor::YELLOW ? this->getSelectedBasestation(utils::TeamColor::YELLOW) : this->getSelectedBasestation(utils::TeamColor::BLUE);
 
-    bool sentMessage = false;
+    int bytesSent = -1;
     if (basestation != nullptr) {
-        sentMessage = basestation->sendMessageToBasestation(message);
+        bytesSent = basestation->sendMessageToBasestation(message);
     }
 
-    return sentMessage;
+    // Update our basestations usage
+    this->updateWantedBasestations(teamColor);
+
+    return bytesSent;
 }
 
 void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback) {
     this->messageFromBasestationCallback = callback;
 }
 
-void BasestationCollection::printCollection() const {
-    const std::string yes = "yes    ";
-    const std::string no = "no     ";
-    const std::string yellow = "yellow ";
-    const std::string blue = "blue   ";
-    const std::string unknown = "unknown";
+const BasestationCollectionStatus BasestationCollection::getStatus() const {
+    const BasestationCollectionStatus status{.wantedBasestations = this->getWantedBasestations(),
+                                             .hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr,
+                                             .hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr,
+                                             .amountOfBasestations = (int)basestations.size()};
 
-    std::string yellowFilled = this->yellowBasestation != nullptr ? yes : no;
-    std::string yellowChannel = unknown;
-    if (this->yellowBasestation != nullptr) {
-        if (this->yellowBasestation->getChannel() == WirelessChannel::BLUE_CHANNEL) {
-            yellowChannel = blue;
-        } else if (this->yellowBasestation->getChannel() == WirelessChannel::YELLOW_CHANNEL) {
-            yellowChannel = yellow;
-        }
+    return status;
+}
+
+std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestations() const {
+    // First, lock the original basestations list
+    std::scoped_lock<std::mutex> lock(this->basestationsMutex);
+
+    std::vector<std::shared_ptr<Basestation>> copyVector;
+    for (const auto& basestation : this->basestations) {
+        copyVector.push_back(basestation);
     }
 
-    std::string blueFilled = this->blueBasestation != nullptr ? yes : no;
-    std::string blueChannel = unknown;
-    if (this->blueBasestation != nullptr) {
-        if (this->blueBasestation->getChannel() == WirelessChannel::BLUE_CHANNEL) {
-            blueChannel = blue;
-        } else if (this->blueBasestation->getChannel() == WirelessChannel::YELLOW_CHANNEL) {
-            blueChannel = yellow;
-        }
+    return copyVector;
+}
+
+std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(utils::TeamColor colorOfBasestation) const {
+    std::shared_ptr<Basestation> basestation;
+
+    std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
+
+    switch (colorOfBasestation) {
+        case utils::TeamColor::BLUE:
+            basestation = this->blueBasestation;
+            break;
+        case utils::TeamColor::YELLOW:
+            basestation = this->yellowBasestation;
+            break;
     }
 
-    auto unselectedBasestations = this->getUnselectedBasestations();
-    int remaining = unselectedBasestations.size();
+    return basestation;
+}
 
-    std::cout << "==== Yellow slot ====== Blue slot =====" << std::endl
-              << "| filled:  " << yellowFilled << " | filled:  " << blueFilled << " |" << std::endl
-              << "| channel: " << yellowChannel << " | channel: " << blueChannel << " |" << std::endl
-              << "|----- Remaining: " << remaining << ", Waiting: ? ------|" << std::endl;
-
-    int i = 0;
-    for (const auto& basestation : this->getUnselectedBasestations()) {
-        std::cout << "|- " << i << ": " << Basestation::wirelessChannelToString(basestation->getChannel()) << std::endl;
+void BasestationCollection::setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color) {
+    std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
+    switch (color) {
+        case utils::TeamColor::BLUE:
+            this->blueBasestation = newBasestation;
+            break;
+        case utils::TeamColor::YELLOW:
+            this->yellowBasestation = newBasestation;
+            break;
     }
-    std::cout << std::endl;
+}
+
+WirelessChannel BasestationCollection::getChannelOfBasestation(const BasestationIdentifier& basestationId) const {
+    WirelessChannel channel = WirelessChannel::UNKNOWN;
+
+    // Lock the map for thread safety
+    std::scoped_lock<std::mutex> lock(this->basestationIdToChannelMutex);
+
+    auto iterator = this->basestationIdToChannel.find(basestationId);
+    if (iterator != this->basestationIdToChannel.end()) {
+        // If the iterator found a key in the map, the channel is the second value
+        channel = iterator->second;
+    }
+
+    return channel;
+}
+
+void BasestationCollection::setChannelOfBasestation(const BasestationIdentifier& basestationId, WirelessChannel newChannel) {
+    // Lock the map for thread safety
+    std::scoped_lock<std::mutex> lock(this->basestationIdToChannelMutex);
+    this->basestationIdToChannel[basestationId] = newChannel;
+}
+
+void BasestationCollection::removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId) {
+    // Lock the map for thread safety
+    std::scoped_lock<std::mutex> lock(this->basestationIdToChannelMutex);
+    this->basestationIdToChannel.erase(basestationId);
+}
+
+WantedBasestations BasestationCollection::getWantedBasestations() const {
+    auto now = std::chrono::steady_clock::now();
+
+    // Calculate how long ago the basestations were used
+    auto timeAfterLastYellowUsage = std::chrono::duration_cast<std::chrono::seconds>(now - this->lastRequestForYellowBasestation).count();
+    auto timeAfterLastBlueUsage = std::chrono::duration_cast<std::chrono::seconds>(now - this->lastRequestForBlueBasestation).count();
+
+    // If they were used recently enough, we say we still want them
+    bool wantsYellowBasestation = timeAfterLastYellowUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
+    bool wantsBlueBasestation = timeAfterLastBlueUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
+
+    WantedBasestations wantedBasestations;
+
+    if (wantsYellowBasestation && wantsBlueBasestation) {
+        wantedBasestations = WantedBasestations::YELLOW_AND_BLUE;
+    } else if (wantsYellowBasestation) {
+        wantedBasestations = WantedBasestations::ONLY_YELLOW;
+    } else if (wantsBlueBasestation) {
+        wantedBasestations = WantedBasestations::ONLY_BLUE;
+    } else {
+        wantedBasestations = WantedBasestations::NEITHER_YELLOW_NOR_BLUE;
+    }
+
+    return wantedBasestations;
+}
+
+void BasestationCollection::updateWantedBasestations(utils::TeamColor requestedBasestationColor) {
+    auto now = std::chrono::steady_clock::now();
+
+    switch (requestedBasestationColor) {
+        case utils::TeamColor::YELLOW:
+            this->lastRequestForYellowBasestation = now;
+            break;
+        case utils::TeamColor::BLUE:
+            this->lastRequestForBlueBasestation = now;
+            break;
+    }
 }
 
 void BasestationCollection::updateBasestationSelection() {
     while (this->shouldUpdateBasestationSelection) {
-        if (this->yellowBasestation == nullptr) {
-            this->trySelectBasestationOfColor(utils::TeamColor::YELLOW);
+        int wrongBasestations = this->unselectIncorrectlySelectedBasestations();
+        if (wrongBasestations > 0) {
+            RTT_WARNING("Selected basestation(s) had incorrect channel(s)")
         }
-        if (this->blueBasestation == nullptr) {
-            this->trySelectBasestationOfColor(utils::TeamColor::BLUE);
-        }
+
+        this->askChannelOfBasestationsWithUnknownChannel();
+
+        this->unselectUnwantedBasestations();
+
+        this->selectWantedBasestations();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(BASESTATION_SELECTION_UPDATE_FREQUENCY_MS));
     }
 }
 
-std::vector<std::shared_ptr<Basestation>> BasestationCollection::getUnselectedBasestations() const {
-    std::vector<std::shared_ptr<Basestation>> unselectedBasestations;
+void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
+    // Create the channel request message
+    REM_BasestationGetConfiguration getConfigurationMessage;
+    getConfigurationMessage.header = PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
 
-    for (const auto& basestation : this->basestations) {
-        if (!basestation->operator==(this->blueBasestation) && !basestation->operator==(this->yellowBasestation)) {
-            // This basestation is neither selected as blue nor yellow basestation
-            unselectedBasestations.push_back(basestation);
+    REM_BasestationGetConfigurationPayload getConfigurationPayload;
+    encodeREM_BasestationGetConfiguration(&getConfigurationPayload, &getConfigurationMessage);
+
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
+    std::memcpy(&message.payloadBuffer, &getConfigurationPayload.payload, message.payloadSize);
+
+    // Send it to every basestation with unknown channel
+    for (const auto& basestation : this->getAllBasestations()) {
+        WirelessChannel channel = this->getChannelOfBasestation(basestation->getIdentifier());
+        if (channel == WirelessChannel::UNKNOWN) {
+            basestation->sendMessageToBasestation(message);
+        }
+    }
+}
+
+std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBasestations() const {
+    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+    const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
+
+    std::vector<std::shared_ptr<Basestation>> selectableBasestations;
+
+    for (const auto& basestation : this->getAllBasestations()) {
+        if (!basestation->operator==(selectedYellowCopy) && !basestation->operator==(selectedBlueCopy) &&
+            this->getChannelOfBasestation(basestation->getIdentifier()) != WirelessChannel::UNKNOWN) {
+            // This basestation is neither selected as blue nor yellow basestation, and has a known channel
+            selectableBasestations.push_back(basestation);
+        }
+    }
+
+    return std::move(selectableBasestations);
+}
+
+bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
+    REM_BasestationSetConfiguration setConfigurationCommand;
+    setConfigurationCommand.header = PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION;
+    setConfigurationCommand.remVersion = LOCAL_REM_VERSION;
+    setConfigurationCommand.channel = BasestationCollection::wirelessChannelToREMChannel(newChannel);
+
+    REM_BasestationSetConfigurationPayload setConfigurationPayload;
+    encodeREM_BasestationSetConfiguration(&setConfigurationPayload, &setConfigurationCommand);
+
+    BasestationMessage message;
+    message.payloadSize = PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION;
+    std::memcpy(&message.payloadBuffer, &setConfigurationPayload.payload, message.payloadSize);
+
+    bool sentSuccesfully = basestation->sendMessageToBasestation(message);
+
+    // Set the wireless channel of this basestation to UNKNOWN, as at this point, its channel is uncertain
+    this->setChannelOfBasestation(basestation->getIdentifier(), WirelessChannel::UNKNOWN);
+
+    return sentSuccesfully;
+}
+
+int BasestationCollection::unselectUnwantedBasestations() {
+    bool hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr;
+    bool hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr;
+
+    int unselectedBasestations = 0;
+
+    switch (this->getWantedBasestations()) {
+        case WantedBasestations::NEITHER_YELLOW_NOR_BLUE: {
+            if (hasYellowBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                unselectedBasestations++;
+            }
+            if (hasBlueBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                unselectedBasestations++;
+            }
+            break;
+        }
+        case WantedBasestations::ONLY_YELLOW: {
+            if (hasBlueBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                unselectedBasestations++;
+            }
+            break;
+        }
+        case WantedBasestations::ONLY_BLUE: {
+            if (hasYellowBasestation) {
+                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                unselectedBasestations++;
+            }
+            break;
         }
     }
 
     return unselectedBasestations;
 }
 
-bool BasestationCollection::trySelectBasestationOfColor(utils::TeamColor color) {
-    // Fist get basestations that aren't already selected as the blue or yellow basestation
-    auto unselectedBasestations = this->getUnselectedBasestations();
+int BasestationCollection::selectWantedBasestations() {
+    bool needsToSelectYellowBasestation = false;
+    bool needsToSelectBlueBasestation = false;
 
-    bool selectedBasestation = false;
-    for (const auto& basestation : unselectedBasestations) {
-        if (basestation->getChannel() == getWirelessChannelCorrespondingTeamColor(color)) {
-            this->selectBasestationOfColor(basestation, color);
-            selectedBasestation = true;
+    switch (this->getWantedBasestations()) {
+        case WantedBasestations::YELLOW_AND_BLUE:
+            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
+            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
             break;
+        case WantedBasestations::ONLY_YELLOW:
+            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
+            break;
+        case WantedBasestations::ONLY_BLUE:
+            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
+            break;
+    }
+
+    int selectedBasestations = this->selectBasestations(needsToSelectYellowBasestation, needsToSelectBlueBasestation);
+    return selectedBasestations;
+}
+
+int BasestationCollection::selectBasestations(bool needYellowBasestation, bool needBlueBasestation) {
+    // Fist get basestations that aren't already selected as the blue or yellow basestation
+    auto selectableBasestations = this->getSelectableBasestations();
+
+    // Then get a list of all unselected basestations in combination with their channel
+    std::vector<std::shared_ptr<Basestation>> yellowBasestations;
+    std::vector<std::shared_ptr<Basestation>> blueBasestations;
+
+    for (const auto& basestation : selectableBasestations) {
+        auto basestationsChannel = this->getChannelOfBasestation(basestation->getIdentifier());
+        switch (basestationsChannel) {
+            case WirelessChannel::YELLOW_CHANNEL: {
+                yellowBasestations.push_back(basestation);
+                break;
+            }
+            case WirelessChannel::BLUE_CHANNEL: {
+                blueBasestations.push_back(basestation);
+                break;
+            }
         }
     }
 
-    return selectedBasestation;
+    int numberOfSelectedBasestations = 0;
+    bool hasSelectedYellowBasestation = false;
+    bool hasSelectedBlueBasestation = false;
+
+    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+    // Now try to select a basestation which already has the channel we want
+    if (needYellowBasestation && !yellowBasestations.empty()) {
+        this->setSelectedBasestation(yellowBasestations.front(), utils::TeamColor::YELLOW);
+        hasSelectedYellowBasestation = true;
+        numberOfSelectedBasestations++;
+
+        // Also remove this basestation from the unselected yellow basestations list
+        yellowBasestations.erase(yellowBasestations.begin());
+    }
+    if (needBlueBasestation && !blueBasestations.empty()) {
+        this->setSelectedBasestation(blueBasestations.front(), utils::TeamColor::BLUE);
+        hasSelectedBlueBasestation = true;
+        numberOfSelectedBasestations++;
+
+        // Also remove this basestation from the unselected blue basestations list
+        blueBasestations.erase(blueBasestations.begin());
+    }
+
+    // If we failed, we will request a basestation with different channel to change its channel
+    if (needYellowBasestation && !hasSelectedYellowBasestation && !blueBasestations.empty()) {
+        // Ask blue basestation to change to yellow
+        this->sendChannelChangeRequest(blueBasestations.front(), WirelessChannel::YELLOW_CHANNEL);
+    }
+    if (needBlueBasestation && !hasSelectedBlueBasestation && !yellowBasestations.empty()) {
+        // Ask yellow basestation to change to blue
+        this->sendChannelChangeRequest(yellowBasestations.front(), WirelessChannel::BLUE_CHANNEL);
+    }
+
+    return numberOfSelectedBasestations;
 }
 
-void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, utils::TeamColor color) {
+int BasestationCollection::unselectIncorrectlySelectedBasestations() {
+    int unselectedBasestations = 0;
+
+    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+    const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
+
+    if (selectedYellowCopy != nullptr && this->getChannelOfBasestation(selectedYellowCopy->getIdentifier()) != WirelessChannel::YELLOW_CHANNEL) {
+        // The yellow basestation is not actually yellow, so unselect it
+        this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+        unselectedBasestations++;
+    }
+    if (selectedBlueCopy != nullptr && this->getChannelOfBasestation(selectedBlueCopy->getIdentifier()) != WirelessChannel::BLUE_CHANNEL) {
+        // The blue basestation is not actually blue, so unselect it
+        this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+        unselectedBasestations++;
+    }
+    return unselectedBasestations;
+}
+
+void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
+    // If this message contains what channel the basestation has, parse it and update our map
+    if (message.payloadBuffer[0] == PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+        REM_BasestationConfigurationPayload configurationPayload;
+        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
+
+        REM_BasestationConfiguration basestationConfiguration;
+        decodeREM_BasestationConfiguration(&basestationConfiguration, &configurationPayload);
+
+        WirelessChannel usedChannel = BasestationCollection::remChannelToWirelessChannel(basestationConfiguration.channel);
+        this->setChannelOfBasestation(basestationId, usedChannel);
+    }
+
+    // This function can be called by multiple basestations simultaneously, so protect it with a mutex
     std::lock_guard<std::mutex> lock(this->messageCallbackMutex);
 
+    // And forward the message if this serialID belongs to a selected basestation
     if (this->messageFromBasestationCallback != nullptr) {
-        this->messageFromBasestationCallback(message, color);
-    }
-}
+        const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+        const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
 
-void BasestationCollection::selectBasestationOfColor(std::shared_ptr<Basestation> basestation, utils::TeamColor color) {
-    this->unselectBasestationOfColor(color);
-
-    auto callback = [&](const BasestationMessage& message, WirelessChannel channel) {
-        utils::TeamColor colorOfBasestation = BasestationCollection::getTeamColorCorrespondingWirelessChannel(channel);
-        this->onMessageFromBasestation(message, colorOfBasestation);
-    };
-
-    switch (color) {
-        case utils::TeamColor::BLUE:
-            this->blueBasestation = basestation;
-            this->blueBasestation->setIncomingMessageCallback(callback);
-            break;
-        case utils::TeamColor::YELLOW:
-            this->yellowBasestation = basestation;
-            this->yellowBasestation->setIncomingMessageCallback(callback);
-            break;
-    }
-}
-
-void BasestationCollection::unselectBasestationOfColor(utils::TeamColor color) {
-    switch (color) {
-        case utils::TeamColor::BLUE: {
-            if (this->blueBasestation != nullptr) {
-                this->blueBasestation->setIncomingMessageCallback(nullptr);
-                this->blueBasestation = nullptr;
-            }
-            break;
-        }
-        case utils::TeamColor::YELLOW: {
-            if (this->yellowBasestation != nullptr) {
-                this->yellowBasestation->setIncomingMessageCallback(nullptr);
-                this->yellowBasestation = nullptr;
-            }
-            break;
+        if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
+            this->messageFromBasestationCallback(message, utils::TeamColor::YELLOW);
+        } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
+            this->messageFromBasestationCallback(message, utils::TeamColor::BLUE);
         }
     }
 }
@@ -233,10 +480,23 @@ utils::TeamColor BasestationCollection::getTeamColorCorrespondingWirelessChannel
     }
 }
 
-bool BasestationCollection::deviceIsInBasestationList(libusb_device* device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
+bool BasestationCollection::basestationIsInDeviceList(const std::shared_ptr<Basestation>& basestation, const std::vector<libusb_device*>& devices) {
+    bool basestationIsInList = false;
+
+    for (const auto& device : devices) {
+        if (*basestation == device) {
+            basestationIsInList = true;
+            break;
+        }
+    }
+
+    return basestationIsInList;
+}
+
+bool BasestationCollection::deviceIsInBasestationList(libusb_device* const device, const std::vector<std::shared_ptr<Basestation>>& basestations) {
     bool deviceIsInList = false;
 
-    for (auto basestation : basestations) {
+    for (const auto& basestation : basestations) {
         if (*basestation == device) {
             deviceIsInList = true;
             break;
@@ -246,17 +506,34 @@ bool BasestationCollection::deviceIsInBasestationList(libusb_device* device, con
     return deviceIsInList;
 }
 
-bool BasestationCollection::basestationIsInDeviceList(std::shared_ptr<Basestation> basestation, const std::vector<libusb_device*>& devices) {
-    bool basestationIsInList = false;
-
-    for (auto device : devices) {
-        if (*basestation == device) {
-            basestationIsInList = true;
+bool BasestationCollection::wirelessChannelToREMChannel(WirelessChannel channel) {
+    bool remChannel;
+    switch (channel) {
+        case WirelessChannel::BLUE_CHANNEL:
+            remChannel = true;
             break;
-        }
+        case WirelessChannel::YELLOW_CHANNEL:
+            remChannel = false;
+            break;
+        default:
+            remChannel = false;
+            break;
     }
 
-    return basestationIsInList;
+    return remChannel;
+}
+
+WirelessChannel BasestationCollection::remChannelToWirelessChannel(bool channel) { return channel ? WirelessChannel::BLUE_CHANNEL : WirelessChannel::YELLOW_CHANNEL; }
+
+std::string BasestationCollection::wirelessChannelToString(WirelessChannel channel) {
+    switch (channel) {
+        case WirelessChannel::BLUE_CHANNEL:
+            return "blue channel";
+        case WirelessChannel::YELLOW_CHANNEL:
+            return "yellow channel";
+        default:
+            return "unknown channel";
+    }
 }
 
 }  // namespace rtt::robothub::basestation

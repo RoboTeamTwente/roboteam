@@ -30,6 +30,7 @@ target_include_directories(simulator_manager PUBLIC "include")
 target_link_libraries(simulator_manager PUBLIC
         simulation_manager_proto
         Qt5::Network
+        roboteam_utils
 )
 target_compile_options(simulator_manager PRIVATE "${COMPILER_FLAGS}")
 
@@ -45,11 +46,12 @@ target_include_directories(basestation_manager PUBLIC
 target_link_libraries(basestation_manager PUBLIC
         Threads::Threads
         lib::usb
+        roboteam_utils
 )
 target_compile_options(basestation_manager PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for RobotHub, which uses the basestationManager and simulationManager library
-add_executable(roboteam_robothub "src/RobotHub.cpp")
+add_executable(roboteam_robothub "src/RobotHubStatistics.cpp" "src/RobotHub.cpp")
 target_include_directories(roboteam_robothub
         PRIVATE include
 )
@@ -57,6 +59,7 @@ target_link_libraries(roboteam_robothub
         PRIVATE simulator_manager
         PRIVATE basestation_manager
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
 )
 target_compile_options(roboteam_robothub PRIVATE "${COMPILER_FLAGS}")
 
@@ -73,6 +76,12 @@ target_link_libraries(roboteam_robothub_enumerate_usb
         lib::usb
 )
 target_compile_options(roboteam_robothub_enumerate_usb PRIVATE "${COMPILER_FLAGS}")
+
+# Create the make file for test/sendRobotCommands.cpp
+add_executable(test_sendRobotCommands
+        "test/SendRobotCommands.cpp"
+)
+target_link_libraries(test_sendRobotCommands PRIVATE roboteam_networking)
 
 # Create make file for simulation formation test
 add_executable(test_formation

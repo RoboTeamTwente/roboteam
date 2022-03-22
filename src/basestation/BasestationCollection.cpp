@@ -36,11 +36,11 @@ void BasestationCollection::removeOldBasestations(const std::vector<libusb_devic
             // This basestation is not plugged in anymore -> remove it
 
             // Remove basestation from the selection if it was in there
-            auto selectedYellow = this->getSelectedBasestation(utils::TeamColor::YELLOW);
-            if (basestation->operator==(selectedYellow)) this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+            auto selectedYellow = this->getSelectedBasestation(rtt::Team::YELLOW);
+            if (basestation->operator==(selectedYellow)) this->setSelectedBasestation(nullptr, rtt::Team::YELLOW);
 
-            auto selectedBlue = this->getSelectedBasestation(utils::TeamColor::BLUE);
-            if (basestation->operator==(selectedBlue)) this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+            auto selectedBlue = this->getSelectedBasestation(rtt::Team::BLUE);
+            if (basestation->operator==(selectedBlue)) this->setSelectedBasestation(nullptr, rtt::Team::BLUE);
 
             // Remove its serial id from wireless channel map
             this->removeBasestationIdToChannelEntry(basestation->getIdentifier());
@@ -77,8 +77,8 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
     }
 }
 
-int BasestationCollection::sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor) {
-    const auto& basestation = teamColor == utils::TeamColor::YELLOW ? this->getSelectedBasestation(utils::TeamColor::YELLOW) : this->getSelectedBasestation(utils::TeamColor::BLUE);
+int BasestationCollection::sendMessageToBasestation(BasestationMessage& message, rtt::Team teamColor) {
+    const auto& basestation = teamColor == rtt::Team::YELLOW ? this->getSelectedBasestation(rtt::Team::YELLOW) : this->getSelectedBasestation(rtt::Team::BLUE);
 
     int bytesSent = -1;
     if (basestation != nullptr) {
@@ -91,14 +91,14 @@ int BasestationCollection::sendMessageToBasestation(BasestationMessage& message,
     return bytesSent;
 }
 
-void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback) {
+void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback) {
     this->messageFromBasestationCallback = callback;
 }
 
 const BasestationCollectionStatus BasestationCollection::getStatus() const {
     const BasestationCollectionStatus status{.wantedBasestations = this->getWantedBasestations(),
-                                             .hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr,
-                                             .hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr,
+                                             .hasYellowBasestation = this->getSelectedBasestation(rtt::Team::YELLOW) != nullptr,
+                                             .hasBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) != nullptr,
                                              .amountOfBasestations = (int)basestations.size()};
 
     return status;
@@ -116,16 +116,16 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getAllBasestati
     return copyVector;
 }
 
-std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(utils::TeamColor colorOfBasestation) const {
+std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(rtt::Team colorOfBasestation) const {
     std::shared_ptr<Basestation> basestation;
 
     std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
 
     switch (colorOfBasestation) {
-        case utils::TeamColor::BLUE:
+        case rtt::Team::BLUE:
             basestation = this->blueBasestation;
             break;
-        case utils::TeamColor::YELLOW:
+        case rtt::Team::YELLOW:
             basestation = this->yellowBasestation;
             break;
     }
@@ -133,13 +133,13 @@ std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(utils
     return basestation;
 }
 
-void BasestationCollection::setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color) {
+void BasestationCollection::setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, rtt::Team color) {
     std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
     switch (color) {
-        case utils::TeamColor::BLUE:
+        case rtt::Team::BLUE:
             this->blueBasestation = newBasestation;
             break;
-        case utils::TeamColor::YELLOW:
+        case rtt::Team::YELLOW:
             this->yellowBasestation = newBasestation;
             break;
     }
@@ -198,14 +198,14 @@ WantedBasestations BasestationCollection::getWantedBasestations() const {
     return wantedBasestations;
 }
 
-void BasestationCollection::updateWantedBasestations(utils::TeamColor requestedBasestationColor) {
+void BasestationCollection::updateWantedBasestations(rtt::Team requestedBasestationColor) {
     auto now = std::chrono::steady_clock::now();
 
     switch (requestedBasestationColor) {
-        case utils::TeamColor::YELLOW:
+        case rtt::Team::YELLOW:
             this->lastRequestForYellowBasestation = now;
             break;
-        case utils::TeamColor::BLUE:
+        case rtt::Team::BLUE:
             this->lastRequestForBlueBasestation = now;
             break;
     }
@@ -250,8 +250,8 @@ void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
 }
 
 std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBasestations() const {
-    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
-    const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
+    const auto selectedYellowCopy = this->getSelectedBasestation(rtt::Team::YELLOW);
+    const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
     std::vector<std::shared_ptr<Basestation>> selectableBasestations;
 
@@ -288,33 +288,33 @@ bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Bases
 }
 
 int BasestationCollection::unselectUnwantedBasestations() {
-    bool hasYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) != nullptr;
-    bool hasBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) != nullptr;
+    bool hasYellowBasestation = this->getSelectedBasestation(rtt::Team::YELLOW) != nullptr;
+    bool hasBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) != nullptr;
 
     int unselectedBasestations = 0;
 
     switch (this->getWantedBasestations()) {
         case WantedBasestations::NEITHER_YELLOW_NOR_BLUE: {
             if (hasYellowBasestation) {
-                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                this->setSelectedBasestation(nullptr, rtt::Team::YELLOW);
                 unselectedBasestations++;
             }
             if (hasBlueBasestation) {
-                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                this->setSelectedBasestation(nullptr, rtt::Team::BLUE);
                 unselectedBasestations++;
             }
             break;
         }
         case WantedBasestations::ONLY_YELLOW: {
             if (hasBlueBasestation) {
-                this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+                this->setSelectedBasestation(nullptr, rtt::Team::BLUE);
                 unselectedBasestations++;
             }
             break;
         }
         case WantedBasestations::ONLY_BLUE: {
             if (hasYellowBasestation) {
-                this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+                this->setSelectedBasestation(nullptr, rtt::Team::YELLOW);
                 unselectedBasestations++;
             }
             break;
@@ -330,14 +330,14 @@ int BasestationCollection::selectWantedBasestations() {
 
     switch (this->getWantedBasestations()) {
         case WantedBasestations::YELLOW_AND_BLUE:
-            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
-            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
+            needsToSelectYellowBasestation = this->getSelectedBasestation(rtt::Team::YELLOW) == nullptr;
+            needsToSelectBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) == nullptr;
             break;
         case WantedBasestations::ONLY_YELLOW:
-            needsToSelectYellowBasestation = this->getSelectedBasestation(utils::TeamColor::YELLOW) == nullptr;
+            needsToSelectYellowBasestation = this->getSelectedBasestation(rtt::Team::YELLOW) == nullptr;
             break;
         case WantedBasestations::ONLY_BLUE:
-            needsToSelectBlueBasestation = this->getSelectedBasestation(utils::TeamColor::BLUE) == nullptr;
+            needsToSelectBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) == nullptr;
             break;
     }
 
@@ -371,10 +371,10 @@ int BasestationCollection::selectBasestations(bool needYellowBasestation, bool n
     bool hasSelectedYellowBasestation = false;
     bool hasSelectedBlueBasestation = false;
 
-    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
+    const auto selectedYellowCopy = this->getSelectedBasestation(rtt::Team::YELLOW);
     // Now try to select a basestation which already has the channel we want
     if (needYellowBasestation && !yellowBasestations.empty()) {
-        this->setSelectedBasestation(yellowBasestations.front(), utils::TeamColor::YELLOW);
+        this->setSelectedBasestation(yellowBasestations.front(), rtt::Team::YELLOW);
         hasSelectedYellowBasestation = true;
         numberOfSelectedBasestations++;
 
@@ -382,7 +382,7 @@ int BasestationCollection::selectBasestations(bool needYellowBasestation, bool n
         yellowBasestations.erase(yellowBasestations.begin());
     }
     if (needBlueBasestation && !blueBasestations.empty()) {
-        this->setSelectedBasestation(blueBasestations.front(), utils::TeamColor::BLUE);
+        this->setSelectedBasestation(blueBasestations.front(), rtt::Team::BLUE);
         hasSelectedBlueBasestation = true;
         numberOfSelectedBasestations++;
 
@@ -406,17 +406,17 @@ int BasestationCollection::selectBasestations(bool needYellowBasestation, bool n
 int BasestationCollection::unselectIncorrectlySelectedBasestations() {
     int unselectedBasestations = 0;
 
-    const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
-    const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
+    const auto selectedYellowCopy = this->getSelectedBasestation(rtt::Team::YELLOW);
+    const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
     if (selectedYellowCopy != nullptr && this->getChannelOfBasestation(selectedYellowCopy->getIdentifier()) != WirelessChannel::YELLOW_CHANNEL) {
         // The yellow basestation is not actually yellow, so unselect it
-        this->setSelectedBasestation(nullptr, utils::TeamColor::YELLOW);
+        this->setSelectedBasestation(nullptr, rtt::Team::YELLOW);
         unselectedBasestations++;
     }
     if (selectedBlueCopy != nullptr && this->getChannelOfBasestation(selectedBlueCopy->getIdentifier()) != WirelessChannel::BLUE_CHANNEL) {
         // The blue basestation is not actually blue, so unselect it
-        this->setSelectedBasestation(nullptr, utils::TeamColor::BLUE);
+        this->setSelectedBasestation(nullptr, rtt::Team::BLUE);
         unselectedBasestations++;
     }
     return unselectedBasestations;
@@ -440,25 +440,25 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
 
     // And forward the message if this serialID belongs to a selected basestation
     if (this->messageFromBasestationCallback != nullptr) {
-        const auto selectedYellowCopy = this->getSelectedBasestation(utils::TeamColor::YELLOW);
-        const auto selectedBlueCopy = this->getSelectedBasestation(utils::TeamColor::BLUE);
+        const auto selectedYellowCopy = this->getSelectedBasestation(rtt::Team::YELLOW);
+        const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
         if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
-            this->messageFromBasestationCallback(message, utils::TeamColor::YELLOW);
+            this->messageFromBasestationCallback(message, rtt::Team::YELLOW);
         } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
-            this->messageFromBasestationCallback(message, utils::TeamColor::BLUE);
+            this->messageFromBasestationCallback(message, rtt::Team::BLUE);
         }
     }
 }
 
-WirelessChannel BasestationCollection::getWirelessChannelCorrespondingTeamColor(utils::TeamColor color) {
+WirelessChannel BasestationCollection::getWirelessChannelCorrespondingTeamColor(rtt::Team color) {
     WirelessChannel matchingWirelessChannel;
 
     switch (color) {
-        case utils::TeamColor::BLUE:
+        case rtt::Team::BLUE:
             matchingWirelessChannel = WirelessChannel::BLUE_CHANNEL;
             break;
-        case utils::TeamColor::YELLOW:
+        case rtt::Team::YELLOW:
             matchingWirelessChannel = WirelessChannel::YELLOW_CHANNEL;
             break;
         default:
@@ -469,14 +469,14 @@ WirelessChannel BasestationCollection::getWirelessChannelCorrespondingTeamColor(
     return matchingWirelessChannel;
 }
 
-utils::TeamColor BasestationCollection::getTeamColorCorrespondingWirelessChannel(WirelessChannel channel) {
+rtt::Team BasestationCollection::getTeamColorCorrespondingWirelessChannel(WirelessChannel channel) {
     switch (channel) {
         case WirelessChannel::YELLOW_CHANNEL:
-            return utils::TeamColor::YELLOW;
+            return rtt::Team::YELLOW;
         case WirelessChannel::BLUE_CHANNEL:
-            return utils::TeamColor::BLUE;
+            return rtt::Team::BLUE;
         default:
-            return utils::TeamColor::YELLOW;
+            return rtt::Team::YELLOW;
     }
 }
 

@@ -27,22 +27,22 @@ SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
         " - Simulation Control Port: ", config.configurationPort, "\n", " - Simulation Feedback Port: ", config.configurationFeedbackPort)
 
     // Spawn listening threads that handle incoming feedback
-    this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(utils::TeamColor::BLUE); });
-    this->yellowFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(utils::TeamColor::YELLOW); });
+    this->blueFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(rtt::Team::BLUE); });
+    this->yellowFeedbackListenThread = std::thread([this] { listenForRobotControlFeedback(rtt::Team::YELLOW); });
     this->configurationFeedbackListenThread = std::thread([this] { listenForConfigurationFeedback(); });
 }
 
 SimulatorManager::~SimulatorManager() { this->stopFeedbackListeningThreads(); }
 
-int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, utils::TeamColor color) {
+int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color) {
     int bytesSent;
 
     switch (color) {
-        case utils::TeamColor::YELLOW: {
+        case rtt::Team::YELLOW: {
             bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->yellowControlSocket, this->networkConfiguration.yellowControlPort);
             break;
         }
-        case utils::TeamColor::BLUE: {
+        case rtt::Team::BLUE: {
             bytesSent = this->sendPacket(robotControlCommand.getPacket(), this->blueControlSocket, this->networkConfiguration.blueControlPort);
             break;
         }
@@ -87,9 +87,9 @@ void SimulatorManager::callConfigurationFeedbackCallback(ConfigurationFeedback& 
     if (this->configurationFeedbackCallback != nullptr) this->configurationFeedbackCallback(feedback);
 }
 
-void SimulatorManager::listenForRobotControlFeedback(utils::TeamColor color) {
+void SimulatorManager::listenForRobotControlFeedback(rtt::Team color) {
     // Select the socket that is used by the team
-    QUdpSocket& teamSocket = (color == utils::TeamColor::YELLOW) ? this->yellowControlSocket : this->blueControlSocket;
+    QUdpSocket& teamSocket = (color == rtt::Team::YELLOW) ? this->yellowControlSocket : this->blueControlSocket;
 
     while (!this->shouldStopListeningToFeedback) {
         while (teamSocket.hasPendingDatagrams()) {
@@ -116,7 +116,7 @@ void SimulatorManager::listenForConfigurationFeedback() {
     }
 }
 
-RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDatagram& datagram, utils::TeamColor color) {
+RobotControlFeedback SimulatorManager::getControlFeedbackFromDatagram(QNetworkDatagram& datagram, rtt::Team color) {
     // First, parse datagram into the proto packet that it resembles
     proto::simulation::RobotControlResponse response;
     response.ParseFromArray(datagram.data().data(), datagram.data().size());

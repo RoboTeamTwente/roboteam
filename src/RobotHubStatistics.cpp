@@ -42,8 +42,8 @@ void RobotHubStatistics::print() const {
     std::array<std::string, MAX_ROBOT_STATISTICS> b;  // Contains the strings for blue robots
 
     for (int i = 0; i < MAX_ROBOT_STATISTICS; ++i) {
-        y[i] = getRobotStats(i, utils::TeamColor::YELLOW);
-        b[i] = getRobotStats(i, utils::TeamColor::BLUE);
+        y[i] = getRobotStats(i, rtt::Team::YELLOW);
+        b[i] = getRobotStats(i, rtt::Team::BLUE);
     }
 
     std::stringstream ss;
@@ -70,23 +70,23 @@ void RobotHubStatistics::print() const {
     RTT_INFO("\n", ss.str())
 }
 
-void RobotHubStatistics::incrementCommandsReceivedCounter(int id, utils::TeamColor color) {
-    auto& arrayToIncrement = color == utils::TeamColor::YELLOW ? this->yellowCommandsSent : this->blueCommandsSent;
+void RobotHubStatistics::incrementCommandsReceivedCounter(int id, rtt::Team color) {
+    auto& arrayToIncrement = color == rtt::Team::YELLOW ? this->yellowCommandsSent : this->blueCommandsSent;
     arrayToIncrement[id]++;
 }
-void RobotHubStatistics::incrementFeedbackReceivedCounter(int id, utils::TeamColor color) {
-    auto& arrayToIncrement = color == utils::TeamColor::YELLOW ? this->yellowFeedbackReceived : this->blueFeedbackReceived;
+void RobotHubStatistics::incrementFeedbackReceivedCounter(int id, rtt::Team color) {
+    auto& arrayToIncrement = color == rtt::Team::YELLOW ? this->yellowFeedbackReceived : this->blueFeedbackReceived;
     arrayToIncrement[id]++;
 }
 
-std::string RobotHubStatistics::getRobotStats(int robotId, utils::TeamColor team) const {
+std::string RobotHubStatistics::getRobotStats(int robotId, rtt::Team team) const {
     std::string stats;
 
     switch (team) {
-        case utils::TeamColor::BLUE:
+        case rtt::Team::BLUE:
             stats = RobotHubStatistics::string_format("%2d: %2d, %2d", robotId, this->blueCommandsSent[robotId], this->blueFeedbackReceived[robotId]);
             break;
-        case utils::TeamColor::YELLOW:
+        case rtt::Team::YELLOW:
             stats = RobotHubStatistics::string_format("%2d: %2d, %2d", robotId, this->yellowCommandsSent[robotId], this->yellowFeedbackReceived[robotId]);
             break;
         default:

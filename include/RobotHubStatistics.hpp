@@ -28,8 +28,8 @@ class RobotHubStatistics {
     int blueTeamPacketsDropped;
     int feedbackPacketsDropped;
 
-    void incrementCommandsReceivedCounter(int id, utils::TeamColor color);
-    void incrementFeedbackReceivedCounter(int id, utils::TeamColor color);
+    void incrementCommandsReceivedCounter(int id, rtt::Team color);
+    void incrementFeedbackReceivedCounter(int id, rtt::Team color);
 
     void print() const;
 
@@ -42,7 +42,7 @@ class RobotHubStatistics {
     std::array<int, MAX_ROBOT_STATISTICS> blueCommandsSent;
     std::array<int, MAX_ROBOT_STATISTICS> blueFeedbackReceived;
 
-    std::string getRobotStats(int id, utils::TeamColor team) const;
+    std::string getRobotStats(int id, rtt::Team team) const;
     std::string getRunTime() const;
     std::string getRobotHubMode() const;
     std::string getAmountOfBasestations() const;

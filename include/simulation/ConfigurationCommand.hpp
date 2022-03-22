@@ -1,7 +1,8 @@
 #pragma once
 
 #include <ssl_simulation_control.pb.h>
-#include <utilities.h>
+
+#include <roboteam_utils/Teams.hpp>
 
 #include <simulation/RobotProperties.hpp>
 
@@ -22,10 +23,10 @@ class ConfigurationCommand {
     void setBallLocation(float x, float y, float z, float xVelocity, float yVelocity, float zVelocity, bool velocityInRolling, bool teleportSafely, bool byForce);
     // Orientation is a global rotation relative to the field.
     // shouldBePresentOnField will make a robot (dis)appear accordingly.
-    void addRobotLocation(int id, utils::TeamColor color, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation, bool shouldBePresentOnField,
+    void addRobotLocation(int id, rtt::Team color, float x, float y, float xVelocity, float yVelocity, float angularVelocity, float orientation, bool shouldBePresentOnField,
                           bool byForce);
     void setSimulationSpeed(float speed);
-    void addRobotSpecs(int id, utils::TeamColor color, RobotProperties& robotProperties);
+    void addRobotSpecs(int id, rtt::Team color, RobotProperties& robotProperties);
     void setVisionPort(int port);
 
     proto::simulation::SimulatorCommand& getPacket();

@@ -7,7 +7,7 @@
 #include <ssl_simulation_robot_control.pb.h>
 #include <ssl_simulation_robot_feedback.pb.h>
 #include <ssl_vision_geometry.pb.h>
-#include <utilities.h>
+#include <roboteam_utils/Teams.hpp>
 
 #include <QtNetwork>
 #include <functional>
@@ -52,7 +52,7 @@ class SimulatorManager {
     ~SimulatorManager();
 
     // Both of the send functions return amount of bytes sent, return -1 if error occured
-    int sendRobotControlCommand(RobotControlCommand& robotControlCommand, utils::TeamColor color);
+    int sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
     int sendConfigurationCommand(ConfigurationCommand& configurationCommand);
 
     // These will set the callback function when feedback has been received
@@ -84,14 +84,14 @@ class SimulatorManager {
     void callConfigurationFeedbackCallback(ConfigurationFeedback& feedback);
 
     // These functions will keep listening for feedback until the Manager object gets destroyed
-    void listenForRobotControlFeedback(utils::TeamColor color);
+    void listenForRobotControlFeedback(rtt::Team color);
     void listenForConfigurationFeedback();
 
     // Will prevent threads from continuing and waits for them to finish
     void stopFeedbackListeningThreads();
 
     // These functions will convert a datagram of bytes into accessible data
-    RobotControlFeedback getControlFeedbackFromDatagram(QNetworkDatagram& datagram, utils::TeamColor color);
+    RobotControlFeedback getControlFeedbackFromDatagram(QNetworkDatagram& datagram, rtt::Team color);
     ConfigurationFeedback getConfigurationFeedbackFromDatagram(QNetworkDatagram& datagram);
 };
 

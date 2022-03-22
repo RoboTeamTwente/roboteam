@@ -227,7 +227,7 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
     rtt::RobotsFeedback robotsFeedback;
-    robotsFeedback.source = rtt::RobotFeedbackSource::BASESTATION;
+    robotsFeedback.source = rtt::RobotFeedbackSource::SIMULATOR;
     robotsFeedback.team = feedback.color == rtt::Team::YELLOW ? rtt::Team::YELLOW : rtt::Team::BLUE;
 
     for (auto const&[robotId, hasBall] : feedback.robotIdHasBall) {

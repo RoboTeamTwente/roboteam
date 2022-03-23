@@ -5,11 +5,11 @@
 #ifndef RTT_OBSERVER_H
 #define RTT_OBSERVER_H
 
-#include <proto/RobotData.pb.h>
 #include <proto/State.pb.h>
 #include <proto/messages_robocup_ssl_referee.pb.h>
 #include <proto/messages_robocup_ssl_wrapper.pb.h>
 #include <roboteam_utils/Time.h>
+#include <roboteam_utils/RobotFeedback.hpp>
 
 #include "filters/WorldFilter.h"
 #include "filters/geometry/GeometryFilter.h"
@@ -33,7 +33,7 @@ class Observer {
      *@return The entire known/predicted state of the game at this point in time.
      */
     proto::State process(Time extrapolatedTo, const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
-                         const std::vector<proto::RobotData>& robotData);
+                         const std::vector<rtt::RobotsFeedback>& robotsFeedback);
 
    private:
     RobotParameterDatabase parameterDatabase;
@@ -45,7 +45,7 @@ class Observer {
 
     void updateGeometry(const std::vector<proto::SSL_WrapperPacket>& visionPackets);
 
-    void updateWorld(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::RobotData>& robothubData);
+    void updateWorld(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<rtt::RobotsFeedback>& robothubData);
 
     void updateReferee(const std::vector<proto::SSL_Referee>& refereePackets);
 };

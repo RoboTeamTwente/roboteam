@@ -4,6 +4,7 @@
 #include <roboteam_utils/Timer.h>
 
 #include <sstream>
+#include <algorithm>
 
 void Handler::start() {
     if (!initializeNetworkers()) {
@@ -19,11 +20,10 @@ void Handler::start() {
         [&]() {
             auto vision_packets = receiveVisionPackets();
             auto referee_packets = receiveRefereePackets();
-            std::vector<proto::RobotData> robothub_info;
+            std::vector<rtt::RobotsFeedback> robothub_info;
             {
                 std::lock_guard guard(sub_mutex);
-                robothub_info = receivedRobotData;
-                receivedRobotData.clear();
+                std::swap(robothub_info, this->receivedRobotsFeedback);
             }
 
             auto state = observer.process(Time::now(), vision_packets, referee_packets, robothub_info);  // TODO: fix time extrapolation
@@ -37,8 +37,9 @@ void Handler::start() {
 bool Handler::initializeNetworkers() {
     this->worldPublisher = std::make_unique<rtt::net::WorldPublisher>();
 
-    auto feedbackCallback = std::bind(&Handler::robotDataCallBack, this, std::placeholders::_1);
-    this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>(feedbackCallback);
+    this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>([&](const rtt::RobotsFeedback& feedback) {
+        onRobotFeedback(feedback);
+    });
 
     return this->worldPublisher != nullptr && this->feedbackSubscriber != nullptr;
 }
@@ -83,9 +84,9 @@ std::vector<proto::SSL_Referee> Handler::receiveRefereePackets() {
     return receivedPackets;
 }
 
-void Handler::robotDataCallBack(const proto::RobotData& data) {
+void Handler::onRobotFeedback(const rtt::RobotsFeedback& feedback) {
     std::lock_guard guard(sub_mutex);
-    receivedRobotData.push_back(data);
+    this->receivedRobotsFeedback.push_back(feedback);
 }
 
 const char* FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another observer running?"; }

@@ -5,19 +5,18 @@
 #ifndef RTT_ROBOTFEEDBACKFILTER_H
 #define RTT_ROBOTFEEDBACKFILTER_H
 
-#include <proto/RobotData.pb.h>
-#include <proto/RobotFeedback.pb.h>
+#include <roboteam_utils/RobotFeedback.hpp>
 
 #include <map>
 
 class RobotFeedbackFilter {
    private:
-    std::map<unsigned int, proto::RobotFeedback> lastBlueFeedback;
-    std::map<unsigned int, proto::RobotFeedback> lastYellowFeedback;
+    std::map<unsigned int, rtt::RobotFeedback> lastBlueFeedback;
+    std::map<unsigned int, rtt::RobotFeedback> lastYellowFeedback;
 
    public:
-    void process(const proto::RobotData& data);
-    std::vector<proto::RobotFeedback> getData(bool teamIsYellow) const;
+    void process(const rtt::RobotsFeedback& data);
+    std::vector<rtt::RobotFeedback> getData(bool teamIsYellow) const;
 };
 
 #endif  // RTT_ROBOTFEEDBACKFILTER_H

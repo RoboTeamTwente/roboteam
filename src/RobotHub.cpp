@@ -221,8 +221,8 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
         configCommand.addRobotSpecs(robotProperties.id(), robotProperties.is_team_yellow() ? rtt::Team::YELLOW : rtt::Team::BLUE, propertyValues);
     }
 
-    int bytesSent = this->simulatorManager->sendConfigurationCommand(configCommand);
     // TODO: Put these bytes sent into nice statistics output (low priority)
+    this->simulatorManager->sendConfigurationCommand(configCommand);
 }
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {

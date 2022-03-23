@@ -6,6 +6,8 @@
 
 #include <simulation/SimulatorManager.hpp>
 
+#include <roboteam_utils/Teams.hpp>
+
 int main() {
     using namespace rtt::robothub::simulation;
 
@@ -23,21 +25,21 @@ int main() {
 
     ConfigurationCommand configurationCommand;
 
-    configurationCommand.addRobotLocation(0, rtt::robothub::utils::TeamColor::YELLOW, 1.5, 0, 0, 0, 0, 3.14, true, false);
-    configurationCommand.addRobotLocation(1, rtt::robothub::utils::TeamColor::YELLOW, 1.5, -1, 0, 0, 0, 3.14, true, false);
-    configurationCommand.addRobotLocation(2, rtt::robothub::utils::TeamColor::YELLOW, 0.5, 0, 0, 0, 0, 3.14, true, false);
-    configurationCommand.addRobotLocation(3, rtt::robothub::utils::TeamColor::YELLOW, 1.5, 1, 0, 0, 0, 3.14, true, false);
+    configurationCommand.addRobotLocation(0, rtt::Team::YELLOW, 1.5, 0, 0, 0, 0, 3.14, true, false);
+    configurationCommand.addRobotLocation(1, rtt::Team::YELLOW, 1.5, -1, 0, 0, 0, 3.14, true, false);
+    configurationCommand.addRobotLocation(2, rtt::Team::YELLOW, 0.5, 0, 0, 0, 0, 3.14, true, false);
+    configurationCommand.addRobotLocation(3, rtt::Team::YELLOW, 1.5, 1, 0, 0, 0, 3.14, true, false);
 
-    configurationCommand.addRobotLocation(0, rtt::robothub::utils::TeamColor::BLUE, -1.5, 0, 0, 0, 0, 0, true, false);
-    configurationCommand.addRobotLocation(1, rtt::robothub::utils::TeamColor::BLUE, -1.5, -1, 0, 0, 0, 0, true, false);
-    configurationCommand.addRobotLocation(2, rtt::robothub::utils::TeamColor::BLUE, -0.5, 0, 0, 0, 0, 0, true, false);
-    configurationCommand.addRobotLocation(3, rtt::robothub::utils::TeamColor::BLUE, -1.5, 1, 0, 0, 0, 0, true, false);
+    configurationCommand.addRobotLocation(0, rtt::Team::BLUE, -1.5, 0, 0, 0, 0, 0, true, false);
+    configurationCommand.addRobotLocation(1, rtt::Team::BLUE, -1.5, -1, 0, 0, 0, 0, true, false);
+    configurationCommand.addRobotLocation(2, rtt::Team::BLUE, -0.5, 0, 0, 0, 0, 0, true, false);
+    configurationCommand.addRobotLocation(3, rtt::Team::BLUE, -1.5, 1, 0, 0, 0, 0, true, false);
 
     configurationCommand.setBallLocation(0, 0, 0, 0, 0, 0, false, false, false);
 
     for (int i = 4; i < 11; i++) {
-        configurationCommand.addRobotLocation(i, rtt::robothub::utils::TeamColor::YELLOW, 0, 0, 0, 0, 0, 0, false, false);
-        configurationCommand.addRobotLocation(i, rtt::robothub::utils::TeamColor::BLUE, 0, 0, 0, 0, 0, 0, false, false);
+        configurationCommand.addRobotLocation(i, rtt::Team::YELLOW, 0, 0, 0, 0, 0, 0, false, false);
+        configurationCommand.addRobotLocation(i, rtt::Team::BLUE, 0, 0, 0, 0, 0, 0, false, false);
     }
 
     manager->sendConfigurationCommand(configurationCommand);

@@ -207,50 +207,74 @@ proto::Setting getSettingsCommand() {
     return settings;
 }
 
-void addHaltCommandForRobot(int id, proto::AICommand& command) {
-    auto robotCommand = command.add_commands();
-    robotCommand->set_id(id);
-    robotCommand->mutable_vel()->set_x(0);
-    robotCommand->mutable_vel()->set_y(0);
-    robotCommand->set_w(0);
-    robotCommand->set_use_angle(false);
-    robotCommand->set_dribbler(false);
-    robotCommand->set_kicker(false);
-    robotCommand->set_chipper(false);
-    robotCommand->set_chip_kick_forced(false);
-    robotCommand->set_chip_kick_vel(false);
+void addHaltCommandForRobot(int id, rtt::RobotCommands& command) {
+    rtt::RobotCommand robotCommand = {
+        .id = id,
+        .velocity = rtt::Vector2(0, 0),
+        .targetAngle = rtt::Angle(0.0),
+        .targetAngularVelocity = 0.0,
+        .useAngularVelocity = false,
+
+        .cameraAngleOfRobot = 0.0,
+        .cameraAngleOfRobotIsSet = false,
+
+        .kickSpeed = 0.0,
+        .waitForBall = false,
+        .kickType = rtt::KickType::NO_KICK,
+
+        .dribblerSpeed = 0.0,
+
+        .ignorePacket = false
+    };
+    command.push_back(robotCommand);
 }
 
-void addRotateLeftCommandForRobot(int id, proto::AICommand& command) {
-    auto robotCommand = command.add_commands();
-    robotCommand->set_id(id);
-    robotCommand->mutable_vel()->set_x(0);
-    robotCommand->mutable_vel()->set_y(0);
-    robotCommand->set_w(ROTATE_SPEED);
-    robotCommand->set_use_angle(false);
-    robotCommand->set_dribbler(false);
-    robotCommand->set_kicker(false);
-    robotCommand->set_chipper(false);
-    robotCommand->set_chip_kick_forced(false);
-    robotCommand->set_chip_kick_vel(false);
+void addRotateLeftCommandForRobot(int id, rtt::RobotCommands& command) {
+    rtt::RobotCommand robotCommand = {
+        .id = id,
+        .velocity = rtt::Vector2(0, 0),
+        .targetAngle = rtt::Angle(0.0),
+        .targetAngularVelocity = ROTATE_SPEED,
+        .useAngularVelocity = true,
+
+        .cameraAngleOfRobot = 0.0,
+        .cameraAngleOfRobotIsSet = false,
+
+        .kickSpeed = 0.0,
+        .waitForBall = false,
+        .kickType = rtt::KickType::NO_KICK,
+
+        .dribblerSpeed = 0.0,
+
+        .ignorePacket = false
+    };
+    command.push_back(robotCommand);
 }
 
-void addRotateRightCommandForRobot(int id, proto::AICommand& command) {
-    auto robotCommand = command.add_commands();
-    robotCommand->set_id(id);
-    robotCommand->mutable_vel()->set_x(0);
-    robotCommand->mutable_vel()->set_y(0);
-    robotCommand->set_w(-ROTATE_SPEED);
-    robotCommand->set_use_angle(false);
-    robotCommand->set_dribbler(false);
-    robotCommand->set_kicker(false);
-    robotCommand->set_chipper(false);
-    robotCommand->set_chip_kick_forced(false);
-    robotCommand->set_chip_kick_vel(false);
+void addRotateRightCommandForRobot(int id, rtt::RobotCommands& command) {
+    rtt::RobotCommand robotCommand = {
+        .id = id,
+        .velocity = rtt::Vector2(0, 0),
+        .targetAngle = rtt::Angle(0.0),
+        .targetAngularVelocity = -ROTATE_SPEED,
+        .useAngularVelocity = true,
+
+        .cameraAngleOfRobot = 0.0,
+        .cameraAngleOfRobotIsSet = false,
+
+        .kickSpeed = 0.0,
+        .waitForBall = false,
+        .kickType = rtt::KickType::NO_KICK,
+
+        .dribblerSpeed = 0.0,
+
+        .ignorePacket = false
+    };
+    command.push_back(robotCommand);
 }
 
-proto::AICommand getCommandToSend() {
-    proto::AICommand command;
+rtt::RobotCommands getCommandToSend() {
+    rtt::RobotCommands command;
 
     if (robotCommand == RobotCommand::HALT) {
         if (sendToAllRobots) {
@@ -288,7 +312,7 @@ void runCommands() {
     while (shouldRunCommands) {
         settingsPub->publish(getSettingsCommand());
 
-        proto::AICommand commandToSend = getCommandToSend();
+        rtt::RobotCommands commandToSend = getCommandToSend();
 
         if (team == Team::YELLOW) {
             yellowCommandsPub->publish(commandToSend);

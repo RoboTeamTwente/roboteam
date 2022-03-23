@@ -13,7 +13,7 @@ BasestationManager::BasestationManager() {
     }
 
     this->basestationCollection = std::make_unique<BasestationCollection>();
-    this->basestationCollection->setIncomingMessageCallback([&](const BasestationMessage& message, utils::TeamColor color) { this->handleIncomingMessage(message, color); });
+    this->basestationCollection->setIncomingMessageCallback([&](const BasestationMessage& message, rtt::Team color) { this->handleIncomingMessage(message, color); });
 
     this->shouldListenForBasestationPlugs = true;
     this->basestationPlugsListener = std::thread(&BasestationManager::listenForBasestationPlugs, this);
@@ -33,7 +33,7 @@ BasestationManager::~BasestationManager() {
     libusb_exit(this->usbContext);
 }
 
-int BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotCommand(const REM_RobotCommand& command, rtt::Team color) const {
     REM_RobotCommand copy = command;  // TODO: Make REM encodeRobotCommand use const so copy is unecessary
 
     REM_RobotCommandPayload payload;
@@ -47,7 +47,7 @@ int BasestationManager::sendRobotCommand(const REM_RobotCommand& command, utils:
     return bytesSent;
 }
 
-int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, utils::TeamColor color) const {
+int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, rtt::Team color) const {
     REM_RobotBuzzer copy = command;
 
     REM_RobotBuzzerPayload payload;
@@ -61,7 +61,7 @@ int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, u
     return bytesSent;
 }
 
-int BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color) const {
+int BasestationManager::sendBasestationStatisticsRequest(rtt::Team color) const {
     REM_BasestationGetStatistics command;
 
     REM_BasestationGetStatisticsPayload payload;
@@ -75,7 +75,7 @@ int BasestationManager::sendBasestationStatisticsRequest(utils::TeamColor color)
     return bytesSent;
 }
 
-void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, utils::TeamColor)>& callback) { this->feedbackCallbackFunction = callback; }
+void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, rtt::Team)>& callback) { this->feedbackCallbackFunction = callback; }
 
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
@@ -112,7 +112,7 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
     return basestations;
 }
 
-void BasestationManager::handleIncomingMessage(const BasestationMessage& message, utils::TeamColor color) const {
+void BasestationManager::handleIncomingMessage(const BasestationMessage& message, rtt::Team color) const {
     switch (message.payloadBuffer[0]) {
         case PACKET_TYPE_REM_ROBOT_FEEDBACK: {
             REM_RobotFeedbackPayload payload;
@@ -127,7 +127,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
     }
 }
 
-void BasestationManager::callFeedbackCallback(const REM_RobotFeedback& feedback, utils::TeamColor color) const {
+void BasestationManager::callFeedbackCallback(const REM_RobotFeedback& feedback, rtt::Team color) const {
     if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback, color);
 }
 

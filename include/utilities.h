@@ -8,19 +8,6 @@ namespace rtt::robothub::utils {
 
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
-enum class TeamColor { YELLOW, BLUE };
-
-static std::string teamColorToString(TeamColor color) {
-    switch (color) {
-        case TeamColor::BLUE:
-            return "BLUE";
-        case TeamColor::YELLOW:
-            return "YELLOW";
-        default:
-            return "UNDEFINED";
-    }
-}
-
 static int char2int(char input) {
     if (input >= '0' && input <= '9') return input - '0';
     if (input >= 'A' && input <= 'F') return input - 'A' + 10;

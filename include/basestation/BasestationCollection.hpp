@@ -1,7 +1,8 @@
 #pragma once
 
 #include <libusb-1.0/libusb.h>
-#include <utilities.h>
+
+#include <roboteam_utils/Teams.hpp>
 
 #include <basestation/Basestation.hpp>
 #include <functional>
@@ -38,10 +39,10 @@ class BasestationCollection {
     void updateBasestationCollection(const std::vector<libusb_device*>& pluggedBasestationDevices);
 
     // Sends a message to the basestation of the given team. Returns bytes sent, -1 if error
-    int sendMessageToBasestation(BasestationMessage& message, utils::TeamColor teamColor);
+    int sendMessageToBasestation(BasestationMessage& message, rtt::Team teamColor);
 
     // Set a callback function to receive all messages from the two basestations of the teams
-    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, utils::TeamColor)> callback);
+    void setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback);
 
     // Prints the current status of the collection directly to the console
     const BasestationCollectionStatus getStatus() const;
@@ -56,8 +57,8 @@ class BasestationCollection {
     std::shared_ptr<Basestation> yellowBasestation;  // Basestation selected for yellow team
     std::shared_ptr<Basestation> blueBasestation;    // Basestation selected for blue team
 
-    std::shared_ptr<Basestation> getSelectedBasestation(utils::TeamColor colorOfBasestation) const;
-    void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, utils::TeamColor color);
+    std::shared_ptr<Basestation> getSelectedBasestation(rtt::Team colorOfBasestation) const;
+    void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, rtt::Team color);
 
     // Keeps track of which basestation has which wireless channel
     std::map<const BasestationIdentifier, WirelessChannel> basestationIdToChannel;
@@ -71,7 +72,7 @@ class BasestationCollection {
     std::chrono::time_point<std::chrono::steady_clock> lastRequestForYellowBasestation;
     std::chrono::time_point<std::chrono::steady_clock> lastRequestForBlueBasestation;
     // This will update the lastRequestFor variables to the current time
-    void updateWantedBasestations(utils::TeamColor lastRequestedBasestation);
+    void updateWantedBasestations(rtt::Team lastRequestedBasestation);
     // Will return which basestations are being used, or requested if not selected yet
     WantedBasestations getWantedBasestations() const;
 
@@ -95,10 +96,10 @@ class BasestationCollection {
 
     std::mutex messageCallbackMutex;  // Guards the messageFromBasestationCallback
     void onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId);
-    std::function<void(const BasestationMessage&, utils::TeamColor color)> messageFromBasestationCallback;
+    std::function<void(const BasestationMessage&, rtt::Team color)> messageFromBasestationCallback;
 
-    static WirelessChannel getWirelessChannelCorrespondingTeamColor(utils::TeamColor color);
-    static utils::TeamColor getTeamColorCorrespondingWirelessChannel(WirelessChannel channel);
+    static WirelessChannel getWirelessChannelCorrespondingTeamColor(rtt::Team color);
+    static rtt::Team getTeamColorCorrespondingWirelessChannel(WirelessChannel channel);
     static bool basestationIsInDeviceList(const std::shared_ptr<Basestation>& basestation, const std::vector<libusb_device*>& devices);
     static bool deviceIsInBasestationList(libusb_device* const device, const std::vector<std::shared_ptr<Basestation>>& basestations);
 

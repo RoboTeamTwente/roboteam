@@ -3,7 +3,6 @@
 #include <roboteam_utils/Print.h>
 
 #include <cmath>
-#include <sstream>
 
 namespace rtt::robothub {
 
@@ -30,7 +29,7 @@ RobotHub::RobotHub() {
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, utils::TeamColor color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
+    this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -45,10 +44,10 @@ bool RobotHub::initializeNetworkers() {
 
     try {
         this->robotCommandsBlueSubscriber =
-            std::make_unique<rtt::net::RobotCommandsBlueSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, utils::TeamColor::BLUE); });
+            std::make_unique<rtt::net::RobotCommandsBlueSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::BLUE); });
 
         this->robotCommandsYellowSubscriber =
-            std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, utils::TeamColor::YELLOW); });
+            std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
         this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &settings) { this->onSettings(settings); });
 
@@ -65,7 +64,7 @@ bool RobotHub::initializeNetworkers() {
     return successfullyInitialized;
 }
 
-void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color) {
+void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color) {
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
@@ -92,13 +91,13 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, utils
 
     // Update bytes sent/packets dropped statistics
     if (bytesSent > 0) {
-        if (color == utils::TeamColor::YELLOW) {
+        if (color == rtt::Team::YELLOW) {
             this->statistics.yellowTeamBytesSent += bytesSent;
         } else {
             this->statistics.blueTeamBytesSent += bytesSent;
         }
     } else {
-        if (color == utils::TeamColor::YELLOW) {
+        if (color == rtt::Team::YELLOW) {
             this->statistics.yellowTeamPacketsDropped++;
         } else {
             this->statistics.blueTeamPacketsDropped++;
@@ -106,7 +105,7 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, utils
     }
 }
 
-void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color) {
+void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt::Team color) {
     for (const auto &robotCommand : commands) {
         // Convert the RobotCommand to a command for the basestation
 
@@ -141,13 +140,13 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
         this->statistics.incrementCommandsReceivedCounter(robotCommand.id, color);
 
         if (bytesSent > 0) {
-            if (color == utils::TeamColor::YELLOW) {
+            if (color == rtt::Team::YELLOW) {
                 this->statistics.yellowTeamBytesSent += bytesSent;
             } else {
                 this->statistics.blueTeamBytesSent += bytesSent;
             }
         } else {
-            if (color == utils::TeamColor::YELLOW) {
+            if (color == rtt::Team::YELLOW) {
                 this->statistics.yellowTeamPacketsDropped++;
             } else {
                 this->statistics.blueTeamPacketsDropped++;
@@ -156,7 +155,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, uti
     }
 }
 
-void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color) {
+void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color) {
     std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
 
     switch (this->mode) {
@@ -194,7 +193,7 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
     }
 
     for (const auto &robotLocation : configuration.robot_locations()) {
-        configCommand.addRobotLocation(robotLocation.id(), robotLocation.is_team_yellow() ? utils::TeamColor::YELLOW : utils::TeamColor::BLUE, robotLocation.x(), robotLocation.y(),
+        configCommand.addRobotLocation(robotLocation.id(), robotLocation.is_team_yellow() ? rtt::Team::YELLOW : rtt::Team::BLUE, robotLocation.x(), robotLocation.y(),
                                        robotLocation.x_velocity(), robotLocation.y_velocity(), robotLocation.angular_velocity(), robotLocation.orientation(),
                                        robotLocation.present_on_field(), robotLocation.by_force());
     }
@@ -219,7 +218,7 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
                                                       .backLeftWheelAngle = robotProperties.back_left_wheel_angle(),
                                                       .frontLeftWheelAngle = robotProperties.front_left_wheel_angle()};
 
-        configCommand.addRobotSpecs(robotProperties.id(), robotProperties.is_team_yellow() ? utils::TeamColor::YELLOW : utils::TeamColor::BLUE, propertyValues);
+        configCommand.addRobotSpecs(robotProperties.id(), robotProperties.is_team_yellow() ? rtt::Team::YELLOW : rtt::Team::BLUE, propertyValues);
     }
 
     int bytesSent = this->simulatorManager->sendConfigurationCommand(configCommand);
@@ -227,49 +226,63 @@ void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &c
 }
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
-    proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(feedback.color == utils::TeamColor::YELLOW);
+    rtt::RobotsFeedback robotsFeedback;
+    robotsFeedback.source = rtt::RobotFeedbackSource::SIMULATOR;
+    robotsFeedback.team = feedback.color;
 
-    // proto::RobotFeedback* feedbackOfRobots = feedbackToBePublished.mutable_receivedfeedback();
-
-    for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
-        proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
-        feedbackOfRobot->set_id(robotId);
-        feedbackOfRobot->set_hasball(hasBall);
+    for (auto const&[robotId, hasBall] : feedback.robotIdHasBall) {
+        rtt::RobotFeedback robotFeedback = {
+            .id = robotId,
+            .hasBall = hasBall,
+            .ballPosition = 0,
+            .ballSensorIsWorking = true,
+            .velocity = { 0, 0 },
+            .angle = 0,
+            .xSensIsCalibrated = true,
+            .capacitorIsCharged = true,
+            .wheelLocked = 0,
+            .wheelBraking = 0,
+            .batteryLevel = 0,
+            .signalStrength = 0
+        };
+        robotsFeedback.feedback.push_back(robotFeedback);
 
         // Increment the feedback counter of this robot
         this->statistics.incrementFeedbackReceivedCounter(robotId, feedback.color);
     }
 
-    this->sendRobotFeedback(feedbackToBePublished);
+    this->sendRobotFeedback(robotsFeedback);
 }
 
-void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, utils::TeamColor basestationColor) {
-    proto::RobotData feedbackToBePublished;
-    feedbackToBePublished.set_isyellow(basestationColor == utils::TeamColor::YELLOW);
+void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team basestationColor) {
+    rtt::RobotsFeedback robotsFeedback;
+    robotsFeedback.source = rtt::RobotFeedbackSource::BASESTATION;
+    robotsFeedback.team = basestationColor;
 
-    proto::RobotFeedback *feedbackOfRobot = feedbackToBePublished.add_receivedfeedback();
-    feedbackOfRobot->set_id(feedback.id);
-    feedbackOfRobot->set_xsenscalibrated(feedback.XsensCalibrated);
-    feedbackOfRobot->set_ballsensorisworking(feedback.ballSensorWorking);
-    feedbackOfRobot->set_hasball(feedback.hasBall);
-    feedbackOfRobot->set_ballpos(feedback.ballPos);
-    // feedbackOfRobot->set_capacitorcharged(feedback.capacitorCharged); // Not yet added to proto
-    feedbackOfRobot->set_x_vel(std::cos(feedback.theta) * feedback.rho);
-    feedbackOfRobot->set_y_vel(std::sin(feedback.theta) * feedback.rho);
-    feedbackOfRobot->set_yaw(feedback.angle);
-    // feedbackOfRobot->set_batterylevel(feedback.batteryLevel); // Not in proto yet
-    feedbackOfRobot->set_signalstrength(feedback.rssi);
-    feedbackOfRobot->set_haslockedwheel(feedback.wheelLocked);
+    rtt::RobotFeedback robotFeedback = {
+        .id = static_cast<int>(feedback.id),
+        .hasBall = feedback.hasBall,
+        .ballPosition = feedback.ballPos,
+        .ballSensorIsWorking = feedback.ballSensorWorking,
+        .velocity = Vector2(Angle(feedback.theta), feedback.rho),
+        .angle = Angle(feedback.angle),
+        .xSensIsCalibrated = feedback.XsensCalibrated,
+        .capacitorIsCharged = feedback.capacitorCharged,
+        .wheelLocked = static_cast<int>(feedback.wheelLocked),
+        .wheelBraking = static_cast<int>(feedback.wheelBraking),
+        .batteryLevel = static_cast<float>(feedback.batteryLevel),
+        .signalStrength = static_cast<int>(feedback.rssi)
+    };
+    robotsFeedback.feedback.push_back(robotFeedback);
 
-    this->sendRobotFeedback(feedbackToBePublished);
+    this->sendRobotFeedback(robotsFeedback);
 
     // Increment the feedback counter of this robot
     this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
 }
 
-bool RobotHub::sendRobotFeedback(const proto::RobotData &feedback) {
-    this->statistics.feedbackBytesSent += static_cast<int>(feedback.ByteSizeLong());
+bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
+    this->statistics.feedbackBytesSent += static_cast<int>(sizeof(feedback));
     return this->robotFeedbackPublisher->publish(feedback);
 }
 

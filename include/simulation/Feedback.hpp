@@ -1,10 +1,10 @@
 #pragma once
 
-#include <utilities.h>
-
 #include <map>
 #include <string>
 #include <vector>
+
+#include <roboteam_utils/Teams.hpp>
 
 namespace rtt::robothub::simulation {
 typedef struct SimulationError {
@@ -13,7 +13,7 @@ typedef struct SimulationError {
 } SimulationError;
 
 typedef struct RobotControlFeedback {
-    utils::TeamColor color;
+    rtt::Team color;
     std::map<int, bool> robotIdHasBall;
     std::vector<SimulationError> simulationErrors;
 } RobotControlFeedback;

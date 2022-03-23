@@ -1,7 +1,6 @@
 #pragma once
 
 #include <libusb-1.0/libusb.h>
-#include <utilities.h>
 
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
@@ -13,6 +12,9 @@
 #include <exception>
 #include <functional>
 #include <memory>
+#include <roboteam_utils/RobotCommands.hpp>
+#include <roboteam_utils/RobotFeedback.hpp>
+#include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
 
 namespace rtt::robothub {
@@ -45,19 +47,19 @@ class RobotHub {
 
     bool initializeNetworkers();
 
-    void sendCommandsToSimulator(const rtt::RobotCommands &commands, utils::TeamColor color);
-    void sendCommandsToBasestation(const rtt::RobotCommands &commands, utils::TeamColor color);
+    void sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color);
+    void sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt::Team color);
 
     std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
-    void onRobotCommands(const rtt::RobotCommands &commands, utils::TeamColor color);
+    void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
 
     void onSettings(const proto::Setting &setting);
 
     void onSimulationConfiguration(const proto::SimulationConfiguration &configuration);
 
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
-    void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, utils::TeamColor team);
-    bool sendRobotFeedback(const proto::RobotData &feedback);
+    void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
+    bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

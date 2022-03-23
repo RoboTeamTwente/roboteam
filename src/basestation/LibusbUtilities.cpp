@@ -209,12 +209,6 @@ std::string usbutils_speedToString(int speed) {
 }
 
 void usbutils_enumerate() {
-    std::cout << "Testing abs" << std::endl;
-    float a = 6.9f;
-    float b = 4.20f;
-    std::cout << "A: " << a << " goes to: " << std::abs(a) << std::endl;
-    std::cout << "B: " << b << " goes to: " << std::abs(b) << std::endl;
-
     libusb_context *ctx;
     int error;
 
@@ -341,45 +335,6 @@ void usbutils_enumerate() {
 
     libusb_free_device_list(list, true);
     libusb_exit(ctx);
-}
-
-void printDeviceProperties(libusb_device *device) {
-    int error;
-
-    libusb_device_descriptor desc{};
-    error = libusb_get_device_descriptor(device, &desc);
-    if (error) {
-        std::cout << "Failed to get descriptor: " << usbutils_errorToString(error) << std::endl;
-        return;
-    }
-
-    std::cout << " == Serial number: " << (unsigned int)desc.iSerialNumber << std::endl;
-
-    if (desc.bNumConfigurations > 0) {
-        libusb_config_descriptor *configDescriptor;
-
-        error = libusb_get_config_descriptor(device, 0, &configDescriptor);
-        if (error) {
-            std::cout << "Could not retrieve first config: " << usbutils_errorToString(error) << std::endl;
-            return;
-        }
-
-        if (configDescriptor->bNumInterfaces > 1) {
-            libusb_interface interface = configDescriptor->interface[1];
-
-            if (interface.num_altsetting > 0) {
-                libusb_interface_descriptor interfaceDesc = interface.altsetting[0];
-
-                for (int iEndpoint = 0; iEndpoint < interfaceDesc.bNumEndpoints; iEndpoint++) {
-                    libusb_endpoint_descriptor endpointDesc = interfaceDesc.endpoint[iEndpoint];
-
-                    uint8_t endpointAddress = endpointDesc.bEndpointAddress;
-                    libusb_endpoint_direction direction = usbutils_getEndpointDirection(endpointAddress);
-                }
-            }
-        }
-        libusb_free_config_descriptor(configDescriptor);
-    }
 }
 
 }  // namespace rtt::robothub::basestation

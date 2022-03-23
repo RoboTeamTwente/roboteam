@@ -58,6 +58,33 @@ void WorldFilter::handleRobots(robotMap &robots, const google::protobuf::Repeate
     }
 }
 
+// This function is temporary, as soon, feedback will be combined with robot data
+proto::RobotsFeedback feedbackToProto(const std::vector<rtt::RobotFeedback>& robotFeedback, rtt::Team team, rtt::RobotFeedbackSource source) {
+    proto::RobotsFeedback protoFeedback;
+
+    protoFeedback.set_team(team == rtt::Team::YELLOW ? proto::YELLOW_TEAM : proto::BLUE_TEAM);
+    protoFeedback.set_source(source == rtt::RobotFeedbackSource::BASESTATION ? proto::BASESTATION : proto::SIMULATOR);
+
+    for (const auto& feedback : robotFeedback) {
+        auto protoRobot = protoFeedback.add_robots_feedback();
+        protoRobot->set_id(feedback.id);
+        protoRobot->set_has_ball(feedback.hasBall);
+        protoRobot->set_ball_position(feedback.ballPosition);
+        protoRobot->set_ball_sensor_is_working(feedback.ballSensorIsWorking);
+        protoRobot->set_estimated_velocity_x(feedback.velocity.x);
+        protoRobot->set_estimated_velocity_y(feedback.velocity.y);
+        protoRobot->set_estimated_angle(feedback.angle.getValue());
+        protoRobot->set_xsens_is_calibrated(feedback.xSensIsCalibrated);
+        protoRobot->set_capacitor_is_charged(feedback.capacitorIsCharged);
+        protoRobot->set_wheels_locked(feedback.wheelLocked);
+        protoRobot->set_wheels_braking(feedback.wheelBraking);
+        protoRobot->set_battery_level(feedback.batteryLevel);
+        protoRobot->set_signal_strength(feedback.signalStrength);
+    }
+
+    return protoFeedback;
+}
+
 // Creates a world message with the currently observed objects in it
 proto::World WorldFilter::getWorld() {
     // First we update to the time we want packets at. Expensive, but ensures we have the latest information
@@ -78,12 +105,9 @@ proto::World WorldFilter::getWorld() {
         proto::WorldBall worldBall = bestFilter(balls)->asWorldBall();
         world.mutable_ball()->CopyFrom(worldBall);
     }
-    for (auto feedback : feedbackFilter.getData(true)) {
-        world.mutable_yellowfeedback()->Add(std::move(feedback));
-    }
-    for (auto feedback : feedbackFilter.getData(false)) {
-        world.mutable_bluefeedback()->Add(std::move(feedback));
-    }
+    world.mutable_yellowfeedback()->CopyFrom(feedbackToProto(feedbackFilter.getData(true), rtt::Team::YELLOW, rtt::RobotFeedbackSource::SIMULATOR));
+    world.mutable_bluefeedback()->CopyFrom(feedbackToProto(feedbackFilter.getData(false), rtt::Team::BLUE, rtt::RobotFeedbackSource::SIMULATOR));
+
     return world;
 }
 void WorldFilter::update(double time, bool doLastPredict) {
@@ -147,7 +171,7 @@ void WorldFilter::setGeometry(const proto::SSL_GeometryData &geometry) {
     // TODO: implement geometry here.
 }
 
-void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData> &robothubData) {
+void WorldFilter::process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<rtt::RobotsFeedback> &robothubData) {
     for (const auto &data : robothubData) {
         feedbackFilter.process(data);
     }

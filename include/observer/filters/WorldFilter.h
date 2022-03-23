@@ -10,6 +10,8 @@
 #include "RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
+#include <roboteam_utils/RobotFeedback.hpp>
+
 /**
  * @author Rolf van der Hulst
  * @date November 2019
@@ -31,7 +33,7 @@ class WorldFilter {
 
     void setGeometry(const proto::SSL_GeometryData &geometry);
     void setRobotParameters(const TwoTeamRobotParameters &parameters);
-    void process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<proto::RobotData> &robothubData);
+    void process(std::vector<proto::SSL_DetectionFrame> visionFrames, const std::vector<rtt::RobotsFeedback> &robothubData);
 
    private:
     /** Add a frame to the WorldFilter. This will be forwarded to the relevant filters (ball/robot)

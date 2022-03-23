@@ -22,7 +22,7 @@ class Handler {
     std::unique_ptr<RobocupReceiver<proto::SSL_Referee>> referee_client;
 
     Observer observer;
-    std::vector<proto::RobotData> receivedRobotData;
+    std::vector<rtt::RobotsFeedback> receivedRobotsFeedback;
     std::mutex sub_mutex;
 
    public:
@@ -37,7 +37,7 @@ class Handler {
     void start();
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::SSL_Referee> receiveRefereePackets();
-    void robotDataCallBack(const proto::RobotData& data);
+    void onRobotFeedback(const rtt::RobotsFeedback& feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

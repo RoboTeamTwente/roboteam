@@ -4,16 +4,16 @@
 
 #include "observer/filters/RobotFeedbackFilter.h"
 
-void RobotFeedbackFilter::process(const proto::RobotData& data) {
-    auto& map = data.isyellow() ? lastYellowFeedback : lastBlueFeedback;
+void RobotFeedbackFilter::process(const rtt::RobotsFeedback& data) {
+    auto& map = data.team == rtt::Team::YELLOW ? lastYellowFeedback : lastBlueFeedback;
     map.clear();
-    for (const auto& feedback : data.receivedfeedback()) {
-        map[feedback.id()] = feedback;
+    for (const auto& feedback : data.feedback) {
+        map[feedback.id] = feedback;
     }
 }
 
-std::vector<proto::RobotFeedback> RobotFeedbackFilter::getData(bool teamIsYellow) const {
-    std::vector<proto::RobotFeedback> feedback;
+std::vector<rtt::RobotFeedback> RobotFeedbackFilter::getData(bool teamIsYellow) const {
+    std::vector<rtt::RobotFeedback> feedback;
     const auto& map = teamIsYellow ? lastYellowFeedback : lastBlueFeedback;
     feedback.reserve(map.size());
     for (const auto& elem : map) {

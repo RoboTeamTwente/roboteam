@@ -9,7 +9,6 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "messages_robocup_ssl_wrapper.proto"
     "messages_robocup_ssl_wrapper_legacy.proto"
     "RobotCommands.proto"
-    "RobotData.proto"
     "RobotFeedback.proto"
     "State.proto"
     "Vector2f.proto"

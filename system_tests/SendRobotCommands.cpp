@@ -27,17 +27,17 @@ proto::Setting getRobotHubBasestationModePacket() {
     return settings;
 }
 
-void onFeedback(const proto::RobotData& robotFeedback) {
-    int amountOfFeedback = robotFeedback.receivedfeedback().size();
-    bool isYellow = robotFeedback.isyellow();
+void onFeedback(const rtt::RobotsFeedback& robotsFeedback) {
+    int amountOfFeedback = robotsFeedback.feedback.size();
+    bool isYellow = robotsFeedback.team == rtt::Team::YELLOW;
 
     std::cout << "Received " << amountOfFeedback << " feedbacks of team " << (isYellow ? "yellow" : "blue") << std::endl;
 
-    for (const auto& feedback : robotFeedback.receivedfeedback()) {
-        int id = feedback.id();
-        bool xSensCalibrated = feedback.xsenscalibrated();
-        bool ballsensorworking = feedback.ballsensorisworking();
-        bool hasBall = feedback.hasball();
+    for (const auto& feedback : robotsFeedback.feedback) {
+        int id = feedback.id;
+        bool xSensCalibrated = feedback.xSensIsCalibrated;
+        bool ballsensorworking = feedback.ballSensorIsWorking;
+        bool hasBall = feedback.hasBall;
 
         std::cout << " - Robot " << id << " has " << (hasBall ? "" : "not ") << "the ball" << std::endl;
     }

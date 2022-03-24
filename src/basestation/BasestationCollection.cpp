@@ -69,7 +69,7 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
                 // Lock the basestations list so we can safely add this basestation
                 std::scoped_lock<std::mutex> lock(this->basestationsMutex);
                 this->basestations.push_back(newBasestation);
-            } catch (FailedToOpenDeviceException e) {
+            } catch (const FailedToOpenDeviceException &e) {
                 RTT_ERROR(e.what())
                 RTT_INFO("Did you edit your PC's user permissions?")
             }
@@ -263,7 +263,7 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBa
         }
     }
 
-    return std::move(selectableBasestations);
+    return selectableBasestations;
 }
 
 bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
@@ -319,6 +319,9 @@ int BasestationCollection::unselectUnwantedBasestations() {
             }
             break;
         }
+        default:
+            // We want both basestations, so do nothing
+            break;
     }
 
     return unselectedBasestations;
@@ -338,6 +341,9 @@ int BasestationCollection::selectWantedBasestations() {
             break;
         case WantedBasestations::ONLY_BLUE:
             needsToSelectBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) == nullptr;
+            break;
+        default:
+            // We want neither basestation, so we select none
             break;
     }
 
@@ -364,6 +370,9 @@ int BasestationCollection::selectBasestations(bool needYellowBasestation, bool n
                 blueBasestations.push_back(basestation);
                 break;
             }
+            default:
+                // We dont know the channel yet, so we have to wait with this one
+                break;
         }
     }
 

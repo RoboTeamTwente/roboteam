@@ -51,9 +51,6 @@ class RobotHubStatistics {
 
     std::string numberToSideBox(int n) const;
 
-    template <typename... Args>
-    static std::string string_format(const std::string& format, Args... args);
-
     static std::string wantedBasestationsToString(basestation::WantedBasestations wantedBasestations);
 };
 

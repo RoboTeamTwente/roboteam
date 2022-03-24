@@ -8,35 +8,6 @@ namespace rtt::robothub::utils {
 
 enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
-static int char2int(char input) {
-    if (input >= '0' && input <= '9') return input - '0';
-    if (input >= 'A' && input <= 'F') return input - 'A' + 10;
-    if (input >= 'a' && input <= 'f') return input - 'a' + 10;
-
-    // TODO look into this, (throw somehow cannot be used)
-    /**
-     * Strongly suggest to use std::optional then
-     */
-    throw std::invalid_argument("char2int : Invalid input string");
-}
-
-/**
- * Inline implies inline, it does not guarantee it
- * However if a function marked constexpr then it's guaranteed to be inlined
- * Things that can be calculated compiletime **should** be actually calculated
- * compiletime Try stick to using constexpr as much as possible, you're using
- * C++17 so might aswel use modern features
- */
-[[maybe_unused]] /* Why static?... inline instead */ static RobotHubMode stringToMode(const std::string& type) noexcept {
-    if (type == "Basestation") {
-        return RobotHubMode::BASESTATION;
-    } else if (type == "Simulator") {
-        return RobotHubMode::SIMULATOR;
-    } else {
-        return RobotHubMode::NEITHER;
-    }
-}
-
 [[maybe_unused]] static std::string modeToString(RobotHubMode mode) noexcept {
     switch (mode) {
         case RobotHubMode::BASESTATION:

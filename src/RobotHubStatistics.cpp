@@ -1,4 +1,5 @@
 #include <roboteam_utils/Print.h>
+#include <roboteam_utils/Format.hpp>
 
 #include <RobotHubStatistics.hpp>
 #include <chrono>
@@ -84,13 +85,13 @@ std::string RobotHubStatistics::getRobotStats(int robotId, rtt::Team team) const
 
     switch (team) {
         case rtt::Team::BLUE:
-            stats = RobotHubStatistics::string_format("%2d: %2d, %2d", robotId, this->blueCommandsSent[robotId], this->blueFeedbackReceived[robotId]);
+            stats = formatString("%2d: %2d, %2d", robotId, this->blueCommandsSent[robotId], this->blueFeedbackReceived[robotId]);
             break;
         case rtt::Team::YELLOW:
-            stats = RobotHubStatistics::string_format("%2d: %2d, %2d", robotId, this->yellowCommandsSent[robotId], this->yellowFeedbackReceived[robotId]);
+            stats = formatString("%2d: %2d, %2d", robotId, this->yellowCommandsSent[robotId], this->yellowFeedbackReceived[robotId]);
             break;
         default:
-            stats = RobotHubStatistics::string_format("%2d:  ?,  ?", robotId);
+            stats = formatString("%2d:  ?,  ?", robotId);
             break;
     }
 
@@ -108,31 +109,31 @@ std::string RobotHubStatistics::getRunTime() const {
     std::string time;
 
     if (hours > 0) {
-        time = RobotHubStatistics::string_format("Running: %2dh %2dm %2ds", hours, minutes, seconds);
+        time = formatString("Running: %2dh %2dm %2ds", hours, minutes, seconds);
     } else if (minutes > 0) {
-        time = RobotHubStatistics::string_format("Running: %2dm %2ds", minutes, seconds);
+        time = formatString("Running: %2dm %2ds", minutes, seconds);
     } else {
-        time = RobotHubStatistics::string_format("Running: %2ds", seconds);
+        time = formatString("Running: %2ds", seconds);
     }
 
-    std::string text = RobotHubStatistics::string_format("%20s", time.c_str());
+    std::string text = formatString("%20s", time.c_str());
 
     return text;
 }
 
 std::string RobotHubStatistics::getRobotHubMode() const {
     std::string mode = utils::modeToString(this->robotHubMode);
-    std::string text = RobotHubStatistics::string_format("%-11s", mode.c_str());
+    std::string text = formatString("%-11s", mode.c_str());
     return text;
 }
 
 std::string RobotHubStatistics::getAmountOfBasestations() const {
-    return RobotHubStatistics::string_format("%-9d", this->basestationManagerStatus.basestationCollection.amountOfBasestations);
+    return formatString("%-9d", this->basestationManagerStatus.basestationCollection.amountOfBasestations);
 }
 
 std::string RobotHubStatistics::getWantedBasestations() const {
     std::string basestations = wantedBasestationsToString(this->basestationManagerStatus.basestationCollection.wantedBasestations);
-    return RobotHubStatistics::string_format("%-9s", basestations.c_str());
+    return formatString("%-9s", basestations.c_str());
 }
 std::string RobotHubStatistics::getSelectedBasestations() const {
     std::string basestations;
@@ -147,9 +148,9 @@ std::string RobotHubStatistics::getSelectedBasestations() const {
         basestations = wantedBasestationsToString(basestation::WantedBasestations::NEITHER_YELLOW_NOR_BLUE);
     }
 
-    return RobotHubStatistics::string_format("%-9s", basestations.c_str());
+    return formatString("%-9s", basestations.c_str());
 }
-std::string RobotHubStatistics::numberToSideBox(int n) const { return RobotHubStatistics::string_format("%7d", n); }
+std::string RobotHubStatistics::numberToSideBox(int n) const { return formatString("%7d", n); }
 
 std::string RobotHubStatistics::wantedBasestationsToString(basestation::WantedBasestations wantedBasestations) {
     std::string text;
@@ -171,18 +172,6 @@ std::string RobotHubStatistics::wantedBasestationsToString(basestation::WantedBa
             break;
     }
     return text;
-}
-
-template <typename... Args>
-std::string RobotHubStatistics::string_format(const std::string& format, Args... args) {
-    int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;  // Extra space for '\0'
-    if (size_s <= 0) {
-        throw std::runtime_error("Error during formatting.");
-    }
-    auto size = static_cast<size_t>(size_s);
-    auto buf = std::make_unique<char[]>(size);
-    std::snprintf(buf.get(), size, format.c_str(), args...);
-    return std::string(buf.get(), buf.get() + size - 1);  // We don't want the '\0' inside
 }
 
 }  // namespace rtt::robothub

@@ -7,7 +7,7 @@
 proto::State
 Observer::process(Time extrapolatedTo,
                   const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
-                  std::vector<proto::RobotData> robotData) {
+                  std::vector<rtt::RobotsFeedback> robotData) {
 
     updateRobotParams(refereePackets);
     proto::State state;

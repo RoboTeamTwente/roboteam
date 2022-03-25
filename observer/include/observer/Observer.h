@@ -7,9 +7,9 @@
 
 #include <proto/messages_robocup_ssl_referee.pb.h>
 #include <proto/messages_robocup_ssl_wrapper.pb.h>
-#include <proto/RobotData.pb.h>
 #include <proto/State.pb.h>
 #include <roboteam_utils/Time.h>
+#include <roboteam_utils/RobotFeedback.hpp>
 
 #include "filters/vision/VisionFilter.h"
 #include "filters/referee/RefereeFilter.h"
@@ -28,13 +28,13 @@ public:
      * Calls all of the feedbacks for processing relevant data given the given input data.
      * @param time time to extrapolate the world to
      * @param visionPackets all of the packets received from vision, including detectionFrames and geometry information
-     * @param refereePackets All ofthe packets which were received from the referee.
+     * @param refereePackets All of the packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
     proto::State process(Time extrapolatedTo,
                  const std::vector<proto::SSL_WrapperPacket>& visionPackets,
                  const std::vector<proto::SSL_Referee>& refereePackets,
-                 std::vector<proto::RobotData> robotData);
+                 std::vector<rtt::RobotsFeedback> robotData);
 
 private:
     RobotParameterDatabase parameterDatabase;

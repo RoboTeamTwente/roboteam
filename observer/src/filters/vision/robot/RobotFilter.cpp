@@ -108,6 +108,7 @@ FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
   vel /= totalVelUncertainty;
   angle /= totalAngleUncertainty;
   angularVel /= totalAngleVelUncertainty;
+  angle +=angleOffset;
   FilteredRobot result(id, RobotPos(pos,angle),RobotVel(vel,angularVel),
                        -1,-1,-1,-1,-1); //TODO define health and merged uncertainties?
 

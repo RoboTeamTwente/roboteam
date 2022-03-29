@@ -53,8 +53,8 @@ BallAssignmentResult assign_balls(const std::vector<CameraGroundBallPrediction>&
                                                    return (observation.position - first.prediction.position).squaredNorm() <
                                                        (observation.position - second.prediction.position).squaredNorm();
                                                  });
-      //if there's no close ball, we will use it for new filters.
-      if(!assignment.op_pairs.empty() ||
+      //if there's no close ball or no observations to match it to, we will use it for new filters.
+      if(assignment.op_pairs.empty() ||
           (closest_prediction->prediction.position-observation.position).norm() > MAX_ACCEPT_DIST){
         assignment.unpairedObservations.push_back(observation);
       }else{

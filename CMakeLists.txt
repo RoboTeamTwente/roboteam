@@ -23,7 +23,7 @@ add_library(roboteam_networking STATIC
     "src/SettingsNetworker.cpp"
     "src/WorldNetworker.cpp"
     "src/SimulationConfigurationNetworker.cpp"
-)
+        include/utils/Pair.hpp)
 
 target_include_directories(roboteam_networking PUBLIC "include")
 target_link_libraries(roboteam_networking PUBLIC roboteam_networking_utils roboteam_networking_proto)

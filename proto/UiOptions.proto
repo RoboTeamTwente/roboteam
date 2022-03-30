@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package proto;
+
+message Slider {
+    string text = 1;
+    float min = 2;
+    float max = 3;
+    float interval = 4;
+    float default = 5;
+    int32 dpi = 6;
+}
+
+message Checkbox {
+    string text = 1;
+}
+
+message Dropdown {
+    string text = 1;
+    repeated string options = 3;
+}
+
+message RadioButton {
+    repeated string options = 2;
+}
+
+message TextField {
+    string text = 1;
+}
+
+message UiOptionDeclaration {
+    string path = 1; // Specifies structure-wise where this should be rendered. The interface should parse this into a tree structure and infer where it should be rendered ("/Settings/Networking/Port")
+    bool is_mutable = 2; // If set to true, the module itself can edit the button, and not just the user.
+    string description = 3; // Description of what this button does
+    oneof ui_elements {
+        Slider slider = 4;
+        Checkbox checkbox = 5;
+        Dropdown dropdown = 6;
+        RadioButton radiobutton = 7;
+        TextField textfield = 8;
+    }
+
+    UiValue default = 9;
+}
+message UiOptionDeclarations{
+    repeated UiOptionDeclaration options = 1;
+}
+message UiValue {
+    oneof value {
+        float float_value = 1;
+        bool bool_value = 2;
+        int64 integer_value = 3;
+        string text_value = 4;
+    }
+}
+
+message UiValues {
+    // maps UiOption::name to the value it currently contains.
+    map<string, UiValue> ui_values = 1;
+}

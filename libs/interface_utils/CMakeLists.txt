@@ -13,3 +13,5 @@ target_link_libraries(interface_utils_lib
         PUBLIC roboteam_networking
         PUBLIC nlohmann_json::nlohmann_json
         PUBLIC roboteam_utils)
+
+target_compile_options(interface_utils_lib PRIVATE "${COMPILER_FLAGS}")

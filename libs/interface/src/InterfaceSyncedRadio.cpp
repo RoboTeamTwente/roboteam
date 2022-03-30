@@ -5,22 +5,15 @@
 #include "InterfaceSyncedRadio.h"
 
 namespace rtt::Interface {
-InterfaceSyncedRadio::InterfaceSyncedRadio(const MainWindow * window, std::shared_ptr<InterfaceControllerClient> ctrlptr, const InterfaceDeclaration &decl, QWidget *parent): QButtonGroup(parent) {
+InterfaceSyncedRadio::InterfaceSyncedRadio(const MainWindow * window, std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): QButtonGroup(parent), identity(ident) {
     QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedRadio::updateDeclaration);
     QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedRadio::updateValue);
 
     QObject::connect(this, &InterfaceSyncedRadio::idToggled, this, &InterfaceSyncedRadio::notifyChangedValue);
 
-    this->identity = decl.path;
     this->setExclusive(true);
 
     this->ctrl = ctrlptr;
-    try {
-        this->updateProps(decl);
-    }
-    catch (const std::bad_variant_access& ex) {
-        std::cout << ex.what() << '\n';
-    }
 }
 
 void InterfaceSyncedRadio::updateProps(const InterfaceDeclaration &decl) {
@@ -38,9 +31,13 @@ void InterfaceSyncedRadio::updateProps(const InterfaceDeclaration &decl) {
 
             this->addButton(tmpButton, i);
         }
+
+        this->button(std::get<int64_t>(decl.defaultValue.variant))->setChecked(true);
     } catch (const std::bad_variant_access& ex) {
         std::cout << ex.what() << '\n';
     }
+
+
 }
 void InterfaceSyncedRadio::updateDeclaration(std::weak_ptr<InterfaceDeclarations> declptr) {
     auto alldecl = declptr.lock();
@@ -56,14 +53,16 @@ void InterfaceSyncedRadio::updateDeclaration(std::weak_ptr<InterfaceDeclarations
 void InterfaceSyncedRadio::updateValue(std::weak_ptr<InterfaceSettings> settings) {
     auto values = settings.lock();
     if (!values) return;
-
+    this->updateDeclaration(ctrl.lock()->getDeclarations());
     auto newVal = values.get()->getSetting(this->identity);
     if (!newVal.has_value()) return;
 
     try {
         auto newButtonSelect = std::get<int64_t>(newVal.value().variant);
-
-        this->button(this->checkedId())->setChecked(false);
+        auto current = this->checkedId();
+        if (this->checkedButton()) {
+            this->checkedButton()->setChecked(false);
+        }
         this->button(newButtonSelect)->setChecked(true);
 
     } catch (const std::bad_variant_access& ex) {

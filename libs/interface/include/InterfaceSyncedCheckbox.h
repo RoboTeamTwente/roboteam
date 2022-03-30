@@ -14,7 +14,7 @@ namespace rtt::Interface {
     class InterfaceSyncedCheckbox: public QCheckBox {
         Q_OBJECT
     public:
-        InterfaceSyncedCheckbox(const MainWindow*, std::shared_ptr<InterfaceControllerClient>, const InterfaceDeclaration&, QWidget* = nullptr);
+        InterfaceSyncedCheckbox(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     protected:
         std::string identity;
 

@@ -1,13 +1,8 @@
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
-qt_wrap_cpp(IFACE_MOC
-        include/InterfaceFieldScene.h
-        include/InterfaceSyncedCheckbox.h
-        include/InterfaceSyncedDropdown.h
-        include/InterfaceSyncedRadio.h
-        include/InterfaceSyncedSlider.h
-        include/InterfaceSyncedText.h
-        include/MainWindow.h
-        include/InterfaceFieldView.h)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC OFF)
+set(CMAKE_AUTOUIC OFF)
+set(CMAKE_INCLUDE_CURRENT_DIR OFF) #Find includes in corresponding build directories
 
 add_library(interface_lib
         src/InterfaceFieldScene.cpp
@@ -23,7 +18,26 @@ add_library(interface_lib
         src/InterfaceBallItem.cpp
         src/InterfaceFieldView.cpp
         src/InterfaceControllerClient.cpp
-        ${IFACE_MOC})
+        src/InterfaceWidgetStopButton.cpp
+        src/InterfaceWidgetRobotOverview.cpp
+        src/InterfaceWidgetRobotDisplay.cpp
+        src/InterfaceSyncedCheckableButton.cpp
+        src/InterfaceWidgetDebugDisplay.cpp
+
+        include/MainWindow.h
+        include/InterfaceSyncedRadio.h
+        include/InterfaceSyncedDropdown.h
+        include/InterfaceSyncedText.h
+        include/InterfaceSyncedCheckbox.h
+        include/InterfaceSyncedSlider.h
+        include/InterfaceFieldScene.h
+        include/InterfaceFieldView.h
+        include/InterfaceWidgetStopButton.h
+        include/InterfaceWidgetRobotOverview.h
+        include/InterfaceWidgetRobotDisplay.h
+        include/InterfaceSyncedCheckableButton.h
+        include/InterfaceWidgetDebugDisplay.h
+        )
 
 target_link_libraries(interface_lib
         PUBLIC Qt::Widgets
@@ -31,3 +45,6 @@ target_link_libraries(interface_lib
 
 target_include_directories(interface_lib
         PUBLIC include/)
+
+
+target_compile_options(interface_lib PRIVATE "${COMPILER_FLAGS}")

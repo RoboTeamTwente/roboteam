@@ -5,15 +5,15 @@
 #ifndef RTT_INTERFACECONTROLLER_H
 #define RTT_INTERFACECONTROLLER_H
 #include <proto/State.pb.h>
-#include <utils/Pair.hpp>
 #include <chrono>
+#include <utils/Pair.hpp>
 
 #include "InterfaceDeclarations.h"
 #include "InterfaceSettings.h"
 // Port: 16971
 namespace rtt::Interface  {
 
-    namespace networking =  rtt::net::utils;
+    namespace networking = rtt::net::utils;
 
     template<size_t port, uint8_t throttle, uint8_t max_time_between_remote_updates, typename S, typename R>
     class InterfaceController {
@@ -38,7 +38,7 @@ namespace rtt::Interface  {
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(time_now-this->last_state_update).count();
 
                 if (hasPriorityData() || duration >= max_time_between_remote_updates) {
-                    this->conn->write(getDataForRemote(duration >= max_time_between_remote_updates));
+                    this->conn->write(getDataForRemote(duration >= max_time_between_remote_updates), true);
                 }
 
                 if (!has_data) continue;
@@ -56,6 +56,9 @@ namespace rtt::Interface  {
                     this->last_state_update = std::chrono::high_resolution_clock::now();
                 }
             }
+
+            poller.remove(conn->socket);
+            conn->socket.close();
         }
     protected:
         std::shared_ptr<InterfaceDeclarations> decls;
@@ -65,7 +68,9 @@ namespace rtt::Interface  {
 
 
     public:
-        InterfaceController(): decls(std::make_shared<InterfaceDeclarations>()), vals(std::make_shared<InterfaceSettings>()), conn(std::make_unique<networking::PairReceiver<port>>()) {} //, fieldState(std::make_shared<InterfaceFieldStateStore>())
+        InterfaceController(): decls(std::make_shared<InterfaceDeclarations>()), vals(std::make_shared<InterfaceSettings>()), conn(std::make_unique<networking::PairReceiver<port>>()) {
+            this->conn->socket.set(zmqpp::socket_option::linger, 0);
+        } //, fieldState(std::make_shared<InterfaceFieldStateStore>())
 
         [[nodiscard]] std::weak_ptr<InterfaceDeclarations> getDeclarations() const {return decls;}
         [[nodiscard]] std::weak_ptr<InterfaceSettings> getValues() const {return vals;}

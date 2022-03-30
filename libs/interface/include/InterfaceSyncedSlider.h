@@ -13,7 +13,7 @@ namespace rtt::Interface {
     class InterfaceSyncedSlider: public QSlider {
         Q_OBJECT
     public:
-        InterfaceSyncedSlider(const MainWindow*, std::shared_ptr<InterfaceControllerClient>, const InterfaceDeclaration&, QWidget* = nullptr);
+        InterfaceSyncedSlider(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     private:
         std::string identity;
         int dpi;

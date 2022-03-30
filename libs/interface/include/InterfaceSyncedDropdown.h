@@ -13,13 +13,13 @@ namespace rtt::Interface {
     class InterfaceSyncedDropdown: public QComboBox {
         Q_OBJECT
     public:
-        InterfaceSyncedDropdown(const MainWindow*, std::shared_ptr<InterfaceControllerClient>, const InterfaceDeclaration&, QWidget* = nullptr);
+        InterfaceSyncedDropdown(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     protected:
         std::string identity;
 
         std::weak_ptr<InterfaceControllerClient> ctrl;
         void updateProps(const InterfaceDeclaration&);
-    public slots:
+    private slots:
         void didChangeValue(const QString&);
         void updateDeclaration(std::weak_ptr<InterfaceDeclarations>);
         void updateValue(std::weak_ptr<InterfaceSettings>);

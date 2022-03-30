@@ -34,6 +34,7 @@ class InterfaceSettings {
        InterfaceSettings& operator=(const InterfaceSettings&) = delete;
 
     std::optional<InterfaceValue> getSetting(std::string name) const noexcept;
+    std::vector<std::tuple<std::string, InterfaceValue>> getSettingsWithSuffix(const std::string suffix) const noexcept;
     void setSetting(std::string name, InterfaceValue newValue) noexcept;
     [[maybe_unused]] void removeSetting(std::string name) noexcept;
 

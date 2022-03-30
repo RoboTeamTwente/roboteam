@@ -14,7 +14,7 @@ namespace rtt::Interface {
     class InterfaceSyncedRadio: public QButtonGroup {
         Q_OBJECT
     public:
-        InterfaceSyncedRadio(const MainWindow*, std::shared_ptr<InterfaceControllerClient>, const InterfaceDeclaration&, QWidget* = nullptr);
+        InterfaceSyncedRadio(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     private:
         std::string identity;
         int dpi;

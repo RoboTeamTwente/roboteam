@@ -5,16 +5,11 @@
 #include "InterfaceSyncedDropdown.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedDropdown::InterfaceSyncedDropdown(const MainWindow* window, std::shared_ptr<InterfaceControllerClient> ctrlptr, const InterfaceDeclaration& decl, QWidget* parent): QComboBox(parent) {
+    InterfaceSyncedDropdown::InterfaceSyncedDropdown(const MainWindow* window, std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget* parent): QComboBox(parent), identity(ident), ctrl(ctrlptr) {
         QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedDropdown::updateDeclaration);
         QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedDropdown::updateValue);
 
         QObject::connect(this, &InterfaceSyncedDropdown::currentTextChanged, this, &InterfaceSyncedDropdown::didChangeValue);
-
-        this->identity = decl.path;
-        this->ctrl = ctrlptr;
-
-        updateProps(decl);
     }
 
     void InterfaceSyncedDropdown::didChangeValue(const QString& newText) {

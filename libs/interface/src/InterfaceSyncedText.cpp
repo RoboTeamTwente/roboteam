@@ -5,16 +5,13 @@
 #include "InterfaceSyncedText.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedText::InterfaceSyncedText(const MainWindow *window, std::shared_ptr<InterfaceControllerClient> ctrlptr, const InterfaceDeclaration &decl, QWidget *parent): QLineEdit(parent) {
+    InterfaceSyncedText::InterfaceSyncedText(const MainWindow *window, std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): QLineEdit(parent), identity(ident) {
         QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedText::updateDeclaration);
         QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedText::updateValue);
 
         QObject::connect(this, &InterfaceSyncedText::textChanged, this, &InterfaceSyncedText::notifyChangedValue);
 
-        this->identity = decl.path;
         this->ctrl = ctrlptr;
-
-        updateProps(decl);
     }
 
     void InterfaceSyncedText::updateValue(std::weak_ptr<InterfaceSettings> settings) {

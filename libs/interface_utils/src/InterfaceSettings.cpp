@@ -17,6 +17,18 @@ std::optional<InterfaceValue> InterfaceSettings::getSetting(const std::string na
     return this->values.at(name);
 }
 
+std::vector<std::tuple<std::string, InterfaceValue>> InterfaceSettings::getSettingsWithSuffix(const std::string suffix) const noexcept {
+    std::vector<std::tuple<std::string, InterfaceValue>> res;
+
+    for (const auto& [key, value] : this->values) {
+        if (key.ends_with(suffix)) {
+            res.push_back({key, value});
+        }
+    }
+
+    return res;
+}
+
 void InterfaceSettings::setSetting(const std::string name, const InterfaceValue newValue) noexcept {
     std::scoped_lock lck(this->mtx);
 

@@ -33,6 +33,8 @@ typedef struct RobotCommand {
     double dribblerSpeed = 0.0;             // [0, 1] Speed of the dribbler
     
     bool ignorePacket = false;              // Robot will ignore packet, but robot will reply with feedback
+
+    bool operator== (const RobotCommand& other) const;
 } RobotCommand;
 
 /* This object represents robot commands that are sent from AI to RobotHub */

@@ -23,6 +23,8 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Shadow.cpp
         src/utils/Polynomial.cpp
         src/utils/RobotShape.cpp
+        src/utils/RobotCommands.cpp
+        src/utils/RobotFeedback.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC

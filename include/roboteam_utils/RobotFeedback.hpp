@@ -27,6 +27,8 @@ typedef struct RobotFeedback {
     int wheelBraking;           // Indicates if a wheel is slipping. One bit per wheel
     float batteryLevel;         // Battery level // TODO: Decide if this is in volts or percentage
     int signalStrength;         // The signal strength of the robot
+
+    bool operator== (const RobotFeedback& other) const;
 } RobotFeedback;
 
 /* This is the data object that is published by RobotHub */
@@ -34,6 +36,8 @@ typedef struct RobotsFeedback {
     Team team;
     RobotFeedbackSource source;
     std::vector<RobotFeedback> feedback;
+
+    bool operator== (const RobotsFeedback& other) const;
 } RobotsFeedback;
 
 } // namespace rtt

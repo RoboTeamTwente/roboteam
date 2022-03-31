@@ -23,7 +23,7 @@ typedef struct RobotCommand {
     bool useAngularVelocity = 0.0;          // True if angular velocity should be used instead of angle
 
     Angle cameraAngleOfRobot;               // (rad) The current angle of the robot according to the camera
-    bool cameraAngleOfRobotIsSet = 0.0;     // True if the cameraAngleOfRobot is set. If false, these fields should be ignored
+    bool cameraAngleOfRobotIsSet = false;   // True if the cameraAngleOfRobot is set. If false, these fields should be ignored
     
     // Action related variables
     double kickSpeed = 0.0;                 // (m/s) [0, 6.5] The target speed of the ball. Speed of <= 0.0 is undefined

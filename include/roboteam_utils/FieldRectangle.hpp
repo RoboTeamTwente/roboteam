@@ -25,7 +25,6 @@ public:
     bool contains(const Vector2& point, double margin) const;
 
     Polygon asPolygon(double margin = 0) const;
-
     double getTop() const;
     double getRight() const;
     double getBottom() const;

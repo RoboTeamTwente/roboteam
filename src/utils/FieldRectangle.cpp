@@ -29,16 +29,16 @@ FieldRectangle::FieldRectangle(const Vector2& pointA, const Vector2& pointB) {
     this->right = std::fmax(pointA.x, pointB.x);
     this->bottom = std::fmin(pointA.y, pointB.y);
     this->left = std::fmin(pointA.x, pointB.x);
-    this->width = right-left;
-    this->height = top-bottom;
+    this->width = this->right - this->left;
+    this->height = this->top - this->bottom;
     this->center = (pointA + pointB) * 0.5;
 }
 
 bool FieldRectangle::operator==(const FieldRectangle& other) const {
-    return top == other.top
-        && right == other.right
-        && bottom == other.bottom
-        && left == other.left;
+    return this->top == other.top
+        && this->right == other.right
+        && this->bottom == other.bottom
+        && this->left == other.left;
 }
 
 bool FieldRectangle::contains(const Vector2& point) const {

@@ -9,7 +9,8 @@
 
 namespace rtt {
 /* This type represents a field, containing a set of rectangles,
- * points and circles. */
+ * points and circles, all expressed in meters.
+ * The middle of the field is (0, 0), and the x-axis goes through the goals */
 typedef struct Field {
 
     Vector2 leftPenaltyPoint;   // Place of left penalty point
@@ -17,7 +18,7 @@ typedef struct Field {
 
     Circle centerCircle;        // Contains the center point and describes the circle around it
 
-    double boundaryWidth;           // Width of the area around the play area
+    double boundaryWidth = 0.0; // Width of the area around the play area
 
     FieldRectangle playArea;        // The whole field in which robots can drive (excluding goal areas)
     FieldRectangle leftPlayArea;    // Left side of the field
@@ -28,7 +29,7 @@ typedef struct Field {
     FieldRectangle rightGoalArea;   // Right goal area outside the play area
 
     // This function can be used to ensure all variables are properly set according to the given sizes
-    static Field createField(double fieldWidth, double fieldHeight, double penaltyWidth, double penaltyHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint);
+    static Field createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint);
 } Field;
 
 } // namespace rtt

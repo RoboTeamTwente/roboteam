@@ -58,7 +58,7 @@ add_library(roboteam_utils STATIC
 
 target_include_directories(roboteam_utils
         PRIVATE include/roboteam_utils
-        INTERFACE include
+        PUBLIC include
         )
 
 target_compile_options(roboteam_utils PRIVATE "${COMPILER_FLAGS}")

@@ -3,9 +3,15 @@
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <gtest/gtest.h>
+
+/* These tests will check if you send something with a publisher of type X,
+ * you will receive the same data with the subscriber of X.
+ * This ensures that all publishers and subscribers:
+ * - Are on the correct channel
+ * - Are able to send the correct data
+ * */
 
 using namespace rtt::net;
 
@@ -15,8 +21,8 @@ constexpr int PAUSE_MS = 50;
 // Robot commands loop test
 bool robotCommandsBlueLoopTestPassed = false;
 bool robotCommandsYellowLoopTestPassed = false;
-void onRobotCommandsBlue(const proto::AICommand& commands) { robotCommandsBlueLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
-void onRobotCommandsYellow(const proto::AICommand& commands) { robotCommandsYellowLoopTestPassed = commands.commands().Get(0).id() == TEST_VALUE; }
+void onRobotCommandsBlue(const rtt::RobotCommands& commands) { robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE; }
+void onRobotCommandsYellow(const rtt::RobotCommands& commands) { robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE; }
 
 TEST(RTTChannels, testRobotCommandsLoop) {
     RobotCommandsBluePublisher pubBlue;
@@ -27,9 +33,9 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    proto::AICommand commands;
-    proto::RobotCommand* command = commands.add_commands();
-    command->set_id(TEST_VALUE);
+    rtt::RobotCommands commands;
+
+    commands.push_back({.id = TEST_VALUE});
 
     pubBlue.publish(commands);
     pubYellow.publish(commands);
@@ -43,16 +49,18 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const proto::RobotData& feedback) { robotFeedbackLoopTestPassed = feedback.receivedfeedback().Get(0).id() == TEST_VALUE; }
+void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) { robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE; }
 TEST(RTTChannels, testRobotFeedbackLoop) {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    proto::RobotData feedback;
-    feedback.add_receivedfeedback()->set_id(TEST_VALUE);
+    rtt::RobotsFeedback feedbacks;
+    feedbacks.feedback.push_back({
+        .id = TEST_VALUE
+    });
 
-    pub.publish(feedback);
+    pub.publish(feedbacks);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     EXPECT_TRUE(robotFeedbackLoopTestPassed);

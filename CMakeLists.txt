@@ -12,7 +12,10 @@ add_subdirectory(proto)
 
 add_library(roboteam_networking_utils STATIC
     "src/utils/Channel.cpp"
-    "src/utils/Channels.cpp")
+    "src/utils/Channels.cpp"
+    "src/utils/Subscriber.cpp"
+    "src/utils/Publisher.cpp"
+)
 target_include_directories(roboteam_networking_utils PUBLIC "include")
 target_link_libraries(roboteam_networking_utils PUBLIC zmqpp)
 target_compile_options(roboteam_networking_utils PRIVATE "${COMPILER_FLAGS}")
@@ -26,7 +29,11 @@ add_library(roboteam_networking STATIC
         include/utils/Pair.hpp)
 
 target_include_directories(roboteam_networking PUBLIC "include")
-target_link_libraries(roboteam_networking PUBLIC roboteam_networking_utils roboteam_networking_proto)
+target_link_libraries(roboteam_networking PUBLIC
+    roboteam_networking_utils
+    roboteam_networking_proto
+    roboteam_utils
+)
 target_compile_options(roboteam_networking PRIVATE "${COMPILER_FLAGS}")
 
 # -- TESTS --

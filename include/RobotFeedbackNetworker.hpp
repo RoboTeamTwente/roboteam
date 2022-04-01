@@ -1,5 +1,6 @@
 #pragma once
-#include <proto/RobotData.pb.h>
+
+#include <roboteam_utils/RobotFeedback.hpp>
 
 #include <functional>
 #include <utils/Publisher.hpp>
@@ -7,16 +8,21 @@
 
 namespace rtt::net {
 
-class RobotFeedbackPublisher : private utils::Publisher<proto::RobotData> {
+class RobotFeedbackPublisher : private utils::Publisher {
    public:
     RobotFeedbackPublisher();
 
-    bool publish(const proto::RobotData& feedback);
+    // Publishes the given robot feedback. Returns success
+    bool publish(const rtt::RobotsFeedback& feedback);
 };
 
-class RobotFeedbackSubscriber : private utils::Subscriber<proto::RobotData> {
+class RobotFeedbackSubscriber : private utils::Subscriber {
    public:
-    RobotFeedbackSubscriber(const std::function<void(const proto::RobotData&)>& callback);
+    RobotFeedbackSubscriber(const std::function<void(const rtt::RobotsFeedback&)>& callback);
+
+   private:
+    void onPublishedMessage(const std::string& message);
+    const std::function<void(const rtt::RobotsFeedback&)> callback;
 };
 
 }  // namespace rtt::net

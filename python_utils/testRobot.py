@@ -350,7 +350,7 @@ while True:
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (1, 1, 1), 4)
 			
 
-			cv2.imshow("img", img)
+			cv2.imshow("Press esc to quit", img)
 			if cv2.waitKey(1) == 27: exit()
 
 

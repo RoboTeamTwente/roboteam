@@ -28,6 +28,8 @@ typedef struct Field {
     FieldRectangle leftGoalArea;    // Left goal area outside the play area
     FieldRectangle rightGoalArea;   // Right goal area outside the play area
 
+    bool operator== (const Field& other) const;
+
     // This function can be used to ensure all variables are properly set according to the given sizes
     static Field createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint);
 } Field;

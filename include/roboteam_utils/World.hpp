@@ -18,15 +18,19 @@ typedef struct World {
     std::optional<Ball> ball = std::nullopt;// The ball
     std::vector<Robot> yellowRobots;        // All yellow robots
     std::vector<Robot> blueRobots;          // All blue robots
+
+    bool operator== (const World& other) const;
 } World;
 
-/* This represents the complete world (SoonTM also past and guestimated future) */
+/* This represents the complete world (SoonTM also guestimated future) */
 typedef struct WorldStates {
     World currentWorld;         // The current world
     // World futureWorld;       // TODO: Implement this
 
     rtt::Field field;           // The field of the world
     proto::SSL_Referee referee; // The latest referee command
+
+    bool operator== (const WorldStates& other) const;
 } WorldStates;
 
 } // namespace rtt

@@ -2,6 +2,20 @@
 
 namespace rtt {
 
+bool Field::operator==(const Field &other) const {
+    return this->leftPenaltyPoint == other.leftPenaltyPoint
+        && this->rightPenaltyPoint == other.rightPenaltyPoint
+        && this->centerCircle == other.centerCircle
+        && this->boundaryWidth == other.boundaryWidth
+        && this->playArea == other.playArea
+        && this->leftPlayArea == other.leftPlayArea
+        && this->rightPlayArea == other.rightPlayArea
+        && this->leftDefenseArea == other.leftDefenseArea
+        && this->rightDefenseArea == other.rightDefenseArea
+        && this->leftGoalArea == other.leftGoalArea
+        && this->rightGoalArea == other.rightGoalArea;
+}
+
 Field Field::createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint) {
     //     A---------------C----------------
     //     |               |               |

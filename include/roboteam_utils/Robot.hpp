@@ -31,6 +31,8 @@ typedef struct Robot {
     double frontWidth = 0.13;           // (m) The width of the front assembly
     double dribblerWidth = 0.10;        // (m) The width of the dribbler
     double capAngleOffset = 0.0;        // (rad) The difference between the angle of the cap vs the angle of the robot
+
+    bool operator== (const Robot& other) const;
 } Robot;
 
 } // namespace rtt

@@ -4,6 +4,7 @@
 #define ZMQ_BUILD_DRAFT_API 1
 
 #include <zmqpp/zmqpp.hpp>
+#include <optional>
 
 namespace rtt::net::utils {
     template <size_t port>

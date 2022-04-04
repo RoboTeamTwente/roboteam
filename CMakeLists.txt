@@ -23,6 +23,8 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Shadow.cpp
         src/utils/Polynomial.cpp
         src/utils/RobotShape.cpp
+        src/utils/RobotCommands.cpp
+        src/utils/RobotFeedback.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC
@@ -46,6 +48,8 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/ShadowTest.cpp
         test/utils/CircularBufferTest.cpp
         test/utils/RobotShapeTest.cpp
+        test/utils/RobotCommandsTest.cpp
+        test/utils/RobotFeedbackTest.cpp
         )
 
 add_library(roboteam_utils STATIC
@@ -55,7 +59,7 @@ add_library(roboteam_utils STATIC
 
 target_include_directories(roboteam_utils
         PRIVATE include/roboteam_utils
-        INTERFACE include
+        PUBLIC include
         )
 
 target_compile_options(roboteam_utils PRIVATE "${COMPILER_FLAGS}")

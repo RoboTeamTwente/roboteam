@@ -23,7 +23,7 @@ typedef struct RobotCommand {
     bool useAngularVelocity = 0.0;          // True if angular velocity should be used instead of angle
 
     Angle cameraAngleOfRobot;               // (rad) The current angle of the robot according to the camera
-    bool cameraAngleOfRobotIsSet = 0.0;     // True if the cameraAngleOfRobot is set. If false, these fields should be ignored
+    bool cameraAngleOfRobotIsSet = false;   // True if the cameraAngleOfRobot is set. If false, these fields should be ignored
     
     // Action related variables
     double kickSpeed = 0.0;                 // (m/s) [0, 6.5] The target speed of the ball. Speed of <= 0.0 is undefined
@@ -33,6 +33,8 @@ typedef struct RobotCommand {
     double dribblerSpeed = 0.0;             // [0, 1] Speed of the dribbler
     
     bool ignorePacket = false;              // Robot will ignore packet, but robot will reply with feedback
+
+    bool operator== (const RobotCommand& other) const;
 } RobotCommand;
 
 /* This object represents robot commands that are sent from AI to RobotHub */

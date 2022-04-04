@@ -25,7 +25,7 @@ typedef struct RobotFeedback {
     bool capacitorIsCharged = false;    // The capacitor is charged
     int wheelLocked = 0;                // Indicates if a wheel is locked. One bit per wheel
     int wheelBraking = 0;               // Indicates if a wheel is slipping. One bit per wheel
-    float batteryLevel = 0;             // Battery level // TODO: Decide if this is in volts or percentage
+    float batteryLevel = 23.0f;             // Battery level // TODO: Decide if this is in volts or percentage
     int signalStrength = 0;             // The signal strength of the robot
 
     bool operator== (const RobotFeedback& other) const;

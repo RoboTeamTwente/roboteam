@@ -58,7 +58,7 @@ TEST(RobotFeedbackTest, instantiation) {
     ASSERT_FALSE(robotFeedback.capacitorIsCharged);
     ASSERT_EQ(robotFeedback.wheelLocked, 0);
     ASSERT_EQ(robotFeedback.wheelBraking, 0);
-    ASSERT_FLOAT_EQ(robotFeedback.batteryLevel, 0);
+    ASSERT_FLOAT_EQ(robotFeedback.batteryLevel, 23.0f);
     ASSERT_EQ(robotFeedback.signalStrength, 0);
 }
 

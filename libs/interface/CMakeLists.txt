@@ -4,7 +4,7 @@ set(CMAKE_AUTORCC OFF)
 set(CMAKE_AUTOUIC OFF)
 set(CMAKE_INCLUDE_CURRENT_DIR OFF) #Find includes in corresponding build directories
 
-add_library(interface_lib
+add_library(roboteam_interface_lib
         src/InterfaceFieldScene.cpp
         src/InterfaceFieldRenderer.cpp
         src/MainWindow.cpp
@@ -39,12 +39,12 @@ add_library(interface_lib
         include/InterfaceWidgetDebugDisplay.h
         )
 
-target_link_libraries(interface_lib
+target_link_libraries(roboteam_interface_lib
         PUBLIC Qt::Widgets
-        PUBLIC interface_utils_lib)
+        PUBLIC roboteam_interface_utils_lib)
 
-target_include_directories(interface_lib
+target_include_directories(roboteam_interface_lib
         PUBLIC include/)
 
 
-target_compile_options(interface_lib PRIVATE "${COMPILER_FLAGS}")
+target_compile_options(roboteam_interface_lib PRIVATE "${COMPILER_FLAGS}")

@@ -242,7 +242,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
             .capacitorIsCharged = true,
             .wheelLocked = 0,
             .wheelBraking = 0,
-            .batteryLevel = 0,
+            .batteryLevel = 23.0f,
             .signalStrength = 0
         };
         robotsFeedback.feedback.push_back(robotFeedback);

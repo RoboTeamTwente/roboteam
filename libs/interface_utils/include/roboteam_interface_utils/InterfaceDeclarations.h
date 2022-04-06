@@ -9,6 +9,7 @@
 
 #include <nlohmann/json.hpp>
 #include <utility>
+#include <optional>
 
 #include "InterfaceDeclaration.h"
 

@@ -15,20 +15,19 @@
 namespace rtt::Interface  {
 
 template<typename S, typename R>
-class InterfaceController {
+    class InterfaceController : private net::utils::Publisher, private net::utils::Subscriber {
 public:
-    InterfaceController(net::utils::ChannelType publishChannel, net::utils::ChannelType subscribeChannel, uint8_t receiveThrottle, uint8_t maxTimeBetweenRemoteUpdates) {
+    InterfaceController(net::utils::ChannelType publishChannel, net::utils::ChannelType subscribeChannel, uint8_t receiveThrottle, uint8_t maxTimeBetweenRemoteUpdates)
+        : net::utils::Publisher(publishChannel),
+          net::utils::Subscriber(subscribeChannel, [&](const std::string& message) {
+              this->onReceivedMessage(message);
+          }) {
         this->receiveThrottle = receiveThrottle;
         this->maxTimeBetweenRemoteUpdates = maxTimeBetweenRemoteUpdates;
         this->shouldRun = true;
 
         this->decls = std::make_shared<InterfaceDeclarations>();
         this->vals = std::make_shared<InterfaceSettings>();
-
-        this->publisher = std::make_unique<net::utils::Publisher>(publishChannel);
-        this->subscriber = std::make_unique<net::utils::Subscriber>(subscribeChannel, [&](const std::string& message) {
-            this->onReceivedMessage(message);
-        });
     }
 
     [[nodiscard]] std::weak_ptr<InterfaceDeclarations> getDeclarations() const {
@@ -66,9 +65,6 @@ protected:
 
 
 private:
-    std::unique_ptr<net::utils::Publisher> publisher;
-    std::unique_ptr<net::utils::Subscriber> subscriber;
-
     std::atomic_bool shouldRun;
     std::thread loopThread;
 
@@ -84,13 +80,10 @@ private:
 
             if (this->hasPriorityData() || duration >= this->maxTimeBetweenRemoteUpdates) {
                 auto data = getDataForRemote(duration >= this->maxTimeBetweenRemoteUpdates);
-                this->publisher->send(data.SerializeAsString());
+                this->send(data.SerializeAsString());
                 this->lastSentData = time_now;
             }
         }
-
-        this->publisher.reset();
-        this->subscriber.reset();
     }
 
     void onReceivedMessage(const std::string& message) {

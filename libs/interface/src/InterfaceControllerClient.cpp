@@ -17,7 +17,7 @@ namespace rtt::Interface {
 
         this->decls->handleData(handshake.declarations());
         this->vals->handleData(handshake.values(), decls);
-        this->fieldState->setState(state.system_state());
+//        this->fieldState->setState(state.system_state());
     }
 
     std::weak_ptr<InterfaceFieldStateStore> InterfaceControllerClient::getFieldState() const {
@@ -26,5 +26,8 @@ namespace rtt::Interface {
 
     bool InterfaceControllerClient::hasPriorityData() const noexcept {
         return this->vals->getDidChange();
+    }
+    void InterfaceControllerClient::field_state_callback(const proto::State& state) {
+        this->fieldState->setState(state);
     }
 }

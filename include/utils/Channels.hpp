@@ -9,6 +9,11 @@ enum ChannelType {
     UNDEFINED_CHANNEL,
     SETTINGS_CHANNEL,
 
+    // AI to Interface
+    AI_TO_INTERFACE_CHANNEL,
+    // Interface to AI
+    INTERFACE_TO_AI_CHANNEL,
+
     // AI to Robothub
     ROBOT_COMMANDS_BLUE_CHANNEL,
     ROBOT_COMMANDS_YELLOW_CHANNEL,

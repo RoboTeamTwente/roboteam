@@ -7,3 +7,17 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(googletest)
+
+#for MacOS X or iOS, watchOS, tvOS(since 3.10.3)
+if (APPLE)
+    set(GTEST_LIB
+            /usr/local/lib/libgtest.a
+            /usr/local/lib/libgtest_main.a
+            /usr/local/lib/libgmock.a
+            /usr/local/lib/libgmock_main.a
+            )
+else (NOT APPLE)
+    set(GTEST_LIB
+            PUBLIC gtest
+            PUBLIC gmock)
+endif ()

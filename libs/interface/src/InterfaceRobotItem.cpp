@@ -45,8 +45,10 @@ void InterfaceRobotItem::triggerUpdate(const proto::State& state) {
             return itm.id() == this->id;
         });
 
+
         if (us == searchArea.end()) {
             this->setVisible(false);
+            return;
         } else {
             this->setVisible(true);
         }

@@ -7,11 +7,13 @@
 
 #include <chrono>
 #include <ctime>
+#include <string>
 
 /**
  * \author Rolf van der Hulst
  * \brief A class that represents a Time Duration. It measures all time points as durations from the clock's epoch (1970).
  * The system clock can be measured up to nanosecond precision.
+ * Also contains a few other time related utility functions.
  * \date August 19 2020
  */
 class Time {
@@ -40,6 +42,11 @@ class Time {
     bool operator<=(const Time &other) const;
     bool operator==(const Time &other) const;
     bool operator!=(const Time &other) const;
+
+    // Returns the current date separated by the given char. Eg: "2022-12-30"
+    static std::string getDate(char separator);
+    // Returns the current time separated by the given char. Eg: "24-59-06"
+    static std::string getTime(char separator);
 
    private:
     std::chrono::high_resolution_clock::duration timePoint;

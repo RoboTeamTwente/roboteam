@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <mutex>
 
 namespace rtt {
 
@@ -26,6 +27,7 @@ public:
 
 private:
     std::unique_ptr<std::ofstream> stream;
+    std::mutex streamMutex; // Guards the stream
 };
 
 class FailedToOpenFileException : public std::exception {

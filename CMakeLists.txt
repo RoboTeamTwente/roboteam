@@ -25,6 +25,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/RobotShape.cpp
         src/utils/RobotCommands.cpp
         src/utils/RobotFeedback.cpp
+        src/utils/FileLogger.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC

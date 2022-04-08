@@ -7,7 +7,9 @@ namespace rtt {
 
 /* A class that makes logging to a file easier and safer.
  * It handles opening and closing, writing and flushing.
- * Will append to previously written text in the file. */
+ * Will append to previously written text in the file.
+ * Throws FailedToOpenFileException if for example the
+ * given folder path of the file does not exist. */
 class FileLogger {
 public:
     // Will create and open the file you specify. Eg. "log/LOG.txt"
@@ -28,8 +30,8 @@ private:
 
 class FailedToOpenFileException : public std::exception {
 public:
-    FailedToOpenFileException(const std::string& message);
-    virtual const char *what() const noexcept;
+    explicit FailedToOpenFileException(const std::string& message);
+    [[nodiscard]] const char *what() const noexcept override;
 private:
     const std::string message;
 };

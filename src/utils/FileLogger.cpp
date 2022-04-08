@@ -6,10 +6,10 @@ namespace rtt {
 
 FileLogger::FileLogger(const std::string& path) {
     this->stream = std::make_unique<std::ofstream>(path.c_str(), std::ios_base::out | std::ios_base::app);
-    RTT_DEBUG("Logging to: '", path, "'")
     if (this->stream == nullptr || !this->stream->is_open()) {
-        throw std::runtime_error("Failed to open file log");
+        throw FailedToOpenFileException("Failed to open log file: '" + path + "'");
     }
+    RTT_DEBUG("Logging to: '", path, "'")
 }
 
 FileLogger::~FileLogger() {

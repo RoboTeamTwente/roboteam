@@ -44,7 +44,7 @@ class BasestationCollection {
     // Set a callback function to receive all messages from the two basestations of the teams
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback);
 
-    // Prints the current status of the collection directly to the console
+    // Returns the current status of the collection
     const BasestationCollectionStatus getStatus() const;
 
    private:

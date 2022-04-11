@@ -101,6 +101,48 @@
 #define PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION                0b10101010 // 170 
 #define PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION                2
 
+#define PACKET_TYPE_REM_GET_P_I_D_GAINS                              0b11000011 // 195 
+#define PACKET_SIZE_REM_GET_P_I_D_GAINS                              1
+
+#define PACKET_TYPE_REM_P_I_D_GAINS                                  0b11001100 // 204 
+#define PACKET_SIZE_REM_P_I_D_GAINS                                  26
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_X_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_X_MAX                    40.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_X_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_X_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_X_MAX                    20.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_X_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_X_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_X_MAX                    10.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_X_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_Y_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_Y_MAX                    40.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_Y_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_Y_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_Y_MAX                    20.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_Y_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_Y_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_Y_MAX                    10.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_Y_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_YAW_MIN                  0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_YAW_MAX                  40.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PBODY_YAW_N_BITS               16
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_YAW_MIN                  0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_YAW_MAX                  20.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IBODY_YAW_N_BITS               16
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_YAW_MIN                  0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_YAW_MAX                  10.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DBODY_YAW_N_BITS               16
+#define PACKET_RANGE_REM_P_I_D_GAINS__PWHEELS_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PWHEELS_MAX                    40.
+#define PACKET_RANGE_REM_P_I_D_GAINS__PWHEELS_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__IWHEELS_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IWHEELS_MAX                    20.
+#define PACKET_RANGE_REM_P_I_D_GAINS__IWHEELS_N_BITS                 16
+#define PACKET_RANGE_REM_P_I_D_GAINS__DWHEELS_MIN                    0.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DWHEELS_MAX                    10.
+#define PACKET_RANGE_REM_P_I_D_GAINS__DWHEELS_N_BITS                 16
+
 static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_REM_ROBOT_COMMAND                               ) return PACKET_SIZE_REM_ROBOT_COMMAND                               ;
     if(type == PACKET_TYPE_REM_ROBOT_FEEDBACK                              ) return PACKET_SIZE_REM_ROBOT_FEEDBACK                              ;
@@ -113,6 +155,8 @@ static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION               ) return PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION               ;
     if(type == PACKET_TYPE_REM_BASESTATION_CONFIGURATION                   ) return PACKET_SIZE_REM_BASESTATION_CONFIGURATION                   ;
     if(type == PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION               ) return PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION               ;
+    if(type == PACKET_TYPE_REM_GET_P_I_D_GAINS                             ) return PACKET_SIZE_REM_GET_P_I_D_GAINS                             ;
+    if(type == PACKET_TYPE_REM_P_I_D_GAINS                                 ) return PACKET_SIZE_REM_P_I_D_GAINS                                 ;
     return 0;
 }
 

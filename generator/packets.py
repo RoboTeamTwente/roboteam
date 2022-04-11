@@ -120,5 +120,27 @@ packets = {
         ["header",     8, None, "Header byte indicating the type of packet"],
         ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
         ["channel",    1, None, "Channel on which the basestation and robots communicate"]
+    ],
+
+    "REM_GetPIDGains" : [
+        ["header",     8, None, "Header byte indicating the type of packet"]
+    ],
+
+    "REM_PIDGains" : [
+        ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
+        ["id",                 4,  None, "Id of the robot"],
+        ["PbodyX",             16, [0.,40.], "Received P gain of the PID for body_x (x-direction)"],
+        ["IbodyX",             16, [0.,20.], "Received I gain of the PID for body_x (x-direction)"],
+        ["DbodyX",             16, [0.,10.], "Received D gain of the PID for body_x (x-direction)"],
+        ["PbodyY",             16, [0.,40.], "Received P gain of the PID for body_y (y-direction)"],
+        ["IbodyY",             16, [0.,20.], "Received I gain of the PID for body_y (y-direction)"],
+        ["DbodyY",             16, [0.,10.], "Received D gain of the PID for body_y (y-direction)"],
+        ["PbodyYaw",           16, [0.,40.], "Received P gain of the PID for body_yaw (Absolute angle)"],
+        ["IbodyYaw",           16, [0.,20.], "Received I gain of the PID for body_yaw (Absolute angle)"],
+        ["DbodyYaw",           16, [0.,10.], "Received D gain of the PID for body_yaw (Absolute angle)"],
+        ["Pwheels",            16, [0.,40.], "Received P gain of the PID for the wheels"],
+        ["Iwheels",            16, [0.,20.], "Received I gain of the PID for the wheels"],
+        ["Dwheels",            16, [0.,10.], "Received D gain of the PID for the wheels"]
     ]
 }

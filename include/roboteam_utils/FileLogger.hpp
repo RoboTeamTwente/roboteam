@@ -19,15 +19,15 @@ public:
     ~FileLogger();
 
     // Writes the line and appends with a newline character
-    void writeNewLine(const std::string& line);
+    void writeNewLine(const std::string& line) const;
     // Writes the given text to the file
-    void write(const std::string& text);
+    void write(const std::string& text) const;
     // Synchronizes the file with the internal buffer. Read: saves
-    bool flush();
+    bool flush() const;
 
 private:
     std::unique_ptr<std::ofstream> stream;
-    std::mutex streamMutex; // Guards the stream
+    mutable std::mutex streamMutex; // Guards the stream
 };
 
 class FailedToOpenFileException : public std::exception {

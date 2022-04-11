@@ -102,7 +102,7 @@
 #define PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION                2
 
 #define PACKET_TYPE_REM_GET_P_I_D_GAINS                              0b11000011 // 195 
-#define PACKET_SIZE_REM_GET_P_I_D_GAINS                              1
+#define PACKET_SIZE_REM_GET_P_I_D_GAINS                              2
 
 #define PACKET_TYPE_REM_P_I_D_GAINS                                  0b11001100 // 204 
 #define PACKET_SIZE_REM_P_I_D_GAINS                                  26

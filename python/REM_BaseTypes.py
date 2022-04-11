@@ -97,7 +97,7 @@ PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION                = 0b10101010 # 170
 PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION                = 2
 
 PACKET_TYPE_REM_GET_P_I_D_GAINS                              = 0b11000011 # 195 
-PACKET_SIZE_REM_GET_P_I_D_GAINS                              = 1
+PACKET_SIZE_REM_GET_P_I_D_GAINS                              = 2
 
 PACKET_TYPE_REM_P_I_D_GAINS                                  = 0b11001100 # 204 
 PACKET_SIZE_REM_P_I_D_GAINS                                  = 26

@@ -64,7 +64,7 @@ void to_json(nlohmann::json& j, const InterfaceValue& p) {
 
 void from_json(const nlohmann::json& j, InterfaceValue& p) {
     if (j.contains("int")) {
-        p.variant = j.at("int").get<int>();
+        p.variant = static_cast<int64_t>(j.at("int").get<int>());
     } else if (j.contains("bool")) {
         p.variant = j.at("bool").get<bool>();
     } else if (j.contains("float")) {

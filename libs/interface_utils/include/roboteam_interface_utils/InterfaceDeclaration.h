@@ -161,6 +161,9 @@ struct InterfaceDeclaration {
         lhs.isMutable == this->isMutable &&
         lhs.options == this->options;
     }
+    bool operator!=(const InterfaceDeclaration& lhs) const {
+        return !(this->operator==(lhs));
+    }
 };
 
 void from_json(const nlohmann::json& json, InterfaceDeclaration& declaration);

@@ -30,6 +30,9 @@ struct InterfaceValue {
     bool operator==(const InterfaceValue& lhs) const {
         return lhs.variant == this->variant;
     }
+    bool operator!=(const InterfaceValue& lhs) const {
+        return !(this->operator==(lhs));
+    }
 };
 void from_json(const nlohmann::json& j, InterfaceValue& p);
 void to_json(nlohmann::json& j, const InterfaceValue& p);

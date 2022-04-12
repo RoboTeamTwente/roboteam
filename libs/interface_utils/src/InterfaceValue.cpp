@@ -47,32 +47,4 @@ proto::UiValue InterfaceValue::toProto() const {
 
     return value;
 }
-
-void to_json(nlohmann::json& j, const InterfaceValue& p) {
-    if (auto* intVal = std::get_if<int64_t>(&p.variant)) {
-        j = nlohmann::json{"int", *intVal};
-    } else if (auto* boolVal = std::get_if<bool>(&p.variant)) {
-        j = nlohmann::json{"bool", *boolVal};
-    } else if (auto* floatVal = std::get_if<float>(&p.variant)) {
-        j = nlohmann::json{"float", *floatVal};
-    } else if (auto* stringVal = std::get_if<std::string>(&p.variant)) {
-        j = nlohmann::json{"string", *stringVal};
-    } else {
-        throw std::logic_error{"Invalid state of InterfaceValue during serialization!"};
-    }
-}
-
-void from_json(const nlohmann::json& j, InterfaceValue& p) {
-    if (j.contains("int")) {
-        p.variant = j.at("int").get<int>();
-    } else if (j.contains("bool")) {
-        p.variant = j.at("bool").get<bool>();
-    } else if (j.contains("float")) {
-        p.variant = j.at("float").get<float>();
-    } else if (j.contains("string")) {
-        p.variant = j.at("string").get<std::string>();
-    } else {
-        throw std::domain_error{"JSON representation of InterfaceValue contains unknown type of value!"};
-    }
-}
 }

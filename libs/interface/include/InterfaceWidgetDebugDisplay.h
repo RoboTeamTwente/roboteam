@@ -12,7 +12,7 @@
 namespace rtt::Interface {
     class InterfaceWidgetDebugDisplay: public QWidget {
     public:
-        InterfaceWidgetDebugDisplay(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, QWidget* = nullptr);
+        InterfaceWidgetDebugDisplay(std::weak_ptr<InterfaceControllerClient>, QWidget* = nullptr);
     private:
         std::weak_ptr<InterfaceControllerClient> ctrl;
         const MainWindow* window;

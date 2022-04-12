@@ -8,19 +8,19 @@
 void InterfaceRobotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     painter->save();
     painter->setRenderHint(QPainter::RenderHint::Antialiasing);
-    auto cPen = painter->pen();
-    auto brush = painter->brush();
     if (!isYellow) {
-        cPen.setColor(Qt::blue);
-        brush.setColor(Qt::blue);
+        painter->setPen(Qt::blue);
+        painter->setBrush(Qt::blue);
     } else {
-        cPen.setColor(Qt::yellow);
-        brush.setColor(Qt::yellow);
+        painter->setPen(Qt::yellow);
+        painter->setBrush(Qt::yellow);
     }
 
-    painter->setBrush(brush);
-    painter->setPen(cPen);
     painter->drawEllipse(QPoint{20, 20}, 20, 20);
+
+    painter->setPen(QPen(Qt::red, 3));
+    painter->setBrush(Qt::red);
+    painter->drawLine(20, 20, 40, 20);
     painter->restore();
 }
 
@@ -57,6 +57,11 @@ void InterfaceRobotItem::triggerUpdate(const proto::State& state) {
 
         double x = this->scene()->views()[0]->viewport()->width()/2 + (scale * us->pos().x() * 1000) - 20;
         double y = this->scene()->views()[0]->viewport()->height()/2 + (scale * us->pos().y() * 1000) - 20;
+
+        this->setTransformOriginPoint(QPoint(20 ,20));
+
+        this->setRotation((us->angle()/M_PI) * 180);
+        this->setScale((20 * scale * 4)/20);
 
         this->setPos(x, y);
 

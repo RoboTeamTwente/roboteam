@@ -14,7 +14,7 @@ namespace rtt::Interface {
     class InterfaceSyncedRadio: public QButtonGroup {
         Q_OBJECT
     public:
-        InterfaceSyncedRadio(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
+        InterfaceSyncedRadio(std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     private:
         std::string identity;
         int dpi;
@@ -23,8 +23,8 @@ namespace rtt::Interface {
 
         void updateProps(const InterfaceDeclaration&);
     protected slots:
-        void updateDeclaration(std::weak_ptr<InterfaceDeclarations>);
-        void updateValue(std::weak_ptr<InterfaceSettings>);
+        void updateDeclaration();
+        void updateValue();
 
         void notifyChangedValue(int id, bool enabled);
 

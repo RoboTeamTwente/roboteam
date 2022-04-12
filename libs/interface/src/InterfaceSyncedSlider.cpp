@@ -5,9 +5,9 @@
 #include "InterfaceSyncedSlider.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedSlider::InterfaceSyncedSlider(const MainWindow* window, std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): QSlider(parent), identity(ident){
-        QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedSlider::updateDeclaration);
-        QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedSlider::updateValue);
+    InterfaceSyncedSlider::InterfaceSyncedSlider(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): QSlider(parent), identity(ident){
+        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateDeclaration);
+        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateValue);
 
         QObject::connect(this, &InterfaceSyncedSlider::valueChanged, this, &InterfaceSyncedSlider::notifyChangedValue);
 
@@ -17,7 +17,9 @@ namespace rtt::Interface {
         this->ctrl = ctrl;
     }
 
-    void InterfaceSyncedSlider::updateValue(std::weak_ptr<InterfaceSettings> valuesPtr) {
+    void InterfaceSyncedSlider::updateValue() {
+        auto ctrlValid = this->ctrl.lock();
+        auto valuesPtr = ctrlValid.get()->getValues();
         if (auto settings = valuesPtr.lock()) {
 
             auto newValue = settings->getSetting(this->identity);
@@ -35,8 +37,9 @@ namespace rtt::Interface {
         }
     }
 
-    void InterfaceSyncedSlider::updateDeclaration(std::weak_ptr<InterfaceDeclarations> declPtr) {
-        auto allDecls = declPtr.lock();
+    void InterfaceSyncedSlider::updateDeclaration() {
+        auto ctrlValid = this->ctrl.lock();
+        auto allDecls = ctrlValid.get()->getDeclarations().lock();
 
         if (!allDecls) return;
 

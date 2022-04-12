@@ -9,7 +9,7 @@
 
 InterfaceFieldScene::InterfaceFieldScene(std::weak_ptr<InterfaceFieldStateStore> state, QObject* parent): QGraphicsScene(parent), state(state), ball(new InterfaceBallItem()) {
     this->timer = new QTimer(this);
-
+// TODO: Centralize timer
     this->addItem(this->ball);
 
     QObject::connect(timer, &QTimer::timeout, this, &InterfaceFieldScene::triggerUpdate);

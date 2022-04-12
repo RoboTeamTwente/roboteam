@@ -25,35 +25,7 @@ int main(int argc, char *argv[]) {
 
     auto ctrl = std::make_shared<rtt::Interface::InterfaceControllerClient>();
     ctrl->run();
-    ctrl->getValues().lock()->setSetting("IS_YELLOW", false);
-
-    proto::State state;
-
-    for (int i = 0; i < 6; i++) {
-        proto::WorldRobot robot;
-        robot.set_id(i);
-        robot.set_angle(1.0);
-        robot.set_angle(69.0);
-        robot.mutable_pos()->set_x(0.0);
-        robot.mutable_pos()->set_y(0.0);
-
-        robot.mutable_vel()->set_x(0.0);
-        robot.mutable_vel()->set_y(0.0);
-
-        state.mutable_ball_camera_world()->mutable_blue()->Add(std::move(robot));
-    }
-
-
-    ctrl->getFieldState().lock()->setState(state);
-    rtt::Interface::InterfaceDeclaration decl;
-    decl.path = "AAAA_DEBUG";
-    decl.description = "TEST";
-    decl.isMutable = true;
-    decl.defaultValue = 50.0f;
-    decl.options = rtt::Interface::InterfaceSlider("AAA", 0, 100, 1, 1);
-    ctrl->getDeclarations().lock()->addDeclaration(decl);
-
-    ctrl->getValues().lock()->setSetting("AAAA_DEBUG", 50.0f);
+    ctrl->getValues().lock()->setSetting("IS_YELLOW", true);
 
     auto view = new InterfaceFieldView(ctrl->getFieldState());
     view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -63,7 +35,7 @@ int main(int argc, char *argv[]) {
     view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     auto fieldLayout = new QHBoxLayout;
 
-    fieldLayout->addWidget(view, 3);
+    fieldLayout->addWidget(view, 4);
 
     auto fieldWidget = new QWidget;
     fieldWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -77,13 +49,13 @@ int main(int argc, char *argv[]) {
     QGridLayout layout;
     QScrollArea *scroll = new QScrollArea;
     scroll->setWidgetResizable(true);
-    scroll->setWidget(new rtt::Interface::InterfaceWidgetRobotOverview(&window, ctrl));
+    scroll->setWidget(new rtt::Interface::InterfaceWidgetRobotOverview(ctrl));
 
-    auto team_button = new rtt::Interface::InterfaceSyncedCheckableButton(&window, ctrl, "IS_YELLOW");
+    auto team_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "IS_YELLOW");
     team_button->setText("Is Yellow");
-    auto invariants_button = new rtt::Interface::InterfaceSyncedCheckableButton(&window, ctrl, "IGNORE_INVARIANTS");
+    auto invariants_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "IGNORE_INVARIANTS");
     invariants_button->setText("Ignore Invariants");
-    auto right_button = new rtt::Interface::InterfaceSyncedCheckableButton(&window, ctrl, "IS_RIGHT");
+    auto right_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "IS_RIGHT");
     right_button->setText("Play Right");
     auto ctrlLaytout = new QVBoxLayout;
     ctrlLaytout->setAlignment(Qt::AlignRight);
@@ -92,14 +64,17 @@ int main(int argc, char *argv[]) {
     ctrlLaytout->addWidget(right_button);
     ctrlLaytout->addWidget(invariants_button);
 
+
+
 //    auto debug = new rtt::Interface::InterfaceWidgetDebugDisplay(&window, ctrl);
 //    layout.addWidget(debug, 1, 2, 2, 2);
     auto leftLayout = new QVBoxLayout;
     leftLayout->addWidget(fieldWidget, 3);
     leftLayout->addLayout(ctrlLaytout, 1);
+    leftLayout->addWidget(new rtt::Interface::InterfaceWidgetStopButton(ctrl), 5);
     auto topLayout = new QHBoxLayout;
     topLayout->addLayout(leftLayout, 5);
-    topLayout->addWidget(scroll, 3);
+    topLayout->addWidget(scroll, 5);
 
     layout.addLayout(topLayout, 0, 0);
 
@@ -111,10 +86,6 @@ int main(int argc, char *argv[]) {
     window.setCentralWidget(intWidget);
     window.show();
     window.setWindowTitle("RBTT (Interface)");
-
-    emit window.valuesChanged(ctrl->getValues().lock());
-    emit window.declarationsChanged(ctrl->getDeclarations().lock());
-    emit window.valuesChanged(ctrl->getValues().lock());
 
 
     auto retval = roboteam_interface.exec();

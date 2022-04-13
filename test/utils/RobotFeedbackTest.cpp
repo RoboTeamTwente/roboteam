@@ -1,46 +1,32 @@
 #include <gtest/gtest.h>
 #include <roboteam_utils/RobotFeedback.hpp>
-
-#include <random>
+#include <roboteam_utils/Random.h>
 
 using namespace rtt;
 
-float randomFloat(float low, float high) {
-    std::uniform_real_distribution<float> distribution(low, high);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
-int randomInt(int low, int high) {
-    std::uniform_int_distribution distribution(low, high);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
-bool randomBool() {
-    std::uniform_int_distribution distribution(0, 1);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
 RobotFeedbackSource randomFeedbackSource() {
-    return randomBool() ? RobotFeedbackSource::SIMULATOR : RobotFeedbackSource::BASESTATION;
+    std::vector<RobotFeedbackSource> allSources = {RobotFeedbackSource::SIMULATOR, RobotFeedbackSource::BASESTATION};
+    return *SimpleRandom::getRandomElement(allSources.begin(), allSources.end());
 }
 Team randomTeam() {
-    return randomBool() ? Team::YELLOW : Team::BLUE;
+    std::vector<Team> allTeams = {Team::YELLOW, Team::BLUE};
+    return *SimpleRandom::getRandomElement(allTeams.begin(), allTeams.end());
 }
 
 RobotFeedback randomFeedback() {
     RobotFeedback feedback = {
-        .id = randomInt(0, 15),
-        .hasBall = randomBool(),
-        .ballPosition = randomFloat(-0.5, 0.5),
-        .ballSensorIsWorking = randomBool(),
-        .velocity = Vector2(randomFloat(-10.0, 10.0), randomFloat(-10.0, 10.0)),
-        .angle = Angle(randomFloat(-M_PI, M_PI)),
-        .xSensIsCalibrated = randomBool(),
-        .capacitorIsCharged = randomBool(),
-        .wheelLocked = randomInt(0, 15),
-        .wheelBraking = randomInt(0, 15),
-        .batteryLevel = randomFloat(18.0f, 26.0f),
-        .signalStrength = randomInt(0, 255)
+        .id = SimpleRandom::getInt(0, 15),
+        .hasBall = SimpleRandom::getBool(),
+        .ballPosition = static_cast<float>(SimpleRandom::getDouble(-0.5, 0.5)),
+        .ballSensorIsWorking = SimpleRandom::getBool(),
+        .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+        .angle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
+        .xSensIsCalibrated = SimpleRandom::getBool(),
+        .capacitorIsCharged = SimpleRandom::getBool(),
+        .wheelLocked = SimpleRandom::getInt(0, 15),
+        .wheelBraking = SimpleRandom::getInt(0, 15),
+        .batteryLevel = static_cast<float>(SimpleRandom::getDouble(18.0f, 26.0f)),
+        .signalStrength = SimpleRandom::getInt(0, 255)
     };
     return feedback;
 }

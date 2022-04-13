@@ -29,6 +29,9 @@ struct InterfaceValue {
     bool operator==(const InterfaceValue& lhs) const {
         return lhs.variant == this->variant;
     }
+    bool operator!=(const InterfaceValue& lhs) const {
+        return !(this->operator==(lhs));
+    }
 };
 }  // namespace rbtt::Interface
 

@@ -150,7 +150,7 @@ TEST(Random, simpleBool) {
 TEST(Random, simpleRandElementEmpty) {
     std::vector<int> empty = {};
     auto randEmptyElement = SimpleRandom::getRandomElement(empty.begin(), empty.end());
-    EXPECT_EQ(randEmptyElement, empty.begin());
+    EXPECT_EQ(randEmptyElement, empty.end());
 }
 
 TEST(Random, simpleRandElementSelection) {

@@ -5,7 +5,6 @@
 #include "InterfaceDeclaration.h"
 #include "InterfaceValue.h"
 #include <roboteam_utils/Print.h>
-#include <nlohmann/json.hpp>
 #include <exception>
 
 namespace rtt::Interface {
@@ -34,50 +33,6 @@ InterfaceDeclaration::InterfaceDeclaration(const proto::UiOptionDeclaration& dec
         case proto::UiOptionDeclaration::UiElementsCase::UI_ELEMENTS_NOT_SET:
         default:
             throw std::logic_error{"Unknown variant type when initialising InterfaceDeclaration!"};
-    }
-}
-
-void to_json(nlohmann::json& j, const InterfaceDeclaration& declaration) {
-    nlohmann::json tmpJson =
-        nlohmann::json{{"path", declaration.path}, {"description", declaration.description}, {"isMutable", declaration.isMutable}, {"defaultValue", declaration.defaultValue}};
-
-    if (const auto* slider = std::get_if<InterfaceSlider>(&declaration.options)) {
-        tmpJson["slider"] = *slider;
-    } else if (const auto* checkbox = std::get_if<InterfaceCheckbox>(&declaration.options)) {
-        tmpJson["checkbox"] = *checkbox;
-    } else if (const auto* dropdown = std::get_if<InterfaceDropdown>(&declaration.options)) {
-        tmpJson["dropdown"] = *dropdown;
-    } else if (const auto* radio = std::get_if<InterfaceRadio>(&declaration.options)) {
-        tmpJson["radio"] = *radio;
-    } else if (const auto* text = std::get_if<InterfaceText>(&declaration.options)) {
-        tmpJson["text"] = *text;
-    } else {
-        throw std::logic_error{"Variant was in an invalid state when serialising InterfaceDeclaration to JSON!"};
-    }
-
-    j = tmpJson;
-}
-
-void from_json(const nlohmann::json& json, InterfaceDeclaration& declaration) {
-    json.at("path").get_to(declaration.path);
-    json.at("description").get_to(declaration.description);
-
-    json.at("isMutable").get_to(declaration.isMutable);
-    json.at("defaultValue").get_to(declaration.defaultValue);
-
-    //    TODO: Replace keys with constants
-    if (json.contains("slider")) {
-        declaration.options = json.at("slider").get<Interface::InterfaceSlider>();
-    } else if (json.contains("checkbox")) {
-        declaration.options = json.at("checkbox").get<InterfaceCheckbox>();
-    } else if (json.contains("dropdown")) {
-        declaration.options = json.at("dropdown").get<InterfaceDropdown>();
-    } else if (json.contains("radio")) {
-        declaration.options = json.at("radio").get<InterfaceRadio>();
-    } else if (json.contains("text")) {
-        declaration.options = json.at("text").get<InterfaceText>();
-    } else {
-        throw std::domain_error{"Unknown type encountered when deserializing InterfaceDeclaration from JSON!"};
     }
 }
 

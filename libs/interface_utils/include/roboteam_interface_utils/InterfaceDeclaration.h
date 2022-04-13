@@ -7,7 +7,6 @@
 #include <variant>
 #include "InterfaceValue.h"
 #include <proto/UiOptions.pb.h>
-#include <nlohmann/json.hpp>
 
 namespace rtt::Interface {
 struct InterfaceSlider {
@@ -40,8 +39,6 @@ struct InterfaceSlider {
         lhs.interval == this->interval &&
             lhs.dpi == this->dpi;
     }
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceSlider, text, min, max, interval, dpi);
 };
 
 struct InterfaceCheckbox {
@@ -62,8 +59,6 @@ struct InterfaceCheckbox {
     bool operator==(const InterfaceCheckbox& lhs) const {
         return lhs.text == this->text;
     }
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceCheckbox, text);
 };
 
 struct InterfaceDropdown {
@@ -88,8 +83,6 @@ struct InterfaceDropdown {
         lhs.options == this->options;
     }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceDropdown, text, options);
-
 };
 
 struct InterfaceRadio {
@@ -110,7 +103,6 @@ struct InterfaceRadio {
         return lhs.options == this->options;
     }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceRadio, options);
 };
 
 struct InterfaceText {
@@ -131,8 +123,6 @@ struct InterfaceText {
     bool operator==(const InterfaceText& lhs) const {
         return lhs.text == this->text;
     }
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(InterfaceText, text);
 };
 
 typedef std::variant<std::monostate, InterfaceSlider, InterfaceCheckbox, InterfaceDropdown, InterfaceRadio, InterfaceText> InterfaceOptions;
@@ -165,9 +155,6 @@ struct InterfaceDeclaration {
         return !(this->operator==(lhs));
     }
 };
-
-void from_json(const nlohmann::json& json, InterfaceDeclaration& declaration);
-void to_json(nlohmann::json& j, const InterfaceDeclaration& declaration);
 
 }  // namespace rbtt::Interface
 

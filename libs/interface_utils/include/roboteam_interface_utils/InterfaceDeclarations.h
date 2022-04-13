@@ -7,7 +7,6 @@
 
 #include <proto/UiOptions.pb.h>
 
-#include <nlohmann/json.hpp>
 #include <utility>
 #include <optional>
 

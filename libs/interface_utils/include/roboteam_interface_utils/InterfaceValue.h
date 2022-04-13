@@ -9,7 +9,6 @@
 #include <variant>
 #include <iostream>
 #include <proto/UiOptions.pb.h>
-#include <nlohmann/json.hpp>
 #include <exception>
 
 namespace rtt::Interface {
@@ -34,9 +33,6 @@ struct InterfaceValue {
         return !(this->operator==(lhs));
     }
 };
-void from_json(const nlohmann::json& j, InterfaceValue& p);
-void to_json(nlohmann::json& j, const InterfaceValue& p);
-
 }  // namespace rbtt::Interface
 
 #endif  // RTT_INTERFACEVALUE_H

@@ -17,3 +17,6 @@
 [submodule "roboteam_networking"]
 	path = roboteam_networking
 	url = git@github.com:RoboTeamTwente/roboteam_networking.git
+[submodule "roboteam_interface"]
+	path = roboteam_interface
+	url = git@github.com:RoboTeamTwente/roboteam_interface.git

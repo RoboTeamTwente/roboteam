@@ -6,7 +6,6 @@
 #include "FT812Q_Drawing.h"
 
 #include "REM_BaseTypes.h"
-#include "REM_BasestationStatistics.h"
 #include "REM_BasestationConfiguration.h"
 #include "REM_BasestationSetConfiguration.h"
 #include "REM_RobotCommand.h"
@@ -39,7 +38,6 @@ char logBuffer[100];
 uint8_t sendBuffer[MAX_PACKET_SIZE];
 
 /* Flags */
-volatile bool flagHandleStatistics = false;
 volatile bool flagHandleConfiguration = false;
 
 // screenCounter acts as a timer for updating the screen
@@ -114,12 +112,6 @@ void loop(){
       HexOut(buffer_RobotStateInfo[id].packet.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO);
       buffer_RobotStateInfo[id].isNewPacket = false;
     }
-  }
-
-  // TODO needs to be updated to the latest roboteam_embedded_messages version. Disabled for now.
-  if(flagHandleStatistics){
-    // handleStatistics();
-    flagHandleStatistics = false;
   }
 
   if (flagHandleConfiguration) {
@@ -325,15 +317,6 @@ void handleBasestationSetConfiguration(uint8_t* packet_buffer){
   SX1280_updateChannel(newChannel);
 }
 
-/**
- * @brief Handles sending basestation statistics over USB.
- * Meant to sent all counters from buffer_RobotCommand and buffer_RobotFeedback to the PC.
- * TODO needs to be updated with the latest version of roboteam_embedded_messages. Currently disabled
- */
-void handleStatistics(){
-  return;
-}
-
 
 
 /**
@@ -368,11 +351,6 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
       case PACKET_TYPE_REM_ROBOT_FEEDBACK:
         handleRobotFeedback(packet_buffer + bytes_processed);
         bytes_processed += PACKET_SIZE_REM_ROBOT_FEEDBACK;
-        break;
-      
-      case PACKET_TYPE_REM_BASESTATION_GET_STATISTICS:
-        bytes_processed += PACKET_SIZE_REM_BASESTATION_GET_STATISTICS;
-        // flagHandleStatistics = true;  
         break;
       
       case PACKET_TYPE_REM_ROBOT_BUZZER:

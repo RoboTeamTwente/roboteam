@@ -80,17 +80,6 @@ while True:
 				print(f"{total_bytes_received} {bytes_received} [LOG] {line}", end="")
 				continue
 
-			if packetType == rem.lib.PACKET_TYPE_REM_BASESTATION_STATISTICS:
-				print("[Statistics]")
-				packet = packet_type + connection.read(rem.lib.PACKET_SIZE_REM_BASESTATION_STATISTICS - 1)
-				print(type(packet), len(packet), packet[1], packet[2], packet[3], packet[4])
-				# payload = rem.ffi.new("RobotCommandPayload*")
-				# payload.payload = packet
-
-				# cmd = rem.ffi.new("RobotCommand*")
-				# rem.lib.decodeRobotCommand(cmd, payload)
-				# printPacket(cmd)
-
 	except serial.SerialException as se:
 		print("SerialException", se)
 		connection = None

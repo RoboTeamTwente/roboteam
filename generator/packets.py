@@ -83,13 +83,13 @@ packets = {
         ["channel",    1, None, "Channel on which the basestation and robots communicate"]
     ],
 
-    "REM_GetPIDGains" : [
+    "REM_RobotGetPIDGains" : [
         ["header",     8, None, "Header byte indicating the type of packet"],
         ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
         ["id",         4, None, "Id of the robot"]
     ],
 
-    "REM_PIDGains" : [
+    "REM_RobotPIDGains" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
         ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
         ["id",                 4,  None, "Id of the robot"],

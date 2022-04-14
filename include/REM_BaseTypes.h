@@ -95,47 +95,47 @@
 #define PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION                0b10011001 // 153 
 #define PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION                2
 
-#define PACKET_TYPE_REM_GET_PIDGAINS                                 0b10100101 // 165 
-#define PACKET_SIZE_REM_GET_PIDGAINS                                 2
+#define PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                           0b10100101 // 165 
+#define PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                           2
 
-#define PACKET_TYPE_REM_PIDGAINS                                     0b10101010 // 170 
-#define PACKET_SIZE_REM_PIDGAINS                                     26
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_X_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_X_MAX                        40.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_X_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_X_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_X_MAX                        20.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_X_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_X_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_X_MAX                        10.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_X_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_Y_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_Y_MAX                        40.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_Y_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_Y_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_Y_MAX                        20.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_Y_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_Y_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_Y_MAX                        10.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_Y_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_YAW_MIN                      0.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_YAW_MAX                      40.
-#define PACKET_RANGE_REM_PIDGAINS_PBODY_YAW_N_BITS                   16
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_YAW_MIN                      0.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_YAW_MAX                      20.
-#define PACKET_RANGE_REM_PIDGAINS_IBODY_YAW_N_BITS                   16
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_YAW_MIN                      0.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_YAW_MAX                      10.
-#define PACKET_RANGE_REM_PIDGAINS_DBODY_YAW_N_BITS                   16
-#define PACKET_RANGE_REM_PIDGAINS_PWHEELS_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_PWHEELS_MAX                        40.
-#define PACKET_RANGE_REM_PIDGAINS_PWHEELS_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_IWHEELS_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_IWHEELS_MAX                        20.
-#define PACKET_RANGE_REM_PIDGAINS_IWHEELS_N_BITS                     16
-#define PACKET_RANGE_REM_PIDGAINS_DWHEELS_MIN                        0.
-#define PACKET_RANGE_REM_PIDGAINS_DWHEELS_MAX                        10.
-#define PACKET_RANGE_REM_PIDGAINS_DWHEELS_N_BITS                     16
+#define PACKET_TYPE_REM_ROBOT_PIDGAINS                               0b10101010 // 170 
+#define PACKET_SIZE_REM_ROBOT_PIDGAINS                               26
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_X_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_X_MAX                  40.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_X_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_X_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_X_MAX                  20.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_X_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_X_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_X_MAX                  10.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_X_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_Y_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_Y_MAX                  40.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_Y_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_Y_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_Y_MAX                  20.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_Y_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_Y_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_Y_MAX                  10.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_Y_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_YAW_MIN                0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_YAW_MAX                40.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PBODY_YAW_N_BITS             16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_YAW_MIN                0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_YAW_MAX                20.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IBODY_YAW_N_BITS             16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_YAW_MIN                0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_YAW_MAX                10.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DBODY_YAW_N_BITS             16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PWHEELS_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PWHEELS_MAX                  40.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_PWHEELS_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IWHEELS_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IWHEELS_MAX                  20.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_IWHEELS_N_BITS               16
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_MIN                  0.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_MAX                  10.
+#define PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_N_BITS               16
 
 #define PACKET_TYPE_REM_SX1280FILLER                                 0b11000011 // 195 
 #define PACKET_SIZE_REM_SX1280FILLER                                 6
@@ -150,8 +150,8 @@ static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION               ) return PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION               ;
     if(type == PACKET_TYPE_REM_BASESTATION_CONFIGURATION                   ) return PACKET_SIZE_REM_BASESTATION_CONFIGURATION                   ;
     if(type == PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION               ) return PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION               ;
-    if(type == PACKET_TYPE_REM_GET_PIDGAINS                                ) return PACKET_SIZE_REM_GET_PIDGAINS                                ;
-    if(type == PACKET_TYPE_REM_PIDGAINS                                    ) return PACKET_SIZE_REM_PIDGAINS                                    ;
+    if(type == PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                          ) return PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                          ;
+    if(type == PACKET_TYPE_REM_ROBOT_PIDGAINS                              ) return PACKET_SIZE_REM_ROBOT_PIDGAINS                              ;
     if(type == PACKET_TYPE_REM_SX1280FILLER                                ) return PACKET_SIZE_REM_SX1280FILLER                                ;
     return 0;
 }

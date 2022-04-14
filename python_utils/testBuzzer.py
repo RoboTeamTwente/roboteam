@@ -10,11 +10,11 @@ import multiprocessing
 import getch
 import sys
 
-import roboteam_embedded_messages.python.BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.RobotBuzzer import RobotBuzzer
+import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer
 
 basestation = None
-buzzPacket = RobotBuzzer()
+buzzPacket = REM_RobotBuzzer()
 
 lastWritten = time.time()
 packetHz = 60

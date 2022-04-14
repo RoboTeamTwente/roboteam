@@ -202,7 +202,7 @@ class REM_PIDGains:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_P_I_D_GAINS, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_PIDGAINS, dtype=np.uint8)
         REM_PIDGains.set_header              (payload, self.header)
         REM_PIDGains.set_remVersion          (payload, self.remVersion)
         REM_PIDGains.set_id                  (payload, self.id)

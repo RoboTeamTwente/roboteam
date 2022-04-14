@@ -11,12 +11,17 @@ def upperFirst(word):
 # RobotCommand => rc
 def CamelCaseToAbbrev(word):
 	return ''.join([letter for letter in word if letter.isupper()]).lower()
-# REM_RobotCommand => _REM_ROBOT_COMMAND
+# REM_RobotCommand => REM_ROBOT_COMMAND
 def CamelCaseToUpper(word):
-	if (word.startswith("REM_")):
-		word = "Rem" + word[4:]
 
-	return ''.join(['_'*char.isupper() + char.upper() for char in word])
+	# Find all indices where a lowercase letter is followed by an uppercase letter
+	indices = [ i for i in range(1, len(word)) if word[i-1].islower() and word[i].isupper() ]
+	# Insert a _ at all of those indices
+	for i in reversed(indices):	word = word[:i] + "_" +  word[i:]
+	# Uppercase word
+	word = word.upper()
+
+	return word
 
 def stripBrackets(string):
 	while string[0] == "(" and string[-1] == ")":
@@ -345,7 +350,7 @@ class C_Generator(Generator):
 	# } RobotCommandPayload;
 	def to_payload_instance(self, packet_name, variables):
 		string_struct  = f"typedef struct _{packet_name}Payload {{\n"
-		string_struct += f"    uint8_t payload[PACKET_SIZE{CamelCaseToUpper(packet_name)}];\n"
+		string_struct += f"    uint8_t payload[PACKET_SIZE_{CamelCaseToUpper(packet_name)}];\n"
 		string_struct += f"}} {packet_name}Payload;"
 		return string_struct
 
@@ -403,7 +408,7 @@ class C_Generator(Generator):
 
 	# RobotCommand => __ROBOT_COMMAND_H
 	def to_header_guard(self, packet_name):
-		return "_%s_H" % CamelCaseToUpper(packet_name)
+		return f"__{CamelCaseToUpper(packet_name)}_H"
 
 class Python_Generator(Generator):
 
@@ -477,7 +482,7 @@ class Python_Generator(Generator):
 
 	def to_encode(self, packet_name, variables):
 		function_string =  f"    def encode(self):\n"
-		function_string += f"        payload = np.zeros(REM_BaseTypes.PACKET_SIZE{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
+		function_string += f"        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
 		for variable, n_bits, _, _ in variables:
 			function_string += f"        {packet_name}.set_{variable:<20}(payload, self.{variable})\n"
 		function_string += "        return payload\n"

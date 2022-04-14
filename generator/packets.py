@@ -60,45 +60,6 @@ packets = {
     	["duration",           16, [0., 5.], "Duration of the sound"]
     ],
 
-    "REM_BasestationStatistics" : [
-        ["header",     8, None, "Header byte indicating the type of packet"],
-        ["remVersion", 4,  None, "Version of roboteam_embedded_messages"],
-        ["bot0_sent",  8, None, "Packets sent to robot with ID 0"],
-        ["bot0_rcvd",  8, None, "Packets received from robot with ID 0"],
-        ["bot1_sent",  8, None, "Packets sent to robot with ID 1"],
-        ["bot1_rcvd",  8, None, "Packets received from robot with ID 1"],
-        ["bot2_sent",  8, None, "Packets sent to robot with ID 2"],
-        ["bot2_rcvd",  8, None, "Packets received from robot with ID 2"],
-        ["bot3_sent",  8, None, "Packets sent to robot with ID 3"],
-        ["bot3_rcvd",  8, None, "Packets received from robot with ID 3"],
-        ["bot4_sent",  8, None, "Packets sent to robot with ID 4"],
-        ["bot4_rcvd",  8, None, "Packets received from robot with ID 4"],
-        ["bot5_sent",  8, None, "Packets sent to robot with ID 5"],
-        ["bot5_rcvd",  8, None, "Packets received from robot with ID 5"],
-        ["bot6_sent",  8, None, "Packets sent to robot with ID 6"],
-        ["bot6_rcvd",  8, None, "Packets received from robot with ID 6"],
-        ["bot7_sent",  8, None, "Packets sent to robot with ID 7"],
-        ["bot7_rcvd",  8, None, "Packets received from robot with ID 7"],
-        ["bot8_sent",  8, None, "Packets sent to robot with ID 8"],
-        ["bot8_rcvd",  8, None, "Packets received from robot with ID 8"],
-        ["bot9_sent",  8, None, "Packets sent to robot with ID 9"],
-        ["bot9_rcvd",  8, None, "Packets received from robot with ID 9"],
-        ["bot10_sent", 8, None, "Packets sent to robot with ID 10"],
-        ["bot10_rcvd", 8, None, "Packets received from robot with ID 10"],
-        ["bot11_sent", 8, None, "Packets sent to robot with ID 11"],
-        ["bot11_rcvd", 8, None, "Packets received from robot with ID 11"],
-        ["bot12_sent", 8, None, "Packets sent to robot with ID 12"],
-        ["bot12_rcvd", 8, None, "Packets received from robot with ID 12"],
-        ["bot13_sent", 8, None, "Packets sent to robot with ID 13"],
-        ["bot13_rcvd", 8, None, "Packets received from robot with ID 13"],
-        ["bot14_sent", 8, None, "Packets sent to robot with ID 14"],
-        ["bot14_rcvd", 8, None, "Packets received from robot with ID 14"],
-        ["bot15_sent", 8, None, "Packets sent to robot with ID 15"],
-        ["bot15_rcvd", 8, None, "Packets received from robot with ID 15"],
-    ],
-    "REM_BasestationGetStatistics" : [
-        ["header",     8, None, "Header byte indicating the type of packet"]
-    ],
     "REM_BasestationLog" : [
         ["header",     8, None, "Header byte indicating the type of packet"]
     ],
@@ -148,10 +109,10 @@ packets = {
 
     # https://media.digikey.com/pdf/Data%20Sheets/Semtech%20PDFs/SX1280-81_Rev3.2_Mar2020.pdf see page 124. 
     # Minimum payload length is 6 bytes
-    "REM_SX1280_FILLER" : [
+    "REM_SX1280Filler" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],
         ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
-        ["more bits",         36,  None, "extra bits, very important"]
+        ["fillerBits",         36,  None, "SX1280 requires a minimum of 6 bytes payload. See documentation page 124."]
     ]
 
 }

@@ -18,15 +18,15 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 Dwheels
 */
 
-#ifndef __REM_P_I_D_GAINS_H
-#define __REM_P_I_D_GAINS_H
+#ifndef __REM_PIDGAINS_H
+#define __REM_PIDGAINS_H
 
 #include <stdbool.h>
 #include <stdint.h>
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_PIDGainsPayload {
-    uint8_t payload[PACKET_SIZE_REM_P_I_D_GAINS];
+    uint8_t payload[PACKET_SIZE_REM_PIDGAINS];
 } REM_PIDGainsPayload;
 
 typedef struct _REM_PIDGains {
@@ -243,4 +243,4 @@ static inline void decodeREM_PIDGains(REM_PIDGains *rempidg, REM_PIDGainsPayload
     rempidg->Dwheels     = REM_PIDGains_get_Dwheels(rempidgp);
 }
 
-#endif /*__REM_P_I_D_GAINS_H*/
+#endif /*__REM_PIDGAINS_H*/

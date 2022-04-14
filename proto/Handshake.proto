@@ -4,11 +4,9 @@ package proto;
 
 import "UiOptions.proto";
 
+// A message which contains either a list of declarations or a list of values for a single module.
 message Handshake {
-    string name = 1;
-    repeated UiOption options = 2;
-}
-
-message HandshakeAccumulation {
-    repeated Handshake handshakes = 1;
+    string module_name = 1;
+    UiOptionDeclarations declarations = 2;
+    UiValues values = 3;
 }

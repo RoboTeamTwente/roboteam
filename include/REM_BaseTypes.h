@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-#define LOCAL_REM_VERSION 6
+#define LOCAL_REM_VERSION 7
 
 #define PACKET_TYPE_REM_ROBOT_COMMAND                                0b00001111 // 15 
 #define PACKET_SIZE_REM_ROBOT_COMMAND                                12
@@ -102,7 +102,7 @@
 #define PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION                2
 
 #define PACKET_TYPE_REM_GET_P_I_D_GAINS                              0b11000011 // 195 
-#define PACKET_SIZE_REM_GET_P_I_D_GAINS                              1
+#define PACKET_SIZE_REM_GET_P_I_D_GAINS                              5
 
 #define PACKET_TYPE_REM_P_I_D_GAINS                                  0b11001100 // 204 
 #define PACKET_SIZE_REM_P_I_D_GAINS                                  26

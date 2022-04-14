@@ -123,7 +123,12 @@ packets = {
     ],
 
     "REM_GetPIDGains" : [
-        ["header",     8, None, "Header byte indicating the type of packet"]
+        ["header",     8, None, "Header byte indicating the type of packet"],
+        ["remVersion", 4, None, "Version of roboteam_embedded_messages"],
+        ["id",         4, None, "Id of the robot"],
+        ["some",       8, None, "Id of the robot"],
+        ["other",      8, None, "Id of the robot"],
+        ["stuff",      8, None, "Id of the robot"]
     ],
 
     "REM_PIDGains" : [

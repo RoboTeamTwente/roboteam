@@ -142,5 +142,14 @@ packets = {
         ["Pwheels",            16, [0.,40.], "Received P gain of the PID for the wheels"],
         ["Iwheels",            16, [0.,20.], "Received I gain of the PID for the wheels"],
         ["Dwheels",            16, [0.,10.], "Received D gain of the PID for the wheels"]
+    ],
+
+    # https://media.digikey.com/pdf/Data%20Sheets/Semtech%20PDFs/SX1280-81_Rev3.2_Mar2020.pdf see page 124. 
+    # Minimum payload length is 6 bytes
+    "REM_SX1280_FILLER" : [
+        ["header",             8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",         4,  None, "Version of roboteam_embedded_messages"],
+        ["more bits",         36,  None, "extra bits, very important"]
     ]
+
 }

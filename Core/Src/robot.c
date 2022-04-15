@@ -26,6 +26,7 @@
 #include "REM_RobotBuzzer.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotGetPIDGains.h"
+#include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
 
 #include "time.h"
@@ -51,6 +52,7 @@ REM_RobotBuzzerPayload robotBuzzerPayload = {0};
 REM_RobotFeedback robotFeedback = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
+REM_RobotPIDGains robotPIDGains = {0};
 
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -351,7 +353,24 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
-
+	{
+		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
+		robotPIDGains.remVersion = LOCAL_REM_VERSION;
+		robotPIDGains.id = ID;
+		robotPIDGains.PbodyX = 2;
+		robotPIDGains.IbodyX = 0;
+		robotPIDGains.DbodyX = 1;
+		robotPIDGains.PbodyY = 2;
+		robotPIDGains.IbodyY = 0;
+		robotPIDGains.DbodyY = 1;
+		robotPIDGains.PbodyYaw = 2;
+		robotPIDGains.IbodyYaw = 0;
+		robotPIDGains.DbodyYaw = 1;
+		robotPIDGains.Pwheels = 0;
+		robotPIDGains.Iwheels = 0;
+		robotPIDGains.Dwheels = 0;
+	}
+	
     // Heartbeat every 17ms	
 	if(heartbeat_17ms + 17 < HAL_GetTick()){
 		heartbeat_17ms += 17;
@@ -508,6 +527,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 			encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
 			total_packet_length += PACKET_SIZE_REM_ROBOT_STATE_INFO;
 		}
+
+		// TODO ensure this is only done when a packet is actually being sent
+		// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
+		// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
+		// if(flagSendPIDGains){
+			encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (message_buffer_out + total_packet_length), &robotPIDGains);
+			total_packet_length += PACKET_SIZE_REM_ROBOT_PIDGAINS;
+			flagSendPIDGains = false;
+		// }
+
+		// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
 
 		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
 

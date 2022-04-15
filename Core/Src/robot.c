@@ -198,23 +198,22 @@ void init(void){
 
 	LOG("[init:"STRINGIZE(__LINE__)"] Last programmed on " __DATE__ "\n");
 	LOG("[init:"STRINGIZE(__LINE__)"] GIT: " STRINGIZE(__GIT_STRING__) "\n");
-	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d;\n", LOCAL_REM_VERSION);
+	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d\n", LOCAL_REM_VERSION);
 	LOG_printf("[init:"STRINGIZE(__LINE__)"] ROBOT_ID: %d\n", ROBOT_ID);
 	LOG_sendAll();
-
+	
 	/* Read jumper */
 	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
-	// LOG_printf("[init] SEND_ROBOT_STATE_INFO: %s\n", (SEND_ROBOT_STATE_INFO ? "True" : "False"));
 
 	/* Initialize buzzer */
 	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
 	set_Pin(LED1_pin, 1);
 
-	// if(!__GIT_DEVELOPMENT__){
-	// 	buzzer_Play_WarningTwo();
-	// 	HAL_Delay(3000);
-	// }
+	if(!__GIT_DEVELOPMENT__){
+		buzzer_Play_WarningGit();
+		HAL_Delay(400);
+	}
 
 	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
 	if(USE_PUTTY){
@@ -290,7 +289,7 @@ void loop(void){
 	counter_loop++;
 
 	/* Send anything in the log buffer over UART */
-	// LOG_send();
+	LOG_send();
 	
 	// If a RobotCommand came in via UART
 	if(robotCommandIsFresh == 1){

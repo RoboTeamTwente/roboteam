@@ -36,6 +36,7 @@ void buzzer_Play_WarningOne();
 void buzzer_Play_WarningTwo();
 void buzzer_Play_WarningThree();
 void buzzer_Play_WarningFour();
+void buzzer_Play_WarningGit();
 void buzzer_Play_BridgeBattle();
 void buzzer_Play_ImperialMarch();
 void buzzer_Play_Flatline();

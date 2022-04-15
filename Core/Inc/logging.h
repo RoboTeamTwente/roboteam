@@ -13,7 +13,7 @@
  * This entire logging thing consists of a large circular buffer where the messages are stored, a circular
  * buffer implementation which is only used to track where the actual buffer currently is, and a function
  * to send something over UART if possible. Each message is currently limited to 127 bytes (including the
- * RobotLog header), since that's the current limit of the SX1280. Each message also tracks its length with
+ * REM_RobotLog header), since that's the current limit of the SX1280. Each message also tracks its length with
  * a uint32_t.
  * 
  * TODO : Support messages larger than 127 bytes, or automatically split up messages into chunks of max 127
@@ -49,7 +49,7 @@ void LOG_init();
 void LOG_printf(char *format, ...);
 
 /**
- * @brief Places a message into the buffer if possible. Truncates to 127-PACKET_SIZE_ROBOT_LOG bytes
+ * @brief Places a message into the buffer if possible. Truncates to 127-PACKET_SIZE_REM_ROBOT_LOG bytes
  * 
  * @param message The message to be placed in the buffer
  */

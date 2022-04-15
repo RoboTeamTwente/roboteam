@@ -16,6 +16,7 @@ from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedbac
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
+from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
 
 
 
@@ -95,6 +96,7 @@ basestation = None
 
 robotFeedback = REM_RobotFeedback()
 robotStateInfo = REM_RobotStateInfo()
+robotPIDGains = REM_RobotPIDGains()
 
 feedbackTimestamp = 0
 stateInfoTimestamp = 0
@@ -262,6 +264,15 @@ while True:
 
 				else:
 					print("Error : Received StateInfo from robot %d ???" % REM_RobotFeedback.get_id(packet))
+
+			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_PIDGAINS:
+				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_PIDGAINS - 1)
+				if REM_RobotPIDGains.get_id(packet) == robotId:
+					print("Received REM_ROBOT_PIDGAINS")
+					robotPIDGains.decode(packet)
+					print("robotPIDGains.PbodyX", robotPIDGains.PbodyX)
+					print("robotPIDGains.DbodyY", robotPIDGains.DbodyY)
+
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()

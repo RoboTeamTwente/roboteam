@@ -268,16 +268,12 @@ while True:
 			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_PIDGAINS:
 				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_PIDGAINS - 1)
 				if REM_RobotPIDGains.get_id(packet) == robotId:
-					print("Received REM_ROBOT_PIDGAINS")
 					robotPIDGains.decode(packet)
-					print("robotPIDGains.PbodyX", robotPIDGains.PbodyX)
-					print("robotPIDGains.DbodyY", robotPIDGains.DbodyY)
-
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
 				lastBasestationLog = logmessage[:-1] + " "*20
-				print(lastBasestationLog)
+				# print(lastBasestationLog)
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
 				logmessage = basestation.readline().decode()

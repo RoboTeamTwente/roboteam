@@ -25,6 +25,8 @@
 #include "REM_RobotFeedback.h"
 #include "REM_RobotBuzzer.h"
 #include "REM_RobotStateInfo.h"
+#include "REM_RobotGetPIDGains.h"
+#include "REM_SX1280Filler.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -50,7 +52,6 @@ REM_RobotFeedback robotFeedback = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 
-
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
 
@@ -61,7 +62,6 @@ bool xsens_CalibrationDoneFirst = true;
 volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
 
-
 volatile uint32_t counter_loop = 0;
 volatile uint32_t counter_htim6 = 0;
 volatile uint32_t counter_htim7 = 0;
@@ -69,7 +69,7 @@ volatile uint32_t counter_htim10 = 0;
 volatile uint32_t counter_htim11 = 0;
 uint32_t timestamp_initialized = 0;
 
-
+bool flagSendPIDGains = false;
 bool isSerialConnected = false;
 uint32_t timeLastPacket = 0;
 
@@ -105,6 +105,8 @@ void executeCommands(REM_RobotCommand* robotCommand){
 
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
+	/* This needs to be constantly updated whenever the RobotCommand definition changes
+	 * Quite prone to human error. Should be possible to reset the entire struct somehow */
 	robotCommand->doKick = false;
 	robotCommand->doChip = false;
 	robotCommand->doForce = false;
@@ -184,7 +186,7 @@ void init(void){
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
 	ID = get_Id();
-	Putty_printf("ID: %d\n", ID);
+	Putty_printf("ID: %d , REM: %d\n", ID, LOCAL_REM_VERSION);
 	set_Pin(LED0_pin, 1);
 
 
@@ -413,6 +415,12 @@ void handleRobotBuzzer(uint8_t* packet_buffer){
 	buzzer_Play_note(period, duration);
 }
 
+void handleRobotGetPIDGains(uint8_t* packet_buffer){
+	REM_RobotGetPIDGainsPayload* rgpidgp = (REM_RobotGetPIDGainsPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotGetPIDGains_get_remVersion(rgpidgp) == LOCAL_REM_VERSION;
+	flagSendPIDGains = true;
+}
+
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 	uint8_t total_bytes_processed = 0;
 	uint8_t packet_header;
@@ -433,6 +441,15 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
 				break;
 			
+			case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
+				handleRobotGetPIDGains(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+				break;
+
+			case PACKET_TYPE_REM_SX1280FILLER:
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+				break;
+
 			default:
 				sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
 				return false;

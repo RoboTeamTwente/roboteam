@@ -137,7 +137,13 @@
 #define PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_MAX                  10.
 #define PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_N_BITS               16
 
-#define PACKET_TYPE_REM_SX1280FILLER                                 0b11000011 // 195 
+#define PACKET_TYPE_ROBOT_ASSURED_PACKET                             0b11000011 // 195 
+#define PACKET_SIZE_ROBOT_ASSURED_PACKET                             4
+
+#define PACKET_TYPE_ROBOT_ASSURED_ACK                                0b11001100 // 204 
+#define PACKET_SIZE_ROBOT_ASSURED_ACK                                3
+
+#define PACKET_TYPE_REM_SX1280FILLER                                 0b11110000 // 240 
 #define PACKET_SIZE_REM_SX1280FILLER                                 6
 
 static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
@@ -152,6 +158,8 @@ static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION               ) return PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION               ;
     if(type == PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                          ) return PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                          ;
     if(type == PACKET_TYPE_REM_ROBOT_PIDGAINS                              ) return PACKET_SIZE_REM_ROBOT_PIDGAINS                              ;
+    if(type == PACKET_TYPE_ROBOT_ASSURED_PACKET                            ) return PACKET_SIZE_ROBOT_ASSURED_PACKET                            ;
+    if(type == PACKET_TYPE_ROBOT_ASSURED_ACK                               ) return PACKET_SIZE_ROBOT_ASSURED_ACK                               ;
     if(type == PACKET_TYPE_REM_SX1280FILLER                                ) return PACKET_SIZE_REM_SX1280FILLER                                ;
     return 0;
 }

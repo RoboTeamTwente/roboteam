@@ -132,7 +132,13 @@ PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_MIN                  = 0.
 PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_MAX                  = 10.
 PACKET_RANGE_REM_ROBOT_PIDGAINS_DWHEELS_N_BITS               = 16
 
-PACKET_TYPE_REM_SX1280FILLER                                 = 0b11000011 # 195 
+PACKET_TYPE_ROBOT_ASSURED_PACKET                             = 0b11000011 # 195 
+PACKET_SIZE_ROBOT_ASSURED_PACKET                             = 4
+
+PACKET_TYPE_ROBOT_ASSURED_ACK                                = 0b11001100 # 204 
+PACKET_SIZE_ROBOT_ASSURED_ACK                                = 3
+
+PACKET_TYPE_REM_SX1280FILLER                                 = 0b11110000 # 240 
 PACKET_SIZE_REM_SX1280FILLER                                 = 6
 
 def PACKET_TYPE_TO_SIZE(type):
@@ -147,6 +153,8 @@ def PACKET_TYPE_TO_SIZE(type):
     if type == PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION               : return PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION               
     if type == PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                          : return PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                          
     if type == PACKET_TYPE_REM_ROBOT_PIDGAINS                              : return PACKET_SIZE_REM_ROBOT_PIDGAINS                              
+    if type == PACKET_TYPE_ROBOT_ASSURED_PACKET                            : return PACKET_SIZE_ROBOT_ASSURED_PACKET                            
+    if type == PACKET_TYPE_ROBOT_ASSURED_ACK                               : return PACKET_SIZE_ROBOT_ASSURED_ACK                               
     if type == PACKET_TYPE_REM_SX1280FILLER                                : return PACKET_SIZE_REM_SX1280FILLER                                
     return 0
 

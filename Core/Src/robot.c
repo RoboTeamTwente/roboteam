@@ -466,7 +466,7 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				break;
 
 			case PACKET_TYPE_REM_SX1280FILLER:
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+				total_bytes_processed += PACKET_SIZE_REM_SX1280FILLER;
 				break;
 
 			default:

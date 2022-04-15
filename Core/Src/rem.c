@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "rem.h"
-#include "BaseTypes.h"
+#include "REM_BaseTypes.h"
 #include "peripheral_util.h"
 #include "robot.h"
 #include "PuTTY.h"
@@ -11,7 +11,7 @@
 
 // Buffers to move received packets in to
 static uint8_t REM_buffer[100];
-static RobotCommandPayload rcp;
+static REM_RobotCommandPayload rcp;
 
 /**
  * @brief Starts the first UART read. This read will eventually lead to 
@@ -42,11 +42,11 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     // Read the header byte
     uint8_t packetType = REM_buffer[0];
     // If RobotCommand
-    if(packetType == PACKET_TYPE_ROBOT_COMMAND){
+    if(packetType == PACKET_TYPE_REM_ROBOT_COMMAND){
         // Receive the entire RobotCommand packet into REM_buffer, excluding the header byte
-        HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_ROBOT_COMMAND-1, 100);
+        HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_COMMAND-1, 100);
         // Store received packet in local RobotCommandPayload. Send to robot.c for decoding
-        memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_ROBOT_COMMAND);
+        memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
         robot_setRobotCommandPayload(&rcp);
         // Hack. Set flag for robot.c
         robotCommandIsFresh = 1;

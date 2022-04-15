@@ -1,6 +1,6 @@
 #include "logging.h"
-#include "BaseTypes.h"
-#include "RobotLog.h"
+#include "REM_BaseTypes.h"
+#include "REM_RobotLog.h"
 #include "peripheral_util.h"
 #include "robot.h"
 
@@ -60,7 +60,7 @@ void LOG(char *message){
     // Get message length
     uint32_t message_length = strlen(message);  
     // Clip the message length to 127 - PACKET_SIZE_ROBOT_LOG, as to not overflow the MessageContainer buffer
-    if(127 - PACKET_SIZE_ROBOT_LOG < message_length) message_length = 127 - PACKET_SIZE_ROBOT_LOG;
+    if(127 - PACKET_SIZE_REM_ROBOT_LOG < message_length) message_length = 127 - PACKET_SIZE_REM_ROBOT_LOG;
     // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the RobotLog_message_length field)
     message[message_length-1] = '\n';
 
@@ -72,15 +72,15 @@ void LOG(char *message){
     MessageContainer* message_container = &message_buffer[index_write];
     uint8_t* payload = message_container->payload;
 
-    RobotLog_set_header((RobotLogPayload*) payload, PACKET_TYPE_ROBOT_LOG);  // 8 bits
-    RobotLog_set_remVersion((RobotLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
-    RobotLog_set_id((RobotLogPayload*) payload, ROBOT_ID);                   // 4 bits
-    RobotLog_set_message_length((RobotLogPayload*) payload, message_length); // 8 bits
+    REM_RobotLog_set_header((REM_RobotLogPayload*) payload, PACKET_TYPE_REM_ROBOT_LOG);  // 8 bits
+    REM_RobotLog_set_remVersion((REM_RobotLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
+    REM_RobotLog_set_id((REM_RobotLogPayload*) payload, ROBOT_ID);                   // 4 bits
+    REM_RobotLog_set_message_length((REM_RobotLogPayload*) payload, message_length); // 8 bits
                                                                             // = 3 bytes
  
     // Copy the message into the message container, next to the RobotLog header
-    memcpy(payload + PACKET_SIZE_ROBOT_LOG, message, message_length);
-    message_container->length = PACKET_SIZE_ROBOT_LOG + message_length;
+    memcpy(payload + PACKET_SIZE_REM_ROBOT_LOG, message, message_length);
+    message_container->length = PACKET_SIZE_REM_ROBOT_LOG + message_length;
     
 }
 

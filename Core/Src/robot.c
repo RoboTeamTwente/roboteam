@@ -22,10 +22,13 @@
 
 #include "rem.h"
 
-#include "RobotCommand.h"
-#include "RobotFeedback.h"
-#include "RobotBuzzer.h"
-#include "RobotStateInfo.h"
+#include "REM_RobotCommand.h"
+#include "REM_RobotFeedback.h"
+#include "REM_RobotBuzzer.h"
+#include "REM_RobotStateInfo.h"
+#include "REM_RobotGetPIDGains.h"
+#include "REM_RobotPIDGains.h"
+#include "REM_SX1280Filler.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -43,14 +46,14 @@ MTi_data* MTi;
 uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
 uint8_t message_buffer_out[127];
 
-/* File-local containers */
-static RobotCommandPayload robotCommandPayload = {0};
-static RobotBuzzerPayload robotBuzzerPayload = {0};
-static RobotFeedback robotFeedback = {0};
-static RobotStateInfo robotStateInfo = {0};
-static RobotStateInfoPayload robotStateInfoPayload = {0};
+REM_RobotCommandPayload robotCommandPayload = {0};
+REM_RobotBuzzerPayload robotBuzzerPayload = {0};
+REM_RobotFeedback robotFeedback = {0};
+REM_RobotStateInfo robotStateInfo = {0};
+REM_RobotStateInfoPayload robotStateInfoPayload = {0};
+REM_RobotPIDGains robotPIDGains = {0};
 
-RobotCommand activeRobotCommand = {0};
+REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
 
 StateInfo stateInfo = {0.0f, false, {0.0}, 0.0f, 0.0f, {0.0}};
@@ -59,7 +62,6 @@ bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
 volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
-
 
 volatile uint32_t counter_loop = 0;
 volatile uint32_t counter_htim6 = 0;
@@ -70,7 +72,7 @@ volatile uint32_t counter_RobotCommand = 0;
 volatile uint32_t counter_RobotBuzzer = 0;
 uint32_t timestamp_initialized = 0;
 
-
+bool flagSendPIDGains = false;
 bool isSerialConnected = false;
 uint32_t timeLastPacket = 0;
 
@@ -82,7 +84,7 @@ uint32_t heartbeat_1000ms = 0;
 
 
 
-void executeCommands(RobotCommand* robotCommand){
+void executeCommands(REM_RobotCommand* robotCommand){
 	float stateReference[3];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
@@ -103,7 +105,11 @@ void executeCommands(RobotCommand* robotCommand){
 	}
 }
 
-void resetRobotCommand(RobotCommand* robotCommand){
+
+
+void resetRobotCommand(REM_RobotCommand* robotCommand){
+	/* This needs to be constantly updated whenever the RobotCommand definition changes
+	 * Quite prone to human error. Should be possible to reset the entire struct somehow */
 	robotCommand->doKick = false;
 	robotCommand->doChip = false;
 	robotCommand->doForce = false;
@@ -156,6 +162,23 @@ void printRobotStateData() {
 	IWDG_Refresh(iwdg);
 }
 
+void printRobotCommand(REM_RobotCommand* rc){
+	Putty_printf("======== RobotCommand ========\r\n");
+	Putty_printf("            id : %d\r\n", rc->id);
+	Putty_printf("        doKick : %d\r\n", rc->doKick);
+	Putty_printf("        doChip : %d\r\n", rc->doChip);
+	Putty_printf("       doForce : %d\r\n", rc->doForce);
+	Putty_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
+	Putty_printf("           rho : %.4f\r\n", rc->rho);
+	Putty_printf("         theta : %.4f\r\n", rc->theta);
+	Putty_printf("         angle : %.4f\r\n", rc->angle);
+	Putty_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
+	Putty_printf("      dribbler : %d\r\n", rc->dribbler);
+	Putty_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
+	Putty_printf("angularControl : %d\r\n", rc->angularControl);
+	Putty_printf("      feedback : %d\r\n", rc->feedback);
+}
+
 
 
 // ----------------------------------------------------- INIT -----------------------------------------------------
@@ -168,7 +191,7 @@ void init(void){
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
  
 	/* Read ID from switches */
-	ROBOT_ID = get_Id();	
+	ROBOT_ID = get_Id();
 	set_Pin(LED0_pin, 1);
 
 	LOG_init();
@@ -273,6 +296,8 @@ void loop(void){
 	if(robotCommandIsFresh == 1){
 		robotCommandIsFresh = 0;
 		timeLastPacket = currentTime;
+		decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
+
 		toggle_Pin(LED6_pin);
 	}
 
@@ -316,7 +341,7 @@ void loop(void){
     }
 
     // Create RobotFeedback
-	robotFeedback.header = PACKET_TYPE_ROBOT_FEEDBACK;
+	robotFeedback.header = PACKET_TYPE_REM_ROBOT_FEEDBACK;
 	robotFeedback.remVersion= LOCAL_REM_VERSION;
     robotFeedback.id = ROBOT_ID;
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
@@ -334,7 +359,7 @@ void loop(void){
     robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
     
 	if(SEND_ROBOT_STATE_INFO){
-		robotStateInfo.header = PACKET_TYPE_ROBOT_STATE_INFO;
+		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
 		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ROBOT_ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
@@ -346,7 +371,24 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
-
+	{
+		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
+		robotPIDGains.remVersion = LOCAL_REM_VERSION;
+		robotPIDGains.id = ROBOT_ID;
+		robotPIDGains.PbodyX = 2;
+		robotPIDGains.IbodyX = 0;
+		robotPIDGains.DbodyX = 1;
+		robotPIDGains.PbodyY = 2;
+		robotPIDGains.IbodyY = 0;
+		robotPIDGains.DbodyY = 1;
+		robotPIDGains.PbodyYaw = 2;
+		robotPIDGains.IbodyYaw = 0;
+		robotPIDGains.DbodyYaw = 1;
+		robotPIDGains.Pwheels = 0;
+		robotPIDGains.Iwheels = 0;
+		robotPIDGains.Dwheels = 0;
+	}
+	
     // Heartbeat every 17ms	
 	if(heartbeat_17ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
@@ -399,10 +441,70 @@ void loop(void){
     set_Pin(LED4_pin, ballPosition.canKickBall);
     // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
     // LED6 done in Wireless.c
+
+	
 }
 
-void robot_setRobotCommandPayload(RobotCommandPayload* rcp){
-	decodeRobotCommand(&activeRobotCommand, rcp);
+void handleRobotCommand(uint8_t* packet_buffer){
+	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
+	REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
+	decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
+}
+
+void handleRobotBuzzer(uint8_t* packet_buffer){
+	REM_RobotBuzzerPayload* rbp = (REM_RobotBuzzerPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
+	uint16_t period = REM_RobotBuzzer_get_period(rbp);
+	float duration = REM_RobotBuzzer_get_duration(rbp);
+	buzzer_Play_note(period, duration);
+}
+
+void handleRobotGetPIDGains(uint8_t* packet_buffer){
+	REM_RobotGetPIDGainsPayload* rgpidgp = (REM_RobotGetPIDGainsPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotGetPIDGains_get_remVersion(rgpidgp) == LOCAL_REM_VERSION;
+	flagSendPIDGains = true;
+}
+
+void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
+	decodeREM_RobotCommand(&activeRobotCommand, rcp);
+}
+
+bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
+	uint8_t total_bytes_processed = 0;
+	uint8_t packet_header;
+
+	while(total_bytes_processed < packet_length){
+
+		packet_header = message_buffer_in[total_bytes_processed];
+
+		switch(packet_header){
+
+			case PACKET_TYPE_REM_ROBOT_COMMAND:
+				handleRobotCommand(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
+				break;
+
+			case PACKET_TYPE_REM_ROBOT_BUZZER: 
+				handleRobotBuzzer(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+				break;
+			
+			case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
+				handleRobotGetPIDGains(message_buffer_in + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+				break;
+
+			case PACKET_TYPE_REM_SX1280FILLER:
+				total_bytes_processed += PACKET_SIZE_REM_SX1280FILLER;
+				break;
+
+			default:
+				sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
+				return false;
+		}
+	}
+
+	return true;
 }
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
@@ -417,37 +519,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 		Wireless_DMA_Handler(SX, message_buffer_in);
 
 		uint8_t total_packet_length = SX->payloadLength;
-		uint8_t total_bytes_processed = 0;
-
-		while(total_bytes_processed < total_packet_length){
-				
-			uint8_t packet_header = message_buffer_in[total_bytes_processed];
-
-			if(packet_header == PACKET_TYPE_ROBOT_COMMAND){
-				counter_RobotCommand++;
-				memcpy(robotCommandPayload.payload, message_buffer_in + total_bytes_processed, PACKET_SIZE_ROBOT_COMMAND);
-				REM_last_packet_had_correct_version &= RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
-				decodeRobotCommand(&activeRobotCommand,&robotCommandPayload);
-
-				total_bytes_processed += PACKET_SIZE_ROBOT_COMMAND;
-				continue;
-			}
-
-			if(packet_header == PACKET_TYPE_ROBOT_BUZZER){
-				counter_RobotBuzzer++;
-				RobotBuzzerPayload* rbp = (RobotBuzzerPayload*) (message_buffer_in + total_bytes_processed);
-				REM_last_packet_had_correct_version &= RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
-				uint16_t period = RobotBuzzer_get_period(rbp);
-				float duration = RobotBuzzer_get_duration(rbp);
-				buzzer_Play_note(period, duration);
-
-				total_bytes_processed += PACKET_SIZE_ROBOT_BUZZER;
-				continue;
-			}
-
-			sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, total_packet_length, packet_header);
-			break;
-		}
+		handlePacket(message_buffer_in, total_packet_length);
 	}
 
 	// If we received data from the XSens
@@ -477,13 +549,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		*/
 		uint8_t total_packet_length = 0;
 
-		encodeRobotFeedback( (RobotFeedbackPayload*) (message_buffer_out + total_packet_length), &robotFeedback);
-		total_packet_length += PACKET_SIZE_ROBOT_FEEDBACK;
+		encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (message_buffer_out + total_packet_length), &robotFeedback);
+		total_packet_length += PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
 		if(SEND_ROBOT_STATE_INFO){
-			encodeRobotStateInfo( (RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
-			total_packet_length += PACKET_SIZE_ROBOT_STATE_INFO;
+			encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
+			total_packet_length += PACKET_SIZE_REM_ROBOT_STATE_INFO;
 		}
+
+		// TODO ensure this is only done when a packet is actually being sent
+		// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
+		// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
+		// if(flagSendPIDGains){
+			encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (message_buffer_out + total_packet_length), &robotPIDGains);
+			total_packet_length += PACKET_SIZE_REM_ROBOT_PIDGAINS;
+			flagSendPIDGains = false;
+		// }
+
+		// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
 
 		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
 

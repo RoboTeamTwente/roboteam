@@ -125,6 +125,7 @@ extern song_struct warningOne[];
 extern song_struct warningTwo[];
 extern song_struct warningThree[];
 extern song_struct warningFour[];
+extern song_struct warningGit[];
 extern song_struct bridgeBattle[];
 extern song_struct imperialMarch[];
 extern song_struct flatLine[];

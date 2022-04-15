@@ -6,7 +6,7 @@
 #include "ballSensor.h"
 #include "limits.h"
 #include "gpio_util.h"
-#include "PuTTY.h"
+#include "logging.h"
 #include "string.h"
 #include "peripheral_util.h"
 #include "main.h"
@@ -75,7 +75,6 @@ uint8_t notification_touch[] = {BS_NOTIFICATION, 17, BS_DEVICE_ADDRESS_AIR, BS_T
 // ====================== PUBLIC FUNCTIONS ====================== //
 
 bool ballSensor_Init(){
-//	Putty_printf("[ballsensor] init\n");
 	
 	bs_NoBall();
 	HAL_Delay(20); // timing specs
@@ -84,7 +83,7 @@ bool ballSensor_Init(){
 	int currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin)){
 		if (HAL_GetTick() - currentTime > 100) {
-//			Putty_printf("[ballsensor] timeout\n");
+			// LOG("[ballsensor] timeout\n");
 			return false;
 		}
 	}
@@ -92,21 +91,21 @@ bool ballSensor_Init(){
 
 	// boot procedure, only check for bootcomplete response
 	if (!bs_Boot()){
-		Putty_printf("[ballsensor] boot failed\n");
+		LOG("[ballsensor] boot failed\n");
 		return false; // boot failed, leave
 	}
 
 	// Set configuration
 	while(read_Pin(BS_IRQ_pin)); // do not proceeed to Tx unless DR is low
 	if (!bs_setDeviceConfiguration()){
-		Putty_printf("[ballsensor] set config failed\n");
+		LOG("[ballsensor] set config failed\n");
 		return false; // set config failed, leave
 	}
 	// Check configuration
 	currentTime = HAL_GetTick(); // avoid lockup when initializing
 	while(!read_Pin(BS_IRQ_pin) && (HAL_GetTick()-currentTime < 5)); // wait for DR
 	if (!bs_checkDeviceConfiguration()){
-		Putty_printf("[ballsensor] check config failed\n");
+		LOG("[ballsensor] check config failed\n");
 		return false;
 	}
 
@@ -169,7 +168,7 @@ void ballSensor_IRQ_Handler() {
 			// Received interrupt that can't be handled
 			uint8_t message_size = data[1];
 			for(uint16_t at = 0; at < message_size; at += 10){
-				Putty_printf("[%d] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+				LOG_printf("[%d] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
 				at, data[at+0], data[at+1], data[at+2], data[at+3], data[at+4], data[at+5], data[at+6], data[at+7], data[at+8], data[at+9]);
 			}
 		}
@@ -192,7 +191,7 @@ bool ballSensor_I2C_Rx() {
 		if (HAL_GetTick()-currentTime > 5) {
 			bs_NoBall();
 			initialized = false;
-			Putty_printf("[ballsensor][I2C_Rx] Timeout!\n", error);
+			LOG_printf("[ballsensor][I2C_Rx] Timeout!\n", error);
 			return false;
 		}
 	}
@@ -205,7 +204,7 @@ bool ballSensor_I2C_Rx() {
 	if(error != HAL_OK){
 		initialized = false;
 		bs_NoBall();
-		Putty_printf("[ballsensor][I2C_Rx] Error at reading message length : %d!\n", error);
+		LOG_printf("[ballsensor][I2C_Rx] Error at reading message length : %d!\n", error);
 		return false;
 	}
 	uint8_t length_message = response[1];
@@ -214,7 +213,7 @@ bool ballSensor_I2C_Rx() {
 	if(error != HAL_OK){
 		initialized = false;
 		bs_NoBall();
-		Putty_printf("[ballsensor][I2C_Rx] Error at reading full message : %d!\n", error);
+		LOG_printf("[ballsensor][I2C_Rx] Error at reading full message : %d!\n", error);
 		return false;
 	}
 
@@ -226,7 +225,7 @@ bool ballSensor_I2C_Rx() {
 void bs_I2C_error(uint8_t error){
 	initialized = false;
 	bs_NoBall();
-	Putty_printf("[bs_I2C_error] %d\n", error);
+	LOG_printf("[bs_I2C_error] %d\n", error);
 }
 
 bool bs_Boot() {
@@ -262,15 +261,6 @@ bool bs_setDeviceConfiguration() {
 bool bs_checkDeviceConfiguration() {
 	ballSensor_I2C_Rx();
 
-	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
-	// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19], data[20], data[21], data[22], data[23], data[24], data[25], data[26], data[27], data[28], data[29]);
-
-	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
-	// data[30], data[31], data[32], data[33], data[34], data[35], data[36], data[37], data[38], data[39], data[40], data[41], data[42], data[43], data[44], data[45], data[46], data[47], data[48], data[49], data[50], data[51], data[52], data[53], data[54], data[55], data[56], data[57], data[58], data[59]);
-	
-	// Putty_printf("[CC] %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", 
-	// data[60], data[61], data[62], data[63], data[64], data[65], data[66], data[67], data[68]);
-
 	bool isEqual = !memcmp(data + 2, response_deviceConfiguration, sizeof(response_deviceConfiguration));
 
 	return isEqual;
@@ -290,13 +280,9 @@ bool bs_getTouchFormat(){
 bool bs_checkTouchFormat(){
 	// Still haven't figured out the response that this gives ...
 	if(!ballSensor_I2C_Rx()){
-		Putty_printf("[ballsensor][bs_readTouchFormat] Read error\n");
+		LOG("[ballsensor][bs_readTouchFormat] Read error\n");
 		return false;
 	}
-
-	// Putty_printf("%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
-	// data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], 
-	// data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19]);
 
 	return true;
 }

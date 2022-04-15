@@ -6,11 +6,12 @@
 #include "peripheral_util.h"
 #include "robot.h"
 #include "PuTTY.h"
-
+#include "logging.h"
 #include "main.h"
 
-// Buffer to move received packets in to
-uint8_t REM_buffer[100];
+// Buffers to move received packets in to
+static uint8_t REM_buffer[100];
+static REM_RobotCommandPayload rcp;
 
 /**
  * @brief Starts the first UART read. This read will eventually lead to 
@@ -19,6 +20,7 @@ uint8_t REM_buffer[100];
  * @param huart The UART to start the first read on. Generally UART_PC.
  */
 void REM_UARTinit(UART_HandleTypeDef *huart){
+    LOG("[REM_UARTinit]\n");
     HAL_UART_Receive_IT(huart, REM_buffer, 1);
 }
 
@@ -43,14 +45,14 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     if(packetType == PACKET_TYPE_REM_ROBOT_COMMAND){
         // Receive the entire RobotCommand packet into REM_buffer, excluding the header byte
         HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_COMMAND-1, 100);
-        // Hack. Store into a global, where robot.c can use it
-        memcpy(&myRobotCommandPayload.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
-        decodeREM_RobotCommand(&myRobotCommand, &myRobotCommandPayload);
+        // Store received packet in local RobotCommandPayload. Send to robot.c for decoding
+        memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
+        robot_setRobotCommandPayload(&rcp);
         // Hack. Set flag for robot.c
         robotCommandIsFresh = 1;
-
     }else{
         // TODO add some error handling here or something.
+        LOG("Unknown header\n");
         sprintf(logBuffer, "Received unknown header %d\n", packetType);
     }
     

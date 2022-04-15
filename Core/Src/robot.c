@@ -208,11 +208,13 @@ void init(void){
 	/* Initialize buzzer */
 	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
+	HAL_Delay(300);
 	set_Pin(LED1_pin, 1);
 
+	/* Play a warning sound if the robot is not programmed with the development branch */
 	if(!__GIT_DEVELOPMENT__){
 		buzzer_Play_WarningGit();
-		HAL_Delay(400);
+		HAL_Delay(300);
 	}
 
 	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */

@@ -107,14 +107,14 @@ packets = {
         ["Dwheels",            16, [0.,10.], "Received D gain of the PID for the wheels"]
     ],
 
-    "RobotAssuredPacket" : [
+    "REM_RobotAssuredPacket" : [
         ["header",         8, None, "Header byte indicating the type of packet"],
         ["remVersion",     4, None, "Version of roboteam_embedded_messages"],
         ["id",             4, None, "Id of the robot"],
         ["sequenceNumber", 8, None, "Number to match this packet with AssuredAck"],
         ["messageLength",  8, None, "Length of the following message"]
     ],
-    "RobotAssuredAck" : [
+    "REM_RobotAssuredAck" : [
         ["header",         8, None, "Header byte indicating the type of packet"],
         ["remVersion",     4, None, "Version of roboteam_embedded_messages"],
         ["id",             4, None, "Id of the robot"],

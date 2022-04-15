@@ -12,7 +12,7 @@ from . import REM_BaseTypes
 
 
 
-class RobotAssuredAck:
+class REM_RobotAssuredAck:
     header = 0                # integer [0, 255]             Header byte indicating the type of packet
     remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
     id = 0                    # integer [0, 15]              Id of the robot
@@ -56,20 +56,20 @@ class RobotAssuredAck:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_ROBOT_ASSURED_ACK, dtype=np.uint8)
-        RobotAssuredAck.set_header              (payload, self.header)
-        RobotAssuredAck.set_remVersion          (payload, self.remVersion)
-        RobotAssuredAck.set_id                  (payload, self.id)
-        RobotAssuredAck.set_sequenceNumber      (payload, self.sequenceNumber)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_ASSURED_ACK, dtype=np.uint8)
+        REM_RobotAssuredAck.set_header              (payload, self.header)
+        REM_RobotAssuredAck.set_remVersion          (payload, self.remVersion)
+        REM_RobotAssuredAck.set_id                  (payload, self.id)
+        REM_RobotAssuredAck.set_sequenceNumber      (payload, self.sequenceNumber)
         return payload
 
 
 # ================================ DECODE ================================
     def decode(self, payload):
-        self.header           = RobotAssuredAck.get_header(payload)
-        self.remVersion       = RobotAssuredAck.get_remVersion(payload)
-        self.id               = RobotAssuredAck.get_id(payload)
-        self.sequenceNumber   = RobotAssuredAck.get_sequenceNumber(payload)
+        self.header           = REM_RobotAssuredAck.get_header(payload)
+        self.remVersion       = REM_RobotAssuredAck.get_remVersion(payload)
+        self.id               = REM_RobotAssuredAck.get_id(payload)
+        self.sequenceNumber   = REM_RobotAssuredAck.get_sequenceNumber(payload)
 
 
     def print_bit_string(self):

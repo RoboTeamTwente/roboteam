@@ -13,7 +13,7 @@ from . import REM_BaseTypes
 
 
 
-class RobotAssuredPacket:
+class REM_RobotAssuredPacket:
     header = 0                # integer [0, 255]             Header byte indicating the type of packet
     remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
     id = 0                    # integer [0, 15]              Id of the robot
@@ -66,22 +66,22 @@ class RobotAssuredPacket:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_ROBOT_ASSURED_PACKET, dtype=np.uint8)
-        RobotAssuredPacket.set_header              (payload, self.header)
-        RobotAssuredPacket.set_remVersion          (payload, self.remVersion)
-        RobotAssuredPacket.set_id                  (payload, self.id)
-        RobotAssuredPacket.set_sequenceNumber      (payload, self.sequenceNumber)
-        RobotAssuredPacket.set_messageLength       (payload, self.messageLength)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, dtype=np.uint8)
+        REM_RobotAssuredPacket.set_header              (payload, self.header)
+        REM_RobotAssuredPacket.set_remVersion          (payload, self.remVersion)
+        REM_RobotAssuredPacket.set_id                  (payload, self.id)
+        REM_RobotAssuredPacket.set_sequenceNumber      (payload, self.sequenceNumber)
+        REM_RobotAssuredPacket.set_messageLength       (payload, self.messageLength)
         return payload
 
 
 # ================================ DECODE ================================
     def decode(self, payload):
-        self.header           = RobotAssuredPacket.get_header(payload)
-        self.remVersion       = RobotAssuredPacket.get_remVersion(payload)
-        self.id               = RobotAssuredPacket.get_id(payload)
-        self.sequenceNumber   = RobotAssuredPacket.get_sequenceNumber(payload)
-        self.messageLength    = RobotAssuredPacket.get_messageLength(payload)
+        self.header           = REM_RobotAssuredPacket.get_header(payload)
+        self.remVersion       = REM_RobotAssuredPacket.get_remVersion(payload)
+        self.id               = REM_RobotAssuredPacket.get_id(payload)
+        self.sequenceNumber   = REM_RobotAssuredPacket.get_sequenceNumber(payload)
+        self.messageLength    = REM_RobotAssuredPacket.get_messageLength(payload)
 
 
     def print_bit_string(self):

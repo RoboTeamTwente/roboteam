@@ -11,12 +11,15 @@
 #include "REM_RobotCommand.h"
 #include "REM_RobotFeedback.h"
 #include "REM_RobotStateInfo.h"
+#include "REM_SX1280Filler.h"
 
 /* Counters, tracking the number of packets handled */ 
 volatile int handled_RobotCommand = 0;
 volatile int handled_RobotFeedback = 0;
 volatile int handled_RobotBuzzer = 0;
 volatile int handled_RobotStateInfo = 0;
+volatile int handled_RobotGetPIDGains = 0;
+
 
 /* Import hardware handles from main.c */
 extern SPI_HandleTypeDef hspi1;
@@ -72,6 +75,12 @@ void init(){
     // displayState = DISPLAY_STATE_INITIALIZED;
     // drawBasestation(true);
 
+    // Initialize the REM_SX1280FillerPayload packet
+    REM_SX1280Filler filler;
+    filler.header = PACKET_TYPE_REM_SX1280FILLER;
+    filler.remVersion = LOCAL_REM_VERSION;
+    encodeREM_SX1280Filler(&SX1280_filler_payload, &filler);
+
     LOG("[init] Initializion complete\n");
 }
 
@@ -90,8 +99,8 @@ void loop(){
   /* Heartbeat every second */
   if(heartbeat_1000ms + 1000 < HAL_GetTick()){
     heartbeat_1000ms += 1000;
-    sprintf(logBuffer, "Tick | RC %d RF %d RB %d RSI %d\n",
-    handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo);
+    sprintf(logBuffer, "Tick | RC %d RF %d RB %d RSI %d GPID %d\n",
+    handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains);
     LOG(logBuffer);
     logBuffer[0] = '\0';
   }
@@ -317,6 +326,23 @@ void handleBasestationSetConfiguration(uint8_t* packet_buffer){
   SX1280_updateChannel(newChannel);
 }
 
+void handleRobotGetPIDGains(uint8_t* packet_buffer){
+  handled_RobotGetPIDGains++;
+  
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = REM_RobotGetPIDGains_get_remVersion((REM_RobotGetPIDGainsPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    sprintf(logBuffer, "[handleRobotGetPIDGains] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
+  // Store the message in the RobotGetPIDGains buffer. Set flag to be sent to the robot
+  uint8_t robot_id = REM_RobotGetPIDGains_get_id((REM_RobotGetPIDGainsPayload*) packet_buffer);
+  memcpy(buffer_RobotGetPIDGains[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
+  buffer_RobotGetPIDGains[robot_id].isNewPacket = true;
+  buffer_RobotGetPIDGains[robot_id].counter++;
+}
+
 
 
 /**
@@ -366,6 +392,11 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
       case PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION:
         handleBasestationSetConfiguration(packet_buffer + bytes_processed);
         bytes_processed += PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION;
+        break;
+
+      case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
+        handleRobotGetPIDGains(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_TYPE_REM_ROBOT_GET_PIDGAINS;
         break;
 
       case PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION:
@@ -447,10 +478,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
       total_packet_length += PACKET_SIZE_REM_ROBOT_BUZZER;
     }
     
+    /* Add RobotGetPIDGains to the transmission */
+    if(buffer_RobotGetPIDGains[idCounter].isNewPacket && total_packet_length + PACKET_SIZE_REM_ROBOT_GET_PIDGAINS < MAX_PACKET_SIZE){
+      buffer_RobotGetPIDGains[idCounter].isNewPacket = false;
+      memcpy(sendBuffer + total_packet_length, buffer_RobotGetPIDGains[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
+      total_packet_length += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+    }
+
     /* Send new command if available for this robot ID */
     if(0 < total_packet_length){
       if(!isTransmitting){
         isTransmitting = true;
+
+        /* Add a filler packet to the buffer if there are currently less than 6 bytes in the buffer
+        * The minimum payload size for the SX1280 in FLRC mode is 6 bytes. 
+        * See documentation page 124 - Table 14-36: Sync Word Combination in FLRC Packet */
+        if(total_packet_length < 6){
+          memcpy(sendBuffer + total_packet_length, SX1280_filler_payload.payload, PACKET_SIZE_REM_SX1280FILLER);
+          total_packet_length += PACKET_SIZE_REM_SX1280FILLER;
+          sprintf(logBuffer, "Added filler packet\n");
+        }
+        
         SX_TX->SX_settings->syncWords[0] = robot_syncWord[idCounter];
         setSyncWords(SX_TX, SX_TX->SX_settings->syncWords[0], 0, 0);
         SendPacket(SX_TX, sendBuffer, total_packet_length);

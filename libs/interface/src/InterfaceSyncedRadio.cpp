@@ -5,15 +5,13 @@
 #include "InterfaceSyncedRadio.h"
 
 namespace rtt::Interface {
-InterfaceSyncedRadio::InterfaceSyncedRadio(std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): QButtonGroup(parent), identity(ident) {
-    QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateDeclaration);
-    QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateValue);
+InterfaceSyncedRadio::InterfaceSyncedRadio(std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): ctrl(std::move(ctrlptr)), QButtonGroup(parent), identity(ident) {
+    QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateDeclaration);
+    QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateValue);
 
     QObject::connect(this, &InterfaceSyncedRadio::idToggled, this, &InterfaceSyncedRadio::notifyChangedValue);
 
     this->setExclusive(true);
-
-    this->ctrl = ctrlptr;
 }
 
 void InterfaceSyncedRadio::updateProps(const InterfaceDeclaration &decl) {

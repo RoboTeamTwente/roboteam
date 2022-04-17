@@ -14,17 +14,12 @@ void InterfaceDeclarations::addDeclaration(const InterfaceDeclaration decl) noex
 
     this->decls.insert_or_assign(decl.path, decl);
 
-    if (did_change) {
-        this->did_change.store(true);
-    }
-
 }
 
 void InterfaceDeclarations::removeDeclaration(const std::string path) noexcept {
     std::scoped_lock lck(this->mtx);
     this->decls.erase(path);
 
-    this->did_change.store(true);
 }
 
 std::map<std::string, InterfaceDeclaration> InterfaceDeclarations::getDeclarations() const noexcept {
@@ -36,7 +31,21 @@ std::map<std::string, InterfaceDeclaration> InterfaceDeclarations::getDeclaratio
 std::optional<InterfaceDeclaration> InterfaceDeclarations::getDeclaration(const std::string path) const noexcept {
     std::scoped_lock lck(this->mtx);
 
+    if (!this->decls.contains(path)) return std::nullopt;
+
     return this->decls.at(path);
+}
+
+std::vector<std::string> InterfaceDeclarations::getWithSuffix(const std::string& suffix) const noexcept {
+    std::vector<std::string> res;
+
+    for (const auto& [key, value] : this->decls) {
+        if (key.ends_with(suffix)) {
+            res.push_back(key);
+        }
+    }
+
+    return res;
 }
 
 void InterfaceDeclarations::handleData(const proto::UiOptionDeclarations& recvDecls) noexcept {
@@ -47,8 +56,6 @@ void InterfaceDeclarations::handleData(const proto::UiOptionDeclarations& recvDe
     for (auto singleDecl: recvDecls.options()) {
         this->decls.insert_or_assign(singleDecl.path(), singleDecl);
     }
-
-    this->did_change.store(true);
 }
 proto::UiOptionDeclarations InterfaceDeclarations::toProto() const noexcept {
     std::scoped_lock lck(this->mtx);
@@ -60,8 +67,5 @@ proto::UiOptionDeclarations InterfaceDeclarations::toProto() const noexcept {
     }
 
     return protoDecls;
-}
-bool InterfaceDeclarations::getDidChange() {
-    return this->did_change.exchange(false);
 }
 }

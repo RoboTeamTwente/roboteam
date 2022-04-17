@@ -6,8 +6,8 @@
 
 namespace rtt::Interface {
 
-    InterfaceSyncedCheckableButton::InterfaceSyncedCheckableButton(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget* parent): QPushButton(parent), ctrl(ctrl), identity(ident) {
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckableButton::updateValue);
+    InterfaceSyncedCheckableButton::InterfaceSyncedCheckableButton(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget* parent): QPushButton(parent), ctrl(std::move(ctrl)), identity(ident) {
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckableButton::updateValue);
         QObject::connect(this, &QPushButton::toggled, this, &InterfaceSyncedCheckableButton::didCheck);
 
         this->setCheckable(true);
@@ -30,7 +30,7 @@ namespace rtt::Interface {
     void InterfaceSyncedCheckableButton::didCheck(bool checked) {
         if(auto ctrl = this->ctrl.lock()) {
             if (auto vals = ctrl->getValues().lock()) {
-                vals->setSetting(this->identity, true);
+                vals->setSetting(this->identity, checked);
             }
         }
     }

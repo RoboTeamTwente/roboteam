@@ -16,16 +16,17 @@
 namespace rtt::Interface {
 
     InterfaceWidgetDebugDisplay::InterfaceWidgetDebugDisplay(std::weak_ptr<InterfaceControllerClient> ctrl, QWidget *parent): QWidget(parent), ctrl(std::move(ctrl)), window(window) {
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceWidgetDebugDisplay::valuesDidChange);
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceWidgetDebugDisplay::valuesDidChange);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceWidgetDebugDisplay::valuesDidChange);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceWidgetDebugDisplay::valuesDidChange);
         this->setLayout(new QVBoxLayout);
+        this->layout()->setAlignment(Qt::AlignTop);
 
     }
 
     void InterfaceWidgetDebugDisplay::valuesDidChange() {
         if (auto ctrl = this->ctrl.lock()) {
-            if (auto vals = ctrl->getValues().lock()) {
-                auto debug_values = vals->getSettingsWithSuffix("_DEBUG");
+            if (auto decls = ctrl->getDeclarations().lock()) {
+                auto debug_values = decls->getWithSuffix("_DEBUG");
                 auto current_count = this->layout()->count();
                 if (debug_values.size() * 2 != current_count) { // Take into consideration the label
                     this->fullRefresh(debug_values);
@@ -34,7 +35,7 @@ namespace rtt::Interface {
         }
     }
 
-    void InterfaceWidgetDebugDisplay::fullRefresh(const std::vector<std::tuple<std::string, InterfaceValue>>& items) {
+    void InterfaceWidgetDebugDisplay::fullRefresh(const std::vector<std::string>& items) {
         auto ctrl = this->ctrl.lock();
         if (!ctrl) return;
         auto decls = ctrl->getDeclarations().lock();
@@ -48,7 +49,7 @@ namespace rtt::Interface {
             delete item;
         }
 
-        for (const auto& [key, value] : items) {
+        for (const auto& key : items) {
             auto this_decl = decls->getDeclaration(key);
             this->layout()->addWidget(new QLabel(QString::fromStdString(this_decl->path)));
             if (const auto* slider = std::get_if<Interface::InterfaceSlider>(&this_decl->options)) {

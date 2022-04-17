@@ -88,7 +88,7 @@ namespace rtt::Interface  {
             this->loopThread = std::move(t1);
         }
 
-        void stop() {
+        virtual void stop() {
             this->should_run.store(false);
             this->loopThread.join();
         }

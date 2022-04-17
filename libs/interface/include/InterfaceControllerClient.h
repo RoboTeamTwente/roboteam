@@ -22,6 +22,7 @@ namespace rtt::Interface {
             QObject::connect(&interface_timer, &QTimer::timeout, this, &InterfaceControllerClient::refresh_trigger);
             interface_timer.start(16); // 60 FPS
         }
+        void stop() override;
     signals:
         void refresh_trigger();
 

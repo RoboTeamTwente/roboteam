@@ -9,14 +9,11 @@
 #include "roboteam_interface_utils/InterfaceDeclaration.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedCheckbox::InterfaceSyncedCheckbox(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): QCheckBox(parent), identity(ident) {
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateDeclaration);
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateValue);
+    InterfaceSyncedCheckbox::InterfaceSyncedCheckbox(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): ctrl(std::move(ctrl)), QCheckBox(parent), identity(ident) {
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateDeclaration);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateValue);
 
         QObject::connect(this, &InterfaceSyncedCheckbox::stateChanged, this, &InterfaceSyncedCheckbox::notifyChangedValue);
-
-        this->ctrl = ctrl;
-
     }
 
     void InterfaceSyncedCheckbox::updateProps(const InterfaceDeclaration& decl) {

@@ -17,7 +17,7 @@ namespace rtt::Interface {
         std::weak_ptr<InterfaceControllerClient> ctrl;
         const MainWindow* window;
 
-        void fullRefresh(const std::vector<std::tuple<std::string, InterfaceValue>>&);
+        void fullRefresh(const std::vector<std::string>&);
     private slots:
         void valuesDidChange();
     };

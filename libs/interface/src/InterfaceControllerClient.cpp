@@ -30,4 +30,9 @@ namespace rtt::Interface {
     void InterfaceControllerClient::field_state_callback(const proto::State& state) {
         this->fieldState->setState(state);
     }
+    void InterfaceControllerClient::stop() {
+        this->field_subscriber.reset(); // Prevent ugly crashes on exit
+
+        InterfaceController::stop();
+    }
 }

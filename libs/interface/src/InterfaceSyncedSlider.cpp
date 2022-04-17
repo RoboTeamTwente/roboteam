@@ -5,16 +5,14 @@
 #include "InterfaceSyncedSlider.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedSlider::InterfaceSyncedSlider(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): QSlider(parent), identity(ident){
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateDeclaration);
-        QObject::connect(ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateValue);
+    InterfaceSyncedSlider::InterfaceSyncedSlider(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): ctrl(std::move(ctrl)), QSlider(parent), identity(ident){
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateDeclaration);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedSlider::updateValue);
 
         QObject::connect(this, &InterfaceSyncedSlider::valueChanged, this, &InterfaceSyncedSlider::notifyChangedValue);
 
         this->setTracking(false);
         this->setOrientation(Qt::Horizontal);
-
-        this->ctrl = ctrl;
     }
 
     void InterfaceSyncedSlider::updateValue() {

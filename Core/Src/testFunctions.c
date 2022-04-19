@@ -272,35 +272,35 @@ status executeSquareDrive() {
 	if (HAL_GetTick() - velTimer < t) {
 		velocityRef[body_x] = v;
 		velocityRef[body_y] = 0.0;
-		velocityRef[body_w] = 0.0;
+		velocityRef[body_yaw] = 0.0;
 	} else if (HAL_GetTick() - velTimer < 2*t) {
 		velocityRef[body_x] = v;
 		velocityRef[body_y] = 0.0;
-		velocityRef[body_w] = 0.5*M_PI;
+		velocityRef[body_yaw] = 0.5*M_PI;
 	} else if (HAL_GetTick() - velTimer < 3*t) {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = v;
-		velocityRef[body_w] = 0.0;
+		velocityRef[body_yaw] = 0.0;
 	} else if (HAL_GetTick() - velTimer < 4*t) {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = v;
-		velocityRef[body_w] = 0.5*M_PI;
+		velocityRef[body_yaw] = 0.5*M_PI;
 	} else if (HAL_GetTick() - velTimer < 5*t) {
 		velocityRef[body_x] = -v;
 		velocityRef[body_y] = 0.0;
-		velocityRef[body_w] = 0.0;
+		velocityRef[body_yaw] = 0.0;
 	} else if (HAL_GetTick() - velTimer < 6*t) {
 		velocityRef[body_x] = -v;
 		velocityRef[body_y] = 0.0;
-		velocityRef[body_w] = 0.5*M_PI;
+		velocityRef[body_yaw] = 0.5*M_PI;
 	} else if (HAL_GetTick() - velTimer < 7*t) {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = -v;
-		velocityRef[body_w] = 0.0;
+		velocityRef[body_yaw] = 0.0;
 	} else if (HAL_GetTick() - velTimer < 8*t) {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = -v;
-		velocityRef[body_w] = 0.5*M_PI;
+		velocityRef[body_yaw] = 0.5*M_PI;
 	} else if (count < reps-1) {
 		velTimer = HAL_GetTick();
 		count++;
@@ -309,7 +309,7 @@ status executeSquareDrive() {
 	} else {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = 0.0;
-		velocityRef[body_w] = 0.0;
+		velocityRef[body_yaw] = 0.0;
 		Putty_printf("---------- End of test ----------\n\r");
 		return test_done;
 	}

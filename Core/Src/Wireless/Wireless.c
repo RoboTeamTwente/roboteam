@@ -14,6 +14,7 @@
 
 static bool isWirelessConnected = false; // boolean to check whether we have a wireless connection or not
 static bool isWirelessTransmitting = false; // boolean to check whether we are transmitting feedback
+static uint8_t last_valid_RSSI = 0;
 
 // make buffers
 uint8_t TX_buffer[MAX_BUF_LENGTH] __attribute__((aligned(16)));
@@ -115,6 +116,10 @@ bool checkWirelessConnection() {
 	return isWirelessConnected;
 }
 
+uint8_t Wireless_getLastValidRSSI(){
+    return last_valid_RSSI;
+}
+
 // -------------------------------------------- Handlers
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     uint16_t irq = getIRQ(SX);
@@ -150,6 +155,7 @@ void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes){
     	toggle_Pin(LED6_pin);
     	// if signal is strong, then receive packet; otherwise wait for packets
     	if (SX->Packet_status->RSSISync < 160) {
+            last_valid_RSSI = SX->Packet_status->RSSISync;
     		ReceivePacket(SX);
 
     		if (wirelessFeedback && !isWirelessTransmitting) {

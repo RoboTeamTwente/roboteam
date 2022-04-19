@@ -125,8 +125,10 @@ void wheels_DeInit(){
 void wheels_Stop(){
 	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
 		wheel_pwms[wheel] = 0;
+		wheels_commanded_speeds[wheel] = 0;
 	}
 	setWheelPWMs(wheel_pwms);
+	
 }
 
 /**

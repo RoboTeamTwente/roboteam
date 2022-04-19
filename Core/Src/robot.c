@@ -108,6 +108,7 @@ void executeCommands(REM_RobotCommand* robotCommand){
 
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
+	memset(robotCommand, 0, sizeof(REM_RobotCommand));
 	/* This needs to be constantly updated whenever the RobotCommand definition changes
 	 * Quite prone to human error. Should be possible to reset the entire struct somehow */
 	robotCommand->doKick = false;
@@ -238,6 +239,7 @@ void init(void){
     dribbler_Init();
     if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
+
 	/* Initialize the SX1280 wireless chip */
 	// TODO figure out why a hardfault occurs when this is disabled
 	if(read_Pin(IN2_pin)){
@@ -357,7 +359,7 @@ void loop(void){
     robotFeedback.angle = stateEstimation_GetState()[body_w];
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
+    robotFeedback.rssi = Wireless_getLastValidRSSI(); // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;

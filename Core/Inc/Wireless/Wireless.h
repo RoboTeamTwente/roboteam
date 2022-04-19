@@ -39,6 +39,7 @@ void ReceivePacket(SX1280* SX);
 void Wireless_IRQ_Handler(SX1280* SX, uint8_t * data, uint8_t Nbytes);
 void Wireless_DMA_Handler(SX1280* SX, uint8_t output[]);
 bool checkWirelessConnection();
+uint8_t Wireless_getLastValidRSSI();
 
 void SX1280_updateChannel(WIRELESS_CHANNEL channel);
 WIRELESS_CHANNEL SX1280_getCurrentChannel();

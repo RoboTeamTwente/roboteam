@@ -88,7 +88,7 @@ void executeCommands(REM_RobotCommand* robotCommand){
 	float stateReference[3];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
-	stateReference[body_w] = robotCommand->angle;
+	stateReference[body_yaw] = robotCommand->angle;
 	stateControl_SetRef(stateReference);
 	dribbler_SetSpeed(robotCommand->dribbler);
 	shoot_SetPower(robotCommand->kickChipPower);
@@ -154,7 +154,7 @@ void printRobotStateData() {
 
 	LOG_printf("XSens   x=%.2f m/s^2  y=%.2f m/s^2  yaw=%.2f  omega=%.2f rad/s\n", 
 	MTi->acc[body_x], MTi->acc[body_y], 
-	stateEstimation_GetState()[body_w], MTi->gyr[2]);
+	stateEstimation_GetState()[body_yaw], MTi->gyr[2]);
 	IWDG_Refresh(iwdg);
 	
 	LOG_printf("Kalman  x=%.2f m/s  y=%.2f m/s\n", 
@@ -354,7 +354,7 @@ void loop(void){
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
     robotFeedback.rho = sqrt(vx*vx + vy*vy);
-    robotFeedback.angle = stateEstimation_GetState()[body_w];
+    robotFeedback.angle = stateEstimation_GetState()[body_yaw];
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
@@ -373,21 +373,20 @@ void loop(void){
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
 	{
+		PIDvariables* robotGains;
+		stateControl_GetState(robotGains);
 		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
 		robotPIDGains.remVersion = LOCAL_REM_VERSION;
 		robotPIDGains.id = ROBOT_ID;
-		robotPIDGains.PbodyX = 2;
-		robotPIDGains.IbodyX = 0;
-		robotPIDGains.DbodyX = 1;
-		robotPIDGains.PbodyY = 2;
-		robotPIDGains.IbodyY = 0;
-		robotPIDGains.DbodyY = 1;
-		robotPIDGains.PbodyYaw = 2;
-		robotPIDGains.IbodyYaw = 0;
-		robotPIDGains.DbodyYaw = 1;
-		robotPIDGains.Pwheels = 0;
-		robotPIDGains.Iwheels = 0;
-		robotPIDGains.Dwheels = 0;
+		robotPIDGains.PbodyX = robotGains[body_x].kP;
+		robotPIDGains.IbodyX = robotGains[body_x].kI;
+		robotPIDGains.DbodyX = robotGains[body_x].kD;
+		robotPIDGains.PbodyY = robotGains[body_y].kP;
+		robotPIDGains.IbodyY = robotGains[body_y].kI;
+		robotPIDGains.DbodyY = robotGains[body_y].kD;
+		robotPIDGains.PbodyYaw = robotGains[body_yaw].kP;
+		robotPIDGains.IbodyYaw = robotGains[body_yaw].kI;
+		robotPIDGains.DbodyYaw = robotGains[body_yaw].kD;
 	}
 	
     // Heartbeat every 17ms	

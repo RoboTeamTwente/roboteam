@@ -32,12 +32,12 @@ int stateControl_Init(){
 		// 50 W
 		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
 		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_w], 20.0, 5.0, 0.0);
+		initPID(&stateK[body_yaw], 20.0, 5.0, 0.0);
 	} else {
 		// 30 W
 		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
 		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_w], 20.0, 30.0, 0.0);
+		initPID(&stateK[body_yaw], 20.0, 30.0, 0.0);
 	}
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
@@ -54,7 +54,7 @@ void stateControl_Update(){
 		float translationalRef[4] = {0.0f};
 		translationVelControl(state, stateRef, translationalRef);
 
-		float angularRef = angleControl(stateRef[body_w], state[body_w]);
+		float angularRef = angleControl(stateRef[body_yaw], state[body_yaw]);
 
 		for (wheel_names wheel=wheels_RF; wheel<=wheels_LF; wheel++){
 			wheelRef[wheel] = translationalRef[wheel] + angularRef;
@@ -65,7 +65,7 @@ void stateControl_Update(){
 void stateControl_SetRef(float input[3]){
 	stateRef[body_x] = input[body_x];
 	stateRef[body_y] = input[body_y];
-	stateRef[body_w] = input[body_w];
+	stateRef[body_yaw] = input[body_yaw];
 }
 
 float* stateControl_GetWheelRef() {
@@ -75,11 +75,23 @@ float* stateControl_GetWheelRef() {
 void stateControl_SetState(float input[3]){
 	state[body_x] = input[body_x];
 	state[body_y] = input[body_y];
-	state[body_w] = input[body_w];
+	state[body_yaw] = input[body_yaw];
+}
+
+void stateControl_GetState(PIDvariables gains[3]){
+	gains[body_x].kP = stateK[body_x].kP;
+	gains[body_x].kI = stateK[body_x].kI;
+	gains[body_x].kD = stateK[body_x].kD;
+	gains[body_y].kP = stateK[body_y].kP;
+	gains[body_y].kI = stateK[body_y].kI;
+	gains[body_y].kD = stateK[body_y].kD;
+	gains[body_yaw].kP = stateK[body_yaw].kP;
+	gains[body_yaw].kI = stateK[body_yaw].kI;
+	gains[body_yaw].kD = stateK[body_yaw].kD;
 }
 
 void stateControl_ResetAngleI(){
-	stateK[body_w].I = 0;
+	stateK[body_yaw].I = 0;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -96,12 +108,12 @@ static void global2Local(float global[3], float local[3], float  yaw){
 	//trigonometry
 	local[body_x] = cosf(yaw)*global[body_x]+sinf(yaw)*global[body_y];
 	local[body_y] = -sinf(yaw)*global[body_x]+cosf(yaw)*global[body_y];
-	local[body_w] = global[body_w];
+	local[body_yaw] = global[body_yaw];
 }
 
 static void translationVelControl(float state[3], float stateRef[3], float translationalRef[4]){
 	float stateLocalRef[3] = {0, 0, 0};
-	global2Local(stateRef, stateLocalRef, state[body_w]); //transfer global to local
+	global2Local(stateRef, stateLocalRef, state[body_yaw]); //transfer global to local
 
 	// Manually adjusting velocity command
 	//     Explanation: see Velocity Difference file on drive (https://docs.google.com/document/d/1pGKysiwpu19DKLpAZ4GpluMV7UBhBQZ65YMTtI7bd_8/)
@@ -124,10 +136,10 @@ static float angleControl(float angleRef, float angle){
 		angleErr = 0.000001*prevangleErr;
 	}
 	if (fabs(angleErr) < YAW_MARGIN || prevangleErr/angleErr < 0) {
-		stateK[body_w].I = 0;
+		stateK[body_yaw].I = 0;
 	}
 	prevangleErr = angleErr;
-	return PID(angleErr, &stateK[body_w]);// PID control from control_util.h
+	return PID(angleErr, &stateK[body_yaw]);// PID control from control_util.h
 }
 
 

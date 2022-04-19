@@ -20,8 +20,6 @@ class InterfaceDeclarations {
 
        mutable std::mutex mtx;
 
-       std::atomic_bool did_change;
-
    public:
        ~InterfaceDeclarations() = default;
 
@@ -45,12 +43,11 @@ class InterfaceDeclarations {
 
        std::map<std::string, InterfaceDeclaration> getDeclarations() const noexcept;
        std::optional<InterfaceDeclaration> getDeclaration(std::string) const noexcept;
+       std::vector<std::string> getWithSuffix(const std::string&) const noexcept;
 
        void handleData(const proto::UiOptionDeclarations&) noexcept;
 
        proto::UiOptionDeclarations toProto() const noexcept;
-
-       bool getDidChange();
 };
 
 }

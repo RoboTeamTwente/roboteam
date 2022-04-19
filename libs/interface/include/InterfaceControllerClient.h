@@ -8,15 +8,27 @@
 
 #include <roboteam_interface_utils/InterfaceController.h>
 #include <WorldNetworker.hpp>
+#include <QObject>
+#include <QTimer>
 
 #include "InterfaceFieldStateStore.h"
 
 namespace rtt::Interface {
-    class InterfaceControllerClient: public InterfaceController<16971, 20, 20, proto::UiValues, proto::ModuleState> {
+    class InterfaceControllerClient: public QObject, public InterfaceController<16971, 20, 20, proto::UiValues, proto::ModuleState>  {
+        Q_OBJECT
     public:
         std::weak_ptr<InterfaceFieldStateStore> getFieldState() const;
-        InterfaceControllerClient(): fieldState(std::make_shared<InterfaceFieldStateStore>()), InterfaceController<16971, 20, 20, proto::UiValues, proto::ModuleState>(), field_subscriber(std::make_unique<rtt::net::WorldSubscriber>([this] (auto state) { field_state_callback(state); })) {}
+        InterfaceControllerClient(): QObject(), fieldState(std::make_shared<InterfaceFieldStateStore>()), InterfaceController<16971, 20, 20, proto::UiValues, proto::ModuleState>(), field_subscriber(std::make_unique<rtt::net::WorldSubscriber>([this] (auto state) { field_state_callback(state); })) {
+            QObject::connect(&interface_timer, &QTimer::timeout, this, &InterfaceControllerClient::refresh_trigger);
+            interface_timer.start(16); // 60 FPS
+        }
+        void stop() override;
+    signals:
+        void refresh_trigger();
+
     private:
+        QTimer interface_timer;
+
         std::unique_ptr<rtt::net::WorldSubscriber> field_subscriber;
 
         std::shared_ptr<InterfaceFieldStateStore> fieldState;

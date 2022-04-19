@@ -13,7 +13,7 @@ namespace rtt::Interface {
     class InterfaceSyncedCheckableButton: public QPushButton {
         Q_OBJECT
     public:
-        InterfaceSyncedCheckableButton(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
+        InterfaceSyncedCheckableButton(std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
 
     protected:
         std::string identity;
@@ -21,7 +21,7 @@ namespace rtt::Interface {
 
         std::weak_ptr<InterfaceControllerClient> ctrl;
     public slots:
-        void updateValue(std::weak_ptr<InterfaceSettings>);
+        void updateValue();
     private slots:
         void didCheck(bool);
     };

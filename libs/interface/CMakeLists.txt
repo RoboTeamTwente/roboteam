@@ -37,6 +37,7 @@ add_library(roboteam_interface_lib
         include/InterfaceWidgetRobotDisplay.h
         include/InterfaceSyncedCheckableButton.h
         include/InterfaceWidgetDebugDisplay.h
+        include/InterfaceControllerClient.h
         )
 
 target_link_libraries(roboteam_interface_lib

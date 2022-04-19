@@ -5,12 +5,12 @@
 #ifndef RTT_INTERFACEWIDGETROBOTDISPLAY_H
 #define RTT_INTERFACEWIDGETROBOTDISPLAY_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QLabel>
 #include <proto/WorldRobot.pb.h>
 
 namespace rtt::Interface {
-    class InterfaceWidgetRobotDisplay: public QWidget {
+    class InterfaceWidgetRobotDisplay: public QFrame {
         Q_OBJECT
     public:
         InterfaceWidgetRobotDisplay(QWidget* parent = nullptr);

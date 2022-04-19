@@ -5,15 +5,13 @@
 #include "InterfaceSyncedRadio.h"
 
 namespace rtt::Interface {
-InterfaceSyncedRadio::InterfaceSyncedRadio(const MainWindow * window, std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): QButtonGroup(parent), identity(ident) {
-    QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedRadio::updateDeclaration);
-    QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedRadio::updateValue);
+InterfaceSyncedRadio::InterfaceSyncedRadio(std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): ctrl(std::move(ctrlptr)), QButtonGroup(parent), identity(ident) {
+    QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateDeclaration);
+    QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedRadio::updateValue);
 
     QObject::connect(this, &InterfaceSyncedRadio::idToggled, this, &InterfaceSyncedRadio::notifyChangedValue);
 
     this->setExclusive(true);
-
-    this->ctrl = ctrlptr;
 }
 
 void InterfaceSyncedRadio::updateProps(const InterfaceDeclaration &decl) {
@@ -39,8 +37,8 @@ void InterfaceSyncedRadio::updateProps(const InterfaceDeclaration &decl) {
 
 
 }
-void InterfaceSyncedRadio::updateDeclaration(std::weak_ptr<InterfaceDeclarations> declptr) {
-    auto alldecl = declptr.lock();
+void InterfaceSyncedRadio::updateDeclaration() {
+    auto alldecl = ctrl.lock()->getDeclarations().lock();
     if (!alldecl) return;
 
     auto decl = alldecl.get()->getDeclaration(this->identity);
@@ -50,10 +48,11 @@ void InterfaceSyncedRadio::updateDeclaration(std::weak_ptr<InterfaceDeclarations
     this->updateProps(decl.value());
 }
 
-void InterfaceSyncedRadio::updateValue(std::weak_ptr<InterfaceSettings> settings) {
-    auto values = settings.lock();
+void InterfaceSyncedRadio::updateValue() {
+    auto lockCtrl = ctrl.lock();
+    auto values = lockCtrl.get()->getValues().lock();
     if (!values) return;
-    this->updateDeclaration(ctrl.lock()->getDeclarations());
+    this->updateDeclaration();
     auto newVal = values.get()->getSetting(this->identity);
     if (!newVal.has_value()) return;
 

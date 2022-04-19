@@ -17,7 +17,7 @@ namespace rtt::Interface {
     class InterfaceWidgetRobotOverview: public QWidget {
         Q_OBJECT
     public:
-        InterfaceWidgetRobotOverview(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, QWidget* = nullptr);
+        InterfaceWidgetRobotOverview(std::weak_ptr<InterfaceControllerClient>, QWidget* = nullptr);
 
     private:
         std::weak_ptr<InterfaceControllerClient> controller;

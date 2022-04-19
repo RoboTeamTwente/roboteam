@@ -9,22 +9,22 @@
 #include "roboteam_interface_utils/InterfaceDeclaration.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedCheckbox::InterfaceSyncedCheckbox(const MainWindow* window, std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): QCheckBox(parent), identity(ident) {
-        QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedCheckbox::updateDeclaration);
-        QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedCheckbox::updateValue);
+    InterfaceSyncedCheckbox::InterfaceSyncedCheckbox(std::weak_ptr<InterfaceControllerClient> ctrl, std::string ident, QWidget *parent): ctrl(std::move(ctrl)), QCheckBox(parent), identity(ident) {
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateDeclaration);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedCheckbox::updateValue);
 
         QObject::connect(this, &InterfaceSyncedCheckbox::stateChanged, this, &InterfaceSyncedCheckbox::notifyChangedValue);
-
-        this->ctrl = ctrl;
-
     }
 
     void InterfaceSyncedCheckbox::updateProps(const InterfaceDeclaration& decl) {
         if (!decl.isMutable) this->setCheckable(false);
     }
 
-    void InterfaceSyncedCheckbox::updateValue(std::weak_ptr<InterfaceSettings> valuesPtr) {
-        if (auto settings = valuesPtr.lock()) {
+    void InterfaceSyncedCheckbox::updateValue() {
+        auto cptr = ctrl.lock();
+        auto sptr = cptr.get()->getValues();
+
+        if (auto settings = sptr.lock()) {
 
             auto newValue = settings->getSetting(this->identity);
             if (!newValue.has_value()) return;
@@ -41,8 +41,10 @@ namespace rtt::Interface {
         }
     }
 
-    void InterfaceSyncedCheckbox::updateDeclaration(std::weak_ptr<InterfaceDeclarations> declPtr) {
-        auto decls = declPtr.lock();
+    void InterfaceSyncedCheckbox::updateDeclaration() {
+        auto cptr = ctrl.lock();
+        auto decls = cptr.get()->getDeclarations().lock();
+
         if (!decls) return;
 
         auto self = decls.get()->getDeclaration(this->identity);

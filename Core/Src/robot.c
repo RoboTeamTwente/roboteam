@@ -373,7 +373,7 @@ void loop(void){
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
 	{
-		PIDvariables* robotGains;
+		PIDvariables robotGains[3];
 		stateControl_GetState(robotGains);
 		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
 		robotPIDGains.remVersion = LOCAL_REM_VERSION;

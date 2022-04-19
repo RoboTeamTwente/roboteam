@@ -73,7 +73,7 @@ class BaseTypeGenerator:
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
 
 			for variable, n_bits, _range, _ in variables:
-				range_min, range_max = 0, n_bits**2
+				range_min, range_max = 0, 2**n_bits-1
 				if _range is not None: range_min, range_max = _range
 
 				VARIABLE_NAME = CamelCaseToUpper(variable)

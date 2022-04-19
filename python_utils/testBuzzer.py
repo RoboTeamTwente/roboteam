@@ -10,11 +10,11 @@ import multiprocessing
 import getch
 import sys
 
-import roboteam_embedded_messages.python.BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.RobotBuzzer import RobotBuzzer
+import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
+from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer
 
 basestation = None
-buzzPacket = RobotBuzzer()
+buzzPacket = REM_RobotBuzzer()
 
 lastWritten = time.time()
 packetHz = 60
@@ -65,7 +65,7 @@ except Exception as e:
 	exit()
 
 
-buzzPacket.header = BaseTypes.PACKET_TYPE_ROBOT_BUZZER
+buzzPacket.header = BaseTypes.PACKET_TYPE_REM_ROBOT_BUZZER
 buzzPacket.remVersion = BaseTypes.LOCAL_REM_VERSION
 buzzPacket.id = robotId
 
@@ -107,7 +107,7 @@ while True:
 
 			packetType = packet_type[0]
 
-			if packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
+			if packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				msg = basestation.readline().decode()
 				print("[LOG]", msg, end="")
 

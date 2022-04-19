@@ -13,6 +13,5 @@ void loop();
 
 void updateTouchState(TouchState* touchState);
 bool handlePacket(uint8_t* packet, uint32_t packet_length);
-void handleStatistics();
 
 #endif  /* __BASESTATION_H */

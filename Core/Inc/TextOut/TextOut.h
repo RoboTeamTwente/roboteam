@@ -20,6 +20,7 @@
   (byte & 0x01 ? '1' : '0')
 
 #include "usbd_cdc_if.h"
+void LOG_printf(char *format, ...);
 void LOG(char *message);
 void TextOut(char *str);
 void HexOut(uint8_t*, uint8_t);

@@ -20,7 +20,7 @@ from roboteam_embedded_messages.python.BasestationSetConfiguration import Basest
 ROBOT_ID = 0
 
 ROTATE_COMMAND = RobotCommand()
-ROTATE_COMMAND.header = BaseTypes.PACKET_TYPE_ROBOT_COMMAND
+ROTATE_COMMAND.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
 ROTATE_COMMAND.remVersion = BaseTypes.LOCAL_REM_VERSION
 ROTATE_COMMAND.id = ROBOT_ID
 ROTATE_COMMAND.dribbler = 1
@@ -29,7 +29,7 @@ ROTATE_COMMAND.theta = 0
 ROTATE_COMMAND.angle = 0
 
 STOP_COMMAND = RobotCommand()
-STOP_COMMAND.header = BaseTypes.PACKET_TYPE_ROBOT_COMMAND
+STOP_COMMAND.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
 STOP_COMMAND.remVersion = BaseTypes.LOCAL_REM_VERSION
 STOP_COMMAND.id = ROBOT_ID
 STOP_COMMAND.dribbler = 0
@@ -41,16 +41,16 @@ ROBOT_FEEDBACK = RobotFeedback()
 
 CHANGE_TO_YELLOW = BasestationSetConfiguration()
 CHANGE_TO_YELLOW.channel = 0
-CHANGE_TO_YELLOW.header = BaseTypes.PACKET_TYPE_BASESTATION_SET_CONFIGURATION
+CHANGE_TO_YELLOW.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION
 CHANGE_TO_YELLOW.remVersion = BaseTypes.LOCAL_REM_VERSION
 
 CHANGE_TO_BLUE = BasestationSetConfiguration()
 CHANGE_TO_BLUE.channel = 1
-CHANGE_TO_BLUE.header = BaseTypes.PACKET_TYPE_BASESTATION_SET_CONFIGURATION
+CHANGE_TO_BLUE.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION
 CHANGE_TO_BLUE.remVersion = BaseTypes.LOCAL_REM_VERSION
 
 GET_CONFIG = BasestationGetConfiguration()
-GET_CONFIG.header = BaseTypes.PACKET_TYPE_BASESTATION_GET_CONFIGURATION;
+GET_CONFIG.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
 
 basestation = None
 packetHz = 60
@@ -83,22 +83,22 @@ def readBasestation():
 
     packetType = packet_type[0]
 
-    if packetType == BaseTypes.PACKET_TYPE_ROBOT_FEEDBACK:
-        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_FEEDBACK - 1)
+    if packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
+        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
         pass
-    elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_CONFIGURATION:
-        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_BASESTATION_CONFIGURATION - 1)
+    elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_CONFIGURATION:
+        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_BASESTATION_CONFIGURATION - 1)
         config.decode(packet)
         print("Received channel: " + channelToString(config.channel))
         
-    elif packetType == BaseTypes.PACKET_TYPE_ROBOT_STATE_INFO:
-        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_STATE_INFO - 1)
+    elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
+        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
         pass
-    elif packetType == BaseTypes.PACKET_TYPE_BASESTATION_LOG:
-        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_BASESTATION_LOG - 1)
+    elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
+        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_BASESTATION_LOG - 1)
         pass
-    elif packetType == BaseTypes.PACKET_TYPE_ROBOT_LOG:
-        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_ROBOT_LOG - 1)
+    elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
+        packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_LOG - 1)
         pass
     else:
         #print(f"Error : Unhandled packet with type {packetType}")

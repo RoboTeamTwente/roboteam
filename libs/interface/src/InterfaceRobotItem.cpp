@@ -5,6 +5,8 @@
 #include "InterfaceRobotItem.h"
 #include <QGraphicsView>
 
+#include <math.h>
+
 void InterfaceRobotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     painter->save();
     painter->setRenderHint(QPainter::RenderHint::Antialiasing);

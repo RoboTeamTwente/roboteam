@@ -176,11 +176,11 @@ while True:
 							if test == "kicker"  : cmd.doKick = True
 							if test == "chipper" : cmd.doChip = True
 							cmd.doForce = True
-							cmd.kickChipPower = 0.2
+							cmd.kickChipPower = BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX // 2
 
 					if test == "dribbler":
 						cmd.dribbler = periodFraction
-						log = "speed = %d" % cmd.dribbler
+						log = "speed = %.2f" % cmd.dribbler
 
 					if test == "rotate":
 						cmd.angle = -math.pi + 2 * math.pi * ((periodFraction*4 + 0.5) % 1)
@@ -314,6 +314,11 @@ while True:
 				length = int(robotFeedback.rho * 500)
 				px, py = rotate((250, 250), (250, 250+length), robotFeedback.theta)
 				cv2.line(img, (250,250), (int(px), int(py)), (1, 0, 0), 8)
+
+				dBm = -robotFeedback.rssi/2
+				cv2.rectangle(img, (10, 10), (210, 20), (100, 0, 0), 2)
+				cv2.rectangle(img, (10, 10), (10 + int(200*(1 - dBm/-80)), 20), (0, 255, 0), -1)
+				if -80 < dBm: print(dBm)
 
 			### Draw information received from the RobotStateInfo packet
 			if time.time() - stateInfoTimestamp < 1:

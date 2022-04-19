@@ -40,7 +40,6 @@
 static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
-SX1280* SX;
 MTi_data* MTi;
 
 uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
@@ -74,6 +73,8 @@ uint32_t timestamp_initialized = 0;
 
 bool flagSendPIDGains = false;
 bool isSerialConnected = false;
+bool isWirelessConnected = false;
+uint8_t last_valid_RSSI = 0;
 uint32_t timeLastPacket = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
@@ -81,7 +82,82 @@ uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
+/* SX data */
+// TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
+extern SX1280_Settings SX1280_DEFAULT_SETTINGS;
+static Wireless SX1280 = {0};
+static Wireless* SX = &SX1280;
+static uint8_t SX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+static uint8_t SX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 
+static WirelessPacket txPacket;
+static WirelessPacket rxPacket;
+
+// The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
+SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer, .logger=LOG_printf,};
+
+void Wireless_Writepacket_Cplt(void){
+  TransmitPacket(SX);
+}
+void Wireless_Readpacket_Cplt(void){
+  //handlePacket(..., SX_RX->payloadLength);
+	toggle_Pin(LED6_pin);
+	handlePacket(rxPacket.message,rxPacket.payloadLength);
+
+	/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
+	* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
+	* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
+	* Somehow, make sure that this is only done on RX_DONE
+	*/
+	txPacket.payloadLength = 0;
+
+	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
+	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
+
+	if(SEND_ROBOT_STATE_INFO){
+		encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
+		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
+	}
+
+	// TODO ensure this is only done when a packet is actually being sent
+	// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
+	// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
+	// if(flagSendPIDGains){
+		encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (txPacket.message + txPacket.payloadLength), &robotPIDGains);
+		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_PIDGAINS;
+		flagSendPIDGains = false;
+	// }
+
+	// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
+	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
+};
+
+void Wireless_TXDone(SX1280_Packet_Status *status){
+//   toggle_pin(LD_TX);
+}
+
+void Wireless_RXDone(SX1280_Packet_Status *status){
+  /* It is possible that random noise can trigger the syncword. 
+    * Syncword is 32 bits. Noise comes in at 2.4GHz. Syncword resets when wrong bit is received.
+    * Expected length of wrong syncword is 1*0.5 + 2*0.25 + 3*0.125 + ... = 2
+    * 2^32 combinations / (2400000000 / 2) syncwords = correct syncword every 3.57 seconds purely from noise
+  */
+  // Correct syncword from noise have a very weak signal 
+  // Threshold is at -160/2 = -80 dBm
+  if (status->RSSISync < 160) {
+    ReadPacket_DMA(SX, &rxPacket, &Wireless_Readpacket_Cplt);
+	isWirelessConnected = true;
+	last_valid_RSSI = status->RSSISync;
+  }
+}
+
+void Wireless_RXTXTimeout(void){
+  // Did not receive packet from robot. Should never be triggered, since the receiving SX is in continuous receiving mode
+//   toggle_pin(LD_LED3);
+	isWirelessConnected = false;
+}
+
+Wireless_IRQcallbacks SX_IRQcallbacks = {.txdone= &Wireless_TXDone, .rxdone= &Wireless_RXDone, .rxtxtimeout= &Wireless_RXTXTimeout};
 
 
 void executeCommands(REM_RobotCommand* robotCommand){
@@ -241,19 +317,34 @@ void init(void){
     set_Pin(LED3_pin, 1);
 
 	/* Initialize the SX1280 wireless chip */
-	// TODO figure out why a hardfault occurs when this is disabled
+	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
+	set.periodBaseCount = WIRELESS_RX_COUNT;
+	Wireless_Error err;
+	SX_Interface.BusyPin = SX_BUSY_pin;
+	SX_Interface.CS = SX_NSS_pin;
+	SX_Interface.Reset = SX_RST_pin;
+	err = Wireless_setPrint_Callback(SX, NULL);
+    err = Wireless_Init(SX, set, &SX_Interface);
+    err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
+    if(err != WIRELESS_OK){
+      //TODO: What do?
+      while(1);
+    }
+    
+
 	if(read_Pin(IN2_pin)){
-		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
+		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
-		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
+		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
 	}
 	LOG_sendAll();
     
-	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
-    setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
+	Wireless_setTXSyncword(SX,robot_syncWord[16]);
+	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
+	Wireless_setRXSyncwords(SX, syncwords);
+	WaitForPacket(SX);
 	set_Pin(LED4_pin, 1);
 
 	/* Initialize the XSens chip */
@@ -318,7 +409,7 @@ void loop(void){
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected)) || !REM_last_packet_had_correct_version;
+    halt = !(xsens_CalibrationDone && (isWirelessConnected || isSerialConnected)) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
@@ -359,7 +450,7 @@ void loop(void){
     robotFeedback.angle = stateEstimation_GetState()[body_w];
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    robotFeedback.rssi = Wireless_getLastValidRSSI(); // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
+    robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
@@ -517,12 +608,8 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 
 	// If we received data from the SX1280
-	if(hspi->Instance == SX->SPI->Instance) {
-
-		Wireless_DMA_Handler(SX, message_buffer_in);
-
-		uint8_t total_packet_length = SX->payloadLength;
-		handlePacket(message_buffer_in, total_packet_length);
+	if(hspi->Instance == SX->Interface->SPI->Instance) {
+		Wireless_DMA_Handler(SX);
 	}
 
 	// If we received data from the XSens
@@ -544,34 +631,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-
-		/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
-		* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
-		* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
-		* Somehow, make sure that this is only done on RX_DONE
-		*/
-		uint8_t total_packet_length = 0;
-
-		encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (message_buffer_out + total_packet_length), &robotFeedback);
-		total_packet_length += PACKET_SIZE_REM_ROBOT_FEEDBACK;
-
-		if(SEND_ROBOT_STATE_INFO){
-			encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
-			total_packet_length += PACKET_SIZE_REM_ROBOT_STATE_INFO;
-		}
-
-		// TODO ensure this is only done when a packet is actually being sent
-		// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
-		// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
-		// if(flagSendPIDGains){
-			encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (message_buffer_out + total_packet_length), &robotPIDGains);
-			total_packet_length += PACKET_SIZE_REM_ROBOT_PIDGAINS;
-			flagSendPIDGains = false;
-		// }
-
-		// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
-
-		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
+		Wireless_IRQ_Handler(SX);
 
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);

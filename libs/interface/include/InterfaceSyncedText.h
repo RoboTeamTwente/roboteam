@@ -13,14 +13,14 @@ namespace rtt::Interface {
     class InterfaceSyncedText: public QLineEdit {
         Q_OBJECT
     public:
-        InterfaceSyncedText(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
+        InterfaceSyncedText(std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     protected:
         std::string identity;
 
         std::weak_ptr<InterfaceControllerClient> ctrl;
     protected slots:
-        void updateDeclaration(std::weak_ptr<InterfaceDeclarations>);
-        void updateValue(std::weak_ptr<InterfaceSettings>);
+        void updateDeclaration();
+        void updateValue();
 
         void notifyChangedValue(const QString& text);
 

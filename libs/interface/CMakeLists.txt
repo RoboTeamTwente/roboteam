@@ -37,10 +37,11 @@ add_library(roboteam_interface_lib
         include/InterfaceWidgetRobotDisplay.h
         include/InterfaceSyncedCheckableButton.h
         include/InterfaceWidgetDebugDisplay.h
+        include/InterfaceControllerClient.h
         )
 
 target_link_libraries(roboteam_interface_lib
-        PUBLIC Qt::Widgets
+        PUBLIC Qt5::Widgets
         PUBLIC roboteam_interface_utils_lib)
 
 target_include_directories(roboteam_interface_lib

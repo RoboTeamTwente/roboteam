@@ -13,7 +13,7 @@ namespace rtt::Interface {
     class InterfaceSyncedSlider: public QSlider {
         Q_OBJECT
     public:
-        InterfaceSyncedSlider(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
+        InterfaceSyncedSlider(std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     private:
         std::string identity;
         int dpi;
@@ -22,8 +22,8 @@ namespace rtt::Interface {
 
         void updateProps(const InterfaceDeclaration&);
     protected slots:
-        void updateDeclaration(std::weak_ptr<InterfaceDeclarations>);
-        void updateValue(std::weak_ptr<InterfaceSettings>);
+        void updateDeclaration();
+        void updateValue();
 
         void notifyChangedValue(int value);
 

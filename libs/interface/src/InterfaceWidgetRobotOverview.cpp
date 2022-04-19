@@ -7,8 +7,8 @@
 
 #include <utility>
 namespace rtt::Interface {
-    InterfaceWidgetRobotOverview::InterfaceWidgetRobotOverview(const MainWindow* window, std::weak_ptr<InterfaceControllerClient> ctrl, QWidget *parent): QWidget(parent), controller(std::move(ctrl)) {
-        QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceWidgetRobotOverview::doUpdate);
+    InterfaceWidgetRobotOverview::InterfaceWidgetRobotOverview(std::weak_ptr<InterfaceControllerClient> ctrl, QWidget *parent): QWidget(parent), controller(std::move(ctrl)) {
+        QObject::connect(this->controller.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceWidgetRobotOverview::doUpdate);
         this->setLayout(new QHBoxLayout);
         this->layout()->setAlignment(Qt::AlignmentFlag::AlignCenter);
     }
@@ -24,7 +24,7 @@ namespace rtt::Interface {
 
             auto state = fieldState->getState();
 
-            auto robots = vals->getSetting("IS_YELLOW").value() == InterfaceValue(true) ? state.ball_camera_world().yellow() : state.ball_camera_world().blue();
+            auto robots = vals->getSetting("IS_YELLOW").value() == InterfaceValue(true) ? state.last_seen_world().yellow() : state.last_seen_world().blue();
 
             if (this->displays.size() != robots.size()) {
                 while (auto item = this->layout()->takeAt(0)) {

@@ -14,15 +14,15 @@ namespace rtt::Interface {
     class InterfaceSyncedCheckbox: public QCheckBox {
         Q_OBJECT
     public:
-        InterfaceSyncedCheckbox(const MainWindow*, std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
+        InterfaceSyncedCheckbox(std::weak_ptr<InterfaceControllerClient>, std::string, QWidget* = nullptr);
     protected:
         std::string identity;
 
         std::weak_ptr<InterfaceControllerClient> ctrl;
         void updateProps(const InterfaceDeclaration&);
     protected slots:
-        void updateDeclaration(std::weak_ptr<InterfaceDeclarations>);
-        void updateValue(std::weak_ptr<InterfaceSettings>);
+        void updateDeclaration();
+        void updateValue();
 
         void notifyChangedValue(int state);
 

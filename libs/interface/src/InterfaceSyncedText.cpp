@@ -5,17 +5,16 @@
 #include "InterfaceSyncedText.h"
 
 namespace rtt::Interface {
-    InterfaceSyncedText::InterfaceSyncedText(const MainWindow *window, std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): QLineEdit(parent), identity(ident) {
-        QObject::connect(window, &MainWindow::declarationsChanged, this, &InterfaceSyncedText::updateDeclaration);
-        QObject::connect(window, &MainWindow::valuesChanged, this, &InterfaceSyncedText::updateValue);
+    InterfaceSyncedText::InterfaceSyncedText(std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget *parent): ctrl(std::move(ctrlptr)), QLineEdit(parent), identity(ident) {
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedText::updateDeclaration);
+        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedText::updateValue);
 
         QObject::connect(this, &InterfaceSyncedText::textChanged, this, &InterfaceSyncedText::notifyChangedValue);
 
-        this->ctrl = ctrlptr;
     }
 
-    void InterfaceSyncedText::updateValue(std::weak_ptr<InterfaceSettings> settings) {
-        auto vals = settings.lock();
+    void InterfaceSyncedText::updateValue() {
+        auto vals = this->ctrl.lock().get()->getValues().lock();
 
         if (!vals) return;
 
@@ -31,7 +30,7 @@ namespace rtt::Interface {
         }
     }
 
-    void InterfaceSyncedText::updateDeclaration(std::weak_ptr<InterfaceDeclarations> declPtr) {
+    void InterfaceSyncedText::updateDeclaration() {
         return;
     }
 

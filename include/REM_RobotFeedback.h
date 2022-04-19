@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- -------- angle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- rssi
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
 */
 
 #ifndef __REM_ROBOT_FEEDBACK_H
@@ -46,7 +46,7 @@ typedef struct _REM_RobotFeedback {
     float      angle               ; // float   [-3.142, 3.142]      The estimated angle (rad)
     uint32_t   wheelLocked         ; // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32_t   wheelBraking        ; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
-    uint32_t   rssi                ; // integer [0, 15]              Signal strength of the last packet received by the robot
+    uint32_t   rssi                ; // integer [0, 255]             Signal strength of the last packet received by the robot
 } REM_RobotFeedback;
 
 // ================================ GETTERS ================================
@@ -115,7 +115,7 @@ static inline uint32_t REM_RobotFeedback_get_wheelBraking(REM_RobotFeedbackPaylo
 }
 
 static inline uint32_t REM_RobotFeedback_get_rssi(REM_RobotFeedbackPayload *remrfp){
-    return ((remrfp->payload[11] & 0b11110000) >> 4);
+    return ((remrfp->payload[11]));
 }
 
 // ================================ SETTERS ================================
@@ -187,7 +187,7 @@ static inline void REM_RobotFeedback_set_wheelBraking(REM_RobotFeedbackPayload *
 }
 
 static inline void REM_RobotFeedback_set_rssi(REM_RobotFeedbackPayload *remrfp, uint32_t rssi){
-    remrfp->payload[11] = ((rssi << 4) & 0b11110000) | (remrfp->payload[11] & 0b00001111);
+    remrfp->payload[11] = rssi;
 }
 
 // ================================ ENCODE ================================

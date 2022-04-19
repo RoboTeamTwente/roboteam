@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- -------- angle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- rssi
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
 """
 
 import numpy as np
@@ -40,7 +40,7 @@ class REM_RobotFeedback:
     angle = 0                 # float   [-3.142, 3.142]      The estimated angle (rad)
     wheelLocked = 0           # integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     wheelBraking = 0          # integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
-    rssi = 0                  # integer [0, 15]              Signal strength of the last packet received by the robot
+    rssi = 0                  # integer [0, 255]             Signal strength of the last packet received by the robot
 
 
 
@@ -111,7 +111,7 @@ class REM_RobotFeedback:
 
     @staticmethod
     def get_rssi(payload):
-        return ((payload[11] & 0b11110000) >> 4);
+        return ((payload[11]));
 
 # ================================ SETTERS ================================
     @staticmethod
@@ -183,7 +183,7 @@ class REM_RobotFeedback:
 
     @staticmethod
     def set_rssi(payload, rssi):
-        payload[11] = ((rssi << 4) & 0b11110000) | (payload[11] & 0b00001111);
+        payload[11] = rssi;
 
 # ================================ ENCODE ================================
     def encode(self):

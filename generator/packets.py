@@ -35,7 +35,7 @@ packets = {
         ["angle",              16, [-math.pi, math.pi],    "The estimated angle (rad)"],
         ["wheelLocked",        4,  None, "Indicates if a wheel is locked. One bit per wheel"],
         ["wheelBraking",       4,  None, "Indicates if a wheel is slipping. One bit per wheel"],
-        ["rssi",               4,  None, "Signal strength of the last packet received by the robot"]
+        ["rssi",               8,  None, "Signal strength of the last packet received by the robot"]
     ],
     "REM_RobotStateInfo" : [
         ["header",             8,  None, "Header byte indicating the type of packet"],

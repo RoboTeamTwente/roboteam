@@ -73,11 +73,13 @@ class BaseTypeGenerator:
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
 
 			for variable, n_bits, _range, _ in variables:
-				if _range is None: continue
+				range_min, range_max = 0, n_bits**2
+				if _range is not None: range_min, range_max = _range
+
 				VARIABLE_NAME = CamelCaseToUpper(variable)
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MIN".ljust(60), f"{_range[0]:.16f}".rstrip('0')) + "\n"
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MAX".ljust(60), f"{_range[1]:.16f}".rstrip('0')) + "\n"
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_N_BITS".ljust(60), f"{n_bits}" + "\n")
+				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_MIN".ljust(60), f"{range_min:.16f}".rstrip('0')) + "\n"
+				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_MAX".ljust(60), f"{range_max:.16f}".rstrip('0')) + "\n"
+				file_string += self.to_constant(f"PACKET_RANGE{PACKET_NAME}_{VARIABLE_NAME}_N_BITS".ljust(60), f"{n_bits}" + "\n")
 
 			file_string += "\n"
 

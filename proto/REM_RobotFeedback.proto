@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- -------- angle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- rssi
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
 */
 
 syntax="proto3";
@@ -39,5 +39,5 @@ message REM_RobotFeedback {
     float angle = 13;         // float   [-3.142, 3.142]      The estimated angle (rad)
     uint32 wheelLocked = 14;  // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32 wheelBraking = 15; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
-    uint32 rssi = 16;         // integer [0, 15]              Signal strength of the last packet received by the robot
+    uint32 rssi = 16;         // integer [0, 255]             Signal strength of the last packet received by the robot
 }

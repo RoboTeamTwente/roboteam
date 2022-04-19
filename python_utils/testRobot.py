@@ -107,7 +107,7 @@ rate_of_turn_avg = 0
 lastWritten = time.time()
 tickCounter = 0
 periodLength = 300
-packetHz = 1
+packetHz = 60
 
 totalCommandsSent = 0
 totalFeedbackReceived = 0
@@ -272,6 +272,7 @@ while True:
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
+				print("\n", logmessage)
 				lastBasestationLog = logmessage[:-1] + " "*20
 				# print(lastBasestationLog)
 

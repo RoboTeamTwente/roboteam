@@ -13,7 +13,6 @@
 #include "REM_RobotGetPIDGains.h"
 #include "REM_RobotPIDGains.h"
 
-bool isTransmitting;
 REM_SX1280FillerPayload SX1280_filler_payload;
 
 struct _buffer_RobotCommand {

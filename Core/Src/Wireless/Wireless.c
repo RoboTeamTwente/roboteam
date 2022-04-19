@@ -369,6 +369,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     /* Packet sent to robot */
     if(irq & IRQ_TX_DONE){
+        if(w->state == WIRELESS_TRANSMITTING) w->state = WIRELESS_READY;
         getPacketStatus(w->Interface, &ps);
         if(w->irqcallbacks->txdone){
             w->irqcallbacks->txdone(&ps);
@@ -413,7 +414,7 @@ Wireless_Error Wireless_DMA_Handler(Wireless* w){
     switch (w->state){
     case WIRELESS_READING:
         DMA_Callback(w->Interface, w->readbufdest, w->readbufBytes);
-        if(w->continuousreceive == true){
+        if(w->continuousreceive){
             w->state = WIRELESS_RECEIVING;
         } else{
             w->state = WIRELESS_READY;

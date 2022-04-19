@@ -181,6 +181,7 @@ void loop(){
     handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains);
     LOG(logBuffer);
     logBuffer[0] = '\0';
+    toggle_pin(LD_ACTIVE);
   }
 
   // TODO put multiple of these messages into a single USB packet, instead of sending every packet separately
@@ -591,10 +592,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
     /* Send new command if available for this robot ID */
     if(0 < total_packet_length){
-      if(!isTransmitting){
-        isTransmitting = true;
-
-
+      if(SX_TX->state == WIRELESS_READY){
         /* Add a filler packet to the buffer if there are currently less than 6 bytes in the buffer
         * The minimum payload size for the SX1280 in FLRC mode is 6 bytes. 
         * See documentation page 124 - Table 14-36: Sync Word Combination in FLRC Packet */

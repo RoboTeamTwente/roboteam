@@ -255,26 +255,11 @@ Wireless_Error Wireless_setRXSyncwords(Wireless* w, uint32_t syncwords[2]){
     return WIRELESS_OK;
 }
 
-void SendPacket(Wireless* w, uint8_t * data, uint8_t Nbytes){
-	clearIRQ(w->Interface,IRQ_ALL);
-
-    // If the packet that we're sending has a different size than the previous packet, we have to update the packet size in the SX1280
-    // Table 14-38: Payload Length Definition in FLRC Packet, page 124
-    if(w->Settings.PacketParam.payloadsize != Nbytes){
-        w->Settings.PacketParam.payloadsize = Nbytes;
-        setPacketParam(w->Interface, &w->Settings.PacketParam);
-    }
-    // Not sure if this is needed, but just to be sure
-    clearIRQ(w->Interface,IRQ_ALL);
-
-    writeBuffer(w->Interface, w->Settings.TXoffset, data, Nbytes);
-    // HAL_Delay(0);    
-    setTX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
-}
-
-
 // SX1280 buffer interface functions
 Wireless_Error WritePacket(Wireless* w, WirelessPacket* packet){
+    if(w->state != WIRELESS_READY)
+        return WIRELESS_ERROR;
+         
     w->state = WIRELESS_WRITING;
 
     clearIRQ(w->Interface,IRQ_ALL);
@@ -289,7 +274,11 @@ Wireless_Error WritePacket(Wireless* w, WirelessPacket* packet){
     return WIRELESS_OK;
 }
 Wireless_Error WritePacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Writepacket_Callback* func){
+    if(w->state != WIRELESS_READY)
+        return WIRELESS_ERROR;
+         
     w->state = WIRELESS_WRITING;
+
     w->wrcallback = func;
 
     clearIRQ(w->Interface,IRQ_ALL);

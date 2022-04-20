@@ -43,9 +43,9 @@ class Time {
     bool operator==(const Time &other) const;
     bool operator!=(const Time &other) const;
 
-    // Returns the current date separated by the given char. Eg: "2022-12-30"
+    // Returns the current date separated by the given char (YYYY-MM-DD). Eg: "2022-12-30"
     static std::string getDate(char separator);
-    // Returns the current time separated by the given char. Eg: "24-59-06"
+    // Returns the current time separated by the given char (HH:MM:SS). Eg: "23:59:06"
     static std::string getTime(char separator);
 
    private:

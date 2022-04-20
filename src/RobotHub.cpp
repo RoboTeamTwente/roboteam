@@ -1,8 +1,13 @@
 #include <REM_RobotCommand.h>
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
+#include <roboteam_utils/Time.h>
+#include <roboteam_utils/Format.hpp>
 
 #include <cmath>
+
+#include <sstream>
+#include <roboteam_utils/Vector2.h>
 
 namespace rtt::robothub {
 
@@ -30,6 +35,11 @@ RobotHub::RobotHub() {
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
+    this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+
+    this->robotStateLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTSTATES.txt");
+    this->robotCommandLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTCOMMANDS.txt");
+    this->robotFeedbackLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTFEEDBACK.txt");
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -172,6 +182,8 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
             RTT_WARNING("Unknown RobotHub mode")
             break;
     }
+
+    this->logRobotCommands(commands, color);
 }
 
 void RobotHub::onSettings(const proto::Setting &settings) {
@@ -283,7 +295,50 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     this->statistics.feedbackBytesSent += static_cast<int>(sizeof(feedback));
+
+    this->logRobotFeedback(feedback);
+
     return this->robotFeedbackPublisher->publish(feedback);
+}
+
+void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
+    this->logRobotStateInfo(info, team);
+}
+
+void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
+    std::stringstream ss;
+    ss << "[" << Time::getTime(':') << "] "
+       << "Team: " << teamToString(team)
+       << "Id: " << formatString("%2i", info.id) << ", "
+       << "MsgId: " << formatString("%5i", info.messageId) << ", "
+       << "xSensAcc1: " << formatString("%7f", info.xsensAcc1) << ", "
+       << "xSensAcc2: " << formatString("%7f", info.xsensAcc2) << ", "
+       << "xSensYaw: " << formatString("%7f", info.xsensYaw) << ", "
+       << "rateOfTurn: " << formatString("%7f", info.rateOfTurn) << ", "
+       << "wheelSp1: " << formatString("%&7f", info.wheelSpeed1) << ", "
+       << "wheelSp2: " << formatString("%7f", info.wheelSpeed2) << ", "
+       << "wheelSp3: " << formatString("%7f", info.wheelSpeed3) << ", "
+       << "wheelSp4: " << formatString("%7f", info.wheelSpeed4) << std::endl;
+    this->robotStateLogger->writeNewLine(ss.str());
+}
+
+void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team team) {
+    std::stringstream ss;
+    ss << "[" << Time::getTime(':') << "] " << "{"
+        << "Team: " << teamToString(team) << ", "
+        << "Commands: [" << std::endl;
+    for (const auto& command : commands) {
+        ss << " - " << command << std::endl;
+    }
+    ss << "]}";
+    this->robotStateLogger->writeNewLine(ss.str());
+}
+
+void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
+    std::stringstream ss;
+    ss << "[" << Time::getTime(':') << "] " << feedback;
+
+    this->robotFeedbackLogger->writeNewLine(ss.str());
 }
 
 const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }

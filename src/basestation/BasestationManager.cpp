@@ -77,6 +77,10 @@ int BasestationManager::sendBasestationStatisticsRequest(rtt::Team color) const 
 
 void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, rtt::Team)>& callback) { this->feedbackCallbackFunction = callback; }
 
+void BasestationManager::setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo&, rtt::Team)>& callback) {
+
+}
+
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -129,6 +133,10 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
 
 void BasestationManager::callFeedbackCallback(const REM_RobotFeedback& feedback, rtt::Team color) const {
     if (this->feedbackCallbackFunction != nullptr) this->feedbackCallbackFunction(feedback, color);
+}
+
+void BasestationManager::callRobotStateInfoCallback(const REM_RobotStateInfo& robotStateInfo, rtt::Team color) const {
+    if (this->robotStateInfoCallbackFunction != nullptr) this->robotStateInfoCallbackFunction(robotStateInfo, color);
 }
 
 FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string message) : message(message) {}

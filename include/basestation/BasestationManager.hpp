@@ -3,6 +3,8 @@
 #include <REM_RobotBuzzer.h>
 #include <REM_RobotCommand.h>
 #include <REM_RobotFeedback.h>
+#include <REM_RobotStateInfo.h>
+
 #include <libusb-1.0/libusb.h>
 
 #include <roboteam_utils/Teams.hpp>
@@ -29,6 +31,7 @@ class BasestationManager {
     int sendBasestationStatisticsRequest(rtt::Team color) const;
 
     void setFeedbackCallback(const std::function<void(const REM_RobotFeedback &, rtt::Team color)> &callback);
+    void setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo &, rtt::Team color)> &callback);
 
     const BasestationManagerStatus getStatus() const;
 
@@ -45,6 +48,8 @@ class BasestationManager {
 
     std::function<void(const REM_RobotFeedback &, rtt::Team)> feedbackCallbackFunction;
     void callFeedbackCallback(const REM_RobotFeedback &feedback, rtt::Team color) const;
+    std::function<void(const REM_RobotStateInfo &, rtt::Team)> robotStateInfoCallbackFunction;
+    void callRobotStateInfoCallback(const REM_RobotStateInfo& stateInfo, rtt::Team color) const;
 
     static std::vector<libusb_device *> filterBasestationDevices(libusb_device *const *const devices, int device_count);
 };

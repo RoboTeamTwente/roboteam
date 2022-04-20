@@ -27,7 +27,7 @@ void FileLogger::write(const std::string& text) {
     *this->stream << text;
 }
 
-bool FileLogger::flush() {
+void FileLogger::flush() {
     std::scoped_lock<std::mutex> lock(this->streamMutex);
     this->stream->flush();
 }

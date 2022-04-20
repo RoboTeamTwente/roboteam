@@ -23,7 +23,7 @@ public:
     // Writes the given text to the file
     void write(const std::string& text);
     // Synchronizes the file with the internal buffer. Read: saves
-    bool flush();
+    void flush();
 
 private:
     std::unique_ptr<std::ofstream> stream;

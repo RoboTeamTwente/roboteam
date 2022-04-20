@@ -1,12 +1,9 @@
-//
-// Created by rolf on 19-08-20.
-//
-
-#ifndef RTT_RANDOM_H
-#define RTT_RANDOM_H
-
+#pragma once
 #include <random>
+#include <iterator>
+
 class Time;
+
 /**
  * @brief This class generates random numbers. The seed is provided by the user.
  * This is to generate deterministic but 'random' sequences. Note that for using replayability,
@@ -30,4 +27,37 @@ class Random {
     std::mt19937 engine;
 };
 
-#endif  // RTT_RANDOM_H
+/* This class will generate a simple random value, meant for testing.
+ * Warning: This does not give true random values, but predictable ones. */
+class SimpleRandom {
+public:
+    // Returns a random integer within the given range
+    static int getInt(int low, int high);
+    // Returns a random integer;
+    static int getInt();
+
+    // Returns a random long within the given range
+    static long getLong(long low, long high);
+    // Returns a random long
+    static long getLong();
+
+    // Returns a random double within the given range
+    static double getDouble(double low, double high);
+    // Returns a random double
+    static double getDouble();
+
+    // Returns a random boolean
+    static bool getBool();
+
+    // Returns a random element within the given range. Can be used for enums
+    // by giving a vector of all possible enum values
+    template <class Iterator>
+    static Iterator getRandomElement(Iterator start, Iterator end) {
+        auto dist = std::distance(start, end);
+        if (dist == 0)
+            return end;
+        auto randomPosition = SimpleRandom::getLong(0, dist - 1);
+        std::advance(start, randomPosition);
+        return start;
+    }
+};

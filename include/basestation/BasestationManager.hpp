@@ -26,7 +26,6 @@ class BasestationManager {
 
     int sendRobotCommand(const REM_RobotCommand &command, rtt::Team color) const;
     int sendRobotBuzzerCommand(const REM_RobotBuzzer &command, rtt::Team color) const;
-    int sendBasestationStatisticsRequest(rtt::Team color) const;
 
     void setFeedbackCallback(const std::function<void(const REM_RobotFeedback &, rtt::Team color)> &callback);
 

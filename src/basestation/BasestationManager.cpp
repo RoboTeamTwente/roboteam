@@ -1,5 +1,3 @@
-#include <REM_BasestationGetStatistics.h>
-
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
 
@@ -56,20 +54,6 @@ int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, r
     BasestationMessage message;
     message.payloadSize = PACKET_SIZE_REM_ROBOT_BUZZER;
     std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
-
-    int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
-    return bytesSent;
-}
-
-int BasestationManager::sendBasestationStatisticsRequest(rtt::Team color) const {
-    REM_BasestationGetStatistics command;
-
-    REM_BasestationGetStatisticsPayload payload;
-    encodeREM_BasestationGetStatistics(&payload, &command);
-
-    BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_STATISTICS;
-    std::memcpy(message.payloadBuffer, &payload.payload, message.payloadSize);
 
     int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
     return bytesSent;

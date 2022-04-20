@@ -55,3 +55,31 @@ Time Time::timeTo() const { return (*this - now()); }
 // Unfortunately some of our input sources use doubles for times.
 //  We need to round to the nearsest nanosecond to prevent small fpe problems from propagating to whole nanoseconds
 Time::Time(double seconds) : timePoint{std::chrono::nanoseconds((long)std::round(seconds * 1e9))} {}
+
+std::string Time::getDate(char separator) {
+    // Get the current time
+    time_t now = time(nullptr);
+    struct tm tstruct = {};
+    tstruct = *localtime(&now);
+    // Create a format string for the date
+    std::string sepStr = std::string(1, separator);
+    std::string formatText = "%Y" + sepStr + "%m" + sepStr + std::string("%d");
+    // Format the string with the current date
+    char buf[11];
+    strftime(buf, sizeof(buf), formatText.c_str(), &tstruct);
+    return buf;
+}
+
+std::string Time::getTime(char separator) {
+    // Get the current time
+    time_t now = time(nullptr);
+    struct tm tstruct = {};
+    tstruct = *localtime(&now);
+    // Create a format string for the time
+    std::string sepStr = std::string(1, separator);
+    std::string formatText = "%H" + sepStr + "%M" + sepStr + "%S";
+    // Format the string with the current time
+    char buf[10];
+    strftime(buf, sizeof(buf), formatText.c_str(), &tstruct);
+    return buf;
+}

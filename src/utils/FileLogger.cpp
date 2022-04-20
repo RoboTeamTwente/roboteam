@@ -17,17 +17,17 @@ FileLogger::~FileLogger() {
         this->stream->close();
 }
 
-void FileLogger::writeNewLine(const std::string& line) const {
+void FileLogger::writeNewLine(const std::string& line) {
     std::scoped_lock<std::mutex> lock(this->streamMutex);
     *this->stream << line << std::endl;
 }
 
-void FileLogger::write(const std::string& text) const {
+void FileLogger::write(const std::string& text) {
     std::scoped_lock<std::mutex> lock(this->streamMutex);
     *this->stream << text;
 }
 
-bool FileLogger::flush() const {
+bool FileLogger::flush() {
     std::scoped_lock<std::mutex> lock(this->streamMutex);
     this->stream->flush();
 }

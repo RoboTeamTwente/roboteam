@@ -14,15 +14,7 @@ enum class RelativeTeam {
     US, THEM
 };
 
-std::string teamToString(Team team) {
-    switch (team) {
-        case Team::YELLOW:
-            return "YELLOW";
-        case Team::BLUE:
-            return "BLUE";
-        default:
-            return "UNKNOWN";
-    }
-}
+std::string teamToString(Team team);
+std::string relativeTeamToString(RelativeTeam team);
 
 } // namespace rtt

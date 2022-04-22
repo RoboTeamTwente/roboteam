@@ -48,8 +48,6 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
         // Store received packet in local RobotCommandPayload. Send to robot.c for decoding
         memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
         robot_setRobotCommandPayload(&rcp);
-        // Hack. Set flag for robot.c
-        robotCommandIsFresh = 1;
     }else{
         // TODO add some error handling here or something.
         LOG("Unknown header\n");

@@ -594,7 +594,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
 		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
 		
-		wheels_Update();
 		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];

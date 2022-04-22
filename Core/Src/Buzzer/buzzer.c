@@ -70,15 +70,15 @@ void buzzer_Play_note(uint16_t period, float duration){
 }
 
 void buzzer_Play(song_struct* tone) {
-	tone->period = (tone->period == 0) ? 0xFFFF : ((1e6 / tone->period)-1);
-	buzzer_Duration = (0.9e6 / tone->period) * (tone->duration);
+	uint16_t tone_period = (tone->period == 0) ? 0xFFFF : ((1e6 / tone->period)-1);
+	buzzer_Duration = (0.9e6 / tone_period) * (tone->duration);
 
 	__HAL_TIM_SET_COUNTER(PWM_Buzzer.TIM, 0);
-	buzzer_SetPWM_Period(tone->period);
-	buzzer_SetPWM_Duty(tone->period/2);
+	buzzer_SetPWM_Period(tone_period);
+	buzzer_SetPWM_Duty(tone_period/2);
 	HAL_TIM_Base_Start_IT(PWM_Buzzer.TIM);
 
-	if(tone->period != 0xFFFF)
+	if(tone_period != 0xFFFF)
 		HAL_TIM_PWM_Start(PWM_Buzzer.TIM, PWM_Buzzer.Channel);	
 }
 

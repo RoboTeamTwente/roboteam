@@ -9,21 +9,19 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
+import os
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
 from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
-from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
 from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
-
+from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
 
 
 # robotStateInfoFile = open(f"robotStateInfo_{int(time.time())}.csv", "w")
 # robotFeedbackFile = open(f"robotFeedback_{int(time.time())}.csv", "w")
-
-
 
 
 try:
@@ -97,6 +95,7 @@ basestation = None
 robotFeedback = REM_RobotFeedback()
 robotStateInfo = REM_RobotStateInfo()
 robotPIDGains = REM_RobotPIDGains()
+robotLog = REM_RobotLog()
 
 feedbackTimestamp = 0
 stateInfoTimestamp = 0
@@ -106,7 +105,7 @@ rate_of_turn_avg = 0
 
 lastWritten = time.time()
 tickCounter = 0
-periodLength = 300
+periodLength = 200
 packetHz = 60
 
 totalCommandsSent = 0
@@ -124,7 +123,7 @@ stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF54485
 while True:
 	# Open basestation with the basestation
 	if basestation is None or not basestation.isOpen():
-		basestation = utils.openContinuous(timeout=0.001)
+		basestation = utils.openContinuous(timeout=0.01)
 
 	try:
 		# Continuously read and print messages from the basestation
@@ -221,15 +220,12 @@ while True:
 				if not robotConnected:
 					print(" Receiving no feedback!", end="")
 				tcs, tfr = totalCommandsSent, totalFeedbackReceived
-				print(f" {robotId} - {test} {bar} {log} | "
-					f"{lastBasestationLog}", end="\r")
+				print(f" {robotId} - {test} {bar} {log} | "	f"{lastBasestationLog}", end="\r")
 
 				# Send command
 				if test != "nothing" and test != "getpid":
 					basestation.write( cmd.encode() )
 					totalCommandsSent += 1
-
-
 
 
 
@@ -259,9 +255,6 @@ while True:
 
 				if REM_RobotStateInfo.get_id(packet) == robotId:
 					robotStateInfo.decode(packet)
-					# robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensYaw} {robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4}\n")
-					# robotStateInfoFile.flush()
-
 				else:
 					print("Error : Received StateInfo from robot %d ???" % REM_RobotFeedback.get_id(packet))
 
@@ -276,8 +269,11 @@ while True:
 				# print(lastBasestationLog)
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
-				logmessage = basestation.readline().decode()
-				print("[BOT]", logmessage)
+				# packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_LOG - 1)
+				packet = packet_type + basestation.readline()
+				robotLog.decode(packet)
+				logmessage = basestation.readline(robotLog.message_length).decode()
+				print("[BOT]", logmessage, end="")
 				# lastBasestationLog = logmessage[:-1] + " "*20
 			else:
 				print(f"Error : Unhandled packet with type {packetType}")
@@ -379,4 +375,6 @@ while True:
 	except KeyError:
 		print("[Error] KeyError", e, "{0:b}".format(int(str(e))))
 	except Exception as e:
-		print("[Error]", e)
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(f"[Error {exc_type} @ line {exc_tb.tb_lineno}] {e}")

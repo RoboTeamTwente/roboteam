@@ -7,7 +7,6 @@
 // These three are currently a callback hack for the REM implementation
 REM_RobotCommandPayload myRobotCommandPayload;
 REM_RobotCommand myRobotCommand;
-volatile uint8_t robotCommandIsFresh;
 
 uint8_t ROBOT_ID;
 

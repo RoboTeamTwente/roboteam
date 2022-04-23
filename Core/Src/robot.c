@@ -48,6 +48,7 @@ uint8_t message_buffer_out[127];
 REM_RobotCommandPayload robotCommandPayload = {0};
 REM_RobotBuzzerPayload robotBuzzerPayload = {0};
 REM_RobotFeedback robotFeedback = {0};
+REM_RobotFeedbackPayload robotFeedbackPayload = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
@@ -240,20 +241,20 @@ void printRobotStateData() {
 }
 
 void printRobotCommand(REM_RobotCommand* rc){
-	Putty_printf("======== RobotCommand ========\r\n");
-	Putty_printf("            id : %d\r\n", rc->id);
-	Putty_printf("        doKick : %d\r\n", rc->doKick);
-	Putty_printf("        doChip : %d\r\n", rc->doChip);
-	Putty_printf("       doForce : %d\r\n", rc->doForce);
-	Putty_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
-	Putty_printf("           rho : %.4f\r\n", rc->rho);
-	Putty_printf("         theta : %.4f\r\n", rc->theta);
-	Putty_printf("         angle : %.4f\r\n", rc->angle);
-	Putty_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
-	Putty_printf("      dribbler : %d\r\n", rc->dribbler);
-	Putty_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	Putty_printf("angularControl : %d\r\n", rc->angularControl);
-	Putty_printf("      feedback : %d\r\n", rc->feedback);
+	LOG_printf("======== RobotCommand ========\r\n");
+	LOG_printf("            id : %d\n", rc->id);
+	LOG_printf("        doKick : %d\n", rc->doKick);
+	LOG_printf("        doChip : %d\r\n", rc->doChip);
+	LOG_printf("       doForce : %d\r\n", rc->doForce);
+	LOG_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
+	LOG_printf("           rho : %.4f\r\n", rc->rho);
+	LOG_printf("         theta : %.4f\r\n", rc->theta);
+	LOG_printf("         angle : %.4f\r\n", rc->angle);
+	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
+	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
+	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
+	LOG_printf("angularControl : %d\r\n", rc->angularControl);
+	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 
 
@@ -301,7 +302,6 @@ void init(void){
 	}else{
 		/* Initialize Roboteam_Embedded_Messages. Not possible when Putty_Init() is called */
 		/* Can now receive RobotCommands (and other packets) via UART */
-		robotCommandIsFresh = 0;
 		REM_UARTinit(UART_PC);
 	}
 	set_Pin(LED2_pin, 1);
@@ -386,15 +386,6 @@ void loop(void){
 	/* Send anything in the log buffer over UART */
 	LOG_send();
 	
-	// If a RobotCommand came in via UART
-	if(robotCommandIsFresh == 1){
-		robotCommandIsFresh = 0;
-		timeLastPacket = currentTime;
-		decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
-
-		toggle_Pin(LED6_pin);
-	}
-
 	// Play a warning if a REM packet with an incorrect version was received
 	if(!REM_last_packet_had_correct_version)
 		if(!buzzer_IsPlaying())
@@ -411,6 +402,7 @@ void loop(void){
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !(xsens_CalibrationDone && (isWirelessConnected || isSerialConnected)) || !REM_last_packet_had_correct_version;
     if (halt) {
+		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         resetRobotCommand(&activeRobotCommand);
@@ -488,26 +480,29 @@ void loop(void){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_17ms < now) heartbeat_17ms += 17;
 
-		// encodeRobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
-		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO, 2);
-		// HAL_UART_Transmit_DMA(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO);
 	}	
 
     // Heartbeat every 100ms	
 	if(heartbeat_100ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_100ms < now) heartbeat_100ms += 100;
+
+		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
+		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
+
+		// encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
 	}
 
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
-		
+
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
-		
-        // Check if ballsensor connection is still correct
+
+		// Check if ballsensor connection is still correct
         if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
@@ -561,6 +556,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
+	timeLastPacket = HAL_GetTick();
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
@@ -613,7 +609,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 	}
 
 	// If we received data from the XSens
-	else if(hspi->Instance == MTi->SPI->Instance){
+	else if(MTi != NULL && hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
@@ -634,7 +630,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		Wireless_IRQ_Handler(SX);
 
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
-		MTi_IRQ_Handler(MTi);
+		if(MTi != NULL) MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
 		// TODO: make this work and use instead of the thing in the while loop
 		ballSensor_IRQ_Handler();
@@ -652,11 +648,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
+		if(MTi == NULL) return;
+
 		// State estimation		
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
 		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
 		
-		wheels_Update();
 		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];

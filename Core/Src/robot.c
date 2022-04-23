@@ -285,7 +285,7 @@ void init(void){
 
 	/* Initialize buzzer */
 	buzzer_Init();
-	buzzer_Play_QuickBeepUp();
+	// buzzer_Play_QuickBeepUp();
 	HAL_Delay(300);
 	set_Pin(LED1_pin, 1);
 
@@ -366,7 +366,7 @@ void init(void){
 
 	/* Turn of all leds. Will now be used to indicate robot status */
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
-	buzzer_Play_ID(ROBOT_ID);
+	// buzzer_Play_ID(ROBOT_ID);
 	
 	timestamp_initialized = HAL_GetTick();
 
@@ -609,7 +609,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 	}
 
 	// If we received data from the XSens
-	else if(MTi != NULL && hspi->Instance == MTi->SPI->Instance){
+	else if(/*MTi != NULL &&*/ hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
@@ -630,7 +630,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		Wireless_IRQ_Handler(SX);
 
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
-		if(MTi != NULL) MTi_IRQ_Handler(MTi);
+		// if(MTi != NULL) 
+		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
 		// TODO: make this work and use instead of the thing in the while loop
 		ballSensor_IRQ_Handler();
@@ -648,7 +649,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
-		if(MTi == NULL) return;
+		// if(MTi == NULL) return;
 
 		// State estimation		
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;

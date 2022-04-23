@@ -179,16 +179,16 @@ Wireless_Error Wireless_setIRQ_Callbacks(Wireless* w, Wireless_IRQcallbacks* irq
 Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
     switch (channel){
     case YELLOW_CHANNEL:
-        w->TXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
-        w->RXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        w->TXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        w->RXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
         break;
     case BLUE_CHANNEL:
-        w->TXchannel = WIRELESS_BLUE_FEEDBACK_CHANNEL;
-        w->RXchannel = WIRELESS_BLUE_COMMAND_CHANNEL;
+        w->TXchannel = WIRELESS_BLUE_COMMAND_CHANNEL;
+        w->RXchannel = WIRELESS_BLUE_FEEDBACK_CHANNEL;
         break;
     default:
-        w->TXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
-        w->RXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        w->TXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
+        w->RXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
         break;
     }
     // If the robot was in receiving mode, switch to the new frequency and continue receiving

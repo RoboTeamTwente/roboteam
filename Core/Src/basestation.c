@@ -130,7 +130,7 @@ void init(){
     SX_RX_Interface.Reset= SX_RX_RST;
     err = Wireless_setPrint_Callback(SX_TX, NULL);
     err = Wireless_Init(SX_RX, SX1280_DEFAULT_SETTINGS, &SX_RX_Interface);
-    err = Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
+    err = Wireless_setIRQ_Callbacks(SX_RX,&SXRX_IRQcallbacks);
     if(err != WIRELESS_OK){
       //TODO: What do?
       while(1);

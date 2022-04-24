@@ -19,6 +19,7 @@
 #include "ballSensor.h"
 #include "testFunctions.h"
 #include "logging.h"
+#include "SX1280_Constants.h"
 
 #include "rem.h"
 
@@ -76,8 +77,8 @@ bool flagSendPIDGains = false;
 bool is_connected_serial = false;
 bool is_connected_wireless = false;
 uint8_t last_valid_RSSI = 0;
-uint32_t time_last_packed_serial = 0;
-uint32_t time_last_packed_wireless = 0;
+uint32_t time_last_packet_serial = 0;
+uint32_t time_last_packet_wireless = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
@@ -105,7 +106,7 @@ void Wireless_Writepacket_Cplt(void){
 
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
-	time_last_packed_wireless = HAL_GetTick();
+	time_last_packet_wireless = HAL_GetTick();
 	handlePacket(rxPacket.message,rxPacket.payloadLength);
 
 	/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
@@ -184,20 +185,6 @@ void executeCommands(REM_RobotCommand* robotCommand){
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
 	memset(robotCommand, 0, sizeof(REM_RobotCommand));
-	/* This needs to be constantly updated whenever the RobotCommand definition changes
-	 * Quite prone to human error. Should be possible to reset the entire struct somehow */
-	robotCommand->doKick = false;
-	robotCommand->doChip = false;
-	robotCommand->doForce = false;
-	robotCommand->useCameraAngle = false;
-	robotCommand->rho = 0.;
-	robotCommand->theta = 0.;
-	robotCommand->angle = 0.;
-	robotCommand->cameraAngle = 0.;
-	robotCommand->dribbler = 0;
-	robotCommand->kickChipPower = 0;
-	robotCommand->angularControl = false;
-	robotCommand->feedback = false;
 }
 
 void printRobotStateData() {
@@ -397,15 +384,15 @@ void loop(void){
 			buzzer_Play_WarningTwo();
 
 	// If serial packet is no older than 250ms, assume connected via wire
-	is_connected_serial = (currentTime - time_last_packed_wired) < 250;
-
+	is_connected_serial = (currentTime - time_last_packet_serial) < 250;
+	is_connected_wireless = (currentTime - time_last_packet_wireless) < 250;
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (is_connected_wireless || is_connected_serial)) || !REM_last_packet_had_correct_version;
+    halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
@@ -527,27 +514,14 @@ void loop(void){
         }
     }
 
-    /*
-    * LEDs for debugging
-    */
-
+    /* LEDs for debugging */
     // LED0 : toggled every second while alive
-    // LED1 : on while xsens startup calibration is not finished
-    // LED2 : on when braking
-    // LED3 : on when halting
-    // LED4 : on when ballsensor says ball is within kicking range
-    // LED5 : on when battery is empty
-    // LED6 : toggled when a packet is received
-
-    // LED0 done in PuTTY prints above
-    set_Pin(LED1_pin, !xsens_CalibrationDone);
-    set_Pin(LED2_pin, wheels_GetWheelsBraking());
-    set_Pin(LED3_pin, halt);
-    set_Pin(LED4_pin, ballPosition.canKickBall);
-    // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
-    // LED6 done in Wireless.c
-
-	
+    set_Pin(LED1_pin, !xsens_CalibrationDone);		// On while xsens startup calibration is not finished
+    set_Pin(LED2_pin, wheels_GetWheelsBraking());   // On when braking 
+    set_Pin(LED3_pin, halt);						// On when halting
+    set_Pin(LED4_pin, ballPosition.canKickBall);    // On when ballsensor says ball is within kicking range
+	// LED5 unused
+    // LED6 Wireless_Readpacket_Cplt : toggled when a packet is received
 }
 
 void handleRobotCommand(uint8_t* packet_buffer){
@@ -572,7 +546,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
-	time_last_packed_wired = HAL_GetTick();
+	time_last_packet_serial = HAL_GetTick();
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){

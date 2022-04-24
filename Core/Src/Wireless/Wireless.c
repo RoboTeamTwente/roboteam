@@ -321,18 +321,18 @@ Wireless_Error ReadPacket_DMA(Wireless* w, Wireless_Packet* packet, Wireless_Rea
 // Send/Receive functions
 // write to buffer before calling TransmitPacket, otherwise the previous packet will be send
 Wireless_Error TransmitPacket(Wireless* w){
-    if(w->state != WIRELESS_READY) return WIRELESS_ERROR;
-
     w->state = WIRELESS_TRANSMITTING;
+    w->Settings.PacketParam.matchsyncword = RX_MATCH_SYNC_WORD_1;
+    setPacketParam(w->Interface, &w->Settings.PacketParam);  
     setChannel(w->Interface, w->TXchannel);
     setTX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
     return WIRELESS_OK;
 }
-Wireless_Error WaitForPacket(Wireless* w){
-    if(w->state != WIRELESS_READY) return WIRELESS_ERROR;
-    
+Wireless_Error WaitForPacket(Wireless* w){    
     w->state = WIRELESS_RECEIVING;
     w->continuousreceive = false;
+    w->Settings.PacketParam.matchsyncword = RX_MATCH_SYNC_WORD_2_3;
+    setPacketParam(w->Interface, &w->Settings.PacketParam);  
     setChannel(w->Interface, w->RXchannel);
     setRX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
     return WIRELESS_OK;
@@ -357,6 +357,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     if(irq & IRQ_CRC_ERROR) {
         if(w->irqcallbacks && w->irqcallbacks->crcerror){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_CRC_ERROR\n");
             w->irqcallbacks->crcerror();
             callback_handled = true;
         }
@@ -367,6 +368,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
         if(w->state == WIRELESS_TRANSMITTING) w->state = WIRELESS_READY;
         getPacketStatus(w->Interface, &ps);
         if(w->irqcallbacks && w->irqcallbacks->txdone){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_TX_DONE\n");
             w->irqcallbacks->txdone(&ps);
             callback_handled = true;
         }
@@ -376,6 +378,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     if(irq & IRQ_RX_DONE && !(irq & IRQ_CRC_ERROR)){
         getPacketStatus(w->Interface, &ps);
         if(w->irqcallbacks && w->irqcallbacks->rxdone){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RX_DONE\n");
             w->irqcallbacks->rxdone(&ps);
             callback_handled = true;
         }
@@ -383,6 +386,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     if(irq & IRQ_RXTX_TIMEOUT) {
         if(w->irqcallbacks && w->irqcallbacks->rxtxtimeout){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RXTX_TIMEOUT\n");
             w->irqcallbacks->rxtxtimeout();
             callback_handled = true;
         }
@@ -390,6 +394,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     
     if(irq & IRQ_SYNCWORD_VALID) {
         if(w->irqcallbacks && w->irqcallbacks->syncvalid){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_VALID\n");
             w->irqcallbacks->syncvalid();
             callback_handled = true;
         }
@@ -397,6 +402,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     if(irq & IRQ_SYNCWORD_ERROR) {
         if(w->irqcallbacks && w->irqcallbacks->syncerror){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_ERROR\n");
             w->irqcallbacks->syncerror();
             callback_handled = true;
         }
@@ -404,6 +410,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     if(irq & IRQ_PREAMBLE_DETECTED) {
         if(w->irqcallbacks && w->irqcallbacks->preambledetected){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_PREAMBLE_DETECTED\n");
             w->irqcallbacks->preambledetected();
             callback_handled = true;
         }
@@ -411,6 +418,7 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     if(!callback_handled){
         if(w->irqcallbacks && w->irqcallbacks->default_callback){
+            if(w->printf) w->printf("[Wireless_IRQ_Handler] Default IRQ Handler for %d\n", irq);
             w->irqcallbacks->default_callback();
         }else{
             /* WARNING! An IRQ has not been handled properly. This should never happen */

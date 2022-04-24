@@ -16,16 +16,17 @@
 #include "SX1280.h"
 #include "main.h"
 
-#define WIRELESS_DEFAULT_FEEDBACK_CHANNEL 30	// 2.395 GHz
-#define WIRELESS_DEFAULT_COMMAND_CHANNEL 40 // 2.385 GHz
-
 #define WIRELESS_YELLOW_CHANNELS 0
 #define WIRELESS_BLUE_CHANNELS 1
 
-#define WIRELESS_YELLOW_FEEDBACK_CHANNEL 30 // 2.395 GHz
-#define WIRELESS_YELLOW_COMMAND_CHANNEL 40 // 2.385 GHz
-#define WIRELESS_BLUE_FEEDBACK_CHANNEL 50
-#define WIRELESS_BLUE_COMMAND_CHANNEL 60
+#define WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION 30 // 2.43 GHz
+#define WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT 40 // 2.44 GHz
+#define WIRELESS_CHANNEL_BLUE_ROBOT_TO_BASESTATION 50 // 2.45 GHz
+#define WIRELESS_CHANNEL_BLUE_BASESTATION_TO_ROBOT 60 // 2.46 GHz
+
+#define WIRELESS_CHANNEL_DEFAULT_ROBOT_TO_BASESTATION WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION
+#define WIRELESS_CHANNEL_DEFAULT_BASESTATION_TO_ROBOT WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT
+
 
 typedef enum WIRELESS_CHANNEL {
     YELLOW_CHANNEL = 0,
@@ -47,18 +48,19 @@ typedef void Wireless_SyncError_Callback(void);
 typedef void Wireless_CRCError_Callback(void);
 typedef void Wireless_RXTXTimeout_Callback(void);
 typedef void Wireless_PreambleDetected_Callback(void);
+typedef void Wireless_Default_Callback(void);
 
 // TODO: Make a wireless error handler? In case an error occured, do this:??
 
 
 ////////////////////////////////////// Enums
-typedef enum _Wireless_Error{
+typedef enum Wireless_Error{
     WIRELESS_OK,
     WIRELESS_ERROR,
     WIRELESS_PARAM_ERROR,
 } Wireless_Error;
 
-typedef enum _Wireless_State{
+typedef enum Wireless_State{
     WIRELESS_RESET,
     WIRELESS_INIT,
     WIRELESS_READY,
@@ -66,12 +68,12 @@ typedef enum _Wireless_State{
     WIRELESS_READING,
     WIRELESS_TRANSMITTING,
     WIRELESS_RECEIVING,
-} Wireless_state;
+} Wireless_State;
 
 ////////////////////////////////////// Structs
 // Struct with callback functions for when an irq is triggered that is active (from the irqs in SX1280_IRQ)
 // Note: The corresponding IRQ needs to be activated and written in SX1280_Settings for the function to be called
-typedef struct{
+typedef struct Wireless_IRQcallbacks {
     Wireless_TXDone_Callback* txdone;
     Wireless_RXDone_Callback* rxdone;
     Wireless_SyncValid_Callback* syncvalid;
@@ -79,21 +81,22 @@ typedef struct{
     Wireless_CRCError_Callback* crcerror;
     Wireless_RXTXTimeout_Callback* rxtxtimeout;
     Wireless_PreambleDetected_Callback* preambledetected;
+    Wireless_Default_Callback* default_callback;
 } Wireless_IRQcallbacks;
 
-typedef struct{
+typedef struct Wireless_Packet {
     uint8_t message[MAX_PAYLOAD_SIZE];
     uint8_t payloadLength;
-} WirelessPacket;
+} Wireless_Packet;
 
 
-typedef struct _Wireless{
+typedef struct Wireless {
     SX1280_Interface* Interface;                // Interface struct containing all outside connections needed to communicate with the SX
     uint32_t TXSyncword;                        // Stores the current TX syncword used for sending packets
     uint32_t RXSyncwords[2];                    // Stores the syncwords the SX listens to when receiving packets, if 0 the syncword is inactive
     int32_t TXchannel;  	                    // current channel used for sending
     int32_t RXchannel;                          // current channel used for receiving
-    Wireless_state state;                       // Emulated internal state of the SX
+    Wireless_State state;                       // Emulated internal state of the SX
     bool continuousreceive;                     // bool that saves if the SX is configured to keep receiving packets
     uint8_t* readbufdest;                       // pointer used when read buffer with dma has been called, TODO: maybe refactor writing/reading to buffer so this can be removed
     uint8_t readbufBytes;                       // amount of bytes used when read buffer with dma has been called, TODO: maybe refactor writing/reading to buffer so this can be removed
@@ -117,10 +120,10 @@ Wireless_Error Wireless_setTXSyncword(Wireless* w, uint32_t syncword);
 Wireless_Error Wireless_setRXSyncwords(Wireless* w, uint32_t syncwords[2]);
 
 // SX1280 buffer interface functions
-Wireless_Error WritePacket(Wireless* w, WirelessPacket* packet);
-Wireless_Error WritePacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Writepacket_Callback* func);
-Wireless_Error ReadPacket(Wireless* w, WirelessPacket* packet);
-Wireless_Error ReadPacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Readpacket_Callback* func);
+Wireless_Error WritePacket(Wireless* w, Wireless_Packet* packet);
+Wireless_Error WritePacket_DMA(Wireless* w, Wireless_Packet* packet, Wireless_Writepacket_Callback* func);
+Wireless_Error ReadPacket(Wireless* w, Wireless_Packet* packet);
+Wireless_Error ReadPacket_DMA(Wireless* w, Wireless_Packet* packet, Wireless_Readpacket_Callback* func);
 
 // Send/Receive functions
 // write to buffer before calling TransmitPacket, otherwise the previous packet will be send

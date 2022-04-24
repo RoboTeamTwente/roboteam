@@ -91,7 +91,7 @@ const SX1280_Settings SX1280_DEFAULT_SETTINGS = {
         
         /* 14.3.1.5, page 121 */ .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}, /* Full power 1.3Mbps, 3/4 encoding rate, Pulse Shaping (Raised Cosine Filter) of 0.5 */ 
         /* 14.3.1.6, page 122 */ .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, MAX_PAYLOAD_SIZE, CRC_2_BYTE, NO_WHITENING},
-        .DIOIRQ = {(IRQ_TX_DONE|IRQ_RX_DONE|IRQ_CRC_ERROR|IRQ_RXTX_TIMEOUT), (IRQ_TX_DONE|IRQ_RX_DONE|IRQ_RXTX_TIMEOUT), IRQ_NONE, IRQ_NONE}
+        .DIOIRQ = {(IRQ_TX_DONE|IRQ_RX_DONE|IRQ_CRC_ERROR|IRQ_RXTX_TIMEOUT), (IRQ_TX_DONE|IRQ_RX_DONE|IRQ_CRC_ERROR|IRQ_RXTX_TIMEOUT), IRQ_NONE, IRQ_NONE}
 };
 
 // init functions
@@ -110,8 +110,8 @@ Wireless_Error Wireless_Init(Wireless* w, SX1280_Settings set, SX1280_Interface*
     w->RXSyncwords[1] = 0x0;
     w->readbufdest = NULL;
     w->readbufBytes = 0;
-    w->TXchannel = WIRELESS_DEFAULT_COMMAND_CHANNEL;
-    w->RXchannel = WIRELESS_DEFAULT_FEEDBACK_CHANNEL;
+    w->TXchannel = WIRELESS_CHANNEL_DEFAULT_ROBOT_TO_BASESTATION;
+    w->RXchannel = WIRELESS_CHANNEL_DEFAULT_BASESTATION_TO_ROBOT;
     
     // Start SX1280
 
@@ -164,6 +164,7 @@ Wireless_Error Wireless_Init(Wireless* w, SX1280_Settings set, SX1280_Interface*
 Wireless_Error Wireless_setPrint_Callback(Wireless* w, Wireless_printf* func){
     // assume input is correct. There is no way to check, other than a compile error
     w->printf = func;
+    if(w->printf) w->printf("[Wireless.c][Wireless_setPrint_Callback] Logging enabled\n");
     return WIRELESS_OK;
 }
 
@@ -177,16 +178,16 @@ Wireless_Error Wireless_setIRQ_Callbacks(Wireless* w, Wireless_IRQcallbacks* irq
 Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
     switch (channel){
     case YELLOW_CHANNEL:
-        w->TXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
-        w->RXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
+        w->TXchannel = WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION;
+        w->RXchannel = WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT;
         break;
     case BLUE_CHANNEL:
-        w->TXchannel = WIRELESS_BLUE_COMMAND_CHANNEL;
-        w->RXchannel = WIRELESS_BLUE_FEEDBACK_CHANNEL;
+        w->TXchannel = WIRELESS_CHANNEL_BLUE_ROBOT_TO_BASESTATION;
+        w->RXchannel = WIRELESS_CHANNEL_BLUE_BASESTATION_TO_ROBOT;
         break;
     default:
-        w->TXchannel = WIRELESS_YELLOW_COMMAND_CHANNEL;
-        w->RXchannel = WIRELESS_YELLOW_FEEDBACK_CHANNEL;
+        w->TXchannel = WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION;
+        w->RXchannel = WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT;
         break;
     }
     // If the robot was in receiving mode, switch to the new frequency and continue receiving
@@ -201,7 +202,7 @@ Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
     return WIRELESS_OK;
 }
 WIRELESS_CHANNEL Wireless_getChannel(Wireless* w){
-    if(w->TXchannel == WIRELESS_YELLOW_COMMAND_CHANNEL){
+    if(w->TXchannel == WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION){
         return YELLOW_CHANNEL;
     }else{
         return BLUE_CHANNEL;
@@ -254,7 +255,7 @@ Wireless_Error Wireless_setRXSyncwords(Wireless* w, uint32_t syncwords[2]){
 }
 
 // SX1280 buffer interface functions
-Wireless_Error WritePacket(Wireless* w, WirelessPacket* packet){
+Wireless_Error WritePacket(Wireless* w, Wireless_Packet* packet){
     if(w->state != WIRELESS_READY)
         return WIRELESS_ERROR;
 
@@ -271,7 +272,7 @@ Wireless_Error WritePacket(Wireless* w, WirelessPacket* packet){
     w->state = WIRELESS_READY;
     return WIRELESS_OK;
 }
-Wireless_Error WritePacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Writepacket_Callback* func){
+Wireless_Error WritePacket_DMA(Wireless* w, Wireless_Packet* packet, Wireless_Writepacket_Callback* func){
     if(w->state != WIRELESS_READY)
         return WIRELESS_ERROR;
          
@@ -290,7 +291,7 @@ Wireless_Error WritePacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Wri
     return WIRELESS_OK;
 }
 
-Wireless_Error ReadPacket(Wireless* w, WirelessPacket* packet){
+Wireless_Error ReadPacket(Wireless* w, Wireless_Packet* packet){
     w->state = WIRELESS_READING;
 
     clearIRQ(w->Interface,IRQ_ALL);
@@ -303,7 +304,7 @@ Wireless_Error ReadPacket(Wireless* w, WirelessPacket* packet){
     return WIRELESS_OK;
 };
 
-Wireless_Error ReadPacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Readpacket_Callback* func){
+Wireless_Error ReadPacket_DMA(Wireless* w, Wireless_Packet* packet, Wireless_Readpacket_Callback* func){
     w->state = WIRELESS_READING;
     w->readbufdest = packet->message;
     w->rdcallback = func;
@@ -320,12 +321,16 @@ Wireless_Error ReadPacket_DMA(Wireless* w, WirelessPacket* packet, Wireless_Read
 // Send/Receive functions
 // write to buffer before calling TransmitPacket, otherwise the previous packet will be send
 Wireless_Error TransmitPacket(Wireless* w){
+    if(w->state != WIRELESS_READY) return WIRELESS_ERROR;
+
     w->state = WIRELESS_TRANSMITTING;
     setChannel(w->Interface, w->TXchannel);
     setTX(w->Interface, w->Settings.periodBase, w->Settings.periodBaseCount);
     return WIRELESS_OK;
 }
 Wireless_Error WaitForPacket(Wireless* w){
+    if(w->state != WIRELESS_READY) return WIRELESS_ERROR;
+    
     w->state = WIRELESS_RECEIVING;
     w->continuousreceive = false;
     setChannel(w->Interface, w->RXchannel);
@@ -348,9 +353,12 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     
     clearIRQ(w->Interface,IRQ_ALL);
 
+    bool callback_handled = false;
+
     if(irq & IRQ_CRC_ERROR) {
-        if(w->irqcallbacks->crcerror){
+        if(w->irqcallbacks && w->irqcallbacks->crcerror){
             w->irqcallbacks->crcerror();
+            callback_handled = true;
         }
     }
 
@@ -358,42 +366,62 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     if(irq & IRQ_TX_DONE){
         if(w->state == WIRELESS_TRANSMITTING) w->state = WIRELESS_READY;
         getPacketStatus(w->Interface, &ps);
-        if(w->irqcallbacks->txdone){
+        if(w->irqcallbacks && w->irqcallbacks->txdone){
             w->irqcallbacks->txdone(&ps);
+            callback_handled = true;
         }
     }
 
     // Note : IRQ_RX_DONE also triggers when there is an crc error, so ignore IRQ_RX_DONE when IRQ_CRC_ERROR is also set: 16.3 All Modems: Interrupt with Bad CRC, page 150
     if(irq & IRQ_RX_DONE && !(irq & IRQ_CRC_ERROR)){
         getPacketStatus(w->Interface, &ps);
-        if(w->irqcallbacks->rxdone){
+        if(w->irqcallbacks && w->irqcallbacks->rxdone){
             w->irqcallbacks->rxdone(&ps);
+            callback_handled = true;
         }
     }
 
     if(irq & IRQ_RXTX_TIMEOUT) {
-        if(w->irqcallbacks->rxtxtimeout){
+        if(w->irqcallbacks && w->irqcallbacks->rxtxtimeout){
             w->irqcallbacks->rxtxtimeout();
+            callback_handled = true;
         }
     }
     
     if(irq & IRQ_SYNCWORD_VALID) {
-        if(w->irqcallbacks->syncvalid){
+        if(w->irqcallbacks && w->irqcallbacks->syncvalid){
             w->irqcallbacks->syncvalid();
+            callback_handled = true;
         }
     }
 
     if(irq & IRQ_SYNCWORD_ERROR) {
-        if(w->irqcallbacks->syncerror){
+        if(w->irqcallbacks && w->irqcallbacks->syncerror){
             w->irqcallbacks->syncerror();
+            callback_handled = true;
         }
     }
 
     if(irq & IRQ_PREAMBLE_DETECTED) {
-        if(w->irqcallbacks->preambledetected){
+        if(w->irqcallbacks && w->irqcallbacks->preambledetected){
             w->irqcallbacks->preambledetected();
+            callback_handled = true;
         }
     }
+
+    if(!callback_handled){
+        if(w->irqcallbacks && w->irqcallbacks->default_callback){
+            w->irqcallbacks->default_callback();
+        }else{
+            /* WARNING! An IRQ has not been handled properly. This should never happen */
+            if(w->printf){
+                w->printf("[Wireless.c][Wireless_IRQ_Handler] Warning : interrupt not handled!\n");
+            }else{
+                /* Unsure what to do here? How to let people know that an interrupt has not been handled? */
+            }
+        }
+    }
+
     return WIRELESS_OK;
 };
 

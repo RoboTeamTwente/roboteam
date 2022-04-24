@@ -73,10 +73,11 @@ volatile uint32_t counter_RobotBuzzer = 0;
 uint32_t timestamp_initialized = 0;
 
 bool flagSendPIDGains = false;
-bool isSerialConnected = false;
-bool isWirelessConnected = false;
+bool is_connected_serial = false;
+bool is_connected_wireless = false;
 uint8_t last_valid_RSSI = 0;
-uint32_t timeLastPacket = 0;
+uint32_t time_last_packed_serial = 0;
+uint32_t time_last_packed_wireless = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
@@ -91,18 +92,20 @@ static Wireless* SX = &SX1280;
 static uint8_t SX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 static uint8_t SX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 
-static WirelessPacket txPacket;
-static WirelessPacket rxPacket;
+static Wireless_Packet txPacket;
+static Wireless_Packet rxPacket;
 
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
 SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer, .logger=LOG_printf,};
 
 void Wireless_Writepacket_Cplt(void){
-  TransmitPacket(SX);
+	if(TransmitPacket(SX) != WIRELESS_OK)
+		LOG("[Wireless_Writepacket_Cplt] TransmitPacket error!\n");
 }
+
 void Wireless_Readpacket_Cplt(void){
-  //handlePacket(..., SX_RX->payloadLength);
 	toggle_Pin(LED6_pin);
+	time_last_packed_wireless = HAL_GetTick();
 	handlePacket(rxPacket.message,rxPacket.payloadLength);
 
 	/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
@@ -133,8 +136,9 @@ void Wireless_Readpacket_Cplt(void){
 	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
 };
 
-void Wireless_TXDone(SX1280_Packet_Status *status){
-//   toggle_pin(LD_TX);
+void Wireless_Default(){
+	if(WaitForPacket(SX) != WIRELESS_OK)
+		LOG_printf("[Wireless_Default] WaitForPacket(SX) != WIRELESS_OK\n", HAL_GetTick());
 }
 
 void Wireless_RXDone(SX1280_Packet_Status *status){
@@ -147,19 +151,13 @@ void Wireless_RXDone(SX1280_Packet_Status *status){
   // Threshold is at -160/2 = -80 dBm
   if (status->RSSISync < 160) {
     ReadPacket_DMA(SX, &rxPacket, &Wireless_Readpacket_Cplt);
-	isWirelessConnected = true;
 	last_valid_RSSI = status->RSSISync;
   }
 }
 
-void Wireless_RXTXTimeout(void){
-  // Did not receive packet from robot. Should never be triggered, since the receiving SX is in continuous receiving mode
-//   toggle_pin(LD_LED3);
-	isWirelessConnected = false;
-}
+Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
 
-Wireless_IRQcallbacks SX_IRQcallbacks = {.txdone= &Wireless_TXDone, .rxdone= &Wireless_RXDone, .rxtxtimeout= &Wireless_RXTXTimeout};
-
+// Wireless_IRQcallbacks SX_IRQcallbacks = {0};
 
 void executeCommands(REM_RobotCommand* robotCommand){
 	float stateReference[3];
@@ -317,19 +315,26 @@ void init(void){
     set_Pin(LED3_pin, 1);
 
 	/* Initialize the SX1280 wireless chip */
+	// SX_IRQcallbacks.txdone = &Wireless_TXDone;
+	// SX_IRQcallbacks.rxdone = &Wireless_RXDone;
+	// SX_IRQcallbacks.rxtxtimeout= &Wireless_RXTXTimeout;
+
 	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
 	set.periodBaseCount = WIRELESS_RX_COUNT;
 	Wireless_Error err;
 	SX_Interface.BusyPin = SX_BUSY_pin;
 	SX_Interface.CS = SX_NSS_pin;
 	SX_Interface.Reset = SX_RST_pin;
-	err = Wireless_setPrint_Callback(SX, NULL);
-    err = Wireless_Init(SX, set, &SX_Interface);
-    err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
+	err |= Wireless_setPrint_Callback(SX, LOG_printf);
+    err |= Wireless_Init(SX, set, &SX_Interface);
+    err |= Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
     if(err != WIRELESS_OK){
       //TODO: What do?
+	  LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n");
+	  LOG_sendAll();
       while(1);
     }
+	LOG_sendAll();
     
 
 	if(read_Pin(IN2_pin)){
@@ -392,7 +397,7 @@ void loop(void){
 			buzzer_Play_WarningTwo();
 
 	// If serial packet is no older than 250ms, assume connected via wire
-	isSerialConnected = (currentTime - timeLastPacket) < 250;
+	is_connected_serial = (currentTime - time_last_packed_wired) < 250;
 
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
@@ -400,7 +405,7 @@ void loop(void){
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (isWirelessConnected || isSerialConnected)) || !REM_last_packet_had_correct_version;
+    halt = !(xsens_CalibrationDone && (is_connected_wireless || is_connected_serial)) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
@@ -479,7 +484,6 @@ void loop(void){
 	if(heartbeat_17ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_17ms < now) heartbeat_17ms += 17;
-
 	}	
 
     // Heartbeat every 100ms	
@@ -492,6 +496,7 @@ void loop(void){
 
 		// encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
 		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+
 	}
 
 	// Heartbeat every 1000ms
@@ -501,6 +506,17 @@ void loop(void){
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
+
+		// switch(SX->state){
+		// case WIRELESS_RESET: LOG_printf("%d: state=WIRELESS_RESET\n", now); break;
+		// case WIRELESS_INIT: LOG_printf("%d: state=WIRELESS_INIT\n", now); break;
+		// case WIRELESS_READY: LOG_printf("%d: state=WIRELESS_READY\n", now); break;
+		// case WIRELESS_WRITING: LOG_printf("%d: state=WIRELESS_WRITING\n", now); break;
+		// case WIRELESS_READING: LOG_printf("%d: state=WIRELESS_READING\n", now); break;
+		// case WIRELESS_TRANSMITTING: LOG_printf("%d: state=WIRELESS_TRANSMITTING\n", now); break;
+		// case WIRELESS_RECEIVING: LOG_printf("%d: state=WIRELESS_RECEIVING\n", now); break;
+		// default: LOG_printf("%d: default\n", now); break;
+		// }
 
 		// Check if ballsensor connection is still correct
         if ( !ballSensor_isInitialized() ) {
@@ -556,7 +572,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
-	timeLastPacket = HAL_GetTick();
+	time_last_packed_wired = HAL_GetTick();
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
@@ -606,6 +622,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 	// If we received data from the SX1280
 	if(hspi->Instance == SX->Interface->SPI->Instance) {
 		Wireless_DMA_Handler(SX);
+
 	}
 
 	// If we received data from the XSens
@@ -628,9 +645,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
 		Wireless_IRQ_Handler(SX);
-
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
-		// if(MTi != NULL) 
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
 		// TODO: make this work and use instead of the thing in the while loop

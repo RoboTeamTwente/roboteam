@@ -1,21 +1,19 @@
-FROM ubuntu:latest
+FROM robocupssl/ubuntu-vnc:latest
 
 LABEL Maintainer Roboteam <roboteamtwente@gmail.com>
 
-# Set environment variables / arguments
-ARG DEBIAN_FRONTEND=noninteractive
+# Some settings need root privileges
+USER root
 
 # Update lists
-RUN /bin/bash -c "apt-get update"
-
-# Upgrade packages, -y marks everything "yes"
-RUN /bin/bash -c "apt-get dist-upgrade -y" 
+RUN /bin/bash -c "apt-get update -y; apt-get upgrade -y"
 
 # Install dependencies
 RUN /bin/bash -c "apt-get -y install \
     ccache \
+    libzmq3-dev \
     clang \
-    xvfb \
+    clang-format \
     ninja-build \
     autoconf \
     automake \
@@ -32,13 +30,13 @@ RUN /bin/bash -c "apt-get -y install \
     libqt5charts5-dev \
     libsdl2-dev \
     qtdeclarative5-dev \
-    git"
+    git \
+    nano"
 
-# Nlohmann-json
-RUN /bin/bash -c "mkdir -p /usr/include/nlohmann && \
-    curl https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp > /usr/include/nlohmann/json.hpp \
-    "
- 
+# Install sublime text
+RUN /bin/bash -c "wget -q 'https://download.sublimetext.com/sublime-text_build-3211_amd64.deb' -O sublime.deb"
+RUN /bin/bash -c "apt-get install ./sublime.deb"
+
 # Setup protobuf
 RUN /bin/bash -c "git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&\
     cd /opt/protobuf &&\
@@ -58,25 +56,8 @@ RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/google
     make -j $(nproc)&&\
     make install"
 
-# Clone the repos and 
-RUN /bin/bash -c "git clone https://github.com/RoboTeamTwente/roboteam_suite /opt/roboteam/roboteam_suite --recurse-submodules"
+# Copy the clone script
+COPY clone.sh /clone.sh
 
-# checkout development on everything
-RUN "cd /opt/roboteam/roboteam_suite &&\
-    python ./checkout_branch.py development\
-    "
-
-# Set ccache symbolic link
-RUN mkdir -p /lib/ccache
-# Set symbolic link
-RUN ln -s /usr/lib/ccache /lib/ccache/bin
-# Create ccache folder
-RUN mkdir -p /opt/.ccache
-# Add tests to the container.
-RUN mkdir -p /opt/robotests
-# Copy over tests folder
-COPY tests /opt/robotests
-# Copy over divider
-COPY divider.sh /divider.sh
-# Set the entrypoint for when your docker container runs
-ENTRYPOINT [ "/divider.sh" ]
+# Switch back to the default user
+USER default

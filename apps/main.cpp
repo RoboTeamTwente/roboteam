@@ -61,6 +61,10 @@ int main(int argc, char *argv[]) {
     dropdown_layout->addWidget(play_selector);
     dropdown_layout->addWidget(game_state_selector);
 
+    auto referee_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "USE_REFEREE");
+    referee_button->setText("Use referee");
+    referee_button->setChecked(true);
+    // TODO: Lock the following buttons when 'use_referee' is checked
     auto team_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "IS_YELLOW");
     team_button->setText("Is Yellow");
     auto invariants_button = new rtt::Interface::InterfaceSyncedCheckableButton(ctrl, "IGNORE_INVARIANTS");
@@ -70,6 +74,7 @@ int main(int argc, char *argv[]) {
     auto ctrlLaytout = new QVBoxLayout;
     ctrlLaytout->setAlignment(Qt::AlignCenter);
 
+    ctrlLaytout->addWidget(referee_button);
     ctrlLaytout->addWidget(team_button);
     ctrlLaytout->addWidget(right_button);
     ctrlLaytout->addWidget(invariants_button);

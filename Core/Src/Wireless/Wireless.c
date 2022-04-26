@@ -356,8 +356,8 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
     bool callback_handled = false;
 
     if(irq & IRQ_CRC_ERROR) {
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_CRC_ERROR\n");
         if(w->irqcallbacks && w->irqcallbacks->crcerror){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_CRC_ERROR\n");
             w->irqcallbacks->crcerror();
             callback_handled = true;
         }
@@ -365,10 +365,10 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     /* Packet sent to robot */
     if(irq & IRQ_TX_DONE){
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_TX_DONE\n");
         if(w->state == WIRELESS_TRANSMITTING) w->state = WIRELESS_READY;
         getPacketStatus(w->Interface, &ps);
-        if(w->irqcallbacks && w->irqcallbacks->txdone){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_TX_DONE\n");
+        if(w->irqcallbacks && w->irqcallbacks->txdone){            
             w->irqcallbacks->txdone(&ps);
             callback_handled = true;
         }
@@ -376,49 +376,49 @@ Wireless_Error Wireless_IRQ_Handler(Wireless* w){
 
     // Note : IRQ_RX_DONE also triggers when there is an crc error, so ignore IRQ_RX_DONE when IRQ_CRC_ERROR is also set: 16.3 All Modems: Interrupt with Bad CRC, page 150
     if(irq & IRQ_RX_DONE && !(irq & IRQ_CRC_ERROR)){
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RX_DONE\n");
         getPacketStatus(w->Interface, &ps);
         if(w->irqcallbacks && w->irqcallbacks->rxdone){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RX_DONE\n");
             w->irqcallbacks->rxdone(&ps);
             callback_handled = true;
         }
     }
 
     if(irq & IRQ_RXTX_TIMEOUT) {
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RXTX_TIMEOUT\n");
         if(w->irqcallbacks && w->irqcallbacks->rxtxtimeout){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_RXTX_TIMEOUT\n");
             w->irqcallbacks->rxtxtimeout();
             callback_handled = true;
         }
     }
     
     if(irq & IRQ_SYNCWORD_VALID) {
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_VALID\n");
         if(w->irqcallbacks && w->irqcallbacks->syncvalid){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_VALID\n");
             w->irqcallbacks->syncvalid();
             callback_handled = true;
         }
     }
 
     if(irq & IRQ_SYNCWORD_ERROR) {
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_ERROR\n");
         if(w->irqcallbacks && w->irqcallbacks->syncerror){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_SYNCWORD_ERROR\n");
             w->irqcallbacks->syncerror();
             callback_handled = true;
         }
     }
 
     if(irq & IRQ_PREAMBLE_DETECTED) {
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_PREAMBLE_DETECTED\n");
         if(w->irqcallbacks && w->irqcallbacks->preambledetected){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] IRQ_PREAMBLE_DETECTED\n");
             w->irqcallbacks->preambledetected();
             callback_handled = true;
         }
     }
 
     if(!callback_handled){
+        if(w->printf) w->printf("[Wireless_IRQ_Handler] Default IRQ Handler for %d\n", irq);
         if(w->irqcallbacks && w->irqcallbacks->default_callback){
-            if(w->printf) w->printf("[Wireless_IRQ_Handler] Default IRQ Handler for %d\n", irq);
             w->irqcallbacks->default_callback();
         }else{
             /* WARNING! An IRQ has not been handled properly. This should never happen */

@@ -51,8 +51,8 @@ static uint8_t SXTX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) 
 static uint8_t SXRX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 static uint8_t SXRX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 
-static WirelessPacket txPacket;
-static WirelessPacket rxPacket;
+static Wireless_Packet txPacket;
+static Wireless_Packet rxPacket;
 
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
 SX1280_Interface SX_TX_Interface = {.SPI= &hspi1, .TXbuf= SXTX_TX_buffer, .RXbuf= SXTX_RX_buffer, .logger=LOG_printf,};

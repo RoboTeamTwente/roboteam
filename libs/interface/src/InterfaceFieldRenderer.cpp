@@ -26,6 +26,9 @@ void InterfaceFieldRenderer::renderField(QPainter *painter, proto::State info, Q
 
     painter->translate(size.width()/2, size.height()/2);
 
+    // Fill field color green
+    painter->fillRect(painter->clipBoundingRect(), Qt::GlobalColor::darkGreen);
+
     for (const auto& arc : arcs) {
         auto thickness = scale * arc.thickness();
         auto center = arc.center();

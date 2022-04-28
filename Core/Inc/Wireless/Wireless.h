@@ -85,8 +85,8 @@ typedef struct Wireless_IRQcallbacks {
 } Wireless_IRQcallbacks;
 
 typedef struct Wireless_Packet {
-    uint8_t message[MAX_PAYLOAD_SIZE];
-    uint8_t payloadLength;
+    volatile uint8_t message[MAX_PAYLOAD_SIZE];
+    volatile uint8_t payloadLength;
 } Wireless_Packet;
 
 

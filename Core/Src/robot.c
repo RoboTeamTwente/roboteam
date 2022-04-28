@@ -43,9 +43,6 @@ static const bool USE_PUTTY = false;
 
 MTi_data* MTi;
 
-uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
-uint8_t message_buffer_out[127];
-
 REM_RobotCommandPayload robotCommandPayload = {0};
 REM_RobotBuzzerPayload robotBuzzerPayload = {0};
 REM_RobotFeedback robotFeedback = {0};
@@ -93,11 +90,11 @@ static Wireless* SX = &SX1280;
 static uint8_t SX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 static uint8_t SX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
 
-static Wireless_Packet txPacket;
-static Wireless_Packet rxPacket;
+static volatile Wireless_Packet txPacket;
+static volatile Wireless_Packet rxPacket;
 
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
-SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer, .logger=LOG_printf,};
+SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer /*, .logger=LOG_printf*/,};
 
 void Wireless_Writepacket_Cplt(void){
 	if(TransmitPacket(SX) != WIRELESS_OK)
@@ -302,28 +299,19 @@ void init(void){
     set_Pin(LED3_pin, 1);
 
 	/* Initialize the SX1280 wireless chip */
-	// SX_IRQcallbacks.txdone = &Wireless_TXDone;
-	// SX_IRQcallbacks.rxdone = &Wireless_RXDone;
-	// SX_IRQcallbacks.rxtxtimeout= &Wireless_RXTXTimeout;
-
 	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
 	set.periodBaseCount = WIRELESS_RX_COUNT;
 	Wireless_Error err;
 	SX_Interface.BusyPin = SX_BUSY_pin;
 	SX_Interface.CS = SX_NSS_pin;
 	SX_Interface.Reset = SX_RST_pin;
-	err |= Wireless_setPrint_Callback(SX, LOG_printf);
-    err |= Wireless_Init(SX, set, &SX_Interface);
-    err |= Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
-    if(err != WIRELESS_OK){
-      //TODO: What do?
-	  LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n");
-	  LOG_sendAll();
-      while(1);
-    }
+	// err |= Wireless_setPrint_Callback(SX, LOG_printf);
+    err = Wireless_Init(SX, set, &SX_Interface);
+    if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
+	err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
+    if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	LOG_sendAll();
     
-
 	if(read_Pin(IN2_pin)){
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
@@ -555,22 +543,22 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 	while(total_bytes_processed < packet_length){
 
-		packet_header = message_buffer_in[total_bytes_processed];
+		packet_header = packet_buffer[total_bytes_processed];
 
 		switch(packet_header){
 
 			case PACKET_TYPE_REM_ROBOT_COMMAND:
-				handleRobotCommand(message_buffer_in + total_bytes_processed);
+				handleRobotCommand(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
 				break;
 
 			case PACKET_TYPE_REM_ROBOT_BUZZER: 
-				handleRobotBuzzer(message_buffer_in + total_bytes_processed);
+				handleRobotBuzzer(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
 				break;
 			
 			case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
-				handleRobotGetPIDGains(message_buffer_in + total_bytes_processed);
+				handleRobotGetPIDGains(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
 				break;
 
@@ -579,7 +567,7 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				break;
 
 			default:
-				sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
+				LOG_printf("[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
 				return false;
 		}
 	}

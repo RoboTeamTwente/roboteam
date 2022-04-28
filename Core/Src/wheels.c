@@ -1,4 +1,5 @@
 #include "main.h"
+#include "gpio_util.h"
 #include "wheels.h"
 #include "stdlib.h"
 

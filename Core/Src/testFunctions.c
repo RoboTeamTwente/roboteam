@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "testFunctions.h"
+#include <string.h>
 
 ///////////////////////////////////////////////////// VARIABLES
 

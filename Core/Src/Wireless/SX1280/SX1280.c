@@ -120,7 +120,7 @@ void readBuffer(SX1280_Interface* interface, uint8_t RXoffset, uint8_t* dest, ui
     *ptr++ = RXoffset;
     memset(ptr, 0, Nbytes + 1);
     SendData(interface, Nbytes + 3);
-    memcpy(dest, interface->RXbuf[3], Nbytes);
+    memcpy(dest, interface->RXbuf + 3, Nbytes);
     UNLOCK(interface)
 }
 
@@ -450,7 +450,7 @@ void DMA_Callback(SX1280_Interface* interface, uint8_t* dest, uint8_t Nbytes){
     interface->SX1280_status = *(SX1280_Status*)interface->RXbuf; // store latest sx status
     // In case of readbuffer_DMA call copy received data into dest buffer
     if(dest){
-        memcpy(dest, interface->RXbuf[3], Nbytes);
+        memcpy(dest, interface->RXbuf + 3, Nbytes);
     }
     UNLOCK(interface)
 }

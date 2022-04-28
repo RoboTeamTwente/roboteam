@@ -202,7 +202,7 @@ Wireless_Error Wireless_setChannel(Wireless* w, WIRELESS_CHANNEL channel){
     return WIRELESS_OK;
 }
 WIRELESS_CHANNEL Wireless_getChannel(Wireless* w){
-    if(w->TXchannel == WIRELESS_CHANNEL_YELLOW_ROBOT_TO_BASESTATION || w->TXchannel == WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT){
+    if(w->TXchannel == WIRELESS_CHANNEL_YELLOW_BASESTATION_TO_ROBOT){
         return YELLOW_CHANNEL;
     }else{
         return BLUE_CHANNEL;

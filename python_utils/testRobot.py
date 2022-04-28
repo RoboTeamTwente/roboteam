@@ -224,6 +224,8 @@ while True:
 				print(f" {robotId} - {test} {bar} {log} | "
 					f"{lastBasestationLog}", end="\r")
 
+				cmd.messageId = tickCounter % int(BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_MESSAGE_ID_MAX+1)
+
 				# Send command
 				if test != "nothing" and test != "getpid":
 					basestation.write( cmd.encode() )
@@ -272,9 +274,7 @@ while True:
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
 				logmessage = basestation.readline().decode()
-				print("\n", logmessage)
 				lastBasestationLog = logmessage[:-1] + " "*20
-				# print(lastBasestationLog)
 
 			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
 				logmessage = basestation.readline().decode()
@@ -319,7 +319,6 @@ while True:
 				dBm = -robotFeedback.rssi/2
 				cv2.rectangle(img, (10, 10), (210, 20), (100, 0, 0), 2)
 				cv2.rectangle(img, (10, 10), (10 + int(200*(1 - dBm/-80)), 20), (0, 255, 0), -1)
-				if -80 < dBm: print(dBm)
 
 			### Draw information received from the RobotStateInfo packet
 			if time.time() - stateInfoTimestamp < 1:

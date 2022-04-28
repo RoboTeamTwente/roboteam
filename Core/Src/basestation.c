@@ -62,8 +62,7 @@ void Wireless_Writepacket_Cplt(void){
   TransmitPacket(SX_TX);
 }
 void Wireless_Readpacket_Cplt(void){
-  //handlePacket(..., SX_RX->payloadLength);
-  toggle_pin(LD_RX);
+  handlePacket(rxPacket.message, rxPacket.payloadLength);
 };
 
 void Wireless_TXDone(SX1280_Packet_Status *status){
@@ -71,6 +70,8 @@ void Wireless_TXDone(SX1280_Packet_Status *status){
 }
 
 void Wireless_RXDone(SX1280_Packet_Status *status){
+  toggle_pin(LD_RX);
+  toggle_pin(LD_LED2);
   /* It is possible that random noise can trigger the syncword. 
     * Syncword is 32 bits. Noise comes in at 2.4GHz. Syncword resets when wrong bit is received.
     * Expected length of wrong syncword is 1*0.5 + 2*0.25 + 3*0.125 + ... = 2
@@ -165,7 +166,6 @@ void init(){
 
 
 void loop(){
-  
   /* Send logs to PC, if there is anything in the buffer */
   /* Nothing should be sent to the PC while in an interrupt. Therefore, while in an interrupt, text can be placed in the logBuffer */
   /* Here, in the main loop, text can be safely sent to the PC */

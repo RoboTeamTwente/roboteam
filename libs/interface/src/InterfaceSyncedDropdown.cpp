@@ -19,7 +19,7 @@ namespace rtt::Interface {
         auto sptr = iface.get()->getValues().lock();
         if (!sptr) return;
 
-        sptr.get()->setSetting(this->identity, InterfaceValue((int64_t)this->currentIndex()));
+        sptr.get()->setSetting(this->identity, InterfaceValue(this->currentText().toStdString()));
     }
 
     void InterfaceSyncedDropdown::updateProps(const InterfaceDeclaration& decl) {
@@ -74,8 +74,8 @@ namespace rtt::Interface {
         if (!thisSettings.has_value()) return;
 
         try {
-            auto newIndex = std::get<int64_t>(thisSettings.value().variant);
-            this->setCurrentIndex(newIndex);
+            auto newText = std::get<std::string>(thisSettings.value().variant);
+            this->setCurrentText(QString::fromStdString(newText));
         } catch (const std::bad_variant_access& ex) {
             std::cout << ex.what() << '\n';
         }

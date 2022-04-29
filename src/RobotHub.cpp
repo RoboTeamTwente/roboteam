@@ -307,7 +307,7 @@ void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team te
 
 void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
     std::stringstream ss;
-    ss << "[" << Time::getTime(':') << "] "
+    ss << "[" << Time::getTimeWithMilliseconds(':') << "] "
        << "Team: " << teamToString(team)
        << "Id: " << formatString("%2i", info.id) << ", "
        << "MsgId: " << formatString("%5i", info.messageId) << ", "
@@ -323,20 +323,25 @@ void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team)
 }
 
 void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team team) {
+    std::string teamStr = teamToString(team);
+    std::string timeStr = Time::getTimeWithMilliseconds(':');
+
     std::stringstream ss;
-    ss << "[" << Time::getTime(':') << "] " << "{"
-        << "Team: " << teamToString(team) << ", "
-        << "Commands: [" << std::endl;
     for (const auto& command : commands) {
-        ss << " - " << command << std::endl;
+        ss << "[" << timeStr << ", " << teamStr << "] " << command << std::endl;
     }
-    ss << "]}";
-    this->robotStateLogger->writeNewLine(ss.str());
+    this->robotCommandLogger->writeNewLine(ss.str());
 }
 
 void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
+    std::string teamStr = teamToString(feedback.team);
+    std::string sourceStr = robotFeedbackSourceToString(feedback.source);
+    std::string timeStr = Time::getTimeWithMilliseconds(':');
+
     std::stringstream ss;
-    ss << "[" << Time::getTime(':') << "] " << feedback;
+    for (const auto &robot : feedback.feedback) {
+        ss << "[" << timeStr << ", " << teamStr << ", " << sourceStr << "] " << robot << std::endl;
+    }
 
     this->robotFeedbackLogger->writeNewLine(ss.str());
 }

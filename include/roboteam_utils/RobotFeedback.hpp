@@ -13,6 +13,8 @@ enum class RobotFeedbackSource {
     SIMULATOR, BASESTATION
 };
 
+std::string robotFeedbackSourceToString(RobotFeedbackSource source);
+
 /* This type represents the feedback that a robot can give */
 typedef struct RobotFeedback {
     int id = 0;                         // ID of the robot
@@ -29,7 +31,11 @@ typedef struct RobotFeedback {
     int signalStrength = 0;             // The signal strength of the robot
 
     bool operator== (const RobotFeedback& other) const;
+
+    std::ostream &write(std::ostream &os) const;
 } RobotFeedback;
+
+std::ostream &operator<<(std::ostream &os, const RobotFeedback& feedback);
 
 /* This is the data object that is published by RobotHub */
 typedef struct RobotsFeedback {
@@ -38,6 +44,10 @@ typedef struct RobotsFeedback {
     std::vector<RobotFeedback> feedback;
 
     bool operator== (const RobotsFeedback& other) const;
+
+    std::ostream &write(std::ostream &os) const;
 } RobotsFeedback;
+
+std::ostream &operator<<(std::ostream &os, const RobotsFeedback&);
 
 } // namespace rtt

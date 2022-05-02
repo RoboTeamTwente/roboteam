@@ -244,6 +244,11 @@ void printRobotCommand(REM_RobotCommand* rc){
 // ----------------------------------------------------- INIT -----------------------------------------------------
 void init(void){
 
+	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
+	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
+	 but its better than suddenly having non-responding robots in a match */
+	IWDG_Init(iwdg, 5000);
+
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
     set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
 	
@@ -267,7 +272,7 @@ void init(void){
 
 	/* Initialize buzzer */
 	buzzer_Init();
-	// buzzer_Play_QuickBeepUp();
+	buzzer_Play_QuickBeepUp();
 	HAL_Delay(300);
 	set_Pin(LED1_pin, 1);
 
@@ -341,12 +346,13 @@ void init(void){
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 	LOG_sendAll();
 
-	/* Initialize watchdog (resets system after it has crashed) */
-	IWDG_Init(iwdg); 
+	/* Reset the watchdog timer and set the threshold at 200ms */
+	IWDG_Refresh(iwdg);
+	IWDG_Init(iwdg, 200);
 
 	/* Turn of all leds. Will now be used to indicate robot status */
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
-	// buzzer_Play_ID(ROBOT_ID);
+	buzzer_Play_ID(ROBOT_ID);
 	
 	timestamp_initialized = HAL_GetTick();
 
@@ -396,6 +402,7 @@ void loop(void){
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
         wheels_Unbrake();
+		LOG_printf("[loop:"STRINGIZE(__LINE__)"] XSens calibrated after %dms\n", currentTime-timestamp_initialized);
     }
 
     // Update test (if active)

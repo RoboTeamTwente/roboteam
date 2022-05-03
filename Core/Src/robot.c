@@ -135,21 +135,18 @@ void Wireless_Readpacket_Cplt(void){
 };
 
 void Wireless_Default(){
-	if(WaitForPacket(SX) != WIRELESS_OK)
-		LOG_printf("[Wireless_Default] WaitForPacket(SX) != WIRELESS_OK\n", HAL_GetTick());
+	WaitForPacket(SX);
 }
 
 void Wireless_RXDone(SX1280_Packet_Status *status){
-  /* It is possible that random noise can trigger the syncword. 
-    * Syncword is 32 bits. Noise comes in at 2.4GHz. Syncword resets when wrong bit is received.
-    * Expected length of wrong syncword is 1*0.5 + 2*0.25 + 3*0.125 + ... = 2
-    * 2^32 combinations / (2400000000 / 2) syncwords = correct syncword every 3.57 seconds purely from noise
-  */
-  // Correct syncword from noise have a very weak signal 
-  // Threshold is at -160/2 = -80 dBm
+  /* It is possible that random noise can trigger the syncword.
+   * Correct syncword from noise have a very weak signal.
+   * Threshold is at -160/2 = -80 dBm. */
   if (status->RSSISync < 160) {
     ReadPacket_DMA(SX, &rxPacket, &Wireless_Readpacket_Cplt);
 	last_valid_RSSI = status->RSSISync;
+  }else{
+	WaitForPacket(SX);
   }
 }
 

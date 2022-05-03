@@ -5,6 +5,8 @@
 #ifndef ROBOTEAM_UTILS_TUBE_H
 #define ROBOTEAM_UTILS_TUBE_H
 #include "LineSegment.h"
+#include "Shape.h"
+
 namespace rtt {
 class Circle;
 /**
@@ -12,7 +14,7 @@ class Circle;
  * @date 24-02-20
  * @brief A class that represents a tube, which can be seen as the points at a constant distance from a 2d line segment or a capped 2d cylinder
  */
-class Tube {
+class Tube : public Shape {
    public:
     /**
      * @brief Constructs a default Tube, which is simply a unit circle.
@@ -39,7 +41,7 @@ class Tube {
      * @param point to be considered
      * @return True if point is inside or on the boundary of the tube
      */
-    [[nodiscard]] bool contains(const Vector2& point) const;
+    [[nodiscard]] bool contains(const Vector2& point) const override;
 
     /**
      * @brief checks if the tube and circle overlap
@@ -59,7 +61,7 @@ class Tube {
      * @param point The point which to project onto this tube
      * @return The location where the point is projected onto the tube
      */
-    Vector2 project(const Vector2& point);
+    Vector2 project(const Vector2& point) const override;
 
     /**
      * @brief checks if the line intersects the tube or is contained within the tube

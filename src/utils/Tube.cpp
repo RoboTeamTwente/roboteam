@@ -15,7 +15,8 @@ Tube::Tube(const Vector2& start, const Vector2& end, double radius) : lineSegmen
 Tube::Tube() : lineSegment{{0, 0}, {0, 0}}, radius{1.0} {  // lines default construct to (0,0) to (0,0)
 }
 bool Tube::doesIntersectOrContain(const Circle& circle) const { return lineSegment.distanceToLine(circle.center) <= (radius + circle.radius); }
-Vector2 Tube::project(const Vector2& point) {
+
+Vector2 Tube::project(const Vector2& point) const {
     auto projectedPoint = lineSegment.project(point);
     return projectedPoint + (point - projectedPoint).stretchToLength(radius);
 }

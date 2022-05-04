@@ -19,7 +19,7 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;     // The angle at which the chipper shoots
 constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f;  // The theoretical maximum speed of the dribblers
 
-RobotHub::RobotHub() {
+RobotHub::RobotHub(bool shouldLog) {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
@@ -37,9 +37,11 @@ RobotHub::RobotHub() {
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
     this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
 
-    this->robotStateLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTSTATES.txt");
-    this->robotCommandLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTCOMMANDS.txt");
-    this->robotFeedbackLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTFEEDBACK.txt");
+    if (shouldLog) {
+        this->robotStateLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTSTATES.txt");
+        this->robotCommandLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTCOMMANDS.txt");
+        this->robotFeedbackLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTFEEDBACK.txt");
+    }
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -306,6 +308,8 @@ void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team te
 }
 
 void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
+    if (this->robotStateLogger == nullptr) return;
+
     std::stringstream ss;
     ss << "[" << Time::getTimeWithMilliseconds(':') << "] "
        << "Team: " << teamToString(team)
@@ -323,6 +327,8 @@ void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team)
 }
 
 void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team team) {
+    if (robotCommandLogger == nullptr) return;
+
     std::string teamStr = teamToString(team);
     std::string timeStr = Time::getTimeWithMilliseconds(':');
 
@@ -334,6 +340,8 @@ void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team te
 }
 
 void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
+    if (this->robotFeedbackLogger == nullptr) return;
+
     std::string teamStr = teamToString(feedback.team);
     std::string sourceStr = robotFeedbackSourceToString(feedback.source);
     std::string timeStr = Time::getTimeWithMilliseconds(':');
@@ -351,7 +359,10 @@ const char *FailedToInitializeNetworkersException::what() const throw() { return
 }  // namespace rtt::robothub
 
 int main(int argc, char *argv[]) {
-    rtt::robothub::RobotHub app;
+    auto it = std::find(argv, argv + argc, std::string("-log"));
+    bool shouldLog = it != argv + argc;
+
+    rtt::robothub::RobotHub app(shouldLog);
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));

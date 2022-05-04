@@ -26,7 +26,7 @@ enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
 class RobotHub {
    public:
-    RobotHub();
+    RobotHub(bool shouldLog);
 
     const RobotHubStatistics &getStatistics();
     void resetStatistics();

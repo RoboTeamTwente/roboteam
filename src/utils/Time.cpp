@@ -5,6 +5,8 @@
 #include "Time.h"
 
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 
 Time::Time(std::chrono::nanoseconds time) : timePoint{time} {}
 
@@ -57,29 +59,56 @@ Time Time::timeTo() const { return (*this - now()); }
 Time::Time(double seconds) : timePoint{std::chrono::nanoseconds((long)std::round(seconds * 1e9))} {}
 
 std::string Time::getDate(char separator) {
+    using namespace std::chrono;
+
     // Get the current time
-    time_t now = time(nullptr);
-    struct tm tstruct = {};
-    tstruct = *localtime(&now);
-    // Create a format string for the date
-    std::string sepStr = std::string(1, separator);
-    std::string formatText = "%Y" + sepStr + "%m" + sepStr + std::string("%d");
-    // Format the string with the current date
-    char buf[11];
-    strftime(buf, sizeof(buf), formatText.c_str(), &tstruct);
-    return buf;
+    auto now = system_clock::to_time_t(system_clock::now());
+    auto brokenTime = *std::localtime(&now);
+
+    // Convert time to text
+    std::stringstream ss;
+    ss << std::put_time(&brokenTime, "%Y") << separator
+        << std::put_time(&brokenTime, "%m") << separator
+        << std::put_time(&brokenTime, "%d");
+
+    return ss.str();
 }
 
 std::string Time::getTime(char separator) {
+    using namespace std::chrono;
+
     // Get the current time
-    time_t now = time(nullptr);
-    struct tm tstruct = {};
-    tstruct = *localtime(&now);
-    // Create a format string for the time
-    std::string sepStr = std::string(1, separator);
-    std::string formatText = "%H" + sepStr + "%M" + sepStr + "%S";
-    // Format the string with the current time
-    char buf[10];
-    strftime(buf, sizeof(buf), formatText.c_str(), &tstruct);
-    return buf;
+    auto timer = system_clock::to_time_t(system_clock::now());
+    auto brokenTime = *std::localtime(&timer);
+
+    // Convert time to text
+    std::stringstream ss;
+    ss << std::put_time(&brokenTime, "%H") << separator
+        << std::put_time(&brokenTime, "%M") << separator
+        << std::put_time(&brokenTime, "%S");
+
+    return ss.str();
+}
+
+std::string Time::getTimeWithMilliseconds(char separator) {
+    using namespace std::chrono;
+
+    // Get the current time
+    auto now = system_clock::now();
+
+    // Amount of milliseconds between full seconds
+    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+
+    // Get the second-precise time
+    auto timer = system_clock::to_time_t(now);
+    std::tm brokenTime = *std::localtime(&timer);
+
+    // Convert these values to text
+    std::stringstream ss;
+    ss << std::put_time(&brokenTime, "%H") << separator     // Hours
+        << std::put_time(&brokenTime, "%M") << separator    // Minutes
+        << std::put_time(&brokenTime, "%S") << "."          // Seconds
+        << std::setfill('0') << std::setw(3) << ms.count(); // Milliseconds
+
+    return ss.str();
 }

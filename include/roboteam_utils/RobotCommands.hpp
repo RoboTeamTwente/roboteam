@@ -13,6 +13,8 @@ enum class KickType {
     CHIP    // Diagonally in the air kicking
 };
 
+std::string kickTypeToString(KickType type);
+
 typedef struct RobotCommand {
     int id = 0;                             // [0,15] The id of robot
     
@@ -35,7 +37,11 @@ typedef struct RobotCommand {
     bool ignorePacket = false;              // Robot will ignore packet, but robot will reply with feedback
 
     bool operator== (const RobotCommand& other) const;
+
+    std::ostream &write(std::ostream &os) const;
 } RobotCommand;
+
+std::ostream &operator<<(std::ostream &os, const RobotCommand& command);
 
 /* This object represents robot commands that are sent from AI to RobotHub */
 typedef std::vector<RobotCommand> RobotCommands;

@@ -47,6 +47,8 @@ class Time {
     static std::string getDate(char separator);
     // Returns the current time separated by the given char (HH:MM:SS). Eg: "23:59:06"
     static std::string getTime(char separator);
+    // Returns the current time, separated by the given char, with milliseconds, (HH:MM:SS.mmm). Eg 23:59:06.034
+    static std::string getTimeWithMilliseconds(char separator);
 
    private:
     std::chrono::high_resolution_clock::duration timePoint;

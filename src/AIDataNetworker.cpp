@@ -7,7 +7,7 @@ namespace rtt::net {
 proto::RobotPath robotPathToProto(const RobotPath& path) {
     proto::RobotPath proto;
     proto.set_robot_id(path.robotId);
-    for (const auto& point : path.path) {
+    for (const auto& point : path.points) {
         auto protoPoint = proto.add_points();
         protoPoint->set_x(point.x);
         protoPoint->set_y(point.y);
@@ -21,7 +21,7 @@ RobotPath protoToRobotPath(const proto::RobotPath& proto) {
     path.robotId = proto.robot_id();
 
     for (const auto& protoPoint : proto.points()) {
-        path.path.push_back({protoPoint.x(), protoPoint.y()});
+        path.points.push_back({protoPoint.x(), protoPoint.y()});
     }
 
     return path;
@@ -102,7 +102,7 @@ bool AIBlueDataPublisher::publish(const AIData& data) {
 }
 
 AIBlueDataSubscriber::AIBlueDataSubscriber(const std::function<void(const AIData&)>& callback)
-    : utils::Subscriber(utils::ChannelType::AI_YELLOW_CHANNEL, [&](const std::string& message) { this->onPublishedMessage(message); }), callback(callback) {
+    : utils::Subscriber(utils::ChannelType::AI_BLUE_CHANNEL, [&](const std::string& message) { this->onPublishedMessage(message); }), callback(callback) {
     if (callback == nullptr) {
         throw utils::InvalidCallbackException("Callback was nullptr");
     }

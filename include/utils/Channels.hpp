@@ -9,6 +9,9 @@ enum ChannelType {
     UNDEFINED_CHANNEL,
     SETTINGS_CHANNEL,
 
+    AI_BLUE_CHANNEL,
+    AI_YELLOW_CHANNEL,
+
     // AI to Interface
     AI_TO_INTERFACE_CHANNEL,
     // Interface to AI

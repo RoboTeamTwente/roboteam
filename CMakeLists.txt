@@ -25,7 +25,9 @@ add_library(roboteam_networking STATIC
     "src/RobotFeedbackNetworker.cpp"
     "src/SettingsNetworker.cpp"
     "src/WorldNetworker.cpp"
-    "src/SimulationConfigurationNetworker.cpp")
+    "src/SimulationConfigurationNetworker.cpp"
+    "src/AIDataNetworker.cpp"
+)
 
 target_include_directories(roboteam_networking PUBLIC "include")
 target_link_libraries(roboteam_networking PUBLIC

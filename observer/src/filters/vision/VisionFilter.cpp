@@ -7,7 +7,8 @@ proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket> &
   bool geometry_updated = processGeometry(packets);
   processDetections(packets,geometry_updated);
 
-  return worldFilter.getWorldPrediction(time);
+  //TODO for now not extrapolating because this is buggy with GrSim not supporting real-time indicing
+  return worldFilter.getWorldPrediction(lastPacketTime);
 }
 bool VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets) {
   bool newGeometry = false;

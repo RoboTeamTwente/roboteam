@@ -11,13 +11,10 @@ RobotOrientationFilter::RobotOrientationFilter(const Eigen::Vector2d &initialSta
     PosVelFilter1D(initialState,initialCovariance,modelError,measurementError,timeStamp){}
 
 double RobotOrientationFilter::limitAngle(double angle) {
-  //TODO: use mod and a non-while loop
-  while (angle >= M_PI) {
-    angle -= 2 * M_PI;
-  }
-  while (angle < -M_PI) {
-    angle += 2 * M_PI;
-  }
+    angle += M_PI;
+    angle = fmod(angle,2*M_PI);
+    angle -= M_PI;
+
   return angle;
 }
 

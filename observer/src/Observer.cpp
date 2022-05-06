@@ -5,13 +5,12 @@
 #include "Observer.h"
 
 proto::State
-Observer::process(Time extrapolatedTo,
-                  const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
                   std::vector<rtt::RobotsFeedback> robotData) {
 
     updateRobotParams(refereePackets);
     proto::State state;
-    proto::World world = visionFilter.process(visionPackets,extrapolatedTo);
+    proto::World world = visionFilter.process(visionPackets);
     updateReferee(refereePackets);
 
 

@@ -9,6 +9,7 @@
 #include "roboteam_utils/Time.h"
 #include "proto/messages_robocup_ssl_wrapper.pb.h"
 
+
 /**
  * @author Rolf
  * @class VisionFilter Filters and processes all information received from SSL-Vision into coherent information.
@@ -24,7 +25,7 @@ class VisionFilter {
    * @param time the wanted time to estimate the world state at (can extrapolate in the future)
    * @return a world state, extrapolated to the given time
    */
-  proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets, Time time);
+  proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets);
 
   /*
    * Updates the robot definitions the vision filter uses in world prediction
@@ -32,8 +33,17 @@ class VisionFilter {
   void updateRobotParameters(const TwoTeamRobotParameters& parameters);
 
   std::optional<proto::SSL_GeometryData> getGeometry() const;
+
+
+  enum class TimeExtrapolationPolicy{
+      REALTIME,
+      LAST_RECEIVED_PACKET_TIME
+  };
+
+  void setExtrapolationPolicy(TimeExtrapolationPolicy policy);
  private:
 
+    Time getExtrapolationTimeForPolicy() const;
   /**
    * processes any geometry data and passes it to the
    * @param packets the packets to check for geometry changes
@@ -48,6 +58,7 @@ class VisionFilter {
   GeometryFilter geomFilter;
   WorldFilter worldFilter;
   Time lastPacketTime;
+  TimeExtrapolationPolicy extrapolationPolicy = TimeExtrapolationPolicy::LAST_RECEIVED_PACKET_TIME;
 };
 
 #endif //RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_VISIONFILTER_H_

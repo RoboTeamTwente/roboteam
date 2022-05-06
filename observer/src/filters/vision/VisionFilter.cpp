@@ -3,12 +3,14 @@
 //
 
 #include "filters/vision/VisionFilter.h"
-proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket> &packets, Time time) {
+proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket> &packets) {
   bool geometry_updated = processGeometry(packets);
   processDetections(packets,geometry_updated);
 
-  //TODO for now not extrapolating because this is buggy with GrSim not supporting real-time indicing
-  return worldFilter.getWorldPrediction(lastPacketTime);
+  //TODO for now not extrapolating because grsim sends packets from 1970...
+  Time extroplatedToTime = getExtrapolationTimeForPolicy();
+
+  return worldFilter.getWorldPrediction(extroplatedToTime);
 }
 bool VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets) {
   bool newGeometry = false;
@@ -45,4 +47,17 @@ std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {
     return geomFilter.getGeometry();
   }
   return std::nullopt;
+}
+
+Time VisionFilter::getExtrapolationTimeForPolicy() const {
+    switch(extrapolationPolicy){
+        case TimeExtrapolationPolicy::REALTIME:
+            return Time::now();
+        case TimeExtrapolationPolicy::LAST_RECEIVED_PACKET_TIME:
+            return lastPacketTime;
+    }
+}
+
+void VisionFilter::setExtrapolationPolicy(VisionFilter::TimeExtrapolationPolicy policy) {
+    extrapolationPolicy = policy;
 }

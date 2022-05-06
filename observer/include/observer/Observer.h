@@ -31,8 +31,7 @@ public:
      * @param refereePackets All of the packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
-    proto::State process(Time extrapolatedTo,
-                 const std::vector<proto::SSL_WrapperPacket>& visionPackets,
+    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets,
                  const std::vector<proto::SSL_Referee>& refereePackets,
                  std::vector<rtt::RobotsFeedback> robotData);
 
@@ -42,9 +41,6 @@ private:
     RefereeFilter refereeFilter;
 
     void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
-
-
-    void updateVision(const std::vector<proto::SSL_WrapperPacket> &visionPackets);
 
     void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
 };

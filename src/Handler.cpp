@@ -25,7 +25,7 @@ void Handler::start() {
                 std::swap(robothub_info, this->receivedRobotData);
             }
 
-            auto state = observer.process(Time::now(),vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
+            auto state = observer.process(vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
             std::size_t iterations = 0;
             bool sent = false;
             while(iterations < 10){

@@ -7,10 +7,19 @@
 #include <fstream>
 #include <proto/State.pb.h>
 
-InterfaceFieldScene::InterfaceFieldScene(std::weak_ptr<InterfaceFieldStateStore> state, QObject* parent): QGraphicsScene(parent), state(state), ball(new InterfaceBallItem()) {
+InterfaceFieldScene::InterfaceFieldScene(std::weak_ptr<InterfaceFieldStateStore> state, QObject* parent):
+      QGraphicsScene(parent),
+      renderer(state),
+      state(state),
+      ball(new InterfaceBallItem()),
+      yellowPaths(new InterfaceRobotPathItem(rtt::Team::YELLOW)),
+      bluePaths(new InterfaceRobotPathItem(rtt::Team::BLUE)) {
     this->timer = new QTimer(this);
-// TODO: Centralize timer
+    // TODO: Centralize timer
+
     this->addItem(this->ball);
+    this->addItem(this->yellowPaths);
+    this->addItem(this->bluePaths);
 
     QObject::connect(timer, &QTimer::timeout, this, &InterfaceFieldScene::triggerUpdate);
     QObject::connect(this, &QGraphicsScene::sceneRectChanged, this, &InterfaceFieldScene::triggerUpdate);
@@ -32,10 +41,17 @@ void InterfaceFieldScene::triggerUpdate() {
         }
 
         for (const auto& robot : this->robots) {
-            robot->triggerUpdate(currentFieldState);
+            robot->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+            robot->triggerUpdate();
         }
 
-        this->ball->trigger_update(currentFieldState);
+        this->ball->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+        this->ball->triggerUpdate(currentFieldState);
+
+        this->yellowPaths->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+        this->yellowPaths->triggerUpdate(stateHolder->getAIData(rtt::Team::YELLOW).robotPaths);
+        this->bluePaths->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+        this->bluePaths->triggerUpdate(stateHolder->getAIData(rtt::Team::BLUE).robotPaths);
     }
 }
 
@@ -46,11 +62,9 @@ void InterfaceFieldScene::doUpdateRobot(const proto::WorldRobot& robot, bool isY
                     }) != this->robots.end();
 
     if (!hasRobot) {
-        auto newRobot = new InterfaceRobotItem((int)(robot.id()), isYellow);
+        auto newRobot = new InterfaceRobotItem((int)(robot.id()), isYellow, this->state);
         newRobot->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
         this->addItem(newRobot);
         this->robots.push_back(newRobot);
     }
-
-
 }

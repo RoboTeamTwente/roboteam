@@ -7,16 +7,23 @@
 
 
 #include <proto/State.pb.h>
+#include <InterfaceFieldStateStore.h>
+#include <roboteam_utils/AIData.hpp>
 
 #include <QPainter>
 
 class InterfaceFieldRenderer {
 public:
-    void renderBall(QPainter*, proto::State, QRect);
-    void renderField(QPainter*, proto::State, QRect);
-    void renderRobot(QPainter*, proto::State, QRect, bool, int);
+    InterfaceFieldRenderer(std::weak_ptr<InterfaceFieldStateStore> storage);
+
+    void renderBall(QPainter*, QRect);
+    void renderField(QPainter*, QRect);
+    void renderRobot(QPainter*, QRect, bool, int);
+
+    void updateScale(int canvasWidth, int canvasHeight, double fieldWidth, double fieldHeight);
 private:
-    double get_scale(int, int, int, int);
+    double scale;
+    std::weak_ptr<InterfaceFieldStateStore> storage;
 };
 
 

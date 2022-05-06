@@ -6,11 +6,15 @@
 #define RTT_INTERFACEROBOTITEM_H
 
 #include <QGraphicsItem>
+#include <InterfaceFieldStateStore.h>
 #include "InterfaceFieldStateStore.h"
 class InterfaceRobotItem: public QGraphicsItem {
 private:
     int id;
     bool isYellow;
+    std::weak_ptr<InterfaceFieldStateStore> storage;
+    double scale;
+    int radius;
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -19,9 +23,13 @@ protected:
 public:
     int getRobotId() const;
     bool getIsYellow() const;
-    InterfaceRobotItem(int id, bool isYellow, QGraphicsItem* parent = nullptr): id(id), isYellow(isYellow), QGraphicsItem(parent) {}
-    void triggerUpdate(const proto::State&);
-    double getScale(int, int, int, int) const;
+    InterfaceRobotItem(int id, bool isYellow, std::weak_ptr<InterfaceFieldStateStore> storage, QGraphicsItem* parent = nullptr):
+          QGraphicsItem(parent),
+          id(id),
+          isYellow(isYellow),
+          storage(storage) {}
+    void triggerUpdate();
+    void updateScale(double fieldWidth, double fieldHeight);
 };
 
 

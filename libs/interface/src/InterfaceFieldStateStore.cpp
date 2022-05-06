@@ -15,4 +15,14 @@ proto::State InterfaceFieldStateStore::getState() const {
     return this->state;
 }
 
+rtt::AIData InterfaceFieldStateStore::getAIData(rtt::Team team) const {
+    return team == rtt::Team::YELLOW ? this->yellowAIData : this->blueAIData;
+}
 
+void InterfaceFieldStateStore::setAIData(const rtt::AIData &data, rtt::Team team) {
+    if (team == rtt::Team::YELLOW) {
+        this->yellowAIData = data;
+    } else if (team == rtt::Team::BLUE) {
+        this->blueAIData = data;
+    }
+}

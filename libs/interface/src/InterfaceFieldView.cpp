@@ -4,7 +4,10 @@
 
 #include "InterfaceFieldView.h"
 
-InterfaceFieldView::InterfaceFieldView(std::weak_ptr<InterfaceFieldStateStore> state, QWidget* parent): QGraphicsView(parent), state(state) {
+InterfaceFieldView::InterfaceFieldView(std::weak_ptr<InterfaceFieldStateStore> state, QWidget* parent):
+      QGraphicsView(parent),
+      renderer(state),
+      state(state) {
     this->setCacheMode(CacheModeFlag::CacheBackground);
 
     //    this->setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
@@ -17,7 +20,11 @@ InterfaceFieldView::InterfaceFieldView(std::weak_ptr<InterfaceFieldStateStore> s
 
 void InterfaceFieldView::drawBackground(QPainter *painter, const QRectF &rect) {
     if (auto availableState = this->state.lock()) {
-        this->renderer.renderField(painter, availableState->getState(), rect.toRect());
+        const auto field = availableState->getState().field().field();
+        this->renderer.updateScale(rect.width(), rect.height(), field.field_length(), field.field_width());
+
+        this->renderer.renderField(painter, rect.toRect());
+        //this->renderer.renderPaths(painter, rect.toRect());
     }
 }
 

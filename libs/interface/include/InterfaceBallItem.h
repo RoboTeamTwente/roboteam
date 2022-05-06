@@ -10,6 +10,8 @@
 class InterfaceBallItem: public QGraphicsItem {
 private:
     double getScale(int field_h, int field_w, int canvas_w, int canvas_h) const;
+
+    double scale;
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
@@ -20,7 +22,8 @@ public:
         this->setVisible(false);
     }
 
-    void trigger_update(const proto::State&);
+    void updateScale(double fieldWidth, double fieldHeight);
+    void triggerUpdate(const proto::State&);
 };
 
 

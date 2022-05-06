@@ -4,6 +4,24 @@
 
 #include "InterfaceControllerClient.h"
 namespace rtt::Interface {
+    InterfaceControllerClient::InterfaceControllerClient()
+         : QObject(),
+           InterfaceController<proto::UiValues, proto::ModuleState>(net::utils::ChannelType::INTERFACE_TO_AI_CHANNEL, net::utils::ChannelType::AI_TO_INTERFACE_CHANNEL, 20, 20)
+    {
+        this->fieldState = std::make_shared<InterfaceFieldStateStore>();
+        this->fieldSubscriber = std::make_unique<net::WorldSubscriber>([this] (auto state) { field_state_callback(state); });
+
+        this->yellowDataSub = std::make_unique<net::AIYellowDataSubscriber>([&](const AIData& data) {
+            this->onAIData(data, Team::YELLOW);
+        });
+        this->blueDataSub = std::make_unique<net::AIBlueDataSubscriber>([&](const AIData& data) {
+            this->onAIData(data, Team::BLUE);
+        });
+
+        QObject::connect(&interface_timer, &QTimer::timeout, this, &InterfaceControllerClient::refresh_trigger);
+        interface_timer.start(16); // 60 FPS
+    }
+
     proto::UiValues InterfaceControllerClient::getDataForRemote(bool) const noexcept {
         return this->vals->toProto();
     }
@@ -30,8 +48,12 @@ namespace rtt::Interface {
     void InterfaceControllerClient::field_state_callback(const proto::State& state) {
         this->fieldState->setState(state);
     }
+    void InterfaceControllerClient::onAIData(const AIData& data, Team team) {
+        this->fieldState->setAIData(data, team);
+    }
+
     void InterfaceControllerClient::stop() {
-        this->field_subscriber.reset(); // Prevent ugly crashes on exit
+        this->fieldSubscriber.reset(); // Prevent ugly crashes on exit
 
         InterfaceController::stop();
     }

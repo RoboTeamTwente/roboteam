@@ -3,15 +3,19 @@
 //
 
 #include "InterfaceFieldRenderer.h"
-void InterfaceFieldRenderer::renderBall(QPainter *painter, proto::State info, QRect size) {
+#include <cmath>
+
+InterfaceFieldRenderer::InterfaceFieldRenderer(std::weak_ptr<InterfaceFieldStateStore> storage) {
+    this->storage = storage;
+}
+
+void InterfaceFieldRenderer::renderBall(QPainter *painter, QRect size) {
 
 }
 
-void InterfaceFieldRenderer::renderField(QPainter *painter, proto::State info, QRect size) {
-    auto req_w = info.field().field().field_width();
-    auto req_h = info.field().field().field_length();
+void InterfaceFieldRenderer::renderField(QPainter *painter, QRect size) {
 
-    double scale = get_scale(size.width(), size.height(), req_w, req_h);
+    auto info = this->storage.lock()->getState();
 
     auto arcs = info.field().field().field_arcs();
     auto lines = info.field().field().field_lines();
@@ -48,15 +52,16 @@ void InterfaceFieldRenderer::renderField(QPainter *painter, proto::State info, Q
     painter->restore();
 }
 
-void InterfaceFieldRenderer::renderRobot(QPainter *painter, proto::State info, QRect size, bool isYellow, int id) {
+void InterfaceFieldRenderer::renderRobot(QPainter *painter, QRect size, bool isYellow, int id) {
 }
 
-double InterfaceFieldRenderer::get_scale(int canvas_w, int canvas_h, int field_w, int field_h) {
-    if (!field_h || !field_w) return 0;
-    double w_scale = (double)canvas_w / (double)field_w;
-    double h_scale =  (double)canvas_h / (double)field_h;
+void InterfaceFieldRenderer::updateScale(int canvasWidth, int canvasHeight, double fieldWidth, double fieldHeight) {
+    if (fieldWidth == 0 || fieldHeight == 0) this->scale = 1;
 
-    return std::min({w_scale, h_scale});
+    double w_scale = static_cast<double>(canvasWidth) / fieldWidth;
+    double h_scale =  static_cast<double>(canvasHeight) / fieldHeight;
+
+    this->scale = std::fmin(w_scale, h_scale);
 }
 
 

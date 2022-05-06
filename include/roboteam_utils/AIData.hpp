@@ -8,14 +8,14 @@
 namespace rtt {
 
 typedef struct RobotPath {
-    int robotId = -1;
-    std::vector<Vector2> path;
+    int robotId = 0;
+    std::vector<Vector2> points;
 
     bool operator==(const RobotPath& other) const;
 } RobotPath;
 
 typedef struct RobotSTP {
-    int robotId = -1;
+    int robotId = 0;
     std::string role;
     std::string roleStatus;
     std::string tactic;

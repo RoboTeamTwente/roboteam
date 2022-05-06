@@ -4,7 +4,7 @@ namespace rtt {
 
 bool RobotPath::operator==(const RobotPath &other) const {
     return this->robotId == other.robotId
-        && this->path == other.path;
+        && this->points == other.points;
 }
 
 bool RobotSTP::operator==(const RobotSTP &other) const {

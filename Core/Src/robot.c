@@ -96,11 +96,17 @@ static volatile Wireless_Packet rxPacket;
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
 SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer /*, .logger=LOG_printf*/,};
 
+
+
+
+
+/* ============================================================ */
+/* ==================== WIRELESS CALLBACKS ==================== */
+/* ============================================================ */
 void Wireless_Writepacket_Cplt(void){
 	if(TransmitPacket(SX) != WIRELESS_OK)
 		LOG("[Wireless_Writepacket_Cplt] TransmitPacket error!\n");
 }
-
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
 	time_last_packet_wireless = HAL_GetTick();
@@ -133,11 +139,9 @@ void Wireless_Readpacket_Cplt(void){
 	// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
 	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
 };
-
 void Wireless_Default(){
 	WaitForPacket(SX);
 }
-
 void Wireless_RXDone(SX1280_Packet_Status *status){
   /* It is possible that random noise can trigger the syncword.
    * Correct syncword from noise have a very weak signal.
@@ -152,7 +156,10 @@ void Wireless_RXDone(SX1280_Packet_Status *status){
 
 Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
 
-// Wireless_IRQcallbacks SX_IRQcallbacks = {0};
+
+
+
+
 
 void executeCommands(REM_RobotCommand* robotCommand){
 	float stateReference[3];
@@ -174,8 +181,6 @@ void executeCommands(REM_RobotCommand* robotCommand){
 		}
 	}
 }
-
-
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
 	memset(robotCommand, 0, sizeof(REM_RobotCommand));
@@ -238,7 +243,11 @@ void printRobotCommand(REM_RobotCommand* rc){
 
 
 
-// ----------------------------------------------------- INIT -----------------------------------------------------
+
+
+/* ======================================================== */
+/* ==================== INITIALIZATION ==================== */
+/* ======================================================== */
 void init(void){
 
 	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
@@ -326,7 +335,6 @@ void init(void){
 	Wireless_setTXSyncword(SX,robot_syncWord[16]);
 	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
 	Wireless_setRXSyncwords(SX, syncwords);
-	WaitForPacket(SX);
 	set_Pin(LED4_pin, 1);
 
 	/* Initialize the XSens chip */
@@ -342,6 +350,8 @@ void init(void){
 
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 	LOG_sendAll();
+
+	WaitForPacket(SX);
 
 	/* Reset the watchdog timer and set the threshold at 200ms */
 	IWDG_Refresh(iwdg);
@@ -361,7 +371,11 @@ void init(void){
 
 
 
-// ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
+
+
+/* =================================================== */
+/* ==================== MAIN LOOP ==================== */
+/* =================================================== */
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
 	counter_loop++;
@@ -516,6 +530,14 @@ void loop(void){
     // LED6 Wireless_Readpacket_Cplt : toggled when a packet is received
 }
 
+
+
+
+
+/* ========================================================= */
+/* ==================== PACKET HANDLERS ==================== */
+/* ========================================================= */
+
 void handleRobotCommand(uint8_t* packet_buffer){
 	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
 	REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
@@ -578,6 +600,10 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 	return true;
 }
+
+
+
+
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */

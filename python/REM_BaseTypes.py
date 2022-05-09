@@ -4,6 +4,21 @@
 # 0b00000000 : The null-terminator, used to signal the end of strings / arrays / etc.
 # 0b00001010 : The byte for newline, used for line termination.
 
+from .REM_RobotCommand                         import REM_RobotCommand
+from .REM_RobotFeedback                        import REM_RobotFeedback
+from .REM_RobotStateInfo                       import REM_RobotStateInfo
+from .REM_RobotBuzzer                          import REM_RobotBuzzer
+from .REM_BasestationLog                       import REM_BasestationLog
+from .REM_RobotLog                             import REM_RobotLog
+from .REM_BasestationGetConfiguration          import REM_BasestationGetConfiguration
+from .REM_BasestationConfiguration             import REM_BasestationConfiguration
+from .REM_BasestationSetConfiguration          import REM_BasestationSetConfiguration
+from .REM_RobotGetPIDGains                     import REM_RobotGetPIDGains
+from .REM_RobotPIDGains                        import REM_RobotPIDGains
+from .REM_RobotAssuredPacket                   import REM_RobotAssuredPacket
+from .REM_RobotAssuredAck                      import REM_RobotAssuredAck
+from .REM_SX1280Filler                         import REM_SX1280Filler
+
 LOCAL_REM_VERSION = 9
 
 PACKET_TYPE_REM_ROBOT_COMMAND                                = 0b00001111 # 15 
@@ -350,4 +365,19 @@ def PACKET_TYPE_TO_SIZE(type):
     if type == PACKET_TYPE_REM_SX1280FILLER                                : return PACKET_SIZE_REM_SX1280FILLER                                
     return 0
 
+def PACKET_TYPE_TO_OBJ(type):
+    if type == PACKET_TYPE_REM_ROBOT_COMMAND                       : return REM_RobotCommand
+    if type == PACKET_TYPE_REM_ROBOT_FEEDBACK                      : return REM_RobotFeedback
+    if type == PACKET_TYPE_REM_ROBOT_STATE_INFO                    : return REM_RobotStateInfo
+    if type == PACKET_TYPE_REM_ROBOT_BUZZER                        : return REM_RobotBuzzer
+    if type == PACKET_TYPE_REM_BASESTATION_LOG                     : return REM_BasestationLog
+    if type == PACKET_TYPE_REM_ROBOT_LOG                           : return REM_RobotLog
+    if type == PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION       : return REM_BasestationGetConfiguration
+    if type == PACKET_TYPE_REM_BASESTATION_CONFIGURATION           : return REM_BasestationConfiguration
+    if type == PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION       : return REM_BasestationSetConfiguration
+    if type == PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                  : return REM_RobotGetPIDGains
+    if type == PACKET_TYPE_REM_ROBOT_PIDGAINS                      : return REM_RobotPIDGains
+    if type == PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                : return REM_RobotAssuredPacket
+    if type == PACKET_TYPE_REM_ROBOT_ASSURED_ACK                   : return REM_RobotAssuredAck
+    if type == PACKET_TYPE_REM_SX1280FILLER                        : return REM_SX1280Filler
 

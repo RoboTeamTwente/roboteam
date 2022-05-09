@@ -52,7 +52,7 @@ class BaseTypeGenerator:
 		file_string += f"{c} 0b00001010 : The byte for newline, used for line termination.\n"
 		file_string += f"\n"
 
-		file_string += self.to_begin()
+		file_string += self.to_begin(packets) + "\n"
 
 		file_string += self.to_constant("LOCAL_REM_VERSION", version) + "\n\n"
 
@@ -84,6 +84,7 @@ class BaseTypeGenerator:
 			file_string += "\n"
 
 		file_string += self.to_type_size_mapping(type_to_size)
+		file_string += self.to_type_obj_mapping(packets.keys())
 		file_string += "\n"
 
 		file_string += self.to_end()
@@ -97,7 +98,7 @@ class BaseTypeGenerator:
 	def comment(self):
 		raise NotImplementedError()
 
-	def to_begin(self):
+	def to_begin(self, packets):
 		return ""
 	def to_end(self):
 		return ""
@@ -107,6 +108,9 @@ class BaseTypeGenerator:
 
 	def to_type_size_mapping(self, type_to_size):
 		raise NotImplementedError()
+	
+	def to_type_obj_mapping(self, types):
+		return ""
 
 class C_BaseTypeGenerator(BaseTypeGenerator):
 	def begin_block_comment(self):
@@ -116,7 +120,7 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 	def comment(self):
 		return "//"
 
-	def to_begin(self):
+	def to_begin(self, packets):
 		begin_string = ""
 		begin_string += "#ifndef __BASETYPES_H\n"
 		begin_string += "#define __BASETYPES_H\n"
@@ -150,6 +154,12 @@ class Python_BaseTypeGenerator(BaseTypeGenerator):
 	def to_constant(self, variable_name, value):
 		return f"{variable_name} = {value}"
 
+	def to_begin(self, types):
+		import_calls = ""
+		for packet_name in packets.keys():
+			import_calls += f"from .{packet_name.ljust(40)} import {packet_name}\n"
+		return import_calls
+
 	def to_type_size_mapping(self, type_to_size):
 		function = """def PACKET_TYPE_TO_SIZE(type):\n"""
 		for _type, size in type_to_size:
@@ -158,6 +168,11 @@ class Python_BaseTypeGenerator(BaseTypeGenerator):
 		function += """\n"""
 		return function
 
+	def to_type_obj_mapping(self, types):
+		function = """def PACKET_TYPE_TO_OBJ(type):\n"""
+		for _type in types:
+			function += f"    if type == PACKET_TYPE_{CamelCaseToUpper(_type).ljust(40)}: return {_type}\n"
+		return function
 
 
 if __name__ == "__main__":
@@ -167,7 +182,8 @@ if __name__ == "__main__":
 	gp = Python_BaseTypeGenerator()
 
 	print("\n")
-	print(gc.generate(packets, 0))
+	# gp.generate(packets, 0)
+	print(gp.generate(packets, 0))
 	# gc.generate(packets, 0)
 
 	# print("\n")

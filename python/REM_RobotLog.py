@@ -4,7 +4,7 @@
 11111111 -------- -------- header
 -------- 1111---- -------- remVersion
 -------- ----1111 -------- id
--------- -------- 11111111 message_length
+-------- -------- 11111111 messageLength
 """
 
 import numpy as np
@@ -16,7 +16,7 @@ class REM_RobotLog:
     header = 0                # integer [0, 255]             Header byte indicating the type of packet
     remVersion = 0            # integer [0, 15]              Version of roboteam_embedded_messages
     id = 0                    # integer [0, 15]              Id of the robot
-    message_length = 0        # integer [0, 255]             Length of the following message
+    messageLength = 0         # integer [0, 255]             Length of the following message
 
 
 
@@ -34,7 +34,7 @@ class REM_RobotLog:
         return ((payload[1] & 0b00001111));
 
     @staticmethod
-    def get_message_length(payload):
+    def get_messageLength(payload):
         return ((payload[2]));
 
 # ================================ SETTERS ================================
@@ -51,8 +51,8 @@ class REM_RobotLog:
         payload[1] = (id & 0b00001111) | (payload[1] & 0b11110000);
 
     @staticmethod
-    def set_message_length(payload, message_length):
-        payload[2] = message_length;
+    def set_messageLength(payload, messageLength):
+        payload[2] = messageLength;
 
 # ================================ ENCODE ================================
     def encode(self):
@@ -60,7 +60,7 @@ class REM_RobotLog:
         REM_RobotLog.set_header              (payload, self.header)
         REM_RobotLog.set_remVersion          (payload, self.remVersion)
         REM_RobotLog.set_id                  (payload, self.id)
-        REM_RobotLog.set_message_length      (payload, self.message_length)
+        REM_RobotLog.set_messageLength       (payload, self.messageLength)
         return payload
 
 
@@ -69,7 +69,7 @@ class REM_RobotLog:
         self.header           = REM_RobotLog.get_header(payload)
         self.remVersion       = REM_RobotLog.get_remVersion(payload)
         self.id               = REM_RobotLog.get_id(payload)
-        self.message_length   = REM_RobotLog.get_message_length(payload)
+        self.messageLength    = REM_RobotLog.get_messageLength(payload)
 
 
     def print_bit_string(self):

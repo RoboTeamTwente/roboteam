@@ -4,7 +4,7 @@
 11111111 -------- -------- header
 -------- 1111---- -------- remVersion
 -------- ----1111 -------- id
--------- -------- 11111111 message_length
+-------- -------- 11111111 messageLength
 */
 
 #ifndef __REM_ROBOT_LOG_H
@@ -22,7 +22,7 @@ typedef struct _REM_RobotLog {
     uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
     uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
     uint32_t   id                  ; // integer [0, 15]              Id of the robot
-    uint32_t   message_length      ; // integer [0, 255]             Length of the following message
+    uint32_t   messageLength       ; // integer [0, 255]             Length of the following message
 } REM_RobotLog;
 
 // ================================ GETTERS ================================
@@ -38,7 +38,7 @@ static inline uint32_t REM_RobotLog_get_id(REM_RobotLogPayload *remrlp){
     return ((remrlp->payload[1] & 0b00001111));
 }
 
-static inline uint32_t REM_RobotLog_get_message_length(REM_RobotLogPayload *remrlp){
+static inline uint32_t REM_RobotLog_get_messageLength(REM_RobotLogPayload *remrlp){
     return ((remrlp->payload[2]));
 }
 
@@ -55,8 +55,8 @@ static inline void REM_RobotLog_set_id(REM_RobotLogPayload *remrlp, uint32_t id)
     remrlp->payload[1] = (id & 0b00001111) | (remrlp->payload[1] & 0b11110000);
 }
 
-static inline void REM_RobotLog_set_message_length(REM_RobotLogPayload *remrlp, uint32_t message_length){
-    remrlp->payload[2] = message_length;
+static inline void REM_RobotLog_set_messageLength(REM_RobotLogPayload *remrlp, uint32_t messageLength){
+    remrlp->payload[2] = messageLength;
 }
 
 // ================================ ENCODE ================================
@@ -64,7 +64,7 @@ static inline void encodeREM_RobotLog(REM_RobotLogPayload *remrlp, REM_RobotLog 
     REM_RobotLog_set_header              (remrlp, remrl->header);
     REM_RobotLog_set_remVersion          (remrlp, remrl->remVersion);
     REM_RobotLog_set_id                  (remrlp, remrl->id);
-    REM_RobotLog_set_message_length      (remrlp, remrl->message_length);
+    REM_RobotLog_set_messageLength       (remrlp, remrl->messageLength);
 }
 
 // ================================ DECODE ================================
@@ -72,7 +72,7 @@ static inline void decodeREM_RobotLog(REM_RobotLog *remrl, REM_RobotLogPayload *
     remrl->header        = REM_RobotLog_get_header(remrlp);
     remrl->remVersion    = REM_RobotLog_get_remVersion(remrlp);
     remrl->id            = REM_RobotLog_get_id(remrlp);
-    remrl->message_length= REM_RobotLog_get_message_length(remrlp);
+    remrl->messageLength = REM_RobotLog_get_messageLength(remrlp);
 }
 
 #endif /*__REM_ROBOT_LOG_H*/

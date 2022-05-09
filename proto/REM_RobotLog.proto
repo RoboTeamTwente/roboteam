@@ -4,7 +4,7 @@
 11111111 -------- -------- header
 -------- 1111---- -------- remVersion
 -------- ----1111 -------- id
--------- -------- 11111111 message_length
+-------- -------- 11111111 messageLength
 */
 
 syntax="proto3";
@@ -15,5 +15,5 @@ message REM_RobotLog {
     uint32 header = 1;        // integer [0, 255]             Header byte indicating the type of packet
     uint32 remVersion = 2;    // integer [0, 15]              Version of roboteam_embedded_messages
     uint32 id = 3;            // integer [0, 15]              Id of the robot
-    uint32 message_length = 4; // integer [0, 255]             Length of the following message
+    uint32 messageLength = 4; // integer [0, 255]             Length of the following message
 }

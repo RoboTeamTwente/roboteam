@@ -315,7 +315,7 @@ void init(void){
 	LOG_sendAll();
     
 	if(read_Pin(IN2_pin)){
-		Wireless_setChannel(SX, YELLOW_CHANNEL);
+		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
 		Wireless_setChannel(SX, YELLOW_CHANNEL);

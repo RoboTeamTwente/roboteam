@@ -9,6 +9,7 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
+from collections import deque
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
@@ -17,14 +18,13 @@ from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateI
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
 from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
-
-
-
-# robotStateInfoFile = open(f"robotStateInfo_{int(time.time())}.csv", "w")
-# robotFeedbackFile = open(f"robotFeedback_{int(time.time())}.csv", "w")
-
-
-
+from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
+from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
+from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
+from roboteam_embedded_messages.python.REM_BasestationLog import REM_BasestationLog
+from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import REM_BasestationGetConfiguration
+from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
+from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
 
 try:
 	import cv2
@@ -76,9 +76,9 @@ try:
 	if len(sys.argv) != 3:
 		raise Exception("Error : Invalid number of arguments. Expected id and test")
 	
-	robotId = int(sys.argv[1])
-	if robotId < 0 or 15 < robotId:
-		raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robotId)
+	robot_id = int(sys.argv[1])
+	if robot_id < 0 or 15 < robot_id:
+		raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robot_id)
 	
 	test = sys.argv[2]
 	if test not in testsAvailable:
@@ -88,18 +88,9 @@ except Exception as e:
 	print("Error : Run script with \"python testRobot.py id test\"")
 	exit()
 
-
-### Needed for visualizing RobotStateInfo
 img = np.zeros((500, 500, 3), dtype=np.float)
 
 basestation = None
-
-robotFeedback = REM_RobotFeedback()
-robotStateInfo = REM_RobotStateInfo()
-robotPIDGains = REM_RobotPIDGains()
-
-feedbackTimestamp = 0
-stateInfoTimestamp = 0
 
 wheel_speeds_avg = np.zeros(4)
 rate_of_turn_avg = 0
@@ -113,38 +104,178 @@ totalCommandsSent = 0
 totalFeedbackReceived = 0
 robotConnected = True
 
-lastBasestationLog = ""
-
 doFullTest = test == "full"
 testIndex = 2
 
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
-while True:
-	# Open basestation with the basestation
-	if basestation is None or not basestation.isOpen():
-		basestation = utils.openContinuous(timeout=0.001)
+def createRobotCommand(robot_id, test, period_fraction):
+	log = ""
 
+	# Seperate test
+	if test == "getpid":
+		if period_fraction == 0:
+			robotGetPIDGains = REM_RobotGetPIDGains()
+			robotGetPIDGains.header = BaseTypes.PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
+			robotGetPIDGains.remVersion = BaseTypes.LOCAL_REM_VERSION
+			robotGetPIDGains.id = robot_id
+			return robotGetPIDGains, log
+
+	# Create new empty robot command
+	cmd = REM_RobotCommand()
+	cmd.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
+	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
+	cmd.id = robot_id	
+
+	if test == "nothing":
+		cmd.rho = 0
+		cmd.theta = 0
+		cmd.angle = 0	
+
+	if test == "kicker-reflect":
+		cmd.doKick = True
+		cmd.kickChipPower = 0.2
+
+	if test == "kicker" or test == "chipper":
+		if period == 0:
+			if test == "kicker"  : cmd.doKick = True
+			if test == "chipper" : cmd.doChip = True
+			cmd.doForce = True
+			cmd.kickChipPower = BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX // 2
+
+	if test == "dribbler":
+		cmd.dribbler = period_fraction
+		log = "speed = %.2f" % cmd.dribbler
+
+	if test == "rotate":
+		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction*4 + 0.5) % 1)
+		log = "angle = %+.3f" % cmd.angle
+
+	if test == "forward" or test == "sideways":
+		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
+		if 0.5 < period_fraction : cmd.theta = -math.pi
+		log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
+
+	if test == "sideways":
+		cmd.angle = math.pi / 2
+
+	if test == "rotate-discrete":
+		if period_fraction <=  1.: cmd.angle = math.pi/2
+		if period_fraction <= .75: cmd.angle = -math.pi
+		if period_fraction <= .50: cmd.angle = -math.pi/2
+		if period_fraction <= .25: cmd.angle = 0
+		log = "angle = %+.3f" % cmd.angle
+
+	if test == "forward-rotate":
+		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
+		if 0.5 < period_fraction : cmd.theta = -math.pi
+		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
+		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
+
+	return cmd, log
+
+class REMReader():
+	
+	def __init__(self, device):
+		print(f"[REMReader] New REMReader for device {device.port}")
+
+		self.device = device
+		self.byte_buffer = bytes()
+		self.packet_buffer = deque()
+
+	def read(self):
+
+		bytes_in_waiting = self.device.inWaiting()
+		if bytes_in_waiting == 0: return
+		# print(f"[read] {bytes_in_waiting} bytes in waiting")
+		self.byte_buffer += self.device.read(bytes_in_waiting)
+		# print(f"Read {bytes_in_waiting} bytes")
+
+	def process(self):
+		# No bytes in the buffer, so nothing to process
+		if len(self.byte_buffer) == 0: return
+
+		# Process as many bytes / packets as possible
+		while True:
+			# Stop when there are no more bytes to process
+			if len(self.byte_buffer) == 0: break
+			# Get the packet type of the packet at the front of the buffer
+			packet_type = self.byte_buffer[0]
+
+			# BasestationLog or RobotLog. Assumption that these are the only two packets with dynamic size
+			if packet_type in [BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG, BaseTypes.PACKET_TYPE_REM_ROBOT_LOG]:
+				idx = 0 if packet_type == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG else 1
+				packet_size = [BaseTypes.PACKET_SIZE_REM_BASESTATION_LOG, BaseTypes.PACKET_SIZE_REM_ROBOT_LOG][idx]
+				# Check if the entire packet is in the buffer
+				if len(self.byte_buffer) < packet_size:	break
+				# Get required bytes from buffer and process
+				packet = [REM_BasestationLog, REM_RobotLog][idx]()
+				packet.decode(self.byte_buffer[:packet_size])
+				# Check if the entire message is in the buffer
+				if len(self.byte_buffer) < packet_size + packet.messageLength: break
+				# Get the message from the buffer
+				message = self.byte_buffer[packet_size : packet_size + packet.messageLength]
+				packet.message = message.decode()
+				# Add packet to buffer
+				self.packet_buffer.append(packet)
+				# Remove processed bytes from buffer
+				self.byte_buffer = self.byte_buffer[packet_size + packet.messageLength:]
+		
+			# Basestation get configuration
+			else:
+				packet_size = BaseTypes.PACKET_TYPE_TO_SIZE(packet_type)
+				
+				if len(self.byte_buffer) < packet_size: break
+				# Create packet instance
+				packet_obj = BaseTypes.PACKET_TYPE_TO_OBJ(packet_type)()
+				# print(f"[process] Packet of size {packet_size} : {packet_type} : {type(packet_obj).__name__}")
+
+				# Get required bytes from buffer and process
+				packet_obj.decode(self.byte_buffer[:packet_size])
+				# Add packet to buffer
+				self.packet_buffer.append(packet_obj)
+				# Remove processed bytes from buffer
+				self.byte_buffer = self.byte_buffer[packet_size:]
+
+	def hasPackets(self):
+		return 0 < len(self.packet_buffer)
+	
+	def getNextPacket(self):
+		if self.hasPackets(): return self.packet_buffer.popleft()
+
+
+
+while True:
 	try:
-		# Continuously read and print messages from the basestation
+
+		latest_packets = {}
+		last_robotfeedback_time = 0
+		last_robotcommand_time = 0
+		lastBasestationLog = ""
+
+		# Open basestation with the basestation
+		if basestation is None or not basestation.isOpen():
+			basestation = utils.openContinuous(timeout=0.01)
+			print("Basestation opened")
+			reader = REMReader(basestation)
+
+		# Continuously write -> read -> visualise
 		while True:
 
-			# Run at 60fps
-			if 1./packetHz <= time.time() - lastWritten:
+			tick_required = 1./packetHz <= time.time() - lastWritten
+
+			# ========== WRITING ========== #
+			if tick_required:
 
 				# Timing stuff
 				lastWritten += 1./packetHz
 				tickCounter += 1
 				period = tickCounter % periodLength
-				periodFraction = period / periodLength
+				period_fraction = period / periodLength
 
 				# Check connection with robot
-				if 0.5 < periodFraction:
-					robotConnected = True
-					# If less than half of feedback packets received
-					if totalFeedbackReceived < 0.5 * packetHz * periodFraction:
-						robotConnected = False
+				robotConnected = last_robotcommand_time - last_robotfeedback_time < 0.5
 
 				# Update test if needed
 				if doFullTest and period == 0:
@@ -152,158 +283,53 @@ while True:
 					if testIndex == 0: testIndex = 2
 					test = testsAvailable[testIndex]
 
-				# Create new empty robot command
-				cmd = REM_RobotCommand()
-				cmd.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
-				cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
-				cmd.id = robotId
-
-				# All tests
-				log = ""
-
-				if True: # This if-statement is just here so that I can easily collapse this large amount of code
-					if test == "nothing":
-						cmd.rho = 0
-						cmd.theta = 0
-						cmd.angle = 0	
-
-					if test == "kicker-reflect":
-						cmd.doKick = True
-						cmd.kickChipPower = 0.2
-
-					if test == "kicker" or test == "chipper":
-						if period == 0:
-							if test == "kicker"  : cmd.doKick = True
-							if test == "chipper" : cmd.doChip = True
-							cmd.doForce = True
-							cmd.kickChipPower = BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX // 2
-
-					if test == "dribbler":
-						cmd.dribbler = periodFraction
-						log = "speed = %.2f" % cmd.dribbler
-
-					if test == "rotate":
-						cmd.angle = -math.pi + 2 * math.pi * ((periodFraction*4 + 0.5) % 1)
-						log = "angle = %+.3f" % cmd.angle
-
-					if test == "forward" or test == "sideways":
-						cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-						if 0.5 < periodFraction : cmd.theta = -math.pi
-						log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
-
-					if test == "sideways":
-						cmd.angle = math.pi / 2
-
-					if test == "rotate-discrete":
-						if periodFraction <=  1.: cmd.angle = math.pi/2
-						if periodFraction <= .75: cmd.angle = -math.pi
-						if periodFraction <= .50: cmd.angle = -math.pi/2
-						if periodFraction <= .25: cmd.angle = 0
-						log = "angle = %+.3f" % cmd.angle
-
-					if test == "forward-rotate":
-						cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * periodFraction )
-						if 0.5 < periodFraction : cmd.theta = -math.pi
-						cmd.angle = -math.pi + 2 * math.pi * ((periodFraction + 0.5) % 1)
-						log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
-
-					if test == "getpid":
-						if periodFraction == 0:
-							robotGetPIDGains = REM_RobotGetPIDGains()
-							robotGetPIDGains.header = BaseTypes.PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
-							robotGetPIDGains.remVersion = BaseTypes.LOCAL_REM_VERSION
-							robotGetPIDGains.id = robotId
-							basestation.write( robotGetPIDGains.encode() )
-							totalCommandsSent += 1
+				# Create and send new robot command
+				cmd, cmd_log = createRobotCommand(robot_id, test, period_fraction)
+				basestation.write(cmd.encode())
+				last_robotcommand_time = time.time()
 
 				# Logging
-				bar = drawProgressBar(periodFraction)
+				bar = drawProgressBar(period_fraction)
 				if not robotConnected:
 					print(" Receiving no feedback!", end="")
 				tcs, tfr = totalCommandsSent, totalFeedbackReceived
-				print(f" {robotId} - {test} {bar} {log} | "
-					f"{lastBasestationLog}", end="\r")
-
-				cmd.messageId = tickCounter % int(BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_MESSAGE_ID_MAX+1)
-
-				# Send command
-				if test != "nothing" and test != "getpid":
-					basestation.write( cmd.encode() )
-					totalCommandsSent += 1
+				print(f" {robot_id} - {test} {bar} {cmd_log} | {lastBasestationLog} ", end=" "*23 + "\r")
 
 
 
+			# ========== READING ========== # 
+			reader.read() # Read all available bytes
+			reader.process() # Convert all read bytes into packets
+
+			# Handle and store all new packets
+			while reader.hasPackets():
+				packet = reader.getNextPacket()
+				latest_packets[type(packet)] = packet
+
+
+			if REM_BasestationLog in latest_packets and latest_packets[REM_BasestationLog] is not None:
+				lastBasestationLog = latest_packets[REM_BasestationLog].message
+				latest_packets[REM_BasestationLog] = None
+				if lastBasestationLog[-1] == '\n': lastBasestationLog = lastBasestationLog[:-1]
 
 
 
-			### Read any packets coming from the basestation
-			# Read packet type
-			packet_type = basestation.read(1)
-			if len(packet_type) == 0:
-				continue
-
-			packetType = packet_type[0]
-
-			# Parse packet based on packet type
-			if packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
-				feedbackTimestamp = time.time()
-				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
-
-				if REM_RobotFeedback.get_id(packet) == robotId:
-					robotFeedback.decode(packet)
-					totalFeedbackReceived += 1
-				else:
-					print("Error : Received feedback from robot %d ???" % REM_RobotFeedback.get_id(packet))
-	
-			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
-				stateInfoTimestamp = time.time()
-				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
-
-				if REM_RobotStateInfo.get_id(packet) == robotId:
-					robotStateInfo.decode(packet)
-					# robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensYaw} {robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4}\n")
-					# robotStateInfoFile.flush()
-
-				else:
-					print("Error : Received StateInfo from robot %d ???" % REM_RobotFeedback.get_id(packet))
-
-			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_PIDGAINS:
-				packet = packet_type + basestation.read(BaseTypes.PACKET_SIZE_REM_ROBOT_PIDGAINS - 1)
-				if REM_RobotPIDGains.get_id(packet) == robotId:
-					robotPIDGains.decode(packet)
-
-			elif packetType == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
-				logmessage = basestation.readline().decode()
-				lastBasestationLog = logmessage[:-1] + " "*20
-
-			elif packetType == BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
-				logmessage = basestation.readline().decode()
-				print("[BOT]", logmessage)
-				# lastBasestationLog = logmessage[:-1] + " "*20
-			else:
-				print(f"Error : Unhandled packet with type {packetType}")
+			# ========== VISUALISING ========== #
 
 			# Break if cv2 is not imported
-			if not cv2_available:
-				break
+			if not cv2_available: break
 
-
-
-
-
-
-
-
-
-
-			img *= 0.5
-
+			# Draw robot on the image
 			s = 101.2
 			cv2.line(img, (int(250-s/2), 250-73), (int(250+s/2), 250-73), (255,255,255),2)
 			cv2.ellipse(img, (250, 250), (90, 90), -90, 35, 325, (255,255,255), 2)			
 
 			### Draw information received from the RobotFeedback packet
-			if time.time() - feedbackTimestamp < 1:
+			if REM_RobotFeedback in latest_packets and latest_packets[REM_RobotFeedback] is not None:
+				robotFeedback = latest_packets[REM_RobotFeedback]
+				latest_packets[REM_RobotFeedback] = None
+				last_robotfeedback_time = time.time()
+
 				# Ballsensor
 				if robotFeedback.ballSensorWorking:
 					cv2.line(img, (int(250-s/2), 250-73-5), (int(250+s/2), 250-73-5), (0, 1, 0),2)
@@ -321,7 +347,9 @@ while True:
 				cv2.rectangle(img, (10, 10), (10 + int(200*(1 - dBm/-80)), 20), (0, 255, 0), -1)
 
 			### Draw information received from the RobotStateInfo packet
-			if time.time() - stateInfoTimestamp < 1:
+			if REM_RobotStateInfo in latest_packets and latest_packets[REM_RobotStateInfo] is not None:
+				robotStateInfo = latest_packets[REM_RobotStateInfo]
+				latest_packets[REM_RobotStateInfo] = None
 
 				# XSens yaw
 				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)
@@ -367,8 +395,10 @@ while True:
 				cv2.line(img, (170, 170), (int(rx), int(ry)), (1, 1, 1), 4)
 			
 
-			cv2.imshow("Press esc to quit", img)
-			if cv2.waitKey(1) == 27: exit()
+			if tick_required:
+				cv2.imshow("Press esc to quit", img)
+				if cv2.waitKey(1) == 27: exit()
+				img *= 0.7
 
 
 	except serial.SerialException as se:

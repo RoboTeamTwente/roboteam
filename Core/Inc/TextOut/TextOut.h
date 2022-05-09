@@ -1,9 +1,9 @@
-/*
- * TextOut.h
- *
- *  Created on: 14 sep. 2016
- *      Author: Hans-van-der-Heide
- */
+// /*
+//  * TextOut.h
+//  *
+//  *  Created on: 14 sep. 2016
+//  *      Author: Hans-van-der-Heide
+//  */
 
 #ifndef TEXTOUT_H_
 #define TEXTOUT_H_
@@ -19,11 +19,11 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
-#include "usbd_cdc_if.h"
-void LOG_printf(char *format, ...);
-void LOG(char *message);
-void TextOut(char *str);
-void HexOut(uint8_t*, uint8_t);
+// #include "usbd_cdc_if.h"
+// void LOG_printf(char *format, ...);
+// void LOG(char *message);
+// void TextOut(char *str);
+// void HexOut(uint8_t*, uint8_t);
 
 
 #endif /* TEXTOUT_H_ */

@@ -13,13 +13,15 @@
  */
 
 typedef struct _CircularBuffer {
+    bool onlyTrackIndex;
     uint32_t indexWrite;
     uint32_t indexRead;
-    uint8_t buffer[CIRCULAR_BUFFER_SIZE];
+    uint32_t bufferSize;
+    uint8_t buffer[];
 } CircularBuffer;
 
 
-void CircularBuffer_init(CircularBuffer* circBuf);
+CircularBuffer* CircularBuffer_init(bool onlyTrackIndex, uint32_t bufferSize);
 
 /**
  * Returns the number of bytes that could still fit in the buffer.

@@ -4,7 +4,7 @@
 # 0b00000000 : The null-terminator, used to signal the end of strings / arrays / etc.
 # 0b00001010 : The byte for newline, used for line termination.
 
-LOCAL_REM_VERSION = 10
+LOCAL_REM_VERSION = 9
 
 PACKET_TYPE_REM_ROBOT_COMMAND                                = 0b00001111 # 15 
 PACKET_SIZE_REM_ROBOT_COMMAND                                = 12

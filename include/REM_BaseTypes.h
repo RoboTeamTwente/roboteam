@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-#define LOCAL_REM_VERSION 10
+#define LOCAL_REM_VERSION 9
 
 #define PACKET_TYPE_REM_ROBOT_COMMAND                                0b00001111 // 15 
 #define PACKET_SIZE_REM_ROBOT_COMMAND                                12

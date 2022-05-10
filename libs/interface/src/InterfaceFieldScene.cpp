@@ -23,19 +23,23 @@ void InterfaceFieldScene::triggerUpdate() {
     if (auto stateHolder = this->state.lock()) {
         auto currentFieldState = stateHolder->getState();
 
-        for (const auto& robot : currentFieldState.last_seen_world().yellow()) {
+        if (!currentFieldState.has_value()) {
+            return;
+        }
+
+        for (const auto& robot : currentFieldState->last_seen_world().yellow()) {
             doUpdateRobot(robot, true);
         }
 
-        for (const auto& robot : currentFieldState.last_seen_world().blue()) {
+        for (const auto& robot : currentFieldState->last_seen_world().blue()) {
             doUpdateRobot(robot, false);
         }
 
         for (const auto& robot : this->robots) {
-            robot->triggerUpdate(currentFieldState);
+            robot->triggerUpdate(*currentFieldState);
         }
 
-        this->ball->trigger_update(currentFieldState);
+        this->ball->trigger_update(*currentFieldState);
     }
 }
 

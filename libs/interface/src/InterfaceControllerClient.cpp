@@ -4,7 +4,7 @@
 
 #include "InterfaceControllerClient.h"
 namespace rtt::Interface {
-    proto::UiValues InterfaceControllerClient::getDataForRemote(bool) const noexcept {
+    proto::UiValues InterfaceControllerClient::getDataForRemote() const noexcept {
         return this->vals->toProto();
     }
 
@@ -17,22 +17,37 @@ namespace rtt::Interface {
 
         this->decls->handleData(handshake.declarations());
         this->vals->handleData(handshake.values(), decls);
-//        this->fieldState->setState(state.system_state());
     }
 
     std::weak_ptr<InterfaceFieldStateStore> InterfaceControllerClient::getFieldState() const {
         return fieldState;
     }
 
-    bool InterfaceControllerClient::hasPriorityData() const noexcept {
-        return this->vals->getDidChange();
-    }
-    void InterfaceControllerClient::field_state_callback(const proto::State& state) {
+    void InterfaceControllerClient::field_state_callback(const std::string& state) {
         this->fieldState->setState(state);
     }
+
     void InterfaceControllerClient::stop() {
         this->field_subscriber.reset(); // Prevent ugly crashes on exit
 
         InterfaceController::stop();
+    }
+
+    void InterfaceControllerClient::loop() {
+        while (this->shouldRun) {
+            this->updateCounter = (this->updateCounter + 1) % MAX_CYCLES_WITHOUT_UPDATE;
+
+            if (this->updateCounter == 0  || this->updateMarker) {
+                bool t = true;
+                updateMarker.compare_exchange_strong(t, false);
+                loop_iter();
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(UPDATE_ATTEMPT_MS));
+        }
+    }
+
+    void InterfaceControllerClient::markForUpdate() {
+        this->updateMarker.store(true);
     }
 }

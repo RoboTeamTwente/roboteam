@@ -11,11 +11,14 @@
 class InterfaceFieldStateStore {
 private:
     mutable std::mutex mtx;
-    proto::State state;
+
+    proto::State cachedState;
+    std::optional<std::string> state;
 
 public:
     void setState(proto::State);
-    proto::State getState() const;
+    void setState(std::string);
+    std::optional<proto::State> getState();
 };
 
 

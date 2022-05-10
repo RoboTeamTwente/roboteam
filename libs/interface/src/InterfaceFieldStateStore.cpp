@@ -6,13 +6,24 @@
 void InterfaceFieldStateStore::setState(proto::State state) {
     std::scoped_lock lck(mtx);
 
-    this->state = std::move(state);
+    this->state = std::nullopt;
+    this->cachedState = state;
 }
 
-proto::State InterfaceFieldStateStore::getState() const {
+void InterfaceFieldStateStore::setState(std::string state) {
     std::scoped_lock lck(mtx);
 
-    return this->state;
+    this->state = state;
 }
 
+std::optional<proto::State> InterfaceFieldStateStore::getState() {
+    std::scoped_lock lck(mtx);
+    proto::State stt;
+
+    if (this->state != std::nullopt) {
+        this->cachedState.ParseFromString(this->state.value());
+    }
+
+    return this->cachedState;
+}
 

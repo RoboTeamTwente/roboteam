@@ -61,6 +61,8 @@ namespace rtt::Interface {
         auto values = controller->getValues().lock();
         if (!values) return;
 
+        controller->markForUpdate();
+
         switch (state) {
             case Qt::CheckState::Unchecked:
                 values->setSetting(this->identity, InterfaceValue(false));

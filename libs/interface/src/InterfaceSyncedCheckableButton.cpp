@@ -29,6 +29,7 @@ namespace rtt::Interface {
 
     void InterfaceSyncedCheckableButton::didCheck(bool checked) {
         if(auto ctrl = this->ctrl.lock()) {
+            ctrl->markForUpdate();
             if (auto vals = ctrl->getValues().lock()) {
                 vals->setSetting(this->identity, checked);
             }

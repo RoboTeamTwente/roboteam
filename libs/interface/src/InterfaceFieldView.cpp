@@ -17,7 +17,12 @@ InterfaceFieldView::InterfaceFieldView(std::weak_ptr<InterfaceFieldStateStore> s
 
 void InterfaceFieldView::drawBackground(QPainter *painter, const QRectF &rect) {
     if (auto availableState = this->state.lock()) {
-        this->renderer.renderField(painter, availableState->getState(), rect.toRect());
+        auto currentState = availableState->getState();
+        if (!currentState.has_value()) {
+            painter->drawText(0, 0, "Waiting for world...");
+        } else {
+            this->renderer.renderField(painter, *currentState, rect.toRect());
+        }
     }
 }
 

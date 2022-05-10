@@ -12,7 +12,6 @@
 #include "stm32f7xx_hal_def.h"
 #include "stm32f7xx_hal_qspi.h"
 #include "FT812Q_Constants.h"
-#include "TextOut/TextOut.h"
 #include <stdbool.h>
 
 extern QSPI_HandleTypeDef hqspi;

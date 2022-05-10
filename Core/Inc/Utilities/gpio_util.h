@@ -21,26 +21,26 @@ typedef struct GPIO_Pin{
 } GPIO_Pin;
 
 /////////////////////////////////// LIST OF KNOWN GPIO PINS
-extern GPIO_Pin SX_TX_IRQ;
-extern GPIO_Pin SX_TX_RST;
-extern GPIO_Pin SX_TX_BUSY;
-extern GPIO_Pin SX_TX_CS;
+extern const GPIO_Pin SX_TX_IRQ;
+extern const GPIO_Pin SX_TX_RST;
+extern const GPIO_Pin SX_TX_BUSY;
+extern const GPIO_Pin SX_TX_CS;
 
-extern GPIO_Pin SX_RX_IRQ;
-extern GPIO_Pin SX_RX_RST;
-extern GPIO_Pin SX_RX_BUSY;
-extern GPIO_Pin SX_RX_CS;
+extern const GPIO_Pin SX_RX_IRQ;
+extern const GPIO_Pin SX_RX_RST;
+extern const GPIO_Pin SX_RX_BUSY;
+extern const GPIO_Pin SX_RX_CS;
 
-extern GPIO_Pin LD_3; // stm32 nucleo on-board LED2
-extern GPIO_Pin LD_2; // stm32 nucleo on-board LED2
+extern const GPIO_Pin LD_3; // stm32 nucleo on-board LED2
+extern const GPIO_Pin LD_2; // stm32 nucleo on-board LED2
 
-extern GPIO_Pin LD_TX; // basestation TX LED
-extern GPIO_Pin LD_RX;
-extern GPIO_Pin LD_ACTIVE; // basestation ACTIVE LED
-extern GPIO_Pin LD_USB; // basestation USB LED
-extern GPIO_Pin LD_LED1; // basestation LED1
-extern GPIO_Pin LD_LED2; // basestation LED2 // MATCHES WITH stm32 nucleo on-board LED1
-extern GPIO_Pin LD_LED3; // basestation LED3
+extern const GPIO_Pin LD_TX; // basestation TX LED
+extern const GPIO_Pin LD_RX;
+extern const GPIO_Pin LD_ACTIVE; // basestation ACTIVE LED
+extern const GPIO_Pin LD_USB; // basestation USB LED
+extern const GPIO_Pin LD_LED1; // basestation LED1
+extern const GPIO_Pin LD_LED2; // basestation LED2 // MATCHES WITH stm32 nucleo on-board LED1
+extern const GPIO_Pin LD_LED3; // basestation LED3
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 
 // Set a GPIO Pin

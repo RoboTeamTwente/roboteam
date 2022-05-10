@@ -165,13 +165,7 @@ void init(){
 
 
 void loop(){
-  /* Send logs to PC, if there is anything in the buffer */
-  /* Nothing should be sent to the PC while in an interrupt. Therefore, while in an interrupt, text can be placed in the logBuffer */
-  /* Here, in the main loop, text can be safely sent to the PC */
-  // if(0 < strlen(logBuffer)){
-  //   LOG(logBuffer);        // Send any text in the buffer over USB to the PC
-  //   logBuffer[0] = '\0';   // 'Empty' the buffer by setting the first byte to \0
-  // }
+
   LOG_send();
 
   /* Heartbeat every second */
@@ -180,8 +174,6 @@ void loop(){
     // HexOut("Tick!\n", 6);
     LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d\n",
     handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains);
-    // LOG(logBuffer);
-    // logBuffer[0] = '\0';
     toggle_pin(LD_ACTIVE);
   }
 

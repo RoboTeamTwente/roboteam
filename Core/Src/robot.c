@@ -35,9 +35,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
-#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
-
 static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
@@ -112,13 +109,9 @@ void Wireless_Readpacket_Cplt(void){
 	time_last_packet_wireless = HAL_GetTick();
 	handlePacket(rxPacket.message,rxPacket.payloadLength);
 
-	/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
-	* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
-	* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
-	* Somehow, make sure that this is only done on RX_DONE
-	*/
 	txPacket.payloadLength = 0;
 
+	robotFeedback.messageId = activeRobotCommand.messageId;
 	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
 	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
@@ -337,9 +330,9 @@ void init(void){
 	Wireless_setRXSyncwords(SX, syncwords);
 	set_Pin(LED4_pin, 1);
 
-	/* Initialize the XSens chip */
+	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
-    MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
+    MTi = MTi_Init(1, XFP_VRU_general);
     if(MTi == NULL){
 		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();

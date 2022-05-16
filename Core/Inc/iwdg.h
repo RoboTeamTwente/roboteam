@@ -7,8 +7,6 @@
 #define IWDG_H
 
 #include "stm32f7xx.h"
-// timer runs at 32 kHz (with prescaler 4), so 8 kHz. with a counter of 1600 it is a timeout of 200 ms before it resets
-#define RELOAD_VALUE 1600
 
 typedef struct
 {
@@ -32,7 +30,7 @@ typedef struct
 }IWDG_Handle;
 
 // Init function that sets the registers
-HAL_StatusTypeDef IWDG_Init(IWDG_Handle* hiwdg);
+HAL_StatusTypeDef IWDG_Init(IWDG_Handle* hiwdg, uint32_t timeout_ms);
 // This function resets the timer and needs to be called every while loop
 void IWDG_Refresh(IWDG_Handle* hiwdg);
 

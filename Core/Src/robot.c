@@ -19,6 +19,7 @@
 #include "ballSensor.h"
 #include "testFunctions.h"
 #include "logging.h"
+#include "SX1280_Constants.h"
 
 #include "rem.h"
 
@@ -34,21 +35,15 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
-#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
-
 static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
-SX1280* SX;
 MTi_data* MTi;
-
-uint8_t message_buffer_in[127]; // TODO set this to something like MAX_BUF_LENGTH
-uint8_t message_buffer_out[127];
 
 REM_RobotCommandPayload robotCommandPayload = {0};
 REM_RobotBuzzerPayload robotBuzzerPayload = {0};
 REM_RobotFeedback robotFeedback = {0};
+REM_RobotFeedbackPayload robotFeedbackPayload = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
@@ -73,13 +68,88 @@ volatile uint32_t counter_RobotBuzzer = 0;
 uint32_t timestamp_initialized = 0;
 
 bool flagSendPIDGains = false;
-bool isSerialConnected = false;
-uint32_t timeLastPacket = 0;
+bool is_connected_serial = false;
+bool is_connected_wireless = false;
+uint8_t last_valid_RSSI = 0;
+uint32_t time_last_packet_serial = 0;
+uint32_t time_last_packet_wireless = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
+
+/* SX data */
+// TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
+extern SX1280_Settings SX1280_DEFAULT_SETTINGS;
+static Wireless SX1280 = {0};
+static Wireless* SX = &SX1280;
+static uint8_t SX_TX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+static uint8_t SX_RX_buffer[MAX_PAYLOAD_SIZE + 3] __attribute__((aligned(4))) = {0};
+
+static volatile Wireless_Packet txPacket;
+static volatile Wireless_Packet rxPacket;
+
+// The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
+SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer /*, .logger=LOG_printf*/,};
+
+
+
+
+
+/* ============================================================ */
+/* ==================== WIRELESS CALLBACKS ==================== */
+/* ============================================================ */
+void Wireless_Writepacket_Cplt(void){
+	if(TransmitPacket(SX) != WIRELESS_OK)
+		LOG("[Wireless_Writepacket_Cplt] TransmitPacket error!\n");
+}
+void Wireless_Readpacket_Cplt(void){
+	toggle_Pin(LED6_pin);
+	time_last_packet_wireless = HAL_GetTick();
+	handlePacket(rxPacket.message,rxPacket.payloadLength);
+
+	txPacket.payloadLength = 0;
+
+	robotFeedback.messageId = activeRobotCommand.messageId;
+	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
+	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
+
+	if(SEND_ROBOT_STATE_INFO){
+		encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
+		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
+	}
+
+	// TODO ensure this is only done when a packet is actually being sent
+	// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
+	// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
+	// if(flagSendPIDGains){
+		encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (txPacket.message + txPacket.payloadLength), &robotPIDGains);
+		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_PIDGAINS;
+		flagSendPIDGains = false;
+	// }
+
+	// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
+	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
+};
+void Wireless_Default(){
+	WaitForPacket(SX);
+}
+void Wireless_RXDone(SX1280_Packet_Status *status){
+  /* It is possible that random noise can trigger the syncword.
+   * Correct syncword from noise have a very weak signal.
+   * Threshold is at -160/2 = -80 dBm. */
+  if (status->RSSISync < 160) {
+    ReadPacket_DMA(SX, &rxPacket, &Wireless_Readpacket_Cplt);
+	last_valid_RSSI = status->RSSISync;
+  }else{
+	WaitForPacket(SX);
+  }
+}
+
+Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
+
+
 
 
 
@@ -105,23 +175,8 @@ void executeCommands(REM_RobotCommand* robotCommand){
 	}
 }
 
-
-
 void resetRobotCommand(REM_RobotCommand* robotCommand){
-	/* This needs to be constantly updated whenever the RobotCommand definition changes
-	 * Quite prone to human error. Should be possible to reset the entire struct somehow */
-	robotCommand->doKick = false;
-	robotCommand->doChip = false;
-	robotCommand->doForce = false;
-	robotCommand->useCameraAngle = false;
-	robotCommand->rho = 0.;
-	robotCommand->theta = 0.;
-	robotCommand->angle = 0.;
-	robotCommand->cameraAngle = 0.;
-	robotCommand->dribbler = 0;
-	robotCommand->kickChipPower = 0;
-	robotCommand->angularControl = false;
-	robotCommand->feedback = false;
+	memset(robotCommand, 0, sizeof(REM_RobotCommand));
 }
 
 void printRobotStateData() {
@@ -163,26 +218,35 @@ void printRobotStateData() {
 }
 
 void printRobotCommand(REM_RobotCommand* rc){
-	Putty_printf("======== RobotCommand ========\r\n");
-	Putty_printf("            id : %d\r\n", rc->id);
-	Putty_printf("        doKick : %d\r\n", rc->doKick);
-	Putty_printf("        doChip : %d\r\n", rc->doChip);
-	Putty_printf("       doForce : %d\r\n", rc->doForce);
-	Putty_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
-	Putty_printf("           rho : %.4f\r\n", rc->rho);
-	Putty_printf("         theta : %.4f\r\n", rc->theta);
-	Putty_printf("         angle : %.4f\r\n", rc->angle);
-	Putty_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
-	Putty_printf("      dribbler : %d\r\n", rc->dribbler);
-	Putty_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	Putty_printf("angularControl : %d\r\n", rc->angularControl);
-	Putty_printf("      feedback : %d\r\n", rc->feedback);
+	LOG_printf("======== RobotCommand ========\r\n");
+	LOG_printf("            id : %d\n", rc->id);
+	LOG_printf("        doKick : %d\n", rc->doKick);
+	LOG_printf("        doChip : %d\r\n", rc->doChip);
+	LOG_printf("       doForce : %d\r\n", rc->doForce);
+	LOG_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
+	LOG_printf("           rho : %.4f\r\n", rc->rho);
+	LOG_printf("         theta : %.4f\r\n", rc->theta);
+	LOG_printf("         angle : %.4f\r\n", rc->angle);
+	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
+	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
+	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
+	LOG_printf("angularControl : %d\r\n", rc->angularControl);
+	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 
 
 
-// ----------------------------------------------------- INIT -----------------------------------------------------
+
+
+/* ======================================================== */
+/* ==================== INITIALIZATION ==================== */
+/* ======================================================== */
 void init(void){
+
+	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
+	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
+	 but its better than suddenly having non-responding robots in a match */
+	IWDG_Init(iwdg, 5000);
 
     set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
     set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
@@ -224,7 +288,6 @@ void init(void){
 	}else{
 		/* Initialize Roboteam_Embedded_Messages. Not possible when Putty_Init() is called */
 		/* Can now receive RobotCommands (and other packets) via UART */
-		robotCommandIsFresh = 0;
 		REM_UARTinit(UART_PC);
 	}
 	set_Pin(LED2_pin, 1);
@@ -238,25 +301,38 @@ void init(void){
     dribbler_Init();
     if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
+
 	/* Initialize the SX1280 wireless chip */
-	// TODO figure out why a hardfault occurs when this is disabled
+	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
+	set.periodBaseCount = WIRELESS_RX_COUNT;
+	Wireless_Error err;
+	SX_Interface.BusyPin = SX_BUSY_pin;
+	SX_Interface.CS = SX_NSS_pin;
+	SX_Interface.Reset = SX_RST_pin;
+	// err |= Wireless_setPrint_Callback(SX, LOG_printf);
+    err = Wireless_Init(SX, set, &SX_Interface);
+    if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
+	err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
+    if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
+	LOG_sendAll();
+    
 	if(read_Pin(IN2_pin)){
-		SX = Wireless_Init(BLUE_CHANNEL, COMM_SPI);
+		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
-		SX = Wireless_Init(YELLOW_CHANNEL, COMM_SPI);
+		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
 	}
 	LOG_sendAll();
     
-	SX->SX_settings->syncWords[0] = robot_syncWord[ROBOT_ID];
-    setSyncWords(SX, SX->SX_settings->syncWords[0], 0x00, 0x00);
-    setRX(SX, SX->SX_settings->periodBase, WIRELESS_RX_COUNT);
+	Wireless_setTXSyncword(SX,robot_syncWord[16]);
+	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
+	Wireless_setRXSyncwords(SX, syncwords);
 	set_Pin(LED4_pin, 1);
 
-	/* Initialize the XSens chip */
+	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
-    MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
+    MTi = MTi_Init(1, XFP_VRU_general);
     if(MTi == NULL){
 		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
@@ -268,8 +344,11 @@ void init(void){
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 	LOG_sendAll();
 
-	/* Initialize watchdog (resets system after it has crashed) */
-	IWDG_Init(iwdg); 
+	WaitForPacket(SX);
+
+	/* Reset the watchdog timer and set the threshold at 200ms */
+	IWDG_Refresh(iwdg);
+	IWDG_Init(iwdg, 200);
 
 	/* Turn of all leds. Will now be used to indicate robot status */
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
@@ -285,7 +364,11 @@ void init(void){
 
 
 
-// ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
+
+
+/* =================================================== */
+/* ==================== MAIN LOOP ==================== */
+/* =================================================== */
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
 	counter_loop++;
@@ -293,31 +376,23 @@ void loop(void){
 	/* Send anything in the log buffer over UART */
 	LOG_send();
 	
-	// If a RobotCommand came in via UART
-	if(robotCommandIsFresh == 1){
-		robotCommandIsFresh = 0;
-		timeLastPacket = currentTime;
-		decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
-
-		toggle_Pin(LED6_pin);
-	}
-
 	// Play a warning if a REM packet with an incorrect version was received
 	if(!REM_last_packet_had_correct_version)
 		if(!buzzer_IsPlaying())
 			buzzer_Play_WarningTwo();
 
 	// If serial packet is no older than 250ms, assume connected via wire
-	isSerialConnected = (currentTime - timeLastPacket) < 250;
-
+	is_connected_serial = (currentTime - time_last_packet_serial) < 250;
+	is_connected_wireless = (currentTime - time_last_packet_wireless) < 250;
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
 
 	// Check XSens
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !(xsens_CalibrationDone && (checkWirelessConnection() || isSerialConnected)) || !REM_last_packet_had_correct_version;
+    halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
     if (halt) {
+		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
         resetRobotCommand(&activeRobotCommand);
@@ -331,6 +406,7 @@ void loop(void){
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
         wheels_Unbrake();
+		LOG_printf("[loop:"STRINGIZE(__LINE__)"] XSens calibrated after %dms\n", currentTime-timestamp_initialized);
     }
 
     // Update test (if active)
@@ -357,7 +433,7 @@ void loop(void){
     robotFeedback.angle = stateEstimation_GetState()[body_yaw];
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    robotFeedback.rssi = SX->Packet_status->RSSISync/2; // TODO scale this between 0 and 15? Check REM packet definition
+    robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
     
 	if(SEND_ROBOT_STATE_INFO){
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
@@ -393,27 +469,41 @@ void loop(void){
 	if(heartbeat_17ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_17ms < now) heartbeat_17ms += 17;
-
-		// encodeRobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
-		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO, 2);
-		// HAL_UART_Transmit_DMA(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_ROBOT_STATE_INFO);
 	}	
 
     // Heartbeat every 100ms	
 	if(heartbeat_100ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_100ms < now) heartbeat_100ms += 100;
+
+		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
+		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
+
+		// encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+
 	}
 
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
-		
+
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
-		
-        // Check if ballsensor connection is still correct
+
+		// switch(SX->state){
+		// case WIRELESS_RESET: LOG_printf("%d: state=WIRELESS_RESET\n", now); break;
+		// case WIRELESS_INIT: LOG_printf("%d: state=WIRELESS_INIT\n", now); break;
+		// case WIRELESS_READY: LOG_printf("%d: state=WIRELESS_READY\n", now); break;
+		// case WIRELESS_WRITING: LOG_printf("%d: state=WIRELESS_WRITING\n", now); break;
+		// case WIRELESS_READING: LOG_printf("%d: state=WIRELESS_READING\n", now); break;
+		// case WIRELESS_TRANSMITTING: LOG_printf("%d: state=WIRELESS_TRANSMITTING\n", now); break;
+		// case WIRELESS_RECEIVING: LOG_printf("%d: state=WIRELESS_RECEIVING\n", now); break;
+		// default: LOG_printf("%d: default\n", now); break;
+		// }
+
+		// Check if ballsensor connection is still correct
         if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
@@ -422,28 +512,23 @@ void loop(void){
         }
     }
 
-    /*
-    * LEDs for debugging
-    */
-
+    /* LEDs for debugging */
     // LED0 : toggled every second while alive
-    // LED1 : on while xsens startup calibration is not finished
-    // LED2 : on when braking
-    // LED3 : on when halting
-    // LED4 : on when ballsensor says ball is within kicking range
-    // LED5 : on when battery is empty
-    // LED6 : toggled when a packet is received
-
-    // LED0 done in PuTTY prints above
-    set_Pin(LED1_pin, !xsens_CalibrationDone);
-    set_Pin(LED2_pin, wheels_GetWheelsBraking());
-    set_Pin(LED3_pin, halt);
-    set_Pin(LED4_pin, ballPosition.canKickBall);
-    // set_Pin(LED5_pin, (read_Pin(Bat_pin) && batCounter > 1000));
-    // LED6 done in Wireless.c
-
-	
+    set_Pin(LED1_pin, !xsens_CalibrationDone);		// On while xsens startup calibration is not finished
+    set_Pin(LED2_pin, wheels_GetWheelsBraking());   // On when braking 
+    set_Pin(LED3_pin, halt);						// On when halting
+    set_Pin(LED4_pin, ballPosition.canKickBall);    // On when ballsensor says ball is within kicking range
+	// LED5 unused
+    // LED6 Wireless_Readpacket_Cplt : toggled when a packet is received
 }
+
+
+
+
+
+/* ========================================================= */
+/* ==================== PACKET HANDLERS ==================== */
+/* ========================================================= */
 
 void handleRobotCommand(uint8_t* packet_buffer){
 	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
@@ -467,6 +552,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
+	time_last_packet_serial = HAL_GetTick();
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
@@ -475,22 +561,22 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 	while(total_bytes_processed < packet_length){
 
-		packet_header = message_buffer_in[total_bytes_processed];
+		packet_header = packet_buffer[total_bytes_processed];
 
 		switch(packet_header){
 
 			case PACKET_TYPE_REM_ROBOT_COMMAND:
-				handleRobotCommand(message_buffer_in + total_bytes_processed);
+				handleRobotCommand(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
 				break;
 
 			case PACKET_TYPE_REM_ROBOT_BUZZER: 
-				handleRobotBuzzer(message_buffer_in + total_bytes_processed);
+				handleRobotBuzzer(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
 				break;
 			
 			case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
-				handleRobotGetPIDGains(message_buffer_in + total_bytes_processed);
+				handleRobotGetPIDGains(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
 				break;
 
@@ -499,13 +585,17 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				break;
 
 			default:
-				sprintf(logBuffer, "[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
+				LOG_printf("[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);
 				return false;
 		}
 	}
 
 	return true;
 }
+
+
+
+
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */
@@ -514,16 +604,13 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 
 	// If we received data from the SX1280
-	if(hspi->Instance == SX->SPI->Instance) {
+	if(hspi->Instance == SX->Interface->SPI->Instance) {
+		Wireless_DMA_Handler(SX);
 
-		Wireless_DMA_Handler(SX, message_buffer_in);
-
-		uint8_t total_packet_length = SX->payloadLength;
-		handlePacket(message_buffer_in, total_packet_length);
 	}
 
 	// If we received data from the XSens
-	else if(hspi->Instance == MTi->SPI->Instance){
+	else if(/*MTi != NULL &&*/ hspi->Instance == MTi->SPI->Instance){
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
@@ -541,35 +628,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == SX_IRQ_pin.PIN) {
-
-		/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
-		* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
-		* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
-		* Somehow, make sure that this is only done on RX_DONE
-		*/
-		uint8_t total_packet_length = 0;
-
-		encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (message_buffer_out + total_packet_length), &robotFeedback);
-		total_packet_length += PACKET_SIZE_REM_ROBOT_FEEDBACK;
-
-		if(SEND_ROBOT_STATE_INFO){
-			encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (message_buffer_out + total_packet_length), &robotStateInfo);
-			total_packet_length += PACKET_SIZE_REM_ROBOT_STATE_INFO;
-		}
-
-		// TODO ensure this is only done when a packet is actually being sent
-		// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
-		// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
-		// if(flagSendPIDGains){
-			encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (message_buffer_out + total_packet_length), &robotPIDGains);
-			total_packet_length += PACKET_SIZE_REM_ROBOT_PIDGAINS;
-			flagSendPIDGains = false;
-		// }
-
-		// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
-
-		Wireless_IRQ_Handler(SX, message_buffer_out, total_packet_length);
-
+		Wireless_IRQ_Handler(SX);
 	}else if(GPIO_Pin == MTi_IRQ_pin.PIN){
 		MTi_IRQ_Handler(MTi);
 	}else if (GPIO_Pin == BS_IRQ_pin.PIN){
@@ -589,11 +648,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == htim7.Instance) {
 		counter_htim7++;
 
+		// if(MTi == NULL) return;
+
 		// State estimation		
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
 		stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
 		
-		wheels_Update();
 		wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
 		stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
 		stateInfo.xsensAcc[body_y] = MTi->acc[body_y];

@@ -176,7 +176,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	// calibrate rotation sensor for calibrate_time seconds
 	if(MTi_NoRotation(MTi,calibrate_time)){
 		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed NoRotation()");
- 		return NULL;
+		return NULL;
 	}
 
 	HAL_Delay(1);
@@ -188,15 +188,16 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	}
 
 	/* Uncommented this because it's double? */
-	// HAL_Delay(1);
-	// if(MTi_UseIcc(MTi) == Xsens_OK) {
-	// 	MTi->started_icc = true;
-	// 	MTi_printf("ICC started");
-	// }
-	// else {
-	// 	MTi_printf("ICC failed");
-	// 	return NULL;
-	// }
+	/* DONT UNCOMMENT THIS! IT DOESN'T WORK WITHOUT IT */
+	HAL_Delay(1);
+	if(MTi_UseIcc(MTi) == Xsens_OK) {
+		MTi->started_icc = true;
+		LOG_printf("ICC started");
+	}
+	else {
+		LOG_printf("ICC failed");
+		return NULL;
+	}
 
 	// set settings
 	HAL_Delay(1);

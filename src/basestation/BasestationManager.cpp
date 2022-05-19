@@ -61,9 +61,7 @@ int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, r
 
 void BasestationManager::setFeedbackCallback(const std::function<void(const REM_RobotFeedback&, rtt::Team)>& callback) { this->feedbackCallbackFunction = callback; }
 
-void BasestationManager::setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo&, rtt::Team)>& callback) {
-
-}
+void BasestationManager::setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo&, rtt::Team)>& callback) { this->robotStateInfoCallbackFunction = callback; }
 
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
@@ -111,7 +109,19 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
 
             this->callFeedbackCallback(feedback, color);
             break;
-        }  // TODO: Other packets can be handled as well, like basestation statistics
+        }
+        case PACKET_TYPE_REM_ROBOT_STATE_INFO: {
+            REM_RobotStateInfoPayload payload;
+            std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
+
+            REM_RobotStateInfo stateInfo;
+            decodeREM_RobotStateInfo(&stateInfo, &payload);
+
+            this->callRobotStateInfoCallback(stateInfo, color);
+
+            break;
+        }
+        // TODO: Other packets can be handled as well, like basestation statistics
     }
 }
 

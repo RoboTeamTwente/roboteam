@@ -27,6 +27,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/RobotFeedback.cpp
         src/utils/FileLogger.cpp
         src/utils/Teams.cpp
+        src/utils/AIData.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC

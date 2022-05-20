@@ -16,6 +16,7 @@
 #include <roboteam_utils/RobotFeedback.hpp>
 #include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
+#include <roboteam_utils/FileLogger.hpp>
 
 namespace rtt::robothub {
 
@@ -25,12 +26,18 @@ enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
 
 class RobotHub {
    public:
-    RobotHub();
+    RobotHub(bool shouldLog);
 
     const RobotHubStatistics &getStatistics();
     void resetStatistics();
 
    private:
+    std::thread loggerThread;
+
+    std::unique_ptr<FileLogger> robotStateLogger;
+    std::unique_ptr<FileLogger> robotCommandLogger;
+    std::unique_ptr<FileLogger> robotFeedbackLogger;
+
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
@@ -60,6 +67,12 @@ class RobotHub {
     void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
     void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
     bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
+
+    void handleRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
+
+    void logRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
+    void logRobotCommands(const rtt::RobotCommands& commands, rtt::Team team);
+    void logRobotFeedback(const rtt::RobotsFeedback& feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

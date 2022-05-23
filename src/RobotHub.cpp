@@ -323,7 +323,8 @@ void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team)
        << "wheelSp2: " << formatString("%7f", info.wheelSpeed2) << ", "
        << "wheelSp3: " << formatString("%7f", info.wheelSpeed3) << ", "
        << "wheelSp4: " << formatString("%7f", info.wheelSpeed4) << std::endl;
-    this->robotStateLogger->writeNewLine(ss.str());
+
+    this->robotStateLogger->operator<<(ss.rdbuf());
 }
 
 void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team team) {
@@ -336,7 +337,7 @@ void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team te
     for (const auto& command : commands) {
         ss << "[" << timeStr << ", " << teamStr << "] " << command << std::endl;
     }
-    this->robotCommandLogger->writeNewLine(ss.str());
+    this->robotCommandLogger->operator<<(ss.rdbuf());
 }
 
 void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
@@ -351,7 +352,7 @@ void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
         ss << "[" << timeStr << ", " << teamStr << ", " << sourceStr << "] " << robot << std::endl;
     }
 
-    this->robotFeedbackLogger->writeNewLine(ss.str());
+    this->robotFeedbackLogger->operator<<(ss.rdbuf());
 }
 
 const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }

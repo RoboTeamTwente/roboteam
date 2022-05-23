@@ -7,6 +7,7 @@
 
 #include <mutex>
 #include <proto/State.pb.h>
+#include <optional>
 
 class InterfaceFieldStateStore {
 private:

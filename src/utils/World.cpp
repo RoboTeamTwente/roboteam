@@ -14,8 +14,7 @@ bool World::operator==(const World &other) const {
 
 bool WorldStates::operator==(const WorldStates &other) const {
     return this->currentWorld == other.currentWorld
-        && this->field == other.field
-        && google::protobuf::util::MessageDifferencer::Equivalent(this->referee, other.referee);
+        && this->field == other.field;
 }
 
 } // namespace rtt

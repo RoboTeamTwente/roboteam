@@ -131,9 +131,16 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             REM_BasestationLog log;
             decodeREM_BasestationLog(&log, &payload);
 
-            std::string actualLogMessage((char*) message.payloadBuffer, 3, log.messageLength-1); // Ignore the last newline character
+            if (log.messageLength > 0) {
+                std::string actualLogMessage((char*) message.payloadBuffer, 3, log.messageLength-1); // Ignore the last newline character
+                this->callBasestationLogCallback(actualLogMessage, color);
+            } else {
+                RTT_WARNING("Received empty basestation log")
+            }
 
-            this->callBasestationLogCallback(actualLogMessage, color);
+            break;
+        }
+        case PACKET_TYPE_REM_ROBOT_PIDGAINS: {
             break;
         }
         default: {

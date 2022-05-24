@@ -11,6 +11,7 @@
 #include "Line.h"
 #include "LineSegment.h"
 #include "Rectangle.h"
+#include "Shape.h"
 #include "Vector2.h"
 
 namespace rtt {
@@ -19,7 +20,7 @@ namespace rtt {
  * @date 24-02-2020
  * @author Emiel Steerneman
  */
-class Circle {
+class Circle : public Shape {
    public:
     Vector2 center;
     double radius;
@@ -66,17 +67,19 @@ class Circle {
      * @param other The point which to project onto this circle
      * @return The location where the point is projected onto the circle
      */
-    [[nodiscard]] Vector2 project(const Vector2& point) const;
+    [[nodiscard]] Vector2 project(const Vector2& point) const override;
 
     /**Move this circle by a certain amount
      * @param by
      */
     void move(const Vector2& by);
+
     /**
      * @brief check if a point is contained within this circle
      * @return true if point is on or within the radius
      */
-    [[nodiscard]] bool contains(const Vector2& point) const;
+    [[nodiscard]] bool contains(const Vector2& point) const override;
+
     /** @brief Check if two circles are equal by comparing the centers and radii */
     bool operator==(const Circle& other) const;
     bool operator!=(const Circle& other) const;

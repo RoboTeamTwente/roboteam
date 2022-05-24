@@ -23,6 +23,11 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Shadow.cpp
         src/utils/Polynomial.cpp
         src/utils/RobotShape.cpp
+        src/utils/RobotCommands.cpp
+        src/utils/RobotFeedback.cpp
+        src/utils/FileLogger.cpp
+        src/utils/Teams.cpp
+        src/utils/AIData.cpp
         src/utils/FieldRectangle.cpp
         src/utils/Field.cpp
         src/utils/Robot.cpp
@@ -51,6 +56,8 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/ShadowTest.cpp
         test/utils/CircularBufferTest.cpp
         test/utils/RobotShapeTest.cpp
+        test/utils/RobotCommandsTest.cpp
+        test/utils/RobotFeedbackTest.cpp
         )
 
 add_library(roboteam_utils STATIC

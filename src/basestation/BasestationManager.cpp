@@ -1,5 +1,7 @@
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
+#include <REM_BasestationLog.h>
+#include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
 
@@ -63,6 +65,8 @@ void BasestationManager::setFeedbackCallback(const std::function<void(const REM_
 
 void BasestationManager::setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo&, rtt::Team)>& callback) { this->robotStateInfoCallbackFunction = callback; }
 
+void BasestationManager::setBasestationLogCallback(const std::function<void(const std::string&, rtt::Team)>& callback) { this->basestationLogCallback = callback; }
+
 void BasestationManager::listenForBasestationPlugs() {
     while (this->shouldListenForBasestationPlugs) {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -118,10 +122,25 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             decodeREM_RobotStateInfo(&stateInfo, &payload);
 
             this->callRobotStateInfoCallback(stateInfo, color);
-
             break;
         }
-        // TODO: Other packets can be handled as well, like basestation statistics
+        case PACKET_TYPE_REM_BASESTATION_LOG: {
+            REM_BasestationLogPayload payload;
+            std::memcpy(payload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_LOG);
+
+            REM_BasestationLog log;
+            decodeREM_BasestationLog(&log, &payload);
+
+            std::string actualLogMessage((char*) message.payloadBuffer, 3, log.messageLength-1); // Ignore the last newline character
+
+            this->callBasestationLogCallback(actualLogMessage, color);
+            break;
+        }
+        default: {
+            RTT_WARNING("Unhandled basestation message: ", (int) message.payloadBuffer[0])
+            break;
+        }
+        // TODO: Other packets can be handled as well
     }
 }
 
@@ -131,6 +150,10 @@ void BasestationManager::callFeedbackCallback(const REM_RobotFeedback& feedback,
 
 void BasestationManager::callRobotStateInfoCallback(const REM_RobotStateInfo& robotStateInfo, rtt::Team color) const {
     if (this->robotStateInfoCallbackFunction != nullptr) this->robotStateInfoCallbackFunction(robotStateInfo, color);
+}
+
+void BasestationManager::callBasestationLogCallback(const std::string& basestationLog, rtt::Team color) const {
+    if (this->basestationLogCallback != nullptr) this->basestationLogCallback(basestationLog, color);
 }
 
 FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string message) : message(message) {}

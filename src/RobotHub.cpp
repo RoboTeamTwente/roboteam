@@ -36,6 +36,7 @@ RobotHub::RobotHub(bool shouldLog) {
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
     this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+    this->basestationManager->setBasestationLogCallback([&](const std::string& log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
     if (shouldLog) {
         this->robotStateLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTSTATES.txt");
@@ -305,6 +306,10 @@ bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
 
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
     this->logRobotStateInfo(info, team);
+}
+
+void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
+    RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
 }
 
 void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {

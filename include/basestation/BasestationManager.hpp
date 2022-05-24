@@ -31,6 +31,7 @@ class BasestationManager {
 
     void setFeedbackCallback(const std::function<void(const REM_RobotFeedback &, rtt::Team color)> &callback);
     void setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo &, rtt::Team color)> &callback);
+    void setBasestationLogCallback(const std::function<void(const std::string&, rtt::Team color)> &callback);
 
     const BasestationManagerStatus getStatus() const;
 
@@ -49,6 +50,8 @@ class BasestationManager {
     void callFeedbackCallback(const REM_RobotFeedback &feedback, rtt::Team color) const;
     std::function<void(const REM_RobotStateInfo &, rtt::Team)> robotStateInfoCallbackFunction;
     void callRobotStateInfoCallback(const REM_RobotStateInfo& stateInfo, rtt::Team color) const;
+    std::function<void(const std::string&, rtt::Team)> basestationLogCallback;
+    void callBasestationLogCallback(const std::string& basestationLog, rtt::Team color) const;
 
     static std::vector<libusb_device *> filterBasestationDevices(libusb_device *const *const devices, int device_count);
 };

@@ -1,17 +1,18 @@
 #ifndef WORLDHANDLER_H
 #define WORLDHANDLER_H
 
-#include <net/robocup_ssl_client.h>
-#include <observer/Observer.h>
+#include <proto/State.pb.h>
 
 #include <RobotFeedbackNetworker.hpp>
 #include <WorldNetworker.hpp>
-#include <exception>
-#include <memory>
-#include <utility>
-#include <vector>
 
+#include <observer/Observer.h>
+#include <utility>
 #include "RobocupReceiver.h"
+#include <memory>
+#include <vector>
+#include <exception>
+
 
 class Handler {
    private:
@@ -22,9 +23,8 @@ class Handler {
     std::unique_ptr<RobocupReceiver<proto::SSL_Referee>> referee_client;
 
     Observer observer;
-    std::vector<rtt::RobotsFeedback> receivedRobotsFeedback;
+    std::vector<rtt::RobotsFeedback> receivedRobotData;
     std::mutex sub_mutex;
-
    public:
     Handler() = default;
 
@@ -46,5 +46,6 @@ class FailedToInitializeNetworkersException : public std::exception {
 class FailedToSetupSSLClients : public std::exception {
     const char* what() const throw();
 };
+
 
 #endif

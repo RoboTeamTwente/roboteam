@@ -1,102 +1,24 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.10)
 project(roboteam_world)
 
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Network)
 
-add_executable(roboteam_observer
-        src/roboteam_observer/main.cpp
-        src/roboteam_observer/Handler.cpp
-        )
+add_subdirectory(observer)
 
+add_executable(roboteam_observer
+        src/main.cpp
+        src/Handler.cpp
+        )
 target_link_libraries(roboteam_observer
-        PRIVATE observer_lib
-        PRIVATE observer_net_lib
+        PRIVATE observer
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Network
         )
-
 target_include_directories(roboteam_observer
         PRIVATE include/roboteam_observer
         INTERFACE include
         )
+
 target_compile_options(roboteam_observer PRIVATE "${COMPILER_FLAGS}")
-
-# -- OBSERVER LIB --
-
-add_library(observer_lib STATIC
-        src/observer/filters/WorldFilter.cpp
-        src/observer/filters/RobotFilter.cpp
-        src/observer/filters/BallFilter.cpp
-        src/observer/filters/CameraFilter.cpp
-        src/observer/filters/Scaling.h
-        src/observer/Observer.cpp
-        src/observer/parameters/RobotParameterDatabase.cpp
-        src/observer/filters/geometry/GeometryFilter.cpp
-        src/observer/filters/referee/RefereeFilter.cpp
-        src/observer/filters/RobotFeedbackFilter.cpp)
-
-target_link_libraries(observer_lib
-        PUBLIC observer_data_lib
-        PUBLIC roboteam_networking
-        PRIVATE roboteam_utils
-        PRIVATE Eigen3::Eigen
-        )
-
-target_include_directories(observer_lib
-        PRIVATE include/observer
-        PUBLIC include
-        )
-
-set_target_properties(observer_lib PROPERTIES UNITY_BUILD FALSE)
-target_compile_options(observer_lib PRIVATE "${COMPILER_FLAGS}")
-
-# -- NET --
-
-add_library(observer_net_lib STATIC
-        src/net/netraw.cpp
-        src/net/robocup_ssl_client.cpp
-        )
-
-target_include_directories(observer_net_lib
-        PRIVATE include/net
-        INTERFACE include
-        )
-
-target_link_libraries(observer_net_lib
-        PUBLIC roboteam_networking
-)
-target_compile_options(observer_net_lib PRIVATE "${COMPILER_FLAGS}")
-
-# -- DATA --
-
-add_library(observer_data_lib STATIC
-        src/data/RobotParameters.cpp
-        )
-
-target_include_directories(observer_data_lib
-        PRIVATE include/data
-        INTERFACE include
-        )
-
-target_link_libraries(observer_data_lib
-        PUBLIC roboteam_networking
-)
-target_compile_options(observer_data_lib PRIVATE "${COMPILER_FLAGS}")
-
-# -- TESTS --
-
-add_executable(roboteam_observer_tests
-        test/observer/KalmanFilterTest.cpp
-        )
-
-target_link_libraries(roboteam_observer_tests
-        PRIVATE observer_lib
-        PRIVATE GTest::gtest
-        PRIVATE GTest::gtest_main
-        )
-
-gtest_discover_tests(roboteam_observer_tests)
-
-target_compile_options(roboteam_observer_tests PRIVATE "${COMPILER_FLAGS}")

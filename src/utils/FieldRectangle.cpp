@@ -51,6 +51,13 @@ bool FieldRectangle::contains(const Vector2& point, double margin) const {
         && point.y > (this->bottom - margin) && point.y < (this->top + margin);
 }
 
+Vector2 FieldRectangle::project(const Vector2& point) const {
+    return Vector2(
+        std::clamp(point.x, this->left, this->right),
+        std::clamp(point.y, this->bottom, this->top)
+    );
+}
+
 Polygon FieldRectangle::asPolygon(double margin) const {
     Vector2 lowerLeft(this->left - margin, this->bottom - margin);
 

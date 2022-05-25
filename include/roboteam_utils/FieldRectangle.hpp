@@ -4,11 +4,13 @@
 #include <roboteam_utils/LineSegment.h>
 #include <roboteam_utils/Polygon.h>
 
+#include <roboteam_utils/Shape.h>
+
 namespace rtt {
 /* A more optimized rectangle class that is used for representing a field.
    Optimized by precalculating many variables that are already known from
    the beginning, because field data is often read, but never changed. */
-class FieldRectangle {
+class FieldRectangle : public Shape {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
     FieldRectangle();
@@ -20,9 +22,12 @@ public:
     bool operator==(const FieldRectangle& other) const;
 
     // Checks if the given point is inside the rectangle
-    bool contains(const Vector2& point) const;
+    bool contains(const Vector2& point) const override;
     // Checks if the given point is inside the rectangle, taken into account the margin from the outsides
     bool contains(const Vector2& point, double margin) const;
+
+    // Projects the given point
+    Vector2 project(const Vector2& point) const override;
 
     Polygon asPolygon(double margin = 0) const;
     double getTop() const;

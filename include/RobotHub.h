@@ -70,6 +70,8 @@ class RobotHub {
 
     void handleRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
 
+    void handleBasestationLog(const std::string& basestationLogMessage, rtt::Team team);
+
     void logRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
     void logRobotCommands(const rtt::RobotCommands& commands, rtt::Team team);
     void logRobotFeedback(const rtt::RobotsFeedback& feedback);

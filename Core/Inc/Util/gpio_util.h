@@ -29,13 +29,6 @@ extern GPIO_Pin Chip_pin;
 extern GPIO_Pin Charge_pin;
 extern GPIO_Pin Charge_done_pin;
 
-// Geneva
-extern GPIO_Pin Geneva_PWM_pin;
-extern GPIO_Pin Geneva_DIR_A_pin;
-extern GPIO_Pin Geneva_DIR_B_pin;
-extern GPIO_Pin Geneva_ENC_A_pin;
-extern GPIO_Pin Geneva_ENC_B_pin;
-
 // Wheels PWM
 extern GPIO_Pin RB_PWM_pin;
 extern GPIO_Pin RF_PWM_pin;
@@ -64,9 +57,6 @@ extern GPIO_Pin RF_ENC_B_pin;
 extern GPIO_Pin LB_ENC_B_pin;
 extern GPIO_Pin LF_ENC_B_pin;
 
-// Battery
-extern GPIO_Pin Bat_pin;
-
 // Dribbler
 extern GPIO_Pin Dribbler_PWM_pin;
 
@@ -85,11 +75,11 @@ extern GPIO_Pin ID1_pin;
 extern GPIO_Pin ID2_pin;
 extern GPIO_Pin ID3_pin;
 
-// GPIO header
-extern GPIO_Pin OUT1_pin;
-extern GPIO_Pin OUT2_pin;	// feeback enable high pin
-extern GPIO_Pin IN1_pin;
-extern GPIO_Pin IN2_pin;	// feedback enable pin
+// Feature Select
+extern GPIO_Pin FT0;
+extern GPIO_Pin FT1;
+extern GPIO_Pin FT2;
+extern GPIO_Pin FT3;
 
 // MTi
 extern GPIO_Pin MTi_RST_pin;
@@ -105,6 +95,18 @@ extern GPIO_Pin SX_BUSY_pin;
 // Ballsensor
 extern GPIO_Pin BS_IRQ_pin;
 extern GPIO_Pin BS_RST_pin;
+
+// Battery
+extern GPIO_Pin BAT_SDN_pin;
+extern GPIO_Pin BAT_KILL_pin;
+extern GPIO_Pin BAT_IRQ_pin;
+
+// SD
+extern GPIO_Pin SD_CD_pin;
+
+// Interface
+extern GPIO_Pin INT_EN_pin;
+extern GPIO_Pin INT_ENneg_pin;
 
 /////////////////////////////////////////////// GPIO UTILITY FUNCTIONS
 

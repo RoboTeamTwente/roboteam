@@ -10,7 +10,7 @@
 namespace rtt {
 /* This type represents a field, containing a set of rectangles,
  * points and circles, all expressed in meters.
- * The middle of the field is (0, 0), and the x-axis goes through the goals */
+ * The center of the field is (0, 0), and the x-axis goes through the goals */
 typedef struct Field {
 
     Vector2 leftPenaltyPoint;   // Place of left penalty point
@@ -30,8 +30,18 @@ typedef struct Field {
 
     bool operator== (const Field& other) const;
 
-    // This function can be used to ensure all variables are properly set according to the given sizes
-    static Field createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint);
+    /* Function to ensure all variables of the created field are properly set.
+     * Assumes no negative sizes are given */
+    static Field createField(double fieldWidth,
+                             double fieldHeight,
+                             double defenseWidth,
+                             double defenseHeight,
+                             double goalWidth,
+                             double goalHeight,
+                             double boundaryWidth,
+                             double centerCircleRadius,
+                             const Vector2& leftPenaltyPoint,
+                             const Vector2& rightPenaltyPoint);
 } Field;
 
 } // namespace rtt

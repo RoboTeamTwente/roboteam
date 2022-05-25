@@ -16,7 +16,7 @@ bool Field::operator==(const Field &other) const {
         && this->rightGoalArea == other.rightGoalArea;
 }
 
-Field Field::createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, Circle centerCircle, Vector2 leftPenaltyPoint, Vector2 rightPenaltyPoint) {
+Field Field::createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, double centerCircleRadius, const Vector2& leftPenaltyPoint, const Vector2& rightPenaltyPoint) {
     //     A---------------C----------------
     //     |               |               |
     //     E-----         _|_         G----|
@@ -46,10 +46,10 @@ Field Field::createField(double fieldWidth, double fieldHeight, double defenseWi
     Vector2 l(d.x,  -goalHeight/2);
 
     Field field = {
-        .leftPenaltyPoint = leftPenaltyPoint,
+        .leftPenaltyPoint  = leftPenaltyPoint,
         .rightPenaltyPoint = rightPenaltyPoint,
-        .centerCircle = centerCircle,
-        .boundaryWidth = boundaryWidth,
+        .centerCircle      = Circle(Vector2(0, 0), centerCircleRadius),
+        .boundaryWidth     = boundaryWidth,
         .playArea          = FieldRectangle(a, d),
         .leftPlayArea      = FieldRectangle(a, b),
         .rightPlayArea     = FieldRectangle(c, d),

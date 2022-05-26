@@ -21,7 +21,7 @@ bool Robot::operator==(const Robot &other) const {
         && this->height == other.height
         && this->frontWidth == other.frontWidth
         && this->dribblerWidth == other.dribblerWidth
-        && this->capAngleOffset == other.capAngleOffset;
+        && this->capOffset == other.capOffset;
 }
 
 } // namespace rtt

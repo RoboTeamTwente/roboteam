@@ -1,27 +1,8 @@
 #include <gtest/gtest.h>
 #include <roboteam_utils/Ball.hpp>
-
-#include <random>
+#include <roboteam_utils/Random.h>
 
 using namespace rtt;
-
-double randomD(double low, double high) {
-    std::uniform_real_distribution<double> distribution(low, high);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
-
-bool randomB() {
-    std::uniform_int_distribution distribution(0, 1);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
-
-int randomI(int low, int high) {
-    std::uniform_int_distribution distribution(low, high);
-    std::default_random_engine engine;
-    return distribution(engine);
-}
 
 TEST(BallTests, instantiation) {
     Ball ball;
@@ -36,13 +17,13 @@ TEST(BallTests, instantiation) {
 
 TEST(BallTests, equality) {
     Ball ball = {
-        .position = Vector2(randomD(-10.0, 10.0), randomD(-10.0, 10.0)),
-        .height = randomD(0.0, 10.0),
-        .velocity = Vector2(randomD(-10.0, 10.0), randomD(-10.0, 10.0)),
-        .verticalVelocity = randomD(-10.0, 10.0),
-        .expectedEndPosition = Vector2(randomD(-10.0, 10.0), randomD(-10.0, 10.0)),
-        .isVisible = randomB(),
-        .area = static_cast<unsigned int>(randomI(0, 10))
+        .position = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+        .height = SimpleRandom::getDouble(0.0, 10.0),
+        .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+        .verticalVelocity = SimpleRandom::getDouble(-10.0, 10.0),
+        .expectedEndPosition = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+        .isVisible = SimpleRandom::getBool(),
+        .area = static_cast<unsigned int>(SimpleRandom::getInt(0, 10))
     };
 
     Ball copy = ball;

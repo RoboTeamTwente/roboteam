@@ -26,6 +26,10 @@ void Handler::start() {
             }
 
             auto state = observer.process(vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
+            std::cout<<robothub_info.size()<<" packets\n";
+            if(robothub_info.size() > 0){
+                state.PrintDebugString();
+            }
             std::size_t iterations = 0;
             bool sent = false;
             while(iterations < 10){

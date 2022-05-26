@@ -26,6 +26,7 @@ add_library(observer STATIC
         src/data/RobotParameters.cpp
         src/filters/vision/Camera.cpp
         src/filters/vision/CameraMap.cpp
+        src/filters/vision/RobotFeedbackFilter.cpp
         )
 
 target_link_libraries(observer

@@ -101,9 +101,9 @@ rtt::RobotsFeedback protoFeedbackToRobotsFeedback(const proto::RobotsFeedback& p
 
 RobotFeedbackPublisher::RobotFeedbackPublisher() : utils::Publisher(utils::ChannelType::ROBOT_FEEDBACK_CHANNEL) {}
 
-bool RobotFeedbackPublisher::publish(const rtt::RobotsFeedback& feedback) {
+std::size_t RobotFeedbackPublisher::publish(const rtt::RobotsFeedback& feedback) {
     auto protoRobotsFeedback = feedbackToProto(feedback);
-    return this->send(protoRobotsFeedback.SerializeAsString());
+    return this->send(protoRobotsFeedback.SerializeAsString()) ? protoRobotsFeedback.ByteSizeLong() : -1;
 }
 
 RobotFeedbackSubscriber::RobotFeedbackSubscriber(const std::function<void(const rtt::RobotsFeedback&)>& callback)

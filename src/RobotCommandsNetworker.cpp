@@ -85,9 +85,10 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
 // Blue commands publisher
 RobotCommandsBluePublisher::RobotCommandsBluePublisher() : utils::Publisher(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL) {}
 
-bool RobotCommandsBluePublisher::publish(const rtt::RobotCommands& commands) {
+std::size_t RobotCommandsBluePublisher::publish(const rtt::RobotCommands& commands) {
     auto protoRobotCommands = robotCommandsToProto(commands);
-    return this->send(protoRobotCommands.SerializeAsString());
+
+    return this->send(protoRobotCommands.SerializeAsString()) ? protoRobotCommands.ByteSizeLong() : -1;
 }
 
 // Blue commands subscriber
@@ -107,9 +108,9 @@ void RobotCommandsBlueSubscriber::onPublishedMessage(const std::string& message)
 // Yellow commands publisher
 RobotCommandsYellowPublisher::RobotCommandsYellowPublisher() : utils::Publisher(utils::ChannelType::ROBOT_COMMANDS_YELLOW_CHANNEL) {}
 
-bool RobotCommandsYellowPublisher::publish(const rtt::RobotCommands& commands) {
+std::size_t RobotCommandsYellowPublisher::publish(const rtt::RobotCommands& commands) {
     auto protoRobotCommands = robotCommandsToProto(commands);
-    return this->send(protoRobotCommands.SerializeAsString());
+    return this->send(protoRobotCommands.SerializeAsString()) ? protoRobotCommands.ByteSizeLong() : -1;
 }
 
 RobotCommandsYellowSubscriber::RobotCommandsYellowSubscriber(const std::function<void(const rtt::RobotCommands&)>& callback)

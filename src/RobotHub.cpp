@@ -299,9 +299,10 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 }
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
-    this->statistics.feedbackBytesSent += static_cast<int>(sizeof(feedback));
+    auto bytesSent = this->robotFeedbackPublisher->publish(feedback);
+    if (bytesSent > 0) this->statistics.feedbackBytesSent += bytesSent;
 
-    return this->robotFeedbackPublisher->publish(feedback);
+    return bytesSent > 0;
 }
 
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {

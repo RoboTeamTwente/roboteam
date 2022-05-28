@@ -267,6 +267,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     }
 
     this->sendRobotFeedback(robotsFeedback);
+    this->logRobotFeedback(robotsFeedback);
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team basestationColor) {
@@ -294,12 +295,11 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
     // Increment the feedback counter of this robot
     this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
+    this->logRobotFeedback(robotsFeedback);
 }
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     this->statistics.feedbackBytesSent += static_cast<int>(sizeof(feedback));
-
-    this->logRobotFeedback(feedback);
 
     return this->robotFeedbackPublisher->publish(feedback);
 }

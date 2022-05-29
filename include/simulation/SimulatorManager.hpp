@@ -51,11 +51,11 @@ class SimulatorManager {
     SimulatorManager(SimulatorNetworkConfiguration configuration);
     ~SimulatorManager();
 
-    // Both of the send functions return amount of bytes sent, return -1 if error occured
+    // Both of the send functions return amount of bytes sent, return -1 if error occurred
     int sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
     int sendConfigurationCommand(ConfigurationCommand& configurationCommand);
 
-    // These will set the callback function when feedback has been received
+    // These will set the callback function, which will be called when feedback is received
     void setRobotControlFeedbackCallback(std::function<void(RobotControlFeedback&)> callback);
     void setConfigurationFeedbackCallback(std::function<void(ConfigurationFeedback&)> callback);
 
@@ -76,7 +76,7 @@ class SimulatorManager {
     std::function<void(RobotControlFeedback&)> robotControlFeedbackCallback;
     std::function<void(ConfigurationFeedback&)> configurationFeedbackCallback;
 
-    // Returns the amount of bytes sent, returns -1 if error occured
+    // Returns the amount of bytes sent, returns -1 if error occurred
     int sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port);
 
     // These will call the callback functions, if set, whenever feedback is received

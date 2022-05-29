@@ -320,7 +320,14 @@ void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rt
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {
     for (const auto& error : errors) {
-        RTT_ERROR("Sim Error ", error.code, ": ", error.message);
+        if (error.code.has_value() && error.message.has_value())
+            RTT_ERROR("Received Simulation error ", error.code.value(), ": ", error.message.value())
+        else if (error.code.has_value())
+            RTT_ERROR("Received Simulation error with code: ", error.code.value())
+        else if (error.message.has_value())
+            RTT_ERROR("Received Simulation error: ", error.message.value())
+        else
+            RTT_ERROR("Received unknown Simulation error");
     }
 }
 

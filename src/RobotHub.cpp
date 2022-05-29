@@ -267,6 +267,8 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     }
 
     this->sendRobotFeedback(robotsFeedback);
+
+    this->handleSimulationErrors(feedback.simulationErrors);
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team basestationColor) {
@@ -304,12 +306,22 @@ bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     return this->robotFeedbackPublisher->publish(feedback);
 }
 
+void RobotHub::handleSimulationConfigurationFeedback(const simulation::ConfigurationFeedback &configFeedback) {
+    this->handleSimulationErrors(configFeedback.simulationErrors);
+}
+
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
     this->logRobotStateInfo(info, team);
 }
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
     RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
+}
+
+void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {
+    for (const auto& error : errors) {
+        RTT_ERROR("Sim Error ", error.code, ": ", error.message);
+    }
 }
 
 void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {

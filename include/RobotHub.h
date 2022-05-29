@@ -68,9 +68,13 @@ class RobotHub {
     void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
     bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
 
+    void handleSimulationConfigurationFeedback(const simulation::ConfigurationFeedback&);
+
     void handleRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
 
     void handleBasestationLog(const std::string& basestationLogMessage, rtt::Team team);
+
+    void handleSimulationErrors(const std::vector<simulation::SimulationError>&);
 
     void logRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
     void logRobotCommands(const rtt::RobotCommands& commands, rtt::Team team);

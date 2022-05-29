@@ -8,8 +8,8 @@
 
 namespace rtt::robothub::simulation {
 typedef struct SimulationError {
-    std::string code;
-    std::string message;
+    std::string code = "UNKNOWN";
+    std::string message = "UNKNOWN";
 } SimulationError;
 
 typedef struct RobotControlFeedback {

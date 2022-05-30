@@ -6,11 +6,11 @@
 
 proto::State
 Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
-                  std::vector<rtt::RobotsFeedback> robotData) {
+                  const std::vector<rtt::RobotsFeedback>& robotData) {
 
     updateRobotParams(refereePackets);
     proto::State state;
-    proto::World world = visionFilter.process(visionPackets);
+    proto::World world = visionFilter.process(visionPackets,robotData);
     updateReferee(refereePackets);
 
 

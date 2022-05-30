@@ -33,7 +33,7 @@ public:
      */
     proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets,
                  const std::vector<proto::SSL_Referee>& refereePackets,
-                 std::vector<rtt::RobotsFeedback> robotData);
+                 const std::vector<rtt::RobotsFeedback>& robotData);
 
 private:
     RobotParameterDatabase parameterDatabase;

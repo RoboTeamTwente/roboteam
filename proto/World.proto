@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "WorldBall.proto";
 import "WorldRobot.proto";
-import "RobotFeedback.proto";
+import "RobotProcessedFeedback.proto";
 package proto;
 
 message World {
@@ -11,6 +11,6 @@ message World {
     WorldBall ball = 3;
     repeated WorldRobot yellow = 4;
     repeated WorldRobot blue = 5;
-    RobotsFeedback blueFeedback = 6;
-    RobotsFeedback yellowFeedback = 7;
+    repeated FeedbackOnlyRobot yellow_unseen_robots = 6;
+    repeated FeedbackOnlyRobot blue_unseen_robots = 7;
 }

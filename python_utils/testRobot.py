@@ -71,7 +71,7 @@ def normalize_angle(angle):
 	if (angle > math.pi): angle -= pi2
 	return angle
 
-testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate", "getpid"]
+testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate", "getpid", "angular-velocity"]
 
 # Parse input arguments 
 try:
@@ -146,6 +146,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "speed = %.2f" % cmd.dribbler
 
 	if test == "rotate":
+		cmd.angularControl = 1
 		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction*5 + 0.5) % 1)
 		log = "angle = %+.3f" % cmd.angle
 
@@ -169,6 +170,11 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		if 0.5 < period_fraction : cmd.theta = -math.pi
 		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
 		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
+		
+	if test == "angular-velocity":
+		cmd.angularControl = 0
+		cmd.angularVelocity = 2*math.pi
+		log = "Commanded omega = %+.3f" % cmd.angularVelocity
 
 	return cmd, log
 

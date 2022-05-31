@@ -5,7 +5,7 @@ namespace rtt::net {
 WorldPublisher::WorldPublisher() : utils::Publisher(utils::ChannelType::WORLD_CHANNEL) {}
 
 std::size_t WorldPublisher::publish(const proto::State& world) {
-    return this->send(world.SerializeAsString()) ? world.ByteSizeLong() : -1;
+    return this->send(world.SerializeAsString());
 }
 
 WorldSubscriber::WorldSubscriber(const std::function<void(const proto::State&)>& callback)

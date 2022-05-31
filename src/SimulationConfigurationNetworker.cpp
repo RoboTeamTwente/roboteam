@@ -5,7 +5,7 @@ namespace rtt::net {
 SimulationConfigurationPublisher::SimulationConfigurationPublisher() : utils::Publisher(utils::ChannelType::SIMULATION_CONFIGURATION_CHANNEL) {}
 
 std::size_t SimulationConfigurationPublisher::publish(const proto::SimulationConfiguration& config) {
-    return this->send(config.SerializeAsString()) ? config.ByteSizeLong() : -1;
+    return this->send(config.SerializeAsString());
 }
 
 SimulationConfigurationSubscriber::SimulationConfigurationSubscriber(const std::function<void(const proto::SimulationConfiguration&)>& callback)

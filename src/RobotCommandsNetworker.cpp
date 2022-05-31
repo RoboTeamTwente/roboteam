@@ -88,7 +88,7 @@ RobotCommandsBluePublisher::RobotCommandsBluePublisher() : utils::Publisher(util
 std::size_t RobotCommandsBluePublisher::publish(const rtt::RobotCommands& commands) {
     auto protoRobotCommands = robotCommandsToProto(commands);
 
-    return this->send(protoRobotCommands.SerializeAsString()) ? protoRobotCommands.ByteSizeLong() : -1;
+    return this->send(protoRobotCommands.SerializeAsString());
 }
 
 // Blue commands subscriber
@@ -110,7 +110,7 @@ RobotCommandsYellowPublisher::RobotCommandsYellowPublisher() : utils::Publisher(
 
 std::size_t RobotCommandsYellowPublisher::publish(const rtt::RobotCommands& commands) {
     auto protoRobotCommands = robotCommandsToProto(commands);
-    return this->send(protoRobotCommands.SerializeAsString()) ? protoRobotCommands.ByteSizeLong() : -1;
+    return this->send(protoRobotCommands.SerializeAsString());
 }
 
 RobotCommandsYellowSubscriber::RobotCommandsYellowSubscriber(const std::function<void(const rtt::RobotCommands&)>& callback)

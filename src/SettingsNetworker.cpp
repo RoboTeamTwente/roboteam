@@ -5,7 +5,7 @@ namespace rtt::net {
 SettingsPublisher::SettingsPublisher() : utils::Publisher(utils::ChannelType::SETTINGS_CHANNEL) {}
 
 std::size_t SettingsPublisher::publish(const proto::Setting& settings) {
-    return this->send(settings.SerializeAsString()) ? settings.ByteSizeLong() : -1;
+    return this->send(settings.SerializeAsString());
 }
 
 SettingsSubscriber::SettingsSubscriber(const std::function<void(const proto::Setting&)>& callback)

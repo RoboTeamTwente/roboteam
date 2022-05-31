@@ -103,7 +103,7 @@ RobotFeedbackPublisher::RobotFeedbackPublisher() : utils::Publisher(utils::Chann
 
 std::size_t RobotFeedbackPublisher::publish(const rtt::RobotsFeedback& feedback) {
     auto protoRobotsFeedback = feedbackToProto(feedback);
-    return this->send(protoRobotsFeedback.SerializeAsString()) ? protoRobotsFeedback.ByteSizeLong() : -1;
+    return this->send(protoRobotsFeedback.SerializeAsString());
 }
 
 RobotFeedbackSubscriber::RobotFeedbackSubscriber(const std::function<void(const rtt::RobotsFeedback&)>& callback)

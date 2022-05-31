@@ -11,7 +11,7 @@ class WorldPublisher : private utils::Publisher {
    public:
     WorldPublisher();
 
-    // Publishes the given world. Returns bytes sent, -1 on failure
+    // Publishes the given world. Returns bytes sent, 0 on failure
     std::size_t publish(const proto::State& world);
 };
 

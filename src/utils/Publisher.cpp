@@ -11,7 +11,7 @@ std::size_t Publisher::send(const std::string& message) {
     zmqpp::message transmission;
     transmission << message;
 
-    return socket->send(transmission, true) ? message.length() : -1;
+    return socket->send(transmission, true) ? message.length() : 0;
 }
 
 }  // namespace rtt::net::utils

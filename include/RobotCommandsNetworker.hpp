@@ -12,7 +12,7 @@ class RobotCommandsBluePublisher : private utils::Publisher {
    public:
     RobotCommandsBluePublisher();
 
-    // Publishes the given robot commands on the blue channel. Returns bytes sent, -1 on failure
+    // Publishes the given robot commands on the blue channel. Returns bytes sent, 0 on failure
     std::size_t publish(const rtt::RobotCommands& commands);
 };
 
@@ -29,7 +29,7 @@ class RobotCommandsYellowPublisher : private utils::Publisher {
    public:
     RobotCommandsYellowPublisher();
 
-    // Publishes the given robot commands on the yellow channel. Returns bytes sent, -1 on failure
+    // Publishes the given robot commands on the yellow channel. Returns bytes sent, 0 on failure
     std::size_t publish(const rtt::RobotCommands& commands);
 };
 

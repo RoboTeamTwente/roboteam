@@ -11,7 +11,7 @@ class SimulationConfigurationPublisher : private utils::Publisher {
    public:
     SimulationConfigurationPublisher();
 
-    // Publishes the given simulation configuration message. Returns bytes sent, -1 on failure
+    // Publishes the given simulation configuration message. Returns bytes sent, 0 on failure
     std::size_t publish(const proto::SimulationConfiguration& configuration);
 };
 

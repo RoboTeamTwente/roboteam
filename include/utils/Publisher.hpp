@@ -25,7 +25,7 @@ class Publisher {
    protected:
     /* Send a message of the specified type
      * @param message: Message to send.
-     * @returns bytes sent, or -1 on failure */
+     * @returns bytes sent, or 0 on failure */
     std::size_t send(const std::string &message);
 
    private:

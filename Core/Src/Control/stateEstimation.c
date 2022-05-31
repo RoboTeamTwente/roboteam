@@ -73,7 +73,7 @@ static void wheels2Body(float wheelSpeeds[4], float output[3]){
 	// Transformation from wheel speeds to translational and angular velocities (assuming no slip)
 	output[body_x] = (cosFront * wheelSpeeds[wheels_RF] + cosBack * wheelSpeeds[wheels_RB] - cosBack * wheelSpeeds[wheels_LB] - cosFront * wheelSpeeds[wheels_LF]) * denominatorA;
 	output[body_y] = (wheelSpeeds[wheels_RF] - wheelSpeeds[wheels_RB] - wheelSpeeds[wheels_LB] + wheelSpeeds[wheels_LF]) * denominatorB;
-	output[body_yaw] = (sinBack * wheelSpeeds[wheels_RF] + sinFront * wheelSpeeds[wheels_RB] + sinFront * wheelSpeeds[wheels_LB] + sinBack * wheelSpeeds[wheels_LF]) * denominatorB / rad_robot;
+	output[body_w] = (sinBack * wheelSpeeds[wheels_RF] + sinFront * wheelSpeeds[wheels_RB] + sinFront * wheelSpeeds[wheels_LB] + sinBack * wheelSpeeds[wheels_LF]) * denominatorB / rad_robot;
 }
 
 

@@ -17,6 +17,7 @@
 #include "control_util.h"
 #include "gpio_util.h"
 #include "tim_util.h"
+//#include "REM_RobotSetPIDGains.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
@@ -33,6 +34,12 @@ float* stateControl_GetWheelRef();
 void stateControl_SetState(float input[3]);
 
 void stateControl_GetState(PIDvariables gains[3]);
+
+float stateControl_GetIntegral(body_handles direction);
+
+void stateControl_useAbsoluteAngle(bool angularControl);
+
+//void stateControl_SetPIDConfig(REM_RobotSetPIDGains* pidConfig);
 
 void stateControl_ResetAngleI();
 

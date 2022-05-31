@@ -1,14 +1,21 @@
-
 #include "stateEstimation.h"
+
+#define RoT_BUFFER_SIZE 5
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static float state[3] = {0.0f};
+static float state[4] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 //Transforms wheel speed to body velocity
 static void wheels2Body(float wheelSpeeds[4], float output[3]);
+
+
+// Use moving average filter to smoothen Xsens rate of turn data.
+// While this decreases the response time, it should allow for smoother rotation.
+float smoothen_rateOfTurn(float rateOfTurn);
+
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -23,6 +30,11 @@ int stateEstimation_DeInit(){
 }
 
 void stateEstimation_Update(StateInfo* input) {
+	// TODO: when angular velocity control is implemented, you could improve state estimation
+    //  by extending the Kalman filter to include angular velocity. You can combine the Xsens
+    //  rateOfTurn with the angular velocity from wheel encoder data (already computed by wheels2Body)
+    //  in this Kalman filter to improve the estimate.
+
 	float vel[3] = {0.0f};
 	wheels2Body(input->wheelSpeeds, vel);
 
@@ -38,12 +50,19 @@ void stateEstimation_Update(StateInfo* input) {
 
 	state[body_x] = kalman_State[0];
 	state[body_y] = kalman_State[2];
+	state[body_w] = smoothen_rateOfTurn(input->rateOfTurn);
+	//state[body_w] = input->rateOfTurn;
 	state[body_yaw] = calibratedYaw;
 }
 
 float* stateEstimation_GetState() {
 	return state;
 }
+
+float stateEstimation_GetFilteredRoT() {
+    return state[body_w];
+}
+
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
@@ -56,3 +75,18 @@ static void wheels2Body(float wheelSpeeds[4], float output[3]){
 	output[body_y] = (wheelSpeeds[wheels_RF] - wheelSpeeds[wheels_RB] - wheelSpeeds[wheels_LB] + wheelSpeeds[wheels_LF]) * denominatorB;
 	output[body_yaw] = (sinBack * wheelSpeeds[wheels_RF] + sinFront * wheelSpeeds[wheels_RB] + sinFront * wheelSpeeds[wheels_LB] + sinBack * wheelSpeeds[wheels_LF]) * denominatorB / rad_robot;
 }
+
+
+float smoothen_rateOfTurn(float rateOfTurn){
+    static float buffer[RoT_BUFFER_SIZE] = {0.0f}; // circular buffer
+    static int idx = 0; // holds current index of buffer
+
+    buffer[idx] = rateOfTurn;
+    idx = idx >= RoT_BUFFER_SIZE-1 ? 0 : idx + 1;
+
+    float avg = 0.0f;  // average of buffer, which is the smoothed rate of turn
+    for (int i=0; i<RoT_BUFFER_SIZE; i++){
+        avg += buffer[i];
+    }
+    return avg / RoT_BUFFER_SIZE;
+} 

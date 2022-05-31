@@ -28,6 +28,7 @@
 #include "REM_RobotBuzzer.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotGetPIDGains.h"
+//#include "REM_RobotSetPIDGains.h"
 #include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
 
@@ -155,9 +156,11 @@ Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_c
 
 
 void executeCommands(REM_RobotCommand* robotCommand){
-	float stateReference[3];
+	stateControl_useAbsoluteAngle(robotCommand->angularControl);
+	float stateReference[4];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
+	stateReference[body_w] = robotCommand->angularVelocity;
 	stateReference[body_yaw] = robotCommand->angle;
 	stateControl_SetRef(stateReference);
 	dribbler_SetSpeed(robotCommand->dribbler);
@@ -442,11 +445,19 @@ void loop(void){
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
-		robotStateInfo.rateOfTurn = stateInfo.rateOfTurn;
+		robotStateInfo.rateOfTurn = stateEstimation_GetFilteredRoT();
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+		/*robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
+		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
+		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RF);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RB);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_LB);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_LF);*/
 	}
 	{
 		PIDvariables robotGains[3];
@@ -551,7 +562,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 }
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
-	decodeREM_RobotCommand(&activeRobotCommand, rcp);
+	decodeREM_RobotCommand(&executeCommands, rcp);
 	time_last_packet_serial = HAL_GetTick();
 }
 

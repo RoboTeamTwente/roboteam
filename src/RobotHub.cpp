@@ -300,8 +300,7 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     auto bytesSent = this->robotFeedbackPublisher->publish(feedback);
-    if (bytesSent > 0) this->statistics.feedbackBytesSent += bytesSent;
-
+    this->statistics.feedbackBytesSent += bytesSent;
     return bytesSent > 0;
 }
 

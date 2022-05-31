@@ -562,7 +562,7 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 }
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
-	decodeREM_RobotCommand(&executeCommands, rcp);
+	decodeREM_RobotCommand(&activeRobotCommand, rcp);
 	time_last_packet_serial = HAL_GetTick();
 }
 

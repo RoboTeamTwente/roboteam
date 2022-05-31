@@ -28,10 +28,10 @@ static float absoluteAngleControl(float angleRef, float angle);
 
 int stateControl_Init(){
 	status = on;
-	initPID(&stateK[body_x], 0.1, 0.0, 0.0);
-	initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-	initPID(&stateK[body_w], 0.4, 0.0, 0.0);
-	initPID(&stateK[body_yaw], 20.0, 5.0, 0.0);
+	initPID(&stateK[body_x], default_P_gain_x, default_I_gain_x, default_D_gain_x);
+	initPID(&stateK[body_y], default_P_gain_y, default_I_gain_y, default_D_gain_y);
+	initPID(&stateK[body_w], default_P_gain_w, default_I_gain_w, default_D_gain_w); 
+	initPID(&stateK[body_yaw], default_P_gain_yaw, default_I_gain_yaw, default_D_gain_yaw);
 	HAL_TIM_Base_Start_IT(TIM_CONTROL);
 	return 0;
 }
@@ -141,11 +141,11 @@ static void global2Local(float global[3], float local[3], float  yaw){
 	//trigonometry
 	local[body_x] = cosf(yaw)*global[body_x]+sinf(yaw)*global[body_y];
 	local[body_y] = -sinf(yaw)*global[body_x]+cosf(yaw)*global[body_y];
-	local[body_yaw] = global[body_yaw];
+	local[body_w] = global[body_w];
 }
 
 static void velocityControl(float *state, float *velRef, float *velocityWheelRef){
-	float stateLocalRef[4] = {0, 0, 0, 0};
+	float stateLocalRef[3] = {0, 0, 0};
 	global2Local(velRef, stateLocalRef, state[body_yaw]); //transfer global to local
 
 	// Manually adjusting velocity command

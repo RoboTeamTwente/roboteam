@@ -19,6 +19,22 @@
 #include "tim_util.h"
 //#include "REM_RobotSetPIDGains.h"
 
+#define default_P_gain_x 0.1
+#define default_I_gain_x 0.0
+#define default_D_gain_x 0.0
+
+#define default_P_gain_y 0.4
+#define default_I_gain_y 0.0
+#define default_D_gain_y 0.0
+
+#define default_P_gain_w 1.3
+#define default_I_gain_w 0.0 // was 14 but now it seems to high
+#define default_D_gain_w 0.0
+
+#define default_P_gain_yaw 20.0
+#define default_I_gain_yaw 5.0
+#define default_D_gain_yaw 0.0
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 int stateControl_Init();

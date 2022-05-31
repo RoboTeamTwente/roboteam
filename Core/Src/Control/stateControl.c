@@ -16,10 +16,10 @@ static bool useAbsoluteAngle = true;
 static void body2Wheels(float wheelSpeed[4], float state[3]);
 
 //Transfer global coordinate frame to local coordinate frame
-static void global2Local(float input[3], float output[2], float yaw);
+static void global2Local(float input[4], float output[4], float yaw);
 
 //Determine the desired wheel speed given the desired velocities
-static void velocityControl(float *state, float *velRef, float *velocityWheelRef);
+static void velocityControl(float state[4], float velRef[4], float velocityWheelRef[4]);
 
 //Determine the desired wheel speed given the desired angle
 static float absoluteAngleControl(float angleRef, float angle);
@@ -137,15 +137,16 @@ static void body2Wheels(float wheelSpeed[4], float vel[3]){
 	}
 }
 
-static void global2Local(float global[3], float local[3], float  yaw){
+static void global2Local(float global[4], float local[4], float  yaw){
 	//trigonometry
 	local[body_x] = cosf(yaw)*global[body_x]+sinf(yaw)*global[body_y];
 	local[body_y] = -sinf(yaw)*global[body_x]+cosf(yaw)*global[body_y];
-	local[body_w] = global[body_w];
+    local[body_w] = global[body_w];
+	local[body_yaw] = global[body_yaw];
 }
 
-static void velocityControl(float *state, float *velRef, float *velocityWheelRef){
-	float stateLocalRef[3] = {0, 0, 0};
+static void velocityControl(float state[4], float velRef[4], float velocityWheelRef[4]){
+	float stateLocalRef[4] = {0, 0, 0, 0};
 	global2Local(velRef, stateLocalRef, state[body_yaw]); //transfer global to local
 
 	// Manually adjusting velocity command

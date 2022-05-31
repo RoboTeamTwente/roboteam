@@ -1,12 +1,12 @@
 #include "LineSegment.h"
-#include "Line.h"
-#include "HalfLine.h"
+
+#include <Angle.h>
+
 #include <cmath>
-
-
 #include <optional>
 
 #include "HalfLine.h"
+#include "Line.h"
 
 namespace rtt {
 double LineSegment::length() const { return (end - start).length(); }
@@ -147,6 +147,26 @@ Vector2 LineSegment::direction() const {
     end+=by;
     }
 
+    void LineSegment::rotate (const Angle angle, const Vector2 rotationPoint){
+
+        Vector2 midpoint = rotationPoint;
+
+        Vector2 startNewMidpoint = Vector2 { start.x - midpoint.x, start.y - midpoint.y};
+        Vector2 endNewMidpoint = Vector2 { end.x - midpoint.x, end.y - midpoint.y};
+
+        Vector2 startRotated = Vector2 {(cos(angle)*startNewMidpoint.x - sin(angle)*startNewMidpoint.y), (sin(angle)*startNewMidpoint.x + cos(angle)*startNewMidpoint.y)};
+        Vector2 endRotated = Vector2 {(cos(angle)*endNewMidpoint.x - sin(angle)*endNewMidpoint.y), (sin(angle)*endNewMidpoint.x + cos(angle)*endNewMidpoint.y) };
+
+        startRotated.x += midpoint.x;
+        startRotated.y += midpoint.y;
+
+        endRotated.x += midpoint.x;
+        endRotated.y += midpoint.y;
+
+        start = startRotated;
+        end = endRotated;
+    }
+
 std::optional<Vector2> LineSegment::firstIntersects(const LineSegment &line) const {
     // These copies will get optimized away but make it easier to read w.r.t the stackoverflow link
     Vector2 p = start;
@@ -216,4 +236,5 @@ bool LineSegment::preciseDoesIntersect(const LineSegment&line) const{
     }
     return false;
 }
+
 }  // namespace rtt

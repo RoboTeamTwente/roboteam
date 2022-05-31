@@ -138,6 +138,14 @@ class LineSegment {
     void move(const Vector2& by);
 
     /**
+     * Rotates the line around the middle point by the given angle
+     * @param angle
+     * @param rotationPoint
+     */
+    void rotate(const Angle angle, const Vector2 rotationPoint);
+
+
+    /**
      * Computes the intersection of two line segments.
      * If the two lines are colinear and have a overlapping line segment, it returns the point closest to the start of this line segment
      * @param segment
@@ -159,6 +167,8 @@ class LineSegment {
      * @return True if the point lies at this LineSegment, false otherwise.
      */
     [[nodiscard]] bool isOnFiniteLine(const Vector2 &point) const;
+
+
 };
 }  // namespace rtt
 #endif  // ROBOTEAM_UTILS_LINESEGMENT_H

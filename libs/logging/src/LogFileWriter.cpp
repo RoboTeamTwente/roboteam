@@ -31,12 +31,15 @@ bool rtt::LogFileWriter::addMessage(const rtt::logged_proto_type &message, logge
     }
 
     std::size_t message_size = message.ByteSizeLong();
-    char * message_buffer = new char[message_size];
+
     if(!message.IsInitialized()){
         std::cout<<"Cannot write uninitialized messages to Log File!\n";
         return false;
     }
-    if(!message.SerializeToArray(message_buffer,message_size)){
+    if(serialization_buffer.size() < message_size){
+        serialization_buffer.resize(message_size);
+    }
+    if(!message.SerializeToArray(serialization_buffer.data(),message_size)){
         std::cout<<"Error in serializing message to Log File!\n";
         return false;
     }
@@ -47,7 +50,7 @@ bool rtt::LogFileWriter::addMessage(const rtt::logged_proto_type &message, logge
         .message_size = message_size
     };
     file->write(reinterpret_cast<char*>(&dataHeader),sizeof(dataHeader));
-    file->write(message_buffer,message_size);
+    file->write(serialization_buffer.data(),message_size);
     bool good = file->good();
     if (!good){
         std::cout<<"Error writing to file!\n";

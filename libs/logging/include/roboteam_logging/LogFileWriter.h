@@ -29,6 +29,7 @@ namespace rtt{
     private:
         std::unique_ptr<std::ofstream> file;
         logged_time_type last_written_timestamp = 0;
+        std::vector<char> serialization_buffer;
     };
 }
 

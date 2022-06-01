@@ -1,10 +1,6 @@
-//
-// Created by rolf on 22-01-20.
-//
-#include "Rectangle.h"
+#include "LazyRectangle.hpp"
 
 #include <cmath>
-#include <optional>
 
 #include "Line.h"
 #include "LineSegment.h"
@@ -16,9 +12,9 @@ constexpr const unsigned int RIGHT = 0x02;
 constexpr const unsigned int BOTTOM = 0x04;
 constexpr const unsigned int TOP = 0x08;
 namespace rtt {
-Rectangle::Rectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
-Rectangle::Rectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
-unsigned int Rectangle::CohenSutherlandCode(const Vector2 &point) const {
+    LazyRectangle::LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
+    LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
+unsigned int LazyRectangle::CohenSutherlandCode(const Vector2 &point) const {
     double x = point.x;
     double y = point.y;
     unsigned int code = INSIDE;  // initialize code as if it's inside the clip window
@@ -35,31 +31,31 @@ unsigned int Rectangle::CohenSutherlandCode(const Vector2 &point) const {
     }
     return code;
 }
-double Rectangle::minX() const { return fmin(corner1.x, corner2.x); }
-double Rectangle::maxX() const { return fmax(corner1.x, corner2.x); }
-double Rectangle::minY() const { return fmin(corner1.y, corner2.y); }
-double Rectangle::maxY() const { return fmax(corner1.y, corner2.y); }
-double Rectangle::width() const { return fabs(corner1.x - corner2.x); }
-double Rectangle::height() const { return fabs(corner1.y - corner2.y); }
+double LazyRectangle::minX() const { return fmin(corner1.x, corner2.x); }
+double LazyRectangle::maxX() const { return fmax(corner1.x, corner2.x); }
+double LazyRectangle::minY() const { return fmin(corner1.y, corner2.y); }
+double LazyRectangle::maxY() const { return fmax(corner1.y, corner2.y); }
+double LazyRectangle::width() const { return fabs(corner1.x - corner2.x); }
+double LazyRectangle::height() const { return fabs(corner1.y - corner2.y); }
 
-std::vector<Vector2> Rectangle::corners() const {
+std::vector<Vector2> LazyRectangle::corners() const {
     std::vector<Vector2> corners = {Vector2(minX(), minY()), Vector2(minX(), maxY()), Vector2(maxX(), maxY()), Vector2(maxX(), minY())};
     return corners;
 }
 
-std::vector<LineSegment> Rectangle::lines() const {
+std::vector<LineSegment> LazyRectangle::lines() const {
     std::vector<Vector2> points = corners();
     std::vector<LineSegment> lines = {LineSegment(points[0], points[1]), LineSegment(points[1], points[2]), LineSegment(points[2], points[3]), LineSegment(points[3], points[0])};
     return lines;
 }
 
-Polygon Rectangle::asPolygon() const { return Polygon(corners()); }
+Polygon LazyRectangle::asPolygon() const { return Polygon(corners()); }
 
-Vector2 Rectangle::center() const { return (corner1 + corner2) * 0.5; }
+Vector2 LazyRectangle::center() const { return (corner1 + corner2) * 0.5; }
 
 // code borrowed from https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
 // and wikipedia. (I know it's way too long)
-std::vector<Vector2> Rectangle::intersects(const LineSegment &line) const {
+std::vector<Vector2> LazyRectangle::intersects(const LineSegment &line) const {
     unsigned int code0 = CohenSutherlandCode(line.start);
     unsigned int code1 = CohenSutherlandCode(line.end);
     std::vector<Vector2> intersections;
@@ -131,12 +127,12 @@ std::vector<Vector2> Rectangle::intersects(const LineSegment &line) const {
     }
     return accept ? intersections : std::vector<Vector2>();
 }
-bool Rectangle::doesIntersect(const LineSegment &line) const { return !intersects(line).empty(); }
+bool LazyRectangle::doesIntersect(const LineSegment &line) const { return !intersects(line).empty(); }
 
 // include the boundary for this calculation!
-bool Rectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
-std::ostream &Rectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
+bool LazyRectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
+std::ostream &LazyRectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
 
-std::ostream &operator<<(std::ostream &out, const Rectangle &rect) { return rect.write(out); }
+std::ostream &operator<<(std::ostream &out, const LazyRectangle &rect) { return rect.write(out); }
 
 }  // namespace rtt

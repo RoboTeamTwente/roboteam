@@ -1,9 +1,4 @@
-//
-// Created by rolf on 22-01-20.
-//
-
-#ifndef ROBOTEAM_UTILS_RECTANGLE_H
-#define ROBOTEAM_UTILS_RECTANGLE_H
+#pragma once
 #include <vector>
 
 #include "Vector2.h"
@@ -14,24 +9,25 @@ class Polygon;
 
 /**
  * @brief Represents a rectangle (with horizontal and vertical lines) by storing 2 opposite corners
+ * All other properties are calculated everytime in their functions (hence, a lazy rectangle)
  * @date 22-01-2020
  * @author Rolf van der Hulst
  */
-class Rectangle {
+class LazyRectangle {
    public:
     /**
      * @brief Constructs a rectangle from two opposite corners
      * @param corner Primary corner
      * @param oppositeCorner The corner which is opposite /diagonal from the other corner.
      */
-    Rectangle(const Vector2 &corner, const Vector2 &oppositeCorner);
+    LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner);
     /**
      * @brief Constructs a rectangle from the bottom left corner given a width and height.
      * @param bottomLeft The bottom left corner of the rectangle
      * @param x Distance the rectangle stretches in positive x-direction
      * @param y Distance the rectangle stretches in positive y-direction
      */
-    Rectangle(const Vector2 &bottomLeft, double x, double y);
+    LazyRectangle(const Vector2 &bottomLeft, double x, double y);
     Vector2 corner1;
     Vector2 corner2;
 
@@ -129,8 +125,6 @@ class Rectangle {
      */
     [[nodiscard]] std::vector<Vector2> intersects(const Line &line) const;
 };
-std::ostream &operator<<(std::ostream &out, const Rectangle &rect);
+std::ostream &operator<<(std::ostream &out, const LazyRectangle &rect);
 
 }  // namespace rtt
-
-#endif  // ROBOTEAM_UTILS_RECTANGLE_H

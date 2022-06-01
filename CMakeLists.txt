@@ -12,7 +12,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Hungarian.cpp
         src/utils/Arc.cpp
         src/utils/Timer.cpp
-        src/utils/Rectangle.cpp
+        src/utils/LazyRectangle.cpp
         src/utils/Circle.cpp
         src/utils/pid.cpp
         src/utils/Tube.cpp
@@ -45,7 +45,7 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/PolygonTest.cpp
         test/utils/PositionTest.cpp
         test/utils/Vector2Test.cpp
-        test/utils/RectangleTest.cpp
+        test/utils/LazyRectangleTest.cpp
         test/utils/HungarianTest.cpp
         test/utils/TubeTest.cpp
         test/utils/TimeTest.cpp

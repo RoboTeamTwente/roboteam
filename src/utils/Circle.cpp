@@ -15,7 +15,7 @@ bool Circle::doesIntersectOrContain(const LineSegment &other) { return other.dis
 
 bool Circle::doesIntersectOrContain(const Circle &other) { return fabs((center - other.center).length()) <= (radius + other.radius); }
 
-bool Circle::doesIntersectOrContain(const Rectangle &other) {
+bool Circle::doesIntersectOrContain(const LazyRectangle &other) {
     // https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
     Vector2 rectCenter = other.center();
@@ -38,7 +38,7 @@ bool Circle::doesIntersectOrContain(const Rectangle &other) {
     return (cornerDistance_sq <= (radius * radius));
 }
 
-bool Circle::doesIntersectOrContain2(const Rectangle &other) {
+bool Circle::doesIntersectOrContain2(const LazyRectangle &other) {
     // https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
     if (other.contains(center)) return true;

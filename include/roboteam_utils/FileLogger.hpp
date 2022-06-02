@@ -1,33 +1,23 @@
 #pragma once
 
+#include <fstream>
 #include <string>
-#include <memory>
-#include <mutex>
 
 namespace rtt {
 
-/* A class that makes logging to a file easier and safer.
- * It handles opening and closing, writing and flushing.
+/* A small wrapper for ofstream, useful for logging to files.
+ * It handles opening and closing of files.
  * Will append to previously written text in the file.
  * Throws FailedToOpenFileException if for example the
- * given folder path of the file does not exist. */
-class FileLogger {
+ * given folder path of the file does not exist.
+ * Use the operator<< for writing to the file.
+ * Saves at destruction. Use flush for intermediate saving. */
+class FileLogger : public std::ofstream {
 public:
     // Will create and open the file you specify. Eg. "log/LOG.txt"
     explicit FileLogger(const std::string& filePath);
     // Will close the file
     ~FileLogger();
-
-    // Writes the line and appends with a newline character
-    void writeNewLine(const std::string& line);
-    // Writes the given text to the file
-    void write(const std::string& text);
-    // Synchronizes the file with the internal buffer. Read: saves
-    void flush();
-
-private:
-    std::unique_ptr<std::ofstream> stream;
-    std::mutex streamMutex; // Guards the stream
 };
 
 class FailedToOpenFileException : public std::exception {

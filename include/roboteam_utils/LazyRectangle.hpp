@@ -2,6 +2,8 @@
 #include <vector>
 
 #include "Vector2.h"
+#include "Rectangle.hpp"
+
 namespace rtt {
 class LineSegment;
 class Line;
@@ -13,7 +15,7 @@ class Polygon;
  * @date 22-01-2020
  * @author Rolf van der Hulst
  */
-class LazyRectangle {
+class LazyRectangle : public Rectangle {
    public:
     /**
      * @brief Constructs a rectangle from two opposite corners
@@ -34,42 +36,52 @@ class LazyRectangle {
     /**
      * @return The smallest X value of the rectangle
      */
-    [[nodiscard]] double minX() const;
+    [[nodiscard]] double left() const override;
     /**
      * @return The largest X value of the rectangle
      */
-    [[nodiscard]] double maxX() const;
+    [[nodiscard]] double right() const override;
     /**
      * @return The smallest Y value of the rectangle
      */
-
-    [[nodiscard]] double minY() const;
+    [[nodiscard]] double bottom() const override;
     /**
      * @return The largest Y value of the rectangle
      */
-    [[nodiscard]] double maxY() const;
+    [[nodiscard]] double top() const override;
 
     /**
      * @brief Returns the width of the rectangle
      * @return The width of the rectangle
      */
-    [[nodiscard]] double width() const;
+    [[nodiscard]] double width() const override;
     /**
      * @brief Returns the height of the rectangle
      * @return The height of the rectangle
      */
-    [[nodiscard]] double height() const;
+    [[nodiscard]] double height() const override;
 
     /**
      * @brief Gets the absolute center (average) of the rectangle
      * @return The center point
      */
-    [[nodiscard]] Vector2 center() const;
+    [[nodiscard]] Vector2 center() const override;
+
+    [[nodiscard]] Vector2 topLeft() const override;
+    [[nodiscard]] Vector2 topRight() const override;
+    [[nodiscard]] Vector2 bottomLeft() const override;
+    [[nodiscard]] Vector2 bottomRight() const override;
+
     /**
      * @brief Get the corners of the rectangle
      * @return A vector with the 4 corners of the rectangle
      */
     [[nodiscard]] std::vector<Vector2> corners() const;
+
+    LineSegment topLine() const override;
+    LineSegment leftLine() const override;
+    LineSegment rightLine() const override;
+    LineSegment bottomLine() const override;
     /**
      * @brief Creates the 4 line segments as defined by the corners of this rectangle
      * @return A vector with 4 line segments which define the boundary of this rectangle
@@ -97,7 +109,13 @@ class LazyRectangle {
      * @param point point to check
      * @return True if point is inside or on boundary of the rectangle
      */
-    [[nodiscard]] bool contains(const Vector2 &point) const;
+    [[nodiscard]] bool contains(const Vector2 &point) const override;
+    /**
+     * @brief Projects the given point, always resulting in a point inside
+     * @param point the point to be projected
+     * @return the result of the projection
+     */
+    [[nodiscard]] Vector2 project(const Vector2& point) const override;
     /**
      * @brief This method is used internally for lineSegment intersection. It checks whether
      * @param point point to check for

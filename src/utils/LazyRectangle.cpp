@@ -18,30 +18,35 @@ unsigned int LazyRectangle::CohenSutherlandCode(const Vector2 &point) const {
     double x = point.x;
     double y = point.y;
     unsigned int code = INSIDE;  // initialize code as if it's inside the clip window
-    if (x < minX()) {
+    if (x < left()) {
         code |= LEFT;
-    } else if (x > maxX()) {
+    } else if (x > right()) {
         code |= RIGHT;
     }
 
-    if (y < minY()) {
+    if (y < bottom()) {
         code |= BOTTOM;
-    } else if (y > maxY()) {
+    } else if (y > top()) {
         code |= TOP;
     }
     return code;
 }
-double LazyRectangle::minX() const { return fmin(corner1.x, corner2.x); }
-double LazyRectangle::maxX() const { return fmax(corner1.x, corner2.x); }
-double LazyRectangle::minY() const { return fmin(corner1.y, corner2.y); }
-double LazyRectangle::maxY() const { return fmax(corner1.y, corner2.y); }
+double LazyRectangle::left() const { return fmin(corner1.x, corner2.x); }
+double LazyRectangle::right() const { return fmax(corner1.x, corner2.x); }
+double LazyRectangle::bottom() const { return fmin(corner1.y, corner2.y); }
+double LazyRectangle::top() const { return fmax(corner1.y, corner2.y); }
 double LazyRectangle::width() const { return fabs(corner1.x - corner2.x); }
 double LazyRectangle::height() const { return fabs(corner1.y - corner2.y); }
 
 std::vector<Vector2> LazyRectangle::corners() const {
-    std::vector<Vector2> corners = {Vector2(minX(), minY()), Vector2(minX(), maxY()), Vector2(maxX(), maxY()), Vector2(maxX(), minY())};
+    std::vector<Vector2> corners = {bottomLeft(), topLeft(), topRight(), bottomRight()};
     return corners;
 }
+
+LineSegment LazyRectangle::topLine() const { return {topLeft(), topRight()}; }
+LineSegment LazyRectangle::rightLine() const { return {topRight(), bottomRight()}; }
+LineSegment LazyRectangle::bottomLine() const { return {bottomRight(), bottomLeft()}; }
+LineSegment LazyRectangle::leftLine() const { return {bottomLeft(), topLeft()}; }
 
 std::vector<LineSegment> LazyRectangle::lines() const {
     std::vector<Vector2> points = corners();
@@ -52,6 +57,11 @@ std::vector<LineSegment> LazyRectangle::lines() const {
 Polygon LazyRectangle::asPolygon() const { return Polygon(corners()); }
 
 Vector2 LazyRectangle::center() const { return (corner1 + corner2) * 0.5; }
+
+Vector2 LazyRectangle::topLeft() const { return {this->left(), this->top()}; }
+Vector2 LazyRectangle::topRight() const { return {this->right(), this->top()}; }
+Vector2 LazyRectangle::bottomLeft() const { return {this->left(), this->bottom()}; }
+Vector2 LazyRectangle::bottomRight() const { return {this->right(), this->bottom()}; }
 
 // code borrowed from https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
 // and wikipedia. (I know it's way too long)
@@ -90,17 +100,17 @@ std::vector<Vector2> LazyRectangle::intersects(const LineSegment &line) const {
             // outcode bit being tested guarantees the denominator is non-zero
 
             if (codeOut & TOP) {  // point is above the clip window
-                x = x0 + (x1 - x0) * (maxY() - y0) / (y1 - y0);
-                y = maxY();
+                x = x0 + (x1 - x0) * (top() - y0) / (y1 - y0);
+                y = top();
             } else if (codeOut & BOTTOM) {  // point is below the clip window
-                x = x0 + (x1 - x0) * (minY() - y0) / (y1 - y0);
-                y = minY();
+                x = x0 + (x1 - x0) * (bottom() - y0) / (y1 - y0);
+                y = bottom();
             } else if (codeOut & RIGHT) {  // point is to the right of clip window
-                y = y0 + (y1 - y0) * (maxX() - x0) / (x1 - x0);
-                x = maxX();
+                y = y0 + (y1 - y0) * (right() - x0) / (x1 - x0);
+                x = right();
             } else if (codeOut & LEFT) {  // point is to the left of clip window
-                y = y0 + (y1 - y0) * (minX() - x0) / (x1 - x0);
-                x = minX();
+                y = y0 + (y1 - y0) * (left() - x0) / (x1 - x0);
+                x = left();
             }
             // Now we move outside point to intersection point to clip
             // and get ready for next pass.
@@ -130,7 +140,13 @@ std::vector<Vector2> LazyRectangle::intersects(const LineSegment &line) const {
 bool LazyRectangle::doesIntersect(const LineSegment &line) const { return !intersects(line).empty(); }
 
 // include the boundary for this calculation!
-bool LazyRectangle::contains(const Vector2 &point) const { return maxX() >= point.x && minX() <= point.x && maxY() >= point.y && minY() <= point.y; }
+bool LazyRectangle::contains(const Vector2 &point) const { return right() >= point.x && left() <= point.x && top() >= point.y && bottom() <= point.y; }
+
+Vector2 LazyRectangle::project(const Vector2 &point) const {
+    return {std::clamp(point.x, left(), right()),
+            std::clamp(point.y, bottom(), top())};
+}
+
 std::ostream &LazyRectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
 
 std::ostream &operator<<(std::ostream &out, const LazyRectangle &rect) { return rect.write(out); }

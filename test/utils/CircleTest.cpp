@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "roboteam_utils/Circle.h"
+#include <roboteam_utils/LazyRectangle.hpp>
 
 TEST(CircleTests, instantiation) {
     // Test unit circle

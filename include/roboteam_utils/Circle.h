@@ -10,7 +10,7 @@
 
 #include "Line.h"
 #include "LineSegment.h"
-#include "LazyRectangle.hpp"
+#include "Rectangle.hpp"
 #include "Shape.h"
 #include "Vector2.h"
 
@@ -59,8 +59,8 @@ class Circle : public Shape {
     [[nodiscard]] bool doesIntersectOrContain(const Line& other);
     [[nodiscard]] bool doesIntersectOrContain(const LineSegment& other);
     [[nodiscard]] bool doesIntersectOrContain(const Circle& other);
-    [[nodiscard]] bool doesIntersectOrContain(const LazyRectangle& other);   // This method is faster
-    [[nodiscard]] bool doesIntersectOrContain2(const LazyRectangle& other);  // This method is easier to understand and handles rotated rectangles
+    [[nodiscard]] bool doesIntersectOrContain(const Rectangle& other);   // This method is faster
+    [[nodiscard]] bool doesIntersectOrContain2(const Rectangle& other);  // This method is easier to understand and handles rotated rectangles
 
     /**
      * @brief Projects the given point onto this circle

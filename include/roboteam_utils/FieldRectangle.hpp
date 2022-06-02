@@ -4,13 +4,13 @@
 #include <roboteam_utils/LineSegment.h>
 #include <roboteam_utils/Polygon.h>
 
-#include <roboteam_utils/Shape.h>
+#include <roboteam_utils/Rectangle.hpp>
 
 namespace rtt {
 /* A more optimized rectangle class that is used for representing a field.
    Optimized by precalculating many variables that are already known from
    the beginning, because field data is often read, but never changed. */
-class FieldRectangle : public Shape {
+class FieldRectangle : public Rectangle {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
     FieldRectangle();
@@ -30,30 +30,30 @@ public:
     Vector2 project(const Vector2& point) const override;
 
     Polygon asPolygon(double margin = 0) const;
-    double getTop() const;
-    double getRight() const;
-    double getBottom() const;
-    double getLeft() const;
-    double getWidth() const;
-    double getHeight() const;
-    Vector2 getCenter() const;
-    Vector2 getTopLeft() const;
-    Vector2 getTopRight() const;
-    Vector2 getBottomLeft() const;
-    Vector2 getBottomRight() const;
-    LineSegment getTopSide() const;
-    LineSegment getRightSide() const;
-    LineSegment getBottomSide() const;
-    LineSegment getLeftSide() const;
+    double top() const override;
+    double right() const override;
+    double bottom() const override;
+    double left() const override;
+    double width() const override;
+    double height() const override;
+    Vector2 center() const override;
+    Vector2 topLeft() const override;
+    Vector2 topRight() const override;
+    Vector2 bottomLeft() const override;
+    Vector2 bottomRight() const override;
+    LineSegment topLine() const override;
+    LineSegment rightLine() const override;
+    LineSegment bottomLine() const override;
+    LineSegment leftLine() const override;
 
 private:
-    double top;
-    double right;
-    double bottom;
-    double left;
-    double width;
-    double height;
-    Vector2 center;
+    double _top;
+    double _right;
+    double _bottom;
+    double _left;
+    double _width;
+    double _height;
+    Vector2 _center;
 };
 
 } // namespace rtt

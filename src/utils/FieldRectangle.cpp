@@ -5,120 +5,120 @@
 namespace rtt {
 
 FieldRectangle::FieldRectangle() {
-    this->top = 1.0;
-    this->right = 1.0;
-    this->bottom = 0.0;
-    this->left = 0.0;
-    this->width = this->right - this->left;
-    this->height = this->top - this->bottom;
-    this->center = Vector2((this->left + this->right) * 0.5, (this->bottom + this->top) * 0.5);
+    this->_top = 1.0;
+    this->_right = 1.0;
+    this->_bottom = 0.0;
+    this->_left = 0.0;
+    this->_width = this->_right - this->_left;
+    this->_height = this->_top - this->_bottom;
+    this->_center = Vector2((this->_left + this->_right) * 0.5, (this->_bottom + this->_top) * 0.5);
 }
 
 FieldRectangle::FieldRectangle(double top, double right, double bottom, double left) {
-    this->top = top;
-    this->right = right;
-    this->bottom = bottom;
-    this->left = left;
-    this->width = right - left;
-    this->height = top - bottom;
-    this->center = Vector2((left + right) * 0.5, (bottom + top) * 0.5);
+    this->_top = top;
+    this->_right = right;
+    this->_bottom = bottom;
+    this->_left = left;
+    this->_width = right - left;
+    this->_height = top - bottom;
+    this->_center = Vector2((left + right) * 0.5, (bottom + top) * 0.5);
 }
 
 FieldRectangle::FieldRectangle(const Vector2& pointA, const Vector2& pointB) {
-    this->top = std::fmax(pointA.y, pointB.y);
-    this->right = std::fmax(pointA.x, pointB.x);
-    this->bottom = std::fmin(pointA.y, pointB.y);
-    this->left = std::fmin(pointA.x, pointB.x);
-    this->width = this->right - this->left;
-    this->height = this->top - this->bottom;
-    this->center = (pointA + pointB) * 0.5;
+    this->_top = std::fmax(pointA.y, pointB.y);
+    this->_right = std::fmax(pointA.x, pointB.x);
+    this->_bottom = std::fmin(pointA.y, pointB.y);
+    this->_left = std::fmin(pointA.x, pointB.x);
+    this->_width = this->_right - this->_left;
+    this->_height = this->_top - this->_bottom;
+    this->_center = (pointA + pointB) * 0.5;
 }
 
 bool FieldRectangle::operator==(const FieldRectangle& other) const {
-    return this->top == other.top
-        && this->right == other.right
-        && this->bottom == other.bottom
-        && this->left == other.left;
+    return this->_top == other._top
+        && this->_right == other._right
+        && this->_bottom == other._bottom
+        && this->_left == other._left;
 }
 
 bool FieldRectangle::contains(const Vector2& point) const {
-    return point.x > this->left && point.x < this->right
-        && point.y > this->bottom && point.y < this->top;
+    return point.x > this->_left && point.x < this->_right
+        && point.y > this->_bottom && point.y < this->_top;
 }
 
 bool FieldRectangle::contains(const Vector2& point, double margin) const {
-    return point.x > (this->left - margin) && point.x < (this->right + margin)
-        && point.y > (this->bottom - margin) && point.y < (this->top + margin);
+    return point.x > (this->_left - margin) && point.x < (this->_right + margin)
+        && point.y > (this->_bottom - margin) && point.y < (this->_top + margin);
 }
 
 Vector2 FieldRectangle::project(const Vector2& point) const {
     return Vector2(
-        std::clamp(point.x, this->left, this->right),
-        std::clamp(point.y, this->bottom, this->top)
+        std::clamp(point.x, this->_left, this->_right),
+        std::clamp(point.y, this->_bottom, this->_top)
     );
 }
 
 Polygon FieldRectangle::asPolygon(double margin) const {
-    Vector2 lowerLeft(this->left - margin, this->bottom - margin);
+    Vector2 lowerLeft(this->_left - margin, this->_bottom - margin);
 
-    double marginalizedWidth = this->width + 2 * margin;
-    double marginalizedHeight = this->height + 2 * margin;
+    double marginalizedWidth = this->_width + 2 * margin;
+    double marginalizedHeight = this->_height + 2 * margin;
 
     return {lowerLeft, marginalizedWidth, marginalizedHeight};
 }
 
-double FieldRectangle::getTop() const {
-    return this->top;
+double FieldRectangle::top() const {
+    return this->_top;
 }
-double FieldRectangle::getRight() const {
-    return this->right;
+double FieldRectangle::right() const {
+    return this->_right;
 }
-double FieldRectangle::getBottom() const {
-    return this->bottom;
+double FieldRectangle::bottom() const {
+    return this->_bottom;
 }
-double FieldRectangle::getLeft() const {
-    return this->left;
+double FieldRectangle::left() const {
+    return this->_left;
 }
-double FieldRectangle::getWidth() const {
-    return this->width;
+double FieldRectangle::width() const {
+    return this->_width;
 }
-double FieldRectangle::getHeight() const {
-    return this->height;
+double FieldRectangle::height() const {
+    return this->_height;
 }
-Vector2 FieldRectangle::getCenter() const {
-    return this->center;
-}
-
-Vector2 FieldRectangle::getTopLeft() const {
-    return {this->left, this->top};
+Vector2 FieldRectangle::center() const {
+    return this->_center;
 }
 
-Vector2 FieldRectangle::getTopRight() const {
-    return {this->right, this->top};
+Vector2 FieldRectangle::topLeft() const {
+    return {this->_left, this->_top};
 }
 
-Vector2 FieldRectangle::getBottomLeft() const {
-    return {this->left, this->bottom};
+Vector2 FieldRectangle::topRight() const {
+    return {this->_right, this->_top};
 }
 
-Vector2 FieldRectangle::getBottomRight() const {
-    return {this->right, this->bottom};
+Vector2 FieldRectangle::bottomLeft() const {
+    return {this->_left, this->_bottom};
 }
 
-LineSegment FieldRectangle::getTopSide() const {
-    return {Vector2(this->left, this->top), Vector2(this->right, this->top)};
+Vector2 FieldRectangle::bottomRight() const {
+    return {this->_right, this->_bottom};
 }
 
-LineSegment FieldRectangle::getRightSide() const {
-    return {Vector2(this->right, this->bottom), Vector2(this->right, this->top)};
+LineSegment FieldRectangle::topLine() const {
+    return {Vector2(this->_left, this->_top), Vector2(this->_right, this->_top)};
 }
 
-LineSegment FieldRectangle::getBottomSide() const {
-    return {Vector2(this->left, this->bottom), Vector2(this->right, this->bottom)};
+LineSegment FieldRectangle::rightLine() const {
+    return {Vector2(this->_right, this->_bottom), Vector2(this->_right, this->_top)};
 }
 
-LineSegment FieldRectangle::getLeftSide() const {
-    return {Vector2(this->left, this->bottom), Vector2(this->left, this->top)};
+LineSegment FieldRectangle::bottomLine() const {
+    return {Vector2(this->_left, this->_bottom), Vector2(this->_right, this->_bottom)};
+}
+
+LineSegment FieldRectangle::leftLine() const {
+    return {Vector2(this->_left, this->_bottom), Vector2(this->_left, this->_top)};
 }
 
 } // namespace rtt

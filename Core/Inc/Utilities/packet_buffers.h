@@ -11,6 +11,7 @@
 #include "REM_RobotBuzzer.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotGetPIDGains.h"
+#include "REM_RobotSetPIDGains.h"
 #include "REM_RobotPIDGains.h"
 
 REM_SX1280FillerPayload SX1280_filler_payload;
@@ -21,6 +22,13 @@ struct _buffer_RobotCommand {
 	uint32_t counter;
 };
 struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
+
+struct _buffer_RobotSetPIDGains {
+	REM_RobotSetPIDGainsPayload packet;
+	bool isNewPacket;
+	uint32_t counter;
+};
+struct _buffer_RobotSetPIDGains buffer_RobotSetPIDGains[MAX_NUMBER_OF_ROBOTS];
 
 struct _buffer_RobotFeedback {
 	REM_RobotFeedbackPayload packet;

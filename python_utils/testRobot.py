@@ -26,6 +26,11 @@ from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import RE
 from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
 from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
 
+robotStateInfoFile = open(f"PIDfiles/robotStateInfo_{int(time.time())}.csv", "w")
+robotCommandFile = open(f"PIDfiles/robotCommand_{int(time.time())}.csv", "w")
+robotFeedbackFile = open(f"PIDfiles/robotFeedback_{int(time.time())}.csv", "w")
+robotPIDFile = open(f"PIDfiles/robotPID_{int(time.time())}.csv", "w")
+
 try:
 	import cv2
 	cv2_available = True
@@ -288,6 +293,19 @@ while True:
 				basestation.write(setPID_encoded)
 				parser.writeBytes(setPID_encoded)
 				
+				# Write packet info to files (used in plotPID.py) 
+				robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
+				
+				robotCommandFile.write(f"{stateInfoTimestamp} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.angularControl} \n")
+				
+				robotFeedbackFile.write(f"{stateInfoTimestamp} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} {robotFeedback.hasBall} 					{robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} {robotFeedback.wheelLocked} 					{robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
+				
+				#robotPIDFile.write(f"{stateInfoTimestamp} {robotPIDFile.PbodyX} {robotPIDFile.IbodyX} {robotPIDFile.DbodyX} {robotPIDFile.PbodyY} {robotPIDFile.IbodyY} 					{robotPIDFile.DbodyY} {robotPIDFile.PbodyW} {robotPIDFile.IbodyW} {robotPIDFile.DbodyW} {robotPIDFile.PbodyYaw} {robotPIDFile.IbodyYaw} {robotPIDFile.DbodyYaw} 					{robotPIDFile.Pwheels} {robotPIDFile.Iwheels} {robotPIDFile.Dwheels}  \n")
+				
+				robotStateInfoFile.flush()
+				robotCommandFile.flush()
+				robotFeedbackFile.flush()
+				robotPIDFile.flush()
 				
 
 				# if period == 0:

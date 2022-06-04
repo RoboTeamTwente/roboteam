@@ -17,10 +17,8 @@ import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
 from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
-from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
-from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
-from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
+from roboteam_embedded_messages.python.REM_RobotSetPIDGains import REM_RobotSetPIDGains
 from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
 from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
 from roboteam_embedded_messages.python.REM_BasestationLog import REM_BasestationLog
@@ -93,8 +91,6 @@ except Exception as e:
 
 basestation = None
 
-
-
 tick_counter = 0
 periodLength = 300
 packetHz = 60
@@ -106,6 +102,34 @@ testIndex = 2
 
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
+
+def createSetPIDCommand(PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.0, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 0.0, IbodyYaw = 0.0, DbodyYaw = 0.0):
+	# Create new empty setPID command
+	setPID = REM_RobotSetPIDGains()
+	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
+	setPID.remVersion = BaseTypes.LOCAL_REM_VERSION
+	setPID.id = robot_id
+	
+	# Set the PID gains
+	setPID.PbodyX = PbodyX
+	setPID.IbodyX = IbodyX
+	setPID.DbodyX = DbodyX
+	
+	setPID.PbodyY = PbodyY
+	setPID.IbodyY = IbodyY
+	setPID.DbodyY = DbodyY
+	
+	setPID.PbodyW = PbodyW
+	setPID.IbodyW = IbodyW
+	setPID.DbodyW = DbodyW
+	
+	setPID.PbodyYaw = PbodyYaw
+	setPID.IbodyYaw = IbodyYaw
+	setPID.DbodyYaw = DbodyYaw
+	
+	return setPID
+	
+	
 
 def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	log = ""
@@ -125,6 +149,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
 	cmd.id = robot_id	
 	cmd.messageId = tick_counter
+	
 	if test == "nothing":
 		cmd.rho = 0
 		cmd.theta = 0
@@ -151,14 +176,17 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "angle = %+.3f" % cmd.angle
 
 	if test == "forward" or test == "sideways":
+		cmd.angularControl = 1
 		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
 		log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
 
 	if test == "sideways":
+		cmd.angularControl = 1
 		cmd.angle = math.pi / 2
 
 	if test == "rotate-discrete":
+		cmd.angularControl = 1
 		if period_fraction <=  1.: cmd.angle = math.pi/2
 		if period_fraction <= .75: cmd.angle = -math.pi
 		if period_fraction <= .50: cmd.angle = -math.pi/2
@@ -166,9 +194,11 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "angle = %+.3f" % cmd.angle
 
 	if test == "forward-rotate":
+		cmd.angularControl = 1
 		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
 		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
+		#cmd.angularVelocity = math.pi/2 # set angularControl to 0 to use this
 		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
 		
 	if test == "angular-velocity":
@@ -247,6 +277,14 @@ while True:
 				basestation.write(cmd_encoded)
 				parser.writeBytes(cmd_encoded)
 				last_robotcommand_time = time.time()
+				
+				# Create and send new PID gains (default 0)
+				setPID = createSetPIDCommand() #put PID gains as arguments to change them
+				setPID_encoded = setPID.encode()
+				basestation.write(setPID_encoded)
+				parser.writeBytes(setPID_encoded)
+				
+				
 
 				# if period == 0:
 				# 	cmd = REM_BasestationGetConfiguration()

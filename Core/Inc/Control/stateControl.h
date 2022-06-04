@@ -17,7 +17,7 @@
 #include "control_util.h"
 #include "gpio_util.h"
 #include "tim_util.h"
-//#include "REM_RobotSetPIDGains.h"
+#include "REM_RobotSetPIDGains.h"
 
 #define default_P_gain_x 0.1
 #define default_I_gain_x 0.0

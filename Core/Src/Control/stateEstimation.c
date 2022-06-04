@@ -1,5 +1,4 @@
 #include "stateEstimation.h"
-
 #define RoT_BUFFER_SIZE 5
 
 ///////////////////////////////////////////////////// VARIABLES
@@ -51,7 +50,6 @@ void stateEstimation_Update(StateInfo* input) {
 	state[body_x] = kalman_State[0];
 	state[body_y] = kalman_State[2];
 	state[body_w] = smoothen_rateOfTurn(input->rateOfTurn);
-	//state[body_w] = input->rateOfTurn;
 	state[body_yaw] = calibratedYaw;
 }
 
@@ -82,7 +80,8 @@ float smoothen_rateOfTurn(float rateOfTurn){
     static int idx = 0; // holds current index of buffer
 
     buffer[idx] = rateOfTurn;
-    idx = idx >= RoT_BUFFER_SIZE-1 ? 0 : idx + 1;
+    //idx = idx >= RoT_BUFFER_SIZE-1 ? 0 : idx + 1;
+	idx = (idx+1) % RoT_BUFFER_SIZE;
 
     float avg = 0.0f;  // average of buffer, which is the smoothed rate of turn
     for (int i=0; i<RoT_BUFFER_SIZE; i++){

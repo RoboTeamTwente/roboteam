@@ -16,16 +16,20 @@ static bool useAbsoluteAngle = true;
 static void body2Wheels(float wheelSpeed[4], float state[3]);
 
 //Transfer global coordinate frame to local coordinate frame
-static void global2Local(float input[4], float output[4], float yaw);
+static void global2Local(float global[4], float local[4], float  yaw);
 
 //Determine the desired wheel speed given the desired velocities
-static void velocityControl(float state[4], float velRef[4], float velocityWheelRef[4]);
+static void velocityControl(float state[3], float velRef[4], float velocityWheelRef[4]);
 
 //Determine the desired wheel speed given the desired angle
 static float absoluteAngleControl(float angleRef, float angle);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
+
+/**
+ * @brief This function initializes the PID's
+ */
 int stateControl_Init(){
 	status = on;
 	initPID(&stateK[body_x], default_P_gain_x, default_I_gain_x, default_D_gain_x);
@@ -55,6 +59,10 @@ void stateControl_Update(){
 	}
 }
 
+/**
+ * @brief This function sets stateRef to the correct input from robotCommand 
+ */
+
 void stateControl_SetRef(float input[4]){
 	stateRef[body_x] = input[body_x];
 	stateRef[body_y] = input[body_y];
@@ -66,6 +74,10 @@ float* stateControl_GetWheelRef() {
 	return wheelRef;
 }
 
+/**
+ * @brief This function sets the state as the estimated state (from stateEstimation)
+ */
+
 void stateControl_SetState(float input[4]){
 	state[body_x] = input[body_x];
 	state[body_y] = input[body_y];
@@ -73,7 +85,7 @@ void stateControl_SetState(float input[4]){
 	state[body_yaw] = input[body_yaw];
 }
 
-void stateControl_GetState(PIDvariables gains[3]){
+void stateControl_GetPIDGains(PIDvariables gains[3]){
 	gains[body_x].kP = stateK[body_x].kP;
 	gains[body_x].kI = stateK[body_x].kI;
 	gains[body_x].kD = stateK[body_x].kD;
@@ -91,15 +103,15 @@ void stateControl_GetState(PIDvariables gains[3]){
 	gains[body_yaw].kD = stateK[body_yaw].kD;
 }
 
-/*float stateControl_GetIntegral(body_handles direction) {
+float stateControl_GetIntegral(body_handles direction) {
 	return stateK[direction].I;
-}*/
+}
 
 void stateControl_useAbsoluteAngle(bool angularControl){
     useAbsoluteAngle = angularControl;
 }
 
-/*void stateControl_SetPIDGains(REM_RobotSetPIDGains* PIDGains){
+void stateControl_SetPIDGains(REM_RobotSetPIDGains* PIDGains){
     stateK[body_x].kP = PIDGains->PbodyX;
     stateK[body_x].kI = PIDGains->IbodyX;
     stateK[body_x].kD = PIDGains->DbodyX;
@@ -115,7 +127,7 @@ void stateControl_useAbsoluteAngle(bool angularControl){
     stateK[body_yaw].kP = PIDGains->PbodyYaw;
     stateK[body_yaw].kI = PIDGains->IbodyYaw;
     stateK[body_yaw].kD = PIDGains->DbodyYaw;
-}*/
+}
 
 void stateControl_ResetAngleI(){
 	stateK[body_yaw].I = 0;
@@ -145,8 +157,8 @@ static void global2Local(float global[4], float local[4], float  yaw){
 	local[body_yaw] = global[body_yaw];
 }
 
-static void velocityControl(float state[4], float velRef[4], float velocityWheelRef[4]){
-	float stateLocalRef[4] = {0, 0, 0, 0};
+static void velocityControl(float state[3], float velRef[4], float velocityWheelRef[4]){
+	float stateLocalRef[3] = {0, 0, 0};
 	global2Local(velRef, stateLocalRef, state[body_yaw]); //transfer global to local
 
 	// Manually adjusting velocity command

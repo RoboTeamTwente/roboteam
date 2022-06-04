@@ -85,7 +85,7 @@ void stateControl_SetState(float input[4]){
 	state[body_yaw] = input[body_yaw];
 }
 
-void stateControl_GetPIDGains(PIDvariables gains[3]){
+void stateControl_GetPIDGains(PIDvariables gains[4]){
 	gains[body_x].kP = stateK[body_x].kP;
 	gains[body_x].kI = stateK[body_x].kI;
 	gains[body_x].kD = stateK[body_x].kD;

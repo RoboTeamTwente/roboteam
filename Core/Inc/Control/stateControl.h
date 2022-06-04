@@ -35,6 +35,10 @@
 #define default_I_gain_yaw 5.0
 #define default_D_gain_yaw 0.0
 
+#define default_P_gain_wheels 4.5
+#define default_I_gain_wheels 0.0
+#define default_D_gain_wheels 0.0
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 int stateControl_Init();
@@ -43,19 +47,19 @@ int stateControl_DeInit();
 
 void stateControl_Update();
 
-void stateControl_SetRef(float input[3]);
+void stateControl_SetRef(float input[4]);
 
 float* stateControl_GetWheelRef();
 
-void stateControl_SetState(float input[3]);
+void stateControl_SetState(float input[4]);
 
-void stateControl_GetState(PIDvariables gains[3]);
+void stateControl_GetPIDGains(PIDvariables gains[4]);
 
 float stateControl_GetIntegral(body_handles direction);
 
 void stateControl_useAbsoluteAngle(bool angularControl);
 
-//void stateControl_SetPIDConfig(REM_RobotSetPIDGains* pidConfig);
+void stateControl_SetPIDGains(REM_RobotSetPIDGains* pidConfig);
 
 void stateControl_ResetAngleI();
 

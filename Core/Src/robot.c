@@ -575,6 +575,7 @@ void handleRobotSetPIDGains(uint8_t* packet_buffer){
 	REM_last_packet_had_correct_version &= REM_RobotSetPIDGains_get_remVersion(rspidgp) == LOCAL_REM_VERSION;
 	decodeREM_RobotSetPIDGains(&robotSetPIDGains, rspidgp);
 	stateControl_SetPIDGains(&robotSetPIDGains);
+	wheels_SetPIDGains(&robotSetPIDGains);
 }
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){

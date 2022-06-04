@@ -2,6 +2,7 @@
 #include "gpio_util.h"
 #include "wheels.h"
 #include "stdlib.h"
+#include "stateControl.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 
@@ -57,7 +58,7 @@ void wheels_Init(){
 
 	/* Initialize wheel controllers */
 	for (wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
-		initPID(&wheelsK[wheel], 4.5, 0.0, 0.0);
+		initPID(&wheelsK[wheel], default_P_gain_wheels, default_I_gain_wheels, default_D_gain_wheels);
 	}
 
 	/* Set PWM of wheels to 0, to prevent robot from suddenly shooting forward */
@@ -217,6 +218,14 @@ void wheels_GetPWM(uint32_t pwms[4]) {
 	pwms[wheels_RB] = get_PWM(PWM_RB);
 	pwms[wheels_LB] = get_PWM(PWM_LB);
 	pwms[wheels_LF] = get_PWM(PWM_LF);
+}
+
+void wheels_SetPIDGains(REM_RobotSetPIDGains* PIDGains){
+	for(wheel_names wheel = wheels_RF; wheel <= wheels_LF; wheel++){
+		wheelsK[wheel].kP = PIDGains->Pwheels;
+		wheelsK[wheel].kI = PIDGains->Iwheels;
+    	wheelsK[wheel].kD = PIDGains->Dwheels;
+	}
 }
 
 /**

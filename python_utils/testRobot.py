@@ -103,7 +103,7 @@ testIndex = 2
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
-def createSetPIDCommand(PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.0, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 0.0, IbodyYaw = 0.0, DbodyYaw = 0.0):
+def createSetPIDCommand(PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.0, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 0.0, IbodyYaw = 0.0, DbodyYaw = 0.0, Pwheels = 0.0, Iwheels = 0.0, Dwheels = 0.0):
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
 	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
@@ -126,6 +126,10 @@ def createSetPIDCommand(PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, 
 	setPID.PbodyYaw = PbodyYaw
 	setPID.IbodyYaw = IbodyYaw
 	setPID.DbodyYaw = DbodyYaw
+	
+	setPID.Pwheels = Pwheels
+	setPID.Iwheels = Iwheels
+	setPID.Dwheels = Dwheels
 	
 	return setPID
 	

@@ -300,7 +300,7 @@ while True:
 				
 				robotFeedbackFile.write(f"{stateInfoTimestamp} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} {robotFeedback.hasBall} 					{robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} {robotFeedback.wheelLocked} 					{robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
 				
-				#robotPIDFile.write(f"{stateInfoTimestamp} {robotPIDFile.PbodyX} {robotPIDFile.IbodyX} {robotPIDFile.DbodyX} {robotPIDFile.PbodyY} {robotPIDFile.IbodyY} 					{robotPIDFile.DbodyY} {robotPIDFile.PbodyW} {robotPIDFile.IbodyW} {robotPIDFile.DbodyW} {robotPIDFile.PbodyYaw} {robotPIDFile.IbodyYaw} {robotPIDFile.DbodyYaw} 					{robotPIDFile.Pwheels} {robotPIDFile.Iwheels} {robotPIDFile.Dwheels}  \n")
+				robotPIDFile.write(f"{stateInfoTimestamp} {robotPIDFile.PbodyX} {robotPIDFile.IbodyX} {robotPIDFile.DbodyX} {robotPIDFile.PbodyY} {robotPIDFile.IbodyY} 					{robotPIDFile.DbodyY} {robotPIDFile.PbodyW} {robotPIDFile.IbodyW} {robotPIDFile.DbodyW} {robotPIDFile.PbodyYaw} {robotPIDFile.IbodyYaw} {robotPIDFile.DbodyYaw} 					{robotPIDFile.Pwheels} {robotPIDFile.Iwheels} {robotPIDFile.Dwheels}  \n")
 				
 				robotStateInfoFile.flush()
 				robotCommandFile.flush()

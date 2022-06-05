@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- cameraAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 111----- dribbler
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ---111-- kickChipPower
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- angularControl
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- useAbsoluteAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 feedback
 */
 
@@ -47,7 +47,7 @@ typedef struct _REM_RobotCommand {
     float      cameraAngle         ; // float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
     float      dribbler            ; // float   [0.000, 1.000]       Dribbler speed
     float      kickChipPower       ; // float   [0.000, 6.500]       Speed of the ball in m/s
-    bool       angularControl      ; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
+    bool       useAbsoluteAngle    ; // integer [0, 1]               0 = angular velocity, 1 = absolute angle
     bool       feedback            ; // integer [0, 1]               Ignore the packet. Just send feedback
 } REM_RobotCommand;
 
@@ -119,7 +119,7 @@ static inline float REM_RobotCommand_get_kickChipPower(REM_RobotCommandPayload *
     return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
 }
 
-static inline bool REM_RobotCommand_get_angularControl(REM_RobotCommandPayload *remrcp){
+static inline bool REM_RobotCommand_get_useAbsoluteAngle(REM_RobotCommandPayload *remrcp){
     return (remrcp->payload[13] & 0b00000010) > 0;
 }
 
@@ -200,8 +200,8 @@ static inline void REM_RobotCommand_set_kickChipPower(REM_RobotCommandPayload *r
     remrcp->payload[13] = ((_kickChipPower << 2) & 0b00011100) | (remrcp->payload[13] & 0b11100011);
 }
 
-static inline void REM_RobotCommand_set_angularControl(REM_RobotCommandPayload *remrcp, bool angularControl){
-    remrcp->payload[13] = ((angularControl << 1) & 0b00000010) | (remrcp->payload[13] & 0b11111101);
+static inline void REM_RobotCommand_set_useAbsoluteAngle(REM_RobotCommandPayload *remrcp, bool useAbsoluteAngle){
+    remrcp->payload[13] = ((useAbsoluteAngle << 1) & 0b00000010) | (remrcp->payload[13] & 0b11111101);
 }
 
 static inline void REM_RobotCommand_set_feedback(REM_RobotCommandPayload *remrcp, bool feedback){
@@ -225,7 +225,7 @@ static inline void encodeREM_RobotCommand(REM_RobotCommandPayload *remrcp, REM_R
     REM_RobotCommand_set_cameraAngle         (remrcp, remrc->cameraAngle);
     REM_RobotCommand_set_dribbler            (remrcp, remrc->dribbler);
     REM_RobotCommand_set_kickChipPower       (remrcp, remrc->kickChipPower);
-    REM_RobotCommand_set_angularControl      (remrcp, remrc->angularControl);
+    REM_RobotCommand_set_useAbsoluteAngle    (remrcp, remrc->useAbsoluteAngle);
     REM_RobotCommand_set_feedback            (remrcp, remrc->feedback);
 }
 
@@ -246,7 +246,7 @@ static inline void decodeREM_RobotCommand(REM_RobotCommand *remrc, REM_RobotComm
     remrc->cameraAngle   = REM_RobotCommand_get_cameraAngle(remrcp);
     remrc->dribbler      = REM_RobotCommand_get_dribbler(remrcp);
     remrc->kickChipPower = REM_RobotCommand_get_kickChipPower(remrcp);
-    remrc->angularControl= REM_RobotCommand_get_angularControl(remrcp);
+    remrc->useAbsoluteAngle= REM_RobotCommand_get_useAbsoluteAngle(remrcp);
     remrc->feedback      = REM_RobotCommand_get_feedback(remrcp);
 }
 

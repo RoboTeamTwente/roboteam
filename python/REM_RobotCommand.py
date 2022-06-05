@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- cameraAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 111----- dribbler
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ---111-- kickChipPower
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- angularControl
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- useAbsoluteAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 feedback
 """
 
@@ -41,7 +41,7 @@ class REM_RobotCommand:
     cameraAngle = 0           # float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
     dribbler = 0              # float   [0.000, 1.000]       Dribbler speed
     kickChipPower = 0         # float   [0.000, 6.500]       Speed of the ball in m/s
-    angularControl = 0        # integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
+    useAbsoluteAngle = 0      # integer [0, 1]               0 = angular velocity, 1 = absolute angle
     feedback = 0              # integer [0, 1]               Ignore the packet. Just send feedback
 
 
@@ -115,7 +115,7 @@ class REM_RobotCommand:
         return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
 
     @staticmethod
-    def get_angularControl(payload):
+    def get_useAbsoluteAngle(payload):
         return (payload[13] & 0b00000010) > 0;
 
     @staticmethod
@@ -196,8 +196,8 @@ class REM_RobotCommand:
         payload[13] = ((_kickChipPower << 2) & 0b00011100) | (payload[13] & 0b11100011);
 
     @staticmethod
-    def set_angularControl(payload, angularControl):
-        payload[13] = ((angularControl << 1) & 0b00000010) | (payload[13] & 0b11111101);
+    def set_useAbsoluteAngle(payload, useAbsoluteAngle):
+        payload[13] = ((useAbsoluteAngle << 1) & 0b00000010) | (payload[13] & 0b11111101);
 
     @staticmethod
     def set_feedback(payload, feedback):
@@ -221,7 +221,7 @@ class REM_RobotCommand:
         REM_RobotCommand.set_cameraAngle         (payload, self.cameraAngle)
         REM_RobotCommand.set_dribbler            (payload, self.dribbler)
         REM_RobotCommand.set_kickChipPower       (payload, self.kickChipPower)
-        REM_RobotCommand.set_angularControl      (payload, self.angularControl)
+        REM_RobotCommand.set_useAbsoluteAngle    (payload, self.useAbsoluteAngle)
         REM_RobotCommand.set_feedback            (payload, self.feedback)
         return payload
 
@@ -243,7 +243,7 @@ class REM_RobotCommand:
         self.cameraAngle      = REM_RobotCommand.get_cameraAngle(payload)
         self.dribbler         = REM_RobotCommand.get_dribbler(payload)
         self.kickChipPower    = REM_RobotCommand.get_kickChipPower(payload)
-        self.angularControl   = REM_RobotCommand.get_angularControl(payload)
+        self.useAbsoluteAngle = REM_RobotCommand.get_useAbsoluteAngle(payload)
         self.feedback         = REM_RobotCommand.get_feedback(payload)
 
 

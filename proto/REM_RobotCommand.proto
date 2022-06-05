@@ -16,7 +16,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 11111111 -------- cameraAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 111----- dribbler
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ---111-- kickChipPower
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- angularControl
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ------1- useAbsoluteAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 feedback
 */
 
@@ -40,6 +40,6 @@ message REM_RobotCommand {
     float cameraAngle = 13;   // float   [-3.142, 3.142]      Angle of the robot as seen by camera (rad)
     float dribbler = 14;      // float   [0.000, 1.000]       Dribbler speed
     float kickChipPower = 15; // float   [0.000, 6.500]       Speed of the ball in m/s
-    bool angularControl = 16; // integer [0, 1]               NOT IMPLEMENTED IN ROBOT YET. 0 = angular velocity, 1 = absolute angle
+    bool useAbsoluteAngle = 16; // integer [0, 1]               0 = angular velocity, 1 = absolute angle
     bool feedback = 17;       // integer [0, 1]               Ignore the packet. Just send feedback
 }

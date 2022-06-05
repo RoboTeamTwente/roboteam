@@ -43,13 +43,13 @@ if len(sys.argv) == 3: lastfile = int(sys.argv[2])
 files = [file for file in os.listdir("PIDfiles") if file.startswith("robotStateInfo") and file.endswith(".csv")]
 filenr = heapq.nlargest(lastfile+1, files)
 filenr = re.findall('[0-9]+', str(filenr)) #find the time of the newest robotStateInfo file
-#ConfigLines = open("robotConfig_1643811941.csv", "r").read().strip().split("\n")
-StateInfoLines = open("PIDfiles/robotStateInfo_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
-CommandedLines = open("PIDfiles/robotCommand_" + filenr[lastfile] +  ".csv", "r").read().strip().split("\n")
-robotFeedbackLines = open("PIDfiles/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
+PIDgainLines = open("Logs/robotPID_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
+StateInfoLines = open("Logs/robotStateInfo_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
+CommandedLines = open("Logs/robotCommand_" + filenr[lastfile] +  ".csv", "r").read().strip().split("\n")
+robotFeedbackLines = open("Logs/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
 print(filenr[lastfile])
 
-for line in PIDGains[100:500]:
+for line in PIDgainLines:
 	ts, xp, xi, xd, yp, yi, yd, wp, wi, wd, yawp, yawi, yawd, wheelsp, wheelsi, wheelsd = line.split(" ")[:16]
 	ts = int(float(ts) * 1000)
 	Configtimestamps.append(ts)
@@ -93,7 +93,7 @@ for line in StateInfoLines:
 	
 	
 for line in CommandedLines: 
-	ts, doKick, doChip, doForce, useCameraAngle, rho, theta, ang, angvel, cameraAngle, dribbler, kickChipPower, angularControl = line.split(" ")[:13]
+	ts, doKick, doChip, doForce, useCameraAngle, rho, theta, ang, angvel, cameraAngle, dribbler, kickChipPower, useAbsoluteAngle = line.split(" ")[:13]
 	ts = int(float(ts) * 1000)
 	Commandedtimestamps.append(ts)
 	

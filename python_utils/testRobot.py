@@ -26,10 +26,10 @@ from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import RE
 from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
 from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
 
-robotStateInfoFile = open(f"PIDfiles/robotStateInfo_{int(time.time())}.csv", "w")
-robotCommandFile = open(f"PIDfiles/robotCommand_{int(time.time())}.csv", "w")
-robotFeedbackFile = open(f"PIDfiles/robotFeedback_{int(time.time())}.csv", "w")
-robotPIDFile = open(f"PIDfiles/robotPID_{int(time.time())}.csv", "w")
+robotStateInfoFile = open(f"Logs/robotStateInfo_{int(time.time())}.csv", "w")
+robotCommandFile = open(f"Logs/robotCommand_{int(time.time())}.csv", "w")
+robotFeedbackFile = open(f"Logs/robotFeedback_{int(time.time())}.csv", "w")
+robotPIDFile = open(f"Logs/robotPID_{int(time.time())}.csv", "w")
 
 try:
 	import cv2
@@ -108,7 +108,7 @@ testIndex = 2
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
-def createSetPIDCommand(PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.0, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 0.0, IbodyYaw = 0.0, DbodyYaw = 0.0, Pwheels = 0.0, Iwheels = 0.0, Dwheels = 0.0):
+def createSetPIDCommand(robot_id, PbodyX = 0.0, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.0, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.0, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 0.0, IbodyYaw = 0.0, DbodyYaw = 0.0, Pwheels = 0.0, Iwheels = 0.0, Dwheels = 0.0):
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
 	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
@@ -180,22 +180,22 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "speed = %.2f" % cmd.dribbler
 
 	if test == "rotate":
-		cmd.angularControl = 1
+		cmd.useAbsoluteAngle = 1
 		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction*5 + 0.5) % 1)
 		log = "angle = %+.3f" % cmd.angle
 
 	if test == "forward" or test == "sideways":
-		cmd.angularControl = 1
+		cmd.useAbsoluteAngle = 1
 		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
 		log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
 
 	if test == "sideways":
-		cmd.angularControl = 1
+		cmd.useAbsoluteAngle = 1
 		cmd.angle = math.pi / 2
 
 	if test == "rotate-discrete":
-		cmd.angularControl = 1
+		cmd.useAbsoluteAngle = 1
 		if period_fraction <=  1.: cmd.angle = math.pi/2
 		if period_fraction <= .75: cmd.angle = -math.pi
 		if period_fraction <= .50: cmd.angle = -math.pi/2
@@ -203,15 +203,15 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "angle = %+.3f" % cmd.angle
 
 	if test == "forward-rotate":
-		cmd.angularControl = 1
+		cmd.useAbsoluteAngle = 1
 		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
 		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
-		#cmd.angularVelocity = math.pi/2 # set angularControl to 0 to use this
+		#cmd.angularVelocity = math.pi/2 # set useAbsoluteAngle to 0 to use this
 		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
 		
 	if test == "angular-velocity":
-		cmd.angularControl = 0
+		cmd.useAbsoluteAngle = 0
 		cmd.angularVelocity = 2*math.pi
 		log = "Commanded omega = %+.3f" % cmd.angularVelocity
 
@@ -243,6 +243,12 @@ while True:
 		image_vis = np.zeros((500, 500, 3), dtype=float)
 		wheel_speeds_avg = np.zeros(4)
 		rate_of_turn_avg = 0
+		
+		# Create and send new PID gains (default 0)
+		setPID = createSetPIDCommand(robot_id) #put PID gains as arguments to change them
+		setPID_encoded = setPID.encode()
+		basestation.write(setPID_encoded)
+		parser.writeBytes(setPID_encoded)
 
 		# Open basestation
 		if basestation is None or not basestation.isOpen():
@@ -287,16 +293,10 @@ while True:
 				parser.writeBytes(cmd_encoded)
 				last_robotcommand_time = time.time()
 				
-				# Create and send new PID gains (default 0)
-				setPID = createSetPIDCommand() #put PID gains as arguments to change them
-				setPID_encoded = setPID.encode()
-				basestation.write(setPID_encoded)
-				parser.writeBytes(setPID_encoded)
-				
 				# Write packet info to files (used in plotPID.py) 
 				robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
 				
-				robotCommandFile.write(f"{stateInfoTimestamp} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.angularControl} \n")
+				robotCommandFile.write(f"{stateInfoTimestamp} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
 				
 				robotFeedbackFile.write(f"{stateInfoTimestamp} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} {robotFeedback.hasBall} 					{robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} {robotFeedback.wheelLocked} 					{robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
 				

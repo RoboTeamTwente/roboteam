@@ -47,7 +47,6 @@ REM_RobotFeedbackPayload robotFeedbackPayload = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
-REM_RobotPIDGainsPayload robotPIDGainsPayload = {0};
 REM_RobotSetPIDGains robotSetPIDGains = {0};
 
 REM_RobotCommand activeRobotCommand = {0};
@@ -160,7 +159,7 @@ Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_c
 
 
 void executeCommands(REM_RobotCommand* robotCommand){
-	stateControl_useAbsoluteAngle(robotCommand->angularControl);
+	stateControl_useAbsoluteAngle(robotCommand->useAbsoluteAngle);
 	float stateReference[4];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
@@ -237,7 +236,7 @@ void printRobotCommand(REM_RobotCommand* rc){
 	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
 	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
 	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	LOG_printf("angularControl : %d\r\n", rc->angularControl);
+	LOG_printf("useAbsoluteAngle : %d\r\n", rc->useAbsoluteAngle);
 	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 

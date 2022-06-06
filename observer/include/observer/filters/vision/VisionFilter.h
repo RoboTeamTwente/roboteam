@@ -8,13 +8,14 @@
 #include "WorldFilter.h"
 #include "roboteam_utils/Time.h"
 #include "proto/messages_robocup_ssl_wrapper.pb.h"
-
+#include "roboteam_utils/RobotFeedback.hpp"
 
 /**
  * @author Rolf
  * @class VisionFilter Filters and processes all information received from SSL-Vision into coherent information.
  *  This primarily involves filters to track the robots and the ball and estimate their position and speed, and some processing of the geometry
- *  At some point in the future, it is also intended that robot command and feedback information is processed and filtered.
+ *  Additionally, it also filters feedback information from the robots into a coherent picture.
+ *  At some point in the future, it is also intended that sent robots commands are processed.
  */
 class VisionFilter {
  public:
@@ -23,9 +24,11 @@ class VisionFilter {
    *  Note time needs to be at some point in the future!
    * @param packets the received packets to update visionfilter with
    * @param time the wanted time to estimate the world state at (can extrapolate in the future)
+   * @param feedback the feedback packets received for all robots
    * @return a world state, extrapolated to the given time
    */
-  proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets);
+  proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets,
+                       const std::vector<rtt::RobotsFeedback>& feedback);
 
   /*
    * Updates the robot definitions the vision filter uses in world prediction
@@ -54,7 +57,9 @@ class VisionFilter {
    * @param packets the relevant detection frames from SSL-vision
    * @param update_geometry Set this to true to update the Geometry used by the world filter
    */
-  void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry);
+  void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry,
+                         const std::vector<rtt::RobotsFeedback>& robotData);
+
   GeometryFilter geomFilter;
   WorldFilter worldFilter;
   Time lastPacketTime;

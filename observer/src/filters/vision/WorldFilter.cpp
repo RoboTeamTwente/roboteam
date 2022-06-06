@@ -12,7 +12,6 @@ void WorldFilter::updateGeometry(const proto::SSL_GeometryData &geometry) {
 }
 
 proto::World WorldFilter::getWorldPrediction(const Time &time) const {
-  //TODO: split up in functions for robot and ball
   proto::World world;
   addRobotPredictionsToMessage(world,time);
   addBallPredictionsToMessage(world,time);
@@ -21,7 +20,12 @@ proto::World WorldFilter::getWorldPrediction(const Time &time) const {
   return world;
 }
 
-void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames) {
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
+                          const std::vector<rtt::RobotsFeedback>& feedback) {
+  //Feedback is processed first, as it is not really dependent on vision packets,
+  //but the vision processing may be helped by the feedback information
+  feedbackFilter.process(feedback);
+
   std::vector<DetectionFrame> detectionFrames;
   for (const auto &protoFrame: frames) {
     detectionFrames.emplace_back(DetectionFrame(protoFrame));
@@ -159,13 +163,38 @@ std::vector<FilteredRobot> WorldFilter::oneCameraHealthyRobots(bool blueBots, in
   return robots;
 }
 void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) const{
+  auto feedbackBots = feedbackFilter.getRecentFeedback();
+
   std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
   for (const auto &blueBot : blueRobots) {
-    world.mutable_blue()->Add()->CopyFrom(blueBot.asWorldRobot());
+    auto worldBot = blueBot.asWorldRobot();
+    auto feedback_it = std::find_if(feedbackBots.begin(),feedbackBots.end(),[&](const std::pair<TeamRobotID,proto::RobotProcessedFeedback>& bot){
+        return bot.first.team == TeamColor::BLUE && bot.first.robot_id == RobotID(worldBot.id());
+    });
+    if(feedback_it != feedbackBots.end()){
+        worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
+        feedbackBots.erase(feedback_it);
+    }
+    world.mutable_blue()->Add()->CopyFrom(worldBot);
   }
   std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
   for (const auto &yellowBot : yellowRobots) {
-    world.mutable_yellow()->Add()->CopyFrom(yellowBot.asWorldRobot());
+    auto worldBot = yellowBot.asWorldRobot();
+      auto feedback_it = std::find_if(feedbackBots.begin(),feedbackBots.end(),[&](const std::pair<TeamRobotID,proto::RobotProcessedFeedback>& bot){
+          return bot.first.team == TeamColor::YELLOW && bot.first.robot_id == RobotID(worldBot.id());
+      });
+      if(feedback_it != feedbackBots.end()){
+          worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
+          feedbackBots.erase(feedback_it);
+      }
+    world.mutable_yellow()->Add()->CopyFrom(worldBot);
+  }
+  //Any remaining feedback of robots is put into the lonely category
+  for(const auto& bot : feedbackBots){
+      auto * team_lonely_bots = bot.first.team == TeamColor::YELLOW ? world.mutable_yellow_unseen_robots() : world.mutable_blue_unseen_robots();
+      proto::FeedbackOnlyRobot * robot = team_lonely_bots->Add();
+      robot->set_id(bot.first.robot_id.robotID);
+      robot->mutable_feedback()->CopyFrom(bot.second);
   }
 }
 void WorldFilter::processBalls(const DetectionFrame &frame) {

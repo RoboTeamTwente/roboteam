@@ -219,6 +219,13 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 
 	return cmd, log
 
+# parser = REMParser(basestation)
+# parser.parseFile("out.bin")
+# print(len(parser.packet_buffer))
+# while parser.hasPackets():
+# 	packet = parser.getNextPacket()
+# exit()
+
 
 while True:
 	try:

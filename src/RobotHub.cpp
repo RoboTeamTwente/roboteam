@@ -63,7 +63,7 @@ bool RobotHub::initializeNetworkers() {
         this->robotCommandsYellowSubscriber =
             std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
-        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &settings) { this->onSettings(settings); });
+        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &_settings) { this->onSettings(_settings); });
 
         this->simulationConfigurationSubscriber =
             std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration &config) { this->onSimulationConfiguration(config); });
@@ -84,12 +84,12 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
     simulation::RobotControlCommand simCommand;
     for (const auto &robotCommand : commands) {
         int id = robotCommand.id;
-        float kickSpeed = static_cast<float>(robotCommand.kickSpeed);
+        auto kickSpeed = static_cast<float>(robotCommand.kickSpeed);
         float kickAngle = robotCommand.kickType == rtt::KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
         float dribblerSpeed = static_cast<float>(robotCommand.dribblerSpeed) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerSpeed is range of 0 to 1
-        float xVelocity = static_cast<float>(robotCommand.velocity.x);
-        float yVelocity = static_cast<float>(robotCommand.velocity.y);
-        float angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
+        auto xVelocity = static_cast<float>(robotCommand.velocity.x);
+        auto yVelocity = static_cast<float>(robotCommand.velocity.y);
+        auto angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         if (!robotCommand.useAngularVelocity) {
             RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
@@ -190,8 +190,8 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
     this->logRobotCommands(commands, color);
 }
 
-void RobotHub::onSettings(const proto::Setting &settings) {
-    this->settings = settings;
+void RobotHub::onSettings(const proto::Setting &_settings) {
+    this->settings = _settings;
 
     utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
 
@@ -327,7 +327,7 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
         else if (error.message.has_value())
             RTT_ERROR("Received Simulation error: ", error.message.value())
         else
-            RTT_ERROR("Received unknown Simulation error");
+            RTT_ERROR("Received unknown Simulation error")
     }
 }
 
@@ -379,7 +379,7 @@ void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
     this->robotFeedbackLogger->operator<<(ss.rdbuf());
 }
 
-const char *FailedToInitializeNetworkersException::what() const throw() { return "Failed to initialize networker(s). Is another RobotHub running?"; }
+const char *FailedToInitializeNetworkersException::what() const noexcept { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 
 }  // namespace rtt::robothub
 

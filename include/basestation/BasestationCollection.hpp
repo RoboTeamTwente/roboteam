@@ -35,7 +35,7 @@ class BasestationCollection {
     BasestationCollection();
     ~BasestationCollection();
 
-    // This function makes sure the collection is up to date. Call this function frequently
+    // This function makes sure the collection is up-to-date. Call this function frequently
     void updateBasestationCollection(const std::vector<libusb_device*>& pluggedBasestationDevices);
 
     // Sends a message to the basestation of the given team. Returns bytes sent, -1 if error
@@ -45,7 +45,7 @@ class BasestationCollection {
     void setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback);
 
     // Returns the current status of the collection
-    const BasestationCollectionStatus getStatus() const;
+    BasestationCollectionStatus getStatus() const;
 
    private:
     // Collection and selection of basestations
@@ -58,7 +58,7 @@ class BasestationCollection {
     std::shared_ptr<Basestation> blueBasestation;    // Basestation selected for blue team
 
     std::shared_ptr<Basestation> getSelectedBasestation(rtt::Team colorOfBasestation) const;
-    void setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, rtt::Team color);
+    void setSelectedBasestation(const std::shared_ptr<Basestation>& newBasestation, rtt::Team color);
 
     // Keeps track of which basestation has which wireless channel
     std::map<const BasestationIdentifier, WirelessChannel> basestationIdToChannel;

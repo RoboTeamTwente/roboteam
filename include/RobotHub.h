@@ -20,13 +20,9 @@
 
 namespace rtt::robothub {
 
-constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
-
-enum class RobotHubMode { NEITHER, SIMULATOR, BASESTATION };
-
 class RobotHub {
    public:
-    RobotHub(bool shouldLog);
+    explicit RobotHub(bool shouldLog);
 
     const RobotHubStatistics &getStatistics();
     void resetStatistics();
@@ -42,7 +38,7 @@ class RobotHub {
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::Setting settings;
-    utils::RobotHubMode mode;
+    utils::RobotHubMode mode = utils::RobotHubMode::NEITHER;
 
     RobotHubStatistics statistics;
 
@@ -82,7 +78,7 @@ class RobotHub {
 };
 
 class FailedToInitializeNetworkersException : public std::exception {
-    virtual const char *what() const throw();
+    [[nodiscard]] const char *what() const noexcept override;
 };
 
 }  // namespace rtt::robothub

@@ -56,14 +56,14 @@ void BasestationCollection::removeOldBasestations(const std::vector<libusb_devic
 }
 
 void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>& pluggedBasestationDevices) {
-    auto callbackForNewBasestations = [&](const BasestationMessage& message, BasestationIdentifier basestationId) { this->onMessageFromBasestation(message, basestationId); };
+    const auto callbackForNewBasestations = [&](const BasestationMessage& message, BasestationIdentifier basestationId) { this->onMessageFromBasestation(message, basestationId); };
 
     // Add plugged in basestations that are not in the list yet
-    for (libusb_device* const pluggedBasestationDevices : pluggedBasestationDevices) {
-        if (!deviceIsInBasestationList(pluggedBasestationDevices, this->basestations)) {
-            // This basestation is plugged in but not in the list -> add it
+    for (const auto& pluggedBasestationDevice : pluggedBasestationDevices) {
+        if (!deviceIsInBasestationList(pluggedBasestationDevice, this->basestations)) {
+            // This basestation device is plugged in but not in our list -> add it
             try {
-                auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevices);
+                auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevice);
                 newBasestation->setIncomingMessageCallback(callbackForNewBasestations);
 
                 // Lock the basestations list so we can safely add this basestation
@@ -95,7 +95,7 @@ void BasestationCollection::setIncomingMessageCallback(std::function<void(const 
     this->messageFromBasestationCallback = callback;
 }
 
-const BasestationCollectionStatus BasestationCollection::getStatus() const {
+BasestationCollectionStatus BasestationCollection::getStatus() const {
     const BasestationCollectionStatus status{.wantedBasestations = this->getWantedBasestations(),
                                              .hasYellowBasestation = this->getSelectedBasestation(rtt::Team::YELLOW) != nullptr,
                                              .hasBlueBasestation = this->getSelectedBasestation(rtt::Team::BLUE) != nullptr,
@@ -133,7 +133,7 @@ std::shared_ptr<Basestation> BasestationCollection::getSelectedBasestation(rtt::
     return basestation;
 }
 
-void BasestationCollection::setSelectedBasestation(std::shared_ptr<Basestation> newBasestation, rtt::Team color) {
+void BasestationCollection::setSelectedBasestation(const std::shared_ptr<Basestation>& newBasestation, rtt::Team color) {
     std::scoped_lock<std::mutex> lock(this->basestationSelectionMutex);
     switch (color) {
         case rtt::Team::BLUE:
@@ -521,10 +521,7 @@ bool BasestationCollection::wirelessChannelToREMChannel(WirelessChannel channel)
         case WirelessChannel::BLUE_CHANNEL:
             remChannel = true;
             break;
-        case WirelessChannel::YELLOW_CHANNEL:
-            remChannel = false;
-            break;
-        default:
+        case WirelessChannel::YELLOW_CHANNEL: default:
             remChannel = false;
             break;
     }

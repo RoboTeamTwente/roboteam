@@ -29,7 +29,9 @@ from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_B
 robotStateInfoFile = open(f"Logs/robotStateInfo_{int(time.time())}.csv", "w")
 robotCommandFile = open(f"Logs/robotCommand_{int(time.time())}.csv", "w")
 robotFeedbackFile = open(f"Logs/robotFeedback_{int(time.time())}.csv", "w")
-robotPIDFile = open(f"Logs/robotPID_{int(time.time())}.csv", "w")
+
+robotStateInfo = REM_RobotStateInfo()
+robotFeedback = REM_RobotFeedback()
 
 try:
 	import cv2
@@ -203,30 +205,19 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "angle = %+.3f" % cmd.angle
 
 	if test == "forward-rotate":
-		cmd.useAbsoluteAngle = 1
+		cmd.useAbsoluteAngle = 0
 		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
-		cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
-		#cmd.angularVelocity = math.pi/2 # set useAbsoluteAngle to 0 to use this
+		#cmd.angle = -math.pi + 2 * math.pi * ((period_fraction + 0.5) % 1)
+		cmd.angularVelocity = math.pi/2 # set useAbsoluteAngle to 0 to use this
 		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
 		
 	if test == "angular-velocity":
 		cmd.useAbsoluteAngle = 0
 		cmd.angularVelocity = 2*math.pi
-		log = "Commanded omega = %+.3f" % cmd.angularVelocity
+		log = "rateOfTurn = %+.3f" % robotStateInfo.rateOfTurn
 
 	return cmd, log
-
-
-
-
-# parser = REMParser(basestation)
-# parser.parseFile("out.bin")
-# print(len(parser.packet_buffer))
-# while parser.hasPackets():
-# 	packet = parser.getNextPacket()
-# exit()
-
 
 
 while True:
@@ -237,6 +228,7 @@ while True:
 		latest_packets = {}
 		last_robotfeedback_time = 0
 		last_robotcommand_time = 0
+		last_robotstateinfo_time = 0
 		last_basestation_log = ""
 		parser = None
 		# Visualisation
@@ -244,12 +236,6 @@ while True:
 		wheel_speeds_avg = np.zeros(4)
 		rate_of_turn_avg = 0
 		
-		# Create and send new PID gains (default 0)
-		setPID = createSetPIDCommand(robot_id) #put PID gains as arguments to change them
-		setPID_encoded = setPID.encode()
-		basestation.write(setPID_encoded)
-		parser.writeBytes(setPID_encoded)
-
 		# Open basestation
 		if basestation is None or not basestation.isOpen():
 			basestation = utils.openContinuous(timeout=0.01)
@@ -259,6 +245,14 @@ while True:
 		if parser is None and basestation is not None:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 			parser = REMParser(basestation, output_file=f"log_{datetime_str}.bin")
+
+		
+		# Create and send new PID gains (default 0)
+		# Comment these lines out to use default PID values
+		#setPID = createSetPIDCommand(robot_id, PbodyW = 1.0, IbodyW = 1.0) #put PID gains as arguments to change them
+		#setPID_encoded = setPID.encode()
+		#basestation.write(setPID_encoded)
+		#parser.writeBytes(setPID_encoded)
 
 		# Continuously write -> read -> visualise
 		while True:
@@ -294,19 +288,8 @@ while True:
 				last_robotcommand_time = time.time()
 				
 				# Write packet info to files (used in plotPID.py) 
-				robotStateInfoFile.write(f"{stateInfoTimestamp} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
-				
-				robotCommandFile.write(f"{stateInfoTimestamp} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
-				
-				robotFeedbackFile.write(f"{stateInfoTimestamp} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} {robotFeedback.hasBall} 					{robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} {robotFeedback.wheelLocked} 					{robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
-				
-				robotPIDFile.write(f"{stateInfoTimestamp} {robotPIDFile.PbodyX} {robotPIDFile.IbodyX} {robotPIDFile.DbodyX} {robotPIDFile.PbodyY} {robotPIDFile.IbodyY} 					{robotPIDFile.DbodyY} {robotPIDFile.PbodyW} {robotPIDFile.IbodyW} {robotPIDFile.DbodyW} {robotPIDFile.PbodyYaw} {robotPIDFile.IbodyYaw} {robotPIDFile.DbodyYaw} 					{robotPIDFile.Pwheels} {robotPIDFile.Iwheels} {robotPIDFile.Dwheels}  \n")
-				
-				robotStateInfoFile.flush()
+				robotCommandFile.write(f"{last_robotcommand_time} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
 				robotCommandFile.flush()
-				robotFeedbackFile.flush()
-				robotPIDFile.flush()
-				
 
 				# if period == 0:
 				# 	cmd = REM_BasestationGetConfiguration()
@@ -354,6 +337,8 @@ while True:
 				robotFeedback = latest_packets[REM_RobotFeedback]
 				latest_packets[REM_RobotFeedback] = None
 				last_robotfeedback_time = time.time()
+				robotFeedbackFile.write(f"{last_robotfeedback_time} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} 							{robotFeedback.hasBall} {robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} 								{robotFeedback.wheelLocked} {robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
+				robotFeedbackFile.flush()
 
 				# Ballsensor
 				if robotFeedback.ballSensorWorking:
@@ -375,6 +360,9 @@ while True:
 			if REM_RobotStateInfo in latest_packets and latest_packets[REM_RobotStateInfo] is not None:
 				robotStateInfo = latest_packets[REM_RobotStateInfo]
 				latest_packets[REM_RobotStateInfo] = None
+				last_robotstateinfo_time = time.time()
+				robotStateInfoFile.write(f"{last_robotstateinfo_time} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
+				robotStateInfoFile.flush()
 
 				# XSens yaw
 				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)

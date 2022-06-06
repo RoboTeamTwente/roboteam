@@ -6,9 +6,6 @@ import re
 import heapq
 from matplotlib.offsetbox import AnchoredText
 
-Configtimestamps = []
-XP, XI, XD, YP, YI, YD, WP, WI, WD, YawP, YawI, YawD, WheelsP, WheelsI, WheelsD = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [] #PID gains
-
 Statetimestamps = []
 rateOfTurn = [] #estimated angular velocity
 W1, W2, W3, W4 = [], [], [], [] #estimated wheel speeds
@@ -40,38 +37,16 @@ except Exception as e:
 
 lastfile = 0
 if len(sys.argv) == 3: lastfile = int(sys.argv[2])
-files = [file for file in os.listdir("PIDfiles") if file.startswith("robotStateInfo") and file.endswith(".csv")]
+files = [file for file in os.listdir("Logs") if file.startswith("robotStateInfo") and file.endswith(".csv")]
 filenr = heapq.nlargest(lastfile+1, files)
 filenr = re.findall('[0-9]+', str(filenr)) #find the time of the newest robotStateInfo file
-PIDgainLines = open("Logs/robotPID_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
 StateInfoLines = open("Logs/robotStateInfo_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
 CommandedLines = open("Logs/robotCommand_" + filenr[lastfile] +  ".csv", "r").read().strip().split("\n")
 robotFeedbackLines = open("Logs/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
-print(filenr[lastfile])
-
-for line in PIDgainLines:
-	ts, xp, xi, xd, yp, yi, yd, wp, wi, wd, yawp, yawi, yawd, wheelsp, wheelsi, wheelsd = line.split(" ")[:16]
-	ts = int(float(ts) * 1000)
-	Configtimestamps.append(ts)
-	XP.append(float(xp))
-	XI.append(float(xi))
-	XD.append(float(xd))
-	YP.append(float(yp))
-	YI.append(float(yi))
-	YD.append(float(yd))
-	WP.append(float(wp))
-	WI.append(float(wi))
-	WD.append(float(wd))
-	YawP.append(float(yawp))
-	YawI.append(float(yawi))
-	YawD.append(float(yawd))
-	WheelsP.append(float(wheelsp))
-	WheelsI.append(float(wheelsi))
-	WheelsD.append(float(wheelsd))
 
 for line in StateInfoLines:
 	ts, xsensx, xsensy, xsensyaw, rot, w1, w2, w3, w4, xint, yint, wint, yawint, w1int, w2int, w3int, w4int = line.split(" ")[:17]
-	ts = int(float(ts) * 1000)
+	ts = int(float(ts) * 1000)/1000
 	Statetimestamps.append(ts)
 	
 	XsensX.append(float(xsensx))
@@ -86,15 +61,15 @@ for line in StateInfoLines:
 	YInt.append(float(yint))
 	WInt.append(float(wint))
 	YawInt.append(float(yawint))
-	#W1Int.append(float(w1int))
-	#W2Int.append(float(w2int))
-	#W3Int.append(float(w3int))
-	#W4Int.append(float(w4int))
+	W1Int.append(float(w1int))
+	W2Int.append(float(w2int))
+	W3Int.append(float(w3int))
+	W4Int.append(float(w4int))
 	
 	
 for line in CommandedLines: 
 	ts, doKick, doChip, doForce, useCameraAngle, rho, theta, ang, angvel, cameraAngle, dribbler, kickChipPower, useAbsoluteAngle = line.split(" ")[:13]
-	ts = int(float(ts) * 1000)
+	ts = int(float(ts) * 1000)/1000
 	Commandedtimestamps.append(ts)
 	
 	Angle.append(float(ang))
@@ -123,9 +98,13 @@ for line in robotFeedbackLines:
 	Vey.append(curVey)
 
 #Shift the time values to make it start at 0
-firstTimeVal = Feedbacktimestamps[0]
+firstTimeVal = min(Feedbacktimestamps[0], Statetimestamps[0], Commandedtimestamps[0]) # find the lowest timestamp
 for i in range(len(Feedbacktimestamps)):
 	Feedbacktimestamps[i] -= firstTimeVal
+for i in range(len(Statetimestamps)):
+	Statetimestamps[i] -= firstTimeVal
+for i in range(len(Commandedtimestamps)):
+	Commandedtimestamps[i] -= firstTimeVal
 
 if plotID == "bode":
 	linesC = open('PIDfiles/velxCommand.csv', 'r').readlines()
@@ -155,11 +134,6 @@ if plotID == "x":
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (XP[0], ), r'$K_I=%.2f$' % (XI[0], ), r'$K_D=%.2f$' % (XD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax.add_artist(at)
 	plt.show()
 	
 if plotID == "y":
@@ -172,28 +146,18 @@ if plotID == "y":
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (YP[0], ), r'$K_I=%.2f$' % (YI[0], ), r'$K_D=%.2f$' % (YD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax.add_artist(at)
 	plt.show()
 	
 if plotID == "w":
 	fig, ax = plt.subplots()
 	
-	ax.plot(Feedbacktimestamps, AngleVel)
-	ax.plot(Feedbacktimestamps, rateOfTurn)
+	ax.plot(Commandedtimestamps, AngleVel)
+	ax.plot(Statetimestamps, rateOfTurn)
 	ax.set_title("Angular velocity", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Velocity [rad/s]", fontsize = "x-large")
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (WP[0], ), r'$K_I=%.2f$' % (WI[0], ), r'$K_D=%.2f$' % (WD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax.add_artist(at)
 	plt.show()
 	
 if plotID == "yaw":
@@ -206,11 +170,6 @@ if plotID == "yaw":
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Angle [rad]", fontsize = "x-large")
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (YawP[0], ), r'$K_I=%.2f$' % (YawI[0], ), r'$K_D=%.2f$' % (YawD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax.add_artist(at)
 	plt.show()
 
 if plotID == "wheels":
@@ -236,11 +195,6 @@ if plotID == "wheels":
 	ax[1, 1].set_title('LF')
 	ax[1, 1].legend(["Commanded", "Estimated"])
 	ax[1, 1].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (WheelsP[0], ), r'$K_I=%.2f$' % (WheelsI[0], ), r'$K_D=%.2f$' % (WheelsD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[1, 1].add_artist(at)
 	
 	fig.text(0.5, 0.04, "Time [s]", ha="center", fontsize = "x-large")
 	fig.text(0.04, 0.5, 'Velocity [m/s]', va='center', rotation='vertical', fontsize = "x-large")
@@ -253,35 +207,15 @@ if plotID == "integral":
 	ax[0, 0].plot(Feedbacktimestamps, XInt)
 	ax[0, 0].set_title('X')
 	ax[0, 0].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (XP[0], ), r'$K_I=%.2f$' % (XI[0], ), r'$K_D=%.2f$' % (XD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[0, 0].add_artist(at)
 	ax[0, 1].plot(Feedbacktimestamps, YInt)
 	ax[0, 1].set_title('Y')
 	ax[0, 1].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (YP[0], ), r'$K_I=%.2f$' % (YI[0], ), r'$K_D=%.2f$' % (YD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[0, 1].add_artist(at)
 	ax[1, 0].plot(Feedbacktimestamps, WInt)
 	ax[1, 0].set_title('W')
 	ax[1, 0].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (WP[0], ), r'$K_I=%.2f$' % (WI[0], ), r'$K_D=%.2f$' % (WD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[1, 0].add_artist(at)
 	ax[1, 1].plot(Feedbacktimestamps, YawInt)
 	ax[1, 1].set_title('Yaw')
 	ax[1, 1].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (YawP[0], ), r'$K_I=%.2f$' % (YawI[0], ), r'$K_D=%.2f$' % (YawD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[1, 1].add_artist(at)
 	
 	fig.text(0.5, 0.04, "Time [s]", ha="center", fontsize = "x-large")
 	fig.text(0.04, 0.5, 'Integral value', va='center', rotation='vertical', fontsize = "x-large")
@@ -293,26 +227,15 @@ if plotID == "integral-wheels":
 	ax[0, 0].plot(Feedbacktimestamps, W1Int)
 	ax[0, 0].set_title('RF')
 	ax[0, 0].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#textstr = '\n'.join((r'$K_P=%.2f$' % (WheelsP[0], ), r'$K_I=%.2f$' % (WheelsI[0], ), r'$K_D=%.2f$' % (WheelsD[0], )))
-	#at = AnchoredText(textstr, prop=dict(size=15), frameon=True, loc='center right')
-	#at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-	#ax[0, 0].add_artist(at)
 	ax[0, 1].plot(Feedbacktimestamps, W2Int)
 	ax[0, 1].set_title('RB')
 	ax[0, 1].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#ax[0, 1].add_artist(at)
 	ax[1, 0].plot(Feedbacktimestamps, W3Int)
 	ax[1, 0].set_title('LB')
 	ax[1, 0].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#ax[1, 0].add_artist(at)
 	ax[1, 1].plot(Feedbacktimestamps, W4Int)
 	ax[1, 1].set_title('LF')
 	ax[1, 1].set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
-	# make box with PID gains
-	#ax[1, 1].add_artist(at)
 	
 	fig.text(0.5, 0.04, "Time [s]", ha="center", fontsize = "x-large")
 	fig.text(0.04, 0.5, 'Integral value', va='center', rotation='vertical', fontsize = "x-large")

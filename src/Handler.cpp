@@ -33,7 +33,8 @@ void Handler::start() {
             std::size_t iterations = 0;
             bool sent = false;
             while(iterations < 10){
-              if(worldPublisher->publish(state)){
+              auto bytesSent = worldPublisher->publish(state);
+              if(bytesSent > 0){
                 sent = true;
                 break;
               }

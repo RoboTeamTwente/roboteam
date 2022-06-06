@@ -1,6 +1,7 @@
 add_library(roboteam_logging
         src/LogFileReader.cpp
         src/LogFileWriter.cpp
+        src/BackLogger.cpp
         )
 
 target_include_directories(roboteam_logging

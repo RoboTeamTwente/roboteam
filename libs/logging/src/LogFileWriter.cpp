@@ -5,7 +5,7 @@
 #include "roboteam_logging/LogFileWriter.h"
 
 bool rtt::LogFileWriter::open(const std::string &file_name) {
-    file = std::make_unique<std::ofstream>(file_name,std::ios_base::out | std::ios_base::binary);
+    file = std::make_unique<std::ofstream>(file_name,std::ios::out | std::ios::binary);
     if(!file->is_open()){
         std::cout<<"Could not open file at location: "<<file_name<<"\n";
         close();
@@ -13,6 +13,7 @@ bool rtt::LogFileWriter::open(const std::string &file_name) {
     }
 
     LogFileHeader header;
+    last_written_timestamp = 0;
     file->write(reinterpret_cast<char*>(&header),sizeof(header));
     bool good = file->good();
     if (!good){

@@ -14,7 +14,7 @@ void rtt::LogFileReader::close() {
 }
 
 bool rtt::LogFileReader::open(const std::string &file_name) {
-    file = std::make_unique<std::ifstream>(file_name,std::ios_base::in | std::ios_base::binary);
+    file = std::make_unique<std::ifstream>(file_name,std::ios::in | std::ios::binary);
     if(!file->is_open()){
         std::cout<<"Could not open log file: "<<file_name<<"\n";
         close();

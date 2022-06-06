@@ -32,6 +32,7 @@ RobotHub::RobotHub(bool shouldLog) {
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
+    this->simulatorManager->setConfigurationFeedbackCallback([&](const simulation::ConfigurationFeedback &feedback) { this->handleSimulationConfigurationFeedback(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
@@ -100,7 +101,7 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
         this->statistics.incrementCommandsReceivedCounter(id, color);
     }
 
-    int bytesSent = this->simulatorManager->sendRobotControlCommand(simCommand, color);
+    auto bytesSent = this->simulatorManager->sendRobotControlCommand(simCommand, color);
 
     // Update bytes sent/packets dropped statistics
     if (bytesSent > 0) {

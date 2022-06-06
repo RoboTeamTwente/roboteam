@@ -34,8 +34,8 @@ SimulatorManager::SimulatorManager(SimulatorNetworkConfiguration config) {
 
 SimulatorManager::~SimulatorManager() { this->stopFeedbackListeningThreads(); }
 
-int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color) {
-    int bytesSent;
+std::size_t SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color) {
+    std::size_t bytesSent;
 
     switch (color) {
         case rtt::Team::YELLOW: {
@@ -54,25 +54,27 @@ int SimulatorManager::sendRobotControlCommand(RobotControlCommand& robotControlC
     return bytesSent;
 }
 
-int SimulatorManager::sendConfigurationCommand(ConfigurationCommand& configurationCommand) {
-    int bytesSent = this->sendPacket(configurationCommand.getPacket(), this->configurationSocket, this->networkConfiguration.configurationPort);
+std::size_t SimulatorManager::sendConfigurationCommand(ConfigurationCommand& configurationCommand) {
+    auto bytesSent = this->sendPacket(configurationCommand.getPacket(), this->configurationSocket, this->networkConfiguration.configurationPort);
     return bytesSent;
 }
 
 void SimulatorManager::setRobotControlFeedbackCallback(std::function<void(RobotControlFeedback&)> callback) { this->robotControlFeedbackCallback = callback; }
 void SimulatorManager::setConfigurationFeedbackCallback(std::function<void(ConfigurationFeedback&)> callback) { this->configurationFeedbackCallback = callback; }
 
-int SimulatorManager::sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port) {
-    int bytesSent;
-
+std::size_t SimulatorManager::sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port) {
     // Create a byteArray where the packet can be serialized into
     QByteArray datagram;
     datagram.resize(packet.ByteSizeLong());
     packet.SerializeToArray(datagram.data(), datagram.size());
     // Send contents of byteArray to simulator
-    bytesSent = socket.writeDatagram(datagram, this->networkConfiguration.simIpAddress, port);
+    auto bytesSent = socket.writeDatagram(datagram, this->networkConfiguration.simIpAddress, port);
 
-    return bytesSent;
+    if (bytesSent < 0) {
+        return 0;
+    } else {
+        return static_cast<std::size_t>(bytesSent);
+    }
 }
 
 void SimulatorManager::callRobotControlFeedbackCallback(RobotControlFeedback& feedback) {

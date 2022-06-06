@@ -7,11 +7,11 @@ Publisher::Publisher(const ChannelType channelType) : channel(CHANNELS.at(channe
     this->socket->bind(this->channel.getPublishAddress());
 }
 
-bool Publisher::send(const std::string& message) {
+std::size_t Publisher::send(const std::string& message) {
     zmqpp::message transmission;
     transmission << message;
 
-    return socket->send(transmission, true);
+    return socket->send(transmission, true) ? message.length() : 0;
 }
 
 }  // namespace rtt::net::utils

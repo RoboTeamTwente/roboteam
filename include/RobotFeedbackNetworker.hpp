@@ -12,8 +12,8 @@ class RobotFeedbackPublisher : private utils::Publisher {
    public:
     RobotFeedbackPublisher();
 
-    // Publishes the given robot feedback. Returns success
-    bool publish(const rtt::RobotsFeedback& feedback);
+    // Publishes the given robot feedback. Returns bytes sent, 0 on failure
+    std::size_t publish(const rtt::RobotsFeedback& feedback);
 };
 
 class RobotFeedbackSubscriber : private utils::Subscriber {

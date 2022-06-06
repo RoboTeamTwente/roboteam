@@ -11,8 +11,8 @@ class SettingsPublisher : private utils::Publisher {
    public:
     SettingsPublisher();
 
-    // Publishes the given settings. Returns success
-    bool publish(const proto::Setting& settings);
+    // Publishes the given settings. Returns bytes sent, 0 on failure
+    std::size_t publish(const proto::Setting& settings);
 };
 
 class SettingsSubscriber : private utils::Subscriber {

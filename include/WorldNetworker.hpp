@@ -11,8 +11,8 @@ class WorldPublisher : private utils::Publisher {
    public:
     WorldPublisher();
 
-    // Publishes the given world. Returns success
-    bool publish(const proto::State& world);
+    // Publishes the given world. Returns bytes sent, 0 on failure
+    std::size_t publish(const proto::State& world);
 };
 
 class WorldSubscriber : private rtt::net::utils::Subscriber {

@@ -11,8 +11,8 @@ class SimulationConfigurationPublisher : private utils::Publisher {
    public:
     SimulationConfigurationPublisher();
 
-    // Publishes the given simulation configuration message. Returns success
-    bool publish(const proto::SimulationConfiguration& configuration);
+    // Publishes the given simulation configuration message. Returns bytes sent, 0 on failure
+    std::size_t publish(const proto::SimulationConfiguration& configuration);
 };
 
 class SimulationConfigurationSubscriber : private rtt::net::utils::Subscriber {

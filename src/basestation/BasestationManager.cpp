@@ -131,11 +131,22 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             REM_BasestationLog log;
             decodeREM_BasestationLog(&log, &payload);
 
-            if (log.messageLength > 0) {
-                std::string actualLogMessage((char*) message.payloadBuffer, 3, log.messageLength-1); // Ignore the last newline character
+            // Check how many bytes were received that are supposed to contain the log message
+            auto logBytesReceived = message.payloadSize - PACKET_SIZE_REM_BASESTATION_LOG;
+
+            // Test if enough bytes are received to get the complete log message (Sometimes fewer bytes are received)
+            bool receivedEnough = log.messageLength <= logBytesReceived; // We do not care if we received more bytes
+
+            if (receivedEnough && log.messageLength > 0) {
+                // We received enough bytes to get the log message, which does contain something
+                std::string actualLogMessage((char*) message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_LOG, log.messageLength -1); // -1 Ignores the last newline character
                 this->callBasestationLogCallback(actualLogMessage, color);
+            } else if (log.messageLength > 0) {
+                // We were supposed to receive a log message, but we did not receive enough bytes
+                RTT_ERROR("Basestation sent fewer bytes than it intended to (", logBytesReceived, " instead of ", log.messageLength, "). Dropped message")
             } else {
-                RTT_WARNING("Received empty basestation log")
+                // We received an intended empty log message... But why?
+                RTT_WARNING("Received empty basestation log message")
             }
 
             break;

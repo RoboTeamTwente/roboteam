@@ -245,9 +245,6 @@ void init(void){
 	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
 	 but its better than suddenly having non-responding robots in a match */
 	IWDG_Init(iwdg, 5000);
-
-    set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
-    set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
 	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
@@ -265,7 +262,7 @@ void init(void){
 	LOG_sendAll();
 	
 	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
+	SEND_ROBOT_STATE_INFO = !read_Pin(FT0_pin);
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -314,7 +311,7 @@ void init(void){
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	LOG_sendAll();
     
-	if(read_Pin(IN2_pin)){
+	if(read_Pin(FT1_pin)){
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{

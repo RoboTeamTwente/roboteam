@@ -76,10 +76,10 @@ extern GPIO_Pin ID2_pin;
 extern GPIO_Pin ID3_pin;
 
 // Feature Select
-extern GPIO_Pin FT0;
-extern GPIO_Pin FT1;
-extern GPIO_Pin FT2;
-extern GPIO_Pin FT3;
+extern GPIO_Pin FT0_pin;
+extern GPIO_Pin FT1_pin;
+extern GPIO_Pin FT2_pin;
+extern GPIO_Pin FT3_pin;
 
 // MTi
 extern GPIO_Pin MTi_RST_pin;

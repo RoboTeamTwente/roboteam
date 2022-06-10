@@ -1244,18 +1244,20 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOF, BS_RST_Pin|LD5_Pin|LD4_Pin|LD3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, FT0_Pin|FT1_Pin|FT2_Pin|FT3_Pin
-                          |RF_FR_Pin|RF_BRK_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD6_Pin|Batt_kill_Pin|Charge_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, LD2_Pin|LD1_Pin|RB_BRK_Pin|RB_FR_Pin
-                          |SPI1_NSS_Pin|Interface_EN_Pin|Interface_ENnegative_Pin, GPIO_PIN_RESET);
+                          |SPI1_NSS_Pin|Interface_EN_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, RF_FR_Pin|RF_BRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(XSENS_RST_GPIO_Port, XSENS_RST_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(Interface_ENnegative_GPIO_Port, Interface_ENnegative_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : Charge_done_Pin */
   GPIO_InitStruct.Pin = Charge_done_Pin;
@@ -1292,13 +1294,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BS_IRQ_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : FT0_Pin FT1_Pin FT2_Pin FT3_Pin
-                           RF_FR_Pin RF_BRK_Pin */
-  GPIO_InitStruct.Pin = FT0_Pin|FT1_Pin|FT2_Pin|FT3_Pin
-                          |RF_FR_Pin|RF_BRK_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pins : FT0_Pin FT1_Pin FT2_Pin FT3_Pin */
+  GPIO_InitStruct.Pin = FT0_Pin|FT1_Pin|FT2_Pin|FT3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ID0_Pin ID1_Pin */
@@ -1320,10 +1319,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD2_Pin LD1_Pin RB_BRK_Pin RB_FR_Pin
-                           Interface_EN_Pin Interface_ENnegative_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin|LD1_Pin|RB_BRK_Pin|RB_FR_Pin
-                          |Interface_EN_Pin|Interface_ENnegative_Pin;
+  /*Configure GPIO pins : LD2_Pin LD1_Pin RB_BRK_Pin RB_FR_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin|LD1_Pin|RB_BRK_Pin|RB_FR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1334,6 +1331,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : RF_FR_Pin RF_BRK_Pin */
+  GPIO_InitStruct.Pin = RF_FR_Pin|RF_BRK_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SD_MMC1_CD_Pin */
   GPIO_InitStruct.Pin = SD_MMC1_CD_Pin;
@@ -1360,6 +1364,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(SPI1_NSS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : Interface_EN_Pin Interface_ENnegative_Pin */
+  GPIO_InitStruct.Pin = Interface_EN_Pin|Interface_ENnegative_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 4, 0);

@@ -94,5 +94,7 @@ DEFINE_PIN(BAT_IRQ_pin, Batt_IRQ)
 DEFINE_PIN(SD_CD_pin, SD_MMC1_CD)
 
 // Interface
-DEFINE_PIN(INT_EN_pin, Interface_EN)
-DEFINE_PIN(INT_ENneg_pin, Interface_ENnegative)
+// DEFINE_PIN(INT_EN_pin, Interface_EN)
+GPIO_Pin INT_EN_pin         = { Interface_EN_GPIO_Port, Interface_EN_Pin};
+// DEFINE_PIN(INT_ENneg_pin, Interface_ENnegative)
+GPIO_Pin INT_ENneg_pin      = { Interface_ENnegative_GPIO_Port, Interface_ENnegative_Pin};

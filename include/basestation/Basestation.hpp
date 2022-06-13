@@ -22,7 +22,7 @@ typedef struct BasestationIdentifier {
 
     bool operator==(const BasestationIdentifier& other) const;
     bool operator<(const BasestationIdentifier& other) const;
-    const std::string toString() const;
+    [[nodiscard]] std::string toString() const;
 } BasestationIdentifier;
 
 class Basestation {
@@ -39,7 +39,7 @@ class Basestation {
     int sendMessageToBasestation(BasestationMessage& message) const;
     void setIncomingMessageCallback(const std::function<void(const BasestationMessage&, const BasestationIdentifier&)>& callback);
 
-    const BasestationIdentifier& getIdentifier() const;
+    [[nodiscard]] const BasestationIdentifier& getIdentifier() const;
 
     static bool isDeviceABasestation(libusb_device* const device);
 
@@ -58,13 +58,13 @@ class Basestation {
     // Writes the given message directly to the basestation. Returns bytes sent
     int writeBasestationMessage(BasestationMessage& message) const;
 
-    static const BasestationIdentifier getIdentifierOfDevice(libusb_device* const device);
+    static BasestationIdentifier getIdentifierOfDevice(libusb_device* const device);
 };
 
 class FailedToOpenDeviceException : public std::exception {
    public:
-    FailedToOpenDeviceException(const std::string& message);
-    const char* what() const noexcept;
+    explicit FailedToOpenDeviceException(const std::string& message);
+    [[nodiscard]] const char* what() const noexcept override;
 
    private:
     const std::string message;

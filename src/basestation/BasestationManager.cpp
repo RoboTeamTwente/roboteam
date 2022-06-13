@@ -73,9 +73,9 @@ void BasestationManager::listenForBasestationPlugs() {
 
         // Get a list of devices
         libusb_device** device_list;
-        ssize_t device_count = libusb_get_device_list(this->usbContext, &device_list);
+        auto device_count = libusb_get_device_list(this->usbContext, &device_list);
 
-        std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, device_count);
+        std::vector<libusb_device*> basestationDevices = filterBasestationDevices(device_list, static_cast<int>(device_count));
 
         this->basestationCollection->updateBasestationCollection(basestationDevices);
 
@@ -84,8 +84,8 @@ void BasestationManager::listenForBasestationPlugs() {
     }
 }
 
-const BasestationManagerStatus BasestationManager::getStatus() const {
-    const BasestationManagerStatus status = {.basestationCollection = this->basestationCollection->getStatus()};
+BasestationManagerStatus BasestationManager::getStatus() const {
+    BasestationManagerStatus status = {.basestationCollection = this->basestationCollection->getStatus()};
 
     return status;
 }
@@ -163,7 +163,7 @@ void BasestationManager::callBasestationLogCallback(const std::string& basestati
     if (this->basestationLogCallback != nullptr) this->basestationLogCallback(basestationLog, color);
 }
 
-FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string message) : message(message) {}
+FailedToInitializeLibUsb::FailedToInitializeLibUsb(const std::string& message) : message(message) {}
 const char* FailedToInitializeLibUsb::what() const noexcept { return this->message.c_str(); }
 
 }  // namespace rtt::robothub::basestation

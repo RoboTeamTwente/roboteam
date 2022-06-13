@@ -44,18 +44,18 @@ typedef struct SimulatorNetworkConfiguration {
     properties of the field.
     To prevent waiting for a response, 3 listen threads are used to listen for feedback for
     the blue team, the yellow team and feedback for configuring the simulator. These threads will
-    make a callback if it has been set. */
+    use a callback if it has been set. */
 class SimulatorManager {
    public:
     // Can throw FailedToBindPortException
     SimulatorManager(SimulatorNetworkConfiguration configuration);
     ~SimulatorManager();
 
-    // Both of the send functions return amount of bytes sent, return -1 if error occured
-    int sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
-    int sendConfigurationCommand(ConfigurationCommand& configurationCommand);
+    // Both of the send functions return amount of bytes sent, return 0 if error occurred
+    std::size_t sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
+    std::size_t sendConfigurationCommand(ConfigurationCommand& configurationCommand);
 
-    // These will set the callback function when feedback has been received
+    // These will set the callback function, which will be called when feedback is received
     void setRobotControlFeedbackCallback(std::function<void(RobotControlFeedback&)> callback);
     void setConfigurationFeedbackCallback(std::function<void(ConfigurationFeedback&)> callback);
 
@@ -76,8 +76,8 @@ class SimulatorManager {
     std::function<void(RobotControlFeedback&)> robotControlFeedbackCallback;
     std::function<void(ConfigurationFeedback&)> configurationFeedbackCallback;
 
-    // Returns the amount of bytes sent, returns -1 if error occured
-    int sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port);
+    // Returns the amount of bytes sent, returns 0 if error occurred
+    std::size_t sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port);
 
     // These will call the callback functions, if set, whenever feedback is received
     void callRobotControlFeedbackCallback(RobotControlFeedback& feedback);

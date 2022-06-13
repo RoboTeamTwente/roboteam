@@ -33,7 +33,7 @@ class BasestationManager {
     void setRobotStateInfoCallback(const std::function<void(const REM_RobotStateInfo &, rtt::Team color)> &callback);
     void setBasestationLogCallback(const std::function<void(const std::string&, rtt::Team color)> &callback);
 
-    const BasestationManagerStatus getStatus() const;
+    [[nodiscard]] BasestationManagerStatus getStatus() const;
 
    private:
     libusb_context *usbContext;
@@ -58,8 +58,8 @@ class BasestationManager {
 
 class FailedToInitializeLibUsb : public std::exception {
    public:
-    FailedToInitializeLibUsb(const std::string message);
-    const char *what() const noexcept override;
+    explicit FailedToInitializeLibUsb(const std::string& message);
+    [[nodiscard]] const char *what() const noexcept override;
 
    private:
     const std::string message;

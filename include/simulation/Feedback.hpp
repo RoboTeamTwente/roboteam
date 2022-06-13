@@ -3,13 +3,14 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <optional>
 
 #include <roboteam_utils/Teams.hpp>
 
 namespace rtt::robothub::simulation {
 typedef struct SimulationError {
-    std::string code;
-    std::string message;
+    std::optional<std::string> code;
+    std::optional<std::string> message;
 } SimulationError;
 
 typedef struct RobotControlFeedback {

@@ -26,13 +26,13 @@ bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const 
         return this->usbAddress < other.usbAddress;
     }
 }
-const std::string BasestationIdentifier::toString() const {
+std::string BasestationIdentifier::toString() const {
     int address = (int)this->usbAddress;
     int id = (int)this->serialIdentifier;
     return "serial id: " + std::to_string(id) + ", address: " + std::to_string(address);
 }
 
-Basestation::Basestation(libusb_device* const device) : device(device), identifier(getIdentifierOfDevice(device)) {
+Basestation::Basestation(libusb_device *const device) : device(device), identifier(getIdentifierOfDevice(device)) {
     if (!Basestation::isDeviceABasestation(device)) {
         throw FailedToOpenDeviceException("Device is not a basestation");
     }
@@ -163,11 +163,11 @@ int Basestation::writeBasestationMessage(BasestationMessage& message) const {
     return bytesSent;
 }
 
-const BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* const device) {
+BasestationIdentifier Basestation::getIdentifierOfDevice(libusb_device* const device) {
     libusb_device_descriptor deviceDescriptor = {};
     libusb_get_device_descriptor(device, &deviceDescriptor);
 
-    const BasestationIdentifier identifier = {.usbAddress = libusb_get_device_address(device), .serialIdentifier = deviceDescriptor.iSerialNumber};
+    BasestationIdentifier identifier = {.usbAddress = libusb_get_device_address(device), .serialIdentifier = deviceDescriptor.iSerialNumber};
 
     return identifier;
 }

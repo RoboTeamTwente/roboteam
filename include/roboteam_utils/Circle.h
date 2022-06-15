@@ -100,6 +100,14 @@ class Circle : public Shape {
     std::ostream& write(std::ostream& out) const;
 
     std::vector<Vector2> intersectsCircleWithLineSegment(LineSegment line);
+
+/**
+ *  Checks whether the circle intersects with the given line segment
+ * @param segment the segment to find intersection with
+ * @return A vector of points where the circle intersects with the line segment
+ * @return An empty vector if the circle does not intersect with the line segment
+ */
+    std::vector<Vector2> intersectsWithLineSegment(const LineSegment& segment) const;
 };
 
 std::ostream& operator<<(std::ostream& out, const Circle& circle);

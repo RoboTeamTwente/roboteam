@@ -8,7 +8,7 @@ namespace rtt {
 
 /* This struct represents all the info we can have about a robot */
 typedef struct Robot {
-    int id = 0.0;                       // [0, 15] The ID of the robot
+    int id = 0;                       // [0, 15] The ID of the robot
     Team team = Team::YELLOW;           // [YELLOW, BLUE] The team of the robot
     Vector2 position;                   // (m) The position of the robot on the field
     Vector2 velocity;                   // (m/s) The velocity of the robot

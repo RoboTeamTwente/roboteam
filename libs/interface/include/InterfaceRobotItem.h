@@ -28,7 +28,7 @@ public:
           id(id),
           isYellow(isYellow),
           storage(storage) {}
-    void triggerUpdate();
+    void triggerUpdate(const proto::State&);
     void updateScale(double fieldWidth, double fieldHeight);
 };
 

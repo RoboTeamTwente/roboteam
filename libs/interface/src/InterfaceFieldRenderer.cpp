@@ -13,12 +13,11 @@ void InterfaceFieldRenderer::renderBall(QPainter *painter, QRect size) {
 
 }
 
-void InterfaceFieldRenderer::renderField(QPainter *painter, QRect size) {
+void InterfaceFieldRenderer::renderField(QPainter *painter, proto::State state, QRect size) {
 
-    auto info = this->storage.lock()->getState();
 
-    auto arcs = info.field().field().field_arcs();
-    auto lines = info.field().field().field_lines();
+    auto arcs = state.field().field().field_arcs();
+    auto lines = state.field().field().field_lines();
 
     painter->save();
     painter->setRenderHint(QPainter::RenderHint::Antialiasing, true);

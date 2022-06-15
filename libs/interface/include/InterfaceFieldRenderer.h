@@ -17,7 +17,7 @@ public:
     InterfaceFieldRenderer(std::weak_ptr<InterfaceFieldStateStore> storage);
 
     void renderBall(QPainter*, QRect);
-    void renderField(QPainter*, QRect);
+    void renderField(QPainter*, proto::State state, QRect);
     void renderRobot(QPainter*, QRect, bool, int);
 
     void updateScale(int canvasWidth, int canvasHeight, double fieldWidth, double fieldHeight);

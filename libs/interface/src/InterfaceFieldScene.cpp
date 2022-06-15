@@ -44,16 +44,16 @@ void InterfaceFieldScene::triggerUpdate() {
         }
 
         for (const auto& robot : this->robots) {
-            robot->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+            robot->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
             robot->triggerUpdate(*currentFieldState);
         }
 
-        this->ball->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
-        this->ball->trigger_update(*currentFieldState);
+        this->ball->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
+        this->ball->triggerUpdate(*currentFieldState);
 
-        this->yellowPaths->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+        this->yellowPaths->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
         this->yellowPaths->triggerUpdate(stateHolder->getAIData(rtt::Team::YELLOW).robotPaths);
-        this->bluePaths->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
+        this->bluePaths->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
         this->bluePaths->triggerUpdate(stateHolder->getAIData(rtt::Team::BLUE).robotPaths);
     }
 }

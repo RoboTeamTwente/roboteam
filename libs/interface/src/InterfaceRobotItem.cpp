@@ -46,12 +46,10 @@ QRectF InterfaceRobotItem::boundingRect() const {
     return QRectF(-60, -60, 120, 120);
 }
 
-void InterfaceRobotItem::triggerUpdate() {
+void InterfaceRobotItem::triggerUpdate(const proto::State& state) {
     if (this->scene()->views().empty()) {
         return;
     }
-
-    auto state = this->storage.lock()->getState();
 
     auto searchArea = isYellow ? state.last_seen_world().yellow() : state.last_seen_world().blue();
     auto us = std::find_if(searchArea.begin(), searchArea.end(), [&] (const auto& itm) {

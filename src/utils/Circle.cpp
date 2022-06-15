@@ -43,7 +43,7 @@ bool Circle::doesIntersectOrContain2(const Rectangle &other) {
 
     if (other.contains(center)) return true;
 
-    std::vector<LineSegment> segments = other.lines();
+    std::vector<LineSegment> segments = { other.leftLine(), other.topLine(), other.rightLine(), other.bottomLine() };
     for (const LineSegment &segment : segments)
         if (doesIntersectOrContain(segment)) return true;
 

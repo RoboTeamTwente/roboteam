@@ -15,6 +15,7 @@ namespace rtt::Interface {
     void InterfaceSyncedDropdown::didChangeValue(const QString& newText) {
         auto iface = this->ctrl.lock();
         if (!iface) return;
+        iface->markForUpdate();
 
         auto sptr = iface.get()->getValues().lock();
         if (!sptr) return;

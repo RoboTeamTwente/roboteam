@@ -15,8 +15,7 @@ InterfaceFieldScene::InterfaceFieldScene(std::weak_ptr<InterfaceFieldStateStore>
       yellowPaths(new InterfaceRobotPathItem(rtt::Team::YELLOW)),
       bluePaths(new InterfaceRobotPathItem(rtt::Team::BLUE)) {
     this->timer = new QTimer(this);
-    // TODO: Centralize timer
-
+// TODO: Centralize timer
     this->addItem(this->ball);
     this->addItem(this->yellowPaths);
     this->addItem(this->bluePaths);
@@ -32,21 +31,25 @@ void InterfaceFieldScene::triggerUpdate() {
     if (auto stateHolder = this->state.lock()) {
         auto currentFieldState = stateHolder->getState();
 
-        for (const auto& robot : currentFieldState.last_seen_world().yellow()) {
+        if (!currentFieldState.has_value()) {
+            return;
+        }
+
+        for (const auto& robot : currentFieldState->last_seen_world().yellow()) {
             doUpdateRobot(robot, true);
         }
 
-        for (const auto& robot : currentFieldState.last_seen_world().blue()) {
+        for (const auto& robot : currentFieldState->last_seen_world().blue()) {
             doUpdateRobot(robot, false);
         }
 
         for (const auto& robot : this->robots) {
             robot->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
-            robot->triggerUpdate();
+            robot->triggerUpdate(*currentFieldState);
         }
 
         this->ball->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
-        this->ball->triggerUpdate(currentFieldState);
+        this->ball->trigger_update(*currentFieldState);
 
         this->yellowPaths->updateScale(currentFieldState.field().field().field_length(), currentFieldState.field().field().field_width());
         this->yellowPaths->triggerUpdate(stateHolder->getAIData(rtt::Team::YELLOW).robotPaths);
@@ -67,4 +70,6 @@ void InterfaceFieldScene::doUpdateRobot(const proto::WorldRobot& robot, bool isY
         this->addItem(newRobot);
         this->robots.push_back(newRobot);
     }
+
+
 }

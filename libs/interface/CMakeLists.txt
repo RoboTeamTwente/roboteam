@@ -12,7 +12,7 @@ add_library(roboteam_interface_lib
         src/InterfaceSyncedCheckbox.cpp
         src/InterfaceSyncedSlider.cpp
         src/InterfaceSyncedDropdown.cpp
-        src/InterfaceSyncedRadio.cpp
+#        src/InterfaceSyncedRadio.cpp
         src/InterfaceSyncedText.cpp
         src/InterfaceFieldStateStore.cpp
         src/InterfaceRobotItem.cpp

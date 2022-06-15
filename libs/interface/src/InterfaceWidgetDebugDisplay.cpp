@@ -10,7 +10,7 @@
 #include "InterfaceSyncedSlider.h"
 #include "InterfaceSyncedCheckbox.h"
 #include "InterfaceSyncedDropdown.h"
-#include "InterfaceSyncedRadio.h"
+//#include "InterfaceSyncedRadio.h"
 #include "InterfaceSyncedText.h"
 
 namespace rtt::Interface {
@@ -58,17 +58,17 @@ namespace rtt::Interface {
                 this->layout()->addWidget(new InterfaceSyncedCheckbox(this->ctrl, key));
             } else if (const auto* dropdown = std::get_if<InterfaceDropdown>(&this_decl->options)) {
                 this->layout()->addWidget(new InterfaceSyncedDropdown(this->ctrl, key));
-            } else if (const auto* radio = std::get_if<InterfaceRadio>(&this_decl->options)) {
-                auto tmpLayout = new QHBoxLayout;
-                auto tmpWidget = new QWidget;
-                auto radioButtons = new InterfaceSyncedRadio(this->ctrl, key);
-                for (auto button : radioButtons->buttons()) {
-                    tmpLayout->addWidget(button);
-                }
-                tmpWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-                tmpWidget->setMinimumSize(40, 20);
-                tmpWidget->setLayout(tmpLayout);
-                this->layout()->addWidget(tmpWidget);
+//            } else if (const auto* radio = std::get_if<InterfaceRadio>(&this_decl->options)) {
+//                auto tmpLayout = new QHBoxLayout;
+//                auto tmpWidget = new QWidget;
+//                auto radioButtons = new InterfaceSyncedRadio(this->ctrl, key);
+//                for (auto button : radioButtons->buttons()) {
+//                    tmpLayout->addWidget(button);
+//                }
+//                tmpWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+//                tmpWidget->setMinimumSize(40, 20);
+//                tmpWidget->setLayout(tmpLayout);
+//                this->layout()->addWidget(tmpWidget);
             } else if (const auto* text = std::get_if<InterfaceText>(&this_decl->options)) {
                 this->layout()->addWidget(new InterfaceSyncedText(this->ctrl, key));
             } else {

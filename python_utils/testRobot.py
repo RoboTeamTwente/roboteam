@@ -26,9 +26,9 @@ from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import RE
 from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
 from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
 
-robotStateInfoFile = open(f"Logs/robotStateInfo_{int(time.time())}.csv", "w")
-robotCommandFile = open(f"Logs/robotCommand_{int(time.time())}.csv", "w")
-robotFeedbackFile = open(f"Logs/robotFeedback_{int(time.time())}.csv", "w")
+robotStateInfoFile = open(f"logs/robotStateInfo_{int(time.time())}.csv", "w+")
+robotCommandFile = open(f"logs/robotCommand_{int(time.time())}.csv", "w+")
+robotFeedbackFile = open(f"logs/robotFeedback_{int(time.time())}.csv", "w+")
 
 robotStateInfo = REM_RobotStateInfo()
 robotFeedback = REM_RobotFeedback()

@@ -12,24 +12,27 @@
 #include <roboteam_utils/AIData.hpp>
 #include <roboteam_utils/Teams.hpp>
 
-class InterfaceFieldStateStore {
-private:
-    mutable std::mutex mtx;
+namespace rtt::Interface {
+    class InterfaceFieldStateStore {
+    private:
+        mutable std::mutex mtx;
 
-    proto::State cachedState;
-    std::optional<std::string> state;
+        proto::State cachedState;
+        std::optional<std::string> state;
 
-    rtt::AIData yellowAIData;
-    rtt::AIData blueAIData;
+        rtt::AIData yellowAIData;
+        rtt::AIData blueAIData;
 
-public:
-    void setState(proto::State);
-    void setState(std::string);
-    std::optional<proto::State> getState();
+    public:
+        void setState(proto::State);
+        void setState(std::string);
+        std::optional<proto::State> getState();
 
-    void setAIData(const rtt::AIData&, rtt::Team);
-    rtt::AIData getAIData(rtt::Team) const;
-};
+        void setAIData(const rtt::AIData&, rtt::Team);
+        rtt::AIData getAIData(rtt::Team) const;
+    };
+}
+
 
 
 #endif  // RTT_INTERFACEFIELDSTATESTORE_H

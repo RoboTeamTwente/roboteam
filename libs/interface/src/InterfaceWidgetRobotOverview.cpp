@@ -22,7 +22,7 @@ namespace rtt::Interface {
                 return;
             }
 
-            auto state = fieldState->getState();
+            auto state = fieldState->getMessage();
             if (!state.has_value()) {
                 return;
             }

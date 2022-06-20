@@ -8,82 +8,87 @@
 #include <QStaticText>
 #include <cmath>
 
-constexpr double REAL_ROBOT_RADIUS = 0.09; // radius is about 8 cm
+namespace rtt::Interface {
+    constexpr double REAL_ROBOT_RADIUS = 0.09; // radius is about 8 cm
 
-void InterfaceRobotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->save();
-    painter->setRenderHint(QPainter::RenderHint::Antialiasing);
+    void InterfaceRobotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+        painter->save();
+        painter->setRenderHint(QPainter::RenderHint::Antialiasing);
 
-    // Draw rotation-line of robot
-    painter->setPen(QPen(Qt::red, 2));
-    painter->drawLine(0, 0, radius*3, 0);
+        // Draw rotation-line of robot
+        painter->setPen(QPen(Qt::red, 2));
+        painter->drawLine(0, 0, radius*3, 0);
 
-    // Draw role of robot
-    QStaticText role("Halt_#");
-    painter->drawStaticText(-role.size().width()/2, radius, role);
+        // Draw role of robot
+//        QStaticText role("Halt_#");
+//        painter->drawStaticText(-role.size().width()/2, radius, role);
 
-    // Draw robot
-    if (!isYellow) {
-        painter->setPen(Qt::blue);
-        painter->setBrush(Qt::blue);
-    } else {
-        painter->setPen(Qt::yellow);
-        painter->setBrush(Qt::yellow);
-    }
-    painter->drawEllipse(QPointF(0, 0), radius, radius);
+        // Draw robot
+        if (!isYellow) {
+            painter->setPen(Qt::blue);
+            painter->setBrush(Qt::blue);
+        } else {
+            painter->setPen(Qt::yellow);
+            painter->setBrush(Qt::yellow);
+        }
+        painter->drawEllipse(QPointF(0, 0), radius, radius);
 
-    painter->restore();
-}
-
-bool InterfaceRobotItem::getIsYellow() const {
-    return this->isYellow;
-}
-
-int InterfaceRobotItem::getRobotId() const {
-    return this->id;
-}
-QRectF InterfaceRobotItem::boundingRect() const {
-    return QRectF(-60, -60, 120, 120);
-}
-
-void InterfaceRobotItem::triggerUpdate(const proto::State& state) {
-    if (this->scene()->views().empty()) {
-        return;
+        painter->restore();
     }
 
-    auto searchArea = isYellow ? state.last_seen_world().yellow() : state.last_seen_world().blue();
-    auto us = std::find_if(searchArea.begin(), searchArea.end(), [&] (const auto& itm) {
-        return itm.id() == this->id;
-    });
-
-    if (us == searchArea.end()) {
-        this->setVisible(false);
-        return;
-    } else {
-        this->setVisible(true);
+    bool InterfaceRobotItem::getIsYellow() const {
+        return this->isYellow;
     }
 
-    int canvasCenterX = this->scene()->views()[0]->viewport()->width()/2;
-    int canvasCenterY = this->scene()->views()[0]->viewport()->height()/2;
+    int InterfaceRobotItem::getRobotId() const {
+        return this->id;
+    }
+    QRectF InterfaceRobotItem::boundingRect() const {
+        return QRectF(-60, -60, 120, 120);
+    }
 
-    double x = us->pos().x() * scale + canvasCenterX;
-    double y = scale * us->pos().y() + canvasCenterY;
+    void InterfaceRobotItem::triggerUpdate(const proto::State& state) {
+        if (this->scene()->views().empty()) {
+            return;
+        }
 
-    this->setPos(x, y);
-    this->setRotation((us->angle()/M_PI) * 180);
+        auto searchArea = isYellow ? state.last_seen_world().yellow() : state.last_seen_world().blue();
+        auto us = std::find_if(searchArea.begin(), searchArea.end(), [&] (const auto& itm) {
+            return itm.id() == this->id;
+        });
 
-    this->update();
+        if (us == searchArea.end()) {
+            this->setVisible(false);
+            return;
+        } else {
+            this->setVisible(true);
+        }
+
+        int canvasCenterX = this->scene()->views()[0]->viewport()->width()/2;
+        int canvasCenterY = this->scene()->views()[0]->viewport()->height()/2;
+
+        double x = us->pos().x() * scale + canvasCenterX;
+        double y = scale * us->pos().y() + canvasCenterY;
+
+        this->setPos(x, y);
+        this->setRotation((us->angle()/M_PI) * 180);
+        // TODO: Migrate to this->setScale and ensure nothing is painted outside the bounds
+    }
+
+    void InterfaceRobotItem::updateScale(double fieldWidth, double fieldHeight) {
+        if (fieldWidth == 0 || fieldHeight == 0) this->scale = 0.0;
+
+        double canvasWidth = static_cast<double>(this->scene()->views()[0]->viewport()->width());
+        double canvasHeight = static_cast<double>(this->scene()->views()[0]->viewport()->height());
+
+        double widthScale = canvasWidth / (fieldWidth/1000);
+        double heightScale = canvasHeight / (fieldHeight/1000);
+
+        this->scale = std::fmin(widthScale, heightScale);
+        if (REAL_ROBOT_RADIUS * this->scale != this->radius) {
+            this->radius = static_cast<int>(REAL_ROBOT_RADIUS * this->scale);
+            this->update();
+        }
+    }
 }
 
-void InterfaceRobotItem::updateScale(double fieldWidth, double fieldHeight) {
-    if (fieldWidth == 0 || fieldHeight == 0) this->scale = 0.0;
-
-    double canvasWidth = static_cast<double>(this->scene()->views()[0]->viewport()->width());
-    double canvasHeight = static_cast<double>(this->scene()->views()[0]->viewport()->height());
-
-    double widthScale = canvasWidth / (fieldWidth/1000);
-    double heightScale = canvasHeight / (fieldHeight/1000);
-
-    this->scale = std::fmin(widthScale, heightScale);
-    this->radius = static_cast<int>(REAL_ROBOT_RADIUS * this->scale);
-}

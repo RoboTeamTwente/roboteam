@@ -19,16 +19,12 @@ namespace rtt::Interface {
         this->vals->handleData(handshake.values(), decls);
     }
 
-    std::weak_ptr<InterfaceFieldStateStore> InterfaceControllerClient::getFieldState() const {
+    std::weak_ptr<MessageCache<proto::State>> InterfaceControllerClient::getFieldState() const {
         return fieldState;
     }
 
     void InterfaceControllerClient::field_state_callback(const std::string& state) {
-        this->fieldState->setState(state);
-    }
-
-    void InterfaceControllerClient::onAIData(const AIData& data, Team team) {
-        this->fieldState->setAIData(data, team);
+        this->fieldState->setMessage(state);
     }
 
     void InterfaceControllerClient::stop() {

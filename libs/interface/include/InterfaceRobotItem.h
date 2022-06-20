@@ -8,29 +8,35 @@
 #include <QGraphicsItem>
 #include <InterfaceFieldStateStore.h>
 #include "InterfaceFieldStateStore.h"
-class InterfaceRobotItem: public QGraphicsItem {
-private:
-    int id;
-    bool isYellow;
-    std::weak_ptr<InterfaceFieldStateStore> storage;
-    double scale;
-    int radius;
+#include <roboteam_interface_utils/MessageCache.h>
 
-protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
+namespace rtt::Interface {
+    class InterfaceRobotItem: public QGraphicsItem {
+    private:
+        int id;
+        bool isYellow;
+        std::weak_ptr<MessageCache<proto::State>> storage;
+        double scale;
+        int radius;
 
-public:
-    int getRobotId() const;
-    bool getIsYellow() const;
-    InterfaceRobotItem(int id, bool isYellow, std::weak_ptr<InterfaceFieldStateStore> storage, QGraphicsItem* parent = nullptr):
-          QGraphicsItem(parent),
-          id(id),
-          isYellow(isYellow),
-          storage(storage) {}
-    void triggerUpdate(const proto::State&);
-    void updateScale(double fieldWidth, double fieldHeight);
-};
+    protected:
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+        QRectF boundingRect() const override;
+
+    public:
+        int getRobotId() const;
+        bool getIsYellow() const;
+        InterfaceRobotItem(int id, bool isYellow, std::weak_ptr<MessageCache<proto::State>> storage, QGraphicsItem* parent = nullptr):
+              QGraphicsItem(parent),
+              id(id),
+              isYellow(isYellow),
+              storage(storage) {}
+        void triggerUpdate(const proto::State&);
+        void updateScale(double fieldWidth, double fieldHeight);
+    };
+}
+
+
 
 
 #endif  // RTT_INTERFACEROBOTITEM_H

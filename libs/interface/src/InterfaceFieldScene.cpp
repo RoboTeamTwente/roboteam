@@ -6,21 +6,19 @@
 #include <QGraphicsScene>
 #include <fstream>
 #include <proto/State.pb.h>
+#include <proto/AIData.pb.h>
 
 namespace rtt::Interface {
-    InterfaceFieldScene::InterfaceFieldScene(std::weak_ptr<MessageCache<proto::State>> state, QObject* parent):
+    InterfaceFieldScene::InterfaceFieldScene(std::map<rtt::Team, std::weak_ptr<MessageCache<proto::AIData>>> paths, std::weak_ptr<MessageCache<proto::State>> state, QObject* parent):
           QGraphicsScene(parent),
           renderer(state),
           state(state),
-          ball(new InterfaceBallItem())
-//          yellowPaths(new InterfaceRobotPathItem(rtt::Team::YELLOW)),
-//          bluePaths(new InterfaceRobotPathItem(rtt::Team::BLUE))
+          ball(new InterfaceBallItem()),
+          pathsData(paths)
     {
         this->timer = new QTimer(this);
         // TODO: Centralize timer
         this->addItem(this->ball);
-//        this->addItem(this->yellowPaths);
-//        this->addItem(this->bluePaths);
 
         QObject::connect(timer, &QTimer::timeout, this, &InterfaceFieldScene::triggerUpdate);
         QObject::connect(this, &QGraphicsScene::sceneRectChanged, this, &InterfaceFieldScene::triggerUpdate);
@@ -50,13 +48,17 @@ namespace rtt::Interface {
                 robot->triggerUpdate(*currentFieldState);
             }
 
+            for (const auto& p : this->paths) {
+                p->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
+            }
+
+            this->doUpdatePaths(this->pathsData.at(rtt::Team::YELLOW));
+            this->doUpdatePaths(this->pathsData.at(rtt::Team::BLUE));
+
+
             this->ball->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
             this->ball->triggerUpdate(*currentFieldState);
 
-//            this->yellowPaths->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
-//            this->yellowPaths->triggerUpdate(stateHolder->getAIData(rtt::Team::YELLOW).robotPaths);
-//            this->bluePaths->updateScale(currentFieldState->field().field().field_length(), currentFieldState->field().field().field_width());
-//            this->bluePaths->triggerUpdate(stateHolder->getAIData(rtt::Team::BLUE).robotPaths);
         }
     }
 
@@ -71,9 +73,29 @@ namespace rtt::Interface {
             newRobot->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
             this->addItem(newRobot);
             this->robots.push_back(newRobot);
+
+            auto robotPath = new InterfaceRobotPathItem(isYellow ? rtt::Team::YELLOW : rtt::Team::BLUE, robot.id());
+            this->paths.push_back(robotPath);
+            this->addItem(robotPath);
         }
 
 
+    }
+    void InterfaceFieldScene::doUpdatePaths(std::weak_ptr<MessageCache<proto::AIData>> currentPaths) {
+        if (auto pathsStore = currentPaths.lock()) {
+            auto tpaths = pathsStore.get()->getMessage();
+
+            if (!tpaths) return;
+
+            for (const auto& pathSet : tpaths.value().robot_paths()) {
+                auto res = std::find_if(paths.begin(), paths.end(), [&] (const auto& pos) {
+                    return pos->getRobotId() == pathSet.robot_id() && pos->getTeam() == rtt::Team::YELLOW;
+                });
+
+                if (res == std::end(paths)) return;
+                (*res)->triggerUpdate(pathSet);
+            }
+        }
     }
 }
 

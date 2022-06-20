@@ -29,6 +29,8 @@ namespace rtt::Interface {
 
     void InterfaceControllerClient::stop() {
         this->field_subscriber.reset(); // Prevent ugly crashes on exit
+        this->blueDataSub.reset();
+        this->yellowDataSub.reset();
 
         InterfaceController::stop();
     }
@@ -49,5 +51,9 @@ namespace rtt::Interface {
 
     void InterfaceControllerClient::markForUpdate() {
         this->updateMarker.store(true);
+    }
+
+    std::map<rtt::Team, std::weak_ptr<MessageCache<proto::AIData>>> InterfaceControllerClient::getPaths() {
+        return {{rtt::Team::YELLOW, this->aiState.at(rtt::Team::YELLOW)}, {rtt::Team::BLUE, this->aiState.at(rtt::Team::BLUE)}};
     }
 }

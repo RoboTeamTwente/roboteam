@@ -1,25 +1,29 @@
 #pragma once
 
 #include <QGraphicsItem>
+#include <QGraphicsPathItem>
 #include <InterfaceFieldStateStore.h>
 #include "InterfaceFieldStateStore.h"
+#include <proto/AIData.pb.h>
 
 namespace rtt::Interface {
-    class InterfaceRobotPathItem: public QGraphicsItem {
+    class InterfaceRobotPathItem: public QGraphicsPathItem {
     public:
-        InterfaceRobotPathItem(rtt::Team, QGraphicsItem* parent = nullptr);
-        void triggerUpdate(const std::vector<rtt::RobotPath>& paths);
+        InterfaceRobotPathItem(rtt::Team, int, QGraphicsItem* parent = nullptr);
+
+        void triggerUpdate(const proto::RobotPath& path);
         void updateScale(double fieldWidth, double fieldHeight);
 
-    protected:
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-        QRectF boundingRect() const override;
+        rtt::Team getTeam();
+        int getRobotId();
+
 
     private:
         double scale;
+        int robot_id;
         rtt::Team team;
 
-        std::vector<rtt::RobotPath> paths;
+//        std::vector<rtt::RobotPath> paths;
     };
 }
 

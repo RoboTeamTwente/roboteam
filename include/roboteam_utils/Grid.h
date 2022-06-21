@@ -23,6 +23,9 @@ namespace rtt {
          */
         Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numPointsX, int numPointsY);
 
+        // A default Grid of 3x3=9 elements, starting at (0, 0)
+        Grid();
+
         [[nodiscard]] double getOffSetX() const;
         [[nodiscard]] double getOffSetY() const;
         [[nodiscard]] double getRegionWidth() const;

@@ -4,11 +4,11 @@
 
 #include <gtest/gtest.h>
 #include <roboteam_utils/LineSegment.h>
-#include <roboteam_utils/Rectangle.h>
+#include <roboteam_utils/LazyRectangle.hpp>
 namespace rtt {
-static Rectangle rect(Vector2(-1, 1), Vector2(1, 2));
-static Rectangle nullExample(Vector2(0, 0), Vector2(0, 0));
-TEST(Rectangle, cohenCodes) {
+static LazyRectangle rect(Vector2(-1, 1), Vector2(1, 2));
+static LazyRectangle nullExample(Vector2(0, 0), Vector2(0, 0));
+TEST(LazyRectangle, cohenCodes) {
     EXPECT_EQ(rect.CohenSutherlandCode(Vector2(0, 1.2)), 0x00);
     EXPECT_EQ(rect.CohenSutherlandCode(Vector2(-1, 1)), 0x00);
     EXPECT_EQ(rect.CohenSutherlandCode(Vector2(-1.5, 1.5)), 0x01);
@@ -24,14 +24,14 @@ TEST(Rectangle, cohenCodes) {
     EXPECT_EQ(rect.CohenSutherlandCode(Vector2(1.5, 2.5)), 0x0A);
 }
 
-TEST(Rectangle, degenerateCohenCodes) {
+TEST(LazyRectangle, degenerateCohenCodes) {
     EXPECT_EQ(nullExample.CohenSutherlandCode(Vector2(0, 0)), 0x00);
     EXPECT_EQ(nullExample.CohenSutherlandCode(Vector2(1, 0)), 0x02);
     EXPECT_EQ(nullExample.CohenSutherlandCode(Vector2(-1, 0)), 0x01);
     EXPECT_EQ(nullExample.CohenSutherlandCode(Vector2(0, 1)), 0x08);
     EXPECT_EQ(nullExample.CohenSutherlandCode(Vector2(0, -.1)), 0x04);
 }
-TEST(Rectangle, contains) {
+TEST(LazyRectangle, contains) {
     EXPECT_TRUE(rect.contains(Vector2(0, 1.5)));
     EXPECT_TRUE(rect.contains(Vector2(-1, 1.5)));
     EXPECT_FALSE(rect.contains(Vector2(-2, 1.5)));
@@ -48,7 +48,7 @@ TEST(Rectangle, contains) {
     EXPECT_FALSE(rect.contains(Vector2(2, 2.5)));
     EXPECT_FALSE(rect.contains(Vector2(-2, 0.5)));
 }
-TEST(Rectangle, segmentIntersection) {
+TEST(LazyRectangle, segmentIntersection) {
     auto results = nullExample.intersects(LineSegment(Vector2(1, 0), Vector2(-1, 0)));
     EXPECT_FALSE(results.empty());
     results = nullExample.intersects(LineSegment(Vector2(1, .1), Vector2(-1, 0)));
@@ -68,8 +68,8 @@ TEST(Rectangle, segmentIntersection) {
         EXPECT_TRUE(point == v1 || point == v2);
     }
 }
-TEST(Rectangle, simpleFunctions) {
-    Rectangle rectangle(Vector2(-1, -1), 2, 1);
+TEST(LazyRectangle, simpleFunctions) {
+    LazyRectangle rectangle(Vector2(-1, -1), 2, 1);
     EXPECT_DOUBLE_EQ(rectangle.corner1.x, -1.0);
     EXPECT_DOUBLE_EQ(rectangle.corner1.y, -1.0);
     EXPECT_DOUBLE_EQ(rectangle.corner2.x, 1.0);

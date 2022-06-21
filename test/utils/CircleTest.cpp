@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "roboteam_utils/Circle.h"
+#include <roboteam_utils/LazyRectangle.hpp>
 
 TEST(CircleTests, instantiation) {
     // Test unit circle
@@ -86,23 +87,23 @@ TEST(CircleTests, doesIntersectOrContainCircle) {
 TEST(CircleTests, doesIntersectOrContainRectangle) {
     rtt::Circle circle({0, 0}, 1);
     // Around the circle
-    rtt::Rectangle rectAround({2, 2}, {-2, -2});
+    rtt::LazyRectangle rectAround({2, 2}, {-2, -2});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectAround));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectAround));
     // In the circle
-    rtt::Rectangle rectIn({.2, .2}, {-.2, -.2});
+    rtt::LazyRectangle rectIn({.2, .2}, {-.2, -.2});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectIn));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectIn));
     // Through the circle
-    rtt::Rectangle rectThrough({2, 2}, {0, 0});
+    rtt::LazyRectangle rectThrough({2, 2}, {0, 0});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectThrough));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectThrough));
     // On the circle
-    rtt::Rectangle rectOn({1, 1}, {2, 0});
+    rtt::LazyRectangle rectOn({1, 1}, {2, 0});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectOn));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectOn));
     // Outside the circle
-    rtt::Rectangle rectOutside({4, 4}, {2, 2});
+    rtt::LazyRectangle rectOutside({4, 4}, {2, 2});
     EXPECT_FALSE(circle.doesIntersectOrContain(rectOutside));
     EXPECT_FALSE(circle.doesIntersectOrContain2(rectOutside));
 }

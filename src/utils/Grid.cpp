@@ -4,6 +4,9 @@
 
 #include "Grid.h"
 namespace rtt {
+
+const Grid DEFAULT_GRID(0, 0, 3, 3, 3, 3); // A Default grid, starting at (0, 0) with 3x3=9 elements
+
 Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numPointsX, int numPointsY)
     : offSetX{offSetX}, offSetY{offSetY}, regionWidth{regionWidth}, regionLength{regionLength}, numPointsX{numPointsX}, numPointsY{numPointsY} {
     this->stepSizeX = regionLength / numPointsX;
@@ -19,6 +22,18 @@ Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionLeng
             points[i].emplace_back(Vector2(offSetX + stepSizeX * i + stepSizeX / 2, offSetY + stepSizeY * j + stepSizeY / 2));
         }
     }
+}
+
+Grid::Grid() {
+    this->points = DEFAULT_GRID.points;
+    this->offSetX = DEFAULT_GRID.offSetX;
+    this->offSetY = DEFAULT_GRID.offSetY;
+    this->regionWidth = DEFAULT_GRID.regionWidth;
+    this->regionLength = DEFAULT_GRID.regionLength;
+    this->numPointsX = DEFAULT_GRID.numPointsX;
+    this->numPointsY = DEFAULT_GRID.numPointsY;
+    this->stepSizeX = DEFAULT_GRID.stepSizeX;
+    this->stepSizeY = DEFAULT_GRID.stepSizeY;
 }
 
 /**

@@ -10,7 +10,7 @@
 
 #include "Line.h"
 #include "LineSegment.h"
-#include "Rectangle.h"
+#include "Rectangle.hpp"
 #include "Shape.h"
 #include "Vector2.h"
 

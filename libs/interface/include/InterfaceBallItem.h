@@ -7,21 +7,27 @@
 #include <QGraphicsItem>
 #include <proto/State.pb.h>
 
-class InterfaceBallItem: public QGraphicsItem {
-private:
-    double getScale(int field_h, int field_w, int canvas_w, int canvas_h) const;
-protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
+namespace rtt::Interface {
+    class InterfaceBallItem: public QGraphicsItem {
+    private:
+        double getScale(int field_h, int field_w, int canvas_w, int canvas_h) const;
 
-public:
-    InterfaceBallItem(QGraphicsItem* parent = nullptr): QGraphicsItem(parent) {
-        this->setPos(0,0);
-        this->setVisible(false);
-    }
+        double scale;
+    protected:
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+        QRectF boundingRect() const override;
 
-    void trigger_update(const proto::State&);
-};
+    public:
+        InterfaceBallItem(QGraphicsItem* parent = nullptr): QGraphicsItem(parent) {
+            this->setPos(0,0);
+            this->setVisible(false);
+        }
+
+        void updateScale(double fieldWidth, double fieldHeight);
+        void triggerUpdate(const proto::State&);
+    };
+}
+
 
 
 #endif  // RTT_INTERFACEBALLITEM_H

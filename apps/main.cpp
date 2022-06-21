@@ -30,9 +30,9 @@ int main(int argc, char *argv[]) {
     ctrl->run();
     ctrl->getValues().lock()->setSetting("IS_YELLOW", true);
 
-    auto view = new InterfaceFieldView(ctrl->getFieldState());
+    auto view = new rtt::Interface::InterfaceFieldView(ctrl->getFieldState());
     view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    auto scene = new InterfaceFieldScene(ctrl->getFieldState());
+    auto scene = new rtt::Interface::InterfaceFieldScene(ctrl->getPaths(), ctrl->getFieldState());
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     view->setScene(scene);
     view->setAlignment(Qt::AlignLeft | Qt::AlignTop);

@@ -37,6 +37,7 @@ namespace rtt::Interface {
     void InterfaceSyncedText::notifyChangedValue(const QString &text) {
         auto interfaceCtrl = this->ctrl.lock();
         if (!interfaceCtrl) return;
+        interfaceCtrl->markForUpdate();
 
         auto valueCtrl = interfaceCtrl->getValues().lock();
         if (!valueCtrl) return;

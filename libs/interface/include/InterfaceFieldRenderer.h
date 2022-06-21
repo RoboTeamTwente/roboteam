@@ -7,17 +7,27 @@
 
 
 #include <proto/State.pb.h>
+#include <InterfaceFieldStateStore.h>
+#include <roboteam_utils/AIData.hpp>
+#include <roboteam_interface_utils/MessageCache.h>
 
 #include <QPainter>
+namespace rtt::Interface {
+    class InterfaceFieldRenderer {
+    public:
+        InterfaceFieldRenderer(std::weak_ptr<MessageCache<proto::State>> storage);
 
-class InterfaceFieldRenderer {
-public:
-    void renderBall(QPainter*, proto::State, QRect);
-    void renderField(QPainter*, proto::State, QRect);
-    void renderRobot(QPainter*, proto::State, QRect, bool, int);
-private:
-    double get_scale(int, int, int, int);
-};
+        void renderBall(QPainter*, QRect);
+        void renderField(QPainter*, proto::State state, QRect);
+        void renderRobot(QPainter*, QRect, bool, int);
+
+        void updateScale(int canvasWidth, int canvasHeight, double fieldWidth, double fieldHeight);
+    private:
+        double scale;
+        std::weak_ptr<MessageCache<proto::State>> storage;
+    };
+}
+
 
 
 #endif  // RTT_INTERFACEFIELDRENDERER_H

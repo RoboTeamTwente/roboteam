@@ -7,11 +7,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR OFF) #Find includes in corresponding build directo
 add_library(roboteam_interface_lib
         src/InterfaceFieldScene.cpp
         src/InterfaceFieldRenderer.cpp
+        src/InterfaceRobotPathsRenderer.cpp
         src/MainWindow.cpp
         src/InterfaceSyncedCheckbox.cpp
         src/InterfaceSyncedSlider.cpp
         src/InterfaceSyncedDropdown.cpp
-        src/InterfaceSyncedRadio.cpp
+#        src/InterfaceSyncedRadio.cpp
         src/InterfaceSyncedText.cpp
         src/InterfaceFieldStateStore.cpp
         src/InterfaceRobotItem.cpp

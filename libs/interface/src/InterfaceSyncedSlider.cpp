@@ -68,6 +68,7 @@ namespace rtt::Interface {
     void InterfaceSyncedSlider::notifyChangedValue(int value) {
         auto controller = this->ctrl.lock();
         if (!controller) return;
+        controller->markForUpdate();
 
         auto values = controller->getValues().lock();
         if (!values) return;

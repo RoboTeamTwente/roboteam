@@ -22,9 +22,12 @@ namespace rtt::Interface {
                 return;
             }
 
-            auto state = fieldState->getState();
+            auto state = fieldState->getMessage();
+            if (!state.has_value()) {
+                return;
+            }
 
-            auto robots = vals->getSetting("IS_YELLOW").value() == InterfaceValue(true) ? state.last_seen_world().yellow() : state.last_seen_world().blue();
+            auto robots = vals->getSetting("IS_YELLOW").value() == InterfaceValue(true) ? state->last_seen_world().yellow() : state->last_seen_world().blue();
 
             if (this->displays.size() != robots.size()) {
                 while (auto item = this->layout()->takeAt(0)) {

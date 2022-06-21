@@ -37,6 +37,7 @@ std::optional<InterfaceDeclaration> InterfaceDeclarations::getDeclaration(const 
 }
 
 std::vector<std::string> InterfaceDeclarations::getWithSuffix(const std::string& suffix) const noexcept {
+    std::scoped_lock lck(this->mtx);
     std::vector<std::string> res;
 
     for (const auto& [key, value] : this->decls) {

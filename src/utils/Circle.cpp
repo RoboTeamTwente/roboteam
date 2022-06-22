@@ -97,30 +97,6 @@ std::vector<Vector2> Circle::intersects(const LineSegment &segment) const {
   return intersections;
 }
 
-std::vector<Vector2> Circle::intersectsWithLineSegment(const LineSegment &segment) const {
-    Vector2 d = segment.direction();
-    Vector2 f = segment.start-center;
-
-    double a = d.dot(d);
-    double b = 2*f.dot(d);
-    double c = f.dot(f)-radius*radius;
-    //Note the values here are sorted ascending already
-    std::optional<std::pair<double,double>> values = solveQuadraticPositiveA(a,b,c);
-    if(!values){
-        return {};
-    }
-
-    std::vector<Vector2> intersections;
-
-    if(values->first>=0 && values->first<=1 && segment.isOnLine(segment.start+d*values->first)) {
-        intersections.push_back(segment.start + d * values->first);
-    }
-
-    if(values->second >= 0 && values->second<=1 && values->second != values->first && segment.isOnLine(segment.start+d*values->second)){
-        intersections.push_back(segment.start+d*values->second);
-    }
-    return intersections;
-}
 std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return circle.write(os); }
 
 double sq(double x) { return x * x; }

@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <math.h>
+#include "roboteam_utils/Angle.h"
+
 
 #include "roboteam_utils/HalfLine.h"
 #include "roboteam_utils/Line.h"
@@ -32,4 +34,13 @@ TEST(LineTests, relativePosition) {
     expected = 0.4;
     actual = Line::relativePosition(start, end, linePoint);
     EXPECT_EQ(expected, actual);
+}
+
+TEST(LineTests, lineSegmentRotate){
+    LineSegment lineSegment({-1, 0}, {1, 0});
+    LineSegment segment1({0, -1}, {0, 1});
+    LineSegment segment2({0, 1}, {0, -1});
+    Angle angle = Angle(M_PI/2);
+    lineSegment.rotate(angle, Vector2{0, 0});
+    EXPECT_TRUE(lineSegment == segment1 || lineSegment == segment2);
 }

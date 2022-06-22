@@ -12,6 +12,7 @@ include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing
+include(GetTracy) # For profiling
 
 # Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
 include(GoogleTest)
@@ -54,6 +55,12 @@ message("Compile flags: " "${COMPILER_FLAGS}")
 
 # This will create a file in the build folder that contains the commands used for compiling, useful for debugging
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if (DEFINED TRACY_ENABLE)
+    message("Tracy Profiler is enabled")
+else()
+    message("Tracy Profiler is disabled")
+endif()
 
 # internal projects
 add_subdirectory(roboteam_networking)

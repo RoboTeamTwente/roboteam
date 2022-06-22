@@ -221,3 +221,13 @@ Working with a referee
 Working with the grSim simulator
 
 - [grSim](https://github.com/RoboTeamTwente/grSim)
+
+### Tracy Profiler
+Tracy is quite cool(and lightweight) profiler, that can help you analyze the performance of your code.
+
+To enable Tracy
+- Define `TRACY_ENABLE` macro (e.g. by passing -DTRACY_ENABLE=1 to cmake)
+- Add ZoneScoped/ZoneScopedN etc. to scope you want to evaluate
+- Compile Tracy Server and run
+  - Information is in the tracy [docs](https://github.com/wolfpld/tracy)
+- Run AI

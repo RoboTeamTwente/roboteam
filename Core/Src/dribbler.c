@@ -23,8 +23,8 @@ void dribbler_SetSpeed(float speed){
 	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
 	if (MOTORS_50W) {
 		// Dribbler is connected to same timer (htim8) as two motors, thus they share the same MAX_PWM
-		set_PWM(PWM_Dribbler, speed * MAX_PWM);
+		set_PWM(PWM_Dribbler, speed * 10000);
 	} else {
-		set_PWM(PWM_Dribbler, (1 - speed) * MAX_PWM);
+		set_PWM(PWM_Dribbler, (1 - speed) * 10000);
 	}
 }

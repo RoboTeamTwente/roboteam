@@ -3,6 +3,7 @@
 #include <Angle.h>
 
 #include <cmath>
+#include <algorithm>
 #include <optional>
 
 #include "HalfLine.h"

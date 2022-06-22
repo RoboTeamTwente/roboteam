@@ -96,7 +96,6 @@ std::vector<Vector2> Circle::intersects(const LineSegment &segment) const {
   }
   return intersections;
 }
-
 std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return circle.write(os); }
 
 double sq(double x) { return x * x; }

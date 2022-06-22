@@ -100,7 +100,6 @@ class Circle : public Shape {
     std::ostream& write(std::ostream& out) const;
 
     std::vector<Vector2> intersectsCircleWithLineSegment(LineSegment line);
-
 };
 
 std::ostream& operator<<(std::ostream& out, const Circle& circle);

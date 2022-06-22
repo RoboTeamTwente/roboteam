@@ -167,8 +167,6 @@ class LineSegment {
      * @return True if the point lies at this LineSegment, false otherwise.
      */
     [[nodiscard]] bool isOnFiniteLine(const Vector2 &point) const;
-
-
 };
 }  // namespace rtt
 #endif  // ROBOTEAM_UTILS_LINESEGMENT_H

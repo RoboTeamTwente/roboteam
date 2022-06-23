@@ -2,6 +2,7 @@
 
 #include <libusb-1.0/libusb.h>
 
+#include <RobotHubLogger.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <RobotHubStatistics.hpp>
@@ -12,6 +13,7 @@
 #include <exception>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <roboteam_utils/RobotCommands.hpp>
 #include <roboteam_utils/RobotFeedback.hpp>
 #include <roboteam_utils/Teams.hpp>
@@ -22,17 +24,13 @@ namespace rtt::robothub {
 
 class RobotHub {
    public:
-    explicit RobotHub(bool shouldLog);
+    explicit RobotHub(bool shouldLog, bool logInMarpleFormat = false);
 
     const RobotHubStatistics &getStatistics();
     void resetStatistics();
 
    private:
-    std::thread loggerThread;
-
-    std::unique_ptr<FileLogger> robotStateLogger;
-    std::unique_ptr<FileLogger> robotCommandLogger;
-    std::unique_ptr<FileLogger> robotFeedbackLogger;
+    std::optional<RobotHubLogger> logger;
 
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
@@ -71,10 +69,6 @@ class RobotHub {
     void handleBasestationLog(const std::string& basestationLogMessage, rtt::Team team);
 
     void handleSimulationErrors(const std::vector<simulation::SimulationError>&);
-
-    void logRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
-    void logRobotCommands(const rtt::RobotCommands& commands, rtt::Team team);
-    void logRobotFeedback(const rtt::RobotsFeedback& feedback);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

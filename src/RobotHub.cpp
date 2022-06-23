@@ -2,7 +2,7 @@
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
 #include <roboteam_utils/Time.h>
-#include <roboteam_utils/Format.hpp>
+
 
 #include <cmath>
 
@@ -19,7 +19,9 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;     // The angle at which the chipper shoots
 constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f;  // The theoretical maximum speed of the dribblers
 
-RobotHub::RobotHub(bool shouldLog) {
+
+
+RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
                                                         .configurationFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION};
@@ -39,11 +41,6 @@ RobotHub::RobotHub(bool shouldLog) {
     this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
     this->basestationManager->setBasestationLogCallback([&](const std::string& log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
-    if (shouldLog) {
-        this->robotStateLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTSTATES.txt");
-        this->robotCommandLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTCOMMANDS.txt");
-        this->robotFeedbackLogger = std::make_unique<FileLogger>(Time::getDate('-') + "_" + Time::getTime('-') + "_ROBOTFEEDBACK.txt");
-    }
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -187,7 +184,7 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
             break;
     }
 
-    this->logRobotCommands(commands, color);
+    if (this->logger.has_value()) { this->logger.value().logRobotCommands(commands, color); }
 }
 
 void RobotHub::onSettings(const proto::Setting &_settings) {
@@ -269,7 +266,8 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
 
     this->sendRobotFeedback(robotsFeedback);
     this->handleSimulationErrors(feedback.simulationErrors);
-    this->logRobotFeedback(robotsFeedback);
+
+    if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team basestationColor) {
@@ -297,7 +295,8 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
     // Increment the feedback counter of this robot
     this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
-    this->logRobotFeedback(robotsFeedback);
+
+    if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
 }
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
@@ -311,7 +310,7 @@ void RobotHub::handleSimulationConfigurationFeedback(const simulation::Configura
 }
 
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
-    this->logRobotStateInfo(info, team);
+    if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
 }
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
@@ -331,61 +330,16 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
     }
 }
 
-void RobotHub::logRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
-    if (this->robotStateLogger == nullptr) return;
-
-    std::stringstream ss;
-    ss << "[" << Time::getTimeWithMilliseconds(':') << "] "
-       << "Team: " << teamToString(team)
-       << "Id: " << formatString("%2i", info.id) << ", "
-       << "MsgId: " << formatString("%5i", info.messageId) << ", "
-       << "xSensAcc1: " << formatString("%7f", info.xsensAcc1) << ", "
-       << "xSensAcc2: " << formatString("%7f", info.xsensAcc2) << ", "
-       << "xSensYaw: " << formatString("%7f", info.xsensYaw) << ", "
-       << "rateOfTurn: " << formatString("%7f", info.rateOfTurn) << ", "
-       << "wheelSp1: " << formatString("%&7f", info.wheelSpeed1) << ", "
-       << "wheelSp2: " << formatString("%7f", info.wheelSpeed2) << ", "
-       << "wheelSp3: " << formatString("%7f", info.wheelSpeed3) << ", "
-       << "wheelSp4: " << formatString("%7f", info.wheelSpeed4) << std::endl;
-
-    this->robotStateLogger->operator<<(ss.rdbuf());
-}
-
-void RobotHub::logRobotCommands(const rtt::RobotCommands &commands, rtt::Team team) {
-    if (robotCommandLogger == nullptr) return;
-
-    std::string teamStr = teamToString(team);
-    std::string timeStr = Time::getTimeWithMilliseconds(':');
-
-    std::stringstream ss;
-    for (const auto& command : commands) {
-        ss << "[" << timeStr << ", " << teamStr << "] " << command << std::endl;
-    }
-    this->robotCommandLogger->operator<<(ss.rdbuf());
-}
-
-void RobotHub::logRobotFeedback(const rtt::RobotsFeedback &feedback) {
-    if (this->robotFeedbackLogger == nullptr) return;
-
-    std::string teamStr = teamToString(feedback.team);
-    std::string sourceStr = robotFeedbackSourceToString(feedback.source);
-    std::string timeStr = Time::getTimeWithMilliseconds(':');
-
-    std::stringstream ss;
-    for (const auto &robot : feedback.feedback) {
-        ss << "[" << timeStr << ", " << teamStr << ", " << sourceStr << "] " << robot << std::endl;
-    }
-
-    this->robotFeedbackLogger->operator<<(ss.rdbuf());
-}
-
 const char *FailedToInitializeNetworkersException::what() const noexcept { return "Failed to initialize networker(s). Is another RobotHub running?"; }
 
 }  // namespace rtt::robothub
 
 int main(int argc, char *argv[]) {
-    auto it = std::find(argv, argv + argc, std::string("-log"));
-    bool shouldLog = it != argv + argc;
+    auto itLog = std::find(argv, argv + argc, std::string("-log"));
+    bool shouldLog = itLog != argv + argc;
+
+    auto itMarple = std::find(argv, argv + argc, std::string("-marple"));
+    bool logForMarple = itMarple != argv + argc;
 
     rtt::robothub::RobotHub app(shouldLog);
 

@@ -146,8 +146,8 @@ void RobotHubLogger::logRobotCommands(const RobotCommands &commands, Team team) 
     std::scoped_lock<std::mutex> lock(this->commandsLogMutex);
 
     if (this->logInMarpleFormat) {
+        auto now = std::chrono::system_clock::now().time_since_epoch().count();
         for (const auto& command : commands) {
-            auto now = std::chrono::system_clock::now().time_since_epoch().count();
             //time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket
             this->commandsLogger
                 << now << MARPLE_DELIMITER

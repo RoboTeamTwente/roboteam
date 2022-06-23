@@ -58,6 +58,7 @@ RobotHubLogger::RobotHubLogger(RobotHubLogger &&other) noexcept {
                                       other.infoMutex);
 
     // Then swap them
+    std::swap(this->logInMarpleFormat, other.logInMarpleFormat);
     this->commandsLogger.swap(other.commandsLogger);
     this->feedbackLogger.swap(other.feedbackLogger);
     this->stateInfoLogger.swap(other.stateInfoLogger);
@@ -90,6 +91,7 @@ RobotHubLogger &RobotHubLogger::operator=(RobotHubLogger &&other) noexcept {
         this->infoLogger.close();
 
         // Then swap them
+        std::swap(this->logInMarpleFormat, other.logInMarpleFormat);
         this->commandsLogger.swap(other.commandsLogger);
         this->feedbackLogger.swap(other.feedbackLogger);
         this->stateInfoLogger.swap(other.stateInfoLogger);

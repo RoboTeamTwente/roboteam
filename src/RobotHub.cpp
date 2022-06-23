@@ -341,7 +341,9 @@ int main(int argc, char *argv[]) {
     auto itMarple = std::find(argv, argv + argc, std::string("-marple"));
     bool logForMarple = itMarple != argv + argc;
 
-    rtt::robothub::RobotHub app(shouldLog);
+    if (logForMarple) shouldLog = true; // Log for marple means to log
+
+    rtt::robothub::RobotHub app(shouldLog, logForMarple);
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));

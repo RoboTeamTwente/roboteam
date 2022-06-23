@@ -21,13 +21,14 @@ RobotHubLogger::RobotHubLogger(bool logInMarpleFormat) {
     this->commandsLogger.open("COMMANDS_" + timeString + suffix);
     this->feedbackLogger.open("FEEDBACK_" + timeString + suffix);
 
+    // Check if all are successfully created
     if (!this->stateInfoLogger.is_open() || !this->commandsLogger.is_open() || !this->feedbackLogger.is_open()) {
         throw std::runtime_error("Failed to open file(s) for logging");
     }
 
     // If we log in marple format, the csv files need a header explaining the values
     if (logInMarpleFormat) {
-        // Also add std::fixed to ensure floating point notation is not scientific
+        // Also add std::fixed to ensure floating point notation is not scientific (aka human readable)
         this->stateInfoLogger << ROBOT_STATE_MARPLE_HEADER << std::fixed << std::endl;
         this->commandsLogger << ROBOT_COMMANDS_MARPLE_HEADER << std::fixed << std::endl;
         this->feedbackLogger << ROBOT_FEEDBACK_MARPLE_HEADER << std::fixed << std::endl;

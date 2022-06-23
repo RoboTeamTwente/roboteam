@@ -8,10 +8,10 @@
 
 namespace rtt {
 
-// This class is meant to contain all the logging functionality of RobotHub
+// This class is meant to contain all the thread-safe logging functionality of RobotHub
 class RobotHubLogger {
 public:
-    // Marple format is csv format. False for "human readable"
+    // Marple format is csv format. False for "human readable" text file
     explicit RobotHubLogger(bool logInMarpleFormat);
     ~RobotHubLogger();
 
@@ -21,6 +21,10 @@ public:
 
 private:
     bool logInMarpleFormat;
+
+    std::mutex commandsLogMutex;
+    std::mutex feedbackLogMutex;
+    std::mutex stateInfoLogMutex;
 
     std::ofstream commandsLogger;
     std::ofstream feedbackLogger;

@@ -75,6 +75,8 @@ int feedbackSourceToInt(rtt::RobotFeedbackSource source) {
 }
 
 void RobotHubLogger::logRobotCommands(const RobotCommands &commands, Team team) {
+    std::scoped_lock<std::mutex> lock(this->commandsLogMutex);
+
     if (this->logInMarpleFormat) {
         for (const auto& command : commands) {
             auto now = std::chrono::system_clock::now().time_since_epoch().count();
@@ -106,6 +108,7 @@ void RobotHubLogger::logRobotCommands(const RobotCommands &commands, Team team) 
 }
 
 void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team) {
+    std::scoped_lock<std::mutex> lock(this->stateInfoLogMutex);
     if (this->logInMarpleFormat) {
         auto now = std::chrono::system_clock::now().time_since_epoch().count();
         //time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4
@@ -138,6 +141,8 @@ void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team
 }
 
 void RobotHubLogger::logRobotFeedback(const RobotsFeedback &feedback) {
+    std::scoped_lock<std::mutex> lock(this->feedbackLogMutex);
+
     if (this->logInMarpleFormat) {
         auto now = std::chrono::system_clock::now().time_since_epoch().count();
         auto team = teamToInt(feedback.team);

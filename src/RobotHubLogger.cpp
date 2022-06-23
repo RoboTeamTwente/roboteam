@@ -20,9 +20,10 @@ RobotHubLogger::RobotHubLogger(bool logInMarpleFormat) {
     this->stateInfoLogger.open("ROBOTSTATES_" + timeString + suffix);
     this->commandsLogger.open("COMMANDS_" + timeString + suffix);
     this->feedbackLogger.open("FEEDBACK_" + timeString + suffix);
+    this->infoLogger.open("ROBOTHUB_INFO.txt", std::ios_base::app);
 
     // Check if all are successfully created
-    if (!this->stateInfoLogger.is_open() || !this->commandsLogger.is_open() || !this->feedbackLogger.is_open()) {
+    if (!this->stateInfoLogger.is_open() || !this->commandsLogger.is_open() || !this->feedbackLogger.is_open() || !this->infoLogger.is_open()) {
         throw std::runtime_error("Failed to open file(s) for logging");
     }
 
@@ -33,12 +34,76 @@ RobotHubLogger::RobotHubLogger(bool logInMarpleFormat) {
         this->commandsLogger << ROBOT_COMMANDS_MARPLE_HEADER << std::fixed << std::endl;
         this->feedbackLogger << ROBOT_FEEDBACK_MARPLE_HEADER << std::fixed << std::endl;
     }
+
+    // And add a nice divider between errors
+    this->infoLogger << std::endl << "Logging started at: '" << timeString << "'." << std::endl;
+}
+
+RobotHubLogger::RobotHubLogger(RobotHubLogger &&other) noexcept {
+    // First lock all of both mutexes
+    std::scoped_lock<std::mutex,
+                     std::mutex,
+                     std::mutex,
+                     std::mutex,
+                     std::mutex,
+                     std::mutex,
+                     std::mutex,
+                     std::mutex> lock(this->commandsLogMutex,
+                                      this->feedbackLogMutex,
+                                      this->stateInfoLogMutex,
+                                      this->infoMutex,
+                                      other.commandsLogMutex,
+                                      other.feedbackLogMutex,
+                                      other.stateInfoLogMutex,
+                                      other.infoMutex);
+
+    // Then swap them
+    this->commandsLogger.swap(other.commandsLogger);
+    this->feedbackLogger.swap(other.feedbackLogger);
+    this->stateInfoLogger.swap(other.stateInfoLogger);
+    this->infoLogger.swap(other.infoLogger);
+}
+
+RobotHubLogger &RobotHubLogger::operator=(RobotHubLogger &&other) noexcept {
+    if (this != &other) {
+        // First lock all of both mutexes
+        std::scoped_lock<std::mutex,
+                         std::mutex,
+                         std::mutex,
+                         std::mutex,
+                         std::mutex,
+                         std::mutex,
+                         std::mutex,
+                         std::mutex> lock(this->commandsLogMutex,
+                 this->feedbackLogMutex,
+                 this->stateInfoLogMutex,
+                 this->infoMutex,
+                 other.commandsLogMutex,
+                 other.feedbackLogMutex,
+                 other.stateInfoLogMutex,
+                 other.infoMutex);
+
+        // Close all current ofstreams
+        this->stateInfoLogger.close();
+        this->commandsLogger.close();
+        this->feedbackLogger.close();
+        this->infoLogger.close();
+
+        // Then swap them
+        this->commandsLogger.swap(other.commandsLogger);
+        this->feedbackLogger.swap(other.feedbackLogger);
+        this->stateInfoLogger.swap(other.stateInfoLogger);
+        this->infoLogger.swap(other.infoLogger);
+    }
+
+    return *this;
 }
 
 RobotHubLogger::~RobotHubLogger() {
     this->stateInfoLogger.close();
     this->commandsLogger.close();
     this->feedbackLogger.close();
+    this->infoLogger.close();
 }
 
 int kickTypeToInt(rtt::KickType type) {
@@ -178,6 +243,13 @@ void RobotHubLogger::logRobotFeedback(const RobotsFeedback &feedback) {
             this->feedbackLogger << "[" << timeStr << ", " << teamStr << ", " << sourceStr << "] " << robot << std::endl;
         }
     }
+}
+
+void RobotHubLogger::logInfo(const std::string &infoMessage) {
+    std::scoped_lock<std::mutex> lock(this->infoMutex);
+
+    auto time = Time::getTimeWithMilliseconds(':');
+    this->infoLogger << "[" << time << "] " << infoMessage << std::endl;
 }
 
 } // namespace rtt

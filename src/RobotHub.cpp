@@ -19,8 +19,6 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;     // The angle at which the chipper shoots
 constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f;  // The theoretical maximum speed of the dribblers
 
-
-
 RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
                                                         .yellowFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL,
@@ -41,6 +39,7 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
     this->basestationManager->setBasestationLogCallback([&](const std::string& log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
+    if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -314,19 +313,24 @@ void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team te
 }
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
+    if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
     RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
 }
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {
     for (const auto& error : errors) {
+        std::string message;
         if (error.code.has_value() && error.message.has_value())
-            RTT_ERROR("Received Simulation error ", error.code.value(), ": ", error.message.value())
+            message = "Received Simulation error ", error.code.value(), ": ", error.message.value();
         else if (error.code.has_value())
-            RTT_ERROR("Received Simulation error with code: ", error.code.value())
+            message = "Received Simulation error with code: ", error.code.value();
         else if (error.message.has_value())
-            RTT_ERROR("Received Simulation error: ", error.message.value())
+            message = "Received Simulation error: ", error.message.value();
         else
-            RTT_ERROR("Received unknown Simulation error")
+            message = "Received unknown Simulation error";
+
+        RTT_ERROR(message);
+        if (this->logger.has_value()) { this->logger->logInfo("WARNING: " + message); }
     }
 }
 

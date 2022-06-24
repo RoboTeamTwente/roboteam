@@ -21,7 +21,7 @@ static REM_RobotCommandPayload rcp;
  */
 void REM_UARTinit(UART_HandleTypeDef *huart){
     LOG("[REM_UARTinit]\n");
-    HAL_UART_Receive_IT(huart, REM_buffer, 1);
+    //HAL_UART_Receive_IT(huart, REM_buffer, 1); // if uncommented, only use with programmer connected
 }
 
 /**

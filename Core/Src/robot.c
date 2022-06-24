@@ -538,12 +538,12 @@ void loop(void){
 		// }
 
 		// Check if ballsensor connection is still correct
-        if ( !ballSensor_isInitialized() ) {
+        /*if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
-        }
+        }*/
     }
 
     /* LEDs for debugging */

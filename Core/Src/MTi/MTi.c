@@ -176,7 +176,7 @@ MTi_data* MTi_Init(uint16_t calibrate_time, enum XsFilterProfile filter_type){
 	// calibrate rotation sensor for calibrate_time seconds
 	if(MTi_NoRotation(MTi,calibrate_time)){
 		LOG("[Xsens:"STRINGIZE(__LINE__)"] Failed NoRotation()");
- 		return NULL;
+		return NULL;
 	}
 
 	HAL_Delay(1);

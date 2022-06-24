@@ -75,7 +75,7 @@ float WHEEL_REF_LIMIT; // [rad/s] Limit the maximum wheel reference to leave roo
 typedef enum {
 	body_x,
 	body_y,
-	body_w,
+	body_yaw,
 }body_handles;
 
 typedef enum {

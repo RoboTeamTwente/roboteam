@@ -35,9 +35,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define NO_ROTATION_TIME 6 				// time [s] the robot will halt at startup to let the xsens calibrate
-#define XSENS_FILTER XFP_VRU_general 	// filter mode that will be used by the xsens
-
 static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
@@ -96,23 +93,25 @@ static volatile Wireless_Packet rxPacket;
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
 SX1280_Interface SX_Interface = {.SPI= COMM_SPI, .TXbuf= SX_TX_buffer, .RXbuf= SX_RX_buffer /*, .logger=LOG_printf*/,};
 
+
+
+
+
+/* ============================================================ */
+/* ==================== WIRELESS CALLBACKS ==================== */
+/* ============================================================ */
 void Wireless_Writepacket_Cplt(void){
 	if(TransmitPacket(SX) != WIRELESS_OK)
 		LOG("[Wireless_Writepacket_Cplt] TransmitPacket error!\n");
 }
-
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
 	time_last_packet_wireless = HAL_GetTick();
 	handlePacket(rxPacket.message,rxPacket.payloadLength);
 
-	/* TODO all this encoding stuff is done not only when a packet has been received from the basestation RX_DONE (which is intended)
-	* It is also triggered when a packet has been sent back to the basestation TX_DONE (so basically this is done double)
-	* And it's also done on RX_TIMEOUT (every 250ms, so not that bad)
-	* Somehow, make sure that this is only done on RX_DONE
-	*/
 	txPacket.payloadLength = 0;
 
+	robotFeedback.messageId = activeRobotCommand.messageId;
 	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
 	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
@@ -133,11 +132,9 @@ void Wireless_Readpacket_Cplt(void){
 	// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
 	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
 };
-
 void Wireless_Default(){
 	WaitForPacket(SX);
 }
-
 void Wireless_RXDone(SX1280_Packet_Status *status){
   /* It is possible that random noise can trigger the syncword.
    * Correct syncword from noise have a very weak signal.
@@ -152,13 +149,16 @@ void Wireless_RXDone(SX1280_Packet_Status *status){
 
 Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
 
-// Wireless_IRQcallbacks SX_IRQcallbacks = {0};
+
+
+
+
 
 void executeCommands(REM_RobotCommand* robotCommand){
 	float stateReference[3];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
-	stateReference[body_w] = robotCommand->angle;
+	stateReference[body_yaw] = robotCommand->angle;
 	stateControl_SetRef(stateReference);
 	dribbler_SetSpeed(robotCommand->dribbler);
 	shoot_SetPower(robotCommand->kickChipPower);
@@ -174,8 +174,6 @@ void executeCommands(REM_RobotCommand* robotCommand){
 		}
 	}
 }
-
-
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
 	memset(robotCommand, 0, sizeof(REM_RobotCommand));
@@ -211,7 +209,7 @@ void printRobotStateData() {
 
 	LOG_printf("XSens   x=%.2f m/s^2  y=%.2f m/s^2  yaw=%.2f  omega=%.2f rad/s\n", 
 	MTi->acc[body_x], MTi->acc[body_y], 
-	stateEstimation_GetState()[body_w], MTi->gyr[2]);
+	stateEstimation_GetState()[body_yaw], MTi->gyr[2]);
 	IWDG_Refresh(iwdg);
 	
 	LOG_printf("Kalman  x=%.2f m/s  y=%.2f m/s\n", 
@@ -238,7 +236,11 @@ void printRobotCommand(REM_RobotCommand* rc){
 
 
 
-// ----------------------------------------------------- INIT -----------------------------------------------------
+
+
+/* ======================================================== */
+/* ==================== INITIALIZATION ==================== */
+/* ======================================================== */
 void init(void){
 
 	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
@@ -323,12 +325,11 @@ void init(void){
 	Wireless_setTXSyncword(SX,robot_syncWord[16]);
 	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
 	Wireless_setRXSyncwords(SX, syncwords);
-	WaitForPacket(SX);
 	set_Pin(LED4_pin, 1);
 
-	/* Initialize the XSens chip */
+	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
-    MTi = MTi_Init(NO_ROTATION_TIME, XSENS_FILTER);
+    MTi = MTi_Init(1, XFP_VRU_general);
     if(MTi == NULL){
 		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
@@ -341,6 +342,8 @@ void init(void){
 	set_Pin(INT_EN_pin, 1);
 	set_Pin(INT_ENneg_pin, 0);
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
+
+	WaitForPacket(SX);
 
 	/* Reset the watchdog timer and set the threshold at 200ms */
 	IWDG_Refresh(iwdg);
@@ -360,7 +363,11 @@ void init(void){
 
 
 
-// ----------------------------------------------------- MAIN LOOP -----------------------------------------------------
+
+
+/* =================================================== */
+/* ==================== MAIN LOOP ==================== */
+/* =================================================== */
 void loop(void){
 	uint32_t currentTime = HAL_GetTick();
 	counter_loop++;
@@ -423,7 +430,7 @@ void loop(void){
     float vx = stateEstimation_GetState()[body_x];
     float vy = stateEstimation_GetState()[body_y];
     robotFeedback.rho = sqrt(vx*vx + vy*vy);
-    robotFeedback.angle = stateEstimation_GetState()[body_w];
+    robotFeedback.angle = stateEstimation_GetState()[body_yaw];
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
@@ -442,21 +449,20 @@ void loop(void){
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 	}
 	{
+		PIDvariables robotGains[3];
+		stateControl_GetState(robotGains);
 		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
 		robotPIDGains.remVersion = LOCAL_REM_VERSION;
 		robotPIDGains.id = ROBOT_ID;
-		robotPIDGains.PbodyX = 2;
-		robotPIDGains.IbodyX = 0;
-		robotPIDGains.DbodyX = 1;
-		robotPIDGains.PbodyY = 2;
-		robotPIDGains.IbodyY = 0;
-		robotPIDGains.DbodyY = 1;
-		robotPIDGains.PbodyYaw = 2;
-		robotPIDGains.IbodyYaw = 0;
-		robotPIDGains.DbodyYaw = 1;
-		robotPIDGains.Pwheels = 0;
-		robotPIDGains.Iwheels = 0;
-		robotPIDGains.Dwheels = 0;
+		robotPIDGains.PbodyX = robotGains[body_x].kP;
+		robotPIDGains.IbodyX = robotGains[body_x].kI;
+		robotPIDGains.DbodyX = robotGains[body_x].kD;
+		robotPIDGains.PbodyY = robotGains[body_y].kP;
+		robotPIDGains.IbodyY = robotGains[body_y].kI;
+		robotPIDGains.DbodyY = robotGains[body_y].kD;
+		robotPIDGains.PbodyYaw = robotGains[body_yaw].kP;
+		robotPIDGains.IbodyYaw = robotGains[body_yaw].kI;
+		robotPIDGains.DbodyYaw = robotGains[body_yaw].kD;
 	}
 	
     // Heartbeat every 17ms	
@@ -513,12 +519,12 @@ void loop(void){
 		// }
 
 		// Check if ballsensor connection is still correct
-        if ( !ballSensor_isInitialized() ) {
+        /*if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
-        }
+        }*/
     }
 
     /* LEDs for debugging */
@@ -530,6 +536,14 @@ void loop(void){
 	// LED5 unused
     // LED6 Wireless_Readpacket_Cplt : toggled when a packet is received
 }
+
+
+
+
+
+/* ========================================================= */
+/* ==================== PACKET HANDLERS ==================== */
+/* ========================================================= */
 
 void handleRobotCommand(uint8_t* packet_buffer){
 	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
@@ -593,6 +607,10 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 	return true;
 }
+
+
+
+
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
 /* HAL_SPI_TxRxCpltCallback = Callback for either SPI Transmit or Receive complete */

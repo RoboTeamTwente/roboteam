@@ -51,7 +51,7 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     }else{
         // TODO add some error handling here or something.
         LOG("Unknown header\n");
-        sprintf(logBuffer, "Received unknown header %d\n", packetType);
+        // sprintf(logBuffer, "Received unknown header %d\n", packetType);
     }
     
     // Schedule the read for the next header byte

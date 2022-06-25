@@ -14,7 +14,8 @@ XInt, YInt, WInt, YawInt, W1Int, W2Int, W3Int, W4Int = [], [], [], [], [], [], [
 
 Feedbacktimestamps = []
 Gamma, Phi = [], [] #estimated movement [m/s] and direction of movement [rad]
-Vex, Vey = [], [] #estimated x- and y velocities calculated from gamma and phi
+VexLocal, VeyLocal = [], [] #estimated local x- and y velocities calculated from gamma and phi
+VexGlobal, VeyGlobal = [], [] #estimated global x- and y velocities calculated from estimated angle
 
 Commandedtimestamps = []
 Angle, AngleVel = [], [] #commanded angle and angular velocity
@@ -22,7 +23,7 @@ Rho, Theta = [], [] #commanded movement [m/s] and direction of movement [rad]
 Vx, Vy = [], [] #commanded x- and y velocities calculated from rho and theta
 Wc1, Wc2, Wc3, Wc4 = [], [], [], [] #commanded wheel speeds calculated from Vx and Vy
 
-plotsAvailable = ["x", "y", "w", "yaw", "wheels", "integral", "integral-wheels"]
+plotsAvailable = ["x", "y", "w", "yaw", "wheels", "integral", "integral-wheels", "rho", "theta"]
 # Parse input arguments 
 try:
 	if len(sys.argv) not in [2,3]:
@@ -37,12 +38,12 @@ except Exception as e:
 
 lastfile = 0
 if len(sys.argv) == 3: lastfile = int(sys.argv[2])
-files = [file for file in os.listdir("Logs") if file.startswith("robotStateInfo") and file.endswith(".csv")]
+files = [file for file in os.listdir("logs") if file.startswith("robotStateInfo") and file.endswith(".csv")]
 filenr = heapq.nlargest(lastfile+1, files)
 filenr = re.findall('[0-9]+', str(filenr)) #find the time of the newest robotStateInfo file
-StateInfoLines = open("Logs/robotStateInfo_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
-CommandedLines = open("Logs/robotCommand_" + filenr[lastfile] +  ".csv", "r").read().strip().split("\n")
-robotFeedbackLines = open("Logs/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
+StateInfoLines = open("logs/robotStateInfo_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
+CommandedLines = open("logs/robotCommand_" + filenr[lastfile] +  ".csv", "r").read().strip().split("\n")
+robotFeedbackLines = open("logs/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
 
 for line in StateInfoLines:
 	ts, xsensx, xsensy, xsensyaw, rot, w1, w2, w3, w4, xint, yint, wint, yawint, w1int, w2int, w3int, w4int = line.split(" ")[:17]
@@ -94,8 +95,12 @@ for line in robotFeedbackLines:
 	Phi.append(float(phi))
 	curVex = float(gamma)*np.cos(float(phi))
 	curVey = float(gamma)*np.sin(float(phi))
-	Vex.append(-curVex)
-	Vey.append(curVey)
+	VexLocal.append(curVex)
+	VeyLocal.append(curVey)
+
+for i in range(len(VexLocal)):
+	VexGlobal.append(VexLocal[i]*np.cos(XsensYaw[i]) + VeyLocal[i]*np.sin(XsensYaw[i]))
+	VeyGlobal.append(-VexLocal[i]*np.sin(XsensYaw[i]) + VeyLocal[i]*np.cos(XsensYaw[i]))
 
 #Shift the time values to make it start at 0
 firstTimeVal = min(Feedbacktimestamps[0], Statetimestamps[0], Commandedtimestamps[0]) # find the lowest timestamp
@@ -127,9 +132,34 @@ if plotID == "bode":
 if plotID == "x":
 	fig, ax = plt.subplots()
 	
-	ax.plot(Feedbacktimestamps, Vx)
-	ax.plot(Feedbacktimestamps, Vex)
+	ax.plot(Commandedtimestamps, Vx)
+	#ax.plot(Feedbacktimestamps, VexLocal)
+	ax.plot(Feedbacktimestamps, VexGlobal)
 	ax.set_title("Velocity in x-direction", fontsize = "xx-large")
+	ax.legend(["Commanded", "Estimated"])
+	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
+	ax.set_xlabel("Time [s]", fontsize = "x-large")
+	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
+	plt.show()
+
+if plotID == "rho":
+	fig, ax = plt.subplots()
+	
+	ax.plot(Commandedtimestamps, Rho)
+	ax.plot(Feedbacktimestamps, Gamma)
+	ax.set_title("Magnitude of movement", fontsize = "xx-large")
+	ax.legend(["Commanded", "Estimated"])
+	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
+	ax.set_xlabel("Time [s]", fontsize = "x-large")
+	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
+	plt.show()
+
+if plotID == "theta":
+	fig, ax = plt.subplots()
+	
+	ax.plot(Commandedtimestamps, Theta)
+	ax.plot(Feedbacktimestamps, Phi)
+	ax.set_title("Direction of movement", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
@@ -139,8 +169,9 @@ if plotID == "x":
 if plotID == "y":
 	fig, ax = plt.subplots()
 	
-	ax.plot(Feedbacktimestamps, Vy)
-	ax.plot(Feedbacktimestamps, Vey)
+	ax.plot(Commandedtimestamps, Vy)
+	#ax.plot(Feedbacktimestamps, VeyLocal)
+	ax.plot(Feedbacktimestamps, VeyGlobal)
 	ax.set_title("Velocity in y-direction", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
@@ -163,8 +194,8 @@ if plotID == "w":
 if plotID == "yaw":
 	fig, ax = plt.subplots()
 	
-	ax.plot(Feedbacktimestamps, Angle)
-	ax.plot(Feedbacktimestamps, XsensYaw)
+	ax.plot(Commandedtimestamps, Angle)
+	ax.plot(Statetimestamps, XsensYaw)
 	ax.set_title("Absolute angle", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))

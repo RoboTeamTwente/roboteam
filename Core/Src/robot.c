@@ -314,7 +314,7 @@ void init(void){
 	LOG_sendAll();
     
 	if(read_Pin(FT1_pin)){
-		Wireless_setChannel(SX, YELLOW_CHANNEL);
+		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
@@ -499,8 +499,8 @@ void loop(void){
 		count++;
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
-		toggle_Pin(INT_EN_pin);
-		toggle_Pin(INT_ENneg_pin);
+		// toggle_Pin(INT_EN_pin);
+		// toggle_Pin(INT_ENneg_pin);
 		// if(count>10){
 		// 	set_Pin(BAT_KILL_pin, false);
 		// 	LOG_printf("kill power");

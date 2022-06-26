@@ -31,11 +31,11 @@ else ()
     # these settings can be overwritten in targets by other libraries
     set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
+endif ()
 
 # Build type compile flags
-set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Wall" "-g" "-Og" "-fdiagnostics-color=always")
-set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-fdiagnostics-color=always")
+set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Wall" "-g" "-Og" "-march=native" "-fdiagnostics-color=always")
+set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=native" "-fdiagnostics-color=always")
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake
@@ -43,7 +43,7 @@ if (CMAKE_BUILD_TYPE MATCHES RELEASE)
     message("Building in release mode")
 
     set(COMPILER_FLAGS "${RELEASE_COMPILE_FLAGS}")
-else()
+else ()
     message("Building in debug mode")
 
     # The default compiler flags are for debugging

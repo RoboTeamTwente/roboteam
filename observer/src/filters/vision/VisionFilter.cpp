@@ -58,6 +58,7 @@ Time VisionFilter::getExtrapolationTimeForPolicy() const {
         case TimeExtrapolationPolicy::LAST_RECEIVED_PACKET_TIME:
             return lastPacketTime;
     }
+    return lastPacketTime; //Fallback option
 }
 
 void VisionFilter::setExtrapolationPolicy(VisionFilter::TimeExtrapolationPolicy policy) {

@@ -86,12 +86,12 @@ Eigen::Vector4d GroundBallExtendedKalmanFilter::getStateEstimate(double dt) cons
   Eigen::Vector2d currentVel = getVelocity();
   double vel = currentVel.norm();
   Eigen::Vector4d estimate;
-  if (vel != 0.0) {
+  if (vel > BALL_STILL_VELOCITY) {
     estimate.head<2>() = currentPos + currentVel * dt + 0.5 * currentVel / vel * acceleration * dt * dt;
     estimate.tail<2>() = currentVel + currentVel / vel * acceleration * dt;
   } else {
     estimate.head<2>() = currentPos;
-    estimate.tail<2>() = currentVel;
+    estimate.tail<2>() = Eigen::Vector2d::Zero();
   }
 
   return estimate;
@@ -163,7 +163,9 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
   double vysq = currentVel.y() * currentVel.y() / velCubed;
   double vxvy = -currentVel.x() * currentVel.y() / velCubed;
   double vxsq = currentVel.x() * currentVel.x() / velCubed;
-  if (vel == 0.0) {
+
+  //To prevent division by zero, we simply put the velocity of the ball to zero if the ball is almost lying still
+  if (vel <= BALL_STILL_VELOCITY) {
     vxsq = 0.0;
     vxvy = 0.0;
     vysq = 0.0;
@@ -182,9 +184,11 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
   setProccessNoise(frame_dt);
 
   //now update the state given the transition function
-  if (vel != 0.0) {
+  if (vel > BALL_STILL_VELOCITY) {
     X.head<2>() = currentPos + currentVel * dt + 0.5 * currentVel / vel * acceleration * dt * dt;
     X.tail<2>() = currentVel + currentVel / vel * acceleration * dt;
+  }else{ //Set the velocity of the ball to zero
+      X.tail<2>() = Eigen::Vector2d::Zero();
   }
   P = F * P * F.transpose() + Q;
 

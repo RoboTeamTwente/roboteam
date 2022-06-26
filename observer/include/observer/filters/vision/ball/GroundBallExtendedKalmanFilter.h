@@ -48,7 +48,8 @@ class GroundBallExtendedKalmanFilter {
   [[nodiscard]] Eigen::Vector4d getStateEstimate(double dt) const;
 
   double modelError = 0.0;
-  double acceleration = -0.3;
+  double acceleration = -0.3; //TODO: make adjustable/fix
+  static constexpr double BALL_STILL_VELOCITY = 0.01;//[m/s]. This is somewhat realistic as due to the dimples in the ball, the ball also stops at roughly this velocity
   Time lastUpdateTime;
   Eigen::Vector4d X;
   Eigen::Matrix4d P;

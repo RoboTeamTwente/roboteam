@@ -111,7 +111,7 @@ testIndex = 2
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
-def createSetPIDCommand(robot_id, PbodyX = 0.1, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.4, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 1.3, IbodyW = 0.0, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 4.5, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
+def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.3, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 1.5, IbodyW = 0.5, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 2.0, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
 	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS

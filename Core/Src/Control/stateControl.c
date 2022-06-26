@@ -131,6 +131,7 @@ void stateControl_SetPIDGains(REM_RobotSetPIDGains* PIDGains){
 
 void stateControl_ResetAngleI(){
 	stateK[body_yaw].I = 0;
+	stateK[body_w].I = 0;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS

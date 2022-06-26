@@ -35,8 +35,8 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
             [](const DetectionFrame &lhs, const DetectionFrame &rhs) { return lhs.timeCaptured < rhs.timeCaptured; });
   for (auto &frame : detectionFrames) {
     auto cameraTime = lastCaptureTimes.find(frame.cameraID);
-    frame.dt = cameraTime == lastCaptureTimes.end() ? 0.0 : (cameraTime->second -
-        lastCaptureTimes[frame.cameraID]).asSeconds();
+    frame.dt = cameraTime == lastCaptureTimes.end() ? 0.0 : (frame.timeCaptured - cameraTime->second ).asSeconds();
+
     //TODO: make a realtime option
     //TODO: remove any frames with captures times which differ more than a second from the current time
   }
@@ -45,6 +45,9 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
   //This can also be caused by other teams running e.g. their simulators internally and accidentally broadcasting onto the network
   detectionFrames.erase(std::remove_if(detectionFrames.begin(), detectionFrames.end(),
                                        [](const DetectionFrame &frame) { return frame.dt < 0.0; }),detectionFrames.end());
+  for(const auto& frame : detectionFrames){
+      lastCaptureTimes[frame.cameraID] = frame.timeCaptured;
+  }
   for (const auto &frame : detectionFrames) {
     processFrame(frame);
   }

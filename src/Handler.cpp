@@ -26,10 +26,11 @@ void Handler::start() {
             }
 
             auto state = observer.process(vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
-            std::cout<<robothub_info.size()<<" packets\n";
-            if(robothub_info.size() > 0){
-                state.PrintDebugString();
-            }
+            if(state.has_last_seen_world() && state.last_seen_world().has_ball() &&
+            state.last_seen_world().ball().has_pos() &&
+                    (isnanf(state.last_seen_world().ball().pos().x())  || isnanf(state.last_seen_world().ball().pos().y()))){
+                std::cout<<"Aaah this ain't supposed to happen\n";
+            }//TODO: remove debugging prints
             std::size_t iterations = 0;
             bool sent = false;
             while(iterations < 10){

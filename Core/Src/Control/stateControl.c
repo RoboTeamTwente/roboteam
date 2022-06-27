@@ -30,9 +30,9 @@ int stateControl_Init(){
 	status = on;
 	if (MOTORS_50W) {
 		// 50 W
-		initPID(&stateK[body_x], 0.1, 0.0, 0.0);
-		initPID(&stateK[body_y], 0.4, 0.0, 0.0);
-		initPID(&stateK[body_yaw], 10.0, 2.5, 0.0);
+		initPID(&stateK[body_x], 0.2, 0.0, 0.0);
+		initPID(&stateK[body_y], 0.3, 0.0, 0.0);
+		initPID(&stateK[body_yaw], 20.0, 5.0, 0.0);
 	} else {
 		// 30 W
 		initPID(&stateK[body_x], 0.1, 0.0, 0.0);

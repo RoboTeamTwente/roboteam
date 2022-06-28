@@ -215,39 +215,3 @@ TEST(CircleTests, intersectionsTest) {
     auto possibilityDiagonal1 = std::vector<Vector2>{ Vector2(-0.71, -0.71), Vector2(0.71, 0.71) };
     auto possibilityDiagonal2 = std::vector<Vector2>{ Vector2(0.71, 0.71), Vector2(-0.71, -0.71) };
 }
-
-TEST(CircleTests, intersectionsWithLineSegmentTest) {
-    // There are two intersection functions... Lets test individually
-    // intersectsCircleWithLineSegment
-    Circle circle({0, 0}, 1);
-    LineSegment noIntersectLine({-2, 2}, {2, 2});
-    ASSERT_TRUE(circle.intersectsCircleWithLineSegment(noIntersectLine).empty());
-    LineSegment noIntersectLineSegment( {2, 0}, {3, 0});
-    ASSERT_TRUE(circle.intersectsCircleWithLineSegment(noIntersectLineSegment).empty());
-
-    LineSegment oneIntersectLine({-2, 1}, {2, 1});
-    ASSERT_EQ(circle.intersectsCircleWithLineSegment(oneIntersectLine).size(), 1);
-    ASSERT_EQ(circle.intersectsCircleWithLineSegment(oneIntersectLine).at(0), Vector2(0, 1));
-
-    LineSegment twoIntersectLine({-2, 0}, {2, 0});
-    ASSERT_EQ(circle.intersectsCircleWithLineSegment(twoIntersectLine).size(), 2);
-    auto intersections = circle.intersectsCircleWithLineSegment(twoIntersectLine);
-    auto possibility1 = std::vector<Vector2>{ Vector2(1, 0), Vector2(-1, 0) };
-    auto possibility2 = std::vector<Vector2>{ Vector2(-1, 0), Vector2(1, 0) };
-    ASSERT_TRUE(intersections == possibility1 || intersections == possibility2);
-
-    LineSegment containsOneEnd( {-2, 0}, {0, 0} );
-    ASSERT_EQ(circle.intersectsCircleWithLineSegment(containsOneEnd).size(), 1);
-    ASSERT_EQ(circle.intersectsCircleWithLineSegment(containsOneEnd).at(0), Vector2(-1, 0));
-
-    LineSegment containsTwoEnds( {-0.5, 0}, {0.5, 0} );
-    for (const auto& a : circle.intersectsCircleWithLineSegment(containsTwoEnds)) {
-        std::cout << a << std::endl;
-    }
-    ASSERT_TRUE(circle.intersectsCircleWithLineSegment(containsTwoEnds).empty());
-
-    LineSegment diagonalLineSegment( {-2, -2}, {2, 2});
-    auto intersectionsDiagonal = circle.intersectsCircleWithLineSegment(twoIntersectLine);
-    auto possibilityDiagonal1 = std::vector<Vector2>{ Vector2(-0.71, -0.71), Vector2(0.71, 0.71) };
-    auto possibilityDiagonal2 = std::vector<Vector2>{ Vector2(0.71, 0.71), Vector2(-0.71, -0.71) };
-}

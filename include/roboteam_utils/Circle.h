@@ -98,8 +98,6 @@ class Circle : public Shape {
 
     /** @brief Writes a textual representation of this circle to the given output stream */
     std::ostream& write(std::ostream& out) const;
-
-    std::vector<Vector2> intersectsCircleWithLineSegment(LineSegment line);
 };
 
 std::ostream& operator<<(std::ostream& out, const Circle& circle);

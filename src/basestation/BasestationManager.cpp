@@ -131,22 +131,27 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             REM_BasestationLog log;
             decodeREM_BasestationLog(&log, &payload);
 
-            // Check how many bytes were received that are supposed to contain the log message
-            auto logBytesReceived = message.payloadSize - PACKET_SIZE_REM_BASESTATION_LOG;
+            // This is the last index +1. Basically indicates the size of the payload that is actually *used*.
+            int endIndexOfLogMessage = std::min(message.payloadSize, static_cast<int>(PACKET_SIZE_REM_BASESTATION_LOG + log.messageLength));
 
-            // Test if enough bytes are received to get the complete log message (Sometimes fewer bytes are received)
-            bool receivedEnough = log.messageLength <= logBytesReceived; // We do not care if we received more bytes
+            static constexpr int charsToSkip = 1; // We skip the last character of log messages, as its always a '\n'
 
-            if (receivedEnough && log.messageLength > 0) {
-                // We received enough bytes to get the log message, which does contain something
-                std::string actualLogMessage((char*) message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_LOG, log.messageLength -1); // -1 Ignores the last newline character
-                this->callBasestationLogCallback(actualLogMessage, color);
-            } else if (log.messageLength > 0) {
-                // We were supposed to receive a log message, but we did not receive enough bytes
-                RTT_ERROR("Basestation sent fewer bytes than it intended to (", logBytesReceived, " instead of ", log.messageLength, "). Dropped message")
-            } else {
+            // Convert the received log bytes into a string
+            std::ostringstream oss;
+            for (int i = PACKET_SIZE_REM_BASESTATION_LOG; i < endIndexOfLogMessage - charsToSkip; i++) {
+                oss << static_cast<char>(message.payloadBuffer[i]); // Convert uint32_t byte to char and store in stream
+            }
+            std::string logMessage = oss.str();
+
+            if (logMessage.length() == log.messageLength - charsToSkip) {
+                // We correctly retrieved the log message
+                this->callBasestationLogCallback(logMessage, color);
+            } else if (log.messageLength == 0) {
                 // We received an intended empty log message... But why?
                 RTT_WARNING("Received empty basestation log message")
+            } else {
+                // We ended up with a message shorter (or longer?) than what the length should have been
+                RTT_ERROR("BasestationLogMessage turned out wrongly sized (", logMessage.length(), " instead of ", log.messageLength - charsToSkip, ")")
             }
 
             break;

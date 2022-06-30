@@ -3,8 +3,10 @@
 
 
 ///////////////////////////////////////////////////// VARIABLES
-static float dribbler_measured_speed;      // Stores most recent measurement of wheel speeds in rad/s
-static float dribbler_commanded_speed;     // Holds most recent commanded dribbler speed in rad/s
+static float dribbler_measured_speed;               // Stores most recent measurement of dribbler speed in rad/s
+static float dribbler_previous_measured_speed;      // Stores the previous measurement of dribbler speed in rad/s
+static bool hasBall = false;						// Stores information if dribbler thinks it has the ball
+static bool previousHadBall = false;				// Stores the previous information about if dribbler thinks it has the ball
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -62,6 +64,7 @@ void dribbler_SetSpeed(float speed){
  * the resulting PID value is added to the commanded speed before being converted to a PWM value. 
  */
 void dribbler_Update(){
+	dribbler_previous_measured_speed = dribbler_measured_speed;
 	computeDribblerSpeed(&dribbler_measured_speed);
 }
 
@@ -73,6 +76,17 @@ void dribbler_Update(){
 void dribbler_GetMeasuredSpeeds(float *speed) {
 	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
 	*speed = dribbler_measured_speed;
+}
+
+bool dribbler_hasBall(){
+	previousHadBall = hasBall;
+	//hasBall = false;
+	if (dribbler_measured_speed < 700.0 && ((dribbler_measured_speed - dribbler_previous_measured_speed + 5) < 0 ))
+		hasBall = true;
+	if (hasBall == true)
+		if (dribbler_measured_speed > 900)
+			hasBall = false;
+	return hasBall;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
@@ -108,7 +122,6 @@ static void computeDribblerSpeed(float *speed){
 	resetWheelEncoders();
 	
 	// Convert encoder values to rad/s
-	// We define clockwise as positive, therefore we have a minus sign here
-	*speed = -1 * DRIBBLER_ENCODER_TO_OMEGA * encoder_value; 
+	*speed = DRIBBLER_ENCODER_TO_OMEGA * encoder_value; 
 }
 

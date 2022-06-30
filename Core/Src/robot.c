@@ -57,7 +57,6 @@ bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
 volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
-float dribblerSpeed = 0.0;
 
 volatile uint32_t counter_loop = 0;
 volatile uint32_t counter_htim6 = 0;
@@ -229,7 +228,7 @@ void printRobotCommand(REM_RobotCommand* rc){
 	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
 	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
 	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	LOG_printf("angularControl : %d\r\n", rc->angularControl);
+	LOG_printf("angularControl : %d\r\n", rc->useAbsoluteAngle);
 	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 
@@ -423,7 +422,7 @@ void loop(void){
     robotFeedback.XsensCalibrated = xsens_CalibrationDone;
     // robotFeedback.batteryLevel = (batCounter > 1000);
     robotFeedback.ballSensorWorking = ballSensor_isInitialized();
-    robotFeedback.hasBall = ballPosition.canKickBall;
+    robotFeedback.ballSensorSeesBall = ballPosition.canKickBall;
     robotFeedback.ballPos = ballSensor_isInitialized() ? (-.5 + ballPosition.x / 700.) : 0;
 
     float vx = stateEstimation_GetState()[body_x];
@@ -433,6 +432,7 @@ void loop(void){
     robotFeedback.theta = atan2(vy, -vx);
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
+	robotFeedback.dribblerSeesBall = dribbler_hasBall();
     
 	{
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
@@ -445,7 +445,8 @@ void loop(void){
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
-		robotStateInfo.wheelSpeed4 = dribblerSpeed;
+		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
 	}
 	{
 		PIDvariables robotGains[3];
@@ -679,7 +680,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
 		stateInfo.rateOfTurn = MTi->gyr[2];
 		stateEstimation_Update(&stateInfo);
-		dribbler_GetMeasuredSpeeds(&dribblerSpeed);
+		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
 
 		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
@@ -709,6 +710,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		wheels_SetSpeeds( stateControl_GetWheelRef() );
 		wheels_Update();
 		dribbler_Update();
+
 	}
 	else if (htim->Instance == htim10.Instance) {
 		counter_htim10++;

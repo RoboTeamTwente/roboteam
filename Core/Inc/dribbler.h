@@ -29,5 +29,7 @@ void dribbler_SetSpeed(float speed);
 void dribbler_Update();
 // Get the last measured dribbler speeds in rad/s
 void dribbler_GetMeasuredSpeeds(float *speed);
+// returns true if the dribbler speed decreases
+bool dribbler_hasBall();
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

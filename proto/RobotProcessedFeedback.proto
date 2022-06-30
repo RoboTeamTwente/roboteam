@@ -16,14 +16,15 @@ message RobotWheels{
 }
 
 message RobotProcessedFeedback {
-    bool has_ball = 1;                  // The robot has the ball
+    bool ball_sensor_sees_ball = 1;     // The ball sensor sees the ball
     float ball_position = 2;            // [-0.5, 0.5] The position of the ball relative to the sensor
     bool ball_sensor_is_working = 3;    // The sensor is working
-    bool xsens_is_calibrated = 4;       // The xSens is calibrated
-    bool capacitor_is_charged = 5;      // The capacitor is charged
-    RobotWheels wheelInformation = 6;   // Information on the wheels
-    float battery_level = 7;            // Battery level of the robot // TODO: Figure out if this is voltage or percentage
-    int32 signal_strength = 8;          // Signal strength of the robot //TODO: units??
+    bool dribbler_sees_ball = 4;        // The dribbler sees the ball
+    bool xsens_is_calibrated = 5;       // The xSens is calibrated
+    bool capacitor_is_charged = 6;      // The capacitor is charged
+    RobotWheels wheelInformation = 7;   // Information on the wheels
+    float battery_level = 8;            // Battery level of the robot // TODO: Figure out if this is voltage or percentage
+    int32 signal_strength = 9;          // Signal strength of the robot //TODO: units??
 }
 
 message FeedbackOnlyRobot{

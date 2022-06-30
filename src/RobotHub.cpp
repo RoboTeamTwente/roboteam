@@ -133,11 +133,8 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.rho = static_cast<float>(robotCommand.velocity.length());
         command.theta = static_cast<float>(robotCommand.velocity.angle());
 
-        command.angularControl = !robotCommand.useAngularVelocity;
+        command.useAbsoluteAngle = !robotCommand.useAngularVelocity;
         command.angle = robotCommand.useAngularVelocity ? static_cast<float>(robotCommand.targetAngularVelocity) : static_cast<float>(robotCommand.targetAngle.getValue());
-        if (robotCommand.useAngularVelocity) {
-            RTT_WARNING("Robot command used angular velocity, but robots do not support that yet")
-        }
 
         command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
         command.cameraAngle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
@@ -276,9 +273,10 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
     rtt::RobotFeedback robotFeedback = {
         .id = static_cast<int>(feedback.id),
-        .hasBall = feedback.hasBall,
+        .hasBall = feedback.ballSensorSeesBall,
         .ballPosition = feedback.ballPos,
         .ballSensorIsWorking = feedback.ballSensorWorking,
+        // .dribblerSeesBall = feedback.dribblerSeesBall // TODO: Implement this on the AI side
         .velocity = Vector2(Angle(feedback.theta), feedback.rho),
         .angle = Angle(feedback.angle),
         .xSensIsCalibrated = feedback.XsensCalibrated,

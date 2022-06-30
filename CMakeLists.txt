@@ -77,16 +77,23 @@ target_link_libraries(roboteam_robothub_enumerate_usb
 )
 target_compile_options(roboteam_robothub_enumerate_usb PRIVATE "${COMPILER_FLAGS}")
 
-# Create the make file for test/sendRobotCommands.cpp
-add_executable(roboteam_robothub_sendRobotCommands_test
-        "test/SendRobotCommands.cpp"
+# Create the make file for scripts/RobotControl.cpp
+add_executable(roboteam_robothub_robotControlScript
+        "scripts/RobotControlScript.cpp"
 )
-target_link_libraries(roboteam_robothub_sendRobotCommands_test PRIVATE roboteam_networking)
-target_compile_options(roboteam_robothub_sendRobotCommands_test PRIVATE "${COMPILER_FLAGS}")
+target_link_libraries(roboteam_robothub_robotControlScript PRIVATE roboteam_networking)
+target_compile_options(roboteam_robothub_robotControlScript PRIVATE "${COMPILER_FLAGS}")
+
+# Create the make file for scripts/RobotMonitor.cpp
+add_executable(roboteam_robothub_robotMonitor
+        "scripts/RobotMonitor.cpp"
+)
+target_link_libraries(roboteam_robothub_robotMonitor PRIVATE roboteam_networking)
+target_compile_options(roboteam_robothub_robotMonitor PRIVATE "${COMPILER_FLAGS}")
 
 # Create make file for simulation formation test
-add_executable(roboteam_robothub_formation_test
-        test/sendFormationToSimulator.cpp
+add_executable(roboteam_robothub_formation
+        scripts/sendFormationToSimulator.cpp
         )
-target_link_libraries(roboteam_robothub_formation_test PUBLIC simulator_manager)
-target_compile_options(roboteam_robothub_formation_test PRIVATE "${COMPILER_FLAGS}")
+target_link_libraries(roboteam_robothub_formation PUBLIC simulator_manager)
+target_compile_options(roboteam_robothub_formation PRIVATE "${COMPILER_FLAGS}")

@@ -7,6 +7,7 @@
 #include "peripheral_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
+#include "dribbler.h"
 #include "stateControl.h"
 #include "stateEstimation.h"
 #include "dribbler.h"
@@ -35,7 +36,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
 MTi_data* MTi;
@@ -57,6 +57,7 @@ bool xsens_CalibrationDone = false;
 bool xsens_CalibrationDoneFirst = true;
 volatile bool REM_last_packet_had_correct_version = true;
 IWDG_Handle* iwdg;
+float dribblerSpeed = 0.0;
 
 volatile uint32_t counter_loop = 0;
 volatile uint32_t counter_htim6 = 0;
@@ -115,10 +116,8 @@ void Wireless_Readpacket_Cplt(void){
 	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
 	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
-	if(SEND_ROBOT_STATE_INFO){
-		encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
-		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
-	}
+	encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
+	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
 
 	// TODO ensure this is only done when a packet is actually being sent
 	// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
@@ -264,7 +263,7 @@ void init(void){
 	LOG_sendAll();
 	
 	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = !read_Pin(FT0_pin);
+	//SEND_ROBOT_STATE_INFO = !read_Pin(FT0_pin);
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -435,7 +434,7 @@ void loop(void){
     robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
     robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
     
-	if(SEND_ROBOT_STATE_INFO){
+	{
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
 		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ROBOT_ID;
@@ -446,7 +445,7 @@ void loop(void){
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
-		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+		robotStateInfo.wheelSpeed4 = dribblerSpeed;
 	}
 	{
 		PIDvariables robotGains[3];
@@ -680,8 +679,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
 		stateInfo.rateOfTurn = MTi->gyr[2];
 		stateEstimation_Update(&stateInfo);
-
-
+		dribbler_GetMeasuredSpeeds(&dribblerSpeed);
 
 		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
@@ -710,12 +708,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		wheels_SetSpeeds( stateControl_GetWheelRef() );
 		wheels_Update();
-
+		dribbler_Update();
 	}
 	else if (htim->Instance == htim10.Instance) {
 		counter_htim10++;
 		buzzer_Callback();
 	}
+
 	else if (htim->Instance == htim11.Instance) {
 		counter_htim11++;
 		shoot_Callback();

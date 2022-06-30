@@ -41,7 +41,7 @@
 
 // Wheels
 #define PWM_CUTOFF 200.0F // arbitrary treshold to avoid motor shutdown
-#define GEAR_RATIO 2.65F // gear ratio between motor and wheel
+#define WHEEL_GEAR_RATIO 2.65F // gear ratio between motor and wheel
 #define PWM_LIMIT MAX_PWM // should be equal to MAX_PWM by default
 float MAX_VOLTAGE; // [V] see datasheet
 #define MAX_VOLTAGE_30W 12.0
@@ -49,10 +49,15 @@ float MAX_VOLTAGE; // [V] see datasheet
 float SPEED_CONSTANT; //[(rad/s)/V] see datasheet
 #define SPEED_CONSTANT_30W 374.0
 #define SPEED_CONSTANT_50W 285.0
-#define PULSES_PER_ROTATION (float)4*1024 // number of pulses of the encoder per rotation of the motor (see datasheet)
+#define WHEEL_PULSES_PER_ROTATION (float)4*1024 // number of pulses of the encoder per rotation of the motor (see datasheet)
 
 float OMEGAtoPWM; // conversion factor from wheel speed [rad/s] to required PWM on the motor
-#define ENCODERtoOMEGA (float)2*M_PI/(TIME_DIFF*GEAR_RATIO*PULSES_PER_ROTATION) // conversion factor from number of encoder pulses to wheel speed [rad/s]
+#define WHEEL_ENCODER_TO_OMEGA (float)2*M_PI/(TIME_DIFF*WHEEL_GEAR_RATIO*WHEEL_PULSES_PER_ROTATION) // conversion factor from number of encoder pulses to wheel speed [rad/s]
+
+// Dribbler
+#define DRIBBLER_GEAR_RATIO 0.777777778F // gear ratio between motor and dribbler
+#define DRIBBLER_PULSES_PER_ROTATION 4.0 // number of pulses of the encoder per rotation of the motor (see datasheet)
+#define DRIBBLER_ENCODER_TO_OMEGA (float)2*M_PI/(TIME_DIFF*DRIBBLER_GEAR_RATIO*DRIBBLER_PULSES_PER_ROTATION) // conversion factor from number of encoder pulses to dribbler speed [rad/s]
 
 // Control
 #define YAW_MARGIN (0.5F/180.0F)*(float)M_PI // margin at which the I-value of the PID is reset to 0

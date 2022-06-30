@@ -19,10 +19,15 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
+// Initializes the PIDs / encoders / PWM timers
 void dribbler_Init();
-
+// Denitializes the encoders / PWM timers
 void dribbler_DeInit();
-
+// Sets the dribbler speed and makes sure it's within [0,1]
 void dribbler_SetSpeed(float speed);
+// Updates the dribbler towards the commanded dribbler speed using the encoder and a PID controller.
+void dribbler_Update();
+// Get the last measured dribbler speeds in rad/s
+void dribbler_GetMeasuredSpeeds(float *speed);
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

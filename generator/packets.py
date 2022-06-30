@@ -52,6 +52,7 @@ packets = {
         ["wheelSpeed2",        32, [-50000., 50000.], "wheelSpeed2"],
         ["wheelSpeed3",        32, [-50000., 50000.], "wheelSpeed3"],
         ["wheelSpeed4",        32, [-50000., 50000.], "wheelSpeed4"],
+        ["dribbleSpeed",       16, [0.     , 20000.], "dribblerSpeed"],
         ["bodyXIntegral",      32, [-50000., 50000.], "Integral value from the PID for body_x"],
         ["bodyYIntegral",      32, [-50000., 50000.], "Integral value from the PID for body_y"],
         ["bodyWIntegral",      32, [-50000., 50000.], "Integral value from the PID for body_w"],

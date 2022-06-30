@@ -236,7 +236,7 @@ int stringToRobotId(std::string s) {
     }
 }
 
-void handleCommand(std::string cmd) {
+bool handleCommand(std::string cmd) {
     // Convert command to upper case
     for (auto& c : cmd)
         c = static_cast<char>(toupper(c));
@@ -293,15 +293,19 @@ void handleCommand(std::string cmd) {
         currentMovement = Movement::STILL;
     } else if (cmd == "DRIBBLE") {
         useDribbler = !useDribbler;
+        return false;
     } else if (cmd == "STOP") {
         shouldSendSettings = false;
         shouldSendRobotCommands = false;
         shouldAskCLICommands = false;
     } else if (cmd == "HELP") {
         printCommandOptions();
+        return false;
     } else {
         std::cout << "Unknown command. Type 'help' for more information." << std::endl;
+        return false;
     }
+    return true;
 }
 
 std::string currentMovementToString() {
@@ -399,7 +403,9 @@ void runCommandLineInterface() {
         std::cout << "Enter command: ";
         std::string enteredCommand;
         std::getline(std::cin, enteredCommand);
-        handleCommand(enteredCommand);
+        if (handleCommand(enteredCommand)) {
+            lastTimeCommandWasUsed = std::chrono::steady_clock::now();
+        }
     }
     std::cout << "I hope this script helped you. Bye!" << std::endl;
 }

@@ -25,23 +25,23 @@ syntax="proto3";
 
 package proto;
 
-message REM_RobotPIDGains {
+message REM_RobotSetPIDGains {
     uint32 header = 1;        // integer [0, 255]             Header byte indicating the type of packet
     uint32 remVersion = 2;    // integer [0, 15]              Version of roboteam_embedded_messages
     uint32 id = 3;            // integer [0, 15]              Id of the robot
-    float PbodyX = 4;         // float   [0.000, 40.000]      Received P gain of the PID for body_x (x-direction)
-    float IbodyX = 5;         // float   [0.000, 20.000]      Received I gain of the PID for body_x (x-direction)
-    float DbodyX = 6;         // float   [0.000, 10.000]      Received D gain of the PID for body_x (x-direction)
-    float PbodyY = 7;         // float   [0.000, 40.000]      Received P gain of the PID for body_y (y-direction)
-    float IbodyY = 8;         // float   [0.000, 20.000]      Received I gain of the PID for body_y (y-direction)
-    float DbodyY = 9;         // float   [0.000, 10.000]      Received D gain of the PID for body_y (y-direction)
-    float PbodyW = 10;        // float   [0.000, 40.000]      Received P gain of the PID for body_w (Angular velocity)
-    float IbodyW = 11;        // float   [0.000, 20.000]      Received I gain of the PID for body_w (Angular velocity)
-    float DbodyW = 12;        // float   [0.000, 10.000]      Received D gain of the PID for body_w (Angular velocity)
-    float PbodyYaw = 13;      // float   [0.000, 40.000]      Received P gain of the PID for body_yaw (Absolute angle)
-    float IbodyYaw = 14;      // float   [0.000, 20.000]      Received I gain of the PID for body_yaw (Absolute angle)
-    float DbodyYaw = 15;      // float   [0.000, 10.000]      Received D gain of the PID for body_yaw (Absolute angle)
-    float Pwheels = 16;       // float   [0.000, 40.000]      Received P gain of the PID for the wheels
-    float Iwheels = 17;       // float   [0.000, 20.000]      Received I gain of the PID for the wheels
-    float Dwheels = 18;       // float   [0.000, 10.000]      Received D gain of the PID for the wheels
+    float PbodyX = 4;         // float   [0.000, 40.000]      Commanded P gain of the PID for body_x (x-direction)
+    float IbodyX = 5;         // float   [0.000, 20.000]      Commanded I gain of the PID for body_x (x-direction)
+    float DbodyX = 6;         // float   [0.000, 10.000]      Commanded D gain of the PID for body_x (x-direction)
+    float PbodyY = 7;         // float   [0.000, 40.000]      Commanded P gain of the PID for body_y (y-direction)
+    float IbodyY = 8;         // float   [0.000, 20.000]      Commanded I gain of the PID for body_y (y-direction)
+    float DbodyY = 9;         // float   [0.000, 10.000]      Commanded D gain of the PID for body_y (y-direction)
+    float PbodyW = 10;        // float   [0.000, 40.000]      Commanded P gain of the PID for body_w (Angular velocity)
+    float IbodyW = 11;        // float   [0.000, 20.000]      Commanded I gain of the PID for body_w (Angular velocity)
+    float DbodyW = 12;        // float   [0.000, 10.000]      Commanded D gain of the PID for body_w (Angular velocity)
+    float PbodyYaw = 13;      // float   [0.000, 40.000]      Commanded P gain of the PID for body_yaw (Absolute angle)
+    float IbodyYaw = 14;      // float   [0.000, 20.000]      Commanded I gain of the PID for body_yaw (Absolute angle)
+    float DbodyYaw = 15;      // float   [0.000, 10.000]      Commanded D gain of the PID for body_yaw (Absolute angle)
+    float Pwheels = 16;       // float   [0.000, 40.000]      Commanded P gain of the PID for the wheels
+    float Iwheels = 17;       // float   [0.000, 20.000]      Commanded I gain of the PID for the wheels
+    float Dwheels = 18;       // float   [0.000, 10.000]      Commanded D gain of the PID for the wheels
 }

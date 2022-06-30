@@ -11,6 +11,7 @@
 #include "REM_RobotCommand.h"
 #include "REM_RobotFeedback.h"
 #include "REM_RobotStateInfo.h"
+#include "REM_RobotSetPIDGains.h"
 #include "REM_SX1280Filler.h"
 
 /* Counters, tracking the number of packets handled */ 
@@ -19,6 +20,7 @@ volatile int handled_RobotFeedback = 0;
 volatile int handled_RobotBuzzer = 0;
 volatile int handled_RobotStateInfo = 0;
 volatile int handled_RobotGetPIDGains = 0;
+volatile int handled_RobotSetPIDGains = 0;
 volatile int handled_RobotPIDGains = 0;
 
 
@@ -317,6 +319,23 @@ void handleRobotCommand(uint8_t* packet_buffer){
   buffer_RobotCommand[robot_id].counter++;
 }
 
+void handleRobotSetPIDGains(uint8_t* packet_buffer){
+  handled_RobotSetPIDGains++;
+
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = REM_RobotSetPIDGains_get_remVersion((REM_RobotSetPIDGainsPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    LOG_printf("[handleRobotSetPIDGains] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
+  // Store the message in the RobotSetPIDGains buffer. Set flag indicating packet needs to be sent to the robot
+  uint8_t robot_id = REM_RobotSetPIDGains_get_id((REM_RobotSetPIDGainsPayload*) packet_buffer);
+  memcpy(buffer_RobotSetPIDGains[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
+  buffer_RobotSetPIDGains[robot_id].isNewPacket = true;
+  buffer_RobotSetPIDGains[robot_id].counter++;
+}
+
 
 /**
  * @brief Receives a buffer which is assumed to be holding a RobotFeedback packet. 
@@ -469,6 +488,11 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
         bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
         break;
       
+      case PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
+        handleRobotSetPIDGains(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
+        break;
+      
       case PACKET_TYPE_REM_ROBOT_FEEDBACK:
         handleRobotFeedback(packet_buffer + bytes_processed);
         bytes_processed += PACKET_SIZE_REM_ROBOT_FEEDBACK;
@@ -566,6 +590,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
       buffer_RobotCommand[idCounter].isNewPacket = false;
       memcpy(txPacket.message + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_COMMAND);
       total_packet_length += PACKET_SIZE_REM_ROBOT_COMMAND;
+    }
+
+    /* Add RobotSetPIDGains to the transmission */
+    if(buffer_RobotSetPIDGains[idCounter].isNewPacket
+    && total_packet_length + PACKET_SIZE_REM_ROBOT_SET_PIDGAINS < MAX_PACKET_SIZE){
+      buffer_RobotSetPIDGains[idCounter].isNewPacket = false;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotSetPIDGains[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
+      total_packet_length += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
     }
 
     /* Add RobotBuzzer to the transmission */

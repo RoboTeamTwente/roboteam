@@ -6,7 +6,7 @@
 constexpr char MARPLE_DELIMITER = ',';
 constexpr char ROBOT_STATE_MARPLE_HEADER[] = "time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4";
 constexpr char ROBOT_COMMANDS_MARPLE_HEADER[] = "time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket";
-constexpr char ROBOT_FEEDBACK_MARPLE_HEADER[] = "time,team,source,id,hasBall,ballPos,sensorWorking,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength";
+constexpr char ROBOT_FEEDBACK_MARPLE_HEADER[] = "time,team,source,id,sensorSeesBall,ballPos,sensorWorking,dribblerSeesBall,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength";
 
 namespace rtt {
 
@@ -217,15 +217,16 @@ void RobotHubLogger::logRobotFeedback(const RobotsFeedback &feedback) {
         auto source = feedbackSourceToInt(feedback.source);
 
         for (const auto& robot : feedback.feedback) {
-            //time,team,source,id,hasBall,ballPos,sensorWorking,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength
+            //time,team,source,id,sensorSeesBall,ballPos,sensorWorking,dribblerSeesBall,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength
             this->feedbackLogger
                 << now << MARPLE_DELIMITER
                 << team << MARPLE_DELIMITER
                 << source << MARPLE_DELIMITER
                 << robot.id << MARPLE_DELIMITER
-                << robot.hasBall << MARPLE_DELIMITER
+                << robot.ballSensorSeesBall << MARPLE_DELIMITER
                 << robot.ballPosition << MARPLE_DELIMITER
                 << robot.ballSensorIsWorking << MARPLE_DELIMITER
+                << robot.dribblerSeesBall << MARPLE_DELIMITER
                 << robot.velocity.x << MARPLE_DELIMITER
                 << robot.velocity.y << MARPLE_DELIMITER
                 << robot.angle.getValue() << MARPLE_DELIMITER

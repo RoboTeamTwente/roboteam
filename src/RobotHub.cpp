@@ -242,9 +242,10 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     for (auto const&[robotId, hasBall] : feedback.robotIdHasBall) {
         rtt::RobotFeedback robotFeedback = {
             .id = robotId,
-            .hasBall = hasBall,
+            .ballSensorSeesBall = hasBall,
             .ballPosition = 0,
             .ballSensorIsWorking = true,
+            .dribblerSeesBall = hasBall,
             .velocity = { 0, 0 },
             .angle = 0,
             .xSensIsCalibrated = true,
@@ -273,10 +274,10 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
     rtt::RobotFeedback robotFeedback = {
         .id = static_cast<int>(feedback.id),
-        .hasBall = feedback.ballSensorSeesBall,
+        .ballSensorSeesBall = feedback.ballSensorSeesBall,
         .ballPosition = feedback.ballPos,
         .ballSensorIsWorking = feedback.ballSensorWorking,
-        // .dribblerSeesBall = feedback.dribblerSeesBall // TODO: Implement this on the AI side
+        .dribblerSeesBall = feedback.dribblerSeesBall,
         .velocity = Vector2(Angle(feedback.theta), feedback.rho),
         .angle = Angle(feedback.angle),
         .xSensIsCalibrated = feedback.XsensCalibrated,

@@ -18,6 +18,7 @@ typedef struct Robot {
     bool ballSensorSeesBall = false;    // Indicates if the ball sensor sees the ball
     bool ballSensorIsWorking = false;   // Indicates if the ball sensor is working
     double ballPositionOnSensor = 0.0;  // [-0.5, 0.5] The position of the ball on the sensor
+    bool dribblerSeesBall = false;      // Indicates if the dribbler sees the ball
 
     double dribblerSpeed = 0.0;         // (rad/s) The current speed of the dribbler
 

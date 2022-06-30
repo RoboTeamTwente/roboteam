@@ -1,6 +1,8 @@
 #include "main.h"
 #include "dribbler.h"
 
+#define DRIBBLER_MAX_PWM 10000
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
 void dribbler_Init(){
@@ -23,8 +25,8 @@ void dribbler_SetSpeed(float speed){
 	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
 	if (MOTORS_50W) {
 		// Dribbler is connected to same timer (htim8) as two motors, thus they share the same MAX_PWM
-		set_PWM(PWM_Dribbler, speed * 10000);
+		set_PWM(PWM_Dribbler, speed * DRIBBLER_MAX_PWM);
 	} else {
-		set_PWM(PWM_Dribbler, (1 - speed) * 10000);
+		set_PWM(PWM_Dribbler, (1 - speed) * DRIBBLER_MAX_PWM);
 	}
 }

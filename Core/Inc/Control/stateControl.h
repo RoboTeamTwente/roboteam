@@ -17,6 +17,27 @@
 #include "control_util.h"
 #include "gpio_util.h"
 #include "tim_util.h"
+#include "REM_RobotSetPIDGains.h"
+
+#define default_P_gain_x 0.2
+#define default_I_gain_x 0.0
+#define default_D_gain_x 0.0
+
+#define default_P_gain_y 0.3
+#define default_I_gain_y 0.0
+#define default_D_gain_y 0.0
+
+#define default_P_gain_w 1.5
+#define default_I_gain_w 0.5
+#define default_D_gain_w 0.0
+
+#define default_P_gain_yaw 20.0
+#define default_I_gain_yaw 5.0
+#define default_D_gain_yaw 0.0
+
+#define default_P_gain_wheels 2.0
+#define default_I_gain_wheels 0.0
+#define default_D_gain_wheels 0.0
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
@@ -26,13 +47,19 @@ int stateControl_DeInit();
 
 void stateControl_Update();
 
-void stateControl_SetRef(float input[3]);
+void stateControl_SetRef(float input[4]);
 
 float* stateControl_GetWheelRef();
 
-void stateControl_SetState(float input[3]);
+void stateControl_SetState(float input[4]);
 
-void stateControl_GetState(PIDvariables gains[3]);
+void stateControl_GetPIDGains(PIDvariables gains[4]);
+
+float stateControl_GetIntegral(body_handles direction);
+
+void stateControl_useAbsoluteAngle(bool angularControl);
+
+void stateControl_SetPIDGains(REM_RobotSetPIDGains* pidConfig);
 
 void stateControl_ResetAngleI();
 

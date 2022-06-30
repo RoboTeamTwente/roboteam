@@ -25,6 +25,7 @@ void initPID(PIDvariables* PID, float kP, float kI, float kD) {
 }
 
 float PID(float err, PIDvariables* K){
+	// TODO clamp I value (maybe with a max PID output so maxI = maxOutput - POutput)
 	float P = K->kP*err;
 	K->I += err*K->timeDiff;
 	float I = K->kI*K->I;

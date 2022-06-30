@@ -28,6 +28,7 @@
 #include "REM_RobotBuzzer.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotGetPIDGains.h"
+#include "REM_RobotSetPIDGains.h"
 #include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
 
@@ -35,7 +36,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static bool SEND_ROBOT_STATE_INFO = false;
 static const bool USE_PUTTY = false;
 
 MTi_data* MTi;
@@ -47,6 +47,7 @@ REM_RobotFeedbackPayload robotFeedbackPayload = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
+REM_RobotSetPIDGains robotSetPIDGains = {0};
 
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -104,6 +105,14 @@ void Wireless_Writepacket_Cplt(void){
 	if(TransmitPacket(SX) != WIRELESS_OK)
 		LOG("[Wireless_Writepacket_Cplt] TransmitPacket error!\n");
 }
+/**
+ * @brief This function is called when a packet is read from the SX1280
+ * 
+ * When this callback function is called, it means that we just received a packet from the SX1280. According to the TDMA protocol that
+ * we use, we now have 1 millisecond to send our feedback to the SX1280. Therefore, this function needs to be fast. Don't do 
+ * any CPU intense stuff in here like matrix multiplications etc etc. This is also the reason that robotFeedback / robotStateInfo / etc
+ * is being fill in the main loop, and not in this function; it saves time.
+ */
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
 	time_last_packet_wireless = HAL_GetTick();
@@ -115,10 +124,8 @@ void Wireless_Readpacket_Cplt(void){
 	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
 	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
-	if(SEND_ROBOT_STATE_INFO){
-		encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
-		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
-	}
+	encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
+	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
 
 	// TODO ensure this is only done when a packet is actually being sent
 	// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
@@ -135,6 +142,7 @@ void Wireless_Readpacket_Cplt(void){
 void Wireless_Default(){
 	WaitForPacket(SX);
 }
+
 void Wireless_RXDone(SX1280_Packet_Status *status){
   /* It is possible that random noise can trigger the syncword.
    * Correct syncword from noise have a very weak signal.
@@ -150,14 +158,12 @@ void Wireless_RXDone(SX1280_Packet_Status *status){
 Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
 
 
-
-
-
-
 void executeCommands(REM_RobotCommand* robotCommand){
-	float stateReference[3];
+	stateControl_useAbsoluteAngle(robotCommand->useAbsoluteAngle);
+	float stateReference[4];
 	stateReference[body_x] = (robotCommand->rho) * cosf(robotCommand->theta);
 	stateReference[body_y] = (robotCommand->rho) * sinf(robotCommand->theta);
+	stateReference[body_w] = robotCommand->angularVelocity;
 	stateReference[body_yaw] = robotCommand->angle;
 	stateControl_SetRef(stateReference);
 	dribbler_SetSpeed(robotCommand->dribbler);
@@ -230,7 +236,7 @@ void printRobotCommand(REM_RobotCommand* rc){
 	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
 	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
 	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	LOG_printf("angularControl : %d\r\n", rc->angularControl);
+	LOG_printf("useAbsoluteAngle : %d\r\n", rc->useAbsoluteAngle);
 	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 
@@ -262,9 +268,6 @@ void init(void){
 	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d\n", LOCAL_REM_VERSION);
 	LOG_printf("[init:"STRINGIZE(__LINE__)"] ROBOT_ID: %d\n", ROBOT_ID);
 	LOG_sendAll();
-	
-	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = !read_Pin(FT0_pin);
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -417,40 +420,53 @@ void loop(void){
         executeCommands(&activeRobotCommand);
     }
 
-    // Create RobotFeedback
-	robotFeedback.header = PACKET_TYPE_REM_ROBOT_FEEDBACK;
-	robotFeedback.remVersion= LOCAL_REM_VERSION;
-    robotFeedback.id = ROBOT_ID;
-    robotFeedback.XsensCalibrated = xsens_CalibrationDone;
-    // robotFeedback.batteryLevel = (batCounter > 1000);
-    robotFeedback.ballSensorWorking = ballSensor_isInitialized();
-    robotFeedback.hasBall = ballPosition.canKickBall;
-    robotFeedback.ballPos = ballSensor_isInitialized() ? (-.5 + ballPosition.x / 700.) : 0;
-
-    float vx = stateEstimation_GetState()[body_x];
-    float vy = stateEstimation_GetState()[body_y];
-    robotFeedback.rho = sqrt(vx*vx + vy*vy);
-    robotFeedback.angle = stateEstimation_GetState()[body_yaw];
-    robotFeedback.theta = atan2(vy, -vx);
-    robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
-    robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
     
-	if(SEND_ROBOT_STATE_INFO){
+    /* == Fill RobotFeedback packet == */
+	{ // Brackets just for collapsing code
+		robotFeedback.header = PACKET_TYPE_REM_ROBOT_FEEDBACK;
+		robotFeedback.remVersion= LOCAL_REM_VERSION;
+		robotFeedback.id = ROBOT_ID;
+		robotFeedback.XsensCalibrated = xsens_CalibrationDone;
+		// robotFeedback.batteryLevel = (batCounter > 1000);
+		robotFeedback.ballSensorWorking = ballSensor_isInitialized();
+		robotFeedback.ballSensorSeesBall = ballPosition.canKickBall;
+		robotFeedback.ballPos = ballSensor_isInitialized() ? (-.5 + ballPosition.x / 700.) : 0;
+
+		float vx = stateEstimation_GetState()[body_x];
+		float vy = stateEstimation_GetState()[body_y];
+		robotFeedback.rho = sqrt(vx*vx + vy*vy);
+		robotFeedback.angle = stateEstimation_GetState()[body_yaw];
+		robotFeedback.theta = atan2(vy, vx);
+		robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
+		robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
+	}
+	    /* == Fill RobotStateInfo packet == */
+	{ // Brackets just for collapsing code
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
 		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ROBOT_ID;
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
-		robotStateInfo.rateOfTurn = stateInfo.rateOfTurn;
+		robotStateInfo.rateOfTurn = stateEstimation_GetFilteredRoT();
 		robotStateInfo.wheelSpeed1 = stateInfo.wheelSpeeds[0];
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
+		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
+		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RF);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RB);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_LB);
+		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_LF);
 	}
+	
+	/* == Fill RobotPIDGains packet == */
 	{
-		PIDvariables robotGains[3];
-		stateControl_GetState(robotGains);
+		PIDvariables robotGains[4];
+		stateControl_GetPIDGains(robotGains);
 		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
 		robotPIDGains.remVersion = LOCAL_REM_VERSION;
 		robotPIDGains.id = ROBOT_ID;
@@ -460,6 +476,9 @@ void loop(void){
 		robotPIDGains.PbodyY = robotGains[body_y].kP;
 		robotPIDGains.IbodyY = robotGains[body_y].kI;
 		robotPIDGains.DbodyY = robotGains[body_y].kD;
+		robotPIDGains.PbodyW = robotGains[body_w].kP;
+		robotPIDGains.IbodyW = robotGains[body_w].kI;
+		robotPIDGains.DbodyW = robotGains[body_w].kD;
 		robotPIDGains.PbodyYaw = robotGains[body_yaw].kP;
 		robotPIDGains.IbodyYaw = robotGains[body_yaw].kI;
 		robotPIDGains.DbodyYaw = robotGains[body_yaw].kD;
@@ -565,6 +584,14 @@ void handleRobotGetPIDGains(uint8_t* packet_buffer){
 	flagSendPIDGains = true;
 }
 
+void handleRobotSetPIDGains(uint8_t* packet_buffer){
+	REM_RobotSetPIDGainsPayload* rspidgp = (REM_RobotSetPIDGainsPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotSetPIDGains_get_remVersion(rspidgp) == LOCAL_REM_VERSION;
+	decodeREM_RobotSetPIDGains(&robotSetPIDGains, rspidgp);
+	stateControl_SetPIDGains(&robotSetPIDGains);
+	wheels_SetPIDGains(&robotSetPIDGains);
+}
+
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
 	time_last_packet_serial = HAL_GetTick();
@@ -594,6 +621,11 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				handleRobotGetPIDGains(packet_buffer + total_bytes_processed);
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
 				break;
+			
+			case PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
+				handleRobotSetPIDGains(packet_buffer + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
+				break;
 
 			case PACKET_TYPE_REM_SX1280FILLER:
 				total_bytes_processed += PACKET_SIZE_REM_SX1280FILLER;
@@ -607,9 +639,6 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 	return true;
 }
-
-
-
 
 
 // ----------------------------------------------------- STM HAL CALLBACKS -----------------------------------------------------
@@ -692,17 +721,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			wheels_Stop();
 			return;
 		}
-
-		// // State estimation
-		// stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;
-		// stateInfo.visionYaw = activeRobotCommand.cameraAngle; // TODO check if this is scaled properly with the new REM messages
-		
-		// wheels_GetMeasuredSpeeds(stateInfo.wheelSpeeds);
-		// stateInfo.xsensAcc[body_x] = MTi->acc[body_x];
-		// stateInfo.xsensAcc[body_y] = MTi->acc[body_y];
-		// stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
-		// stateInfo.rateOfTurn = MTi->gyr[2];
-		// stateEstimation_Update(&stateInfo);
 
 		// State control
 		stateControl_SetState(stateEstimation_GetState());

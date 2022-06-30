@@ -26,6 +26,7 @@
 #include "control_util.h"
 #include "gpio_util.h"
 #include "tim_util.h"
+#include "REM_RobotSetPIDGains.h"
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
@@ -43,6 +44,8 @@ void wheels_SetSpeeds(const float speeds[4]);
 void wheels_GetMeasuredSpeeds(float speeds[4]);
 // Get the current wheel PWMs
 void wheels_GetPWM(uint32_t pwms[4]);
+// Set the PID gains for the wheels
+void wheels_SetPIDGains(REM_RobotSetPIDGains* PIDGains);
 // Get the current status of the brakes
 bool wheels_GetWheelsBraking();
 // Enable the brakes

@@ -41,4 +41,6 @@ void stateEstimation_Update(StateInfo* input);
 
 float* stateEstimation_GetState();
 
+float stateEstimation_GetFilteredRoT();
+
 #endif /* DO_STATEESTIMATION_H_ */

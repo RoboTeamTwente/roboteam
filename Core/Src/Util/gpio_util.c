@@ -8,6 +8,7 @@
 #include "gpio_util.h"
 #include "main.h"
 
+#define DEFINE_PIN(label,pin_name) GPIO_Pin label = {pin_name##_GPIO_Port, pin_name##_Pin};
 // List known GPIO pins
 
 // Kick/Chip
@@ -15,13 +16,6 @@ GPIO_Pin Kick_pin 			= { Kick_GPIO_Port			, Kick_Pin			};
 GPIO_Pin Chip_pin 			= { Chip_GPIO_Port			, Chip_Pin			};
 GPIO_Pin Charge_pin 		= { Charge_GPIO_Port		, Charge_Pin		};
 GPIO_Pin Charge_done_pin 	= { Charge_done_GPIO_Port	, Charge_done_Pin	};
-
-// Geneva
-GPIO_Pin Geneva_PWM_pin		= { PWM_Geneva_GPIO_Port	, PWM_Geneva_Pin	};
-GPIO_Pin Geneva_DIR_A_pin 	= { Geneva_DIRA_GPIO_Port	, Geneva_DIRA_Pin	};
-GPIO_Pin Geneva_DIR_B_pin 	= { Geneva_DIRB_GPIO_Port	, Geneva_DIRB_Pin	};
-GPIO_Pin Geneva_ENC_A_pin	= { Geneva_CHA_GPIO_Port	, Geneva_CHA_Pin	};
-GPIO_Pin Geneva_ENC_B_pin	= { Geneva_CHB_GPIO_Port	, Geneva_CHB_Pin	};
 
 // Wheels PWM
 GPIO_Pin RB_PWM_pin			= { RB_PWM_GPIO_Port		, RB_PWM_Pin		};
@@ -51,9 +45,6 @@ GPIO_Pin LB_ENC_B_pin		= { LB_CHB_GPIO_Port		, LB_CHB_Pin		};
 GPIO_Pin LF_ENC_A_pin		= { LF_CHA_GPIO_Port		, LF_CHA_Pin		};
 GPIO_Pin LF_ENC_B_pin		= { LF_CHB_GPIO_Port		, LF_CHB_Pin		};
 
-// Battery
-GPIO_Pin Bat_pin			= { Battery_empty_GPIO_Port	, Battery_empty_Pin	};
-
 // Dribbler
 GPIO_Pin Dribbler_PWM_pin	= { PWM_Dribbler_GPIO_Port	, PWM_Dribbler_Pin	};
 
@@ -73,11 +64,11 @@ GPIO_Pin ID1_pin			= { ID1_GPIO_Port			, ID1_Pin			};
 GPIO_Pin ID2_pin			= { ID2_GPIO_Port			, ID2_Pin			};
 GPIO_Pin ID3_pin			= { ID3_GPIO_Port			, ID3_Pin			};
 
-// GPIO header
-GPIO_Pin OUT1_pin			= { GPIO_OUT1_GPIO_Port		, GPIO_OUT1_Pin		};
-GPIO_Pin OUT2_pin			= { GPIO_OUT2_GPIO_Port		, GPIO_OUT2_Pin		};
-GPIO_Pin IN1_pin			= { GPIO_IN1_GPIO_Port		, GPIO_IN1_Pin		};
-GPIO_Pin IN2_pin			= { GPIO_IN2_GPIO_Port		, GPIO_IN2_Pin		};
+// Feature Select
+DEFINE_PIN(FT0_pin, FT0)
+DEFINE_PIN(FT1_pin, FT1)
+DEFINE_PIN(FT2_pin, FT2)
+DEFINE_PIN(FT3_pin, FT3)
 
 // MTi
 GPIO_Pin MTi_RST_pin 		= { XSENS_RST_GPIO_Port		, XSENS_RST_Pin		};
@@ -93,3 +84,17 @@ GPIO_Pin SX_BUSY_pin		= { SPI4_BUSY_GPIO_Port 	, SPI4_BUSY_Pin		};
 // Ballsensor
 GPIO_Pin BS_RST_pin			= { BS_RST_GPIO_Port 		, BS_RST_Pin		};
 GPIO_Pin BS_IRQ_pin			= { BS_IRQ_GPIO_Port 		, BS_IRQ_Pin		};
+
+// Battery
+DEFINE_PIN(BAT_SDN_pin, Batt_SDN)
+DEFINE_PIN(BAT_KILL_pin, Batt_kill)
+DEFINE_PIN(BAT_IRQ_pin, Batt_IRQ)
+
+// SD
+DEFINE_PIN(SD_CD_pin, SD_MMC1_CD)
+
+// Interface
+// DEFINE_PIN(INT_EN_pin, Interface_EN)
+GPIO_Pin INT_EN_pin         = { Interface_EN_GPIO_Port, Interface_EN_Pin};
+// DEFINE_PIN(INT_ENneg_pin, Interface_ENnegative)
+GPIO_Pin INT_ENneg_pin      = { Interface_ENnegative_GPIO_Port, Interface_ENnegative_Pin};

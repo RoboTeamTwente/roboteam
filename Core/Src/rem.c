@@ -21,7 +21,7 @@ static REM_RobotCommandPayload rcp;
  */
 void REM_UARTinit(UART_HandleTypeDef *huart){
     LOG("[REM_UARTinit]\n");
-    HAL_UART_Receive_IT(huart, REM_buffer, 1);
+    //HAL_UART_Receive_IT(huart, REM_buffer, 1); // if uncommented, only use with programmer connected
 }
 
 /**
@@ -51,7 +51,7 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     }else{
         // TODO add some error handling here or something.
         LOG("Unknown header\n");
-        sprintf(logBuffer, "Received unknown header %d\n", packetType);
+        // sprintf(logBuffer, "Received unknown header %d\n", packetType);
     }
     
     // Schedule the read for the next header byte

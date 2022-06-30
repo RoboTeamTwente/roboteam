@@ -247,9 +247,6 @@ void init(void){
 	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
 	 but its better than suddenly having non-responding robots in a match */
 	IWDG_Init(iwdg, 5000);
-
-    set_Pin(OUT1_pin, HIGH);  // reference pin for motor wattage
-    set_Pin(OUT2_pin, HIGH);  // reference pin for feedback header
 	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
@@ -267,7 +264,7 @@ void init(void){
 	LOG_sendAll();
 	
 	/* Read jumper */
-	SEND_ROBOT_STATE_INFO = !read_Pin(IN1_pin);
+	SEND_ROBOT_STATE_INFO = !read_Pin(FT0_pin);
 
 	/* Initialize buzzer */
 	buzzer_Init();
@@ -299,7 +296,7 @@ void init(void){
     stateEstimation_Init();
     shoot_Init();
     dribbler_Init();
-    if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
+    // if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
 
 	/* Initialize the SX1280 wireless chip */
@@ -316,7 +313,7 @@ void init(void){
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	LOG_sendAll();
     
-	if(read_Pin(IN2_pin)){
+	if(read_Pin(FT1_pin)){
 		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
 	}else{
@@ -341,8 +338,10 @@ void init(void){
 	
 	set_Pin(LED5_pin, 1);
 
-	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 	LOG_sendAll();
+	set_Pin(INT_EN_pin, 1);
+	set_Pin(INT_ENneg_pin, 0);
+	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 
 	WaitForPacket(SX);
 
@@ -399,6 +398,7 @@ void loop(void){
 		// Quick fix to also stop the dribbler from rotating when the command is reset
 		// TODO maybe move executeCommand to TIMER_7?
 		dribbler_SetSpeed(0);
+
 		REM_last_packet_had_correct_version = true;
     }
 
@@ -484,13 +484,28 @@ void loop(void){
 
 	}
 
+	// if(read_Pin(BAT_SDN_pin) == false){
+	// 	set_Pin(LED6_pin,true);
+	// 	LOG_printf("shutting down");
+	// 	LOG_send();
+	// }
+
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
 
+		static count = 0;
+		count++;
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
+		// toggle_Pin(INT_EN_pin);
+		// toggle_Pin(INT_ENneg_pin);
+		// if(count>10){
+		// 	set_Pin(BAT_KILL_pin, false);
+		// 	LOG_printf("kill power");
+		// 	count = 0;
+		// }
 
 		// switch(SX->state){
 		// case WIRELESS_RESET: LOG_printf("%d: state=WIRELESS_RESET\n", now); break;
@@ -504,12 +519,12 @@ void loop(void){
 		// }
 
 		// Check if ballsensor connection is still correct
-        if ( !ballSensor_isInitialized() ) {
+        /*if ( !ballSensor_isInitialized() ) {
             ballSensor_Init();
             __HAL_I2C_DISABLE(BS_I2C);
             HAL_Delay(1);
             __HAL_I2C_ENABLE(BS_I2C);
-        }
+        }*/
     }
 
     /* LEDs for debugging */
@@ -649,6 +664,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		counter_htim7++;
 
 		// if(MTi == NULL) return;
+		// float speeds[4] = {5., 5., 5., 5.};
+		// wheels_Unbrake();
+		// wheels_SetSpeeds(speeds);
+		// wheels_Update();
+		// return;
 
 		// State estimation		
 		stateInfo.visionAvailable = activeRobotCommand.useCameraAngle;

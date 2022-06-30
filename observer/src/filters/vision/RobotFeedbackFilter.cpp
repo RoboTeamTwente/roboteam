@@ -45,9 +45,10 @@ void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback &feedback) {
 //TODO: now just returns last received feedback: use timestamps and some cutoff limit to prevent sending old feedback
 proto::RobotProcessedFeedback SingleRobotFeedbackFilter::getFilteredFeedback() const {
     proto::RobotProcessedFeedback feedback;
-    feedback.set_has_ball(storedFeedback.hasBall);
+    feedback.set_ball_sensor_sees_ball(storedFeedback.ballSensorSeesBall);
     feedback.set_ball_position(storedFeedback.ballPosition);
     feedback.set_ball_sensor_is_working(storedFeedback.ballSensorIsWorking);
+    feedback.set_dribbler_sees_ball(storedFeedback.dribblerSeesBall);
     feedback.set_battery_level(storedFeedback.batteryLevel);
     feedback.set_xsens_is_calibrated(storedFeedback.xSensIsCalibrated);
     feedback.set_signal_strength(storedFeedback.signalStrength);

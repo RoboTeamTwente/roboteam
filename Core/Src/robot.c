@@ -429,7 +429,7 @@ void loop(void){
 		robotFeedback.XsensCalibrated = xsens_CalibrationDone;
 		// robotFeedback.batteryLevel = (batCounter > 1000);
 		robotFeedback.ballSensorWorking = ballSensor_isInitialized();
-		robotFeedback.hasBall = ballPosition.canKickBall;
+		robotFeedback.ballSensorSeesBall = ballPosition.canKickBall;
 		robotFeedback.ballPos = ballSensor_isInitialized() ? (-.5 + ballPosition.x / 700.) : 0;
 
 		float vx = stateEstimation_GetState()[body_x];

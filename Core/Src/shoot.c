@@ -41,10 +41,12 @@ void shoot_Callback()
 {
 	int callbackTime = 0;
 	static int count = 0;
+	static bool charging = false;
 
 	switch(shootState){
 	case shoot_Ready:
-		set_Pin(Charge_pin, 1); // Keep charging
+		charging = !charging;
+		set_Pin(Charge_pin, charging); // Keep charging
 		callbackTime = TIMER_FREQ/READY_CALLBACK_FREQ;
 		break;
 	case shoot_Charging:

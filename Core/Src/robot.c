@@ -263,6 +263,9 @@ void init(void){
 	/* Read ID from switches */
 	ROBOT_ID = get_Id();
 	set_Pin(LED0_pin, 1);
+	set_Pin(INT_EN_pin, 1);
+	set_Pin(INT_ENneg_pin, 0);
+	set_Pin(BAT_KILL_pin, 1);
 
 	LOG_init();
 

@@ -257,7 +257,9 @@ void init(void){
 	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
- 
+	set_Pin(INT_EN_pin, 1);
+	set_Pin(INT_ENneg_pin, 0);
+	set_Pin(BAT_KILL_pin, 1);
 	/* Read ID from switches */
 	ROBOT_ID = get_Id();
 	set_Pin(LED0_pin, 1);
@@ -343,8 +345,6 @@ void init(void){
 	set_Pin(LED5_pin, 1);
 
 	LOG_sendAll();
-	set_Pin(INT_EN_pin, 1);
-	set_Pin(INT_ENneg_pin, 0);
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 
 	WaitForPacket(SX);
@@ -455,8 +455,8 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
-		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
-		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
+		robotStateInfo.bodyXIntegral = stateInfo.dribblerFilteredSpeed;
+		robotStateInfo.bodyYIntegral = stateInfo.speedBeforeGotBall;
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RF);
@@ -496,6 +496,10 @@ void loop(void){
 	if(heartbeat_100ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_100ms < now) heartbeat_100ms += 100;
+		dribbler_Update();
+		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
+		dribbler_GetFilteredSpeeds(&stateInfo.dribblerFilteredSpeed);
+		dribbler_GetSpeedBeforeGotBall(&stateInfo.speedBeforeGotBall);
 
 		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
 		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
@@ -711,7 +715,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.xsensYaw = (MTi->angles[2]*M_PI/180); //Gradients to Radians
 		stateInfo.rateOfTurn = MTi->gyr[2];
 		stateEstimation_Update(&stateInfo);
-		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
 
 		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
@@ -729,7 +732,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		wheels_SetSpeeds( stateControl_GetWheelRef() );
 		wheels_Update();
-		dribbler_Update();
 
 	}
 	else if (htim->Instance == htim10.Instance) {

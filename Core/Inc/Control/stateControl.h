@@ -27,8 +27,8 @@
 #define default_I_gain_y 0.0
 #define default_D_gain_y 0.0
 
-#define default_P_gain_w 1.5
-#define default_I_gain_w 0.5
+#define default_P_gain_w 0.25
+#define default_I_gain_w 5.0
 #define default_D_gain_w 0.0
 
 #define default_P_gain_yaw 20.0

@@ -3,12 +3,15 @@
 
 #define DRIBBLER_MAX_PWM 10000
 
+movingAverage movingAvg = {{0.0},{1.0}, 0, 0, 0.0};
 
 ///////////////////////////////////////////////////// VARIABLES
-static float dribbler_measured_speed;               // Stores most recent measurement of dribbler speed in rad/s
-static float dribbler_previous_measured_speed;      // Stores the previous measurement of dribbler speed in rad/s
-static bool hasBall = false;						// Stores information if dribbler thinks it has the ball
-static bool previousHadBall = false;				// Stores the previous information about if dribbler thinks it has the ball
+static float dribbler_measured_speed = 0.0;             		   // Stores most recent measurement of dribbler speed in rad/s
+static float dribbler_previous_measured_speed = 0.0;     		   // Stores the previous measurement of dribbler speed in rad/s
+static float dribbler_filtered_measured_speed = 0.0; 		       // Stores filtered measurement of dribbler speed in rad/s
+static float dribbler_previous_filtered_measured_speed = 0.0;      // Stores the previous filtered measurement of dribbler speed in rad/s
+static bool hasBall = false;					        		   // Stores information if dribbler thinks it has the ball
+static bool previousHadBall = false;				   			   // Stores the previous information about if dribbler thinks it has the ball
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -20,6 +23,9 @@ static void resetWheelEncoders();
 
 // Calculates angular velocity in rad/s for each wheel based on their encoder values
 static void computeDribblerSpeed(float *speed);
+
+// moving average filter on the dribbler speed
+float smoothen_dribblerSpeed(float speed);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
@@ -46,7 +52,6 @@ void dribbler_SetSpeed(float speed){
 	// The 12V and 24V boards require different calculations for the dribbler PWM
 	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
 	if (MOTORS_50W) {
-		// Dribbler is connected to same timer (htim8) as two motors, thus they share the same MAX_PWM
 		set_PWM(PWM_Dribbler, speed * DRIBBLER_MAX_PWM);
 	} else {
 		set_PWM(PWM_Dribbler, (1 - speed) * DRIBBLER_MAX_PWM);
@@ -67,7 +72,14 @@ void dribbler_SetSpeed(float speed){
  */
 void dribbler_Update(){
 	dribbler_previous_measured_speed = dribbler_measured_speed;
+	dribbler_previous_filtered_measured_speed = dribbler_filtered_measured_speed;
 	computeDribblerSpeed(&dribbler_measured_speed);
+	dribbler_filtered_measured_speed = smoothen_dribblerSpeed(dribbler_measured_speed);
+
+	int size = sizeof(movingAvg.filteredBuffer)/sizeof(movingAvg.filteredBuffer[0]);
+    movingAvg.filteredBuffer[movingAvg.filteredIdx] = dribbler_filtered_measured_speed;
+	movingAvg.filteredIdx = (movingAvg.filteredIdx+1) % size;
+
 }
 
 /**
@@ -80,13 +92,33 @@ void dribbler_GetMeasuredSpeeds(float *speed) {
 	*speed = dribbler_measured_speed;
 }
 
+void dribbler_GetFilteredSpeeds(float *speed) {
+	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
+	*speed = dribbler_filtered_measured_speed;
+}
+
+void dribbler_GetSpeedBeforeGotBall(float *speed) {
+	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
+	*speed = movingAvg.speedBeforeGotBall;
+}
+
 bool dribbler_hasBall(){
 	previousHadBall = hasBall;
 	//hasBall = false;
-	if (dribbler_measured_speed < 700.0 && ((dribbler_measured_speed - dribbler_previous_measured_speed + 5) < 0 ))
+	/*if (dribbler_measured_speed < 700.0 && ((dribbler_measured_speed - dribbler_previous_measured_speed + 5) < 0 ))
 		hasBall = true;
 	if (hasBall == true)
 		if (dribbler_measured_speed > 900)
+			hasBall = false;*/
+	int size = sizeof(movingAvg.filteredBuffer)/sizeof(movingAvg.filteredBuffer[0]);
+	if (hasBall == false)
+		if (movingAvg.filteredBuffer[movingAvg.filteredIdx+1 % size] > 50.0)
+			movingAvg.speedBeforeGotBall = movingAvg.filteredBuffer[movingAvg.filteredIdx+1 % size];
+	
+	if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed + 5) < 0) && dribbler_filtered_measured_speed > 400)
+		hasBall = true;
+	if (hasBall == true)
+		if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_measured_speed > (movingAvg.speedBeforeGotBall))
 			hasBall = false;
 	return hasBall;
 }
@@ -127,3 +159,15 @@ static void computeDribblerSpeed(float *speed){
 	*speed = DRIBBLER_ENCODER_TO_OMEGA * encoder_value; 
 }
 
+float smoothen_dribblerSpeed(float speed){
+	int size = sizeof(movingAvg.movingAvgBuffer)/sizeof(movingAvg.movingAvgBuffer[0]);
+    movingAvg.movingAvgBuffer[movingAvg.movingAvgIdx] = speed;
+	movingAvg.movingAvgIdx = (movingAvg.movingAvgIdx+1) % size;
+
+    float avg = 0.0f;  // average of buffer, which is the smoothed rate of turn
+    for (int i=0; i<size; i++){
+        avg += movingAvg.movingAvgBuffer[i];
+    }
+	avg = avg/(float)size;
+    return avg;
+} 

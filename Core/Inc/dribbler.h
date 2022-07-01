@@ -17,6 +17,14 @@
 #include "gpio_util.h"
 #include "tim_util.h"
 
+typedef struct movingAverage {
+    float movingAvgBuffer[5];
+    float filteredBuffer[3];
+    int movingAvgIdx;
+    int filteredIdx;
+    float speedBeforeGotBall;
+} movingAverage;
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
 // Initializes the PIDs / encoders / PWM timers
@@ -29,7 +37,11 @@ void dribbler_SetSpeed(float speed);
 void dribbler_Update();
 // Get the last measured dribbler speeds in rad/s
 void dribbler_GetMeasuredSpeeds(float *speed);
+// Get the filtered dribbler speeds in rad/s
+void dribbler_GetFilteredSpeeds(float *speed);
 // returns true if the dribbler speed decreases
 bool dribbler_hasBall();
+
+void dribbler_GetSpeedBeforeGotBall(float *speed);
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

@@ -134,7 +134,8 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.theta = static_cast<float>(robotCommand.velocity.angle());
 
         command.useAbsoluteAngle = !robotCommand.useAngularVelocity;
-        command.angle = robotCommand.useAngularVelocity ? static_cast<float>(robotCommand.targetAngularVelocity) : static_cast<float>(robotCommand.targetAngle.getValue());
+        command.angle = static_cast<float>(robotCommand.targetAngle.getValue());
+        command.angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
         command.cameraAngle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;

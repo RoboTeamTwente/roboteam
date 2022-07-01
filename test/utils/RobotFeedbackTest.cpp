@@ -16,9 +16,10 @@ Team randomTeam() {
 RobotFeedback randomFeedback() {
     RobotFeedback feedback = {
         .id = SimpleRandom::getInt(0, 15),
-        .hasBall = SimpleRandom::getBool(),
+        .ballSensorSeesBall = SimpleRandom::getBool(),
         .ballPosition = static_cast<float>(SimpleRandom::getDouble(-0.5, 0.5)),
         .ballSensorIsWorking = SimpleRandom::getBool(),
+        .dribblerSeesBall = SimpleRandom::getBool(),
         .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
         .angle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
         .xSensIsCalibrated = SimpleRandom::getBool(),
@@ -35,9 +36,10 @@ RobotFeedback randomFeedback() {
 TEST(RobotFeedbackTest, instantiation) {
     RobotFeedback robotFeedback;
     ASSERT_EQ(robotFeedback.id, 0);
-    ASSERT_FALSE(robotFeedback.hasBall);
+    ASSERT_FALSE(robotFeedback.ballSensorSeesBall);
     ASSERT_FLOAT_EQ(robotFeedback.ballPosition, 0.0f);
     ASSERT_FALSE(robotFeedback.ballSensorIsWorking);
+    ASSERT_FALSE(robotFeedback.dribblerSeesBall);
     ASSERT_EQ(robotFeedback.velocity, Vector2());
     ASSERT_EQ(robotFeedback.angle, Angle());
     ASSERT_FALSE(robotFeedback.xSensIsCalibrated);

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "dribbler.h"
+#include <math.h>
 
 #define DRIBBLER_MAX_PWM 10000
 
@@ -118,7 +119,7 @@ bool dribbler_hasBall(){
 	if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed + 5) < 0) && dribbler_filtered_measured_speed > 400)
 		hasBall = true;
 	if (hasBall == true)
-		if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_measured_speed > (movingAvg.speedBeforeGotBall))
+		if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5))
 			hasBall = false;
 	return hasBall;
 }
@@ -152,11 +153,16 @@ static void resetWheelEncoders() {
  */
 static void computeDribblerSpeed(float *speed){
 	int16_t encoder_value = 0;
+	float measurement;
 	getEncoderData(&encoder_value);
 	resetWheelEncoders();
 	
 	// Convert encoder values to rad/s
-	*speed = DRIBBLER_ENCODER_TO_OMEGA * encoder_value; 
+	measurement = DRIBBLER_ENCODER_TO_OMEGA * (float) encoder_value;
+	if (measurement < 0) 
+		*speed = -measurement; 
+	else
+		*speed = measurement; 
 }
 
 float smoothen_dribblerSpeed(float speed){

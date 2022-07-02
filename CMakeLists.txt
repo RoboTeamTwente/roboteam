@@ -41,6 +41,7 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/LineTest.cpp
         test/utils/LineIntersectionTest.cpp
         test/utils/LineProjectionTest.cpp
+        test/utils/LineSegmentTest.cpp
         test/utils/CircleTest.cpp
         test/utils/PolygonTest.cpp
         test/utils/PositionTest.cpp

@@ -11,7 +11,7 @@ HalfLine::HalfLine(const Vector2 &start, const Vector2 &goesThrough) {
     }
 }
 
-std::optional<Vector2> HalfLine::intersect(const Line &line) {
+std::optional<Vector2> HalfLine::intersect(const Line &line) const {
     auto result = Line::intersect(start, goesThrough, line.v1, line.v2);
     if (result.has_value()) {
         float t = Line::relativePosition(start, goesThrough, result.value());
@@ -29,6 +29,10 @@ Vector2 HalfLine::project(const Vector2 &point) const {
         return start;
     }
     return projection;
+}
+
+Line HalfLine::toLine() const {
+    return Line(this->start, this->goesThrough);
 }
 
 }  // namespace rtt

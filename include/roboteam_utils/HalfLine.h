@@ -33,7 +33,7 @@ class HalfLine {
      * @return std::nullopt in case of no intersection. In case there is a single intersection point, return that point. In case there are multiple (infinitely many)
      * intersection points, return the intersection point closest to the origin (0,0).
      */
-    std::optional<Vector2> intersect(const Line &line);
+    std::optional<Vector2> intersect(const Line &line) const;
 
     /**
      * Projects the point onto this HalfLine, i.e. find the location on this HalfLine closest to that point.
@@ -42,6 +42,12 @@ class HalfLine {
      * @return The projection point. Note that this point is located on this HalfLine, but it does NOT have to be orthogonal to the given point.
      */
     Vector2 project(const Vector2 &point) const;
+
+    /**
+     * Converts the current HalfLine to a full line
+     * @return a full line of which this line is a part
+     */
+    Line toLine() const;
 };
 }  // namespace rtt
 #endif  // RTT_ROBOTEAM_UTILS_SRC_HALFLINE_H_

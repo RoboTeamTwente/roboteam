@@ -16,9 +16,10 @@ std::string robotFeedbackSourceToString(RobotFeedbackSource source) {
 
 bool RobotFeedback::operator==(const RobotFeedback &other) const {
     return this->id == other.id
-        && this->hasBall == other.hasBall
+        && this->ballSensorSeesBall == other.ballSensorSeesBall
         && this->ballPosition == other.ballPosition
         && this->ballSensorIsWorking == other.ballSensorIsWorking
+        && this->dribblerSeesBall == other.dribblerSeesBall
         && this->velocity == other.velocity
         && this->angle == other.angle
         && this->xSensIsCalibrated == other.xSensIsCalibrated
@@ -36,9 +37,10 @@ std::string boolToString(bool b) {
 std::ostream &RobotFeedback::write(std::ostream &os) const {
     return os << "{"
         << "id: " << formatString("%2i", this->id) << ", "
-        << "hasBall: " << boolToString(this->hasBall) << ", "
+        << "ballSensorSeesBall: " << boolToString(this->ballSensorSeesBall) << ", "
         << "ballPos: " << formatString("%5f", this->ballPosition) << ", "
         << "ballSensorWorks: " << boolToString(this->ballSensorIsWorking) << ", "
+        << "dribblerSeesBall: " << boolToString(this->dribblerSeesBall) << ", "
         << "velocity: " << this->velocity << ", "
         << "angle: " << this->angle << ", "
         << "xSensCalib: " << boolToString(this->xSensIsCalibrated) << ", "

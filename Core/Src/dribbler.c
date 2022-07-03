@@ -122,7 +122,7 @@ bool dribbler_hasBall(){
 	if (hasBall == true)
 		if ((((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5)) || movingAvg.commandedSpeed < 0.05)
 			hasBall = false;
-	if (movingAvg.commandedSpeed == 0)
+	if (movingAvg.commandedSpeed < 0.05)
 		resetDribblerBallSensor();
 	return hasBall;
 }

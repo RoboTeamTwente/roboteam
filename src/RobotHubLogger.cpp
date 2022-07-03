@@ -4,9 +4,9 @@
 #include <roboteam_utils/Format.hpp>
 
 constexpr char MARPLE_DELIMITER = ',';
-constexpr char ROBOT_STATE_MARPLE_HEADER[] = "time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4";
+constexpr char ROBOT_STATE_MARPLE_HEADER[] = "time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4,dribbleSpeed,bodyXInt,bodyYInt,bodyWInt,bodyYawInt,wheel1Int,wheel2Int,wheel3Int,wheel4Int";
 constexpr char ROBOT_COMMANDS_MARPLE_HEADER[] = "time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket";
-constexpr char ROBOT_FEEDBACK_MARPLE_HEADER[] = "time,team,source,id,hasBall,ballPos,sensorWorking,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength";
+constexpr char ROBOT_FEEDBACK_MARPLE_HEADER[] = "time,team,source,id,sensorSeesBall,ballPos,sensorWorking,dribblerSeesBall,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength";
 
 namespace rtt {
 
@@ -190,7 +190,16 @@ void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team
             << info.wheelSpeed1 << MARPLE_DELIMITER
             << info.wheelSpeed2 << MARPLE_DELIMITER
             << info.wheelSpeed3 << MARPLE_DELIMITER
-            << info.wheelSpeed4 << std::endl;
+            << info.wheelSpeed4 << MARPLE_DELIMITER
+            << info.dribbleSpeed << MARPLE_DELIMITER
+            << info.bodyXIntegral << MARPLE_DELIMITER
+            << info.bodyYIntegral << MARPLE_DELIMITER
+            << info.bodyWIntegral << MARPLE_DELIMITER
+            << info.bodyYawIntegral << MARPLE_DELIMITER
+            << info.wheel1Integral << MARPLE_DELIMITER
+            << info.wheel2Integral << MARPLE_DELIMITER
+            << info.wheel3Integral << MARPLE_DELIMITER
+            << info.wheel4Integral << std::endl;
     } else {
         this->stateInfoLogger
             << "[" << Time::getTimeWithMilliseconds(':') << "] "
@@ -204,7 +213,16 @@ void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team
             << "wheelSp1: " << formatString("%&7f", info.wheelSpeed1) << ", "
             << "wheelSp2: " << formatString("%7f", info.wheelSpeed2) << ", "
             << "wheelSp3: " << formatString("%7f", info.wheelSpeed3) << ", "
-            << "wheelSp4: " << formatString("%7f", info.wheelSpeed4) << std::endl;
+            << "wheelSp4: " << formatString("%7f", info.wheelSpeed4) << std::endl
+            << "dribblerSpeed: " << formatString("%7f", info.dribbleSpeed) << std::endl
+            << "bodyXIntegral: " << formatString("%7f", info.bodyXIntegral) << std::endl
+            << "bodyYIntegral: " << formatString("%7f", info.bodyYIntegral) << std::endl
+            << "bodyWIntegral: " << formatString("%7f", info.bodyWIntegral) << std::endl
+            << "bodyYawIntegral: " << formatString("%7f", info.bodyYawIntegral) << std::endl
+            << "wheel1Integral: " << formatString("%7f", info.wheel1Integral) << std::endl
+            << "wheel2Integral: " << formatString("%7f", info.wheel2Integral) << std::endl
+            << "wheel3Integral: " << formatString("%7f", info.wheel3Integral) << std::endl
+            << "wheel4Integral: " << formatString("%7f", info.wheel4Integral) << std::endl;
     }
 }
 
@@ -217,15 +235,16 @@ void RobotHubLogger::logRobotFeedback(const RobotsFeedback &feedback) {
         auto source = feedbackSourceToInt(feedback.source);
 
         for (const auto& robot : feedback.feedback) {
-            //time,team,source,id,hasBall,ballPos,sensorWorking,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength
+            //time,team,source,id,sensorSeesBall,ballPos,sensorWorking,dribblerSeesBall,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength
             this->feedbackLogger
                 << now << MARPLE_DELIMITER
                 << team << MARPLE_DELIMITER
                 << source << MARPLE_DELIMITER
                 << robot.id << MARPLE_DELIMITER
-                << robot.hasBall << MARPLE_DELIMITER
+                << robot.ballSensorSeesBall << MARPLE_DELIMITER
                 << robot.ballPosition << MARPLE_DELIMITER
                 << robot.ballSensorIsWorking << MARPLE_DELIMITER
+                << robot.dribblerSeesBall << MARPLE_DELIMITER
                 << robot.velocity.x << MARPLE_DELIMITER
                 << robot.velocity.y << MARPLE_DELIMITER
                 << robot.angle.getValue() << MARPLE_DELIMITER

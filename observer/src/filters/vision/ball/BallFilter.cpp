@@ -56,10 +56,10 @@ FilteredBall BallFilter::mergeBalls(Time time) const {
     ball.velocityUncertainty+=velWeight;
   }
   constexpr double limit = 1e-10;
-  if(ball.posUncertainty <= limit){
+  if(ball.posUncertainty >= limit){
       ball.position /= ball.posUncertainty;
   }
-  if(ball.velocityUncertainty <= limit){
+  if(ball.velocityUncertainty >= limit){
       ball.velocity /= ball.velocityUncertainty;
   }
 

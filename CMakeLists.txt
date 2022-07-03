@@ -14,6 +14,7 @@ target_link_libraries(roboteam_observer
         PRIVATE observer
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
+        PRIVATE roboteam_logging
         PRIVATE Qt5::Network
         )
 target_include_directories(roboteam_observer

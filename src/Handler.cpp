@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <proto/messages_robocup_ssl_wrapper.pb.h>
 
+#include <roboteam_logging/LogFileWriter.h>
+
 void Handler::start() {
     if (!initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
@@ -15,6 +17,19 @@ void Handler::start() {
 
     roboteam_utils::Timer t;
 
+    rtt::LogFileWriter fileWriter;
+    {
+        auto now = Time::now();
+        long total_seconds = now.asIntegerSeconds();
+        long days = total_seconds/(24*3600);
+        long day_seconds = total_seconds % (24*3600);
+        long hours = day_seconds/3600;
+        long minutes = (day_seconds -hours*3600)/60;
+        long seconds = day_seconds % 60;
+        long mili = now.asIntegerMilliSeconds() % 1000;
+        std::string file_name = "world_log_" + std::to_string(days) + "_" +std::to_string(hours) + "_" + std::to_string(minutes) +"_" + std::to_string(seconds) + "_" + std::to_string(mili)+".log";
+        fileWriter.open(file_name);
+    }
     t.loop(
         [&]() {
             auto vision_packets = receiveVisionPackets();
@@ -38,6 +53,10 @@ void Handler::start() {
             }
             if(!sent){
               std::cout<<"could not send data on publisher!"<<std::endl;
+            }
+            bool good = fileWriter.addMessage(state,Time::now().asNanoSeconds());
+            if(!good){
+                std::cout<<"could not log message to file!\n";
             }
         },
         100);

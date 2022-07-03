@@ -12,6 +12,7 @@ bool Robot::operator==(const Robot &other) const {
         && this->ballSensorSeesBall == other.ballSensorSeesBall
         && this->ballSensorIsWorking == other.ballSensorIsWorking
         && this->ballPositionOnSensor == other.ballPositionOnSensor
+        && this->dribblerSeesBall == other.dribblerSeesBall
         && this->dribblerSpeed == other.dribblerSpeed
         && this->xSensIsCalibrated == other.xSensIsCalibrated
         && this->capacitorIsCharged == other.capacitorIsCharged

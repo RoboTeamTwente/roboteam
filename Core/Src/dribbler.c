@@ -122,23 +122,7 @@ bool dribbler_hasBall(){
 	if (hasBall == true)
 		if ((((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5)) || movingAvg.commandedSpeed < 0.05)
 			hasBall = false;
-	if (movingAvg.commandedSpeed < 0.05)
-		resetDribblerBallSensor();
 	return hasBall;
-}
-
-void resetDribblerBallSensor(){
-	int filteredBufferSize = sizeof(movingAvg.filteredBuffer)/sizeof(movingAvg.filteredBuffer[0]);
-	for (int i=0; i<filteredBufferSize; i++){
-        movingAvg.filteredBuffer[i] = 0.0;
-    }
-	int movingAvgBufferSize = sizeof(movingAvg.movingAvgBuffer)/sizeof(movingAvg.movingAvgBuffer[0]);
-	for (int i=0; i<movingAvgBufferSize; i++){
-        movingAvg.movingAvgBuffer[i] = 0.0;
-    }
-	movingAvg.filteredIdx = 0;
-	movingAvg.movingAvgIdx = 0;
-	movingAvg.speedBeforeGotBall = 0.0;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS

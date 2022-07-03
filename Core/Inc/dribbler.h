@@ -23,6 +23,7 @@ typedef struct movingAverage {
     int movingAvgIdx;
     int filteredIdx;
     float speedBeforeGotBall;
+    float commandedSpeed;
 } movingAverage;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
@@ -41,6 +42,8 @@ void dribbler_GetMeasuredSpeeds(float *speed);
 void dribbler_GetFilteredSpeeds(float *speed);
 // returns true if the dribbler speed decreases
 bool dribbler_hasBall();
+
+void resetDribblerBallSensor();
 
 void dribbler_GetSpeedBeforeGotBall(float *speed);
 

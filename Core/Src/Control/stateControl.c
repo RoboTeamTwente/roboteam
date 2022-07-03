@@ -9,6 +9,7 @@ static float stateRef[4] = {0.0f};
 static float wheelRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 static float state[4] = {0.0f};
 static bool useAbsoluteAngle = true;
+static bool previousUseAbsoluteAngle = true;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
@@ -108,6 +109,11 @@ float stateControl_GetIntegral(body_handles direction) {
 }
 
 void stateControl_useAbsoluteAngle(bool angularControl){
+	if (angularControl != previousUseAbsoluteAngle){
+		stateControl_ResetAngleI();
+		stateControl_ResetPID();
+	}
+	previousUseAbsoluteAngle = angularControl;
     useAbsoluteAngle = angularControl;
 }
 
@@ -132,6 +138,13 @@ void stateControl_SetPIDGains(REM_RobotSetPIDGains* PIDGains){
 void stateControl_ResetAngleI(){
 	stateK[body_yaw].I = 0;
 	stateK[body_w].I = 0;
+}
+
+void stateControl_ResetPID(){
+	stateK[body_yaw].prev_e = 0;
+	stateK[body_yaw].prev_PID = 0;
+	stateK[body_w].prev_e = 0;
+	stateK[body_w].prev_PID = 0;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS

@@ -179,6 +179,13 @@ void executeCommands(REM_RobotCommand* robotCommand){
 			shoot_Shoot(shoot_Chip);
 		}
 	}
+	else if (robotCommand->kickAtAngle) {
+		if (fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle) < 0.1) {
+			if (ballPosition.canKickBall || robotCommand->doForce) {
+				shoot_Shoot(shoot_Kick);
+			}
+		}
+	}
 }
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){

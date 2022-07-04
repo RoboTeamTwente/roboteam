@@ -81,6 +81,8 @@ uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
+float angleErrorWhenShooting = 0.0;
+
 /* SX data */
 // TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
 extern SX1280_Settings SX1280_DEFAULT_SETTINGS;
@@ -184,6 +186,7 @@ void executeCommands(REM_RobotCommand* robotCommand){
 		if (fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle) < 0.1) {
 			if (ballPosition.canKickBall || robotCommand->doForce) {
 				shoot_Shoot(shoot_Kick);
+				angleErrorWhenShooting = fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle);
 			}
 		}
 	}
@@ -465,7 +468,9 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
-		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
+		robotStateInfo.filteredDribbleSpeed = stateInfo.dribblerFilteredSpeed;
+		robotStateInfo.dribblespeedBeforeGotBall = stateInfo.dribbleSpeedBeforeGotBall;
+		robotStateInfo.bodyXIntegral = angleErrorWhenShooting;
 		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);

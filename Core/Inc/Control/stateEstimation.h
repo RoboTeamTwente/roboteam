@@ -42,4 +42,6 @@ float* stateEstimation_GetState();
 
 float stateEstimation_GetFilteredRoT();
 
+void stateControl_ResetPID();
+
 #endif /* DO_STATEESTIMATION_H_ */

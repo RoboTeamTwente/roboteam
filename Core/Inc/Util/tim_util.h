@@ -35,14 +35,14 @@ typedef struct PWM_struct{
 
 // Timer Helpers
 // Encoders
-#define ENC_RF 		&htim1
-#define ENC_GENEVA	&htim2
-#define ENC_LB 		&htim3
-#define ENC_RB 		&htim4
-#define ENC_LF 		&htim5
-#define TIM_SHOOT	&htim11
-#define TIM_CONTROL &htim7
-#define TIM_GENEVA  &htim6
+#define ENC_RF 		 &htim1
+#define ENC_DRIBBLER &htim2
+#define ENC_LB 		 &htim3
+#define ENC_RB 		 &htim4
+#define ENC_LF 		 &htim5
+#define TIM_SHOOT	 &htim11
+#define TIM_CONTROL  &htim7
+#define TIM_GENEVA   &htim6
 
 
 extern PWM_struct PWM_RF;

@@ -28,6 +28,9 @@ typedef struct StateInfo {
 	float xsensYaw;
 	float rateOfTurn;
 	float wheelSpeeds[4];
+	float dribblerSpeed;
+	float dribblerFilteredSpeed;
+	float speedBeforeGotBall;
 } StateInfo;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS

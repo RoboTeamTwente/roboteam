@@ -32,7 +32,7 @@
 
 // Initializes the PIDs / PWM timers / encoders
 void wheels_Init();
-// Deinitializes the PIDs / PWM timers / encoders
+// Deinitializes the PWM timers / encoders
 void wheels_DeInit();
 // Stops the wheels without deinitializing them 
 void wheels_Stop();

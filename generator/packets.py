@@ -17,7 +17,7 @@ packets = {
         ["angularVelocity",    16, [-4*math.pi, 4*math.pi], "Angular velocity (rad/s)"],
         ["cameraAngle",        16, [-math.pi, math.pi], "Angle of the robot as seen by camera (rad)"],
         ["dribbler",            3,  [0, 1], "Dribbler speed"],
-        ["kickChipPower",       3,  [0, 6.5], "Speed of the ball in m/s"],
+        ["kickChipPower",       4,  [0, 6.5], "Speed of the ball in m/s"],
         ["useAbsoluteAngle",    1,  None, "0 = angular velocity, 1 = absolute angle"],
         ["feedback",            1,  None, "Ignore the packet. Just send feedback"],
     ],

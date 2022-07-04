@@ -16,9 +16,9 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -1111111 11111111 1------- -------- -------- -------- angularVelocity
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -1111111 11111111 1------- -------- cameraAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -111---- -------- dribbler
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----111- -------- kickChipPower
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 -------- useAbsoluteAngle
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1------- feedback
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- kickChipPower
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1------- useAbsoluteAngle
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -1------ feedback
 */
 
 #ifndef __REM_ROBOT_COMMAND_H
@@ -121,16 +121,16 @@ static inline float REM_RobotCommand_get_dribbler(REM_RobotCommandPayload *remrc
 }
 
 static inline float REM_RobotCommand_get_kickChipPower(REM_RobotCommandPayload *remrcp){
-    uint32_t _kickChipPower = ((remrcp->payload[13] & 0b00001110) >> 1);
-    return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
+    uint32_t _kickChipPower = ((remrcp->payload[13] & 0b00001111));
+    return (_kickChipPower * 0.4333333333333333) + 0.0000000000000000;
 }
 
 static inline bool REM_RobotCommand_get_useAbsoluteAngle(REM_RobotCommandPayload *remrcp){
-    return (remrcp->payload[13] & 0b00000001) > 0;
+    return (remrcp->payload[14] & 0b10000000) > 0;
 }
 
 static inline bool REM_RobotCommand_get_feedback(REM_RobotCommandPayload *remrcp){
-    return (remrcp->payload[14] & 0b10000000) > 0;
+    return (remrcp->payload[14] & 0b01000000) > 0;
 }
 
 // ================================ SETTERS ================================
@@ -211,16 +211,16 @@ static inline void REM_RobotCommand_set_dribbler(REM_RobotCommandPayload *remrcp
 }
 
 static inline void REM_RobotCommand_set_kickChipPower(REM_RobotCommandPayload *remrcp, float kickChipPower){
-    uint32_t _kickChipPower = (uint32_t)(kickChipPower / 0.9285714285714286);
-    remrcp->payload[13] = ((_kickChipPower << 1) & 0b00001110) | (remrcp->payload[13] & 0b11110001);
+    uint32_t _kickChipPower = (uint32_t)(kickChipPower / 0.4333333333333333);
+    remrcp->payload[13] = (_kickChipPower & 0b00001111) | (remrcp->payload[13] & 0b11110000);
 }
 
 static inline void REM_RobotCommand_set_useAbsoluteAngle(REM_RobotCommandPayload *remrcp, bool useAbsoluteAngle){
-    remrcp->payload[13] = (useAbsoluteAngle & 0b00000001) | (remrcp->payload[13] & 0b11111110);
+    remrcp->payload[14] = ((useAbsoluteAngle << 7) & 0b10000000) | (remrcp->payload[14] & 0b01111111);
 }
 
 static inline void REM_RobotCommand_set_feedback(REM_RobotCommandPayload *remrcp, bool feedback){
-    remrcp->payload[14] = ((feedback << 7) & 0b10000000) | (remrcp->payload[14] & 0b01111111);
+    remrcp->payload[14] = ((feedback << 6) & 0b01000000) | (remrcp->payload[14] & 0b10111111);
 }
 
 // ================================ ENCODE ================================

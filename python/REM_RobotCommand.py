@@ -16,9 +16,9 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -1111111 11111111 1------- -------- -------- -------- angularVelocity
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -1111111 11111111 1------- -------- cameraAngle
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -111---- -------- dribbler
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----111- -------- kickChipPower
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 -------- useAbsoluteAngle
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1------- feedback
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- kickChipPower
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1------- useAbsoluteAngle
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -1------ feedback
 """
 
 import numpy as np
@@ -117,16 +117,16 @@ class REM_RobotCommand:
 
     @staticmethod
     def get_kickChipPower(payload):
-        _kickChipPower = ((payload[13] & 0b00001110) >> 1);
-        return (_kickChipPower * 0.9285714285714286) + 0.0000000000000000;
+        _kickChipPower = ((payload[13] & 0b00001111));
+        return (_kickChipPower * 0.4333333333333333) + 0.0000000000000000;
 
     @staticmethod
     def get_useAbsoluteAngle(payload):
-        return (payload[13] & 0b00000001) > 0;
+        return (payload[14] & 0b10000000) > 0;
 
     @staticmethod
     def get_feedback(payload):
-        return (payload[14] & 0b10000000) > 0;
+        return (payload[14] & 0b01000000) > 0;
 
 # ================================ SETTERS ================================
     @staticmethod
@@ -207,16 +207,16 @@ class REM_RobotCommand:
 
     @staticmethod
     def set_kickChipPower(payload, kickChipPower):
-        _kickChipPower = int(kickChipPower / 0.9285714285714286);
-        payload[13] = ((_kickChipPower << 1) & 0b00001110) | (payload[13] & 0b11110001);
+        _kickChipPower = int(kickChipPower / 0.4333333333333333);
+        payload[13] = (_kickChipPower & 0b00001111) | (payload[13] & 0b11110000);
 
     @staticmethod
     def set_useAbsoluteAngle(payload, useAbsoluteAngle):
-        payload[13] = (useAbsoluteAngle & 0b00000001) | (payload[13] & 0b11111110);
+        payload[14] = ((useAbsoluteAngle << 7) & 0b10000000) | (payload[14] & 0b01111111);
 
     @staticmethod
     def set_feedback(payload, feedback):
-        payload[14] = ((feedback << 7) & 0b10000000) | (payload[14] & 0b01111111);
+        payload[14] = ((feedback << 6) & 0b01000000) | (payload[14] & 0b10111111);
 
 # ================================ ENCODE ================================
     def encode(self):

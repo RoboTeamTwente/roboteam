@@ -439,7 +439,7 @@ void loop(void){
 		float vy = stateEstimation_GetState()[body_y];
 		robotFeedback.rho = sqrt(vx*vx + vy*vy);
 		robotFeedback.angle = stateEstimation_GetState()[body_yaw];
-		robotFeedback.theta = atan2(vy, -vx);
+		robotFeedback.theta = atan2(vy, vx);
 		robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
 		robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
 		robotFeedback.dribblerSeesBall = dribbler_hasBall();

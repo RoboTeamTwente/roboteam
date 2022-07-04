@@ -8,6 +8,7 @@ packets = {
         ["messageId",           4,  None, "Id of the message"],
         ["doKick",              1,  None, "Do a kick if ballsensor"],
         ["doChip",              1,  None, "Do a chip if ballsensor"],
+        ["kickAtAngle",         1,  None, "Do a kick once angle is reached"],
         ["doForce",             1,  None, "Do regardless of ballsensor"],
         ["useCameraAngle",      1,  None, "Use the info in 'cameraAngle'"],
         ["rho",                16, [0, 8], "Magnitude of movement (m/s)"],

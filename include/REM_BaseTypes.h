@@ -10,10 +10,10 @@
 #include <stdint.h>
 
 
-#define LOCAL_REM_VERSION 10
+#define LOCAL_REM_VERSION 11
 
 #define PACKET_TYPE_REM_ROBOT_COMMAND                                0b00001111 // 15 
-#define PACKET_SIZE_REM_ROBOT_COMMAND                                14
+#define PACKET_SIZE_REM_ROBOT_COMMAND                                15
 #define PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_MIN                    0.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_MAX                    255.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_N_BITS                 8
@@ -32,6 +32,9 @@
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_CHIP_MIN                   0.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_CHIP_MAX                   1.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_CHIP_N_BITS                1
+#define PACKET_RANGE_REM_ROBOT_COMMAND_KICK_AT_ANGLE_MIN             0.
+#define PACKET_RANGE_REM_ROBOT_COMMAND_KICK_AT_ANGLE_MAX             1.
+#define PACKET_RANGE_REM_ROBOT_COMMAND_KICK_AT_ANGLE_N_BITS          1
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_FORCE_MIN                  0.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_FORCE_MAX                  1.
 #define PACKET_RANGE_REM_ROBOT_COMMAND_DO_FORCE_N_BITS               1

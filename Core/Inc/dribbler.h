@@ -17,13 +17,19 @@
 #include "gpio_util.h"
 #include "tim_util.h"
 
+#define sizeOfMovingAverageBuffer 5
+#define sizeOfDelay 3
+#define sizeOfCommandBuffer 5
+#define minReliableData 400.0
+
+
 typedef struct movingAverage {
-    float movingAvgBuffer[5];
-    float filteredBuffer[3];
-    int movingAvgIdx;
-    int filteredIdx;
+    float movingAvgBuffer[sizeOfMovingAverageBuffer]; // stores measured speeds for a moving average filter
+    int movingAvgIdx; // index for the moving average buffer
+    float commandedSpeedBuffer[sizeOfCommandBuffer];
+    int commandedIdx;
+    float AvgCommandedSpeed;
     float speedBeforeGotBall;
-    float commandedSpeed;
 } movingAverage;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
@@ -40,9 +46,9 @@ void dribbler_Update();
 void dribbler_GetMeasuredSpeeds(float *speed);
 // Get the filtered dribbler speeds in rad/s
 void dribbler_GetFilteredSpeeds(float *speed);
-// returns true if the dribbler speed decreases
+// Returns true if the dribbler speed decreases
 bool dribbler_hasBall();
-
+// Returns the delayed speed of the moving average filter at the time it got the ball
 void dribbler_GetSpeedBeforeGotBall(float *speed);
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

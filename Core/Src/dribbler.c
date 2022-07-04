@@ -4,7 +4,7 @@
 
 #define DRIBBLER_MAX_PWM 10000
 
-movingAverage movingAvg = {{0.0},{1.0}, 0, 0, 0.0};
+movingAverage movingAvg = {0};
 
 ///////////////////////////////////////////////////// VARIABLES
 static float dribbler_measured_speed = 0.0;             		   // Stores most recent measurement of dribbler speed in rad/s
@@ -28,6 +28,9 @@ static void computeDribblerSpeed(float *speed);
 // moving average filter on the dribbler speed
 float smoothen_dribblerSpeed(float speed);
 
+// Calculates the average of an array (buffer)
+float getAvgOfBuffer(float *buffer, int size);
+
 ///////////////////////////////////////////////////// PUBLIC FUNCTIONS IMPLEMENTATIONS
 
 void dribbler_Init(){
@@ -44,12 +47,14 @@ void dribbler_DeInit(){
 }
 
 void dribbler_SetSpeed(float speed){
-	movingAvg.commandedSpeed = speed;
 	if(speed > 1){
 		speed = 1;
 	}else if(speed < 0){
 		speed = 0;
 	}
+	int size = sizeof(movingAvg.commandedSpeedBuffer)/sizeof(movingAvg.commandedSpeedBuffer[0]);
+    movingAvg.commandedSpeedBuffer[movingAvg.commandedIdx] = speed;
+	movingAvg.commandedIdx = (movingAvg.commandedIdx+1) % size;	
 
 	// The 12V and 24V boards require different calculations for the dribbler PWM
 	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
@@ -77,11 +82,6 @@ void dribbler_Update(){
 	dribbler_previous_filtered_measured_speed = dribbler_filtered_measured_speed;
 	computeDribblerSpeed(&dribbler_measured_speed);
 	dribbler_filtered_measured_speed = smoothen_dribblerSpeed(dribbler_measured_speed);
-
-	int size = sizeof(movingAvg.filteredBuffer)/sizeof(movingAvg.filteredBuffer[0]);
-    movingAvg.filteredBuffer[movingAvg.filteredIdx] = dribbler_filtered_measured_speed;
-	movingAvg.filteredIdx = (movingAvg.filteredIdx+1) % size;
-
 }
 
 /**
@@ -90,47 +90,52 @@ void dribbler_Update(){
  * @param speeds float[4]{RF, RB, LB, LF} output array in which the measured speeds will be stored
  */
 void dribbler_GetMeasuredSpeeds(float *speed) {
-	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
+	// Copy into "speed", so that the file-local variable "dribbler_measured_speed" doesn't escape
 	*speed = dribbler_measured_speed;
 }
 
 void dribbler_GetFilteredSpeeds(float *speed) {
-	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
+	// Copy into "speed", so that the file-local variable "dribbler_filtered_measured_speed" doesn't escape
 	*speed = dribbler_filtered_measured_speed;
 }
 
 void dribbler_GetSpeedBeforeGotBall(float *speed) {
-	// Copy into "speeds", so that the file-local variable "wheels_measured_speeds" doesn't escape
+	// Copy into "speed", so that the file-local struct "movingAvg" doesn't escape
 	*speed = movingAvg.speedBeforeGotBall;
 }
 
 bool dribbler_hasBall(){
-	previousHadBall = hasBall;
-	//hasBall = false;
-	/*if (dribbler_measured_speed < 700.0 && ((dribbler_measured_speed - dribbler_previous_measured_speed + 5) < 0 ))
-		hasBall = true;
-	if (hasBall == true)
-		if (dribbler_measured_speed > 900)
-			hasBall = false;*/
-	int size = sizeof(movingAvg.filteredBuffer)/sizeof(movingAvg.filteredBuffer[0]);
+	previousHadBall = hasBall; 
+
+	// check if moving average is moving up or down (speed reduces when dribbler gets the ball)
+	bool speed_reducing = ((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed + 5) < 0); 
+	bool speed_increasing = ((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0);
+
+	movingAvg.AvgCommandedSpeed = getAvgOfBuffer(movingAvg.commandedSpeedBuffer,sizeOfCommandBuffer);
+
+	// update speed of the dribbler until it thinks it has the ball. This is used as the threshold value
 	if (hasBall == false)
-		if (movingAvg.filteredBuffer[movingAvg.filteredIdx+1 % size] > 50.0)
-			movingAvg.speedBeforeGotBall = movingAvg.filteredBuffer[movingAvg.filteredIdx+1 % size];
-	
-	if (((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed + 5) < 0) && (dribbler_filtered_measured_speed > 400) && (movingAvg.commandedSpeed > 0))
+		// Check if data is in the reliable range
+		if (movingAvg.movingAvgBuffer[(movingAvg.movingAvgIdx+(sizeOfMovingAverageBuffer-sizeOfDelay)) % sizeOfMovingAverageBuffer] > minReliableData)
+			// Use a delayed value as the threshold (before it loses speed)
+			movingAvg.speedBeforeGotBall = movingAvg.movingAvgBuffer[(movingAvg.movingAvgIdx+(sizeOfMovingAverageBuffer-sizeOfDelay)) % sizeOfMovingAverageBuffer];
+
+	// check if all conditions are met, assume we have the ball if so
+	if (speed_reducing && (dribbler_filtered_measured_speed > minReliableData) && (movingAvg.AvgCommandedSpeed > 0))
 		hasBall = true;
+	
+	// Only say we lose the ball if the speed increases above the threshold value or if the dribbler turns off
 	if (hasBall == true)
-		if ((((dribbler_filtered_measured_speed  - dribbler_previous_filtered_measured_speed) > 0) && dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5)) || movingAvg.commandedSpeed < 0.05)
+		if ((speed_increasing && (dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5))) || movingAvg.AvgCommandedSpeed < 0.05)
 			hasBall = false;
+	
 	return hasBall;
 }
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 /**
- * @brief Reads out the values of the dribbler encoders
- * 
- * @param output_array int16_t[4]{RF, RB, LB, LF} output array in which the current encoder values will be placed
+ * @brief Reads out the counts of the dribbler encoders
  */
 static void getEncoderData(int16_t *encoder_value){
 	*encoder_value = __HAL_TIM_GET_COUNTER(ENC_DRIBBLER);
@@ -146,11 +151,9 @@ static void resetWheelEncoders() {
 /**
  * @brief Calculates angular velocity in rad/s for the dribbler based on their encoder values
  * 
- * @todo This function requires to be called every 10 milliseconds, as dictated by the variable TIME_DIFF contained
+ * @todo This function requires to be called every 100 milliseconds, as dictated by the variable TIME_DIFF contained
  * within the variable ENCODERtoOMEGA. This can of course not always be perfectly guaranteed. Therefore, a timer should
  * be used to calculate the time difference between two calculations.
- * 
- * @param speeds float[4]{RF, RB, LB, LF} output array in which the calculated wheels speeds will be placed
  */
 static void computeDribblerSpeed(float *speed){
 	int16_t encoder_value = 0;
@@ -160,6 +163,8 @@ static void computeDribblerSpeed(float *speed){
 	
 	// Convert encoder values to rad/s
 	measurement = DRIBBLER_ENCODER_TO_OMEGA * (float) encoder_value;
+
+	// for some reason the values are negative for some encoders and positive for others
 	if (measurement < 0) 
 		*speed = -measurement; 
 	else
@@ -167,14 +172,19 @@ static void computeDribblerSpeed(float *speed){
 }
 
 float smoothen_dribblerSpeed(float speed){
-	int size = sizeof(movingAvg.movingAvgBuffer)/sizeof(movingAvg.movingAvgBuffer[0]);
     movingAvg.movingAvgBuffer[movingAvg.movingAvgIdx] = speed;
-	movingAvg.movingAvgIdx = (movingAvg.movingAvgIdx+1) % size;
+	movingAvg.movingAvgIdx = (movingAvg.movingAvgIdx+1) % sizeOfMovingAverageBuffer;
 
-    float avg = 0.0f;  // average of buffer, which is the smoothed rate of turn
-    for (int i=0; i<size; i++){
-        avg += movingAvg.movingAvgBuffer[i];
-    }
-	avg = avg/(float)size;
-    return avg;
+    return getAvgOfBuffer(movingAvg.movingAvgBuffer, sizeOfMovingAverageBuffer);
 } 
+
+float getAvgOfBuffer(float *buffer, int size){
+	if (size == 0) return 0.0; // make sure we don't divide by zero
+	
+	float sum = 0.0;
+	for (int i=0; i<size; i++){
+        sum += buffer[i];
+    }
+
+	return sum/(float)size;
+}

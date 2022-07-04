@@ -7,6 +7,7 @@
 #include "peripheral_util.h"
 #include "PuTTY.h"
 #include "wheels.h"
+#include "dribbler.h"
 #include "stateControl.h"
 #include "stateEstimation.h"
 #include "dribbler.h"
@@ -256,7 +257,9 @@ void init(void){
 	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
- 
+	set_Pin(INT_EN_pin, 1);
+	set_Pin(INT_ENneg_pin, 0);
+	set_Pin(BAT_KILL_pin, 1);
 	/* Read ID from switches */
 	ROBOT_ID = get_Id();
 	set_Pin(LED0_pin, 1);
@@ -421,9 +424,8 @@ void loop(void){
         executeCommands(&activeRobotCommand);
     }
 
-    
-    /* == Fill RobotFeedback packet == */
-	{ // Brackets just for collapsing code
+    // Create RobotFeedback
+	{
 		robotFeedback.header = PACKET_TYPE_REM_ROBOT_FEEDBACK;
 		robotFeedback.remVersion= LOCAL_REM_VERSION;
 		robotFeedback.id = ROBOT_ID;
@@ -440,9 +442,10 @@ void loop(void){
 		robotFeedback.theta = atan2(vy, vx);
 		robotFeedback.wheelBraking = wheels_GetWheelsBraking(); // TODO Locked feedback has to be changed to brake feedback in PC code
 		robotFeedback.rssi = last_valid_RSSI; // Should be divided by two to get dBm but RSSI is 8 bits so just send all 8 bits back
+		robotFeedback.dribblerSeesBall = dribbler_hasBall();
 	}
-	    /* == Fill RobotStateInfo packet == */
-	{ // Brackets just for collapsing code
+    
+	{
 		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
 		robotStateInfo.remVersion = LOCAL_REM_VERSION;
 		robotStateInfo.id = ROBOT_ID;
@@ -454,6 +457,7 @@ void loop(void){
 		robotStateInfo.wheelSpeed2 = stateInfo.wheelSpeeds[1];
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
+		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
 		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
 		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
@@ -495,6 +499,10 @@ void loop(void){
 	if(heartbeat_100ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_100ms < now) heartbeat_100ms += 100;
+		dribbler_Update();
+		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
+		dribbler_GetFilteredSpeeds(&stateInfo.dribblerFilteredSpeed);
+		dribbler_GetSpeedBeforeGotBall(&stateInfo.speedBeforeGotBall);
 
 		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
 		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
@@ -711,8 +719,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		stateInfo.rateOfTurn = MTi->gyr[2];
 		stateEstimation_Update(&stateInfo);
 
-
-
 		if(test_isTestRunning(wheels) || test_isTestRunning(normal)) {
             wheels_Update();
             return;
@@ -735,6 +741,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		counter_htim10++;
 		buzzer_Callback();
 	}
+
 	else if (htim->Instance == htim11.Instance) {
 		counter_htim11++;
 		shoot_Callback();

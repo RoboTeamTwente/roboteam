@@ -100,21 +100,24 @@ bool dribbler_hasBall(){
 	float AvgCommandedSpeed = getAvgOfBuffer(movingAvg.commandedSpeedBuffer,sizeOfCommandBuffer);
 
 	// update speed of the dribbler until it thinks it has the ball. This is used as the threshold value
-	if (hasBall == false)
+	if (hasBall == false){
 		// Check if data is in the reliable range
-		if (movingAvg.movingAvgBuffer[(movingAvg.movingAvgIdx+(sizeOfMovingAverageBuffer-sizeOfDelay)) % sizeOfMovingAverageBuffer] > minReliableData)
+		if (movingAvg.movingAvgBuffer[(movingAvg.movingAvgIdx+(sizeOfMovingAverageBuffer-sizeOfDelay)) % sizeOfMovingAverageBuffer] > minReliableData){
 			// Use a delayed value as the threshold (before it loses speed)
 			movingAvg.speedBeforeGotBall = movingAvg.movingAvgBuffer[(movingAvg.movingAvgIdx+(sizeOfMovingAverageBuffer-sizeOfDelay)) % sizeOfMovingAverageBuffer];
-
+		}
+	}
 	// check if all conditions are met, assume we have the ball if so
-	if (speed_reducing && (dribbler_filtered_measured_speed > minReliableData) && (AvgCommandedSpeed > 0))
+	if (speed_reducing && (dribbler_filtered_measured_speed > minReliableData) && (AvgCommandedSpeed > 0)){
 		hasBall = true;
+	}
 	
 	// Only say we lose the ball if the speed increases above the threshold value or if the dribbler turns off
-	if (hasBall == true)
-		if ((speed_increasing && (dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5))) || AvgCommandedSpeed < 0.05)
+	if (hasBall == true){
+		if ((speed_increasing && (dribbler_filtered_measured_speed > (movingAvg.speedBeforeGotBall-5))) || AvgCommandedSpeed < 0.05){
 			hasBall = false;
-	
+		}
+	}
 	return hasBall;
 }
 

@@ -18,9 +18,9 @@
 
 #define DRIBBLER_MAX_PWM 10000
 #define sizeOfMovingAverageBuffer 5
-#define sizeOfDelay 3
+#define sizeOfDelay 4
 #define sizeOfCommandBuffer 5
-#define minReliableData 500.0
+#define minReliableData 550.0
 
 
 typedef struct movingAverage {

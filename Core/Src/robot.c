@@ -458,8 +458,8 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
-		robotStateInfo.bodyXIntegral = stateInfo.dribblerFilteredSpeed;
-		robotStateInfo.bodyYIntegral = stateInfo.speedBeforeGotBall;
+		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
+		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_RF);

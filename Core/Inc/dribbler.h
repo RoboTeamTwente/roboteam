@@ -14,9 +14,9 @@
 #define DRIBBLER_DRIBBLER_H_
 
 #include "control_util.h"
-#include "gpio_util.h"
 #include "tim_util.h"
 
+#define DRIBBLER_MAX_PWM 10000
 #define sizeOfMovingAverageBuffer 5
 #define sizeOfDelay 3
 #define sizeOfCommandBuffer 5
@@ -26,10 +26,9 @@
 typedef struct movingAverage {
     float movingAvgBuffer[sizeOfMovingAverageBuffer]; // stores measured speeds for a moving average filter
     int movingAvgIdx; // index for the moving average buffer
-    float commandedSpeedBuffer[sizeOfCommandBuffer];
-    int commandedIdx;
-    float AvgCommandedSpeed;
-    float speedBeforeGotBall;
+    float commandedSpeedBuffer[sizeOfCommandBuffer]; // stores commanded speeds to check if the dribbler has been turned off
+    int commandedIdx; // index for commanded speed buffer 
+    float speedBeforeGotBall; // keeps speed of ball while we don't have the ball
 } movingAverage;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
@@ -46,9 +45,10 @@ void dribbler_Update();
 void dribbler_GetMeasuredSpeeds(float *speed);
 // Get the filtered dribbler speeds in rad/s
 void dribbler_GetFilteredSpeeds(float *speed);
-// Returns true if the dribbler speed decreases
-bool dribbler_hasBall();
 // Returns the delayed speed of the moving average filter at the time it got the ball
 void dribbler_GetSpeedBeforeGotBall(float *speed);
+// Returns true if the dribbler speed decreases
+bool dribbler_hasBall();
+
 
 #endif /* DRIBBLER_DRIBBLER_H_ */

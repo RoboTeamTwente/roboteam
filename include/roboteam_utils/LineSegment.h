@@ -159,6 +159,14 @@ class LineSegment {
      * @return
      */
     [[nodiscard]] bool preciseDoesIntersect(const LineSegment&line) const;
+
+    /**
+     * Gets the point on this LineSegment that is closest to any point of the other line
+     * If other line is parallel to this,
+     * @return point on this LineSegment closest to given line
+     */
+    [[nodiscard]] std::optional<Vector2> getClosestPointToLine(const Line&) const;
+
    private:
     /**
      * Check whether a given point lies on this LineSegment, given that this LineSegment has length > 0 and that the given point lies on the infinite Line expansion of this

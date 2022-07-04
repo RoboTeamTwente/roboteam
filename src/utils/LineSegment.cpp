@@ -238,4 +238,15 @@ bool LineSegment::preciseDoesIntersect(const LineSegment&line) const{
     return false;
 }
 
+std::optional<Vector2> LineSegment::getClosestPointToLine(const Line &other) const {
+    // Get the intersection of this line and the other line
+    auto intersection = rtt::Line::intersect(this->start, this->end, other.v1, other.v2);
+
+    if (intersection.has_value()) {
+        return this->project(intersection.value());
+    }
+
+    return std::nullopt;
+}
+
 }  // namespace rtt

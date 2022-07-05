@@ -81,8 +81,6 @@ uint32_t heartbeat_17ms = 0;
 uint32_t heartbeat_100ms = 0;
 uint32_t heartbeat_1000ms = 0;
 
-float angleErrorWhenShooting = 0.0;
-
 /* SX data */
 // TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
 extern SX1280_Settings SX1280_DEFAULT_SETTINGS;

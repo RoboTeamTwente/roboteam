@@ -183,7 +183,7 @@ void executeCommands(REM_RobotCommand* robotCommand){
 		}
 	}
 	else if (robotCommand->kickAtAngle) {
-		if (fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle) < 0.1) {
+		if (fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle) < 0.025) {
 			if (ballPosition.canKickBall || robotCommand->doForce) {
 				shoot_Shoot(shoot_Kick);
 				angleErrorWhenShooting = fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle);

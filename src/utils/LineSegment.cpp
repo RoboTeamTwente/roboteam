@@ -9,10 +9,16 @@
 #include "HalfLine.h"
 #include "Line.h"
 
+#include "Print.h"
+
 namespace rtt {
 double LineSegment::length() const { return (end - start).length(); }
 
 double LineSegment::length2() const { return (end - start).length2(); }
+
+Vector2 LineSegment::center() const {
+    return (this->start + this->end) / 2;
+}
 
 bool LineSegment::isPoint() const { return start == end; }
 
@@ -143,30 +149,47 @@ Vector2 LineSegment::direction() const {
     return end-start;
 }
 
-    void LineSegment::move(const Vector2 &by) {
+void LineSegment::move(const Vector2 &by) {
     start+=by;
     end+=by;
+}
+
+void LineSegment::rotate (const Angle angle, const Vector2 rotationPoint){
+
+    Vector2 midpoint = rotationPoint;
+
+    Vector2 startNewMidpoint = Vector2 { start.x - midpoint.x, start.y - midpoint.y};
+    Vector2 endNewMidpoint = Vector2 { end.x - midpoint.x, end.y - midpoint.y};
+
+    Vector2 startRotated = Vector2 {(cos(angle)*startNewMidpoint.x - sin(angle)*startNewMidpoint.y), (sin(angle)*startNewMidpoint.x + cos(angle)*startNewMidpoint.y)};
+    Vector2 endRotated = Vector2 {(cos(angle)*endNewMidpoint.x - sin(angle)*endNewMidpoint.y), (sin(angle)*endNewMidpoint.x + cos(angle)*endNewMidpoint.y) };
+
+    startRotated.x += midpoint.x;
+    startRotated.y += midpoint.y;
+
+    endRotated.x += midpoint.x;
+    endRotated.y += midpoint.y;
+
+    start = startRotated;
+    end = endRotated;
+}
+
+void LineSegment::resize(double toLength) {
+    // If this line segment is on a point, resizing does not work
+    if (this->isPoint()) {
+        RTT_WARNING("Tried to resize LineSegment with length 0")
+        return;
     }
+    auto centerOfLine = this->center();
 
-    void LineSegment::rotate (const Angle angle, const Vector2 rotationPoint){
-
-        Vector2 midpoint = rotationPoint;
-
-        Vector2 startNewMidpoint = Vector2 { start.x - midpoint.x, start.y - midpoint.y};
-        Vector2 endNewMidpoint = Vector2 { end.x - midpoint.x, end.y - midpoint.y};
-
-        Vector2 startRotated = Vector2 {(cos(angle)*startNewMidpoint.x - sin(angle)*startNewMidpoint.y), (sin(angle)*startNewMidpoint.x + cos(angle)*startNewMidpoint.y)};
-        Vector2 endRotated = Vector2 {(cos(angle)*endNewMidpoint.x - sin(angle)*endNewMidpoint.y), (sin(angle)*endNewMidpoint.x + cos(angle)*endNewMidpoint.y) };
-
-        startRotated.x += midpoint.x;
-        startRotated.y += midpoint.y;
-
-        endRotated.x += midpoint.x;
-        endRotated.y += midpoint.y;
-
-        start = startRotated;
-        end = endRotated;
-    }
+    // Calculate the vector from the center to the end of the line, and scale that for the new length
+    Vector2 halfOfLineSegment = this->end - centerOfLine;
+    double halfNewLength = toLength / 2;
+    Vector2 newHalfOfLineSegment = halfOfLineSegment.stretchToLength(halfNewLength);
+    // And update the end and start
+    this->end = centerOfLine + newHalfOfLineSegment;
+    this->start = centerOfLine - newHalfOfLineSegment;
+}
 
 std::optional<Vector2> LineSegment::firstIntersects(const LineSegment &line) const {
     // These copies will get optimized away but make it easier to read w.r.t the stackoverflow link

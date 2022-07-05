@@ -514,7 +514,7 @@ void loop(void){
 		dribbler_Update();
 		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
 		dribbler_GetFilteredSpeeds(&stateInfo.dribblerFilteredSpeed);
-		dribbler_GetSpeedBeforeGotBall(&stateInfo.speedBeforeGotBall);
+		dribbler_GetSpeedBeforeGotBall(&stateInfo.dribbleSpeedBeforeGotBall);
 
 		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
 		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);

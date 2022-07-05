@@ -470,7 +470,7 @@ void loop(void){
 		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
 		robotStateInfo.filteredDribbleSpeed = stateInfo.dribblerFilteredSpeed;
 		robotStateInfo.dribblespeedBeforeGotBall = stateInfo.dribbleSpeedBeforeGotBall;
-		robotStateInfo.bodyXIntegral = angleErrorWhenShooting;
+		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
 		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(body_yaw);

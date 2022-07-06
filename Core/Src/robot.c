@@ -180,6 +180,13 @@ void executeCommands(REM_RobotCommand* robotCommand){
 			shoot_Shoot(shoot_Chip);
 		}
 	}
+	else if (robotCommand->kickAtAngle) {
+		if (fabs(stateEstimation_GetState()[body_yaw] - robotCommand->angle) < 0.025) {
+			if (ballPosition.canKickBall || robotCommand->doForce) {
+				shoot_Shoot(shoot_Kick);
+			}
+		}
+	}
 }
 
 void resetRobotCommand(REM_RobotCommand* robotCommand){
@@ -458,6 +465,8 @@ void loop(void){
 		robotStateInfo.wheelSpeed3 = stateInfo.wheelSpeeds[2];
 		robotStateInfo.wheelSpeed4 = stateInfo.wheelSpeeds[3];
 		robotStateInfo.dribbleSpeed = stateInfo.dribblerSpeed;
+		robotStateInfo.filteredDribbleSpeed = stateInfo.dribblerFilteredSpeed;
+		robotStateInfo.dribblespeedBeforeGotBall = stateInfo.dribbleSpeedBeforeGotBall;
 		robotStateInfo.bodyXIntegral = stateControl_GetIntegral(body_x);
 		robotStateInfo.bodyYIntegral = stateControl_GetIntegral(body_y);
 		robotStateInfo.bodyWIntegral = stateControl_GetIntegral(body_w);
@@ -502,7 +511,7 @@ void loop(void){
 		dribbler_Update();
 		dribbler_GetMeasuredSpeeds(&stateInfo.dribblerSpeed);
 		dribbler_GetFilteredSpeeds(&stateInfo.dribblerFilteredSpeed);
-		dribbler_GetSpeedBeforeGotBall(&stateInfo.speedBeforeGotBall);
+		dribbler_GetSpeedBeforeGotBall(&stateInfo.dribbleSpeedBeforeGotBall);
 
 		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
 		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);

@@ -30,7 +30,7 @@ typedef struct StateInfo {
 	float wheelSpeeds[4];
 	float dribblerSpeed;
 	float dribblerFilteredSpeed;
-	float speedBeforeGotBall;
+	float dribbleSpeedBeforeGotBall;
 } StateInfo;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS

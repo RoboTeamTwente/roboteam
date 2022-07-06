@@ -66,8 +66,8 @@ float WHEEL_REF_LIMIT; // [rad/s] Limit the maximum wheel reference to leave roo
 #define WHEEL_REF_LIMIT_PWM 2200 // [pwm]
 
 // Shoot
-#define MIN_KICK_TIME 8.2 				// minimum time period of kicking
-#define MAX_KICK_TIME 25 				// maximum time period of kicking
+#define MIN_KICK_TIME 1.0 				// minimum time period of kicking
+#define MAX_KICK_TIME 25.0 				// maximum time period of kicking
 #define MIN_CHIP_TIME 10 				// minimum time period of chipping
 #define MAX_CHIP_TIME 100 				// maximum time period of chipping
 #define TIMER_FREQ 10000 			// frequency [Hz] of TIM6  (Clock frequency divided by prescaler)

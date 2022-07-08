@@ -49,6 +49,7 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
         protoCommand->set_kick_speed(command.kickSpeed);
         protoCommand->set_wait_for_ball(command.waitForBall);
         protoCommand->set_kick_type(kickTypeToProto(command.kickType));
+        protoCommand->set_kick_at_angle(command.kickAtAngle);
 
         protoCommand->set_dribbler_speed(command.dribblerSpeed);
         protoCommand->set_ignore_packet(command.ignorePacket);
@@ -73,6 +74,7 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
                                           .kickSpeed = protoCommand.kick_speed(),
                                           .waitForBall = protoCommand.wait_for_ball(),
                                           .kickType = protoToKickType(protoCommand.kick_type()),
+                                           .kickAtAngle = protoCommand.kick_at_angle(),
 
                                           .dribblerSpeed = protoCommand.dribbler_speed(),
                                           .ignorePacket = protoCommand.ignore_packet()};

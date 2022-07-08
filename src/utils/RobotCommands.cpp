@@ -27,6 +27,7 @@ bool RobotCommand::operator==(const RobotCommand &other) const {
         && this->kickSpeed == other.kickSpeed
         && this->waitForBall == other.waitForBall
         && this->kickType == other.kickType
+        && this->kickAtAngle == other.kickAtAngle
         && this->dribblerSpeed == other.dribblerSpeed
         && this->ignorePacket == other.ignorePacket;
 }
@@ -43,6 +44,7 @@ std::ostream &RobotCommand::write(std::ostream &os) const {
         << "kickSpeed: " << formatString("%5f", this->kickSpeed) << ", "
         << "waitForBall: " << (this->waitForBall ? " true" : "false") << ", "
         << "kickType: " << kickTypeToString(this->kickType) << ", "
+        << "kickAtAngle: " << this->kickAtAngle << ", "
         << "dribblerSpeed: " << formatString("%5f", this->dribblerSpeed) << ", "
         << "ignorePacket: " << (this->ignorePacket ? " true" : "false")
         << "}";

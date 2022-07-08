@@ -31,6 +31,7 @@ typedef struct RobotCommand {
     double kickSpeed = 0.0;                 // (m/s) [0, 6.5] The target speed of the ball. Speed of <= 0.0 is undefined
     bool waitForBall = false;               // Will make the robot wait with kicking until it has the ball
     KickType kickType = KickType::NO_KICK;  // Defines the type of kicking, either normal(horizontal) or chipping(vertical), or no kick
+    bool kickAtAngle = false;               // Makes robot kick once it arrives at the specified angle, used in combination with angular velocity
     
     double dribblerSpeed = 0.0;             // [0, 1] Speed of the dribbler
     

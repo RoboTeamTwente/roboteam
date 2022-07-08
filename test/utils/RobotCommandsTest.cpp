@@ -24,6 +24,7 @@ TEST(RobotCommandsTest, instantiation) {
     ASSERT_DOUBLE_EQ(robotCommand.kickSpeed, 0.0);
     ASSERT_FALSE(robotCommand.waitForBall);
     ASSERT_EQ(robotCommand.kickType, KickType::NO_KICK);
+    ASSERT_FALSE(robotCommand.kickAtAngle);
     ASSERT_DOUBLE_EQ(robotCommand.dribblerSpeed, 0.0);
 
     ASSERT_FALSE(robotCommand.ignorePacket);
@@ -41,6 +42,7 @@ TEST(RobotCommandsTest, equals) {
         .kickSpeed = SimpleRandom::getDouble(0.0, 5.0),
         .waitForBall = SimpleRandom::getBool(),
         .kickType = randomKickType(),
+        .kickAtAngle = SimpleRandom::getBool(),
         .dribblerSpeed = SimpleRandom::getDouble(0.0, 5.0),
         .ignorePacket = SimpleRandom::getBool()
     };

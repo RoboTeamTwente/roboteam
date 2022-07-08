@@ -123,7 +123,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.header = PACKET_TYPE_REM_ROBOT_COMMAND;
         command.remVersion = LOCAL_REM_VERSION;
         command.id = robotCommand.id;
-
+        command.kickAtAngle = robotCommand.kickAtAngle;
         command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::KICK;
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;

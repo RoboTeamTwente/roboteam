@@ -43,17 +43,10 @@ TEST(LineSegmentTests, center) {
     }
 }
 
-constexpr double LIMIT = 1e-10;
-bool doubleEquals(double a, double b) {
-    double diff = std::fabs(a - b);
-    return diff < LIMIT;
-}
-
 TEST(LineSegmentTests, resize) {
     auto null = LineSegment({0,0}, {0,0});
     auto resizedNull = null;
     resizedNull.resize(69);
-    std::cout << "S1: " << null.start << ", S2" << resizedNull.start << ", E1" << null.end << ", E2: " << resizedNull.end << std::endl;
     ASSERT_EQ(null, resizedNull);
 
     // Resizing to 0 should result in a point
@@ -79,7 +72,7 @@ TEST(LineSegmentTests, resize) {
             newLine.resize(resizeValue);
 
             // The line segment should have the new length after resizing
-            ASSERT_TRUE(doubleEquals(newLine.length(), newLength));
+            EXPECT_NEAR(newLine.length(), newLength, 1e-10);
 
             // The start and end should not be swapped incorrectly after resizing
             double newStartOldStart = newLine.start.dist(oldLine.start);

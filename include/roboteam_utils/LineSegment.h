@@ -47,6 +47,8 @@ class LineSegment {
      */
     [[nodiscard]] double length2() const;
 
+    [[nodiscard]] Vector2 center() const;
+
     /**
      * Checks whether this LineSegment is also a point, i.e. check if both of the endings of this LineSegment are the same.
      *
@@ -144,6 +146,13 @@ class LineSegment {
      */
     void rotate(const Angle angle, const Vector2 rotationPoint);
 
+    /**
+     * Resizes the linesegment. Moves both ends from the center outwards untill the specified length is achieved
+     * Will not resize if length of this LineSegment is 0.
+     * Negative size will mirror the line
+     * @param toLength the new length this LineSegment should have
+     */
+    void resize(double toLength);
 
     /**
      * Computes the intersection of two line segments.

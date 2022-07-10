@@ -69,7 +69,6 @@ void dribbler_Update(){
  * @brief Get the last measured dribbler speed in rad/s
  */
 float dribbler_GetMeasuredSpeeds() {
-	// Copy into "speed", so that the file-local variable "dribbler_measured_speed" doesn't escape
 	return dribbler_measured_speed;
 }
 
@@ -77,7 +76,6 @@ float dribbler_GetMeasuredSpeeds() {
  * @brief Get the last filtered dribbler speed in rad/s
  */
 float dribbler_GetFilteredSpeeds() {
-	// Copy into "speed", so that the file-local variable "dribbler_filtered_measured_speed" doesn't escape
 	return dribbler_filtered_measured_speed;
 }
 
@@ -85,7 +83,6 @@ float dribbler_GetFilteredSpeeds() {
  * @brief Get the dribbler speed it had before getting the ball in rad/s
  */
 float dribbler_GetSpeedBeforeGotBall() {
-	// Copy into "speed", so that the file-local struct "movingAvg" doesn't escape
 	return movingAvg.speedBeforeGotBall;
 }
 

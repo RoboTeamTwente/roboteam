@@ -7,7 +7,7 @@
 
 #include <roboteam_logging/LogFileWriter.h>
 
-void Handler::start() {
+void Handler::start(bool shouldLog) {
     if (!initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
     }
@@ -17,8 +17,9 @@ void Handler::start() {
 
     roboteam_utils::Timer t;
 
-    rtt::LogFileWriter fileWriter;
-    {
+    std::optional<rtt::LogFileWriter> fileWriter = std::nullopt;
+
+    if (shouldLog) {
         auto now = Time::now();
         long total_seconds = now.asIntegerSeconds();
         long days = total_seconds/(24*3600);
@@ -28,8 +29,10 @@ void Handler::start() {
         long seconds = day_seconds % 60;
         long mili = now.asIntegerMilliSeconds() % 1000;
         std::string file_name = "world_log_" + std::to_string(days) + "_" +std::to_string(hours) + "_" + std::to_string(minutes) +"_" + std::to_string(seconds) + "_" + std::to_string(mili)+".log";
-        fileWriter.open(file_name);
+        fileWriter = rtt::LogFileWriter();
+        fileWriter.value().open(file_name);
     }
+
     t.loop(
         [&]() {
             auto vision_packets = receiveVisionPackets();
@@ -54,9 +57,12 @@ void Handler::start() {
             if(!sent){
               std::cout<<"could not send data on publisher!"<<std::endl;
             }
-            bool good = fileWriter.addMessage(state,Time::now().asNanoSeconds());
-            if(!good){
-                std::cout<<"could not log message to file!\n";
+            
+            if (fileWriter.has_value()) {
+                bool good = fileWriter.value().addMessage(state,Time::now().asNanoSeconds());
+                if(!good){
+                    std::cout<<"could not log message to file!\n";
+                }
             }
         },
         100);

@@ -34,7 +34,7 @@ class Handler {
     bool initializeNetworkers();
     bool setupSSLClients();
 
-    void start();
+    void start(bool shouldLog = false);
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::SSL_Referee> receiveRefereePackets();
     void onRobotFeedback(const rtt::RobotsFeedback& feedback);

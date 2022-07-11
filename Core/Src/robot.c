@@ -323,15 +323,10 @@ void init(void){
 	SX_Interface.CS = SX_NSS_pin;
 	SX_Interface.Reset = SX_RST_pin;
 	// err |= Wireless_setPrint_Callback(SX, LOG_printf);
-	LOG("Trying to init SX \n");
-	LOG_sendAll();
     err = Wireless_Init(SX, set, &SX_Interface);
-	LOG("Finished first line while trying to init SX \n");
-	LOG_sendAll();
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
-	LOG("Managed to init SX \n");
 	LOG_sendAll();
     
 	if(read_Pin(FT1_pin)){
@@ -515,7 +510,7 @@ void loop(void){
 		while (heartbeat_100ms < now) heartbeat_100ms += 100;
 		dribbler_Update();
 		stateInfo.dribblerSpeed = dribbler_GetMeasuredSpeeds();
-		stateInfo.dribbleSpeedBeforeGotBall = dribbler_GetFilteredSpeeds();
+		stateInfo.dribblerFilteredSpeed = dribbler_GetFilteredSpeeds();
 		stateInfo.dribbleSpeedBeforeGotBall = dribbler_GetSpeedBeforeGotBall();
 		
 		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );

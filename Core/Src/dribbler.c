@@ -143,11 +143,11 @@ static void resetDribblerEncoders() {
  * be used to calculate the time difference between two calculations.
  */
 static void computeDribblerSpeed(){
-	int16_t encoder_value = getEncoderData(&encoder_value);
+	int16_t encoder_value = getEncoderData();
 	resetDribblerEncoders();
 	
 	// Convert encoder values to rad/s
-	dribbler_measured_speed = DRIBBLER_ENCODER_TO_OMEGA * (float) abs(encoder_value);
+	dribbler_measured_speed = DRIBBLER_ENCODER_TO_OMEGA * (float) fabs(encoder_value);
 }
 
 /**

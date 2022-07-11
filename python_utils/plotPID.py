@@ -7,23 +7,34 @@ import heapq
 from matplotlib.offsetbox import AnchoredText
 
 Statetimestamps = []
+XsensX, XsensY, XsensYaw = [], [], [] #estimated x-, y accelerations and absolute angle
 rateOfTurn = [] #estimated angular velocity
 W1, W2, W3, W4 = [], [], [], [] #estimated wheel speeds
-XsensX, XsensY, XsensYaw = [], [], [] #estimated x-, y accelerations and absolute angle
+DribbleSpeed, FilteredDribbleSpeed, DribbleSpeedBeforeGotBall = [], [], [] #dribbler speeds
 XInt, YInt, WInt, YawInt, W1Int, W2Int, W3Int, W4Int = [], [], [], [], [], [], [], [] #integral value from the I part of the PIDs
 
 Feedbacktimestamps = []
-Gamma, Phi = [], [] #estimated movement [m/s] and direction of movement [rad]
+BatteryLvl = [] 
+XsensCalibrated = [] # true if Xsens is calibrated
+BallSensorWorking, BallSensorSeesBall, DribblerSeesBall = [], [], [] #ballsensor stuff
+CapacitorCharged = [] # indicates if the capacitor is charged for kicking/chipping
+BallPos = [] # ball sensor position
+RhoE, ThetaE = [], [] #estimated movement [m/s] and direction of movement [rad]
 VexLocal, VeyLocal = [], [] #estimated local x- and y velocities calculated from gamma and phi
 VexGlobal, VeyGlobal = [], [] #estimated global x- and y velocities calculated from estimated angle
+wheelLocked, wheelBraking = [], [] #true if wheel is locked or braking (one bit per wheel)
 
 Commandedtimestamps = []
-Angle, AngleVel = [], [] #commanded angle and angular velocity
+DoKick, DoChip = [], [] # true if robot should kick or chip
+KickAtAngle = [] #true if robot should kick at a certain angle (for orbit skill)
+DoForce = [] # true if robot should kick even if ballsensor doesn't say it has the ball
+UseCameraAngle = [] # true if robot should use the info in camera angle
 Rho, Theta = [], [] #commanded movement [m/s] and direction of movement [rad]
+Angle, AngleVel = [], [] #commanded angle and angular velocity
 Vx, Vy = [], [] #commanded x- and y velocities calculated from rho and theta
 Wc1, Wc2, Wc3, Wc4 = [], [], [], [] #commanded wheel speeds calculated from Vx and Vy
 
-plotsAvailable = ["x", "y", "w", "yaw", "wheels", "integral", "integral-wheels", "rho", "theta"]
+plotsAvailable = ["x", "y", "w", "yaw", "wheels", "integral", "integral-wheels", "rho", "theta", "ballsensor", "dribbler"]
 # Parse input arguments 
 try:
 	if len(sys.argv) not in [2,3]:
@@ -46,7 +57,7 @@ CommandedLines = open("logs/robotCommand_" + filenr[lastfile] +  ".csv", "r").re
 robotFeedbackLines = open("logs/robotFeedback_" + filenr[lastfile] + ".csv", "r").read().strip().split("\n")
 
 for line in StateInfoLines:
-	ts, xsensx, xsensy, xsensyaw, rot, w1, w2, w3, w4, xint, yint, wint, yawint, w1int, w2int, w3int, w4int = line.split(" ")[:17]
+	ts, xsensx, xsensy, xsensyaw, rot, w1, w2, w3, w4, dribblerSpeed, filteredDribbleSpeed, dribbleSpeedBeforeGotBall, xint, yint, wint, yawint, w1int, w2int, w3int, w4int = line.split(" ")[:20]
 	ts = int(float(ts) * 1000)/1000
 	Statetimestamps.append(ts)
 	
@@ -58,6 +69,9 @@ for line in StateInfoLines:
 	W2.append(float(w2))
 	W3.append(float(w3))
 	W4.append(float(w4))
+	DribbleSpeed.append(float(dribblerSpeed))
+	FilteredDribbleSpeed.append(float(filteredDribbleSpeed))
+	DribbleSpeedBeforeGotBall.append(float(dribbleSpeedBeforeGotBall))
 	XInt.append(float(xint))
 	YInt.append(float(yint))
 	WInt.append(float(wint))
@@ -69,7 +83,7 @@ for line in StateInfoLines:
 	
 	
 for line in CommandedLines: 
-	ts, doKick, doChip, doForce, useCameraAngle, rho, theta, ang, angvel, cameraAngle, dribbler, kickChipPower, useAbsoluteAngle = line.split(" ")[:13]
+	ts, doKick, doChip, kickAtAngle, doForce, useCameraAngle, rho, theta, ang, angvel, cameraAngle, dribbler, kickChipPower, useAbsoluteAngle = line.split(" ")[:14]
 	ts = int(float(ts) * 1000)/1000
 	Commandedtimestamps.append(ts)
 	
@@ -87,16 +101,20 @@ for line in CommandedLines:
 	Wc4.append((curVx * -np.cos(30 * np.pi/180) + curVy * np.sin(30 * np.pi/180))/0.028 + float(angvel) * 0.081 / 0.028) 
 
 for line in robotFeedbackLines:
-	ts, batteryLevel, XsensCalibrated, ballSensorWorking, hasBall, capacitorCharged, ballPos, gamma, phi, wheelLocked, wheelBraking, rssi = line.split(" ")[:12]
+	ts, batteryLevel, XsensCalibrated, ballSensorWorking, ballSensorSeesBall, dribblerSeesBall, capacitorCharged, ballPos, rhoE, thetaE, angle, wheelLocked, wheelBraking, rssi = line.split(" ")[:14]
 	ts = int(float(ts) * 1000)/1000 #multiply by 1000 to get ms accuracy, divide by 1000 to get x-axis in seconds
 	Feedbacktimestamps.append(ts)
 	
-	Gamma.append(float(gamma))
-	Phi.append(float(phi))
-	curVex = float(gamma)*np.cos(float(phi))
-	curVey = float(gamma)*np.sin(float(phi))
+	RhoE.append(float(rhoE))
+	ThetaE.append(float(thetaE))
+	curVex = float(rhoE)*np.cos(float(thetaE))
+	curVey = float(rhoE)*np.sin(float(thetaE))
 	VexLocal.append(curVex)
 	VeyLocal.append(curVey)
+	if dribblerSeesBall == 'False': DribblerSeesBall.append(0.0)
+	else: DribblerSeesBall.append(1000.0)
+	if ballSensorWorking == 'False': BallSensorWorking.append(0.0)
+	else: BallSensorWorking.append(1.0)
 
 for i in range(len(VexLocal)):
 	VexGlobal.append(VexLocal[i]*np.cos(XsensYaw[i]) + VeyLocal[i]*np.sin(XsensYaw[i]))
@@ -133,10 +151,10 @@ if plotID == "x":
 	fig, ax = plt.subplots()
 	
 	ax.plot(Commandedtimestamps, Vx)
-	#ax.plot(Feedbacktimestamps, VexLocal)
+	ax.plot(Feedbacktimestamps, VexLocal)
 	ax.plot(Feedbacktimestamps, VexGlobal)
 	ax.set_title("Velocity in x-direction", fontsize = "xx-large")
-	ax.legend(["Commanded", "Estimated"])
+	ax.legend(["Commanded", "Estimated Local", "Estimated Global"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
@@ -146,7 +164,7 @@ if plotID == "rho":
 	fig, ax = plt.subplots()
 	
 	ax.plot(Commandedtimestamps, Rho)
-	ax.plot(Feedbacktimestamps, Gamma)
+	ax.plot(Feedbacktimestamps, RhoE)
 	ax.set_title("Magnitude of movement", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
@@ -158,7 +176,7 @@ if plotID == "theta":
 	fig, ax = plt.subplots()
 	
 	ax.plot(Commandedtimestamps, Theta)
-	ax.plot(Feedbacktimestamps, Phi)
+	ax.plot(Feedbacktimestamps, ThetaE)
 	ax.set_title("Direction of movement", fontsize = "xx-large")
 	ax.legend(["Commanded", "Estimated"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
@@ -170,10 +188,10 @@ if plotID == "y":
 	fig, ax = plt.subplots()
 	
 	ax.plot(Commandedtimestamps, Vy)
-	#ax.plot(Feedbacktimestamps, VeyLocal)
+	ax.plot(Feedbacktimestamps, VeyLocal)
 	ax.plot(Feedbacktimestamps, VeyGlobal)
 	ax.set_title("Velocity in y-direction", fontsize = "xx-large")
-	ax.legend(["Commanded", "Estimated"])
+	ax.legend(["Commanded", "Estimated Local", "Estimated Global"])
 	ax.set_xticks(np.arange(Feedbacktimestamps[0], Feedbacktimestamps[-1], step=1))
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Velocity [m/s]", fontsize = "x-large")
@@ -202,6 +220,29 @@ if plotID == "yaw":
 	ax.set_xlabel("Time [s]", fontsize = "x-large")
 	ax.set_ylabel("Angle [rad]", fontsize = "x-large")
 	plt.show()
+
+if plotID == "dribbler":
+	fig, ax = plt.subplots()
+	ax.plot(Statetimestamps, DribbleSpeed)
+	ax.plot(Statetimestamps, FilteredDribbleSpeed)
+	ax.plot(Statetimestamps, DribbleSpeedBeforeGotBall)
+	ax.plot(Feedbacktimestamps, DribblerSeesBall)
+	ax.set_title("Absolute angle", fontsize = "xx-large")
+	ax.legend(["Dribbler speed", "filtered dribbler speed", "speedBeforeGotBall", "Dribbler sees ball"])
+	ax.set_xlabel("Time [s]", fontsize = "x-large")
+	ax.set_ylabel("Angle [rad]", fontsize = "x-large")
+	plt.show()
+
+if plotID == "ballsensor":
+	fig, ax = plt.subplots()
+	
+	ax.plot(Feedbacktimestamps, BallSensorWorking)
+	ax.set_title("Absolute angle", fontsize = "xx-large")
+	ax.legend(["Estimated", "hasBall", "Filtered", "speedBeforeGotBall"])
+	ax.set_xlabel("Time [s]", fontsize = "x-large")
+	ax.set_ylabel("Angle [rad]", fontsize = "x-large")
+	plt.show()
+
 
 if plotID == "wheels":
 	fig, ax = plt.subplots(2, 2)

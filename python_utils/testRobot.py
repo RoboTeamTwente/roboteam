@@ -111,7 +111,7 @@ testIndex = 2
 # stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
 stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
 
-def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.3, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 1.5, IbodyW = 0.5, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 2.0, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
+def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.3, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.25, IbodyW = 5.0, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 2.0, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
 	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
@@ -181,7 +181,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 			if test == "kicker"  : cmd.doKick = True
 			if test == "chipper" : cmd.doChip = True
 			cmd.doForce = True
-			cmd.kickChipPower = BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX // 2
+			cmd.kickChipPower = 3.5 #BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX
 
 	if test == "dribbler":
 		cmd.dribbler = period_fraction
@@ -196,23 +196,8 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		if period_fraction == 1:
 			counter += 1
 		cmd.useAbsoluteAngle = 1
-		cmd.rho = 0.5 - 0.5 * math.cos( 4 * math.pi * period_fraction )
-		#cmd.rho = signal.sawtooth(2 * np.pi * period_fraction+counter, 0.5)
-		#cmd.theta = (0.5 * -np.sign(cmd.rho) + 0.5) * -math.pi
-		#cmd.rho = abs(cmd.rho)
+		cmd.rho = 0.3 - 0.3 * math.cos( 4 * math.pi * period_fraction )
 		if 0.5 < period_fraction : cmd.theta = -math.pi
-		log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
-	
-	if test == "raised-cosine": #not working yet
-		time = abs(((period_fraction+counter) % (2*T) - T)/T)
-		#t = (period_fraction + counter) % (4*T)
-		if period_fraction == 1: counter += 1
-		cmd.useAbsoluteAngle = 1
-		#cmd.rho = (1/T)*np.sinc((time)/T)*((np.cos((np.pi*beta*(time))/T))/(max((1-((2*beta*(time))/T)**2), 0.001)))
-		if (abs(time) < (0.5 - 0.5*beta)) : cmd.rho = 1
-		elif abs(time) < (0.5 + (beta / 2)) * T : cmd.rho = np.cos((np.pi * (time - (0.5 - (beta/2))))/beta)/2 +.5
-		else: cmd.rho = 0
-		#if t < (2*T): cmd.theta = -math.pi
 		log = "rho = %+.3f theta = %+.3f" % (cmd.rho, cmd.theta)
 
 	if test == "sideways":
@@ -241,8 +226,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 		log = "rho = %+.3f theta = %+.3f angle = %+.3f" % (cmd.rho, cmd.theta, cmd.angle)
 		
 	if test == "angular-velocity":
-		cmd.useAbsoluteAngle = 0
-		cmd.angularVelocity = 2*math.pi
+		cmd.angularVelocity = math.pi
 		log = "rateOfTurn = %+.3f" % robotStateInfo.rateOfTurn
 
 	return cmd, log
@@ -284,7 +268,7 @@ while True:
 		
 		# Create and send new PID gains
 		# Comment these lines out if you're not tuning PIDs
-		#setPID = createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, PbodyY = 0.25, IbodyW = 0.5) #put PID gains as arguments to change them (unchanged keep default value)
+		#setPID = createSetPIDCommand(robot_id, PbodyW = 0.25, IbodyW = 5.0) #put PID gains as arguments to change them (unchanged keep default value)
 		#setPID_encoded = setPID.encode()
 		#basestation.write(setPID_encoded)
 		#parser.writeBytes(setPID_encoded)
@@ -393,12 +377,12 @@ while True:
 				robotStateInfo = latest_packets[REM_RobotStateInfo]
 				latest_packets[REM_RobotStateInfo] = None
 				last_robotstateinfo_time = time.time()
-				robotStateInfoFile.write(f"{last_robotstateinfo_time} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
+				robotStateInfoFile.write(f"{last_robotstateinfo_time} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.dribbleSpeed} {robotStateInfo.filteredDribbleSpeed} {robotStateInfo.dribblespeedBeforeGotBall	} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
 				robotStateInfoFile.flush()
 				last_robotfeedback_time = time.time()
 				robotFeedbackFile.write(f"{last_robotfeedback_time} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} 							{robotFeedback.ballSensorSeesBall} {robotFeedback.dribblerSeesBall} {robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} 								{robotFeedback.wheelLocked} {robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
 				robotFeedbackFile.flush()
-				robotCommandFile.write(f"{last_robotcommand_time} {cmd.doKick} {cmd.doChip} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
+				robotCommandFile.write(f"{last_robotcommand_time} {cmd.doKick} {cmd.doChip} {cmd.kickAtAngle} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
 				robotCommandFile.flush()
 
 				# XSens yaw

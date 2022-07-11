@@ -63,4 +63,6 @@ void stateControl_SetPIDGains(REM_RobotSetPIDGains* pidConfig);
 
 void stateControl_ResetAngleI();
 
+void stateControl_ResetPID();
+
 #endif /* DO_STATE_CONTROL_H_ */

@@ -11,11 +11,11 @@ static bool hasBall = false;					        		   // Stores information if dribbler 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
 // Reads out the values of the wheel encoders
-static void getEncoderData(int16_t *encoder_value);
+static int16_t getEncoderData();
 // Resets the dribbler encoder
 static void resetDribblerEncoders();
 // Calculates angular velocity in rad/s for each wheel based on their encoder values
-static void computeDribblerSpeed(float *speed);
+static void computeDribblerSpeed();
 // moving average filter on the dribbler speed
 float smoothen_dribblerSpeed(float speed);
 // Calculates the average of an array (buffer)
@@ -61,32 +61,29 @@ void dribbler_SetSpeed(float speed){
  */
 void dribbler_Update(){
 	dribbler_previous_filtered_measured_speed = dribbler_filtered_measured_speed;
-	computeDribblerSpeed(&dribbler_measured_speed);
+	computeDribblerSpeed();
 	dribbler_filtered_measured_speed = smoothen_dribblerSpeed(dribbler_measured_speed);
 }
 
 /**
  * @brief Get the last measured dribbler speed in rad/s
  */
-void dribbler_GetMeasuredSpeeds(float *speed) {
-	// Copy into "speed", so that the file-local variable "dribbler_measured_speed" doesn't escape
-	*speed = dribbler_measured_speed;
+float dribbler_GetMeasuredSpeeds() {
+	return dribbler_measured_speed;
 }
 
 /**
  * @brief Get the last filtered dribbler speed in rad/s
  */
-void dribbler_GetFilteredSpeeds(float *speed) {
-	// Copy into "speed", so that the file-local variable "dribbler_filtered_measured_speed" doesn't escape
-	*speed = dribbler_filtered_measured_speed;
+float dribbler_GetFilteredSpeeds() {
+	return dribbler_filtered_measured_speed;
 }
 
 /**
  * @brief Get the dribbler speed it had before getting the ball in rad/s
  */
-void dribbler_GetSpeedBeforeGotBall(float *speed) {
-	// Copy into "speed", so that the file-local struct "movingAvg" doesn't escape
-	*speed = movingAvg.speedBeforeGotBall;
+float dribbler_GetSpeedBeforeGotBall() {
+	return movingAvg.speedBeforeGotBall;
 }
 
 /**
@@ -126,8 +123,9 @@ bool dribbler_hasBall(){
 /**
  * @brief Reads out the counts of the dribbler encoder
  */
-static void getEncoderData(int16_t *encoder_value){
-	*encoder_value = __HAL_TIM_GET_COUNTER(ENC_DRIBBLER);
+static int16_t getEncoderData(){
+	uint32_t value = __HAL_TIM_GET_COUNTER(ENC_DRIBBLER);
+	return value;
 }
 
 /**
@@ -144,20 +142,12 @@ static void resetDribblerEncoders() {
  * within the variable ENCODERtoOMEGA. This can of course not always be perfectly guaranteed. Therefore, a timer should
  * be used to calculate the time difference between two calculations.
  */
-static void computeDribblerSpeed(float *speed){
-	int16_t encoder_value = 0;
-	float measurement;
-	getEncoderData(&encoder_value);
+static void computeDribblerSpeed(){
+	int16_t encoder_value = getEncoderData();
 	resetDribblerEncoders();
 	
 	// Convert encoder values to rad/s
-	measurement = DRIBBLER_ENCODER_TO_OMEGA * (float) encoder_value;
-
-	// for some reason the values are negative for some encoders and positive for others
-	if (measurement < 0) 
-		*speed = -measurement; 
-	else
-		*speed = measurement; 
+	dribbler_measured_speed = DRIBBLER_ENCODER_TO_OMEGA * (float) fabs(encoder_value);
 }
 
 /**

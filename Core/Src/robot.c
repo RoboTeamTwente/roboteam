@@ -72,9 +72,11 @@ uint32_t timestamp_initialized = 0;
 bool flagSendPIDGains = false;
 bool is_connected_serial = false;
 bool is_connected_wireless = false;
+bool is_connected_xsens = false;
 uint8_t last_valid_RSSI = 0;
 uint32_t timestamp_last_packet_serial = 0;
 uint32_t timestamp_last_packet_wireless = 0;
+uint32_t timestamp_last_packet_xsens = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
@@ -383,7 +385,7 @@ void init(void){
 /* ==================== MAIN LOOP ==================== */
 /* =================================================== */
 void loop(void){
-	uint32_t currentTime = HAL_GetTick();
+	uint32_t current_time = HAL_GetTick();
 	counter_loop++;
 
 	/* Send anything in the log buffer over UART */
@@ -394,14 +396,16 @@ void loop(void){
 		if(!buzzer_IsPlaying())
 			buzzer_Play_WarningTwo();
 
-	// If serial packet is no older than 250ms, assume connected via wire
-	is_connected_serial = (currentTime - timestamp_last_packet_serial) < 250;
-	is_connected_wireless = (currentTime - timestamp_last_packet_wireless) < 250;
-    // Refresh Watchdog timer
+	// Check for connection to serial, wireless, and xsens
+	is_connected_serial   = (current_time - timestamp_last_packet_serial)   < 250;
+	is_connected_wireless = (current_time - timestamp_last_packet_wireless) < 250;
+	is_connected_xsens    = (current_time - timestamp_last_packet_xsens)    < 250;
+    
+	// Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
 
-	// Check XSens
+	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
     if (halt) {
@@ -420,13 +424,13 @@ void loop(void){
     if (xsens_CalibrationDoneFirst && xsens_CalibrationDone) {
         xsens_CalibrationDoneFirst = false;
         wheels_Unbrake();
-		LOG_printf("[loop:"STRINGIZE(__LINE__)"] XSens calibrated after %dms\n", currentTime-timestamp_initialized);
+		LOG_printf("[loop:"STRINGIZE(__LINE__)"] XSens calibrated after %dms\n", current_time-timestamp_initialized);
     }
 
     // Update test (if active)
     test_Update();
     
-    // Go through all commands
+    // Go through all commands if robot is not in HALT state
     if (!halt) {
         executeCommands(&activeRobotCommand);
     }
@@ -521,39 +525,18 @@ void loop(void){
 
 	}
 
-	// if(read_Pin(BAT_SDN_pin) == false){
-	// 	set_Pin(LED6_pin,true);
-	// 	LOG_printf("shutting down");
-	// 	LOG_send();
-	// }
-
 	// Heartbeat every 1000ms
 	if(heartbeat_1000ms < HAL_GetTick()){
 		uint32_t now = HAL_GetTick();
 		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
 
-		static count = 0;
-		count++;
+		// If the XSens isn't connected anymore, play a warning sound
+		if(!is_connected_xsens){
+			buzzer_Play_QuickBeepDown();
+		}
+
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
-		// toggle_Pin(INT_EN_pin);
-		// toggle_Pin(INT_ENneg_pin);
-		// if(count>10){
-		// 	set_Pin(BAT_KILL_pin, false);
-		// 	LOG_printf("kill power");
-		// 	count = 0;
-		// }
-
-		// switch(SX->state){
-		// case WIRELESS_RESET: LOG_printf("%d: state=WIRELESS_RESET\n", now); break;
-		// case WIRELESS_INIT: LOG_printf("%d: state=WIRELESS_INIT\n", now); break;
-		// case WIRELESS_READY: LOG_printf("%d: state=WIRELESS_READY\n", now); break;
-		// case WIRELESS_WRITING: LOG_printf("%d: state=WIRELESS_WRITING\n", now); break;
-		// case WIRELESS_READING: LOG_printf("%d: state=WIRELESS_READING\n", now); break;
-		// case WIRELESS_TRANSMITTING: LOG_printf("%d: state=WIRELESS_TRANSMITTING\n", now); break;
-		// case WIRELESS_RECEIVING: LOG_printf("%d: state=WIRELESS_RECEIVING\n", now); break;
-		// default: LOG_printf("%d: default\n", now); break;
-		// }
 
 		// Check if ballsensor connection is still correct
         /*if ( !ballSensor_isInitialized() ) {
@@ -673,6 +656,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 
 	// If we received data from the XSens
 	else if(/*MTi != NULL &&*/ hspi->Instance == MTi->SPI->Instance){
+		timestamp_last_packet_xsens = HAL_GetTick();
 		MTi_SPI_RxCpltCallback(MTi);
 	}
 }
@@ -701,8 +685,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 // Handles the interrupts of the different timers.
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{	
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {		
 	// Old Geneva timer. Needs to be properly disabled in CubeMX
 	if(htim->Instance == htim6.Instance){
 		counter_htim6++;

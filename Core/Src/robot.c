@@ -73,8 +73,8 @@ bool flagSendPIDGains = false;
 bool is_connected_serial = false;
 bool is_connected_wireless = false;
 uint8_t last_valid_RSSI = 0;
-uint32_t time_last_packet_serial = 0;
-uint32_t time_last_packet_wireless = 0;
+uint32_t timestamp_last_packet_serial = 0;
+uint32_t timestamp_last_packet_wireless = 0;
 
 uint32_t heartbeat_17ms_counter = 0;
 uint32_t heartbeat_17ms = 0;
@@ -116,7 +116,7 @@ void Wireless_Writepacket_Cplt(void){
  */
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
-	time_last_packet_wireless = HAL_GetTick();
+	timestamp_last_packet_wireless = HAL_GetTick();
 	handlePacket(rxPacket.message,rxPacket.payloadLength);
 
 	txPacket.payloadLength = 0;
@@ -395,8 +395,8 @@ void loop(void){
 			buzzer_Play_WarningTwo();
 
 	// If serial packet is no older than 250ms, assume connected via wire
-	is_connected_serial = (currentTime - time_last_packet_serial) < 250;
-	is_connected_wireless = (currentTime - time_last_packet_wireless) < 250;
+	is_connected_serial = (currentTime - timestamp_last_packet_serial) < 250;
+	is_connected_wireless = (currentTime - timestamp_last_packet_wireless) < 250;
     // Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
@@ -612,7 +612,7 @@ void handleRobotSetPIDGains(uint8_t* packet_buffer){
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
-	time_last_packet_serial = HAL_GetTick();
+	timestamp_last_packet_serial = HAL_GetTick();
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){

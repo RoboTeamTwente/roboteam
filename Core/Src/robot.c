@@ -407,7 +407,7 @@ void loop(void){
 
 	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
-    halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial || is_connected_xsens) || !REM_last_packet_had_correct_version;
+    halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
     if (halt) {
 		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);

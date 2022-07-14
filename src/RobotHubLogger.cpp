@@ -4,8 +4,8 @@
 #include <roboteam_utils/Format.hpp>
 
 constexpr char MARPLE_DELIMITER = ',';
-constexpr char ROBOT_STATE_MARPLE_HEADER[] = "time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4,dribbleSpeed,bodyXInt,bodyYInt,bodyWInt,bodyYawInt,wheel1Int,wheel2Int,wheel3Int,wheel4Int";
-constexpr char ROBOT_COMMANDS_MARPLE_HEADER[] = "time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket";
+constexpr char ROBOT_STATE_MARPLE_HEADER[] = "time,team,id,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4,dribbleBeforeBall,filterDribble";
+constexpr char ROBOT_COMMANDS_MARPLE_HEADER[] = "time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickAtAngle,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket";
 constexpr char ROBOT_FEEDBACK_MARPLE_HEADER[] = "time,team,source,id,sensorSeesBall,ballPos,sensorWorking,dribblerSeesBall,velX,velY,angle,xSensCalibrated,capCharged,wheelLocked,wheelBraking,batteryLevel,signalStrength";
 
 namespace rtt {
@@ -148,7 +148,7 @@ void RobotHubLogger::logRobotCommands(const RobotCommands &commands, Team team) 
     if (this->logInMarpleFormat) {
         auto now = std::chrono::system_clock::now().time_since_epoch().count();
         for (const auto& command : commands) {
-            //time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket
+            //time,team,id,xVel,yVel,targetAngle,targetAngularVel,camAngle,camAngleIsSet,kickAtAngle,kickSpeed,waitForBall,kickType,dribblerSpeed,ignorePacket
             this->commandsLogger
                 << now << MARPLE_DELIMITER
                 << teamToInt(team) << MARPLE_DELIMITER
@@ -159,6 +159,7 @@ void RobotHubLogger::logRobotCommands(const RobotCommands &commands, Team team) 
                 << command.targetAngularVelocity << MARPLE_DELIMITER
                 << command.cameraAngleOfRobot.getValue() << MARPLE_DELIMITER
                 << command.cameraAngleOfRobotIsSet << MARPLE_DELIMITER
+                << command.kickAtAngle << MARPLE_DELIMITER
                 << command.kickSpeed << MARPLE_DELIMITER
                 << command.waitForBall << MARPLE_DELIMITER
                 << kickTypeToInt(command.kickType) << MARPLE_DELIMITER
@@ -179,10 +180,11 @@ void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team
     std::scoped_lock<std::mutex> lock(this->stateInfoLogMutex);
     if (this->logInMarpleFormat) {
         auto now = std::chrono::system_clock::now().time_since_epoch().count();
-        //time,team,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4
+        //time,team,id,xSensAcc1,xSensAcc2,xSensYaw,rateOfTurn,wheelSpeed1,wheelSpeed2,wheelSpeed3,wheelSpeed4,dribbleBeforeBall,filterDribble
         this->stateInfoLogger
             << now << MARPLE_DELIMITER
             << teamToInt(team) << MARPLE_DELIMITER
+            << info.id << MARPLE_DELIMITER
             << info.xsensAcc1 << MARPLE_DELIMITER
             << info.xsensAcc2 << MARPLE_DELIMITER
             << info.xsensYaw << MARPLE_DELIMITER
@@ -199,7 +201,9 @@ void RobotHubLogger::logRobotStateInfo(const REM_RobotStateInfo &info, Team team
             << info.wheel1Integral << MARPLE_DELIMITER
             << info.wheel2Integral << MARPLE_DELIMITER
             << info.wheel3Integral << MARPLE_DELIMITER
-            << info.wheel4Integral << std::endl;
+            << info.wheel4Integral << MARPLE_DELIMITER
+            << info.dribblespeedBeforeGotBall << MARPLE_DELIMITER
+            << info.filteredDribbleSpeed << std::endl;
     } else {
         this->stateInfoLogger
             << "[" << Time::getTimeWithMilliseconds(':') << "] "

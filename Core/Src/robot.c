@@ -266,15 +266,21 @@ void init(void){
 	
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
-	set_Pin(INT_EN_pin, 1);
-	set_Pin(INT_ENneg_pin, 0);
+	
+	// Enable the I2C buffer (on the topboard, parts U500, U503).
+	// These two buffers do communication with the ballsensor I2C, and the power monitor I2C + breakout I2C (shared bus)
+	set_Pin(INT_EN_pin, 1); // HIGH == Buffers are turned on
+	
+	// Enable the four GPIO buffers (on the topboard, parts U501, U502, U800, and U801). 
+	// These four buffers do communication with power meter GPIO pins, kill/shutdown signal, breakout UART,
+	// kicker/chipper, dribbler (encoder + pwm), and ballsensor GPIO pins
+	set_Pin(INT_ENneg_pin, 0); // LOW == Buffers are turned on
+	
+	// Set power circuit pin to HIGH, meaning on. When pulled again to LOW, it signals the power circuit to turn off, and power is then cut off instantly.
 	set_Pin(BAT_KILL_pin, 1);
 	/* Read ID from switches */
 	ROBOT_ID = get_Id();
 	set_Pin(LED0_pin, 1);
-	set_Pin(INT_EN_pin, 1);
-	set_Pin(INT_ENneg_pin, 0);
-	set_Pin(BAT_KILL_pin, 1);
 
 	LOG_init();
 
@@ -537,6 +543,19 @@ void loop(void){
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
+
+		// Play a song on the speaker after 3 seconds
+		static bool isPlaying = false;
+		if (!isPlaying && 3000 < current_time){
+			isPlaying = true;
+			// Set volume to max (30)                 vv
+			uint8_t musicbuf1[5] = {0x7E, 0x03, 0x31, 30, 0xEF};
+			HAL_UART_Transmit(UART_BACK, musicbuf1, 5, 10);
+			HAL_Delay(50);
+			// Play song 10 (noo-noo)                       vv
+			uint8_t musicbuf2[6] = {0x7e, 0x04, 0x42, 0x01, 10, 0xef};
+			HAL_UART_Transmit(UART_BACK, musicbuf2, 6, 10);
+		}
 
 		// Check if ballsensor connection is still correct
         /*if ( !ballSensor_isInitialized() ) {

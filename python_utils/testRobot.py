@@ -181,7 +181,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 			if test == "kicker"  : cmd.doKick = True
 			if test == "chipper" : cmd.doChip = True
 			cmd.doForce = True
-			cmd.kickChipPower = 3.5 #BaseTypes.PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX
+			cmd.kickChipPower = 1.5
 
 	if test == "dribbler":
 		cmd.dribbler = period_fraction
@@ -280,9 +280,6 @@ while True:
 
 			# ========== WRITING ========== #
 			if tick_required:
-				print(tick_counter / (periodLength/4))
-				if 1000 < tick_counter / (periodLength/4):
-					exit()
 
 				# Timing stuff
 				last_tick_time += 1./packetHz
@@ -343,7 +340,7 @@ while True:
 			# ========== VISUALISING ========== #
 
 			# Break if cv2 is not imported
-			if not cv2_available: break
+			if not cv2_available: continue
 
 			# Draw robot on the image
 			s = 101.2

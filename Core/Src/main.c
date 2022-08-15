@@ -1128,7 +1128,7 @@ static void MX_UART4_Init(void)
 
   /* USER CODE END UART4_Init 1 */
   huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
+  huart4.Init.BaudRate = 9600;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;
@@ -1244,7 +1244,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOF, BS_RST_Pin|LD5_Pin|LD4_Pin|LD3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LD6_Pin|Batt_kill_Pin|Charge_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LD6_Pin|Charge_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, LD2_Pin|LD1_Pin|RB_BRK_Pin|RB_FR_Pin
@@ -1258,6 +1258,9 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Interface_ENnegative_GPIO_Port, Interface_ENnegative_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(Batt_kill_GPIO_Port, Batt_kill_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : Charge_done_Pin */
   GPIO_InitStruct.Pin = Charge_done_Pin;

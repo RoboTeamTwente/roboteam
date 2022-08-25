@@ -32,8 +32,8 @@
  **/
 
 #include "BaseTypes.h"
-#include "RobotAssuredPacket.h"
-#include "RobotAssuredAck.h"
+#include "REM_RobotAssuredPacket.h"
+#include "REM_RobotAssuredAck.h"
 
 /**
  * @brief Three states to keep track of the state of an AssuredPacket message transmitted by the robot
@@ -104,6 +104,6 @@ void APM_packetIsSent(AssuredPacketManager* apm);
  * @param apm Pointer to the AssuredPacketManager instance
  * @param raap Pointer to the RobotAssuredAckPayload instance
  */
-void APM_absorbAssuredAck(AssuredPacketManager* apm, RobotAssuredAckPayload* raap);
+void APM_absorbAssuredAck(AssuredPacketManager* apm, REM_RobotAssuredAckPayload* raap);
 
 #endif /*__ASSURED_PACKET_MANAGER*/

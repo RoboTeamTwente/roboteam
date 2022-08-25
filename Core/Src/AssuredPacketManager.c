@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "BaseTypes.h"
 #include "AssuredPacketManager.h"
 
 #include "robot.h"
@@ -37,24 +38,24 @@ bool APM_sendAssuredPacket(AssuredPacketManager* apm, uint8_t* message, uint8_t 
     // TODO replace the magic number 127 with a constant, reflecting the max SX1280 buffer size
     // Ensure that the packet can actually be transmitted by the SX1280. Yes, it might be possible
     // to send larger packets over UART, but please just split it up into a few smaller packets.
-    if(127 < length + PACKET_SIZE_ROBOT_ASSURED_PACKET)
+    if(127 < length + PACKET_SIZE_REM_ROBOT_ASSURED_PACKET)
         return false;
 
     // Increase the sequence number
     apm->sequence_number++;
 
     // Create the AssuredPacket header
-    RobotAssuredPacketPayload rapp;
-    RobotAssuredPacket_set_header(&rapp, PACKET_TYPE_ROBOT_ASSURED_PACKET);
-    RobotAssuredPacket_set_remVersion(&rapp, LOCAL_REM_VERSION);
-    RobotAssuredPacket_set_id(&rapp, robot_getID());
-    RobotAssuredPacket_set_sequenceNumber(&rapp, apm->sequence_number);
-    RobotAssuredPacket_set_messageLength(&rapp, length);
+    REM_RobotAssuredPacketPayload rapp;
+    REM_RobotAssuredPacket_set_header(&rapp, PACKET_TYPE_REM_ROBOT_ASSURED_PACKET);
+    REM_RobotAssuredPacket_set_remVersion(&rapp, LOCAL_REM_VERSION);
+    REM_RobotAssuredPacket_set_id(&rapp, robot_getID());
+    REM_RobotAssuredPacket_set_sequenceNumber(&rapp, apm->sequence_number);
+    REM_RobotAssuredPacket_set_messageLength(&rapp, length);
 
     // Copy the AssuredPacket header into the message buffer
-    memcpy(apm->message_buffer, rapp.payload, PACKET_SIZE_ROBOT_ASSURED_PACKET);
+    memcpy(apm->message_buffer, rapp.payload, PACKET_SIZE_REM_ROBOT_ASSURED_PACKET);
     // Copy the rest of the message into the message buffer
-    memcpy(apm->message_buffer + PACKET_SIZE_ROBOT_ASSURED_PACKET, message, length);
+    memcpy(apm->message_buffer + PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, message, length);
 
     apm->message_length = length;
     apm->state = AWAITING_TRANSMISSION;
@@ -65,13 +66,13 @@ void APM_packetIsSent(AssuredPacketManager* apm){
     apm->state = AWAITING_ACK;    
 }
 
-void APM_absorbAssuredAck(AssuredPacketManager* apm, RobotAssuredAckPayload* raap){
+void APM_absorbAssuredAck(AssuredPacketManager* apm, REM_RobotAssuredAckPayload* raap){
     // Ignore any AssuredAck if APM is not expecting one
     if(!APM_isAwaitingAck(apm))
         return;
 
     // Get the sequence number from the AssuredAck
-    uint8_t ack_sequence_number = RobotAssuredAck_get_sequenceNumber(raap);
+    uint8_t ack_sequence_number = REM_RobotAssuredAck_get_sequenceNumber(raap);
     // Ensure the sequence number is correct
     if(ack_sequence_number != apm->sequence_number)
         return;

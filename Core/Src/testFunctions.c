@@ -260,10 +260,10 @@ status executeDribblerTest() {
 
 status executeSquareDrive() {
 	// SQUARE WITH 90 DEGREES TURNS AT SIDES
-	float velocityRef[3];
+	float velocityRef[4];
 	velocityRef[0] = 0.0;
 	velocityRef[1] = 0.0;
-	velocityRef[2] = 0.0*M_PI;
+	velocityRef[2] = 0.0 * M_PI;
 
 	static int velTimer = 0;
 	static int count = 0;

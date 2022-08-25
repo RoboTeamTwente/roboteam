@@ -1,8 +1,8 @@
+#include "robot.h"
 #include "logging.h"
 #include "REM_BaseTypes.h"
 #include "REM_RobotLog.h"
 #include "peripheral_util.h"
-#include "robot.h"
 
 #include "CircularBuffer.h"
 
@@ -74,7 +74,7 @@ void LOG(char *message){
 
     REM_RobotLog_set_header((REM_RobotLogPayload*) payload, PACKET_TYPE_REM_ROBOT_LOG);  // 8 bits
     REM_RobotLog_set_remVersion((REM_RobotLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
-    REM_RobotLog_set_id((REM_RobotLogPayload*) payload, ROBOT_ID);                   // 4 bits
+    REM_RobotLog_set_id((REM_RobotLogPayload*) payload, robot_get_ID());             // 4 bits
     REM_RobotLog_set_messageLength((REM_RobotLogPayload*) payload, message_length); // 8 bits
                                                                             // = 3 bytes
  

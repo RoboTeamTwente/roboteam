@@ -10,7 +10,6 @@ void control_util_Init() {
 }
 
 void initPID(PIDvariables* PID, float kP, float kI, float kD) {
-	//PID = PIDdefault;
 	PID->kP = kP;
 	PID->kI = kI;
 	PID->kD = kD;

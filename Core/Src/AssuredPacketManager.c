@@ -2,13 +2,14 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "main.h"
 #include "robot.h"
 
 #include "BaseTypes.h"
 #include "AssuredPacketManager.h"
 
 // The time needed in milliseconds before a packet is being retransmitted
-static const RETRANSMISSION_DELAY_MS = 3000;
+static const uint32_t RETRANSMISSION_DELAY_MS = 3000;
 
 bool APM_isReady(AssuredPacketManager* apm){
     return apm->state == READY;
@@ -48,7 +49,7 @@ bool APM_sendAssuredPacket(AssuredPacketManager* apm, uint8_t* message, uint8_t 
     REM_RobotAssuredPacketPayload rapp;
     REM_RobotAssuredPacket_set_header(&rapp, PACKET_TYPE_REM_ROBOT_ASSURED_PACKET);
     REM_RobotAssuredPacket_set_remVersion(&rapp, LOCAL_REM_VERSION);
-    REM_RobotAssuredPacket_set_id(&rapp, robot_getID());
+    REM_RobotAssuredPacket_set_id(&rapp, robot_get_ID());
     REM_RobotAssuredPacket_set_sequenceNumber(&rapp, apm->sequence_number);
     REM_RobotAssuredPacket_set_messageLength(&rapp, length);
 
@@ -59,6 +60,8 @@ bool APM_sendAssuredPacket(AssuredPacketManager* apm, uint8_t* message, uint8_t 
 
     apm->message_length = length;
     apm->state = AWAITING_TRANSMISSION;
+
+    return true;
 }
 
 void APM_packetIsSent(AssuredPacketManager* apm){

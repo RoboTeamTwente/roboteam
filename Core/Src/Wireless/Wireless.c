@@ -89,8 +89,8 @@ const SX1280_Settings SX1280_DEFAULT_SETTINGS = {
         .TXoffset = 0x80,
         .RXoffset = 0x00,
         
-        /* 14.3.1.5, page 121 */ .ModParam = {FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}, /* Full power 1.3Mbps, 3/4 encoding rate, Pulse Shaping (Raised Cosine Filter) of 0.5 */ 
-        /* 14.3.1.6, page 122 */ .PacketParam = {PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, MAX_PAYLOAD_SIZE, CRC_2_BYTE, NO_WHITENING},
+        /* 14.3.1.5, page 121 */ .ModParam = {{FLRC_BR_1_300_BW_1_2, FLRC_CR_3_4, BT_0_5}}, /* Full power 1.3Mbps, 3/4 encoding rate, Pulse Shaping (Raised Cosine Filter) of 0.5 */ 
+        /* 14.3.1.6, page 122 */ .PacketParam = {{PREAMBLE_LENGTH_24_BITS, FLRC_SYNC_WORD_LEN_P32S, RX_MATCH_SYNC_WORD_1, PACKET_VARIABLE_LENGTH, MAX_PAYLOAD_SIZE, CRC_2_BYTE, NO_WHITENING}},
         .DIOIRQ = {(IRQ_TX_DONE|IRQ_RX_DONE|IRQ_CRC_ERROR|IRQ_RXTX_TIMEOUT), (IRQ_TX_DONE|IRQ_RX_DONE|IRQ_CRC_ERROR|IRQ_RXTX_TIMEOUT), IRQ_NONE, IRQ_NONE}
 };
 

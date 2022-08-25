@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
+uint8_t ROBOT_ID;
 static const bool USE_PUTTY = false;
 
 MTi_data* MTi;
@@ -584,7 +585,9 @@ void loop(void){
     // LED6 Wireless_Readpacket_Cplt : toggled when a packet is received
 }
 
-
+uint8_t robot_get_ID(){
+	return ROBOT_ID;
+}
 
 
 

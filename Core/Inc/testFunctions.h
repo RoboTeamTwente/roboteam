@@ -14,6 +14,7 @@
 #include "stateControl.h"
 #include "Buzzer/buzzer.h"
 #include "dribbler.h"
+#include "math.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 

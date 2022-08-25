@@ -8,12 +8,11 @@
 REM_RobotCommandPayload myRobotCommandPayload;
 REM_RobotCommand myRobotCommand;
 
-uint8_t ROBOT_ID;
-
 void print(char _out[]);
 
 void init(void);
 void loop(void);
+uint8_t robot_get_ID();
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp);
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length);

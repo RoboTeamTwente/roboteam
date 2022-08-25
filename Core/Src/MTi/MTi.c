@@ -71,7 +71,6 @@ static Xsens_Status MTi_GoToMeasure(MTi_data* MTi);
 
 // Debug functions
 static Xsens_Status PrintOutputConfig(struct XbusMessage* message);
-static inline void MTi_printf(char* format, ...);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
@@ -523,14 +522,3 @@ static inline Xsens_Status WaitForAck(MTi_data* MTi, enum XsMessageId XMID){
 	}
 	return timedout ? Xsens_Failed_Receive : Xsens_OK;
 }
-
-// static inline void MTi_printf(char* format, ...){
-// 	if(MT_DEBUG){
-// 		char mes[100];
-// 		va_list aptr;
-// 		va_start(aptr, format); // give starting point of additional arguments
-// 	    vsprintf(mes, format, aptr); // Copies and turns into string
-// 	    va_end(aptr); // close list
-// 	    LOG_printf("MTi: %s\n\r", mes);
-// 	}
-// }

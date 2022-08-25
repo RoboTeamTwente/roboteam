@@ -38,16 +38,16 @@ typedef struct _SX1280_Settings{
 
 
 typedef struct _SX1280Interface{
-	 GPIO_Pin BusyPin;
-	 GPIO_Pin Reset;
-	 GPIO_Pin CS;
-	 SPI_HandleTypeDef* SPI;
+	GPIO_Pin BusyPin;
+	GPIO_Pin Reset;
+	GPIO_Pin CS;
+	SPI_HandleTypeDef* SPI;
 	volatile bool active_transfer;
 	volatile uint8_t* TXbuf;
 	volatile uint8_t* RXbuf;
 	volatile SX1280_Status SX1280_status;
 	void* logger; // TODO: Implement logger feedback
-}SX1280_Interface;
+} SX1280_Interface;
 
 ////////////////////////////////////// public functions
 void SX1280WakeUp(SX1280_Interface* interface);

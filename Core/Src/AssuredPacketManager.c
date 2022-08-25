@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "robot.h"
+
 #include "BaseTypes.h"
 #include "AssuredPacketManager.h"
-
-#include "robot.h"
 
 // The time needed in milliseconds before a packet is being retransmitted
 static const RETRANSMISSION_DELAY_MS = 3000;

@@ -5,7 +5,7 @@
 #include "main.h"
 #include "robot.h"
 
-#include "BaseTypes.h"
+#include "REM_BaseTypes.h"
 #include "AssuredPacketManager.h"
 
 // The time needed in milliseconds before a packet is being retransmitted

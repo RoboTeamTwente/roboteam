@@ -14,7 +14,7 @@
 #include "dribbler.h"
 #include "shoot.h"
 #include "wheels.h"
-#include "ballSensor.h"
+#include "ballsensor.h"
 #include "testFunctions.h"
 
 ///////////////////////////////////////////////////// VARIABLE STRUCT

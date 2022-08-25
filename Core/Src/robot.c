@@ -17,7 +17,7 @@
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
-#include "ballSensor.h"
+#include "ballsensor.h"
 #include "testFunctions.h"
 #include "logging.h"
 #include "SX1280_Constants.h"

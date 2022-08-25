@@ -3,7 +3,7 @@
 /* Page 105. Touch resolution = 0.1mm */
 
 
-#include "ballSensor.h"
+#include "ballsensor.h"
 #include "limits.h"
 #include "gpio_util.h"
 #include "logging.h"

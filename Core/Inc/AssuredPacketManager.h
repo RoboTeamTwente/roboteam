@@ -31,7 +31,7 @@
  *    on the other side. The next AssuredPacket can be sent.
  **/
 
-#include "BaseTypes.h"
+#include "REM_BaseTypes.h"
 #include "REM_RobotAssuredPacket.h"
 #include "REM_RobotAssuredAck.h"
 

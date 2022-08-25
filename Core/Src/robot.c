@@ -21,6 +21,7 @@
 #include "testFunctions.h"
 #include "logging.h"
 #include "SX1280_Constants.h"
+#include "AssuredPacketManager.h"
 
 #include "rem.h"
 
@@ -69,7 +70,7 @@ volatile uint32_t counter_RobotCommand = 0;
 volatile uint32_t counter_RobotBuzzer = 0;
 uint32_t timestamp_initialized = 0;
 
-bool flagSendPIDGains = false;
+bool flag_send_PID_gains = false;
 bool is_connected_serial = false;
 bool is_connected_wireless = false;
 bool is_connected_xsens = false;
@@ -114,12 +115,12 @@ void Wireless_Writepacket_Cplt(void){
  * When this callback function is called, it means that we just received a packet from the SX1280. According to the TDMA protocol that
  * we use, we now have 1 millisecond to send our feedback to the SX1280. Therefore, this function needs to be fast. Don't do 
  * any CPU intense stuff in here like matrix multiplications etc etc. This is also the reason that robotFeedback / robotStateInfo / etc
- * is being fill in the main loop, and not in this function; it saves time.
+ * is being filled in the main loop, and not in this function; it saves time.
  */
 void Wireless_Readpacket_Cplt(void){
 	toggle_Pin(LED6_pin);
 	timestamp_last_packet_wireless = HAL_GetTick();
-	handlePacket(rxPacket.message,rxPacket.payloadLength);
+	handlePacket(rxPacket.message, rxPacket.payloadLength);
 
 	txPacket.payloadLength = 0;
 
@@ -130,18 +131,15 @@ void Wireless_Readpacket_Cplt(void){
 	encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
 	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
 
-	// TODO ensure this is only done when a packet is actually being sent
-	// Both the RX_TIMEOUT and TX_DONE reset the flagSendPIDGains, and then the data isn't actually being sent
-	// Maybe wait for Cas his rerwite? For now just always send PID values. There is space left in the packet
-	// if(flagSendPIDGains){
+	if(flag_send_PID_gains){
 		encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (txPacket.message + txPacket.payloadLength), &robotPIDGains);
 		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_PIDGAINS;
-		flagSendPIDGains = false;
-	// }
+		flag_send_PID_gains = false;
+	}
 
 	// TODO insert REM_SX1280Filler packet if total_packet_length < 6. Fine for now since feedback is already more than 6 bytes
 	WritePacket_DMA(SX, &txPacket, &Wireless_Writepacket_Cplt);
-};
+}
 void Wireless_Default(){
 	WaitForPacket(SX);
 }
@@ -259,14 +257,15 @@ void printRobotCommand(REM_RobotCommand* rc){
 /* ======================================================== */
 void init(void){
 
+	// Turn off all leds. Use leds to indicate init() progress
+	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
+	
+	{ // ====== WATCHDOG TIMER, COMMUNICATION BUFFERS ON TOPBOARD, BATTERY, ROBOT_ID
 	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
 	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
 	 but its better than suddenly having non-responding robots in a match */
 	IWDG_Init(iwdg, 5000);
-	
-	// Turn off all leds. Use leds to indicate init() progress
-	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
-	
+		
 	// Enable the I2C buffer (on the topboard, parts U500, U503).
 	// These two buffers do communication with the ballsensor I2C, and the power monitor I2C + breakout I2C (shared bus)
 	set_Pin(INT_EN_pin, 1); // HIGH == Buffers are turned on
@@ -275,15 +274,18 @@ void init(void){
 	// These four buffers do communication with power meter GPIO pins, kill/shutdown signal, breakout UART,
 	// kicker/chipper, dribbler (encoder + pwm), and ballsensor GPIO pins
 	set_Pin(INT_ENneg_pin, 0); // LOW == Buffers are turned on
-	
+
 	// Set power circuit pin to HIGH, meaning on. When pulled again to LOW, it signals the power circuit to turn off, and power is then cut off instantly.
+	// This pin must be set HIGH within a few milliseconds after powering on the robot, or it will turn the robot off again
 	set_Pin(BAT_KILL_pin, 1);
-	/* Read ID from switches */
+	
+	/* Read robot ID from switches */
 	ROBOT_ID = get_Id();
+	}
+
 	set_Pin(LED0_pin, 1);
 
 	LOG_init();
-
 	LOG("[init:"STRINGIZE(__LINE__)"] Last programmed on " __DATE__ "\n");
 	LOG("[init:"STRINGIZE(__LINE__)"] GIT: " STRINGIZE(__GIT_STRING__) "\n");
 	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d\n", LOCAL_REM_VERSION);
@@ -294,13 +296,16 @@ void init(void){
 	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
 	HAL_Delay(300);
+
 	set_Pin(LED1_pin, 1);
 
 	/* Play a warning sound if the robot is not programmed with the development branch */
+	#ifdef __GIT_DEVELOPMENT__
 	if(!__GIT_DEVELOPMENT__){
 		buzzer_Play_WarningGit();
 		HAL_Delay(300);
 	}
+	#endif
 
 	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
 	if(USE_PUTTY){
@@ -311,6 +316,7 @@ void init(void){
 		/* Can now receive RobotCommands (and other packets) via UART */
 		REM_UARTinit(UART_PC);
 	}
+	
 	set_Pin(LED2_pin, 1);
 
     // Initialize control constants
@@ -330,13 +336,13 @@ void init(void){
 	SX_Interface.BusyPin = SX_BUSY_pin;
 	SX_Interface.CS = SX_NSS_pin;
 	SX_Interface.Reset = SX_RST_pin;
-	// err |= Wireless_setPrint_Callback(SX, LOG_printf);
+	// err |= Wireless_setPrint_Callback(SX, LOG_prinstf);
     err = Wireless_Init(SX, set, &SX_Interface);
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
-	err = Wireless_setIRQ_Callbacks(SX,&SX_IRQcallbacks);
+	err = Wireless_setIRQ_Callbacks(SX, &SX_IRQcallbacks);
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	LOG_sendAll();
-    
+	// Read the pins on the topboard to determine the wireless frequency 
 	if(read_Pin(FT1_pin)){
 		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
@@ -345,10 +351,10 @@ void init(void){
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
 	}
 	LOG_sendAll();
-    
-	Wireless_setTXSyncword(SX,robot_syncWord[16]);
+    // SX1280 section 7.3 FLRC : Syncword is 4 bytes at the beginning of each transmission, that ensures that only the right robot / basestation listens to that transmission.
+	Wireless_setTXSyncword(SX, robot_syncWord[16]); // TX syncword is set to the basestation its syncword
 	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
-	Wireless_setRXSyncwords(SX, syncwords);
+	Wireless_setRXSyncwords(SX, syncwords); // RX syncword is specific for the robot its ID
 	set_Pin(LED4_pin, 1);
 
 	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
@@ -365,6 +371,8 @@ void init(void){
 	LOG_sendAll();
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
 
+	// Tell the SX to start listening for packets. This is non-blocking. It simply sets the SX into receiver mode.
+	// SX1280 section 10.7 Transceiver Circuit Modes Graphical Illustration
 	WaitForPacket(SX);
 
 	/* Reset the watchdog timer and set the threshold at 200ms */
@@ -601,7 +609,7 @@ void handleRobotBuzzer(uint8_t* packet_buffer){
 void handleRobotGetPIDGains(uint8_t* packet_buffer){
 	REM_RobotGetPIDGainsPayload* rgpidgp = (REM_RobotGetPIDGainsPayload*) (packet_buffer);
 	REM_last_packet_had_correct_version &= REM_RobotGetPIDGains_get_remVersion(rgpidgp) == LOCAL_REM_VERSION;
-	flagSendPIDGains = true;
+	flag_send_PID_gains = true;
 }
 
 void handleRobotSetPIDGains(uint8_t* packet_buffer){

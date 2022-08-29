@@ -33,6 +33,7 @@ apt-get install -y qtdeclarative5-dev
 echo Installing protobuf
 git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf
 cd /opt/protobuf
+git checkout 3.19.x
 git submodule update --init --recursive
 ./autogen.sh
 ./configure

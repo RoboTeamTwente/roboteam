@@ -1,29 +1,33 @@
 #!/bin/bash
 
 echo Updating repositories
-apt-get update
-apt-get upgrade
+apt-get -y update
+apt-get -y upgrade
 
-echo Installing package dependencies
-apt-get install libzmq3-dev -y
-apt-get install clang -y
-apt-get install clang-format -y
-apt-get install ninja-build -y
-apt-get install autoconf -y
-apt-get install automake -y
-apt-get install libtool -y
-apt-get install libtbb-dev -y
-apt-get install apt-utils -y
-apt-get install libboost-all-dev -y
-apt-get install libeigen3-dev -y
-apt-get install curl -y
-apt-get install make -y
-apt-get install g++ -y
-apt-get install unzip -y
-apt-get install cmake -y
-apt-get install libqt5charts5-dev -y
-apt-get install libsdl2-dev -y
-apt-get install qtdeclarative5-dev -y
+echo Installing required packaged dependencies
+apt-get install -y cmake
+apt-get install -y g++
+apt-get install -y qt5-default
+apt-get install -y libqt5charts5-dev
+apt-get install -y libsdl2-dev
+apt-get install -y libzmq3-dev
+apt-get install -y libeigen3-dev
+apt-get install -y libgtest-dev
+
+echo Installing other useful packages
+apt-get install -y clang
+apt-get install -y clang-format
+apt-get install -y ninja-build
+apt-get install -y autoconf
+apt-get install -y automake
+apt-get install -y libtool
+apt-get install -y libtbb-dev
+apt-get install -y apt-utils
+apt-get install -y libboost-all-dev
+apt-get install -y curl
+apt-get install -y make
+apt-get install -y unzip
+apt-get install -y qtdeclarative5-dev
 
 # The default protobuf package is too low of a version for us
 echo Installing protobuf
@@ -35,12 +39,3 @@ git submodule update --init --recursive
 make -j $(nproc)
 make install
 ldconfig
-
-echo Installing gtest
-git clone https://github.com/google/googletest.git /opt/googletest
-cd /opt/googletest
-mkdir install
-cd install
-cmake ..
-make -j $(nproc)
-make install

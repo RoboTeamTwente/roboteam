@@ -156,6 +156,16 @@ packets = {
         ["id",                  4, None, "Id of the robot"],
         ["sequenceNumber",      8, None, "Number to match this packet with AssuredPacket"],
     ],
+    
+    "REM_MusicCommand" : [
+        ["header",              8,  None, "Header byte indicating the type of packet"],
+        ["remVersion",          4,  None, "Version of roboteam_embedded_messages"],
+        ["id",                  4,  None, "Id of the robot"],
+        ["volume",              5,  None, "Volume of the song. 31 is loudest"],
+        ["play",                1,  None, "When set, a song will be played. If not, the song will be stopped"],
+        ["folder_id",           2,  None, "The id of the folder, from which to pick a song"],
+        ["song_id",             8,  None, "Id of the song, given the folder"],
+    ],
     # https://media.digikey.com/pdf/Data%20Sheets/Semtech%20PDFs/SX1280-81_Rev3.2_Mar2020.pdf see page 124. 
     # Minimum payload length is 6 bytes
     "REM_SX1280Filler" : [

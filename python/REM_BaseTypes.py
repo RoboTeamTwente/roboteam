@@ -18,9 +18,10 @@ from .REM_RobotPIDGains                        import REM_RobotPIDGains
 from .REM_RobotSetPIDGains                     import REM_RobotSetPIDGains
 from .REM_RobotAssuredPacket                   import REM_RobotAssuredPacket
 from .REM_RobotAssuredAck                      import REM_RobotAssuredAck
+from .REM_MusicCommand                         import REM_MusicCommand
 from .REM_SX1280Filler                         import REM_SX1280Filler
 
-LOCAL_REM_VERSION = 11
+LOCAL_REM_VERSION = 12
 
 PACKET_TYPE_REM_ROBOT_COMMAND                                = 0b00001111 # 15 
 PACKET_SIZE_REM_ROBOT_COMMAND                                = 15
@@ -445,7 +446,31 @@ PACKET_RANGE_REM_ROBOT_ASSURED_ACK_SEQUENCE_NUMBER_MIN       = 0.
 PACKET_RANGE_REM_ROBOT_ASSURED_ACK_SEQUENCE_NUMBER_MAX       = 255.
 PACKET_RANGE_REM_ROBOT_ASSURED_ACK_SEQUENCE_NUMBER_N_BITS    = 8
 
-PACKET_TYPE_REM_SX1280FILLER                                 = 0b11111111 # 255 
+PACKET_TYPE_REM_MUSIC_COMMAND                                = 0b11111111 # 255 
+PACKET_SIZE_REM_MUSIC_COMMAND                                = 4
+PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_MIN                    = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_MAX                    = 255.
+PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_N_BITS                 = 8
+PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_MIN               = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_MAX               = 15.
+PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_N_BITS            = 4
+PACKET_RANGE_REM_MUSIC_COMMAND_ID_MIN                        = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_ID_MAX                        = 15.
+PACKET_RANGE_REM_MUSIC_COMMAND_ID_N_BITS                     = 4
+PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_MIN                    = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_MAX                    = 31.
+PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_N_BITS                 = 5
+PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_MIN                      = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_MAX                      = 1.
+PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_N_BITS                   = 1
+PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_MIN                 = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_MAX                 = 3.
+PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_N_BITS              = 2
+PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_MIN                   = 0.
+PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_MAX                   = 255.
+PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_N_BITS                = 8
+
+PACKET_TYPE_REM_SX1280FILLER                                 = 0b01001011 # 75 
 PACKET_SIZE_REM_SX1280FILLER                                 = 6
 PACKET_RANGE_REM_SX1280FILLER_HEADER_MIN                     = 0.
 PACKET_RANGE_REM_SX1280FILLER_HEADER_MAX                     = 255.
@@ -472,6 +497,7 @@ def PACKET_TYPE_TO_SIZE(type):
     if type == PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                          : return PACKET_SIZE_REM_ROBOT_SET_PIDGAINS                          
     if type == PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                        : return PACKET_SIZE_REM_ROBOT_ASSURED_PACKET                        
     if type == PACKET_TYPE_REM_ROBOT_ASSURED_ACK                           : return PACKET_SIZE_REM_ROBOT_ASSURED_ACK                           
+    if type == PACKET_TYPE_REM_MUSIC_COMMAND                               : return PACKET_SIZE_REM_MUSIC_COMMAND                               
     if type == PACKET_TYPE_REM_SX1280FILLER                                : return PACKET_SIZE_REM_SX1280FILLER                                
     return 0
 
@@ -490,5 +516,6 @@ def PACKET_TYPE_TO_OBJ(type):
     if type == PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                  : return REM_RobotSetPIDGains
     if type == PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                : return REM_RobotAssuredPacket
     if type == PACKET_TYPE_REM_ROBOT_ASSURED_ACK                   : return REM_RobotAssuredAck
+    if type == PACKET_TYPE_REM_MUSIC_COMMAND                       : return REM_MusicCommand
     if type == PACKET_TYPE_REM_SX1280FILLER                        : return REM_SX1280Filler
 

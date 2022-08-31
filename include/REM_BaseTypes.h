@@ -10,7 +10,7 @@
 #include <stdint.h>
 
 
-#define LOCAL_REM_VERSION 11
+#define LOCAL_REM_VERSION 12
 
 #define PACKET_TYPE_REM_ROBOT_COMMAND                                0b00001111 // 15 
 #define PACKET_SIZE_REM_ROBOT_COMMAND                                15
@@ -435,7 +435,31 @@
 #define PACKET_RANGE_REM_ROBOT_ASSURED_ACK_SEQUENCE_NUMBER_MAX       255.
 #define PACKET_RANGE_REM_ROBOT_ASSURED_ACK_SEQUENCE_NUMBER_N_BITS    8
 
-#define PACKET_TYPE_REM_SX1280FILLER                                 0b11111111 // 255 
+#define PACKET_TYPE_REM_MUSIC_COMMAND                                0b11111111 // 255 
+#define PACKET_SIZE_REM_MUSIC_COMMAND                                4
+#define PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_MIN                    0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_MAX                    255.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_HEADER_N_BITS                 8
+#define PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_MIN               0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_MAX               15.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_REM_VERSION_N_BITS            4
+#define PACKET_RANGE_REM_MUSIC_COMMAND_ID_MIN                        0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_ID_MAX                        15.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_ID_N_BITS                     4
+#define PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_MIN                    0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_MAX                    31.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_VOLUME_N_BITS                 5
+#define PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_MIN                      0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_MAX                      1.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_PLAY_N_BITS                   1
+#define PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_MIN                 0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_MAX                 3.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_FOLDER_ID_N_BITS              2
+#define PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_MIN                   0.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_MAX                   255.
+#define PACKET_RANGE_REM_MUSIC_COMMAND_SONG_ID_N_BITS                8
+
+#define PACKET_TYPE_REM_SX1280FILLER                                 0b01001011 // 75 
 #define PACKET_SIZE_REM_SX1280FILLER                                 6
 #define PACKET_RANGE_REM_SX1280FILLER_HEADER_MIN                     0.
 #define PACKET_RANGE_REM_SX1280FILLER_HEADER_MAX                     255.
@@ -462,6 +486,7 @@ static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                          ) return PACKET_SIZE_REM_ROBOT_SET_PIDGAINS                          ;
     if(type == PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                        ) return PACKET_SIZE_REM_ROBOT_ASSURED_PACKET                        ;
     if(type == PACKET_TYPE_REM_ROBOT_ASSURED_ACK                           ) return PACKET_SIZE_REM_ROBOT_ASSURED_ACK                           ;
+    if(type == PACKET_TYPE_REM_MUSIC_COMMAND                               ) return PACKET_SIZE_REM_MUSIC_COMMAND                               ;
     if(type == PACKET_TYPE_REM_SX1280FILLER                                ) return PACKET_SIZE_REM_SX1280FILLER                                ;
     return 0;
 }

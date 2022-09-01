@@ -9,7 +9,6 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
-from scipy import signal
 
 import utils
 from REMParser import REMParser

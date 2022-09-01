@@ -186,6 +186,7 @@ class Joystick:
 		self.command.rho = rho
 		self.command.theta = theta + self.absolute_angle
 		self.command.angle = self.absolute_angle
+		self.command.useAbsoluteAngle = 1
 
 		buzzer_value = self.controller.trigger_l._value
 		if 0.3 < buzzer_value:

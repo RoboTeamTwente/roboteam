@@ -157,14 +157,24 @@ packets = {
         ["sequenceNumber",      8, None, "Number to match this packet with AssuredPacket"],
     ],
     
-    "REM_MusicCommand" : [
+    "REM_RobotMusicCommand" : [
         ["header",              8,  None, "Header byte indicating the type of packet"],
         ["remVersion",          4,  None, "Version of roboteam_embedded_messages"],
         ["id",                  4,  None, "Id of the robot"],
-        ["volume",              5,  None, "Volume of the song. 31 is loudest"],
-        ["play",                1,  None, "When set, a song will be played. If not, the song will be stopped"],
-        ["folder_id",           2,  None, "The id of the folder, from which to pick a song"],
-        ["song_id",             8,  None, "Id of the song, given the folder"],
+        
+        ["play",                1,  None, "Set to play the current song"],
+        ["pause",               1,  None, "Set to pause the current song"],
+        ["stop",                1,  None, "Set to stop the current song"],
+
+        ["previousSong",        1,  None, "Set to stop the current song"],        
+        ["nextSong",            1,  None, "Set to stop the current song"],        
+
+        ["volume",              5,  None, "Set the volume. Value between 1 and 31. 0 is ignored"],
+        ["volumeUp",            1,  None, "Set to increase the volume"],
+        ["volumeDown",          1,  None, "Set to decrease the volume"],
+        
+        ["folderId",            4,  None, "The id of the folder, from which to pick a song"],
+        ["songId",              8,  None, "Id of the song, given the folder"],
     ],
     # https://media.digikey.com/pdf/Data%20Sheets/Semtech%20PDFs/SX1280-81_Rev3.2_Mar2020.pdf see page 124. 
     # Minimum payload length is 6 bytes

@@ -7,13 +7,13 @@
 -------- -------- 1------- -------- -------- play
 -------- -------- -1------ -------- -------- pause
 -------- -------- --1----- -------- -------- stop
--------- -------- ---1---- -------- -------- previous_song
--------- -------- ----1--- -------- -------- next_song
+-------- -------- ---1---- -------- -------- previousSong
+-------- -------- ----1--- -------- -------- nextSong
 -------- -------- -----111 11------ -------- volume
--------- -------- -------- --1----- -------- volume_up
--------- -------- -------- ---1---- -------- volume_down
--------- -------- -------- ----11-- -------- folder_id
--------- -------- -------- ------11 111111-- song_id
+-------- -------- -------- --1----- -------- volumeUp
+-------- -------- -------- ---1---- -------- volumeDown
+-------- -------- -------- ----11-- -------- folderId
+-------- -------- -------- ------11 111111-- songId
 */
 
 #ifndef __REM_ROBOT_MUSIC_COMMAND_H
@@ -34,13 +34,13 @@ typedef struct _REM_RobotMusicCommand {
     bool       play                ; // integer [0, 1]               Set to play the current song
     bool       pause               ; // integer [0, 1]               Set to pause the current song
     bool       stop                ; // integer [0, 1]               Set to stop the current song
-    bool       previous_song       ; // integer [0, 1]               Set to stop the current song
-    bool       next_song           ; // integer [0, 1]               Set to stop the current song
+    bool       previousSong        ; // integer [0, 1]               Set to stop the current song
+    bool       nextSong            ; // integer [0, 1]               Set to stop the current song
     uint32_t   volume              ; // integer [0, 31]              Set the volume. Value between 1 and 31. 0 is ignored
-    bool       volume_up           ; // integer [0, 1]               Set to increase the volume
-    bool       volume_down         ; // integer [0, 1]               Set to decrease the volume
-    uint32_t   folder_id           ; // integer [0, 3]               The id of the folder, from which to pick a song
-    uint32_t   song_id             ; // integer [0, 255]             Id of the song, given the folder
+    bool       volumeUp            ; // integer [0, 1]               Set to increase the volume
+    bool       volumeDown          ; // integer [0, 1]               Set to decrease the volume
+    uint32_t   folderId            ; // integer [0, 3]               The id of the folder, from which to pick a song
+    uint32_t   songId              ; // integer [0, 255]             Id of the song, given the folder
 } REM_RobotMusicCommand;
 
 // ================================ GETTERS ================================
@@ -68,11 +68,11 @@ static inline bool REM_RobotMusicCommand_get_stop(REM_RobotMusicCommandPayload *
     return (remrmcp->payload[2] & 0b00100000) > 0;
 }
 
-static inline bool REM_RobotMusicCommand_get_previous_song(REM_RobotMusicCommandPayload *remrmcp){
+static inline bool REM_RobotMusicCommand_get_previousSong(REM_RobotMusicCommandPayload *remrmcp){
     return (remrmcp->payload[2] & 0b00010000) > 0;
 }
 
-static inline bool REM_RobotMusicCommand_get_next_song(REM_RobotMusicCommandPayload *remrmcp){
+static inline bool REM_RobotMusicCommand_get_nextSong(REM_RobotMusicCommandPayload *remrmcp){
     return (remrmcp->payload[2] & 0b00001000) > 0;
 }
 
@@ -80,19 +80,19 @@ static inline uint32_t REM_RobotMusicCommand_get_volume(REM_RobotMusicCommandPay
     return ((remrmcp->payload[2] & 0b00000111) << 2) | ((remrmcp->payload[3] & 0b11000000) >> 6);
 }
 
-static inline bool REM_RobotMusicCommand_get_volume_up(REM_RobotMusicCommandPayload *remrmcp){
+static inline bool REM_RobotMusicCommand_get_volumeUp(REM_RobotMusicCommandPayload *remrmcp){
     return (remrmcp->payload[3] & 0b00100000) > 0;
 }
 
-static inline bool REM_RobotMusicCommand_get_volume_down(REM_RobotMusicCommandPayload *remrmcp){
+static inline bool REM_RobotMusicCommand_get_volumeDown(REM_RobotMusicCommandPayload *remrmcp){
     return (remrmcp->payload[3] & 0b00010000) > 0;
 }
 
-static inline uint32_t REM_RobotMusicCommand_get_folder_id(REM_RobotMusicCommandPayload *remrmcp){
+static inline uint32_t REM_RobotMusicCommand_get_folderId(REM_RobotMusicCommandPayload *remrmcp){
     return ((remrmcp->payload[3] & 0b00001100) >> 2);
 }
 
-static inline uint32_t REM_RobotMusicCommand_get_song_id(REM_RobotMusicCommandPayload *remrmcp){
+static inline uint32_t REM_RobotMusicCommand_get_songId(REM_RobotMusicCommandPayload *remrmcp){
     return ((remrmcp->payload[3] & 0b00000011) << 6) | ((remrmcp->payload[4] & 0b11111100) >> 2);
 }
 
@@ -121,12 +121,12 @@ static inline void REM_RobotMusicCommand_set_stop(REM_RobotMusicCommandPayload *
     remrmcp->payload[2] = ((stop << 5) & 0b00100000) | (remrmcp->payload[2] & 0b11011111);
 }
 
-static inline void REM_RobotMusicCommand_set_previous_song(REM_RobotMusicCommandPayload *remrmcp, bool previous_song){
-    remrmcp->payload[2] = ((previous_song << 4) & 0b00010000) | (remrmcp->payload[2] & 0b11101111);
+static inline void REM_RobotMusicCommand_set_previousSong(REM_RobotMusicCommandPayload *remrmcp, bool previousSong){
+    remrmcp->payload[2] = ((previousSong << 4) & 0b00010000) | (remrmcp->payload[2] & 0b11101111);
 }
 
-static inline void REM_RobotMusicCommand_set_next_song(REM_RobotMusicCommandPayload *remrmcp, bool next_song){
-    remrmcp->payload[2] = ((next_song << 3) & 0b00001000) | (remrmcp->payload[2] & 0b11110111);
+static inline void REM_RobotMusicCommand_set_nextSong(REM_RobotMusicCommandPayload *remrmcp, bool nextSong){
+    remrmcp->payload[2] = ((nextSong << 3) & 0b00001000) | (remrmcp->payload[2] & 0b11110111);
 }
 
 static inline void REM_RobotMusicCommand_set_volume(REM_RobotMusicCommandPayload *remrmcp, uint32_t volume){
@@ -134,21 +134,21 @@ static inline void REM_RobotMusicCommand_set_volume(REM_RobotMusicCommandPayload
     remrmcp->payload[3] = ((volume << 6) & 0b11000000) | (remrmcp->payload[3] & 0b00111111);
 }
 
-static inline void REM_RobotMusicCommand_set_volume_up(REM_RobotMusicCommandPayload *remrmcp, bool volume_up){
-    remrmcp->payload[3] = ((volume_up << 5) & 0b00100000) | (remrmcp->payload[3] & 0b11011111);
+static inline void REM_RobotMusicCommand_set_volumeUp(REM_RobotMusicCommandPayload *remrmcp, bool volumeUp){
+    remrmcp->payload[3] = ((volumeUp << 5) & 0b00100000) | (remrmcp->payload[3] & 0b11011111);
 }
 
-static inline void REM_RobotMusicCommand_set_volume_down(REM_RobotMusicCommandPayload *remrmcp, bool volume_down){
-    remrmcp->payload[3] = ((volume_down << 4) & 0b00010000) | (remrmcp->payload[3] & 0b11101111);
+static inline void REM_RobotMusicCommand_set_volumeDown(REM_RobotMusicCommandPayload *remrmcp, bool volumeDown){
+    remrmcp->payload[3] = ((volumeDown << 4) & 0b00010000) | (remrmcp->payload[3] & 0b11101111);
 }
 
-static inline void REM_RobotMusicCommand_set_folder_id(REM_RobotMusicCommandPayload *remrmcp, uint32_t folder_id){
-    remrmcp->payload[3] = ((folder_id << 2) & 0b00001100) | (remrmcp->payload[3] & 0b11110011);
+static inline void REM_RobotMusicCommand_set_folderId(REM_RobotMusicCommandPayload *remrmcp, uint32_t folderId){
+    remrmcp->payload[3] = ((folderId << 2) & 0b00001100) | (remrmcp->payload[3] & 0b11110011);
 }
 
-static inline void REM_RobotMusicCommand_set_song_id(REM_RobotMusicCommandPayload *remrmcp, uint32_t song_id){
-    remrmcp->payload[3] = ((song_id >> 6) & 0b00000011) | (remrmcp->payload[3] & 0b11111100);
-    remrmcp->payload[4] = ((song_id << 2) & 0b11111100) | (remrmcp->payload[4] & 0b00000011);
+static inline void REM_RobotMusicCommand_set_songId(REM_RobotMusicCommandPayload *remrmcp, uint32_t songId){
+    remrmcp->payload[3] = ((songId >> 6) & 0b00000011) | (remrmcp->payload[3] & 0b11111100);
+    remrmcp->payload[4] = ((songId << 2) & 0b11111100) | (remrmcp->payload[4] & 0b00000011);
 }
 
 // ================================ ENCODE ================================
@@ -159,13 +159,13 @@ static inline void encodeREM_RobotMusicCommand(REM_RobotMusicCommandPayload *rem
     REM_RobotMusicCommand_set_play                (remrmcp, remrmc->play);
     REM_RobotMusicCommand_set_pause               (remrmcp, remrmc->pause);
     REM_RobotMusicCommand_set_stop                (remrmcp, remrmc->stop);
-    REM_RobotMusicCommand_set_previous_song       (remrmcp, remrmc->previous_song);
-    REM_RobotMusicCommand_set_next_song           (remrmcp, remrmc->next_song);
+    REM_RobotMusicCommand_set_previousSong        (remrmcp, remrmc->previousSong);
+    REM_RobotMusicCommand_set_nextSong            (remrmcp, remrmc->nextSong);
     REM_RobotMusicCommand_set_volume              (remrmcp, remrmc->volume);
-    REM_RobotMusicCommand_set_volume_up           (remrmcp, remrmc->volume_up);
-    REM_RobotMusicCommand_set_volume_down         (remrmcp, remrmc->volume_down);
-    REM_RobotMusicCommand_set_folder_id           (remrmcp, remrmc->folder_id);
-    REM_RobotMusicCommand_set_song_id             (remrmcp, remrmc->song_id);
+    REM_RobotMusicCommand_set_volumeUp            (remrmcp, remrmc->volumeUp);
+    REM_RobotMusicCommand_set_volumeDown          (remrmcp, remrmc->volumeDown);
+    REM_RobotMusicCommand_set_folderId            (remrmcp, remrmc->folderId);
+    REM_RobotMusicCommand_set_songId              (remrmcp, remrmc->songId);
 }
 
 // ================================ DECODE ================================
@@ -176,13 +176,13 @@ static inline void decodeREM_RobotMusicCommand(REM_RobotMusicCommand *remrmc, RE
     remrmc->play         = REM_RobotMusicCommand_get_play(remrmcp);
     remrmc->pause        = REM_RobotMusicCommand_get_pause(remrmcp);
     remrmc->stop         = REM_RobotMusicCommand_get_stop(remrmcp);
-    remrmc->previous_song= REM_RobotMusicCommand_get_previous_song(remrmcp);
-    remrmc->next_song    = REM_RobotMusicCommand_get_next_song(remrmcp);
+    remrmc->previousSong = REM_RobotMusicCommand_get_previousSong(remrmcp);
+    remrmc->nextSong     = REM_RobotMusicCommand_get_nextSong(remrmcp);
     remrmc->volume       = REM_RobotMusicCommand_get_volume(remrmcp);
-    remrmc->volume_up    = REM_RobotMusicCommand_get_volume_up(remrmcp);
-    remrmc->volume_down  = REM_RobotMusicCommand_get_volume_down(remrmcp);
-    remrmc->folder_id    = REM_RobotMusicCommand_get_folder_id(remrmcp);
-    remrmc->song_id      = REM_RobotMusicCommand_get_song_id(remrmcp);
+    remrmc->volumeUp     = REM_RobotMusicCommand_get_volumeUp(remrmcp);
+    remrmc->volumeDown   = REM_RobotMusicCommand_get_volumeDown(remrmcp);
+    remrmc->folderId     = REM_RobotMusicCommand_get_folderId(remrmcp);
+    remrmc->songId       = REM_RobotMusicCommand_get_songId(remrmcp);
 }
 
 #endif /*__REM_ROBOT_MUSIC_COMMAND_H*/

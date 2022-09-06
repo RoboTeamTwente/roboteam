@@ -7,13 +7,13 @@
 -------- -------- 1------- -------- -------- play
 -------- -------- -1------ -------- -------- pause
 -------- -------- --1----- -------- -------- stop
--------- -------- ---1---- -------- -------- previous_song
--------- -------- ----1--- -------- -------- next_song
+-------- -------- ---1---- -------- -------- previousSong
+-------- -------- ----1--- -------- -------- nextSong
 -------- -------- -----111 11------ -------- volume
--------- -------- -------- --1----- -------- volume_up
--------- -------- -------- ---1---- -------- volume_down
--------- -------- -------- ----11-- -------- folder_id
--------- -------- -------- ------11 111111-- song_id
+-------- -------- -------- --1----- -------- volumeUp
+-------- -------- -------- ---1---- -------- volumeDown
+-------- -------- -------- ----11-- -------- folderId
+-------- -------- -------- ------11 111111-- songId
 """
 
 import numpy as np
@@ -28,13 +28,13 @@ class REM_RobotMusicCommand:
     play = 0                  # integer [0, 1]               Set to play the current song
     pause = 0                 # integer [0, 1]               Set to pause the current song
     stop = 0                  # integer [0, 1]               Set to stop the current song
-    previous_song = 0         # integer [0, 1]               Set to stop the current song
-    next_song = 0             # integer [0, 1]               Set to stop the current song
+    previousSong = 0          # integer [0, 1]               Set to stop the current song
+    nextSong = 0              # integer [0, 1]               Set to stop the current song
     volume = 0                # integer [0, 31]              Set the volume. Value between 1 and 31. 0 is ignored
-    volume_up = 0             # integer [0, 1]               Set to increase the volume
-    volume_down = 0           # integer [0, 1]               Set to decrease the volume
-    folder_id = 0             # integer [0, 3]               The id of the folder, from which to pick a song
-    song_id = 0               # integer [0, 255]             Id of the song, given the folder
+    volumeUp = 0              # integer [0, 1]               Set to increase the volume
+    volumeDown = 0            # integer [0, 1]               Set to decrease the volume
+    folderId = 0              # integer [0, 3]               The id of the folder, from which to pick a song
+    songId = 0                # integer [0, 255]             Id of the song, given the folder
 
 
 
@@ -64,11 +64,11 @@ class REM_RobotMusicCommand:
         return (payload[2] & 0b00100000) > 0;
 
     @staticmethod
-    def get_previous_song(payload):
+    def get_previousSong(payload):
         return (payload[2] & 0b00010000) > 0;
 
     @staticmethod
-    def get_next_song(payload):
+    def get_nextSong(payload):
         return (payload[2] & 0b00001000) > 0;
 
     @staticmethod
@@ -76,19 +76,19 @@ class REM_RobotMusicCommand:
         return ((payload[2] & 0b00000111) << 2) | ((payload[3] & 0b11000000) >> 6);
 
     @staticmethod
-    def get_volume_up(payload):
+    def get_volumeUp(payload):
         return (payload[3] & 0b00100000) > 0;
 
     @staticmethod
-    def get_volume_down(payload):
+    def get_volumeDown(payload):
         return (payload[3] & 0b00010000) > 0;
 
     @staticmethod
-    def get_folder_id(payload):
+    def get_folderId(payload):
         return ((payload[3] & 0b00001100) >> 2);
 
     @staticmethod
-    def get_song_id(payload):
+    def get_songId(payload):
         return ((payload[3] & 0b00000011) << 6) | ((payload[4] & 0b11111100) >> 2);
 
 # ================================ SETTERS ================================
@@ -117,12 +117,12 @@ class REM_RobotMusicCommand:
         payload[2] = ((stop << 5) & 0b00100000) | (payload[2] & 0b11011111);
 
     @staticmethod
-    def set_previous_song(payload, previous_song):
-        payload[2] = ((previous_song << 4) & 0b00010000) | (payload[2] & 0b11101111);
+    def set_previousSong(payload, previousSong):
+        payload[2] = ((previousSong << 4) & 0b00010000) | (payload[2] & 0b11101111);
 
     @staticmethod
-    def set_next_song(payload, next_song):
-        payload[2] = ((next_song << 3) & 0b00001000) | (payload[2] & 0b11110111);
+    def set_nextSong(payload, nextSong):
+        payload[2] = ((nextSong << 3) & 0b00001000) | (payload[2] & 0b11110111);
 
     @staticmethod
     def set_volume(payload, volume):
@@ -130,21 +130,21 @@ class REM_RobotMusicCommand:
         payload[3] = ((volume << 6) & 0b11000000) | (payload[3] & 0b00111111);
 
     @staticmethod
-    def set_volume_up(payload, volume_up):
-        payload[3] = ((volume_up << 5) & 0b00100000) | (payload[3] & 0b11011111);
+    def set_volumeUp(payload, volumeUp):
+        payload[3] = ((volumeUp << 5) & 0b00100000) | (payload[3] & 0b11011111);
 
     @staticmethod
-    def set_volume_down(payload, volume_down):
-        payload[3] = ((volume_down << 4) & 0b00010000) | (payload[3] & 0b11101111);
+    def set_volumeDown(payload, volumeDown):
+        payload[3] = ((volumeDown << 4) & 0b00010000) | (payload[3] & 0b11101111);
 
     @staticmethod
-    def set_folder_id(payload, folder_id):
-        payload[3] = ((folder_id << 2) & 0b00001100) | (payload[3] & 0b11110011);
+    def set_folderId(payload, folderId):
+        payload[3] = ((folderId << 2) & 0b00001100) | (payload[3] & 0b11110011);
 
     @staticmethod
-    def set_song_id(payload, song_id):
-        payload[3] = ((song_id >> 6) & 0b00000011) | (payload[3] & 0b11111100);
-        payload[4] = ((song_id << 2) & 0b11111100) | (payload[4] & 0b00000011);
+    def set_songId(payload, songId):
+        payload[3] = ((songId >> 6) & 0b00000011) | (payload[3] & 0b11111100);
+        payload[4] = ((songId << 2) & 0b11111100) | (payload[4] & 0b00000011);
 
 # ================================ ENCODE ================================
     def encode(self):
@@ -155,13 +155,13 @@ class REM_RobotMusicCommand:
         REM_RobotMusicCommand.set_play                (payload, self.play)
         REM_RobotMusicCommand.set_pause               (payload, self.pause)
         REM_RobotMusicCommand.set_stop                (payload, self.stop)
-        REM_RobotMusicCommand.set_previous_song       (payload, self.previous_song)
-        REM_RobotMusicCommand.set_next_song           (payload, self.next_song)
+        REM_RobotMusicCommand.set_previousSong        (payload, self.previousSong)
+        REM_RobotMusicCommand.set_nextSong            (payload, self.nextSong)
         REM_RobotMusicCommand.set_volume              (payload, self.volume)
-        REM_RobotMusicCommand.set_volume_up           (payload, self.volume_up)
-        REM_RobotMusicCommand.set_volume_down         (payload, self.volume_down)
-        REM_RobotMusicCommand.set_folder_id           (payload, self.folder_id)
-        REM_RobotMusicCommand.set_song_id             (payload, self.song_id)
+        REM_RobotMusicCommand.set_volumeUp            (payload, self.volumeUp)
+        REM_RobotMusicCommand.set_volumeDown          (payload, self.volumeDown)
+        REM_RobotMusicCommand.set_folderId            (payload, self.folderId)
+        REM_RobotMusicCommand.set_songId              (payload, self.songId)
         return payload
 
 
@@ -173,13 +173,13 @@ class REM_RobotMusicCommand:
         self.play             = REM_RobotMusicCommand.get_play(payload)
         self.pause            = REM_RobotMusicCommand.get_pause(payload)
         self.stop             = REM_RobotMusicCommand.get_stop(payload)
-        self.previous_song    = REM_RobotMusicCommand.get_previous_song(payload)
-        self.next_song        = REM_RobotMusicCommand.get_next_song(payload)
+        self.previousSong     = REM_RobotMusicCommand.get_previousSong(payload)
+        self.nextSong         = REM_RobotMusicCommand.get_nextSong(payload)
         self.volume           = REM_RobotMusicCommand.get_volume(payload)
-        self.volume_up        = REM_RobotMusicCommand.get_volume_up(payload)
-        self.volume_down      = REM_RobotMusicCommand.get_volume_down(payload)
-        self.folder_id        = REM_RobotMusicCommand.get_folder_id(payload)
-        self.song_id          = REM_RobotMusicCommand.get_song_id(payload)
+        self.volumeUp         = REM_RobotMusicCommand.get_volumeUp(payload)
+        self.volumeDown       = REM_RobotMusicCommand.get_volumeDown(payload)
+        self.folderId         = REM_RobotMusicCommand.get_folderId(payload)
+        self.songId           = REM_RobotMusicCommand.get_songId(payload)
 
 
     def print_bit_string(self):

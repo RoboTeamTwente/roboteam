@@ -67,13 +67,15 @@ print(f"Generated file {filename}")
 
 
 
-
+os.makedirs("../include", exist_ok=True)
 for file in os.listdir("generated_c"):
 	shutil.move(f"generated_c/{file}", f"../include/{file}")
 
+os.makedirs("../python", exist_ok=True)
 for file in os.listdir("generated_python"):
 	shutil.move(f"generated_python/{file}", f"../python/{file}")
 
+os.makedirs("../proto", exist_ok=True)
 for file in os.listdir("generated_proto"):
 	shutil.move(f"generated_proto/{file}", f"../proto/{file}")
 

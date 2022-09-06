@@ -1,8 +1,8 @@
 # Roboteam_robothub
 
-* [What is RobotHub?]()
-* [Installation]()
-* [Code architecture]()
+* [What is RobotHub?](https://github.com/RoboTeamTwente/roboteam_robothub/tree/chore/improveDocumentation#what-is-robothub)
+* [Installation](https://github.com/RoboTeamTwente/roboteam_robothub/tree/chore/improveDocumentation#installation)
+* [Code architecture](https://github.com/RoboTeamTwente/roboteam_robothub/tree/chore/improveDocumentation#code-architecture)
 
 ## What is RobotHub?
 

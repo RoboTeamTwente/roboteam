@@ -12,8 +12,8 @@
 -------- -------- -----111 11------ -------- volume
 -------- -------- -------- --1----- -------- volumeUp
 -------- -------- -------- ---1---- -------- volumeDown
--------- -------- -------- ----11-- -------- folderId
--------- -------- -------- ------11 111111-- songId
+-------- -------- -------- ----1111 -------- folderId
+-------- -------- -------- -------- 11111111 songId
 */
 
 #ifndef __REM_ROBOT_MUSIC_COMMAND_H
@@ -39,7 +39,7 @@ typedef struct _REM_RobotMusicCommand {
     uint32_t   volume              ; // integer [0, 31]              Set the volume. Value between 1 and 31. 0 is ignored
     bool       volumeUp            ; // integer [0, 1]               Set to increase the volume
     bool       volumeDown          ; // integer [0, 1]               Set to decrease the volume
-    uint32_t   folderId            ; // integer [0, 3]               The id of the folder, from which to pick a song
+    uint32_t   folderId            ; // integer [0, 15]              The id of the folder, from which to pick a song
     uint32_t   songId              ; // integer [0, 255]             Id of the song, given the folder
 } REM_RobotMusicCommand;
 
@@ -89,11 +89,11 @@ static inline bool REM_RobotMusicCommand_get_volumeDown(REM_RobotMusicCommandPay
 }
 
 static inline uint32_t REM_RobotMusicCommand_get_folderId(REM_RobotMusicCommandPayload *remrmcp){
-    return ((remrmcp->payload[3] & 0b00001100) >> 2);
+    return ((remrmcp->payload[3] & 0b00001111));
 }
 
 static inline uint32_t REM_RobotMusicCommand_get_songId(REM_RobotMusicCommandPayload *remrmcp){
-    return ((remrmcp->payload[3] & 0b00000011) << 6) | ((remrmcp->payload[4] & 0b11111100) >> 2);
+    return ((remrmcp->payload[4]));
 }
 
 // ================================ SETTERS ================================
@@ -143,12 +143,11 @@ static inline void REM_RobotMusicCommand_set_volumeDown(REM_RobotMusicCommandPay
 }
 
 static inline void REM_RobotMusicCommand_set_folderId(REM_RobotMusicCommandPayload *remrmcp, uint32_t folderId){
-    remrmcp->payload[3] = ((folderId << 2) & 0b00001100) | (remrmcp->payload[3] & 0b11110011);
+    remrmcp->payload[3] = (folderId & 0b00001111) | (remrmcp->payload[3] & 0b11110000);
 }
 
 static inline void REM_RobotMusicCommand_set_songId(REM_RobotMusicCommandPayload *remrmcp, uint32_t songId){
-    remrmcp->payload[3] = ((songId >> 6) & 0b00000011) | (remrmcp->payload[3] & 0b11111100);
-    remrmcp->payload[4] = ((songId << 2) & 0b11111100) | (remrmcp->payload[4] & 0b00000011);
+    remrmcp->payload[4] = songId;
 }
 
 // ================================ ENCODE ================================

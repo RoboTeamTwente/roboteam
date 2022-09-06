@@ -12,8 +12,8 @@
 -------- -------- -----111 11------ -------- volume
 -------- -------- -------- --1----- -------- volumeUp
 -------- -------- -------- ---1---- -------- volumeDown
--------- -------- -------- ----11-- -------- folderId
--------- -------- -------- ------11 111111-- songId
+-------- -------- -------- ----1111 -------- folderId
+-------- -------- -------- -------- 11111111 songId
 */
 
 syntax="proto3";
@@ -32,6 +32,6 @@ message REM_RobotMusicCommand {
     uint32 volume = 9;        // integer [0, 31]              Set the volume. Value between 1 and 31. 0 is ignored
     bool volumeUp = 10;       // integer [0, 1]               Set to increase the volume
     bool volumeDown = 11;     // integer [0, 1]               Set to decrease the volume
-    uint32 folderId = 12;     // integer [0, 3]               The id of the folder, from which to pick a song
+    uint32 folderId = 12;     // integer [0, 15]              The id of the folder, from which to pick a song
     uint32 songId = 13;       // integer [0, 255]             Id of the song, given the folder
 }

@@ -166,15 +166,15 @@ packets = {
         ["pause",               1,  None, "Set to pause the current song"],
         ["stop",                1,  None, "Set to stop the current song"],
 
-        ["previousSong",       1,  None, "Set to stop the current song"],        
-        ["nextSong",           1,  None, "Set to stop the current song"],        
+        ["previousSong",        1,  None, "Set to stop the current song"],        
+        ["nextSong",            1,  None, "Set to stop the current song"],        
 
         ["volume",              5,  None, "Set the volume. Value between 1 and 31. 0 is ignored"],
-        ["volumeUp",           1,  None, "Set to increase the volume"],
-        ["volumeDown",         1,  None, "Set to decrease the volume"],
+        ["volumeUp",            1,  None, "Set to increase the volume"],
+        ["volumeDown",          1,  None, "Set to decrease the volume"],
         
-        ["folderId",           2,  None, "The id of the folder, from which to pick a song"],
-        ["songId",             8,  None, "Id of the song, given the folder"],
+        ["folderId",            4,  None, "The id of the folder, from which to pick a song"],
+        ["songId",              8,  None, "Id of the song, given the folder"],
     ],
     # https://media.digikey.com/pdf/Data%20Sheets/Semtech%20PDFs/SX1280-81_Rev3.2_Mar2020.pdf see page 124. 
     # Minimum payload length is 6 bytes

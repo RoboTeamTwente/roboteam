@@ -12,8 +12,8 @@
 -------- -------- -----111 11------ -------- volume
 -------- -------- -------- --1----- -------- volumeUp
 -------- -------- -------- ---1---- -------- volumeDown
--------- -------- -------- ----11-- -------- folderId
--------- -------- -------- ------11 111111-- songId
+-------- -------- -------- ----1111 -------- folderId
+-------- -------- -------- -------- 11111111 songId
 """
 
 import numpy as np
@@ -33,7 +33,7 @@ class REM_RobotMusicCommand:
     volume = 0                # integer [0, 31]              Set the volume. Value between 1 and 31. 0 is ignored
     volumeUp = 0              # integer [0, 1]               Set to increase the volume
     volumeDown = 0            # integer [0, 1]               Set to decrease the volume
-    folderId = 0              # integer [0, 3]               The id of the folder, from which to pick a song
+    folderId = 0              # integer [0, 15]              The id of the folder, from which to pick a song
     songId = 0                # integer [0, 255]             Id of the song, given the folder
 
 
@@ -85,11 +85,11 @@ class REM_RobotMusicCommand:
 
     @staticmethod
     def get_folderId(payload):
-        return ((payload[3] & 0b00001100) >> 2);
+        return ((payload[3] & 0b00001111));
 
     @staticmethod
     def get_songId(payload):
-        return ((payload[3] & 0b00000011) << 6) | ((payload[4] & 0b11111100) >> 2);
+        return ((payload[4]));
 
 # ================================ SETTERS ================================
     @staticmethod
@@ -139,12 +139,11 @@ class REM_RobotMusicCommand:
 
     @staticmethod
     def set_folderId(payload, folderId):
-        payload[3] = ((folderId << 2) & 0b00001100) | (payload[3] & 0b11110011);
+        payload[3] = (folderId & 0b00001111) | (payload[3] & 0b11110000);
 
     @staticmethod
     def set_songId(payload, songId):
-        payload[3] = ((songId >> 6) & 0b00000011) | (payload[3] & 0b11111100);
-        payload[4] = ((songId << 2) & 0b11111100) | (payload[4] & 0b00000011);
+        payload[4] = songId;
 
 # ================================ ENCODE ================================
     def encode(self):

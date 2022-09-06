@@ -157,12 +157,22 @@ packets = {
         ["sequenceNumber",      8, None, "Number to match this packet with AssuredPacket"],
     ],
     
-    "REM_MusicCommand" : [
+    "REM_RobotMusicCommand" : [
         ["header",              8,  None, "Header byte indicating the type of packet"],
         ["remVersion",          4,  None, "Version of roboteam_embedded_messages"],
         ["id",                  4,  None, "Id of the robot"],
-        ["volume",              5,  None, "Volume of the song. 31 is loudest"],
-        ["play",                1,  None, "When set, a song will be played. If not, the song will be stopped"],
+        
+        ["play",                1,  None, "Set to play the current song"],
+        ["pause",               1,  None, "Set to pause the current song"],
+        ["stop",                1,  None, "Set to stop the current song"],
+
+        ["previous_song",       1,  None, "Set to stop the current song"],        
+        ["next_song",           1,  None, "Set to stop the current song"],        
+
+        ["volume",              5,  None, "Set the volume. Value between 1 and 31. 0 is ignored"],
+        ["volume_up",           1,  None, "Set to increase the volume"],
+        ["volume_down",         1,  None, "Set to decrease the volume"],
+        
         ["folder_id",           2,  None, "The id of the folder, from which to pick a song"],
         ["song_id",             8,  None, "Id of the song, given the folder"],
     ],

@@ -13,6 +13,7 @@
 #include "REM_RobotGetPIDGains.h"
 #include "REM_RobotSetPIDGains.h"
 #include "REM_RobotPIDGains.h"
+#include "REM_RobotMusicCommand.h"
 
 REM_SX1280FillerPayload SX1280_filler_payload;
 
@@ -64,5 +65,12 @@ struct _buffer_RobotPIDGains {
 	uint32_t counter;
 };
 struct _buffer_RobotPIDGains buffer_RobotPIDGains[MAX_NUMBER_OF_ROBOTS];
+
+struct _buffer_RobotMusicCommand {
+	REM_RobotMusicCommandPayload packet;
+	bool isNewPacket;
+	uint32_t counter;
+};
+struct _buffer_RobotMusicCommand buffer_RobotMusicCommand[MAX_NUMBER_OF_ROBOTS];
 
 #endif // __MSG_BUFF_STATUS_H

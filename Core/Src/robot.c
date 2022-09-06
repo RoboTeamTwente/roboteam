@@ -14,6 +14,7 @@
 #include "shoot.h"
 #include "Wireless.h"
 #include "buzzer.h"
+#include "speaker.h"
 #include "MTi.h"
 #include "yawCalibration.h"
 #include "iwdg.h"
@@ -33,6 +34,7 @@
 #include "REM_RobotSetPIDGains.h"
 #include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
+#include "REM_RobotMusicCommand.h"
 
 #include "time.h"
 #include <unistd.h>
@@ -51,6 +53,8 @@ REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
 REM_RobotSetPIDGains robotSetPIDGains = {0};
+REM_RobotMusicCommand RobotMusicCommand = {0};
+volatile bool RobotMusicCommand_received_flag = false;
 
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -158,7 +162,6 @@ void Wireless_RXDone(SX1280_Packet_Status *status){
 }
 
 Wireless_IRQcallbacks SX_IRQcallbacks = { .rxdone = &Wireless_RXDone, .default_callback = &Wireless_Default };
-
 
 void executeCommands(REM_RobotCommand* robotCommand){
 	stateControl_useAbsoluteAngle(robotCommand->useAbsoluteAngle);
@@ -376,6 +379,9 @@ void init(void){
 	// SX1280 section 10.7 Transceiver Circuit Modes Graphical Illustration
 	WaitForPacket(SX);
 
+	// Ensure that the speaker is stopped. The speaker keeps going even if the robot is reset
+	speaker_Stop();
+
 	/* Reset the watchdog timer and set the threshold at 200ms */
 	IWDG_Refresh(iwdg);
 	IWDG_Init(iwdg, 200);
@@ -383,7 +389,7 @@ void init(void){
 	/* Turn of all leds. Will now be used to indicate robot status */
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
 	buzzer_Play_ID(ROBOT_ID);
-	
+
 	timestamp_initialized = HAL_GetTick();
 
 	/* Set the heartbeat timers */
@@ -419,6 +425,17 @@ void loop(void){
 	// Refresh Watchdog timer
     IWDG_Refresh(iwdg);
     Putty_Callback();
+
+
+
+	/** MUSIC TEST CODE **/
+	if(RobotMusicCommand_received_flag){
+		RobotMusicCommand_received_flag = false;
+		speaker_HandleCommand(&RobotMusicCommand);
+	}
+
+
+
 
 	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
@@ -518,15 +535,13 @@ void loop(void){
 	}
 	
     // Heartbeat every 17ms	
-	if(heartbeat_17ms < HAL_GetTick()){
-		uint32_t now = HAL_GetTick();
-		while (heartbeat_17ms < now) heartbeat_17ms += 17;
+	if(heartbeat_17ms < current_time){
+		while (heartbeat_17ms < current_time) heartbeat_17ms += 17;
 	}	
 
     // Heartbeat every 100ms	
-	if(heartbeat_100ms < HAL_GetTick()){
-		uint32_t now = HAL_GetTick();
-		while (heartbeat_100ms < now) heartbeat_100ms += 100;
+	if(heartbeat_100ms < current_time){
+		while (heartbeat_100ms < current_time) heartbeat_100ms += 100;
 		dribbler_Update();
 		stateInfo.dribblerSpeed = dribbler_GetMeasuredSpeeds();
 		stateInfo.dribblerFilteredSpeed = dribbler_GetFilteredSpeeds();
@@ -541,30 +556,27 @@ void loop(void){
 	}
 
 	// Heartbeat every 1000ms
-	if(heartbeat_1000ms < HAL_GetTick()){
-		uint32_t now = HAL_GetTick();
-		while (heartbeat_1000ms < now) heartbeat_1000ms += 1000;
+	if(heartbeat_1000ms < current_time){
+		while (heartbeat_1000ms < current_time) heartbeat_1000ms += 1000;
 
 		// If the XSens isn't connected anymore, play a warning sound
 		if(!is_connected_xsens){
-			buzzer_Play_QuickBeepDown();
+			buzzer_Play_QuickBeepUp();
 		}
 
         // Toggle liveliness LED
         toggle_Pin(LED0_pin);
 
-		// Play a song on the speaker after 3 seconds
-		static bool isPlaying = false;
-		if (!isPlaying && 3000 < current_time){
-			isPlaying = true;
-			// Set volume to max (30)                 vv
-			uint8_t musicbuf1[5] = {0x7E, 0x03, 0x31, 30, 0xEF};
-			HAL_UART_Transmit(UART_BACK, musicbuf1, 5, 10);
-			HAL_Delay(50);
-			// Play song 10 (noo-noo)                       vv
-			uint8_t musicbuf2[6] = {0x7e, 0x04, 0x42, 0x01, 10, 0xef};
-			HAL_UART_Transmit(UART_BACK, musicbuf2, 6, 10);
-		}
+		// if (!isPlaying && 3000 < current_time){
+		// 	isPlaying = true;
+		// 	// Set volume to max (30)                 vv
+		// 	uint8_t musicbuf1[5] = {0x7E, 0x03, 0x31, 30, 0xEF};
+		// 	HAL_UART_Transmit(UART_BACK, musicbuf1, 5, 10);
+		// 	HAL_Delay(50);
+		// 	// Play song 10 (noo-noo)                       vv
+		// 	uint8_t musicbuf2[6] = {0x7e, 0x04, 0x42, 0x01, 10, 0xef};
+		// 	HAL_UART_Transmit(UART_BACK, musicbuf2, 6, 10);
+		// }
 
 		// Check if ballsensor connection is still correct
         /*if ( !ballSensor_isInitialized() ) {
@@ -623,9 +635,20 @@ void handleRobotSetPIDGains(uint8_t* packet_buffer){
 	wheels_SetPIDGains(&robotSetPIDGains);
 }
 
+void handleRobotMusicCommand(uint8_t* packet_buffer){
+	REM_RobotMusicCommandPayload* rmcp = (REM_RobotMusicCommandPayload*) (packet_buffer);
+	REM_last_packet_had_correct_version &= REM_RobotMusicCommand_get_remVersion(rmcp) == LOCAL_REM_VERSION;
+	robot_setRobotMusicCommandPayload(rmcp);
+}
+
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp){
 	decodeREM_RobotCommand(&activeRobotCommand, rcp);
 	timestamp_last_packet_serial = HAL_GetTick();
+}
+
+void robot_setRobotMusicCommandPayload(REM_RobotMusicCommandPayload* mcp){
+	decodeREM_RobotMusicCommand(&RobotMusicCommand, mcp);
+	RobotMusicCommand_received_flag = true;
 }
 
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
@@ -658,9 +681,15 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 				total_bytes_processed += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
 				break;
 
+			case PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
+				handleRobotMusicCommand(packet_buffer + total_bytes_processed);
+				total_bytes_processed += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
+				break;
+
 			case PACKET_TYPE_REM_SX1280FILLER:
 				total_bytes_processed += PACKET_SIZE_REM_SX1280FILLER;
 				break;
+
 
 			default:
 				LOG_printf("[SPI_TxRxCplt] Error! At %d of %d bytes. [@] = %d\n", total_bytes_processed, packet_length, packet_header);

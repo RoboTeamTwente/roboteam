@@ -3,6 +3,8 @@
 
 #include "rem.h"
 #include "REM_BaseTypes.h"
+#include "REM_RobotCommand.h"
+#include "REM_RobotMusicCommand.h"
 #include "peripheral_util.h"
 #include "robot.h"
 #include "PuTTY.h"
@@ -12,6 +14,7 @@
 // Buffers to move received packets in to
 static uint8_t REM_buffer[100];
 static REM_RobotCommandPayload rcp;
+static REM_RobotMusicCommandPayload mcp;
 
 /**
  * @brief Starts the first UART read. This read will eventually lead to 
@@ -21,7 +24,7 @@ static REM_RobotCommandPayload rcp;
  */
 void REM_UARTinit(UART_HandleTypeDef *huart){
     LOG("[REM_UARTinit]\n");
-    //HAL_UART_Receive_IT(huart, REM_buffer, 1); // if uncommented, only use with programmer connected
+    HAL_UART_Receive_IT(huart, REM_buffer, 1); // if uncommented, only use with programmer connected
 }
 
 /**
@@ -38,7 +41,6 @@ void REM_UARTinit(UART_HandleTypeDef *huart){
  * @param huart The UART to receive the bytes on. Generally UART_PC. 
  */
 void REM_UARTCallback(UART_HandleTypeDef *huart){
-    
     // Read the header byte
     uint8_t packetType = REM_buffer[0];
     // If RobotCommand
@@ -48,6 +50,11 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
         // Store received packet in local RobotCommandPayload. Send to robot.c for decoding
         memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
         robot_setRobotCommandPayload(&rcp);
+    }else
+    if(packetType == PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND){
+        HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND-1, 100);
+        memcpy(&mcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+        robot_setRobotMusicCommandPayload(&mcp);
     }else{
         // TODO add some error handling here or something.
         LOG("Unknown header\n");

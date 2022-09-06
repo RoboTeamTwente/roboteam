@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include "REM_RobotCommand.h"
+#include "REM_RobotMusicCommand.h"
 
 // These three are currently a callback hack for the REM implementation
 REM_RobotCommandPayload myRobotCommandPayload;
@@ -15,6 +16,7 @@ void loop(void);
 uint8_t robot_get_ID();
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp);
+void robot_setMusicCommandPayload(REM_RobotMusicCommandPayload* mcp);
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length);
 
 #endif /* __ROBOT__H_ */

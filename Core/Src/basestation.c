@@ -12,6 +12,7 @@
 #include "REM_RobotFeedback.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotSetPIDGains.h"
+#include "REM_RobotMusicCommand.h"
 #include "REM_SX1280Filler.h"
 
 /* Counters, tracking the number of packets handled */ 
@@ -22,6 +23,7 @@ volatile int handled_RobotStateInfo = 0;
 volatile int handled_RobotGetPIDGains = 0;
 volatile int handled_RobotSetPIDGains = 0;
 volatile int handled_RobotPIDGains = 0;
+volatile int handled_RobotMusicCommand = 0;
 
 
 /* Import hardware handles from main.c */
@@ -459,6 +461,24 @@ void handleRobotPIDGains(uint8_t* packet_buffer){
   buffer_RobotPIDGains[robot_id].counter++;
 }
 
+void handleRobotMusicCommand(uint8_t* packet_buffer){
+  handled_RobotMusicCommand++;
+  
+  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+  uint8_t packet_rem_version = REM_RobotMusicCommand_get_remVersion((REM_RobotMusicCommandPayload*) packet_buffer);
+  if(packet_rem_version != LOCAL_REM_VERSION){
+    LOG_printf("[handleRobotMusicCommand] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+    return;
+  }
+
+  // Store the message in the RobotMusicCommand buffer. Set flag to be sent to the robot
+  uint8_t robot_id = REM_RobotMusicCommand_get_id((REM_RobotMusicCommandPayload*) packet_buffer);
+  memcpy(buffer_RobotMusicCommand[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+  buffer_RobotMusicCommand[robot_id].isNewPacket = true;
+  buffer_RobotMusicCommand[robot_id].counter++;
+}
+
+
 /**
  * @brief routes any incoming packet to the correct function. Hub for all incoming packets.
  * TODO actually make it route all incoming packets, and not just USB packets
@@ -526,6 +546,11 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
       case PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION:
         bytes_processed += PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
         flagHandleConfiguration = true;
+        break;
+
+      case PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
+        handleRobotMusicCommand(packet_buffer + bytes_processed);
+        bytes_processed += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
         break;
 
       default:
@@ -613,6 +638,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
       buffer_RobotGetPIDGains[idCounter].isNewPacket = false;
       memcpy(txPacket.message + total_packet_length, buffer_RobotGetPIDGains[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
       total_packet_length += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+    }
+
+    /* Add RobotMusicCommand to the transmission */
+    if(buffer_RobotMusicCommand[idCounter].isNewPacket && total_packet_length + PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND < MAX_PACKET_SIZE){
+      buffer_RobotMusicCommand[idCounter].isNewPacket = false;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotMusicCommand[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+      total_packet_length += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
     }
 
     /* Send new command if available for this robot ID */

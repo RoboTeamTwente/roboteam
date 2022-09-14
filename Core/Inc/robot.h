@@ -16,7 +16,7 @@ void loop(void);
 uint8_t robot_get_ID();
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp);
-void robot_setMusicCommandPayload(REM_RobotMusicCommandPayload* mcp);
+void robot_setRobotMusicCommandPayload(REM_RobotMusicCommandPayload* rmcp);
 bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length);
 
 #endif /* __ROBOT__H_ */

@@ -178,6 +178,9 @@ void buzzer_Play_ID(uint8_t id){
 	buzzer_Play(song);
 }
 
+song_struct beep_blue[] = {{buzz_C4, 0.5}, {0xFFFF, 0}};
+song_struct beep_yellow[] = {{buzz_C4, 0.2}, {buzz_Si,0.1}, {buzz_C4, 0.2}, {0xFFFF, 0}};
+
 song_struct quickBeepUp[] = {{buzz_C4, 0.1}, {buzz_C5, 0.1}, {0xFFFF, 0}};
 song_struct quickBeepDown[] = {{buzz_C5, 0.1}, {buzz_C4, 0.1}, {0xFFFF, 0}};
 

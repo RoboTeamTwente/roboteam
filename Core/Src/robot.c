@@ -299,7 +299,7 @@ void init(void){
 	/* Initialize buzzer */
 	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
-	HAL_Delay(300);
+	HAL_Delay(500);
 
 	set_Pin(LED1_pin, 1);
 
@@ -307,7 +307,7 @@ void init(void){
 	#ifdef __GIT_DEVELOPMENT__
 	if(!__GIT_DEVELOPMENT__){
 		buzzer_Play_WarningGit();
-		HAL_Delay(300);
+		HAL_Delay(600);
 	}
 	#endif
 
@@ -350,9 +350,11 @@ void init(void){
 	if(read_Pin(FT1_pin)){
 		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
+		buzzer_Play(&beep_blue); HAL_Delay(350);
 	}else{
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
+		buzzer_Play(&beep_yellow); HAL_Delay(350);
 	}
 	LOG_sendAll();
     // SX1280 section 7.3 FLRC : Syncword is 4 bytes at the beginning of each transmission, that ensures that only the right robot / basestation listens to that transmission.

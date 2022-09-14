@@ -14,7 +14,7 @@
 // Buffers to move received packets in to
 static uint8_t REM_buffer[100];
 static REM_RobotCommandPayload rcp;
-static REM_RobotMusicCommandPayload mcp;
+static REM_RobotMusicCommandPayload rmcp;
 
 /**
  * @brief Starts the first UART read. This read will eventually lead to 
@@ -53,8 +53,8 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     }else
     if(packetType == PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND){
         HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND-1, 100);
-        memcpy(&mcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
-        robot_setRobotMusicCommandPayload(&mcp);
+        memcpy(&rmcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+        robot_setRobotMusicCommandPayload(&rmcp);
     }else{
         // TODO add some error handling here or something.
         LOG("Unknown header\n");

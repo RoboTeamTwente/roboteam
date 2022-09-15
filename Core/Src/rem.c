@@ -63,5 +63,6 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     
     // Schedule the read for the next header byte
     HAL_UART_Receive_IT(huart, REM_buffer, 1);
+    toggle_Pin(LED6_pin);
 
 }

@@ -22,6 +22,7 @@ generic_packet_header = [
 ]
 
 packets = {
+    "REM_Message" : [],
     "REM_RobotCommand" : [
         # Movement
         ["rho",                16, [0, 8], "Magnitude of movement (m/s)"],

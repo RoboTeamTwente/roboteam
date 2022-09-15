@@ -23,7 +23,7 @@ from . import REM_BaseTypes
 
 
 
-class REM_BasestationLog:
+class REM_Message:
     header = 0                # integer [0, 255]             Header byte indicating the type of packet
     toRobotId = 0             # integer [0, 15]              Id of the receiving robot
     toColor = 0               # integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
@@ -166,42 +166,42 @@ class REM_BasestationLog:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_BASESTATION_LOG, dtype=np.uint8)
-        REM_BasestationLog.set_header              (payload, self.header)
-        REM_BasestationLog.set_toRobotId           (payload, self.toRobotId)
-        REM_BasestationLog.set_toColor             (payload, self.toColor)
-        REM_BasestationLog.set_toBC                (payload, self.toBC)
-        REM_BasestationLog.set_toBS                (payload, self.toBS)
-        REM_BasestationLog.set_toPC                (payload, self.toPC)
-        REM_BasestationLog.set_fromRobotId         (payload, self.fromRobotId)
-        REM_BasestationLog.set_fromColor           (payload, self.fromColor)
-        REM_BasestationLog.set_reserved            (payload, self.reserved)
-        REM_BasestationLog.set_fromBS              (payload, self.fromBS)
-        REM_BasestationLog.set_fromPC              (payload, self.fromPC)
-        REM_BasestationLog.set_remVersion          (payload, self.remVersion)
-        REM_BasestationLog.set_messageId           (payload, self.messageId)
-        REM_BasestationLog.set_payloadSize         (payload, self.payloadSize)
-        REM_BasestationLog.set_header              (payload, self.header)
+        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_MESSAGE, dtype=np.uint8)
+        REM_Message.set_header              (payload, self.header)
+        REM_Message.set_toRobotId           (payload, self.toRobotId)
+        REM_Message.set_toColor             (payload, self.toColor)
+        REM_Message.set_toBC                (payload, self.toBC)
+        REM_Message.set_toBS                (payload, self.toBS)
+        REM_Message.set_toPC                (payload, self.toPC)
+        REM_Message.set_fromRobotId         (payload, self.fromRobotId)
+        REM_Message.set_fromColor           (payload, self.fromColor)
+        REM_Message.set_reserved            (payload, self.reserved)
+        REM_Message.set_fromBS              (payload, self.fromBS)
+        REM_Message.set_fromPC              (payload, self.fromPC)
+        REM_Message.set_remVersion          (payload, self.remVersion)
+        REM_Message.set_messageId           (payload, self.messageId)
+        REM_Message.set_payloadSize         (payload, self.payloadSize)
+        REM_Message.set_header              (payload, self.header)
         return payload
 
 
 # ================================ DECODE ================================
     def decode(self, payload):
-        self.header           = REM_BasestationLog.get_header(payload)
-        self.toRobotId        = REM_BasestationLog.get_toRobotId(payload)
-        self.toColor          = REM_BasestationLog.get_toColor(payload)
-        self.toBC             = REM_BasestationLog.get_toBC(payload)
-        self.toBS             = REM_BasestationLog.get_toBS(payload)
-        self.toPC             = REM_BasestationLog.get_toPC(payload)
-        self.fromRobotId      = REM_BasestationLog.get_fromRobotId(payload)
-        self.fromColor        = REM_BasestationLog.get_fromColor(payload)
-        self.reserved         = REM_BasestationLog.get_reserved(payload)
-        self.fromBS           = REM_BasestationLog.get_fromBS(payload)
-        self.fromPC           = REM_BasestationLog.get_fromPC(payload)
-        self.remVersion       = REM_BasestationLog.get_remVersion(payload)
-        self.messageId        = REM_BasestationLog.get_messageId(payload)
-        self.payloadSize      = REM_BasestationLog.get_payloadSize(payload)
-        self.header           = REM_BasestationLog.get_header(payload)
+        self.header           = REM_Message.get_header(payload)
+        self.toRobotId        = REM_Message.get_toRobotId(payload)
+        self.toColor          = REM_Message.get_toColor(payload)
+        self.toBC             = REM_Message.get_toBC(payload)
+        self.toBS             = REM_Message.get_toBS(payload)
+        self.toPC             = REM_Message.get_toPC(payload)
+        self.fromRobotId      = REM_Message.get_fromRobotId(payload)
+        self.fromColor        = REM_Message.get_fromColor(payload)
+        self.reserved         = REM_Message.get_reserved(payload)
+        self.fromBS           = REM_Message.get_fromBS(payload)
+        self.fromPC           = REM_Message.get_fromPC(payload)
+        self.remVersion       = REM_Message.get_remVersion(payload)
+        self.messageId        = REM_Message.get_messageId(payload)
+        self.payloadSize      = REM_Message.get_payloadSize(payload)
+        self.header           = REM_Message.get_header(payload)
 
 
     def print_bit_string(self):

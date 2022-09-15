@@ -365,8 +365,8 @@ void init(void){
 
 	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
-    MTi = MTi_Init(1, XFP_VRU_general);
-    if(MTi == NULL){
+	MTi = MTi_Init(1, XFP_VRU_general);
+	if(MTi == NULL){
 		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
@@ -428,16 +428,11 @@ void loop(void){
     IWDG_Refresh(iwdg);
     Putty_Callback();
 
-
-
 	/** MUSIC TEST CODE **/
 	if(RobotMusicCommand_received_flag){
 		RobotMusicCommand_received_flag = false;
 		speaker_HandleCommand(&RobotMusicCommand);
 	}
-
-
-
 
 	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
@@ -548,12 +543,14 @@ void loop(void){
 		stateInfo.dribblerSpeed = dribbler_GetMeasuredSpeeds();
 		stateInfo.dribblerFilteredSpeed = dribbler_GetFilteredSpeeds();
 		stateInfo.dribbleSpeedBeforeGotBall = dribbler_GetSpeedBeforeGotBall();
-		
-		// encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
-		// HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
 
-		// encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
-		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+		if(is_connected_serial){		
+			encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
+			HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
+
+			encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+			HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+		}
 
 	}
 

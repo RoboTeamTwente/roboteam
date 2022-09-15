@@ -160,9 +160,9 @@ packets = {
 }
 
 # For each packet, insert 1 header byte to ensure that it's present
-header_field = ["header", 8, None, "Header byte indicating the type of packet"]
-for packet_name in packets:
-    packets[packet_name] = [header_field] + packets[packet_name]
+# header_field = ["header", 8, None, "Header byte indicating the type of packet"]
+# for packet_name in packets:
+#     packets[packet_name] = [header_field] + packets[packet_name]
 
 # For each packet, add the generic_header_packet
 for packet_name in packets:

@@ -8,7 +8,6 @@ import Generator
 import BaseTypeGenerator
 from packets import packets
 
-
 def read_version():
 	return int(open("latest_rem_version.txt", "r").read())
 def write_version(version):

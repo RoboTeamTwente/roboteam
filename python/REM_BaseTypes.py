@@ -4,7 +4,7 @@
 # 0b00000000 : The null-terminator, used to signal the end of strings / arrays / etc.
 # 0b00001010 : The byte for newline, used for line termination.
 
-from .REM_Message                              import REM_Message
+from .REM_Packet                               import REM_Packet
 from .REM_RobotCommand                         import REM_RobotCommand
 from .REM_RobotFeedback                        import REM_RobotFeedback
 from .REM_RobotStateInfo                       import REM_RobotStateInfo
@@ -24,50 +24,50 @@ from .REM_SX1280Filler                         import REM_SX1280Filler
 
 LOCAL_REM_VERSION = 1
 
-PACKET_TYPE_REM_MESSAGE                                      = 0b00100001 # 33 
-PACKET_SIZE_REM_MESSAGE                                      = 5
-PACKET_RANGE_REM_MESSAGE_HEADER_MIN                          = 0.
-PACKET_RANGE_REM_MESSAGE_HEADER_MAX                          = 255.
-PACKET_RANGE_REM_MESSAGE_HEADER_N_BITS                       = 8
-PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_MIN                     = 0.
-PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_MAX                     = 15.
-PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_N_BITS                  = 4
-PACKET_RANGE_REM_MESSAGE_TO_COLOR_MIN                        = 0.
-PACKET_RANGE_REM_MESSAGE_TO_COLOR_MAX                        = 1.
-PACKET_RANGE_REM_MESSAGE_TO_COLOR_N_BITS                     = 1
-PACKET_RANGE_REM_MESSAGE_TO_BC_MIN                           = 0.
-PACKET_RANGE_REM_MESSAGE_TO_BC_MAX                           = 1.
-PACKET_RANGE_REM_MESSAGE_TO_BC_N_BITS                        = 1
-PACKET_RANGE_REM_MESSAGE_TO_BS_MIN                           = 0.
-PACKET_RANGE_REM_MESSAGE_TO_BS_MAX                           = 1.
-PACKET_RANGE_REM_MESSAGE_TO_BS_N_BITS                        = 1
-PACKET_RANGE_REM_MESSAGE_TO_PC_MIN                           = 0.
-PACKET_RANGE_REM_MESSAGE_TO_PC_MAX                           = 1.
-PACKET_RANGE_REM_MESSAGE_TO_PC_N_BITS                        = 1
-PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_MIN                   = 0.
-PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_MAX                   = 15.
-PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_N_BITS                = 4
-PACKET_RANGE_REM_MESSAGE_FROM_COLOR_MIN                      = 0.
-PACKET_RANGE_REM_MESSAGE_FROM_COLOR_MAX                      = 1.
-PACKET_RANGE_REM_MESSAGE_FROM_COLOR_N_BITS                   = 1
-PACKET_RANGE_REM_MESSAGE_RESERVED_MIN                        = 0.
-PACKET_RANGE_REM_MESSAGE_RESERVED_MAX                        = 1.
-PACKET_RANGE_REM_MESSAGE_RESERVED_N_BITS                     = 1
-PACKET_RANGE_REM_MESSAGE_FROM_BS_MIN                         = 0.
-PACKET_RANGE_REM_MESSAGE_FROM_BS_MAX                         = 1.
-PACKET_RANGE_REM_MESSAGE_FROM_BS_N_BITS                      = 1
-PACKET_RANGE_REM_MESSAGE_FROM_PC_MIN                         = 0.
-PACKET_RANGE_REM_MESSAGE_FROM_PC_MAX                         = 1.
-PACKET_RANGE_REM_MESSAGE_FROM_PC_N_BITS                      = 1
-PACKET_RANGE_REM_MESSAGE_REM_VERSION_MIN                     = 0.
-PACKET_RANGE_REM_MESSAGE_REM_VERSION_MAX                     = 15.
-PACKET_RANGE_REM_MESSAGE_REM_VERSION_N_BITS                  = 4
-PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_MIN                      = 0.
-PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_MAX                      = 15.
-PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_N_BITS                   = 4
-PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_MIN                    = 0.
-PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_MAX                    = 255.
-PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_N_BITS                 = 8
+PACKET_TYPE_REM_PACKET                                       = 0b00100001 # 33 
+PACKET_SIZE_REM_PACKET                                       = 5
+PACKET_RANGE_REM_PACKET_HEADER_MIN                           = 0.
+PACKET_RANGE_REM_PACKET_HEADER_MAX                           = 255.
+PACKET_RANGE_REM_PACKET_HEADER_N_BITS                        = 8
+PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_MIN                      = 0.
+PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_MAX                      = 15.
+PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_N_BITS                   = 4
+PACKET_RANGE_REM_PACKET_TO_COLOR_MIN                         = 0.
+PACKET_RANGE_REM_PACKET_TO_COLOR_MAX                         = 1.
+PACKET_RANGE_REM_PACKET_TO_COLOR_N_BITS                      = 1
+PACKET_RANGE_REM_PACKET_TO_BC_MIN                            = 0.
+PACKET_RANGE_REM_PACKET_TO_BC_MAX                            = 1.
+PACKET_RANGE_REM_PACKET_TO_BC_N_BITS                         = 1
+PACKET_RANGE_REM_PACKET_TO_BS_MIN                            = 0.
+PACKET_RANGE_REM_PACKET_TO_BS_MAX                            = 1.
+PACKET_RANGE_REM_PACKET_TO_BS_N_BITS                         = 1
+PACKET_RANGE_REM_PACKET_TO_PC_MIN                            = 0.
+PACKET_RANGE_REM_PACKET_TO_PC_MAX                            = 1.
+PACKET_RANGE_REM_PACKET_TO_PC_N_BITS                         = 1
+PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_MIN                    = 0.
+PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_MAX                    = 15.
+PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_N_BITS                 = 4
+PACKET_RANGE_REM_PACKET_FROM_COLOR_MIN                       = 0.
+PACKET_RANGE_REM_PACKET_FROM_COLOR_MAX                       = 1.
+PACKET_RANGE_REM_PACKET_FROM_COLOR_N_BITS                    = 1
+PACKET_RANGE_REM_PACKET_RESERVED_MIN                         = 0.
+PACKET_RANGE_REM_PACKET_RESERVED_MAX                         = 1.
+PACKET_RANGE_REM_PACKET_RESERVED_N_BITS                      = 1
+PACKET_RANGE_REM_PACKET_FROM_BS_MIN                          = 0.
+PACKET_RANGE_REM_PACKET_FROM_BS_MAX                          = 1.
+PACKET_RANGE_REM_PACKET_FROM_BS_N_BITS                       = 1
+PACKET_RANGE_REM_PACKET_FROM_PC_MIN                          = 0.
+PACKET_RANGE_REM_PACKET_FROM_PC_MAX                          = 1.
+PACKET_RANGE_REM_PACKET_FROM_PC_N_BITS                       = 1
+PACKET_RANGE_REM_PACKET_REM_VERSION_MIN                      = 0.
+PACKET_RANGE_REM_PACKET_REM_VERSION_MAX                      = 15.
+PACKET_RANGE_REM_PACKET_REM_VERSION_N_BITS                   = 4
+PACKET_RANGE_REM_PACKET_MESSAGE_ID_MIN                       = 0.
+PACKET_RANGE_REM_PACKET_MESSAGE_ID_MAX                       = 15.
+PACKET_RANGE_REM_PACKET_MESSAGE_ID_N_BITS                    = 4
+PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_MIN                     = 0.
+PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_MAX                     = 255.
+PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_N_BITS                  = 8
 
 PACKET_TYPE_REM_ROBOT_COMMAND                                = 0b00100010 # 34 
 PACKET_SIZE_REM_ROBOT_COMMAND                                = 17
@@ -1069,7 +1069,7 @@ PACKET_RANGE_REM_SX1280FILLER_FILLER_BITS_MAX                = 68719476735.
 PACKET_RANGE_REM_SX1280FILLER_FILLER_BITS_N_BITS             = 36
 
 def PACKET_TYPE_TO_SIZE(type):
-    if type == PACKET_TYPE_REM_MESSAGE                                     : return PACKET_SIZE_REM_MESSAGE                                     
+    if type == PACKET_TYPE_REM_PACKET                                      : return PACKET_SIZE_REM_PACKET                                      
     if type == PACKET_TYPE_REM_ROBOT_COMMAND                               : return PACKET_SIZE_REM_ROBOT_COMMAND                               
     if type == PACKET_TYPE_REM_ROBOT_FEEDBACK                              : return PACKET_SIZE_REM_ROBOT_FEEDBACK                              
     if type == PACKET_TYPE_REM_ROBOT_STATE_INFO                            : return PACKET_SIZE_REM_ROBOT_STATE_INFO                            
@@ -1089,7 +1089,7 @@ def PACKET_TYPE_TO_SIZE(type):
     return 0
 
 def PACKET_TYPE_TO_OBJ(type):
-    if type == PACKET_TYPE_REM_MESSAGE                             : return REM_Message
+    if type == PACKET_TYPE_REM_PACKET                              : return REM_Packet
     if type == PACKET_TYPE_REM_ROBOT_COMMAND                       : return REM_RobotCommand
     if type == PACKET_TYPE_REM_ROBOT_FEEDBACK                      : return REM_RobotFeedback
     if type == PACKET_TYPE_REM_ROBOT_STATE_INFO                    : return REM_RobotStateInfo

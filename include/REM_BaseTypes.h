@@ -12,50 +12,50 @@
 
 #define LOCAL_REM_VERSION 1
 
-#define PACKET_TYPE_REM_MESSAGE                                      0b00100001 // 33 
-#define PACKET_SIZE_REM_MESSAGE                                      5
-#define PACKET_RANGE_REM_MESSAGE_HEADER_MIN                          0.
-#define PACKET_RANGE_REM_MESSAGE_HEADER_MAX                          255.
-#define PACKET_RANGE_REM_MESSAGE_HEADER_N_BITS                       8
-#define PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_MIN                     0.
-#define PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_MAX                     15.
-#define PACKET_RANGE_REM_MESSAGE_TO_ROBOT_ID_N_BITS                  4
-#define PACKET_RANGE_REM_MESSAGE_TO_COLOR_MIN                        0.
-#define PACKET_RANGE_REM_MESSAGE_TO_COLOR_MAX                        1.
-#define PACKET_RANGE_REM_MESSAGE_TO_COLOR_N_BITS                     1
-#define PACKET_RANGE_REM_MESSAGE_TO_BC_MIN                           0.
-#define PACKET_RANGE_REM_MESSAGE_TO_BC_MAX                           1.
-#define PACKET_RANGE_REM_MESSAGE_TO_BC_N_BITS                        1
-#define PACKET_RANGE_REM_MESSAGE_TO_BS_MIN                           0.
-#define PACKET_RANGE_REM_MESSAGE_TO_BS_MAX                           1.
-#define PACKET_RANGE_REM_MESSAGE_TO_BS_N_BITS                        1
-#define PACKET_RANGE_REM_MESSAGE_TO_PC_MIN                           0.
-#define PACKET_RANGE_REM_MESSAGE_TO_PC_MAX                           1.
-#define PACKET_RANGE_REM_MESSAGE_TO_PC_N_BITS                        1
-#define PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_MIN                   0.
-#define PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_MAX                   15.
-#define PACKET_RANGE_REM_MESSAGE_FROM_ROBOT_ID_N_BITS                4
-#define PACKET_RANGE_REM_MESSAGE_FROM_COLOR_MIN                      0.
-#define PACKET_RANGE_REM_MESSAGE_FROM_COLOR_MAX                      1.
-#define PACKET_RANGE_REM_MESSAGE_FROM_COLOR_N_BITS                   1
-#define PACKET_RANGE_REM_MESSAGE_RESERVED_MIN                        0.
-#define PACKET_RANGE_REM_MESSAGE_RESERVED_MAX                        1.
-#define PACKET_RANGE_REM_MESSAGE_RESERVED_N_BITS                     1
-#define PACKET_RANGE_REM_MESSAGE_FROM_BS_MIN                         0.
-#define PACKET_RANGE_REM_MESSAGE_FROM_BS_MAX                         1.
-#define PACKET_RANGE_REM_MESSAGE_FROM_BS_N_BITS                      1
-#define PACKET_RANGE_REM_MESSAGE_FROM_PC_MIN                         0.
-#define PACKET_RANGE_REM_MESSAGE_FROM_PC_MAX                         1.
-#define PACKET_RANGE_REM_MESSAGE_FROM_PC_N_BITS                      1
-#define PACKET_RANGE_REM_MESSAGE_REM_VERSION_MIN                     0.
-#define PACKET_RANGE_REM_MESSAGE_REM_VERSION_MAX                     15.
-#define PACKET_RANGE_REM_MESSAGE_REM_VERSION_N_BITS                  4
-#define PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_MIN                      0.
-#define PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_MAX                      15.
-#define PACKET_RANGE_REM_MESSAGE_MESSAGE_ID_N_BITS                   4
-#define PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_MIN                    0.
-#define PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_MAX                    255.
-#define PACKET_RANGE_REM_MESSAGE_PAYLOAD_SIZE_N_BITS                 8
+#define PACKET_TYPE_REM_PACKET                                       0b00100001 // 33 
+#define PACKET_SIZE_REM_PACKET                                       5
+#define PACKET_RANGE_REM_PACKET_HEADER_MIN                           0.
+#define PACKET_RANGE_REM_PACKET_HEADER_MAX                           255.
+#define PACKET_RANGE_REM_PACKET_HEADER_N_BITS                        8
+#define PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_MIN                      0.
+#define PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_MAX                      15.
+#define PACKET_RANGE_REM_PACKET_TO_ROBOT_ID_N_BITS                   4
+#define PACKET_RANGE_REM_PACKET_TO_COLOR_MIN                         0.
+#define PACKET_RANGE_REM_PACKET_TO_COLOR_MAX                         1.
+#define PACKET_RANGE_REM_PACKET_TO_COLOR_N_BITS                      1
+#define PACKET_RANGE_REM_PACKET_TO_BC_MIN                            0.
+#define PACKET_RANGE_REM_PACKET_TO_BC_MAX                            1.
+#define PACKET_RANGE_REM_PACKET_TO_BC_N_BITS                         1
+#define PACKET_RANGE_REM_PACKET_TO_BS_MIN                            0.
+#define PACKET_RANGE_REM_PACKET_TO_BS_MAX                            1.
+#define PACKET_RANGE_REM_PACKET_TO_BS_N_BITS                         1
+#define PACKET_RANGE_REM_PACKET_TO_PC_MIN                            0.
+#define PACKET_RANGE_REM_PACKET_TO_PC_MAX                            1.
+#define PACKET_RANGE_REM_PACKET_TO_PC_N_BITS                         1
+#define PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_MIN                    0.
+#define PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_MAX                    15.
+#define PACKET_RANGE_REM_PACKET_FROM_ROBOT_ID_N_BITS                 4
+#define PACKET_RANGE_REM_PACKET_FROM_COLOR_MIN                       0.
+#define PACKET_RANGE_REM_PACKET_FROM_COLOR_MAX                       1.
+#define PACKET_RANGE_REM_PACKET_FROM_COLOR_N_BITS                    1
+#define PACKET_RANGE_REM_PACKET_RESERVED_MIN                         0.
+#define PACKET_RANGE_REM_PACKET_RESERVED_MAX                         1.
+#define PACKET_RANGE_REM_PACKET_RESERVED_N_BITS                      1
+#define PACKET_RANGE_REM_PACKET_FROM_BS_MIN                          0.
+#define PACKET_RANGE_REM_PACKET_FROM_BS_MAX                          1.
+#define PACKET_RANGE_REM_PACKET_FROM_BS_N_BITS                       1
+#define PACKET_RANGE_REM_PACKET_FROM_PC_MIN                          0.
+#define PACKET_RANGE_REM_PACKET_FROM_PC_MAX                          1.
+#define PACKET_RANGE_REM_PACKET_FROM_PC_N_BITS                       1
+#define PACKET_RANGE_REM_PACKET_REM_VERSION_MIN                      0.
+#define PACKET_RANGE_REM_PACKET_REM_VERSION_MAX                      15.
+#define PACKET_RANGE_REM_PACKET_REM_VERSION_N_BITS                   4
+#define PACKET_RANGE_REM_PACKET_MESSAGE_ID_MIN                       0.
+#define PACKET_RANGE_REM_PACKET_MESSAGE_ID_MAX                       15.
+#define PACKET_RANGE_REM_PACKET_MESSAGE_ID_N_BITS                    4
+#define PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_MIN                     0.
+#define PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_MAX                     255.
+#define PACKET_RANGE_REM_PACKET_PAYLOAD_SIZE_N_BITS                  8
 
 #define PACKET_TYPE_REM_ROBOT_COMMAND                                0b00100010 // 34 
 #define PACKET_SIZE_REM_ROBOT_COMMAND                                17
@@ -1057,7 +1057,7 @@
 #define PACKET_RANGE_REM_SX1280FILLER_FILLER_BITS_N_BITS             36
 
 static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){
-    if(type == PACKET_TYPE_REM_MESSAGE                                     ) return PACKET_SIZE_REM_MESSAGE                                     ;
+    if(type == PACKET_TYPE_REM_PACKET                                      ) return PACKET_SIZE_REM_PACKET                                      ;
     if(type == PACKET_TYPE_REM_ROBOT_COMMAND                               ) return PACKET_SIZE_REM_ROBOT_COMMAND                               ;
     if(type == PACKET_TYPE_REM_ROBOT_FEEDBACK                              ) return PACKET_SIZE_REM_ROBOT_FEEDBACK                              ;
     if(type == PACKET_TYPE_REM_ROBOT_STATE_INFO                            ) return PACKET_SIZE_REM_ROBOT_STATE_INFO                            ;

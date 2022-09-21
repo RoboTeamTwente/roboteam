@@ -11,8 +11,9 @@
 
 
 #define REM_LOCAL_VERSION 1
+#define REM_TOTAL_NUMBER_OF_PACKETS 16
 
-#define REM_TOTAL_NUMBER_OF_PACKETS 16#define REM_PACKET_TYPE_REM_PACKET                                   0b00100001 // 33 
+#define REM_PACKET_TYPE_REM_PACKET                                   0b00100001 // 33 
 #define REM_PACKET_SIZE_REM_PACKET                                   5
 #define REM_PACKET_RANGE_REM_PACKET_HEADER_MIN                       0.
 #define REM_PACKET_RANGE_REM_PACKET_HEADER_MAX                       255.

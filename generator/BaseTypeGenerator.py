@@ -44,8 +44,8 @@ class BaseTypeGenerator:
 
 		file_string += self.to_begin(packets) + "\n"
 
-		file_string += self.to_constant("REM_LOCAL_VERSION", version) + "\n\n"
-		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets))
+		file_string += self.to_constant("REM_LOCAL_VERSION", version) + "\n"
+		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets)) + "\n\n"
 
 		type_to_size = []
 

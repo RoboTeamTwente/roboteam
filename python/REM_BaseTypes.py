@@ -22,8 +22,9 @@ from .REM_RobotMusicCommand                    import REM_RobotMusicCommand
 from .REM_SX1280Filler                         import REM_SX1280Filler
 
 REM_LOCAL_VERSION = 1
+REM_TOTAL_NUMBER_OF_PACKETS = 16
 
-REM_TOTAL_NUMBER_OF_PACKETS = 16REM_PACKET_TYPE_REM_PACKET                                   = 0b00100001 # 33 
+REM_PACKET_TYPE_REM_PACKET                                   = 0b00100001 # 33 
 REM_PACKET_SIZE_REM_PACKET                                   = 5
 REM_PACKET_RANGE_REM_PACKET_HEADER_MIN                       = 0.
 REM_PACKET_RANGE_REM_PACKET_HEADER_MAX                       = 255.

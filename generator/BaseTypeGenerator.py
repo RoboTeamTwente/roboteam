@@ -44,7 +44,8 @@ class BaseTypeGenerator:
 
 		file_string += self.to_begin(packets) + "\n"
 
-		file_string += self.to_constant("LOCAL_REM_VERSION", version) + "\n\n"
+		file_string += self.to_constant("REM_LOCAL_VERSION", version) + "\n\n"
+		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets))
 
 		type_to_size = []
 
@@ -54,10 +55,10 @@ class BaseTypeGenerator:
 			total_bytes = math.ceil(total_bits / 8)
 			PACKET_NAME = CamelCaseToUpper(packet_name)
 
-			VARIABLE_NAME_TYPE = f"PACKET_TYPE_{PACKET_NAME}".ljust(60)
+			VARIABLE_NAME_TYPE = f"REM_PACKET_TYPE_{PACKET_NAME}".ljust(60)
 			file_string += f"{self.to_constant(VARIABLE_NAME_TYPE, codewords[iPacket])} {c} {str(int(codewords[iPacket], 2))} \n"
 
-			VARIABLE_NAME_SIZE = f"PACKET_SIZE_{PACKET_NAME}".ljust(60)
+			VARIABLE_NAME_SIZE = f"REM_PACKET_SIZE_{PACKET_NAME}".ljust(60)
 			file_string += self.to_constant(VARIABLE_NAME_SIZE, total_bytes) + "\n"
 
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
@@ -67,14 +68,14 @@ class BaseTypeGenerator:
 				if _range is not None: range_min, range_max = _range
 
 				VARIABLE_NAME = CamelCaseToUpper(variable)
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MIN".ljust(60), f"{range_min:.16f}".rstrip('0')) + "\n"
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MAX".ljust(60), f"{range_max:.16f}".rstrip('0')) + "\n"
-				file_string += self.to_constant(f"PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_N_BITS".ljust(60), f"{n_bits}" + "\n")
+				file_string += self.to_constant(f"REM_PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MIN".ljust(60), f"{range_min:.16f}".rstrip('0')) + "\n"
+				file_string += self.to_constant(f"REM_PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_MAX".ljust(60), f"{range_max:.16f}".rstrip('0')) + "\n"
+				file_string += self.to_constant(f"REM_PACKET_RANGE_{PACKET_NAME}_{VARIABLE_NAME}_N_BITS".ljust(60), f"{n_bits}" + "\n")
 
 			file_string += "\n"
 
 		file_string += self.to_type_size_mapping(type_to_size)
-		file_string += self.to_type_obj_mapping(packets.keys())
+		file_string += self.to_type_obj_mapping(type_to_size)
 		file_string += "\n"
 
 		file_string += self.to_end()
@@ -126,7 +127,7 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 		return f"#define {variable_name} {value}"
 
 	def to_type_size_mapping(self, type_to_size):
-		function = """static uint8_t PACKET_TYPE_TO_SIZE(uint8_t type){\n"""
+		function = """static uint8_t REM_PACKET_TYPE_TO_SIZE(uint8_t type){\n"""
 		for _type, size in type_to_size:
 			function += f"    if(type == {_type}) return {size};\n"
 		function += """    return 0;\n"""
@@ -151,17 +152,17 @@ class Python_BaseTypeGenerator(BaseTypeGenerator):
 		return import_calls
 
 	def to_type_size_mapping(self, type_to_size):
-		function = """def PACKET_TYPE_TO_SIZE(type):\n"""
+		function = """def REM_PACKET_TYPE_TO_SIZE(type):\n"""
 		for _type, size in type_to_size:
 			function += f"    if type == {_type}: return {size}\n"
 		function += """    return 0\n"""
 		function += """\n"""
 		return function
 
-	def to_type_obj_mapping(self, types):
-		function = """def PACKET_TYPE_TO_OBJ(type):\n"""
-		for _type in types:
-			function += f"    if type == PACKET_TYPE_{CamelCaseToUpper(_type).ljust(40)}: return {_type}\n"
+	def to_type_obj_mapping(self, type_to_size):
+		function = """def REM_PACKET_TYPE_TO_OBJ(type):\n"""
+		for _type, size in type_to_size:
+			function += f"    if type == REM_PACKET_TYPE_{_type}: return {_type}\n"
 		return function
 
 

@@ -91,8 +91,9 @@ packets = {
     "REM_BasestationLog"              : [],
     "REM_RobotLog"                    : [],
     "REM_BasestationGetConfiguration" : [],
-    "REM_BasestationConfiguration"    : [],
-    "REM_BasestationSetConfiguration" : [],
+    "REM_BasestationConfiguration"    : [
+        ["channel",             1, None, "Channel on which the basestation and robots communicate"]
+    ],
     "REM_RobotGetPIDGains"            : [],
     "REM_RobotPIDGains" : [
         ["PbodyX",             16, [0.,40.], "Received P gain of the PID for body_x (x-direction)"],

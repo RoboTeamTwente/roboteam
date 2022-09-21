@@ -24,7 +24,9 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies using temporary script
-        run: sudo ./.github/workflows/TEMP_INSTALL_SCRIPT.sh
+        run: |
+          chmod +x ./.github/workflows/TEMP_INSTALL_SCRIPT.sh
+          sudo ./.github/workflows/TEMP_INSTALL_SCRIPT.sh
         shell: bash
 
       - name: Configure CMake

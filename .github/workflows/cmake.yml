@@ -24,7 +24,7 @@ jobs:
         submodules: recursive
     
     - name: Install dependencies
-      run: sudo ./TEMP_INSTALL_SCRIPT.sh
+      run: sudo .github/workflows/TEMP_INSTALL_SCRIPT.sh
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

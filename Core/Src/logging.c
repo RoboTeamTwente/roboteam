@@ -51,7 +51,7 @@ void LOG_printf(char *format, ...){
 /**
  * TODO Ensure that messages are not "too" long, whatever that may be.
  * 
- * @brief Sends a log message over USB using the PACKET_TYPE_BASESTATION_LOG header.
+ * @brief Sends a log message over USB using the REM_PACKET_TYPE_BASESTATION_LOG header.
  * The log must always end with \n, which this function enforces.
  * 
  * @param message The message to send over the USB
@@ -61,8 +61,8 @@ void LOG(char *message){
 
     // Get message length
     uint32_t message_length = strlen(message);  
-    // Clip the message length to 127 - PACKET_SIZE_REM_BASESTATION_LOG, as to not overflow the MessageContainer buffer
-    if(127 - PACKET_SIZE_REM_BASESTATION_LOG < message_length) message_length = 127 - PACKET_SIZE_REM_BASESTATION_LOG;
+    // Clip the message length to 127 - REM_PACKET_SIZE_REM_BASESTATION_LOG, as to not overflow the MessageContainer buffer
+    if(127 - REM_PACKET_SIZE_REM_BASESTATION_LOG < message_length) message_length = 127 - REM_PACKET_SIZE_REM_BASESTATION_LOG;
     // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the BasestationLog_messageLength field)
     message[message_length-1] = '\n';
 
@@ -74,13 +74,16 @@ void LOG(char *message){
     MessageContainer* message_container = &message_buffer[index_write];
     uint8_t* payload = message_container->payload;
 
-    REM_BasestationLog_set_header((REM_BasestationLogPayload*) payload, PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
-    REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
-    REM_BasestationLog_set_messageLength((REM_BasestationLogPayload*) payload, message_length); // 8 bits
+    REM_BasestationLog_set_header((REM_BasestationLogPayload*) payload, REM_PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
+    REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) payload, REM_LOCAL_VERSION);  // 4 bits
+    // REM_BasestationLog_set_payloadSize((REM_BasestationLogPayload*) payload, message_length); // 8 bits
  
+    // TODO FIX LOGGING!!
+    #warning "FIX THIS BEFORE MERGING TO DEVELOPMENT! SET PAYLOAD SIZE CORRECTLY"
+
     // Copy the message into the message container, next to the BasestationLog header
-    memcpy(payload + PACKET_SIZE_REM_BASESTATION_LOG, message, message_length);
-    message_container->length = PACKET_SIZE_REM_BASESTATION_LOG + message_length;
+    memcpy(payload + REM_PACKET_SIZE_REM_BASESTATION_LOG, message, message_length);
+    message_container->length = REM_PACKET_SIZE_REM_BASESTATION_LOG + message_length;
     
 }
 
@@ -97,8 +100,8 @@ void LOG_send(){
     MessageContainer* message_container = &message_buffer[buffer_indexer->indexRead];
     CDC_Transmit_FS(message_container->payload, message_container->length);
 
-    // REM_BasestationLog_set_header((REM_BasestationLogPayload*) buffer, PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
-    // REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) buffer, LOCAL_REM_VERSION);  // 4 bits
+    // REM_BasestationLog_set_header((REM_BasestationLogPayload*) buffer, REM_PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
+    // REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) buffer, REM_LOCAL_VERSION);  // 4 bits
     // REM_BasestationLog_set_messageLength((REM_BasestationLogPayload*) buffer, 5); // 8 bits
     // sprintf(buffer+3, "01234\n");
     // CDC_Transmit_FS(buffer, 8);

@@ -17,6 +17,8 @@
 
 REM_SX1280FillerPayload SX1280_filler_payload;
 
+#include "CircularBuffer.h"
+
 struct _buffer_RobotCommand {
 	REM_RobotCommandPayload packet;
 	bool isNewPacket;

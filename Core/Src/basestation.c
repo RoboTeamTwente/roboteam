@@ -7,13 +7,15 @@
 
 #include "REM_BaseTypes.h"
 #include "REM_BasestationConfiguration.h"
-#include "REM_BasestationSetConfiguration.h"
 #include "REM_RobotCommand.h"
 #include "REM_RobotFeedback.h"
 #include "REM_RobotStateInfo.h"
 #include "REM_RobotSetPIDGains.h"
 #include "REM_RobotMusicCommand.h"
+#include "REM_Packet.h"
 #include "REM_SX1280Filler.h"
+
+#include "CircularBuffer.h"
 
 /* Counters, tracking the number of packets handled */ 
 volatile int handled_RobotCommand = 0;
@@ -159,8 +161,8 @@ void init(){
 
     // Initialize the REM_SX1280FillerPayload packet
     REM_SX1280Filler filler;
-    filler.header = PACKET_TYPE_REM_SX1280FILLER;
-    filler.remVersion = LOCAL_REM_VERSION;
+    filler.header = REM_PACKET_TYPE_REM_SX1280FILLER;
+    filler.remVersion = REM_LOCAL_VERSION;
     encodeREM_SX1280Filler(&SX1280_filler_payload, &filler);
 
     LOG("[init] Initializion complete\n");
@@ -185,7 +187,7 @@ void loop(){
   /* Send any new RobotFeedback packets */
   for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_RobotFeedback[id].isNewPacket){
-      LOG_sendBlocking(buffer_RobotFeedback[id].packet.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK);
+      LOG_sendBlocking(buffer_RobotFeedback[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
       buffer_RobotFeedback[id].isNewPacket = false;
     }
   }
@@ -193,7 +195,7 @@ void loop(){
   /* Send any new RobotStateInfo packets */
   for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_RobotStateInfo[id].isNewPacket){
-      LOG_sendBlocking(buffer_RobotStateInfo[id].packet.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO);
+      LOG_sendBlocking(buffer_RobotStateInfo[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO);
       buffer_RobotStateInfo[id].isNewPacket = false;
     }
   }
@@ -201,7 +203,7 @@ void loop(){
   /* Send any new RobotPIDGains packets */
   for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_RobotPIDGains[id].isNewPacket){
-      LOG_sendBlocking(buffer_RobotPIDGains[id].packet.payload, PACKET_SIZE_REM_ROBOT_PIDGAINS);
+      LOG_sendBlocking(buffer_RobotPIDGains[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_PIDGAINS);
       buffer_RobotPIDGains[id].isNewPacket = false;
     }
   }
@@ -209,14 +211,14 @@ void loop(){
   if (flagHandleConfiguration) {
     // TODO: Make a nice function for this
     REM_BasestationConfiguration configuration;
-    configuration.header = PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
-    configuration.remVersion = LOCAL_REM_VERSION;
+    configuration.header = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
+    configuration.remVersion = REM_LOCAL_VERSION;
     configuration.channel = Wireless_getChannel(SX_TX);
 
     REM_BasestationConfigurationPayload payload;
     encodeREM_BasestationConfiguration(&payload, &configuration);
 
-    LOG_sendBlocking(payload.payload, PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
+    LOG_sendBlocking(payload.payload, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
     flagHandleConfiguration = false;
   }
 
@@ -309,14 +311,14 @@ void handleRobotCommand(uint8_t* packet_buffer){
 
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotCommand_get_remVersion((REM_RobotCommandPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotCommand] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotCommand] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotCommand buffer. Set flag indicating packet needs to be sent to the robot
-  uint8_t robot_id = REM_RobotCommand_get_id((REM_RobotCommandPayload*) packet_buffer);
-  memcpy(buffer_RobotCommand[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
+  uint8_t robot_id = REM_RobotCommand_get_toRobotId((REM_RobotCommandPayload*) packet_buffer);
+  memcpy(buffer_RobotCommand[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
   buffer_RobotCommand[robot_id].isNewPacket = true;
   buffer_RobotCommand[robot_id].counter++;
 }
@@ -326,14 +328,14 @@ void handleRobotSetPIDGains(uint8_t* packet_buffer){
 
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotSetPIDGains_get_remVersion((REM_RobotSetPIDGainsPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotSetPIDGains] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotSetPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotSetPIDGains buffer. Set flag indicating packet needs to be sent to the robot
-  uint8_t robot_id = REM_RobotSetPIDGains_get_id((REM_RobotSetPIDGainsPayload*) packet_buffer);
-  memcpy(buffer_RobotSetPIDGains[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
+  uint8_t robot_id = REM_RobotSetPIDGains_get_toRobotId((REM_RobotSetPIDGainsPayload*) packet_buffer);
+  memcpy(buffer_RobotSetPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
   buffer_RobotSetPIDGains[robot_id].isNewPacket = true;
   buffer_RobotSetPIDGains[robot_id].counter++;
 }
@@ -351,14 +353,14 @@ void handleRobotFeedback(uint8_t* packet_buffer){
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotFeedback_get_remVersion((REM_RobotFeedbackPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotFeedback] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotFeedback] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotFeedback buffer. Set flag indicating packet needs to be sent to the robot
-  uint8_t robot_id = REM_RobotFeedback_get_id((REM_RobotFeedbackPayload*) packet_buffer);
-  memcpy(buffer_RobotFeedback[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_FEEDBACK);
+  uint8_t robot_id = REM_RobotFeedback_get_toRobotId((REM_RobotFeedbackPayload*) packet_buffer);
+  memcpy(buffer_RobotFeedback[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
   buffer_RobotFeedback[robot_id].isNewPacket = true;
   buffer_RobotFeedback[robot_id].counter++;
 }
@@ -376,14 +378,14 @@ void handleRobotStateInfo(uint8_t* packet_buffer){
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotStateInfo_get_remVersion((REM_RobotStateInfoPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotStateInfo] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotStateInfo] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotStateInfo buffer. Set flag to be sent to the robot
-  uint8_t robot_id = REM_RobotStateInfo_get_id((REM_RobotStateInfoPayload*) packet_buffer);
-  memcpy(buffer_RobotStateInfo[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_STATE_INFO);
+  uint8_t robot_id = REM_RobotStateInfo_get_toRobotId((REM_RobotStateInfoPayload*) packet_buffer);
+  memcpy(buffer_RobotStateInfo[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO);
   buffer_RobotStateInfo[robot_id].isNewPacket = true;
   buffer_RobotStateInfo[robot_id].counter++;
 }
@@ -401,45 +403,45 @@ void handleRobotBuzzer(uint8_t* packet_buffer){
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotBuzzer_get_remVersion((REM_RobotBuzzerPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotBuzzer] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotBuzzer] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotBuzzer buffer. Set flag to be sent to the robot
-  uint8_t robot_id = REM_RobotBuzzer_get_id((REM_RobotBuzzerPayload*) packet_buffer);
-  memcpy(buffer_RobotBuzzer[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_BUZZER);
+  uint8_t robot_id = REM_RobotBuzzer_get_toRobotId((REM_RobotBuzzerPayload*) packet_buffer);
+  memcpy(buffer_RobotBuzzer[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_BUZZER);
   buffer_RobotBuzzer[robot_id].isNewPacket = true;
   buffer_RobotBuzzer[robot_id].counter++;
 }
 
-void handleBasestationSetConfiguration(uint8_t* packet_buffer){
-  // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  uint8_t packet_rem_version = REM_BasestationSetConfiguration_get_remVersion((REM_BasestationSetConfigurationPayload*) packet_buffer);
-  //uint8_t packet_rem_version = RobotBuzzer_get_remVersion((RobotBuzzerPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleBasestationSetConfiguration] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
-    return;
-  }
+// void handleBasestationSetConfiguration(uint8_t* packet_buffer){
+//   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
+//   uint8_t packet_rem_version = REM_BasestationSetConfiguration_get_remVersion((REM_BasestationSetConfigurationPayload*) packet_buffer);
+//   //uint8_t packet_rem_version = RobotBuzzer_get_remVersion((RobotBuzzerPayload*) packet_buffer);
+//   if(packet_rem_version != REM_LOCAL_VERSION){
+//     LOG_printf("[handleBasestationSetConfiguration] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
+//     return;
+//   }
 
-  WIRELESS_CHANNEL newChannel = REM_BasestationSetConfiguration_get_channel((REM_BasestationSetConfigurationPayload*) packet_buffer);
-  Wireless_setChannel(SX_TX, newChannel);
-  Wireless_setChannel(SX_RX, newChannel);
-}
+//   WIRELESS_CHANNEL newChannel = REM_BasestationSetConfiguration_get_channel((REM_BasestationSetConfigurationPayload*) packet_buffer);
+//   Wireless_setChannel(SX_TX, newChannel);
+//   Wireless_setChannel(SX_RX, newChannel);
+// }
 
 void handleRobotGetPIDGains(uint8_t* packet_buffer){
   handled_RobotGetPIDGains++;
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotGetPIDGains_get_remVersion((REM_RobotGetPIDGainsPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotGetPIDGains] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotGetPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotGetPIDGains buffer. Set flag to be sent to the robot
-  uint8_t robot_id = REM_RobotGetPIDGains_get_id((REM_RobotGetPIDGainsPayload*) packet_buffer);
-  memcpy(buffer_RobotGetPIDGains[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
+  uint8_t robot_id = REM_RobotGetPIDGains_get_toRobotId((REM_RobotGetPIDGainsPayload*) packet_buffer);
+  memcpy(buffer_RobotGetPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
   buffer_RobotGetPIDGains[robot_id].isNewPacket = true;
   buffer_RobotGetPIDGains[robot_id].counter++;
 }
@@ -449,14 +451,14 @@ void handleRobotPIDGains(uint8_t* packet_buffer){
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotPIDGains_get_remVersion((REM_RobotPIDGainsPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotPIDGains] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotGetPIDGains buffer. Set flag to be sent to the robot
-  uint8_t robot_id = REM_RobotPIDGains_get_id((REM_RobotPIDGainsPayload*) packet_buffer);
-  memcpy(buffer_RobotPIDGains[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_PIDGAINS);
+  uint8_t robot_id = REM_RobotPIDGains_get_toRobotId((REM_RobotPIDGainsPayload*) packet_buffer);
+  memcpy(buffer_RobotPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_PIDGAINS);
   buffer_RobotPIDGains[robot_id].isNewPacket = true;
   buffer_RobotPIDGains[robot_id].counter++;
 }
@@ -466,14 +468,14 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
   
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotMusicCommand_get_remVersion((REM_RobotMusicCommandPayload*) packet_buffer);
-  if(packet_rem_version != LOCAL_REM_VERSION){
-    LOG_printf("[handleRobotMusicCommand] Error! packet_rem_version %u != %u LOCAL_REM_VERSION.", packet_rem_version, LOCAL_REM_VERSION);
+  if(packet_rem_version != REM_LOCAL_VERSION){
+    LOG_printf("[handleRobotMusicCommand] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
   // Store the message in the RobotMusicCommand buffer. Set flag to be sent to the robot
-  uint8_t robot_id = REM_RobotMusicCommand_get_id((REM_RobotMusicCommandPayload*) packet_buffer);
-  memcpy(buffer_RobotMusicCommand[robot_id].packet.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+  uint8_t robot_id = REM_RobotMusicCommand_get_toRobotId((REM_RobotMusicCommandPayload*) packet_buffer);
+  memcpy(buffer_RobotMusicCommand[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
   buffer_RobotMusicCommand[robot_id].isNewPacket = true;
   buffer_RobotMusicCommand[robot_id].counter++;
 }
@@ -494,8 +496,28 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
  * @return false if the packet(s) have been handled unsuccessfully, e.g. due to corruption
  */
 bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
+
+
+  
+  
+
+
   uint8_t packet_type;
   uint32_t bytes_processed = 0;
+
+  REM_PacketPayload* packet = packet_buffer;
+  packet_type = REM_Packet_get_header(packet);
+  uint32_t packet_size = REM_Packet_get_payloadSize(packet);
+
+  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND){
+    /* High priority packet */
+  }else
+  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK){
+    /* High priority packet */
+  }else{
+    /* Generic packet, no priority. Add to queue */
+      
+  }
 
   while(bytes_processed < packet_length){
 
@@ -503,54 +525,49 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
 
     switch (packet_type){
 
-      case PACKET_TYPE_REM_ROBOT_COMMAND:
+      case REM_PACKET_TYPE_REM_ROBOT_COMMAND:
         handleRobotCommand(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_COMMAND;
         break;
       
-      case PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
+      case REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
         handleRobotSetPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
         break;
       
-      case PACKET_TYPE_REM_ROBOT_FEEDBACK:
+      case REM_PACKET_TYPE_REM_ROBOT_FEEDBACK:
         handleRobotFeedback(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_FEEDBACK;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_FEEDBACK;
         break;
       
-      case PACKET_TYPE_REM_ROBOT_BUZZER:
+      case REM_PACKET_TYPE_REM_ROBOT_BUZZER:
         handleRobotBuzzer(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_BUZZER;
         break;
 
-      case PACKET_TYPE_REM_ROBOT_STATE_INFO:
+      case REM_PACKET_TYPE_REM_ROBOT_STATE_INFO:
         handleRobotStateInfo(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_STATE_INFO;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_STATE_INFO;
         break;
       
-      case PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION:
-        handleBasestationSetConfiguration(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION;
-        break;
-
-      case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
+      case REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
         handleRobotGetPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_TYPE_REM_ROBOT_GET_PIDGAINS;
+        bytes_processed += REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS;
         break;
 
-      case PACKET_TYPE_REM_ROBOT_PIDGAINS:
+      case REM_PACKET_TYPE_REM_ROBOT_PIDGAINS:
         handleRobotPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_TYPE_REM_ROBOT_PIDGAINS;
+        bytes_processed += REM_PACKET_TYPE_REM_ROBOT_PIDGAINS;
         break;
 
-      case PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION:
-        bytes_processed += PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
+      case REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION:
+        bytes_processed += REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
         flagHandleConfiguration = true;
         break;
 
-      case PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
+      case REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
         handleRobotMusicCommand(packet_buffer + bytes_processed);
-        bytes_processed += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
+        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
         break;
 
       default:
@@ -611,40 +628,40 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
     /* Add RobotCommand to the transmission */
     if(buffer_RobotCommand[idCounter].isNewPacket 
-    && total_packet_length + PACKET_SIZE_REM_ROBOT_COMMAND < MAX_PACKET_SIZE){
+    && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_COMMAND < MAX_PACKET_SIZE){
       buffer_RobotCommand[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_COMMAND);
-      total_packet_length += PACKET_SIZE_REM_ROBOT_COMMAND;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
+      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_COMMAND;
     }
 
     /* Add RobotSetPIDGains to the transmission */
     if(buffer_RobotSetPIDGains[idCounter].isNewPacket
-    && total_packet_length + PACKET_SIZE_REM_ROBOT_SET_PIDGAINS < MAX_PACKET_SIZE){
+    && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS < MAX_PACKET_SIZE){
       buffer_RobotSetPIDGains[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotSetPIDGains[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
-      total_packet_length += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotSetPIDGains[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
+      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
     }
 
     /* Add RobotBuzzer to the transmission */
     if(buffer_RobotBuzzer[idCounter].isNewPacket
-    && total_packet_length + PACKET_SIZE_REM_ROBOT_BUZZER < MAX_PACKET_SIZE){
+    && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_BUZZER < MAX_PACKET_SIZE){
       buffer_RobotBuzzer[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_BUZZER);
-      total_packet_length += PACKET_SIZE_REM_ROBOT_BUZZER;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_BUZZER);
+      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_BUZZER;
     }
     
     /* Add RobotGetPIDGains to the transmission */
-    if(buffer_RobotGetPIDGains[idCounter].isNewPacket && total_packet_length + PACKET_SIZE_REM_ROBOT_GET_PIDGAINS < MAX_PACKET_SIZE){
+    if(buffer_RobotGetPIDGains[idCounter].isNewPacket && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS < MAX_PACKET_SIZE){
       buffer_RobotGetPIDGains[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotGetPIDGains[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
-      total_packet_length += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotGetPIDGains[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
+      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
     }
 
     /* Add RobotMusicCommand to the transmission */
-    if(buffer_RobotMusicCommand[idCounter].isNewPacket && total_packet_length + PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND < MAX_PACKET_SIZE){
+    if(buffer_RobotMusicCommand[idCounter].isNewPacket && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND < MAX_PACKET_SIZE){
       buffer_RobotMusicCommand[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotMusicCommand[idCounter].packet.payload, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
-      total_packet_length += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
+      memcpy(txPacket.message + total_packet_length, buffer_RobotMusicCommand[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
     }
 
     /* Send new command if available for this robot ID */
@@ -654,8 +671,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
         * The minimum payload size for the SX1280 in FLRC mode is 6 bytes. 
         * See documentation page 124 - Table 14-36: Sync Word Combination in FLRC Packet */
         if(total_packet_length < 6){
-          memcpy(txPacket.message + total_packet_length, SX1280_filler_payload.payload, PACKET_SIZE_REM_SX1280FILLER);
-          total_packet_length += PACKET_SIZE_REM_SX1280FILLER;
+          memcpy(txPacket.message + total_packet_length, SX1280_filler_payload.payload, REM_PACKET_SIZE_REM_SX1280FILLER);
+          total_packet_length += REM_PACKET_SIZE_REM_SX1280FILLER;
         }
 
         txPacket.payloadLength = total_packet_length;

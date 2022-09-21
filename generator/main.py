@@ -15,6 +15,7 @@ def write_version(version):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--version', help='REM version number', type=int)
+
 args = parser.parse_args()
 
 version = read_version() + 1
@@ -26,6 +27,7 @@ print(f"Generating REM version {version}")
 generator_c = Generator.C_Generator()
 generator_python = Generator.Python_Generator()
 generator_proto = Generator.Proto_Generator()
+
 
 os.makedirs("generated_c", exist_ok=True)
 os.makedirs("generated_python", exist_ok=True)
@@ -65,17 +67,24 @@ with open(os.path.join("generated_python", filename), "w") as file:
 print(f"Generated file {filename}")
 
 
-
+shutil.rmtree("../include")
 os.makedirs("../include", exist_ok=True)
 for file in os.listdir("generated_c"):
 	shutil.move(f"generated_c/{file}", f"../include/{file}")
 
+shutil.rmtree("../python")
 os.makedirs("../python", exist_ok=True)
 for file in os.listdir("generated_python"):
 	shutil.move(f"generated_python/{file}", f"../python/{file}")
 
+shutil.rmtree("../proto")
 os.makedirs("../proto", exist_ok=True)
 for file in os.listdir("generated_proto"):
 	shutil.move(f"generated_proto/{file}", f"../proto/{file}")
 
 write_version(version)
+
+
+print("\n")
+print(f"All files generated with REM version {version}")
+print("If you want to generate using a specific version, run 'python main.py --version %d'")

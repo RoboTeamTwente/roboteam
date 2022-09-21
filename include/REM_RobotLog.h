@@ -25,7 +25,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotLogPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_LOG];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_LOG];
 } REM_RobotLogPayload;
 
 typedef struct _REM_RobotLog {

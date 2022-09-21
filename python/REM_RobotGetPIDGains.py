@@ -156,7 +156,7 @@ class REM_RobotGetPIDGains:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_GET_PIDGAINS, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS, dtype=np.uint8)
         REM_RobotGetPIDGains.set_header              (payload, self.header)
         REM_RobotGetPIDGains.set_toRobotId           (payload, self.toRobotId)
         REM_RobotGetPIDGains.set_toColor             (payload, self.toColor)

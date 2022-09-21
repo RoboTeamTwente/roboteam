@@ -39,7 +39,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotFeedbackPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_FEEDBACK];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_FEEDBACK];
 } REM_RobotFeedbackPayload;
 
 typedef struct _REM_RobotFeedback {

@@ -27,7 +27,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotBuzzerPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_BUZZER];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_BUZZER];
 } REM_RobotBuzzerPayload;
 
 typedef struct _REM_RobotBuzzer {

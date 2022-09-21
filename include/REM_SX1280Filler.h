@@ -26,7 +26,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_SX1280FillerPayload {
-    uint8_t payload[PACKET_SIZE_REM_SX1280FILLER];
+    uint8_t payload[REM_PACKET_SIZE_REM_SX1280FILLER];
 } REM_SX1280FillerPayload;
 
 typedef struct _REM_SX1280Filler {

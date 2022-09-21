@@ -25,7 +25,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_PacketPayload {
-    uint8_t payload[PACKET_SIZE_REM_PACKET];
+    uint8_t payload[REM_PACKET_SIZE_REM_PACKET];
 } REM_PacketPayload;
 
 typedef struct _REM_Packet {

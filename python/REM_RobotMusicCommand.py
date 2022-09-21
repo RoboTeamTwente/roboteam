@@ -257,7 +257,7 @@ class REM_RobotMusicCommand:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND, dtype=np.uint8)
         REM_RobotMusicCommand.set_header              (payload, self.header)
         REM_RobotMusicCommand.set_toRobotId           (payload, self.toRobotId)
         REM_RobotMusicCommand.set_toColor             (payload, self.toColor)

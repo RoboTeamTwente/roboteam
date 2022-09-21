@@ -176,7 +176,7 @@ class REM_RobotAssuredPacket:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, dtype=np.uint8)
         REM_RobotAssuredPacket.set_header              (payload, self.header)
         REM_RobotAssuredPacket.set_toRobotId           (payload, self.toRobotId)
         REM_RobotAssuredPacket.set_toColor             (payload, self.toColor)

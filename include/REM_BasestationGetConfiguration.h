@@ -25,7 +25,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationGetConfigurationPayload {
-    uint8_t payload[PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION];
+    uint8_t payload[REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION];
 } REM_BasestationGetConfigurationPayload;
 
 typedef struct _REM_BasestationGetConfiguration {

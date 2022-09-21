@@ -44,7 +44,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotStateInfoPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_STATE_INFO];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_STATE_INFO];
 } REM_RobotStateInfoPayload;
 
 typedef struct _REM_RobotStateInfo {

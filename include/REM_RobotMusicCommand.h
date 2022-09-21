@@ -35,7 +35,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotMusicCommandPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND];
 } REM_RobotMusicCommandPayload;
 
 typedef struct _REM_RobotMusicCommand {

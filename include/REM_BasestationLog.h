@@ -25,7 +25,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationLogPayload {
-    uint8_t payload[PACKET_SIZE_REM_BASESTATION_LOG];
+    uint8_t payload[REM_PACKET_SIZE_REM_BASESTATION_LOG];
 } REM_BasestationLogPayload;
 
 typedef struct _REM_BasestationLog {

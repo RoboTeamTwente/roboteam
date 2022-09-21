@@ -315,7 +315,7 @@ class REM_RobotCommand:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_COMMAND, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND, dtype=np.uint8)
         REM_RobotCommand.set_header              (payload, self.header)
         REM_RobotCommand.set_toRobotId           (payload, self.toRobotId)
         REM_RobotCommand.set_toColor             (payload, self.toColor)

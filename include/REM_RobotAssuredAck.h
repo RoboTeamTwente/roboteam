@@ -26,7 +26,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotAssuredAckPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_ASSURED_ACK];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_ASSURED_ACK];
 } REM_RobotAssuredAckPayload;
 
 typedef struct _REM_RobotAssuredAck {

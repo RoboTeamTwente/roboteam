@@ -166,7 +166,7 @@ class REM_RobotAssuredAck:
 
 # ================================ ENCODE ================================
     def encode(self):
-        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_ASSURED_ACK, dtype=np.uint8)
+        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_REM_ROBOT_ASSURED_ACK, dtype=np.uint8)
         REM_RobotAssuredAck.set_header              (payload, self.header)
         REM_RobotAssuredAck.set_toRobotId           (payload, self.toRobotId)
         REM_RobotAssuredAck.set_toColor             (payload, self.toColor)

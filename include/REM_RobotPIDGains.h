@@ -40,7 +40,7 @@
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotPIDGainsPayload {
-    uint8_t payload[PACKET_SIZE_REM_ROBOT_PIDGAINS];
+    uint8_t payload[REM_PACKET_SIZE_REM_ROBOT_PIDGAINS];
 } REM_RobotPIDGainsPayload;
 
 typedef struct _REM_RobotPIDGains {

@@ -25,6 +25,7 @@ jobs:
 
       - name: Install dependencies using temporary script
         run: sudo ./.github/workflows/TEMP_INSTALL_SCRIPT.sh
+        shell: bash
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

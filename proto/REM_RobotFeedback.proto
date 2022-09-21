@@ -25,7 +25,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 -------- -------- -------- ballSensorSeesBall
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- -------- ballPos
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1--- -------- -------- dribblerSeesBall
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved1
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
@@ -60,7 +60,7 @@ message REM_RobotFeedback {
     bool ballSensorSeesBall = 22; // integer [0, 1]               Indicates if the ballsensor sees the ball
     float ballPos = 23;       // float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
     bool dribblerSeesBall = 24; // integer [0, 1]               Indicates if the dribbler sees the ball
-    uint32 reserved = 25;     // integer [0, 7]               reserved
+    uint32 reserved1 = 25;    // integer [0, 7]               reserved1
     uint32 wheelLocked = 26;  // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32 wheelBraking = 27; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     uint32 rssi = 28;         // integer [0, 255]             Signal strength of the last packet received by the robot

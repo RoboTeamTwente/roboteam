@@ -25,7 +25,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 -------- -------- -------- ballSensorSeesBall
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- -------- ballPos
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1--- -------- -------- dribblerSeesBall
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved1
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
@@ -61,7 +61,7 @@ class REM_RobotFeedback:
     ballSensorSeesBall = 0    # integer [0, 1]               Indicates if the ballsensor sees the ball
     ballPos = 0               # float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
     dribblerSeesBall = 0      # integer [0, 1]               Indicates if the dribbler sees the ball
-    reserved = 0              # integer [0, 7]               reserved
+    reserved1 = 0             # integer [0, 7]               reserved1
     wheelLocked = 0           # integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     wheelBraking = 0          # integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     rssi = 0                  # integer [0, 255]             Signal strength of the last packet received by the robot
@@ -170,7 +170,7 @@ class REM_RobotFeedback:
         return (payload[12] & 0b00001000) > 0;
 
     @staticmethod
-    def get_reserved(payload):
+    def get_reserved1(payload):
         return ((payload[12] & 0b00000111));
 
     @staticmethod
@@ -290,8 +290,8 @@ class REM_RobotFeedback:
         payload[12] = ((dribblerSeesBall << 3) & 0b00001000) | (payload[12] & 0b11110111);
 
     @staticmethod
-    def set_reserved(payload, reserved):
-        payload[12] = (reserved & 0b00000111) | (payload[12] & 0b11111000);
+    def set_reserved1(payload, reserved1):
+        payload[12] = (reserved1 & 0b00000111) | (payload[12] & 0b11111000);
 
     @staticmethod
     def set_wheelLocked(payload, wheelLocked):
@@ -332,7 +332,7 @@ class REM_RobotFeedback:
         REM_RobotFeedback.set_ballSensorSeesBall  (payload, self.ballSensorSeesBall)
         REM_RobotFeedback.set_ballPos             (payload, self.ballPos)
         REM_RobotFeedback.set_dribblerSeesBall    (payload, self.dribblerSeesBall)
-        REM_RobotFeedback.set_reserved            (payload, self.reserved)
+        REM_RobotFeedback.set_reserved1           (payload, self.reserved1)
         REM_RobotFeedback.set_wheelLocked         (payload, self.wheelLocked)
         REM_RobotFeedback.set_wheelBraking        (payload, self.wheelBraking)
         REM_RobotFeedback.set_rssi                (payload, self.rssi)
@@ -365,7 +365,7 @@ class REM_RobotFeedback:
         self.ballSensorSeesBall= REM_RobotFeedback.get_ballSensorSeesBall(payload)
         self.ballPos          = REM_RobotFeedback.get_ballPos(payload)
         self.dribblerSeesBall = REM_RobotFeedback.get_dribblerSeesBall(payload)
-        self.reserved         = REM_RobotFeedback.get_reserved(payload)
+        self.reserved1        = REM_RobotFeedback.get_reserved1(payload)
         self.wheelLocked      = REM_RobotFeedback.get_wheelLocked(payload)
         self.wheelBraking     = REM_RobotFeedback.get_wheelBraking(payload)
         self.rssi             = REM_RobotFeedback.get_rssi(payload)

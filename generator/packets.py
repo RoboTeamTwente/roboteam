@@ -56,7 +56,7 @@ packets = {
         ["ballSensorSeesBall",  1,  None, "Indicates if the ballsensor sees the ball"],
         ["ballPos",             4,  [-0.5, 0.5],  "Indicates where in front of the ballsensor the ball is"],
         ["dribblerSeesBall",    1,  None, "Indicates if the dribbler sees the ball"],
-        ["reserved",            3,  None, "reserved"],
+        ["reserved1",           3,  None, "reserved1"],
 
         ["wheelLocked",         4,  None, "Indicates if a wheel is locked. One bit per wheel"],
         ["wheelBraking",        4,  None, "Indicates if a wheel is slipping. One bit per wheel"],

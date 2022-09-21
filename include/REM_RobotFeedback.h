@@ -25,7 +25,7 @@
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------1 -------- -------- -------- ballSensorSeesBall
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- -------- ballPos
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1--- -------- -------- dribblerSeesBall
--------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved
+-------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -----111 -------- -------- reserved1
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 1111---- -------- wheelLocked
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- ----1111 -------- wheelBraking
 -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- 11111111 rssi
@@ -67,7 +67,7 @@ typedef struct _REM_RobotFeedback {
     bool       ballSensorSeesBall  ; // integer [0, 1]               Indicates if the ballsensor sees the ball
     float      ballPos             ; // float   [-0.500, 0.500]      Indicates where in front of the ballsensor the ball is
     bool       dribblerSeesBall    ; // integer [0, 1]               Indicates if the dribbler sees the ball
-    uint32_t   reserved            ; // integer [0, 7]               reserved
+    uint32_t   reserved1           ; // integer [0, 7]               reserved1
     uint32_t   wheelLocked         ; // integer [0, 15]              Indicates if a wheel is locked. One bit per wheel
     uint32_t   wheelBraking        ; // integer [0, 15]              Indicates if a wheel is slipping. One bit per wheel
     uint32_t   rssi                ; // integer [0, 255]             Signal strength of the last packet received by the robot
@@ -174,7 +174,7 @@ static inline bool REM_RobotFeedback_get_dribblerSeesBall(REM_RobotFeedbackPaylo
     return (remrfp->payload[12] & 0b00001000) > 0;
 }
 
-static inline uint32_t REM_RobotFeedback_get_reserved(REM_RobotFeedbackPayload *remrfp){
+static inline uint32_t REM_RobotFeedback_get_reserved1(REM_RobotFeedbackPayload *remrfp){
     return ((remrfp->payload[12] & 0b00000111));
 }
 
@@ -294,8 +294,8 @@ static inline void REM_RobotFeedback_set_dribblerSeesBall(REM_RobotFeedbackPaylo
     remrfp->payload[12] = ((dribblerSeesBall << 3) & 0b00001000) | (remrfp->payload[12] & 0b11110111);
 }
 
-static inline void REM_RobotFeedback_set_reserved(REM_RobotFeedbackPayload *remrfp, uint32_t reserved){
-    remrfp->payload[12] = (reserved & 0b00000111) | (remrfp->payload[12] & 0b11111000);
+static inline void REM_RobotFeedback_set_reserved1(REM_RobotFeedbackPayload *remrfp, uint32_t reserved1){
+    remrfp->payload[12] = (reserved1 & 0b00000111) | (remrfp->payload[12] & 0b11111000);
 }
 
 static inline void REM_RobotFeedback_set_wheelLocked(REM_RobotFeedbackPayload *remrfp, uint32_t wheelLocked){
@@ -336,7 +336,7 @@ static inline void encodeREM_RobotFeedback(REM_RobotFeedbackPayload *remrfp, REM
     REM_RobotFeedback_set_ballSensorSeesBall  (remrfp, remrf->ballSensorSeesBall);
     REM_RobotFeedback_set_ballPos             (remrfp, remrf->ballPos);
     REM_RobotFeedback_set_dribblerSeesBall    (remrfp, remrf->dribblerSeesBall);
-    REM_RobotFeedback_set_reserved            (remrfp, remrf->reserved);
+    REM_RobotFeedback_set_reserved1           (remrfp, remrf->reserved1);
     REM_RobotFeedback_set_wheelLocked         (remrfp, remrf->wheelLocked);
     REM_RobotFeedback_set_wheelBraking        (remrfp, remrf->wheelBraking);
     REM_RobotFeedback_set_rssi                (remrfp, remrf->rssi);
@@ -368,7 +368,7 @@ static inline void decodeREM_RobotFeedback(REM_RobotFeedback *remrf, REM_RobotFe
     remrf->ballSensorSeesBall= REM_RobotFeedback_get_ballSensorSeesBall(remrfp);
     remrf->ballPos       = REM_RobotFeedback_get_ballPos(remrfp);
     remrf->dribblerSeesBall= REM_RobotFeedback_get_dribblerSeesBall(remrfp);
-    remrf->reserved      = REM_RobotFeedback_get_reserved(remrfp);
+    remrf->reserved1     = REM_RobotFeedback_get_reserved1(remrfp);
     remrf->wheelLocked   = REM_RobotFeedback_get_wheelLocked(remrfp);
     remrf->wheelBraking  = REM_RobotFeedback_get_wheelBraking(remrfp);
     remrf->rssi          = REM_RobotFeedback_get_rssi(remrfp);

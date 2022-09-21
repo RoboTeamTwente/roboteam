@@ -18,11 +18,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout repository and submodules
       uses: actions/checkout@v3
-      
-    - name: Checkout submodule
-      uses: textbook/git-checkout-submodule-action@master
+      with:
+        submodules: recursive
     
     - name: Install dependencies
       run: sudo apt install qt5-default libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev

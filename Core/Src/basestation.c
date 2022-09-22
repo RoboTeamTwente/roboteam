@@ -110,6 +110,10 @@ uint32_t screenCounter = 0;
 uint32_t heartbeat_1000ms = 0;
 
 
+CircularBuffer* nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_pc;
+CircularBuffer* nonpriority_queue_bs;
+
 
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
@@ -164,6 +168,18 @@ void init(){
     filler.header = REM_PACKET_TYPE_REM_SX1280FILLER;
     filler.remVersion = REM_LOCAL_VERSION;
     encodeREM_SX1280Filler(&SX1280_filler_payload, &filler);
+
+
+
+    // Initialize the circular buffers for the nonprioriry queue
+    // STM32F767 has 512kb of RAM. Give each robot a 10kb buffer for a total of 160kb RAM. 
+    // That should be enough for around 200 messages per robot at least
+    for(uint8_t robot_id = 0; robot_id < MAX_NUMBER_OF_ROBOTS; robot_id++){
+      nonpriority_queue_robots[robot_id] = CircularBuffer_init(false, 10000);
+    }
+    nonpriority_queue_pc = CircularBuffer_init(false, 10000);
+    nonpriority_queue_bs = CircularBuffer_init(false, 10000);
+
 
     LOG("[init] Initializion complete\n");
 }
@@ -481,6 +497,59 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * @brief routes any incoming packet to the correct function. Hub for all incoming packets.
  * TODO actually make it route all incoming packets, and not just USB packets
@@ -502,21 +571,39 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
   
 
 
-  uint8_t packet_type;
   uint32_t bytes_processed = 0;
 
-  REM_PacketPayload* packet = packet_buffer;
-  packet_type = REM_Packet_get_header(packet);
+  // Get some information about the packet
+  REM_PacketPayload* packet = (REM_PacketPayload*) packet_buffer;
+  uint8_t packet_type = REM_Packet_get_header(packet);
   uint32_t packet_size = REM_Packet_get_payloadSize(packet);
+  // If neither toPC or toBS is true, then that means that the packet is meant for a robot
+  bool toPC = REM_Packet_get_toPC(packet);  // Packet is destined for the PC
+  bool toBS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
+  bool toRobot = !(toPC || toBS);           // Packet is destined for a robot
+  bool robotId = REM_Packet_get_toRobotId(packet);
 
-  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND){
+  // High priority : Deal with RobotCommand packets that are destined for a robot
+  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND && toRobot){
     /* High priority packet */
   }else
-  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK){
+  // High priority : Deal with RobotFeedback packets that are destined for the PC
+  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK && toPC){
     /* High priority packet */
-  }else{
+  }
+  // Low priority : Deal with any other packet
+  else{
     /* Generic packet, no priority. Add to queue */
-      
+    CircularBuffer* queue;
+    if(toRobot) queue = nonpriority_queue_robots[robotId];
+    if(toPC)    queue = nonpriority_queue_pc;
+    if(toBS)    queue = nonpriority_queue_bs;
+
+    if(CircularBuffer_canWrite(queue, packet_size)){
+      CircularBuffer_write(queue, (uint8_t*) packet, packet_size);      
+    }else{
+      "ERROR WARNING SHIT SHIT SHIT";
+    }
   }
 
   while(bytes_processed < packet_length){

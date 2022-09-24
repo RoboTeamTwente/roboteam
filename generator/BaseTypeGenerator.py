@@ -48,6 +48,7 @@ class BaseTypeGenerator:
 		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets)) + "\n\n"
 
 		type_to_size = []
+		type_to_index = []
 
 		for iPacket, packet_name in enumerate(packets.keys()):
 			variables = packets[packet_name]
@@ -61,7 +62,11 @@ class BaseTypeGenerator:
 			VARIABLE_NAME_SIZE = f"REM_PACKET_SIZE_{PACKET_NAME}".ljust(60)
 			file_string += self.to_constant(VARIABLE_NAME_SIZE, total_bytes) + "\n"
 
+			VARIABLE_NAME_INDEX = f"REM_PACKET_INDEX_{PACKET_NAME}".ljust(60)
+			file_string += self.to_constant(VARIABLE_NAME_SIZE, iPacket) + "\n"
+
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
+			type_to_index.append([VARIABLE_NAME_TYPE, iPacket])
 
 			for variable, n_bits, _range, _ in variables:
 				range_min, range_max = 0, 2**n_bits-1
@@ -75,6 +80,7 @@ class BaseTypeGenerator:
 			file_string += "\n"
 
 		file_string += self.to_type_size_mapping(type_to_size)
+		file_string += self.to_type_index_mapping(type_to_index)
 		file_string += self.to_type_obj_mapping(type_to_size)
 		file_string += "\n"
 
@@ -98,6 +104,9 @@ class BaseTypeGenerator:
 		raise NotImplementedError()
 
 	def to_type_size_mapping(self, type_to_size):
+		raise NotImplementedError()
+
+	def to_type_index_mapping(self, type_to_index):
 		raise NotImplementedError()
 	
 	def to_type_obj_mapping(self, types):
@@ -134,6 +143,14 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 		function += """}\n"""
 		return function
 
+	def to_type_index_mapping(self, type_to_index):
+		function = """static uint8_t REM_PACKET_TYPE_TO_INDEX(uint8_t type){\n"""
+		for _type, index in type_to_index:
+			function += f"    if(type == {_type}) return {index};\n"
+		function += """    return 0;\n"""
+		function += """}\n"""
+		return function		
+
 class Python_BaseTypeGenerator(BaseTypeGenerator):
 	def begin_block_comment(self):
 		return '"""'
@@ -158,6 +175,14 @@ class Python_BaseTypeGenerator(BaseTypeGenerator):
 		function += """    return 0\n"""
 		function += """\n"""
 		return function
+
+	def to_type_index_mapping(self, type_to_index):
+		function = """def REM_PACKET_TYPE_TO_INDEX(type):\n"""
+		for _type, size in type_to_index:
+			function += f"    if type == {_type}: return {size}\n"
+		function += """    return 0\n"""
+		function += """\n"""
+		return function	
 
 	def to_type_obj_mapping(self, type_to_size):
 		function = """def REM_PACKET_TYPE_TO_OBJ(type):\n"""

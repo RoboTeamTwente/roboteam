@@ -15,6 +15,7 @@
 
 #define REM_PACKET_TYPE_REM_PACKET                                   0b00100001 // 33 
 #define REM_PACKET_SIZE_REM_PACKET                                   5
+#define REM_PACKET_SIZE_REM_PACKET                                   0
 #define REM_PACKET_RANGE_REM_PACKET_HEADER_MIN                       0.
 #define REM_PACKET_RANGE_REM_PACKET_HEADER_MAX                       255.
 #define REM_PACKET_RANGE_REM_PACKET_HEADER_N_BITS                    8
@@ -60,6 +61,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_COMMAND                            0b00100010 // 34 
 #define REM_PACKET_SIZE_REM_ROBOT_COMMAND                            17
+#define REM_PACKET_SIZE_REM_ROBOT_COMMAND                            1
 #define REM_PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_MIN                0.
 #define REM_PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_MAX                255.
 #define REM_PACKET_RANGE_REM_ROBOT_COMMAND_HEADER_N_BITS             8
@@ -147,6 +149,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                           0b00100100 // 36 
 #define REM_PACKET_SIZE_REM_ROBOT_FEEDBACK                           15
+#define REM_PACKET_SIZE_REM_ROBOT_FEEDBACK                           2
 #define REM_PACKET_RANGE_REM_ROBOT_FEEDBACK_HEADER_MIN               0.
 #define REM_PACKET_RANGE_REM_ROBOT_FEEDBACK_HEADER_MAX               255.
 #define REM_PACKET_RANGE_REM_ROBOT_FEEDBACK_HEADER_N_BITS            8
@@ -234,6 +237,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                         0b00100111 // 39 
 #define REM_PACKET_SIZE_REM_ROBOT_STATE_INFO                         45
+#define REM_PACKET_SIZE_REM_ROBOT_STATE_INFO                         3
 #define REM_PACKET_RANGE_REM_ROBOT_STATE_INFO_HEADER_MIN             0.
 #define REM_PACKET_RANGE_REM_ROBOT_STATE_INFO_HEADER_MAX             255.
 #define REM_PACKET_RANGE_REM_ROBOT_STATE_INFO_HEADER_N_BITS          8
@@ -336,6 +340,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_BUZZER                             0b00101000 // 40 
 #define REM_PACKET_SIZE_REM_ROBOT_BUZZER                             9
+#define REM_PACKET_SIZE_REM_ROBOT_BUZZER                             4
 #define REM_PACKET_RANGE_REM_ROBOT_BUZZER_HEADER_MIN                 0.
 #define REM_PACKET_RANGE_REM_ROBOT_BUZZER_HEADER_MAX                 255.
 #define REM_PACKET_RANGE_REM_ROBOT_BUZZER_HEADER_N_BITS              8
@@ -387,6 +392,7 @@
 
 #define REM_PACKET_TYPE_REM_BASESTATION_LOG                          0b00101011 // 43 
 #define REM_PACKET_SIZE_REM_BASESTATION_LOG                          5
+#define REM_PACKET_SIZE_REM_BASESTATION_LOG                          5
 #define REM_PACKET_RANGE_REM_BASESTATION_LOG_HEADER_MIN              0.
 #define REM_PACKET_RANGE_REM_BASESTATION_LOG_HEADER_MAX              255.
 #define REM_PACKET_RANGE_REM_BASESTATION_LOG_HEADER_N_BITS           8
@@ -432,6 +438,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_LOG                                0b00101101 // 45 
 #define REM_PACKET_SIZE_REM_ROBOT_LOG                                5
+#define REM_PACKET_SIZE_REM_ROBOT_LOG                                6
 #define REM_PACKET_RANGE_REM_ROBOT_LOG_HEADER_MIN                    0.
 #define REM_PACKET_RANGE_REM_ROBOT_LOG_HEADER_MAX                    255.
 #define REM_PACKET_RANGE_REM_ROBOT_LOG_HEADER_N_BITS                 8
@@ -477,6 +484,7 @@
 
 #define REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION            0b00101110 // 46 
 #define REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION            5
+#define REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION            7
 #define REM_PACKET_RANGE_REM_BASESTATION_GET_CONFIGURATION_HEADER_MIN 0.
 #define REM_PACKET_RANGE_REM_BASESTATION_GET_CONFIGURATION_HEADER_MAX 255.
 #define REM_PACKET_RANGE_REM_BASESTATION_GET_CONFIGURATION_HEADER_N_BITS 8
@@ -522,6 +530,7 @@
 
 #define REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION                0b00110000 // 48 
 #define REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION                6
+#define REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION                8
 #define REM_PACKET_RANGE_REM_BASESTATION_CONFIGURATION_HEADER_MIN    0.
 #define REM_PACKET_RANGE_REM_BASESTATION_CONFIGURATION_HEADER_MAX    255.
 #define REM_PACKET_RANGE_REM_BASESTATION_CONFIGURATION_HEADER_N_BITS 8
@@ -570,6 +579,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                       0b00110011 // 51 
 #define REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                       5
+#define REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS                       9
 #define REM_PACKET_RANGE_REM_ROBOT_GET_PIDGAINS_HEADER_MIN           0.
 #define REM_PACKET_RANGE_REM_ROBOT_GET_PIDGAINS_HEADER_MAX           255.
 #define REM_PACKET_RANGE_REM_ROBOT_GET_PIDGAINS_HEADER_N_BITS        8
@@ -615,6 +625,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                           0b00110101 // 53 
 #define REM_PACKET_SIZE_REM_ROBOT_PIDGAINS                           35
+#define REM_PACKET_SIZE_REM_ROBOT_PIDGAINS                           10
 #define REM_PACKET_RANGE_REM_ROBOT_PIDGAINS_HEADER_MIN               0.
 #define REM_PACKET_RANGE_REM_ROBOT_PIDGAINS_HEADER_MAX               255.
 #define REM_PACKET_RANGE_REM_ROBOT_PIDGAINS_HEADER_N_BITS            8
@@ -705,6 +716,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                       0b00110110 // 54 
 #define REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS                       35
+#define REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS                       11
 #define REM_PACKET_RANGE_REM_ROBOT_SET_PIDGAINS_HEADER_MIN           0.
 #define REM_PACKET_RANGE_REM_ROBOT_SET_PIDGAINS_HEADER_MAX           255.
 #define REM_PACKET_RANGE_REM_ROBOT_SET_PIDGAINS_HEADER_N_BITS        8
@@ -795,6 +807,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                     0b00111001 // 57 
 #define REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET                     7
+#define REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET                     12
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_PACKET_HEADER_MIN         0.
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_PACKET_HEADER_MAX         255.
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_PACKET_HEADER_N_BITS      8
@@ -846,6 +859,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                        0b00111010 // 58 
 #define REM_PACKET_SIZE_REM_ROBOT_ASSURED_ACK                        6
+#define REM_PACKET_SIZE_REM_ROBOT_ASSURED_ACK                        13
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_ACK_HEADER_MIN            0.
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_ACK_HEADER_MAX            255.
 #define REM_PACKET_RANGE_REM_ROBOT_ASSURED_ACK_HEADER_N_BITS         8
@@ -894,6 +908,7 @@
 
 #define REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                      0b00111100 // 60 
 #define REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND                      8
+#define REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND                      14
 #define REM_PACKET_RANGE_REM_ROBOT_MUSIC_COMMAND_HEADER_MIN          0.
 #define REM_PACKET_RANGE_REM_ROBOT_MUSIC_COMMAND_HEADER_MAX          255.
 #define REM_PACKET_RANGE_REM_ROBOT_MUSIC_COMMAND_HEADER_N_BITS       8
@@ -969,6 +984,7 @@
 
 #define REM_PACKET_TYPE_REM_SX1280FILLER                             0b00111111 // 63 
 #define REM_PACKET_SIZE_REM_SX1280FILLER                             10
+#define REM_PACKET_SIZE_REM_SX1280FILLER                             15
 #define REM_PACKET_RANGE_REM_SX1280FILLER_HEADER_MIN                 0.
 #define REM_PACKET_RANGE_REM_SX1280FILLER_HEADER_MAX                 255.
 #define REM_PACKET_RANGE_REM_SX1280FILLER_HEADER_N_BITS              8
@@ -1032,6 +1048,25 @@ static uint8_t REM_PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       ) return REM_PACKET_SIZE_REM_ROBOT_ASSURED_ACK                       ;
     if(type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     ) return REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND                     ;
     if(type == REM_PACKET_TYPE_REM_SX1280FILLER                            ) return REM_PACKET_SIZE_REM_SX1280FILLER                            ;
+    return 0;
+}
+static uint8_t REM_PACKET_TYPE_TO_INDEX(uint8_t type){
+    if(type == REM_PACKET_TYPE_REM_PACKET                                  ) return 0;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_COMMAND                           ) return 1;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          ) return 2;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        ) return 3;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_BUZZER                            ) return 4;
+    if(type == REM_PACKET_TYPE_REM_BASESTATION_LOG                         ) return 5;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_LOG                               ) return 6;
+    if(type == REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           ) return 7;
+    if(type == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               ) return 8;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      ) return 9;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          ) return 10;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      ) return 11;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    ) return 12;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       ) return 13;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     ) return 14;
+    if(type == REM_PACKET_TYPE_REM_SX1280FILLER                            ) return 15;
     return 0;
 }
 

@@ -19,12 +19,12 @@ REM_SX1280FillerPayload SX1280_filler_payload;
 
 #include "CircularBuffer.h"
 
-struct _buffer_RobotCommand {
-	REM_RobotCommandPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
+// struct _buffer_RobotCommand {
+// 	REM_RobotCommandPayload packet;
+// 	bool isNewPacket;
+// 	uint32_t counter;
+// };
+// struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
 
 struct _buffer_RobotSetPIDGains {
 	REM_RobotSetPIDGainsPayload packet;

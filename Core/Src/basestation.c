@@ -67,7 +67,7 @@ void Wireless_Writepacket_Cplt(void){
   TransmitPacket(SX_TX);
 }
 void Wireless_Readpacket_Cplt(void){
-  handlePacket(rxPacket.message, rxPacket.payloadLength);
+  handlePackets(rxPacket.message, rxPacket.payloadLength);
 };
 
 void Wireless_TXDone(SX1280_Packet_Status *status){
@@ -109,6 +109,18 @@ uint32_t screenCounter = 0;
 /* Tracks time since last heartbeat. Runs at 1Hz */
 uint32_t heartbeat_1000ms = 0;
 
+
+struct _buffer_REM_RobotCommand {
+	REM_RobotCommandPayload packet;
+	bool isNewPacket;
+};
+struct _buffer_REM_RobotCommand buffer_REM_RobotCommand[MAX_NUMBER_OF_ROBOTS];
+
+struct _buffer_REM_RobotFeedback {
+	REM_RobotFeedbackPayload packet;
+	bool isNewPacket;
+};
+struct _buffer_REM_RobotFeedback buffer_REM_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
 CircularBuffer* nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS];
 CircularBuffer* nonpriority_queue_pc;
@@ -559,108 +571,73 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
  * will arrive as two packets of 64 and 36 bytes. This is because the wMaxPacketSize for
  * full speed USB is 64 bytes.
  * 
- * @param packet_buffer Pointer to the buffer the packet from the USB is stored in
- * @param packet_length Length of the packet currently in the buffer
+ * @param packets_buffer Pointer to the buffer the packet from the USB is stored in
+ * @param packets_buffer_length Length of the packets currently in the buffer
  * @return true if the packet(s) have been handled succesfully
  * @return false if the packet(s) have been handled unsuccessfully, e.g. due to corruption
  */
-bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
-
-
-  
-  
-
+bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
   uint32_t bytes_processed = 0;
 
-  // Get some information about the packet
-  REM_PacketPayload* packet = (REM_PacketPayload*) packet_buffer;
-  uint8_t packet_type = REM_Packet_get_header(packet);
-  uint32_t packet_size = REM_Packet_get_payloadSize(packet);
-  // If neither toPC or toBS is true, then that means that the packet is meant for a robot
-  bool toPC = REM_Packet_get_toPC(packet);  // Packet is destined for the PC
-  bool toBS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
-  bool toRobot = !(toPC || toBS);           // Packet is destined for a robot
-  bool robotId = REM_Packet_get_toRobotId(packet);
+  while(bytes_processed < packets_buffer_length){
 
-  // High priority : Deal with RobotCommand packets that are destined for a robot
-  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND && toRobot){
-    /* High priority packet */
-  }else
-  // High priority : Deal with RobotFeedback packets that are destined for the PC
-  if(packet_type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK && toPC){
-    /* High priority packet */
-  }
-  // Low priority : Deal with any other packet
-  else{
-    /* Generic packet, no priority. Add to queue */
-    CircularBuffer* queue;
-    if(toRobot) queue = nonpriority_queue_robots[robotId];
-    if(toPC)    queue = nonpriority_queue_pc;
-    if(toBS)    queue = nonpriority_queue_bs;
+    // Get some information about the packet
+    REM_PacketPayload* packet = (REM_PacketPayload*) packets_buffer;
+    uint8_t packet_type = REM_Packet_get_header(packet);
+    uint32_t packet_size = REM_Packet_get_payloadSize(packet);
+    uint8_t packet_rem_version = REM_Packet_get_remVersion(packet);
 
-    if(CircularBuffer_canWrite(queue, packet_size)){
-      CircularBuffer_write(queue, (uint8_t*) packet, packet_size);      
-    }else{
-      "ERROR WARNING SHIT SHIT SHIT";
+    if(packet_rem_version != REM_LOCAL_VERSION){
+      // Something something error, maybe. Maybe only error if the packet is meant for the basestation
     }
-  }
 
-  while(bytes_processed < packet_length){
-
-    packet_type = packet_buffer[bytes_processed];
-
-    switch (packet_type){
-
-      case REM_PACKET_TYPE_REM_ROBOT_COMMAND:
-        handleRobotCommand(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_COMMAND;
-        break;
-      
-      case REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
-        handleRobotSetPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
-        break;
-      
-      case REM_PACKET_TYPE_REM_ROBOT_FEEDBACK:
-        handleRobotFeedback(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_FEEDBACK;
-        break;
-      
-      case REM_PACKET_TYPE_REM_ROBOT_BUZZER:
-        handleRobotBuzzer(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_BUZZER;
-        break;
-
-      case REM_PACKET_TYPE_REM_ROBOT_STATE_INFO:
-        handleRobotStateInfo(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_STATE_INFO;
-        break;
-      
-      case REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
-        handleRobotGetPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS;
-        break;
-
-      case REM_PACKET_TYPE_REM_ROBOT_PIDGAINS:
-        handleRobotPIDGains(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_TYPE_REM_ROBOT_PIDGAINS;
-        break;
-
-      case REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION:
-        bytes_processed += REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
-        flagHandleConfiguration = true;
-        break;
-
-      case REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
-        handleRobotMusicCommand(packet_buffer + bytes_processed);
-        bytes_processed += REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
-        break;
-
-      default:
-        LOG_printf("[handlePacket] Error! At %ld of %ld bytes. [@] = %d\n", bytes_processed, packet_length, packet_buffer[bytes_processed]);
-        return false;
+    // Check size of static packets. Should not be needed but can't hurt. Skip the LOG packet, since it has a dynamic length
+    if(packet_type != REM_PACKET_TYPE_REM_ROBOT_LOG && packet_type != REM_PACKET_TYPE_REM_BASESTATION_LOG){
+      if(packet_size != REM_PACKET_TYPE_TO_SIZE(packet_type)){
+        // Something something error. We're now unsure how mamy bytes we have to transmit..
+      }
     }
+
+    // Figure out where the packet is headed to
+    // If neither toPC or toBS is true, then that means that the packet is meant for a robot
+    bool to_PC = REM_Packet_get_toPC(packet);  // Packet is destined for the PC
+    bool to_BS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
+    bool to_robot = !(to_PC || to_BS);           // Packet is destined for a robot
+    bool robot_id = REM_Packet_get_toRobotId(packet);
+
+    // High priority : Deal with RobotCommand packets that are destined for a robot
+    if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND && to_robot){
+      // Store the message in the RobotCommand buffer. Set flag indicating packet needs to be sent to the robot
+      memcpy(buffer_REM_RobotCommand[robot_id].packet.payload, packets_buffer, packet_size);
+      buffer_REM_RobotCommand[robot_id].isNewPacket = true;
+    }else
+
+    // High priority : Deal with RobotFeedback packets that are destined for the PC
+    if(packet_type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK && to_PC){
+      // Store the message in the RobotFeedback buffer. Set flag indicating packet needs to be sent to the PC
+      memcpy(buffer_REM_RobotFeedback[robot_id].packet.payload, packets_buffer, packet_size);
+      buffer_REM_RobotFeedback[robot_id].isNewPacket = true;
+    }
+
+    // Low priority : Deal with any other packet
+    else{
+      CircularBuffer* queue;
+      if(to_robot) queue = nonpriority_queue_robots[robot_id];
+      if(to_PC)    queue = nonpriority_queue_pc;
+      if(to_BS)    queue = nonpriority_queue_bs;
+
+      if(CircularBuffer_canWrite(queue, packet_size)){
+        CircularBuffer_write(queue, (uint8_t*) packet, packet_size);      
+      }else{
+        "ERROR WARNING SHIT SHIT SHIT";
+      }
+    }
+
+    bytes_processed += packet_size;
+
+    LOG_printf("[handlePackets] Error! At %ld of %ld bytes. [@] = %d\n", bytes_processed, packets_buffer_length, packets_buffer[bytes_processed]);
+
   }
 
   return true;
@@ -672,7 +649,7 @@ bool handlePacket(uint8_t* packet_buffer, uint32_t packet_length){
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
   if(hspi->Instance == SX_TX->Interface->SPI->Instance){
     Wireless_DMA_Handler(SX_TX);
-    // SX_TX should never receive a packet so that's why we don't call handlePacket here.
+    // SX_TX should never receive a packet so that's why we don't call handlePackets here.
 	}
 	if(hspi->Instance == SX_RX->Interface->SPI->Instance) {
     Wireless_DMA_Handler(SX_RX);
@@ -707,48 +684,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
   if(htim->Instance == htim1.Instance){
     // Counter that tracks the current robot id that the basestation sends a packet to
-    static uint8_t idCounter = 0;
+    static uint8_t robot_id = 0;
 
     // Keeps track of the total length of the packet that goes to the robot. 
     // Cannot exceed MAX_PACKET_SIZE, or it will overflow the internal buffer of the SX1280
     uint8_t total_packet_length = 0;    
 
     /* Add RobotCommand to the transmission */
-    if(buffer_RobotCommand[idCounter].isNewPacket 
+    if(buffer_REM_RobotCommand[robot_id].isNewPacket 
     && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_COMMAND < MAX_PACKET_SIZE){
-      buffer_RobotCommand[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotCommand[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
+      buffer_REM_RobotCommand[robot_id].isNewPacket = false;
+      memcpy(txPacket.message + total_packet_length, buffer_REM_RobotCommand[robot_id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
       total_packet_length += REM_PACKET_SIZE_REM_ROBOT_COMMAND;
     }
 
-    /* Add RobotSetPIDGains to the transmission */
-    if(buffer_RobotSetPIDGains[idCounter].isNewPacket
-    && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS < MAX_PACKET_SIZE){
-      buffer_RobotSetPIDGains[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotSetPIDGains[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
-      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
-    }
-
-    /* Add RobotBuzzer to the transmission */
-    if(buffer_RobotBuzzer[idCounter].isNewPacket
-    && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_BUZZER < MAX_PACKET_SIZE){
-      buffer_RobotBuzzer[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotBuzzer[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_BUZZER);
-      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_BUZZER;
-    }
-    
-    /* Add RobotGetPIDGains to the transmission */
-    if(buffer_RobotGetPIDGains[idCounter].isNewPacket && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS < MAX_PACKET_SIZE){
-      buffer_RobotGetPIDGains[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotGetPIDGains[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
-      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
-    }
-
-    /* Add RobotMusicCommand to the transmission */
-    if(buffer_RobotMusicCommand[idCounter].isNewPacket && total_packet_length + REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND < MAX_PACKET_SIZE){
-      buffer_RobotMusicCommand[idCounter].isNewPacket = false;
-      memcpy(txPacket.message + total_packet_length, buffer_RobotMusicCommand[idCounter].packet.payload, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
-      total_packet_length += REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
+    /* Add any other packet from the queue to the transmission */
+    CircularBuffer* queue = nonpriority_queue_robots[robot_id];
+    while(true){
+      // If mo more packets in queue to send, then break
+      if(CircularBuffer_spaceFilled(queue) == 0) break;
+      
     }
 
     /* Send new command if available for this robot ID */
@@ -763,16 +718,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
         }
 
         txPacket.payloadLength = total_packet_length;
-        Wireless_setTXSyncword(SX_TX,robot_syncWord[idCounter]);
+        Wireless_setTXSyncword(SX_TX,robot_syncWord[robot_id]);
         WritePacket_DMA(SX_TX, &txPacket, &Wireless_Writepacket_Cplt);
       }
     }
 
     // Schedule next ID to be sent
-    idCounter++;
+    robot_id++;
     // Wrap around if the last ID has been dealt with
-    if(MAX_ROBOT_ID < idCounter){
-      idCounter = 0;
+    if(MAX_ROBOT_ID < robot_id){
+      robot_id = 0;
     }
   }
 }

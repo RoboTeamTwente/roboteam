@@ -12,6 +12,6 @@ void init();
 void loop();
 
 void updateTouchState(TouchState* touchState);
-bool handlePacket(uint8_t* packet, uint32_t packet_length);
+bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length);
 
 #endif  /* __BASESTATION_H */

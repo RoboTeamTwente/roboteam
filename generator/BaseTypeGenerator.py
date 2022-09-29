@@ -15,7 +15,15 @@ def CamelCaseToUpper(word):
 
 	return word
 
-
+# packet should be a definition from packet.py, e.g. 
+# [
+#	['header',    8, None, 'Header byte indicating the type of packet'], 
+#	['toRobotId', 4, None, 'Id of the receiving robot'],
+# ]
+def packet_to_size_in_bytes(packet):
+	total_bits = sum([variable[1] for variable in packet])
+	total_bytes = math.ceil(total_bits / 8)
+	return total_bytes
 
 class BaseTypeGenerator:
 
@@ -44,16 +52,18 @@ class BaseTypeGenerator:
 
 		file_string += self.to_begin(packets) + "\n"
 
+		largest_packet_in_bytes = max([ packet_to_size_in_bytes(packets[packet_name]) for iPacket, packet_name in enumerate(packets.keys())])
+
 		file_string += self.to_constant("REM_LOCAL_VERSION", version) + "\n"
+		file_string += self.to_constant("REM_LARGEST_PACKET_IN_BYTES", largest_packet_in_bytes) + "\n"
 		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets)) + "\n\n"
 
 		type_to_size = []
 		type_to_index = []
 
 		for iPacket, packet_name in enumerate(packets.keys()):
-			variables = packets[packet_name]
-			total_bits = sum([variable[1] for variable in variables])
-			total_bytes = math.ceil(total_bits / 8)
+			
+			total_bytes = packet_to_size_in_bytes(packets[packet_name])
 			PACKET_NAME = CamelCaseToUpper(packet_name)
 
 			VARIABLE_NAME_TYPE = f"REM_PACKET_TYPE_{PACKET_NAME}".ljust(60)
@@ -68,7 +78,7 @@ class BaseTypeGenerator:
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
 			type_to_index.append([VARIABLE_NAME_TYPE, iPacket])
 
-			for variable, n_bits, _range, _ in variables:
+			for variable, n_bits, _range, _ in packets[packet_name]:
 				range_min, range_max = 0, 2**n_bits-1
 				if _range is not None: range_min, range_max = _range
 

@@ -11,6 +11,7 @@
 
 
 #define REM_LOCAL_VERSION 1
+#define REM_LARGEST_PACKET_IN_BYTES 45
 #define REM_TOTAL_NUMBER_OF_PACKETS 16
 
 #define REM_PACKET_TYPE_REM_PACKET                                   0b00100001 // 33 

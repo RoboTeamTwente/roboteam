@@ -100,7 +100,7 @@ basestation = None
 
 tick_counter = 0
 periodLength = 300
-packetHz = 60
+packetHz = 0.01
 
 robotConnected = True
 

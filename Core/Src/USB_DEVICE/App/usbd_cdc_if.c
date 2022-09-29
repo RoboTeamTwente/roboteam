@@ -273,7 +273,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
   
-  bool succes = handlePacket(Buf, *Len);
+  bool succes = handlePackets(Buf, *Len);
   if(succes)
     return USBD_OK;
   

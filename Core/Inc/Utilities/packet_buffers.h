@@ -19,60 +19,32 @@ REM_SX1280FillerPayload SX1280_filler_payload;
 
 #include "CircularBuffer.h"
 
-// struct _buffer_RobotCommand {
-// 	REM_RobotCommandPayload packet;
-// 	bool isNewPacket;
-// 	uint32_t counter;
-// };
-// struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
-
-struct _buffer_RobotSetPIDGains {
-	REM_RobotSetPIDGainsPayload packet;
+typedef struct _wrapper_REM_RobotCommand {
+	REM_RobotCommandPayload packet;
 	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotSetPIDGains buffer_RobotSetPIDGains[MAX_NUMBER_OF_ROBOTS];
+} wrapper_REM_RobotCommand;
+wrapper_REM_RobotCommand buffer_REM_RobotCommand[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotFeedback {
+typedef struct _wrapper_REM_RobotFeedback {
 	REM_RobotFeedbackPayload packet;
 	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotFeedback buffer_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
+} wrapper_REM_RobotFeedback;
+wrapper_REM_RobotFeedback buffer_REM_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotStateInfo {
-	REM_RobotStateInfoPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotStateInfo buffer_RobotStateInfo[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer** nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_pc_index;
+CircularBuffer* nonpriority_queue_bs_index;
 
-struct _buffer_RobotBuzzer {
-	REM_RobotBuzzerPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotBuzzer buffer_RobotBuzzer[MAX_NUMBER_OF_ROBOTS];
+/**
+ * @brief 
+ * 
+ */
+typedef struct REM_nonpriority_holder_single_packet {
+  uint8_t data[REM_MAX_TOTAL_PACKET_SIZE_SX1280];
+} REM_nonpriority_holder_single_packet;
 
-struct _buffer_RobotGetPIDGains {
-	REM_RobotGetPIDGainsPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotGetPIDGains buffer_RobotGetPIDGains[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotPIDGains {
-	REM_RobotPIDGainsPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotPIDGains buffer_RobotPIDGains[MAX_NUMBER_OF_ROBOTS];
-
-struct _buffer_RobotMusicCommand {
-	REM_RobotMusicCommandPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotMusicCommand buffer_RobotMusicCommand[MAX_NUMBER_OF_ROBOTS];
-
+REM_nonpriority_holder_single_packet nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS][40];
+REM_nonpriority_holder_single_packet nonpriority_queue_pc[40];
+REM_nonpriority_holder_single_packet nonpriority_queue_bs[40];
 #endif // __MSG_BUFF_STATUS_H

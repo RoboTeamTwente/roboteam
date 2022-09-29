@@ -63,7 +63,7 @@ class BaseTypeGenerator:
 			file_string += self.to_constant(VARIABLE_NAME_SIZE, total_bytes) + "\n"
 
 			VARIABLE_NAME_INDEX = f"REM_PACKET_INDEX_{PACKET_NAME}".ljust(60)
-			file_string += self.to_constant(VARIABLE_NAME_SIZE, iPacket) + "\n"
+			file_string += self.to_constant(VARIABLE_NAME_INDEX, iPacket) + "\n"
 
 			type_to_size.append([VARIABLE_NAME_TYPE, VARIABLE_NAME_SIZE])
 			type_to_index.append([VARIABLE_NAME_TYPE, iPacket])

@@ -88,8 +88,7 @@ packets = {
     	["period",             12, None, "Sound that the buzzer makes."],
     	["duration",           16, [0., 5.], "Duration of the sound"]
     ],
-    "REM_BasestationLog"              : [],
-    "REM_RobotLog"                    : [],
+    "REM_Log"                         : [],
     "REM_BasestationGetConfiguration" : [],
     "REM_BasestationConfiguration"    : [
         ["channel",             1, None, "Channel on which the basestation and robots communicate"]

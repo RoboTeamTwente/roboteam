@@ -998,19 +998,19 @@ def REM_PACKET_TYPE_TO_INDEX(type):
     return 0
 
 def REM_PACKET_TYPE_TO_OBJ(type):
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_PACKET                                  : return REM_PACKET_TYPE_REM_PACKET                                  
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_COMMAND                           : return REM_PACKET_TYPE_REM_ROBOT_COMMAND                           
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          : return REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        : return REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_BUZZER                            : return REM_PACKET_TYPE_REM_ROBOT_BUZZER                            
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_LOG                                     : return REM_PACKET_TYPE_REM_LOG                                     
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           : return REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               : return REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      : return REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          : return REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      : return REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    : return REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       : return REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     : return REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     
-    if type == REM_PACKET_TYPE_REM_PACKET_TYPE_REM_SX1280FILLER                            : return REM_PACKET_TYPE_REM_SX1280FILLER                            
+    if type == REM_PACKET_TYPE_REM_PACKET                                  : return REM_Packet
+    if type == REM_PACKET_TYPE_REM_ROBOT_COMMAND                           : return REM_RobotCommand
+    if type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          : return REM_RobotFeedback
+    if type == REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        : return REM_RobotStateInfo
+    if type == REM_PACKET_TYPE_REM_ROBOT_BUZZER                            : return REM_RobotBuzzer
+    if type == REM_PACKET_TYPE_REM_LOG                                     : return REM_Log
+    if type == REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           : return REM_BasestationGetConfiguration
+    if type == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               : return REM_BasestationConfiguration
+    if type == REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      : return REM_RobotGetPIDGains
+    if type == REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          : return REM_RobotPIDGains
+    if type == REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      : return REM_RobotSetPIDGains
+    if type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    : return REM_RobotAssuredPacket
+    if type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       : return REM_RobotAssuredAck
+    if type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     : return REM_RobotMusicCommand
+    if type == REM_PACKET_TYPE_REM_SX1280FILLER                            : return REM_SX1280Filler
 

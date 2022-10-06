@@ -5,7 +5,6 @@
 #include "gpio_util.h"
 #include "tim_util.h"
 #include "peripheral_util.h"
-#include "PuTTY.h"
 #include "wheels.h"
 #include "dribbler.h"
 #include "stateControl.h"
@@ -41,7 +40,6 @@
 #include <stdio.h>
 
 uint8_t ROBOT_ID;
-static const bool USE_PUTTY = false;
 
 MTi_data* MTi;
 
@@ -311,15 +309,8 @@ void init(void){
 	}
 	#endif
 
-	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
-	if(USE_PUTTY){
-		/* Initialize Putty. Not possible when REM_UARTinit() is called */
-		Putty_Init();
-	}else{
-		/* Initialize Roboteam_Embedded_Messages. Not possible when Putty_Init() is called */
-		/* Can now receive RobotCommands (and other packets) via UART */
-		REM_UARTinit(UART_PC);
-	}
+	/* === Wired communication with robot; Can now receive RobotCommands (and other packets) via UART */
+	REM_UARTinit(UART_PC);
 	
 	set_Pin(LED2_pin, 1);
 
@@ -426,7 +417,6 @@ void loop(void){
     
 	// Refresh Watchdog timer
     IWDG_Refresh(iwdg);
-    Putty_Callback();
 
 	/** MUSIC TEST CODE **/
 	if(RobotMusicCommand_received_flag){
@@ -722,11 +712,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 /* Callback for when bytes have been received via the UART */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == UART_PC->Instance){
-		if(USE_PUTTY){
-			Putty_UARTCallback(huart);
-		} else {
-			REM_UARTCallback(huart);
-		}
+		REM_UARTCallback(huart);
 	}
 }
 

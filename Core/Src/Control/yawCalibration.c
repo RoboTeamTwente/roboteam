@@ -1,6 +1,5 @@
 
 #include "yawCalibration.h"
-#include "PuTTY.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 

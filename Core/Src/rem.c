@@ -6,8 +6,8 @@
 #include "REM_RobotCommand.h"
 #include "REM_RobotMusicCommand.h"
 #include "peripheral_util.h"
+#include "gpio_util.h"
 #include "robot.h"
-#include "PuTTY.h"
 #include "logging.h"
 #include "main.h"
 

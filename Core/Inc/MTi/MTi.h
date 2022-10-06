@@ -28,7 +28,6 @@ Notes:
 #include "xbusparser.h"
 #include <stdlib.h>
 #include "gpio_util.h"
-#include "PuTTY.h"
 #include "stdint.h"
 #include "peripheral_util.h"
 

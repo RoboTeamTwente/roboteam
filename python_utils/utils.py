@@ -20,7 +20,6 @@ def openPort(port=None, suppressError = True, timeout=None):
 		)
 	except serial.serialutil.SerialException as e:
 		print("[open]", e)
-		# if not suppressError:
 
 	return ser
 

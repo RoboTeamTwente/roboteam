@@ -12,6 +12,7 @@ import multiprocessing
 
 import utils
 from REMParser import REMParser
+from SerialSimulator import SerialSimulator
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
@@ -20,15 +21,9 @@ from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateI
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
 from roboteam_embedded_messages.python.REM_RobotSetPIDGains import REM_RobotSetPIDGains
 from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
-from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
-from roboteam_embedded_messages.python.REM_BasestationLog import REM_BasestationLog
+from roboteam_embedded_messages.python.REM_Log import REM_Log
 from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import REM_BasestationGetConfiguration
-from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
 from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
-
-robotStateInfoFile = open(f"logs/robotStateInfo_{int(time.time())}.csv", "w+")
-robotCommandFile = open(f"logs/robotCommand_{int(time.time())}.csv", "w+")
-robotFeedbackFile = open(f"logs/robotFeedback_{int(time.time())}.csv", "w+")
 
 robotStateInfo = REM_RobotStateInfo()
 robotFeedback = REM_RobotFeedback()
@@ -78,29 +73,29 @@ def normalize_angle(angle):
 
 testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate", "getpid", "angular-velocity", "circle", "raised-cosine"]
 
-# Parse input arguments 
-try:
-	if len(sys.argv) != 3:
-		raise Exception("Error : Invalid number of arguments. Expected id and test")
-	
-	robot_id = int(sys.argv[1])
-	if robot_id < 0 or 15 < robot_id:
-		raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robot_id)
-	
-	test = sys.argv[2]
-	if test not in testsAvailable:
-		raise Exception("Error : Unknown test %s. Choose a test : %s" % (test, ", ".join(testsAvailable)))
-except Exception as e:
-	print(e)
-	print("Error : Run script with \"python testRobot.py id test\"")
-	exit()
+parser = argparse.ArgumentParser()
+parser.add_argument('robot_id', help='Robot ID to send commands to', type=int)
+parser.add_argument('test', help='Test to execute', type=str)
+parser.add_argument('--simulate', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
 
+args = parser.parse_args()
+print(args)
+
+# Parse input arguments 
+robot_id = args.robot_id
+if robot_id < 0 or 15 < robot_id:
+	raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robot_id)
+	
+test = args.test
+if test not in testsAvailable:
+	raise Exception("Error : Unknown test %s. Choose a test : %s" % (test, ", ".join(testsAvailable)))
 
 basestation = None
+simulated_basestation = None
 
 tick_counter = 0
 periodLength = 300
-packetHz = 0.01
+packetHz = 60
 
 robotConnected = True
 
@@ -113,8 +108,8 @@ stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF54485
 def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.3, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.25, IbodyW = 5.0, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 2.0, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
-	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
-	setPID.remVersion = BaseTypes.LOCAL_REM_VERSION
+	setPID.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
+	setPID.remVersion = BaseTypes.REM_LOCAL_VERSION
 	setPID.id = robot_id
 	
 	# Set the PID gains
@@ -149,15 +144,15 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	if test == "getpid":
 		if period_fraction == 0:
 			robotGetPIDGains = REM_RobotGetPIDGains()
-			robotGetPIDGains.header = BaseTypes.PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
-			robotGetPIDGains.remVersion = BaseTypes.LOCAL_REM_VERSION
+			robotGetPIDGains.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
+			robotGetPIDGains.remVersion = BaseTypes.REM_LOCAL_VERSION
 			robotGetPIDGains.id = robot_id
 			return robotGetPIDGains, log
 
 	# Create new empty robot command
 	cmd = REM_RobotCommand()
-	cmd.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
-	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
+	cmd.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
 	cmd.id = robot_id	
 	cmd.messageId = tick_counter
 	
@@ -230,14 +225,6 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 
 	return cmd, log
 
-# parser = REMParser(basestation)
-# parser.parseFile("out.bin")
-# print(len(parser.packet_buffer))
-# while parser.hasPackets():
-# 	packet = parser.getNextPacket()
-# exit()
-
-
 while True:
 	try:
 		# Loop control
@@ -249,20 +236,27 @@ while True:
 		last_robotstateinfo_time = 0
 		last_basestation_log = ""
 		parser = None
+
 		# Visualisation
 		image_vis = np.zeros((500, 500, 3), dtype=float)
 		wheel_speeds_avg = np.zeros(4)
 		rate_of_turn_avg = 0
 		
+		# Create simulated basestation if needed
+		if args.simulate:
+			simulated_basestation = SerialSimulator()
+			simulated_basestation.run()
+
 		# Open basestation
 		if basestation is None or not basestation.isOpen():
-			basestation = utils.openContinuous(timeout=0.01)
+			port = None if not args.simulate else simulated_basestation.getSerialName()
+			basestation = utils.openContinuous(timeout=0.01, port=port)
 			print("Basestation opened")
 
 		# Open writer / parser
 		if parser is None and basestation is not None:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-			parser = REMParser(basestation, output_file=f"log_{datetime_str}.bin")
+			parser = REMParser(basestation)
 
 		
 		# Create and send new PID gains
@@ -308,7 +302,7 @@ while True:
 				# if period == 0:
 				# 	cmd = REM_BasestationGetConfiguration()
 				# 	cmd.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION
-				# 	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
+				# 	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
 				# 	basestation.write(cmd.encode())
 
 				# Logging
@@ -329,9 +323,9 @@ while True:
 				latest_packets[type(packet)] = packet
 
 
-			if REM_BasestationLog in latest_packets and latest_packets[REM_BasestationLog] is not None:
-				last_basestation_log = latest_packets[REM_BasestationLog].message
-				latest_packets[REM_BasestationLog] = None
+			if REM_Log in latest_packets and latest_packets[REM_Log] is not None:
+				last_basestation_log = latest_packets[REM_Log].message
+				latest_packets[REM_Log] = None
 				if last_basestation_log[-1] == '\n': last_basestation_log = last_basestation_log[:-1]
 
 
@@ -432,7 +426,9 @@ while True:
 
 			if tick_required:
 				cv2.imshow("Press esc to quit", image_vis)
-				if cv2.waitKey(1) == 27: exit()
+				if cv2.waitKey(1) == 27: 
+					if simulated_basestation is not None: simulated_basestation.stop()
+					exit()
 				image_vis *= 0.7
 
 			# for packet_type in latest_packets.keys():

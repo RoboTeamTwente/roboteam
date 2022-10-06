@@ -1,8 +1,8 @@
 import numpy as np
 from collections import deque
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
-from roboteam_embedded_messages.python.REM_BasestationLog import REM_BasestationLog
+from roboteam_embedded_messages.python.REM_Packet import REM_Packet
+from roboteam_embedded_messages.python.REM_Log import REM_Log
 
 class REMParser():
 	
@@ -27,7 +27,7 @@ class REMParser():
 		if bytes_in_waiting == 0: return
 		# print(f"[read] {bytes_in_waiting} bytes in waiting")
 		self.byte_buffer += self.device.read(bytes_in_waiting)
-		# print(f"Read {bytes_in_waiting} bytes")
+		# print(f"[read] Read {bytes_in_waiting} bytes")
 
 	def process(self):
 		# No bytes in the buffer, so nothing to process
@@ -35,21 +35,24 @@ class REMParser():
 
 		# Process as many bytes / packets as possible
 		while True:
+			# print(f"while True | {len(self.byte_buffer)} bytes in buffer")
+
 			# Stop when there are no more bytes to process
 			if len(self.byte_buffer) == 0: break
 			# Get the packet type of the packet at the front of the buffer
 			packet_type = self.byte_buffer[0]
 
 			# BasestationLog or RobotLog. Assumption that these are the only two packets with dynamic size
-			if packet_type in [BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG, BaseTypes.PACKET_TYPE_REM_ROBOT_LOG]:
-				idx = 0 if packet_type == BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG else 1
-				packet_size = [BaseTypes.PACKET_SIZE_REM_BASESTATION_LOG, BaseTypes.PACKET_SIZE_REM_ROBOT_LOG][idx]
+			if packet_type == REM_Log:
+				packet_size = REM_Packet.get_payloadSize(self.byte_buffer)
+				# packet_size = BaseTypes.PACKET_SIZE_REM_LOG
+
 				# Check if the entire packet is in the buffer
 				if len(self.byte_buffer) < packet_size:	break
 				
 				packet_bytes = self.byte_buffer[:packet_size]
 				# Get required bytes from buffer and process
-				packet = [REM_BasestationLog, REM_RobotLog][idx]()
+				packet = REM_Log()
 				packet.decode(packet_bytes)
 				# Check if the entire message is in the buffer
 				if len(self.byte_buffer) < packet_size + packet.messageLength: break
@@ -65,12 +68,12 @@ class REMParser():
 				
 			# Basestation get configuration
 			else:
-				packet_size = BaseTypes.PACKET_TYPE_TO_SIZE(packet_type)
-				
+				packet_size = BaseTypes.REM_PACKET_TYPE_TO_SIZE(packet_type)
+				# print(f"[process] Packet of size {packet_size} : type {packet_type} ", end="")
 				if len(self.byte_buffer) < packet_size: break
-				# Create packet instance
-				packet_obj = BaseTypes.PACKET_TYPE_TO_OBJ(packet_type)()
-				# print(f"[process] Packet of size {packet_size} : {packet_type} : {type(packet_obj).__name__}")
+				# Create packet instance= 
+				packet_obj = BaseTypes.REM_PACKET_TYPE_TO_OBJ(packet_type)()
+				# print(f"\r[process] Packet of size {packet_size} : type {packet_type} : {type(packet_obj).__name__}")
 				packet_bytes = self.byte_buffer[:packet_size]
 				# Get required bytes from buffer and process
 				packet_obj.decode(packet_bytes)

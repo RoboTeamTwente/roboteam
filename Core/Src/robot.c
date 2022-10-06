@@ -40,6 +40,7 @@
 #include <stdio.h>
 
 uint8_t ROBOT_ID;
+bool IS_RUNNING_TEST = false;
 
 MTi_data* MTi;
 
@@ -250,7 +251,49 @@ void printRobotCommand(REM_RobotCommand* rc){
 	LOG_printf("      feedback : %d\r\n", rc->feedback);
 }
 
+/**
+ * @brief Function that fills a REM_RobotCommand with values for easy testing. After one
+ * second, the robots starts rotating, dribbling, and kicking. After 10 seconds, the
+ * robot stops.
+ * 
+ * @param rc The REM_RobotCommand to place the test commands into  
+ * @param time The time in milliseconds indicating how far into test we are
+ * @return true If the test is ongoing
+ * @return false If the test is finished
+ */
+bool updateTestCommand(REM_RobotCommand* rc, uint32_t time){
+	// First, empty the entire RobotCommand
+	resetRobotCommand(rc);
+	// Set the basic required stuff
+	rc->header = PACKET_TYPE_REM_ROBOT_COMMAND;
+	rc->remVersion = LOCAL_REM_VERSION;
+	rc->id = ROBOT_ID;
 
+	// Don't do anything for the first second
+	if(time < 1000) return true;
+	// Don't do anything after 11 seconds
+	if(11000 < time) return false;
+	// These two give a test window of 10 seconds. 
+	
+	// Normalize time to 0 for easier calculations
+	time -= 1000;
+
+	// Split up testing window into blocks of two seconds
+	float period_fraction = (time%2000)/2000.;
+
+	// Rotate around, slowly
+	rc->angularVelocity = 6 * sin(period_fraction * 2 * M_PI);
+	// Turn on dribbler
+	rc->dribbler = period_fraction;
+	// Kick a little every block
+	if(0.95 < period_fraction){
+		rc->doKick = true;
+		rc->kickChipPower = 1;
+		rc->doForce = true;
+	}
+
+	return true;
+}
 
 
 
@@ -324,6 +367,8 @@ void init(void){
     // if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
 
+
+	{ // ====== SX : PINS, CALLBACKS, CHANNEL, SYNCWORDS
 	/* Initialize the SX1280 wireless chip */
 	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
 	set.periodBaseCount = WIRELESS_RX_COUNT;
@@ -353,6 +398,8 @@ void init(void){
 	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
 	Wireless_setRXSyncwords(SX, syncwords); // RX syncword is specific for the robot its ID
 	set_Pin(LED4_pin, 1);
+	}
+
 
 	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
@@ -367,10 +414,24 @@ void init(void){
 
 	LOG_sendAll();
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
+	
+	// Read out jumper FT0 to check if we want to run a test
+	IS_RUNNING_TEST = read_Pin(FT0_pin);
+	if(IS_RUNNING_TEST){
+		LOG("[init:"STRINGIZE(__LINE__)"] In test-mode! Flip pin FT0 and reboot to disable test-mode\n");
+		LOG_sendAll();
+		// Sound an alarm to let the user know that the robot is going to perform a test
+		for(uint8_t t = 0; t < 5; t++){
+			buzzer_Play(&warningRunningTest);
+			HAL_Delay(400);
+		}
+		HAL_Delay(100);
+	}
 
 	// Tell the SX to start listening for packets. This is non-blocking. It simply sets the SX into receiver mode.
 	// SX1280 section 10.7 Transceiver Circuit Modes Graphical Illustration
-	WaitForPacket(SX);
+	// Ignore packets when we're in test-mode by simply never entering this receive-respond loop
+	if(!IS_RUNNING_TEST) WaitForPacket(SX);
 
 	// Ensure that the speaker is stopped. The speaker keeps going even if the robot is reset
 	speaker_Stop();
@@ -427,7 +488,9 @@ void loop(void){
 	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
-    if (halt) {
+	if(IS_RUNNING_TEST) halt = false;
+
+	if (halt) {
 		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
@@ -447,7 +510,7 @@ void loop(void){
     }
 
     // Update test (if active)
-    test_Update();
+    // test_Update();
     
     // Go through all commands if robot is not in HALT state
     if (!halt) {
@@ -524,6 +587,10 @@ void loop(void){
     // Heartbeat every 17ms	
 	if(heartbeat_17ms < current_time){
 		while (heartbeat_17ms < current_time) heartbeat_17ms += 17;
+
+		if(IS_RUNNING_TEST){
+			IS_RUNNING_TEST = updateTestCommand(&activeRobotCommand, current_time - timestamp_initialized);
+		}
 	}	
 
     // Heartbeat every 100ms	
@@ -589,6 +656,8 @@ void loop(void){
 uint8_t robot_get_ID(){
 	return ROBOT_ID;
 }
+
+
 
 
 

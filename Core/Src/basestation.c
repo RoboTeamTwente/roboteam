@@ -60,8 +60,8 @@ static Wireless_Packet txPacket;
 static Wireless_Packet rxPacket;
 
 // The pins cannot be set at this point as they are not "const" enough for the compiler, so set them in the init
-SX1280_Interface SX_TX_Interface = {.SPI= &hspi1, .TXbuf= SXTX_TX_buffer, .RXbuf= SXTX_RX_buffer, .logger=LOG_printf,};
-SX1280_Interface SX_RX_Interface = {.SPI= &hspi2, .TXbuf= SXRX_TX_buffer, .RXbuf= SXRX_RX_buffer, .logger=LOG_printf,};
+SX1280_Interface SX_TX_Interface = {.SPI= &hspi1, .TXbuf= SXTX_TX_buffer, .RXbuf= SXTX_RX_buffer, /*.logger=LOG_printf*/};
+SX1280_Interface SX_RX_Interface = {.SPI= &hspi2, .TXbuf= SXRX_TX_buffer, .RXbuf= SXRX_RX_buffer, /*.logger=LOG_printf*/};
 
 void Wireless_Writepacket_Cplt(void){
   TransmitPacket(SX_TX);
@@ -116,12 +116,26 @@ extern UART_HandleTypeDef huart3;
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
     
+
+    // LOG_init();
+    static char charbuffer[100];
+    sprintf(charbuffer, "Yellow World\n");
+
+    while(1){
+      // LOG("Hello world\n");
+      // LOG_sendBlocking(charbuffer, strlen(charbuffer));
+      CDC_Transmit_FS(charbuffer, strlen(charbuffer));
+      toggle_pin(LD_ACTIVE);
+      HAL_Delay(1000);
+    }
+
+
     // sprintf(stringbuffer, "Hello World\n");
     // HAL_UART_Transmit(&huart3, stringbuffer, strlen(stringbuffer), 10);
     
-    LOG_init();
+    
     // Init SX_TX
-    LOG("[init] Initializing SX_TX\n");
+    // LOG("[init] Initializing SX_TX\n");
     Wireless_Error err;
     SX_TX_Interface.BusyPin = SX_TX_BUSY;
     SX_TX_Interface.CS= SX_TX_CS;
@@ -136,7 +150,7 @@ void init(){
     Wireless_setChannel(SX_TX, YELLOW_CHANNEL);
     
     // Init SX_RX
-    LOG("[init] Initializing SX_RX\n");
+    // LOG("[init] Initializing SX_RX\n");
     SX_RX_Interface.BusyPin= SX_RX_BUSY;
     SX_RX_Interface.CS= SX_RX_CS;
     SX_RX_Interface.Reset= SX_RX_RST;
@@ -158,7 +172,7 @@ void init(){
 
     // Start the timer that is responsible for sending packets to the robots
     // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
-    LOG("[init] Initializing Timer\n");
+    // LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
     // display_Init();
@@ -190,21 +204,22 @@ void init(){
     nonpriority_queue_bs_index = CircularBuffer_init(true, 40);
     //TODO: How to assign associated buffer?
 
-    LOG("[init] Initializion complete\n");
+    // LOG("[init] Initializion complete\n");
 }
 
 
 
 void loop(){
 
-  LOG_send();
+  //LOG_send();
 
   /* Heartbeat every second */
   if(heartbeat_1000ms + 1000 < HAL_GetTick()){
     heartbeat_1000ms += 1000;
-    // HexOut("Tick!\n", 6);
-    LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d\n",
-    handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains);
+
+    //LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d\n",
+    // handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains);
+
     toggle_pin(LD_ACTIVE);
   }
 
@@ -212,7 +227,7 @@ void loop(){
   /* Send any new RobotFeedback packets */
   for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_REM_RobotFeedback[id].isNewPacket){
-      LOG_sendBlocking(buffer_REM_RobotFeedback[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
+      //LOG_sendBlocking(buffer_REM_RobotFeedback[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
       buffer_REM_RobotFeedback[id].isNewPacket = false;
     }
   }
@@ -220,7 +235,7 @@ void loop(){
   // /* Send any new RobotStateInfo packets */
   // for(int id = 0; id <= MAX_ROBOT_ID; id++){
   //   if(buffer_RobotStateInfo[id].isNewPacket){
-  //     LOG_sendBlocking(buffer_RobotStateInfo[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO);
+  //     //LOG_sendBlocking(buffer_RobotStateInfo[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO);
   //     buffer_RobotStateInfo[id].isNewPacket = false;
   //   }
   // }
@@ -228,7 +243,7 @@ void loop(){
   // /* Send any new RobotPIDGains packets */
   // for(int id = 0; id <= MAX_ROBOT_ID; id++){
   //   if(buffer_RobotPIDGains[id].isNewPacket){
-  //     LOG_sendBlocking(buffer_RobotPIDGains[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_PIDGAINS);
+  //     //LOG_sendBlocking(buffer_RobotPIDGains[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_PIDGAINS);
   //     buffer_RobotPIDGains[id].isNewPacket = false;
   //   }
   // }
@@ -243,7 +258,7 @@ void loop(){
     REM_BasestationConfigurationPayload payload;
     encodeREM_BasestationConfiguration(&payload, &configuration);
 
-    LOG_sendBlocking(payload.payload, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
+    //LOG_sendBlocking(payload.payload, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
     flagHandleConfiguration = false;
   }
 
@@ -337,7 +352,7 @@ void handleRobotCommand(uint8_t* packet_buffer){
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotCommand_get_remVersion((REM_RobotCommandPayload*) packet_buffer);
   if(packet_rem_version != REM_LOCAL_VERSION){
-    LOG_printf("[handleRobotCommand] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
+    //LOG_printf("[handleRobotCommand] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
@@ -349,20 +364,6 @@ void handleRobotCommand(uint8_t* packet_buffer){
 }
 
 void handleRobotSetPIDGains(uint8_t* packet_buffer){
-  // handled_RobotSetPIDGains++;
-
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotSetPIDGains_get_remVersion((REM_RobotSetPIDGainsPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotSetPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotSetPIDGains buffer. Set flag indicating packet needs to be sent to the robot
-  // uint8_t robot_id = REM_RobotSetPIDGains_get_toRobotId((REM_RobotSetPIDGainsPayload*) packet_buffer);
-  // memcpy(buffer_RobotSetPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS);
-  // buffer_RobotSetPIDGains[robot_id].isNewPacket = true;
-  // buffer_RobotSetPIDGains[robot_id].counter++;
 }
 
 
@@ -379,7 +380,7 @@ void handleRobotFeedback(uint8_t* packet_buffer){
   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
   uint8_t packet_rem_version = REM_RobotFeedback_get_remVersion((REM_RobotFeedbackPayload*) packet_buffer);
   if(packet_rem_version != REM_LOCAL_VERSION){
-    LOG_printf("[handleRobotFeedback] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
+    //LOG_printf("[handleRobotFeedback] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
     return;
   }
 
@@ -399,20 +400,6 @@ void handleRobotFeedback(uint8_t* packet_buffer){
  * @param packet_buffer Pointer to the buffer that holds the packet
  */
 void handleRobotStateInfo(uint8_t* packet_buffer){
-  // handled_RobotStateInfo++;
-  
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotStateInfo_get_remVersion((REM_RobotStateInfoPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotStateInfo] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotStateInfo buffer. Set flag to be sent to the robot
-  // uint8_t robot_id = REM_RobotStateInfo_get_toRobotId((REM_RobotStateInfoPayload*) packet_buffer);
-  // memcpy(buffer_RobotStateInfo[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO);
-  // buffer_RobotStateInfo[robot_id].isNewPacket = true;
-  // buffer_RobotStateInfo[robot_id].counter++;
 }
 
 
@@ -424,85 +411,15 @@ void handleRobotStateInfo(uint8_t* packet_buffer){
  * @param packet_buffer Pointer to the buffer that holds the packet
  */
 void handleRobotBuzzer(uint8_t* packet_buffer){
-  // handled_RobotBuzzer++;
-  
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotBuzzer_get_remVersion((REM_RobotBuzzerPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotBuzzer] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotBuzzer buffer. Set flag to be sent to the robot
-  // uint8_t robot_id = REM_RobotBuzzer_get_toRobotId((REM_RobotBuzzerPayload*) packet_buffer);
-  // memcpy(buffer_RobotBuzzer[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_BUZZER);
-  // buffer_RobotBuzzer[robot_id].isNewPacket = true;
-  // buffer_RobotBuzzer[robot_id].counter++;
 }
 
-// void handleBasestationSetConfiguration(uint8_t* packet_buffer){
-//   // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-//   uint8_t packet_rem_version = REM_BasestationSetConfiguration_get_remVersion((REM_BasestationSetConfigurationPayload*) packet_buffer);
-//   //uint8_t packet_rem_version = RobotBuzzer_get_remVersion((RobotBuzzerPayload*) packet_buffer);
-//   if(packet_rem_version != REM_LOCAL_VERSION){
-//     LOG_printf("[handleBasestationSetConfiguration] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-//     return;
-//   }
-
-//   WIRELESS_CHANNEL newChannel = REM_BasestationSetConfiguration_get_channel((REM_BasestationSetConfigurationPayload*) packet_buffer);
-//   Wireless_setChannel(SX_TX, newChannel);
-//   Wireless_setChannel(SX_RX, newChannel);
-// }
-
 void handleRobotGetPIDGains(uint8_t* packet_buffer){
-  // handled_RobotGetPIDGains++;
-  
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotGetPIDGains_get_remVersion((REM_RobotGetPIDGainsPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotGetPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotGetPIDGains buffer. Set flag to be sent to the robot
-  // uint8_t robot_id = REM_RobotGetPIDGains_get_toRobotId((REM_RobotGetPIDGainsPayload*) packet_buffer);
-  // memcpy(buffer_RobotGetPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS);
-  // buffer_RobotGetPIDGains[robot_id].isNewPacket = true;
-  // buffer_RobotGetPIDGains[robot_id].counter++;
 }
 
 void handleRobotPIDGains(uint8_t* packet_buffer){
-  // handled_RobotPIDGains++;
-  
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotPIDGains_get_remVersion((REM_RobotPIDGainsPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotPIDGains] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotGetPIDGains buffer. Set flag to be sent to the robot
-  // uint8_t robot_id = REM_RobotPIDGains_get_toRobotId((REM_RobotPIDGainsPayload*) packet_buffer);
-  // memcpy(buffer_RobotPIDGains[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_PIDGAINS);
-  // buffer_RobotPIDGains[robot_id].isNewPacket = true;
-  // buffer_RobotPIDGains[robot_id].counter++;
 }
 
 void handleRobotMusicCommand(uint8_t* packet_buffer){
-  // handled_RobotMusicCommand++;
-  
-  // // Check if the packet REM version corresponds to the local REM version. If the REM versions do not correspond, drop the packet.
-  // uint8_t packet_rem_version = REM_RobotMusicCommand_get_remVersion((REM_RobotMusicCommandPayload*) packet_buffer);
-  // if(packet_rem_version != REM_LOCAL_VERSION){
-  //   LOG_printf("[handleRobotMusicCommand] Error! packet_rem_version %u != %u REM_LOCAL_VERSION.", packet_rem_version, REM_LOCAL_VERSION);
-  //   return;
-  // }
-
-  // // Store the message in the RobotMusicCommand buffer. Set flag to be sent to the robot
-  // uint8_t robot_id = REM_RobotMusicCommand_get_toRobotId((REM_RobotMusicCommandPayload*) packet_buffer);
-  // memcpy(buffer_RobotMusicCommand[robot_id].packet.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
-  // buffer_RobotMusicCommand[robot_id].isNewPacket = true;
-  // buffer_RobotMusicCommand[robot_id].counter++;
 }
 
 
@@ -575,6 +492,9 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
  */
 bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
+  if(packets_buffer_length < 5)
+    return true;
+
   uint32_t bytes_processed = 0;
 
   while(bytes_processed < packets_buffer_length){
@@ -600,7 +520,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     // If neither toPC or toBS is true, then that means that the packet is meant for a robot
     bool to_PC = REM_Packet_get_toPC(packet);  // Packet is destined for the PC
     bool to_BS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
-    bool to_robot = !(to_PC || to_BS);           // Packet is destined for a robot
+    bool to_robot = !(to_PC || to_BS);         // Packet is destined for a robot
     bool robot_id = REM_Packet_get_toRobotId(packet);
 
     // High priority : Deal with RobotCommand packets that are destined for a robot
@@ -649,7 +569,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
     bytes_processed += packet_size;
 
-    LOG_printf("[handlePackets] Error! At %ld of %ld bytes. [@] = %d\n", bytes_processed, packets_buffer_length, packets_buffer[bytes_processed]);
+    //LOG_printf("[handlePackets] Error! At %ld of %ld bytes. [@] = %d\n", bytes_processed, packets_buffer_length, packets_buffer[bytes_processed]);
 
   }
 

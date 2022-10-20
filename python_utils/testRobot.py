@@ -9,7 +9,7 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
-
+import os
 import utils
 from REMParser import REMParser
 from SerialSimulator import SerialSimulator
@@ -95,7 +95,7 @@ simulated_basestation = None
 
 tick_counter = 0
 periodLength = 300
-packetHz = 60
+packetHz = 50
 
 robotConnected = True
 
@@ -149,13 +149,15 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 			robotGetPIDGains.id = robot_id
 			return robotGetPIDGains, log
 
-	# Create new empty robot command
+	# Create new empty robot command. Fill required fields
 	cmd = REM_RobotCommand()
 	cmd.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+	cmd.toRobotId = robot_id
+	cmd.fromPC = 1	
 	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
-	cmd.id = robot_id	
 	cmd.messageId = tick_counter
-	
+	cmd.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND
+
 	counter = 0
 	beta = 0.5
 	T = 1
@@ -227,6 +229,9 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 
 while True:
 	try:
+
+
+		# ========== INIT ========== #
 		# Loop control
 		last_tick_time = time.time()
 
@@ -258,18 +263,21 @@ while True:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 			parser = REMParser(basestation)
 
-		
-		# Create and send new PID gains
-		# Comment these lines out if you're not tuning PIDs
-		#setPID = createSetPIDCommand(robot_id, PbodyW = 0.25, IbodyW = 5.0) #put PID gains as arguments to change them (unchanged keep default value)
-		#setPID_encoded = setPID.encode()
-		#basestation.write(setPID_encoded)
-		#parser.writeBytes(setPID_encoded)
 
+		# ========== LOOP ========== #
 		# Continuously write -> read -> visualise
 		while True:
+			# Timing stuff. Get current time, seconds to next tick, and check if a new tick is required
+			current_time = time.time()
+			s_until_next_tick = last_tick_time + 1./packetHz - current_time
+			tick_required = s_until_next_tick < 0
 
-			tick_required = 1./packetHz <= time.time() - last_tick_time
+			# If tick is not required yet, sleep for 10% of the time between ticks, to prevent 100% CPU usage
+			# It 'should' also still give the script enough time between ticks to handle all reading and rendering
+			if not tick_required and 0.1 / packetHz < s_until_next_tick: 
+				time.sleep(0.1 / packetHz)
+
+
 
 			# ========== WRITING ========== #
 			if tick_required:
@@ -292,24 +300,16 @@ while True:
 				# Create and send new robot command
 				cmd, cmd_log = createRobotCommand(robot_id, test, tick_counter, period_fraction)
 				cmd_encoded = cmd.encode()
+				
 				basestation.write(cmd_encoded)
 				parser.writeBytes(cmd_encoded)
 				last_robotcommand_time = time.time()
 				
-				# Write packet info to files (used in plotPID.py) 
-				
-
-				# if period == 0:
-				# 	cmd = REM_BasestationGetConfiguration()
-				# 	cmd.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION
-				# 	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
-				# 	basestation.write(cmd.encode())
-
 				# Logging
 				bar = drawProgressBar(period_fraction)
 				if not robotConnected:
 					print(" Receiving no feedback!", end="")
-				print(f" {robot_id} - {test} {bar} {cmd_log} | {last_basestation_log} ", end=" "*23 + "\r")
+				print(f" {robot_id} - {test} {bar} {cmd_log} ", end=" "*23 + "\r")
 
 
 
@@ -322,11 +322,25 @@ while True:
 				packet = parser.getNextPacket()
 				latest_packets[type(packet)] = packet
 
-
+			# Handle REM_Log packets
 			if REM_Log in latest_packets and latest_packets[REM_Log] is not None:
-				last_basestation_log = latest_packets[REM_Log].message
+				# Get REM_Log object and reset buffer
+				rem_log = latest_packets[REM_Log]
 				latest_packets[REM_Log] = None
-				if last_basestation_log[-1] == '\n': last_basestation_log = last_basestation_log[:-1]
+
+				# Prepend where the packet originates from
+				log_from = "[?]  "
+				if rem_log.fromBS: log_from = "[BS] "
+				if not rem_log.fromPC and not rem_log.fromBS:
+					log_from = f"[{str(rem_log.fromRobotId).rjust(2)}]"
+
+				# Get message. Strip possible newline
+				message = rem_log.message.strip()
+				message = log_from + message
+
+				# Print message on new line
+				nwhitespace = os.get_terminal_size().columns - len(message) - 2
+				print(f"\r{message}{' ' * nwhitespace}")
 
 
 
@@ -334,6 +348,7 @@ while True:
 
 			# Break if cv2 is not imported
 			if not cv2_available: continue
+			continue
 
 			# Draw robot on the image
 			s = 101.2

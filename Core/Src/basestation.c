@@ -35,7 +35,7 @@ volatile int handled_RobotSetPIDGains = 0;
 volatile int handled_RobotPIDGains = 0;
 volatile int handled_RobotMusicCommand = 0;
 volatile int handled_INVALID = 0;
-volatile int handled_INVALID_nbytes = 0;
+volatile int handled_total_bytes = 0;
 volatile char INVALID_buffer[1024];
 
 /* Import hardware handles from main.c */
@@ -230,41 +230,17 @@ void loop(){
 
   /* Heartbeat every second */
   if(heartbeat_1000ms + 1000 < current_time){
-    HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
-    while (heartbeat_1000ms + 1000 < current_time)
-      heartbeat_1000ms += 1000;
-
-      USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
-
-
-    // LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d INV %d B %d\n",
-    // handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains, handled_INVALID, handled_INVALID_nbytes);
-    // LOG_printf("\nTick | t=%d, INVALID %d INVALID_NBYTES %d\n", heartbeat_1000ms, handled_INVALID, handled_INVALID_nbytes);
     
-    // sprintf(stringbuffer, "BTick | t=%d, INVALID %d INVALID_NBYTES %d\n", heartbeat_1000ms, handled_INVALID, handled_INVALID_nbytes);
-    for(uint8_t wer = 0; wer < 10; wer++){
-      sprintf(stringbuffer, " Hello%d %d\n", wer, current_time);
-      while (hcdc->TxState != 0);
-      CDC_Transmit_FS(stringbuffer, strlen(stringbuffer));
-      HAL_Delay(2);
-    }
-    
+    while (heartbeat_1000ms + 1000 < current_time) heartbeat_1000ms += 1000;
 
-    INVALID_buffer[handled_INVALID_nbytes+1] = "\n";
-    INVALID_buffer[handled_INVALID_nbytes+2] = "\0";
-    // LOG_sendBlocking(INVALID_buffer, handled_INVALID_nbytes+2);
-    // HAL_UART_Transmit(&huart3, INVALID_buffer, handled_INVALID_nbytes+2, 10);
+    LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d INV %d B %d\n",
+    handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains, handled_INVALID, handled_total_bytes);
 
-
+    // USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
     // while (hcdc->TxState != 0);
-    // CDC_Transmit_FS(INVALID_buffer, handled_INVALID_nbytes+2);
+    // CDC_Transmit_FS(INVALID_buffer, handled_total_bytes+2);
 
-
-
-
-    handled_INVALID = 0;
-    handled_INVALID_nbytes = 0;
-    memset(INVALID_buffer, 0, 200);
+    HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
     toggle_pin(LD_ACTIVE);
   }
 
@@ -537,10 +513,10 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
  */
 bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
+  handled_total_bytes += packets_buffer_length;
   if(packets_buffer_length < 5){
     handled_INVALID++;
-    handled_INVALID_nbytes += packets_buffer_length;
-    memcpy(INVALID_buffer + handled_INVALID_nbytes, packets_buffer, packets_buffer_length);
+    memcpy(INVALID_buffer + handled_total_bytes, packets_buffer, packets_buffer_length);
     return true;
   }
 
@@ -577,6 +553,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
       // Store the message in the RobotCommand buffer. Set flag indicating packet needs to be sent to the robot
       memcpy(buffer_REM_RobotCommand[robot_id].packet.payload, packets_buffer, packet_size);
       buffer_REM_RobotCommand[robot_id].isNewPacket = true;
+      handled_RobotCommand++;
     }else
 
     // High priority : Deal with RobotFeedback packets that are destined for the PC
@@ -584,6 +561,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
       // Store the message in the RobotFeedback buffer. Set flag indicating packet needs to be sent to the PC
       memcpy(buffer_REM_RobotFeedback[robot_id].packet.payload, packets_buffer, packet_size);
       buffer_REM_RobotFeedback[robot_id].isNewPacket = true;
+      handled_RobotFeedback++;
     }else
     // If filler packet is detected just continue
     if(packet_type == REM_PACKET_TYPE_REM_SX1280FILLER){
@@ -592,13 +570,11 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     }
     // Low priority : Deal with any other packet
     else{
-      CircularBuffer* queue;
-      uint8_t* buffer;
       if(to_robot){
-        queue = nonpriority_queue_robots_index[robot_id];
-        buffer = nonpriority_queue_robots[robot_id];
+        CircularBuffer* index = nonpriority_queue_robots_index[robot_id];
+        uint8_t* queue = nonpriority_queue_robots[robot_id];
         if(CircularBuffer_canWrite(queue, 1)){
-          memcpy(buffer[queue->indexWrite], packets_buffer, REM_PACKET_TYPE_TO_SIZE(packet_type));
+          memcpy(queue[index->indexWrite], packets_buffer, REM_PACKET_TYPE_TO_SIZE(packet_type));
           CircularBuffer_write(queue, NULL, 1);
         }
       }

@@ -31,10 +31,6 @@ typedef struct _wrapper_REM_RobotFeedback {
 } wrapper_REM_RobotFeedback;
 wrapper_REM_RobotFeedback buffer_REM_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
-CircularBuffer** nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
-CircularBuffer* nonpriority_queue_pc_index;
-CircularBuffer* nonpriority_queue_bs_index;
-
 /**
  * @brief 
  * 
@@ -43,6 +39,9 @@ typedef struct REM_nonpriority_holder_single_packet {
   uint8_t data[REM_MAX_TOTAL_PACKET_SIZE_SX1280];
 } REM_nonpriority_holder_single_packet;
 
+CircularBuffer** nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_pc_index;
+CircularBuffer* nonpriority_queue_bs_index;
 
 REM_nonpriority_holder_single_packet nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS][40];
 REM_nonpriority_holder_single_packet nonpriority_queue_pc[40];

@@ -17,6 +17,14 @@
 
 #include "CircularBuffer.h"
 
+//TODO REMOVE
+#include "usbd_cdc.h"
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
+extern USBD_HandleTypeDef hUsbDeviceFS;
+
+
+
 /* Counters, tracking the number of packets handled */ 
 volatile int handled_RobotCommand = 0;
 volatile int handled_RobotFeedback = 0;
@@ -26,7 +34,9 @@ volatile int handled_RobotGetPIDGains = 0;
 volatile int handled_RobotSetPIDGains = 0;
 volatile int handled_RobotPIDGains = 0;
 volatile int handled_RobotMusicCommand = 0;
-
+volatile int handled_INVALID = 0;
+volatile int handled_INVALID_nbytes = 0;
+volatile char INVALID_buffer[1024];
 
 /* Import hardware handles from main.c */
 extern SPI_HandleTypeDef hspi1;
@@ -110,32 +120,30 @@ uint32_t screenCounter = 0;
 uint32_t heartbeat_1000ms = 0;
 
 
-uint8_t stringbuffer[100];
+uint8_t stringbuffer[1024];
 extern UART_HandleTypeDef huart3;
 
 void init(){
     HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
     
 
-    // LOG_init();
+    LOG_init();
     static char charbuffer[100];
-    sprintf(charbuffer, "Yellow World\n");
+    sprintf(charbuffer, "Yellow World!\n");
 
-    while(1){
-      // LOG("Hello world\n");
-      // LOG_sendBlocking(charbuffer, strlen(charbuffer));
-      CDC_Transmit_FS(charbuffer, strlen(charbuffer));
-      toggle_pin(LD_ACTIVE);
-      HAL_Delay(1000);
-    }
+    // while(1){
+    //   LOG("Hello world\n");
+    //   LOG_sendBlocking(charbuffer, strlen(charbuffer));
+    //   // CDC_Transmit_FS(charbuffer, strlen(charbuffer));
+    //   // toggle_pin(LD_ACTIVE);
+    //   // HAL_UART_Transmit(&huart3, charbuffer, strlen(charbuffer), 10);
+    //   HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
+    //   HAL_Delay(1000);
+    // }
 
-
-    // sprintf(stringbuffer, "Hello World\n");
-    // HAL_UART_Transmit(&huart3, stringbuffer, strlen(stringbuffer), 10);
-    
-    
     // Init SX_TX
-    // LOG("[init] Initializing SX_TX\n");
+    /*
+    LOG("[init] Initializing SX_TX\n");
     Wireless_Error err;
     SX_TX_Interface.BusyPin = SX_TX_BUSY;
     SX_TX_Interface.CS= SX_TX_CS;
@@ -148,9 +156,11 @@ void init(){
       while(1);
     }
     Wireless_setChannel(SX_TX, YELLOW_CHANNEL);
-    
+    */
+
     // Init SX_RX
     // LOG("[init] Initializing SX_RX\n");
+    /*
     SX_RX_Interface.BusyPin= SX_RX_BUSY;
     SX_RX_Interface.CS= SX_RX_CS;
     SX_RX_Interface.Reset= SX_RX_RST;
@@ -174,6 +184,7 @@ void init(){
     // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
     // LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
+    */
 
     // display_Init();
     // displayState = DISPLAY_STATE_INITIALIZED;
@@ -205,21 +216,55 @@ void init(){
     //TODO: How to assign associated buffer?
 
     // LOG("[init] Initializion complete\n");
+    // LOG_sendAll();
+    // while(1);
 }
 
 
 
 void loop(){
 
-  //LOG_send();
+  LOG_send();
+
+  uint32_t current_time = HAL_GetTick();
 
   /* Heartbeat every second */
-  if(heartbeat_1000ms + 1000 < HAL_GetTick()){
-    heartbeat_1000ms += 1000;
+  if(heartbeat_1000ms + 1000 < current_time){
+    HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
+    while (heartbeat_1000ms + 1000 < current_time)
+      heartbeat_1000ms += 1000;
 
-    //LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d\n",
-    // handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains);
+      USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
 
+
+    // LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d INV %d B %d\n",
+    // handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains, handled_INVALID, handled_INVALID_nbytes);
+    // LOG_printf("\nTick | t=%d, INVALID %d INVALID_NBYTES %d\n", heartbeat_1000ms, handled_INVALID, handled_INVALID_nbytes);
+    
+    // sprintf(stringbuffer, "BTick | t=%d, INVALID %d INVALID_NBYTES %d\n", heartbeat_1000ms, handled_INVALID, handled_INVALID_nbytes);
+    for(uint8_t wer = 0; wer < 10; wer++){
+      sprintf(stringbuffer, " Hello%d %d\n", wer, current_time);
+      while (hcdc->TxState != 0);
+      CDC_Transmit_FS(stringbuffer, strlen(stringbuffer));
+      HAL_Delay(2);
+    }
+    
+
+    INVALID_buffer[handled_INVALID_nbytes+1] = "\n";
+    INVALID_buffer[handled_INVALID_nbytes+2] = "\0";
+    // LOG_sendBlocking(INVALID_buffer, handled_INVALID_nbytes+2);
+    // HAL_UART_Transmit(&huart3, INVALID_buffer, handled_INVALID_nbytes+2, 10);
+
+
+    // while (hcdc->TxState != 0);
+    // CDC_Transmit_FS(INVALID_buffer, handled_INVALID_nbytes+2);
+
+
+
+
+    handled_INVALID = 0;
+    handled_INVALID_nbytes = 0;
+    memset(INVALID_buffer, 0, 200);
     toggle_pin(LD_ACTIVE);
   }
 
@@ -492,8 +537,12 @@ void handleRobotMusicCommand(uint8_t* packet_buffer){
  */
 bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
-  if(packets_buffer_length < 5)
+  if(packets_buffer_length < 5){
+    handled_INVALID++;
+    handled_INVALID_nbytes += packets_buffer_length;
+    memcpy(INVALID_buffer + handled_INVALID_nbytes, packets_buffer, packets_buffer_length);
     return true;
+  }
 
   uint32_t bytes_processed = 0;
 

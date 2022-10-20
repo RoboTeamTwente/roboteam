@@ -76,7 +76,9 @@ testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dri
 parser = argparse.ArgumentParser()
 parser.add_argument('robot_id', help='Robot ID to send commands to', type=int)
 parser.add_argument('test', help='Test to execute', type=str)
-parser.add_argument('--simulate', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
+parser.add_argument('--simulate', '-s', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
+parser.add_argument('--no-visualization', '--nv', action='store_true', help='Disable robot feedback visualization')
+
 
 args = parser.parse_args()
 print(args)
@@ -153,7 +155,7 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	cmd = REM_RobotCommand()
 	cmd.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
 	cmd.toRobotId = robot_id
-	cmd.fromPC = 1	
+	cmd.fromPC = True	
 	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
 	cmd.messageId = tick_counter
 	cmd.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND
@@ -301,7 +303,9 @@ while True:
 				cmd, cmd_log = createRobotCommand(robot_id, test, tick_counter, period_fraction)
 				cmd_encoded = cmd.encode()
 				
-				basestation.write(cmd_encoded)
+				# Send command only if an actual basestation is connected, not a simulated one
+				if not args.simulate:
+					basestation.write(cmd_encoded)
 				parser.writeBytes(cmd_encoded)
 				last_robotcommand_time = time.time()
 				
@@ -332,7 +336,7 @@ while True:
 				log_from = "[?]  "
 				if rem_log.fromBS: log_from = "[BS] "
 				if not rem_log.fromPC and not rem_log.fromBS:
-					log_from = f"[{str(rem_log.fromRobotId).rjust(2)}]"
+					log_from = f"[{str(rem_log.fromRobotId).rjust(2)}] "
 
 				# Get message. Strip possible newline
 				message = rem_log.message.strip()
@@ -347,8 +351,7 @@ while True:
 			# ========== VISUALISING ========== #
 
 			# Break if cv2 is not imported
-			if not cv2_available: continue
-			continue
+			if not cv2_available or args.no_visualization : continue
 
 			# Draw robot on the image
 			s = 101.2

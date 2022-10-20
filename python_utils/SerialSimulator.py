@@ -17,6 +17,7 @@ import numpy as np
 import roboteam_embedded_messages.python.REM_BaseTypes as REM_BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
 from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback
+from roboteam_embedded_messages.python.REM_Log import REM_Log
 
 def getValue(a, b, p):
 	return (b-a) * p + a
@@ -63,8 +64,18 @@ class SerialSimulator:
 			os.write(self.master, cmd.encode())
 			time.sleep(0.02) # 50Hz
 
-			if np.random.rand() < 0.01:
-				log = REM_Log()
+			if np.random.rand() < 0.02:
+				from_bot = 0.25 < np.random.rand()
+				message = ["Basestation log!\n", "Robot log!\n"][from_bot].encode()
+				rem_log = REM_Log()
+				rem_log.header = REM_BaseTypes.REM_PACKET_TYPE_REM_LOG
+				rem_log.toPC = True
+				rem_log.fromRobotId = from_bot * np.random.randint(0, 16)
+				rem_log.fromBS = not from_bot
+				rem_log.remVersion = REM_BaseTypes.REM_LOCAL_VERSION
+				rem_log.payloadSize = REM_BaseTypes.REM_PACKET_SIZE_REM_LOG + len(message)
+
+				os.write(self.master, rem_log.encode().tobytes() + message)
 
 if __name__ == "__main__":
 	print("SerialSimulator.py")
@@ -75,6 +86,7 @@ if __name__ == "__main__":
 	import REMParser
 	parser = REMParser.REMParser(device=serial.Serial(ss.getSerialName()))
 
+	# Atm, this doesn't seem to work. No packets arrive
 	try:
 		while(True):
 			time.sleep(0.01)
@@ -82,7 +94,7 @@ if __name__ == "__main__":
 			parser.process()
 			while parser.hasPackets():
 				packet = parser.getNextPacket()
-				print("Received", type(packet).__name__)
+				print("\n\nReceived", type(packet).__name__)
 	except KeyboardInterrupt as ki:
 		ss.stop()
 

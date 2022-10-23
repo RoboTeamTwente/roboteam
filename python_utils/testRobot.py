@@ -97,7 +97,7 @@ simulated_basestation = None
 
 tick_counter = 0
 periodLength = 300
-packetHz = 50
+packetHz = 0.5
 
 robotConnected = True
 
@@ -321,17 +321,7 @@ while True:
 			parser.read() # Read all available bytes
 			parser.process() # Convert all read bytes into packets
 
-			# Handle and store all new packets
-			while parser.hasPackets():
-				packet = parser.getNextPacket()
-				latest_packets[type(packet)] = packet
-
-			# Handle REM_Log packets
-			if REM_Log in latest_packets and latest_packets[REM_Log] is not None:
-				# Get REM_Log object and reset buffer
-				rem_log = latest_packets[REM_Log]
-				latest_packets[REM_Log] = None
-
+			def handleREM_LOG(rem_log):
 				# Prepend where the packet originates from
 				log_from = "[?]  "
 				if rem_log.fromBS: log_from = "[BS] "
@@ -347,6 +337,14 @@ while True:
 				print(f"\r{message}{' ' * nwhitespace}")
 
 
+			# Handle and store all new packets
+			while parser.hasPackets():
+				packet = parser.getNextPacket()
+				# RobotLog gets special treatment since we're interested in ALL logs, not just the last one
+				if type(packet) == REM_Log:
+					handleREM_LOG(packet)
+				else:
+					latest_packets[type(packet)] = packet
 
 			# ========== VISUALISING ========== #
 
@@ -467,4 +465,5 @@ while True:
 		print("[Error] KeyError", e, "{0:b}".format(int(str(e))))
 	except Exception as e:
 		print("[Error]", e)
-		raise e
+		basestation = None
+		# raise e

@@ -15,6 +15,7 @@ from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
 from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback
 from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 
+from REMParser import REMParser
 
 def printPacket(rc):
 	maxLength = max([len(k) for k, v in getmembers(rc)])
@@ -26,6 +27,7 @@ def printPacket(rc):
 	print("\n".join(lines))
 
 serial_connection = None
+parser = None
 
 robotCommand = REM_RobotCommand()
 robotFeedback = REM_RobotFeedback()
@@ -34,57 +36,51 @@ robotStateInfo = REM_RobotStateInfo()
 feedbackTimestamp = 0
 stateInfoTimestamp = 0
 
-# stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_0674FF525750877267181714-if02"
-# stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF544852707267223637-if02"
-
 while True:
 	# Open serial_connection with the serial_connection
 	if serial_connection is None or not serial_connection.isOpen():
 		serial_connection = utils.openContinuous(timeout=0.1)
-		# serial_connection = utils.openContinuous(timeout=0.001)
+
+	if parser is None and serial_connection is not None:
+		parser = REMParser(serial_connection)
 
 	try:
 		# Continuously read and print messages from the serial_connection
 		while True:
-			msg = serial_connection.readline()
-			if len(msg) == 0:
-				continue
-			print(msg.decode())
-			continue
 
-			### Read any packets coming from the serial_connection
-			# Read packet type
-			packet_type = serial_connection.read(1)
-			if len(packet_type) == 0:
-				continue
+			# ========== READING ========== # 
+			parser.read() # Read all available bytes
+			parser.process() # Convert all read bytes into packets
 
-			packetType = packet_type[0]
+			while parser.hasPackets():
+				packet = parser.getNextPacket()
+				print(packet)
 
-			# Parse packet based on packet type
-			if packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
-				feedbackTimestamp = time.time()
-				packet = packet_type + serial_connection.read(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
-				# robotFeedback.decode(packet)
-				print("[PACKET_TYPE_REM_ROBOT_FEEDBACK]")
+			# # Parse packet based on packet type
+			# if packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_FEEDBACK:
+			# 	feedbackTimestamp = time.time()
+			# 	packet = packet_type + serial_connection.read(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_FEEDBACK - 1)
+			# 	# robotFeedback.decode(packet)
+			# 	print("[PACKET_TYPE_REM_ROBOT_FEEDBACK]")
 
-			elif packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
-				stateInfoTimestamp = time.time()
-				packet = packet_type + serial_connection.read(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
-				# robotStateInfo.decode(packet)
-				print("[ROBOT_STATE_INFO]")
+			# elif packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_STATE_INFO:
+			# 	stateInfoTimestamp = time.time()
+			# 	packet = packet_type + serial_connection.read(REM_BaseTypes.PACKET_SIZE_REM_ROBOT_STATE_INFO - 1)
+			# 	# robotStateInfo.decode(packet)
+			# 	print("[ROBOT_STATE_INFO]")
 
-			elif packetType == REM_BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
-				logmessage = serial_connection.readline().decode()
-				print("[BASESTATION]", logmessage)
+			# elif packetType == REM_BaseTypes.PACKET_TYPE_REM_BASESTATION_LOG:
+			# 	logmessage = serial_connection.readline().decode()
+			# 	print("[BASESTATION]", logmessage)
 
 
-			elif packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
-				logmessage = serial_connection.readline().decode()
-				print("[BOT]", logmessage)
+			# elif packetType == REM_BaseTypes.PACKET_TYPE_REM_ROBOT_LOG:
+			# 	logmessage = serial_connection.readline().decode()
+			# 	print("[BOT]", logmessage)
 
-			else:
-				print(f"Error : Unhandled packet with type {packetType}")
-				print(serial_connection.readline().decode())
+			# else:
+			# 	print(f"Error : Unhandled packet with type {packetType}")
+			# 	print(serial_connection.readline().decode())
 
 
 	except serial.SerialException as se:

@@ -1013,4 +1013,21 @@ def REM_PACKET_TYPE_TO_OBJ(type):
     if type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       : return REM_RobotAssuredAck
     if type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     : return REM_RobotMusicCommand
     if type == REM_PACKET_TYPE_REM_SX1280FILLER                            : return REM_SX1280Filler
+def REM_PACKET_TYPE_TO_VALID(type):
+    if type == REM_PACKET_TYPE_REM_PACKET                                  : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_COMMAND                           : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_BUZZER                            : return True
+    if type == REM_PACKET_TYPE_REM_LOG                                     : return True
+    if type == REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           : return True
+    if type == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       : return True
+    if type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     : return True
+    if type == REM_PACKET_TYPE_REM_SX1280FILLER                            : return True
+    return False
 

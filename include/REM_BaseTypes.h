@@ -8,6 +8,7 @@
 #define __BASETYPES_H
 
 #include <stdint.h>
+#include <bool.h>
 
 
 #define REM_LOCAL_VERSION 1
@@ -969,7 +970,7 @@ static uint8_t REM_PACKET_TYPE_TO_SIZE(uint8_t type){
     if(type == REM_PACKET_TYPE_REM_SX1280FILLER                            ) return REM_PACKET_SIZE_REM_SX1280FILLER                            ;
     return 0;
 }
-static uint8_t REM_PACKET_TYPE_TO_INDEX(uint8_t type){
+static int8_t REM_PACKET_TYPE_TO_INDEX(uint8_t type){
     if(type == REM_PACKET_TYPE_REM_PACKET                                  ) return 0;
     if(type == REM_PACKET_TYPE_REM_ROBOT_COMMAND                           ) return 1;
     if(type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          ) return 2;
@@ -985,7 +986,25 @@ static uint8_t REM_PACKET_TYPE_TO_INDEX(uint8_t type){
     if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       ) return 12;
     if(type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     ) return 13;
     if(type == REM_PACKET_TYPE_REM_SX1280FILLER                            ) return 14;
-    return 0;
+    return -1;
+}
+static bool REM_PACKET_TYPE_TO_VALID(uint8_t type){
+    if(type == REM_PACKET_TYPE_REM_PACKET                                  ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_COMMAND                           ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_FEEDBACK                          ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_STATE_INFO                        ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_BUZZER                            ) return true;
+    if(type == REM_PACKET_TYPE_REM_LOG                                     ) return true;
+    if(type == REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION           ) return true;
+    if(type == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION               ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS                      ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_PIDGAINS                          ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS                      ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET                    ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_ASSURED_ACK                       ) return true;
+    if(type == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND                     ) return true;
+    if(type == REM_PACKET_TYPE_REM_SX1280FILLER                            ) return true;
+    return false;
 }
 
 #endif /*__BASETYPES_H*/

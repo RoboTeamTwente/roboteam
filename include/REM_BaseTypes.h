@@ -8,7 +8,7 @@
 #define __BASETYPES_H
 
 #include <stdint.h>
-#include <bool.h>
+#include <stdbool.h>
 
 
 #define REM_LOCAL_VERSION 1

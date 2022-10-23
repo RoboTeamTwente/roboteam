@@ -140,7 +140,7 @@ class C_BaseTypeGenerator(BaseTypeGenerator):
 		begin_string += "#define __BASETYPES_H\n"
 		begin_string += "\n"
 		begin_string += "#include <stdint.h>\n"
-		begin_string += "#include <bool.h>\n"
+		begin_string += "#include <stdbool.h>\n"
 		begin_string += "\n"
 		return begin_string
 

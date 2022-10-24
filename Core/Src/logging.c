@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "usbd_cdc.h"
 #include "usb_device.h"
@@ -80,13 +81,10 @@ void LOG(char *message){
     REM_Log_set_fromBS     ((REM_LogPayload*) payload, 1);
     REM_Log_set_toPC       ((REM_LogPayload*) payload, 1);
 
-    // Copy the message into the message container, next to the BasestationLog header
+    // Copy the message into the message container, next to the REM_Log header
     memcpy(payload + REM_PACKET_SIZE_REM_LOG, message, message_length);
-    message_container->length = REM_PACKET_SIZE_REM_LOG + message_length;
-    
+    message_container->length = REM_PACKET_SIZE_REM_LOG + message_length; 
 }
-
-static uint8_t buffer[100];
 
 void LOG_send(){
     // Check if the USB is ready for transmitting
@@ -98,13 +96,6 @@ void LOG_send(){
     // Write the message over USB
     MessageContainer* message_container = &message_buffer[buffer_indexer->indexRead];
     CDC_Transmit_FS(message_container->payload, message_container->length);
-
-    // REM_Log_set_header((REM_LogPayload*) buffer, REM_PACKET_TYPE_REM_LOG);  // 8 bits
-    // REM_Log_set_remVersion((REM_LogPayload*) buffer, REM_LOCAL_VERSION);  // 4 bits
-    // REM_Log_set_messageLength((REM_LogPayload*) buffer, 5); // 8 bits
-    // sprintf(buffer+3, "01234\n");
-    // CDC_Transmit_FS(buffer, 8);
-
     // Move up the circular buffer
     CircularBuffer_read(buffer_indexer, NULL, 1);
 }
@@ -119,6 +110,19 @@ void LOG_sendBlocking(uint8_t* data, uint8_t length){
 		// memcpy(TxBuffer, data, length);
     CDC_Transmit_FS(data, length);
 	// }
+}
+
+bool LOG_sendBuffer(uint8_t* data, uint32_t length, bool blocking){
+    if(!log_initialized) return false;
+    
+    if(!blocking){
+        USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+        if (hcdc->TxState != 0) return false;
+    }
+    
+    CDC_Transmit_FS(data, length);
+
+    return true;
 }
 
 void LOG_sendAll(){

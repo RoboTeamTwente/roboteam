@@ -32,9 +32,6 @@ volatile int handled_RobotGetPIDGains = 0;
 volatile int handled_RobotSetPIDGains = 0;
 volatile int handled_RobotPIDGains = 0;
 volatile int handled_RobotMusicCommand = 0;
-volatile int handled_INVALID = 0;
-volatile int handled_total_bytes = 0;
-volatile char INVALID_buffer[1024];
 
 /* Import hardware handles from main.c */
 extern SPI_HandleTypeDef hspi1;
@@ -50,7 +47,6 @@ TouchState touchState; // TODO check default initialization. What is touchState-
 // Currently, we're splitting the SX1280 256 byte buffer in half. 128 for sending, 128 for receiving
 // Set to 127, because that's the max value as defined in the datasheet
 // Table 14-38: Payload Length Definition in FLRC Packet, page 124
-#define MAX_PACKET_SIZE 127
 
 /* SX data */
 // TODO: Maybe move all configs to its own file? (basestation_config.c/h???)
@@ -213,7 +209,7 @@ void init(){
 
     // Start the timer that is responsible for sending packets to the robots
     // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
-    /// It's requird that all buffers are initialized before starting the timer!
+    /// It's required that all buffers are initialized before starting the timer!
     LOG("[init] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
@@ -248,17 +244,19 @@ void loop(){
     // LOG_printf("Tick | RC %d RF %d RB %d RSI %d GPID %d PID %d INV %d B %d\n",
     // handled_RobotCommand, handled_RobotFeedback, handled_RobotBuzzer, handled_RobotStateInfo, handled_RobotGetPIDGains, handled_RobotPIDGains, handled_INVALID, handled_total_bytes);
 
-    LOG_printf("Tick : Type in out | RC %d %d | RF %d %d | RB %d %d | RSI %d %d\n",
-      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_COMMAND], packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_COMMAND],
-      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_FEEDBACK], packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_FEEDBACK],
-      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_BUZZER], packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_BUZZER],
-      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_STATE_INFO], packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_STATE_INFO]
+    LOG_printf("Tick : Type in out | RC %d %d | RF %d %d | RB %d %d | RSI %d %d | toPC %d | toBS %d\n",
+      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_COMMAND],    packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_COMMAND],
+      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_FEEDBACK],   packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_FEEDBACK],
+      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_BUZZER],     packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_BUZZER],
+      packet_counter_in[REM_PACKET_INDEX_REM_ROBOT_STATE_INFO], packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_STATE_INFO],
+      CircularBuffer_spaceFilled(nonpriority_queue_pc_index),   CircularBuffer_spaceFilled(nonpriority_queue_bs_index)
     );
+    
 
     // for(int robot_id = 0; robot_id <= MAX_ROBOT_ID; robot_id++){
     //   CircularBuffer* queue_index = nonpriority_queue_robots_index[robot_id];
     //   if(queue_index != NULL){
-    //     LOG_printf("Robot %d: %d\n", robot_id, CircularBuffer_spaceFilled(queue_index));
+    //     LOG_printf("Robot %d: %d %p\n", robot_id, CircularBuffer_spaceFilled(queue_index), (void*) queue_index);
     //   }
     // }
 
@@ -270,9 +268,28 @@ void loop(){
   /* Send any new RobotFeedback packets */
   for(int id = 0; id <= MAX_ROBOT_ID; id++){
     if(buffer_REM_RobotFeedback[id].isNewPacket){
-      //LOG_sendBlocking(buffer_REM_RobotFeedback[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
+      LOG_sendBlocking(buffer_REM_RobotFeedback[id].packet.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK);
       buffer_REM_RobotFeedback[id].isNewPacket = false;
+      packet_counter_out[REM_PACKET_INDEX_REM_ROBOT_FEEDBACK]++;
     }
+  }
+
+  /* Send any packets that are in the queue and meant for the PC */
+  if(CircularBuffer_canRead(nonpriority_queue_pc_index, 1)){
+      // LOG_printf("Reading from index %d\n", nonpriority_queue_pc_index->indexRead);
+      uint8_t* data = nonpriority_queue_pc[ nonpriority_queue_pc_index->indexRead ].data;
+      REM_PacketPayload* packet = (REM_PacketPayload*) nonpriority_queue_pc[ nonpriority_queue_pc_index->indexRead ].data;
+      uint8_t  packet_type = REM_Packet_get_header(packet);
+      uint32_t packet_size = REM_Packet_get_payloadSize(packet);
+      bool packet_sent = LOG_sendBuffer((uint8_t*)packet, packet_size, false);
+      if(packet_sent) {
+        uint8_t packet_type = REM_Packet_get_header(packet);
+        packet_counter_out[REM_PACKET_TYPE_TO_INDEX(packet_type)]++;
+        // LOG_printf("Packet sent! type=%d (%d) size=%d (%d) p=%p\n", packet_type, data[0], packet_size, data[4], nonpriority_queue_pc[ nonpriority_queue_pc_index->indexRead ].data);
+        CircularBuffer_read(nonpriority_queue_pc_index, NULL, 1);
+      }else{
+        // LOG("Couldn't send packet..\n");
+      }
   }
 
   // /* Send any new RobotStateInfo packets */
@@ -405,22 +422,13 @@ void updateTouchState(TouchState* touchState){
  */
 bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
-  handled_total_bytes += packets_buffer_length;
-  if(packets_buffer_length < 5){
-    handled_INVALID++;
-    memcpy(INVALID_buffer + handled_total_bytes, packets_buffer, packets_buffer_length);
-    return true;
-  }
-
   uint32_t bytes_processed = 0;
 
   while(bytes_processed < packets_buffer_length){
 
-    LOG_printf("Processed %d bytes of %d bytes\n", bytes_processed, packets_buffer_length);
-
     // Get the packet and its type
     REM_PacketPayload* packet = (REM_PacketPayload*) (packets_buffer + bytes_processed);
-    int8_t   packet_type = REM_Packet_get_header(packet);
+    int8_t packet_type = REM_Packet_get_header(packet);
     
     // Skip filler packets. We need to skip these before we do anything else, since this packet does
     // not have all the normal functions such as REM_Packet_get_payloadSize.
@@ -436,9 +444,8 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     uint32_t packet_size_rem = REM_PACKET_TYPE_TO_SIZE(packet_type); // Expected packet size according to REM
     uint32_t packet_rem_version = REM_Packet_get_remVersion(packet);
     uint32_t packet_index = REM_PACKET_TYPE_TO_INDEX(packet_type);
-
+    // Now that we know the index, update the counter
     packet_counter_in[packet_index]++;
-    LOG_printf("Incremented packet_counter_in[%d] to %d\n", packet_index, packet_counter_in[packet_index]);
 
     // Check if the packet type is valid
     if(!packet_valid){
@@ -496,18 +503,19 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
       Wrapper_REM_Packet* queue = nonpriority_queue_robots[robot_id];
       // Check if the packet is meant for the PC or the BaseStation
       if(to_PC || to_BS){
-        CircularBuffer*     index = to_PC ? nonpriority_queue_pc_index : nonpriority_queue_bs_index;
-        Wrapper_REM_Packet* queue = to_PC ? nonpriority_queue_pc       : nonpriority_queue_bs;
+        index = to_PC ? nonpriority_queue_pc_index : nonpriority_queue_bs_index;
+        queue = to_PC ? nonpriority_queue_pc       : nonpriority_queue_bs;
       }
-      // Write the packet to the correct queue, and move up the queue its index by one
+      // Write the packet to the correct queue, and move up the queue index by one
       if(CircularBuffer_canWrite(index, 1)){
-        memcpy(queue[index->indexWrite].data, (uint8_t) packet, packet_size);
+        memcpy(queue[index->indexWrite].data, (uint8_t*) packet, packet_size);
         CircularBuffer_write(index, NULL, 1);
       }else{
         LOG_printf("[handlePackets]["STRINGIZE(__LINE__)"] Error! Packet type %u : queue is full\n", packet_type);
       }
     }
 
+    // Update the total number of bytes processed, to keep track of where we are in the packets_buffer
     bytes_processed += packet_size;
   }
 
@@ -517,6 +525,8 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
 
 
 /* Triggers when a call to HAL_SPI_TransmitReceive_DMA or HAL_SPI_TransmitReceive_IT (both non-blocking) completes */
+/* ELI5: triggers when something has been sent to or received over a SPI interface. For the Basestation, this means either
+*  of the two SX1280 chips */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
   if(hspi->Instance == SX_TX->Interface->SPI->Instance){
     Wireless_DMA_Handler(SX_TX);
@@ -557,7 +567,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     static uint8_t robot_id = 0;
 
     // Keeps track of the total length of the packet that goes to the robot. 
-    // Cannot exceed MAX_PACKET_SIZE, or it will overflow the internal buffer of the SX1280
+    // Cannot exceed REM_MAX_TOTAL_PACKET_SIZE_SX1280, or it will overflow the internal buffer of the SX1280
     uint8_t total_packet_length = 0;    
 
     /* Add RobotCommand to the transmission */
@@ -587,8 +597,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
       // Check if the packet is destined for the robot. Should always be the case, but again, just to be sure
       if(REM_Packet_get_toBS(packet) || REM_Packet_get_toPC(packet) || REM_Packet_get_toRobotId(packet) != robot_id){
-        LOG_printf("[htim1]["STRINGIZE(__LINE__)"] Error! Packet is not destined for robot %d", robot_id);  
-        break;
+        LOG_printf("[htim1]["STRINGIZE(__LINE__)"] Warning! Packet with type %u is not destined for robot %u", packet_type, robot_id);  
       }
 
       // Copy packet to the transmission

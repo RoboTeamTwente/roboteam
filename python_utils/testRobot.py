@@ -35,12 +35,15 @@ except:
 	print("Warning! Could not import cv2. Can't visualize.")
 	cv2_available = False
 
-def printPacket(rc):
+def printCompletePacket(rc):
+	types_allowed = [int, str, bool, float]
 	maxLength = max([len(k) for k, v in getmembers(rc)])
 	title = re.findall(r"_(\w+) ", str(rc))[0]
 	
 	lines = [("┌─ %s "%title) + ("─"*100)[:maxLength*2+2-len(title)] + "┐" ]	
-	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).ljust(maxLength) ) for k, v in getmembers(rc) ]
+	members = [ [k,v] for k,v in getmembers(rc) if type(v) in types_allowed and not k.startswith("__")]
+
+	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).strip().ljust(maxLength) ) for k, v in members ]
 	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
 	print("\n".join(lines))
 
@@ -79,7 +82,6 @@ parser.add_argument('test', help='Test to execute', type=str)
 parser.add_argument('--simulate', '-s', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
 parser.add_argument('--no-visualization', '--nv', action='store_true', help='Disable robot feedback visualization')
 
-
 args = parser.parse_args()
 print(args)
 
@@ -97,7 +99,7 @@ simulated_basestation = None
 
 tick_counter = 0
 periodLength = 300
-packetHz = 0.5
+packetHz = 60
 
 robotConnected = True
 
@@ -137,8 +139,6 @@ def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, Pbod
 	
 	return setPID
 	
-	
-
 def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	log = ""
 
@@ -359,6 +359,7 @@ while True:
 			### Draw information received from the RobotFeedback packet
 			if REM_RobotFeedback in latest_packets and latest_packets[REM_RobotFeedback] is not None:
 				robotFeedback = latest_packets[REM_RobotFeedback]
+				# printCompletePacket(robotFeedback)
 				latest_packets[REM_RobotFeedback] = None
 				
 
@@ -382,15 +383,8 @@ while True:
 			if REM_RobotStateInfo in latest_packets and latest_packets[REM_RobotStateInfo] is not None:
 				robotStateInfo = latest_packets[REM_RobotStateInfo]
 				latest_packets[REM_RobotStateInfo] = None
-				last_robotstateinfo_time = time.time()
-				robotStateInfoFile.write(f"{last_robotstateinfo_time} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.dribbleSpeed} {robotStateInfo.filteredDribbleSpeed} {robotStateInfo.dribblespeedBeforeGotBall	} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
-				robotStateInfoFile.flush()
 				last_robotfeedback_time = time.time()
-				robotFeedbackFile.write(f"{last_robotfeedback_time} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} 							{robotFeedback.ballSensorSeesBall} {robotFeedback.dribblerSeesBall} {robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} 								{robotFeedback.wheelLocked} {robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
-				robotFeedbackFile.flush()
-				robotCommandFile.write(f"{last_robotcommand_time} {cmd.doKick} {cmd.doChip} {cmd.kickAtAngle} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
-				robotCommandFile.flush()
-
+				
 				# XSens yaw
 				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)
 				cv2.line(image_vis, (250, 250), (int(px), int(py)), (1, 1, 1), 1)

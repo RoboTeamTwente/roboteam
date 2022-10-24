@@ -34,7 +34,7 @@ typedef struct _wrapper_REM_RobotFeedback {
 wrapper_REM_RobotCommand buffer_REM_RobotCommand[MAX_NUMBER_OF_ROBOTS];
 wrapper_REM_RobotFeedback buffer_REM_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
-CircularBuffer** nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
 CircularBuffer* nonpriority_queue_pc_index;
 CircularBuffer* nonpriority_queue_bs_index;
 

@@ -75,6 +75,11 @@ void LOG_sendBlocking(uint8_t* data, uint8_t length);
 bool LOG_canAddLog();
 
 /**
+ * @brief Send a buffer over USB, possibly blocking
+ */
+bool LOG_sendBuffer(uint8_t* data, uint32_t length, bool blocking);
+
+/**
  * @brief Send all messages in the buffer using a blocking while-loop
  */
 void LOG_sendAll();

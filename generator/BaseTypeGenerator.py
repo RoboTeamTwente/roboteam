@@ -56,6 +56,15 @@ class BaseTypeGenerator:
 
 		file_string += self.to_constant("REM_LOCAL_VERSION", version) + "\n"
 		file_string += self.to_constant("REM_LARGEST_PACKET_IN_BYTES", largest_packet_in_bytes) + "\n"
+
+		file_string += self.begin_block_comment()
+		file_string += """
+Currently, we're splitting the SX1280 256 byte buffer in half. 128 for sending, 128 for receiving
+Set to 127, because that's the max value as defined in the SX1280 datasheet
+Table 14-38: Payload Length Definition in FLRC Packet, page 124
+"""
+		file_string += self.end_block_comment() + "\n"
+
 		file_string += self.to_constant("REM_MAX_TOTAL_PACKET_SIZE_SX1280", 127) + "\n"
 		file_string += self.to_constant("REM_TOTAL_NUMBER_OF_PACKETS", len(packets)) + "\n\n"
 

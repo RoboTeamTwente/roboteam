@@ -13,6 +13,11 @@
 
 #define REM_LOCAL_VERSION 1
 #define REM_LARGEST_PACKET_IN_BYTES 45
+/*
+Currently, we're splitting the SX1280 256 byte buffer in half. 128 for sending, 128 for receiving
+Set to 127, because that's the max value as defined in the SX1280 datasheet
+Table 14-38: Payload Length Definition in FLRC Packet, page 124
+*/
 #define REM_MAX_TOTAL_PACKET_SIZE_SX1280 127
 #define REM_TOTAL_NUMBER_OF_PACKETS 15
 

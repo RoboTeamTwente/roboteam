@@ -44,16 +44,16 @@ void REM_UARTCallback(UART_HandleTypeDef *huart){
     // Read the header byte
     uint8_t packetType = REM_buffer[0];
     // If RobotCommand
-    if(packetType == PACKET_TYPE_REM_ROBOT_COMMAND){
+    if(packetType == REM_PACKET_TYPE_REM_ROBOT_COMMAND){
         // Receive the entire RobotCommand packet into REM_buffer, excluding the header byte
-        HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_COMMAND-1, 100);
+        HAL_UART_Receive(huart, REM_buffer+1, REM_PACKET_SIZE_REM_ROBOT_COMMAND-1, 100);
         // Store received packet in local RobotCommandPayload. Send to robot.c for decoding
-        memcpy(&rcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
+        memcpy(&rcp.payload, REM_buffer, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
         robot_setRobotCommandPayload(&rcp);
     }else
-    if(packetType == PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND){
-        HAL_UART_Receive(huart, REM_buffer+1, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND-1, 100);
-        memcpy(&rmcp.payload, REM_buffer, PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
+    if(packetType == REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND){
+        HAL_UART_Receive(huart, REM_buffer+1, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND-1, 100);
+        memcpy(&rmcp.payload, REM_buffer, REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND);
         robot_setRobotMusicCommandPayload(&rmcp);
     }else{
         // TODO add some error handling here or something.

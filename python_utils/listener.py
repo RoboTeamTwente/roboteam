@@ -93,15 +93,17 @@ while True:
 				if args.verbose:
 					printCompletePacket(packet)
 				else:
-					sender = f"[{str(packet.fromRobotId).rjust(2)}] "
-					if packet.fromBS: sender = "[BS] "
-					if packet.fromPC: senders = "[PC] "
+					timestamp = str(packet.timestamp).rjust(5)
 					
+					sender = str(packet.fromRobotId).rjust(2)
+					if packet.fromBS: sender = "BS"
+					if packet.fromPC: senders = "PC"
+
 					message = ""							
 					if type(packet) == REM_Log:
 						message = packet.message.strip()
 
-					print(f"[{type(packet).__name__}]{sender} {message}")
+					print(f"[{timestamp}][{type(packet).__name__}][{sender}] {message}")
 
 
 	except serial.SerialException as se:

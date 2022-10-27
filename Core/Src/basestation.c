@@ -227,7 +227,6 @@ void init(){
     filler.remVersion = REM_LOCAL_VERSION;
     encodeREM_SX1280Filler(&SX1280_filler_payload, &filler);
 
-
     LOG("[init:"STRINGIZE(__LINE__)"] Initializion complete\n");
     LOG_sendAll();
 }
@@ -316,7 +315,11 @@ void loop(){
     // TODO: Make a nice function for this
     REM_BasestationConfiguration configuration;
     configuration.header = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
+    configuration.toPC = true;
+    configuration.fromBS = true;
     configuration.remVersion = REM_LOCAL_VERSION;
+    configuration.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION;
+    configuration.timestamp = HAL_GetTick();
     configuration.channel = Wireless_getChannel(SX_TX);
 
     REM_BasestationConfigurationPayload payload;

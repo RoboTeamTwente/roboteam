@@ -8,6 +8,8 @@
 #include "main.h"
 #include "testFunctions.h"
 #include <string.h>
+#include "shoot.h"
+#include "logging.h"
 
 ///////////////////////////////////////////////////// VARIABLES
 
@@ -43,12 +45,12 @@ void test_Update() {
 
 void test_RunTest(tests t) {
 	runningTest[t] = true;
-	Putty_printf("---------- Start test! ----------\n\r");
+	LOG("---------- Start test! ----------\n");
 }
 
 void test_StopTest(tests t) {
     runningTest[t] = false;
-    Putty_printf("---------- End of test ----------\n\r");
+    LOG("---------- End of test ----------\n");
 }
 
 bool test_isTestRunning(tests t) {
@@ -125,7 +127,7 @@ status executeFullTest() {
 	} else if (progress[dribbler] == test_running) {
 		progress[dribbler] = executeDribblerTest();
 	} else {
-		Putty_printf("---------- End of test ----------\n\r");
+		LOG("---------- End of test ----------\n");
 		for (int i = 0; i < nTests; i++) {
 			progress[i] = test_none;
 		}
@@ -146,7 +148,7 @@ status executeWheelsTest() {
 
 	uint32_t timeDiff = HAL_GetTick() - timer;
 	if (firstTime) {
-		Putty_printf("Testing wheels...\n\r");
+		LOG("Testing wheels...\n");
 		firstTime = false;
 	}
 
@@ -174,7 +176,7 @@ status executeWheelsTest() {
 			cnt[wheel] = 0;
 			wheelEncoders[wheel] = 0;
 		}
-        Putty_printf("---------- End of test ----------\n\r");
+        LOG("---------- End of test ----------\n");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -207,14 +209,14 @@ status executeShootTest() {
 
 	// Print status and results
 	if (firstTime) {
-		Putty_printf("Testing kick...\n\r");
+		LOG("Testing kick...\n");
 		firstTime = false;
 	} else if (timeDiff >= RUN_TIME + PAUSE_TIME && prevTimeDiff < RUN_TIME + PAUSE_TIME) {
-		Putty_printf("\t %s\n\r", chargeCount >= MIN_CHARGE_TIME ? "PASS" : "FAIL");
+		LOG_printf("\t %s\n", chargeCount >= MIN_CHARGE_TIME ? "PASS" : "FAIL");
 		chargeCount = 0;
-		Putty_printf("Testing chip...\n\r");
+		LOG("Testing chip...\n");
 	} else if (timeDiff >= 2 * (RUN_TIME + PAUSE_TIME) && prevTimeDiff < 2 * (RUN_TIME + PAUSE_TIME)) {
-		Putty_printf("\t %s\n\r", chargeCount >= MIN_CHARGE_TIME ? "PASS" : "FAIL");
+		LOG_printf("\t %s\n", chargeCount >= MIN_CHARGE_TIME ? "PASS" : "FAIL");
 		chargeCount = 0;
 	}
 
@@ -223,7 +225,7 @@ status executeShootTest() {
 		timer = 0;
 		prevTimeDiff = 0;
 		firstTime = true;
-        Putty_printf("---------- End of test ----------\n\r");
+        LOG("---------- End of test ----------\n");
 		return test_done;
 	} else {
 		prevTimeDiff = timeDiff;
@@ -241,7 +243,7 @@ status executeDribblerTest() {
 	uint32_t timeDiff = HAL_GetTick() - timer;
 
 	if (firstTime) {
-		Putty_printf("Testing dribbler...\n\r");
+		LOG("Testing dribbler...\n");
 		firstTime = false;
 	} else if (timeDiff < RUN_TIME) {
 		dribbler_SetSpeed(50);
@@ -250,7 +252,7 @@ status executeDribblerTest() {
 	if (timeDiff > RUN_TIME + PAUSE_TIME) {
 		timer = 0;
 		firstTime = true;
-        Putty_printf("---------- End of test ----------\n\r");
+        LOG("---------- End of test ----------\n");
         dribbler_SetSpeed(0);
 		return test_done;
 	} else {
@@ -311,7 +313,7 @@ status executeSquareDrive() {
 		velocityRef[body_x] = 0.0;
 		velocityRef[body_y] = 0.0;
 		velocityRef[body_yaw] = 0.0;
-		Putty_printf("---------- End of test ----------\n\r");
+		LOG("---------- End of test ----------\n");
 		return test_done;
 	}
 
@@ -342,10 +344,10 @@ void checkWheels(int avgPWM[4], int cnt[4], float wheelEncoders[4]) {
 		}
 	}
 
-	Putty_printf("\t Wheel RF: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_RF]) < 5 ? "FAIL" : ((avgPWM[wheels_RF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RF]);
-	Putty_printf("\t Wheel RB: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_RB]) < 5 ? "FAIL" : ((avgPWM[wheels_RB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RB]);
-	Putty_printf("\t Wheel LB: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_LB]) < 5 ? "FAIL" : ((avgPWM[wheels_LB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LB]);
-	Putty_printf("\t Wheel LF: %s (PWM = %d)\n\r", fabs(wheelEncoders[wheels_LF]) < 5 ? "FAIL" : ((avgPWM[wheels_LF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LF]);
+	LOG_printf("\t Wheel RF: %s (PWM = %d)\n", fabs(wheelEncoders[wheels_RF]) < 5 ? "FAIL" : ((avgPWM[wheels_RF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RF]);
+	LOG_printf("\t Wheel RB: %s (PWM = %d)\n", fabs(wheelEncoders[wheels_RB]) < 5 ? "FAIL" : ((avgPWM[wheels_RB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_RB]);
+	LOG_printf("\t Wheel LB: %s (PWM = %d)\n", fabs(wheelEncoders[wheels_LB]) < 5 ? "FAIL" : ((avgPWM[wheels_LB] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LB]);
+	LOG_printf("\t Wheel LF: %s (PWM = %d)\n", fabs(wheelEncoders[wheels_LF]) < 5 ? "FAIL" : ((avgPWM[wheels_LF] > minPWM + margin) ? "HEAVY" : "PASS"), avgPWM[wheels_LF]);
 }
 
 

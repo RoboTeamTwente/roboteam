@@ -5,7 +5,6 @@
 #include "gpio_util.h"
 #include "tim_util.h"
 #include "peripheral_util.h"
-#include "PuTTY.h"
 #include "wheels.h"
 #include "dribbler.h"
 #include "stateControl.h"
@@ -36,14 +35,17 @@
 #include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
 #include "REM_RobotMusicCommand.h"
+#include "REM_Log.h"
 
-#include "time.h"
+#include <time.h>
 #include <unistd.h>
 #include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 uint8_t ROBOT_ID;
 WIRELESS_CHANNEL ROBOT_CHANNEL;
-static const bool USE_PUTTY = false;
+bool IS_RUNNING_TEST = false;
 
 MTi_data* MTi;
 
@@ -59,6 +61,8 @@ REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
 REM_RobotSetPIDGains robotSetPIDGains = {0};
+REM_Log robotLog = {0};
+REM_LogPayload robotLogPayload = {0};
 
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -210,6 +214,53 @@ void initPacketHeader(REM_Packet* packet, uint8_t robot_id, uint8_t channel, uin
 	packet->payloadSize = REM_PACKET_TYPE_TO_SIZE(packet_type);
 }
 
+
+/**
+ * @brief Function that fills a REM_RobotCommand with values for easy testing. After one
+ * second, the robots starts rotating, dribbling, and kicking. After 10 seconds, the
+ * robot stops.
+ * 
+ * @param rc The REM_RobotCommand to place the test commands into  
+ * @param time The time in milliseconds indicating how far into test we are
+ * @return true If the test is ongoing
+ * @return false If the test is finished
+ */
+bool updateTestCommand(REM_RobotCommand* rc, uint32_t time){
+	// First, empty the entire RobotCommand
+	resetRobotCommand(rc);
+	// Set the basic required stuff
+	rc->header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+	rc->remVersion = REM_LOCAL_VERSION;
+	rc->toRobotId = ROBOT_ID;
+
+	// Don't do anything for the first second
+	if(time < 1000) return true;
+	// Don't do anything after 11 seconds
+	if(11000 < time) return false;
+	// These two give a test window of 10 seconds. 
+	
+	// Normalize time to 0 for easier calculations
+	time -= 1000;
+
+	// Split up testing window into blocks of two seconds
+	float period_fraction = (time%2000)/2000.;
+
+	// Rotate around, slowly
+	rc->angularVelocity = 6 * sin(period_fraction * 2 * M_PI);
+	// Turn on dribbler
+	rc->dribbler = period_fraction;
+	// Kick a little every block
+	if(0.95 < period_fraction){
+		rc->doKick = true;
+		rc->kickChipPower = 1;
+		rc->doForce = true;
+	}
+
+	return true;
+}
+
+
+
 /* ======================================================== */
 /* ==================== INITIALIZATION ==================== */
 /* ======================================================== */
@@ -244,6 +295,7 @@ void init(void){
 	initPacketHeader((REM_Packet*) &robotFeedback, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_FEEDBACK);
 	initPacketHeader((REM_Packet*) &robotStateInfo, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_STATE_INFO);
  	initPacketHeader((REM_Packet*) &robotPIDGains, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_PIDGAINS);
+	initPacketHeader((REM_Packet*) &robotLog, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_LOG);
 	}
 
 
@@ -257,7 +309,7 @@ void init(void){
 	LOG_sendAll();
 
 	/* Initialize buzzer */
-	// buzzer_Init();
+	buzzer_Init();
 	buzzer_Play_QuickBeepUp();
 	HAL_Delay(500);
 
@@ -271,15 +323,8 @@ void init(void){
 	}
 	#endif
 
-	/* === Wired communication with robot; Either REM to send RobotCommands, or Putty for interactive terminal */
-	if(USE_PUTTY){
-		/* Initialize Putty. Not possible when REM_UARTinit() is called */
-		Putty_Init();
-	}else{
-		/* Initialize Roboteam_Embedded_Messages. Not possible when Putty_Init() is called */
-		/* Can now receive RobotCommands (and other packets) via UART */
-		REM_UARTinit(UART_PC);
-	}
+	/* === Wired communication with robot; Can now receive RobotCommands (and other packets) via UART */
+	REM_UARTinit(UART_PC);
 	
 	set_Pin(LED2_pin, 1);
 
@@ -293,6 +338,8 @@ void init(void){
     // if(ballSensor_Init()) LOG("[init:"STRINGIZE(__LINE__)"] Ballsensor initialized\n");
     set_Pin(LED3_pin, 1);
 
+
+	{ // ====== SX : PINS, CALLBACKS, CHANNEL, SYNCWORDS
 	/* Initialize the SX1280 wireless chip */
 	SX1280_Settings set = SX1280_DEFAULT_SETTINGS;
 	set.periodBaseCount = WIRELESS_RX_COUNT;
@@ -310,11 +357,11 @@ void init(void){
 	if(ROBOT_CHANNEL == BLUE_CHANNEL){
 		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
-		buzzer_Play(&beep_blue); HAL_Delay(350);
+		buzzer_Play(beep_blue); HAL_Delay(350);
 	}else{
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
-		buzzer_Play(&beep_yellow); HAL_Delay(350);
+		buzzer_Play(beep_yellow); HAL_Delay(350);
 	}
 	LOG_sendAll();
     // SX1280 section 7.3 FLRC : Syncword is 4 bytes at the beginning of each transmission, that ensures that only the right robot / basestation listens to that transmission.
@@ -322,11 +369,13 @@ void init(void){
 	uint32_t syncwords[2] = {robot_syncWord[ROBOT_ID],0};
 	Wireless_setRXSyncwords(SX, syncwords); // RX syncword is specific for the robot its ID
 	set_Pin(LED4_pin, 1);
+	}
+
 
 	/* Initialize the XSens chip. 1 second calibration time, XFP_VRU_general = no magnetometer */
 	LOG("[init:"STRINGIZE(__LINE__)"] Initializing XSens\n");
-    MTi = MTi_Init(1, XFP_VRU_general);
-    if(MTi == NULL){
+	MTi = MTi_Init(1, XFP_VRU_general);
+	if(MTi == NULL){
 		LOG("[init:"STRINGIZE(__LINE__)"] Failed to initialize XSens\n");
 		buzzer_Play_WarningOne();
 		HAL_Delay(1500);
@@ -336,10 +385,24 @@ void init(void){
 
 	LOG_sendAll();
 	LOG("[init:"STRINGIZE(__LINE__)"] Initialized\n");
+	
+	// Read out jumper FT0 to check if we want to run a test
+	IS_RUNNING_TEST = read_Pin(FT0_pin);
+	if(IS_RUNNING_TEST){
+		LOG("[init:"STRINGIZE(__LINE__)"] In test-mode! Flip pin FT0 and reboot to disable test-mode\n");
+		LOG_sendAll();
+		// Sound an alarm to let the user know that the robot is going to perform a test
+		for(uint8_t t = 0; t < 5; t++){
+			buzzer_Play(warningRunningTest);
+			HAL_Delay(400);
+		}
+		HAL_Delay(100);
+	}
 
 	// Tell the SX to start listening for packets. This is non-blocking. It simply sets the SX into receiver mode.
 	// SX1280 section 10.7 Transceiver Circuit Modes Graphical Illustration
-	WaitForPacket(SX);
+	// Ignore packets when we're in test-mode by simply never entering this receive-respond loop
+	if(!IS_RUNNING_TEST) WaitForPacket(SX);
 
 	// Ensure that the speaker is stopped. The speaker keeps going even if the robot is reset
 	speaker_Stop();
@@ -386,9 +449,6 @@ void loop(void){
     
 	// Refresh Watchdog timer
     IWDG_Refresh(iwdg);
-    Putty_Callback();
-
-
 
 	/** MUSIC TEST CODE **/
 	if(RobotMusicCommand_received_flag){
@@ -396,13 +456,12 @@ void loop(void){
 		speaker_HandleCommand(&RobotMusicCommand);
 	}
 
-
-
-
 	/* === Determine HALT state === */
     xsens_CalibrationDone = (MTi->statusword & (0x18)) == 0; // if bits 3 and 4 of status word are zero, calibration is done
     halt = !xsens_CalibrationDone || !(is_connected_wireless || is_connected_serial) || !REM_last_packet_had_correct_version;
-    if (halt) {
+	if(IS_RUNNING_TEST) halt = false;
+
+	if (halt) {
 		// LOG_printf("HALT %d %d %d\n", xsens_CalibrationDone, checkWirelessConnection(), isSerialConnected);
 		// toggle_Pin(LED5_pin);
         stateControl_ResetAngleI();
@@ -422,7 +481,7 @@ void loop(void){
     }
 
     // Update test (if active)
-    test_Update();
+    // test_Update();
     
     // Go through all commands if robot is not in HALT state
     if (!halt) {
@@ -430,6 +489,7 @@ void loop(void){
     }
 
 	/* == Fill robotFeedback packet == */ {
+		robotFeedback.timestamp = current_time;
 		robotFeedback.XsensCalibrated = xsens_CalibrationDone;
 		// robotFeedback.batteryLevel = (batCounter > 1000);
 		robotFeedback.ballSensorWorking = ballSensor_isInitialized();
@@ -446,7 +506,8 @@ void loop(void){
 		robotFeedback.dribblerSeesBall = dribbler_hasBall();
 	}
     
-	/* == Fill robotStateInfo packet == */ {		
+	/* == Fill robotStateInfo packet == */ {	
+		robotStateInfo.timestamp = current_time;	
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
@@ -472,6 +533,7 @@ void loop(void){
 		PIDvariables robotGains[4];
 		stateControl_GetPIDGains(robotGains);
 
+		robotPIDGains.timestamp = current_time;
 		robotPIDGains.PbodyX = robotGains[body_x].kP;
 		robotPIDGains.IbodyX = robotGains[body_x].kI;
 		robotPIDGains.DbodyX = robotGains[body_x].kD;
@@ -489,6 +551,10 @@ void loop(void){
     // Heartbeat every 17ms	
 	if(heartbeat_17ms < current_time){
 		while (heartbeat_17ms < current_time) heartbeat_17ms += 17;
+
+		if(IS_RUNNING_TEST){
+			IS_RUNNING_TEST = updateTestCommand(&activeRobotCommand, current_time - timestamp_initialized);
+		}
 	}	
 
     // Heartbeat every 100ms	
@@ -498,14 +564,14 @@ void loop(void){
 		stateInfo.dribblerSpeed = dribbler_GetMeasuredSpeeds();
 		stateInfo.dribblerFilteredSpeed = dribbler_GetFilteredSpeeds();
 		stateInfo.dribbleSpeedBeforeGotBall = dribbler_GetSpeedBeforeGotBall();
-		
-		if(is_connected_serial){
+
+		if(is_connected_serial){		
 			encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
 			HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
-		}
 
-		// encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
-		// HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+			encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
+			HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+		}
 
 	}
 
@@ -558,6 +624,8 @@ uint8_t robot_get_ID(){
 uint8_t robot_get_Channel(){
 	return ROBOT_CHANNEL == YELLOW_CHANNEL ? 0 : 1;
 }
+
+
 
 
 
@@ -683,11 +751,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi){
 /* Callback for when bytes have been received via the UART */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == UART_PC->Instance){
-		if(USE_PUTTY){
-			Putty_UARTCallback(huart);
-		} else {
-			REM_UARTCallback(huart);
-		}
+		REM_UARTCallback(huart);
 	}
 }
 

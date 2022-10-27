@@ -3,6 +3,8 @@ import time
 import serial
 from bitarray import bitarray
 from bitarray.util import int2ba, ba2int
+from inspect import getmembers
+import re
 
 def openPort(port=None, suppressError = True, timeout=None):
 	ser = None
@@ -65,3 +67,15 @@ def getSTLinkPath():
 		return None
 	except Exception:
 		return None
+
+def printCompletePacket(rc):
+	types_allowed = [int, str, bool, float]
+	maxLength = max([len(k) for k, v in getmembers(rc)])
+	title = re.findall(r"_(\w+) ", str(rc))[0]
+	
+	lines = [("┌─ %s "%title) + ("─"*100)[:maxLength*2+2-len(title)] + "┐" ]	
+	members = [ [k,v] for k,v in getmembers(rc) if type(v) in types_allowed and not k.startswith("__")]
+
+	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).strip().ljust(maxLength) ) for k, v in members ]
+	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
+	print("\n".join(lines))

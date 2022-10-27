@@ -21,15 +21,12 @@ class REMParser():
 			print(f"[REMParser] Creating output file {output_file}")
 			self.output_file = open(output_file, "wb")
 
-
-
 	def read(self):
-
 		bytes_in_waiting = self.device.inWaiting()
 		if bytes_in_waiting == 0: return
-		# print(f"[read] {bytes_in_waiting} bytes in waiting")
+		if DEBUG: print(f"[read] {bytes_in_waiting} bytes in waiting")
 		self.byte_buffer += self.device.read(bytes_in_waiting)
-		# print(f"[read] Read {bytes_in_waiting} bytes")
+		if DEBUG: print(f"[read] Read {bytes_in_waiting} bytes")
 
 	def process(self):
 		# No bytes in the buffer, so nothing to process
@@ -59,7 +56,7 @@ class REMParser():
 				break				
 
 			# At least the REM_Packet headers are in the buffer. Decode it
-			packet = REM_Log()
+			packet = REM_Packet()
 			packet.decode(self.byte_buffer[:BaseTypes.REM_PACKET_SIZE_REM_PACKET])
 
 			# Get the expected packet size as expected by REM
@@ -78,46 +75,26 @@ class REMParser():
 					self.byte_buffer = bytes()
 					raise Exception(f"[REMParser][process] Error! REM_Packet->payloadSize={packet.payloadSize} does not equal expected REM_PACKET_SIZE_*={rem_packet_size}! ")
 
-			# BasestationLog or RobotLog. Assumption that these are the only two packets with dynamic size
-			try:
-				if packet.header == BaseTypes.REM_PACKET_TYPE_REM_LOG:
+			# Retrieve the bytes of the entire packet from the byte buffer
+			packet_bytes = self.byte_buffer[:packet.payloadSize]
+			# Create packet instance
+			packet = BaseTypes.REM_PACKET_TYPE_TO_OBJ(packet_type)()
+			# Decode the packet
+			packet.decode(packet_bytes)
 
-					# Retrieve the bytes from the byte buffer
-					packet_bytes = self.byte_buffer[:packet.payloadSize]
-					# Decode the packet as REM_Log
-					packet = REM_Log()
-					packet.decode(packet_bytes)
-					# Get the message from the buffer. The message is everything after the REM_Packet header
-					message = packet_bytes[BaseTypes.REM_PACKET_SIZE_REM_LOG:]
-					# Convert bytes into string, and store in REM_Log object
-					packet.message = message.decode()
-					# Add packet to buffer
-					self.addPacket(packet)
-					# Write bytes to output file
-					self.writeBytes(packet_bytes + message)
-					# Remove processed bytes from buffer
-					self.byte_buffer = self.byte_buffer[packet.payloadSize:]
+			if packet.header == BaseTypes.REM_PACKET_TYPE_REM_LOG:
+				# Get the message from the buffer. The message is everything after the REM_Packet header
+				message = packet_bytes[BaseTypes.REM_PACKET_SIZE_REM_LOG:]
+				# Convert bytes into string, and store in REM_Log object
+				packet.message = message.decode()
 					
-				# Basestation get configuration
-				else:
-					packet_size = BaseTypes.REM_PACKET_TYPE_TO_SIZE(packet.header)
-					# print(f"[process] Packet of size {packet_size} : type {packet_type} ", end="")
-					if len(self.byte_buffer) < packet_size: break
-					# Create packet instance= 
-					packet_obj = BaseTypes.REM_PACKET_TYPE_TO_OBJ(packet.header)()
-					# print(f"\r[process] Packet of size {packet_size} : type {packet_type} : {type(packet_obj).__name__}")
-					packet_bytes = self.byte_buffer[:packet_size]
-					# Get required bytes from buffer and process
-					packet_obj.decode(packet_bytes)
-					# Add packet to buffer
-					self.addPacket(packet_obj)
-					# Write bytes to output file
-					self.writeBytes(packet_bytes)
-					# Remove processed bytes from buffer
-					self.byte_buffer = self.byte_buffer[packet_size:]
-			except Exception as e:
-				print("EXCEPTION", e)
-				self.byte_buffer = bytes()
+			# Add packet to buffer
+			self.addPacket(packet)
+			if DEBUG: print(f"- Added packet type={type(packet)}")
+			# Write bytes to output file
+			self.writeBytes(packet_bytes)
+			# Remove processed bytes from buffer
+			self.byte_buffer = self.byte_buffer[packet.payloadSize:]
 
 	def addPacket(self, packet):
 		self.packet_buffer.append(packet)

@@ -1,7 +1,6 @@
 import time
 from datetime import datetime
 import math
-from inspect import getmembers
 import serial
 import numpy as np
 import re
@@ -34,18 +33,6 @@ try:
 except:
 	print("Warning! Could not import cv2. Can't visualize.")
 	cv2_available = False
-
-def printCompletePacket(rc):
-	types_allowed = [int, str, bool, float]
-	maxLength = max([len(k) for k, v in getmembers(rc)])
-	title = re.findall(r"_(\w+) ", str(rc))[0]
-	
-	lines = [("┌─ %s "%title) + ("─"*100)[:maxLength*2+2-len(title)] + "┐" ]	
-	members = [ [k,v] for k,v in getmembers(rc) if type(v) in types_allowed and not k.startswith("__")]
-
-	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).strip().ljust(maxLength) ) for k, v in members ]
-	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
-	print("\n".join(lines))
 
 def drawProgressBar(progress):
 	cols = min(40, shutil.get_terminal_size((80, 20)).columns)
@@ -81,9 +68,11 @@ parser.add_argument('robot_id', help='Robot ID to send commands to', type=int)
 parser.add_argument('test', help='Test to execute', type=str)
 parser.add_argument('--simulate', '-s', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
 parser.add_argument('--no-visualization', '--nv', action='store_true', help='Disable robot feedback visualization')
+parser.add_argument('--output-file', '-o', help="REMParser output file")
 
 args = parser.parse_args()
 print(args)
+# exit()
 
 # Parse input arguments 
 robot_id = args.robot_id
@@ -259,11 +248,13 @@ while True:
 			port = None if not args.simulate else simulated_basestation.getSerialName()
 			basestation = utils.openContinuous(timeout=0.01, port=port)
 			print("Basestation opened")
+			if parser is not None:
+				parser.device = basestation
 
 		# Open writer / parser
 		if parser is None and basestation is not None:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-			parser = REMParser(basestation)
+			parser = REMParser(basestation, output_file=args.output_file)
 
 
 		# ========== LOOP ========== #
@@ -359,7 +350,6 @@ while True:
 			### Draw information received from the RobotFeedback packet
 			if REM_RobotFeedback in latest_packets and latest_packets[REM_RobotFeedback] is not None:
 				robotFeedback = latest_packets[REM_RobotFeedback]
-				# printCompletePacket(robotFeedback)
 				latest_packets[REM_RobotFeedback] = None
 				
 
@@ -460,4 +450,4 @@ while True:
 	except Exception as e:
 		print("[Error]", e)
 		basestation = None
-		# raise e
+		raise e

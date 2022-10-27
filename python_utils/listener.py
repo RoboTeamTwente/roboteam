@@ -19,18 +19,6 @@ from roboteam_embedded_messages.python.REM_Log import REM_Log
 
 from REMParser import REMParser
 
-def printCompletePacket(rc):
-	types_allowed = [int, str, bool, float]
-	maxLength = max([len(k) for k, v in getmembers(rc)])
-	title = re.findall(r"_(\w+) ", str(rc))[0]
-	
-	lines = [("┌─ %s "%title) + ("─"*100)[:maxLength*2+2-len(title)] + "┐" ]	
-	members = [ [k,v] for k,v in getmembers(rc) if type(v) in types_allowed and not k.startswith("__")]
-
-	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).strip().ljust(maxLength) ) for k, v in members ]
-	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
-	print("\n".join(lines))
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--robotcommand', '-r', help='Print REM_RobotCommand', action='store_true')
 parser.add_argument('--robotfeedback', '-f', help='Print REM_RobotFeedback', action='store_true')
@@ -91,10 +79,10 @@ while True:
 				if type(packet) not in packet_types_selected: continue
 
 				if args.verbose:
-					printCompletePacket(packet)
+					utils.printCompletePacket(packet)
 				else:
 					timestamp = str(packet.timestamp).rjust(5)
-					
+
 					sender = str(packet.fromRobotId).rjust(2)
 					if packet.fromBS: sender = "BS"
 					if packet.fromPC: senders = "PC"

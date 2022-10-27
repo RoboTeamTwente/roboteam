@@ -118,47 +118,51 @@ uint8_t stringbuffer[1024];
 extern UART_HandleTypeDef huart3;
 
 void init(){
-    HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
-    
+  HAL_Delay(1000); // TODO Why do we have this again? To allow for USB to start up iirc?
+  
+  LOG_init();
+  
+  LOG("[init:"STRINGIZE(__LINE__)"] Last programmed on " __DATE__ "\n");
+  LOG("[init:"STRINGIZE(__LINE__)"] GIT: " STRINGIZE(__GIT_STRING__) "\n");
+  LOG_printf("[init:"STRINGIZE(__LINE__)"] REM_LOCAL_VERSION: %d\n", REM_LOCAL_VERSION);
+  LOG_sendAll();
+  // static char charbuffer[100];
+  // sprintf(charbuffer, "Yellow World!\n");
 
-    LOG_init();
-    // static char charbuffer[100];
-    // sprintf(charbuffer, "Yellow World!\n");
-
-    // while(1){
-    //   LOG("Hello world\n");
-    //   LOG_sendBlocking(charbuffer, strlen(charbuffer));
-    //   // CDC_Transmit_FS(charbuffer, strlen(charbuffer));
-    //   // toggle_pin(LD_ACTIVE);
-    //   // HAL_UART_Transmit(&huart3, charbuffer, strlen(charbuffer), 10);
-    //   HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
-    //   HAL_Delay(1000);
-    // }
+  // while(1){
+  //   LOG("Hello world\n");
+  //   LOG_sendBlocking(charbuffer, strlen(charbuffer));
+  //   // CDC_Transmit_FS(charbuffer, strlen(charbuffer));
+  //   // toggle_pin(LD_ACTIVE);
+  //   // HAL_UART_Transmit(&huart3, charbuffer, strlen(charbuffer), 10);
+  //   HAL_GPIO_TogglePin(LD_LED2_GPIO_Port, LD_LED2_Pin);
+  //   HAL_Delay(1000);
+  // }
 
 
 
 
-    // Initialize the circular buffers for the nonprioriry queue
-    // STM32F767 has 512kb of RAM. Give each robot a 10kb buffer for a total of 160kb RAM. 
-    // That should be enough for around 200 messages per robot at least
+  // Initialize the circular buffers for the nonprioriry queue
+  // STM32F767 has 512kb of RAM. Give each robot a 10kb buffer for a total of 160kb RAM. 
+  // That should be enough for around 200 messages per robot at least
 
-    for(uint8_t robot_id = 0; robot_id < MAX_NUMBER_OF_ROBOTS; robot_id++){
-      nonpriority_queue_robots_index[robot_id] = CircularBuffer_init(true, 40);
-    }
-    nonpriority_queue_pc_index = CircularBuffer_init(true, 40);
-    nonpriority_queue_bs_index = CircularBuffer_init(true, 40);
+  for(uint8_t robot_id = 0; robot_id < MAX_NUMBER_OF_ROBOTS; robot_id++){
+    nonpriority_queue_robots_index[robot_id] = CircularBuffer_init(true, 40);
+  }
+  nonpriority_queue_pc_index = CircularBuffer_init(true, 40);
+  nonpriority_queue_bs_index = CircularBuffer_init(true, 40);
 
 
 
 
     // Init SX_TX
-    LOG("[init] Initializing SX_TX\n");
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_TX\n");
     bool SX_TX_init_err = false;
     SX_TX_Interface.BusyPin = SX_TX_BUSY;
     SX_TX_Interface.CS= SX_TX_CS;
     SX_TX_Interface.Reset= SX_TX_RST;
     // Set the print function. NULL to supress printing, LOG_printf to enable printing
-    SX_TX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, LOG_printf);
+    // SX_TX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, LOG_printf);
     // Wake up the TX SX1280 and send it all the default settings
     SX_TX_init_err |= WIRELESS_OK != Wireless_Init(SX_TX, SX1280_DEFAULT_SETTINGS, &SX_TX_Interface);
     // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
@@ -168,7 +172,7 @@ void init(){
 
     if(SX_TX_init_err){
       while(true){
-        LOG_printf("[init]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_TX! Please reboot the basestation\n");
+        LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_TX! Please reboot the basestation\n");
         LOG_sendAll();
         HAL_Delay(1000);
       }
@@ -179,7 +183,7 @@ void init(){
 
 
     // Init SX_RX
-    LOG("[init] Initializing SX_RX\n");
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_RX\n");
     bool SX_RX_init_err = false;
     SX_RX_Interface.BusyPin= SX_RX_BUSY;
     SX_RX_Interface.CS= SX_RX_CS;
@@ -200,7 +204,7 @@ void init(){
 
     if(SX_RX_init_err){
       while(true){
-        LOG_printf("[init]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_RX! Please reboot the basestation\n");
+        LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_RX! Please reboot the basestation\n");
         LOG_sendAll();
         HAL_Delay(1000);
       }
@@ -210,7 +214,7 @@ void init(){
     // Start the timer that is responsible for sending packets to the robots
     // With 16 robots at 60Hz each, this timer runs at approximately 960Hz
     /// It's required that all buffers are initialized before starting the timer!
-    LOG("[init] Initializing Timer\n");
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializing Timer\n");
     HAL_TIM_Base_Start_IT(&htim1);
 
     // display_Init();
@@ -224,7 +228,7 @@ void init(){
     encodeREM_SX1280Filler(&SX1280_filler_payload, &filler);
 
 
-    LOG("[init] Initializion complete\n");
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializion complete\n");
     LOG_sendAll();
 }
 

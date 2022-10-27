@@ -72,6 +72,7 @@ while True:
 	# Open serial_connection with the serial_connection
 	if serial_connection is None or not serial_connection.isOpen():
 		serial_connection = utils.openContinuous(timeout=0.01)
+		if parser is not None: parser.device = serial_connection
 
 	if parser is None and serial_connection is not None:
 		parser = REMParser(serial_connection)
@@ -112,4 +113,6 @@ while True:
 		print("[Error] KeyError", e, "{0:b}".format(int(str(e))))
 	except Exception as e:
 		print("\n[Exception]", e)
+		serial_connection = None
+		# raise e
 		# print(traceback.format_exc())

@@ -68,7 +68,7 @@ parser.add_argument('robot_id', help='Robot ID to send commands to', type=int)
 parser.add_argument('test', help='Test to execute', type=str)
 parser.add_argument('--simulate', '-s', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
 parser.add_argument('--no-visualization', '--nv', action='store_true', help='Disable robot feedback visualization')
-parser.add_argument('--output-file', '-o', help="REMParser output file")
+parser.add_argument('--output-dir', '-d', help="REMParser output directory. Logs will be placed under 'logs/OUTPUT_DIR'")
 
 args = parser.parse_args()
 print(args)
@@ -87,7 +87,7 @@ basestation = None
 simulated_basestation = None
 
 tick_counter = 0
-periodLength = 300
+periodLength = 150
 packetHz = 60
 
 robotConnected = True
@@ -254,7 +254,12 @@ while True:
 		# Open writer / parser
 		if parser is None and basestation is not None:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-			parser = REMParser(basestation, output_file=args.output_file)
+			output_file = None
+			if args.output_dir is not None:
+				os.makedirs(f"logs/{args.output_dir}", exist_ok=True)
+				output_file = f"logs/{args.output_dir}/log_{datetime_str}.bin"
+
+			parser = REMParser(basestation, output_file=output_file)
 
 
 		# ========== LOOP ========== #
@@ -428,6 +433,7 @@ while True:
 				cv2.imshow("Press esc to quit", image_vis)
 				if cv2.waitKey(1) == 27: 
 					if simulated_basestation is not None: simulated_basestation.stop()
+					if(args.output_dir): print(f"Logs are written to {parser.output_file}")
 					exit()
 				image_vis *= 0.7
 

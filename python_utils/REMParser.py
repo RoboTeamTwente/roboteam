@@ -1,7 +1,17 @@
 import numpy as np
 from collections import deque
+import argparse
+import utils
+import json
+import copy
+import time 
+from datetime import datetime
+import os
+
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_Packet import REM_Packet
+from roboteam_embedded_messages.python.REM_RobotFeedback import REM_RobotFeedback
+from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateInfo
 from roboteam_embedded_messages.python.REM_Log import REM_Log
 
 DEBUG = False
@@ -28,7 +38,7 @@ class REMParser():
 		self.byte_buffer += self.device.read(bytes_in_waiting)
 		if DEBUG: print(f"[read] Read {bytes_in_waiting} bytes")
 
-	def process(self):
+	def process(self, parse_file=False):
 		# No bytes in the buffer, so nothing to process
 		if len(self.byte_buffer) == 0: return
 		
@@ -38,6 +48,12 @@ class REMParser():
 		while True:
 			# Stop when there are no more bytes to process
 			if len(self.byte_buffer) == 0: break
+
+			timestamp_parser_ms = None
+			if parse_file:
+				timestamp_ms_bytes = self.byte_buffer[:8]
+				timestamp_parser_ms = int.from_bytes(timestamp_ms_bytes, 'little')
+				self.byte_buffer = self.byte_buffer[8:]
 
 			if DEBUG: print(f"- while True | {len(self.byte_buffer)} bytes in buffer")
 
@@ -87,7 +103,10 @@ class REMParser():
 				message = packet_bytes[BaseTypes.REM_PACKET_SIZE_REM_LOG:]
 				# Convert bytes into string, and store in REM_Log object
 				packet.message = message.decode()
-					
+			
+			if timestamp_parser_ms is not None:
+				packet.timestamp_parser_ms = timestamp_parser_ms
+
 			# Add packet to buffer
 			self.addPacket(packet)
 			if DEBUG: print(f"- Added packet type={type(packet)}")
@@ -100,7 +119,9 @@ class REMParser():
 		self.packet_buffer.append(packet)
 		
 	def writeBytes(self, _bytes):
-		if self.output_file is not None: 
+		if self.output_file is not None:
+			time_ms_bytes = int(time.time()*1000).to_bytes(8, 'little')
+			self.output_file.write(time_ms_bytes)
 			self.output_file.write(_bytes)
 
 	def hasPackets(self):
@@ -113,7 +134,7 @@ class REMParser():
 		print(f"[REMParser] Parsing file {filepath}")
 		with open(filepath, "rb") as file:
 			self.byte_buffer = file.read()
-			self.process()
+			self.process(parse_file=True)
 
 		packet_counts = {}
 		for packet in self.packet_buffer:
@@ -124,3 +145,61 @@ class REMParser():
 
 		for packet_type in packet_counts:
 			print(packet_type.__name__.ljust(30), packet_counts[packet_type])
+
+
+if __name__ == "__main__":
+	print("Running REMParser directly")
+
+	argparser = argparse.ArgumentParser()
+	argparser.add_argument('input_file', help='File to parse')
+	args = argparser.parse_args()
+
+	print("Parsing file", args.input_file)
+
+	parser = REMParser(device=None)
+	parser.parseFile(args.input_file)
+
+	packet_dicts = []
+	for packet in parser.packet_buffer:
+		if type(packet) in [REM_RobotFeedback]:
+			packet_dict = utils.packetToDict(packet)
+			packet_dicts.append(packet_dict)
+
+	# Split up packets into types
+	packets_by_type = {}
+	for packet in parser.packet_buffer:
+		type_str = type(packet).__name__
+		if type_str not in packets_by_type:
+			packets_by_type[type_str] = []
+		packets_by_type[type_str].append(utils.packetToDict(packet))
+
+	output_file_no_ext = os.path.splitext(args.input_file)[0]
+
+	for type_str in packets_by_type:
+		packets = packets_by_type[type_str]
+		
+		# json
+		output_file_json = f"{output_file_no_ext}_{type_str}.json"
+		with open(output_file_json, 'w') as file:
+			file.write(json.dumps(packets))
+
+		# CSV
+		output_file_csv = f"{output_file_no_ext}_{type_str}.csv"
+		with open(output_file_csv, 'w') as file:
+			header = ", ".join(list(packets[0].keys()))
+			file.write(header + "\n")
+			for packet in packets:
+				values = list(packet.values())
+				string = ", ".join([str(v) for v in values])
+				file.write(string + "\n")
+
+	print("Done!")
+
+
+
+
+
+
+
+
+

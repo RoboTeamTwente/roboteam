@@ -79,3 +79,8 @@ def printCompletePacket(rc):
 	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).strip().ljust(maxLength) ) for k, v in members ]
 	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
 	print("\n".join(lines))
+
+def packetToDict(rc):
+	types_allowed = [int, str, bool, float]
+	members = { k:v for k,v in getmembers(rc) if type(v) in types_allowed and not k.startswith("__") }
+	return members

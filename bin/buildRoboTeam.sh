@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ../
+
 num_of_cores=$(nproc)
 num_of_cores=$(expr $num_of_cores / 2)
 

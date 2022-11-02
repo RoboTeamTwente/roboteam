@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "Starting grSim"
-cd ../grSim/bin
+cd ../../grSim/bin
 ./grSim

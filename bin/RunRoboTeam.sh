@@ -1,5 +1,4 @@
 #!/bin/bash
-num_of_cores=9
 
 echo "starting Observer"
 ./cmake-build-debug/roboteam_world/roboteam_observer &

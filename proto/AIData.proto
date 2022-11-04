@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotPath {
+  message Point {
+    double x = 1;
+    double y = 2;
+  }
+  int32 robot_id = 1;
+  repeated Point points = 2;
+}
+
+message RobotSTP {
+  int32 robot_id = 1;
+  string role = 2;
+  string role_status = 3;
+  string tactic = 4;
+  string tactic_status = 5;
+  string skill = 6;
+  string skill_status = 7;
+}
+
+message AIData {
+  repeated RobotSTP robot_stps = 1;
+  repeated RobotPath robot_paths = 2;
+}

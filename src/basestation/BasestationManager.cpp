@@ -1,6 +1,8 @@
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
-#include <REM_BasestationLog.h>
+#include <REM_BaseTypes.h>
+#include <REM_Packet.h>
+#include <REM_Log.h>
 #include <roboteam_utils/Print.h>
 
 namespace rtt::robothub::basestation {
@@ -40,7 +42,7 @@ int BasestationManager::sendRobotCommand(const REM_RobotCommand& command, rtt::T
     encodeREM_RobotCommand(&payload, &copy);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_REM_ROBOT_COMMAND;
+    message.payloadSize = REM_PACKET_SIZE_REM_ROBOT_COMMAND;
     std::memcpy(&message.payloadBuffer, payload.payload, message.payloadSize);
 
     int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
@@ -54,7 +56,7 @@ int BasestationManager::sendRobotBuzzerCommand(const REM_RobotBuzzer& command, r
     encodeREM_RobotBuzzer(&payload, &copy);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_REM_ROBOT_BUZZER;
+    message.payloadSize = REM_PACKET_SIZE_REM_ROBOT_BUZZER;
     std::memcpy(message.payloadBuffer, payload.payload, message.payloadSize);
 
     int bytesSent = this->basestationCollection->sendMessageToBasestation(message, color);
@@ -103,8 +105,17 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
 }
 
 void BasestationManager::handleIncomingMessage(const BasestationMessage& message, rtt::Team color) const {
-    switch (message.payloadBuffer[0]) {
-        case PACKET_TYPE_REM_ROBOT_FEEDBACK: {
+    REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
+    uint32_t payloadSize = REM_Packet_get_payloadSize(packetPayload);
+    uint8_t packetType = REM_Packet_get_header(packetPayload);
+
+    if(message.payloadSize != payloadSize) {
+        RTT_ERROR("Payload size of message does not match the size specified in the packet header. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);
+        return;
+    }
+
+    switch (packetType) {
+        case REM_PACKET_TYPE_REM_ROBOT_FEEDBACK: {
             REM_RobotFeedbackPayload payload;
             std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
 
@@ -114,7 +125,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             this->callFeedbackCallback(feedback, color);
             break;
         }
-        case PACKET_TYPE_REM_ROBOT_STATE_INFO: {
+        case REM_PACKET_TYPE_REM_ROBOT_STATE_INFO: {
             REM_RobotStateInfoPayload payload;
             std::memcpy(payload.payload, message.payloadBuffer, message.payloadSize);
 
@@ -124,43 +135,42 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             this->callRobotStateInfoCallback(stateInfo, color);
             break;
         }
-        case PACKET_TYPE_REM_BASESTATION_LOG: {
-            REM_BasestationLogPayload payload;
-            std::memcpy(payload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_LOG);
+        case REM_PACKET_TYPE_REM_LOG: {
+            REM_LogPayload payload;
+            std::memcpy(payload.payload, message.payloadBuffer, REM_PACKET_SIZE_REM_LOG);
 
-            REM_BasestationLog log;
-            decodeREM_BasestationLog(&log, &payload);
-
-            // This is the last index +1. Basically indicates the size of the payload that is actually *used*.
-            int endIndexOfLogMessage = std::min(message.payloadSize, static_cast<int>(PACKET_SIZE_REM_BASESTATION_LOG + log.messageLength));
-
+            REM_Log log;
+            decodeREM_Log(&log, &payload);
+            
+            uint32_t logLength = message.payloadSize - REM_PACKET_SIZE_REM_LOG;
+            
             static constexpr int charsToSkip = 1; // We skip the last character of log messages, as its always a '\n'
 
             // Convert the received log bytes into a string
             std::ostringstream oss;
-            for (int i = PACKET_SIZE_REM_BASESTATION_LOG; i < endIndexOfLogMessage - charsToSkip; i++) {
+            for (int i = REM_PACKET_SIZE_REM_LOG; i < message.payloadSize - charsToSkip; i++) {
                 oss << static_cast<char>(message.payloadBuffer[i]); // Convert uint32_t byte to char and store in stream
             }
             std::string logMessage = oss.str();
 
-            if (logMessage.length() == log.messageLength - charsToSkip) {
+            if (logMessage.length() == logLength - charsToSkip) {
                 // We correctly retrieved the log message
                 this->callBasestationLogCallback(logMessage, color);
-            } else if (log.messageLength == 0) {
+            } else if (logLength == 0) {
                 // We received an intended empty log message... But why?
                 RTT_WARNING("Received empty basestation log message")
             } else {
                 // We ended up with a message shorter (or longer?) than what the length should have been
-                RTT_ERROR("BasestationLogMessage turned out wrongly sized (", logMessage.length(), " instead of ", log.messageLength - charsToSkip, ")")
+                RTT_ERROR("BasestationLogMessage turned out wrongly sized (", logMessage.length(), " instead of ", logLength - charsToSkip, ")")
             }
 
             break;
         }
-        case PACKET_TYPE_REM_ROBOT_PIDGAINS: {
+        case REM_PACKET_TYPE_REM_ROBOT_PIDGAINS: {
             break;
         }
         default: {
-            RTT_WARNING("Unhandled basestation message: ", (int) message.payloadBuffer[0])
+            RTT_WARNING("Unhandled basestation message: ", packetType)
             break;
         }
         // TODO: Other packets can be handled as well

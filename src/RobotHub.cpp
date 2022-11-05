@@ -1,3 +1,4 @@
+#include <REM_BaseTypes.h>
 #include <REM_RobotCommand.h>
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
@@ -39,7 +40,7 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
     this->basestationManager->setBasestationLogCallback([&](const std::string& log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
-    if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
+    // if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
@@ -120,9 +121,14 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         // Convert the RobotCommand to a command for the basestation
 
         REM_RobotCommand command;
-        command.header = PACKET_TYPE_REM_ROBOT_COMMAND;
-        command.remVersion = LOCAL_REM_VERSION;
-        command.id = robotCommand.id;
+        command.header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+        command.toRobotId = robotCommand.id;
+        command.toColor = color == rtt::Team::BLUE;
+        command.fromBS = true;
+        command.remVersion = REM_LOCAL_VERSION;
+        // command.messageId = 0; TODO implement incrementing message id
+        command.payloadSize = REM_PACKET_SIZE_REM_ROBOT_COMMAND;
+
         command.kickAtAngle = robotCommand.kickAtAngle;
         command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::KICK;
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
@@ -181,7 +187,7 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
             break;
     }
 
-    if (this->logger.has_value()) { this->logger.value().logRobotCommands(commands, color); }
+    // if (this->logger.has_value()) { this->logger.value().logRobotCommands(commands, color); }
 }
 
 void RobotHub::onSettings(const proto::Setting &_settings) {
@@ -265,7 +271,7 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     this->sendRobotFeedback(robotsFeedback);
     this->handleSimulationErrors(feedback.simulationErrors);
 
-    if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
+    // if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
 }
 
 void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team basestationColor) {
@@ -274,7 +280,7 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
     robotsFeedback.team = basestationColor;
 
     rtt::RobotFeedback robotFeedback = {
-        .id = static_cast<int>(feedback.id),
+        .id = static_cast<int>(feedback.fromRobotId),
         .ballSensorSeesBall = feedback.ballSensorSeesBall,
         .ballPosition = feedback.ballPos,
         .ballSensorIsWorking = feedback.ballSensorWorking,
@@ -293,9 +299,9 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
     this->sendRobotFeedback(robotsFeedback);
 
     // Increment the feedback counter of this robot
-    this->statistics.incrementFeedbackReceivedCounter(feedback.id, basestationColor);
+    this->statistics.incrementFeedbackReceivedCounter(feedback.fromRobotId, basestationColor);
 
-    if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
+    // if (this->logger.has_value()) { this->logger->logRobotFeedback(robotsFeedback); }
 }
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
@@ -309,11 +315,11 @@ void RobotHub::handleSimulationConfigurationFeedback(const simulation::Configura
 }
 
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
-    if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
+    // if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
 }
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
-    if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
+    // if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
     RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
 }
 
@@ -330,7 +336,7 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
             message = "Received unknown Simulation error";
 
         RTT_ERROR(message);
-        if (this->logger.has_value()) { this->logger->logInfo("WARNING: " + message); }
+        // if (this->logger.has_value()) { this->logger->logInfo("WARNING: " + message); }
     }
 }
 
@@ -340,14 +346,15 @@ const char *FailedToInitializeNetworkersException::what() const noexcept { retur
 
 int main(int argc, char *argv[]) {
     auto itLog = std::find(argv, argv + argc, std::string("-log"));
-    bool shouldLog = itLog != argv + argc;
+    // bool shouldLog = itLog != argv + argc;
 
     auto itMarple = std::find(argv, argv + argc, std::string("-marple"));
     bool logForMarple = itMarple != argv + argc;
 
-    if (logForMarple) shouldLog = true; // Log for marple means to log
+    // if (logForMarple) shouldLog = true; // Log for marple means to log
 
-    rtt::robothub::RobotHub app(shouldLog, logForMarple);
+    // rtt::robothub::RobotHub app(shouldLog, logForMarple);
+    rtt::robothub::RobotHub app(false, false);
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));

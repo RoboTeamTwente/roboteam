@@ -4,7 +4,6 @@ import math
 import time
 import signal
 from xbox360controller import Xbox360Controller
-import utils
 import serial
 from datetime import datetime
 import numpy as np
@@ -12,9 +11,10 @@ import threading
 from glob import glob
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
-from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand as RobotCommand
-from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer as RobotBuzzer
-
+from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
+from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer
+from REMParser import REMParser
+import utils
 
 basestation_handler = None
 joystick_handler = None
@@ -96,6 +96,7 @@ class JoystickHandler:
 							self.event_handler.record_event(id, "New controller discovered")
 						except Exception as e:
 							print(e)
+							sleep(1)
 							pass
 
 				time.sleep(0.1)
@@ -119,8 +120,12 @@ class Joystick:
 		self.Y = False
 		self.HAT_X = 0
 		self.HAT_Y = 0
-		self.command = RobotCommand()
-
+		self.command = REM_RobotCommand()
+		self.command.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+		self.command.fromPC = True
+		self.command.remVersion = BaseTypes.REM_LOCAL_VERSION
+		self.command.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND
+		
 		self.assign_open_robot(1)
 
 	def assign_open_robot(self, addition=0):
@@ -176,27 +181,25 @@ class Joystick:
 			velocity_y = ( abs(self.controller.axis_l.y) - deadzone) / (1 - deadzone)
 			velocity_y *= np.sign(self.controller.axis_l.y)
 
-		rho = math.sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
+		rho = 0.5 * math.sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
 		theta = math.atan2(-velocity_x, -velocity_y);
 
-		self.command.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
-		self.command.remVersion = BaseTypes.LOCAL_REM_VERSION
-		self.command.id = self.robot_id
+		self.command.toRobotId = self.robot_id
 
 		self.command.rho = rho
 		self.command.theta = theta + self.absolute_angle
 		self.command.angle = self.absolute_angle
 		self.command.useAbsoluteAngle = 1
 
-		buzzer_value = self.controller.trigger_l._value
-		if 0.3 < buzzer_value:
-			buzzer_command = RobotBuzzer()
-			buzzer_command.header = BaseTypes.PACKET_TYPE_REM_ROBOT_BUZZER
-			buzzer_command.remVersion = BaseTypes.LOCAL_REM_VERSION
-			buzzer_command.id = self.robot_id
-			buzzer_command.period = int(buzzer_value * 1000)
-			buzzer_command.duration = 0.1
-			return buzzer_command.encode()
+		# buzzer_value = self.controller.trigger_l._value
+		# if 0.3 < buzzer_value:
+		# 	buzzer_command = REM_RobotBuzzer()
+		# 	buzzer_command.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_BUZZER
+		# 	buzzer_command.remVersion = BaseTypes.REM_LOCAL_VERISON
+		# 	buzzer_command.id = self.robot_id
+		# 	buzzer_command.period = int(buzzer_value * 1000)
+		# 	buzzer_command.duration = 0.1
+		# 	return buzzer_command.encode()
 
 		return self.command.encode()
 
@@ -215,13 +218,22 @@ class BasestationHandler:
 
 	def loop(self):
 		try:
+			os.makedirs("logs/joystick", exist_ok=True)
+			filename = datetime.now().strftime("%Y-%m-%d_%H:%M:%S") + ".rembin"
+			logger = REMParser(self.basestation, f"logs/joystick/{filename}")
+
 			last_written = time.time()
 			while self.running:
 				if 1./self.packet_Hz <= time.time() - last_written:
 					last_written += 1./self.packet_Hz
 
 					for i in joystick_handler.controllers:
-						self.basestation.write(joystick_handler.controllers[i].get_payload())
+						payload = joystick_handler.controllers[i].get_payload()
+						logger.writeBytes(payload)
+						self.basestation.write(payload)
+
+					logger.read() # Read all available bytes
+					logger.process() # Convert all read bytes into packets
 
 				time.sleep(0.005)
 		except Exception as e:

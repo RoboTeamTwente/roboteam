@@ -5,7 +5,7 @@ import utils
 import json
 import copy
 import time 
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
@@ -130,22 +130,37 @@ class REMParser():
 	def getNextPacket(self):
 		if self.hasPackets(): return self.packet_buffer.popleft()
 
-	def parseFile(self, filepath):
+	def parseFile(self, filepath, print_statistics=True):
 		print(f"[REMParser] Parsing file {filepath}")
 		with open(filepath, "rb") as file:
 			self.byte_buffer = file.read()
 			self.process(parse_file=True)
 
+		if not print_statistics: return
+
+		# Print file statistics
+
 		packet_counts = {}
+		packet_timestamps = {}
+		
+		print("   ", "PACKET TYPE".ljust(20), "COUNT", " ", "START DATE".ljust(23), " ", "STOP DATE".ljust(23), " ", "DURATION H:M:S:MS")
 		for packet in self.packet_buffer:
 			packet_type = type(packet)
 			if packet_type not in packet_counts:
 				packet_counts[packet_type] = 0
+				packet_timestamps[packet_type] = {'start' : packet.timestamp_parser_ms / 1000}
 			packet_counts[packet_type] += 1
+			packet_timestamps[packet_type]['stop'] = packet.timestamp_parser_ms / 1000
 
 		for packet_type in packet_counts:
-			print(packet_type.__name__.ljust(30), packet_counts[packet_type])
+			start_sec, stop_sec = packet_timestamps[packet_type].values()
+			start_msec, stop_msec = start_sec % 1, stop_sec % 1
+			datetime_str_start = datetime.fromtimestamp(np.floor(start_sec)).strftime("%Y-%m-%d %H:%M:%S")  + (f".{start_msec:.3f}"[2:])
+			datetime_str_stop  = datetime.fromtimestamp(np.floor(stop_sec )).strftime("%Y-%m-%d %H:%M:%S")  + (f".{stop_msec :.3f}"[2:])
+			duration_sec = stop_sec - start_sec
+			duration_str = str(timedelta(seconds=duration_sec))[:-3]
 
+			print("   ", packet_type.__name__.ljust(20), str(packet_counts[packet_type]).rjust(5), " ", datetime_str_start, " ", datetime_str_stop, " ", duration_str)
 
 if __name__ == "__main__":
 	print("Running REMParser directly")
@@ -186,11 +201,11 @@ if __name__ == "__main__":
 		# CSV
 		output_file_csv = f"{output_file_no_ext}_{type_str}.csv"
 		with open(output_file_csv, 'w') as file:
-			header = ", ".join(list(packets[0].keys()))
+			header = ",".join(list(packets[0].keys()))
 			file.write(header + "\n")
 			for packet in packets:
 				values = list(packet.values())
-				string = ", ".join([str(v) for v in values])
+				string = ",".join([str(v) for v in values])
 				file.write(string + "\n")
 
 	print("Done!")

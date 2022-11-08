@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ../
+
 echo "starting Observer"
 ./cmake-build-debug/roboteam_world/roboteam_observer &
 

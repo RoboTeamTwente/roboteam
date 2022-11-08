@@ -6,7 +6,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 include(ccache) # For daster compiling
 include(FindSodium) # ? Not required...
 include(GetSDL) # For connecting joysticks to the GUI
-include(GetWebsocket) # ?
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support

@@ -8,8 +8,6 @@ This repo contains:
 - Roboteam Utils, which contains a lot of helper functions, primarily geometrical in nature, such as Lines, Triangles, etc. These are used in other repo's, such as Roboteam AI and Roboteam World
 - Roboteam Proto, which contains the protocol used to send and receive messages over TCP/UDP
 
-In order to test this code, we use the GRSim simulator developed by the SSL Team Parsian. However, due to differences in the control mechanism of the robot (specifically, theta vs omega control), this software requires the [RoboTeam fork of GRSim](https://github.com/RoboTeamTwente/grSim). Installation instructions can be found in the readme of that repo.
-
 Please note:
 This software is tested on Ubuntu 20.04 LTS, and the installation instructions are written with that distro/OS in mind. However, other distro's of Linux are also likely to be able to run this software, albeit with some modifications.
 
@@ -20,12 +18,11 @@ First, clone this repository. We recommend using an SSH key if you are able to d
 ```bash
 $ mkdir -p ~/roboteam
 $ git clone --recursive https://github.com/RoboTeamTwente/roboteam_suite.git ~/roboteam/roboteam_suite
-# This might actually create the directory, but might aswel create it manually
 ```
 
 Now, you can open the roboteam_suite project with an IDE of your choice. We recommed CLion, as it has a lot of very helpful features and you can get a student license for it.
 
-Make sure you have CMake installed. Go to the CMakeLists.txt and click on it. CLion will generate a pop-up saying "project files not loaded" in blue in the top right corner. Clicking it will have CMake load the project. This means it generates instructions on how the files should be compiled in order to produce the executables specified in the CMakeLists.txt file. You can now compile the targets!
+Make sure you have the dependencies installed. Go to the CMakeLists.txt and click on it. CLion will generate a pop-up saying "project files not loaded" in blue in the top right corner. Clicking it will have CMake load the project. This means it generates instructions on how the files should be compiled in order to produce the executables specified in the CMakeLists.txt file. You can now compile the targets!
 
 The easiest way to run the application is to make some [compound executables](https://www.jetbrains.com/help/clion/run-debug-configuration.html#config-folders) in CLion that boot everything you need. To run 1 team in GRSim, the simulator, you will need to add roboteam_ai, roboteam_world, and roboteam_robothub.
 Make sure you have GRSim or ssl-vision running and are listening to the right ports. In general, the GRSim vision multicast port should be set to 10006.
@@ -61,11 +58,11 @@ Then run this compound executable and run GRSim.
 Follow the steps used for the other compound executable, only now add 2 extra targets: roboteam_ai_1 and roboteam_robothub_1, as seen in the screenshot, to the compound. While creating the new CMake Targets, be sure to include a "1" in the program arguments, as seen in the image.
 ![run_two_teams](https://github.com/RoboTeamTwente/roboteam_suite/blob/RobotJesse-patch-1/readme_images/run_two_teams.png?raw=true)
 
-## Installation
+## Installation Ubuntu
 
 ### List of dependencies
 
-- [CMake 3.16](https://cmake.org/)
+- [CMake >3.16](https://cmake.org/)
 - [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
 - [ZeroMQ 4.2.5](https://zeromq.org/)
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
@@ -74,76 +71,8 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 - [Ninja](http://ninja-build.org)
 - [CCache](https://ccache.dev)
 - [Google Test and Google Mock](https://github.com/google/googletest)
-- [nlohmann-json](https://github.com/nlohmann/json)
 
-### Installation of Dependencies (tested on Ubuntu 20.04)
-
-Any command preceded by `#` indicates that it has to be ran using `sudo`.
-Any command peceded by `$` can be ran as your user.
-
-#### Dependencies in aptitude
-
-Install these by running the following:
-
-```bash
-# apt -y update
-# apt -y dist-upgrade
-# apt -y install \
-    ccache \
-    libzmq3-dev \
-    clang \
-    clang-format \
-    xvfb \
-    ninja-build \
-    autoconf \
-    automake \
-    libtool \
-    libtbb-dev \
-    apt-utils \
-    libboost-all-dev \
-    libeigen3-dev \
-    curl \
-    make \
-    g++ \
-    unzip \
-    cmake \
-    libqt5charts5-dev \
-    libsdl2-dev \
-    qtdeclarative5-dev \
-    git
-```
-
-#### Install nlohmann-json
-
-```bash
-$ sudo -s /bin/bash -c "mkdir -p /usr/include/nlohmann && \
-    curl https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp > /usr/include/nlohmann/json.hpp"
-```
-
-#### Install protobuf 3.9.1
-
-```bash
-$ sudo /bin/bash -c "git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&\
-    cd /opt/protobuf &&\
-    git submodule update --init --recursive &&\
-    ./autogen.sh &&\
-    ./configure &&\
-    make -j $(nproc)&&\
-    make install &&\
-    ldconfig"
-```
-
-### Install Google Test
-
-```bash
-$ sudo -s /bin/bash -c "git clone https://github.com/google/googletest.git /opt/googletest &&\
-    cd /opt/googletest &&\
-    mkdir install &&\
-    cd install &&\
-    cmake .. &&\
-    make -j $(nproc)&&\
-    make install"
-```
+Either install these manually or run the script called `install_UBUNTU_20_04.sh`
 
 ## Installation on macOS (tested on macOS 12.2.1 Monterey)
 Make sure you already have the following:
@@ -231,3 +160,4 @@ To enable Tracy
 - Compile Tracy Server and run
   - Information is in the tracy [docs](https://github.com/wolfpld/tracy)
 - Run AI
+

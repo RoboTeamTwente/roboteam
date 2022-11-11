@@ -44,13 +44,15 @@ class EventHandler:
 		try:
 			while self.running:
 				# Clear terminal
-				os.system('cls' if os.name == 'nt' else 'clear')
+				# os.system('cls' if os.name == 'nt' else 'clear')
 
+				string = "\r"
 				for id in self.joystick_handler.controllers:
 					controller = self.joystick_handler.controllers[id]
 					id = int(id) + 1
-					print(f"Controller: {id} | Robot: {controller.robot_id} (Dribbler: {controller.dribbler})")
-				print()
+					string += f" Joystick {id} -> Robot {controller.robot_id} | "
+					# print(f"\rController: {id} | Robot: {controller.robot_id} (Dribbler: {controller.dribbler})", end=)
+				print(string, end="")
 
 				for event in self.events:
 					print(event)
@@ -102,7 +104,7 @@ class JoystickHandler:
 				time.sleep(0.1)
 		except Exception as e:
 			self.event_handler.record_event(-1, e)
-			print(e)
+			print(f"\n{e}")
 			self.shutdown()
 
 class Joystick:
@@ -118,6 +120,8 @@ class Joystick:
 		self.B = False
 		self.X = False
 		self.Y = False
+		self.TRIGGER_R = False
+		self.TRIGGER_L = False
 		self.HAT_X = 0
 		self.HAT_Y = 0
 		self.command = REM_RobotCommand()
@@ -144,10 +148,15 @@ class Joystick:
 			self.robot_id = (self.robot_id + self.controller.hat.x) % 16
 			self.assign_open_robot(addition=self.controller.hat.x)
 
-		# Toggle dribbler
+		# Toggle dribbler with Y
 		if self.controller.button_y._value and not self.Y:
 			self.dribbler = not self.dribbler
 		self.Y = self.controller.button_y._value
+		# Toggle dribbler with left trigger
+		if self.controller.button_trigger_l._value and not self.Y:
+			self.dribbler = not self.dribbler
+		self.TRIGGER_L = self.controller.button_trigger_l._value
+
 		self.command.dribbler = self.dribbler
 
 		# Kick or chip
@@ -159,11 +168,19 @@ class Joystick:
 			self.command.doForce = True
 		self.A = self.controller.button_a._value
 
+		# Kick with B
 		if self.controller.button_b._value and not self.B:
 			self.command.kickChipPower = self.kick_speed
 			self.command.doKick = True
 			self.command.doForce = True
 		self.B = self.controller.button_b._value
+		# Kick with right trigger
+		if self.controller.button_trigger_r._value and not self.TRIGGER_R:
+			self.command.kickChipPower = self.kick_speed
+			self.command.doKick = True
+			self.command.doForce = True
+		self.TRIGGER_R = self.controller.button_trigger_r._value
+
 
 		# Calculate angle
 		if 0.3 < abs(self.controller.axis_r.x): self.absolute_angle -= self.controller.axis_r.x * 0.1

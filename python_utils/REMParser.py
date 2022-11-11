@@ -30,7 +30,13 @@ class REMParser():
 		if type(output_file) == str:
 			print(f"[REMParser] Creating output file {output_file}")
 			self.output_file = open(output_file, "wb")
-
+			try:
+				# Create symlink
+				os.remove("latest.rembin")
+			except Exception as e:
+				print("\n")
+				print(e)
+			os.symlink(output_file, "latest.rembin")
 	def read(self):
 		bytes_in_waiting = self.device.inWaiting()
 		if bytes_in_waiting == 0: return

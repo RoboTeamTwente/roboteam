@@ -40,15 +40,19 @@ void kalman_Update(float acc[2], float vel[2]){
 		az[2] = vel[1];
 		az[3] = acc[1];
 
+		// Computes the formula:
+		// Xk = Fk * X(k-1) + Bk * Uk
 		multiplyMatrix(aF, aXold, aFX, STATE, 1, STATE);
 		multiplyMatrix(aB, aU, aBU, STATE, 1, STATE);
 		addMatrix(aFX, aBU, aXcurrent, STATE);
 
 		// Process data
+		// Yk = Zk - Hk * Xk
 		multiplyMatrix(aH, aXcurrent, aHX, OBSERVE, 1, STATE);
 		subMatrix(az, aHX, ayold, OBSERVE);
 
 		// Update
+		// X(k+1) = Kk * Yk + Xk
 		multiplyMatrix(aK, ayold, aKy, STATE, 1, OBSERVE);
 		addMatrix(aXcurrent, aKy, aXnew, STATE);
 
@@ -63,24 +67,39 @@ void kalman_CalculateK(){
 	static float count = 0;
 	if (count < 100){
 		static float oldk[STATE*OBSERVE] = {0};
+
+		// Calculates the predicted estimate covariance
+		// Pk = Fk * P(k-1) * Ftk + Qk
 		multiplyMatrix(aF, aPold, aFP, STATE, STATE, STATE);
 		multiplyMatrix(aFP, aFt, aFPFt, STATE, STATE, STATE);
 		addMatrix(aFPFt, aQ, aPcurrent, STATE*STATE);
 
+		// Calculates the innovation covariance
+		// Sk = Pk * Htk * Hk + Rk
 		multiplyMatrix(aPcurrent, aHt, aPHt, STATE, OBSERVE, STATE);
 		multiplyMatrix(aH, aPHt, aHPHt, OBSERVE, OBSERVE, STATE);
 		addMatrix(aR, aHPHt, aS, OBSERVE*OBSERVE);
 
 		// Compute Kalman Gain
+		// Kk = Pk * Htk * Sik
 		inverse(aS, aSi);
 		multiplyMatrix(aPHt, aSi, aK, STATE, OBSERVE, OBSERVE);
 
+		// Calculate the posteriori estimate covariance matrix
+		// Pk = (I - Kk * Hk) * P(k - 1) * (I - Kk * Hk)t + Kk * Rk * Ktk
+
+		// KRKt = Kk * Rk * Ktk
 		transMatrix(aK, aKt, STATE, OBSERVE);
 		multiplyMatrix(aK, aR, aKR, STATE, OBSERVE, OBSERVE);
 		multiplyMatrix(aKR, aKt, aKRKt, STATE, STATE, OBSERVE);
+
+		// I-KH = I - Kk * Hh
 		multiplyMatrix(aK, aH, aKH, STATE, STATE, OBSERVE);
 		subMatrix(aI, aKH, aI_KH, STATE*STATE);
+
+		// (I-KH)t
 		transMatrix(aI_KH, aI_KHt, STATE, STATE);
+		
 		multiplyMatrix(aI_KH, aPcurrent, aI_KHP, STATE, STATE, STATE);
 		multiplyMatrix(aI_KHP, aI_KHt, aI_KHPI_KHt, STATE, STATE, STATE);
 		addMatrix(aI_KHPI_KHt, aKRKt, aPnew, STATE*STATE);

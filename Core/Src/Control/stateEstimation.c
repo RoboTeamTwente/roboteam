@@ -7,12 +7,21 @@ static float state[4] = {0.0f};
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-//Transforms wheel speed to body velocity
+/**
+ * Translates the velocities from the wheels to the body velocities.
+ * 
+ * @param wheelSpeeds The speed achieved by each wheel.
+ * @param output 	  The x, y and w speeds from a body perspective.
+ */
 static void wheels2Body(float wheelSpeeds[4], float output[3]);
 
-
-// Use moving average filter to smoothen Xsens rate of turn data.
-// While this decreases the response time, it should allow for smoother rotation.
+/**
+ * Smoothens out the IMU rate of turn data.
+ * While this does decrease the response time slightly, it allows for smoother rotations.
+ * 
+ * @param rateOfTurn The current rate of turn as measured by the IMU.
+ * @return float     The smoothed out rate of turn.
+ */
 float smoothen_rateOfTurn(float rateOfTurn);
 
 

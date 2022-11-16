@@ -23,16 +23,33 @@ void kalman_Init();
 
 void kalman_DeInit();
 
+/**
+ * Updates the Kalman filter with the newest acceleration and velocity data
+ * @param acc The acceleration in X and Y directions as given by the IMU.
+ * @param vel The velocity in X and Y directions as measured by the wheels. 
+ */
 void kalman_Update(float acc[2], float vel[2]);
 
+/**
+ * Calculates the kalman gain. 
+ */
 void kalman_CalculateK();
 
+/**
+ * Retrieve the state as determined by the kalman filter. 
+ */
 void kalman_GetState(float state[4]);
 
-// seems to be not used
+/**
+ * Get the kalman gain .
+ * @deprecated Seems to not being used 
+ */
 void kalman_GetK(float gain[4][4]);
 
-// seems to be not used
+/**
+ * Get the prediction matrix used by the kalman filter
+ * @deprecated Seems to not being used 
+ */
 void kalman_GetP(float P[16]);
 
 #endif /* KALMAN_KALMAN_H_*/

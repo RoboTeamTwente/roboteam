@@ -22,7 +22,6 @@
 #include "tim_util.h"
 #include "control_util.h"
 #include <stdbool.h>
-#include "PuTTY.h"
 
 ///////////////////////////////////////////////////// STRUCTS
 

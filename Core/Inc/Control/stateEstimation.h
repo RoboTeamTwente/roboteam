@@ -22,27 +22,48 @@
 ///////////////////////////////////////////////////// STRUCTS
 
 typedef struct StateInfo {
-	float visionYaw;
-	bool visionAvailable;
-	float xsensAcc[2];
-	float xsensYaw;
-	float rateOfTurn;
-	float wheelSpeeds[4];
-	float dribblerSpeed;
-	float dribblerFilteredSpeed;
-	float dribbleSpeedBeforeGotBall;
+	float visionYaw;					// The yaw for this robot as indicated by vision
+	bool visionAvailable;				// Wether vision data can be used at this point
+	float xsensAcc[2];					// The acceleration as measured by the IMU in the X and Y directions
+	float xsensYaw;						// They yaw for this robot as indicated by the IMU
+	float rateOfTurn;					// [rad/s]
+	float wheelSpeeds[4];				// The speed for each wheel 
+	float dribblerSpeed;				// The measured speed of the dribbler
+	float dribblerFilteredSpeed;		// The filtered speed of the dribbler
+	float dribbleSpeedBeforeGotBall;	// The speed of the dribbler before it had a ball
 } StateInfo;
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
+/**
+ * Initializes the state estimation, which for now just sets up the kalman filter.
+ */
 int stateEstimation_Init();
 
+/**
+ * De-initializes the kalman filter.
+ */
 int stateEstimation_DeInit();
 
+/**
+ * Updates the current state based on the measured wheel speeds, vision yaw and acceleration
+ * 
+ * @param input The vision, IMU and encoder data used for state estimation
+ */
 void stateEstimation_Update(StateInfo* input);
 
+/**
+ * Get the current estimated state
+ * 
+ * @return float* The curent state for x, y, w and yaw
+ */
 float* stateEstimation_GetState();
 
+/**
+ * Identical to stateEstimation_GetState(), but only returns w.
+ * 
+ * @return float Rate of return
+ */
 float stateEstimation_GetFilteredRoT();
 
 void stateControl_ResetPID();

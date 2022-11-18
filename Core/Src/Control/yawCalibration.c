@@ -1,6 +1,5 @@
 
 #include "yawCalibration.h"
-#include "PuTTY.h"
 
 ///////////////////////////////////////////////////// DEFINITIONS
 
@@ -10,18 +9,37 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
-static float calibratedYaw = 0.0f;
-static bool hasCalibratedOnce = false;
+static float calibratedYaw = 0.0f;				// The calibrated yaw
+static bool hasCalibratedOnce = false;			// Wether the yaw has been calibrated at least once. This variable is also used to enforce a new calibration
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-// If the vision yaw and xsens yaw deviate too much for several time steps, set calibration needed to true
+/**
+ * Checks wether the vision yaw and the IMU yaw deviate too much for multiple time steps. 
+ * If that is the case, then calibration is needed.
+ * 
+ * @param visionYaw The yaw as measured by vision
+ * @param xsensYaw 	The yaw as measured by the IMU
+ * @param yawOffset The offset used to correct the yaw at this moment
+ * @return true 	When calibration is needed
+ * @return false 	When calibration is not needed
+ */
 static bool isCalibrationNeeded(float visionYaw, float xsensYaw, float yawOffset);
 
-// Check if robot has been rotating sufficiently slow for several time steps
-static bool isRotatingSlow(float visionYaw);
+/**
+ * Check if the robot has been rotating slow enough in order to do a reliable yaw calibration.
+ * 
+ * @param rateOfTurn The measured rate of turn by vision [rad/s]
+ * @returns bool
+ */
+static bool isRotatingSlow(float rateOfTurn);
 
-// Get the oldest Xsens yaw from the buffer (as old as the assumed delay)
+/**
+ * Get the oldest IMU yaw from the buffer.
+ * 
+ * @param newXsensYaw The new yaw to replace the oldest yaw
+ * @return float 	  The oldest yaw
+ */
 static float getOldXsensYaw(float newXsensYaw);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS

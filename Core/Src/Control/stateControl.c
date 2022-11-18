@@ -3,34 +3,65 @@
 
 ///////////////////////////////////////////////////// VARIABLES
 
+// The current status of the system.
 static PID_states status = off;
+
+// The PID values for x, y, w and yaw.
 static PIDvariables stateK[4];
+
+// The global x, y, w and yaw velocities to be achieved.
 static float stateRef[4] = {0.0f}; 
+
+// The wheel velocities to be achieved.
 static float wheelRef[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+// The current x, y, w and yaw velocities.
 static float state[4] = {0.0f};
+
+// Whether to move to an absolute angle. If true yes, otherwise use angular velocity.
 static bool useAbsoluteAngle = true;
 static bool previousUseAbsoluteAngle = true;
 
 ///////////////////////////////////////////////////// PRIVATE FUNCTION DECLARATIONS
 
-//Transforms body velocity to wheel speed
+/**
+ * Translates the velocity from a body perspective to wheel speeds.
+ * 
+ * @param wheelSpeed The speed to be achieved for each wheel.
+ * @param vel 		 The velocities to be achieved seen from the body perspective.
+ */
 static void body2Wheels(float wheelSpeed[4], float state[3]);
 
-//Transfer global coordinate frame to local coordinate frame
-static void global2Local(float global[4], float local[4], float  yaw);
+/**
+ * Translates the global coordinate frame to the local coordinate frame
+ * 
+ * @param global 	The global coordinates
+ * @param local 	The local coordinates
+ * @param yaw 		Yaw
+ */
+static void global2Local(float global[4], float local[4], float yaw);
 
-//Determine the desired wheel speed given the desired velocities
+/**
+ * Determines the desired wheel speeds given the desired velocities
+ * 
+ * @param state 			The current x, y, w and yaw speeds seen from the body
+ * @param velRef 			The instructed global x, y, w and yaw speeds
+ * @param velocityWheelRef 	The resulting wheel speeds that should be achieved for each wheel
+ */
 static void velocityControl(float state[3], float velRef[4], float velocityWheelRef[4]);
 
-//Determine the desired wheel speed given the desired angle
+/**
+ * Determine the speed that the wheels should achieve in order to move towards a desired angle.
+ * 
+ * @param angleRef The angle to be achieved.
+ * @param angle    The current angle.
+ * @return float   The PID value to achieve the set angle.
+ */
 static float absoluteAngleControl(float angleRef, float angle);
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION IMPLEMENTATIONS
 
 
-/**
- * @brief This function initializes the PID's
- */
 int stateControl_Init(){
 	status = on;
 	initPID(&stateK[body_x], default_P_gain_x, default_I_gain_x, default_D_gain_x);
@@ -60,10 +91,6 @@ void stateControl_Update(){
 	}
 }
 
-/**
- * @brief This function sets stateRef to the correct input from robotCommand 
- */
-
 void stateControl_SetRef(float input[4]){
 	stateRef[body_x] = input[body_x];
 	stateRef[body_y] = input[body_y];
@@ -74,10 +101,6 @@ void stateControl_SetRef(float input[4]){
 float* stateControl_GetWheelRef() {
 	return wheelRef;
 }
-
-/**
- * @brief This function sets the state as the estimated state (from stateEstimation)
- */
 
 void stateControl_SetState(float input[4]){
 	state[body_x] = input[body_x];
@@ -150,7 +173,6 @@ void stateControl_ResetPID(){
 ///////////////////////////////////////////////////// PRIVATE FUNCTION IMPLEMENTATIONS
 
 static void body2Wheels(float wheelSpeed[4], float vel[3]){
-	// Transformation from translational velocities to wheel speeds
 	wheelSpeed[wheels_RF] = (vel[body_x] * cosFront + vel[body_y] * sinFront) / rad_wheel;
 	wheelSpeed[wheels_RB] = (vel[body_x] * cosBack + vel[body_y] * -sinBack) / rad_wheel;
 	wheelSpeed[wheels_LB] = (vel[body_x] * -cosBack + vel[body_y] * -sinBack) / rad_wheel;

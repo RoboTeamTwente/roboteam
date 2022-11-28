@@ -13,6 +13,7 @@ from glob import glob
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
 from roboteam_embedded_messages.python.REM_RobotBuzzer import REM_RobotBuzzer
+from roboteam_embedded_messages.python.REM_Log import REM_Log
 from REMParser import REMParser
 import utils
 
@@ -198,7 +199,7 @@ class Joystick:
 			velocity_y = ( abs(self.controller.axis_l.y) - deadzone) / (1 - deadzone)
 			velocity_y *= np.sign(self.controller.axis_l.y)
 
-		rho = 0.5 * math.sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
+		rho = math.sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
 		theta = math.atan2(-velocity_x, -velocity_y);
 
 		self.command.toRobotId = self.robot_id
@@ -251,6 +252,26 @@ class BasestationHandler:
 
 					logger.read() # Read all available bytes
 					logger.process() # Convert all read bytes into packets
+
+					def handleREM_LOG(rem_log):
+						# Prepend where the packet originates from
+						log_from = "[?]  "
+						if rem_log.fromBS: log_from = "[BS] "
+						if not rem_log.fromPC and not rem_log.fromBS:
+							log_from = f"[{str(rem_log.fromRobotId).rjust(2)}] "
+
+						# Get message. Strip possible newline
+						message = rem_log.message.strip()
+						message = log_from + message
+
+						# Print message on new line
+						nwhitespace = os.get_terminal_size().columns - len(message) - 2
+						print(f"\r{message}{' ' * nwhitespace}")
+
+					while logger.hasPackets():
+						packet = logger.getNextPacket()
+						# RobotLog gets special treatment since we're interested in ALL logs, not just the last one
+						if type(packet) == REM_Log: handleREM_LOG(packet)
 
 				time.sleep(0.005)
 		except Exception as e:

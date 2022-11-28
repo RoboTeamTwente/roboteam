@@ -295,6 +295,29 @@ void loop(){
       }
   }
 
+  /* Deal with any packets that are in the queue and meant for the Basestation, one at a time */
+  if(CircularBuffer_canRead(nonpriority_queue_bs_index, 1)){
+    uint8_t* data = nonpriority_queue_pc[ nonpriority_queue_pc_index->indexRead ].data;
+    REM_PacketPayload* packet = (REM_PacketPayload*) nonpriority_queue_pc[ nonpriority_queue_pc_index->indexRead ].data;
+
+    if(REM_Packet_get_header(packet) == REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION){
+      LOG_printf("REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION\n");
+      REM_BasestationConfiguration configuration;
+      configuration.header = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
+      configuration.toPC = true;
+      configuration.fromBS = true;
+      configuration.remVersion = REM_LOCAL_VERSION;
+      configuration.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION;
+      configuration.timestamp = HAL_GetTick();
+      configuration.channel = Wireless_getChannel(SX_TX);
+
+      REM_BasestationConfigurationPayload payload;
+      encodeREM_BasestationConfiguration(&payload, &configuration);
+      LOG_sendBuffer((uint8_t*)packet, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION, false);
+    }
+
+    CircularBuffer_read(nonpriority_queue_bs_index, NULL, 1);
+  }
   // /* Send any new RobotStateInfo packets */
   // for(int id = 0; id <= MAX_ROBOT_ID; id++){
   //   if(buffer_RobotStateInfo[id].isNewPacket){
@@ -486,6 +509,8 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     bool to_BS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
     bool to_robot = !(to_PC || to_BS);         // Packet is destined for a robot
     bool robot_id = REM_Packet_get_toRobotId(packet);
+
+    LOG_printf("[handlePackets]["STRINGIZE(__LINE__)"] Packet type %u; to_PC %d; to_BS %d; to_robot %d;\n", packet_type, to_PC, to_BS, to_robot);
 
     // High priority : Deal with RobotCommand packets that are destined for a robot
     if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND && to_robot){

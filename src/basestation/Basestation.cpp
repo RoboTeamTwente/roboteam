@@ -113,9 +113,12 @@ void Basestation::listenForIncomingMessages() {
     // The incoming data will keep being written to this message object over and over
     BasestationMessage incomingMessage;
 
+    RTT_DEBUG("[", this->identifier.toString(), "]", " listenForIncomingMessages()");
+
     while (this->shouldListenForIncomingMessages) {
         bool hasReadMessage = this->readBasestationMessage(incomingMessage);
         if (hasReadMessage) {
+            RTT_DEBUG("[", this->identifier.toString(), "]", " listenForIncomingMessages() hasReadMessage!");
             // TODO: Protect callback with mutex. Other threads are theoretically able to set the callback to nullptr,
             // so at this point, calling the callback could result in error.
             if (this->incomingMessageCallback != nullptr) {

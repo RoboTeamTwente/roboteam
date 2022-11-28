@@ -1,6 +1,7 @@
 #include <REM_BaseTypes.h>
 #include <REM_BasestationConfiguration.h>
 #include <REM_BasestationGetConfiguration.h>
+#include <REM_Log.h>
 #include <REM_Packet.h>
 #include <roboteam_utils/Print.h>
 
@@ -440,9 +441,12 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
+    RTT_DEBUG("onMessageFromBasestation()");
+    
     // If this message contains what channel the basestation has, parse it and update our map
     REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
     if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+        RTT_DEBUG("onMessageFromBasestation() REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION");
         REM_BasestationConfigurationPayload configurationPayload;
         std::memcpy(&configurationPayload.payload, message.payloadBuffer, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
 
@@ -451,6 +455,17 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
 
         WirelessChannel usedChannel = BasestationCollection::remChannelToWirelessChannel(basestationConfiguration.channel);
         this->setChannelOfBasestation(basestationId, usedChannel);
+    }
+
+    if(REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG){
+        RTT_DEBUG("onMessageFromBasestation() REM_PACKET_TYPE_REM_LOG");
+        REM_LogPayload* logPayload = (REM_LogPayload*) message.payloadBuffer;
+        uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
+        RTT_DEBUG("onMessageFromBasestation() message length = ", message_length);
+        char* charstring = (char*) &message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];
+        std::string str = charstring;
+        RTT_INFO("REM_PACKET_TYPE_REM_LOG ", str);
+
     }
 
     // This function can be called by multiple basestations simultaneously, so protect it with a mutex
@@ -462,8 +477,10 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
         const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
         if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
+            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(YELLOW)");
             this->messageFromBasestationCallback(message, rtt::Team::YELLOW);
         } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
+            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(BLUE)");
             this->messageFromBasestationCallback(message, rtt::Team::BLUE);
         }
     }

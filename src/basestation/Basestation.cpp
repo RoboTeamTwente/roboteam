@@ -29,7 +29,7 @@ bool BasestationIdentifier::operator<(const BasestationIdentifier& other) const 
 std::string BasestationIdentifier::toString() const {
     int address = (int)this->usbAddress;
     int id = (int)this->serialIdentifier;
-    return "serial id: " + std::to_string(id) + ", address: " + std::to_string(address);
+    return "(serialIdentifier=" + std::to_string(id) + ", usbAddress=" + std::to_string(address) + ")";
 }
 
 Basestation::Basestation(libusb_device *const device) : device(device), identifier(getIdentifierOfDevice(device)) {
@@ -60,7 +60,7 @@ Basestation::Basestation(libusb_device *const device) : device(device), identifi
     this->shouldListenForIncomingMessages = true;
     this->incomingMessageListenerThread = std::thread(&Basestation::listenForIncomingMessages, this);
 
-    RTT_DEBUG("Opened basestation(", this->identifier.toString(), ")")
+    RTT_DEBUG("Opened basestation ", this->identifier.toString())
 }
 
 Basestation::~Basestation() {
@@ -113,12 +113,12 @@ void Basestation::listenForIncomingMessages() {
     // The incoming data will keep being written to this message object over and over
     BasestationMessage incomingMessage;
 
-    RTT_DEBUG("[", this->identifier.toString(), "]", " listenForIncomingMessages()");
+    RTT_DEBUG(this->identifier.toString(), " listenForIncomingMessages()");
 
     while (this->shouldListenForIncomingMessages) {
         bool hasReadMessage = this->readBasestationMessage(incomingMessage);
         if (hasReadMessage) {
-            RTT_DEBUG("[", this->identifier.toString(), "]", " listenForIncomingMessages() hasReadMessage!");
+            // RTT_DEBUG("[", this->identifier.toString(), "]", " listenForIncomingMessages() hasReadMessage!");
             // TODO: Protect callback with mutex. Other threads are theoretically able to set the callback to nullptr,
             // so at this point, calling the callback could result in error.
             if (this->incomingMessageCallback != nullptr) {

@@ -166,6 +166,7 @@ void BasestationCollection::setChannelOfBasestation(const BasestationIdentifier&
     // Lock the map for thread safety
     std::scoped_lock<std::mutex> lock(this->basestationIdToChannelMutex);
     this->basestationIdToChannel[basestationId] = newChannel;
+    RTT_DEBUG("Basestation ", basestationId.toString(), " is on ", wirelessChannelToString(newChannel));
 }
 
 void BasestationCollection::removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId) {
@@ -232,7 +233,7 @@ void BasestationCollection::updateBasestationSelection() {
 
 void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     // Create the channel request message
-    REM_BasestationGetConfiguration getConfigurationMessage;
+    REM_BasestationGetConfiguration getConfigurationMessage = {0};
     getConfigurationMessage.header = REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
     getConfigurationMessage.toBS = true;
     getConfigurationMessage.fromPC = true;
@@ -250,6 +251,7 @@ void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     for (const auto& basestation : this->getAllBasestations()) {
         WirelessChannel channel = this->getChannelOfBasestation(basestation->getIdentifier());
         if (channel == WirelessChannel::UNKNOWN) {
+            RTT_DEBUG("Sent GET_CONFIGURATION to basestation ", basestation->getIdentifier().toString());
             basestation->sendMessageToBasestation(message);
         }
     }
@@ -441,31 +443,23 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
-    RTT_DEBUG("onMessageFromBasestation()");
+    RTT_DEBUG("onMessageFromBasestation() REM = ",  (uint64_t) message.payloadBuffer[0]);
     
     // If this message contains what channel the basestation has, parse it and update our map
     REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
+    
     if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
-        RTT_DEBUG("onMessageFromBasestation() REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION");
-        REM_BasestationConfigurationPayload configurationPayload;
-        std::memcpy(&configurationPayload.payload, message.payloadBuffer, REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
-
-        REM_BasestationConfiguration basestationConfiguration;
-        decodeREM_BasestationConfiguration(&basestationConfiguration, &configurationPayload);
-
-        WirelessChannel usedChannel = BasestationCollection::remChannelToWirelessChannel(basestationConfiguration.channel);
-        this->setChannelOfBasestation(basestationId, usedChannel);
+        uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel( (REM_BasestationConfigurationPayload*) message.payloadBuffer );
+        WirelessChannel basestation_channel = BasestationCollection::remChannelToWirelessChannel(basestation_channel_rem);
+        this->setChannelOfBasestation(basestationId, basestation_channel);
     }
 
     if(REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG){
-        RTT_DEBUG("onMessageFromBasestation() REM_PACKET_TYPE_REM_LOG");
         REM_LogPayload* logPayload = (REM_LogPayload*) message.payloadBuffer;
         uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
-        RTT_DEBUG("onMessageFromBasestation() message length = ", message_length);
         char* charstring = (char*) &message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];
-        std::string str = charstring;
-        RTT_INFO("REM_PACKET_TYPE_REM_LOG ", str);
-
+        std::string str = std::string(charstring, message_length);
+        std::cout << "[BS]" << str; // Logs should always end with \n, so no std::endl needed
     }
 
     // This function can be called by multiple basestations simultaneously, so protect it with a mutex

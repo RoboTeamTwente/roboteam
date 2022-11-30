@@ -298,9 +298,11 @@ void loop(){
       if( handleREM_BasestationGetConfiguration() )
         CircularBuffer_read(nonpriority_queue_bs_index, NULL, 1);
     
-    // CircularBuffer_read(nonpriority_queue_bs_index, NULL, 1);
-    
+    if(REM_Packet_get_header(packet) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION)
+      if( handleREM_BasestationConfiguration( (REM_BasestationConfigurationPayload*) packet) )
+        CircularBuffer_read(nonpriority_queue_bs_index, NULL, 1);    
   }
+
   // /* Send any new RobotStateInfo packets */
   // for(int id = 0; id <= MAX_ROBOT_ID; id++){
   //   if(buffer_RobotStateInfo[id].isNewPacket){
@@ -379,9 +381,11 @@ bool handleREM_BasestationGetConfiguration(){
 }
 
 bool handleREM_BasestationConfiguration(REM_BasestationConfigurationPayload* payload){
-  
+  WIRELESS_CHANNEL new_channel = REM_BasestationConfiguration_get_channel(payload);
+  Wireless_setChannel(SX_TX, new_channel);
+  Wireless_setChannel(SX_RX, new_channel);
+  return true;
 }
-
 
 /**
  * @brief Updates the state of the touch. This helps identifying

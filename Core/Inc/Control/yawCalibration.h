@@ -20,16 +20,34 @@
 
 ///////////////////////////////////////////////////// PUBLIC FUNCTION DECLARATIONS
 
-// Calibrate the state yaw with the vision yaw
+/**
+ * Calibrates the yaw measured by the IMU.
+ * 
+ * @param xsensYaw          The yaw as currently being measured by the IMU.
+ * @param visionYaw         The yaw as currently being observed by vision
+ * @param visionAvailable   Wether vision can be used at this moment
+ * @param rateOfTurn        Our current rate of turn (if it is too high, we cannot reliably calibrate the yaw)
+ */
 void yaw_Calibrate(float xsensYaw, float visionYaw, bool visionAvailable, float rateOfTurn);
 
-// Getter for the yaw after calibration
+/**
+ * Get the calibrated yaw
+ * 
+ * @return float 
+ */
 float yaw_GetCalibratedYaw();
 
-// Check if we have calibrated at least once, otherwise the yaw is probably way off
+/**
+ * Check if the calibration has been executed at least once.
+ * Otherwise the yaw is probably way off
+ * 
+ * @return bool
+ */
 bool yaw_hasCalibratedOnce();
 
-// At some points the calibration has to be done again for certain.
+/**
+ * Resets the entire yaw calibration on the next calibration call
+ */
 void yaw_ResetCalibration();
 
 #endif /* YAWCALIBRATION_H_ */

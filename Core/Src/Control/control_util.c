@@ -2,7 +2,7 @@
 #include "control_util.h"
 
 void control_util_Init() {
-	bool MOTORS_50W = true; // Keep this on the offchance that we're going to use the 30W motors again
+	bool MOTORS_50W = true; // Keep this on the in case that we're going to use the 30W motors again
 	MAX_VOLTAGE = MOTORS_50W ? MAX_VOLTAGE_50W : MAX_VOLTAGE_30W;
 	SPEED_CONSTANT = 2*M_PI/60.0 * (MOTORS_50W ? SPEED_CONSTANT_50W : SPEED_CONSTANT_30W);
 	OMEGAtoPWM = (1/SPEED_CONSTANT)*(MAX_PWM/MAX_VOLTAGE)*WHEEL_GEAR_RATIO;
@@ -24,7 +24,7 @@ void initPID(PIDvariables* PID, float kP, float kI, float kD) {
 }
 
 float PID(float err, PIDvariables* K){
-	// TODO clamp I value (maybe with a max PID output so maxI = maxOutput - POutput)
+	// TODO: clamp I value (maybe with a max PID output so maxI = maxOutput - POutput)
 	float P = K->kP*err;
 	K->I += err*K->timeDiff;
 	float I = K->kI*K->I;

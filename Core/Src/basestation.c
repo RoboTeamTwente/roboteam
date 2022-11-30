@@ -150,60 +150,60 @@ void init(){
 
 
 
-    // // Init SX_TX
-    // LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_TX\n");
-    // bool SX_TX_init_err = false;
-    // SX_TX_Interface.BusyPin = SX_TX_BUSY;
-    // SX_TX_Interface.CS= SX_TX_CS;
-    // SX_TX_Interface.Reset= SX_TX_RST;
-    // // Set the print function. NULL to supress printing, LOG_printf to enable printing
-    // // SX_TX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, LOG_printf);
-    // // Wake up the TX SX1280 and send it all the default settings
-    // SX_TX_init_err |= WIRELESS_OK != Wireless_Init(SX_TX, SX1280_DEFAULT_SETTINGS, &SX_TX_Interface);
-    // // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
-    // SX_TX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
-    // // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
-    // SX_TX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_TX, YELLOW_CHANNEL);
+    // Init SX_TX
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_TX\n");
+    bool SX_TX_init_err = false;
+    SX_TX_Interface.BusyPin = SX_TX_BUSY;
+    SX_TX_Interface.CS= SX_TX_CS;
+    SX_TX_Interface.Reset= SX_TX_RST;
+    // Set the print function. NULL to supress printing, LOG_printf to enable printing
+    // SX_TX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, LOG_printf);
+    // Wake up the TX SX1280 and send it all the default settings
+    SX_TX_init_err |= WIRELESS_OK != Wireless_Init(SX_TX, SX1280_DEFAULT_SETTINGS, &SX_TX_Interface);
+    // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
+    SX_TX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
+    // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
+    SX_TX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_TX, BLUE_CHANNEL);
 
-    // if(SX_TX_init_err){
-    //   while(true){
-    //     LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_TX! Please reboot the basestation\n");
-    //     LOG_sendAll();
-    //     HAL_Delay(1000);
-    //   }
-    // }
+    if(SX_TX_init_err){
+      while(true){
+        LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_TX! Please reboot the basestation\n");
+        LOG_sendAll();
+        HAL_Delay(1000);
+      }
+    }
 
     
 
 
 
-    // // Init SX_RX
-    // LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_RX\n");
-    // bool SX_RX_init_err = false;
-    // SX_RX_Interface.BusyPin= SX_RX_BUSY;
-    // SX_RX_Interface.CS= SX_RX_CS;
-    // SX_RX_Interface.Reset= SX_RX_RST;
-    // // Set the print function. NULL to supress printing, LOG_printf to enable printing
-    // SX_RX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, NULL);
-    // // Wake up the RX SX1280 and send it all the default settings
-    // SX_RX_init_err |= WIRELESS_OK != Wireless_Init(SX_RX, SX1280_DEFAULT_SETTINGS, &SX_RX_Interface);
-    // // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
-    // SX_RX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_RX, &SXRX_IRQcallbacks);
-    // // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
-    // SX_RX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_RX, YELLOW_CHANNEL);
-    // // Set SX_RX syncword to basestation syncword. Meaning, let the receiving SX only receive packets meant for the basestation
-    // uint32_t syncwords[2] = {robot_syncWord[16],0};
-    // SX_RX_init_err |= WIRELESS_OK != Wireless_setRXSyncwords(SX_RX, syncwords);
-    // // Start listening on the SX_RX for packets from the robots
-    // SX_RX_init_err |= WIRELESS_OK != WaitForPacketContinuous(SX_RX);
+    // Init SX_RX
+    LOG("[init:"STRINGIZE(__LINE__)"] Initializing SX_RX\n");
+    bool SX_RX_init_err = false;
+    SX_RX_Interface.BusyPin= SX_RX_BUSY;
+    SX_RX_Interface.CS= SX_RX_CS;
+    SX_RX_Interface.Reset= SX_RX_RST;
+    // Set the print function. NULL to supress printing, LOG_printf to enable printing
+    SX_RX_init_err |= WIRELESS_OK != Wireless_setPrint_Callback(SX_TX, NULL);
+    // Wake up the RX SX1280 and send it all the default settings
+    SX_RX_init_err |= WIRELESS_OK != Wireless_Init(SX_RX, SX1280_DEFAULT_SETTINGS, &SX_RX_Interface);
+    // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
+    SX_RX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_RX, &SXRX_IRQcallbacks);
+    // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
+    SX_RX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_RX, BLUE_CHANNEL);
+    // Set SX_RX syncword to basestation syncword. Meaning, let the receiving SX only receive packets meant for the basestation
+    uint32_t syncwords[2] = {robot_syncWord[16],0};
+    SX_RX_init_err |= WIRELESS_OK != Wireless_setRXSyncwords(SX_RX, syncwords);
+    // Start listening on the SX_RX for packets from the robots
+    SX_RX_init_err |= WIRELESS_OK != WaitForPacketContinuous(SX_RX);
 
-    // if(SX_RX_init_err){
-    //   while(true){
-    //     LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_RX! Please reboot the basestation\n");
-    //     LOG_sendAll();
-    //     HAL_Delay(1000);
-    //   }
-    // }
+    if(SX_RX_init_err){
+      while(true){
+        LOG_printf("[init:"STRINGIZE(__LINE__)"]["STRINGIZE(__LINE__)"] Error! Could not initialize SX_RX! Please reboot the basestation\n");
+        LOG_sendAll();
+        HAL_Delay(1000);
+      }
+    }
 
 
     // Start the timer that is responsible for sending packets to the robots
@@ -500,7 +500,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     bool to_PC = REM_Packet_get_toPC(packet);  // Packet is destined for the PC
     bool to_BS = REM_Packet_get_toBS(packet);  // Packet is destined for the BaseStation
     bool to_robot = !(to_PC || to_BS);         // Packet is destined for a robot
-    bool robot_id = REM_Packet_get_toRobotId(packet);
+    uint8_t robot_id = REM_Packet_get_toRobotId(packet);
 
     LOG_printf("[handlePackets]["STRINGIZE(__LINE__)"] Packet type %u; to_PC %d; to_BS %d; to_robot %d; robot_id %d;\n", packet_type, to_PC, to_BS, to_robot, robot_id);
 

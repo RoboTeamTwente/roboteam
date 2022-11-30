@@ -370,7 +370,7 @@ bool handleREM_BasestationGetConfiguration(){
   configuration.remVersion = REM_LOCAL_VERSION;
   configuration.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION;
   configuration.timestamp = HAL_GetTick();
-  configuration.channel = 0;//Wireless_getChannel(SX_TX);
+  configuration.channel = Wireless_getChannel(SX_TX);
   /* Encode packet */
   REM_BasestationConfigurationPayload payload = {0};
   encodeREM_BasestationConfiguration(&payload, &configuration);
@@ -502,7 +502,7 @@ bool handlePackets(uint8_t* packets_buffer, uint32_t packets_buffer_length){
     bool to_robot = !(to_PC || to_BS);         // Packet is destined for a robot
     uint8_t robot_id = REM_Packet_get_toRobotId(packet);
 
-    LOG_printf("[handlePackets]["STRINGIZE(__LINE__)"] Packet type %u; to_PC %d; to_BS %d; to_robot %d; robot_id %d;\n", packet_type, to_PC, to_BS, to_robot, robot_id);
+    // LOG_printf("[handlePackets]["STRINGIZE(__LINE__)"] Packet type %u; to_PC %d; to_BS %d; to_robot %d; robot_id %d;\n", packet_type, to_PC, to_BS, to_robot, robot_id);
 
     // High priority : Deal with RobotCommand packets that are destined for a robot
     if(packet_type == REM_PACKET_TYPE_REM_ROBOT_COMMAND && to_robot){

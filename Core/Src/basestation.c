@@ -163,7 +163,7 @@ void init(){
     // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
     SX_TX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_TX,&SXTX_IRQcallbacks);
     // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
-    SX_TX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_TX, BLUE_CHANNEL);
+    SX_TX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_TX, YELLOW_CHANNEL);
 
     if(SX_TX_init_err){
       while(true){
@@ -190,7 +190,7 @@ void init(){
     // Set the functions that have to be called on stuff like "a packet has been received" or "a packet has been sent" or "a timeout has occured". See Wireless_IRQcallbacks in Wireless.h
     SX_RX_init_err |= WIRELESS_OK != Wireless_setIRQ_Callbacks(SX_RX, &SXRX_IRQcallbacks);
     // Set the channel (radio frequency) to the YELLOW_CHANNEL. Can be changed by sending a REM_BasestationConfiguration message
-    SX_RX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_RX, BLUE_CHANNEL);
+    SX_RX_init_err |= WIRELESS_OK != Wireless_setChannel(SX_RX, YELLOW_CHANNEL);
     // Set SX_RX syncword to basestation syncword. Meaning, let the receiving SX only receive packets meant for the basestation
     uint32_t syncwords[2] = {robot_syncWord[16],0};
     SX_RX_init_err |= WIRELESS_OK != Wireless_setRXSyncwords(SX_RX, syncwords);

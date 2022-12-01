@@ -1,9 +1,10 @@
+#include <stdbool.h>
 #include "buzzer.h"
 #include "tim_util.h"
 #include "buzzer_tunes.h"
 
 uint32_t buzzer_Duration = 0;
-
+bool buzzer_initialized = false;
 song_struct* song;
 song_struct song_single_note[] = {{buzz_Si, 0}, {0xFFFF, 0}};
 
@@ -15,6 +16,7 @@ void buzzer_Init() {
 	// play a sound to inform that we are aliiiiiiiiive
 	// song = quickBeepUp;
 	// buzzer_Play(song);
+	buzzer_initialized = true;
 }
 
 void buzzer_DeInit() {
@@ -27,6 +29,8 @@ bool buzzer_IsPlaying(){
 }
 
 void buzzer_Callback() {
+	if(!buzzer_initialized) return;
+
 	if(song){
 		if(buzzer_Duration != 0){
 			buzzer_Duration--;
@@ -62,6 +66,8 @@ void buzzer_Play_note(uint16_t period, float duration){
 }
 
 void buzzer_Play(song_struct* tone) {
+	if(!buzzer_initialized) return;
+	
 	song = tone;
 
 	uint16_t tone_period = (tone->period == 0) ? 0xFFFF : ((1e6 / tone->period)-1);

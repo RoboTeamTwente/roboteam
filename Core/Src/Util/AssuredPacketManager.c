@@ -39,7 +39,7 @@ bool APM_sendAssuredPacket(AssuredPacketManager* apm, uint8_t* message, uint8_t 
     // TODO replace the magic number 127 with a constant, reflecting the max SX1280 buffer size
     // Ensure that the packet can actually be transmitted by the SX1280. Yes, it might be possible
     // to send larger packets over UART, but please just split it up into a few smaller packets.
-    if(127 < length + PACKET_SIZE_REM_ROBOT_ASSURED_PACKET)
+    if(127 < length + REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET)
         return false;
 
     // Increase the sequence number
@@ -47,16 +47,16 @@ bool APM_sendAssuredPacket(AssuredPacketManager* apm, uint8_t* message, uint8_t 
 
     // Create the AssuredPacket header
     REM_RobotAssuredPacketPayload rapp;
-    REM_RobotAssuredPacket_set_header(&rapp, PACKET_TYPE_REM_ROBOT_ASSURED_PACKET);
-    REM_RobotAssuredPacket_set_remVersion(&rapp, LOCAL_REM_VERSION);
+    REM_RobotAssuredPacket_set_header(&rapp, REM_PACKET_TYPE_REM_ROBOT_ASSURED_PACKET);
+    REM_RobotAssuredPacket_set_remVersion(&rapp, REM_LOCAL_VERSION);
     REM_RobotAssuredPacket_set_id(&rapp, robot_get_ID());
     REM_RobotAssuredPacket_set_sequenceNumber(&rapp, apm->sequence_number);
     REM_RobotAssuredPacket_set_messageLength(&rapp, length);
 
     // Copy the AssuredPacket header into the message buffer
-    memcpy(apm->message_buffer, rapp.payload, PACKET_SIZE_REM_ROBOT_ASSURED_PACKET);
+    memcpy(apm->message_buffer, rapp.payload, REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET);
     // Copy the rest of the message into the message buffer
-    memcpy(apm->message_buffer + PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, message, length);
+    memcpy(apm->message_buffer + REM_PACKET_SIZE_REM_ROBOT_ASSURED_PACKET, message, length);
 
     apm->message_length = length;
     apm->state = AWAITING_TRANSMISSION;

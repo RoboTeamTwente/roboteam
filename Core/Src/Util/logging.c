@@ -1,7 +1,7 @@
 #include "robot.h"
 #include "logging.h"
 #include "REM_BaseTypes.h"
-#include "REM_RobotLog.h"
+#include "REM_Log.h"
 #include "peripheral_util.h"
 
 #include "CircularBuffer.h"
@@ -59,9 +59,9 @@ void LOG(char *message){
 
     // Get message length
     uint32_t message_length = strlen(message);  
-    // Clip the message length to 127 - PACKET_SIZE_ROBOT_LOG, as to not overflow the MessageContainer buffer
-    if(127 - PACKET_SIZE_REM_ROBOT_LOG < message_length) message_length = 127 - PACKET_SIZE_REM_ROBOT_LOG;
-    // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the RobotLog_message_length field)
+    // Clip the message length to 127 - REM_PACKET_SIZE_REM_LOG, as to not overflow the MessageContainer buffer
+    if(127 - REM_PACKET_SIZE_REM_LOG < message_length) message_length = 127 - REM_PACKET_SIZE_REM_LOG;
+    // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the BasestationLog_messageLength field)
     message[message_length-1] = '\n';
 
     // Get the current write position, and increment ASAP, to (hopefully) prevent race conditions
@@ -72,16 +72,18 @@ void LOG(char *message){
     MessageContainer* message_container = &message_buffer[index_write];
     uint8_t* payload = message_container->payload;
 
-    REM_RobotLog_set_header((REM_RobotLogPayload*) payload, PACKET_TYPE_REM_ROBOT_LOG);  // 8 bits
-    REM_RobotLog_set_remVersion((REM_RobotLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
-    REM_RobotLog_set_id((REM_RobotLogPayload*) payload, robot_get_ID());             // 4 bits
-    REM_RobotLog_set_messageLength((REM_RobotLogPayload*) payload, message_length); // 8 bits
-                                                                            // = 3 bytes
- 
-    // Copy the message into the message container, next to the RobotLog header
-    memcpy(payload + PACKET_SIZE_REM_ROBOT_LOG, message, message_length);
-    message_container->length = PACKET_SIZE_REM_ROBOT_LOG + message_length;
-    
+    REM_Log_set_header     ((REM_LogPayload*) payload, REM_PACKET_TYPE_REM_LOG);
+    REM_Log_set_remVersion ((REM_LogPayload*) payload, REM_LOCAL_VERSION);
+    REM_Log_set_payloadSize((REM_LogPayload*) payload, REM_PACKET_SIZE_REM_LOG + message_length);
+    // REM_Log_set_fromBS     ((REM_LogPayload*) payload, 1);
+    REM_Log_set_toPC       ((REM_LogPayload*) payload, 1);
+    REM_Log_set_fromRobotId((REM_LogPayload*) payload, robot_get_ID());
+    REM_Log_set_fromColor  ((REM_LogPayload*) payload, robot_get_Channel());
+    REM_Log_set_timestamp  ((REM_LogPayload*) payload, HAL_GetTick());
+
+    // Copy the message into the message container, next to the BasestationLog header
+    memcpy(payload + REM_PACKET_SIZE_REM_LOG, message, message_length);
+    message_container->length = REM_PACKET_SIZE_REM_LOG + message_length; 
 }
 
 void LOG_send(){

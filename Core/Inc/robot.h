@@ -14,6 +14,7 @@ void print(char _out[]);
 void init(void);
 void loop(void);
 uint8_t robot_get_ID();
+uint8_t robot_get_Channel();
 
 void robot_setRobotCommandPayload(REM_RobotCommandPayload* rcp);
 void robot_setRobotMusicCommandPayload(REM_RobotMusicCommandPayload* rmcp);

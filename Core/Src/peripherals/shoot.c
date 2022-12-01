@@ -86,7 +86,7 @@ shoot_states shoot_GetState(){
 
 void shoot_SetPower(float meters_per_second){
     // At some point, make a formula to convert m/s to power. For now, linear relation
-    power = meters_per_second / PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX;
+    power = meters_per_second / REM_PACKET_RANGE_REM_ROBOT_COMMAND_KICK_CHIP_POWER_MAX;
     if(power < 0) power = 0;
     if(1 < power) power = 1;
 }

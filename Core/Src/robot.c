@@ -25,6 +25,7 @@
 
 #include "rem.h"
 
+#include "REM_Packet.h"
 #include "REM_RobotCommand.h"
 #include "REM_RobotFeedback.h"
 #include "REM_RobotBuzzer.h"
@@ -34,26 +35,34 @@
 #include "REM_RobotPIDGains.h"
 #include "REM_SX1280Filler.h"
 #include "REM_RobotMusicCommand.h"
+#include "REM_Log.h"
 
-#include "time.h"
+#include <time.h>
 #include <unistd.h>
 #include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 uint8_t ROBOT_ID;
+WIRELESS_CHANNEL ROBOT_CHANNEL;
 bool IS_RUNNING_TEST = false;
 
 MTi_data* MTi;
 
+// Incoming packets
 REM_RobotCommandPayload robotCommandPayload = {0};
 REM_RobotBuzzerPayload robotBuzzerPayload = {0};
+REM_RobotMusicCommand RobotMusicCommand = {0};
+volatile bool RobotMusicCommand_received_flag = false;
+// Outgoing packets
 REM_RobotFeedback robotFeedback = {0};
 REM_RobotFeedbackPayload robotFeedbackPayload = {0};
 REM_RobotStateInfo robotStateInfo = {0};
 REM_RobotStateInfoPayload robotStateInfoPayload = {0};
 REM_RobotPIDGains robotPIDGains = {0};
 REM_RobotSetPIDGains robotSetPIDGains = {0};
-REM_RobotMusicCommand RobotMusicCommand = {0};
-volatile bool RobotMusicCommand_received_flag = false;
+REM_Log robotLog = {0};
+REM_LogPayload robotLogPayload = {0};
 
 REM_RobotCommand activeRobotCommand = {0};
 float activeStateReference[3];
@@ -130,14 +139,14 @@ void Wireless_Readpacket_Cplt(void){
 
 	robotFeedback.messageId = activeRobotCommand.messageId;
 	encodeREM_RobotFeedback( (REM_RobotFeedbackPayload*) (txPacket.message + txPacket.payloadLength), &robotFeedback);
-	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_FEEDBACK;
+	txPacket.payloadLength += REM_PACKET_SIZE_REM_ROBOT_FEEDBACK;
 
 	encodeREM_RobotStateInfo( (REM_RobotStateInfoPayload*) (txPacket.message + txPacket.payloadLength), &robotStateInfo);
-	txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_STATE_INFO;
+	txPacket.payloadLength += REM_PACKET_SIZE_REM_ROBOT_STATE_INFO;
 
 	if(flag_send_PID_gains){
 		encodeREM_RobotPIDGains( (REM_RobotPIDGainsPayload*) (txPacket.message + txPacket.payloadLength), &robotPIDGains);
-		txPacket.payloadLength += PACKET_SIZE_REM_ROBOT_PIDGAINS;
+		txPacket.payloadLength += REM_PACKET_SIZE_REM_ROBOT_PIDGAINS;
 		flag_send_PID_gains = false;
 	}
 
@@ -196,60 +205,15 @@ void resetRobotCommand(REM_RobotCommand* robotCommand){
 	memset(robotCommand, 0, sizeof(REM_RobotCommand));
 }
 
-void printRobotStateData() {
-	// The need for IWDG_Refresh(iwdg) worries me, since it means this function
-	// takes a VERY long time. Might screw with other stuff that comes after at
-	// wherever this function is called.
-
-	LOG("-------Robot state data--------\n");
-	LOG_printf("halt=%u  braking=%u\n", halt, wheels_GetWheelsBraking());
-	IWDG_Refresh(iwdg);
-
-	LOG_printf("Wheels refs   RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
-	stateControl_GetWheelRef()[wheels_RF], stateControl_GetWheelRef()[wheels_RB], 
-	stateControl_GetWheelRef()[wheels_LB], stateControl_GetWheelRef()[wheels_LF]);
-	IWDG_Refresh(iwdg);
-
-	uint32_t wheel_PWMs[4];
-	wheels_GetPWM(wheel_PWMs);
-	LOG_printf("Wheels pwms   RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
-	wheel_PWMs[wheels_RF], wheel_PWMs[wheels_RB], 
-	wheel_PWMs[wheels_LB], wheel_PWMs[wheels_LF]);
-	IWDG_Refresh(iwdg);
-
-	float measured_wheel_speeds[4];
-	wheels_GetMeasuredSpeeds(measured_wheel_speeds);
-	LOG_printf("Wheels rad/s  RF=%.2f RB=%.2f LB=%.2f LF=%.2f\n", 
-	measured_wheel_speeds[wheels_RF], measured_wheel_speeds[wheels_RB], 
-	measured_wheel_speeds[wheels_LB], measured_wheel_speeds[wheels_LF]);
-	IWDG_Refresh(iwdg);
-
-	LOG_printf("XSens   x=%.2f m/s^2  y=%.2f m/s^2  yaw=%.2f  omega=%.2f rad/s\n", 
-	MTi->acc[body_x], MTi->acc[body_y], 
-	stateEstimation_GetState()[body_yaw], MTi->gyr[2]);
-	IWDG_Refresh(iwdg);
-	
-	LOG_printf("Kalman  x=%.2f m/s  y=%.2f m/s\n", 
-	stateEstimation_GetState()[body_x], stateEstimation_GetState()[body_y]);
-	IWDG_Refresh(iwdg);
+void initPacketHeader(REM_Packet* packet, uint8_t robot_id, uint8_t channel, uint8_t packet_type){
+	packet->header = packet_type;
+	packet->toPC = true;
+	packet->fromColor = channel;
+	packet->remVersion = REM_LOCAL_VERSION;
+	packet->fromRobotId = robot_id;
+	packet->payloadSize = REM_PACKET_TYPE_TO_SIZE(packet_type);
 }
 
-void printRobotCommand(REM_RobotCommand* rc){
-	LOG_printf("======== RobotCommand ========\r\n");
-	LOG_printf("            id : %d\n", rc->id);
-	LOG_printf("        doKick : %d\n", rc->doKick);
-	LOG_printf("        doChip : %d\r\n", rc->doChip);
-	LOG_printf("       doForce : %d\r\n", rc->doForce);
-	LOG_printf("useCameraAngle : %d\r\n", rc->useCameraAngle);
-	LOG_printf("           rho : %.4f\r\n", rc->rho);
-	LOG_printf("         theta : %.4f\r\n", rc->theta);
-	LOG_printf("         angle : %.4f\r\n", rc->angle);
-	LOG_printf("   cameraAngle : %.4f\r\n", rc->cameraAngle);
-	LOG_printf("      dribbler : %d\r\n", rc->dribbler);
-	LOG_printf(" kickChipPower : %d\r\n", rc->kickChipPower);
-	LOG_printf("useAbsoluteAngle : %d\r\n", rc->useAbsoluteAngle);
-	LOG_printf("      feedback : %d\r\n", rc->feedback);
-}
 
 /**
  * @brief Function that fills a REM_RobotCommand with values for easy testing. After one
@@ -265,9 +229,9 @@ bool updateTestCommand(REM_RobotCommand* rc, uint32_t time){
 	// First, empty the entire RobotCommand
 	resetRobotCommand(rc);
 	// Set the basic required stuff
-	rc->header = PACKET_TYPE_REM_ROBOT_COMMAND;
-	rc->remVersion = LOCAL_REM_VERSION;
-	rc->id = ROBOT_ID;
+	rc->header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+	rc->remVersion = REM_LOCAL_VERSION;
+	rc->toRobotId = ROBOT_ID;
 
 	// Don't do anything for the first second
 	if(time < 1000) return true;
@@ -305,7 +269,7 @@ void init(void){
 	// Turn off all leds. Use leds to indicate init() progress
 	set_Pin(LED0_pin, 0); set_Pin(LED1_pin, 0); set_Pin(LED2_pin, 0); set_Pin(LED3_pin, 0); set_Pin(LED4_pin, 0); set_Pin(LED5_pin, 0); set_Pin(LED6_pin, 0);
 	
-	{ // ====== WATCHDOG TIMER, COMMUNICATION BUFFERS ON TOPBOARD, BATTERY, ROBOT_ID
+	{ // ====== WATCHDOG TIMER, COMMUNICATION BUFFERS ON TOPBOARD, BATTERY, ROBOT_ID, OUTGOING PACKET HEADERS
 	/* Enable the watchdog timer and set the threshold at 5 seconds. It should not be needed in the initialization but
 	 sometimes for some reason the code keeps hanging when powering up the robot using the power switch. It's not nice
 	 but its better than suddenly having non-responding robots in a match */
@@ -326,14 +290,21 @@ void init(void){
 	
 	/* Read robot ID from switches */
 	ROBOT_ID = get_Id();
+	ROBOT_CHANNEL = read_Pin(FT1_pin) == GPIO_PIN_SET ? BLUE_CHANNEL : YELLOW_CHANNEL;
+	
+	initPacketHeader((REM_Packet*) &robotFeedback, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_FEEDBACK);
+	initPacketHeader((REM_Packet*) &robotStateInfo, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_STATE_INFO);
+ 	initPacketHeader((REM_Packet*) &robotPIDGains, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_ROBOT_PIDGAINS);
+	initPacketHeader((REM_Packet*) &robotLog, ROBOT_ID, ROBOT_CHANNEL, REM_PACKET_TYPE_REM_LOG);
 	}
+
 
 	set_Pin(LED0_pin, 1);
 
 	LOG_init();
 	LOG("[init:"STRINGIZE(__LINE__)"] Last programmed on " __DATE__ "\n");
 	LOG("[init:"STRINGIZE(__LINE__)"] GIT: " STRINGIZE(__GIT_STRING__) "\n");
-	LOG_printf("[init:"STRINGIZE(__LINE__)"] LOCAL_REM_VERSION: %d\n", LOCAL_REM_VERSION);
+	LOG_printf("[init:"STRINGIZE(__LINE__)"] REM_LOCAL_VERSION: %d\n", REM_LOCAL_VERSION);
 	LOG_printf("[init:"STRINGIZE(__LINE__)"] ROBOT_ID: %d\n", ROBOT_ID);
 	LOG_sendAll();
 
@@ -383,14 +354,14 @@ void init(void){
     if(err != WIRELESS_OK){ LOG("[init:"STRINGIZE(__LINE__)"] SX1280 error\n"); LOG_sendAll(); while(1); }
 	LOG_sendAll();
 	// Read the pins on the topboard to determine the wireless frequency 
-	if(read_Pin(FT1_pin)){
+	if(ROBOT_CHANNEL == BLUE_CHANNEL){
 		Wireless_setChannel(SX, BLUE_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] BLUE CHANNEL\n");
-		buzzer_Play(&beep_blue); HAL_Delay(350);
+		buzzer_Play(beep_blue); HAL_Delay(350);
 	}else{
 		Wireless_setChannel(SX, YELLOW_CHANNEL);
 		LOG("[init:"STRINGIZE(__LINE__)"] YELLOW CHANNEL\n");
-		buzzer_Play(&beep_yellow); HAL_Delay(350);
+		buzzer_Play(beep_yellow); HAL_Delay(350);
 	}
 	LOG_sendAll();
     // SX1280 section 7.3 FLRC : Syncword is 4 bytes at the beginning of each transmission, that ensures that only the right robot / basestation listens to that transmission.
@@ -422,7 +393,7 @@ void init(void){
 		LOG_sendAll();
 		// Sound an alarm to let the user know that the robot is going to perform a test
 		for(uint8_t t = 0; t < 5; t++){
-			buzzer_Play(&warningRunningTest);
+			buzzer_Play(warningRunningTest);
 			HAL_Delay(400);
 		}
 		HAL_Delay(100);
@@ -517,11 +488,8 @@ void loop(void){
         executeCommands(&activeRobotCommand);
     }
 
-    // Create RobotFeedback
-	{
-		robotFeedback.header = PACKET_TYPE_REM_ROBOT_FEEDBACK;
-		robotFeedback.remVersion= LOCAL_REM_VERSION;
-		robotFeedback.id = ROBOT_ID;
+	/* == Fill robotFeedback packet == */ {
+		robotFeedback.timestamp = current_time;
 		robotFeedback.XsensCalibrated = xsens_CalibrationDone;
 		// robotFeedback.batteryLevel = (batCounter > 1000);
 		robotFeedback.ballSensorWorking = ballSensor_isInitialized();
@@ -538,10 +506,8 @@ void loop(void){
 		robotFeedback.dribblerSeesBall = dribbler_hasBall();
 	}
     
-	{
-		robotStateInfo.header = PACKET_TYPE_REM_ROBOT_STATE_INFO;
-		robotStateInfo.remVersion = LOCAL_REM_VERSION;
-		robotStateInfo.id = ROBOT_ID;
+	/* == Fill robotStateInfo packet == */ {	
+		robotStateInfo.timestamp = current_time;	
 		robotStateInfo.xsensAcc1 = stateInfo.xsensAcc[0];
 		robotStateInfo.xsensAcc2 = stateInfo.xsensAcc[1];
 		robotStateInfo.xsensYaw = yaw_GetCalibratedYaw();
@@ -563,13 +529,11 @@ void loop(void){
 		robotStateInfo.bodyYawIntegral = stateControl_GetIntegral(wheels_LF);
 	}
 	
-	/* == Fill RobotPIDGains packet == */
-	{
+	/* == Fill RobotPIDGains packet == */ {
 		PIDvariables robotGains[4];
 		stateControl_GetPIDGains(robotGains);
-		robotPIDGains.header = PACKET_TYPE_REM_ROBOT_PIDGAINS;
-		robotPIDGains.remVersion = LOCAL_REM_VERSION;
-		robotPIDGains.id = ROBOT_ID;
+
+		robotPIDGains.timestamp = current_time;
 		robotPIDGains.PbodyX = robotGains[body_x].kP;
 		robotPIDGains.IbodyX = robotGains[body_x].kI;
 		robotPIDGains.DbodyX = robotGains[body_x].kD;
@@ -603,10 +567,10 @@ void loop(void){
 
 		if(is_connected_serial){		
 			encodeREM_RobotFeedback( &robotFeedbackPayload, &robotFeedback );
-			HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
+			HAL_UART_Transmit(UART_PC, robotFeedbackPayload.payload, REM_PACKET_SIZE_REM_ROBOT_FEEDBACK, 10);
 
 			encodeREM_RobotStateInfo( &robotStateInfoPayload, &robotStateInfo);
-			HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
+			HAL_UART_Transmit(UART_PC, robotStateInfoPayload.payload, REM_PACKET_SIZE_REM_ROBOT_STATE_INFO, 10);
 		}
 
 	}
@@ -657,6 +621,12 @@ uint8_t robot_get_ID(){
 	return ROBOT_ID;
 }
 
+uint8_t robot_get_Channel(){
+	return ROBOT_CHANNEL == YELLOW_CHANNEL ? 0 : 1;
+}
+
+
+
 
 
 
@@ -666,14 +636,14 @@ uint8_t robot_get_ID(){
 /* ========================================================= */
 
 void handleRobotCommand(uint8_t* packet_buffer){
-	memcpy(robotCommandPayload.payload, packet_buffer, PACKET_SIZE_REM_ROBOT_COMMAND);
-	REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == LOCAL_REM_VERSION;
+	memcpy(robotCommandPayload.payload, packet_buffer, REM_PACKET_SIZE_REM_ROBOT_COMMAND);
+	REM_last_packet_had_correct_version &= REM_RobotCommand_get_remVersion(&robotCommandPayload) == REM_LOCAL_VERSION;
 	decodeREM_RobotCommand(&activeRobotCommand,&robotCommandPayload);
 }
 
 void handleRobotBuzzer(uint8_t* packet_buffer){
 	REM_RobotBuzzerPayload* rbp = (REM_RobotBuzzerPayload*) (packet_buffer);
-	REM_last_packet_had_correct_version &= REM_RobotBuzzer_get_remVersion(rbp) == LOCAL_REM_VERSION;
+	REM_last_packet_had_correct_version &= REM_RobotBuzzer_get_remVersion(rbp) == REM_LOCAL_VERSION;
 	uint16_t period = REM_RobotBuzzer_get_period(rbp);
 	float duration = REM_RobotBuzzer_get_duration(rbp);
 	buzzer_Play_note(period, duration);
@@ -681,13 +651,13 @@ void handleRobotBuzzer(uint8_t* packet_buffer){
 
 void handleRobotGetPIDGains(uint8_t* packet_buffer){
 	REM_RobotGetPIDGainsPayload* rgpidgp = (REM_RobotGetPIDGainsPayload*) (packet_buffer);
-	REM_last_packet_had_correct_version &= REM_RobotGetPIDGains_get_remVersion(rgpidgp) == LOCAL_REM_VERSION;
+	REM_last_packet_had_correct_version &= REM_RobotGetPIDGains_get_remVersion(rgpidgp) == REM_LOCAL_VERSION;
 	flag_send_PID_gains = true;
 }
 
 void handleRobotSetPIDGains(uint8_t* packet_buffer){
 	REM_RobotSetPIDGainsPayload* rspidgp = (REM_RobotSetPIDGainsPayload*) (packet_buffer);
-	REM_last_packet_had_correct_version &= REM_RobotSetPIDGains_get_remVersion(rspidgp) == LOCAL_REM_VERSION;
+	REM_last_packet_had_correct_version &= REM_RobotSetPIDGains_get_remVersion(rspidgp) == REM_LOCAL_VERSION;
 	decodeREM_RobotSetPIDGains(&robotSetPIDGains, rspidgp);
 	stateControl_SetPIDGains(&robotSetPIDGains);
 	wheels_SetPIDGains(&robotSetPIDGains);
@@ -695,7 +665,7 @@ void handleRobotSetPIDGains(uint8_t* packet_buffer){
 
 void handleRobotMusicCommand(uint8_t* packet_buffer){
 	REM_RobotMusicCommandPayload* rmcp = (REM_RobotMusicCommandPayload*) (packet_buffer);
-	REM_last_packet_had_correct_version &= REM_RobotMusicCommand_get_remVersion(rmcp) == LOCAL_REM_VERSION;
+	REM_last_packet_had_correct_version &= REM_RobotMusicCommand_get_remVersion(rmcp) == REM_LOCAL_VERSION;
 	robot_setRobotMusicCommandPayload(rmcp);
 }
 
@@ -719,33 +689,33 @@ bool handlePacket(uint8_t* packet_buffer, uint8_t packet_length){
 
 		switch(packet_header){
 
-			case PACKET_TYPE_REM_ROBOT_COMMAND:
+			case REM_PACKET_TYPE_REM_ROBOT_COMMAND:
 				handleRobotCommand(packet_buffer + total_bytes_processed);
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_COMMAND;
+				total_bytes_processed += REM_PACKET_SIZE_REM_ROBOT_COMMAND;
 				break;
 
-			case PACKET_TYPE_REM_ROBOT_BUZZER: 
+			case REM_PACKET_TYPE_REM_ROBOT_BUZZER: 
 				handleRobotBuzzer(packet_buffer + total_bytes_processed);
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_BUZZER;
+				total_bytes_processed += REM_PACKET_SIZE_REM_ROBOT_BUZZER;
 				break;
 			
-			case PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
+			case REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS:
 				handleRobotGetPIDGains(packet_buffer + total_bytes_processed);
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
+				total_bytes_processed += REM_PACKET_SIZE_REM_ROBOT_GET_PIDGAINS;
 				break;
 			
-			case PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
+			case REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS:
 				handleRobotSetPIDGains(packet_buffer + total_bytes_processed);
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
+				total_bytes_processed += REM_PACKET_SIZE_REM_ROBOT_SET_PIDGAINS;
 				break;
 
-			case PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
+			case REM_PACKET_TYPE_REM_ROBOT_MUSIC_COMMAND:
 				handleRobotMusicCommand(packet_buffer + total_bytes_processed);
-				total_bytes_processed += PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
+				total_bytes_processed += REM_PACKET_SIZE_REM_ROBOT_MUSIC_COMMAND;
 				break;
 
-			case PACKET_TYPE_REM_SX1280FILLER:
-				total_bytes_processed += PACKET_SIZE_REM_SX1280FILLER;
+			case REM_PACKET_TYPE_REM_SX1280FILLER:
+				total_bytes_processed += REM_PACKET_SIZE_REM_SX1280FILLER;
 				break;
 
 

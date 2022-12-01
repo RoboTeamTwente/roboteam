@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.16)
-
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
 set(ROBOTEAM_UTILS_SRC
@@ -38,8 +37,7 @@ set(ROBOTEAM_UTILS_SRC
 
 set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/AngleTest.cpp
-        test/utcmake_minimum_required(VERSION 3.16)
-ils/ArcTest.cpp
+        test/utils/ArcTest.cpp
         test/utils/LineTest.cpp
         test/utils/LineIntersectionTest.cpp
         test/utils/LineProjectionTest.cpp

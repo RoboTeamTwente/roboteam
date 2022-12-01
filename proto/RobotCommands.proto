@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotCommand {
+    int32 id = 1;   // [0, 15] Id of robot
+
+    double velocity_x = 2;          // (m/s) Target x velocity of the robot
+    double velocity_y = 3;          // (m/s) Target y velocity of the robot
+    double angle = 4;               // (rad) [-PI, PI] Target angle
+    double angular_velocity = 5;    // (rad/s) Target angular velocity
+    bool use_angular_velocity = 6;  // If true, the angular velocity has priority over angle
+
+    double camera_angle_of_robot = 7;       // (rad) Angle of robot according to camera
+    bool camera_angle_of_robot_is_set = 8;  // If true, the camera angle can be used
+
+    double kick_speed = 9;          // (m/s) Target speed of the ball after kicking
+    bool wait_for_ball = 10;        // If true, the robot will wait with kicking until it has the ball
+    bool kick_at_angle = 11;        // Makes robot kick once it arrives at the specified angle, used in combination with angular velocity
+
+    enum KickType {
+        NO_KICK = 0;
+        KICK = 1;
+        CHIP = 2;
+    }
+    KickType kick_type = 12;        // Decides if and how the ball should be kicked
+
+    double dribbler_speed = 13; // [0, 1] Speed of the dribbler
+    bool ignore_packet = 14;    // If true, the robot will ignore this packet, but will reply with feedback
+}
+
+message RobotCommands {
+    repeated RobotCommand robot_commands = 1;
+}

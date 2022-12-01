@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "Vector2f.proto";
+
+package proto;
+
+message WorldBall {
+    uint32 area = 1;
+    Vector2f pos = 2;
+    float z = 3;
+    Vector2f vel = 4;
+    float z_vel = 5;
+    bool visible = 6;
+}

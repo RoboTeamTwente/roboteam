@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "WorldBall.proto";
+import "WorldRobot.proto";
+import "RobotProcessedFeedback.proto";
+package proto;
+
+message World {
+    uint64 time = 1;
+    uint32 id = 2;
+    WorldBall ball = 3;
+    repeated WorldRobot yellow = 4;
+    repeated WorldRobot blue = 5;
+    repeated FeedbackOnlyRobot yellow_unseen_robots = 6;
+    repeated FeedbackOnlyRobot blue_unseen_robots = 7;
+}

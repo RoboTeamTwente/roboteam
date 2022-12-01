@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package proto;
+
+message RobotWheel{
+    bool locked = 1; //Indicates if this wheel is locked
+    bool braking = 2; //Indicates if this wheel is braking
+}
+
+
+message RobotWheels{
+    RobotWheel rightFront = 1; //Right front wheel when considering the robots POV
+    RobotWheel rightBack = 2; //Right back wheel when considering the robots POV
+    RobotWheel leftBack = 3; //Left back wheel when considering the robots POV
+    RobotWheel leftFront = 4; //Left front wheel when considering the robots POV
+}
+
+message RobotProcessedFeedback {
+    bool ball_sensor_sees_ball = 1;     // The ball sensor sees the ball
+    float ball_position = 2;            // [-0.5, 0.5] The position of the ball relative to the sensor
+    bool ball_sensor_is_working = 3;    // The sensor is working
+    bool dribbler_sees_ball = 4;        // The dribbler sees the ball
+    bool xsens_is_calibrated = 5;       // The xSens is calibrated
+    bool capacitor_is_charged = 6;      // The capacitor is charged
+    RobotWheels wheelInformation = 7;   // Information on the wheels
+    float battery_level = 8;            // Battery level of the robot // TODO: Figure out if this is voltage or percentage
+    int32 signal_strength = 9;          // Signal strength of the robot //TODO: units??
+}
+
+message FeedbackOnlyRobot{
+    int32 id = 1;
+    RobotProcessedFeedback feedback = 2;
+}

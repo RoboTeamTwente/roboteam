@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "World.proto";
+import "RobotParameters.proto";
+
+import "messages_robocup_ssl_wrapper.proto";
+import "messages_robocup_ssl_referee.proto";
+import "messages_robocup_ssl_geometry.proto";
+
+import "Handshake.proto";
+import "UiOptions.proto";
+
+package proto;
+
+message State {
+    World last_seen_world = 1;
+    World command_extrapolated_world = 2;
+    World ball_camera_world = 3;
+    TeamParameters blue_robot_parameters = 4;
+    TeamParameters yellow_robot_parameters = 5;
+    SSL_GeometryData field = 6; //TODO: later change to a custom field type
+    SSL_Referee referee = 7; //TODO: later change to a custom referee type
+    repeated SSL_WrapperPacket processed_vision_packets = 10;
+    repeated SSL_Referee processed_referee_packets = 11;
+}
+
+message ModuleState {
+    State system_state = 1;
+    repeated Handshake handshakes = 2;
+}

@@ -22,7 +22,7 @@ syntax="proto3";
 
 package proto;
 
-message REM_RobotGetPIDGains {
+message REM_Packet {
     uint32 header = 1;        // integer [0, 255]             Header byte indicating the type of packet
     uint32 toRobotId = 2;     // integer [0, 15]              Id of the receiving robot
     bool toColor = 3;         // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1

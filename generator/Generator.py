@@ -346,11 +346,11 @@ class C_Generator(Generator):
 		return f"#endif /*{self.to_header_guard(packet_name)}*/\n"
 
 	# typedef struct _RobotCommandPayload {
-	#     uint8_t payload[PACKET_SIZE_ROBOT_COMMAND];
+	#     uint8_t payload[REM_PACKET_SIZE_ROBOT_COMMAND];
 	# } RobotCommandPayload;
 	def to_payload_instance(self, packet_name, variables):
 		string_struct  = f"typedef struct _{packet_name}Payload {{\n"
-		string_struct += f"    uint8_t payload[PACKET_SIZE_{CamelCaseToUpper(packet_name)}];\n"
+		string_struct += f"    uint8_t payload[REM_PACKET_SIZE_{CamelCaseToUpper(packet_name)}];\n"
 		string_struct += f"}} {packet_name}Payload;"
 		return string_struct
 
@@ -482,7 +482,7 @@ class Python_Generator(Generator):
 
 	def to_encode(self, packet_name, variables):
 		function_string =  f"    def encode(self):\n"
-		function_string += f"        payload = np.zeros(REM_BaseTypes.PACKET_SIZE_{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
+		function_string += f"        payload = np.zeros(REM_BaseTypes.REM_PACKET_SIZE_{CamelCaseToUpper(packet_name)}, dtype=np.uint8)\n"
 		for variable, n_bits, _, _ in variables:
 			function_string += f"        {packet_name}.set_{variable:<20}(payload, self.{variable})\n"
 		function_string += "        return payload\n"

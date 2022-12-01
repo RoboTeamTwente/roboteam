@@ -1,7 +1,6 @@
 import time
 from datetime import datetime
 import math
-from inspect import getmembers
 import serial
 import numpy as np
 import re
@@ -9,9 +8,10 @@ import argparse
 import sys 
 import shutil
 import multiprocessing
-
+import os
 import utils
 from REMParser import REMParser
+from SerialSimulator import SerialSimulator
 
 import roboteam_embedded_messages.python.REM_BaseTypes as BaseTypes
 from roboteam_embedded_messages.python.REM_RobotCommand import REM_RobotCommand
@@ -20,15 +20,9 @@ from roboteam_embedded_messages.python.REM_RobotStateInfo import REM_RobotStateI
 from roboteam_embedded_messages.python.REM_RobotGetPIDGains import REM_RobotGetPIDGains
 from roboteam_embedded_messages.python.REM_RobotSetPIDGains import REM_RobotSetPIDGains
 from roboteam_embedded_messages.python.REM_RobotPIDGains import REM_RobotPIDGains
-from roboteam_embedded_messages.python.REM_RobotLog import REM_RobotLog
-from roboteam_embedded_messages.python.REM_BasestationLog import REM_BasestationLog
+from roboteam_embedded_messages.python.REM_Log import REM_Log
 from roboteam_embedded_messages.python.REM_BasestationGetConfiguration import REM_BasestationGetConfiguration
-from roboteam_embedded_messages.python.REM_BasestationSetConfiguration import REM_BasestationSetConfiguration
 from roboteam_embedded_messages.python.REM_BasestationConfiguration import REM_BasestationConfiguration
-
-robotStateInfoFile = open(f"logs/robotStateInfo_{int(time.time())}.csv", "w+")
-robotCommandFile = open(f"logs/robotCommand_{int(time.time())}.csv", "w+")
-robotFeedbackFile = open(f"logs/robotFeedback_{int(time.time())}.csv", "w+")
 
 robotStateInfo = REM_RobotStateInfo()
 robotFeedback = REM_RobotFeedback()
@@ -39,15 +33,6 @@ try:
 except:
 	print("Warning! Could not import cv2. Can't visualize.")
 	cv2_available = False
-
-def printPacket(rc):
-	maxLength = max([len(k) for k, v in getmembers(rc)])
-	title = re.findall(r"_(\w+) ", str(rc))[0]
-	
-	lines = [("┌─ %s "%title) + ("─"*100)[:maxLength*2+2-len(title)] + "┐" ]	
-	lines += [ "│ %s : %s │" % ( k.rjust(maxLength) , str(v).ljust(maxLength) ) for k, v in getmembers(rc) ]
-	lines += [ "└" + ("─"*(maxLength*2+5)) + "┘"]
-	print("\n".join(lines))
 
 def drawProgressBar(progress):
 	cols = min(40, shutil.get_terminal_size((80, 20)).columns)
@@ -78,28 +63,31 @@ def normalize_angle(angle):
 
 testsAvailable = ["nothing", "full", "kicker-reflect", "kicker", "chipper", "dribbler", "rotate", "forward", "sideways", "rotate-discrete", "forward-rotate", "getpid", "angular-velocity", "circle", "raised-cosine"]
 
-# Parse input arguments 
-try:
-	if len(sys.argv) != 3:
-		raise Exception("Error : Invalid number of arguments. Expected id and test")
-	
-	robot_id = int(sys.argv[1])
-	if robot_id < 0 or 15 < robot_id:
-		raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robot_id)
-	
-	test = sys.argv[2]
-	if test not in testsAvailable:
-		raise Exception("Error : Unknown test %s. Choose a test : %s" % (test, ", ".join(testsAvailable)))
-except Exception as e:
-	print(e)
-	print("Error : Run script with \"python testRobot.py id test\"")
-	exit()
+parser = argparse.ArgumentParser()
+parser.add_argument('robot_id', help='Robot ID to send commands to', type=int)
+parser.add_argument('test', help='Test to execute', type=str)
+parser.add_argument('--simulate', '-s', action='store_true', help='Create a fake basestation that sends REM_RobotFeedback packets')
+parser.add_argument('--no-visualization', '--nv', action='store_true', help='Disable robot feedback visualization')
+parser.add_argument('--output-dir', '-d', help="REMParser output directory. Logs will be placed under 'logs/OUTPUT_DIR'")
 
+args = parser.parse_args()
+print(args)
+# exit()
+
+# Parse input arguments 
+robot_id = args.robot_id
+if robot_id < 0 or 15 < robot_id:
+	raise Exception("Error : Invalid robot id %d. Robot id should be between 0 and 15" % robot_id)
+	
+test = args.test
+if test not in testsAvailable:
+	raise Exception("Error : Unknown test %s. Choose a test : %s" % (test, ", ".join(testsAvailable)))
 
 basestation = None
+simulated_basestation = None
 
 tick_counter = 0
-periodLength = 300
+periodLength = 150
 packetHz = 60
 
 robotConnected = True
@@ -113,8 +101,8 @@ stlink_port = "/dev/serial/by-id/usb-STMicroelectronics_STM32_STLink_066FFF54485
 def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, PbodyY = 0.3, IbodyY = 0.0, DbodyY = 0.0, PbodyW = 0.25, IbodyW = 5.0, DbodyW = 0.0, PbodyYaw = 20.0, IbodyYaw = 5.0, DbodyYaw = 0.0, Pwheels = 2.0, Iwheels = 0.0, Dwheels = 0.0): # Change the default values if the robot PIDs change
 	# Create new empty setPID command
 	setPID = REM_RobotSetPIDGains()
-	setPID.header = BaseTypes.PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
-	setPID.remVersion = BaseTypes.LOCAL_REM_VERSION
+	setPID.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_SET_PIDGAINS
+	setPID.remVersion = BaseTypes.REM_LOCAL_VERSION
 	setPID.id = robot_id
 	
 	# Set the PID gains
@@ -140,8 +128,6 @@ def createSetPIDCommand(robot_id, PbodyX = 0.2, IbodyX = 0.0, DbodyX = 0.0, Pbod
 	
 	return setPID
 	
-	
-
 def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	log = ""
 
@@ -149,18 +135,20 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 	if test == "getpid":
 		if period_fraction == 0:
 			robotGetPIDGains = REM_RobotGetPIDGains()
-			robotGetPIDGains.header = BaseTypes.PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
-			robotGetPIDGains.remVersion = BaseTypes.LOCAL_REM_VERSION
+			robotGetPIDGains.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_GET_PIDGAINS
+			robotGetPIDGains.remVersion = BaseTypes.REM_LOCAL_VERSION
 			robotGetPIDGains.id = robot_id
 			return robotGetPIDGains, log
 
-	# Create new empty robot command
+	# Create new empty robot command. Fill required fields
 	cmd = REM_RobotCommand()
-	cmd.header = BaseTypes.PACKET_TYPE_REM_ROBOT_COMMAND
-	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
-	cmd.id = robot_id	
+	cmd.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+	cmd.toRobotId = robot_id
+	cmd.fromPC = True	
+	cmd.remVersion = BaseTypes.REM_LOCAL_VERSION
 	cmd.messageId = tick_counter
-	
+	cmd.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND
+
 	counter = 0
 	beta = 0.5
 	T = 1
@@ -230,16 +218,11 @@ def createRobotCommand(robot_id, test, tick_counter, period_fraction):
 
 	return cmd, log
 
-# parser = REMParser(basestation)
-# parser.parseFile("out.bin")
-# print(len(parser.packet_buffer))
-# while parser.hasPackets():
-# 	packet = parser.getNextPacket()
-# exit()
-
-
 while True:
 	try:
+
+
+		# ========== INIT ========== #
 		# Loop control
 		last_tick_time = time.time()
 
@@ -249,33 +232,50 @@ while True:
 		last_robotstateinfo_time = 0
 		last_basestation_log = ""
 		parser = None
+
 		# Visualisation
 		image_vis = np.zeros((500, 500, 3), dtype=float)
 		wheel_speeds_avg = np.zeros(4)
 		rate_of_turn_avg = 0
 		
+		# Create simulated basestation if needed
+		if args.simulate:
+			simulated_basestation = SerialSimulator()
+			simulated_basestation.run()
+
 		# Open basestation
 		if basestation is None or not basestation.isOpen():
-			basestation = utils.openContinuous(timeout=0.01)
+			port = None if not args.simulate else simulated_basestation.getSerialName()
+			basestation = utils.openContinuous(timeout=0.01, port=port)
 			print("Basestation opened")
+			if parser is not None:
+				parser.device = basestation
 
 		# Open writer / parser
 		if parser is None and basestation is not None:
 			datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-			parser = REMParser(basestation, output_file=f"log_{datetime_str}.bin")
+			output_file = None
+			if args.output_dir is not None:
+				os.makedirs(f"logs/{args.output_dir}", exist_ok=True)
+				output_file = f"logs/{args.output_dir}/log_{datetime_str}.bin"
 
-		
-		# Create and send new PID gains
-		# Comment these lines out if you're not tuning PIDs
-		#setPID = createSetPIDCommand(robot_id, PbodyW = 0.25, IbodyW = 5.0) #put PID gains as arguments to change them (unchanged keep default value)
-		#setPID_encoded = setPID.encode()
-		#basestation.write(setPID_encoded)
-		#parser.writeBytes(setPID_encoded)
+			parser = REMParser(basestation, output_file=output_file)
 
+
+		# ========== LOOP ========== #
 		# Continuously write -> read -> visualise
 		while True:
+			# Timing stuff. Get current time, seconds to next tick, and check if a new tick is required
+			current_time = time.time()
+			s_until_next_tick = last_tick_time + 1./packetHz - current_time
+			tick_required = s_until_next_tick < 0
 
-			tick_required = 1./packetHz <= time.time() - last_tick_time
+			# If tick is not required yet, sleep for 10% of the time between ticks, to prevent 100% CPU usage
+			# It 'should' also still give the script enough time between ticks to handle all reading and rendering
+			if not tick_required and 0.1 / packetHz < s_until_next_tick: 
+				time.sleep(0.1 / packetHz)
+
+
 
 			# ========== WRITING ========== #
 			if tick_required:
@@ -298,24 +298,18 @@ while True:
 				# Create and send new robot command
 				cmd, cmd_log = createRobotCommand(robot_id, test, tick_counter, period_fraction)
 				cmd_encoded = cmd.encode()
-				basestation.write(cmd_encoded)
+				
+				# Send command only if an actual basestation is connected, not a simulated one
+				if not args.simulate:
+					basestation.write(cmd_encoded)
 				parser.writeBytes(cmd_encoded)
 				last_robotcommand_time = time.time()
 				
-				# Write packet info to files (used in plotPID.py) 
-				
-
-				# if period == 0:
-				# 	cmd = REM_BasestationGetConfiguration()
-				# 	cmd.header = BaseTypes.PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION
-				# 	cmd.remVersion = BaseTypes.LOCAL_REM_VERSION
-				# 	basestation.write(cmd.encode())
-
 				# Logging
 				bar = drawProgressBar(period_fraction)
 				if not robotConnected:
 					print(" Receiving no feedback!", end="")
-				print(f" {robot_id} - {test} {bar} {cmd_log} | {last_basestation_log} ", end=" "*23 + "\r")
+				print(f" {robot_id} - {test} {bar} {cmd_log} ", end=" "*23 + "\r")
 
 
 
@@ -323,23 +317,35 @@ while True:
 			parser.read() # Read all available bytes
 			parser.process() # Convert all read bytes into packets
 
+			def handleREM_LOG(rem_log):
+				# Prepend where the packet originates from
+				log_from = "[?]  "
+				if rem_log.fromBS: log_from = "[BS] "
+				if not rem_log.fromPC and not rem_log.fromBS:
+					log_from = f"[{str(rem_log.fromRobotId).rjust(2)}] "
+
+				# Get message. Strip possible newline
+				message = rem_log.message.strip()
+				message = log_from + message
+
+				# Print message on new line
+				nwhitespace = os.get_terminal_size().columns - len(message) - 2
+				print(f"\r{message}{' ' * nwhitespace}")
+
+
 			# Handle and store all new packets
 			while parser.hasPackets():
 				packet = parser.getNextPacket()
-				latest_packets[type(packet)] = packet
-
-
-			if REM_BasestationLog in latest_packets and latest_packets[REM_BasestationLog] is not None:
-				last_basestation_log = latest_packets[REM_BasestationLog].message
-				latest_packets[REM_BasestationLog] = None
-				if last_basestation_log[-1] == '\n': last_basestation_log = last_basestation_log[:-1]
-
-
+				# RobotLog gets special treatment since we're interested in ALL logs, not just the last one
+				if type(packet) == REM_Log:
+					handleREM_LOG(packet)
+				else:
+					latest_packets[type(packet)] = packet
 
 			# ========== VISUALISING ========== #
 
 			# Break if cv2 is not imported
-			if not cv2_available: continue
+			if not cv2_available or args.no_visualization : continue
 
 			# Draw robot on the image
 			s = 101.2
@@ -372,15 +378,8 @@ while True:
 			if REM_RobotStateInfo in latest_packets and latest_packets[REM_RobotStateInfo] is not None:
 				robotStateInfo = latest_packets[REM_RobotStateInfo]
 				latest_packets[REM_RobotStateInfo] = None
-				last_robotstateinfo_time = time.time()
-				robotStateInfoFile.write(f"{last_robotstateinfo_time} {robotStateInfo.xsensAcc1} {robotStateInfo.xsensAcc2} {robotStateInfo.xsensYaw} {robotStateInfo.rateOfTurn} 					{robotStateInfo.wheelSpeed1} {robotStateInfo.wheelSpeed2} {robotStateInfo.wheelSpeed3} {robotStateInfo.wheelSpeed4} {robotStateInfo.dribbleSpeed} {robotStateInfo.filteredDribbleSpeed} {robotStateInfo.dribblespeedBeforeGotBall	} {robotStateInfo.bodyXIntegral} 				{robotStateInfo.bodyYIntegral} {robotStateInfo.bodyWIntegral} {robotStateInfo.bodyYawIntegral} {robotStateInfo.wheel1Integral} {robotStateInfo.wheel2Integral} 					{robotStateInfo.wheel3Integral} {robotStateInfo.wheel4Integral} \n")
-				robotStateInfoFile.flush()
 				last_robotfeedback_time = time.time()
-				robotFeedbackFile.write(f"{last_robotfeedback_time} {robotFeedback.batteryLevel} {robotFeedback.XsensCalibrated} {robotFeedback.ballSensorWorking} 							{robotFeedback.ballSensorSeesBall} {robotFeedback.dribblerSeesBall} {robotFeedback.capacitorCharged} {robotFeedback.ballPos} {robotFeedback.rho} {robotFeedback.theta} {robotFeedback.angle} 								{robotFeedback.wheelLocked} {robotFeedback.wheelBraking} {robotFeedback.rssi} \n")
-				robotFeedbackFile.flush()
-				robotCommandFile.write(f"{last_robotcommand_time} {cmd.doKick} {cmd.doChip} {cmd.kickAtAngle} {cmd.doForce} {cmd.useCameraAngle} {cmd.rho} {cmd.theta} {cmd.angle} {cmd.angularVelocity} 					{cmd.cameraAngle} {cmd.dribbler} {cmd.kickChipPower} {cmd.useAbsoluteAngle} \n")
-				robotCommandFile.flush()
-
+				
 				# XSens yaw
 				px, py = rotate((250, 250), (250, 150), -robotStateInfo.xsensYaw)
 				cv2.line(image_vis, (250, 250), (int(px), int(py)), (1, 1, 1), 1)
@@ -432,7 +431,10 @@ while True:
 
 			if tick_required:
 				cv2.imshow("Press esc to quit", image_vis)
-				if cv2.waitKey(1) == 27: exit()
+				if cv2.waitKey(1) == 27: 
+					if simulated_basestation is not None: simulated_basestation.stop()
+					if(args.output_dir): print(f"Logs are written to {parser.output_file}")
+					exit()
 				image_vis *= 0.7
 
 			# for packet_type in latest_packets.keys():
@@ -453,4 +455,5 @@ while True:
 		print("[Error] KeyError", e, "{0:b}".format(int(str(e))))
 	except Exception as e:
 		print("[Error]", e)
+		basestation = None
 		raise e

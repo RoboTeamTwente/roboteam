@@ -93,7 +93,8 @@ void drawBasestation(bool USBstatus){
 }
 
 uint32_t drawRobotInfo(uint8_t id, bool USBstatus){
-	REM_RobotFeedbackPayload *rfp = &buffer_RobotFeedback[id].packet;
+	return 0;
+	REM_RobotFeedbackPayload *rfp = NULL;//&buffer_RobotFeedback[id].packet;
 
 	// /* CALCULATE DATA */
 	float angle				= REM_RobotFeedback_get_angle(rfp);

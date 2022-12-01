@@ -17,60 +17,40 @@
 
 REM_SX1280FillerPayload SX1280_filler_payload;
 
-struct _buffer_RobotCommand {
+#include "CircularBuffer.h"
+
+typedef struct _wrapper_REM_RobotCommand {
 	REM_RobotCommandPayload packet;
 	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotCommand buffer_RobotCommand[MAX_NUMBER_OF_ROBOTS];
+} wrapper_REM_RobotCommand;
 
-struct _buffer_RobotSetPIDGains {
-	REM_RobotSetPIDGainsPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotSetPIDGains buffer_RobotSetPIDGains[MAX_NUMBER_OF_ROBOTS];
-
-struct _buffer_RobotFeedback {
+typedef struct _wrapper_REM_RobotFeedback {
 	REM_RobotFeedbackPayload packet;
 	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotFeedback buffer_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
+} wrapper_REM_RobotFeedback;
 
-struct _buffer_RobotStateInfo {
-	REM_RobotStateInfoPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotStateInfo buffer_RobotStateInfo[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotBuzzer {
-	REM_RobotBuzzerPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotBuzzer buffer_RobotBuzzer[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotGetPIDGains {
-	REM_RobotGetPIDGainsPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotGetPIDGains buffer_RobotGetPIDGains[MAX_NUMBER_OF_ROBOTS];
+wrapper_REM_RobotCommand buffer_REM_RobotCommand[MAX_NUMBER_OF_ROBOTS];
+wrapper_REM_RobotFeedback buffer_REM_RobotFeedback[MAX_NUMBER_OF_ROBOTS];
 
-struct _buffer_RobotPIDGains {
-	REM_RobotPIDGainsPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotPIDGains buffer_RobotPIDGains[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_robots_index[MAX_NUMBER_OF_ROBOTS];
+CircularBuffer* nonpriority_queue_pc_index;
+CircularBuffer* nonpriority_queue_bs_index;
 
-struct _buffer_RobotMusicCommand {
-	REM_RobotMusicCommandPayload packet;
-	bool isNewPacket;
-	uint32_t counter;
-};
-struct _buffer_RobotMusicCommand buffer_RobotMusicCommand[MAX_NUMBER_OF_ROBOTS];
+typedef struct _Wrapper_REM_Packet {
+  uint8_t data[REM_MAX_TOTAL_PACKET_SIZE_SX1280];
+} Wrapper_REM_Packet;
+
+Wrapper_REM_Packet nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS][40];
+Wrapper_REM_Packet nonpriority_queue_pc[40];
+Wrapper_REM_Packet nonpriority_queue_bs[40];
+
+
+
+// uint8_t nonpriority_queue_robots[MAX_NUMBER_OF_ROBOTS][40][REM_MAX_TOTAL_PACKET_SIZE_SX1280];
+// uint8_t nonpriority_queue_pc[40][REM_MAX_TOTAL_PACKET_SIZE_SX1280];
+// uint8_t nonpriority_queue_bs[40][REM_MAX_TOTAL_PACKET_SIZE_SX1280];
+
 
 #endif // __MSG_BUFF_STATUS_H

@@ -1,12 +1,13 @@
 #include "logging.h"
 #include "REM_BaseTypes.h"
-#include "REM_BasestationLog.h"
+#include "REM_Log.h"
 
 #include "CircularBuffer.h"
 
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "usbd_cdc.h"
 #include "usb_device.h"
@@ -51,7 +52,7 @@ void LOG_printf(char *format, ...){
 /**
  * TODO Ensure that messages are not "too" long, whatever that may be.
  * 
- * @brief Sends a log message over USB using the PACKET_TYPE_BASESTATION_LOG header.
+ * @brief Sends a log message over USB using the REM_PACKET_TYPE_LOG header.
  * The log must always end with \n, which this function enforces.
  * 
  * @param message The message to send over the USB
@@ -61,8 +62,8 @@ void LOG(char *message){
 
     // Get message length
     uint32_t message_length = strlen(message);  
-    // Clip the message length to 127 - PACKET_SIZE_REM_BASESTATION_LOG, as to not overflow the MessageContainer buffer
-    if(127 - PACKET_SIZE_REM_BASESTATION_LOG < message_length) message_length = 127 - PACKET_SIZE_REM_BASESTATION_LOG;
+    // Clip the message length to 127 - REM_PACKET_SIZE_REM_LOG, as to not overflow the MessageContainer buffer
+    if(127 - REM_PACKET_SIZE_REM_LOG < message_length) message_length = 127 - REM_PACKET_SIZE_REM_LOG;
     // Ensure newline at the end of the message (Can be removed if all software everywhere properly used the BasestationLog_messageLength field)
     message[message_length-1] = '\n';
 
@@ -74,17 +75,18 @@ void LOG(char *message){
     MessageContainer* message_container = &message_buffer[index_write];
     uint8_t* payload = message_container->payload;
 
-    REM_BasestationLog_set_header((REM_BasestationLogPayload*) payload, PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
-    REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) payload, LOCAL_REM_VERSION);  // 4 bits
-    REM_BasestationLog_set_messageLength((REM_BasestationLogPayload*) payload, message_length); // 8 bits
- 
-    // Copy the message into the message container, next to the BasestationLog header
-    memcpy(payload + PACKET_SIZE_REM_BASESTATION_LOG, message, message_length);
-    message_container->length = PACKET_SIZE_REM_BASESTATION_LOG + message_length;
-    
-}
+    REM_Log_set_header     ((REM_LogPayload*) payload, REM_PACKET_TYPE_REM_LOG);
+    REM_Log_set_remVersion ((REM_LogPayload*) payload, REM_LOCAL_VERSION);
+    REM_Log_set_payloadSize((REM_LogPayload*) payload, REM_PACKET_SIZE_REM_LOG + message_length);
+    REM_Log_set_fromBS     ((REM_LogPayload*) payload, 1);
+    REM_Log_set_toPC       ((REM_LogPayload*) payload, 1);
+    // TODO implement REM_Log_set_fromChannel
+    REM_Log_set_timestamp  ((REM_LogPayload*) payload, HAL_GetTick());
 
-static uint8_t buffer[100];
+    // Copy the message into the message container, next to the REM_Log header
+    memcpy(payload + REM_PACKET_SIZE_REM_LOG, message, message_length);
+    message_container->length = REM_PACKET_SIZE_REM_LOG + message_length; 
+}
 
 void LOG_send(){
     // Check if the USB is ready for transmitting
@@ -96,27 +98,33 @@ void LOG_send(){
     // Write the message over USB
     MessageContainer* message_container = &message_buffer[buffer_indexer->indexRead];
     CDC_Transmit_FS(message_container->payload, message_container->length);
-
-    // REM_BasestationLog_set_header((REM_BasestationLogPayload*) buffer, PACKET_TYPE_REM_BASESTATION_LOG);  // 8 bits
-    // REM_BasestationLog_set_remVersion((REM_BasestationLogPayload*) buffer, LOCAL_REM_VERSION);  // 4 bits
-    // REM_BasestationLog_set_messageLength((REM_BasestationLogPayload*) buffer, 5); // 8 bits
-    // sprintf(buffer+3, "01234\n");
-    // CDC_Transmit_FS(buffer, 8);
-
     // Move up the circular buffer
     CircularBuffer_read(buffer_indexer, NULL, 1);
 }
 
 void LOG_sendBlocking(uint8_t* data, uint8_t length){
     USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
-    while(!(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED || hUsbDeviceFS.dev_state == USBD_STATE_SUSPENDED));
+    // while(!(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED || hUsbDeviceFS.dev_state == USBD_STATE_SUSPENDED));
 	// if (hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED || hUsbDeviceFS.dev_state == USBD_STATE_SUSPENDED) {
-    while(hcdc->TxState != 0);
+    // while(hcdc->TxState != 0);
 		// TODO unneccesary memcpy? How about CDC_Transmit_FS(data, length);? 
 		// 	 if CDC_Transmit_FS is blocking, no fear to have 'data' go out of scope.
 		// memcpy(TxBuffer, data, length);
     CDC_Transmit_FS(data, length);
 	// }
+}
+
+bool LOG_sendBuffer(uint8_t* data, uint32_t length, bool blocking){
+    if(!log_initialized) return false;
+    
+    if(!blocking){
+        USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+        if (hcdc->TxState != 0) return false;
+    }
+    
+    CDC_Transmit_FS(data, length);
+
+    return true;
 }
 
 void LOG_sendAll(){

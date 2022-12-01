@@ -48,6 +48,14 @@ uint32_t CircularBuffer_spaceFilled(CircularBuffer* circBuf);
 bool CircularBuffer_canWrite(CircularBuffer* circBuf, uint32_t length);
 
 /**
+ * Check if a hypotethical message of 'length' bytes could be read from the buffer.
+ * @param circBuf Pointer to the circular buffer object
+ * @param length Length of the hypothetical message
+ * @return True if it can be read from buffer, False if can not be read from the buffer
+ */
+bool CircularBuffer_canRead(CircularBuffer* circBuf, uint32_t length);
+
+/**
  * Writes 'length' bytes to the buffer, even if this overflows.
  * @param circBuf Pointer to the circular buffer object
  * @param data The buffer where the data to be written is stored

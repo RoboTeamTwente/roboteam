@@ -2,7 +2,7 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include <RobotHubLogger.hpp>
+// #include <RobotHubLogger.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <RobotHubStatistics.hpp>
@@ -30,7 +30,7 @@ class RobotHub {
     void resetStatistics();
 
    private:
-    std::optional<RobotHubLogger> logger;
+    // std::optional<RobotHubLogger> logger;
 
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;

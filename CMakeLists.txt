@@ -51,7 +51,7 @@ target_link_libraries(basestation_manager PUBLIC
 target_compile_options(basestation_manager PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for RobotHub, which uses the basestationManager and simulationManager library
-add_executable(roboteam_robothub "src/RobotHubStatistics.cpp" "src/RobotHubLogger.cpp" "src/RobotHub.cpp")
+add_executable(roboteam_robothub "src/RobotHubStatistics.cpp" "src/RobotHub.cpp")
 target_include_directories(roboteam_robothub
         PRIVATE include
 )
@@ -62,6 +62,17 @@ target_link_libraries(roboteam_robothub
         PRIVATE roboteam_utils
 )
 target_compile_options(roboteam_robothub PRIVATE "${COMPILER_FLAGS}")
+
+# add_executable(roboteam_robothub_logger "src/RobotHubLogger.cpp")
+# target_include_directories(roboteam_robothub_logger
+#         PRIVATE include
+#         "roboteam_embedded_messages/include"
+# )
+# target_link_libraries(roboteam_robothub_logger
+#         PRIVATE roboteam_networking
+#         PRIVATE roboteam_utils
+# )
+# target_compile_options(roboteam_robothub_logger PRIVATE "${COMPILER_FLAGS}")
 
 # Create the make file for robothub_enumerate_usb
 add_executable(roboteam_robothub_enumerate_usb

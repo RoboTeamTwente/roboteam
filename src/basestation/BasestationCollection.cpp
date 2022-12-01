@@ -1,6 +1,8 @@
+#include <REM_BaseTypes.h>
 #include <REM_BasestationConfiguration.h>
 #include <REM_BasestationGetConfiguration.h>
-#include <REM_BasestationSetConfiguration.h>
+#include <REM_Log.h>
+#include <REM_Packet.h>
 #include <roboteam_utils/Print.h>
 
 #include <basestation/BasestationCollection.hpp>
@@ -8,7 +10,7 @@
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTILL_BASESTATION_IS_UNWANTED_S = 1;        // 1 second with no interaction
+constexpr int TIME_UNTIL_BASESTATION_IS_UNWANTED_S = 1;        // 1 second with no interaction
 constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 420;  // Why 420? No reason at all...
 
 BasestationCollection::BasestationCollection() {
@@ -164,6 +166,7 @@ void BasestationCollection::setChannelOfBasestation(const BasestationIdentifier&
     // Lock the map for thread safety
     std::scoped_lock<std::mutex> lock(this->basestationIdToChannelMutex);
     this->basestationIdToChannel[basestationId] = newChannel;
+    RTT_DEBUG("Basestation ", basestationId.toString(), " is on ", wirelessChannelToString(newChannel));
 }
 
 void BasestationCollection::removeBasestationIdToChannelEntry(const BasestationIdentifier& basestationId) {
@@ -180,8 +183,8 @@ WantedBasestations BasestationCollection::getWantedBasestations() const {
     auto timeAfterLastBlueUsage = std::chrono::duration_cast<std::chrono::seconds>(now - this->lastRequestForBlueBasestation).count();
 
     // If they were used recently enough, we say we still want them
-    bool wantsYellowBasestation = timeAfterLastYellowUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
-    bool wantsBlueBasestation = timeAfterLastBlueUsage <= TIME_UNTILL_BASESTATION_IS_UNWANTED_S;
+    bool wantsYellowBasestation = timeAfterLastYellowUsage <= TIME_UNTIL_BASESTATION_IS_UNWANTED_S;
+    bool wantsBlueBasestation = timeAfterLastBlueUsage <= TIME_UNTIL_BASESTATION_IS_UNWANTED_S;
 
     WantedBasestations wantedBasestations;
 
@@ -230,20 +233,25 @@ void BasestationCollection::updateBasestationSelection() {
 
 void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     // Create the channel request message
-    REM_BasestationGetConfiguration getConfigurationMessage;
-    getConfigurationMessage.header = PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
-
+    REM_BasestationGetConfiguration getConfigurationMessage = {0};
+    getConfigurationMessage.header = REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
+    getConfigurationMessage.toBS = true;
+    getConfigurationMessage.fromPC = true;
+    getConfigurationMessage.remVersion = REM_LOCAL_VERSION;
+    getConfigurationMessage.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
+    
     REM_BasestationGetConfigurationPayload getConfigurationPayload;
     encodeREM_BasestationGetConfiguration(&getConfigurationPayload, &getConfigurationMessage);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
+    message.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
     std::memcpy(&message.payloadBuffer, &getConfigurationPayload.payload, message.payloadSize);
 
     // Send it to every basestation with unknown channel
     for (const auto& basestation : this->getAllBasestations()) {
         WirelessChannel channel = this->getChannelOfBasestation(basestation->getIdentifier());
         if (channel == WirelessChannel::UNKNOWN) {
+            RTT_DEBUG("Sent GET_CONFIGURATION to basestation ", basestation->getIdentifier().toString());
             basestation->sendMessageToBasestation(message);
         }
     }
@@ -267,16 +275,19 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBa
 }
 
 bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
-    REM_BasestationSetConfiguration setConfigurationCommand;
-    setConfigurationCommand.header = PACKET_TYPE_REM_BASESTATION_SET_CONFIGURATION;
-    setConfigurationCommand.remVersion = LOCAL_REM_VERSION;
+    REM_BasestationConfiguration setConfigurationCommand;
+    setConfigurationCommand.header = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
+    setConfigurationCommand.toBS = true;
+    setConfigurationCommand.fromPC = true;
+    setConfigurationCommand.remVersion = REM_LOCAL_VERSION;
+    setConfigurationCommand.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION;
     setConfigurationCommand.channel = BasestationCollection::wirelessChannelToREMChannel(newChannel);
 
-    REM_BasestationSetConfigurationPayload setConfigurationPayload;
-    encodeREM_BasestationSetConfiguration(&setConfigurationPayload, &setConfigurationCommand);
+    REM_BasestationConfigurationPayload setConfigurationPayload;
+    encodeREM_BasestationConfiguration(&setConfigurationPayload, &setConfigurationCommand);
 
     BasestationMessage message;
-    message.payloadSize = PACKET_SIZE_REM_BASESTATION_SET_CONFIGURATION;
+    message.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_CONFIGURATION;
     std::memcpy(&message.payloadBuffer, &setConfigurationPayload.payload, message.payloadSize);
 
     bool sentSuccesfully = basestation->sendMessageToBasestation(message);
@@ -432,16 +443,23 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
+    RTT_DEBUG("onMessageFromBasestation() REM = ",  (uint64_t) message.payloadBuffer[0]);
+    
     // If this message contains what channel the basestation has, parse it and update our map
-    if (message.payloadBuffer[0] == PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
-        REM_BasestationConfigurationPayload configurationPayload;
-        std::memcpy(&configurationPayload.payload, message.payloadBuffer, PACKET_SIZE_REM_BASESTATION_CONFIGURATION);
+    REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
+    
+    if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+        uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel( (REM_BasestationConfigurationPayload*) message.payloadBuffer );
+        WirelessChannel basestation_channel = BasestationCollection::remChannelToWirelessChannel(basestation_channel_rem);
+        this->setChannelOfBasestation(basestationId, basestation_channel);
+    }
 
-        REM_BasestationConfiguration basestationConfiguration;
-        decodeREM_BasestationConfiguration(&basestationConfiguration, &configurationPayload);
-
-        WirelessChannel usedChannel = BasestationCollection::remChannelToWirelessChannel(basestationConfiguration.channel);
-        this->setChannelOfBasestation(basestationId, usedChannel);
+    if(REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG){
+        REM_LogPayload* logPayload = (REM_LogPayload*) message.payloadBuffer;
+        uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
+        char* charstring = (char*) &message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];
+        std::string str = std::string(charstring, message_length);
+        std::cout << "[BS]" << str; // Logs should always end with \n, so no std::endl needed
     }
 
     // This function can be called by multiple basestations simultaneously, so protect it with a mutex
@@ -453,8 +471,10 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
         const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
         if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
+            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(YELLOW)");
             this->messageFromBasestationCallback(message, rtt::Team::YELLOW);
         } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
+            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(BLUE)");
             this->messageFromBasestationCallback(message, rtt::Team::BLUE);
         }
     }

@@ -118,9 +118,6 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
             1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score)
         return true;
 
-    // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    if (FieldComputations::pointIsInOurDefenseArea(field, world->getWorld()->getBall()->get()->position)) return true;
-
     return false;
 }
 const char* KeeperKickBall::getName() { return "Keeper Kick Ball"; }

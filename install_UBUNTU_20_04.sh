@@ -1,4 +1,5 @@
 #!/bin/bash
+install_directory=$(pwd)
 
 echo Updating repositories
 apt-get -y update
@@ -40,3 +41,16 @@ git submodule update --init --recursive
 make -j $(nproc)
 make install
 ldconfig
+
+echo Installing roboteam
+cd $install_directory
+if [ -d "build/" ] 
+then
+echo build directory found
+cd build
+else
+echo build directory not found: making directory
+mkdir build && cd build
+fi
+cmake ..
+make -j$(nproc)

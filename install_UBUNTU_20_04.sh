@@ -54,3 +54,26 @@ mkdir build && cd build
 fi
 cmake ..
 make -j$(nproc)
+
+echo Installing grSim
+cd $install_directory/..
+if [ -d "grSim/" ]
+then
+echo grSim already installed: updating
+cd grSim/
+git pull
+else
+echo grSim not installed: installing
+git clone https://github.com/RoboCup-SSL/grSim.git
+cd grSim/
+fi
+if [ -d "build/" ] 
+then
+echo build directory found
+cd build
+else
+echo build directory not found: making directory
+mkdir build && cd build
+fi
+cmake ..
+make -j$(nproc)

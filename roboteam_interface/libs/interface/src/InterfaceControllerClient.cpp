@@ -16,7 +16,7 @@ namespace rtt::Interface {
         const auto& handshake = state.handshakes(0);
 
         this->decls->handleData(handshake.declarations());
-        this->vals->handleData(handshake.values(), decls);
+        this->vals->handleData(handshake.values(), decls, InterfaceSettingsPrecedence::IFACE);
     }
 
     std::weak_ptr<MessageCache<proto::State>> InterfaceControllerClient::getFieldState() const {

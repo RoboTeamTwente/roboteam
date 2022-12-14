@@ -52,14 +52,12 @@ void InterfaceSettings::handleData(const proto::UiValues& uiValues, std::weak_pt
         return;
     }
 
-    this->values.clear();
-
     for (const auto& entry : uiValues.ui_values()) {
         const auto declForVal = decls->getDeclaration(entry.first);
 
         if (!declForVal.has_value()) continue;
-        if (precedence == InterfaceSettingsPrecedence::AI && declForVal->isMutable) continue; // Prevent interface from changing AI-only uiValues
-        if (precedence == InterfaceSettingsPrecedence::IFACE && !declForVal->isMutable) continue; // Prevent AI from changing interface-only uiValues
+        if (precedence == InterfaceSettingsPrecedence::AI && !declForVal->isMutable && this->values.contains(declForVal->path)) continue; // Prevent interface from changing AI-only uiValues
+        if (precedence == InterfaceSettingsPrecedence::IFACE && declForVal->isMutable && this->values.contains(declForVal->path)) continue; // Prevent AI from changing interface-only uiValues
 
         this->values.insert_or_assign(entry.first, entry.second);
     }
@@ -91,5 +89,12 @@ bool InterfaceSettings::getDidChange() {
     return this->did_change.exchange(false);
 }
 
+void InterfaceSettings::populateWithDefaults(std::weak_ptr<InterfaceDeclarations> declsPtr) noexcept {
+    if (auto decls = declsPtr.lock()) {
+        for (const auto& decl : decls->getDeclarations()) {
+            this->setSetting(decl.first, decl.second.defaultValue);
+        }
+    }
+}
 
 }

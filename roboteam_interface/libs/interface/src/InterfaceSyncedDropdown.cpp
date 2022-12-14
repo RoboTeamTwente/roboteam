@@ -6,8 +6,8 @@
 
 namespace rtt::Interface {
     InterfaceSyncedDropdown::InterfaceSyncedDropdown(std::weak_ptr<InterfaceControllerClient> ctrlptr, std::string ident, QWidget* parent): QComboBox(parent), identity(ident), ctrl(ctrlptr) {
-        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedDropdown::updateDeclaration);
-        QObject::connect(this->ctrl.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedDropdown::updateValue);
+        QObject::connect(ctrlptr.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedDropdown::updateDeclaration);
+        QObject::connect(ctrlptr.lock().get(), &InterfaceControllerClient::refresh_trigger, this, &InterfaceSyncedDropdown::updateValue);
 
         QObject::connect(this, &InterfaceSyncedDropdown::currentTextChanged, this, &InterfaceSyncedDropdown::didChangeValue);
     }
@@ -25,8 +25,6 @@ namespace rtt::Interface {
 
     void InterfaceSyncedDropdown::updateProps(const InterfaceDeclaration& decl) {
         this->clear();
-
-        if (!decl.isMutable) this->setEnabled(false);
 
         try {
             auto dropdown = std::get<InterfaceDropdown>(decl.options);
@@ -54,14 +52,13 @@ namespace rtt::Interface {
         auto us = allDecls->getDeclaration(this->identity);
         if (!us) return;
 
+        this->setEnabled(us->isMutable);
+
         if (current_options == std::get<InterfaceDropdown>(us.value().options).options) {
             return;
         }
-
-        auto self = allDecls->getDeclaration(this->identity);
-        if (!self.has_value()) return;
-
-        this->updateProps(self.value());
+        
+        this->updateProps(us.value());
     }
 
     void InterfaceSyncedDropdown::updateValue() {

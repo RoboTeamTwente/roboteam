@@ -25,6 +25,14 @@ namespace rtt::Interface {
                 this->setChecked(false);
             }
         }
+
+        if (auto decls = cptr->getDeclarations().lock()) {
+            auto self = decls->getDeclaration(this->identity);
+
+            if (!self.has_value()) return;
+
+            this->setEnabled(self->isMutable);
+        }
     }
 
     void InterfaceSyncedCheckableButton::didCheck(bool checked) {

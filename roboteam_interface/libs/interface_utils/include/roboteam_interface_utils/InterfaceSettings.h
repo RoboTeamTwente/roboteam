@@ -42,6 +42,8 @@ class InterfaceSettings {
 
     proto::UiValues toProto() const noexcept;
 
+    void populateWithDefaults(std::weak_ptr<InterfaceDeclarations>) noexcept;
+
     bool getDidChange();
 };
 }  // namespace rbtt::Interface

@@ -13,15 +13,15 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     setMinimumHeight(600);
 
     // layouts
-    visualizer = new Visualizer(this);
+    // visualizer = new Visualizer(this);
     mainLayout = new QVBoxLayout();
     horizontalLayout = new QHBoxLayout();
     vLayout = new QVBoxLayout();
 
     auto menu = new QMenuBar(this);
     this->setMenuBar(menu);
-    menu->addMenu(tr("&File"));
-    auto viewMenu = menu->addMenu(tr("&Visualization"));
+    // menu->addMenu(tr("&File"));
+    // auto viewMenu = menu->addMenu(tr("&Visualization"));
 
     // the main controls widget for the most crucial buttons
     // changing strategies, goalie id, etc.
@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     behaviourTreeWidget->setLayout(behaviourTreeWidgetLayout);
 
     keeperStpWidget = new STPVisualizerWidget(this);
-    auto visualizationSettingsWidget = new VisualizationSettingsWidget(visualizer, this);
+    // auto visualizationSettingsWidget = new VisualizationSettingsWidget(visualizer, this);
     auto settingsWidget = new SettingsWidget(this);
 
     auto pidWidget = new PidsWidget();
@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     // add the tab widget
     auto tabWidget = new QTabWidget;
 
-    graphWidget = new GraphWidget(this);
+    // graphWidget = new GraphWidget(this);
 
     playsWidget = new PlaysWidget(this);
 
@@ -56,14 +56,14 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     DataTabWidget->addTab(behaviourTreeWidget, tr("STP states"));
     DataTabWidget->addTab(keeperStpWidget, tr("Keeper"));
     DataTabWidget->addTab(playsWidget, "Plays");
-    DataTabWidget->addTab(graphWidget, tr("Charts"));
+    // DataTabWidget->addTab(graphWidget, tr("Charts"));
     DataTabWidget->addTab(robotsWidget, tr("Robots"));
     DataTabWidget->addTab(refWidget, tr("GameStateManager"));
     tabWidget->addTab(DataTabWidget, tr("Data"));
 
     auto SettingsTabWidget = new QTabWidget;
     SettingsTabWidget->addTab(settingsWidget, tr("General settings"));
-    SettingsTabWidget->addTab(visualizationSettingsWidget, tr("Visualisation Settings"));
+    // SettingsTabWidget->addTab(visualizationSettingsWidget, tr("Visualisation Settings"));
     SettingsTabWidget->addTab(pidWidget, tr("PID"));
     tabWidget->addTab(SettingsTabWidget, tr("Settings"));
     tabWidget->addTab(manualControlWidget, tr("Manual"));
@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     // set up the general layout structure
     // visualizer on the left, sidebar (with maincontrols and tabs) on the right.
     auto splitter = new QSplitter();  // the splitter is an horizontal view that allows to be changed by the user
-    splitter->addWidget(visualizer);
+    // splitter->addWidget(visualizer);
     auto sideBarWidget = new QWidget;
     sideBarWidget->setLayout(vLayout);
     splitter->addWidget(sideBarWidget);
@@ -87,22 +87,22 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
 
     // start the UI update cycles
     // update mainwindow and field visualization
-    auto *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(20);  // 50fps
+    // auto *timer = new QTimer(this);
+    // connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    // timer->start(20);  // 50fps
 
     // start the UI update cycles
     // these are slower than the tick rate
     auto *robotsTimer = new QTimer(this);
     connect(robotsTimer, SIGNAL(timeout()), refWidget, SLOT(updateContents()));
-    connect(robotsTimer, SIGNAL(timeout()), this,
-            SLOT(updateRobotsWidget()));  // we need to pass the visualizer so thats why a seperate function is used
+    // connect(robotsTimer, SIGNAL(timeout()), this,
+    //         SLOT(updateRobotsWidget()));  // we need to pass the visualizer so thats why a seperate function is used
     connect(robotsTimer, SIGNAL(timeout()), mainControlsWidget, SLOT(updateContents()));
     robotsTimer->start(500);  // 2fps
 
-    auto *graphTimer = new QTimer(this);
-    connect(graphTimer, SIGNAL(timeout()), graphWidget, SLOT(updateContents()));
-    graphTimer->start(500);  // 2fps
+    // auto *graphTimer = new QTimer(this);
+    // connect(graphTimer, SIGNAL(timeout()), graphWidget, SLOT(updateContents()));
+    // graphTimer->start(500);  // 2fps
 
     connect(this, &MainWindow::updateStpWidgets, stpWidget, &STPVisualizerWidget::outputStpData);
     connect(this, &MainWindow::updateStpWidgets, keeperStpWidget, &STPVisualizerWidget::outputStpData);
@@ -153,10 +153,14 @@ void MainWindow::updatePlay(stp::Play *play) {
     updateStpWidgets();
 }
 
-void MainWindow::setPlayForRobot(std::string const &str, uint8_t id) { visualizer->setPlayForRobot(str, id); }
+void MainWindow::setPlayForRobot(std::string const &str, uint8_t id) {
+    // visualizer->setPlayForRobot(str, id);
+}
 
 void MainWindow::setKeeperRole(stp::Role *keeperRole, stp::Status state) { keeperStpWidget->updateKeeperContents(keeperRole, state); }
 
-void MainWindow::updateProcessedVisionPackets(const std::vector<proto::SSL_WrapperPacket> &packets) { visualizer->updateProcessedVisionPackets(packets); }
+void MainWindow::updateProcessedVisionPackets(const std::vector<proto::SSL_WrapperPacket> &packets) {
+    // visualizer->updateProcessedVisionPackets(packets);
+}
 
 }  // namespace rtt::ai::interface

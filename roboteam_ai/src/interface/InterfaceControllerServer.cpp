@@ -34,6 +34,9 @@ proto::ModuleState InterfaceControllerServer::getDataForRemote() const noexcept 
 
     auto val = this->vals->toProto();
     hand.mutable_values()->Swap(&val);
+    auto decls = this->decls->toProto();
+
+    hand.mutable_declarations()->Swap(&decls);
 
     mod.mutable_handshakes()->Add(std::move(hand));
 

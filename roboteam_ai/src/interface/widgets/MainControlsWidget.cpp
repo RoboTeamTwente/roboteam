@@ -28,8 +28,8 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
 
     // todo: the hacks for SLOTS() are unbelievable
     // functions to select strategies
-    MainWindow::configureCheckBox("Use referee", refHorizontalLayout, this, SLOT(setUseReferee(bool)), Constants::STD_USE_REFEREE());
-    MainWindow::configureCheckBox("Ignore invariants", refHorizontalLayout, this, SLOT(setIgnoreInvariants(bool)), false);
+    // MainWindow::configureCheckBox("Use referee", refHorizontalLayout, this, SLOT(setUseReferee(bool)), Constants::STD_USE_REFEREE());
+    // MainWindow::configureCheckBox("Ignore invariants", refHorizontalLayout, this, SLOT(setIgnoreInvariants(bool)), false);
 
     toggleRobotHubModeBtn = new QPushButton("--");
 
@@ -43,11 +43,11 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
     auto gameStateLayout = new QVBoxLayout();
 
     // get the strategy names from Switches
-    select_play = new QComboBox();
-    gameStateLayout->addWidget(select_play);
-    select_play->setStyleSheet(
-        QString::fromUtf8("QComboBox:disabled"
-                          "{ color: gray }"));
+    // select_play = new QComboBox();
+    // gameStateLayout->addWidget(select_play);
+    // select_play->setStyleSheet(
+    //     QString::fromUtf8("QComboBox:disabled"
+    //                       "{ color: gray }"));
 
     auto keeperHorizontalLayout = new QHBoxLayout();
 
@@ -72,26 +72,26 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
         QString::fromUtf8("QComboBox:disabled"
                           "{ color: gray }"));
 
-    auto settingsButtonsLayout = new QHBoxLayout();
-    toggleColorBtn = new QPushButton("Color");
-    QObject::connect(toggleColorBtn, SIGNAL(clicked()), this, SLOT(toggleOurColorParam()));
-    settingsButtonsLayout->addWidget(toggleColorBtn);
-    toggleColorBtn->setStyleSheet(
-        QString::fromUtf8("QPushButton:disabled"
-                          "{ color: gray }"));
+    // auto settingsButtonsLayout = new QHBoxLayout();
+    // toggleColorBtn = new QPushButton("Color");
+    // QObject::connect(toggleColorBtn, SIGNAL(clicked()), this, SLOT(toggleOurColorParam()));
+    // settingsButtonsLayout->addWidget(toggleColorBtn);
+    // toggleColorBtn->setStyleSheet(
+    //     QString::fromUtf8("QPushButton:disabled"
+    //                       "{ color: gray }"));
 
-    setToggleColorBtnLayout();
+    // setToggleColorBtnLayout();
 
-    toggleSideBtn = new QPushButton("Side");
-    QObject::connect(toggleSideBtn, SIGNAL(clicked()), this, SLOT(toggleOurSideParam()));
-    settingsButtonsLayout->addWidget(toggleSideBtn);
-    toggleSideBtn->setStyleSheet(
-        QString::fromUtf8("QPushButton:disabled"
-                          "{ color: gray }"));
+    // toggleSideBtn = new QPushButton("Side");
+    // QObject::connect(toggleSideBtn, SIGNAL(clicked()), this, SLOT(toggleOurSideParam()));
+    // settingsButtonsLayout->addWidget(toggleSideBtn);
+    // toggleSideBtn->setStyleSheet(
+    //     QString::fromUtf8("QPushButton:disabled"
+    //                       "{ color: gray }"));
 
-    setToggleSideBtnLayout();
+    // setToggleSideBtnLayout();
 
-    gameStateLayout->addLayout(settingsButtonsLayout);
+    // gameStateLayout->addLayout(settingsButtonsLayout);
 
     gameStateBox->setLayout(gameStateLayout);
     vLayout->addWidget(gameStateBox);
@@ -182,18 +182,18 @@ void MainControlsWidget::setToggleColorBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleSideBtnLayout() const {
-    if (SETTINGS.isLeft()) {
-        toggleSideBtn->setText("◀ Playing as left");
-    } else {
-        toggleSideBtn->setText("Playing as right ▶");
-    }
+    // if (SETTINGS.isLeft()) {
+    //     toggleSideBtn->setText("◀ Playing as left");
+    // } else {
+    //     toggleSideBtn->setText("Playing as right ▶");
+    // }
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string modeText = Settings::robotHubModeToString(SETTINGS.getRobotHubMode());
+    // std::string modeText = Settings::robotHubModeToString(SETTINGS.getRobotHubMode());
 
-    QString buttonText = QString::fromStdString(modeText);
-    toggleRobotHubModeBtn->setText(buttonText);
+    // QString buttonText = QString::fromStdString(modeText);
+    // toggleRobotHubModeBtn->setText(buttonText);
 }
 
 void MainControlsWidget::updateContents() {
@@ -214,8 +214,8 @@ void MainControlsWidget::updateContents() {
         select_goalie->setStyleSheet("background-color: #cc0000;");
     }
 
-    this->setToggleSideBtnLayout();
-    this->setToggleColorBtnLayout();
+    // this->setToggleSideBtnLayout();
+    // this->setToggleColorBtnLayout();
     this->setToggleRobotHubModeBtnLayout();
 }
 
@@ -226,6 +226,8 @@ void MainControlsWidget::updatePlays() {
     }
 }
 
-void MainControlsWidget::setIgnoreInvariants(bool ignore) { SETTINGS.setIgnoreInvariants(ignore); }
+void MainControlsWidget::setIgnoreInvariants(bool ignore) {
+    // SETTINGS.setIgnoreInvariants(ignore);
+}
 
 }  // namespace rtt::ai::interface

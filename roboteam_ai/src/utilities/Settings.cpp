@@ -41,6 +41,9 @@ bool Settings::setYellow(bool yellow) {
 
     if (ai::io::io.obtainTeamColorChannel(yellow)) {
         // We could obtain the necessary channel
+        if (this->yellow != yellow) {
+            RTT_DEBUG("Changed isYellow to ", yellow)
+        }
         this->yellow = yellow;
         hasWantedColor = true;
     }
@@ -51,7 +54,33 @@ bool Settings::setYellow(bool yellow) {
 bool Settings::isLeft() const { return left; }
 
 void Settings::setLeft(bool _left) {
-    if (this->isPrimaryAI()) this->left = _left;
+    if (this->isPrimaryAI()) {
+        if (this->left != _left) {
+            RTT_DEBUG("Changed isLeft to ", _left)
+        }
+        this->left = _left;
+    }
+}
+
+bool Settings::getIgnoreInvariants() const {
+    return this->ignoreInvariants;
+}
+void Settings::setIgnoreInvariants(bool ignoreInvariants) {
+    if (this->ignoreInvariants != ignoreInvariants) {
+        RTT_DEBUG("Changed ignoreInvariants to ", ignoreInvariants)
+    }
+    this->ignoreInvariants = ignoreInvariants;
+}
+
+bool Settings::getUseReferee() const {
+    return this->useReferee;
+}
+
+void Settings::setUseReferee(bool useReferee) {
+    if (this->useReferee != useReferee) {
+        RTT_DEBUG("Changed useReferee to ", useReferee)
+    }
+    this->useReferee = useReferee;
 }
 
 Settings::RobotHubMode Settings::getRobotHubMode() const { return this->robotHubMode; }

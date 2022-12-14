@@ -10,7 +10,7 @@
 namespace rtt::ai::interface {
 
 MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) : QWidget(parent), manager{appManager} {
-    Output::setUseRefereeCommands(Constants::STD_USE_REFEREE());
+    SETTINGS.setUseReferee(Constants::STD_USE_REFEREE());
 
     // todo: 2 dropdown menus, fix them to reflect new STP
     vLayout = new QVBoxLayout();
@@ -117,12 +117,11 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
         interface::Output::setRuleSetName(rulesetName.toStdString());
     });
 
-    setUseReferee(Output::usesRefereeCommands());
     this->setLayout(vLayout);
 }
 
 void MainControlsWidget::setUseReferee(bool useRef) {
-    Output::setUseRefereeCommands(useRef);
+    SETTINGS.setUseReferee(useRef);
 
     select_play->setDisabled(useRef);
     select_ruleset->setDisabled(useRef);
@@ -226,6 +225,6 @@ void MainControlsWidget::updatePlays() {
     }
 }
 
-void MainControlsWidget::setIgnoreInvariants(bool ignore) { MainControlsWidget::ignoreInvariants = ignore; }
+void MainControlsWidget::setIgnoreInvariants(bool ignore) { SETTINGS.setIgnoreInvariants(ignore); }
 
 }  // namespace rtt::ai::interface

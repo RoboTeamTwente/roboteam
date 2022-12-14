@@ -16,11 +16,9 @@ pidVals Output::keeperPID = pidVals(0.0, 0.0, 0.0);
 pidVals Output::keeperInterceptPID = pidVals(0.0, 0.0, 0.0);
 
 rtt::Vector2 Output::markerPosition = {0, 0};  // initialize on middle of the field
-bool Output::useRefereeCommands = false;
 bool Output::timeOutAtTop = Constants::STD_TIMEOUT_TO_TOP();
 
 std::mutex Output::markerMutex;
-std::mutex Output::refMutex;
 
 GameState Output::interfaceGameState("halt_strategy", "default");
 
@@ -51,16 +49,6 @@ const Vector2 &Output::getInterfaceMarkerPosition() {
 void Output::setMarkerPosition(const Vector2 &ballPlacementTarget) {
     std::lock_guard<std::mutex> lock(markerMutex);
     Output::markerPosition = ballPlacementTarget;
-}
-
-bool Output::usesRefereeCommands() {
-    std::lock_guard<std::mutex> lock(refMutex);
-    return useRefereeCommands;
-}
-
-void Output::setUseRefereeCommands(bool useRefereeCommands) {
-    std::lock_guard<std::mutex> lock(refMutex);
-    Output::useRefereeCommands = useRefereeCommands;
 }
 
 bool Output::isTimeOutAtTop() { return timeOutAtTop; }

@@ -26,7 +26,6 @@ else()
     outdated
     REMOTE
     conancenter
-    flatexdegiro
     UPDATE
     SETTINGS
     ${settings})

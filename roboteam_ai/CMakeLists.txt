@@ -345,6 +345,8 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE roboteam_utils
         PRIVATE SDL2::SDL2-static
         PRIVATE roboteam_interface_utils_lib
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
 

@@ -7,6 +7,7 @@
 
 #include <optional>
 
+// TODO: get rid of this, inherit Field in fixture in tests
 #include "gtest/gtest_prod.h"
 
 namespace rtt::world {

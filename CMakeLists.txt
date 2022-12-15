@@ -20,7 +20,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 5.15.7 COMPONENTS
-    Gui Widgets Core Charts REQUIRED)
+    Gui Widgets Core Charts Network REQUIRED)
 
 include(GoogleTest)
 enable_testing()

@@ -28,29 +28,29 @@ proto::Setting getRobotHubBasestationModePacket() {
 }
 
 void onFeedback(const rtt::RobotsFeedback& robotsFeedback) {
-    int amountOfFeedback = robotsFeedback.feedback.size();
-    bool isYellow = robotsFeedback.team == rtt::Team::YELLOW;
+    // int amountOfFeedback = robotsFeedback.feedback.size();
+    // bool isYellow = robotsFeedback.team == rtt::Team::YELLOW;
 
-    std::cout << "Received " << amountOfFeedback << " feedbacks of team " << (isYellow ? "yellow" : "blue") << std::endl;
+    // std::cout << "Received " << amountOfFeedback << " feedbacks of team " << (isYellow ? "yellow" : "blue") << std::endl;
 
-    for (const auto& feedback : robotsFeedback.feedback) {
-        int id = feedback.id;
-        bool xSensCalibrated = feedback.xSensIsCalibrated;
-        bool ballsensorworking = feedback.ballSensorIsWorking;
-        bool hasBall = feedback.hasBall;
+    // for (const auto& feedback : robotsFeedback.feedback) {
+    //     int id = feedback.id;
+    //     bool xSensCalibrated = feedback.xSensIsCalibrated;
+    //     bool ballsensorworking = feedback.ballSensorIsWorking;
+    //     bool hasBall = feedback.hasBall;
 
-        std::cout << " - Robot " << id << " has " << (hasBall ? "" : "not ") << "the ball" << std::endl;
-    }
+    //     std::cout << " - Robot " << id << " has " << (hasBall ? "" : "not ") << "the ball" << std::endl;
+    // }
 }
 
 void onWorld(const proto::State& world) {
-    for (const auto& robot : world.last_seen_world().yellowfeedback()) {
-        // std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
-    }
+    // for (const auto& robot : world.last_seen_world().yellowfeedback()) {
+    //     // std::cout << "Robot " << robot.id() << " of team yellow has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+    // }
 
-    for (const auto& robot : world.last_seen_world().bluefeedback()) {
-        // std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
-    }
+    // for (const auto& robot : world.last_seen_world().bluefeedback()) {
+    //     // std::cout << "Robot " << robot.id() << " of team blue has " << (robot.hasball() ? "" : "not ") << "the ball" << std::endl;
+    // }
 }
 
 int main() {

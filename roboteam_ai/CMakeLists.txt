@@ -19,6 +19,10 @@ target_link_libraries(roboteam_ai_utils
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
+        # What you could also do is to just make a roboteam_field target, INTERFACE GTest::gtest
+        # but realistically we shouldn't be shipping test dependencies.
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
@@ -36,8 +40,10 @@ target_include_directories(roboteam_ai_manual
 target_link_libraries(roboteam_ai_manual
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         PRIVATE Qt5::Widgets
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_manual PRIVATE "${COMPILER_FLAGS}")
 
@@ -58,6 +64,8 @@ target_link_libraries(roboteam_ai_skills
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_skills PRIVATE "${COMPILER_FLAGS}")
 
@@ -88,7 +96,9 @@ target_include_directories(roboteam_ai_tactics
 target_link_libraries(roboteam_ai_tactics
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
-        PRIVATE Qt5::Widgets
+        PRIVATE Qt5::Widgets # <- ?
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_tactics PRIVATE "${COMPILER_FLAGS}")
 
@@ -121,6 +131,8 @@ target_link_libraries(roboteam_ai_roles
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
         PRIVATE Qt5::Widgets
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_roles PRIVATE "${COMPILER_FLAGS}")
 
@@ -163,8 +175,10 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         PRIVATE NFParam
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 
@@ -222,6 +236,8 @@ target_link_libraries(roboteam_ai_evaluation
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE NFParam
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_evaluation PRIVATE "${COMPILER_FLAGS}")
 
@@ -240,6 +256,8 @@ target_link_libraries(roboteam_ai_computation
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE NFParam
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 
@@ -273,6 +291,8 @@ target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PRIVATE GTest::gtest # Due to Field.h requiring it... 
+        # TODO: get rid of test dependencies in deployables
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 
@@ -323,7 +343,7 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         PRIVATE roboteam_interface_utils_lib
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
@@ -362,7 +382,7 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -426,7 +446,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -460,7 +480,7 @@ target_include_directories(positionScoringTest
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
+        PRIVATE SDL2::SDL2-static
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_roles

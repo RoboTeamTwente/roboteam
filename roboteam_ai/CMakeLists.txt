@@ -3,7 +3,7 @@ project(roboteam_ai)
 
 add_subdirectory(src)
 
-###### UTILS #######
+# ##### UTILS #######
 add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/GameStateManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Constants.cpp
@@ -19,17 +19,14 @@ target_link_libraries(roboteam_ai_utils
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
-        # What you could also do is to just make a roboteam_field target, INTERFACE GTest::gtest
-        # but realistically we shouldn't be shipping test dependencies.
+        PUBLIC roboteam_ai_world
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
 )
 target_compile_options(roboteam_ai_utils PRIVATE "${COMPILER_FLAGS}")
 
-###### MANUAL #######
+# ##### MANUAL #######
 add_library(roboteam_ai_manual
         ${PROJECT_SOURCE_DIR}/src/manual/JoystickManager.cpp
         ${PROJECT_SOURCE_DIR}/src/manual/JoystickHandler.cpp
@@ -42,12 +39,11 @@ target_link_libraries(roboteam_ai_manual
         PRIVATE roboteam_utils
         PRIVATE SDL2::SDL2-static
         PRIVATE Qt5::Widgets
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_manual PRIVATE "${COMPILER_FLAGS}")
 
-###### SKILLS #######
+# ##### SKILLS #######
 add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/Skill.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Kick.cpp
@@ -64,18 +60,19 @@ target_link_libraries(roboteam_ai_skills
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_skills PRIVATE "${COMPILER_FLAGS}")
 
-###### TACTICS #######
+# ##### TACTICS #######
 add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/Tactic.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/constants/ControlConstants.cpp
+
         # /
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/KeeperBlockBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/TestTactic.cpp
+
         # active/
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/DriveWithBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/GetBall.cpp
@@ -83,6 +80,7 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/KickAtPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/OrbitKick.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
+
         # passive/
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/AvoidBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockBall.cpp
@@ -97,18 +95,19 @@ target_link_libraries(roboteam_ai_tactics
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
         PRIVATE Qt5::Widgets # <- ?
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_tactics PRIVATE "${COMPILER_FLAGS}")
 
-###### ROLES #######
+# ##### ROLES #######
 add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/Role.cpp
+
         # /
         ${PROJECT_SOURCE_DIR}/src/stp/roles/TestRole.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/Keeper.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/PenaltyKeeper.cpp
+
         # active
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Attacker.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Harasser.cpp
@@ -117,6 +116,7 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Passer.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/KeeperPasser.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PassReceiver.cpp
+
         # passive
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallAvoider.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallDefender.cpp
@@ -131,23 +131,25 @@ target_link_libraries(roboteam_ai_roles
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
         PRIVATE Qt5::Widgets
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_roles PRIVATE "${COMPILER_FLAGS}")
 
-###### PLAYS #######
+# ##### PLAYS #######
 add_library(roboteam_ai_plays
         ${PROJECT_SOURCE_DIR}/src/stp/Play.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/PlayDecider.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/PlayEvaluator.cpp
+
         # defensive/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/DefendPass.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/DefendShot.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/KeeperKickBall.cpp
+
         # offensive/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/Attack.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/AttackingPass.cpp
+
         # referee_specific/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/AggressiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementThem.cpp
@@ -177,12 +179,11 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE Qt5::Widgets
         PRIVATE SDL2::SDL2-static
         PRIVATE NFParam
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 
-###### EVALUATION #######
+# ##### EVALUATION #######
 add_library(roboteam_ai_evaluation
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeHaveBallGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyHaveBallGlobalEvaluation.cpp
@@ -236,12 +237,11 @@ target_link_libraries(roboteam_ai_evaluation
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE NFParam
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_evaluation PRIVATE "${COMPILER_FLAGS}")
 
-###### COMPUTATION #######
+# ##### COMPUTATION #######
 add_library(roboteam_ai_computation
         ${PROJECT_SOURCE_DIR}/src/stp/computations/PositionComputations.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/computations/GoalComputations.cpp
@@ -256,12 +256,11 @@ target_link_libraries(roboteam_ai_computation
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE NFParam
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 
-###### CONTROL #######
+# ##### CONTROL #######
 add_library(roboteam_ai_control
         ${PROJECT_SOURCE_DIR}/src/control/ControlModule.cpp
         ${PROJECT_SOURCE_DIR}/src/control/ControlUtils.cpp
@@ -291,14 +290,14 @@ target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC robtoeam_ai_world
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 
-###### INTERFACE *HEADERS* #######
+# ##### INTERFACE *HEADERS* #######
 set(INTERFACE_HEADERS
-        #QT wants to know about these headers
+
+        # QT wants to know about these headers
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PidBox.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PidsWidget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/MainControlsWidget.h
@@ -314,7 +313,7 @@ set(INTERFACE_HEADERS
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/GraphWidget.h
 )
 
-###### INTERFACE #######
+# ##### INTERFACE #######
 add_library(roboteam_ai_interface
         ${INTERFACE_HEADERS}
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/mainWindow.cpp
@@ -333,8 +332,9 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/SettingsWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/ManualControlWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
+
         # After removing the interface, only this file should remain
-        #${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
+        # ${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
 )
 target_include_directories(roboteam_ai_interface
         PRIVATE include/roboteam_ai
@@ -345,12 +345,11 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE roboteam_utils
         PRIVATE SDL2::SDL2-static
         PRIVATE roboteam_interface_utils_lib
-        PRIVATE GTest::gtest # Due to Field.h requiring it... 
-        # TODO: get rid of test dependencies in deployables
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
 
-###### WORLD #######
+# ##### WORLD #######
 add_library(roboteam_ai_world
         ${PROJECT_SOURCE_DIR}/src/world/FieldComputations.cpp
         ${PROJECT_SOURCE_DIR}/src/world/Field.cpp
@@ -369,10 +368,15 @@ target_link_libraries(roboteam_ai_world
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PUBLIC GTest::gtest # Due to Field.h requiring it...
+
+        # TODO: get rid of test dependencies in deployables
+        # What you could also do is to just make a roboteam_field target, INTERFACE GTest::gtest
+        # but realistically we shouldn't be shipping test dependencies.
 )
 target_compile_options(roboteam_ai_world PRIVATE "${COMPILER_FLAGS}")
 
-###### MAIN #######
+# ##### MAIN #######
 add_executable(roboteam_ai
         ${PROJECT_SOURCE_DIR}/src/STPManager.cpp
         ${PROJECT_SOURCE_DIR}/src/roboteam_ai.cpp
@@ -385,6 +389,7 @@ target_link_libraries(roboteam_ai
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE SDL2::SDL2-static
+
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -401,7 +406,7 @@ target_link_libraries(roboteam_ai
 )
 target_compile_options(roboteam_ai PRIVATE "${COMPILER_FLAGS}")
 
-###### TESTHELPERS #######
+# ##### TESTHELPERS #######
 add_library(testHelpers
         ${PROJECT_SOURCE_DIR}/test/helpers/WorldHelper.h
         ${PROJECT_SOURCE_DIR}/test/helpers/WorldHelper.cpp
@@ -416,11 +421,11 @@ target_link_libraries(testHelpers
         PRIVATE roboteam_networking
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_ai_utils
-        )
+)
 
 target_compile_options(testHelpers PRIVATE "${COMPILER_FLAGS}")
 
-###### TEST #######
+# ##### TEST #######
 add_executable(roboteam_ai_tests
         ${PROJECT_SOURCE_DIR}/test/main.cpp
         ${PROJECT_SOURCE_DIR}/test/ControlTests/ControlUtilsTest.cpp
@@ -436,11 +441,11 @@ add_executable(roboteam_ai_tests
         ${PROJECT_SOURCE_DIR}/test/StpTests/CorrectPlayTest.cpp
         ${PROJECT_SOURCE_DIR}/test/ControlTests/BBTrajectory/BBTrajectory1DTest.cpp
         ${PROJECT_SOURCE_DIR}/test/PassingTests/PassingTests.cpp
-        )
+)
 target_include_directories(roboteam_ai_tests
         PRIVATE include/roboteam_ai
         PRIVATE test
-        )
+)
 target_link_libraries(roboteam_ai_tests
         PRIVATE GTest::gtest
         PRIVATE GTest::gmock
@@ -449,6 +454,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE SDL2::SDL2-static
+
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -463,21 +469,21 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_skills
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_interface_utils_lib
-        )
+)
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")
 
 gtest_discover_tests(roboteam_ai_tests)
 
-###### POSITIONSCORINGTEST #######
+# ##### POSITIONSCORINGTEST #######
 add_executable(positionScoringTest
         ${PROJECT_SOURCE_DIR}/test/PositionScoringTests/PositionScoringTest.cpp
-        )
+)
 
 target_include_directories(positionScoringTest
         PRIVATE test
         PRIVATE include/roboteam_ai
-        )
+)
 
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
@@ -497,4 +503,4 @@ target_link_libraries(positionScoringTest
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_interface
-        )
+)

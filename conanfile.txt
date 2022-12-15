@@ -1,0 +1,27 @@
+[build_requires]
+
+[requires]
+    protobuf/3.21.4
+    zeromq/4.3.4
+    eigen/3.4.0
+    qt/5.15.7
+    gtest/1.12.1
+    zlib/1.2.13
+    nlohmann_json/3.11.2
+    boost/1.80.0
+    sdl/2.24.1
+    ixwebsocket/11.4.3
+    zmqpp/4.2.0
+    libusb/1.0.26
+    libsodium/1.0.18
+    tracy/0.8.2.1
+    libudev/system
+    openssl/1.1.1q
+
+
+[generators]
+    cmake_find_package
+
+[options]
+    zmqpp:shared = True
+    qt:qtcharts = True

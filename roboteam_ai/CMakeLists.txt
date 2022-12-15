@@ -290,7 +290,7 @@ target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PUBLIC robtoeam_ai_world
+        PUBLIC roboteam_ai_world
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 

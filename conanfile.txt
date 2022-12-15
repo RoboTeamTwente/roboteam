@@ -22,4 +22,6 @@
     cmake_find_package
 
 [options]
+    qt:shared = True
     qt:qtcharts = True
+    qt:qtwayland = True

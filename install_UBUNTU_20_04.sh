@@ -77,3 +77,21 @@ mkdir build && cd build
 fi
 cmake ..
 make -j$(nproc)
+
+echo Installing autorefs
+cd $install_directory/..
+if [ -d "ssl-autorefs/" ]
+then
+echo autorefs already installed: updating
+cd ssl-autorefs/
+./updateAll.sh
+else
+echo autorefs not installed: installing
+git clone https://github.com/RoboCup-SSL/ssl-autorefs.git
+cd ssl-autorefs
+git clone https://github.com/TIGERs-Mannheim/AutoReferee.git tigers
+git clone https://github.com/robotics-erlangen/autoref.git erforce
+./installDeps.sh
+fi
+./buildAll.sh
+

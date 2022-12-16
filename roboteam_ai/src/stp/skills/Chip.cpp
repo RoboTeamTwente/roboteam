@@ -10,7 +10,7 @@ namespace rtt::ai::stp::skill {
 
 Status Chip::onUpdate(const StpInfo &info) noexcept {
     // Clamp and set chip velocity
-    float chipVelocity = std::clamp(info.getKickChipVelocity(), 0.0, stp::control_constants::MAX_CHIP_POWER);
+    float chipVelocity = std::clamp(info.getKickChipVelocity(), stp::control_constants::MIN_CHIP_POWER, stp::control_constants::MAX_CHIP_POWER);
 
     // Set chip command
     command.kickType = KickType::CHIP;

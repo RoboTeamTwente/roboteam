@@ -95,3 +95,15 @@ git clone https://github.com/robotics-erlangen/autoref.git erforce
 fi
 ./buildAll.sh
 
+echo Installing game-controller
+cd $install_directory/..
+if [ -d "ssl-game-controller/" ]
+then
+echo game-controller already installed
+else
+echo game-controller not installed: installing
+mkdir ssl-game-controller
+cd ssl-game-controller
+wget "https://github.com/RoboCup-SSL/ssl-game-controller/releases/download/v2.16.1/ssl-game-controller_v2.16.1_linux_amd64"
+fi
+

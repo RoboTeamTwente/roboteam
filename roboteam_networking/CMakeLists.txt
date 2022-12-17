@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD "17")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
 # Create make file for all theproto files as target 'roboteam_networking_proto'
+find_package(GTest REQUIRED)
 find_package(Protobuf 3.9.1 REQUIRED)
 add_subdirectory(proto)
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ssl_simulation_control.pb.h>
+#include <proto/ssl_simulation_control.pb.h>
 
 #include <roboteam_utils/Teams.hpp>
 

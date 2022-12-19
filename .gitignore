@@ -3,6 +3,8 @@ cmake-build-debug/
 cmake-build-release/
 build/
 /.vscode
+
+## BASESTATOIN
 # Custom
 roboteam_basestation/.project
 roboteam_basestation/.cproject
@@ -76,3 +78,24 @@ roboteam_basestation/Module.symvers
 roboteam_basestation/Mkfile.old
 roboteam_basestation/dkms.conf
 roboteam_basestation//Debug/
+
+## MICROCONTROLLER
+roboteam_microcontroller5.0/.pio/
+roboteam_microcontroller5.0/.vscode/
+roboteam_microcontroller5.0/.cproject
+roboteam_microcontroller5.0/.mxproject
+roboteam_microcontroller5.0/.project
+roboteam_microcontroller5.0/.settings
+
+roboteam_microcontroller5.0/startup
+roboteam_microcontroller5.0/cmake-build-debug/
+roboteam_microcontroller5.0/.idea/*
+roboteam_microcontroller5.0/.settings/*
+roboteam_microcontroller5.0/*.tmp
+roboteam_microcontroller5.0/Debug/
+roboteam_microcontroller5.0//Release/
+roboteam_microcontroller5.0/Drivers
+roboteam_microcontroller5.0/*.ld
+
+roboteam_microcontroller5.0/python_utils/rem/*
+roboteam_microcontroller5.0/*.code-workspace

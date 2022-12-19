@@ -33,6 +33,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Robot.cpp
         src/utils/World.cpp
         src/utils/Ball.cpp
+        src/utils/Rectangle.cpp
         )
 
 set(ROBOTEAM_UTILS_TEST_SRC

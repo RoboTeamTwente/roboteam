@@ -40,6 +40,12 @@ public:
     [[nodiscard]] virtual LineSegment rightLine() const = 0;
     // Gets the bottom line segment
     [[nodiscard]] virtual LineSegment bottomLine() const = 0;
+
+    // Adds the center(s) of this object to the given vector. Recursively if this is a container
+    virtual void addPointsToVec(std::vector<Vector2>&) const;
+
+    // Lists the center(s) of this object using the addPointsToVec function
+    std::vector<Vector2> getPoints() const;
 };
 
 } // namespace rtt

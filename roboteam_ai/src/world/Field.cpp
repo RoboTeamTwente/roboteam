@@ -57,26 +57,13 @@ void Field::initFieldArcs(const proto::SSL_GeometryFieldSize &sslFieldSize) {
 }
 
 void Field::initFieldGrids() {
-    auto gridLength = getFieldLength() / numSegmentsX;
-    auto gridWidth = getFieldWidth() / numSegmentsY;
+    auto gridWidth = getFieldLength();
+    auto gridHeight = getFieldWidth();
 
-    auto bottomX = getLeftmostX();
-    auto middleX = getLeftmostX() + gridLength;
-    auto topX = getLeftmostX() + gridLength * 2;
+    Vector2 bottomLeft = {getLeftmostX(), getBottommostY()};
+    LazyRectangle gridArea = LazyRectangle(bottomLeft, gridWidth, gridHeight);
 
-    auto leftY = getBottommostY() + gridWidth * 2;
-    auto middleY = getBottommostY() + gridWidth;
-    auto rightY = getBottommostY();
-
-    backLeftGrid = Grid(bottomX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    backMidGrid = Grid(bottomX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    backRightGrid = Grid(bottomX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleLeftGrid = Grid(middleX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleMidGrid = Grid(middleX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleRightGrid = Grid(middleX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontLeftGrid = Grid(topX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontMidGrid = Grid(topX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontRightGrid = Grid(topX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
+    grid = Grid3x3<Grid3x3<FastRectangle>>(gridArea);
 }
 
 void Field::initFieldOthers() {
@@ -199,24 +186,6 @@ const Vector2 &Field::getTopRightTheirDefenceArea() const { return getFieldVecto
 
 const Vector2 &Field::getBottomRightTheirDefenceArea() const { return getFieldVector(bottomRightTheirDefenceArea); }
 
-const Grid &Field::getBackLeftGrid() const { return getFieldGrid(backLeftGrid); }
-
-const Grid &Field::getBackMidGrid() const { return getFieldGrid(backMidGrid); }
-
-const Grid &Field::getBackRightGrid() const { return getFieldGrid(backRightGrid); }
-
-const Grid &Field::getMiddleLeftGrid() const { return getFieldGrid(middleLeftGrid); }
-
-const Grid &Field::getMiddleMidGrid() const { return getFieldGrid(middleMidGrid); }
-
-const Grid &Field::getMiddleRightGrid() const { return getFieldGrid(middleRightGrid); }
-
-const Grid &Field::getFrontLeftGrid() const { return getFieldGrid(frontLeftGrid); }
-
-const Grid &Field::getFrontMidGrid() const { return getFieldGrid(frontMidGrid); }
-
-const Grid &Field::getFrontRightGrid() const { return getFieldGrid(frontRightGrid); }
-
 double Field::getFieldValue(const std::optional<double> &fieldValue) const {
     if (fieldValue) {
         return fieldValue.value();
@@ -267,15 +236,15 @@ const FieldArc &Field::getFieldArc(const std::optional<FieldArc> &fieldArc) cons
     }
 }
 
-const Grid &Field::getFieldGrid(const std::optional<Grid> &fieldGrid) const {
-    if (fieldGrid) {
-        return fieldGrid.value();
+const FieldGrid &Field::getFieldGrid() const {
+    if (grid) {
+        return grid.value();
     } else {
         /* This clause is needed, because the default constructor could have been called. In which case the variables
         have not been assigned a value. */
         RTT_WARNING("Access undefined grid in the Field class (world might not be turned on?).")
 
-        static Grid standard = Grid(0, 0, 0, 0, 0, 0);
+        static FieldGrid standard = FieldGrid(LazyRectangle({0, 0}, {0, 0}));
         return standard;
     }
 }
@@ -395,15 +364,7 @@ Field &Field::operator=(const Field &old) noexcept {
     bottomLeftOurDefenceArea = old.bottomLeftOurDefenceArea;
     topRightTheirDefenceArea = old.topRightTheirDefenceArea;
     bottomRightTheirDefenceArea = old.bottomRightTheirDefenceArea;
-    backLeftGrid = old.backLeftGrid;
-    backMidGrid = old.backMidGrid;
-    backRightGrid = old.backRightGrid;
-    middleLeftGrid = old.middleLeftGrid;
-    middleMidGrid = old.middleMidGrid;
-    middleRightGrid = old.middleRightGrid;
-    frontLeftGrid = old.frontLeftGrid;
-    frontMidGrid = old.frontMidGrid;
-    frontRightGrid = old.frontRightGrid;
+    grid = old.grid;
     return *this;
 }
 

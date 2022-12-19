@@ -14,16 +14,14 @@
 
 namespace rtt::ai::stp {
 
-gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const world::Field &field,
+gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const std::vector<Vector2>& searchPoints, gen::ScoreProfile profile, const world::Field &field,
                                                       const world::World *world) {
     gen::ScoredPosition bestPosition;
     (currentPosition.has_value()) ? bestPosition = PositionScoring::scorePosition(currentPosition.value(), profile, field, world, 2) : bestPosition = {{0, 0}, 0};
-    for (const auto &nestedPoints : searchGrid.getPoints()) {
-        for (const Vector2 &position : nestedPoints) {
-            if (!FieldComputations::pointIsValidPosition(field, position)) continue;
-            gen::ScoredPosition consideredPosition = PositionScoring::scorePosition(position, profile, field, world);
-            if (consideredPosition.score > bestPosition.score) bestPosition = consideredPosition;
-        }
+    for (const auto &position : searchPoints) {
+        if (!FieldComputations::pointIsValidPosition(field, position)) continue;
+        gen::ScoredPosition consideredPosition = PositionScoring::scorePosition(position, profile, field, world);
+        if (consideredPosition.score > bestPosition.score) bestPosition = consideredPosition;
     }
     return bestPosition;
 }
@@ -185,16 +183,21 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, c
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
         // Use a larger grid each iteration in case no valid point is found
         auto distance = 3 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE / 2.0;
-        auto possiblePoints = Grid(ballPos.x - distance / 2.0, ballPos.y - distance / 2.0, distance, distance, 3, 3).getPoints();
+
+        auto x = ballPos.x - distance / 2.0;
+        auto y = ballPos.y - distance / 2.0;
+        auto width = distance;
+        auto height = distance;
+        LazyRectangle searchArea = LazyRectangle({x, y}, width, height);
+        auto possiblePoints = searchArea.getPoints();
+
         double dist = 1e3;
-        for (auto &pointVector : possiblePoints) {
-            for (auto &point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
-                    if (ballPos.dist(point) < dist) {
-                        dist = ballPos.dist(point);
-                        newTarget = point;
-                        pointFound = true;
-                    }
+        for (auto &point : possiblePoints) {
+            if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
+                if (ballPos.dist(point) < dist) {
+                    dist = ballPos.dist(point);
+                    newTarget = point;
+                    pointFound = true;
                 }
             }
         }

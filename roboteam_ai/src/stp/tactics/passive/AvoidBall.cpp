@@ -69,16 +69,18 @@ Vector2 AvoidBall::calculateNewPosition(Vector2 ballPos, const rtt::world::Field
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
         // Use a larger grid each iteration in case no valid point is found
         auto distance = 3 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE / 2.0;
-        auto possiblePoints = Grid(ballPos.x - distance / 2.0, ballPos.y - distance / 2.0, distance, distance, 3, 3).getPoints();
+
+        double x = ballPos.x - distance / 2.0;
+        double y = ballPos.y - distance / 2.0;
+        LazyRectangle searchArea = LazyRectangle({x, y}, distance, distance);
+
         double dist = 1e3;
-        for (auto& pointVector : possiblePoints) {
-            for (auto& point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
-                    if (ballPos.dist(point) < dist) {
-                        dist = ballPos.dist(point);
-                        newTarget = point;
-                        pointFound = true;
-                    }
+        for (auto& point : searchArea.getPoints()) {
+            if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
+                if (ballPos.dist(point) < dist) {
+                    dist = ballPos.dist(point);
+                    newTarget = point;
+                    pointFound = true;
                 }
             }
         }

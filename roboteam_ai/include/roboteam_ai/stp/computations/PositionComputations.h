@@ -36,15 +36,15 @@ class PositionComputations {
     static std::vector<Vector2> determineWallPositions(const world::Field &field, const world::World *world, int amountDefenders);
 
     /**
-     * Returns the best scored position from a grid with a profile
+     * Returns the best scored position from a list of points with a profile
      * @param currentPosition The position the robot it currently going to (small biased) if it exists
-     * @param searchGrid the area (with points) that should be searched
+     * @param searchPoints the points through which should be searched
      * @param profile combination of weights for different factors that should be scored
      * @param field
      * @param world
      * @return the best position within that grid with its score
      */
-    static gen::ScoredPosition getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const world::Field &field,
+    static gen::ScoredPosition getPosition(std::optional<rtt::Vector2> currentPosition, const std::vector<Vector2>& searchPoints, gen::ScoreProfile profile, const world::Field &field,
                                            const world::World *world);
 
     /**

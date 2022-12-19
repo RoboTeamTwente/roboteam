@@ -10,16 +10,16 @@ namespace rtt {
 /* A more optimized rectangle class that is used for representing a field.
    Optimized by precalculating many variables that are already known from
    the beginning, because field data is often read, but never changed. */
-class FieldRectangle : public Rectangle {
+class FastRectangle : public Rectangle {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
-    FieldRectangle();
+    FastRectangle();
     // Creates a rectangle from a top, right, bottom and left boundary
-    FieldRectangle(double top, double right, double bottom, double left);
+    FastRectangle(double top, double right, double bottom, double left);
     // Creates a rectangle from any two opposing corners
-    FieldRectangle(const Vector2& pointA, const Vector2& pointB);
+    FastRectangle(const Vector2& pointA, const Vector2& pointB);
 
-    bool operator==(const FieldRectangle& other) const;
+    bool operator==(const FastRectangle& other) const;
 
     // Checks if the given point is inside the rectangle
     bool contains(const Vector2& point) const override;

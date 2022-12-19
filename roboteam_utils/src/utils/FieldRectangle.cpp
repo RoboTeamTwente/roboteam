@@ -106,19 +106,19 @@ Vector2 FieldRectangle::bottomRight() const {
 }
 
 LineSegment FieldRectangle::topLine() const {
-    return {Vector2(this->_left, this->_top), Vector2(this->_right, this->_top)};
+    return {this->topLeft(), this->topRight()};
 }
 
 LineSegment FieldRectangle::rightLine() const {
-    return {Vector2(this->_right, this->_bottom), Vector2(this->_right, this->_top)};
+    return {this->topRight(), this->bottomRight()};
 }
 
 LineSegment FieldRectangle::bottomLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_right, this->_bottom)};
+    return {this->bottomRight(), this->bottomLeft()};
 }
 
 LineSegment FieldRectangle::leftLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_left, this->_top)};
+    return {this->bottomLeft(), this->topLeft()};
 }
 
 } // namespace rtt

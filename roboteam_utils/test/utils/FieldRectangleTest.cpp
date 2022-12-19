@@ -60,16 +60,18 @@ TEST(FieldRectangleTest, contains) {
         FieldRectangle fr(a, b);
         testCoherence(fr);
 
-        ASSERT_TRUE(fr.contains(fr.topLeft()));
-        ASSERT_TRUE(fr.contains(fr.topRight()));
-        ASSERT_TRUE(fr.contains(fr.bottomLeft()));
-        ASSERT_TRUE(fr.contains(fr.bottomRight()));
-        ASSERT_TRUE(fr.contains(fr.center()));
+        double DELTA = 0.00000001;
 
-        ASSERT_FALSE(fr.contains(Vector2(fr.left() - 1.0, fr.center().y)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.right() + 1.0, fr.center().y)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.top() + 1.0)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.bottom() - 1.0)));
+        ASSERT_TRUE(fr.contains(fr.topLeft(), DELTA));
+        ASSERT_TRUE(fr.contains(fr.topRight(), DELTA));
+        ASSERT_TRUE(fr.contains(fr.bottomLeft(), DELTA));
+        ASSERT_TRUE(fr.contains(fr.bottomRight(), DELTA));
+        ASSERT_TRUE(fr.contains(fr.center(), DELTA));
+
+        ASSERT_FALSE(fr.contains(Vector2(fr.left() - DELTA, fr.center().y)));
+        ASSERT_FALSE(fr.contains(Vector2(fr.right() + DELTA, fr.center().y)));
+        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.top() + DELTA)));
+        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.bottom() - DELTA)));
     }
 }
 
@@ -81,10 +83,12 @@ TEST(FieldRectangleTest, project) {
         FieldRectangle fr(a, b);
         testCoherence(fr);
 
+        double DELTA = 0.0000001;
+
         for (int j = 0; j < 50; j++) {
             Vector2 p(SimpleRandom::getDouble(-30, 30), SimpleRandom::getDouble(-30, 30));
 
-            ASSERT_TRUE(fr.contains(fr.project(p)));
+            ASSERT_TRUE(fr.contains(fr.project(p), DELTA));
         }
     }
 }

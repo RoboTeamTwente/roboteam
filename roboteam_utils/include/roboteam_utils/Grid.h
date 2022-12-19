@@ -1,55 +1,39 @@
-//
-// Created by jesse on 18-05-20.
-//
+#pragma once
 
-#ifndef RTT_GRID_H
-#define RTT_GRID_H
-
-#include <vector>
-
-#include "Vector2.h"
+#include <roboteam_utils/Rectangle.hpp>
 
 namespace rtt {
-    class Grid {
-    public:
-        /**
-         * A Grid is a 2D vector of Vector2 points. The points will be evenly spaced and centered in the given range.
-         * @param offSetX the distance you want to horizontally shift the grid from 0 (where 0 is left edge)
-         * @param offSetY the distance you want to vertically shift the grid from 0 (where 0 is bottom edge)
-         * @param regionWidth the width of the region you want the grid to encompass (y-direction)
-         * @param regionLength the length of the region you want the grid to encompass (x-direction)
-         * @param numStepsX number of segments to divide the grid into in x direction
-         * @param numStepsY number of segments to divide the grid into in y direction
-         */
-        Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numPointsX, int numPointsY);
 
-        // A default Grid of 3x3=9 elements, starting at (0, 0)
-        Grid();
+/*
+ * A general Grid class that can contain any type of Rectangle, including another grid
+ */
+template <typename T>
+class Grid : virtual Rectangle {
+public:
 
-        [[nodiscard]] double getOffSetX() const;
-        [[nodiscard]] double getOffSetY() const;
-        [[nodiscard]] double getRegionWidth() const;
-        [[nodiscard]] double getRegionLength() const;
-        [[nodiscard]] int getNumPointsX() const;
-        [[nodiscard]] int getNumPointsY() const;
-        [[nodiscard]] double getStepSizeX() const;
-        [[nodiscard]] double getStepSizeY() const;
-        [[nodiscard]] const std::vector<std::vector<Vector2>> &getPoints() const;
+    // Gets the cell at the specified location, can throw InvalidCellLocation
+    virtual const T& getCell(unsigned int row, unsigned int column) const = 0;
 
-    private:
-        /**
-         * nested vector, first index corresponds to nth x element, second to nth y element
-         */
-        std::vector<std::vector<Vector2>> points;
-        double offSetX;
-        double offSetY;
-        double regionWidth;
-        double regionLength;
-        int numPointsX;
-        int numPointsY;
-        double stepSizeX;
-        double stepSizeY;
-    };
+    // A list of all cells, from left to right, top to bottom
+    virtual const std::vector<T>& getCells() const = 0;
+
+    virtual unsigned int getRowSize() const = 0;
+    virtual unsigned int getColumnSize() const = 0;
+};
+
+class InvalidCellLocation : private std::exception {
+public:
+    explicit InvalidCellLocation(const std::string& message);
+    const char* what() const noexcept override;
+private:
+    const std::string message;
+};
+class InvalidGridSizeException : private std::exception {
+public:
+    explicit InvalidGridSizeException(const std::string& message);
+    const char* what() const noexcept override;
+private:
+    const std::string message;
+};
+
 } // namespace rtt
-
-#endif  // RTT_GRID_H

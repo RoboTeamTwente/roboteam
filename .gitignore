@@ -3,3 +3,76 @@ cmake-build-debug/
 cmake-build-release/
 build/
 /.vscode
+# Custom
+roboteam_basestation/.project
+roboteam_basestation/.cproject
+roboteam_basestation/.mxproject
+roboteam_basestation/.pio/
+roboteam_basestation/.vscode/
+roboteam_basestation/__pycache__
+roboteam_basestation/.idea/
+roboteam_basestation/venv
+roboteam_basestation/.venv
+roboteam_basestation/Drivers
+roboteam_basestation/Middlewares
+roboteam_basestation/USB_DEVICE
+roboteam_basestation/startup
+roboteam_basestation/STM32F767ZITx_FLASH.ld
+roboteam_basestation/python_utils/rem
+
+roboteam_basestation/python_utils/*.csv
+roboteam_basestation/python_utils/*.bin
+
+# Prerequisites
+roboteam_basestation/*.d
+
+# Object files
+roboteam_basestation/*.o
+roboteam_basestation/*.ko
+roboteam_basestation/*.obj
+roboteam_basestation/*.elf
+
+# Linker output
+roboteam_basestation/*.ilk
+roboteam_basestation/*.map
+roboteam_basestation/*.exp
+
+# Precompiled Headers
+roboteam_basestation/*.gch
+roboteam_basestation/*.pch
+
+# Libraries
+roboteam_basestation/*.lib
+roboteam_basestation/*.a
+roboteam_basestation/*.la
+roboteam_basestation/*.lo
+
+# Shared objects (inc. Windows DLLs)
+roboteam_basestation/*.dll
+roboteam_basestation/*.so
+roboteam_basestation/*.so.*
+roboteam_basestation/*.dylib
+
+# Executables
+roboteam_basestation/*.exe
+roboteam_basestation/*.out
+roboteam_basestation/*.app
+roboteam_basestation/*.i*86
+roboteam_basestation/*.x86_64
+roboteam_basestation/*.hex
+
+# Debug files
+roboteam_basestation/*.dSYM/
+roboteam_basestation/*.su
+roboteam_basestation/*.idb
+roboteam_basestation/*.pdb
+
+# Kernel Module Compile Results
+roboteam_basestation/*.mod*
+roboteam_basestation/*.cmd
+roboteam_basestation/.tmp_versions/
+roboteam_basestation/modules.order
+roboteam_basestation/Module.symvers
+roboteam_basestation/Mkfile.old
+roboteam_basestation/dkms.conf
+roboteam_basestation//Debug/

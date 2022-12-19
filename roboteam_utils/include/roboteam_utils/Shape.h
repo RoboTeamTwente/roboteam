@@ -11,6 +11,8 @@
 namespace rtt {
     class Shape {
     public:
+        virtual ~Shape() {} // Necessary to prevent memory leaks: https://stackoverflow.com/questions/461203/when-to-use-virtual-destructors
+
         virtual bool contains(const Vector2& point) const = 0;
 
         virtual Vector2 project(const Vector2& point) const = 0;

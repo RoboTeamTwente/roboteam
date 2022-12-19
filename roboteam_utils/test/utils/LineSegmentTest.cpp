@@ -30,6 +30,7 @@ TEST(LineSegmentTests, firstIntersects) {
 }
 
 TEST(LineSegmentTests, center) {
+    const double DELTA = 0.000000001;
     for (int i = 0; i < 50; i++) {
         auto start = Vector2(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
         auto end = Vector2(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
@@ -37,9 +38,9 @@ TEST(LineSegmentTests, center) {
         auto lineSeg = LineSegment(start, end);
         ASSERT_TRUE(lineSeg.isOnLine(lineSeg.center()));
 
-        auto distCenterStart = lineSeg.center().dist(lineSeg.start);
-        auto distCenterEnd = lineSeg.center().dist(lineSeg.end);
-        ASSERT_DOUBLE_EQ(distCenterStart, distCenterEnd);
+        auto distCenterStart = lineSeg.center().dist2(lineSeg.start);
+        auto distCenterEnd = lineSeg.center().dist2(lineSeg.end);
+        EXPECT_NEAR(distCenterStart, distCenterEnd, DELTA);
     }
 }
 

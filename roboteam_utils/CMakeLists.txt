@@ -61,6 +61,8 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/RobotCommandsTest.cpp
         test/utils/RobotFeedbackTest.cpp
         test/utils/FastRectangleTest.cpp
+        test/utils/FastGridTest.cpp
+        test/utils/Grid3x3Test.cpp
         )
 
 add_library(roboteam_utils STATIC

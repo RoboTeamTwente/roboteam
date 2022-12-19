@@ -14,6 +14,16 @@ FastRectangle::FastRectangle() {
     this->_center = Vector2((this->_left + this->_right) * 0.5, (this->_bottom + this->_top) * 0.5);
 }
 
+FastRectangle::FastRectangle(const Rectangle& r) {
+    this->_top = r.top();
+    this->_right = r.right();
+    this->_bottom = r.bottom();
+    this->_left = r.left();
+    this->_width = r.width();
+    this->_height = r.height();
+    this->_center = r.center();
+}
+
 FastRectangle::FastRectangle(double top, double right, double bottom, double left) {
     this->_top = top;
     this->_right = right;

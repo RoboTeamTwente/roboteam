@@ -14,6 +14,8 @@ class FastRectangle : public Rectangle {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
     FastRectangle();
+    // Creates a FastRectangle from the given rectangle
+    FastRectangle(const Rectangle&);
     // Creates a rectangle from a top, right, bottom and left boundary
     FastRectangle(double top, double right, double bottom, double left);
     // Creates a rectangle from any two opposing corners

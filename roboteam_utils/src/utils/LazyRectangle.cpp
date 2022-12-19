@@ -12,6 +12,8 @@ constexpr const unsigned int RIGHT = 0x02;
 constexpr const unsigned int BOTTOM = 0x04;
 constexpr const unsigned int TOP = 0x08;
 namespace rtt {
+
+    LazyRectangle::LazyRectangle(const Rectangle& r) : corner1{r.topLeft()}, corner2{r.bottomRight()}{}
     LazyRectangle::LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
     LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
 unsigned int LazyRectangle::CohenSutherlandCode(const Vector2 &point) const {

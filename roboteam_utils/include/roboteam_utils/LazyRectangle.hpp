@@ -17,6 +17,10 @@ class Polygon;
  */
 class LazyRectangle : public Rectangle {
    public:
+
+   // Creates a lazy rectangle from the given rectangle
+   LazyRectangle(const Rectangle&);
+
     /**
      * @brief Constructs a rectangle from two opposite corners
      * @param corner Primary corner

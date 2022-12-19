@@ -15,7 +15,7 @@ class Polygon;
  * @date 22-01-2020
  * @author Rolf van der Hulst
  */
-class LazyRectangle : public Rectangle {
+class LazyRectangle : public virtual Rectangle {
    public:
 
    // Creates a lazy rectangle from the given rectangle

@@ -10,7 +10,7 @@ namespace rtt {
 /* A more optimized rectangle class that is used for representing a field.
    Optimized by precalculating many variables that are already known from
    the beginning, because field data is often read, but never changed. */
-class FastRectangle : public Rectangle {
+class FastRectangle : public virtual Rectangle {
 public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
     FastRectangle();

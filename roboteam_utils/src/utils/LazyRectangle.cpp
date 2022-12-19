@@ -15,7 +15,7 @@ namespace rtt {
 
     LazyRectangle::LazyRectangle(const Rectangle& r) : corner1{r.topLeft()}, corner2{r.bottomRight()}{}
     LazyRectangle::LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
-    LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
+    LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double width, double height) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + width, bottomLeft.y + height)} {}
 unsigned int LazyRectangle::CohenSutherlandCode(const Vector2 &point) const {
     double x = point.x;
     double y = point.y;

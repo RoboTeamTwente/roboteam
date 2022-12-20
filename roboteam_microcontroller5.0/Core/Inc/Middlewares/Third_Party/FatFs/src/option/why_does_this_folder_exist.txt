@@ -1,0 +1,1 @@
+This folder exists because the compiler searches for ff.h as ../ff.h. So, if it doesn't have any folder here then it never finds ff.h in ../ff.h

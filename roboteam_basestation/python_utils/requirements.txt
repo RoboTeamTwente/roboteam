@@ -1,0 +1,5 @@
+xbox360controller
+pyserial
+bitarray
+numpy
+cffi

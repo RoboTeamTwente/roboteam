@@ -2,11 +2,11 @@
 #pragma once
 
 #include <google/protobuf/message.h>
-#include <ssl_simulation_config.pb.h>
-#include <ssl_simulation_control.pb.h>
-#include <ssl_simulation_robot_control.pb.h>
-#include <ssl_simulation_robot_feedback.pb.h>
-#include <ssl_vision_geometry.pb.h>
+#include <proto/ssl_simulation_config.pb.h>
+#include <proto/ssl_simulation_control.pb.h>
+#include <proto/ssl_simulation_robot_control.pb.h>
+#include <proto/ssl_simulation_robot_feedback.pb.h>
+#include <proto/ssl_vision_geometry.pb.h>
 #include <roboteam_utils/Teams.hpp>
 
 #include <QtNetwork>

@@ -1,17 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(roboteam_robothub)
 
-# for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
-if(APPLE)
-    set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
-endif()
-
-# for Linux, BSD, Solaris, Minix
-if(UNIX AND NOT APPLE)
-    SET(Qt5Network_DIR "/usr/include/x86_64-linux-gnu/qt5/Qt5Network")
-endif()
-
-find_package(Qt5Network REQUIRED)
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
@@ -45,7 +34,7 @@ target_include_directories(basestation_manager PUBLIC
         "roboteam_embedded_messages/include")
 target_link_libraries(basestation_manager PUBLIC
         Threads::Threads
-        lib::usb
+        libusb::libusb
         roboteam_utils
 )
 target_compile_options(basestation_manager PRIVATE "${COMPILER_FLAGS}")
@@ -84,7 +73,7 @@ target_include_directories(roboteam_robothub_enumerate_usb
 )
 target_link_libraries(roboteam_robothub_enumerate_usb
         Threads::Threads
-        lib::usb
+        libusb::libusb
 )
 target_compile_options(roboteam_robothub_enumerate_usb PRIVATE "${COMPILER_FLAGS}")
 

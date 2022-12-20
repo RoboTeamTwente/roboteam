@@ -58,4 +58,4 @@ target_compile_options(observer PRIVATE "${COMPILER_FLAGS}")
 #        )
 #target_compile_options(roboteam_observer_tests PRIVATE "${COMPILER_FLAGS}")
 #
-#gtest_discover_tests(roboteam_observer_tests)
+#add_test(roboteam_observer_tests roboteam_observer_tests)

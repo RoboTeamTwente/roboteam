@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ssl_simulation_robot_control.pb.h>
+#include <proto/ssl_simulation_robot_control.pb.h>
 
 namespace rtt::robothub::simulation {
 /*  This class contains the information for moving robots.

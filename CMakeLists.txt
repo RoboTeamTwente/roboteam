@@ -34,7 +34,7 @@ else ()
 endif ()
 
 # Build type compile flags
-set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Wall" "-g" "-Og" "-march=native" "-fdiagnostics-color=always")
+set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-g" "-Og" "-Wall" "-Wextra" "-Wnon-virtual-dtor" "-pedantic" "-fdiagnostics-color=always")
 set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=native" "-fdiagnostics-color=always")
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones

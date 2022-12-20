@@ -22,43 +22,55 @@ namespace rtt::ai::control {
  */
 class ControlModule {
    protected:
-    /**
-     *
-     */
-    static inline std::mutex robotCommandsMutex;
-    static inline std::vector<rtt::RobotCommand> robotCommands;
-    static inline std::map<unsigned int, AnglePID> simulatorAnglePIDmap;
+    static inline std::mutex robotCommandsMutex; /**< Synchronizes the robot commands */
+    static inline std::vector<rtt::RobotCommand> robotCommands; /**< Vector of all robot commands */
+    static inline std::map<unsigned int, AnglePID> simulatorAnglePIDmap; /**< Angle controller for each robot */
 
     /**
-     * Applies constraints to the internal robot command
+     * @brief Applies constraints to the internal robot command
+     * @param command Robot command that needs to be checked
+     * @param robot Info about the robot
      */
     static void limitRobotCommand(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
 
     /**
-     * Limits the velocity with a control_constants value
+     * @brief Limits the velocity with a control_constants value
+     * @param command Robot command that needs to be checked
+     * @param robot Info about the robot
      */
     static void limitVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
 
     /**
-     * Limits the angular velocity with a control_constants value
+     * @brief Limits the angular velocity with a control_constants value
+     * @param command Robot command that needs to be checked
+     * @param robot Info about the robot
      */
     static void limitAngularVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
 
     /**
-     * Rotates the robot command to the other side of the field
+     * @brief Rotates the robot command to the other side of the field
+     * @param command Robot command that needs to be checked
      */
     static void rotateRobotCommand(rtt::RobotCommand& command);
 
    public:
     /**
-     * Limits the current robot command and adds it to the list of commands to be sent
+     * @brief Limits the current robot command and adds it to the list of commands to be sent
+     * @param command Robot command that needs to be added
+     * @param robot Info about the robot
+     * @param data Info about world
      */
     static void addRobotCommand(std::optional<rtt::world::view::RobotView> robot, const rtt::RobotCommand& command, const rtt::world::World* data) noexcept;
     /**
-     *
+     * @brief Sends all commands to robothub
      */
     static void sendAllCommands();
 
+    /**
+     * @brief Adjust the angular velocity to the simulator
+     * @param robot Info about the robot
+     * @param robot_command Robot command that needs to be adjusted
+     */
     static void simulator_angular_control(const std::optional<::rtt::world::view::RobotView>& robot, rtt::RobotCommand& robot_command);
 };
 }  // namespace rtt::ai::control

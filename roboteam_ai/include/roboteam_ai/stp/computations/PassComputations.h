@@ -16,7 +16,7 @@
 namespace rtt::ai::stp {
 
 /**
- * Struct to hold relevant information for passing
+ * @brief Struct to hold relevant information for passing
  */
 struct PassInfo {
     int keeperId = -1;
@@ -29,10 +29,13 @@ struct PassInfo {
 }  // namespace rtt::ai::stp
 namespace rtt::ai::stp::computations {
 
+/**
+ * @brief Class with computations about passing
+ */
 class PassComputations {
    public:
     /**
-     * Calculates which robot should pass where, and which robot should receive it
+     * @brief Calculates which robot should pass where, and which robot should receive it
      * @param profile the profile to be used when scoring the pass location
      * @param world the current world state
      * @param field the current field
@@ -42,7 +45,7 @@ class PassComputations {
     static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
 
     /**
-     * Scores a given pass based on how likely it is to score from the passLocation, adjusted for the riskiness of the pass
+     * @brief Scores a given pass based on how likely it is to score from the passLocation, adjusted for the riskiness of the pass
      * @param passInfo The passInfo of the pass to be scored
      * @param world pointer to world
      * @param field the current field
@@ -52,14 +55,14 @@ class PassComputations {
 
    private:
     /**
-     * Gets the grid of points containing all possible pass locations
+     * @brief Gets the grid of points containing all possible pass locations
      * @param field the current field
      * @return a Grid class containing a vector of vectors, which in turn contain all possible pass locations
      */
     static Grid getPassGrid(const Field& field);
 
     /**
-     * Indicates whether the given point 1) a valid point to pass to in terms of ssl-rules and 2) whether it is feasible ot pass there
+     * @brief Indicates whether the given point 1) a valid point to pass to in terms of ssl-rules and 2) whether it is feasible ot pass there
      * @param point the point to check for validity
      * @param ballLocation the current ball location
      * @param possibleReceiverLocations the locations of all robots that could receive the ball
@@ -72,7 +75,7 @@ class PassComputations {
                                          const Field& field, const world::World* world);
 
     /**
-     * Determines which robot should be the keeper (either previous keeper, or robot closest to goal if there was no keeper)
+     * @brief Determines which robot should be the keeper (either previous keeper, or robot closest to goal if there was no keeper)
      * @param possibleRobots vector of robots that could become keeper
      * @param world current world
      * @param field current field
@@ -81,7 +84,7 @@ class PassComputations {
     static int getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const Field& field);
 
     /**
-     * Determines which robot should be the passer (the robot closest to the ball)
+     * @brief Determines which robot should be the passer (the robot closest to the ball)
      * @param possibleRobots vector of robots that could become passer
      * @param world current world
      * @param field current field
@@ -90,7 +93,7 @@ class PassComputations {
     static int getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& possibleRobots, const world::World* world);
 
     /**
-     * Approximate the time it takes a robot to reach a point
+     * @brief Approximate the time it takes a robot to reach a point
      * @param robotPosition current position of robot
      * @param targetPosition position to calculate travel time to
      * @return approximated time to reach target from position

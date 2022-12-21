@@ -12,64 +12,74 @@
 
 namespace rtt::ai::stp::play {
 
+/**
+ * @brief The attacking pass play is executed when we want to pass the ball to a robot that can shoot at the enemy goal
+ */
 class AttackingPass : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     AttackingPass();
 
     /**
-     *  Calculate how beneficial we expect this play to be
+     *  @brief Calculate how beneficial we expect this play to be
+     *  @param field The current field
+     *  @return The score of the play
      */
     uint8_t score(const rtt::world::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return A map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculates info for the defenders
+     * @brief Calculates info for the defenders
      */
     void calculateInfoForDefenders() noexcept;
 
     /**
-     * Calculates info for the attackers
+     * @brief Calculates info for the attackers
      */
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
+     * @brief Calculate info for the roles that need to be calculated for scoring
+     * @param world The current world
      */
     void calculateInfoForScoredRoles(world::World*) noexcept override{};
 
     /**
-     * Gets the play name
+     * @brief Retrieves the name of the play
+     * @return The name of the play as string
      */
     const char* getName() override;
 
     /**
-     * Check if play should end. True if pass arrived, if the ball is not moving anymore after pass, or if there is a better pass available
+     * @brief Check if play should end. True if pass arrived, if the ball is not moving anymore after pass, or if there is a better pass available
+     * @return Boolean that tells whether the play should end
      */
     bool shouldEndPlay() noexcept override;
 
    private:
     /**
-     * Return true if passer is done with KickAtPos tactic
+     * @brief Check if the ball has been kicked. True if passer is done with KickAtPos tactic, False if it is still ongoing
+     * @return Boolean that tells whether the ball has been kicked
      */
     bool ballKicked();
 
-    /**
-     * Struct containing info about the pass. Calculated once for each time this play is run
-     */
-    PassInfo passInfo;
+    PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
 
+    /**
+     * @brief Calculate info for the blocker roles
+     */
     void calculateInfoForBlocker () noexcept;
 };
 }  // namespace rtt::ai::stp::play

@@ -5,43 +5,58 @@
 
 namespace rtt::ai::stp::play {
 
+/**
+ * @brief The ball placement them play is executed when the ball placement them game state is selected
+ */
 class BallPlacementThem : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     BallPlacementThem();
 
     /**
-     * Calculates the score of this play to determine which play is best in this situation
+     * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
     uint8_t score(const rtt::world::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return A map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
+     * @brief Calculate info for the roles that need to be calculated for scoring
+     * @param world The current world
      */
     void calculateInfoForScoredRoles(world::World*) noexcept override{};
 
+    /**
+     * @brief Calculates info for the keeper role
+     */
     void calculateInfoForKeeper() noexcept;
 
+    /**
+     * @brief Calculates info for the harasser roles
+     */
     void calculateInfoForHarasser() noexcept;
 
+    /**
+     * @brief Calculates info for the waller roles
+     */
     void calculateInfoForWallers() noexcept;
 
     /**
-     * Gets the play name
+     * @brief Retrieves the name of the play
+     * @return The name of the play as string
      */
     const char* getName() override;
 

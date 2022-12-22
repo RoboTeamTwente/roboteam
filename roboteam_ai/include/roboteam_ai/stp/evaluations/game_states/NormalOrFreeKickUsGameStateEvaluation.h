@@ -12,6 +12,7 @@ namespace rtt::ai::stp::evaluation {
  * @brief Class that evaluates the normal or free kick us game state
  */
 class NormalOrFreeKickUsGameStateEvaluation : public BaseEvaluation {
+   public:
     /**
      * @brief Calculates the score for the normal or free kick us game state
      * @param world The current world

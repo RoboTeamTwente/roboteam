@@ -8,12 +8,14 @@
 #include "stp/Role.hpp"
 
 namespace rtt::ai::stp::role {
-
+/**
+ * @brief Class that defines the attacker role. The attacker will try to shoot at the enemy goal.
+ */
 class Attacker : public Role {
    public:
     /**
-     * Ctor that sets the name of the role and creates a state machine of tactics
-     * @param name name of the role
+     * @brief Constructor that sets the name of the role and creates a state machine of tactics
+     * @param name The name of the role
      */
     Attacker(std::string name);
 };

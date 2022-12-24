@@ -13,7 +13,7 @@ constexpr double MIN_KICK_POWER = 3.0;
 constexpr double MAX_POWER_KICK_DISTANCE = 8;
 constexpr double MAX_POWER_CHIP_DISTANCE = 9;
 constexpr double MAX_CHIP_POWER = 6.5;
-constexpr double MIN_CHIP_POWER = 1.01;
+constexpr double MIN_CHIP_POWER = 4.5;
 // Max attempts before the force_kick_chip is set to true
 constexpr double MAX_KICK_ATTEMPTS = 25;
 constexpr double MAX_CHIP_ATTEMPTS = 25;

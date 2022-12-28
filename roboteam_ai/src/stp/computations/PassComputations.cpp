@@ -80,8 +80,8 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
 }
 
 Grid PassComputations::getPassGrid(const Field& field) {
-    double gridHeight = field.getFieldWidth();
-    double gridWidth = field.getFieldLength();
+    double gridHeight = field.playArea.height();
+    double gridWidth = field.playArea.width();
     int numPoints = 9;
     return Grid(-gridWidth / 2, -gridHeight / 2, gridWidth, gridHeight, numPoints, numPoints);  // 81 points spread over the whole field
 }

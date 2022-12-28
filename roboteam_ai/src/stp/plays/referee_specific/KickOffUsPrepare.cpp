@@ -51,24 +51,24 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
         stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
     }
 
-    auto width = field.getFieldWidth();
-    auto length = field.getFieldLength();
+    auto height = field.playArea.height();
+    auto width = field.playArea.width();
 
     // Defenders
     double defense_line_x = field.getLeftPenaltyX() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
-    stpInfos["defender_left"].setPositionToMoveTo(Vector2(defense_line_x, width / 5));
+    stpInfos["defender_left"].setPositionToMoveTo(Vector2(defense_line_x, height / 5));
     stpInfos["defender_mid"].setPositionToMoveTo(Vector2(defense_line_x, 0.0));
-    stpInfos["defender_right"].setPositionToMoveTo(Vector2(defense_line_x, -width / 5));
+    stpInfos["defender_right"].setPositionToMoveTo(Vector2(defense_line_x, -height / 5));
 
     // Midfielders
-    stpInfos["midfielder_left"].setPositionToMoveTo(Vector2(-length / 5, width / 3));
-    stpInfos["midfielder_mid"].setPositionToMoveTo(Vector2(-length / 4, 0));
-    stpInfos["midfielder_right"].setPositionToMoveTo(Vector2(-length / 5, -width / 3));
+    stpInfos["midfielder_left"].setPositionToMoveTo(Vector2(-width / 5, height / 3));
+    stpInfos["midfielder_mid"].setPositionToMoveTo(Vector2(-width / 4, 0));
+    stpInfos["midfielder_right"].setPositionToMoveTo(Vector2(-width / 5, -height / 3));
 
     // Attackers
     stpInfos["attacker_left"].setPositionToMoveTo(Vector2(-1, 1));
-    stpInfos["attacker_mid"].setPositionToMoveTo(Vector2(-length / 8, 0));
-    stpInfos["attacker_right"].setPositionToMoveTo(Vector2(-length / 12, -width / 4));
+    stpInfos["attacker_mid"].setPositionToMoveTo(Vector2(-width / 8, 0));
+    stpInfos["attacker_right"].setPositionToMoveTo(Vector2(-width / 12, -height / 4));
 }
 
 Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {

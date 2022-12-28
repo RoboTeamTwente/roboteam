@@ -20,13 +20,13 @@ TEST(FieldComputationTest, outwards_margin) {
     Field testField = Field::createTestField();
 
     // Check if the area of the field matches when the field is not changed, when it is expanded and when it is shrinked.
-    double expectedFieldSize = testField.getFieldWidth() * testField.getFieldLength();
+    double expectedFieldSize = testField.playArea.width() * testField.playArea.height();
     double actualFieldSize = FieldComputations::getFieldEdge(testField).area();
     EXPECT_TRUE(fabs(expectedFieldSize - actualFieldSize) < MAXIMUM_DIFFERENCE);
-    expectedFieldSize = (testField.getFieldWidth() + 2.0) * (testField.getFieldLength() + 2.0);
+    expectedFieldSize = (testField.playArea.width() + 2.0) * (testField.playArea.height() + 2.0);
     actualFieldSize = FieldComputations::getFieldEdge(testField, 1.0).area();
     EXPECT_TRUE(fabs(expectedFieldSize - actualFieldSize) < MAXIMUM_DIFFERENCE);
-    expectedFieldSize = (testField.getFieldWidth() - 2.0) * (testField.getFieldLength() - 2.0);
+    expectedFieldSize = (testField.playArea.width() - 2.0) * (testField.playArea.height() - 2.0);
     actualFieldSize = FieldComputations::getFieldEdge(testField, -1.0).area();
     EXPECT_TRUE(fabs(expectedFieldSize - actualFieldSize) < MAXIMUM_DIFFERENCE);
 

@@ -165,12 +165,12 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
                                                                Vector2 &targetPosition) {
     double angleBetweenIntermediatePoints = M_PI_4 / 2;
 
-    // Radius and point extension of intermediate points are based on the fieldWith
-    auto fieldWidth = field.getFieldWidth();
+    // Radius and point extension of intermediate points are based on the fieldHeight
+    auto fieldHeight = field.playArea.height();
 
     // PointToDrawFrom is picked by drawing a line from the target position to the obstacle and extending that
     // line further towards our currentPosition by extension meters.
-    float pointExtension = fieldWidth / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
+    float pointExtension = fieldHeight / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
     Vector2 pointToDrawFrom = firstCollision->obstaclePosition + (firstCollision->obstaclePosition - targetPosition).normalize() * pointExtension;
 
     std::vector<Vector2> intermediatePoints;
@@ -178,7 +178,7 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
         if (i != 0) {
             // Make half circle of intermediatePoints pointed towards obstaclePosition, originating from pointToDrawFrom, by rotating pointToRotate with a radius
             // intermediatePointRadius
-            float intermediatePointRadius = fieldWidth / 4;  // Radius of the half circle
+            float intermediatePointRadius = fieldHeight / 4;  // Radius of the half circle
             Vector2 pointToRotate = pointToDrawFrom + (targetPosition - firstCollision->obstaclePosition).normalize() * intermediatePointRadius;
             Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints, pointToDrawFrom);
 

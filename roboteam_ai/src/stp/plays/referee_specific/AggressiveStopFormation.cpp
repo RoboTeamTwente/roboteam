@@ -42,21 +42,21 @@ void AggressiveStopFormation::calculateInfoForRoles() noexcept {
     stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter() + Vector2{0.5, 0.0});
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
-    auto length = field.getFieldLength();
-    auto width = field.getFieldWidth();
+    auto width = field.playArea.width();
+    auto height = field.playArea.height();
 
-    stpInfos["defender_0"].setPositionToMoveTo(Vector2{-length / 3.5, 0.0});
-    stpInfos["defender_1"].setPositionToMoveTo(Vector2{-length / 3.5, width / 6});
-    stpInfos["defender_2"].setPositionToMoveTo(Vector2{-length / 3.5, -width / 6});
+    stpInfos["defender_0"].setPositionToMoveTo(Vector2{-width / 3.5, 0.0});
+    stpInfos["defender_1"].setPositionToMoveTo(Vector2{-width / 3.5, height / 6});
+    stpInfos["defender_2"].setPositionToMoveTo(Vector2{-width / 3.5, -height / 6});
 
-    stpInfos["mid_field_0"].setPositionToMoveTo(Vector2{-length / 8, 0.0});
-    stpInfos["mid_field_1"].setPositionToMoveTo(Vector2{-length / 9, -width / 4});
-    stpInfos["mid_field_2"].setPositionToMoveTo(Vector2{-length / 9, width / 4});
+    stpInfos["mid_field_0"].setPositionToMoveTo(Vector2{-width / 8, 0.0});
+    stpInfos["mid_field_1"].setPositionToMoveTo(Vector2{-width / 9, -height / 4});
+    stpInfos["mid_field_2"].setPositionToMoveTo(Vector2{-width / 9, height / 4});
 
-    stpInfos["offender_0"].setPositionToMoveTo(Vector2{length / 8, width / 8});
-    stpInfos["offender_1"].setPositionToMoveTo(Vector2{length / 8, width / 4});
-    stpInfos["offender_2"].setPositionToMoveTo(Vector2{length / 8, -width / 4});
-    stpInfos["offender_3"].setPositionToMoveTo(Vector2{length / 12, -width / 10});  // This robot is put here because BallAvoider doesnt work correctly for KickOffUs
+    stpInfos["offender_0"].setPositionToMoveTo(Vector2{width / 8, height / 8});
+    stpInfos["offender_1"].setPositionToMoveTo(Vector2{width / 8, height / 4});
+    stpInfos["offender_2"].setPositionToMoveTo(Vector2{width / 8, -height / 4});
+    stpInfos["offender_3"].setPositionToMoveTo(Vector2{width / 12, -height / 10});  // This robot is put here because BallAvoider doesnt work correctly for KickOffUs
 }
 
 Dealer::FlagMap AggressiveStopFormation::decideRoleFlags() const noexcept {

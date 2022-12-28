@@ -42,21 +42,21 @@ void DefensiveStopFormation::calculateInfoForRoles() noexcept {
     stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter() + Vector2{0.5, 0.0});
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
-    auto length = field.getFieldLength();
-    auto width = field.getFieldWidth();
+    auto width = field.playArea.width();
+    auto height = field.playArea.height();
 
-    stpInfos["defender_0"].setPositionToMoveTo(Vector2(-length / 4, width / 8));
-    stpInfos["defender_1"].setPositionToMoveTo(Vector2(-length / 4, -width / 8));
-    stpInfos["defender_2"].setPositionToMoveTo(Vector2(-length / 4.5, width / 3));
-    stpInfos["defender_3"].setPositionToMoveTo(Vector2(-length / 4.5, -width / 3));
+    stpInfos["defender_0"].setPositionToMoveTo(Vector2(-width / 4, height / 8));
+    stpInfos["defender_1"].setPositionToMoveTo(Vector2(-width / 4, -height / 8));
+    stpInfos["defender_2"].setPositionToMoveTo(Vector2(-width / 4.5, height / 3));
+    stpInfos["defender_3"].setPositionToMoveTo(Vector2(-width / 4.5, -height / 3));
 
-    stpInfos["mid_field_0"].setPositionToMoveTo(Vector2{-length / 8, 0.0});
-    stpInfos["mid_field_1"].setPositionToMoveTo(Vector2{-length / 9, -width / 4});
-    stpInfos["mid_field_2"].setPositionToMoveTo(Vector2{-length / 9, width / 4});
+    stpInfos["mid_field_0"].setPositionToMoveTo(Vector2{-width / 8, 0.0});
+    stpInfos["mid_field_1"].setPositionToMoveTo(Vector2{-width / 9, -height / 4});
+    stpInfos["mid_field_2"].setPositionToMoveTo(Vector2{-width / 9, height / 4});
 
-    stpInfos["offender_0"].setPositionToMoveTo(Vector2{length / 12, width / 10});  // This robot is put here because BallAvoider doesnt work correctly for KickOffUs
-    stpInfos["offender_1"].setPositionToMoveTo(Vector2{length / 8, width / 4});
-    stpInfos["offender_2"].setPositionToMoveTo(Vector2{length / 8, -width / 4});
+    stpInfos["offender_0"].setPositionToMoveTo(Vector2{width / 12, height / 10});  // This robot is put here because BallAvoider doesnt work correctly for KickOffUs
+    stpInfos["offender_1"].setPositionToMoveTo(Vector2{width / 8, height / 4});
+    stpInfos["offender_2"].setPositionToMoveTo(Vector2{width / 8, -height / 4});
 }
 
 Dealer::FlagMap DefensiveStopFormation::decideRoleFlags() const noexcept {

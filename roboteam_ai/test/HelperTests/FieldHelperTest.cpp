@@ -47,13 +47,13 @@ TEST(FieldHelperTests, FieldTest) {
     world->updateField(protoField);
 
     auto field = world->getField().value();
-    auto fieldLength = field.getFieldLength();
-    auto fieldWidth = field.getFieldWidth();
+    auto fieldWidth = field.playArea.width();
+    auto fieldHeight = field.playArea.height();
 
-    FieldComputations::pointIsInField(field, rtt::Vector2(0.99 * fieldLength, 0.99 * fieldWidth));
-    EXPECT_TRUE(FieldComputations::pointIsInField(field, rtt::Vector2(0.49 * fieldLength, 0.49 * fieldWidth)));
-    EXPECT_TRUE(FieldComputations::pointIsInField(field, rtt::Vector2(-0.49 * fieldLength, -0.49 * fieldWidth)));
+    FieldComputations::pointIsInField(field, rtt::Vector2(0.99 * fieldWidth, 0.99 * fieldHeight));
+    EXPECT_TRUE(FieldComputations::pointIsInField(field, rtt::Vector2(0.49 * fieldWidth, 0.49 * fieldHeight)));
+    EXPECT_TRUE(FieldComputations::pointIsInField(field, rtt::Vector2(-0.49 * fieldWidth, -0.49 * fieldHeight)));
 
-    EXPECT_FALSE(FieldComputations::pointIsInField(field, rtt::Vector2(0.51 * fieldLength, 0.51 * fieldWidth)));
-    EXPECT_FALSE(FieldComputations::pointIsInField(field, rtt::Vector2(-0.51 * fieldLength, -0.51 * fieldWidth)));
+    EXPECT_FALSE(FieldComputations::pointIsInField(field, rtt::Vector2(0.51 * fieldWidth, 0.51 * fieldHeight)));
+    EXPECT_FALSE(FieldComputations::pointIsInField(field, rtt::Vector2(-0.51 * fieldWidth, -0.51 * fieldHeight)));
 }

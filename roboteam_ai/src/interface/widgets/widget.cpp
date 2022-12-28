@@ -166,8 +166,8 @@ bool Visualizer::shouldVisualize(Toggle toggle, int robotId) {
 void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
     fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.getBoundaryWidth());
 
-    float widthFactor = this->size().width() / field.getFieldLength() - (2 * fieldmargin);
-    float heightFactor = this->size().height() / field.getFieldWidth() - (2 * fieldmargin);
+    float widthFactor = this->size().width() / field.playArea.width() - (2 * fieldmargin);
+    float heightFactor = this->size().height() / field.playArea.height() - (2 * fieldmargin);
     factor = std::min(widthFactor, heightFactor);
 }
 
@@ -254,7 +254,7 @@ void Visualizer::drawFieldHints(const rtt::Field &field, QPainter &painter) {
 
     // draw the position where robots would be for timeout
     int inv = rtt::ai::interface::Output::isTimeOutAtTop() ? 1 : -1;
-    int lineY = (field.getFieldWidth() / 2 + 1) * inv;
+    int lineY = (field.playArea.height() / 2 + 1) * inv;
 
     pen.setBrush(Qt::gray);
     pen.setColor(Qt::gray);

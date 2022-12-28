@@ -97,7 +97,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         wallLine.rotate(M_PI / 2, projectedPosition);
 
         // And resize it to make sure enough robots can fit on it
-        double newLength = 2 * std::max(field.getFieldWidth(), field.getFieldLength());
+        double newLength = 2 * std::max(field.playArea.width(), field.playArea.height());
         wallLine.resize(newLength);
 
         // But limit this resizing to the edges of the field (we dont want to place robots outside of the field

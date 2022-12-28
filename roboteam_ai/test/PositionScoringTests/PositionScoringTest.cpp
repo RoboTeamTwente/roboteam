@@ -28,8 +28,8 @@ world::World* generateWorld() {
  * @return scoredPosition with the highest score of all considered points
  */
 ai::stp::gen::ScoredPosition getMaxScore(world::World* world, ai::stp::gen::ScoreProfile profile, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
-    auto width = world->getField().value().getFieldLength();
-    auto height = world->getField().value().getFieldWidth();
+    auto width = world->getField().value().playArea.width();
+    auto height = world->getField().value().playArea.height();
     auto gridPoints = Grid(-width / 2.0, -height / 2.0, width, height, static_cast<int>(width) * pointsPerMeterX, static_cast<int>(height) * pointsPerMeterY).getPoints();
     auto bestPosition = ai::stp::gen::ScoredPosition{Vector2(), 0};
     for (auto& pointsVec : gridPoints) {
@@ -47,8 +47,8 @@ ai::stp::gen::ScoredPosition getMaxScore(world::World* world, ai::stp::gen::Scor
 
 /// Saves all computed scores in the specified file ([x, y, score\n])
 void saveScores(world::World* world, ai::stp::gen::ScoreProfile profile, const std::string& fileName, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
-    auto width = world->getField().value().getFieldLength();
-    auto height = world->getField().value().getFieldWidth();
+    auto width = world->getField().value().playArea.width();
+    auto height = world->getField().value().playArea.height();
     auto gridPoints = Grid(-width / 2.0, -height / 2.0, width, height, static_cast<int>(width) * pointsPerMeterX, static_cast<int>(height) * pointsPerMeterY).getPoints();
     std::ofstream f;
     f.open(fileName);

@@ -38,7 +38,7 @@ Attack::Attack() : Play() {
                                                                                        std::make_unique<role::Formation>(("attacking_midfielder"))};
 }
 
-uint8_t Attack::score(const rtt::world::Field& field) noexcept {
+uint8_t Attack::score(const rtt::Field& field) noexcept {
     // Score the position of the ball based on the odds of scoring
     return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
 }

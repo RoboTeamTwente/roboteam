@@ -32,7 +32,7 @@ DefensiveStopFormation::DefensiveStopFormation() : Play() {
                                                                                  std::make_unique<role::BallAvoider>(role::BallAvoider("offender_2"))};
 }
 
-uint8_t DefensiveStopFormation::score(const rtt::world::Field& field) noexcept {
+uint8_t DefensiveStopFormation::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallOnOurSide, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.

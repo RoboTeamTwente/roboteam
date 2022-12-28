@@ -13,7 +13,7 @@
 
 namespace rtt::ai::stp::computations {
 
-PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const world::Field& field, bool keeperCanPass) {
+PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const Field& field, bool keeperCanPass) {
     PassInfo passInfo;  // Struct used to store the information needed to execute the pass
     if (world->getWorld()->getUs().size() < (keeperCanPass ? 2 : 3)) {
         return passInfo;
@@ -79,7 +79,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     return passInfo;
 }
 
-Grid PassComputations::getPassGrid(const world::Field& field) {
+Grid PassComputations::getPassGrid(const Field& field) {
     double gridHeight = field.getFieldWidth();
     double gridWidth = field.getFieldLength();
     int numPoints = 9;
@@ -87,7 +87,7 @@ Grid PassComputations::getPassGrid(const world::Field& field) {
 }
 
 bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations, Vector2 passerLocation,
-                                                const world::Field& field, const world::World* world) {
+                                                const Field& field, const world::World* world) {
     constexpr double MINIMUM_PASS_DISTANCE = 2.0;  // This can be dribbled instead of passed
     if (point.dist(ballLocation) < MINIMUM_PASS_DISTANCE) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
@@ -129,7 +129,7 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     return bestPasserId;
 }
 
-int PassComputations::getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const world::Field& field) {
+int PassComputations::getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const Field& field) {
     auto keeperId = GameStateManager::getCurrentGameState().keeperId;
     auto keeperIt = std::find_if(possibleRobots.begin(), possibleRobots.end(), [keeperId](const auto& bot) { return bot->getId() == keeperId; });
     if (keeperIt != possibleRobots.end()) {
@@ -154,7 +154,7 @@ double PassComputations::calculateBallTravelTime(Vector2 ballPosition, Vector2 p
     return travelTime + rotateTime + ballTime;
 }
 
-uint8_t PassComputations::scorePass(PassInfo passInfo, const world::World* world, const world::Field& field) {
+uint8_t PassComputations::scorePass(PassInfo passInfo, const world::World* world, const Field& field) {
     constexpr double passPenaltyFactor = 0.9;  // Factor to reduce the score by to account for the inherent risk of passing (stuff going wrong, unexpected events etc)
 
     // Score of pass is the goalshotscore, adjusted based on the LoS and openness scores. The worse the LoS/Openness, the more the score is reduced

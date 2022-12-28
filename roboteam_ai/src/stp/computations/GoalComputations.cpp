@@ -10,7 +10,7 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp::computations {
-Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rtt::world::Field &field) {
+Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rtt::Field &field) {
     // Position of the ball from which the goal target is determined
     auto sourcePoint = world->getWorld().value().getBall().value()->position;
 
@@ -52,7 +52,7 @@ Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rt
     }
 }
 
-LineSegment GoalComputations::getAimPoints(const world::Field &field, const Vector2 &sourcePoint) {
+LineSegment GoalComputations::getAimPoints(const Field &field, const Vector2 &sourcePoint) {
     LineSegment goalSides = FieldComputations::getGoalSides(field, false);
 
     // Aim points are located some distance away from the edges of the goal to take into account inaccuracies in the shot

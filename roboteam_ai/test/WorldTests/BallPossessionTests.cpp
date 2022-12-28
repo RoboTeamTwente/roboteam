@@ -61,7 +61,7 @@
 //    roboteam_msgs::GeometryFieldSize field;
 //    field.field_width = 8;
 //    field.field_length = 12;
-//    rtt::world::Field->set_field(field);
+//    rtt::Field->set_field(field);
 //    auto worldmsg = testhelpers::WorldHelper::getWorldMsgWhereRobotHasBall(3, 0, true, field).first;
 //    worldmsg.time = 0.0;
 //    rtt::world::world->updateWorld(worldmsg);

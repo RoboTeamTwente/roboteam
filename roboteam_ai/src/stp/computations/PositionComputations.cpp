@@ -14,7 +14,7 @@
 
 namespace rtt::ai::stp {
 
-gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const world::Field &field,
+gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const Field &field,
                                                       const world::World *world) {
     gen::ScoredPosition bestPosition;
     (currentPosition.has_value()) ? bestPosition = PositionScoring::scorePosition(currentPosition.value(), profile, field, world, 2) : bestPosition = {{0, 0}, 0};
@@ -28,7 +28,7 @@ gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2
     return bestPosition;
 }
 
-Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, const rtt::world::Field &field, rtt::world::World *world) {
+Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, const rtt::Field &field, rtt::world::World *world) {
     if (ComputationManager::calculatedWallPositions.empty()) {
         ComputationManager::calculatedWallPositions = determineWallPositions(field, world, amountDefenders);
     }
@@ -36,7 +36,7 @@ Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, co
     return ComputationManager::calculatedWallPositions[index];
 }
 
-std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::world::Field &field, const rtt::world::World *world, int amountDefenders) {
+std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Field &field, const rtt::world::World *world, int amountDefenders) {
     if (amountDefenders <= 0) return {};  // we need at least 1 defender to be able to compute a wall
 
     double radius = control_constants::ROBOT_RADIUS;
@@ -155,7 +155,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::wor
 
     return positions;
 }
-Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const world::Field &field) {
+Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
     auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
     std::unique_ptr<Shape> avoidShape;
@@ -179,7 +179,7 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
     return targetPosition;
 }
 
-Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, const rtt::world::Field &field, const std::unique_ptr<Shape> &avoidShape) {
+Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
     Vector2 newTarget = ballPos;  // The new position to go to
     bool pointFound = false;
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
@@ -204,7 +204,7 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, c
     return newTarget;
 }
 
-Vector2 PositionComputations::getBallBlockPosition(const world::Field &field, const world::World *world) {
+Vector2 PositionComputations::getBallBlockPosition(const Field &field, const world::World *world) {
     if (!world->getWorld()->getBall()) return {field.getLeftPenaltyPoint()};  // If there is no ball, return a default value
 
     constexpr double distFromDefenceArea = 1.0;

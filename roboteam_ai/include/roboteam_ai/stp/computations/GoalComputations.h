@@ -18,7 +18,7 @@ class GoalComputations {
      * Calculate point in goal to aim for
      * @return Target point
      */
-    static Vector2 calculateGoalTarget(rtt::world::World *world, const rtt::world::Field &field);
+    static Vector2 calculateGoalTarget(rtt::world::World *world, const rtt::Field &field);
 
     /**
      * Calculate points we want to aim for
@@ -26,7 +26,7 @@ class GoalComputations {
      * @param fromPoint Position to shoot from
      * @return Line between the two aim points
      */
-    static rtt::LineSegment getAimPoints(const rtt::world::Field &field, const rtt::Vector2 &sourcePoint);
+    static rtt::LineSegment getAimPoints(const rtt::Field &field, const rtt::Vector2 &sourcePoint);
 
     /**
      * Returns the longest line from openSegments

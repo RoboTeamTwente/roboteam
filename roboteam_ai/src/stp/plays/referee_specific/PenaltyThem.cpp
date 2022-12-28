@@ -30,7 +30,7 @@ PenaltyThem::PenaltyThem() : Play() {
                                                                                        std::make_unique<role::Halt>(role::Halt("halt_9"))};
 }
 
-uint8_t PenaltyThem::score(const rtt::world::Field& field) noexcept {
+uint8_t PenaltyThem::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::PenaltyThemGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.

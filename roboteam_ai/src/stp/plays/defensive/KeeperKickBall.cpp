@@ -35,7 +35,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
                                                                                        std::make_unique<role::Formation>(role::Formation("attacker_right"))};
 }
 
-uint8_t KeeperKickBall::score(const rtt::world::Field& field) noexcept {
+uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
     // Calculate passInfo to be used during the play
     passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
 

@@ -17,7 +17,7 @@ class GoalVisionFromBallGlobalEvaluation : public BaseEvaluation {
    public:
     GoalVisionFromBallGlobalEvaluation() noexcept;
 
-    [[nodiscard]] uint8_t metricCheck(const world::World* world, const world::Field* field) const noexcept override;
+    [[nodiscard]] uint8_t metricCheck(const world::World* world, const Field* field) const noexcept override;
 
     const char* getName() override { return "GoalVisionFromBall"; }
 

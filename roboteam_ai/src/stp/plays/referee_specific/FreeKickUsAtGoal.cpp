@@ -33,7 +33,7 @@ FreeKickUsAtGoal::FreeKickUsAtGoal() : Play() {
                                                                                        std::make_unique<role::BallDefender>(("defender_right"))};
 }
 
-uint8_t FreeKickUsAtGoal::score(const rtt::world::Field& field) noexcept {
+uint8_t FreeKickUsAtGoal::score(const rtt::Field& field) noexcept {
     // If we are in the FreeKickUsAtGoal gameState, we always want to execute this play
     return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
 }

@@ -28,8 +28,8 @@ struct StpInfo {
     const std::optional<world::view::RobotView>& getEnemyRobot() const { return enemyRobot; }
     void setEnemyRobot(const std::optional<world::view::RobotView>& enemyRobot) { this->enemyRobot = enemyRobot; }
 
-    const std::optional<world::Field>& getField() const { return field; }
-    void setField(const std::optional<world::Field>& field) { this->field = field; }
+    const std::optional<Field>& getField() const { return field; }
+    void setField(const std::optional<Field>& field) { this->field = field; }
 
     const std::optional<world::view::BallView>& getBall() const { return ball; }
     void setBall(const std::optional<world::view::BallView>& ball) { this->ball = ball; }
@@ -110,7 +110,7 @@ struct StpInfo {
     /**
      * Field
      */
-    std::optional<world::Field> field;
+    std::optional<Field> field;
 
     /**
      * View to the ball in the world this tactic executes on

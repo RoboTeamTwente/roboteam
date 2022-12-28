@@ -45,8 +45,8 @@ class Visualizer : public QWidget {
     float factor{};
     int fieldmargin = Constants::WINDOW_FIELD_MARGIN();
     void drawBackground(QPainter &painter);
-    void drawFieldLines(const rtt::world::Field &field, QPainter &painter);
-    void drawFieldHints(const rtt::world::Field &field, QPainter &painter);
+    void drawFieldLines(const rtt::Field &field, QPainter &painter);
+    void drawFieldHints(const rtt::Field &field, QPainter &painter);
 
     void drawRobots(QPainter &painter, rtt::world::view::WorldDataView world);
     void drawRobot(QPainter &painter, rtt::world::view::RobotView robot, bool ourTeam, std::string role = "");
@@ -68,7 +68,7 @@ class Visualizer : public QWidget {
     rtt::Vector2 toScreenPosition(rtt::Vector2 fieldPos);
     rtt::Vector2 toFieldPosition(rtt::Vector2 screenPos);
 
-    void calculateFieldSizeFactor(const rtt::world::Field &field);
+    void calculateFieldSizeFactor(const rtt::Field &field);
 
     // visualization for detection packets
     void drawRawDetectionPackets(QPainter &painter);

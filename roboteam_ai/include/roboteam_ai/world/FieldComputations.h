@@ -43,7 +43,7 @@ class FieldComputations {
      * @param backMargin The margin that the goal line will be expanded in the x-direction (+ value -> expand to outside of the field, - value -> shrink to inside the field)
      * @return True if the point is in our defence area (after adding margins), false otherwise
      */
-    static bool pointIsInOurDefenseArea(const rtt::world::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
+    static bool pointIsInOurDefenseArea(const rtt::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
 
     /**
      * Determines whether a given point is in their defense area
@@ -54,7 +54,7 @@ class FieldComputations {
      * @param backMargin The margin that the goal line will be expanded in the x-direction (+ value -> expand to outside of the field, - value -> shrink to inside the field)
      * @return True if the point is in their defence area (after adding margins), false otherwise
      */
-    static bool pointIsInTheirDefenseArea(const rtt::world::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
+    static bool pointIsInTheirDefenseArea(const rtt::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
 
     /**
      * Check whether a given point is in the field.
@@ -64,7 +64,7 @@ class FieldComputations {
      * expanded, a negative value means that the field area will be shrunk.
      * @return True if the point is in the field, false otherwise.
      */
-    static bool pointIsInField(const rtt::world::Field &field, const Vector2 &point, double margin = 0.0);
+    static bool pointIsInField(const rtt::Field &field, const Vector2 &point, double margin = 0.0);
 
     /**
      * Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
@@ -73,7 +73,7 @@ class FieldComputations {
      * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
      * @return True if the point is not within any area that has to be avoided according to avoidObjects (note that shouldAvoidBall is not taken into consideration)
      */
-    static bool pointIsValidPosition(const rtt::world::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0,
+    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0,
                                      double ourDefenseAreaMargin = 0.0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
@@ -84,7 +84,7 @@ class FieldComputations {
      * @return The position closest to the given point that is inside the field with the given margin
      * If the given point is already inside the field, the same point is returned
      */
-    static Vector2 projectPointInField(const rtt::world::Field &field, Vector2 point, double margin = 0);
+    static Vector2 projectPointInField(const rtt::Field &field, Vector2 point, double margin = 0);
 
     /**
      * Project given position to outside the defense areas with a certain margin
@@ -95,7 +95,7 @@ class FieldComputations {
      * Note that the returned position will always be within the field, even if this is not the closest position that is out of the defense area.
      * If the given point is already out of the defense area, this same point is returned.
      */
-    static Vector2 projectPointOutOfDefenseArea(const rtt::world::Field &field, Vector2 point, double ourDefenseAreaMargin = 0.0,
+    static Vector2 projectPointOutOfDefenseArea(const rtt::Field &field, Vector2 point, double ourDefenseAreaMargin = 0.0,
                                                 double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
@@ -110,7 +110,7 @@ class FieldComputations {
      * @param theirDefenseAreaMargin The outwards margin in which their defense area will get expanded/shrunk
      * @return The position closest to the given point that fulfills the criteria set in avoidObjects (except ball avoidance)
      */
-    static Vector2 projectPointToValidPosition(const rtt::world::Field &field, Vector2 point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0,
+    static Vector2 projectPointToValidPosition(const rtt::Field &field, Vector2 point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0,
                                                double ourDefenseAreaMargin = 0.0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
@@ -124,7 +124,7 @@ class FieldComputations {
      * @return The position in the field closest to p1 on the line between p1 and p2.
      * If no such position can be found, return the closest position in the field from the given point (but not on the given line).
      */
-    static Vector2 projectPointIntoFieldOnLine(const world::Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin = 0.0);
+    static Vector2 projectPointIntoFieldOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin = 0.0);
 
     /**
      * Projects the given point to a valid position, as defined by avoidObjects, on a line between two given points.
@@ -141,7 +141,7 @@ class FieldComputations {
      * @return The closest valid position to the given point on the line between p1 and p2.
      * If no such position can be found, return the closest valid position to the given point (but not on the given line).
      */
-    static Vector2 projectPointToValidPositionOnLine(const world::Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0,
+    static Vector2 projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0,
                                                      double ourDefenseAreaMargin = 0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
@@ -156,7 +156,7 @@ class FieldComputations {
      * blockades).
      * @return The percentage of the goal visible, which is a double value between 0.0 and 100.0 including both 0.0 and 100.0.
      */
-    static double getPercentageOfGoalVisibleFromPoint(const rtt::world::Field &field, bool ourGoal, const Vector2 &point, rtt::world::view::WorldDataView world, int id = -1,
+    static double getPercentageOfGoalVisibleFromPoint(const rtt::Field &field, bool ourGoal, const Vector2 &point, rtt::world::view::WorldDataView world, int id = -1,
                                                       bool ourTeam = false);
 
     /**
@@ -166,7 +166,7 @@ class FieldComputations {
      * @param robots A list of all robots that could possibly block the goal.
      * @cite getVisiblePartsOfGoal(const Field &field, bool ourGoal, const Vector2 &point, world::view::WorldDataView &world)
      */
-    static std::vector<LineSegment> getVisiblePartsOfGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point, const std::vector<rtt::world::view::RobotView> &robots);
+    static std::vector<LineSegment> getVisiblePartsOfGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point, const std::vector<rtt::world::view::RobotView> &robots);
 
     /**
      * Get the goal side (the line segment regarding the goal line) of either our goal or the opponents goal.
@@ -175,7 +175,7 @@ class FieldComputations {
      * @return The LineSegment which represents the goal side (the first part is always the bottom part of the goal, i.e. the part with the lowest y-coordinate, the second part
      * is always the top part of the goal, i.e. the part with the highest y-coordinate).
      */
-    static LineSegment getGoalSides(const rtt::world::Field &field, bool ourGoal);
+    static LineSegment getGoalSides(const rtt::Field &field, bool ourGoal);
 
     /**
      * Compute the Euclidean distance from a given point to the closest point on the goal.
@@ -184,7 +184,7 @@ class FieldComputations {
      * @param point The given point from which the distance is computed.
      * @return The Euclidean distance to the closest point on the goal from the given point.
      */
-    static double getDistanceToGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point);
+    static double getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point);
 
     /**
      * Determine the intersection between a LineSegment and the boundary of the defence area and return the intersection point closest to the start of the line (if the LineSegment
@@ -198,7 +198,7 @@ class FieldComputations {
      * @param ignoreGoalLine If true, do not count intersections with the goal line (the line of the defense area that overlaps with the left line of the field).
      * @return The closest intersection point to the start of the LineSegment. In case of no intersection point return a null pointer.
      */
-    static std::shared_ptr<Vector2> lineIntersectionWithDefenseArea(const rtt::world::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd, double margin,
+    static std::shared_ptr<Vector2> lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd, double margin,
                                                                     bool ignoreGoalLine = false);
 
     /**
@@ -211,7 +211,7 @@ class FieldComputations {
      * be expanded, a negative value means that it will be shrinked (if unset then it will be neither expanded/shrinked).
      * @return The closest intersection point to the start of the LineSegment. In case of no intersection point return a null optional.
      */
-    static std::optional<Vector2> lineIntersectionWithField(const rtt::world::Field &field, const Vector2 &lineStart, const Vector2 &lineEnd, double margin);
+    static std::optional<Vector2> lineIntersectionWithField(const rtt::Field &field, const Vector2 &lineStart, const Vector2 &lineEnd, double margin);
 
     /**
      * Compute the total angle a given point makes with the goal, i.e. you create a triangle using this point and both upperside and lowerside of the goal and compute the angle
@@ -221,7 +221,7 @@ class FieldComputations {
      * @param point The given point from which the angle is computed.
      * @return The angle in radians that this point makes with the given goal.
      */
-    static double getTotalGoalAngle(const rtt::world::Field &field, bool ourGoal, const Vector2 &point);
+    static double getTotalGoalAngle(const rtt::Field &field, bool ourGoal, const Vector2 &point);
 
     /**
      * Get the defense area, i.e. the area in front of the goal which is bounded by the penalty line.
@@ -232,7 +232,7 @@ class FieldComputations {
      * @param backMargin The outwards margin at the goal side (boundary side) of the field.
      * @return The area (Polygon) which represents the defense area.
      */
-    static Polygon getDefenseArea(const rtt::world::Field &field, bool ourDefenseArea, double margin, double backMargin);
+    static Polygon getDefenseArea(const rtt::Field &field, bool ourDefenseArea, double margin, double backMargin);
 
     /**
      * Get the goal area, i.e. the small area INSIDE the goal.
@@ -244,7 +244,7 @@ class FieldComputations {
      * margin (by default the goal depth will NOT be increased by the margin).
      * @return The area (Polygon) that represents the goal area.
      */
-    static Polygon getGoalArea(const rtt::world::Field &field, bool ourGoal = true, double margin = 0.0, bool hasBackMargin = false);
+    static Polygon getGoalArea(const rtt::Field &field, bool ourGoal = true, double margin = 0.0, bool hasBackMargin = false);
 
     /**
      * Get the entire field area.
@@ -253,7 +253,7 @@ class FieldComputations {
      * expanded, a negative value means that the field area will be shrinked.
      * @return The area (Polygon) that represents the entire field area.
      */
-    static Polygon getFieldEdge(const rtt::world::Field &field, double margin = 0.0);
+    static Polygon getFieldEdge(const rtt::Field &field, double margin = 0.0);
 
    private:
     /**
@@ -269,7 +269,7 @@ class FieldComputations {
      * blockades).
      * @return All the parts of the goal that are blocked.
      */
-    static std::vector<LineSegment> getBlockadesMappedToGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point,
+    static std::vector<LineSegment> getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
                                                              const std::vector<rtt::world::view::RobotView> &robots, int id = -1, bool ourTeam = false);
 
     /**

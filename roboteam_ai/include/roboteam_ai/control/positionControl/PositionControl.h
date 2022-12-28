@@ -49,7 +49,7 @@ class PositionControl {
      * @param targetPosition the desired position that the robot has to reachsho
      * @return Boolean that is 1 if the path needs to be recalculated
      */
-    bool shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
+    bool shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
                                      ai::stp::AvoidObjects);
 
    public:
@@ -65,7 +65,7 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return a RobotCommand, which can be fed directly in the output
      */
-    RobotCommand computeAndTrackPath(const rtt::world::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
+    RobotCommand computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
                                      stp::PIDType pidType);
 
     /**
@@ -98,7 +98,7 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    rtt::BB::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 currentPosition,
+    rtt::BB::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
                                                         Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
                                                         stp::AvoidObjects avoidObjects);
 
@@ -117,7 +117,7 @@ class PositionControl {
      * @param timeStep the time between path points when approaching the path
      * @return An optional with a new path
      */
-    std::optional<Trajectory2D> findNewTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
+    std::optional<Trajectory2D> findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
                                                   std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
                                                   stp::AvoidObjects AvoidObjects);
 
@@ -136,7 +136,7 @@ class PositionControl {
      * @param timeStep time in seconds between new start points on the BBT to the intermediatePoint
      * @return optional Trajectory if a new path was found
      */
-    std::optional<Trajectory2D> calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::world::Field &field,
+    std::optional<Trajectory2D> calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::Field &field,
                                                                    std::optional<BB::CollisionData> &intermediatePathCollision, Trajectory2D trajectoryToIntermediatePoint,
                                                                    Vector2 &targetPosition, int robotId, double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects);
 
@@ -150,7 +150,7 @@ class PositionControl {
      * @param targetPosition the desired position that the robot has to reach
      * @return A vector with coordinates of the intermediate points
      */
-    std::vector<Vector2> createIntermediatePoints(const rtt::world::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
+    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
 
     /**
      * @brief Gives each intermediate point a score for how close the point is to the collisionPosition

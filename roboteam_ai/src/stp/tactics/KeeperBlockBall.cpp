@@ -52,7 +52,7 @@ bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
 
 const char *KeeperBlockBall::getName() { return "Keeper Block Ball"; }
 
-LineSegment KeeperBlockBall::getKeepersLineSegment(const world::Field &field) {
+LineSegment KeeperBlockBall::getKeepersLineSegment(const Field &field) {
     auto keepersLineSegmentLeft = field.getOurTopGoalSide() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, -KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
     auto keepersLineSegmentRight = field.getOurBottomGoalSide() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
     auto keepersLineSegment = LineSegment(keepersLineSegmentLeft, keepersLineSegmentRight);
@@ -87,7 +87,7 @@ std::optional<HalfLine> KeeperBlockBall::estimateBallTrajectory(const world::vie
     return std::nullopt;
 }
 
-bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const world::Field &field) {
+bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const Field &field) {
     auto goalLineSegment = LineSegment(field.getOurBottomGoalSide(), field.getOurTopGoalSide());
     // Get the intersection between the ball and the line on which the goal is
     auto intersectionWithGoalLine = ballTrajectory.intersect(Line(goalLineSegment));
@@ -95,7 +95,7 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
 
-std::pair<Vector2,PIDType> KeeperBlockBall::calculateTargetPosition(const world::view::BallView &ball, const world::Field &field,
+std::pair<Vector2,PIDType> KeeperBlockBall::calculateTargetPosition(const world::view::BallView &ball, const Field &field,
                                                                           const std::optional<world::view::RobotView> &enemyRobot) noexcept {
     // Get the line on which the keeper should move to
     auto keepersLineSegment = getKeepersLineSegment(field);

@@ -20,7 +20,7 @@ class CollisionDetector {
     static constexpr double DEFAULT_ROBOT_COLLISION_RADIUS = 3.0 * Constants::ROBOT_RADIUS();
 
     std::vector<Vector2> robotPositions;
-    const rtt::world::Field* field = nullptr;
+    const rtt::Field* field = nullptr;
 
    public:
     /**
@@ -66,7 +66,7 @@ class CollisionDetector {
      */
     std::optional<Vector2> getCollisionBetweenPoints(const Vector2& point, const Vector2& nextPoint);
 
-    void setField(const rtt::world::Field& field);
+    void setField(const rtt::Field& field);
 
     void setRobotPositions(std::vector<Vector2>& robotPositions);
 };

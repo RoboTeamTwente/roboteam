@@ -51,7 +51,7 @@ class BallPossession {
     /**
      * Runs every tick to update which team possess the ball (can also be both/no team).
      */
-    void update(world::view::WorldDataView world, const world::Field &field);
+    void update(world::view::WorldDataView world, const Field &field);
 
     /**
      * Check which team possess the ball (can also be both/no team).
@@ -88,7 +88,7 @@ class BallPossession {
     /**
      * Recompute which team possess the ball (can also be both/no team).
      */
-    void recomputeState(world::view::WorldDataView world, const world::Field &field);
+    void recomputeState(world::view::WorldDataView world, const Field &field);
 };
 
 extern BallPossession ballPossession;

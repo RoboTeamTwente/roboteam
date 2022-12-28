@@ -35,7 +35,7 @@ DefendShot::DefendShot() : Play() {
                                                                                        std::make_unique<role::Formation>("ball_blocker")};
 }
 
-uint8_t DefendShot::score(const rtt::world::Field& field) noexcept {
+uint8_t DefendShot::score(const rtt::Field& field) noexcept {
     if (world->getWorld()->whichRobotHasBall(world::them) != std::nullopt) return 255;
     if (world->getWorld()->whichRobotHasBall(world::us) != std::nullopt) return 0;
     return 0;

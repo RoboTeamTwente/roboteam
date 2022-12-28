@@ -22,7 +22,7 @@
 
 namespace rtt::ai {
 
-Dealer::Dealer(v::WorldDataView world, rtt::world::Field *field) : world(world), field(field) {}
+Dealer::Dealer(v::WorldDataView world, rtt::Field *field) : world(world), field(field) {}
 
 Dealer::DealerFlag::DealerFlag(DealerFlagTitle title, DealerFlagPriority priority) : title(title), priority(priority) {}
 

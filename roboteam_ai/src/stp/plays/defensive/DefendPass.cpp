@@ -39,7 +39,7 @@ DefendPass::DefendPass() : Play() {
     };
 }
 
-uint8_t DefendPass::score(const rtt::world::Field& field) noexcept {
+uint8_t DefendPass::score(const rtt::Field& field) noexcept {
     auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
     auto position = distanceFromPointToLine(field.getBottomLeftCorner(), field.getTopLeftCorner(), enemyRobot->get()->getPos());
     auto goalVisibility =

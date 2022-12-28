@@ -34,7 +34,7 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
                                                                                        std::make_unique<role::Formation>(role::Formation("attacker_right"))};
 }
 
-uint8_t FreeKickUsPass::score(const rtt::world::Field& field) noexcept {
+uint8_t FreeKickUsPass::score(const rtt::Field& field) noexcept {
     passInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
 
     if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found

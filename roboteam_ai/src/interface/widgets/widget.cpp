@@ -163,7 +163,7 @@ bool Visualizer::shouldVisualize(Toggle toggle, int robotId) {
 }
 
 /// Calculates the factor variable which is used for mapping field coordinates with screen coordinates.
-void Visualizer::calculateFieldSizeFactor(const rtt::world::Field &field) {
+void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
     fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.getBoundaryWidth());
 
     float widthFactor = this->size().width() / field.getFieldLength() - (2 * fieldmargin);
@@ -178,7 +178,7 @@ void Visualizer::drawBackground(QPainter &painter) {
 }
 
 // draws the field lines
-void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painter) {
+void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     painter.setPen(Constants::FIELD_LINE_COLOR());
     painter.setBrush(Qt::transparent);
     // draw lines
@@ -249,7 +249,7 @@ void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painte
     painter.drawLine(theirLineUpper.x, theirLineUpper.y, theirLineLower.x, theirLineLower.y);
 }
 
-void Visualizer::drawFieldHints(const rtt::world::Field &field, QPainter &painter) {
+void Visualizer::drawFieldHints(const rtt::Field &field, QPainter &painter) {
     QPen pen;
 
     // draw the position where robots would be for timeout

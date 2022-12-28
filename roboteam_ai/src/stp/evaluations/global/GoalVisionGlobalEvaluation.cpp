@@ -28,7 +28,7 @@ GoalVisionGlobalEvaluation::GoalVisionGlobalEvaluation() noexcept {
     piecewiseLinearFunction->setYAtX(control_constants::FUZZY_TRUE, 100);
 }
 
-uint8_t GoalVisionGlobalEvaluation::metricCheck(const world::World* world, const world::Field* field) const noexcept {
+uint8_t GoalVisionGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
     auto& us = world->getWorld()->getUs();
     std::vector<double> visibilities{};
     visibilities.reserve(control_constants::MAX_ROBOT_COUNT);

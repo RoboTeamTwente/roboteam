@@ -26,7 +26,7 @@ FormationPreHalf::FormationPreHalf() : Play() {
         std::make_unique<role::Formation>(role::Formation("formation_9"))};
 }
 
-uint8_t FormationPreHalf::score(const rtt::world::Field& field) noexcept {
+uint8_t FormationPreHalf::score(const rtt::Field& field) noexcept {
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::PreHalfGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
 }

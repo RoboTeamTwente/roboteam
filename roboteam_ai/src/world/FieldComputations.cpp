@@ -6,22 +6,22 @@
 
 namespace rtt::ai {
 
-bool FieldComputations::pointIsInOurDefenseArea(const rtt::world::Field &field, const Vector2 &point, double margin, double backMargin) {
+bool FieldComputations::pointIsInOurDefenseArea(const rtt::Field &field, const Vector2 &point, double margin, double backMargin) {
     auto defenseArea = FieldComputations::getDefenseArea(field, true, margin, backMargin);
     return defenseArea.contains(point);
 }
 
-bool FieldComputations::pointIsInTheirDefenseArea(const rtt::world::Field &field, const Vector2 &point, double margin, double backMargin) {
+bool FieldComputations::pointIsInTheirDefenseArea(const rtt::Field &field, const Vector2 &point, double margin, double backMargin) {
     auto defenseArea = FieldComputations::getDefenseArea(field, false, margin, backMargin);
     return defenseArea.contains(point);
 }
 
-bool FieldComputations::pointIsInField(const rtt::world::Field &field, const Vector2 &point, double margin) {
+bool FieldComputations::pointIsInField(const rtt::Field &field, const Vector2 &point, double margin) {
     return (point.x <= field.getRightmostX() + margin && point.x >= field.getLeftmostX() - margin && point.y <= field.getTopmostY() + margin &&
             point.y >= field.getBottommostY() - margin);
 }
 
-bool FieldComputations::pointIsValidPosition(const rtt::world::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
+bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
                                              double theirDefenseAreaMargin) {
     if (avoidObjects.shouldAvoidOutOfField && !pointIsInField(field, point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidDefenseArea && (pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin) || pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin)))
@@ -29,14 +29,14 @@ bool FieldComputations::pointIsValidPosition(const rtt::world::Field &field, con
     return true;
 }
 
-double FieldComputations::getTotalGoalAngle(const rtt::world::Field &field, bool ourGoal, const Vector2 &point) {
+double FieldComputations::getTotalGoalAngle(const rtt::Field &field, bool ourGoal, const Vector2 &point) {
     LineSegment goal = getGoalSides(field, ourGoal);
     Angle angleLeft = Angle(goal.start - point);
     Angle angleRight = Angle(goal.end - point);
     return angleLeft.shortestAngleDiff(angleRight);
 }
 
-double FieldComputations::getPercentageOfGoalVisibleFromPoint(const rtt::world::Field &field, bool ourGoal, const Vector2 &point, rtt::world::view::WorldDataView world, int id,
+double FieldComputations::getPercentageOfGoalVisibleFromPoint(const rtt::Field &field, bool ourGoal, const Vector2 &point, rtt::world::view::WorldDataView world, int id,
                                                               bool ourTeam) {
     double goalWidth = field.getGoalWidth();
     double blockadeLength = 0;
@@ -47,7 +47,7 @@ double FieldComputations::getPercentageOfGoalVisibleFromPoint(const rtt::world::
     return fmax(100 - blockadeLength / goalWidth * 100, 0.0);
 }
 
-std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point,
+std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
                                                                   const std::vector<rtt::world::view::RobotView> &robots) {
     // TODO: improve when it takes our/their robots into account
     std::vector<LineSegment> blockades = getBlockadesMappedToGoal(field, ourGoal, point, robots, -1, true);
@@ -77,7 +77,7 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::wor
     return visibleParts;
 }
 
-LineSegment FieldComputations::getGoalSides(const rtt::world::Field &field, bool ourGoal) {
+LineSegment FieldComputations::getGoalSides(const rtt::Field &field, bool ourGoal) {
     if (ourGoal) {
         return LineSegment(field.getOurBottomGoalSide(), field.getOurTopGoalSide());
     } else {
@@ -85,9 +85,9 @@ LineSegment FieldComputations::getGoalSides(const rtt::world::Field &field, bool
     }
 }
 
-double FieldComputations::getDistanceToGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point) { return getGoalSides(field, ourGoal).distanceToLine(point); }
+double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) { return getGoalSides(field, ourGoal).distanceToLine(point); }
 
-std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::world::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
+std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
                                                                             double margin, bool ignoreGoalLine) {
     auto defenseArea = getDefenseArea(field, ourGoal, margin, field.getBoundaryWidth());
 
@@ -114,7 +114,7 @@ std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(cons
     }
 }
 
-std::optional<Vector2> FieldComputations::lineIntersectionWithField(const rtt::world::Field &field, const Vector2 &lineStart, const Vector2 &lineEnd, double margin) {
+std::optional<Vector2> FieldComputations::lineIntersectionWithField(const rtt::Field &field, const Vector2 &lineStart, const Vector2 &lineEnd, double margin) {
     auto fieldEdges = getFieldEdge(field, margin);
     auto intersections = fieldEdges.intersections({lineStart, lineEnd});
 
@@ -130,7 +130,7 @@ std::optional<Vector2> FieldComputations::lineIntersectionWithField(const rtt::w
 }
 
 // True standard which mean field.getBoundaryWidth() is used otherwise margin is used
-Polygon FieldComputations::getDefenseArea(const rtt::world::Field &field, bool ourDefenseArea, double margin, double backMargin) {
+Polygon FieldComputations::getDefenseArea(const rtt::Field &field, bool ourDefenseArea, double margin, double backMargin) {
     Vector2 belowGoal = ourDefenseArea ? field.getBottomLeftOurDefenceArea() : field.getBottomRightTheirDefenceArea();
     Vector2 aboveGoal = ourDefenseArea ? field.getTopLeftOurDefenceArea() : field.getTopRightTheirDefenceArea();
     Vector2 bottomPenalty = ourDefenseArea ? field.getLeftPenaltyLineBottom() : field.getRightPenaltyLineBottom();
@@ -169,7 +169,7 @@ Polygon FieldComputations::getDefenseArea(const rtt::world::Field &field, bool o
     return {defenseArea};
 }
 
-Polygon FieldComputations::getGoalArea(const rtt::world::Field &field, bool ourGoal, double margin, bool hasBackMargin) {
+Polygon FieldComputations::getGoalArea(const rtt::Field &field, bool ourGoal, double margin, bool hasBackMargin) {
     double goalDepth = hasBackMargin ? field.getGoalDepth() + margin : field.getGoalDepth();
     Vector2 outerBottomGoal = ourGoal ? field.getOurBottomGoalSide() + Vector2(margin, -margin) : field.getTheirBottomGoalSide() + Vector2(-margin, -margin);
     Vector2 innerBottomGoal = ourGoal ? field.getOurBottomGoalSide() + Vector2(-goalDepth, -margin) : field.getTheirBottomGoalSide() + Vector2(goalDepth, -margin);
@@ -181,14 +181,14 @@ Polygon FieldComputations::getGoalArea(const rtt::world::Field &field, bool ourG
     return Polygon(goalArea);
 }
 
-Polygon FieldComputations::getFieldEdge(const rtt::world::Field &field, double margin) {
+Polygon FieldComputations::getFieldEdge(const rtt::Field &field, double margin) {
     std::vector<Vector2> fieldEdge = {field.getBottomLeftCorner() + Vector2(-margin, -margin), field.getTopLeftCorner() + Vector2(-margin, margin),
                                       field.getTopRightCorner() + Vector2(margin, margin), field.getBottomRightCorner() + Vector2(margin, -margin)};
     //interface::Input::drawDebugData(fieldEdge, Qt::red, interface::Drawing::LINES_CONNECTED);
     return Polygon(fieldEdge);
 }
 
-std::vector<LineSegment> FieldComputations::getBlockadesMappedToGoal(const rtt::world::Field &field, bool ourGoal, const Vector2 &point,
+std::vector<LineSegment> FieldComputations::getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
                                                                      const std::vector<rtt::world::view::RobotView> &robots, int id, bool ourTeam) {
     std::vector<LineSegment> blockades = {};
     const double robotRadius = Constants::ROBOT_RADIUS() + Constants::BALL_RADIUS();
@@ -242,14 +242,14 @@ std::vector<LineSegment> FieldComputations::mergeBlockades(std::vector<LineSegme
     return blockades;
 }
 
-Vector2 FieldComputations::projectPointInField(const world::Field &field, Vector2 point, double margin) {
+Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point, double margin) {
     Vector2 projectedPoint;
     projectedPoint.x = std::clamp(point.x, field.getLeftmostX() + margin + PROJECTION_MARGIN, field.getRightmostX() - margin - PROJECTION_MARGIN);
     projectedPoint.y = std::clamp(point.y, field.getBottommostY() + margin + PROJECTION_MARGIN, field.getTopmostY() - margin - PROJECTION_MARGIN);
     return projectedPoint;
 }
 
-Vector2 FieldComputations::projectPointOutOfDefenseArea(const world::Field &field, Vector2 point, double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
+Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
     if (pointIsInField(field, point) && !pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin) && !pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin))
         return point;
 
@@ -276,7 +276,7 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const world::Field &fiel
     return {point.x, point.y + yDiff};
 }
 
-Vector2 FieldComputations::projectPointToValidPosition(const world::Field &field, Vector2 point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
+Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
                                                        double theirDefenseAreaMargin) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
@@ -284,7 +284,7 @@ Vector2 FieldComputations::projectPointToValidPosition(const world::Field &field
     return projectedPos;
 }
 
-Vector2 FieldComputations::projectPointIntoFieldOnLine(const world::Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
+Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
     auto projectedPos = LineSegment(p1, p2).project(point);
     if (FieldComputations::pointIsInField(field, projectedPos, fieldMargin)) return projectedPos;
 
@@ -298,7 +298,7 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const world::Field &field
     return (dist_lhs < dist_rhs ? *intersection_lhs : *intersection_rhs);  // return the intersection closest to the point
 }
 
-Vector2 FieldComputations::projectPointToValidPositionOnLine(const world::Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin,
+Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin,
                                                              double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
     // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
     auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);

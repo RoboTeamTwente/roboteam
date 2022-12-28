@@ -39,7 +39,7 @@ std::optional<view::WorldDataView> World::getWorld() const noexcept {
     }
 }
 
-std::optional<world::Field> World::getField() const noexcept {
+std::optional<Field> World::getField() const noexcept {
     if (currentField) {
         return currentField;
     } else {
@@ -67,11 +67,11 @@ void World::updateWorld(proto::World &protoWorld) {
 }
 
 void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
-    world::Field field(protoField);
+    Field field(protoField);
     this->currentField = field;
 }
 
-void World::updateField(rtt::world::Field &protoField) { this->currentField = protoField; }
+void World::updateField(rtt::Field &protoField) { this->currentField = protoField; }
 
 World::World(Settings *settings) : settings{settings}, currentWorld{std::nullopt}, lastTick{0} { history.reserve(HISTORY_SIZE); }
 

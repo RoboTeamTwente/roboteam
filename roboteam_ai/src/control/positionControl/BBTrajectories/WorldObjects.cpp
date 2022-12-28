@@ -12,7 +12,7 @@ namespace rtt::BB {
 
 WorldObjects::WorldObjects() = default;
 
-std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::World *world, const rtt::world::Field &field, const Trajectory2D &Trajectory,
+std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const Trajectory2D &Trajectory,
                                                              const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects) {
     gameState = rtt::ai::GameStateManager::getCurrentGameState();
     ruleset = gameState.getRuleSet();
@@ -65,7 +65,7 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     }
 }
 
-void WorldObjects::calculateFieldCollisions(const rtt::world::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
+void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
                                             double timeStep) {
     for (size_t i = 0; i < pathPoints.size(); i++) {
         if (!rtt::ai::FieldComputations::pointIsInField(field, pathPoints[i], rtt::ai::Constants::ROBOT_RADIUS())) {
@@ -78,7 +78,7 @@ void WorldObjects::calculateFieldCollisions(const rtt::world::Field &field, std:
     }
 }
 
-void WorldObjects::calculateDefenseAreaCollisions(const rtt::world::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
+void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
                                                   double timeStep) {
     auto ourDefenseArea = rtt::ai::FieldComputations::getDefenseArea(field, true, 0, 0);
     auto theirDefenseArea = rtt::ai::FieldComputations::getDefenseArea(field, false, ai::stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN, 0);

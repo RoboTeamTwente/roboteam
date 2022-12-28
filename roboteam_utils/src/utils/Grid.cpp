@@ -59,4 +59,13 @@ double Grid::getStepSizeX() const { return stepSizeX; }
 
 double Grid::getStepSizeY() const { return stepSizeY; }
 
+bool Grid::operator==(const Grid &other) const {
+    return this->getOffSetX() == other.getOffSetX()
+        && this->getOffSetY() == other.getOffSetY()
+        && this->getRegionWidth() == other.getRegionWidth()
+        && this->getRegionLength() == other.getRegionLength()
+        && this->getNumPointsX() == other.getNumPointsX()
+        && this->getNumPointsY() == other.getNumPointsY();
+}
+
 }  // namespace rtt

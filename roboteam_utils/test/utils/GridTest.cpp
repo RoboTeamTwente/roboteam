@@ -59,4 +59,23 @@ TEST(Grid, spreadTest) {
     EXPECT_NEAR(totalX/5.0, 0.0, 1e-10);
     EXPECT_NEAR(totalY/3.0, 0.0, 1e-10);
 }
+
+TEST(Grid, equals) {
+    Grid g1(0, 0, 10, 10, 10, 10);
+    Grid g2(0, 0, 10, 10, 10, 10);
+    ASSERT_EQ(g1, g2);
+
+    Grid g3(0, 0, 10, 10, 10, 11);
+    ASSERT_NE(g1, g3);
+    Grid g4(0, 0, 10, 10, 5, 10);
+    ASSERT_NE(g1, g4);
+    Grid g5(0, 0, 10, 11, 10, 10);
+    ASSERT_NE(g1, g5);
+    Grid g6(0, 0, 11, 10, 10, 10);
+    ASSERT_NE(g1, g6);
+    Grid g7(0, 1, 10, 10, 10, 10);
+    ASSERT_NE(g1, g7);
+    Grid g8(-1, 0, 10, 10, 10, 10);
+}
+
 }  // namespace rtt

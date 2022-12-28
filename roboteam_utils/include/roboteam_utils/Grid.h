@@ -36,6 +36,8 @@ namespace rtt {
         [[nodiscard]] double getStepSizeY() const;
         [[nodiscard]] const std::vector<std::vector<Vector2>> &getPoints() const;
 
+        bool operator==(const Grid& other) const;
+
     private:
         /**
          * nested vector, first index corresponds to nth x element, second to nth y element

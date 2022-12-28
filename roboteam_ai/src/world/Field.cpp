@@ -57,26 +57,26 @@ void Field::initFieldArcs(const proto::SSL_GeometryFieldSize &sslFieldSize) {
 }
 
 void Field::initFieldGrids() {
-    auto gridLength = getFieldLength() / numSegmentsX;
-    auto gridWidth = getFieldWidth() / numSegmentsY;
+    auto gridWidth = getFieldLength() / numSegmentsX;
+    auto gridHeight = getFieldWidth() / numSegmentsY;
 
     auto bottomX = getLeftmostX();
-    auto middleX = getLeftmostX() + gridLength;
-    auto topX = getLeftmostX() + gridLength * 2;
+    auto middleX = getLeftmostX() + gridWidth;
+    auto topX = getLeftmostX() + gridWidth * 2;
 
-    auto leftY = getBottommostY() + gridWidth * 2;
-    auto middleY = getBottommostY() + gridWidth;
+    auto leftY = getBottommostY() + gridHeight * 2;
+    auto middleY = getBottommostY() + gridHeight;
     auto rightY = getBottommostY();
 
-    backLeftGrid = Grid(bottomX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    backMidGrid = Grid(bottomX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    backRightGrid = Grid(bottomX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleLeftGrid = Grid(middleX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleMidGrid = Grid(middleX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    middleRightGrid = Grid(middleX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontLeftGrid = Grid(topX, leftY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontMidGrid = Grid(topX, middleY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
-    frontRightGrid = Grid(topX, rightY, gridWidth, gridLength, numSegmentsX, numSegmentsY);
+    backLeftGrid = Grid(bottomX, leftY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    backMidGrid = Grid(bottomX, middleY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    backRightGrid = Grid(bottomX, rightY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    middleLeftGrid = Grid(middleX, leftY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    middleMidGrid = Grid(middleX, middleY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    middleRightGrid = Grid(middleX, rightY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    frontLeftGrid = Grid(topX, leftY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    frontMidGrid = Grid(topX, middleY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
+    frontRightGrid = Grid(topX, rightY, gridWidth, gridHeight, numSegmentsX, numSegmentsY);
 }
 
 void Field::initFieldOthers() {

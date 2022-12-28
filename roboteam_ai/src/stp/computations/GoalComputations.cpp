@@ -10,7 +10,7 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp::computations {
-Vector2 GoalComputations::calculateGoalTarget(rtt_world::World *world, const rtt_world::Field &field) {
+Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rtt::world::Field &field) {
     // Position of the ball from which the goal target is determined
     auto sourcePoint = world->getWorld().value().getBall().value()->position;
 

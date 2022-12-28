@@ -18,7 +18,7 @@ class GoalComputations {
      * Calculate point in goal to aim for
      * @return Target point
      */
-    static Vector2 calculateGoalTarget(rtt::world::World *world, const rtt_world::Field &field);
+    static Vector2 calculateGoalTarget(rtt::world::World *world, const rtt::world::Field &field);
 
     /**
      * Calculate points we want to aim for

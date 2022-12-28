@@ -13,7 +13,17 @@ bool Field::operator==(const Field &other) const {
         && this->leftDefenseArea == other.leftDefenseArea
         && this->rightDefenseArea == other.rightDefenseArea
         && this->leftGoalArea == other.leftGoalArea
-        && this->rightGoalArea == other.rightGoalArea;
+        && this->rightGoalArea == other.rightGoalArea
+        && this->bottomLeftGrid == other.bottomLeftGrid
+        && this->bottomMidGrid == other.bottomMidGrid
+        && this->bottomRightGrid == other.bottomRightGrid
+        && this->middleLeftGrid == other.middleLeftGrid
+        && this->middleMidGrid == other.middleMidGrid
+        && this->middleRightGrid == other.middleRightGrid
+        && this->topLeftGrid == other.topLeftGrid
+        && this->topMidGrid == other.topMidGrid
+        && this->topRightGrid == other.topRightGrid;
+
 }
 
 Field Field::createField(double fieldWidth, double fieldHeight, double defenseWidth, double defenseHeight, double goalWidth, double goalHeight, double boundaryWidth, double centerCircleRadius, const Vector2& leftPenaltyPoint, const Vector2& rightPenaltyPoint) {
@@ -58,6 +68,32 @@ Field Field::createField(double fieldWidth, double fieldHeight, double defenseWi
         .leftGoalArea      = FastRectangle(i, j),
         .rightGoalArea     = FastRectangle(k, l),
     };
+
+    // Now set the grids of the field
+    auto gridWidths = field.playArea.width() / 3;
+    auto gridHeights = field.playArea.height() / 3;
+
+    auto leftX = field.playArea.left();
+    auto middleX = leftX + gridWidths;
+    auto rightX = leftX + 2 * gridWidths;
+
+    auto bottomY = field.playArea.bottom();
+    auto middleY = bottomY + gridHeights;
+    auto topY = bottomY + 2 * gridHeights;
+
+    const double nSegments = 3;
+
+    field.bottomLeftGrid = Grid(leftX, bottomY, gridWidths, gridHeights, nSegments, nSegments);
+    field.bottomMidGrid = Grid(middleX, bottomY, gridWidths, gridHeights, nSegments, nSegments);
+    field.bottomRightGrid = Grid(rightX, bottomY, gridWidths, gridHeights, nSegments, nSegments);
+
+    field.middleLeftGrid = Grid(leftX, middleY, gridWidths, gridHeights, nSegments, nSegments);
+    field.middleMidGrid = Grid(middleX, middleY, gridWidths, gridHeights, nSegments, nSegments);
+    field.middleRightGrid = Grid(rightX, middleY, gridWidths, gridHeights, nSegments, nSegments);
+
+    field.topLeftGrid = Grid(leftX, topY, gridWidths, gridHeights, nSegments, nSegments);
+    field.topMidGrid = Grid(middleX, topY, gridWidths, gridHeights, nSegments, nSegments);
+    field.topRightGrid = Grid(rightX, topY, gridWidths, gridHeights, nSegments, nSegments);
 
     return field;
 }

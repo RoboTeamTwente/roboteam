@@ -28,6 +28,17 @@ typedef struct Field {
     FastRectangle leftGoalArea;    // Left goal area outside the play area
     FastRectangle rightGoalArea;   // Right goal area outside the play area
 
+    // TODO: Put these grids into a single grid of grids
+    Grid topLeftGrid;
+    Grid topMidGrid;
+    Grid topRightGrid;
+    Grid middleLeftGrid;
+    Grid middleMidGrid;
+    Grid middleRightGrid;
+    Grid bottomLeftGrid;
+    Grid bottomMidGrid;
+    Grid bottomRightGrid;
+
     bool operator== (const Field& other) const;
 
     /* Function to ensure all variables of the created field are properly set.

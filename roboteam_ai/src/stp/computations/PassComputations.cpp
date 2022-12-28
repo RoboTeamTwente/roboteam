@@ -135,7 +135,7 @@ int PassComputations::getKeeperId(const std::vector<world::view::RobotView>& pos
     if (keeperIt != possibleRobots.end()) {
         return (*keeperIt)->getId();
     }
-    auto keeper = world->getWorld()->getRobotClosestToPoint(field.getOurGoalCenter(), possibleRobots);
+    auto keeper = world->getWorld()->getRobotClosestToPoint(field.leftGoalArea.rightLine().center(), possibleRobots);
     if (keeper) {
         return keeper->get()->getId();
     }

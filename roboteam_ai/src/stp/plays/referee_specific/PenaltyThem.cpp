@@ -55,7 +55,7 @@ Dealer::FlagMap PenaltyThem::decideRoleFlags() const noexcept {
 }
 
 void PenaltyThem::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
     stpInfos["keeper"].setPidType(stp::PIDType::DEFAULT);
 }

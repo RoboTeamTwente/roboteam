@@ -31,7 +31,7 @@ TEST(FieldComputationTest, outwards_margin) {
     EXPECT_TRUE(fabs(expectedFieldSize - actualFieldSize) < MAXIMUM_DIFFERENCE);
 
     // Check if the area of our defence area matches when it is not changed, when it is expanded and when it is shrinked.
-    double defenceAreaWidth = testField.getLeftPenaltyX() - testField.getLeftLine().begin.x;
+    double defenceAreaWidth = testField.leftDefenseArea.right() - testField.getLeftLine().begin.x;
     double defenceAreaHeight = LineSegment(testField.getLeftPenaltyLine().begin, testField.getLeftPenaltyLine().end).length();
     double expectedDefenceAreaSize = defenceAreaWidth * defenceAreaHeight;
     double actualDefenceAreaSize = FieldComputations::getDefenseArea(testField, true, 0.0, 0.0).area();
@@ -57,8 +57,8 @@ TEST(FieldComputationTest, outwards_margin) {
     EXPECT_TRUE(fabs(expectedDefenceAreaSize - actualDefenceAreaSize) < MAXIMUM_DIFFERENCE);
 
     // Check if the area of our goal area matches when it is not changed, when it is expanded and when it is shrinked.
-    double goalAreaWidth = testField.getGoalDepth();
-    double goalAreaHeight = testField.getGoalWidth();
+    double goalAreaWidth = testField.leftGoalArea.width();
+    double goalAreaHeight = testField.leftGoalArea.height();
     double expectedGoalAreaSize = goalAreaWidth * goalAreaHeight;
     double actualGoalAreaSize = FieldComputations::getGoalArea(testField, true, 0.0, false).area();
     EXPECT_TRUE(fabs(expectedGoalAreaSize - actualGoalAreaSize) < MAXIMUM_DIFFERENCE);
@@ -94,33 +94,33 @@ TEST(FieldComputationTest, point_in_polygon) {
      * new positions are indeed located outside that area. */
 
     // Do the boundary value analysis + error guessing for the pointInField function
-    testPoint = testField.getTopLeftCorner() + Vector2(-1.0, 1.0);
+    testPoint = testField.playArea.topLeft() + Vector2(-1.0, 1.0);
     EXPECT_TRUE(FieldComputations::pointIsInField(testField, testPoint, 1.0));
-    testPoint = testField.getTopLeftCorner() + Vector2(-1.0 - smallChanges, 1.0 + smallChanges);
+    testPoint = testField.playArea.topLeft() + Vector2(-1.0 - smallChanges, 1.0 + smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInField(testField, testPoint, 1.0));
-    testPoint = testField.getBottomRightCorner() + Vector2(-1.0, 1.0);
+    testPoint = testField.playArea.bottomRight() + Vector2(-1.0, 1.0);
     EXPECT_TRUE(FieldComputations::pointIsInField(testField, testPoint, -1.0));
-    testPoint = testField.getBottomRightCorner() + Vector2(-1.0 + smallChanges, 1.0 - smallChanges);
+    testPoint = testField.playArea.bottomRight() + Vector2(-1.0 + smallChanges, 1.0 - smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInField(testField, testPoint, -1.0));
 
     // Do the boundary value analysis + error guessing for our defence area in the pointInDefenseArea function
-    testPoint = testField.getLeftPenaltyLineTop() + Vector2(0.3 - smallChanges, 0.3 - smallChanges);
+    testPoint = testField.leftDefenseArea.topRight() + Vector2(0.3 - smallChanges, 0.3 - smallChanges);
     EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.getLeftPenaltyLineTop() + Vector2(0.3 + smallChanges, 0.3 + smallChanges);
+    testPoint = testField.leftDefenseArea.topRight() + Vector2(0.3 + smallChanges, 0.3 + smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.getBottomLeftOurDefenceArea() + Vector2(0.2 + smallChanges, 0.3 + smallChanges);
+    testPoint = testField.leftDefenseArea.bottomLeft() + Vector2(0.2 + smallChanges, 0.3 + smallChanges);
     EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.getBottomLeftOurDefenceArea() + Vector2(0.2 - smallChanges, 0.3 - smallChanges);
+    testPoint = testField.leftDefenseArea.bottomLeft() + Vector2(0.2 - smallChanges, 0.3 - smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, -0.3, -0.2));
 
     // Do the boundary value analysis + error guessing for their defence area in the pointInDefenseArea function
-    testPoint = testField.getRightPenaltyLineTop() + Vector2(0.3 + smallChanges, -0.3 - smallChanges);
+    testPoint = testField.rightDefenseArea.topLeft() + Vector2(0.3 + smallChanges, -0.3 - smallChanges);
     EXPECT_TRUE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.getRightPenaltyLineTop() + Vector2(0.3 - smallChanges, -0.3 + smallChanges);
+    testPoint = testField.rightDefenseArea.topLeft() + Vector2(0.3 - smallChanges, -0.3 + smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.getBottomRightTheirDefenceArea() + Vector2(0.2 - smallChanges, -0.3 + smallChanges);
+    testPoint = testField.rightDefenseArea.bottomRight() + Vector2(0.2 - smallChanges, -0.3 + smallChanges);
     EXPECT_TRUE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.getBottomRightTheirDefenceArea() + Vector2(0.2 + smallChanges, -0.3 - smallChanges);
+    testPoint = testField.rightDefenseArea.bottomRight() + Vector2(0.2 + smallChanges, -0.3 - smallChanges);
     EXPECT_FALSE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, 0.3, 0.2));
 }
 
@@ -129,11 +129,11 @@ TEST(FieldComputationTest, goal_distance) {
 
     /* Test cases with a point on the goal, point below the goal, point not on the goal but with y-coordinates between both goal
      * endings and point not on the goal with y-coordinates not between both goal endings. */
-    Vector2 testPoint = (testField.getOurBottomGoalSide() + testField.getOurTopGoalSide()) / 2;
+    Vector2 testPoint = (testField.leftGoalArea.bottomRight() + testField.leftGoalArea.topRight()) / 2;
     double expectedDistance = FieldComputations::getDistanceToGoal(testField, true, testPoint);
     double actualDistance = 0.0;
     EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
-    testPoint = testField.getTheirBottomGoalSide() + Vector2(0, -3);
+    testPoint = testField.rightGoalArea.bottomLeft() + Vector2(0, -3);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, false, testPoint);
     actualDistance = 3.0;
     EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
@@ -153,23 +153,23 @@ TEST(FieldComputationTest, total_goal_angle) {
     /* Test cases with a point on the goal, point below the goal, point not on the goal with y-coordinates not between both goal
      * endings, point not on the goal with y-coordinates between both goal endings and point that has an angle of 90 degrees at the
      * goal side. */
-    Vector2 testPoint = (testField.getTheirBottomGoalSide() + testField.getTheirTopGoalSide()) / 2;
+    Vector2 testPoint = (testField.rightGoalArea.bottomLeft() + testField.rightGoalArea.topLeft()) / 2;
     double expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
     double actualAngle = M_PI;
     EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
-    testPoint = testField.getOurBottomGoalSide() + Vector2(0, -3);
+    testPoint = testField.leftGoalArea.bottomRight() + Vector2(0, -3);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, true, testPoint);
     actualAngle = 0.0;
     EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
-    testPoint = testField.getTopLeftCorner();
+    testPoint = testField.playArea.topLeft();
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
     actualAngle = atan(5.1 / 12) - atan(3.9 / 12);
     EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
-    testPoint = testField.getTheirTopGoalSide() + Vector2(0, -0.4);
+    testPoint = testField.rightGoalArea.topLeft() + Vector2(0, -0.4);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, true, testPoint);
     actualAngle = atan(0.4 / 12) + atan(0.8 / 12);
     EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
-    testPoint = testField.getTheirBottomGoalSide() + Vector2(1.2, 0);
+    testPoint = testField.rightGoalArea.bottomLeft() + Vector2(1.2, 0);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
     actualAngle = 0.25 * M_PI;
     EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
@@ -182,34 +182,34 @@ TEST(FieldComputationTest, line_intersection_with_defence_area) {
      * does not intersect, where a LineSegment has infinitely many intersections with the boundary, where a LineSegment ends closely
      * before the defence area, where a LineSegment only intersect once with boundary of the defence area and 2 test cases where a
      * LineSegment intersects twice with the boundary of the defence area. */
-    Vector2 startTestLine = testField.getLeftPenaltyLineBottom() + Vector2(1.5, 0.5);
-    Vector2 endTestLine = testField.getLeftPenaltyLineBottom() + Vector2(-0.5, -1.5);
+    Vector2 startTestLine = testField.leftDefenseArea.bottomRight() + Vector2(1.5, 0.5);
+    Vector2 endTestLine = testField.leftDefenseArea.bottomRight() + Vector2(-0.5, -1.5);
     std::shared_ptr<Vector2> actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, true, startTestLine, endTestLine, 0.5);
-    Vector2 expectedIntersection = testField.getLeftPenaltyLineBottom() + Vector2(0.5, -0.5);
+    Vector2 expectedIntersection = testField.leftDefenseArea.bottomRight() + Vector2(0.5, -0.5);
     EXPECT_EQ(*actualIntersection, expectedIntersection);
-    startTestLine = testField.getRightPenaltyLineTop() + Vector2(-0.5, -0.499);
-    endTestLine = testField.getTopRightTheirDefenceArea() + Vector2(0.5, -0.499);
+    startTestLine = testField.rightDefenseArea.topLeft() + Vector2(-0.5, -0.499);
+    endTestLine = testField.rightDefenseArea.topRight() + Vector2(0.5, -0.499);
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, false, startTestLine, endTestLine, -0.5);
     EXPECT_EQ(actualIntersection, nullptr);
-    startTestLine = testField.getRightPenaltyLineBottom() + Vector2(0.0, 0.5);
-    endTestLine = testField.getRightPenaltyLineTop();
+    startTestLine = testField.rightDefenseArea.bottomLeft() + Vector2(0.0, 0.5);
+    endTestLine = testField.rightDefenseArea.topLeft();
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, false, startTestLine, endTestLine, 0.0);
     EXPECT_EQ(*actualIntersection, startTestLine);
-    startTestLine = testField.getTheirGoalCenter();
-    endTestLine = (testField.getLeftPenaltyLineTop() + testField.getLeftPenaltyLineBottom()) / 2;
+    startTestLine = testField.rightGoalArea.leftLine().center();
+    endTestLine = (testField.leftDefenseArea.topRight() + testField.leftDefenseArea.bottomRight()) / 2;
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, true, startTestLine, endTestLine, -0.1);
     EXPECT_EQ(actualIntersection, nullptr);
-    endTestLine = testField.getTopLeftOurDefenceArea() * 2 - testField.getBottomLeftOurDefenceArea();
-    startTestLine = testField.getLeftPenaltyLineBottom() * 0.99 + endTestLine * 0.01;
+    endTestLine = testField.leftDefenseArea.topLeft() * 2 - testField.leftDefenseArea.bottomLeft();
+    startTestLine = testField.leftDefenseArea.bottomRight() * 0.99 + endTestLine * 0.01;
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, true, startTestLine, endTestLine, 0.0);
-    expectedIntersection = (testField.getTopLeftOurDefenceArea() + testField.getLeftPenaltyLineTop()) / 2;
+    expectedIntersection = (testField.leftDefenseArea.topLeft() + testField.leftDefenseArea.topRight()) / 2;
     EXPECT_EQ(*actualIntersection, expectedIntersection);
-    startTestLine = testField.getTopRightTheirDefenceArea() + Vector2(-0.5, 0.2);
-    endTestLine = testField.getRightPenaltyLineBottom() + Vector2(0.6, -0.2);
+    startTestLine = testField.rightDefenseArea.topRight() + Vector2(-0.5, 0.2);
+    endTestLine = testField.rightDefenseArea.bottomLeft() + Vector2(0.6, -0.2);
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, false, startTestLine, endTestLine, 0.2);
     EXPECT_EQ(*actualIntersection, startTestLine);
-    Vector2 intersectStart = testField.getBottomLeftOurDefenceArea() * 0.8 + testField.getBottomLeftOurDefenceArea() * 0.2;
-    Vector2 intersectEnd = testField.getLeftPenaltyLineBottom() * 0.25 + testField.getLeftPenaltyLineTop() * 0.75;
+    Vector2 intersectStart = testField.leftDefenseArea.bottomLeft() * 0.8 + testField.leftDefenseArea.bottomLeft() * 0.2;
+    Vector2 intersectEnd = testField.leftDefenseArea.bottomRight() * 0.25 + testField.leftDefenseArea.topRight() * 0.75;
     startTestLine = intersectStart * 10 - intersectEnd * 9;
     endTestLine = intersectEnd * 10 - intersectStart * 9;
     actualIntersection = FieldComputations::lineIntersectionWithDefenseArea(testField, true, startTestLine, endTestLine, 0.0);
@@ -218,9 +218,9 @@ TEST(FieldComputationTest, line_intersection_with_defence_area) {
 
 TEST(FieldComputationTest, projectionTests) {
     Field field = testhelpers::FieldHelper::generateField();
-    Vector2 belowGoal = field.getBottomLeftOurDefenceArea();
-    Vector2 aboveGoal = field.getTopLeftOurDefenceArea();
-    Vector2 topPenalty = field.getLeftPenaltyLineTop();
+    Vector2 belowGoal = field.leftDefenseArea.bottomLeft();
+    Vector2 aboveGoal = field.leftDefenseArea.topLeft();
+    Vector2 topPenalty = field.leftDefenseArea.topRight();
 
     // Random point in our defense area
     auto pointInDefenseArea = Vector2(SimpleRandom::getDouble(aboveGoal.x, topPenalty.x), SimpleRandom::getDouble(belowGoal.y, aboveGoal.y));
@@ -229,12 +229,12 @@ TEST(FieldComputationTest, projectionTests) {
     auto projectedPoint = FieldComputations::projectPointOutOfDefenseArea(field, pointInDefenseArea);
     EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(field, projectedPoint));
 
-    auto pointOutsideField = Vector2(field.getLeftmostX() - 0.05, field.getTopmostY() + 0.05);
+    auto pointOutsideField = Vector2(field.playArea.left() - 0.05, field.playArea.top() + 0.05);
     EXPECT_FALSE(FieldComputations::pointIsInField(field, pointOutsideField));
     projectedPoint = FieldComputations::projectPointInField(field, pointOutsideField);
     EXPECT_TRUE(FieldComputations::pointIsInField(field, projectedPoint));
 
-    auto pointBehindGoal = field.getOurGoalCenter() + Vector2(-0.10, 0);
+    auto pointBehindGoal = field.leftGoalArea.rightLine().center() + Vector2(-0.10, 0);
     projectedPoint = FieldComputations::projectPointInField(field, pointBehindGoal);
     EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(field, projectedPoint));
 
@@ -245,7 +245,7 @@ TEST(FieldComputationTest, projectionTests) {
 
 TEST(FieldComputationTest, projectionOnLineTests) {
     Field field = testhelpers::FieldHelper::generateField();
-    auto line = LineSegment(Vector2(), field.getTheirGoalCenter());
+    auto line = LineSegment(Vector2(), field.rightGoalArea.leftLine().center());
     auto pointToProject = Vector2(5.5, -1);
 
     auto projectedPoint = FieldComputations::projectPointToValidPositionOnLine(field, pointToProject, line.start, line.end);

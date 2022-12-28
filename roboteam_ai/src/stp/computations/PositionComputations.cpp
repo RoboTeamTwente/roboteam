@@ -54,7 +54,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     std::vector<LineSegment> defenseAreaBorder = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).getBoundary();
 
     /// Find intersect of ball to goal on the border of the defense area
-    LineSegment ball2GoalLine = LineSegment(ballPos, field.getOurGoalCenter());
+    LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
 
     lineBorderIntersects = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).intersections(ball2GoalLine);
 
@@ -62,7 +62,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         std::sort(std::begin(lineBorderIntersects), std::end(lineBorderIntersects), [](Vector2 a, Vector2 b) { return a.x > b.x; });
         projectedPosition = lineBorderIntersects.front();  // Always use the first one
     } else {
-        projectedPosition = Vector2{field.getOurGoalCenter().x, field.getBottomLeftOurDefenceArea().y};
+        projectedPosition = Vector2{field.leftGoalArea.rightLine().center().x, field.leftDefenseArea.bottomLeft().y};
     }
 
     LineSegment wallLine;
@@ -72,28 +72,28 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     // there is a possibility that the circle becomes bigger than the linesegment, resulting in an infinite loop.
     // A quick fix for this is extending the line segments, but in my eyes, it is a beun fix, because there is
     // still no guarantee it is big enough
-    if (ballPos.x < field.getLeftPenaltyLineBottom().x) {
+    if (ballPos.x < field.leftDefenseArea.bottomRight().x) {
         // case when the projected position is below penalty line
         if (ballPos.y < 0) {
             wallLine = LineSegment(Vector2{FieldComputations::getDefenseArea(field, true, 0, 0)[0].x, FieldComputations::getDefenseArea(field, true, 0, 0)[0].y},
                                    Vector2{FieldComputations::getDefenseArea(field, false, 0, 0)[0].x, FieldComputations::getDefenseArea(field, false, 0, 0)[0].y});
-//            wallLine = LineSegment(field.getBottomLeftOurDefenceArea(), field.getBottomRightTheirDefenceArea());
+//            wallLine = LineSegment(field.leftDefenseArea.bottomLeft(), field.rightDefenseArea.bottomRight());
             wallLine.move({0, -spaceBetweenDefenseArea});
         } else {
             wallLine = LineSegment(Vector2{FieldComputations::getDefenseArea(field, true, 0, 0)[3].x, FieldComputations::getDefenseArea(field, true, 0, 0)[3].y},
                                    Vector2{FieldComputations::getDefenseArea(field, false, 0, 0)[3].x, FieldComputations::getDefenseArea(field, false, 0, 0)[3].y});
-//            wallLine = LineSegment(field.getTopLeftOurDefenceArea(), field.getTopRightTheirDefenceArea());
+//            wallLine = LineSegment(field.leftDefenseArea.topLeft(), field.rightDefenseArea.topRight());
             wallLine.move({0, spaceBetweenDefenseArea});
         }
         // case when it is above the penalty line no further away than side lines of the defense area
-    } else if (ballPos.y < field.getLeftPenaltyLineTop().y && ballPos.y > field.getLeftPenaltyLineBottom().y) {
-        double lineX = field.getLeftPenaltyX() + spaceBetweenDefenseArea;
-        double lineYTop = field.getTopmostY();
-        double lineYBottom = field.getBottommostY();
+    } else if (ballPos.y < field.leftDefenseArea.topRight().y && ballPos.y > field.leftDefenseArea.bottomRight().y) {
+        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
+        double lineYTop = field.playArea.top();
+        double lineYBottom = field.playArea.bottom();
         wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
     } else {
         // We put the wall line perpendicular to the ball-goal line
-        wallLine = LineSegment(ballPos, field.getOurGoalCenter());
+        wallLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
         wallLine.rotate(M_PI / 2, projectedPosition);
 
         // And resize it to make sure enough robots can fit on it
@@ -143,7 +143,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
 
     // For the robots not to change the position withing the wall
-    if (ballPos.x < field.getLeftPenaltyLineBottom().x) {
+    if (ballPos.x < field.leftDefenseArea.bottomRight().x) {
         if (ballPos.y < 0) {
             std::sort(std::begin(positions), std::end(positions), [](Vector2 a, Vector2 b) { return a.x < b.x; });
         } else {
@@ -205,7 +205,7 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, c
 }
 
 Vector2 PositionComputations::getBallBlockPosition(const Field &field, const world::World *world) {
-    if (!world->getWorld()->getBall()) return {field.getLeftPenaltyPoint()};  // If there is no ball, return a default value
+    if (!world->getWorld()->getBall()) return {field.leftPenaltyPoint};  // If there is no ball, return a default value
 
     constexpr double distFromDefenceArea = 1.0;
 
@@ -216,7 +216,7 @@ Vector2 PositionComputations::getBallBlockPosition(const Field &field, const wor
     // If the ball is moving towards our defense area, stand on its trajectory
     auto ball = world->getWorld()->getBall()->get();
     if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.getFieldLength()));
+        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto interceptionPoint =
             FieldComputations::lineIntersectionWithDefenseArea(field, true, ballTrajectory.start, ballTrajectory.end, distFromDefenceArea, true);
         if (interceptionPoint) return *interceptionPoint;
@@ -227,8 +227,8 @@ Vector2 PositionComputations::getBallBlockPosition(const Field &field, const wor
     if (enemyClosestToBall && enemyClosestToBall->get()->getDistanceToBall() < control_constants::ENEMY_CLOSE_TO_BALL_DISTANCE) {
         auto start = enemyClosestToBall->get()->getPos();
         auto robotAngle = enemyClosestToBall->get()->getAngle();
-        auto end = start + robotAngle.toVector2().stretchToLength(field.getFieldLength());
-        //auto intersection = LineSegment(field.getOurBottomGoalSide() - Vector2(0, 0.20), field.getOurTopGoalSide() + Vector2(0, 0.20)).intersects({start, end});
+        auto end = start + robotAngle.toVector2().stretchToLength(field.playArea.width());
+        //auto intersection = LineSegment(field.leftGoalArea.bottomRight() - Vector2(0, 0.20), field.leftGoalArea.topRight() + Vector2(0, 0.20)).intersects({start, end});
         auto intersection = FieldComputations::lineIntersectionWithDefenseArea(field, true, start, end, distFromDefenceArea, true);
         if (intersection != nullptr) {
             return FieldComputations::projectPointToValidPositionOnLine(field, *intersection, start, end, AvoidObjects(), 0.0,
@@ -238,7 +238,7 @@ Vector2 PositionComputations::getBallBlockPosition(const Field &field, const wor
 
     // If there is no enemy about to shoot and the ball is not moving towards the goal, simply stand in between the ball and our goal center
     auto ballToGoalIntersection =
-        FieldComputations::lineIntersectionWithDefenseArea(field, true, ball->position, field.getOurGoalCenter(), distFromDefenceArea, true);
+        FieldComputations::lineIntersectionWithDefenseArea(field, true, ball->position, field.leftGoalArea.rightLine().center(), distFromDefenceArea, true);
     if (ballToGoalIntersection) return *ballToGoalIntersection;
 
     // If there is no ball to goal intersection (this essentially means the ball is in our defense area), project that the ball position to a valid point

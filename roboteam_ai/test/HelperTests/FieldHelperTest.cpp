@@ -18,9 +18,9 @@ TEST(FieldHelperTests, DefenseAreaTest) {
     world->updateField(protoField);
 
     auto field = world->getField().value();
-    auto fieldLength = field.getFieldLength();
-    auto defAreaDepth = field.getLeftPenaltyLineTop().x - field.getOurGoalCenter().x;
-    auto defAreaWidth = field.getTopLeftOurDefenceArea().y;
+    auto fieldLength = field.playArea.width();
+    auto defAreaDepth = field.leftDefenseArea.topRight().x - field.leftGoalArea.rightLine().center().x;
+    auto defAreaWidth = field.leftDefenseArea.topLeft().y;
 
     EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(field, rtt::Vector2(-fieldLength * 0.49, 0)));
     EXPECT_TRUE(FieldComputations::pointIsInTheirDefenseArea(field, rtt::Vector2(fieldLength * 0.49, 0)));

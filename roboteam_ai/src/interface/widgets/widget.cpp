@@ -164,7 +164,7 @@ bool Visualizer::shouldVisualize(Toggle toggle, int robotId) {
 
 /// Calculates the factor variable which is used for mapping field coordinates with screen coordinates.
 void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
-    fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.getBoundaryWidth());
+    fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.boundaryWidth);
 
     float widthFactor = this->size().width() / field.playArea.width() - (2 * fieldmargin);
     float heightFactor = this->size().height() / field.playArea.height() - (2 * fieldmargin);
@@ -260,7 +260,7 @@ void Visualizer::drawFieldHints(const rtt::Field &field, QPainter &painter) {
     pen.setColor(Qt::gray);
     painter.setPen(pen);
 
-    auto lineStart = toScreenPosition(Vector2(field.getLeftmostX(), lineY));
+    auto lineStart = toScreenPosition(Vector2(field.playArea.left(), lineY));
     auto lineEnd = toScreenPosition(Vector2(0, lineY));
 
     painter.drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);

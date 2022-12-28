@@ -48,7 +48,7 @@ double PositionScoring::determineOpenScore(Vector2 &point, const rtt::Field &fie
     for (auto &enemyRobot : them) {
         enemyDistances.push_back(point.dist(enemyRobot->getPos()));
     }
-    auto radius = field.getFieldLength() / 4.0;
+    auto radius = field.playArea.width() / 4.0;
     return (scores.scoreOpen = stp::evaluation::OpennessEvaluation::metricCheck(enemyDistances, radius)).value();
 }
 
@@ -72,7 +72,7 @@ double PositionScoring::determineGoalShotScore(Vector2 &point, const rtt::Field 
     double goalAngle = FieldComputations::getTotalGoalAngle(field, false, point);
 
     // The goal angle from right in front of their defense area- i.e. the "best" goal angle
-    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.getRightPenaltyPoint());
+    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.rightPenaltyPoint);
     return (scores.scoreGoalShot = stp::evaluation::GoalShotEvaluation::metricCheck(visibility, goalAngle / maxGoalAngle)).value();
 }
 

@@ -67,7 +67,7 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
     calculateInfoForDefenders();
 
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     // FreeKickTaker
@@ -78,13 +78,13 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
 }
 
 void FreeKickUsAtGoal::calculateInfoForDefenders() noexcept {
-    stpInfos["defender_left"].setPositionToDefend(field.getOurTopGoalSide());
+    stpInfos["defender_left"].setPositionToDefend(field.leftGoalArea.topRight());
     stpInfos["defender_left"].setBlockDistance(BlockDistance::HALFWAY);
 
-    stpInfos["defender_mid"].setPositionToDefend(field.getOurGoalCenter());
+    stpInfos["defender_mid"].setPositionToDefend(field.leftGoalArea.rightLine().center());
     stpInfos["defender_mid"].setBlockDistance(BlockDistance::CLOSE);
 
-    stpInfos["defender_right"].setPositionToDefend(field.getOurBottomGoalSide());
+    stpInfos["defender_right"].setPositionToDefend(field.leftGoalArea.bottomRight());
     stpInfos["defender_right"].setBlockDistance(BlockDistance::HALFWAY);
 }
 

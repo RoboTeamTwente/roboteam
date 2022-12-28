@@ -39,7 +39,7 @@ uint8_t DefensiveStopFormation::score(const rtt::Field& field) noexcept {
 }
 
 void DefensiveStopFormation::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter() + Vector2{0.5, 0.0});
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center() + Vector2{0.5, 0.0});
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     auto width = field.playArea.width();

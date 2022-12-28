@@ -66,7 +66,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     calculateInfoForAttackers();
 
     /// Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     /// Midfielder
@@ -80,7 +80,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     } else {
         // Receiver goes to the passLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.getFieldLength()));
+        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
@@ -98,13 +98,13 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
 }
 
 void FreeKickUsPass::calculateInfoForDefenders() noexcept {
-    stpInfos["defender_left"].setPositionToDefend(field.getOurTopGoalSide());
+    stpInfos["defender_left"].setPositionToDefend(field.leftGoalArea.topRight());
     stpInfos["defender_left"].setBlockDistance(BlockDistance::HALFWAY);
 
-    stpInfos["defender_mid"].setPositionToDefend(field.getOurBottomGoalSide());
+    stpInfos["defender_mid"].setPositionToDefend(field.leftGoalArea.bottomRight());
     stpInfos["defender_mid"].setBlockDistance(BlockDistance::HALFWAY);
 
-    stpInfos["defender_right"].setPositionToDefend(field.getOurGoalCenter());
+    stpInfos["defender_right"].setPositionToDefend(field.leftGoalArea.rightLine().center());
     stpInfos["defender_right"].setBlockDistance(BlockDistance::CLOSE);
 }
 

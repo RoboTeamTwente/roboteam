@@ -33,7 +33,7 @@ uint8_t BallPlacementUs::score(const rtt::Field& field) noexcept {
 }
 
 void BallPlacementUs::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.getOurGoalCenter() + Vector2(0.5, 0.0)));
+    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     auto ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();

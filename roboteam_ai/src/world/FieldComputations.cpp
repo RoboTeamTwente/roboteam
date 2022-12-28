@@ -17,8 +17,8 @@ bool FieldComputations::pointIsInTheirDefenseArea(const rtt::Field &field, const
 }
 
 bool FieldComputations::pointIsInField(const rtt::Field &field, const Vector2 &point, double margin) {
-    return (point.x <= field.getRightmostX() + margin && point.x >= field.getLeftmostX() - margin && point.y <= field.getTopmostY() + margin &&
-            point.y >= field.getBottommostY() - margin);
+    return (point.x <= field.playArea.right() + margin && point.x >= field.playArea.left() - margin && point.y <= field.playArea.top() + margin &&
+            point.y >= field.playArea.bottom() - margin);
 }
 
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
@@ -38,7 +38,7 @@ double FieldComputations::getTotalGoalAngle(const rtt::Field &field, bool ourGoa
 
 double FieldComputations::getPercentageOfGoalVisibleFromPoint(const rtt::Field &field, bool ourGoal, const Vector2 &point, rtt::world::view::WorldDataView world, int id,
                                                               bool ourTeam) {
-    double goalWidth = field.getGoalWidth();
+    double goalWidth = field.leftGoalArea.height();
     double blockadeLength = 0;
     auto &robots = ourTeam ? world.getThem() : world.getUs();
     for (auto const &blockade : getBlockadesMappedToGoal(field, ourGoal, point, robots, id, ourTeam)) {
@@ -79,9 +79,9 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Fie
 
 LineSegment FieldComputations::getGoalSides(const rtt::Field &field, bool ourGoal) {
     if (ourGoal) {
-        return LineSegment(field.getOurBottomGoalSide(), field.getOurTopGoalSide());
+        return LineSegment(field.leftGoalArea.bottomRight(), field.leftGoalArea.topRight());
     } else {
-        return LineSegment(field.getTheirBottomGoalSide(), field.getTheirTopGoalSide());
+        return LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.topLeft());
     }
 }
 
@@ -89,7 +89,7 @@ double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoa
 
 std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
                                                                             double margin, bool ignoreGoalLine) {
-    auto defenseArea = getDefenseArea(field, ourGoal, margin, field.getBoundaryWidth());
+    auto defenseArea = getDefenseArea(field, ourGoal, margin, field.boundaryWidth);
 
     std::vector<Vector2> intersections;
     if (!ignoreGoalLine) {
@@ -129,12 +129,12 @@ std::optional<Vector2> FieldComputations::lineIntersectionWithField(const rtt::F
     }
 }
 
-// True standard which mean field.getBoundaryWidth() is used otherwise margin is used
+// True standard which mean field.boundaryWidth is used otherwise margin is used
 Polygon FieldComputations::getDefenseArea(const rtt::Field &field, bool ourDefenseArea, double margin, double backMargin) {
-    Vector2 belowGoal = ourDefenseArea ? field.getBottomLeftOurDefenceArea() : field.getBottomRightTheirDefenceArea();
-    Vector2 aboveGoal = ourDefenseArea ? field.getTopLeftOurDefenceArea() : field.getTopRightTheirDefenceArea();
-    Vector2 bottomPenalty = ourDefenseArea ? field.getLeftPenaltyLineBottom() : field.getRightPenaltyLineBottom();
-    Vector2 topPenalty = ourDefenseArea ? field.getLeftPenaltyLineTop() : field.getRightPenaltyLineTop();
+    Vector2 belowGoal = ourDefenseArea ? field.leftDefenseArea.bottomLeft() : field.rightDefenseArea.bottomRight();
+    Vector2 aboveGoal = ourDefenseArea ? field.leftDefenseArea.topLeft() : field.rightDefenseArea.topRight();
+    Vector2 bottomPenalty = ourDefenseArea ? field.leftDefenseArea.bottomRight() : field.rightDefenseArea.bottomLeft();
+    Vector2 topPenalty = ourDefenseArea ? field.leftDefenseArea.topRight() : field.rightDefenseArea.topLeft();
 
     if (aboveGoal.y < belowGoal.y) {
         std::swap(aboveGoal, belowGoal);
@@ -170,11 +170,11 @@ Polygon FieldComputations::getDefenseArea(const rtt::Field &field, bool ourDefen
 }
 
 Polygon FieldComputations::getGoalArea(const rtt::Field &field, bool ourGoal, double margin, bool hasBackMargin) {
-    double goalDepth = hasBackMargin ? field.getGoalDepth() + margin : field.getGoalDepth();
-    Vector2 outerBottomGoal = ourGoal ? field.getOurBottomGoalSide() + Vector2(margin, -margin) : field.getTheirBottomGoalSide() + Vector2(-margin, -margin);
-    Vector2 innerBottomGoal = ourGoal ? field.getOurBottomGoalSide() + Vector2(-goalDepth, -margin) : field.getTheirBottomGoalSide() + Vector2(goalDepth, -margin);
-    Vector2 innerTopGoal = ourGoal ? field.getOurTopGoalSide() + Vector2(-goalDepth, margin) : field.getTheirTopGoalSide() + Vector2(goalDepth, margin);
-    Vector2 outerTopGoal = ourGoal ? field.getOurTopGoalSide() + Vector2(margin, margin) : field.getTheirTopGoalSide() + Vector2(-margin, margin);
+    double goalDepth = hasBackMargin ? field.leftGoalArea.width() + margin : field.leftGoalArea.width();
+    Vector2 outerBottomGoal = ourGoal ? field.leftGoalArea.bottomRight() + Vector2(margin, -margin) : field.rightGoalArea.bottomLeft() + Vector2(-margin, -margin);
+    Vector2 innerBottomGoal = ourGoal ? field.leftGoalArea.bottomRight() + Vector2(-goalDepth, -margin) : field.rightGoalArea.bottomLeft() + Vector2(goalDepth, -margin);
+    Vector2 innerTopGoal = ourGoal ? field.leftGoalArea.topRight() + Vector2(-goalDepth, margin) : field.rightGoalArea.topLeft() + Vector2(goalDepth, margin);
+    Vector2 outerTopGoal = ourGoal ? field.leftGoalArea.topRight() + Vector2(margin, margin) : field.rightGoalArea.topLeft() + Vector2(-margin, margin);
 
     std::vector<Vector2> goalArea = {outerBottomGoal, innerBottomGoal, innerTopGoal, outerTopGoal};
     //interface::Input::drawDebugData(goalArea, ourGoal ? Qt::green : Qt::red, interface::Drawing::LINES_CONNECTED);
@@ -182,8 +182,8 @@ Polygon FieldComputations::getGoalArea(const rtt::Field &field, bool ourGoal, do
 }
 
 Polygon FieldComputations::getFieldEdge(const rtt::Field &field, double margin) {
-    std::vector<Vector2> fieldEdge = {field.getBottomLeftCorner() + Vector2(-margin, -margin), field.getTopLeftCorner() + Vector2(-margin, margin),
-                                      field.getTopRightCorner() + Vector2(margin, margin), field.getBottomRightCorner() + Vector2(margin, -margin)};
+    std::vector<Vector2> fieldEdge = {field.playArea.bottomLeft() + Vector2(-margin, -margin), field.playArea.topLeft() + Vector2(-margin, margin),
+                                      field.playArea.topRight() + Vector2(margin, margin), field.playArea.bottomRight() + Vector2(margin, -margin)};
     //interface::Input::drawDebugData(fieldEdge, Qt::red, interface::Drawing::LINES_CONNECTED);
     return Polygon(fieldEdge);
 }
@@ -244,8 +244,8 @@ std::vector<LineSegment> FieldComputations::mergeBlockades(std::vector<LineSegme
 
 Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point, double margin) {
     Vector2 projectedPoint;
-    projectedPoint.x = std::clamp(point.x, field.getLeftmostX() + margin + PROJECTION_MARGIN, field.getRightmostX() - margin - PROJECTION_MARGIN);
-    projectedPoint.y = std::clamp(point.y, field.getBottommostY() + margin + PROJECTION_MARGIN, field.getTopmostY() - margin - PROJECTION_MARGIN);
+    projectedPoint.x = std::clamp(point.x, field.playArea.left() + margin + PROJECTION_MARGIN, field.playArea.right() - margin - PROJECTION_MARGIN);
+    projectedPoint.y = std::clamp(point.y, field.playArea.bottom() + margin + PROJECTION_MARGIN, field.playArea.top() - margin - PROJECTION_MARGIN);
     return projectedPoint;
 }
 
@@ -262,13 +262,13 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     double xDiff;
     double yDiff;
     if (pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin)) {
-        xDiff = (field.getLeftPenaltyLineBottom().x + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.getLeftPenaltyLineTop().y + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.getLeftPenaltyLineBottom().y - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.leftDefenseArea.bottomRight().x + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
+        yDiff = point.y > 0 ? (field.leftDefenseArea.topRight().y + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
+                            : (field.leftDefenseArea.bottomRight().y - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
     } else if (pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin)) {
-        xDiff = (field.getRightPenaltyLineBottom().x - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.getRightPenaltyLineTop().y + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.getRightPenaltyLineBottom().y - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.rightDefenseArea.bottomLeft().x - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
+        yDiff = point.y > 0 ? (field.rightDefenseArea.topLeft().y + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
+                            : (field.rightDefenseArea.bottomLeft().y - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
     } else
         return point;  // In case it is in neither defense area, just return the point
 

@@ -34,7 +34,7 @@ uint8_t KickOffUsPrepare::score(const rtt::Field& field) noexcept {
 
 void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.getOurGoalCenter() + Vector2(0.5, 0.0)));
+    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
 
     // The "kicker" will go to the ball
     if (stpInfos["kicker"].getRobot() && stpInfos["kicker"].getRobot()->get()->getPos().x < 0) {
@@ -55,7 +55,7 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     auto width = field.playArea.width();
 
     // Defenders
-    double defense_line_x = field.getLeftPenaltyX() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
+    double defense_line_x = field.leftDefenseArea.right() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
     stpInfos["defender_left"].setPositionToMoveTo(Vector2(defense_line_x, height / 5));
     stpInfos["defender_mid"].setPositionToMoveTo(Vector2(defense_line_x, 0.0));
     stpInfos["defender_right"].setPositionToMoveTo(Vector2(defense_line_x, -height / 5));

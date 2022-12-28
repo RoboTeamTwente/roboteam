@@ -23,7 +23,7 @@ Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rt
 
     // If there is no empty location to shoot at, just shoot at the center of the goal
     /// TODO-Max communicate this to the play
-    if (openSegments.empty()) return field.getTheirGoalCenter();
+    if (openSegments.empty()) return field.rightGoalArea.leftLine().center();
 
     // The longest open segment of the goal will be the best to shoot at
     LineSegment bestSegment = getLongestSegment(openSegments);
@@ -57,7 +57,7 @@ LineSegment GoalComputations::getAimPoints(const Field &field, const Vector2 &so
 
     // Aim points are located some distance away from the edges of the goal to take into account inaccuracies in the shot
     const double angleMargin = sin(2.0 / 180.0 * M_PI);
-    const double constantMargin = 0.05 * field.getGoalWidth();
+    const double constantMargin = 0.05 * field.leftGoalArea.height();
     Vector2 leftPoint(goalSides.start.x, goalSides.start.y + constantMargin + angleMargin * goalSides.start.dist(sourcePoint));
     Vector2 rightPoint(goalSides.end.x, goalSides.end.y - angleMargin * goalSides.end.dist(sourcePoint) - constantMargin);
 

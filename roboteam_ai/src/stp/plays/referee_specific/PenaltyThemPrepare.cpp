@@ -31,7 +31,7 @@ uint8_t PenaltyThemPrepare::score(const rtt::Field& field) noexcept {
 
 void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
     // We need at least a keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
 
     // During their penalty, all our robots should be behind the ball to not interfere.
     // Create a grid pattern of robots on their side of the field
@@ -43,15 +43,15 @@ void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
     double limitX = std::max(ballX, PENALTY_MARK_THEM_X) + Constants::PENALTY_DISTANCE_BEHIND_BALL();
 
     // First, figure out at what interval the robots will stand on a horizontal line
-    double horizontalRange = std::fabs(field.getRightmostX() - limitX);
+    double horizontalRange = std::fabs(field.playArea.right() - limitX);
     double horizontalHalfStep = horizontalRange / (5.0 * 2.0); // 5 robots for stepSize, divided by 2 for half stepSize
 
     // Then, figure out vertical stepSize
-    double verticalRange = std::fabs(field.getBottomRightTheirDefenceArea().y - field.getBottommostY());
+    double verticalRange = std::fabs(field.rightDefenseArea.bottomRight().y - field.playArea.bottom());
     double verticalHalfStep = verticalRange / (2.0 * 2.0); // 2 rows, divided by 2 for half stepSize
 
-    double startX = field.getRightmostX() + horizontalHalfStep;
-    double bottomY = field.getBottommostY() + verticalHalfStep;
+    double startX = field.playArea.right() + horizontalHalfStep;
+    double bottomY = field.playArea.bottom() + verticalHalfStep;
     double topY = bottomY + 2 * verticalHalfStep;
 
     const std::string formationPrefix = "formation_";
@@ -62,7 +62,7 @@ void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
         auto position = Vector2(startX - i * 2 * horizontalHalfStep, bottomY);
         stpInfos[formationName].setPositionToMoveTo(position);
 
-        auto angleToGoal = (field.getOurGoalCenter() - position).toAngle();
+        auto angleToGoal = (field.leftGoalArea.rightLine().center() - position).toAngle();
         stpInfos[formationName].setAngle(angleToGoal);
     }
 
@@ -72,7 +72,7 @@ void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
         auto position = Vector2(startX - (i - 5) * 2 * horizontalHalfStep, topY);
         stpInfos[formationName].setPositionToMoveTo(position);
 
-        auto angleToGoal = (field.getOurGoalCenter() - position).toAngle();
+        auto angleToGoal = (field.leftGoalArea.rightLine().center() - position).toAngle();
         stpInfos[formationName].setAngle(angleToGoal);
     }
 }

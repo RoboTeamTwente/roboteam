@@ -310,7 +310,7 @@ double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::Dea
         case DealerFlagTitle::READY_TO_INTERCEPT_GOAL_SHOT: {
             // get distance to line between ball and goal
             // TODO this method can be improved by choosing a better line for the interception.
-            LineSegment lineSegment = {world.getBall()->get()->position, field->getOurGoalCenter()};
+            LineSegment lineSegment = {world.getBall()->get()->position, field->leftGoalArea.rightLine().center()};
             return lineSegment.distanceToLine(robot->getPos());
         }
         case DealerFlagTitle::KEEPER:

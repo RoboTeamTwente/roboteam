@@ -75,12 +75,12 @@ void Attack::calculateInfoForRoles() noexcept {
     calculateInfoForMidfielders();
 
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     // Striker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    goalTarget.y = std::clamp(goalTarget.y, field.getTheirBottomGoalSide().y + 0.4, field.getTheirTopGoalSide().y - 0.4);
+    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottomLeft().y + 0.4, field.rightGoalArea.topLeft().y - 0.4);
     stpInfos["striker"].setPositionToShootAt(goalTarget);
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);
@@ -135,7 +135,7 @@ void Attack::calculateInfoForDefenders() noexcept {
         auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
 
         wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.getOurGoalCenter()).angle());
+        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
         constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
@@ -143,7 +143,7 @@ void Attack::calculateInfoForDefenders() noexcept {
             wallerStpInfo.setShouldAvoidOurRobots(false);
         }
     }
-    stpInfos["defender_left"].setPositionToDefend(field.getOurTopGoalSide());
+    stpInfos["defender_left"].setPositionToDefend(field.leftGoalArea.topRight());
     stpInfos["defender_left"].setBlockDistance(BlockDistance::HALFWAY);
 }
 

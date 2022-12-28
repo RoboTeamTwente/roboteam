@@ -41,10 +41,10 @@ DefendPass::DefendPass() : Play() {
 
 uint8_t DefendPass::score(const rtt::Field& field) noexcept {
     auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
-    auto position = distanceFromPointToLine(field.getBottomLeftCorner(), field.getTopLeftCorner(), enemyRobot->get()->getPos());
+    auto position = distanceFromPointToLine(field.playArea.bottomLeft(), field.playArea.topLeft(), enemyRobot->get()->getPos());
     auto goalVisibility =
         FieldComputations::getPercentageOfGoalVisibleFromPoint(field, true, enemyRobot->get()->getPos(), world->getWorld().value(), enemyRobot->get()->getId(), false);
-    return 255 * (position / field.getFieldLength()) * (100 - goalVisibility) / 100;
+    return 255 * (position / field.playArea.width()) * (100 - goalVisibility) / 100;
 }
 
 Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {
@@ -82,19 +82,19 @@ void DefendPass::calculateInfoForDefenders() noexcept {
     auto enemyRobots = world->getWorld()->getThem();
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
 
-    stpInfos["defender_1"].setPositionToDefend(field.getOurTopGoalSide());
+    stpInfos["defender_1"].setPositionToDefend(field.leftGoalArea.topRight());
     stpInfos["defender_1"].setBlockDistance(BlockDistance::PARTWAY);
 
-    stpInfos["defender_2"].setPositionToDefend(field.getOurBottomGoalSide());
+    stpInfos["defender_2"].setPositionToDefend(field.leftGoalArea.bottomRight());
     stpInfos["defender_2"].setBlockDistance(BlockDistance::PARTWAY);
 
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
 
-    auto enemyClosestToOurGoalOne = world->getWorld()->getRobotClosestToPoint(field.getOurGoalCenter(), enemyRobots);
+    auto enemyClosestToOurGoalOne = world->getWorld()->getRobotClosestToPoint(field.leftGoalArea.rightLine().center(), enemyRobots);
 
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToOurGoalOne && enemyRobot->getId() == enemyClosestToOurGoalOne.value()->getId(); });
 
-    auto enemyClosestToOurGoalTwo = world->getWorld()->getRobotClosestToPoint(field.getOurGoalCenter(), enemyRobots);
+    auto enemyClosestToOurGoalTwo = world->getWorld()->getRobotClosestToPoint(field.leftGoalArea.rightLine().center(), enemyRobots);
 
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToOurGoalTwo && enemyRobot->getId() == enemyClosestToOurGoalTwo.value()->getId(); });
 
@@ -124,7 +124,7 @@ void DefendPass::calculateInfoForDefenders() noexcept {
 }
 
 void DefendPass::calculateInfoForKeeper() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
     stpInfos["keeper"].setPositionToShootAt(Vector2());
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
@@ -134,7 +134,7 @@ void DefendPass::calculateInfoForRobotDefenders() noexcept {
     auto enemyRobots = world->getWorld()->getThem();
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
 
-    stpInfos["robot_defender"].setPositionToDefend(field.getOurGoalCenter());
+    stpInfos["robot_defender"].setPositionToDefend(field.leftGoalArea.rightLine().center());
     stpInfos["robot_defender"].setEnemyRobot(enemyClosestToBall);
     stpInfos["robot_defender"].setBlockDistance(BlockDistance::CLOSE);
 }

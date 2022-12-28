@@ -28,7 +28,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/FileLogger.cpp
         src/utils/Teams.cpp
         src/utils/AIData.cpp
-        src/utils/FieldRectangle.cpp
+        src/utils/FastRectangle.cpp
         src/utils/Field.cpp
         src/utils/Robot.cpp
         src/utils/World.cpp

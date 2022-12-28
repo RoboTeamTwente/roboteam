@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/FieldRectangle.hpp>
+#include <roboteam_utils/FastRectangle.hpp>
 #include <roboteam_utils/Random.h>
 
 using namespace rtt;
 
 // Function to test if the values correspond to each other
-void testCoherence(const FieldRectangle& fr) {
+void testCoherence(const FastRectangle& fr) {
     // Test if points match
     ASSERT_EQ(fr.bottomLeft(), Vector2(fr.left(), fr.bottom()));
     ASSERT_EQ(fr.topLeft(), Vector2(fr.left(), fr.top()));
@@ -33,18 +33,18 @@ void testCoherence(const FieldRectangle& fr) {
     ASSERT_EQ(fr.leftLine().end, fr.topLeft());
 }
 
-TEST(FieldRectangleTest, instantiation) {
-    FieldRectangle fr;
+TEST(FastRectangleTest, instantiation) {
+    FastRectangle fr;
     // FR should be a unit rectangle
     ASSERT_EQ(fr.bottomLeft(), Vector2(0.0, 0.0));
     ASSERT_EQ(fr.topRight(), Vector2(1.0, 1.0));
     testCoherence(fr);
 
     // Creating a rectangle from any opposing corners results in the same one
-    FieldRectangle fr1(fr.bottomLeft(), fr.topRight());
-    FieldRectangle fr2(fr.topRight(), fr.bottomLeft());
-    FieldRectangle fr3(fr.bottomRight(), fr.topLeft());
-    FieldRectangle fr4(fr.topLeft(), fr.bottomRight());
+    FastRectangle fr1(fr.bottomLeft(), fr.topRight());
+    FastRectangle fr2(fr.topRight(), fr.bottomLeft());
+    FastRectangle fr3(fr.bottomRight(), fr.topLeft());
+    FastRectangle fr4(fr.topLeft(), fr.bottomRight());
 
     ASSERT_EQ(fr, fr1);
     ASSERT_EQ(fr, fr2);
@@ -52,12 +52,12 @@ TEST(FieldRectangleTest, instantiation) {
     ASSERT_EQ(fr, fr4);
 }
 
-TEST(FieldRectangleTest, contains) {
+TEST(FastRectangleTest, contains) {
     for (int i = 0; i < 50; i++) {
         Vector2 a(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
         Vector2 b(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
 
-        FieldRectangle fr(a, b);
+        FastRectangle fr(a, b);
         testCoherence(fr);
 
         ASSERT_TRUE(fr.contains(fr.topLeft()));
@@ -73,12 +73,12 @@ TEST(FieldRectangleTest, contains) {
     }
 }
 
-TEST(FieldRectangleTest, project) {
+TEST(FastRectangleTest, project) {
     for (int i = 0; i < 50; i++) {
         Vector2 a(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
         Vector2 b(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
 
-        FieldRectangle fr(a, b);
+        FastRectangle fr(a, b);
         testCoherence(fr);
 
         for (int j = 0; j < 50; j++) {
@@ -89,11 +89,11 @@ TEST(FieldRectangleTest, project) {
     }
 }
 
-TEST(FieldRectangleTest, equals) {
+TEST(FastRectangleTest, equals) {
     for (int i = 0; i < 50; i++) {
         Vector2 a(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
         Vector2 b(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
-        FieldRectangle r(a, b);
+        FastRectangle r(a, b);
 
         auto copy = r;
 

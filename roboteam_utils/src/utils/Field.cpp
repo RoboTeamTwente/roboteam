@@ -50,13 +50,13 @@ Field Field::createField(double fieldWidth, double fieldHeight, double defenseWi
         .rightPenaltyPoint = rightPenaltyPoint,
         .centerCircle      = Circle(Vector2(0, 0), centerCircleRadius),
         .boundaryWidth     = boundaryWidth,
-        .playArea          = FieldRectangle(a, d),
-        .leftPlayArea      = FieldRectangle(a, b),
-        .rightPlayArea     = FieldRectangle(c, d),
-        .leftDefenseArea   = FieldRectangle(e, f),
-        .rightDefenseArea  = FieldRectangle(g, h),
-        .leftGoalArea      = FieldRectangle(i, j),
-        .rightGoalArea     = FieldRectangle(k, l),
+        .playArea          = FastRectangle(a, d),
+        .leftPlayArea      = FastRectangle(a, b),
+        .rightPlayArea     = FastRectangle(c, d),
+        .leftDefenseArea   = FastRectangle(e, f),
+        .rightDefenseArea  = FastRectangle(g, h),
+        .leftGoalArea      = FastRectangle(i, j),
+        .rightGoalArea     = FastRectangle(k, l),
     };
 
     return field;

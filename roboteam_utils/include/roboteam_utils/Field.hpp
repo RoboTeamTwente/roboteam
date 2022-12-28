@@ -1,6 +1,6 @@
 #pragma once
 
-#include <roboteam_utils/FieldRectangle.hpp>
+#include <roboteam_utils/FastRectangle.hpp>
 #include <roboteam_utils/Vector2.h>
 #include <roboteam_utils/Grid.h>
 #include <roboteam_utils/Circle.h>
@@ -20,13 +20,13 @@ typedef struct Field {
 
     double boundaryWidth = 0.0; // Width of the area around the play area
 
-    FieldRectangle playArea;        // The whole field in which robots can drive (excluding goal areas)
-    FieldRectangle leftPlayArea;    // Left side of the field
-    FieldRectangle rightPlayArea;   // Right side of the field
-    FieldRectangle leftDefenseArea; // Left defense area inside left play area
-    FieldRectangle rightDefenseArea;// Right defense area inside right play area
-    FieldRectangle leftGoalArea;    // Left goal area outside the play area
-    FieldRectangle rightGoalArea;   // Right goal area outside the play area
+    FastRectangle playArea;        // The whole field in which robots can drive (excluding goal areas)
+    FastRectangle leftPlayArea;    // Left side of the field
+    FastRectangle rightPlayArea;   // Right side of the field
+    FastRectangle leftDefenseArea; // Left defense area inside left play area
+    FastRectangle rightDefenseArea;// Right defense area inside right play area
+    FastRectangle leftGoalArea;    // Left goal area outside the play area
+    FastRectangle rightGoalArea;   // Right goal area outside the play area
 
     bool operator== (const Field& other) const;
 

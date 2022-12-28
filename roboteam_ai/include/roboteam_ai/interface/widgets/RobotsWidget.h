@@ -8,7 +8,7 @@
 #include <QLayout>
 
 #include "widget.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::interface {
 

@@ -15,7 +15,7 @@
 
 #include "stp/constants/GeneralizationConstants.h"
 #include "utilities/Constants.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/FieldComputations.h"
 #include "world/World.hpp"
 #include "world/views/WorldDataView.hpp"

@@ -6,7 +6,7 @@
 #define RTT_GOALCOMPUTATIONS_H
 
 #include <roboteam_utils/LineSegment.h>
-#include <world/Field.h>
+#include <roboteam_utils/Field.hpp>
 
 #include <world/World.hpp>
 

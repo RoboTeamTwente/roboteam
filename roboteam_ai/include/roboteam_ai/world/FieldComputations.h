@@ -12,7 +12,7 @@
 #include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::world::view {
 class WorldDataView;

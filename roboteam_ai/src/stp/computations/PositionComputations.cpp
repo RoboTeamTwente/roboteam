@@ -9,7 +9,7 @@
 
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PositionScoring.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

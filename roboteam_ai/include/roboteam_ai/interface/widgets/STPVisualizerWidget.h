@@ -10,7 +10,7 @@
 
 #include "mutex"
 #include "utilities/StpInfoEnums.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp {
 class Play;

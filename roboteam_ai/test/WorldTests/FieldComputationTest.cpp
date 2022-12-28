@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <helpers/FieldHelper.h>
 #include <roboteam_utils/Random.h>
-#include <world/Field.h>
+#include <roboteam_utils/Field.hpp>
 #include <world/FieldComputations.h>
 
 namespace rtt {

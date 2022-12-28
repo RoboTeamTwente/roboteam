@@ -16,7 +16,7 @@
 
 #include "interface/api/Toggles.h"
 #include "proto/messages_robocup_ssl_wrapper.pb.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/World.hpp"
 
 namespace rtt::ai::interface {

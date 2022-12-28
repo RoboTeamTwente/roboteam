@@ -15,7 +15,7 @@
 
 #include "gtest/gtest_prod.h"
 #include "stp/StpInfo.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/views/RobotView.hpp"
 #include "world/views/WorldDataView.hpp"
 

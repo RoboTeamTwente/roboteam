@@ -6,7 +6,7 @@
 #define RTT_COLLISIONDETECTOR_H
 
 #include "utilities/Constants.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/views/RobotView.hpp"
 
 namespace rtt::ai::control {

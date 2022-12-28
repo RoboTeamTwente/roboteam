@@ -37,16 +37,16 @@ TEST(Grid, getters) {
     EXPECT_EQ(grid.getOffSetX(), 1);
     EXPECT_EQ(grid.getOffSetY(), 2);
     EXPECT_EQ(grid.getRegionWidth(), 3);
-    EXPECT_EQ(grid.getRegionLength(), 4);
+    EXPECT_EQ(grid.getRegionHeight(), 4);
     EXPECT_EQ(grid.getNumPointsX(), 5);
     EXPECT_EQ(grid.getNumPointsY(), 6);
-    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 4 / 5.0);
-    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 3 / 6.0);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 3 / 5.0);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 4 / 6.0);
 }
 
 // Test whether the points are equally spaced in the region (average should be in the center of the grid)
 TEST(Grid, spreadTest) {
-    Grid grid = Grid(-3, -2, 4, 6, 5, 3);
+    Grid grid = Grid(-3, -2, 6, 4, 5, 3);
     double totalX = 0;
     double totalY = 0;
     for (auto nestedPoints : grid.getPoints()) {

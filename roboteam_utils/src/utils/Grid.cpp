@@ -7,10 +7,10 @@ namespace rtt {
 
 const Grid DEFAULT_GRID(0, 0, 3, 3, 3, 3); // A Default grid, starting at (0, 0) with 3x3=9 elements
 
-Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionLength, int numPointsX, int numPointsY)
-    : offSetX{offSetX}, offSetY{offSetY}, regionWidth{regionWidth}, regionLength{regionLength}, numPointsX{numPointsX}, numPointsY{numPointsY} {
-    this->stepSizeX = regionLength / numPointsX;
-    this->stepSizeY = regionWidth / numPointsY;
+Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionHeight, int numPointsX, int numPointsY)
+    : offSetX{offSetX}, offSetY{offSetY}, regionHeight{regionHeight}, regionWidth{regionWidth}, numPointsX{numPointsX}, numPointsY{numPointsY} {
+    this->stepSizeX = regionWidth / numPointsX;
+    this->stepSizeY = regionHeight / numPointsY;
 
     for (int i = 0; i <= numPointsX; i++) {
         std::vector<Vector2> a;
@@ -28,8 +28,8 @@ Grid::Grid() {
     this->points = DEFAULT_GRID.points;
     this->offSetX = DEFAULT_GRID.offSetX;
     this->offSetY = DEFAULT_GRID.offSetY;
+    this->regionHeight = DEFAULT_GRID.regionHeight;
     this->regionWidth = DEFAULT_GRID.regionWidth;
-    this->regionLength = DEFAULT_GRID.regionLength;
     this->numPointsX = DEFAULT_GRID.numPointsX;
     this->numPointsY = DEFAULT_GRID.numPointsY;
     this->stepSizeX = DEFAULT_GRID.stepSizeX;
@@ -49,7 +49,7 @@ double Grid::getOffSetY() const { return offSetY; }
 
 double Grid::getRegionWidth() const { return regionWidth; }
 
-double Grid::getRegionLength() const { return regionLength; }
+double Grid::getRegionHeight() const { return regionHeight; }
 
 int Grid::getNumPointsX() const { return numPointsX; }
 
@@ -63,7 +63,7 @@ bool Grid::operator==(const Grid &other) const {
     return this->getOffSetX() == other.getOffSetX()
         && this->getOffSetY() == other.getOffSetY()
         && this->getRegionWidth() == other.getRegionWidth()
-        && this->getRegionLength() == other.getRegionLength()
+        && this->getRegionHeight() == other.getRegionHeight()
         && this->getNumPointsX() == other.getNumPointsX()
         && this->getNumPointsY() == other.getNumPointsY();
 }

@@ -106,19 +106,19 @@ Vector2 FastRectangle::bottomRight() const {
 }
 
 LineSegment FastRectangle::topLine() const {
-    return {Vector2(this->_left, this->_top), Vector2(this->_right, this->_top)};
+    return {this->topLeft(), this->topRight()};
 }
 
 LineSegment FastRectangle::rightLine() const {
-    return {Vector2(this->_right, this->_bottom), Vector2(this->_right, this->_top)};
+    return {this->topRight(), this->bottomRight()};
 }
 
 LineSegment FastRectangle::bottomLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_right, this->_bottom)};
+    return {this->bottomRight(), this->bottomLeft()};
 }
 
 LineSegment FastRectangle::leftLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_left, this->_top)};
+    return {this->bottomLeft(), this->topLeft()};
 }
 
 } // namespace rtt

@@ -53,40 +53,54 @@ TEST(FastRectangleTest, instantiation) {
 }
 
 TEST(FastRectangleTest, contains) {
-    for (int i = 0; i < 50; i++) {
-        Vector2 a(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
-        Vector2 b(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
 
-        FastRectangle fr(a, b);
-        testCoherence(fr);
+    FastRectangle fr(1, 1, -1, -1);
 
-        ASSERT_TRUE(fr.contains(fr.topLeft()));
-        ASSERT_TRUE(fr.contains(fr.topRight()));
-        ASSERT_TRUE(fr.contains(fr.bottomLeft()));
-        ASSERT_TRUE(fr.contains(fr.bottomRight()));
-        ASSERT_TRUE(fr.contains(fr.center()));
+    // 'contains' tests for points within the rectangle, not on the edge
+    // (Makes sense, as using <= instead of < makes no sense with doubles (doubles often fail ==))
+    ASSERT_FALSE(fr.contains(fr.topLeft()));
+    ASSERT_FALSE(fr.contains(fr.topRight()));
+    ASSERT_FALSE(fr.contains(fr.bottomLeft()));
+    ASSERT_FALSE(fr.contains(fr.bottomRight()));
 
-        ASSERT_FALSE(fr.contains(Vector2(fr.left() - 1.0, fr.center().y)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.right() + 1.0, fr.center().y)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.top() + 1.0)));
-        ASSERT_FALSE(fr.contains(Vector2(fr.center().x, fr.bottom() - 1.0)));
-    }
+    const double almostOne = 0.99999999;
+    ASSERT_TRUE(fr.contains(fr.center()));
+    ASSERT_TRUE(fr.contains({almostOne, almostOne}));
+    ASSERT_TRUE(fr.contains({almostOne, -almostOne}));
+    ASSERT_TRUE(fr.contains({-almostOne, almostOne}));
+    ASSERT_TRUE(fr.contains({-almostOne, -almostOne}));
+}
+
+TEST(FastRectangleTest, containsMargin) {
+    FastRectangle fr(1, 1, -1, -1);
+
+    const double DELTA = 0.00000001;
+
+    // Where 'contains' says points on the edge are not contained, with a margin they are
+    ASSERT_TRUE(fr.contains(fr.topLeft(), DELTA));
+    ASSERT_TRUE(fr.contains(fr.topRight(), DELTA));
+    ASSERT_TRUE(fr.contains(fr.bottomLeft(), DELTA));
+    ASSERT_TRUE(fr.contains(fr.bottomRight(), DELTA));
+    ASSERT_TRUE(fr.contains(fr.center(), DELTA));
 }
 
 TEST(FastRectangleTest, project) {
-    for (int i = 0; i < 50; i++) {
-        Vector2 a(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
-        Vector2 b(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20));
+    FastRectangle rect(1, 1, -1, -1);
 
-        FastRectangle fr(a, b);
-        testCoherence(fr);
+    // Projecting point inside shape does not return different point
+    ASSERT_EQ(rect.center(), rect.project(rect.center()));
+    ASSERT_EQ(rect.topLeft(), rect.project(rect.topLeft()));
+    ASSERT_EQ(rect.topRight(), rect.project(rect.topRight()));
+    ASSERT_EQ(rect.bottomLeft(), rect.project(rect.bottomLeft()));
+    ASSERT_EQ(rect.bottomRight(), rect.project(rect.bottomRight()));
 
-        for (int j = 0; j < 50; j++) {
-            Vector2 p(SimpleRandom::getDouble(-30, 30), SimpleRandom::getDouble(-30, 30));
+    // Projection of point is always in/on rectangle
+    const double DELTA = 0.0000001;
 
-            ASSERT_TRUE(fr.contains(fr.project(p)));
-        }
-    }
+    ASSERT_TRUE(rect.contains(rect.project(Vector2(2, 2)), DELTA));
+    ASSERT_TRUE(rect.contains(rect.project(Vector2(2, -2)), DELTA));
+    ASSERT_TRUE(rect.contains(rect.project(Vector2(-2, 2)), DELTA));
+    ASSERT_TRUE(rect.contains(rect.project(Vector2(-2, -2)), DELTA));
 }
 
 TEST(FastRectangleTest, equals) {

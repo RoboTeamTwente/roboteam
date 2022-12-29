@@ -62,7 +62,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         std::sort(std::begin(lineBorderIntersects), std::end(lineBorderIntersects), [](Vector2 a, Vector2 b) { return a.x > b.x; });
         projectedPosition = lineBorderIntersects.front();  // Always use the first one
     } else {
-        projectedPosition = Vector2{field.leftGoalArea.rightLine().center().x, field.leftDefenseArea.bottomLeft().y};
+        projectedPosition = Vector2{field.leftGoalArea.rightLine().center().x, field.leftDefenseArea.bottom()};
     }
 
     LineSegment wallLine;
@@ -72,7 +72,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     // there is a possibility that the circle becomes bigger than the linesegment, resulting in an infinite loop.
     // A quick fix for this is extending the line segments, but in my eyes, it is a beun fix, because there is
     // still no guarantee it is big enough
-    if (ballPos.x < field.leftDefenseArea.bottomRight().x) {
+    if (ballPos.x < field.leftDefenseArea.right()) {
         // case when the projected position is below penalty line
         if (ballPos.y < 0) {
             wallLine = LineSegment(Vector2{FieldComputations::getDefenseArea(field, true, 0, 0)[0].x, FieldComputations::getDefenseArea(field, true, 0, 0)[0].y},
@@ -86,7 +86,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             wallLine.move({0, spaceBetweenDefenseArea});
         }
         // case when it is above the penalty line no further away than side lines of the defense area
-    } else if (ballPos.y < field.leftDefenseArea.topRight().y && ballPos.y > field.leftDefenseArea.bottomRight().y) {
+    } else if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
         double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
         double lineYTop = field.playArea.top();
         double lineYBottom = field.playArea.bottom();
@@ -143,7 +143,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
 
     // For the robots not to change the position withing the wall
-    if (ballPos.x < field.leftDefenseArea.bottomRight().x) {
+    if (ballPos.x < field.leftDefenseArea.right()) {
         if (ballPos.y < 0) {
             std::sort(std::begin(positions), std::end(positions), [](Vector2 a, Vector2 b) { return a.x < b.x; });
         } else {

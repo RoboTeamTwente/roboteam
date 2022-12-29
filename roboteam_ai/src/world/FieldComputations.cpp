@@ -262,13 +262,13 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     double xDiff;
     double yDiff;
     if (pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin)) {
-        xDiff = (field.leftDefenseArea.bottomRight().x + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.leftDefenseArea.topRight().y + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.leftDefenseArea.bottomRight().y - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
+        yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
+                            : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
     } else if (pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin)) {
-        xDiff = (field.rightDefenseArea.bottomLeft().x - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.rightDefenseArea.topLeft().y + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.rightDefenseArea.bottomLeft().y - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
+        yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
+                            : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
     } else
         return point;  // In case it is in neither defense area, just return the point
 

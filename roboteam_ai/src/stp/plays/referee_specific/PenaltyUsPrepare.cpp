@@ -48,7 +48,7 @@ void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
     double horizontalHalfStep = horizontalRange / (5.0 * 2.0); // 5 robots for stepSize, divided by 2 for half stepSize
 
     // Lastly, figure out vertical stepSize
-    double verticalRange = std::fabs(field.leftDefenseArea.bottomLeft().y - field.playArea.bottom());
+    double verticalRange = std::fabs(field.leftDefenseArea.bottom() - field.playArea.bottom());
     double verticalHalfStep = verticalRange / (2.0 * 2.0); // 2 rows, divided by 2 for half stepSize
 
     double startX = field.playArea.left() + horizontalHalfStep;

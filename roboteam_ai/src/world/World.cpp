@@ -66,9 +66,42 @@ void World::updateWorld(proto::World &protoWorld) {
     setWorld(data);
 }
 
+// Converts millimeters to meters
+double mmToM(double mm) {
+    return mm / 1000.0;
+}
+
 void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
-    Field field(protoField);
-    this->currentField = field;
+
+    // TODO: Move this conversion from the scary proto to the safe c++ rtt::Field type in observer or something.
+    // Observers' whole function is to filter and parse anyways, might as well check which proto fields are set and which arent...
+    // Also, the proto does not require penalty_area_depth to be set *UNLIKE GOAL DEPTH AND WIDTH*,
+    // so we need to derive specifically these lines from a list of named lines... Kill me plz
+    double penaltyAreaDepth = 0.0;
+    double penaltyAreaWidth = 0.0;
+    for (const auto& line : protoField.field_lines()) {
+        if (line.name() == "LeftPenaltyStretch") {
+            penaltyAreaWidth = std::fabs(line.p2().y() - line.p1().y());
+        }
+        else if(line.name() == "LeftFieldLeftPenaltyStretch") {
+            penaltyAreaDepth = std::fabs(line.p2().x() - line.p1().x());
+        }
+    }
+
+    auto fields = Field::createField(
+        mmToM(protoField.field_length()),
+        mmToM(protoField.field_width()),
+        mmToM(penaltyAreaDepth), // Imagine if GRSim would actually use the protoField.penalty_area_dept and width fields...
+        mmToM(penaltyAreaWidth),
+        mmToM(protoField.goal_depth()),
+        mmToM(protoField.goal_width()),
+        mmToM(protoField.boundary_width()),
+        0.5,
+        Vector2(-2, 0),
+        Vector2(2, 0)
+    );
+
+    this->currentField = fields;
 }
 
 void World::updateField(rtt::Field &protoField) { this->currentField = protoField; }

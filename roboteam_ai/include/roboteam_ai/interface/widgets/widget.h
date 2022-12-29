@@ -58,6 +58,7 @@ class Visualizer : public QWidget {
     void drawPoints(QPainter &painter, std::vector<Vector2> points, double width, double height);
     void drawRealLifeSizedPoints(QPainter &painter, std::vector<Vector2> points, double width, double height);  // width and height are now in meters
 
+    void drawLine(QPainter& painter, const LineSegment& line);
     void drawLines(QPainter &painter, std::vector<Vector2> points);
     void drawArrows(QPainter &painter, std::vector<Vector2> points, double factor, double maxSize, bool closedArrow);
     bool shouldVisualize(Toggle toggle, int robotId);

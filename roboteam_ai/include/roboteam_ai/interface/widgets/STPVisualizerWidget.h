@@ -29,10 +29,6 @@ class MainWindow;
 class STPVisualizerWidget : public QTextEdit {
     Q_OBJECT
 
-    FRIEND_TEST(TreeVisualizerTest, it_properly_displays_trees);
-
-    FRIEND_TEST(TreeVisualizerTest, it_sets_proper_color_for_status);
-
    private:
     /**
      * Gets the color for a status code

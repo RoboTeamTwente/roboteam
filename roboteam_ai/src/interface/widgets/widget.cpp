@@ -209,6 +209,22 @@ void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     painter.setPen(Qt::red);
     drawLine(painter, field.playArea.leftLine());
 
+    // Draw left penalty point
+    QPen dotPen1;
+    dotPen1.setWidth(5);
+    dotPen1.setColor(Qt::red);
+    painter.setPen(dotPen1);
+    auto leftPenaltyPoint = toScreenPosition(field.leftPenaltyPoint);
+    painter.drawPoint(leftPenaltyPoint.x, leftPenaltyPoint.y);
+
+    // Draw right penalty point
+    QPen dotPen2;
+    dotPen2.setWidth(5);
+    dotPen2.setColor(Qt::green);
+    painter.setPen(dotPen2);
+    auto rightPenaltyPoint = toScreenPosition(field.rightPenaltyPoint);
+    painter.drawPoint(rightPenaltyPoint.x, rightPenaltyPoint.y);
+
     QPen pen;
     pen.setWidth(3);
 

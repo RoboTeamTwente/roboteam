@@ -57,7 +57,7 @@ Dealer::FlagMap FreeKickThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-uint8_t FreeKickThem::score(const rtt::world::Field& field) noexcept {
+uint8_t FreeKickThem::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::FreeKickThemGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
@@ -86,7 +86,7 @@ void FreeKickThem::calculateInfoForWallers() noexcept {
         auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
 
         wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.getOurGoalCenter()).angle());
+        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
         constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
@@ -149,7 +149,7 @@ void FreeKickThem::calculateInfoForHarasser() noexcept {
 }
 
 void FreeKickThem::calculateInfoForKeeper() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }

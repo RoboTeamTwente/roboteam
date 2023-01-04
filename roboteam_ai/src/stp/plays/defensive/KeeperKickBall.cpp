@@ -35,7 +35,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
                                                                                        std::make_unique<role::Formation>(role::Formation("attacker_right"))};
 }
 
-uint8_t KeeperKickBall::score(const rtt::world::Field& field) noexcept {
+uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
     // Calculate passInfo to be used during the play
     passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
 
@@ -73,7 +73,7 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
     } else {
         auto ball = world->getWorld()->getBall().value();
         // Receiver goes to the passLocation projected on the trajectory of the ball
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.getFieldLength()));
+        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
@@ -81,21 +81,21 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
 }
 
 void KeeperKickBall::calculateInfoForDefenders() noexcept {
-    stpInfos["defender_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getBackLeftGrid(), gen::SafePosition, field, world));
-    stpInfos["defender_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getBackMidGrid(), gen::BlockingPosition, field, world));
-    stpInfos["defender_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getBackRightGrid(), gen::SafePosition, field, world));
+    stpInfos["defender_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topLeftGrid, gen::SafePosition, field, world));
+    stpInfos["defender_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleLeftGrid, gen::BlockingPosition, field, world));
+    stpInfos["defender_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomLeftGrid, gen::SafePosition, field, world));
 }
 
 void KeeperKickBall::calculateInfoForMidfielders() noexcept {
-    stpInfos["midfielder_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getMiddleLeftGrid(), gen::SafePosition, field, world));
-    stpInfos["midfielder_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getMiddleMidGrid(), gen::SafePosition, field, world));
-    stpInfos["midfielder_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getMiddleRightGrid(), gen::SafePosition, field, world));
+    stpInfos["midfielder_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::SafePosition, field, world));
+    stpInfos["midfielder_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePosition, field, world));
+    stpInfos["midfielder_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::SafePosition, field, world));
 }
 
 void KeeperKickBall::calculateInfoForAttackers() noexcept {
-    stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontLeftGrid(), gen::SafePass, field, world));
-    stpInfos["attacker_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontMidGrid(), gen::SafePass, field, world));
-    stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontRightGrid(), gen::SafePass, field, world));
+    stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::SafePass, field, world));
+    stpInfos["attacker_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::SafePass, field, world));
+    stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::SafePass, field, world));
 }
 
 bool KeeperKickBall::ballKicked() {
@@ -119,7 +119,7 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
         return true;
 
     // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    if (FieldComputations::pointIsInOurDefenseArea(field, world->getWorld()->getBall()->get()->position)) return true;
+    if (field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
 
     return false;
 }

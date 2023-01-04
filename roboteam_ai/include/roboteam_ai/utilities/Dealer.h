@@ -15,7 +15,7 @@
 
 #include "gtest/gtest_prod.h"
 #include "stp/StpInfo.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/views/RobotView.hpp"
 #include "world/views/WorldDataView.hpp"
 
@@ -68,7 +68,7 @@ class Dealer {
 
     /// Map with the roleName and the RoleInfo (priority, flags and forcedID)
     using FlagMap = std::map<std::string, RoleInfo>;
-    Dealer(v::WorldDataView world, rtt::world::Field *field);
+    Dealer(v::WorldDataView world, rtt::Field *field);
     virtual ~Dealer() = default;  // needed for test
 
     /**
@@ -89,7 +89,7 @@ class Dealer {
 
    private:
     v::WorldDataView world;
-    rtt::world::Field *field;
+    rtt::Field *field;
 
     /// Score of a certain flag (/factor) with its weight that it was multiplied with (to be used in normalization)
     struct FlagScore {

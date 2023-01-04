@@ -25,7 +25,7 @@ BallMovesSlowGlobalEvaluation::BallMovesSlowGlobalEvaluation() noexcept {
     piecewiseLinearFunction->setYAtX(0, stp::control_constants::BALL_GOT_SHOT_LIMIT - stp::control_constants::FUZZY_MARGIN);
 }
 
-uint8_t BallMovesSlowGlobalEvaluation::metricCheck(const world::World* world, const world::Field* field) const noexcept {
+uint8_t BallMovesSlowGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
     return calculateMetric(world->getWorld()->getBall()->get()->velocity.length());
 }
 

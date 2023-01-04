@@ -28,7 +28,7 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/FileLogger.cpp
         src/utils/Teams.cpp
         src/utils/AIData.cpp
-        src/utils/FieldRectangle.cpp
+        src/utils/FastRectangle.cpp
         src/utils/Field.cpp
         src/utils/Robot.cpp
         src/utils/World.cpp
@@ -59,6 +59,8 @@ set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/RobotShapeTest.cpp
         test/utils/RobotCommandsTest.cpp
         test/utils/RobotFeedbackTest.cpp
+        test/utils/FastRectangleTest.cpp
+        test/utils/FieldTest.cpp
         )
 
 add_library(roboteam_utils STATIC

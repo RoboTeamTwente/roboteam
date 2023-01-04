@@ -6,7 +6,7 @@
 #include <control/PositionUtils.h>
 #include <gtest/gtest.h>
 #include <world/Ball.h>
-#include <world/Field.h>
+#include <roboteam_utils/Field.hpp>
 #include <world/World.h>
 
 #include "helpers/WorldHelper.h"

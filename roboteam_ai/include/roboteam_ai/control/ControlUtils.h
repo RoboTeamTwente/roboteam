@@ -14,7 +14,7 @@
 #include <optional>
 
 #include "utilities/Constants.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 using Vector2 = rtt::Vector2;
 using Angle = rtt::Angle;

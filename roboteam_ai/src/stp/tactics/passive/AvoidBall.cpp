@@ -63,7 +63,7 @@ bool AvoidBall::isTacticFailing(const StpInfo& info) noexcept {
 
 bool AvoidBall::shouldTacticReset(const StpInfo& info) noexcept { return false; }
 
-Vector2 AvoidBall::calculateNewPosition(Vector2 ballPos, const rtt::world::Field& field, const std::unique_ptr<Shape>& avoidShape) {
+Vector2 AvoidBall::calculateNewPosition(Vector2 ballPos, const rtt::Field& field, const std::unique_ptr<Shape>& avoidShape) {
     Vector2 newTarget = ballPos;  // The new position to go to
     bool pointFound = false;
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {

@@ -59,7 +59,7 @@ class KeeperBlockBall : public Tactic {
      * Start is left of goal, end is right of goal
      * @return the keepers lineSegment
      */
-    static LineSegment getKeepersLineSegment(const world::Field&);
+    static LineSegment getKeepersLineSegment(const Field&);
 
     /**
      * Estimates the trajectory of the ball, either from current velocity or from enemies that might kick it
@@ -75,7 +75,7 @@ class KeeperBlockBall : public Tactic {
      * @param field which contains our goal
      * @return true if the trajectory goes near our goal, false otherwise
      */
-    static bool isBallHeadingTowardsOurGoal(const HalfLine& ballTrajectory, const world::Field &field);
+    static bool isBallHeadingTowardsOurGoal(const HalfLine& ballTrajectory, const Field &field);
 
     /**
      * Calculates the position for the keeper and the PID type with which that position should be achieved
@@ -85,7 +85,7 @@ class KeeperBlockBall : public Tactic {
      * @return Target position for the keeper and the corresponding PID type
      * PID type is different for intercepting and kicking (coarse and fast or fine and slower control)
      */
-    static std::pair<Vector2,PIDType> calculateTargetPosition(const world::view::BallView &ball, const world::Field &field,
+    static std::pair<Vector2,PIDType> calculateTargetPosition(const world::view::BallView &ball, const Field &field,
                                                                     const std::optional<world::view::RobotView> &enemyRobot) noexcept;
 
     /**

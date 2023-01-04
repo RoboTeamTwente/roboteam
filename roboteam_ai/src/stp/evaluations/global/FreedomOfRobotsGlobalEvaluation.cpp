@@ -26,7 +26,7 @@ FreedomOfRobotsGlobalEvaluation::FreedomOfRobotsGlobalEvaluation() noexcept {
     piecewiseLinearFunction->setYAtX(control_constants::FUZZY_TRUE, stp::control_constants::DISTANCE_TO_ROBOT_FAR - stp::control_constants::FUZZY_MARGIN);
 }
 
-uint8_t FreedomOfRobotsGlobalEvaluation::metricCheck(const world::World* world, const world::Field* field) const noexcept {
+uint8_t FreedomOfRobotsGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
     auto& us = world->getWorld()->getUs();
     std::vector<uint8_t> distanceMetrics{};
     distanceMetrics.reserve(2 * us.size());

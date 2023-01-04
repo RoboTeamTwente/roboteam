@@ -163,11 +163,11 @@ bool Visualizer::shouldVisualize(Toggle toggle, int robotId) {
 }
 
 /// Calculates the factor variable which is used for mapping field coordinates with screen coordinates.
-void Visualizer::calculateFieldSizeFactor(const rtt::world::Field &field) {
-    fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.getBoundaryWidth());
+void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
+    fieldmargin = static_cast<int>(Constants::WINDOW_FIELD_MARGIN() + field.boundaryWidth);
 
-    float widthFactor = this->size().width() / field.getFieldLength() - (2 * fieldmargin);
-    float heightFactor = this->size().height() / field.getFieldWidth() - (2 * fieldmargin);
+    float widthFactor = this->size().width() / field.playArea.width() - (2 * fieldmargin);
+    float heightFactor = this->size().height() / field.playArea.height() - (2 * fieldmargin);
     factor = std::min(widthFactor, heightFactor);
 }
 
@@ -178,44 +178,52 @@ void Visualizer::drawBackground(QPainter &painter) {
 }
 
 // draws the field lines
-void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painter) {
+void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     painter.setPen(Constants::FIELD_LINE_COLOR());
     painter.setBrush(Qt::transparent);
-    // draw lines
-    for (const auto &fieldLine : field.getFieldLines()) {
-        rtt::Vector2 start = toScreenPosition(fieldLine.begin);
-        rtt::Vector2 end = toScreenPosition(fieldLine.end);
-        painter.drawLine(start.x, start.y, end.x, end.y);
-    }
-
     // draw the circle in the middle
-    auto centercircle = field.getCenterCircle();
-    Vector2 screenPos = toScreenPosition({centercircle.center.x, centercircle.center.y});
-    painter.drawEllipse(QPointF(screenPos.x, screenPos.y), centercircle.radius * factor, centercircle.radius * factor);
+    auto centerCircle = field.centerCircle;
+    Vector2 screenPos = toScreenPosition({centerCircle.center.x, centerCircle.center.y});
+    painter.drawEllipse(QPointF(screenPos.x, screenPos.y), centerCircle.radius * factor, centerCircle.radius * factor);
+
+    drawLine(painter, field.playArea.topLine());
+    drawLine(painter, field.playArea.bottomLine());
+    drawLine(painter, field.leftPlayArea.rightLine());
+    drawLine(painter, field.leftDefenseArea.topLine());
+    drawLine(painter, field.leftDefenseArea.bottomLine());
+    drawLine(painter, field.rightDefenseArea.topLine());
+    drawLine(painter, field.rightDefenseArea.bottomLine());
+    drawLine(painter, field.leftGoalArea.leftLine());
+    drawLine(painter, field.leftGoalArea.topLine());
+    drawLine(painter, field.leftGoalArea.bottomLine());
+    drawLine(painter, field.rightGoalArea.rightLine());
+    drawLine(painter, field.rightGoalArea.topLine());
+    drawLine(painter, field.rightGoalArea.bottomLine());
 
     painter.setPen(Qt::red);
-    auto line = field.getLeftPenaltyLine();
-    rtt::Vector2 start = toScreenPosition(line.begin);
-    rtt::Vector2 end = toScreenPosition(line.end);
-    painter.drawLine(start.x, start.y, end.x, end.y);
-
+    drawLine(painter, field.leftDefenseArea.rightLine());
     painter.setPen(Qt::green);
-    line = field.getRightPenaltyLine();
-    start = toScreenPosition(line.begin);
-    end = toScreenPosition(line.end);
-    painter.drawLine(start.x, start.y, end.x, end.y);
-
+    drawLine(painter, field.rightDefenseArea.leftLine());
     painter.setPen(Qt::green);
-    line = field.getRightLine();
-    start = toScreenPosition(line.begin);
-    end = toScreenPosition(line.end);
-    painter.drawLine(start.x, start.y, end.x, end.y);
-
+    drawLine(painter, field.playArea.rightLine());
     painter.setPen(Qt::red);
-    line = field.getLeftLine();
-    start = toScreenPosition(line.begin);
-    end = toScreenPosition(line.end);
-    painter.drawLine(start.x, start.y, end.x, end.y);
+    drawLine(painter, field.playArea.leftLine());
+
+    // Draw left penalty point
+    QPen dotPen1;
+    dotPen1.setWidth(5);
+    dotPen1.setColor(Qt::red);
+    painter.setPen(dotPen1);
+    auto leftPenaltyPoint = toScreenPosition(field.leftPenaltyPoint);
+    painter.drawPoint(leftPenaltyPoint.x, leftPenaltyPoint.y);
+
+    // Draw right penalty point
+    QPen dotPen2;
+    dotPen2.setWidth(5);
+    dotPen2.setColor(Qt::green);
+    painter.setPen(dotPen2);
+    auto rightPenaltyPoint = toScreenPosition(field.rightPenaltyPoint);
+    painter.drawPoint(rightPenaltyPoint.x, rightPenaltyPoint.y);
 
     QPen pen;
     pen.setWidth(3);
@@ -224,7 +232,7 @@ void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painte
     bool weAreYellow = SETTINGS.isYellow();
 
     // draw the hint for us
-    LineSegment usGoalLine = FieldComputations::getGoalSides(field, true);
+    LineSegment usGoalLine = field.leftGoalArea.rightLine();
     Vector2 ourLineUpper = {usGoalLine.start.x, usGoalLine.start.y};
     Vector2 ourLineLower = {usGoalLine.end.x, usGoalLine.end.y};
     ourLineUpper = toScreenPosition(ourLineUpper);
@@ -236,7 +244,7 @@ void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painte
     painter.setPen(pen);
     painter.drawLine(ourLineUpper.x, ourLineUpper.y, ourLineLower.x, ourLineLower.y);
 
-    LineSegment theirGoalLine = FieldComputations::getGoalSides(field, false);
+    LineSegment theirGoalLine = field.rightGoalArea.leftLine();
     Vector2 theirLineUpper = {theirGoalLine.start.x, theirGoalLine.start.y};
     Vector2 theirLineLower = {theirGoalLine.end.x, theirGoalLine.end.y};
     theirLineUpper = toScreenPosition(theirLineUpper);
@@ -249,18 +257,18 @@ void Visualizer::drawFieldLines(const rtt::world::Field &field, QPainter &painte
     painter.drawLine(theirLineUpper.x, theirLineUpper.y, theirLineLower.x, theirLineLower.y);
 }
 
-void Visualizer::drawFieldHints(const rtt::world::Field &field, QPainter &painter) {
+void Visualizer::drawFieldHints(const rtt::Field &field, QPainter &painter) {
     QPen pen;
 
     // draw the position where robots would be for timeout
     int inv = rtt::ai::interface::Output::isTimeOutAtTop() ? 1 : -1;
-    int lineY = (field.getFieldWidth() / 2 + 1) * inv;
+    int lineY = (field.playArea.height() / 2 + 1) * inv;
 
     pen.setBrush(Qt::gray);
     pen.setColor(Qt::gray);
     painter.setPen(pen);
 
-    auto lineStart = toScreenPosition(Vector2(field.getLeftmostX(), lineY));
+    auto lineStart = toScreenPosition(Vector2(field.playArea.left(), lineY));
     auto lineEnd = toScreenPosition(Vector2(0, lineY));
 
     painter.drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
@@ -586,6 +594,12 @@ void Visualizer::drawPoints(QPainter &painter, std::vector<Vector2> points, doub
         Vector2 pointOnScreen = toScreenPosition(point);
         painter.drawEllipse(pointOnScreen.x - width / 2, pointOnScreen.y - height / 2, width, height);
     }
+}
+
+void Visualizer::drawLine(QPainter &painter, const LineSegment &line) {
+    auto start = toScreenPosition(line.start);
+    auto end = toScreenPosition(line.end);
+    painter.drawLine(start.x, start.y, end.x, end.y);
 }
 
 void Visualizer::drawLines(QPainter &painter, std::vector<Vector2> points) {

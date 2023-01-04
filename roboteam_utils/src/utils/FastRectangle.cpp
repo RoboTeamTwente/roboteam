@@ -1,10 +1,10 @@
-#include <roboteam_utils/FieldRectangle.hpp>
+#include <roboteam_utils/FastRectangle.hpp>
 
 #include <cmath>
 
 namespace rtt {
 
-FieldRectangle::FieldRectangle() {
+FastRectangle::FastRectangle() {
     this->_top = 1.0;
     this->_right = 1.0;
     this->_bottom = 0.0;
@@ -14,7 +14,7 @@ FieldRectangle::FieldRectangle() {
     this->_center = Vector2((this->_left + this->_right) * 0.5, (this->_bottom + this->_top) * 0.5);
 }
 
-FieldRectangle::FieldRectangle(double top, double right, double bottom, double left) {
+FastRectangle::FastRectangle(double top, double right, double bottom, double left) {
     this->_top = top;
     this->_right = right;
     this->_bottom = bottom;
@@ -24,7 +24,7 @@ FieldRectangle::FieldRectangle(double top, double right, double bottom, double l
     this->_center = Vector2((left + right) * 0.5, (bottom + top) * 0.5);
 }
 
-FieldRectangle::FieldRectangle(const Vector2& pointA, const Vector2& pointB) {
+FastRectangle::FastRectangle(const Vector2& pointA, const Vector2& pointB) {
     this->_top = std::fmax(pointA.y, pointB.y);
     this->_right = std::fmax(pointA.x, pointB.x);
     this->_bottom = std::fmin(pointA.y, pointB.y);
@@ -34,31 +34,31 @@ FieldRectangle::FieldRectangle(const Vector2& pointA, const Vector2& pointB) {
     this->_center = (pointA + pointB) * 0.5;
 }
 
-bool FieldRectangle::operator==(const FieldRectangle& other) const {
+bool FastRectangle::operator==(const FastRectangle& other) const {
     return this->_top == other._top
         && this->_right == other._right
         && this->_bottom == other._bottom
         && this->_left == other._left;
 }
 
-bool FieldRectangle::contains(const Vector2& point) const {
+bool FastRectangle::contains(const Vector2& point) const {
     return point.x > this->_left && point.x < this->_right
         && point.y > this->_bottom && point.y < this->_top;
 }
 
-bool FieldRectangle::contains(const Vector2& point, double margin) const {
+bool FastRectangle::contains(const Vector2& point, double margin) const {
     return point.x > (this->_left - margin) && point.x < (this->_right + margin)
         && point.y > (this->_bottom - margin) && point.y < (this->_top + margin);
 }
 
-Vector2 FieldRectangle::project(const Vector2& point) const {
+Vector2 FastRectangle::project(const Vector2& point) const {
     return Vector2(
         std::clamp(point.x, this->_left, this->_right),
         std::clamp(point.y, this->_bottom, this->_top)
     );
 }
 
-Polygon FieldRectangle::asPolygon(double margin) const {
+Polygon FastRectangle::asPolygon(double margin) const {
     Vector2 lowerLeft(this->_left - margin, this->_bottom - margin);
 
     double marginalizedWidth = this->_width + 2 * margin;
@@ -67,58 +67,58 @@ Polygon FieldRectangle::asPolygon(double margin) const {
     return {lowerLeft, marginalizedWidth, marginalizedHeight};
 }
 
-double FieldRectangle::top() const {
+double FastRectangle::top() const {
     return this->_top;
 }
-double FieldRectangle::right() const {
+double FastRectangle::right() const {
     return this->_right;
 }
-double FieldRectangle::bottom() const {
+double FastRectangle::bottom() const {
     return this->_bottom;
 }
-double FieldRectangle::left() const {
+double FastRectangle::left() const {
     return this->_left;
 }
-double FieldRectangle::width() const {
+double FastRectangle::width() const {
     return this->_width;
 }
-double FieldRectangle::height() const {
+double FastRectangle::height() const {
     return this->_height;
 }
-Vector2 FieldRectangle::center() const {
+Vector2 FastRectangle::center() const {
     return this->_center;
 }
 
-Vector2 FieldRectangle::topLeft() const {
+Vector2 FastRectangle::topLeft() const {
     return {this->_left, this->_top};
 }
 
-Vector2 FieldRectangle::topRight() const {
+Vector2 FastRectangle::topRight() const {
     return {this->_right, this->_top};
 }
 
-Vector2 FieldRectangle::bottomLeft() const {
+Vector2 FastRectangle::bottomLeft() const {
     return {this->_left, this->_bottom};
 }
 
-Vector2 FieldRectangle::bottomRight() const {
+Vector2 FastRectangle::bottomRight() const {
     return {this->_right, this->_bottom};
 }
 
-LineSegment FieldRectangle::topLine() const {
-    return {Vector2(this->_left, this->_top), Vector2(this->_right, this->_top)};
+LineSegment FastRectangle::topLine() const {
+    return {this->topLeft(), this->topRight()};
 }
 
-LineSegment FieldRectangle::rightLine() const {
-    return {Vector2(this->_right, this->_bottom), Vector2(this->_right, this->_top)};
+LineSegment FastRectangle::rightLine() const {
+    return {this->topRight(), this->bottomRight()};
 }
 
-LineSegment FieldRectangle::bottomLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_right, this->_bottom)};
+LineSegment FastRectangle::bottomLine() const {
+    return {this->bottomRight(), this->bottomLeft()};
 }
 
-LineSegment FieldRectangle::leftLine() const {
-    return {Vector2(this->_left, this->_bottom), Vector2(this->_left, this->_top)};
+LineSegment FastRectangle::leftLine() const {
+    return {this->bottomLeft(), this->topLeft()};
 }
 
 } // namespace rtt

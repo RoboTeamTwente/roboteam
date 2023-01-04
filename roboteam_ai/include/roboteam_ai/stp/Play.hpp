@@ -56,7 +56,7 @@ class Play {
      * Updates the field in the play
      * @param field the current field
      */
-    void updateField(world::Field field) noexcept;
+    void updateField(Field field) noexcept;
 
     /**
      * Updates (or ticks) all the roles that have robots assigned to them
@@ -80,7 +80,7 @@ class Play {
      * @param field The current Field class
      * @return Score of the play (0 - 255)
      */
-    virtual uint8_t score(const rtt::world::Field& field) noexcept = 0;
+    virtual uint8_t score(const rtt::Field& field) noexcept = 0;
 
     /**
      * Virtual default dtor, ensures proper destruction of derived plays
@@ -162,7 +162,7 @@ class Play {
     /**
      * The Field
      */
-    rtt::world::Field field;
+    rtt::Field field;
 
     /**
      * Decides the input for the robot dealer. The result will be used to distribute the roles

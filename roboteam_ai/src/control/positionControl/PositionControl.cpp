@@ -8,7 +8,7 @@
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
-RobotCommand PositionControl::computeAndTrackPath(const rtt::world::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
+RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
                                                   Vector2 &targetPosition, stp::PIDType pidType) {
     collisionDetector.setField(field);
 
@@ -38,7 +38,7 @@ bool PositionControl::shouldRecalculatePath(const Vector2 &currentPosition, cons
 
 void PositionControl::setRobotPositions(std::vector<Vector2> &robotPositions) { collisionDetector.setRobotPositions(robotPositions); }
 
-rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 currentPosition,
+rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
                                                                      Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
                                                                      stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
@@ -105,7 +105,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     return commandCollision;
 }
 
-std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 &currentPosition,
+std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition,
                                                                Vector2 &currentVelocity, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition,
                                                                double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
     auto intermediatePoints = createIntermediatePoints(field, robotId, firstCollision, targetPosition);
@@ -133,7 +133,7 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
     return std::nullopt;
 }
 
-std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::world::Field &field,
+std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::Field &field,
                                                                                 std::optional<BB::CollisionData> &intermediatePathCollision,
                                                                                 Trajectory2D trajectoryToIntermediatePoint, Vector2 &targetPosition, int robotId,
                                                                                 double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
@@ -161,16 +161,16 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
     return std::nullopt;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::world::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
+std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
                                                                Vector2 &targetPosition) {
     double angleBetweenIntermediatePoints = M_PI_4 / 2;
 
-    // Radius and point extension of intermediate points are based on the fieldWith
-    auto fieldWidth = field.getFieldWidth();
+    // Radius and point extension of intermediate points are based on the fieldHeight
+    auto fieldHeight = field.playArea.height();
 
     // PointToDrawFrom is picked by drawing a line from the target position to the obstacle and extending that
     // line further towards our currentPosition by extension meters.
-    float pointExtension = fieldWidth / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
+    float pointExtension = fieldHeight / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
     Vector2 pointToDrawFrom = firstCollision->obstaclePosition + (firstCollision->obstaclePosition - targetPosition).normalize() * pointExtension;
 
     std::vector<Vector2> intermediatePoints;
@@ -178,7 +178,7 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::world:
         if (i != 0) {
             // Make half circle of intermediatePoints pointed towards obstaclePosition, originating from pointToDrawFrom, by rotating pointToRotate with a radius
             // intermediatePointRadius
-            float intermediatePointRadius = fieldWidth / 4;  // Radius of the half circle
+            float intermediatePointRadius = fieldHeight / 4;  // Radius of the half circle
             Vector2 pointToRotate = pointToDrawFrom + (targetPosition - firstCollision->obstaclePosition).normalize() * intermediatePointRadius;
             Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints, pointToDrawFrom);
 
@@ -189,7 +189,7 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::world:
                                                                    0.2 + rtt::ai::Constants::ROBOT_RADIUS()))) {
                 //.. and inside the field (only checked if the robot is not allowed outside the field), add this cross to the list
                 if (worldObjects.canMoveOutsideField(robotId) ||
-                    rtt::ai::FieldComputations::pointIsInField(field, intermediatePoint,
+                    field.playArea.contains(intermediatePoint,
                                                                rtt::ai::Constants::ROBOT_RADIUS())) {*/
             intermediatePoints.emplace_back(intermediatePoint);
             /*}
@@ -211,7 +211,7 @@ std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Ve
     return intermediatePointsSorted;
 }
 
-bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::world::Field &field, int robotId, Vector2 targetPosition,
+bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition,
                                                   const Vector2 &currentPosition, ai::stp::AvoidObjects avoidObjects) {
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&

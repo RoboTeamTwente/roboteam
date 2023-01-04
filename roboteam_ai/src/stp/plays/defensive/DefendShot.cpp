@@ -35,7 +35,7 @@ DefendShot::DefendShot() : Play() {
                                                                                        std::make_unique<role::Formation>("ball_blocker")};
 }
 
-uint8_t DefendShot::score(const rtt::world::Field& field) noexcept {
+uint8_t DefendShot::score(const rtt::Field& field) noexcept {
     if (world->getWorld()->whichRobotHasBall(world::them) != std::nullopt) return 255;
     if (world->getWorld()->whichRobotHasBall(world::us) != std::nullopt) return 0;
     return 0;
@@ -91,7 +91,7 @@ void DefendShot::calculateInfoForWallers(bool shouldIncludeBallBlocker) noexcept
         auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
 
         wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.getOurGoalCenter()).angle());
+        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
         constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
@@ -167,7 +167,7 @@ void DefendShot::calculateInfoForHarasser() noexcept {
 }
 
 void DefendShot::calculateInfoForKeeper() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }

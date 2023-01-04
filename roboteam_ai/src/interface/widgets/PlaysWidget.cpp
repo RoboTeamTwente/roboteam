@@ -9,7 +9,7 @@
 namespace rtt::ai::interface {
 inline QString formatPlay(stp::Play* play) {
     std::optional<rtt::world::view::WorldDataView> world;
-    std::optional<rtt::world::Field> field;
+    std::optional<rtt::Field> field;
 
     {
         auto const& [_, worldOwner] = rtt::world::World::instance();

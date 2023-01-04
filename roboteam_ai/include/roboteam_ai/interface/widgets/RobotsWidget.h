@@ -8,14 +8,14 @@
 #include <QLayout>
 
 #include "widget.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::interface {
 
 class RobotsWidget : public QWidget {
     Q_OBJECT
    private:
-    QVBoxLayout *createRobotGroupItem(const rtt::world::Field &field, rtt::world::view::RobotView robot);
+    QVBoxLayout *createRobotGroupItem(const rtt::Field &field, rtt::world::view::RobotView robot);
     int amountOfSelectedRobots = 0;
     QVBoxLayout *VLayout;
 

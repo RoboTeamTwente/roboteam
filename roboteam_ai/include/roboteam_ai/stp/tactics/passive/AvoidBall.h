@@ -55,7 +55,7 @@ class AvoidBall : public Tactic {
      * @return new position to go to which is valid and outside the avoidShape,
      * or the original targetPos is no such position is found (although this is very unlikely).
      */
-    Vector2 calculateNewPosition(Vector2 targetPos, const rtt::world::Field &field, const std::unique_ptr<Shape> &avoidShape);
+    Vector2 calculateNewPosition(Vector2 targetPos, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape);
 
     /**
      * Gets the tactic name

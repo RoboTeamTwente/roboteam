@@ -8,7 +8,7 @@
 
 namespace rtt::ai::stp::evaluation {
 
-uint8_t BallIsFreeGlobalEvaluation::metricCheck(const world::World* world, const world::Field* field) const noexcept {
+uint8_t BallIsFreeGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
     auto& robots = world->getWorld()->getRobotsNonOwning();
 
     // If there are no robots, ball is free

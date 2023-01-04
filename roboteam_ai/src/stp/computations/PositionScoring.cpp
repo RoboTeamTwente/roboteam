@@ -11,14 +11,14 @@
 #include "stp/evaluations/position/OpennessEvaluation.h"
 
 namespace rtt::ai::stp {
-gen::ScoredPosition PositionScoring::scorePosition(const Vector2 &position, const gen::ScoreProfile &profile, const world::Field &field, const world::World *world, uint8_t bias) {
+gen::ScoredPosition PositionScoring::scorePosition(const Vector2 &position, const gen::ScoreProfile &profile, const Field &field, const world::World *world, uint8_t bias) {
     gen::PositionScores &scores = ComputationManager::calculatedScores[position];
     uint8_t positionScore = getScoreOfPosition(profile, position, scores, field, world);
     if (bias) positionScore = (positionScore + bias > bias) ? positionScore + bias : std::numeric_limits<uint8_t>::max();  // stop overflow of uint8_t (254+2 = 1)
     return {position, positionScore};
 }
 
-uint8_t PositionScoring::getScoreOfPosition(const gen::ScoreProfile &profile, Vector2 position, gen::PositionScores &scores, const rtt::world::Field &field,
+uint8_t PositionScoring::getScoreOfPosition(const gen::ScoreProfile &profile, Vector2 position, gen::PositionScores &scores, const rtt::Field &field,
                                             const rtt::world::World *world) {
     double scoreTotal = 0;
     double weightTotal = 0;
@@ -41,14 +41,14 @@ uint8_t PositionScoring::getScoreOfPosition(const gen::ScoreProfile &profile, Ve
     return static_cast<uint8_t>(scoreTotal / weightTotal);
 }
 
-double PositionScoring::determineOpenScore(Vector2 &point, const rtt::world::Field &field, const rtt::world::World *world, gen::PositionScores &scores) {
+double PositionScoring::determineOpenScore(Vector2 &point, const rtt::Field &field, const rtt::world::World *world, gen::PositionScores &scores) {
     std::vector<double> enemyDistances;
     auto &them = world->getWorld()->getThem();
     enemyDistances.reserve(them.size());
     for (auto &enemyRobot : them) {
         enemyDistances.push_back(point.dist(enemyRobot->getPos()));
     }
-    auto radius = field.getFieldLength() / 4.0;
+    auto radius = field.playArea.width() / 4.0;
     return (scores.scoreOpen = stp::evaluation::OpennessEvaluation::metricCheck(enemyDistances, radius)).value();
 }
 
@@ -67,12 +67,12 @@ double PositionScoring::determineLineOfSightScore(Vector2 &point, const rtt::wor
     return (scores.scoreLineOfSight = stp::evaluation::LineOfSightEvaluation::metricCheck(pointDistance, enemyDistancesToBall, enemyAnglesToBallvsPoint)).value();
 }
 
-double PositionScoring::determineGoalShotScore(Vector2 &point, const rtt::world::Field &field, const rtt::world::World *world, gen::PositionScores &scores) {
+double PositionScoring::determineGoalShotScore(Vector2 &point, const rtt::Field &field, const rtt::world::World *world, gen::PositionScores &scores) {
     double visibility = FieldComputations::getPercentageOfGoalVisibleFromPoint(field, false, point, world->getWorld().value(), -1, true) / 100;
     double goalAngle = FieldComputations::getTotalGoalAngle(field, false, point);
 
     // The goal angle from right in front of their defense area- i.e. the "best" goal angle
-    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.getRightPenaltyPoint());
+    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.rightPenaltyPoint);
     return (scores.scoreGoalShot = stp::evaluation::GoalShotEvaluation::metricCheck(visibility, goalAngle / maxGoalAngle)).value();
 }
 

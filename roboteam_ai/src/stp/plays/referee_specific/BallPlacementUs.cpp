@@ -26,14 +26,14 @@ BallPlacementUs::BallPlacementUs() : Play() {
         std::make_unique<role::BallAvoider>(role::BallAvoider("ball_avoider_8"))};
 }
 
-uint8_t BallPlacementUs::score(const rtt::world::Field& field) noexcept {
+uint8_t BallPlacementUs::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallPlacementUsGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
 }
 
 void BallPlacementUs::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.getOurGoalCenter() + Vector2(0.5, 0.0)));
+    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     auto ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();

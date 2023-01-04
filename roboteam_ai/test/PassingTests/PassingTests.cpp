@@ -34,7 +34,7 @@ TEST_F(RTT_AI_Tests, idTests) {
     EXPECT_TRUE((passInfo.receiverId != -1) || (passInfo.passScore == 0));
 
     auto us = world->getWorld()->getUs();
-    auto keeperId = world->getWorld()->getRobotClosestToPoint(world->getField()->getOurGoalCenter(), us).value()->getId();
+    auto keeperId = world->getWorld()->getRobotClosestToPoint(world->getField()->leftGoalArea.rightLine().center(), us).value()->getId();
     erase_if(us, [keeperId](auto bot) { return bot->getId() == keeperId; });
     auto passerId = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, us).value()->getId();
     EXPECT_EQ(passInfo.passerId, passerId);
@@ -67,14 +67,14 @@ TEST_F(RTT_AI_Tests, keeperPassTest) {
     world->updateWorld(protoWorld);
     world->updateField(field);
 
-    ASSERT_TRUE(world->getWorld()->getBall()->get()->position == world->getField()->getOurGoalCenter());
+    ASSERT_TRUE(world->getWorld()->getBall()->get()->position == world->getField()->leftGoalArea.rightLine().center());
 
     PassInfo passInfo;
     do {
         passInfo = computations::PassComputations::calculatePass(gen::AttackingPass, world, world->getField().value(), true);
     } while (passInfo.passScore == 0);
 
-    auto keeper = world->getWorld()->getRobotClosestToPoint(world->getField()->getOurGoalCenter(), rtt::world::Team::us);
+    auto keeper = world->getWorld()->getRobotClosestToPoint(world->getField()->leftGoalArea.rightLine().center(), rtt::world::Team::us);
     ASSERT_TRUE(keeper.has_value());
     EXPECT_EQ(keeper->get()->getId(), passInfo.keeperId);
     EXPECT_EQ(passInfo.keeperId, passInfo.passerId);

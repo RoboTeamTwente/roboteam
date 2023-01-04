@@ -8,7 +8,7 @@
 
 #include "Keeper.h"
 #include "stp/Role.hpp"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp::role {
 

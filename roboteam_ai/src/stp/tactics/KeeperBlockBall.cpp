@@ -52,9 +52,9 @@ bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
 
 const char *KeeperBlockBall::getName() { return "Keeper Block Ball"; }
 
-LineSegment KeeperBlockBall::getKeepersLineSegment(const world::Field &field) {
-    auto keepersLineSegmentLeft = field.getOurTopGoalSide() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, -KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
-    auto keepersLineSegmentRight = field.getOurBottomGoalSide() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
+LineSegment KeeperBlockBall::getKeepersLineSegment(const Field &field) {
+    auto keepersLineSegmentLeft = field.leftGoalArea.topRight() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, -KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
+    auto keepersLineSegmentRight = field.leftGoalArea.bottomRight() + Vector2(KEEPER_DISTANCE_TO_GOAL_LINE, KEEPER_GOAL_DECREASE_AT_ONE_SIDE);
     auto keepersLineSegment = LineSegment(keepersLineSegmentLeft, keepersLineSegmentRight);
     return keepersLineSegment;
 }
@@ -87,15 +87,15 @@ std::optional<HalfLine> KeeperBlockBall::estimateBallTrajectory(const world::vie
     return std::nullopt;
 }
 
-bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const world::Field &field) {
-    auto goalLineSegment = LineSegment(field.getOurBottomGoalSide(), field.getOurTopGoalSide());
+bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const Field &field) {
+    auto goalLineSegment = LineSegment(field.leftGoalArea.bottomRight(), field.leftGoalArea.topRight());
     // Get the intersection between the ball and the line on which the goal is
     auto intersectionWithGoalLine = ballTrajectory.intersect(Line(goalLineSegment));
     // Ball heads towards goal if the intersection is near our goal
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
 
-std::pair<Vector2,PIDType> KeeperBlockBall::calculateTargetPosition(const world::view::BallView &ball, const world::Field &field,
+std::pair<Vector2,PIDType> KeeperBlockBall::calculateTargetPosition(const world::view::BallView &ball, const Field &field,
                                                                           const std::optional<world::view::RobotView> &enemyRobot) noexcept {
     // Get the line on which the keeper should move to
     auto keepersLineSegment = getKeepersLineSegment(field);
@@ -117,10 +117,10 @@ std::pair<Vector2,PIDType> KeeperBlockBall::calculateTargetPosition(const world:
     }
 
     // Otherwise, the ball probably will not move towards the goal any time soon
-    if (ball->position.x >= field.getOurGoalCenter().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
+    if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
         // This will pick a position somewhat between the ball and the goal,
         // but only if the ball is not too far behind the goal
-        auto ballGoalLine = Line(ball->position, field.getOurGoalCenter() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
+        auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
         auto targetPosition = keepersLineSegment.getClosestPointToLine(ballGoalLine);
         if (targetPosition.has_value()) return { targetPosition.value(), PIDType::DEFAULT };
     }

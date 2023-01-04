@@ -14,10 +14,14 @@ using namespace rtt::ai;
 
 double MAXIMUM_DIFFERENCE = 0.000001;
 
+rtt::Field createTestField() {
+    return Field::createField(12, 9, 1.8, 3.6, 0.18, 1.8, 0.3, 0.5, {-2, 0}, {2, 0});
+}
+
 /* Checks whether the margins of the functions that return an Polygon are all in outwards direction by checking if the actual size of the area
  * matches with the expected size of the area. */
 TEST(FieldComputationTest, outwards_margin) {
-    Field testField = Field::createTestField();
+    Field testField = createTestField();
 
     // Check if the area of the field matches when the field is not changed, when it is expanded and when it is shrinked.
     double expectedFieldSize = testField.playArea.width() * testField.playArea.height();
@@ -31,8 +35,8 @@ TEST(FieldComputationTest, outwards_margin) {
     EXPECT_TRUE(fabs(expectedFieldSize - actualFieldSize) < MAXIMUM_DIFFERENCE);
 
     // Check if the area of our defence area matches when it is not changed, when it is expanded and when it is shrinked.
-    double defenceAreaWidth = testField.leftDefenseArea.right() - testField.getLeftLine().begin.x;
-    double defenceAreaHeight = LineSegment(testField.getLeftPenaltyLine().begin, testField.getLeftPenaltyLine().end).length();
+    double defenceAreaWidth = testField.leftDefenseArea.width();
+    double defenceAreaHeight = testField.leftDefenseArea.height();
     double expectedDefenceAreaSize = defenceAreaWidth * defenceAreaHeight;
     double actualDefenceAreaSize = FieldComputations::getDefenseArea(testField, true, 0.0, 0.0).area();
     EXPECT_TRUE(fabs(expectedDefenceAreaSize - actualDefenceAreaSize) < MAXIMUM_DIFFERENCE);
@@ -44,8 +48,8 @@ TEST(FieldComputationTest, outwards_margin) {
     EXPECT_TRUE(fabs(expectedDefenceAreaSize - actualDefenceAreaSize) < MAXIMUM_DIFFERENCE);
 
     // Check if the area of the opponents defence area matches when it is not changed, when it is expanded and when it is shrinked.
-    defenceAreaWidth = testField.getRightLine().begin.x - testField.getRightPenaltyX();
-    defenceAreaHeight = LineSegment(testField.getRightPenaltyLine().begin, testField.getRightPenaltyLine().end).length();
+    defenceAreaWidth = testField.rightDefenseArea.width();
+    defenceAreaHeight = testField.rightDefenseArea.height();
     expectedDefenceAreaSize = defenceAreaWidth * defenceAreaHeight;
     actualDefenceAreaSize = FieldComputations::getDefenseArea(testField, false, 0.0, 0.0).area();
     EXPECT_TRUE(fabs(expectedDefenceAreaSize - actualDefenceAreaSize) < MAXIMUM_DIFFERENCE);
@@ -82,30 +86,30 @@ TEST(FieldComputationTest, outwards_margin) {
 }
 
 TEST(FieldComputationTest, goal_distance) {
-    Field testField = Field::createTestField();
+    Field testField = createTestField();
 
     /* Test cases with a point on the goal, point below the goal, point not on the goal but with y-coordinates between both goal
      * endings and point not on the goal with y-coordinates not between both goal endings. */
     Vector2 testPoint = (testField.leftGoalArea.bottomRight() + testField.leftGoalArea.topRight()) / 2;
     double expectedDistance = FieldComputations::getDistanceToGoal(testField, true, testPoint);
     double actualDistance = 0.0;
-    EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
+    EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
     testPoint = testField.rightGoalArea.bottomLeft() + Vector2(0, -3);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, false, testPoint);
     actualDistance = 3.0;
-    EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
+    EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
     testPoint = Vector2(2, 3.6);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, true, testPoint);
-    actualDistance = sqrt(73.0);
-    EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
+    actualDistance = sqrt(2.7*2.7 + 8*8);
+    EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
     testPoint = Vector2(4, 0.5);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, false, testPoint);
     actualDistance = 2.0;
-    EXPECT_TRUE(abs(expectedDistance - actualDistance) < MAXIMUM_DIFFERENCE);
+    EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
 }
 
 TEST(FieldComputationTest, total_goal_angle) {
-    Field testField = Field::createTestField();
+    Field testField = createTestField();
 
     /* Test cases with a point on the goal, point below the goal, point not on the goal with y-coordinates not between both goal
      * endings, point not on the goal with y-coordinates between both goal endings and point that has an angle of 90 degrees at the
@@ -113,27 +117,31 @@ TEST(FieldComputationTest, total_goal_angle) {
     Vector2 testPoint = (testField.rightGoalArea.bottomLeft() + testField.rightGoalArea.topLeft()) / 2;
     double expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
     double actualAngle = M_PI;
-    EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
+    EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
+
     testPoint = testField.leftGoalArea.bottomRight() + Vector2(0, -3);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, true, testPoint);
     actualAngle = 0.0;
-    EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
+    EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
+
     testPoint = testField.playArea.topLeft();
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
-    actualAngle = atan(5.1 / 12) - atan(3.9 / 12);
-    EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
+    actualAngle = atan((4.5+0.9) / 12) - atan((4.5-0.9) / 12);
+    EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
+
     testPoint = testField.rightGoalArea.topLeft() + Vector2(0, -0.4);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, true, testPoint);
-    actualAngle = atan(0.4 / 12) + atan(0.8 / 12);
-    EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
+    actualAngle = atan(0.4 / 12) + atan((1.8-0.4) / 12);
+    EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
+
     testPoint = testField.rightGoalArea.bottomLeft() + Vector2(1.2, 0);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
-    actualAngle = 0.25 * M_PI;
-    EXPECT_TRUE(abs(expectedAngle - actualAngle) < MAXIMUM_DIFFERENCE);
+    actualAngle = atan(1.8 / 1.2);
+    EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
 }
 
 TEST(FieldComputationTest, line_intersection_with_defence_area) {
-    Field testField = Field::createTestField();
+    Field testField = createTestField();
 
     /* Test cases where only an intersection happens with the corner, where a LineSegment is closely parallel to the defence area but
      * does not intersect, where a LineSegment has infinitely many intersections with the boundary, where a LineSegment ends closely
@@ -174,7 +182,7 @@ TEST(FieldComputationTest, line_intersection_with_defence_area) {
 }
 
 TEST(FieldComputationTest, projectionTests) {
-    Field field = testhelpers::FieldHelper::generateField();
+    Field field = createTestField();
     Vector2 belowGoal = field.leftDefenseArea.bottomLeft();
     Vector2 aboveGoal = field.leftDefenseArea.topLeft();
     Vector2 topPenalty = field.leftDefenseArea.topRight();
@@ -201,7 +209,7 @@ TEST(FieldComputationTest, projectionTests) {
 }
 
 TEST(FieldComputationTest, projectionOnLineTests) {
-    Field field = testhelpers::FieldHelper::generateField();
+    Field field = createTestField();
     auto line = LineSegment(Vector2(), field.rightGoalArea.leftLine().center());
     auto pointToProject = Vector2(5.5, -1);
 

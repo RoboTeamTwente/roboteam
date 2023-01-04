@@ -67,7 +67,7 @@ void World::updateWorld(proto::World &protoWorld) {
 }
 
 // Converts millimeters to meters
-double mmToM(double mm) {
+constexpr double mmToM(double mm) {
     return mm / 1000.0;
 }
 

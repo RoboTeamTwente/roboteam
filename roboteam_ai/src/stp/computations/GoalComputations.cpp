@@ -53,7 +53,7 @@ Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rt
 }
 
 LineSegment GoalComputations::getAimPoints(const Field &field, const Vector2 &sourcePoint) {
-    LineSegment goalSides = FieldComputations::getGoalSides(field, false);
+    LineSegment goalSides = field.rightGoalArea.leftLine();
 
     // Aim points are located some distance away from the edges of the goal to take into account inaccuracies in the shot
     const double angleMargin = sin(2.0 / 180.0 * M_PI);

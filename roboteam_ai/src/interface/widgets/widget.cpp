@@ -232,7 +232,7 @@ void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     bool weAreYellow = SETTINGS.isYellow();
 
     // draw the hint for us
-    LineSegment usGoalLine = FieldComputations::getGoalSides(field, true);
+    LineSegment usGoalLine = field.leftGoalArea.rightLine();
     Vector2 ourLineUpper = {usGoalLine.start.x, usGoalLine.start.y};
     Vector2 ourLineLower = {usGoalLine.end.x, usGoalLine.end.y};
     ourLineUpper = toScreenPosition(ourLineUpper);
@@ -244,7 +244,7 @@ void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     painter.setPen(pen);
     painter.drawLine(ourLineUpper.x, ourLineUpper.y, ourLineLower.x, ourLineLower.y);
 
-    LineSegment theirGoalLine = FieldComputations::getGoalSides(field, false);
+    LineSegment theirGoalLine = field.rightGoalArea.leftLine();
     Vector2 theirLineUpper = {theirGoalLine.start.x, theirGoalLine.start.y};
     Vector2 theirLineLower = {theirGoalLine.end.x, theirGoalLine.end.y};
     theirLineUpper = toScreenPosition(theirLineUpper);

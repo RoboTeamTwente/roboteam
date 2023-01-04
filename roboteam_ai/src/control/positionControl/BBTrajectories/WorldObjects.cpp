@@ -68,7 +68,7 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
 void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
                                             double timeStep) {
     for (size_t i = 0; i < pathPoints.size(); i++) {
-        if (!rtt::ai::FieldComputations::pointIsInField(field, pathPoints[i], rtt::ai::Constants::ROBOT_RADIUS())) {
+        if (!field.playArea.contains(pathPoints[i], rtt::ai::Constants::ROBOT_RADIUS())) {
             // Don't care about the field if the robot is already outside the field (i == 0 is the first point of the robot's path, so almost the currentPosition).
             if (i == 0) return;
 

@@ -81,49 +81,6 @@ TEST(FieldComputationTest, outwards_margin) {
     EXPECT_TRUE(fabs(expectedGoalAreaSize - actualGoalAreaSize) < MAXIMUM_DIFFERENCE);
 }
 
-TEST(FieldComputationTest, point_in_polygon) {
-    double smallChanges = 0.001;
-    Field testField = Field::createTestField();
-
-    // Test whether the center of the field is indeed located in the field
-    Vector2 testPoint = Vector2(0, 0);
-    EXPECT_TRUE(FieldComputations::pointIsInField(testField, testPoint, 0.0));
-
-    /* In the following test cases you do boundary value analysis + error guessing by extending the areas and pick 2 corners of this area from which you slightly move inwards and
-     * check if these new positions are indeed located in that area. Also you shrink the areas and pick the same corners from which you slightly move outwards and check if these
-     * new positions are indeed located outside that area. */
-
-    // Do the boundary value analysis + error guessing for the pointInField function
-    testPoint = testField.playArea.topLeft() + Vector2(-1.0, 1.0);
-    EXPECT_TRUE(FieldComputations::pointIsInField(testField, testPoint, 1.0));
-    testPoint = testField.playArea.topLeft() + Vector2(-1.0 - smallChanges, 1.0 + smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInField(testField, testPoint, 1.0));
-    testPoint = testField.playArea.bottomRight() + Vector2(-1.0, 1.0);
-    EXPECT_TRUE(FieldComputations::pointIsInField(testField, testPoint, -1.0));
-    testPoint = testField.playArea.bottomRight() + Vector2(-1.0 + smallChanges, 1.0 - smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInField(testField, testPoint, -1.0));
-
-    // Do the boundary value analysis + error guessing for our defence area in the pointInDefenseArea function
-    testPoint = testField.leftDefenseArea.topRight() + Vector2(0.3 - smallChanges, 0.3 - smallChanges);
-    EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.leftDefenseArea.topRight() + Vector2(0.3 + smallChanges, 0.3 + smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.leftDefenseArea.bottomLeft() + Vector2(0.2 + smallChanges, 0.3 + smallChanges);
-    EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.leftDefenseArea.bottomLeft() + Vector2(0.2 - smallChanges, 0.3 - smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(testField, testPoint, -0.3, -0.2));
-
-    // Do the boundary value analysis + error guessing for their defence area in the pointInDefenseArea function
-    testPoint = testField.rightDefenseArea.topLeft() + Vector2(0.3 + smallChanges, -0.3 - smallChanges);
-    EXPECT_TRUE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.rightDefenseArea.topLeft() + Vector2(0.3 - smallChanges, -0.3 + smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, -0.3, -0.2));
-    testPoint = testField.rightDefenseArea.bottomRight() + Vector2(0.2 - smallChanges, -0.3 + smallChanges);
-    EXPECT_TRUE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, 0.3, 0.2));
-    testPoint = testField.rightDefenseArea.bottomRight() + Vector2(0.2 + smallChanges, -0.3 - smallChanges);
-    EXPECT_FALSE(FieldComputations::pointIsInTheirDefenseArea(testField, testPoint, 0.3, 0.2));
-}
-
 TEST(FieldComputationTest, goal_distance) {
     Field testField = Field::createTestField();
 
@@ -224,19 +181,19 @@ TEST(FieldComputationTest, projectionTests) {
 
     // Random point in our defense area
     auto pointInDefenseArea = Vector2(SimpleRandom::getDouble(aboveGoal.x, topPenalty.x), SimpleRandom::getDouble(belowGoal.y, aboveGoal.y));
-    EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(field, pointInDefenseArea));
+    EXPECT_TRUE(field.leftDefenseArea.contains(pointInDefenseArea));
 
     auto projectedPoint = FieldComputations::projectPointOutOfDefenseArea(field, pointInDefenseArea);
-    EXPECT_FALSE(FieldComputations::pointIsInOurDefenseArea(field, projectedPoint));
+    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint));
 
     auto pointOutsideField = Vector2(field.playArea.left() - 0.05, field.playArea.top() + 0.05);
-    EXPECT_FALSE(FieldComputations::pointIsInField(field, pointOutsideField));
+    EXPECT_FALSE(field.playArea.contains(pointOutsideField));
     projectedPoint = FieldComputations::projectPointInField(field, pointOutsideField);
-    EXPECT_TRUE(FieldComputations::pointIsInField(field, projectedPoint));
+    EXPECT_TRUE(field.playArea.contains(projectedPoint));
 
     auto pointBehindGoal = field.leftGoalArea.rightLine().center() + Vector2(-0.10, 0);
     projectedPoint = FieldComputations::projectPointInField(field, pointBehindGoal);
-    EXPECT_TRUE(FieldComputations::pointIsInOurDefenseArea(field, projectedPoint));
+    EXPECT_TRUE(field.leftDefenseArea.contains(projectedPoint));
 
     auto pointBehindDefArea = Vector2(6.047, -1.12139);
     projectedPoint = FieldComputations::projectPointToValidPosition(field, pointBehindDefArea);
@@ -255,7 +212,7 @@ TEST(FieldComputationTest, projectionOnLineTests) {
     auto pointOutsideField = Vector2(1, -4.6);
     line = LineSegment(pointOutsideField, Vector2());
     projectedPoint = FieldComputations::projectPointIntoFieldOnLine(field, pointOutsideField, pointOutsideField, Vector2());
-    EXPECT_TRUE(FieldComputations::pointIsInField(field, projectedPoint));
+    EXPECT_TRUE(field.playArea.contains(projectedPoint));
     EXPECT_TRUE(line.isOnLine(projectedPoint));
 }
 }  // namespace rtt

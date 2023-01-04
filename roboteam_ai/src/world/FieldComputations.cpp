@@ -6,31 +6,16 @@
 
 namespace rtt::ai {
 
-bool FieldComputations::pointIsInOurDefenseArea(const rtt::Field &field, const Vector2 &point, double margin, double backMargin) {
-    auto defenseArea = FieldComputations::getDefenseArea(field, true, margin, backMargin);
-    return defenseArea.contains(point);
-}
-
-bool FieldComputations::pointIsInTheirDefenseArea(const rtt::Field &field, const Vector2 &point, double margin, double backMargin) {
-    auto defenseArea = FieldComputations::getDefenseArea(field, false, margin, backMargin);
-    return defenseArea.contains(point);
-}
-
-bool FieldComputations::pointIsInField(const rtt::Field &field, const Vector2 &point, double margin) {
-    return (point.x <= field.playArea.right() + margin && point.x >= field.playArea.left() - margin && point.y <= field.playArea.top() + margin &&
-            point.y >= field.playArea.bottom() - margin);
-}
-
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
                                              double theirDefenseAreaMargin) {
-    if (avoidObjects.shouldAvoidOutOfField && !pointIsInField(field, point, fieldMargin)) return false;
-    if (avoidObjects.shouldAvoidDefenseArea && (pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin) || pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin)))
+    if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
+    if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
         return false;
     return true;
 }
 
 double FieldComputations::getTotalGoalAngle(const rtt::Field &field, bool ourGoal, const Vector2 &point) {
-    LineSegment goal = getGoalSides(field, ourGoal);
+    LineSegment goal = ourGoal ? field.leftGoalArea.rightLine() : field.rightGoalArea.leftLine();
     Angle angleLeft = Angle(goal.start - point);
     Angle angleRight = Angle(goal.end - point);
     return angleLeft.shortestAngleDiff(angleRight);
@@ -51,7 +36,7 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Fie
                                                                   const std::vector<rtt::world::view::RobotView> &robots) {
     // TODO: improve when it takes our/their robots into account
     std::vector<LineSegment> blockades = getBlockadesMappedToGoal(field, ourGoal, point, robots, -1, true);
-    LineSegment goalSide = getGoalSides(field, ourGoal);
+    LineSegment goalSide = ourGoal ? field.leftGoalArea.rightLine() : field.rightGoalArea.leftLine();
     double goalX = goalSide.start.x;  // The x-coordinate of the entire goal line (all vectors on this line have the same x-coordinate).
     double upperGoalY = goalSide.end.y;
     double lowerY = goalSide.start.y;
@@ -77,15 +62,7 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Fie
     return visibleParts;
 }
 
-LineSegment FieldComputations::getGoalSides(const rtt::Field &field, bool ourGoal) {
-    if (ourGoal) {
-        return LineSegment(field.leftGoalArea.bottomRight(), field.leftGoalArea.topRight());
-    } else {
-        return LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.topLeft());
-    }
-}
-
-double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) { return getGoalSides(field, ourGoal).distanceToLine(point); }
+double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) { return ourGoal ? field.leftGoalArea.rightLine().distanceToLine(point) : field.rightGoalArea.leftLine().distanceToLine(point); }
 
 std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
                                                                             double margin, bool ignoreGoalLine) {
@@ -192,7 +169,7 @@ std::vector<LineSegment> FieldComputations::getBlockadesMappedToGoal(const rtt::
                                                                      const std::vector<rtt::world::view::RobotView> &robots, int id, bool ourTeam) {
     std::vector<LineSegment> blockades = {};
     const double robotRadius = Constants::ROBOT_RADIUS() + Constants::BALL_RADIUS();
-    LineSegment goalSide = getGoalSides(field, ourGoal);
+    LineSegment goalSide = ourGoal ? field.leftGoalArea.rightLine() : field.rightGoalArea.leftLine();
     for (auto const &robot : robots) {
         std::optional<LineSegment> blockade = robotBlockade(ourGoal, point, id, ourTeam, robot, robotRadius, goalSide);
         if (blockade.has_value()) {
@@ -250,22 +227,22 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
 }
 
 Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
-    if (pointIsInField(field, point) && !pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin) && !pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin))
+    if (field.playArea.contains(point) && !field.rightDefenseArea.contains(point, theirDefenseAreaMargin) && !field.leftDefenseArea.contains(point, ourDefenseAreaMargin))
         return point;
 
     // If the point is not in the field yet, project it into the field
-    if (!pointIsInField(field, point)) {
+    if (!field.playArea.contains(point)) {
         point = projectPointInField(field, point);
     }
 
     // Calculate how far the point is from the defense area border in the x and y direction
     double xDiff;
     double yDiff;
-    if (pointIsInOurDefenseArea(field, point, ourDefenseAreaMargin)) {
+    if (field.leftDefenseArea.contains(point, ourDefenseAreaMargin)) {
         xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
         yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
                             : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
-    } else if (pointIsInTheirDefenseArea(field, point, theirDefenseAreaMargin)) {
+    } else if (field.rightDefenseArea.contains(point, theirDefenseAreaMargin)) {
         xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
         yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
                             : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
@@ -286,7 +263,7 @@ Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vecto
 
 Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
     auto projectedPos = LineSegment(p1, p2).project(point);
-    if (FieldComputations::pointIsInField(field, projectedPos, fieldMargin)) return projectedPos;
+    if (field.playArea.contains(projectedPos, fieldMargin)) return projectedPos;
 
     auto intersection_lhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p1, fieldMargin - PROJECTION_MARGIN);
     auto intersection_rhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p2, fieldMargin - PROJECTION_MARGIN);
@@ -305,10 +282,10 @@ Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field,
 
     bool ourGoal;   // Which goal's defense area the projected point is in
     double margin;  // The margin to be used for the defense area- set to ourDefenseMargin or theirDefenseAreaMargin depending on where the projected pos is
-    if (pointIsInOurDefenseArea(field, pointProjectedInField, ourDefenseAreaMargin)) {
+    if (field.leftDefenseArea.contains(pointProjectedInField, ourDefenseAreaMargin)) {
         margin = ourDefenseAreaMargin;
         ourGoal = true;
-    } else if (pointIsInTheirDefenseArea(field, pointProjectedInField, theirDefenseAreaMargin)) {
+    } else if (field.rightDefenseArea.contains(pointProjectedInField, theirDefenseAreaMargin)) {
         margin = theirDefenseAreaMargin;
         ourGoal = false;
     } else {

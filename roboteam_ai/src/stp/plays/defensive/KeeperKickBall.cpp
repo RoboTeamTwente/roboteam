@@ -119,7 +119,7 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
         return true;
 
     // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    if (FieldComputations::pointIsInOurDefenseArea(field, world->getWorld()->getBall()->get()->position)) return true;
+    if (field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
 
     return false;
 }

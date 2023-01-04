@@ -35,38 +35,6 @@ class FieldComputations {
 
    public:
     /**
-     * Determines whether a given point is our defense area
-     * @param field The field class which is used to determine the position of the defense areas.
-     * @param point The point for which it is checked whether it is in our/their defense area.
-     * @param margin The outwards margin in which the defence area will be expanded/shrunk in all directions (except for the goal line in the x-direction). A positive value means
-     * that it will be expanded, a negative value means that it will be shrunk.
-     * @param backMargin The margin that the goal line will be expanded in the x-direction (+ value -> expand to outside of the field, - value -> shrink to inside the field)
-     * @return True if the point is in our defence area (after adding margins), false otherwise
-     */
-    static bool pointIsInOurDefenseArea(const rtt::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
-
-    /**
-     * Determines whether a given point is in their defense area
-     * @param field The field class which is used to determine the position of the defense areas.
-     * @param point The point for which it is checked whether it is in our/their defense area.
-     * @param margin The outwards margin in which the defence area will be expanded/shrunk in all directions (except for the goal line in the x-direction). A positive value means
-     * that it will be expanded, a negative value means that it will be shrunk.
-     * @param backMargin The margin that the goal line will be expanded in the x-direction (+ value -> expand to outside of the field, - value -> shrink to inside the field)
-     * @return True if the point is in their defence area (after adding margins), false otherwise
-     */
-    static bool pointIsInTheirDefenseArea(const rtt::Field &field, const Vector2 &point, double margin = 0.0, double backMargin = 0.0);
-
-    /**
-     * Check whether a given point is in the field.
-     * @param field The field class which is used to determine the boundaries of the field.
-     * @param point The point for which it is checked whether it is in the field or not.
-     * @param margin The outwards margin in which the rectangular field area will get expanded/shrunk in all directions. A positive value means that the field area will be
-     * expanded, a negative value means that the field area will be shrunk.
-     * @return True if the point is in the field, false otherwise.
-     */
-    static bool pointIsInField(const rtt::Field &field, const Vector2 &point, double margin = 0.0);
-
-    /**
      * Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point for which it is checked whether it is valid or not
@@ -167,15 +135,6 @@ class FieldComputations {
      * @cite getVisiblePartsOfGoal(const Field &field, bool ourGoal, const Vector2 &point, world::view::WorldDataView &world)
      */
     static std::vector<LineSegment> getVisiblePartsOfGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point, const std::vector<rtt::world::view::RobotView> &robots);
-
-    /**
-     * Get the goal side (the line segment regarding the goal line) of either our goal or the opponents goal.
-     * @param field The field used to determine where the goals are.
-     * @param ourGoal True if we want to obtain our goal side, false if we want to obtain the opponents goal side.
-     * @return The LineSegment which represents the goal side (the first part is always the bottom part of the goal, i.e. the part with the lowest y-coordinate, the second part
-     * is always the top part of the goal, i.e. the part with the highest y-coordinate).
-     */
-    static LineSegment getGoalSides(const rtt::Field &field, bool ourGoal);
 
     /**
      * Compute the Euclidean distance from a given point to the closest point on the goal.

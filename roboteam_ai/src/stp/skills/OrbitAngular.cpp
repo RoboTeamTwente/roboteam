@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 01-07-22.
-//
-
 #include "stp/skills/OrbitAngular.h"
 
 #include "stp/constants/ControlConstants.h"
@@ -14,7 +10,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     Vector2 directionVector =  info.getRobot()->get()->getAngle().toVector2();  // Vector in direction robot is currently facing
     Angle targetAngle = (info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).toAngle(); // Angle we want to have
     auto direction = Angle(directionVector).rotateDirection(targetAngle) ? 1.0 : -1.0;  // Direction robot should rotate to
-    double speed = 0.1 + 4 * directionVector.toAngle().shortestAngleDiff(targetAngle); // Speed at which the robot should orbit. I made it relative to the angle so that we don't overshoot
+    double speed = std::clamp(4 * directionVector.toAngle().shortestAngleDiff(targetAngle), 0.5, 3.0); // Speed at which the robot should orbit. I made it relative to the angle so that we don't overshoot
     Vector2 normalVector = directionVector.rotate(-direction * M_PI_2); // Direction robot should move to
 
     // velocity vector the robot should follow

@@ -97,6 +97,8 @@ class Publisher:
         self.detection_frame.t_capture = time.time()  # The time at which the frame was captured
         self.detection_frame.t_sent = time.time()  # The time at which the frame is sent
         self.detection_frame.camera_id = 0  # ID of the camera which captured the frame
-        self.detection_frame.balls = self.ball  # The SSL_DetectionBall package
-        self.detection_frame.robots_yellow = self.robots_yellow  # List of SSL_DetectionRobot packages
-        self.detection_frame.robots_blue = self.robots_blue  # List of SSL_DetectionRobot packages
+        self.detection_frame.balls.append(self.ball)  # The SSL_DetectionBall package
+        for robot in self.robots_yellow:
+            self.detection_frame.robots_yellow.append(robot)
+        for robot in self.robots_blue:
+            self.detection_frame.robots_blue.append(robot)

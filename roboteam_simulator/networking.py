@@ -8,6 +8,7 @@ published as multicast. Meaning that multiple applications will be able to liste
 """
 import zmq
 import time
+from PyQt5.QtCore import QByteArray
 
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_DetectionBall, SSL_DetectionRobot
@@ -46,6 +47,7 @@ class Publisher:
         self.wrap_ball(field.ball)  # Wrap the ball in na SSL_DetectionBall package
         self.wrap_robots(field.yellowTeam.robots, field.blueTeam.robots)  # Wrap the robots in SSL_DetectionRobot packages
         self.wrap_detection_frame()  # Wrap all data in an SSL_DetectionFrame package
+        self.wrap_packet()
         packet = self.wrapper.SerializeToString()  # Serializes the wrapper packet
         self.socket.send(packet)  # Sends the serialized packet to the socket
 
@@ -102,3 +104,6 @@ class Publisher:
             self.detection_frame.robots_yellow.append(robot)
         for robot in self.robots_blue:
             self.detection_frame.robots_blue.append(robot)
+
+    def wrap_packet(self):
+        self.wrapper.detection.CopyFrom(self.detection_frame)

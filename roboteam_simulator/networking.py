@@ -13,7 +13,7 @@ from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_DetectionBall, SSL_DetectionRobot
 
 # Addresses and ports used to communicate with the teams
-PUBLISH_ADDRESS = '256.4.5.23.2'  # The address the packages should be published on
+PUBLISH_ADDRESS = '224.5.23.2'  # The address the packages should be published on
 PUBLISH_PORT = '10006'  # The port the packages should be published on
 
 

@@ -37,9 +37,15 @@ class Publisher:
         self.frame_number = 0  # Frame number of the current SSL_DetectionFrame
         self.detection_frame = SSL_DetectionFrame()  # The SSL_DetectionFrame package containing data from the simulator
 
-    def send(self):
+    def send(self, field):
+        # noinspection GrazieInspection
         """! Sends the package to the earlier initialized socket
+
+        @param field Field data that needs to be sent
         """
+        self.wrap_ball(field.ball)  # Wrap the ball in na SSL_DetectionBall package
+        self.wrap_robots(field.yelllow_robots, field.blue_robots)  # Wrap the robots in SSL_DetectionRobot packages
+        self.wrap_detection_frame()  # Wrap all data in an SSL_DetectionFrame package
         packet = self.wrapper.SerializeToString()  # Serializes the wrapper packet
         self.socket.send(packet)  # Sends the serialized packet to the socket
 

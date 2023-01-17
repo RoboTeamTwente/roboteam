@@ -44,7 +44,7 @@ class Publisher:
         @param field Field data that needs to be sent
         """
         self.wrap_ball(field.ball)  # Wrap the ball in na SSL_DetectionBall package
-        self.wrap_robots(field.yelllow_robots, field.blue_robots)  # Wrap the robots in SSL_DetectionRobot packages
+        self.wrap_robots(field.yellowTeam.robots, field.blueTeam.robots)  # Wrap the robots in SSL_DetectionRobot packages
         self.wrap_detection_frame()  # Wrap all data in an SSL_DetectionFrame package
         packet = self.wrapper.SerializeToString()  # Serializes the wrapper packet
         self.socket.send(packet)  # Sends the serialized packet to the socket

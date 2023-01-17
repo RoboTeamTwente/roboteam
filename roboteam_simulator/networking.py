@@ -111,4 +111,6 @@ class Publisher:
             self.detection_frame.robots_blue.append(robot)
 
     def wrap_packet(self):
+        """! Wraps the detection frame and geometry data into the SSL_WrapperPacket package
+        """
         self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message

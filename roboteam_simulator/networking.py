@@ -68,6 +68,7 @@ class Publisher:
         @param yellow_robots A list of all yellow team robots to be wrapped
         @param blue_robots A list of all blue team robots to be wrapped
         """
+        self.robots_yellow.clear()  # Make sure there are no yellow robots left from previous frame
         # Wraps the yellow team robots one by one and puts them into the robots_yellow list
         for robot in yellow_robots:
             temp_bot = SSL_DetectionRobot()  # Temporary SSL_DetectionRobot package to add to the yellow robots list
@@ -80,6 +81,7 @@ class Publisher:
             temp_bot.pixel_y = robot.pos_y  # Pixelated y-position of the robot
             self.robots_yellow.append(temp_bot)  # Puts the SSL_DetectionRobot package in the yellow robots list
 
+        self.robots_blue.clear()  # Make sure there are no blue robots left from previous frame
         # Wraps the blue team robots one by one and puts the into the robots_blue list
         for robot in blue_robots:
             temp_bot = SSL_DetectionRobot()  # Temporary SSL_DetectionRobot package to add to the blue robots list
@@ -99,11 +101,14 @@ class Publisher:
         self.detection_frame.t_capture = time.time()  # The time at which the frame was captured
         self.detection_frame.t_sent = time.time()  # The time at which the frame is sent
         self.detection_frame.camera_id = 0  # ID of the camera which captured the frame
+        del self.detection_frame.balls[:]  # Make sure there are no balls left from previous frame
         self.detection_frame.balls.append(self.ball)  # The SSL_DetectionBall package
-        for robot in self.robots_yellow:
+        del self.detection_frame.robots_yellow[:]  # Make sure there are no yellow robots left from previous frame
+        for robot in self.robots_yellow:  # Add yellow robots to the detection frame
             self.detection_frame.robots_yellow.append(robot)
-        for robot in self.robots_blue:
+        del self.detection_frame.robots_blue[:]  # Make sure there are no blue robots left from previous frame
+        for robot in self.robots_blue:  # Add blue robots to the detection frame
             self.detection_frame.robots_blue.append(robot)
 
     def wrap_packet(self):
-        self.wrapper.detection.CopyFrom(self.detection_frame)
+        self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message

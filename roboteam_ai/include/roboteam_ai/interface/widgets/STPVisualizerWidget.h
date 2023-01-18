@@ -10,7 +10,7 @@
 
 #include "mutex"
 #include "utilities/StpInfoEnums.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp {
 class Play;
@@ -28,10 +28,6 @@ class MainWindow;
  */
 class STPVisualizerWidget : public QTextEdit {
     Q_OBJECT
-
-    FRIEND_TEST(TreeVisualizerTest, it_properly_displays_trees);
-
-    FRIEND_TEST(TreeVisualizerTest, it_sets_proper_color_for_status);
 
    private:
     /**

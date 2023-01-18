@@ -4,7 +4,7 @@
 #include <proto/SimulationConfiguration.pb.h>
 #include <utilities/Constants.h>
 #include <utilities/Settings.h>
-#include <world/Field.h>
+#include <roboteam_utils/Field.hpp>
 
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>

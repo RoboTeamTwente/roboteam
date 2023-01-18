@@ -6,7 +6,7 @@
 #define RTT_KEEPER_H
 
 #include "stp/Role.hpp"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp::role {
 

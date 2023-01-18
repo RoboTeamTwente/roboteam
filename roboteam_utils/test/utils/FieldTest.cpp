@@ -7,36 +7,36 @@ using namespace rtt;
 // Function to test if the values correspond to each other
 void testCoherence(const Field& f) {
     // Left play area must be inside play area
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getLeft(), f.playArea.getLeft());
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getRight(), f.playArea.getCenter().x);
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getTop(), f.playArea.getTop());
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getBottom(), f.playArea.getBottom());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.left(), f.playArea.left());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.right(), f.playArea.center().x);
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.top(), f.playArea.top());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.bottom(), f.playArea.bottom());
     // Right play area must be inside play area
-    ASSERT_DOUBLE_EQ(f.rightPlayArea.getLeft(), f.playArea.getCenter().x);
-    ASSERT_DOUBLE_EQ(f.rightPlayArea.getRight(), f.playArea.getRight());
-    ASSERT_DOUBLE_EQ(f.rightPlayArea.getTop(), f.playArea.getTop());
-    ASSERT_DOUBLE_EQ(f.rightPlayArea.getBottom(), f.playArea.getBottom());
+    ASSERT_DOUBLE_EQ(f.rightPlayArea.left(), f.playArea.center().x);
+    ASSERT_DOUBLE_EQ(f.rightPlayArea.right(), f.playArea.right());
+    ASSERT_DOUBLE_EQ(f.rightPlayArea.top(), f.playArea.top());
+    ASSERT_DOUBLE_EQ(f.rightPlayArea.bottom(), f.playArea.bottom());
     // Left play area touches right play area in the middle
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getRight(), f.rightPlayArea.getLeft());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.right(), f.rightPlayArea.left());
 
     // Defense areas touch the insides of the play area
-    ASSERT_DOUBLE_EQ(f.leftDefenseArea.getLeft(), f.playArea.getLeft());
-    ASSERT_DOUBLE_EQ(f.rightDefenseArea.getRight(), f.playArea.getRight());
+    ASSERT_DOUBLE_EQ(f.leftDefenseArea.left(), f.playArea.left());
+    ASSERT_DOUBLE_EQ(f.rightDefenseArea.right(), f.playArea.right());
 
     // Goal areas touch the outsides of the play area
-    ASSERT_DOUBLE_EQ(f.leftGoalArea.getRight(), f.playArea.getLeft());
-    ASSERT_DOUBLE_EQ(f.rightGoalArea.getLeft(), f.playArea.getRight());
+    ASSERT_DOUBLE_EQ(f.leftGoalArea.right(), f.playArea.left());
+    ASSERT_DOUBLE_EQ(f.rightGoalArea.left(), f.playArea.right());
 
     // Center of field is indeed 0, 0
-    ASSERT_EQ(f.playArea.getCenter(), Vector2(0, 0));
+    ASSERT_EQ(f.playArea.center(), Vector2(0, 0));
 
     // Left and right should have same size
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getWidth(), f.rightPlayArea.getWidth());
-    ASSERT_DOUBLE_EQ(f.leftPlayArea.getHeight(), f.rightPlayArea.getHeight());
-    ASSERT_DOUBLE_EQ(f.leftDefenseArea.getWidth(), f.rightDefenseArea.getWidth());
-    ASSERT_DOUBLE_EQ(f.leftDefenseArea.getHeight(), f.rightDefenseArea.getHeight());
-    ASSERT_DOUBLE_EQ(f.leftGoalArea.getWidth(), f.rightGoalArea.getWidth());
-    ASSERT_DOUBLE_EQ(f.leftGoalArea.getHeight(), f.rightGoalArea.getHeight());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.width(), f.rightPlayArea.width());
+    ASSERT_DOUBLE_EQ(f.leftPlayArea.height(), f.rightPlayArea.height());
+    ASSERT_DOUBLE_EQ(f.leftDefenseArea.width(), f.rightDefenseArea.width());
+    ASSERT_DOUBLE_EQ(f.leftDefenseArea.height(), f.rightDefenseArea.height());
+    ASSERT_DOUBLE_EQ(f.leftGoalArea.width(), f.rightGoalArea.width());
+    ASSERT_DOUBLE_EQ(f.leftGoalArea.height(), f.rightGoalArea.height());
 }
 
 TEST(FieldTest, instantiation) {
@@ -62,16 +62,16 @@ TEST(FieldTest, instantiation) {
                                 leftPenaltyPoint,
                                 rightPenaltyPoint);
 
+    const double DELTA = 1e-12;
     testCoherence(f);
-
-    ASSERT_DOUBLE_EQ(f.playArea.getWidth(), fieldWidth);
-    ASSERT_DOUBLE_EQ(f.playArea.getHeight(), fieldHeight);
-    ASSERT_DOUBLE_EQ(f.leftDefenseArea.getWidth(), defenseWidth);
-    ASSERT_DOUBLE_EQ(f.leftDefenseArea.getHeight(), defenseHeight);
-    ASSERT_DOUBLE_EQ(f.leftGoalArea.getWidth(), goalWidth);
-    ASSERT_DOUBLE_EQ(f.leftGoalArea.getHeight(), goalHeight);
-    ASSERT_DOUBLE_EQ(f.boundaryWidth, boundary);
-    ASSERT_DOUBLE_EQ(f.centerCircle.radius, centerRadius);
+    ASSERT_NEAR(f.playArea.width(), fieldWidth, DELTA);
+    ASSERT_NEAR(f.playArea.height(), fieldHeight, DELTA);
+    ASSERT_NEAR(f.leftDefenseArea.width(), defenseWidth, DELTA);
+    ASSERT_NEAR(f.leftDefenseArea.height(), defenseHeight, DELTA);
+    ASSERT_NEAR(f.leftGoalArea.width(), goalWidth, DELTA);
+    ASSERT_NEAR(f.leftGoalArea.height(), goalHeight, DELTA);
+    ASSERT_NEAR(f.boundaryWidth, boundary, DELTA);
+    ASSERT_NEAR(f.centerCircle.radius, centerRadius, DELTA);
     ASSERT_EQ(f.centerCircle.center, Vector2(0.0, 0.0));
 }
 

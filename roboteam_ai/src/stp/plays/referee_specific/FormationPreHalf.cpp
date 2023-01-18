@@ -26,31 +26,31 @@ FormationPreHalf::FormationPreHalf() : Play() {
         std::make_unique<role::Formation>(role::Formation("formation_9"))};
 }
 
-uint8_t FormationPreHalf::score(const rtt::world::Field& field) noexcept {
+uint8_t FormationPreHalf::score(const rtt::Field& field) noexcept {
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::PreHalfGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
 }
 
 void FormationPreHalf::calculateInfoForRoles() noexcept {
 
-    auto width = field.getFieldWidth();
-    auto length = field.getFieldLength();
+    auto height = field.playArea.height();
+    auto width = field.playArea.width();
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.getOurGoalCenter() + Vector2(0.5, 0.0)));
+    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
-    double defense_line_x = field.getLeftPenaltyX() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
+    double defense_line_x = field.leftDefenseArea.right() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
     // regular bots
-    stpInfos["formation_0"].setPositionToMoveTo(Vector2(-length / 4, width / 8));
-    stpInfos["formation_1"].setPositionToMoveTo(Vector2(-length / 4, -width / 8));
-    stpInfos["formation_2"].setPositionToMoveTo(Vector2(-length / 8, width / 4));
-    stpInfos["formation_3"].setPositionToMoveTo(Vector2(-length / 8, -width / 4));
+    stpInfos["formation_0"].setPositionToMoveTo(Vector2(-width / 4, height / 8));
+    stpInfos["formation_1"].setPositionToMoveTo(Vector2(-width / 4, -height / 8));
+    stpInfos["formation_2"].setPositionToMoveTo(Vector2(-width / 8, height / 4));
+    stpInfos["formation_3"].setPositionToMoveTo(Vector2(-width / 8, -height / 4));
     stpInfos["formation_4"].setPositionToMoveTo(Vector2(defense_line_x, 0.0));
-    stpInfos["formation_5"].setPositionToMoveTo(Vector2(defense_line_x, width / 5));
-    stpInfos["formation_6"].setPositionToMoveTo(Vector2(defense_line_x, -width / 5));
-    stpInfos["formation_7"].setPositionToMoveTo(Vector2(-length / 4, width / 3));
-    stpInfos["formation_8"].setPositionToMoveTo(Vector2(-length / 4, -width / 3));
-    stpInfos["formation_9"].setPositionToMoveTo(Vector2(-length * 3.0 / 16.0, 0.0));
+    stpInfos["formation_5"].setPositionToMoveTo(Vector2(defense_line_x, height / 5));
+    stpInfos["formation_6"].setPositionToMoveTo(Vector2(defense_line_x, -height / 5));
+    stpInfos["formation_7"].setPositionToMoveTo(Vector2(-width / 4, height / 3));
+    stpInfos["formation_8"].setPositionToMoveTo(Vector2(-width / 4, -height / 3));
+    stpInfos["formation_9"].setPositionToMoveTo(Vector2(-width * 3.0 / 16.0, 0.0));
 }
 
 Dealer::FlagMap FormationPreHalf::decideRoleFlags() const noexcept {

@@ -22,7 +22,7 @@ class FreeKickUsPass : public Play {
     /**
      *  Calculate how beneficial we expect this play to be
      */
-    uint8_t score(const rtt::world::Field& field) noexcept override;
+    uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
      * Assigns robots to roles of this play

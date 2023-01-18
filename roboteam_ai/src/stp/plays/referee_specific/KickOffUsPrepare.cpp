@@ -26,7 +26,7 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
         std::make_unique<role::Formation>(role::Formation("attacker_right"))};
 }
 
-uint8_t KickOffUsPrepare::score(const rtt::world::Field& field) noexcept {
+uint8_t KickOffUsPrepare::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffUsPrepareGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
@@ -34,7 +34,7 @@ uint8_t KickOffUsPrepare::score(const rtt::world::Field& field) noexcept {
 
 void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.getOurGoalCenter() + Vector2(0.5, 0.0)));
+    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
 
     // The "kicker" will go to the ball
     if (stpInfos["kicker"].getRobot() && stpInfos["kicker"].getRobot()->get()->getPos().x < 0) {
@@ -51,24 +51,24 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
         stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
     }
 
-    auto width = field.getFieldWidth();
-    auto length = field.getFieldLength();
+    auto height = field.playArea.height();
+    auto width = field.playArea.width();
 
     // Defenders
-    double defense_line_x = field.getLeftPenaltyX() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
-    stpInfos["defender_left"].setPositionToMoveTo(Vector2(defense_line_x, width / 5));
+    double defense_line_x = field.leftDefenseArea.right() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
+    stpInfos["defender_left"].setPositionToMoveTo(Vector2(defense_line_x, height / 5));
     stpInfos["defender_mid"].setPositionToMoveTo(Vector2(defense_line_x, 0.0));
-    stpInfos["defender_right"].setPositionToMoveTo(Vector2(defense_line_x, -width / 5));
+    stpInfos["defender_right"].setPositionToMoveTo(Vector2(defense_line_x, -height / 5));
 
     // Midfielders
-    stpInfos["midfielder_left"].setPositionToMoveTo(Vector2(-length / 5, width / 3));
-    stpInfos["midfielder_mid"].setPositionToMoveTo(Vector2(-length / 4, 0));
-    stpInfos["midfielder_right"].setPositionToMoveTo(Vector2(-length / 5, -width / 3));
+    stpInfos["midfielder_left"].setPositionToMoveTo(Vector2(-width / 5, height / 3));
+    stpInfos["midfielder_mid"].setPositionToMoveTo(Vector2(-width / 4, 0));
+    stpInfos["midfielder_right"].setPositionToMoveTo(Vector2(-width / 5, -height / 3));
 
     // Attackers
     stpInfos["attacker_left"].setPositionToMoveTo(Vector2(-1, 1));
-    stpInfos["attacker_mid"].setPositionToMoveTo(Vector2(-length / 8, 0));
-    stpInfos["attacker_right"].setPositionToMoveTo(Vector2(-length / 12, -width / 4));
+    stpInfos["attacker_mid"].setPositionToMoveTo(Vector2(-width / 8, 0));
+    stpInfos["attacker_right"].setPositionToMoveTo(Vector2(-width / 12, -height / 4));
 }
 
 Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {

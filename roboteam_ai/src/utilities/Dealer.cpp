@@ -22,7 +22,7 @@
 
 namespace rtt::ai {
 
-Dealer::Dealer(v::WorldDataView world, rtt_world::Field *field) : world(world), field(field) {}
+Dealer::Dealer(v::WorldDataView world, rtt::Field *field) : world(world), field(field) {}
 
 Dealer::DealerFlag::DealerFlag(DealerFlagTitle title, DealerFlagPriority priority) : title(title), priority(priority) {}
 
@@ -268,7 +268,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     // Target found. Calculate distance
     distance = robot->getPos().dist(*target_position);
 
-    return costForDistance(distance, field->getFieldWidth(), field->getFieldLength());
+    return costForDistance(distance, field->playArea.width(), field->playArea.height());
 }
 
 // TODO these values need to be tuned.
@@ -292,15 +292,15 @@ double Dealer::getWeightForPriority(const DealerFlagPriority &flagPriority) {
 
 // TODO these values need to be tuned.
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
-    auto fieldWidth = field->getFieldWidth();
-    auto fieldLength = field->getFieldLength();
+    auto fieldHeight = field->playArea.height();
+    auto fieldWidth = field->playArea.width();
     switch (flag.title) {
         case DealerFlagTitle::CLOSE_TO_THEIR_GOAL:
-            return costForDistance(FieldComputations::getDistanceToGoal(*field, false, robot->getPos()), fieldWidth, fieldLength);
+            return costForDistance(FieldComputations::getDistanceToGoal(*field, false, robot->getPos()), fieldHeight, fieldWidth);
         case DealerFlagTitle::CLOSE_TO_OUR_GOAL:
-            return costForDistance(FieldComputations::getDistanceToGoal(*field, true, robot->getPos()), fieldWidth, fieldLength);
+            return costForDistance(FieldComputations::getDistanceToGoal(*field, true, robot->getPos()), fieldHeight, fieldWidth);
         case DealerFlagTitle::CLOSE_TO_BALL:
-            return costForDistance(robot->getDistanceToBall(), fieldWidth, fieldLength);
+            return costForDistance(robot->getDistanceToBall(), fieldWidth, fieldWidth);
         case DealerFlagTitle::CLOSE_TO_POSITIONING:
             return costForProperty(true);
         case DealerFlagTitle::WITH_WORKING_BALL_SENSOR:
@@ -310,7 +310,7 @@ double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::Dea
         case DealerFlagTitle::READY_TO_INTERCEPT_GOAL_SHOT: {
             // get distance to line between ball and goal
             // TODO this method can be improved by choosing a better line for the interception.
-            LineSegment lineSegment = {world.getBall()->get()->position, field->getOurGoalCenter()};
+            LineSegment lineSegment = {world.getBall()->get()->position, field->leftGoalArea.rightLine().center()};
             return lineSegment.distanceToLine(robot->getPos());
         }
         case DealerFlagTitle::KEEPER:
@@ -346,7 +346,7 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
 double Dealer::costForDistance(double distance, double fieldWidth, double fieldHeight) {
-    auto fieldDiagonalLength = sqrt(pow(fieldWidth, 2.0) + pow(fieldHeight, 2.0));
+    auto fieldDiagonalLength = sqrt(pow(fieldHeight, 2.0) + pow(fieldHeight, 2.0));
     return distance / fieldDiagonalLength;
 }
 

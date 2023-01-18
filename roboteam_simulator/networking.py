@@ -5,6 +5,9 @@ Defines the classes used for publishing the SSL packages and receiving commands 
 published as multicast. Meaning that multiple applications will be able to listen to these packages.
 -Publisher
 -Subscriber
+
+@section author_static_classes Author
+- Created by Jibbe Andringa on 16/01/2023
 """
 import zmq
 import time
@@ -16,6 +19,8 @@ from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_Det
 # Addresses and ports used to communicate with the teams
 PUBLISH_ADDRESS = '224.5.23.2'  # The address the packages should be published on
 PUBLISH_PORT = '10006'  # The port the packages should be published on
+SUB_ADDRESS = '224.5.23.2'  # The address the packages should be received on
+SUB_PORT = '10006'  # The port the packages should be received on
 
 
 class Publisher:
@@ -29,8 +34,7 @@ class Publisher:
         """
         self.context = zmq.Context()  # The zmq context that manages the sockets
         self.socket = self.context.socket(zmq.PUB)  # The socket we will be publishing with
-        self.socket.bind(
-            'tcp://' + PUBLISH_ADDRESS + ':' + PUBLISH_PORT)  # Bind the socket to the publishing address/port
+        self.socket.bind(f'tcp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
         self.ball = SSL_DetectionBall()  # The SSL_DetectionBall package containing data about the ball
         self.robots_yellow = []  # List of SSL_DetectionRobot packages containing data about the yellow robots
         self.robots_blue = []  # List of SSL_DetectionRobot packages containing data about the blue robots
@@ -45,7 +49,7 @@ class Publisher:
         @param field Field data that needs to be sent
         """
         self.wrap_ball(field.ball)  # Wrap the ball in na SSL_DetectionBall package
-        self.wrap_robots(field.yellowTeam.robots, field.blueTeam.robots)  # Wrap the robots in SSL_DetectionRobot packages
+        self.wrap_robots(field.yellowTeam.robots, field.blueTeam.robots)  # Wrap robots in SSL_DetectionRobot packages
         self.wrap_detection_frame()  # Wrap all data in an SSL_DetectionFrame package
         self.wrap_packet()
         packet = self.wrapper.SerializeToString()  # Serializes the wrapper packet
@@ -114,3 +118,15 @@ class Publisher:
         """! Wraps the detection frame and geometry data into the SSL_WrapperPacket package
         """
         self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message
+
+
+class Subscriber:
+    def __init__(self):
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.SUB)
+        self.socket.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT}')
+
+    def receive(self):
+        msg = self.socket.recv()
+        print(msg)
+        return msg

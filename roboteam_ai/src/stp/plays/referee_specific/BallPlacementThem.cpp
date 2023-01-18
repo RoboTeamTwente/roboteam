@@ -29,7 +29,7 @@ BallPlacementThem::BallPlacementThem() : Play() {
                                                                                  std::make_unique<role::BallAvoider>(role::BallAvoider("harasser"))};
 }
 
-uint8_t BallPlacementThem::score(const rtt::world::Field& field) noexcept {
+uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallPlacementThemGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
@@ -75,20 +75,20 @@ void BallPlacementThem::calculateInfoForWallers() noexcept {
 
         wallerStpInfo.setPositionToMoveTo(
             Vector2(FieldComputations::getDefenseArea(field, true, 0, 0)[2].x + 2 * control_constants::ROBOT_RADIUS, side * 1.7 * (i+1) * control_constants::ROBOT_RADIUS));
-        wallerStpInfo.setAngle((Vector2{0, 0} - field.getOurGoalCenter()).angle());
+        wallerStpInfo.setAngle((Vector2{0, 0} - field.leftGoalArea.rightLine().center()).angle());
     }
 }
 
 void BallPlacementThem::calculateInfoForHarasser() noexcept {
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-    auto targetPos = placementPos + (field.getOurGoalCenter() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+    auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
     targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, world->getWorld()->getBall().value()->position, field);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
-    stpInfos["harasser"].setAngle((placementPos - field.getOurGoalCenter()).toAngle());
+    stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }
 
 void BallPlacementThem::calculateInfoForKeeper() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
 }
 
 const char* BallPlacementThem::getName() { return "Ball Placement Them"; }

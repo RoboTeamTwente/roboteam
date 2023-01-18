@@ -104,7 +104,7 @@ if (currentWorld.has_value()) {
 
 `updateField` -> Updates the internal `currentField` member from a new incoming protobuf Field.
 
-`updateField` -> An overload of the previous updateField, instead it takes an `ai::world::Field` object reference and updates 
+`updateField` -> An overload of the previous updateField, instead it takes an `ai::Field` object reference and updates 
 the internal world accordingly. Takes ownership of the original data.
 Ownership will be explained in a lecture about move semantics.
 

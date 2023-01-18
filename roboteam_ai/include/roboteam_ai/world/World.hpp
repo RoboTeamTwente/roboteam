@@ -107,7 +107,7 @@ class World {
      */
     void updateField(proto::SSL_GeometryFieldSize &protoField);
 
-    void updateField(world::Field &protoField);
+    void updateField(Field &protoField);
 
     /**
      * Update the position control using the new robot position
@@ -124,7 +124,7 @@ class World {
      * Gets the current field
      * @return std::nullopt if there is no currentField, otherwise Some with the value
      */
-    [[nodiscard]] std::optional<world::Field> getField() const noexcept;
+    [[nodiscard]] std::optional<Field> getField() const noexcept;
 
     /**
      * Gets a certain world from history
@@ -216,7 +216,7 @@ class World {
      */
     std::optional<WorldData> currentWorld = std::nullopt;
 
-    std::optional<world::Field> currentField;
+    std::optional<Field> currentField;
 
     /**
      * Timestamp of the last tick

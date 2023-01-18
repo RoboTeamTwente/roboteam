@@ -27,7 +27,7 @@ void Play::initialize(gen::PlayInfos &_previousPlayInfos) noexcept {
 
 void Play::setWorld(world::World *world) noexcept { this->world = world; }
 
-void Play::updateField(world::Field field) noexcept { this->field = field; }
+void Play::updateField(Field field) noexcept { this->field = field; }
 
 void Play::update() noexcept {
     // clear roleStatuses so it only contains the current tick's statuses

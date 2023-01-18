@@ -16,7 +16,7 @@ proto::SSL_Referee GameStateManager::getRefereeData() {
     return GameStateManager::refMsg;
 }
 
-void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt_world::World* data) {
+void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::world::World* data) {
     std::lock_guard<std::mutex> lock(refMsgLock);
     GameStateManager::refMsg = refMsg;
     RefCommand cmd;
@@ -175,7 +175,7 @@ GameState GameStateManager::getCurrentGameState() {
     return newGameState;
 }
 
-void GameStateManager::forceNewGameState(RefCommand cmd, std::optional<rtt_world::view::BallView> ball) {
+void GameStateManager::forceNewGameState(RefCommand cmd, std::optional<rtt::world::view::BallView> ball) {
     RTT_INFO("Forcing new refstate!")
 
     // overwrite both the interface and the strategy manager.

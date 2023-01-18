@@ -38,7 +38,7 @@ Attack::Attack() : Play() {
                                                                                        std::make_unique<role::Formation>(("attacking_midfielder"))};
 }
 
-uint8_t Attack::score(const rtt::world::Field& field) noexcept {
+uint8_t Attack::score(const rtt::Field& field) noexcept {
     // Score the position of the ball based on the odds of scoring
     return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
 }
@@ -75,12 +75,12 @@ void Attack::calculateInfoForRoles() noexcept {
     calculateInfoForMidfielders();
 
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     // Striker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    goalTarget.y = std::clamp(goalTarget.y, field.getTheirBottomGoalSide().y + 0.4, field.getTheirTopGoalSide().y - 0.4);
+    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.4, field.rightGoalArea.top() - 0.4);
     stpInfos["striker"].setPositionToShootAt(goalTarget);
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);
@@ -135,7 +135,7 @@ void Attack::calculateInfoForDefenders() noexcept {
         auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
 
         wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.getOurGoalCenter()).angle());
+        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
         constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
@@ -143,7 +143,7 @@ void Attack::calculateInfoForDefenders() noexcept {
             wallerStpInfo.setShouldAvoidOurRobots(false);
         }
     }
-    stpInfos["defender_left"].setPositionToDefend(field.getOurTopGoalSide());
+    stpInfos["defender_left"].setPositionToDefend(field.leftGoalArea.topRight());
     stpInfos["defender_left"].setBlockDistance(BlockDistance::HALFWAY);
 }
 
@@ -151,30 +151,30 @@ void Attack::calculateInfoForMidfielders() noexcept {
 
     // If the ball (and therefore striker) are in the front of the field, let the attacking midfielder go to the midfield
     // If the striker is not in the front field already, let the attacking midfielder go to the free section in the front field
-    if (world->getWorld()->getBall()->get()->position.x > field.getFrontMidGrid().getOffSetX()) {
-        stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getMiddleMidGrid(), gen::OffensivePosition, field, world));
+    if (world->getWorld()->getBall()->get()->position.x > field.middleRightGrid.getOffSetX()) {
+        stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::OffensivePosition, field, world));
     } else {
-        if (world->getWorld()->getBall().value()->position.y > field.getFrontLeftGrid().getOffSetY()) {  // Ball is in left of field
-            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontLeftGrid(), gen::OffensivePosition, field, world));
-        } else if (world->getWorld()->getBall().value()->position.y < field.getFrontMidGrid().getOffSetY()) {  // Ball is in right of field
-            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontRightGrid(), gen::OffensivePosition, field, world));
+        if (world->getWorld()->getBall().value()->position.y > field.topRightGrid.getOffSetY()) {  // Ball is in left of field
+            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::OffensivePosition, field, world));
+        } else if (world->getWorld()->getBall().value()->position.y < field.middleRightGrid.getOffSetY()) {  // Ball is in right of field
+            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::OffensivePosition, field, world));
         } else {  // Ball is in middle of field
-            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontMidGrid(), gen::OffensivePosition, field, world));
+            stpInfos["attacking_midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
         }
     }
 }
 
 void Attack::calculateInfoForAttackers() noexcept {
     // Set the attackers to go to the part of the field where the ball is NOT (in y-direction), since that is where the striker will be
-    if (world->getWorld()->getBall().value()->position.y > field.getFrontLeftGrid().getOffSetY()) {  // Ball is in left of field
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontMidGrid(), gen::OffensivePosition, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontRightGrid(), gen::OffensivePosition, field, world));
-    } else if (world->getWorld()->getBall().value()->position.y < field.getFrontMidGrid().getOffSetY()) {  // Ball is in right of field
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontLeftGrid(), gen::OffensivePosition, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontMidGrid(), gen::OffensivePosition, field, world));
+    if (world->getWorld()->getBall().value()->position.y > field.topRightGrid.getOffSetY()) {  // Ball is in left of field
+        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
+        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::OffensivePosition, field, world));
+    } else if (world->getWorld()->getBall().value()->position.y < field.middleRightGrid.getOffSetY()) {  // Ball is in right of field
+        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::OffensivePosition, field, world));
+        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
     } else {  // Ball is in middle of field
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontLeftGrid(), gen::OffensivePosition, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.getFrontRightGrid(), gen::OffensivePosition, field, world));
+        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::OffensivePosition, field, world));
+        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::OffensivePosition, field, world));
     }
 }
 

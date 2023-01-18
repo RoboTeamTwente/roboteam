@@ -9,7 +9,7 @@
 #include <stp/constants/GeneralizationConstants.h>
 
 #include "roboteam_utils/Grid.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/World.hpp"
 #include "world/views/RobotView.hpp"
 
@@ -39,7 +39,7 @@ class PassComputations {
      * @param keeperCanPass indicate whether the keeper can pass and be passed to
      * @return a PassInfo struct which contains the relevant information needed to complete the pass
      */
-    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const world::Field& field, bool keeperCanPass = false);
+    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
 
     /**
      * Scores a given pass based on how likely it is to score from the passLocation, adjusted for the riskiness of the pass
@@ -48,7 +48,7 @@ class PassComputations {
      * @param field the current field
      * @return the score of the pass (0 - 255)
      */
-    static uint8_t scorePass(PassInfo passInfo, const world::World* world, const rtt::world::Field& field);
+    static uint8_t scorePass(PassInfo passInfo, const world::World* world, const rtt::Field& field);
 
    private:
     /**
@@ -56,7 +56,7 @@ class PassComputations {
      * @param field the current field
      * @return a Grid class containing a vector of vectors, which in turn contain all possible pass locations
      */
-    static Grid getPassGrid(const world::Field& field);
+    static Grid getPassGrid(const Field& field);
 
     /**
      * Indicates whether the given point 1) a valid point to pass to in terms of ssl-rules and 2) whether it is feasible ot pass there
@@ -69,7 +69,7 @@ class PassComputations {
      * @return bool indicating whether this point is (likely) possible to pass to
      */
     static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations, Vector2 passerLocation,
-                                         const world::Field& field, const world::World* world);
+                                         const Field& field, const world::World* world);
 
     /**
      * Determines which robot should be the keeper (either previous keeper, or robot closest to goal if there was no keeper)
@@ -78,7 +78,7 @@ class PassComputations {
      * @param field current field
      * @return Id of robot that should become keeper
      */
-    static int getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const world::Field& field);
+    static int getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const Field& field);
 
     /**
      * Determines which robot should be the passer (the robot closest to the ball)

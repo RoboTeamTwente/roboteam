@@ -9,7 +9,7 @@
 #include "stp/constants/ControlConstants.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
-#include "world/Field.h"
+#include <roboteam_utils/Field.hpp>
 #include "world/World.hpp"
 
 namespace rtt::ai::control {

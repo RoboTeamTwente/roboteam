@@ -45,7 +45,7 @@ namespace ai = rtt::ai;
 namespace rtt {
 
 /// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
-void STPManager::start() {
+void STPManager::start(std::atomic_bool& exitApplication) {
     // make sure we start in halt state for safety
     ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
     RTT_INFO("Start looping")
@@ -117,6 +117,9 @@ void STPManager::start() {
             // If this is primary AI, broadcast settings every second
             if (SETTINGS.isPrimaryAI()) {
                 stpTimer.limit([&]() { io::io.publishSettings(SETTINGS); }, ai::Constants::SETTINGS_BROADCAST_RATE());
+            }
+            if(exitApplication){
+                stpTimer.stop();
             }
         },
         ai::Constants::STP_TICK_RATE());

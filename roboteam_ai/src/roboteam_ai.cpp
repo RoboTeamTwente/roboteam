@@ -8,9 +8,9 @@ namespace ui = rtt::ai::interface;
 
 ui::MainWindow* window;
 
-void runStp() {
+void runStp(std::atomic_bool& exitApplication) {
     rtt::STPManager app{window};
-    app.start();
+    app.start(exitApplication);
 }
 
 void setDarkTheme() {
@@ -87,15 +87,20 @@ int main(int argc, char* argv[]) {
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     // initialize the interface
-    QApplication a(argc, argv);
+    QApplication application(argc, argv);
     setDarkTheme();
 
     // Todo make this a not-global-static thingy
     window = new ui::MainWindow{};
     window->setWindowState(Qt::WindowMaximized);
 
-    std::thread stpThread = std::thread(&runStp);
+    //Create a flag which signals to the STP thread to stop if the interface is stopped
+    std::atomic_bool exitApplication = false;
+    std::thread stpThread(runStp,std::ref(exitApplication));
 
     window->show();
-    return a.exec();
+    bool runQT = application.exec();
+    exitApplication = true;
+    stpThread.join();
+    return runQT;
 }

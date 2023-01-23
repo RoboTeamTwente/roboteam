@@ -11,9 +11,11 @@
 namespace rtt {
     class Shape {
     public:
-        virtual bool contains(const Vector2& point) const = 0;
+        [[nodiscard]] virtual bool contains(const Vector2& point) const = 0;
 
-        virtual Vector2 project(const Vector2& point) const = 0;
+        [[nodiscard]] virtual Vector2 project(const Vector2& point) const = 0;
+
+        virtual ~Shape() = default;
     };
 }
 

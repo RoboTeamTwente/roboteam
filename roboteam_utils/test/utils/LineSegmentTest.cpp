@@ -39,7 +39,8 @@ TEST(LineSegmentTests, center) {
 
         auto distCenterStart = lineSeg.center().dist(lineSeg.start);
         auto distCenterEnd = lineSeg.center().dist(lineSeg.end);
-        ASSERT_DOUBLE_EQ(distCenterStart, distCenterEnd);
+        ASSERT_TRUE(std::fabs(distCenterStart-distCenterEnd) < 1e-12); //ASSERT_DOUBLE_EQ can fail here due to small numerical errors for nearly parallel lines,
+                                                                       //though these errors should really stay small in practice.
     }
 }
 

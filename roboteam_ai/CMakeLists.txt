@@ -335,7 +335,6 @@ target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
 ###### WORLD #######
 add_library(roboteam_ai_world
         ${PROJECT_SOURCE_DIR}/src/world/FieldComputations.cpp
-        ${PROJECT_SOURCE_DIR}/src/world/Field.cpp
         ${PROJECT_SOURCE_DIR}/src/world/Ball.cpp
         ${PROJECT_SOURCE_DIR}/src/world/Robot.cpp
         ${PROJECT_SOURCE_DIR}/src/world/World.cpp

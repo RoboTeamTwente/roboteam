@@ -26,7 +26,7 @@ RobotsWidget::RobotsWidget(QWidget *parent) : QWidget(parent) {
 }
 
 void RobotsWidget::updateContents(Visualizer *visualizer, rtt::world::view::WorldDataView world) {
-    std::optional<rtt::world::Field> field;
+    std::optional<rtt::Field> field;
     {
         auto const &[_, world] = rtt::world::World::instance();
         field = world->getField();
@@ -69,7 +69,7 @@ void RobotsWidget::updateContents(Visualizer *visualizer, rtt::world::view::Worl
 }
 
 /// create a single layout with robot information for a specific robot
-QVBoxLayout *RobotsWidget::createRobotGroupItem(const rtt::world::Field &field, rtt::world::view::RobotView robot) {
+QVBoxLayout *RobotsWidget::createRobotGroupItem(const rtt::Field &field, rtt::world::view::RobotView robot) {
     auto vbox = new QVBoxLayout();
 
     auto absVel = robot->getVel().length();

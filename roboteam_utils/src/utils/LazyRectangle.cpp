@@ -1,5 +1,6 @@
 #include "LazyRectangle.hpp"
 
+#include <cassert>
 #include <cmath>
 
 #include "Line.h"
@@ -108,7 +109,8 @@ std::vector<Vector2> LazyRectangle::intersects(const LineSegment &line) const {
             } else if (codeOut & RIGHT) {  // point is to the right of clip window
                 y = y0 + (y1 - y0) * (right() - x0) / (x1 - x0);
                 x = right();
-            } else if (codeOut & LEFT) {  // point is to the left of clip window
+            } else{  // point is to the left of clip window
+                assert(codeOut & LEFT);
                 y = y0 + (y1 - y0) * (left() - x0) / (x1 - x0);
                 x = left();
             }

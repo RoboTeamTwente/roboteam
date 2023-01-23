@@ -58,7 +58,7 @@ class WorldObjects {
      * @param avoidObjects a struct with if it should avoid certain objects
      * @return optional with rtt::BB::CollisionData
      */
-    std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::world::Field &field, const rtt::Trajectory2D &Trajectory,
+    std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
                                                    const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects);
 
     /**
@@ -70,7 +70,7 @@ class WorldObjects {
      * @param robotId
      * @param timeStep in seconds
      */
-    void calculateFieldCollisions(const rtt::world::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep);
+    void calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep);
 
     /**
      * @brief Takes a calculated path and checks points along the path if they are inside the defensearea if
@@ -81,7 +81,7 @@ class WorldObjects {
      * @param robotId
      * @param timeStep in seconds
      */
-    void calculateDefenseAreaCollisions(const rtt::world::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
+    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
                                         double timeStep);
 
     /**

@@ -37,16 +37,16 @@ TEST(Grid, getters) {
     EXPECT_EQ(grid.getOffSetX(), 1);
     EXPECT_EQ(grid.getOffSetY(), 2);
     EXPECT_EQ(grid.getRegionWidth(), 3);
-    EXPECT_EQ(grid.getRegionLength(), 4);
+    EXPECT_EQ(grid.getRegionHeight(), 4);
     EXPECT_EQ(grid.getNumPointsX(), 5);
     EXPECT_EQ(grid.getNumPointsY(), 6);
-    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 4 / 5.0);
-    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 3 / 6.0);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeX(), 3 / 5.0);
+    EXPECT_DOUBLE_EQ(grid.getStepSizeY(), 4 / 6.0);
 }
 
 // Test whether the points are equally spaced in the region (average should be in the center of the grid)
 TEST(Grid, spreadTest) {
-    Grid grid = Grid(-3, -2, 4, 6, 5, 3);
+    Grid grid = Grid(-3, -2, 6, 4, 5, 3);
     double totalX = 0;
     double totalY = 0;
     for (auto nestedPoints : grid.getPoints()) {
@@ -59,4 +59,23 @@ TEST(Grid, spreadTest) {
     EXPECT_NEAR(totalX/5.0, 0.0, 1e-10);
     EXPECT_NEAR(totalY/3.0, 0.0, 1e-10);
 }
+
+TEST(Grid, equals) {
+    Grid g1(0, 0, 10, 10, 10, 10);
+    Grid g2(0, 0, 10, 10, 10, 10);
+    ASSERT_EQ(g1, g2);
+
+    Grid g3(0, 0, 10, 10, 10, 11);
+    ASSERT_NE(g1, g3);
+    Grid g4(0, 0, 10, 10, 5, 10);
+    ASSERT_NE(g1, g4);
+    Grid g5(0, 0, 10, 11, 10, 10);
+    ASSERT_NE(g1, g5);
+    Grid g6(0, 0, 11, 10, 10, 10);
+    ASSERT_NE(g1, g6);
+    Grid g7(0, 1, 10, 10, 10, 10);
+    ASSERT_NE(g1, g7);
+    Grid g8(-1, 0, 10, 10, 10, 10);
+}
+
 }  // namespace rtt

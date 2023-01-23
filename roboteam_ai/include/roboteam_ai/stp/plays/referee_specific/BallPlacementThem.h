@@ -17,7 +17,7 @@ class BallPlacementThem : public Play {
      * @param field The current Field
      * @return The score of this play (0-255)
      */
-    uint8_t score(const rtt::world::Field& field) noexcept override;
+    uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
      * Assigns robots to roles of this play

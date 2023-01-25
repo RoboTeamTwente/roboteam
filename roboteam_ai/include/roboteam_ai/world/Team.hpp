@@ -7,17 +7,12 @@
 
 namespace rtt::world {
 /**
- * Enum used for indicating team
+ * @brief Enumerator used for indicating the team
  */
 enum Team : short {
-    // our team
-    us,
-    // their team
-    them,
-    /**
-     * If a robot has both as team -> invalid.
-     */
-    both
+    us, /**< Our team */
+    them, /**< Enemy team */
+    both /**< If a robot has both as team -> invalid. */
 };
 }  // namespace rtt::world
 

@@ -146,17 +146,15 @@ void STPManager::runOneLoopCycle() {
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);
+        world->updateField(fieldMessage);
 
         if (!world->getWorld()->getUs().empty()) {
             if (!robotsInitialized) {
                 RTT_SUCCESS("Received robots, starting STP!")
             }
-            robotsInitialized = true;
-
-            world->updateField(fieldMessage);
             world->updatePositionControl();
-
             decidePlay(world);
+            robotsInitialized = true;
 
         } else {
             if (robotsInitialized) {

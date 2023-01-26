@@ -31,7 +31,7 @@ class STPManager {
     void decidePlay(world::World* _world);
 
    public:
-    void start();
+    void start(std::atomic_bool& exitApplication);
 
     /**
      * The vector that contains all plays

@@ -33,7 +33,7 @@ KickOffUs::KickOffUs() : Play() {
                                                                                  std::make_unique<role::Halt>("halt_7")};
 }
 
-uint8_t KickOffUs::score(const rtt::world::Field &field) noexcept {
+uint8_t KickOffUs::score(const rtt::Field &field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffUsGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
@@ -41,7 +41,7 @@ uint8_t KickOffUs::score(const rtt::world::Field &field) noexcept {
 
 void KickOffUs::calculateInfoForRoles() noexcept {
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter() + Vector2(control_constants::DISTANCE_FROM_GOAL_CLOSE, 0));
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center() + Vector2(control_constants::DISTANCE_FROM_GOAL_CLOSE, 0));
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     // Kicker
@@ -59,7 +59,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
         stpInfos["receiver"].setPositionToMoveTo(passLocation);
     } else {
         auto ball = world->getWorld()->getBall()->get();
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.getFieldLength()));
+        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);

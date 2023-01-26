@@ -57,7 +57,7 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
     return flagMap;  // DONT TOUCH.
 }
 
-uint8_t PenaltyUs::score(const rtt::world::Field& field) noexcept {
+uint8_t PenaltyUs::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::PenaltyUsGameState, world), 1.0}};
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
@@ -66,11 +66,11 @@ uint8_t PenaltyUs::score(const rtt::world::Field& field) noexcept {
 void PenaltyUs::calculateInfoForRoles() noexcept {
     /// Function where are roles get their information, make sure not to compute roles twice.
 
-    stpInfos["keeper"].setPositionToMoveTo(field.getOurGoalCenter());
+    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     // TODO: the shoot position might need to change
-    stpInfos["kicker"].setPositionToShootAt(field.getTheirGoalCenter() + Vector2{1.0, 0.5});
+    stpInfos["kicker"].setPositionToShootAt(field.rightGoalArea.leftLine().center() + Vector2{1.0, 0.5});
     stpInfos["kicker"].setShotType(ShotType::PASS);
 }
 

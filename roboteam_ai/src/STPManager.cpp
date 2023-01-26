@@ -44,7 +44,7 @@ namespace ai = rtt::ai;
 namespace rtt {
 
 /// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
-void STPManager::start() {
+void STPManager::start(std::atomic_bool& exitApplication) {
     // make sure we start in halt state for safety
     ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
     RTT_INFO("Start looping")
@@ -116,6 +116,9 @@ void STPManager::start() {
             if (SETTINGS.isPrimaryAI()) {
                 stpTimer.limit([&]() { io::io.publishSettings(SETTINGS); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
+            if(exitApplication){
+                stpTimer.stop();
+            }
         },
         ai::Constants::STP_TICK_RATE());
 }
@@ -143,17 +146,15 @@ void STPManager::runOneLoopCycle() {
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);
+        world->updateField(fieldMessage);
 
         if (!world->getWorld()->getUs().empty()) {
             if (!robotsInitialized) {
                 RTT_SUCCESS("Received robots, starting STP!")
             }
-            robotsInitialized = true;
-
-            world->updateField(fieldMessage);
             world->updatePositionControl();
-
             decidePlay(world);
+            robotsInitialized = true;
 
         } else {
             if (robotsInitialized) {

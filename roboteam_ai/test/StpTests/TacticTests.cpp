@@ -51,7 +51,7 @@ TEST(TacticTests, nonEndTacticFinishedSuccessful) {
     MockTactic tactic(true);
     StpInfo info;
     info.setBall(rtt::world::view::BallView(nullptr));
-    info.setField(rtt::world::Field());
+    info.setField(rtt::Field());
     proto::WorldRobot robot_proto;
     robot_proto.set_id(1);
     std::unordered_map<uint8_t, proto::RobotFeedback> updateMap;
@@ -68,7 +68,7 @@ TEST(TacticTests, endTacticWaiting) {
     MockTactic tactic(true);
     StpInfo info;
     info.setBall(rtt::world::view::BallView(nullptr));
-    info.setField(rtt::world::Field());
+    info.setField(rtt::Field());
     proto::WorldRobot robot_proto;
     robot_proto.set_id(1);
     std::unordered_map<uint8_t, proto::RobotFeedback> updateMap;
@@ -85,7 +85,7 @@ TEST(TacticTests, endTacticFailingCondition) {
     MockTactic tactic(false);
     StpInfo info;
     info.setBall(rtt::world::view::BallView(nullptr));
-    info.setField(rtt::world::Field());
+    info.setField(rtt::Field());
 
     proto::WorldRobot robot_proto;
     robot_proto.set_id(1);
@@ -103,7 +103,7 @@ TEST(TacticTests, isTacticRunningSuccessful) {
     MockTactic tactic(false);
     StpInfo info;
     info.setBall(rtt::world::view::BallView(nullptr));
-    info.setField(rtt::world::Field());
+    info.setField(rtt::Field());
 
     proto::WorldRobot robot_proto;
     robot_proto.set_id(1);

@@ -32,13 +32,13 @@ public:
     [[nodiscard]] virtual Vector2 bottomLeft() const = 0;
     // Gets the bottom right corner
     [[nodiscard]] virtual Vector2 bottomRight() const = 0;
-    // Gets the top line segment
+    // Gets the top line segment, points in clockwise rotation
     [[nodiscard]] virtual LineSegment topLine() const = 0;
-    // Gets the left line segment
+    // Gets the left line segment, points in clockwise rotation
     [[nodiscard]] virtual LineSegment leftLine() const = 0;
-    // Gets the right line segment
+    // Gets the right line segment, points in clockwise rotation
     [[nodiscard]] virtual LineSegment rightLine() const = 0;
-    // Gets the bottom line segment
+    // Gets the bottom line segment, points in clockwise rotation
     [[nodiscard]] virtual LineSegment bottomLine() const = 0;
 };
 

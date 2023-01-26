@@ -17,7 +17,7 @@ NoGoalVisionFromBallGlobalEvaluation::NoGoalVisionFromBallGlobalEvaluation() noe
     piecewiseLinearFunction->setYAtX(control_constants::FUZZY_TRUE, 0.0);
 }
 
-uint8_t NoGoalVisionFromBallGlobalEvaluation::metricCheck(const world::World* world, const world::Field* field) const noexcept {
+uint8_t NoGoalVisionFromBallGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
     return calculateMetric(
         FieldComputations::getPercentageOfGoalVisibleFromPoint(*field, false, world->getWorld()->getBall().value()->position, world->getWorld().value(), -1, false));
 }

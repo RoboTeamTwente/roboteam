@@ -7,9 +7,9 @@ name: Doxygen Documentation
 on:
   # Triggers the action on push or pull request events but only for the development branch
   push:
-    branches: [ development ]
+    branches: [ main ]
   pull_request:
-    branches: [ development ]
+    branches: [ main ]
 
   # Allows you to run this action manually from the Actions tab
   workflow_dispatch:

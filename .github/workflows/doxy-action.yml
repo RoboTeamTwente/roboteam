@@ -23,7 +23,7 @@ jobs:
       - name: 'Build'
         uses: mattnotmitt/doxygen-action@v1.3.1  # action to create the documentation from the specified doxygen config file
         with:
-          working-directory: "."
+          working-directory: "./roboteam_ai/"
           doxyfile-path: "doxygen"
 
       - name: 'Deploy'

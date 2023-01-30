@@ -6,44 +6,35 @@
 namespace rtt::ai::stp::skill {
 
 Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
+    RTT_DEBUG(info.getBall().value()->velocity.length())
     // initialization of local variables
-    Vector2 directionVector =  info.getRobot()->get()->getAngle().toVector2();  // Vector in direction robot is currently facing
-    Angle targetAngle = (info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).toAngle(); // Angle we want to have
-    auto direction = Angle(directionVector).rotateDirection(targetAngle) ? 1.0 : -1.0;  // Direction robot should rotate to
-    double speed = std::clamp(4 * directionVector.toAngle().shortestAngleDiff(targetAngle), 0.5, 3.0); // Speed at which the robot should orbit. I made it relative to the angle so that we don't overshoot
-    Vector2 normalVector = directionVector.rotate(-direction * M_PI_2); // Direction robot should move to
+    Angle currentAngle = info.getRobot().value()->getAngle(); // Angle the robot is currently facing
+    Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle(); // targetAngle the robot should have
+    int direction = targetAngle.rotateDirection(currentAngle) ? -1 : 1; // Direction in which the robot should move
+    double speedFactor = M_PI_2; // Speed at which the robot should orbit
 
-    // velocity vector the robot should follow
-    Vector2 targetVelocity;
-    targetVelocity.x = speed * normalVector.x;
-    targetVelocity.y = speed * normalVector.y;
+    double targetAngularVelocity = direction * speedFactor; // Set the target angular velocity of the robot
 
-    // make robot commnad
+    Vector2 normalVector = info.getRobot().value()->getAngle().toVector2().rotate(-direction * M_PI_2); // Vector the robot should move to
+    Vector2 targetVelocity; // Absolute velocity the robot should have
+    targetVelocity.x = speedFactor * normalVector.x * (stp::control_constants::BALL_RADIUS + stp::control_constants::ROBOT_RADIUS); // X-Velocity
+    targetVelocity.y = speedFactor * normalVector.y * (stp::control_constants::BALL_RADIUS + stp::control_constants::ROBOT_RADIUS); // Y-velocity
+
+    // Construct the robot command
     command.id = info.getRobot().value()->getId();
     command.velocity = targetVelocity;
     command.useAngularVelocity = true;
-    command.targetAngularVelocity = direction * targetVelocity.length(); // Scale the angular velocity to the absolute velocity for a nice circle
+    command.targetAngularVelocity = targetAngularVelocity;
+    command.targetAngle = targetAngle;
     command.dribblerSpeed = stp::control_constants::MAX_DRIBBLER_CMD;
 
-    // Send robot commands
-    forwardRobotCommand(info.getCurrentWorld());
+    forwardRobotCommand(info.getCurrentWorld()); // Send the robot command
 
-    // Check if successful
-    double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI_2 * 0.2; // Can be finetuned. smaller margin means preciser shooting but more prone to overshooting angle
-    if (directionVector.toAngle().shortestAngleDiff(targetAngle) < errorMargin) {
-        counter++;
-    }
-    else {
-        counter = 0;
-    }
-
-    // If the robot is within the error margin for 5 consecutive ticks, return success
-    if (counter > 2) {
-        command.dribblerSpeed = 0;
-        forwardRobotCommand(info.getCurrentWorld());
+    // Return success if the angle difference is within the margin
+    if (currentAngle.shortestAngleDiff(targetAngle) < stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN){
         return Status::Success;
     }
-    else {
+    else{
         return Status::Running;
     }
 }

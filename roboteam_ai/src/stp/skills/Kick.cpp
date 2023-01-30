@@ -13,7 +13,6 @@ namespace rtt::ai::stp::skill {
 Status Kick::onUpdate(const StpInfo &info) noexcept {
     // Clamp and set kick velocity
     float kickVelocity = std::clamp(info.getKickChipVelocity(), control_constants::MIN_KICK_POWER, control_constants::MAX_KICK_POWER);
-    RTT_DEBUG(kickVelocity)
     // Set kick command
     command.kickType = KickType::KICK;
     command.kickSpeed = kickVelocity;

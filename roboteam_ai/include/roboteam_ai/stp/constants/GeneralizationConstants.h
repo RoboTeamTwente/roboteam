@@ -66,7 +66,7 @@ constexpr ScoreProfile SafePass = {1, 1, 0.5, 0}; /**< Scoring weights for Safe 
 constexpr ScoreProfile LineOfSight = {0, 1, 0, 0}; /**< Scoring weights for Line of Sight score */
 constexpr ScoreProfile Open = {1, 0, 0, 0}; /**< Scoring weights for Open score */
 constexpr ScoreProfile GoalShot = {0, 0, 1, 0}; /**< Scoring weights for Goal Shot Score */
-
+constexpr ScoreProfile ChippingPass = {0, 0.0,0,1};
 /**
  * @brief Generalized Keys for passing information form the old play to the new.
  * Usage in the storePlayInfo where KeyInfo is the key for the elements in the map.

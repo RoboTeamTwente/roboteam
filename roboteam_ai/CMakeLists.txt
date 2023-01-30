@@ -45,6 +45,7 @@ target_compile_options(roboteam_ai_manual PRIVATE "${COMPILER_FLAGS}")
 add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/Skill.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Kick.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/skills/Chip.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Rotate.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/GoToPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Orbit.cpp
@@ -73,6 +74,7 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/GetBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/GetBehindBallInDirection.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/KickAtPos.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/ChipAtPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/OrbitKick.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
         # passive/
@@ -105,6 +107,7 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/BallPlacer.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/FreeKickTaker.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Passer.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Chipper.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/KeeperPasser.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PassReceiver.cpp
         # passive
@@ -136,6 +139,7 @@ add_library(roboteam_ai_plays
         # offensive/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/Attack.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/AttackingPass.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/ChippingPass.cpp
         # referee_specific/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/AggressiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementThem.cpp

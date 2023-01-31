@@ -12,8 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: action/checkout@v1
-    - name: Install gtest
-      run: sudo apt-get install libgtest-dev
-    - name: Configure
-      run: ls ${{ github.workspace }}
+      - uses: actions/checkout@v2
+      - name: Install gtest
+        run: sudo apt-get install libgtest-dev
+      - name: Configure
+        run: ls ${{ github.workspace }}

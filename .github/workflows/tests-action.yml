@@ -15,4 +15,4 @@ jobs:
     - name: Install gtest
       run: sudo apt-get install libgtest-dev
     - name: Configure
-      run: print ${ ls }
+      run: ls

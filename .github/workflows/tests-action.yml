@@ -21,4 +21,6 @@ jobs:
         run: mkdir build && cd build && cmake ..
       - name: Build
         run: cmake --build build --target roboteam_ai_tests
+      - name: Run
+        run: ./build/roboteam_ai/roboteam_ai_tests
         

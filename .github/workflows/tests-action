@@ -1,0 +1,15 @@
+name: GTests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install gtest
+      run: sudo ./Install_UBUNTU_20_04.sh

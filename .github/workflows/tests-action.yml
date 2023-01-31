@@ -11,4 +11,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install gtest
-      run: sudo ./Install_UBUNTU_20_04.sh
+      run: sudo ./${{ github.workspace }}/install_UBUNTU_20_04.sh

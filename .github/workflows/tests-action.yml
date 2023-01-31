@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependecies
         run: |
-            chomd +x ./install_UBUNTU_20_04.sh
+            chmod +x ./install_UBUNTU_20_04.sh
             sudo ./install_UBUNTU_20_04.sh
       - name: Configure
         run: ls ${{ github.workspace }}

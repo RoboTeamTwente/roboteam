@@ -19,3 +19,6 @@ jobs:
             sudo ./install_UBUNTU_20_04.sh
       - name: Configure
         run: mkdir build && cd build && cmake ..
+      - name: Build
+        run: cmake --build build --target roboteam_ai_tests
+        

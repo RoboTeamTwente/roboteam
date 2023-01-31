@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install gtest
-      run: |
-          ls
-          chmod +x .${{ github.workspace }}/install_UBUNTU_20_04.sh
-          sudo .${{ github.workspace }}/install_UBUNTU_20_04.sh
-      shell: bash
+      run: sudo apt-get install libgtest-dev
+    - name: Configure
+      run: mkdir build && cd build && cmake ..

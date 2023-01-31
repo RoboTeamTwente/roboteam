@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install gtest
-        run: sudo apt-get install libgtest-dev
+      - name: Install dependecies
+        run: |
+            chomd +x ./install_UBUNTU_20_04.sh
+            sudo ./install_UBUNTU_20_04.sh
       - name: Configure
         run: ls ${{ github.workspace }}

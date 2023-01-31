@@ -18,4 +18,4 @@ jobs:
             chmod +x ./install_UBUNTU_20_04.sh
             sudo ./install_UBUNTU_20_04.sh
       - name: Configure
-        run: ls ${{ github.workspace }}
+        run: mkdir build && cd build && cmake ..

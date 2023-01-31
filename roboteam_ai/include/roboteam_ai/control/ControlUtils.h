@@ -80,7 +80,7 @@ class ControlUtils {
      */
     static double determineKickForce(const double distance, stp::ShotType shotType) noexcept;
     /**
-     * Determines the chip force based on the distance and the type of chip
+     * @brief Determines the chip force based on the distance and the type of chip
      * @param distance distance to the target
      * @param shotType type of the chip
      * @return a chip speed between min and max chip speed

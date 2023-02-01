@@ -17,6 +17,7 @@ jobs:
         run: |
             chmod +x ./install_UBUNTU_20_04.sh
             sudo ./install_UBUNTU_20_04.sh
+            sudo apt install -y qtcreator qtbase5-dev qt5-qmake cmake
       - name: Configure
         run: mkdir build && cd build && cmake ..
       - name: Build

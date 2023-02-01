@@ -19,7 +19,7 @@ jobs:
             sudo ./install_UBUNTU_20_04.sh
             sudo apt install -y qtcreator qtbase5-dev qt5-qmake cmake
       - name: Configure
-        run: mkdir build && cd build && cmake ..
+        run: mkdir build && cd build && cmake -QT_DEBUG_PLUGINS=1 ..
       - name: Build
         run: cmake --build build --target roboteam_ai_tests
       - name: Run

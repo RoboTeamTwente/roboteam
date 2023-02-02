@@ -60,7 +60,6 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                 // Only print this once. If we're receiving packets, we don't want to influence processing time with slow std::cout calls
                 if(!receiving_vision){
                     std::cout << "\rReceiving vision packets        \r" << std::flush;
-                    std::cout << "tick" << std::endl;
                     receiving_vision = true;
                 }
                 no_vision_received = 0;

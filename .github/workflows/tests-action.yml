@@ -12,9 +12,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Install gtest
-      run: |
-          ls
-          chmod +x .${{ github.workspace }}/install_UBUNTU_20_04.sh
-          sudo .${{ github.workspace }}/install_UBUNTU_20_04.sh
-      shell: bash
+      - uses: actions/checkout@v2
+      - name: Install dependecies
+        run: |
+            chmod +x ./install_UBUNTU_20_04.sh
+            sudo ./install_UBUNTU_20_04.sh
+            sudo apt install -y qtcreator qtbase5-dev qt5-qmake cmake
+      - name: Configure
+        run: mkdir build && cd build && cmake ..
+      - name: Build
+        run: cmake --build build --target roboteam_ai_tests -j $(nproc) &&
+             cmake --build build --target roboteam_utils_tests -j $(nproc) &&
+             cmake --build build --target roboteam_networking_tests -j $(nproc)
+      - name: Run
+        run: ./build/roboteam_ai/roboteam_ai_tests && 
+             ./build/roboteam_networking/roboteam_networking_tests &&
+             ./build/roboteam_utils/roboteam_utils_tests
+        

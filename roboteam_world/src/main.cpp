@@ -1,12 +1,12 @@
 #include "Handler.h"
 
-std::optional<std::string> findFlagValue(int argc, char** argv, std::string flag){
+std::optional<std::string> findFlagValue(const std::vector<std::string> args, std::string flag){
     // Search for flag
-    auto it = std::find(argv, argv + argc, flag);
+    auto it = std::find(args.begin(), args.end(), flag);
     // If flag is present in arguments
-    if(it < argv + argc){
+    if(it != args.end()){
         // No value found for flag.. 
-        if(argc < it - argv + 2){
+        if(it == args.end() - 1){
             std::cout << "Warning! flag '" << flag << "' raised but no value given." << std::endl << std::endl;
             return std::nullopt;
         }
@@ -33,26 +33,28 @@ int main(int argc, char** argv) {
     std::string visionport_str = "10006";
     std::string refereeport_str = "10003";
 
+    const std::vector<std::string> args(argv, argv + argc); 
+
     // Search for log flag --log
-    auto itLog = std::find(argv, argv + argc, std::string("--log"));
-    bool shouldLog = itLog != argv + argc;
+    auto itLog = std::find(args.begin(), args.end(), std::string("--log"));
+    bool shouldLog = itLog != args.end();
 
     std::optional<std::string> val;
 
-    val = findFlagValue(argc, argv, "--vision-ip");
-    if(val) visionip = *val;
+    val = findFlagValue(args, "--vision-ip");
+    if(val){ visionip = *val; }
 
-    val = findFlagValue(argc, argv, "--referee-ip");
-    if(val) refereeip = *val;
+    val = findFlagValue(args, "--referee-ip");
+    if(val){ refereeip = *val; }
 
-    val = findFlagValue(argc, argv, "--vision-port");
-    if(val) visionport_str = *val;
+    val = findFlagValue(args, "--vision-port");
+    if(val){ visionport_str = *val; }
 
-    val = findFlagValue(argc, argv, "--referee-port");
-    if(val) refereeport_str = *val;
+    val = findFlagValue(args, "--referee-port");
+    if(val){ refereeport_str = *val; }
 
-    int visionport  = atoi( visionport_str.c_str() );
-    int refereeport = atoi( refereeport_str.c_str() );
+    int visionport  = std::stoi( visionport_str.c_str() );
+    int refereeport = std::stoi( refereeport_str.c_str() );
 
     Handler handler;
     handler.start(visionip, refereeip, visionport, refereeport, shouldLog);

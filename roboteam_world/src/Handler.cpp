@@ -106,13 +106,13 @@ bool Handler::initializeNetworkers() {
 }
 
 bool Handler::setupSSLClients(std::string visionip, std::string refereeip, int visionport, int refereeport) {
+    std::cout << "Vision  : " << visionip << ":" << visionport << std::endl;
+    std::cout << "Referee : " << refereeip << ":" << refereeport << std::endl;
+    
     bool success = true;
 
-    const QString SSL_VISION_SOURCE_IP = QString::fromStdString(visionip);
-    const QString SSL_REFEREE_SOURCE_IP = QString::fromStdString(refereeip);
-    
-    QHostAddress visionAddress(SSL_VISION_SOURCE_IP);
-    QHostAddress refereeAddress(SSL_REFEREE_SOURCE_IP);
+    QHostAddress visionAddress(QString::fromStdString(visionip));
+    QHostAddress refereeAddress(QString::fromStdString(refereeip));
 
     success &= !(visionAddress.isNull());
     success &= !(refereeAddress.isNull());
@@ -124,9 +124,7 @@ bool Handler::setupSSLClients(std::string visionip, std::string refereeip, int v
     this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(refereeAddress, refereeport);
 
     success &= vision_client != nullptr && referee_client != nullptr;
-    std::cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << visionport << std::endl;
-    std::cout << "Referee : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << refereeport << std::endl;
-
+    
     success &= vision_client->connect();
     success &= referee_client->connect();
     std::this_thread::sleep_for(std::chrono::microseconds(10000));

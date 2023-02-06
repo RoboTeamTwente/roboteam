@@ -1,6 +1,6 @@
 #include "Handler.h"
 
-std::optional<std::string> findFlagValue(const std::vector<std::string> args, std::string flag){
+std::optional<std::string> findFlagValue(const std::vector<std::string>& args, std::string flag){
     // Search for flag
     auto it = std::find(args.begin(), args.end(), flag);
     // If flag is present in arguments
@@ -53,8 +53,8 @@ int main(int argc, char** argv) {
     val = findFlagValue(args, "--referee-port");
     if(val){ refereeport_str = *val; }
 
-    int visionport  = std::stoi( visionport_str.c_str() );
-    int refereeport = std::stoi( refereeport_str.c_str() );
+    int visionport  = std::stoi( visionport_str );
+    int refereeport = std::stoi( refereeport_str );
 
     Handler handler;
     handler.start(visionip, refereeip, visionport, refereeport, shouldLog);

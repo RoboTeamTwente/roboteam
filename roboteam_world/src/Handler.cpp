@@ -7,11 +7,11 @@
 
 #include <roboteam_logging/LogFileWriter.h>
 
-void Handler::start(bool shouldLog) {
+void Handler::start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog) {
     if (!initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
     }
-    if (!this->setupSSLClients()) {
+    if (!this->setupSSLClients(visionip, refereeip, visionport, refereeport)) {
         throw FailedToSetupSSLClients();
     }
 
@@ -33,10 +33,38 @@ void Handler::start(bool shouldLog) {
         fileWriter.value().open(file_name);
     }
 
+    // Feedback for user
+    int no_vision_received = 0;
+    bool receiving_vision = true;
+    std::cout << std::endl << "\rReceiving vision packets" << std::flush;
+
     t.loop(
         [&]() {
             auto vision_packets = receiveVisionPackets();
             auto referee_packets = receiveRefereePackets();
+
+            // Feedback to user
+            if (vision_packets.empty()) {
+                no_vision_received++;
+                receiving_vision = no_vision_received < 100;
+                if (0 < no_vision_received && no_vision_received % 50 == 0) {
+                    std::cout << "\rNot receiving vision packets ";
+                    // Print spinner to show that program is still running
+                         if(no_vision_received % 200 <  50) std::cout << "|";
+                    else if(no_vision_received % 200 < 100) std::cout << "/";
+                    else if(no_vision_received % 200 < 150) std::cout << "-";
+                    else if(no_vision_received % 200 < 200) std::cout << "\\";
+                    std::cout << std::flush;
+                }
+            } else {
+                // Only print this once. If we're receiving packets, we don't want to influence processing time with slow std::cout calls
+                if(!receiving_vision){
+                    std::cout << "\rReceiving vision packets        \r" << std::flush;
+                    receiving_vision = true;
+                }
+                no_vision_received = 0;
+            }
+            
             std::vector<rtt::RobotsFeedback> robothub_info;
             {
                 std::lock_guard guard(sub_mutex);
@@ -77,21 +105,26 @@ bool Handler::initializeNetworkers() {
     return this->worldPublisher != nullptr && this->feedbackSubscriber != nullptr;
 }
 
-bool Handler::setupSSLClients() {
-    bool success = true;
-    constexpr quint16 DEFAULT_VISION_PORT = 10006;
-    constexpr quint16 DEFAULT_REFEREE_PORT = 10003;
-
-    const QString SSL_VISION_SOURCE_IP = "224.5.23.2";
-    const QString SSL_REFEREE_SOURCE_IP = "224.5.23.1";
+bool Handler::setupSSLClients(std::string visionip, std::string refereeip, int visionport, int refereeport) {
+    std::cout << "Vision  : " << visionip << ":" << visionport << std::endl;
+    std::cout << "Referee : " << refereeip << ":" << refereeport << std::endl;
     
-    this->vision_client = std::make_unique<RobocupReceiver<proto::SSL_WrapperPacket>>(QHostAddress(SSL_VISION_SOURCE_IP),DEFAULT_VISION_PORT);
-    this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(QHostAddress(SSL_REFEREE_SOURCE_IP),DEFAULT_REFEREE_PORT);
+    bool success = true;
 
-    success = vision_client != nullptr && referee_client != nullptr;
-    std::cout << "Vision  : " << SSL_VISION_SOURCE_IP.toStdString() << ":" << DEFAULT_VISION_PORT << std::endl;
-    std::cout << "Referee  : " << SSL_REFEREE_SOURCE_IP.toStdString() << ":" << DEFAULT_REFEREE_PORT << std::endl;
+    QHostAddress visionAddress(QString::fromStdString(visionip));
+    QHostAddress refereeAddress(QString::fromStdString(refereeip));
 
+    success &= !(visionAddress.isNull());
+    success &= !(refereeAddress.isNull());
+
+    if(visionAddress.isNull()) std::cout << "Error! Invalid vision ip-address: " << visionip << std::endl;
+    if(refereeAddress.isNull()) std::cout << "Error! Invalid referee ip-address: " << refereeip << std::endl;
+
+    this->vision_client = std::make_unique<RobocupReceiver<proto::SSL_WrapperPacket>>(visionAddress, visionport);
+    this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(refereeAddress, refereeport);
+
+    success &= vision_client != nullptr && referee_client != nullptr;
+    
     success &= vision_client->connect();
     success &= referee_client->connect();
     std::this_thread::sleep_for(std::chrono::microseconds(10000));

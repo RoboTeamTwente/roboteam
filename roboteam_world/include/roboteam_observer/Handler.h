@@ -32,9 +32,9 @@ class Handler {
      * Setup a world with a kalmanfilter, and initialize the publishers for publishing data.
      */
     bool initializeNetworkers();
-    bool setupSSLClients();
+    bool setupSSLClients(std::string visionip, std::string refereeip, int visionport, int refereeport);
 
-    void start(bool shouldLog = false);
+    void start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog = false);
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::SSL_Referee> receiveRefereePackets();
     void onRobotFeedback(const rtt::RobotsFeedback& feedback);

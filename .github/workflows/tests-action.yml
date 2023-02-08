@@ -18,7 +18,9 @@ jobs:
         id: cache-build-restore
         uses: actions/cache/restore@v3
         with:
-          path: .
+          path: |
+              build/
+              /usr/lib/
           key: ${{ runner.os }}-build
       
       - name: Install dependecies

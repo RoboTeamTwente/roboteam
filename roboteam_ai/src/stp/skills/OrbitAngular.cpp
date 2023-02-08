@@ -6,7 +6,6 @@
 namespace rtt::ai::stp::skill {
 
 Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
-    RTT_DEBUG(info.getBall().value()->velocity.length())
     // initialization of local variables
     Angle currentAngle = info.getRobot().value()->getAngle(); // Angle the robot is currently facing
     Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle(); // targetAngle the robot should have

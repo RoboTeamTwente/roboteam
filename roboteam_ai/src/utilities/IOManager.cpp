@@ -138,7 +138,7 @@ proto::State IOManager::getState() {
 }
 
 bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {
-    bool obtainedChannel = false;
+    bool obtainedChannel;
 
     if (toYellowChannel) {
         obtainedChannel = this->robotCommandsYellowPublisher != nullptr;

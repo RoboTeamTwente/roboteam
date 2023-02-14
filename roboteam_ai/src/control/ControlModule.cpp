@@ -62,6 +62,7 @@ void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView>
     robot_command.kickSpeed *= Constants::ROBOT_MAXIMUM_KICK_TIME(robot->get()->getId())/40.0;
 
     if (robot && robot->get()) {
+        // TODO: Fix this visualisation
         Angle target = command.targetAngle;
         //interface::Input::drawData(interface::Visual::PATHFINDING, {robot->get()->getPos(), robot->get()->getPos() + Vector2(target)}, Qt::red, robot->get()->getId(),
         //                           interface::Drawing::LINES_CONNECTED);

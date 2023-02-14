@@ -15,8 +15,6 @@ typedef std::tuple<double, double, double> pidVals;
 
 class Constants {
    public:
-    static void init();
-    static bool GRSIM();
     static bool FEEDBACK_ENABLED();
 
     static constexpr size_t ROBOT_COUNT() { return 11; };

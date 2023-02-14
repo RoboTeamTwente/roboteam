@@ -52,8 +52,6 @@ int main(int argc, char* argv[]) {
 
     RTT_DEBUG("Debug prints enabled")
 
-    rtt::ai::Constants::init();
-
     // get the id of the ai from the init
     int id = *argv[1] - '0';
 

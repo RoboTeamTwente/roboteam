@@ -3,33 +3,9 @@
 //
 
 #include "utilities/Constants.h"
-
-#include <assert.h>
-#include <roboteam_utils/Print.h>
-
 #include "utilities/Settings.h"
 
-// TODO: Clean this up and remove unneeded variables
-
 namespace rtt::ai {
-
-// static initializers
-bool Constants::isInitialized = false;
-bool Constants::robotOutputTargetGrSim = true;
-
-void Constants::init() {
-    std::string target = robotOutputTargetGrSim ? "GRSIM" : "SERIAL";
-    RTT_INFO("robot_output_target is set to ", target)
-    isInitialized = true;
-}
-
-bool Constants::GRSIM() {
-    if (!isInitialized) {
-        RTT_ERROR("You use a value dependent on an unkown environment! This may result in unexepected behaviour")
-        assert(false);
-    }
-    return robotOutputTargetGrSim;
-}
 
 double Constants::PENALTY_DISTANCE_BEHIND_BALL() {
     // The minimum is 1 meter, but do 1.5 to be sure
@@ -213,7 +189,7 @@ bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
-QColor Constants::FIELD_COLOR() { return GRSIM() ? QColor(30, 30, 30, 255) : QColor(50, 0, 0, 255); }
+QColor Constants::FIELD_COLOR() { return {30, 30, 30, 255}; }
 
 QColor Constants::FIELD_LINE_COLOR() { return Qt::white; }
 
@@ -229,15 +205,15 @@ QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
 
 std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
 
-pidVals Constants::standardNumTreePID() { return GRSIM() ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardNumTreePID() { return {2.5, 0.0, 0}; }
 
-pidVals Constants::standardReceivePID() { return GRSIM() ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
+pidVals Constants::standardReceivePID() { return {4, 0, 0}; }
 
-pidVals Constants::standardInterceptPID() { return GRSIM() ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardInterceptPID() { return {6, 0, 1}; }
 
-pidVals Constants::standardKeeperPID() { return GRSIM() ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardKeeperPID() { return {2.5, 0.0, 0}; }
 
-pidVals Constants::standardKeeperInterceptPID() { return GRSIM() ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardKeeperInterceptPID() { return {6, 0, 1}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {{"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true},

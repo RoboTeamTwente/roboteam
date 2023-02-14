@@ -22,8 +22,8 @@ struct BBTrajectoryPart {
 /**
  * @brief small struct to keep Position, Velocity and Acceleration in at once.
  */
-struct BBPosVelAcc {
-    explicit BBPosVelAcc(double pos, double vel, double acc) : pos{pos}, vel{vel} {};
+struct BBPosVel {
+    explicit BBPosVel(double pos, double vel) : pos{pos}, vel{vel} {};
 
     double pos;
     double vel;
@@ -43,7 +43,7 @@ class BBTrajectory1D {
      * @param t time to get values at
      * @return The PosVelAcc
      */
-    [[nodiscard]] BBPosVelAcc getValues(double t) const;
+    [[nodiscard]] BBPosVel getValues(double t) const;
 
     /**
      * @brief Gets the position at time t

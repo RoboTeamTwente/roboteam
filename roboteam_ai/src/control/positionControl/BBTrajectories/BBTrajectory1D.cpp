@@ -93,12 +93,12 @@ BBTrajectory1D::BBTrajectory1D(double startPos, double startVel, double endPos, 
     generateTrajectory(startPos, startVel, endPos, maximumVel, maximumAcc);
 }
 
-BBPosVelAcc BBTrajectory1D::getValues(double t) const {
+BBPosVel BBTrajectory1D::getValues(double t) const {
     double trajTime = fmax(0, t);
     BBTrajectoryPart piece = parts[0];
     if (trajTime >= getTotalTime()) {
         // The time is not on the trajectory so we just return the last known element
-        return BBPosVelAcc(finalPos, 0, 0);  // can also be computed from parts if necessary
+        return BBPosVel(finalPos, 0);  // can also be computed from parts if necessary
     }
     // we step through the parts and try to find the relevant part on which the time is.
     double tPieceStart = 0;
@@ -111,7 +111,7 @@ BBPosVelAcc BBTrajectory1D::getValues(double t) const {
     }
     double tPiece = trajTime - tPieceStart;
     // extrapolate the state given the information we have.
-    return BBPosVelAcc(piece.startPos + piece.startVel * tPiece + 0.5 * piece.acc * tPiece * tPiece, piece.startVel + piece.acc * tPiece, piece.acc);
+    return BBPosVel(piece.startPos + piece.startVel * tPiece + 0.5 * piece.acc * tPiece * tPiece, piece.startVel + piece.acc * tPiece);
 }
 
 double BBTrajectory1D::getTotalTime() const { return parts[numParts - 1].tEnd; }

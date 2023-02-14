@@ -21,7 +21,6 @@ class Constants {
 
     static constexpr size_t ROBOT_COUNT() { return 11; };
 
-    ;
     static constexpr int STP_TICK_RATE() { return 60; };
     static constexpr int SETTINGS_BROADCAST_RATE() { return 1; }
 
@@ -51,25 +50,8 @@ class Constants {
 
     /// REF STATES ///
     static constexpr double MAX_VEL() { return 1.5; };
-    ;
-    ;
     static int DEFAULT_KEEPER_ID();
-
     static double PENALTY_DISTANCE_BEHIND_BALL();
-
-    // TODO: TUNE MAX KICK POWER
-    // TODO: TUNE MIN KICK POWER
-    // TODO: TUNE MAX CHIP POWER
-    // TODO: TUNE MIN CHIP POWER
-    // TODO: TUNE MAX CHIP DISTANCE
-    // Could maybe be even less? Is a LOT lower in real life, think max 0.05 m.
-
-    // Seconds. Intercept terminates  after this time.
-    // If the ball has velocity lower than this in defense area, keeper starts getting it
-
-    // m
-    // m
-    // m
 
     /// INTERFACE ///
     static int ROBOT_DRAWING_SIZE();

@@ -25,20 +25,12 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         avoidObj.avoidBallDist = control_constants::AVOID_BALL_DISTANCE;
         avoidObj.shouldAvoidBall = true;
     }
-
-    bool useOldPathPlanning = false;
+    
     rtt::BB::CommandCollision commandCollision;
 
-    if (useOldPathPlanning) {
-        // Calculate commands from path planning and tracking
-        commandCollision.robotCommand = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackPath(
-            info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos, info.getPidType().value());
-    } else {
-        // _______Use this one for the BBT pathplanning and tracking_______
-        commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
-            info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
-            info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
-    }
+    commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
+        info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
+        info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
 
     if (commandCollision.collisionData.has_value()) {
         // return Status::Failure;
@@ -46,9 +38,9 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     double targetVelocityLength;
     if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
+        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
     } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
+        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
     } else {
         targetVelocityLength = std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity());
     }

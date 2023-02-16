@@ -27,6 +27,10 @@ class PidTracking : public PathTrackingAlgorithm {
 
    public:
     /**
+     * @brief Default constructor for the PidTracking class
+     */
+    ~PidTracking() override = default;
+    /**
      * Generates an output velocity and angle according to the implemented algorithm.
      * After reaching a certain distance to the closest path point, it will go to the next one. <br><br>
      * PidTracking applied a PID to the difference of positions, to obtain a velocity. The values are

@@ -14,6 +14,11 @@ namespace rtt::ai::control {
 class PathTrackingAlgorithm {
    public:
     /**
+     * @brief Virtual destructor for the PathTrackingAlgorithm class
+     */
+    virtual ~PathTrackingAlgorithm() = default;
+
+    /**
      * Purely virtual function that will handle tracking of a path
      * @param currentPosition
      * @param currentVelocity

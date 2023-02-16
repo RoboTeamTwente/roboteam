@@ -40,6 +40,8 @@ class NumTreesPlanning : public PathPlanningAlgorithm {
      */
     explicit NumTreesPlanning(CollisionDetector &collisionDetector);
 
+    ~NumTreesPlanning() override = default;
+
     /**
      * Computes a path using the implemented algorithm. It takes into account the
      * obstacles present in the field. <br><br>

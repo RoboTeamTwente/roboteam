@@ -18,14 +18,19 @@ class PathPlanningAlgorithm {
 
    public:
     /**
-     * The collision detector is provided by the position control. This class was intended
+     * @brief The collision detector is provided by the position control. This class was intended
      * to be used only with the PositionControl
      * @param collisionDetector
      */
     explicit PathPlanningAlgorithm(CollisionDetector &collisionDetector);
 
     /**
-     * Algorithm specific path computation. It should take into account the obstacles in the field
+     * @brief Virtual destructor of the PathPlanningAlgorithm
+     */
+     virtual ~PathPlanningAlgorithm() = default;
+
+    /**
+     * @brief Algorithm specific path computation. It should take into account the obstacles in the field
      * @param robotPosition the current robot position
      * @param targetPosition the goal position
      * @return a list of points representing the path

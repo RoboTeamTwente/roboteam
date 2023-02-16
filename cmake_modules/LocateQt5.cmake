@@ -3,6 +3,8 @@ if (APPLE)
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt@5")
     elseif(EXISTS /usr/local/opt/qt5)
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+    elseif(EXISTS /opt/homebrew/opt/qt@5) # Apple Silicon bottles
+        list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/qt@5")
     else()
         message(FATAL_ERROR "Could not find Qt5. Please install with `brew install qt@5`.")
     endif()

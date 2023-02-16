@@ -55,14 +55,6 @@ class GetBall : public Tactic {
      * @return The name of this tactic
      */
     const char *getName() override;
-
-    /**
-     * Checks if this tactic should be forced success
-     * It is forced success whenever the corresponding robot has the ball
-     * @param info
-     * @return whether the tactic is forced success
-     */
-    bool forceTacticSuccess(const StpInfo &info) noexcept override;
 };
 }  // namespace rtt::ai::stp::tactic
 

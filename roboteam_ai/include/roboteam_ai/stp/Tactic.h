@@ -114,10 +114,9 @@ class Tactic {
 
     /**
      * Forces a tactic to be success, when we have the ball for example.
-     * @param info to do calculations on
      * @return a bool whether the tactic is forced successful or not
      */
-    virtual bool forceTacticSuccess(const StpInfo &info) noexcept;
+    virtual bool forceTacticSuccess() noexcept;
 };
 }  // namespace rtt::ai::stp
 

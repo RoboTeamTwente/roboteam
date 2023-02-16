@@ -54,8 +54,6 @@ bool GetBall::isEndTactic() noexcept {
     return false;
 }
 
-bool GetBall::forceTacticSuccess(const StpInfo &info) noexcept { return info.getRobot().value()->hasBall(); }
-
 const char *GetBall::getName() { return "Get Ball"; }
 
 }  // namespace rtt::ai::stp::tactic

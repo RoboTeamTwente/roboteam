@@ -180,11 +180,9 @@ void STPManager::decidePlay(world::World *_world) {
     ai::stp::ComputationManager::clearStoredComputations();
 
     if (!currentPlay || rtt::ai::stp::PlayDecider::interfacePlayChanged || !currentPlay->isValidPlayToKeep()) {
-        ai::stp::gen::PlayInfos previousPlayInfo{};
-        if (currentPlay) currentPlay->storePlayInfo(previousPlayInfo);
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
         currentPlay->updateField(_world->getField().value());
-        currentPlay->initialize(previousPlayInfo);
+        currentPlay->initialize();
     } else {
         currentPlay->updateField(_world->getField().value());
     }

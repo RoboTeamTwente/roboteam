@@ -38,7 +38,7 @@ class Play {
     /**
      * Initializes stpInfos struct, distributes roles, sets the previousRobotNum variable and calls onInitialize()
      */
-    void initialize(gen::PlayInfos& previousPlayInfo) noexcept;
+    void initialize() noexcept;
 
     /**
      * Sets the Play's world pointer to the static world class

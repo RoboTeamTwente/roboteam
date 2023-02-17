@@ -9,12 +9,7 @@
 
 namespace rtt::ai::stp {
 
-void Play::initialize(gen::PlayInfos &_previousPlayInfos) noexcept {
-    //        previousPlayInfos = _previousPlayInfos;
-    //        if (!previousPlayInfos->empty()) {
-    //            RTT_DEBUG(
-    //                std::to_string(previousPlayInfos->begin()->second.robotID.value_or(-1)));
-    //        }
+void Play::initialize() noexcept {
     stpInfos.clear();
     for (auto &role : roles) {
         if (role != nullptr) role->reset();

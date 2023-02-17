@@ -64,12 +64,6 @@ class Play {
     virtual void calculateInfoForRoles() noexcept = 0;
 
     /**
-     * Calculate info for roles that are used in the scoring of the play.
-     * This is a purely virtual function, so it is implemented in every play.
-     */
-    virtual void calculateInfoForScoredRoles(world::World* world) noexcept = 0;
-
-    /**
      * Scores the play based on how effective this play would be given the current world
      * @param field The current Field class
      * @return Score of the play (0 - 255)

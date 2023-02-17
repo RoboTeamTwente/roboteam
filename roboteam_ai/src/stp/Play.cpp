@@ -146,8 +146,6 @@ bool Play::isValidPlayToStart() const noexcept {
             std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); }));
 }
 
-void Play::calculateInfoForScoredRoles(world::World *_world) noexcept {}
-
 uint8_t Play::getLastScore() const { return lastScore.value_or(0); }
 
 bool Play::shouldEndPlay() noexcept { return false; }

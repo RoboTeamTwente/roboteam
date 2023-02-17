@@ -34,11 +34,6 @@ class Halt : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Info that should be calculated for scoring of the play
-     */
-    void calculateInfoForScoredRoles(world::World *world) noexcept override;
-
-    /**
      * Gets the play name
      */
     const char *getName() override;

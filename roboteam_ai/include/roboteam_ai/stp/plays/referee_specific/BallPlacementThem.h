@@ -29,11 +29,6 @@ class BallPlacementThem : public Play {
      */
     void calculateInfoForRoles() noexcept override;
 
-    /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
     void calculateInfoForKeeper() noexcept;
 
     void calculateInfoForHarasser() noexcept;

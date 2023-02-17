@@ -49,11 +49,6 @@ class Attack : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * Check if play should end. True when attacker role is finished.
      */
     bool shouldEndPlay() noexcept override;

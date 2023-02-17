@@ -45,11 +45,6 @@ class AttackingPass : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * Gets the play name
      */
     const char* getName() override;

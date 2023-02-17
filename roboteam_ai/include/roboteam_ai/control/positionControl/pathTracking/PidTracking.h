@@ -20,10 +20,8 @@ namespace rtt::ai::control {
  */
 class PidTracking : public PathTrackingAlgorithm {
    private:
-    static constexpr double MAX_VELOCITY = Constants::MAX_VEL();
-
-    // PID controllers for each robot
-    std::unordered_map<int, std::pair<PID, PID>> pidMapping = {};
+    static constexpr double MAX_VELOCITY = Constants::MAX_VEL(); /**< Maximum allowed velocity */
+    std::unordered_map<int, std::pair<PID, PID>> pidMapping = {}; /**< Map of PID controllers for each robot */
 
    public:
     /**
@@ -35,8 +33,8 @@ class PidTracking : public PathTrackingAlgorithm {
      * After reaching a certain distance to the closest path point, it will go to the next one. <br><br>
      * PidTracking applied a PID to the difference of positions, to obtain a velocity. The values are
      * taken from the interface.
-     * @param currentPosition
-     * @param currentVelocity
+     * @param currentPosition current position of the robot
+     * @param currentVelocity current velocity of the robot
      * @param pathPoints the path as a list of points
      * @param robotId the robotId of the controlled robot - used only for state based tracking (like PID)
      * @param angle the desired orientation angle of the robot - if omitted, the robot will face its velocity

@@ -9,11 +9,13 @@
 #include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp::role {
-
+/**
+ * @brief Class that defines the keeper role. The keeper will block the ball from going into the goal
+ */
 class Keeper : public Role {
    public:
     /**
-     * Ctor that sets the name of the role and creates a state machine of tactics
+     * @brief Constructor that sets the name of the role and creates a state machine of tactics
      * @param name name of the role
      */
     explicit Keeper(std::string name);

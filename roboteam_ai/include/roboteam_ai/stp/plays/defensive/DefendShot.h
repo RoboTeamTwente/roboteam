@@ -10,67 +10,68 @@
 namespace rtt::ai::stp::play {
 
 /**
- * DefendShot Play is executed when the opponent has or is close to the ball and on our side of the field.
+ * @brief DefendShot Play is executed when the opponent has or is close to the ball and on our side of the field.
  * In this case they most likely will try to score. Some defenders defend the goal by blocking the path between enemy
  * robots and the goal. Other defenders block other enemy robots to avoid passes to them.
  */
 class DefendShot : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     DefendShot();
 
     /**
-     * Calculates the score of this play to determine which play is best in this situation
+     * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
     uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return Map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Gets the play name
+     * @brief Gets the play name
      */
     const char* getName() override;
 
     /**
-     * Check if play should end
+     * @brief Check if play should end
      */
     bool shouldEndPlay() noexcept override;
 
    protected:
     /**
-     * Calculates info for the wallers
+     * @brief Calculates info for the wallers
      */
     void calculateInfoForWallers(bool shouldIncludeBallBlocker) noexcept;
 
     /**
-     * Calculates info for the defenders
+     * @brief Calculates info for the defenders
      */
     void calculateInfoForDefenders() noexcept;
 
     /**
-     * Calculates info for the ballBlocker
+     * @brief Calculates info for the ballBlocker
      */
     void calculateInfoForBlocker() noexcept;
 
     /**
-     * Calculates info for the harasser
+     * @brief Calculates info for the harasser
      */
     void calculateInfoForHarasser() noexcept;
 
     /**
-     * Calculates info for the keeper
+     * @brief Calculates info for the keeper
      */
     void calculateInfoForKeeper() noexcept;
 };

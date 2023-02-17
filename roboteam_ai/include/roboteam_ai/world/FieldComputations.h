@@ -29,13 +29,12 @@ namespace rtt::ai {
  */
 class FieldComputations {
    private:
-    static constexpr double NEGLIGIBLE_LENGTH = 0.000001;  // If a line length is below or equal to this threshold then is it neglected during determining the blockades.
-    static constexpr double PROJECTION_MARGIN =
-        0.02;  // Some extra padding that is added when projecting positions, to make sure that the projected position is not exactly on lines/intersections
+    static constexpr double NEGLIGIBLE_LENGTH = 0.000001;  /**< If a line length is below or equal to this threshold then is it neglected during determining the blockades. */
+    static constexpr double PROJECTION_MARGIN = 0.02;  /**< Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections */
 
    public:
     /**
-     * Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
+     * @brief Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point for which it is checked whether it is valid or not
      * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
@@ -45,17 +44,16 @@ class FieldComputations {
                                      double ourDefenseAreaMargin = 0.0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
-     * Project given position to within the field with a certain margin
+     * @brief Project given position to within the field with a certain margin
      * @param field The field class used to determine where the field lines are
      * @param point The position to be projected to within the field
      * @param margin The margin that should be used when calculating the new position. The position will have a minimum of this distance to the field lines
-     * @return The position closest to the given point that is inside the field with the given margin
-     * If the given point is already inside the field, the same point is returned
+     * @return The position closest to the given point that is inside the field with the given margin. If the given point is already inside the field, the same point is returned
      */
     static Vector2 projectPointInField(const rtt::Field &field, Vector2 point, double margin = 0);
 
     /**
-     * Project given position to outside the defense areas with a certain margin
+     * @brief Project given position to outside the defense areas with a certain margin
      * @param field The field class used to determine where the defense area is
      * @param point The position to be projected to outside of the defense area
      * @param margin The margin that should be used when calculating the new position. The position will have a minimum of this distance to the defense area
@@ -67,7 +65,7 @@ class FieldComputations {
                                                 double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
-     * Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
+     * @brief Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point to be projected to a valid position
      * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
@@ -82,7 +80,7 @@ class FieldComputations {
                                                double ourDefenseAreaMargin = 0.0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
-     * Projects the given point into the field on a line between two given points.
+     * @brief Projects the given point into the field on a line between two given points.
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point to be projected into the field
      * @param p1 First point on the line
@@ -95,7 +93,7 @@ class FieldComputations {
     static Vector2 projectPointIntoFieldOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin = 0.0);
 
     /**
-     * Projects the given point to a valid position, as defined by avoidObjects, on a line between two given points.
+     * @brief Projects the given point to a valid position, as defined by avoidObjects, on a line between two given points.
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point to be projected to a valid position
      * @param p1 First point on the line
@@ -113,7 +111,7 @@ class FieldComputations {
                                                      double ourDefenseAreaMargin = 0, double theirDefenseAreaMargin = stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN);
 
     /**
-     * Get the percentage of goal visible from a given point, i.e. how much of the goal can be reached by directly shooting a ball over the ground from a given point without
+     * @brief Get the percentage of goal visible from a given point, i.e. how much of the goal can be reached by directly shooting a ball over the ground from a given point without
      * hitting any robot from a given team.
      * @param field The field class used to determine where the goals are.
      * @param ourGoal True if we want to compute this for our goal, false if we want to compute it for the opponents goal.
@@ -128,16 +126,19 @@ class FieldComputations {
                                                       bool ourTeam = false);
 
     /**
-     * Look at the overloaded function getVisiblePartsOfGoal(const Field &field, bool ourGoal, const Vector2 &point, world::view::WorldDataView &world) for the corresponding
+     * @brief Look at the overloaded function getVisiblePartsOfGoal(const Field &field, bool ourGoal, const Vector2 &point, world::view::WorldDataView &world) for the corresponding
      * documentation.
-     *
+     * @param field The current field.
+     * @param ourGoal Indicates whether our goal should be used for the visibility.
+     * @param point The position from which we want to calculate the visibility.
      * @param robots A list of all robots that could possibly block the goal.
+     * @return A vector with all parts of the goal that are visible from the given position.
      * @cite getVisiblePartsOfGoal(const Field &field, bool ourGoal, const Vector2 &point, world::view::WorldDataView &world)
      */
     static std::vector<LineSegment> getVisiblePartsOfGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point, const std::vector<rtt::world::view::RobotView> &robots);
 
     /**
-     * Compute the Euclidean distance from a given point to the closest point on the goal.
+     * @brief Compute the Euclidean distance from a given point to the closest point on the goal.
      * @param field The field used to determine where the goals are.
      * @param ourGoal True if the distance towards our goal is computed, false if the distance towards the opponents goal is computed.
      * @param point The given point from which the distance is computed.
@@ -146,14 +147,14 @@ class FieldComputations {
     static double getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point);
 
     /**
-     * Determine the intersection between a LineSegment and the boundary of the defence area and return the intersection point closest to the start of the line (if the LineSegment
+     * @brief Determine the intersection between a LineSegment and the boundary of the defence area and return the intersection point closest to the start of the line (if the LineSegment
      * does not intersect then return a null pointer).
      * @param field The field used to determine where the defence area is located.
      * @param ourGoal True if we want to compute the intersection with our defence area, false if we compute this for the opponents defence area.
      * @param lineStart The location of the start of the LineSegment.
      * @param lineEnd The location of the end of the LineSegment.
-     * @param margin The outwards margin in which the defence area will be expanded/shrinked in all directions (except maybe for the goal side). A positive value means that it will
-     * be expanded, a negative value means that it will be shrinked (if unset then it will be neither expanded/shrinked).
+     * @param margin The outwards margin in which the defence area will be expanded/shrank in all directions (except maybe for the goal side). A positive value means that it will
+     * be expanded, a negative value means that it will be shrank (if unset then it will be neither expanded/shrank).
      * @param ignoreGoalLine If true, do not count intersections with the goal line (the line of the defense area that overlaps with the left line of the field).
      * @return The closest intersection point to the start of the LineSegment. In case of no intersection point return a null pointer.
      */
@@ -161,7 +162,7 @@ class FieldComputations {
                                                                     bool ignoreGoalLine = false);
 
     /**
-     * Determine the intersection between a LineSegment and the field lines and return the intersection point closest to the start of the line (if the LineSegment
+     * @brief Determine the intersection between a LineSegment and the field lines and return the intersection point closest to the start of the line (if the LineSegment
      * does not intersect then return a null_opt).
      * @param field The field used to determine where the defence area is located.
      * @param lineStart The location of the start of the LineSegment.
@@ -173,17 +174,17 @@ class FieldComputations {
     static std::optional<Vector2> lineIntersectionWithField(const rtt::Field &field, const Vector2 &lineStart, const Vector2 &lineEnd, double margin);
 
     /**
-     * Compute the total angle a given point makes with the goal, i.e. you create a triangle using this point and both upperside and lowerside of the goal and compute the angle
-     * at this given point. Warning: this function does not work for points on the start & end points of the goal.
+     * @brief Compute the total angle a given point makes with the goal, i.e. you create a triangle using this point and both upperside and lowerside of the goal and compute the
+     * angle at this given point. Warning: this function does not work for points on the start & end points of the goal.
      * @param field The field used to determine where the goals are.
-     * @param ourGoal True if the angle between the point and our goal is computed, false if we compute this for the opponnents goal.
+     * @param ourGoal True if the angle between the point and our goal is computed, false if we compute this for the opponents goal.
      * @param point The given point from which the angle is computed.
      * @return The angle in radians that this point makes with the given goal.
      */
     static double getTotalGoalAngle(const rtt::Field &field, bool ourGoal, const Vector2 &point);
 
     /**
-     * Get the defense area, i.e. the area in front of the goal which is bounded by the penalty line.
+     * @brief Get the defense area, i.e. the area in front of the goal which is bounded by the penalty line.
      * @param field The field used to determine where the defense area is.
      * @param ourDefenseArea True if our defense area will be returned, false if the opponents defense area will be returned.
      * @param margin The outwards margin in which the defence area will be expanded/shrinked in all directions except for the goal side. A positive value means that it will be
@@ -194,7 +195,7 @@ class FieldComputations {
     static Polygon getDefenseArea(const rtt::Field &field, bool ourDefenseArea, double margin, double backMargin);
 
     /**
-     * Get the goal area, i.e. the small area INSIDE the goal.
+     * @brief Get the goal area, i.e. the small area INSIDE the goal.
      * @param field The field used to determine where the goal area is.
      * @param ourGoal True if our goal area has to be returned, false if the opponents goal area has to be returned (by default our goal area will be returned).
      * @param margin The outwards margin in which the defence area will be expanded/shrinked in all directions (except maybe for the goal side). A positive value means that it will
@@ -206,7 +207,7 @@ class FieldComputations {
     static Polygon getGoalArea(const rtt::Field &field, bool ourGoal = true, double margin = 0.0, bool hasBackMargin = false);
 
     /**
-     * Get the entire field area.
+     * @brief Get the entire field area.
      * @param field The field of which the area is determined.
      * @param margin The outwards margin in which the rectangular field area will get expanded/shrinked in all directions. A positive value means that the field area will be
      * expanded, a negative value means that the field area will be shrinked.
@@ -216,7 +217,7 @@ class FieldComputations {
 
    private:
     /**
-     * Check which part of the goal are blocked by robots, i.e. to which parts of the goal the ball can be shoot over the ground from a given point without hitting any robot
+     * @brief Check which part of the goal are blocked by robots, i.e. to which parts of the goal the ball can be shoot over the ground from a given point without hitting any robot
      * from a given team.
      * @param field The field used to determine where the goals are.
      * @param ourGoal True if the blockades on our goal are computed. False if we compute this for the opponents goal.
@@ -232,8 +233,8 @@ class FieldComputations {
                                                              const std::vector<rtt::world::view::RobotView> &robots, int id = -1, bool ourTeam = false);
 
     /**
-     * Check whether a given robot really blocks a part of the goal (which is not the case if the robot belongs to a given team or if the robot has a given id) and if so return
-     * the given part of the goal that is blocked by this robot.
+     * @brief Check whether a given robot really blocks a part of the goal (which is not the case if the robot belongs to a given team or if the robot has a given id) and if so
+     * return the given part of the goal that is blocked by this robot.
      * @param ourGoal True if the blockade caused by this robot on our goal is computed. False if we compute this for the opponents goal.
      * @param point The given point from which it is computed what places of the goal is blocked.
      * @param id The id of the robot which is not considered as blockade. Set this value to -1 if you do not want to exclude a particular robot as blockade (by default we do not
@@ -249,7 +250,7 @@ class FieldComputations {
                                                     LineSegment goalSide);
 
     /**
-     * Merge overlapping blockade line segments on the goal side into non-overlapping blockade line segments.
+     * @brief Merge overlapping blockade line segments on the goal side into non-overlapping blockade line segments.
      * @param blockades The non-merged possibly overlapping blockade line segments on the goal side.
      * @return Non-overlapping blockade line segments that cover all blocked goal sides.
      */

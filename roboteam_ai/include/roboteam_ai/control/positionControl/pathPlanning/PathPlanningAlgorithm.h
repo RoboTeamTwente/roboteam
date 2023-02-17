@@ -9,18 +9,16 @@
 
 namespace rtt::ai::control {
 /**
- * The base class for the path planning algorithms. All future algorithms should inherit
- * from this
+ * @brief The base class for the path planning algorithms. All future algorithms should inherit from this
  */
 class PathPlanningAlgorithm {
    protected:
-    CollisionDetector &collisionDetector;
+    CollisionDetector &collisionDetector; /**< Detects collisions on the trajectory */
 
    public:
     /**
-     * @brief The collision detector is provided by the position control. This class was intended
-     * to be used only with the PositionControl
-     * @param collisionDetector
+     * Constructor of the PathPlanningAlgorithm class
+     * @param collisionDetector Detects collisions on the trajectory
      */
     explicit PathPlanningAlgorithm(CollisionDetector &collisionDetector);
 
@@ -32,8 +30,8 @@ class PathPlanningAlgorithm {
     /**
      * @brief Algorithm specific path computation. It should take into account the obstacles in the field
      * @param robotPosition the current robot position
-     * @param targetPosition the goal position
-     * @return a list of points representing the path
+     * @param targetPosition the target position to move to
+     * @return a vector of points representing the path
      */
     virtual std::vector<Vector2> computePath(const Vector2 &robotPosition, Vector2 &targetPosition) = 0;
 };

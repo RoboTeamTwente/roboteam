@@ -11,6 +11,9 @@
 #include <vector>
 
 namespace rtt::ai::control {
+/**
+ * @brief Base class of the path tracking algorithms
+ */
 class PathTrackingAlgorithm {
    public:
     /**
@@ -20,11 +23,11 @@ class PathTrackingAlgorithm {
 
     /**
      * Purely virtual function that will handle tracking of a path
-     * @param currentPosition
-     * @param currentVelocity
-     * @param pathPoints
-     * @param robotId
-     * @param angle
+     * @param currentPosition current position of the robot
+     * @param currentVelocity current velocity of the robot
+     * @param pathPoints Vector of points the path should follow
+     * @param robotId ID of the robot
+     * @param angle Angle the robot should be at
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return a structure containing the tracking velocity and the orientation angle
      */
@@ -34,10 +37,10 @@ class PathTrackingAlgorithm {
     /**
      * Uses the implementation of trackPath, but replaces the angle with the orientation of the
      * direction of the current position and the next point in the path
-     * @param currentPosition
-     * @param currentVelocity
-     * @param pathPoints
-     * @param robotId
+     * @param currentPosition current position of the robot
+     * @param currentVelocity current velocity of the robot
+     * @param pathPoints Vector of points the path should follow
+     * @param robotId ID of the robot
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return a structure containing the tracking velocity and the orientation angle
      */

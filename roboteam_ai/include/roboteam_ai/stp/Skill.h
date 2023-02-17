@@ -13,37 +13,29 @@
 namespace rtt::ai::stp {
 
 /**
- * Base skill class, inherit from it for making your own skill
+ * @brief Base skill class, inherit from it for making your own skill
  */
 class Skill {
    protected:
-    /**
-     * Status of the last time update() was called
-     */
-    Status currentStatus;
+    Status currentStatus; /**< Status of the last time update() was called */
+
+    rtt::RobotCommand command; /**< Robot command that will eventually be sent to the robot */
+
+    std::optional<world::view::RobotView> robot; /**< Robot this skill controls */
 
     /**
-     * Robot command that will eventually be sent to the robot
-     */
-    rtt::RobotCommand command;
-
-    /**
-     * Robot this skill controls
-     */
-    std::optional<world::view::RobotView> robot;
-
-    /**
-     * Forwards the current robot command to the ControlModule and refreshes it
+     * @brief Forwards the current robot command to the ControlModule and refreshes it
+     * @param data const pointer to world
      */
     virtual void forwardRobotCommand(world::World const* data) noexcept;
 
     /**
-     * Resets the internal robot command
+     * @brief Resets the internal robot command
      */
     virtual void refreshRobotCommand() noexcept;
 
     /**
-     * Function that's called when the skill gets updated (every tick)
+     * @brief Function that's called when the skill gets updated (every tick)
      * @param info StpInfo structure that provides data to the skill
      * @return Status according to its current execution
      */
@@ -51,37 +43,37 @@ class Skill {
 
    public:
     /**
-     * Gets the status from the last time update() was called
+     * @brief Gets the status from the last time update() was called
      * @return this->currentStatus
      */
     [[nodiscard]] Status getStatus() const;
 
     /**
-     * Calls onInitialize
-     * @return Status of initialization
+     * @brief Calls onInitialize
      */
     virtual void initialize() noexcept;
 
     /**
-     * Function that's called when the skill gets updated (every tick)
+     * @brief Function that's called when the skill gets updated (every tick)
      * @param info StpInfo structure that provides data to the skill
      * @return Status according to its current execution
      */
     virtual Status update(StpInfo const& info) noexcept;
 
     /**
-     * Calls onTerminate
+     * @brief Calls onTerminate
      * @return Status of termination
      */
     virtual void terminate() noexcept;
 
     /**
-     * Virtual dtor that ensures proper destruction
+     * @brief Virtual destructor that ensures proper destruction
      */
     virtual ~Skill() = default;
 
     /**
-     * Gets the current skill name
+     * @brief Gets the current skill name
+     * @return Name of the skill
      */
     virtual const char* getName() = 0;
 };

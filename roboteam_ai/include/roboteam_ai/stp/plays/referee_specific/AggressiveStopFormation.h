@@ -42,12 +42,6 @@ class AggressiveStopFormation : public Play {
      * Gets the play name
      */
     const char* getName() override;
-
-    /**
-     * Optional function to save information for the next play
-     * @param info Map-Struct to save info in
-     */
-    void storePlayInfo(gen::PlayInfos& info) noexcept override{};
 };
 }  // namespace rtt::ai::stp::play
 

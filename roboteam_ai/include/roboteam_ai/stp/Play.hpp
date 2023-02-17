@@ -26,12 +26,6 @@ using eval = GlobalEvaluation;
 class Play {
    public:
     /**
-     * Saves all necessary information (that is needed for a potential next Play), when this Play will be finished
-     * @return Map of all the necessary information
-     */
-    virtual void storePlayInfo(gen::PlayInfos& previousPlayInfo) noexcept;
-
-    /**
      * Invariant vector that contains invariants that need to be true to continue execution of this play
      */
     std::vector<GlobalEvaluation> keepPlayEvaluation;

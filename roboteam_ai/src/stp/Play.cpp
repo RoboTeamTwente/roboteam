@@ -150,8 +150,6 @@ void Play::calculateInfoForScoredRoles(world::World *_world) noexcept {}
 
 uint8_t Play::getLastScore() const { return lastScore.value_or(0); }
 
-void Play::storePlayInfo(gen::PlayInfos &previousPlayInfo) noexcept {}
-
 bool Play::shouldEndPlay() noexcept { return false; }
 
 }  // namespace rtt::ai::stp

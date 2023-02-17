@@ -8,9 +8,17 @@
 #include "BBTrajectory1D.h"
 
 namespace rtt {
-
+/**
+ * @author Tijmen
+ * @brief Class that stores 1 dimensional trajectories
+ */
 class Trajectory1D {
    public:
+    /**
+     * @brief Stores the trajectory
+     * @param newParts Trajectory which needs to be stored
+     * @param addFromTime Time the trajectory was created
+     */
     void addTrajectory(const std::vector<BB::BBTrajectoryPart> &newParts, double addFromTime);
 
     /**
@@ -40,12 +48,9 @@ class Trajectory1D {
      */
     [[nodiscard]] double getTotalTime() const;
 
-    std::vector<BB::BBTrajectoryPart> parts;
-    // m
-    double finalPos;    // m
-    // m/s
-    // m/s^2
-    double maxVel;      // m/s
+    std::vector<BB::BBTrajectoryPart> parts; /**< Vector containing all parts of the trajectory */
+    double finalPos; /**< Target position to go to */
+    double maxVel; /**< Maximum allowed velocity */
 };
 
 }  // namespace rtt

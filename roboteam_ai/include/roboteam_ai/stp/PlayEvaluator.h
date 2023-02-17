@@ -9,6 +9,9 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {
+/**
+ * @brief Enumerator for global evaluations
+ */
 enum class GlobalEvaluation {
     /// Game States
     BallPlacementThemGameState = 0,
@@ -52,15 +55,21 @@ enum class GlobalEvaluation {
     WeHaveMajority
 };
 
+/**
+ * @brief Class that defines the play evaluator. It evaluates each play possible and gives it a score
+ */
 class PlayEvaluator {
    public:
+    /**
+     * @brief Structure for storing the scores for the plays
+     */
     struct PlayScoring {
         uint8_t evaluationScore;
         double weight;
     };
 
     /**
-     * Gets the score of a Global Evaluation, if it was not updated yet, update it before.
+     * @brief Gets the score of a Global Evaluation, if it was not updated yet, update it before.
      * @param evaluation that needs to be evaluated
      * @param world pointer to world
      * @return evaluated score for the evaluation, between 0 and 255
@@ -68,12 +77,12 @@ class PlayEvaluator {
     static uint8_t getGlobalEvaluation(GlobalEvaluation evaluation, const world::World* world);
 
     /**
-     * Clears the map of stored scores, to make sure new scores are calculated next tick
+     * @brief Clears the map of stored scores, to make sure new scores are calculated next tick
      */
     static void clearGlobalScores();
 
     /**
-     * Checks if FUZZY-TRUE score in uint8-t of global evaluation is above the TRUE threshold
+     * @brief Checks if FUZZY-TRUE score in uint8-t of global evaluation is above the TRUE threshold
      * @param globalEvaluation Invariant to be checked
      * @param world the pointer to world
      * @param cutOff Bottom bound value of true
@@ -82,20 +91,17 @@ class PlayEvaluator {
     static bool checkEvaluation(GlobalEvaluation globalEvaluation, const rtt::world::World* world, uint8_t cutOff = control_constants::FUZZY_DEFAULT_CUTOFF) noexcept;
 
     /**
-     * Calculate a final weighted score given a vector of scores with their weights
+     * @brief Calculate a final weighted score given a vector of scores with their weights
      * @param scoring vector withto be considered Evaluations
      * @return final score (0-255)
      */
     static uint8_t calculateScore(std::vector<PlayScoring>& scoring);
 
    private:
-    /**
-     * Map of all loaded Global Evaluations scores
-     */
-    static inline std::unordered_map<GlobalEvaluation, uint8_t> scoresGlobal{};
+    static inline std::unordered_map<GlobalEvaluation, uint8_t> scoresGlobal{}; /**< Map of all loaded Global Evaluations scores */
 
     /**
-     * Updates a given Global Evaluation, should only happen if this was not done in this tick yet.
+     * @brief Updates a given Global Evaluation, should only happen if this was not done in this tick yet.
      * @param index of evaluation that needs to be updated
      * @return the score of the updated evaluation
      */

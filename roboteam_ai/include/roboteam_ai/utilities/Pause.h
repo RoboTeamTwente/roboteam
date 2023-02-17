@@ -17,15 +17,36 @@ namespace io {
 class IOManager;
 }
 
+/**
+ * @brief Class that allows us to pause the robots from the interface.
+ */
 class Pause {
    private:
-    static bool pause;
-    static std::mutex pauseLock;
+    static bool pause; /**< Indicates whether the robots are paused */
+    static std::mutex pauseLock; /**< Synchronizer for the pause button */
 
    public:
+    /**
+     * @brief Constructor for the Pause class
+     */
     Pause();
+
+    /**
+     * @brief Getter for the pause boolean
+     * @return Whether the robots are paused
+     */
     bool getPause();
+
+    /**
+     * @brief Halts the robots
+     * @param data The current world
+     */
     void haltRobots(rtt::world::World const* data);
+
+    /**
+     * @brief Sets the pause boolean
+     * @param set The value to which the pause boolean should be set
+     */
     void setPause(bool set);
 };
 }  // namespace rtt::ai

@@ -9,11 +9,13 @@
 #include <vector>
 
 namespace rtt::ai::stp::evaluation {
-
+/**
+ * @brief Class that evaluates the blocking score
+ */
 class BlockingEvaluation {
    public:
     /**
-     * Score ability to block robots from position based on enemy positions
+     * @brief Score ability to block robots from position based on enemy positions
      * @param pointDistance distance from ball to point
      * @param enemyDistances enemy distances to ball
      * @param enemyAngles vector of angles between the line from the ball to the point and from the ball to the enemy

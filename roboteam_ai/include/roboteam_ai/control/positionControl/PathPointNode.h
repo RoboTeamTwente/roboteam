@@ -13,25 +13,33 @@ namespace rtt::ai::control {
  */
 class PathPointNode {
    private:
-    Vector2 position;
-    PathPointNode *parent = nullptr;
+    Vector2 position; /**< Position of the node */
+    PathPointNode *parent = nullptr; /**< Parent node of the node */
 
    public:
     /**
-     * Create a new tree node with a null parent (this will usually be the root of the tree)
+     * @brief Create a new tree node with a null parent (this will usually be the root of the tree)
      * @param position the position represented by the node
      */
     explicit PathPointNode(const Vector2 &position);
 
     /**
-     * Create a new tree node with the specified parent
+     * @brief Create a new tree node with the specified parent
      * @param position the position represented by the node
      * @param parent the parent node of the current node
      */
     PathPointNode(const Vector2 &position, PathPointNode &parent);
 
+    /**
+     * @brief Retrieves the position of the node
+     * @return position of the node
+     */
     [[nodiscard]] const Vector2 &getPosition() const;
 
+    /**
+     * @brief retrieves the parent of the node
+     * @return parent of the node
+     */
     [[nodiscard]] PathPointNode *getParent() const;
 };
 }  // namespace rtt::ai::control

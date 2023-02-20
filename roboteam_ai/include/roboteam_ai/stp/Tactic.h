@@ -109,12 +109,6 @@ class Tactic {
      * @return The current skill
      */
     Skill *getCurrentSkill();
-
-    /**
-     * @brief Forces a tactic to be success, when we have the ball for example.
-     * @return a bool whether the tactic is forced successful or not
-     */
-    virtual bool forceTacticSuccess() noexcept;
 };
 }  // namespace rtt::ai::stp
 

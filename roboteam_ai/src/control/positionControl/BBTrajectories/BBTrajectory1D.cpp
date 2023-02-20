@@ -5,6 +5,8 @@
 
 #include <cmath>
 
+#include "roboteam_utils/Print.h"
+
 namespace rtt::BB {
 double BBTrajectory1D::fullBrakePos(double pos, double vel, double accMax) {
     double acc = vel <= 0 ? accMax : -accMax;
@@ -55,7 +57,13 @@ void BBTrajectory1D::trapezoidalProfile(double startPos, double startVel, double
     double t3 = -maximumVel / acc3;
     double startCoastPos = startPos + 0.5 * (startVel + maximumVel) * t1;
     double endCoastPos = endPos - 0.5 * maximumVel * t3;
-    double t2 = (endCoastPos - startCoastPos) / maximumVel;
+    double t2;
+    if (maximumVel != 0) {
+        t2 = (endCoastPos - startCoastPos) / maximumVel;
+    }
+    else{
+        t2 = 0;
+    }
 
     updatePart(0, t1, acc1, startVel, startPos);
     updatePart(1, t1 + t2, 0, maximumVel, startCoastPos);

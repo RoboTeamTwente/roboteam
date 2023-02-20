@@ -33,7 +33,6 @@ std::vector<Vector2> Trajectory2D::getPathApproach(double timeStep) const {
     double time = 0;
 
     if (totalTime == std::numeric_limits<double>::infinity()) {
-        // TODO: Prevent this from happening!
         RTT_ERROR("Infinite while loop")
         // throw std::runtime_error("Total time of infinity!");
         return {getPosition(0)};
@@ -52,7 +51,6 @@ std::vector<Vector2> Trajectory2D::getVelocityVector(double timeStep) const {
     double time = 0;
 
     if (totalTime == std::numeric_limits<double>::infinity()) {
-        // TODO: Prevent this from happening!
         RTT_ERROR("Infinite while loop")
         // throw std::runtime_error("Total time of infinity!");
         return {getPosition(0)};

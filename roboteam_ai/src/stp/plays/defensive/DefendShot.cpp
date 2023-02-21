@@ -150,13 +150,11 @@ void DefendShot::calculateInfoForHarasser() noexcept {
     auto robotToBallAngle = (ballPos - stpInfos["harasser"].getRobot()->get()->getPos()).toAngle();
     auto ballToEnemyAngle = (enemyClosestToBall->get()->getPos() - ballPos).toAngle();
     auto angleDiff = robotToBallAngle.shortestAngleDiff(ballToEnemyAngle);
-    RTT_DEBUG(angleDiff);
     if (angleDiff > M_PI / 3.0) {  // If the enemy is between us and the ball, dont go to the ball directly but further away, to avoid crashing
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos = FieldComputations::projectPointToValidPositionOnLine(field, enemyPos + (ballPos - enemyPos).stretchToLength(0.50), enemyPos,
                                                                               enemyPos + (ballPos - enemyPos).stretchToLength(10), AvoidObjects{}, 0.0,
                                                                               control_constants::ROBOT_RADIUS * 2, 0.0);
-        RTT_DEBUG(targetPos);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((enemyPos - ballPos).angle());
     } else {

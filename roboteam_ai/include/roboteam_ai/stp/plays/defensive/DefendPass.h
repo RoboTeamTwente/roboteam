@@ -65,6 +65,11 @@ class DefendPass : public Play {
      * @brief Calculates info for the offenders
      */
     void calculateInfoForOffenders() noexcept;
+
+    /**
+     * @brief Calculates info for the harasser role
+     */
+    void calculateInfoForHarasser() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

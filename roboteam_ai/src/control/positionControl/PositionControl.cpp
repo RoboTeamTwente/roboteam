@@ -8,6 +8,10 @@
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
+std::vector<Vector2> PositionControl::getComputedPath(int ID) {
+    return computedPaths[ID];
+}
+
 RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
                                                   Vector2 &targetPosition, stp::PIDType pidType) {
     collisionDetector.setField(field);

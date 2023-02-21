@@ -50,6 +50,13 @@ class PositionControl {
 
    public:
     /**
+     * @brief Retrieves the computed path of the given robot
+     * @param ID ID of the robot who's path we want to retrieve
+     * @return Path that of the given robot
+     */
+    std::vector<Vector2> getComputedPath(int ID);
+
+    /**
      * @brief Generates a path according to the selected planning algorithm,
      * and tracks it using the selected tracking algorithm. In the case a collision
      * is detected (using the collision detector), the path is recalculated.

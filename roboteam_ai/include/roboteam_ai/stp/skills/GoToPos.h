@@ -24,6 +24,12 @@ class GoToPos : public Skill {
      * @return The name of this skill
      */
     const char* getName() override;
+
+    /**
+     * @brief Visualizes the path the robot will take
+     * @param info StpInfo struct with all relevant information for this robot and skill
+     */
+    void visualize(StpInfo const& info);
 };
 }  // namespace rtt::ai::stp::skill
 

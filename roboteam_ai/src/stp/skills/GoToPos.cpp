@@ -25,7 +25,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         avoidObj.avoidBallDist = control_constants::AVOID_BALL_DISTANCE;
         avoidObj.shouldAvoidBall = true;
     }
-    
+
     rtt::BB::CommandCollision commandCollision;
 
     commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
@@ -65,6 +65,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     // forward the generated command to the ControlModule, for checking and limiting
     forwardRobotCommand(info.getCurrentWorld());
 
+    visualize(info);
+
     // Check if successful
     if ((info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::GO_TO_POS_ERROR_MARGIN || info.getRobot().value()->hasBall()) {
         return Status::Success;
@@ -74,5 +76,11 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 }
 
 const char *GoToPos::getName() { return "Go To Position"; }
+
+void GoToPos::visualize(const StpInfo &info) {
+    auto pathPoints = info.getCurrentWorld()->getRobotPositionController()->getComputedPath(info.getRobot().value()->getId());
+    ai::interface::Input::addDrawing(interface::Drawing(interface::Visual::PATHFINDING, pathPoints, QColorConstants::Magenta, info.getRobot().value()->getId(),
+                                                        interface::Drawing::LINES_CONNECTED, 10, 10, 10));
+}
 
 }  // namespace rtt::ai::stp::skill

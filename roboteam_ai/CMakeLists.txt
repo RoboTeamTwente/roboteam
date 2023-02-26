@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(roboteam_ai)
+find_package(Eigen3 REQUIRED)
 
 add_subdirectory(src)
 
@@ -251,25 +252,15 @@ target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 add_library(roboteam_ai_control
         ${PROJECT_SOURCE_DIR}/src/control/ControlModule.cpp
         ${PROJECT_SOURCE_DIR}/src/control/ControlUtils.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathPlanning/NumTreesPlanning.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/CollisionDetector.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PositionControl.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathTracking/DensePathTracking.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathTracking/PidTracking.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathTracking/BBTPathTracking.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PathPointNode.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathPlanning/PathPlanningAlgorithm.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/pathTracking/PathTrackingAlgorithm.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PositionControlUtils.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/WorldObjects.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectory1D.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectory2D.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/Trajectory1D.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/Trajectory2D.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/WorldObjects.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/WorldObjects.cpp
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectoryIterator.cpp
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PathTracking.cpp
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PositionControlUtils.cpp
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PathPlanning.cpp
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/PositionControl.cpp
         ${PROJECT_SOURCE_DIR}/src/control/AnglePID.cpp
-)
+        ${PROJECT_SOURCE_DIR}/src/control/positionControl/CollisionDetector.cpp)
 target_include_directories(roboteam_ai_control
         PRIVATE include/roboteam_ai
 )
@@ -277,6 +268,7 @@ target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PUBLIC Eigen3::Eigen
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 

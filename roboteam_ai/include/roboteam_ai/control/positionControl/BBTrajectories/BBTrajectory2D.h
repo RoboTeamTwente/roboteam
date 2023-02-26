@@ -10,8 +10,9 @@
 #include <vector>
 
 #include "BBTrajectory1D.h"
+#include "control/positionControl/StateVector.h"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 /**
  * @author Rolf
@@ -20,6 +21,29 @@ namespace rtt::BB {
  */
 class BBTrajectory2D {
    public:
+    class Iterator  {
+       public:
+        using T = std::pair<double, StateVector>;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+        using iterator_category = std::output_iterator_tag;
+
+        explicit Iterator(const BBTrajectory2D& trajectory, double time = 0);
+
+        reference operator*();
+        pointer operator->();
+        Iterator& operator++();
+        bool operator==(const Iterator& other) const;
+        bool operator!=(const Iterator& other) const;
+
+       private:
+        const BBTrajectory2D& trajectory;
+        std::optional<T> item;
+        double time;
+    };
+
     /**
      * @brief Default constructor
      */
@@ -77,7 +101,10 @@ class BBTrajectory2D {
     /**
      * @brief Returns all the trajectory parts in both dimensions to use in the general trajectory class
      */
-    [[nodiscard]] std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> getParts();
+    [[nodiscard]] std::pair<std::vector<BBTrajectoryPart>, std::vector<BBTrajectoryPart>> getParts();
+
+    Iterator begin() const { return Iterator(*this, 0); }
+    Iterator end() const { return Iterator(*this, getTotalTime()); }
 
    private:
     /**

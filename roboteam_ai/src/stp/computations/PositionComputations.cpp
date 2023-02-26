@@ -7,9 +7,11 @@
 #include <roboteam_utils/Grid.h>
 #include <roboteam_utils/Tube.h>
 
+#include <roboteam_utils/Field.hpp>
+
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PositionScoring.h"
-#include <roboteam_utils/Field.hpp>
+#include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

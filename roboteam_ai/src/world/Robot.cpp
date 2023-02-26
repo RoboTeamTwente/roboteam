@@ -5,6 +5,7 @@
 #include "world/Robot.hpp"
 
 #include "utilities/Constants.h"
+#include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
 
 namespace rtt::world::robot {

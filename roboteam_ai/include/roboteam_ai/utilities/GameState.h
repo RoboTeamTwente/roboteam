@@ -15,7 +15,7 @@ struct GameState {
     std::string ruleSetName;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
 
-    RuleSet getRuleSet() {
+    RuleSet getRuleSet() const {
         for (auto ruleSet : Constants::ruleSets()) {
             if (ruleSet.title == ruleSetName) {
                 return ruleSet;

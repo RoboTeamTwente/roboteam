@@ -6,6 +6,7 @@
 
 #include "control/ControlUtils.h"
 #include "interface/widgets/MainControlsWidget.h"
+#include "utilities/GameStateManager.hpp"
 
 namespace rtt::ai::stp {
 

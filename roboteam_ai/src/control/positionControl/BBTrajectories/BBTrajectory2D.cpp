@@ -6,8 +6,9 @@
 
 #include <cmath>
 
+#include "control/positionControl/PositionControlUtils.h"
 #include "utilities/Constants.h"
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 BBTrajectory2D::BBTrajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {
     generateSyncedTrajectory(initialPos, initialVel, finalPos, maxVel, maxAcc);
@@ -48,5 +49,38 @@ Vector2 BBTrajectory2D::getAcceleration(double t) const { return Vector2(x.getAc
 
 [[maybe_unused]] double BBTrajectory2D::getTotalTime() const { return std::max(x.getTotalTime(), y.getTotalTime()); }
 
-std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
+std::pair<std::vector<BBTrajectoryPart>, std::vector<BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
+
+
+BBTrajectory2D::Iterator::Iterator(const BBTrajectory2D &trajectory, double time): trajectory(trajectory), time(time) {}
+
+BBTrajectory2D::Iterator::reference BBTrajectory2D::Iterator::operator*() {
+    if (!item.has_value()) {
+        item = {{ time, {trajectory.getPosition(time), trajectory.getVelocity(time) }}};
+    }
+    return item.value();
+}
+
+BBTrajectory2D::Iterator::pointer BBTrajectory2D::Iterator::operator->() {
+    if (!item.has_value()) {
+        item = {{ time, {trajectory.getPosition(time), trajectory.getVelocity(time) }}};
+    }
+
+    return &item.value();
+}
+
+bool BBTrajectory2D::Iterator::operator==(const BBTrajectory2D::Iterator& other) const {
+    return abs(other.time - time) < PositionControlUtils::TIME_STEP;
+}
+
+bool BBTrajectory2D::Iterator::operator!=(const BBTrajectory2D::Iterator& other) const {
+    return !(*this == other);
+}
+
+BBTrajectory2D::Iterator& BBTrajectory2D::Iterator::operator++() {
+    time += PositionControlUtils::TIME_STEP;
+    item = std::nullopt;
+    return *this;
+}
+
 }  // namespace rtt::BB

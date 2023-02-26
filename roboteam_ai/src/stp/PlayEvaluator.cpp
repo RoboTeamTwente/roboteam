@@ -43,6 +43,8 @@
 #include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeHaveMajorityGlobalEvaluation.h>
 
+#include "utilities/GameStateManager.hpp"
+
 namespace rtt::ai::stp {
 
 uint8_t PlayEvaluator::getGlobalEvaluation(GlobalEvaluation evaluation, const rtt::world::World* world) {

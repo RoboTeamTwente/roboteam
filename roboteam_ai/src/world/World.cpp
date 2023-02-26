@@ -4,6 +4,8 @@
 
 #include "world/World.hpp"
 
+#include "utilities/GameStateManager.hpp"
+
 namespace rtt::world {
 WorldData const &World::setWorld(WorldData &newWorld) noexcept {
     if (currentWorld) {
@@ -124,10 +126,7 @@ void World::updateTickTime() noexcept {
 }
 
 void World::updatePositionControl() {
-    std::vector<Vector2> robotPositions(getWorld()->getRobotsNonOwning().size());
-    std::transform(getWorld()->getRobotsNonOwning().begin(), getWorld()->getRobotsNonOwning().end(), robotPositions.begin(),
-                   [](const auto &robot) -> Vector2 { return (robot->getPos()); });
-    positionControl.setRobotPositions(robotPositions);
+    positionControl.updatePositionControl(getWorld(), getField(), rtt::ai::GameStateManager::getCurrentGameState());
 }
 
 ai::control::PositionControl *World::getRobotPositionController() noexcept { return &positionControl; }

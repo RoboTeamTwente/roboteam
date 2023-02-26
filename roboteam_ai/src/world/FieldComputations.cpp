@@ -142,7 +142,7 @@ Polygon FieldComputations::getDefenseArea(const rtt::Field &field, bool ourDefen
     topPenalty = ourDefenseArea ? topPenalty + Vector2(margin, margin) : topPenalty + Vector2(-margin, margin);
 
     std::vector<Vector2> defenseArea = {belowGoal, bottomPenalty, topPenalty, aboveGoal};
-    //interface::Input::drawDebugData(defenseArea);
+//    interface::Input::drawDebugData(defenseArea);
     return {defenseArea};
 }
 

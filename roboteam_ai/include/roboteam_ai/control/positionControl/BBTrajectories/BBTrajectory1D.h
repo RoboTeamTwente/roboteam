@@ -8,7 +8,7 @@
 #include <array>
 #include <vector>
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 /**
  * @brief Represents a segment of a one-dimensional bang-bang trajectory.
  */
@@ -103,7 +103,7 @@ class BBTrajectory1D {
      * @brief Returns all the parts of a BBTrajectory as a vector
      * @return All parts as a vector
      */
-    std::vector<BB::BBTrajectoryPart> getParts();
+    std::vector<BBTrajectoryPart> getParts();
 
     BBTrajectory1D(double initialPos, double initialVel, double finalPos, double maxVel, double maxAcc);
 

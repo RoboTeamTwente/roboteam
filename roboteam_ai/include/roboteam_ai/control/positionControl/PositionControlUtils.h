@@ -5,19 +5,19 @@
 #ifndef RTT_POSITIONCONTROLUTILS_H
 #define RTT_POSITIONCONTROLUTILS_H
 
+#include "interface/api/Output.h"
 #include "roboteam_utils/Vector2.h"
-#include "utilities/Constants.h"
+#include "utilities/StpInfoEnums.h"
 
 namespace rtt::ai::control {
 
 class PositionControlUtils {
-   private:
-    static constexpr double MAX_TARGET_DEVIATION = 0.05;
-
-    // minimum distance needed to consider the current target reached
-    static constexpr double MIN_DISTANCE_TARGET_REACHED = 2 * Constants::ROBOT_RADIUS();
-
    public:
+    constexpr static const double TIME_STEP = 0.1;
+    constexpr static const int COLLISION_DETECTOR_STEP_COUNT = 10;
+    constexpr static const double MIN_ROBOT_DISTANCE = 3 * ai::Constants::ROBOT_RADIUS_MAX();
+    constexpr static const int MAX_ROBOTS_PER_TEAM = 11;
+
     /**
      * If the distance between the old target and the new target > MAX_TARGET_DEVIATION
      * @param targetPos
@@ -35,11 +35,15 @@ class PositionControlUtils {
     static bool isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition);
 
     /**
-     * Removes the first element in the path in the case the first point is reached
-     * @param path the vector of path points
-     * @param currentPosition the current position of the robot
+     * Is the target moving
+     * @param velocity
      */
-    static void removeFirstIfReached(std::vector<Vector2> &path, const Vector2 &currentPosition);
+    static bool isMoving(const Vector2 &velocity);
+
+    static pidVals getPIDValue(const stp::PIDType &pidType);
+
+    static int convertTimeToStep(double time);
+    static double convertStepToTime(int step);
 };
 }  // namespace rtt::ai::control
 

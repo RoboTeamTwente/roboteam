@@ -1,5 +1,6 @@
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
+#include <sstream>
 #include <REM_BaseTypes.h>
 #include <REM_Packet.h>
 #include <REM_Log.h>

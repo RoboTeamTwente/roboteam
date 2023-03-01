@@ -72,11 +72,22 @@ void CollisionDetector::updateDefenseAreas(const std::optional<rtt::Field>& fiel
 }
 
 void CollisionDetector::updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId) {
+    int pathLength = static_cast<int>(path.size());
+
     // Sometimes robot did not reach the next step, thus we want to offset the collision by 1.
     // timeline[0] is filed with current position at the start of the tick
     int offset = !path.empty() && !PositionControlUtils::isTargetReached(path[0].position, currentPosition) ? 1 : 0;
-    for (int i = offset; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {
-        timeline[i].robotsUs[robotId] = i < path.size() ? path[i] : StateVector{currentPosition, Vector2{0, 0}};
+    for (int i = offset; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT && i < pathLength; i++) {
+        timeline[i].robotsUs[robotId] = path[i];
+    }
+
+    // Fill the rest of the timeline with the last position
+    const auto endState = path.empty()
+                                  ? StateVector{currentPosition, Vector2{0, 0}}
+                                  : StateVector{path[pathLength - 1].position, Vector2{0, 0}};
+
+    for(int i = pathLength; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {
+        timeline[i].robotsUs[robotId] = endState;
     }
 }
 }  // namespace rtt::ai::control

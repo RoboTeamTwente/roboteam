@@ -21,29 +21,9 @@ enum UpdatePath {
     DONT_UPDATE,
     UPDATE_TARGET_CHANGED,
     UPDATE_TARGET_REACHED,
-
     UPDATE_POSITION_CHANGED,
-
     UPDATE_COLLISION_DETECTED,
 };
-
-inline std::ostream& operator<<(std::ostream& os, const UpdatePath updatePath) {
-    switch (updatePath) {
-        case UpdatePath::DONT_UPDATE:
-            os << "DONT_UPDATE";
-            break;
-        case UpdatePath::UPDATE_TARGET_CHANGED:
-            os << "UPDATE_TARGET_CHANGED";
-            break;
-        case UpdatePath::UPDATE_TARGET_REACHED:
-            os << "UPDATE_TARGET_REACHED";
-            break;
-        case UpdatePath::UPDATE_COLLISION_DETECTED:
-            os << "UPDATE_COLLISION_DETECTED";
-            break;
-    }
-    return os;
-}
 
 /**
  * Path tracker for single robot.

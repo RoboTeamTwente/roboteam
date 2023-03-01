@@ -46,10 +46,10 @@ UpdatePath PathTracking::shouldUpdatePath(const PositionControlInput& input, std
 
     if (remainingPath.empty() && !PositionControlUtils::isTargetReached(input.targetPos, input.state.position)) return UPDATE_TARGET_REACHED;
 
-
-//    auto collision = collisionDetector.getFirstCollision(remainingPath, robotId, avoidObjects);
-//    if (collision.has_value() && remainingPath.size() > 2) return UPDATE_COLLISION_DETECTED;
-
+    for (int i = 0; i < static_cast<int>(remainingPath.size()); i++) {
+        if (!collisionDetector.doesCollideWithMovingObjects(remainingPath[i].position, input.robotId, input.avoidObjects.shouldAvoidBall, i)) continue;
+        return UPDATE_COLLISION_DETECTED;
+    }
     return DONT_UPDATE;
 }
 

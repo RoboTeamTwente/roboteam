@@ -48,7 +48,7 @@ void PositionControl::updatePositionControl(std::optional<WorldDataView> world, 
 
     pathPlanning.updateConstraints(field.value());
     for (const auto& ourRobot : world->getUs()) {
-        if (paths.contains(ourRobot->getId())) { continue; }
+        if (paths.contains(ourRobot->getId())) [[likely]] { continue; }
 
         auto emptyPath = std::vector<StateVector>();
         emptyPath.reserve(512);

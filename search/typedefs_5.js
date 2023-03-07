@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['leftpair_10719',['LeftPair',['../classrtt_1_1BiMap.html#a1259594deeba56677267e541ae3672cb',1,'rtt::BiMap']]],
-  ['logged_5fproto_5ftype_10720',['logged_proto_type',['../namespacertt.html#a2e8a6630b9d1deaaa9853de900a91e0a',1,'rtt']]],
-  ['logged_5ftime_5ftype_10721',['logged_time_type',['../namespacertt.html#a540587a38d079113df727e6a138f7eea',1,'rtt']]]
+  ['vector2_3474',['Vector2',['../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82',1,'Vector2():&#160;ControlUtils.h'],['../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82',1,'Vector2():&#160;ControlUtilsTest.cpp']]]
 ];

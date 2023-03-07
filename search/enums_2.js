@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['channeltype_10743',['ChannelType',['../namespacertt_1_1net_1_1utils.html#a5dcf6666293d65bd84a7544139702e0d',1,'rtt::net::utils']]]
+  ['dealerflagpriority_3477',['DealerFlagPriority',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617',1,'rtt::ai']]],
+  ['dealerflagtitle_3478',['DealerFlagTitle',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67',1,'rtt::ai']]],
+  ['drawingmethod_3479',['DrawingMethod',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3ac',1,'rtt::ai::interface::Drawing']]]
 ];

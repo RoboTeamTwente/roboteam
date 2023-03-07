@@ -1,25 +1,10 @@
 var searchData=
 [
-  ['lazyrectangle_2ecpp_6160',['LazyRectangle.cpp',['../LazyRectangle_8cpp.html',1,'']]],
-  ['lazyrectangle_2ehpp_6161',['LazyRectangle.hpp',['../LazyRectangle_8hpp.html',1,'']]],
-  ['lazyrectangletest_2ecpp_6162',['LazyRectangleTest.cpp',['../LazyRectangleTest_8cpp.html',1,'']]],
-  ['libusbutilities_2ecpp_6163',['LibusbUtilities.cpp',['../LibusbUtilities_8cpp.html',1,'']]],
-  ['libusbutilities_2eh_6164',['LibusbUtilities.h',['../LibusbUtilities_8h.html',1,'']]],
-  ['line_2ecpp_6165',['Line.cpp',['../Line_8cpp.html',1,'']]],
-  ['line_2eh_6166',['Line.h',['../Line_8h.html',1,'']]],
-  ['lineintersectiontest_2ecpp_6167',['LineIntersectionTest.cpp',['../LineIntersectionTest_8cpp.html',1,'']]],
-  ['lineofsightevaluation_2ecpp_6168',['LineOfSightEvaluation.cpp',['../LineOfSightEvaluation_8cpp.html',1,'']]],
-  ['lineofsightevaluation_2eh_6169',['LineOfSightEvaluation.h',['../LineOfSightEvaluation_8h.html',1,'']]],
-  ['lineprojectiontest_2ecpp_6170',['LineProjectionTest.cpp',['../LineProjectionTest_8cpp.html',1,'']]],
-  ['linesegment_2ecpp_6171',['LineSegment.cpp',['../LineSegment_8cpp.html',1,'']]],
-  ['linesegment_2eh_6172',['LineSegment.h',['../LineSegment_8h.html',1,'']]],
-  ['linesegmenttest_2ecpp_6173',['LineSegmentTest.cpp',['../LineSegmentTest_8cpp.html',1,'']]],
-  ['linetest_2ecpp_6174',['LineTest.cpp',['../LineTest_8cpp.html',1,'']]],
-  ['logfileheader_2eh_6175',['LogFileHeader.h',['../LogFileHeader_8h.html',1,'']]],
-  ['logfilereader_2ecpp_6176',['LogFileReader.cpp',['../LogFileReader_8cpp.html',1,'']]],
-  ['logfilereader_2eh_6177',['LogFileReader.h',['../LogFileReader_8h.html',1,'']]],
-  ['logfilewriter_2ecpp_6178',['LogFileWriter.cpp',['../LogFileWriter_8cpp.html',1,'']]],
-  ['logfilewriter_2eh_6179',['LogFileWriter.h',['../LogFileWriter_8h.html',1,'']]],
-  ['loggingtest_2ecpp_6180',['LoggingTest.cpp',['../LoggingTest_8cpp.html',1,'']]],
-  ['loopstest_2ecpp_6181',['LoopsTest.cpp',['../LoopsTest_8cpp.html',1,'']]]
+  ['main_2ecpp_2188',['main.cpp',['../df/d0a/main_8cpp.html',1,'']]],
+  ['maincontrolswidget_2ecpp_2189',['MainControlsWidget.cpp',['../d8/d23/MainControlsWidget_8cpp.html',1,'']]],
+  ['maincontrolswidget_2eh_2190',['MainControlsWidget.h',['../d2/df8/MainControlsWidget_8h.html',1,'']]],
+  ['mainwindow_2ecpp_2191',['mainWindow.cpp',['../d6/d94/mainWindow_8cpp.html',1,'']]],
+  ['mainwindow_2eh_2192',['mainWindow.h',['../d2/d11/mainWindow_8h.html',1,'']]],
+  ['manualcontrolwidget_2ecpp_2193',['ManualControlWidget.cpp',['../dc/d82/ManualControlWidget_8cpp.html',1,'']]],
+  ['manualcontrolwidget_2eh_2194',['ManualControlWidget.h',['../d2/d6f/ManualControlWidget_8h.html',1,'']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roboteam AI: Docker setup for RTT</title>
+<title>Roboteam AI: RoboTeam AI</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,31 +85,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Docker setup for RTT </div>  </div>
+<div class="title">RoboTeam AI </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_docker_README"></a> </p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Why docker?</h1>
-<p>Docker can create a virtual environment with pre installed depencendies. This makes sure everyone with this virtual environment can run our code.</p>
-<p>For a simulation tournament (2022/04), every team had to put their program in a docker image, so that their image could run on the server of the people that hosted the tournament (So less delay between our program and the simulator). </p>
-<h1><a class="anchor" id="autotoc_md2"></a>
-How to make?</h1>
-<p>The <code>Dockerfile</code> file contains the steps to create the image. It contains all the commands that need to be run to install the required dependencies. It also copies the <code>clone.sh</code> script to the image so you dont have to type git clone for our repo.</p><ul>
-<li>To create the image: (note the dot at the end) <pre class="fragment">  docker build -t roboteamtwente/practice_tournament .
-</pre></li>
-<li>To run the image in a container: <pre class="fragment">  docker run -e VNC_PW=12345 -p 5901:5901 -p 2222:2222 -it roboteamtwente/practice_tournament
-</pre> This image that will be created is also publicly available at <a href="https://hub.docker.com/r/roboteamtwente/practice_tournament">the docker hub</a>. This allows others to run our image. Be sure to update that docker once in a while.</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
-How to use?</h1>
-<p>On startup, the container will open a VNC session. With this you can remote desktop into the container, where you will be able to run our code. Download a VNC viewer for the remote desktopping(I suggest <a href="https://www.realvnc.com/en/connect/download/viewer/linux/">this one</a>, and log in with the VNC password you set in the <code>docker run</code> command (12345).</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
-Nice to know</h1>
-<ul>
-<li>The image already has the text editor sublime text. To start it, open a terminal, and enter <code>subl &lt;folder&gt;</code> to open that specific folder.</li>
-<li>Use the sript <code>clone.sh</code> to clone the roboteam repo located at <code>/</code>. </li>
-</ul>
+<div class="textblock"><p><a class="anchor" id="md_roboteam_ai_README"></a>This repository holds the logic for decision making and high-level robot control for RoboTeam Twente. For more information, be sure to check out our wiki!</p>
+<p>➡️ <a href="https://roboteamtwente.github.io/roboteam_ai/index.html">Documentation</a></p>
+<p>➡️ <a href="https://github.com/RoboTeamTwente/roboteam_suite#installation">Installation guide</a></p>
+<hr  />
+<h5>Development</h5>
+<p><a href="https://www.codefactor.io/repository/github/roboteamtwente/roboteam_ai"><img src="https://www.codefactor.io/repository/github/roboteamtwente/roboteam_ai/badge" alt="CodeFactor" class="inline"/></a> </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

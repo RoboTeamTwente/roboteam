@@ -1,0 +1,65 @@
+var RobotControlScript_8cpp =
+[
+    [ "Mode", "RobotControlScript_8cpp.html#a46c8a310cf4c094f8c80e1cb8dc1f911", [
+      [ "BASESTATION", "RobotControlScript_8cpp.html#a46c8a310cf4c094f8c80e1cb8dc1f911af8e01a5c23ab905365d14b05b85a2239", null ],
+      [ "SIMULATOR", "RobotControlScript_8cpp.html#a46c8a310cf4c094f8c80e1cb8dc1f911adc943d0cb7e0ca6d66e0c38df02c9b01", null ]
+    ] ],
+    [ "Movement", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985e", [
+      [ "FORWARD", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985eabfec72bb37910c61f36b6c29a1f7ec31", null ],
+      [ "BACKWARD", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea6377b4908ae38f9a57fe9120cf179eb1", null ],
+      [ "LEFT", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea684d325a7303f52e64011467ff5c5758", null ],
+      [ "RIGHT", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea21507b40c80068eda19865706fdc2403", null ],
+      [ "SINE_X", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea78c7fc831e9f42fee03284c13ad71cd8", null ],
+      [ "SINE_Y", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985eaf2e5864035089bee84cc53c3666c6f01", null ],
+      [ "SINE_CIRCLE", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985eac22ce4aa78bfdec0ff6f71a09fbaf64f", null ],
+      [ "STILL", "RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea8b572d218013b9626d59e6a2b38f18b6", null ]
+    ] ],
+    [ "Rotation", "RobotControlScript_8cpp.html#a4940d1dc528122726d2c8c475657e1a9", [
+      [ "NO_ROTATION", "RobotControlScript_8cpp.html#a4940d1dc528122726d2c8c475657e1a9a18e30ece833d6ab1d781fcd8fe9d4d5d", null ],
+      [ "LEFT_ROTATION", "RobotControlScript_8cpp.html#a4940d1dc528122726d2c8c475657e1a9a884dcaa90bb4cee33af0f504e9cb7427", null ],
+      [ "RIGHT_ROTATION", "RobotControlScript_8cpp.html#a4940d1dc528122726d2c8c475657e1a9a4105853af646eb04d7f61fdaadea194b", null ]
+    ] ],
+    [ "Team", "RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598", [
+      [ "NEITHER", "RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a9fc49374420f4310fb89e88ea2689da5", null ],
+      [ "YELLOW", "RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a8a568e5f41b7e4da88fe5c4a00aad34e", null ],
+      [ "BLUE", "RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a1b3e1ee9bff86431dea6b181365ba65f", null ],
+      [ "BOTH", "RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a6328e5e3186c227a021ef2ff77e40197", null ]
+    ] ],
+    [ "createCommandForRobot", "RobotControlScript_8cpp.html#a8ca569073024828e8b669a0e79c0c5dd", null ],
+    [ "currentModeToString", "RobotControlScript_8cpp.html#aaad06383aa9017626ed2f53c5cc346d7", null ],
+    [ "currentMovementToString", "RobotControlScript_8cpp.html#a9a1f66454b946e44bd0fd7262b28825a", null ],
+    [ "currentRotationToString", "RobotControlScript_8cpp.html#a9f67118c28340149ae8c7e3efe4a43c7", null ],
+    [ "getRobotCommandsForTeam", "RobotControlScript_8cpp.html#a78044a8e6a2a1361f894c8a25610636b", null ],
+    [ "handleCommand", "RobotControlScript_8cpp.html#a38408ba48f24a52c7966484ca9c9cbeb", null ],
+    [ "main", "RobotControlScript_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4", null ],
+    [ "printCommandOptions", "RobotControlScript_8cpp.html#aea948845029fcbdc49456c43ebca2756", null ],
+    [ "printStatus", "RobotControlScript_8cpp.html#a743686a7f8c73933aa49668fd432ebb4", null ],
+    [ "runCommandLineInterface", "RobotControlScript_8cpp.html#a320f4c1a29d1509d7b489ce70d908543", null ],
+    [ "runCommandSending", "RobotControlScript_8cpp.html#ad4a15b73b80e02c0bee36119acb03f94", null ],
+    [ "runSettingsSending", "RobotControlScript_8cpp.html#a64cdeb3dbf0f25a944cea91d00d54bba", null ],
+    [ "stringToRobotId", "RobotControlScript_8cpp.html#a39a5c8d9ded32ca8148d91fc4d833b4a", null ],
+    [ "targetIDsToString", "RobotControlScript_8cpp.html#ab3cad7724141a85f92c8cfacb5c20dd8", null ],
+    [ "targetTeamToString", "RobotControlScript_8cpp.html#a255dfd23d5603aba3886896d90ccd518", null ],
+    [ "updateCommandValues", "RobotControlScript_8cpp.html#a44857e0b1178b3464de87e1a3a3ae863", null ],
+    [ "COMMAND_TRANSMISSION_INTERVAL_MS", "RobotControlScript_8cpp.html#a59134e35a6e7aa352138adfa29ba4600", null ],
+    [ "currentMode", "RobotControlScript_8cpp.html#abd94ded7cb6d0d29c553f52d2d926623", null ],
+    [ "currentMovement", "RobotControlScript_8cpp.html#a3626f94fc363546590a6396a1109291b", null ],
+    [ "currentRotation", "RobotControlScript_8cpp.html#a459ca545ad52a32380435a7a220f6e86", null ],
+    [ "currentTeam", "RobotControlScript_8cpp.html#a6c32bca4a76bcfc2e620dd531adb1ac9", null ],
+    [ "lastTimeCommandWasUsed", "RobotControlScript_8cpp.html#aaad0241d72c2299264af208262ccf715", null ],
+    [ "MAX_AMOUNT_OF_ROBOTS", "RobotControlScript_8cpp.html#a61d32245ecd72654d563c70217adcb61", null ],
+    [ "MAX_ANGULAR_VELOCITY", "RobotControlScript_8cpp.html#affbb10e5b02e8a50844cb2bf4285efd4", null ],
+    [ "MAX_DRIBBLER_SPEED", "RobotControlScript_8cpp.html#a419610bbd06e9274135b790f4f7148ae", null ],
+    [ "MAX_VELOCITY", "RobotControlScript_8cpp.html#ad6b4b428423dce2764c72bfdbd9154e2", null ],
+    [ "SETTINGS_TRANSMISSION_INTERVAL_MS", "RobotControlScript_8cpp.html#a4adb6f8bb112e66bd2f5bef9bd7cc24c", null ],
+    [ "shouldAskCLICommands", "RobotControlScript_8cpp.html#a808ab5857525b9ffa58034fb6b33c7fa", null ],
+    [ "shouldSendRobotCommands", "RobotControlScript_8cpp.html#a42f2f7576bd6f91233f0ba94d57e17c5", null ],
+    [ "shouldSendSettings", "RobotControlScript_8cpp.html#aace567d734ff9c535f0b82eabb85da5e", null ],
+    [ "targetAllRobotIDs", "RobotControlScript_8cpp.html#a1bcaa9dfa5a04756a796d5a45a1e7030", null ],
+    [ "targetAngle", "RobotControlScript_8cpp.html#a90ed0735fe9946bfafd1b33632324ace", null ],
+    [ "targetAngularVelocity", "RobotControlScript_8cpp.html#a8a2afeecb1868739b4e0eddcd4518efb", null ],
+    [ "targetRobotID", "RobotControlScript_8cpp.html#acbd2542ecb91a7a7094e8a5652bc7206", null ],
+    [ "targetVelocity", "RobotControlScript_8cpp.html#a6d2ac4ee95bfb186ec81d1d1e67ecca3", null ],
+    [ "useAngularVelocity", "RobotControlScript_8cpp.html#a3b437955ab317c7021598a1dd55c52e0", null ],
+    [ "useDribbler", "RobotControlScript_8cpp.html#ada38c17402c3325bf3f2457ea26c6ca0", null ]
+];

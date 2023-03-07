@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['backward_10780',['BACKWARD',['../RobotControlScript_8cpp.html#a2fc3593b03b2993ef34f3900f6be985ea6377b4908ae38f9a57fe9120cf179eb1',1,'RobotControlScript.cpp']]],
+  ['ball_5fdata_10781',['BALL_DATA',['../namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850bae51ddccd1cd898c281bc4cf1a67a77c1',1,'rtt::ai::interface']]],
+  ['ball_5fhandling_10782',['BALL_HANDLING',['../namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850ba1fb66483901be50671916d48ae8e917c',1,'rtt::ai::interface']]],
+  ['ball_5fplacement_5fthem_10783',['BALL_PLACEMENT_THEM',['../Constants_8h.html#a83e242d5478dff7460995b612ed14ef5a4abfa514bf71ac46359cd47ef3aa6c7e',1,'Constants.h']]],
+  ['ball_5fplacement_5fus_10784',['BALL_PLACEMENT_US',['../Constants_8h.html#a83e242d5478dff7460995b612ed14ef5aaa94a644a66e971a67a1865b6256bda0',1,'Constants.h']]],
+  ['ballclosesttous_10785',['BallClosestToUs',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ae986a8686e48610eac00ec3ce6c64eb3',1,'rtt::ai::stp']]],
+  ['ballclosetothem_10786',['BallCloseToThem',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2acd8caf0460e547b781ced6f8f4e63b0e',1,'rtt::ai::stp']]],
+  ['ballclosetous_10787',['BallCloseToUs',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad5306fa7938c37c34288cf7b62a2a2e3',1,'rtt::ai::stp']]],
+  ['ballgotshot_10788',['BallGotShot',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2afca55423bb8eb46fe0fee5ca4372c3ae',1,'rtt::ai::stp']]],
+  ['ballinourdefenseareaandstill_10789',['BallInOurDefenseAreaAndStill',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a310169b790806221862dfaac167191b8',1,'rtt::ai::stp']]],
+  ['ballisfree_10790',['BallIsFree',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3',1,'rtt::ai::stp']]],
+  ['ballmovesslow_10791',['BallMovesSlow',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a92a649dbcfbf97f49c3700ef0c3deb44',1,'rtt::ai::stp']]],
+  ['ballnotinourdefenseareaandstill_10792',['BallNotInOurDefenseAreaAndStill',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a5fb2385fbd0166e0c9d58c7921526f34',1,'rtt::ai::stp']]],
+  ['ballonourside_10793',['BallOnOurSide',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a0da9db34d6df52ddc7b31add5894a621',1,'rtt::ai::stp']]],
+  ['ballontheirside_10794',['BallOnTheirSide',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a52e638a2d35b495523933ae29854444b',1,'rtt::ai::stp']]],
+  ['ballplacement_10795',['BALLPLACEMENT',['../namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850ba6b7e10d8cceb1039d15ebea7d401142a',1,'rtt::ai::interface']]],
+  ['ballplacementthemgamestate_10796',['BallPlacementThemGameState',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a775d0ce7887fa4de0aadf511dcd6fd71',1,'rtt::ai::stp']]],
+  ['ballplacementusgamestate_10797',['BallPlacementUsGameState',['../namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a195616208981cef4a486610feadfb6f6',1,'rtt::ai::stp']]],
+  ['basestation_10798',['BASESTATION',['../classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0a403506f398d777478fa03a2d5c8c5e89',1,'rtt::Settings::BASESTATION()'],['../namespacertt_1_1robothub_1_1utils.html#a2c80d25a9a74ca54978ba41d0c9eaeaeaf8e01a5c23ab905365d14b05b85a2239',1,'rtt::robothub::utils::BASESTATION()'],['../RobotControlScript_8cpp.html#a46c8a310cf4c094f8c80e1cb8dc1f911af8e01a5c23ab905365d14b05b85a2239',1,'BASESTATION():&#160;RobotControlScript.cpp'],['../namespacertt.html#afa6c75a23a89851ea4b73a5a0ed15d8aaf8e01a5c23ab905365d14b05b85a2239',1,'rtt::BASESTATION()']]],
+  ['blue_10799',['BLUE',['../RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a1b3e1ee9bff86431dea6b181365ba65f',1,'BLUE():&#160;RobotControlScript.cpp'],['../namespacertt.html#a0c4e54c0c480c15f58b33de0a8f9f9afa1b3e1ee9bff86431dea6b181365ba65f',1,'rtt::BLUE()'],['../RobotPos_8h.html#adedc1c7a6f9eae4d7b207f3e33cbff8da1b3e1ee9bff86431dea6b181365ba65f',1,'BLUE():&#160;RobotPos.h']]],
+  ['blue_5fchannel_10800',['BLUE_CHANNEL',['../namespacertt_1_1robothub_1_1basestation.html#a1b2b70b3a9e3da6e0fa99d92246b62d7acea4d82b92ed58a26e78ade7123b2902',1,'rtt::robothub::basestation']]],
+  ['both_10801',['BOTH',['../RobotControlScript_8cpp.html#a9c13bb5b1d69698f9b47900990eaa598a6328e5e3186c227a021ef2ff77e40197',1,'RobotControlScript.cpp']]],
+  ['both_10802',['both',['../namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6e5f2747daba8cda60dca36edf058525',1,'rtt::world']]]
+];

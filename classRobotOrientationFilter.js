@@ -1,0 +1,27 @@
+var classRobotOrientationFilter =
+[
+    [ "RobotOrientationFilter", "classRobotOrientationFilter.html#acc7d0ff80ccfc6dad72dc8d7e82b1177", null ],
+    [ "RobotOrientationFilter", "classRobotOrientationFilter.html#a61e927c61e70e3ff3ddce5b03d6407ed", null ],
+    [ "getCovariance", "classRobotOrientationFilter.html#a662c5ce39b35c84783451483d119ed57", null ],
+    [ "getInnovation", "classRobotOrientationFilter.html#a16a1df8f5a34807c1a994ac4fa459638", null ],
+    [ "getPosition", "classRobotOrientationFilter.html#a3699bc15822fdf6b29d37b745b7bc613", null ],
+    [ "getPositionEstimate", "classRobotOrientationFilter.html#a69cd096b30dd113e6338ca450edb6155", null ],
+    [ "getPositionUncertainty", "classRobotOrientationFilter.html#a2cef3e384d6c626cf2c3ad0610fdac5a", null ],
+    [ "getState", "classRobotOrientationFilter.html#a2d310e880ee40426722656895b84e8f0", null ],
+    [ "getVelocity", "classRobotOrientationFilter.html#af10e12d3a876bb8c8ba91b623118f6b5", null ],
+    [ "getVelocityUncertainty", "classRobotOrientationFilter.html#ae1bdcf560f902b027cc72140178224f6", null ],
+    [ "lastUpdated", "classRobotOrientationFilter.html#a26222e87f1a633100d3194bb13f12f89", null ],
+    [ "limitAngle", "classRobotOrientationFilter.html#a9895853f49a4499e70b0aedbb05cc29f", null ],
+    [ "predict", "classRobotOrientationFilter.html#acac5578e53d1fb09ebc2379b00278123", null ],
+    [ "setCovariance", "classRobotOrientationFilter.html#a10e3f0fdfc4d6a5e1b705cdbacca794f", null ],
+    [ "setMeasurementError", "classRobotOrientationFilter.html#a017d6b04df791e8746b499008d413850", null ],
+    [ "setPosition", "classRobotOrientationFilter.html#a1e0c9e89c4380be7073da514ed643f5c", null ],
+    [ "setProcessNoiseFromRandomAcceleration", "classRobotOrientationFilter.html#ab2b90d5c9f6caff087f5d7e5d362724f", null ],
+    [ "setState", "classRobotOrientationFilter.html#acab11f398c15f26dd057aba4c324ac33", null ],
+    [ "setTransitionMatrix", "classRobotOrientationFilter.html#a5e0f6c35e189a3211b18c2021eef4416", null ],
+    [ "setVelocity", "classRobotOrientationFilter.html#aa7350e75e33e23c30406e422515a677e", null ],
+    [ "update", "classRobotOrientationFilter.html#aeaec689c32b523490379c3cacc7d6a25", null ],
+    [ "filter", "classRobotOrientationFilter.html#afc9c97ff293292e44793d39f8d3da87f", null ],
+    [ "lastUpdateTime", "classRobotOrientationFilter.html#a18c68df1af59c80a93e8f6d1b43d3e75", null ],
+    [ "modelError", "classRobotOrientationFilter.html#a1c63472b89b946be9e9dc2633a0044bc", null ]
+];

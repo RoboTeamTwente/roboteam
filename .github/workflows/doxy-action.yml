@@ -29,9 +29,6 @@ jobs:
       - name: Generate Doxygen Documentation
         run: doxygen doxygen
         shell: bash
-      - name: Create .nojekyll
-        run: touch docs/html/.nojekyll
-        shell: bash
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:

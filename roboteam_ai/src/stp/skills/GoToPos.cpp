@@ -67,7 +67,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     visualize(info);
 
     // Check if successful
-    if ((info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::GO_TO_POS_ERROR_MARGIN || info.getRobot().value()->hasBall()) {
+    if ((info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::GO_TO_POS_ERROR_MARGIN || (info.getRobot().value()->hasBall() && info.getRoleName() != "ball_placer")) {
         return Status::Success;
     } else {
         return Status::Running;

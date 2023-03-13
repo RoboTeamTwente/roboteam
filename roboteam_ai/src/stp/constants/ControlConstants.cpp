@@ -47,7 +47,7 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0;
 
 /// GTP Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ERROR_MARGIN = 0.08;
+constexpr double GO_TO_POS_ERROR_MARGIN = 0.15;
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.009 * 6.0;
 // Maximum inaccuracy during ballplacement

@@ -331,11 +331,11 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
     for (const auto& error : errors) {
         std::string message;
         if (error.code.has_value() && error.message.has_value())
-            message = "Received Simulation error ", error.code.value(), ": ", error.message.value();
+            message = "Received Simulation error! code=" + error.code.value() + "    message=" + error.message.value();
         else if (error.code.has_value())
-            message = "Received Simulation error with code: ", error.code.value();
+            message = "Received Simulation error! code=" + error.code.value();
         else if (error.message.has_value())
-            message = "Received Simulation error: ", error.message.value();
+            message = "Received Simulation error! message=" + error.message.value();
         else
             message = "Received unknown Simulation error";
 

@@ -92,7 +92,11 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
             RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
         }
 
-        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        /* addRobotControlWithLocalSpeeds works with both grSim and ER-Force sim, while addRobotControlWithGlobalSpeeds only works with grSim*/
+        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraAngleOfRobot);
+        auto forward = relativeVelocity.x;
+        auto left = relativeVelocity.y;
+        simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
 
         // Update received commands stats
         this->statistics.incrementCommandsReceivedCounter(id, color);

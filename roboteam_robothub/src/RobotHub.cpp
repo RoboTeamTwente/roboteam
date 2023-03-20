@@ -92,7 +92,11 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
             RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
         }
 
-        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        /* addRobotControlWithLocalSpeeds works with both grSim and ER-Force sim, while addRobotControlWithGlobalSpeeds only works with grSim*/
+        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraAngleOfRobot);
+        auto forward = relativeVelocity.x;
+        auto left = relativeVelocity.y;
+        simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
 
         // Update received commands stats
         this->statistics.incrementCommandsReceivedCounter(id, color);
@@ -327,11 +331,11 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
     for (const auto& error : errors) {
         std::string message;
         if (error.code.has_value() && error.message.has_value())
-            message = "Received Simulation error ", error.code.value(), ": ", error.message.value();
+            message = "Received Simulation error! code=" + error.code.value() + "    message=" + error.message.value();
         else if (error.code.has_value())
-            message = "Received Simulation error with code: ", error.code.value();
+            message = "Received Simulation error! code=" + error.code.value();
         else if (error.message.has_value())
-            message = "Received Simulation error: ", error.message.value();
+            message = "Received Simulation error! message=" + error.message.value();
         else
             message = "Received unknown Simulation error";
 

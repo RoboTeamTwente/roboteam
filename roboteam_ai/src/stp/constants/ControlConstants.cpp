@@ -38,7 +38,6 @@ constexpr double HAS_CHIPPED_ERROR_MARGIN = 0.4;
 constexpr double ENEMY_CLOSE_TO_BALL_DISTANCE = 1.0;
 
 /// RobotCommand limits
-// TODO: for testing, this is set to 1.89!
 constexpr double MAX_VEL_CMD = 8;
 constexpr double MAX_DRIBBLER_CMD = 1;
 // Angle increment per tick
@@ -47,7 +46,7 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0;
 
 /// GTP Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ERROR_MARGIN = 0.15;
+constexpr double GO_TO_POS_ERROR_MARGIN = 0.11;
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.009 * 6.0;
 // Maximum inaccuracy during ballplacement

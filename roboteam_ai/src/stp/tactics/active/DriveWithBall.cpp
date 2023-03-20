@@ -23,7 +23,7 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(StpInfo const& info)
     if (!skillStpInfo.getPositionToMoveTo() || !skillStpInfo.getBall()) return std::nullopt;
 
     if (skills.current_num() == 0) {
-        skillStpInfo.setAngle((info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).angle());
+        skillStpInfo.setAngle((info.getPositionToMoveTo().value() - info.getRobot()->get()->getPos()).angle());
     } else {
         double angleToBall = (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle();
         skillStpInfo.setAngle(angleToBall);

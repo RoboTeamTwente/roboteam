@@ -169,7 +169,17 @@ void MainControlsWidget::toggleRobotHubModeParam() {
 }
 
 /// send a halt signal to stop all trees from executing
-void MainControlsWidget::sendPauseSignal() { Output::sendHaltCommand(); }
+void MainControlsWidget::sendPauseSignal() { 
+    Output::sendHaltCommand();
+    rtt::ai::Pause p;
+    if(p.getPause()){
+        pauseBtn->setText("Start");
+    }else{
+        pauseBtn->setText("Stop");
+    }
+
+
+}
 
 void MainControlsWidget::setToggleColorBtnLayout() const {
     if (SETTINGS.isYellow()) {

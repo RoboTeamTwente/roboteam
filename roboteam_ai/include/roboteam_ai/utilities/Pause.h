@@ -25,29 +25,29 @@ class Pause {
     static bool pause; /**< Indicates whether the robots are paused */
     static std::mutex pauseLock; /**< Synchronizer for the pause button */
 
-   public:
     /**
-     * @brief Constructor for the Pause class
+     * @brief Constructor for the Pause class. No instance should ever be needed
      */
     Pause();
 
+   public:
     /**
      * @brief Getter for the pause boolean
      * @return Whether the robots are paused
      */
-    bool getPause();
+    static bool getPause();
 
     /**
      * @brief Halts the robots
      * @param data The current world
      */
-    void haltRobots(rtt::world::World const* data);
+    static void haltRobots(rtt::world::World const* data);
 
     /**
      * @brief Sets the pause boolean
      * @param set The value to which the pause boolean should be set
      */
-    void setPause(bool set);
+    static void setPause(bool set);
 };
 }  // namespace rtt::ai
 

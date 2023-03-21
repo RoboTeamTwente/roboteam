@@ -173,7 +173,7 @@ void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
 
 /// draws background of the field
 void Visualizer::drawBackground(QPainter &painter) {
-    painter.setBrush(Constants::FIELD_COLOR());
+    painter.setBrush(QColor(30, 30, 30, 255));
     painter.drawRect(-10, -10, this->size().width() + 10, this->size().height() + 10);
 }
 

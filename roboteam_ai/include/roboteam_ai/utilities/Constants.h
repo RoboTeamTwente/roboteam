@@ -20,7 +20,6 @@ typedef std::tuple<double, double, double> pidVals; /**< Defenition of the pidVa
 class Constants {
    public:
     static void init(); /**< Initializes the constants for either the simulator or basestation. */
-    static bool GRSIM(); /**< Checks whether we are using grsim or the basestation */
     static bool FEEDBACK_ENABLED(); /**< Checks whether robot feedback is enabled */
 
     /**
@@ -112,10 +111,6 @@ class Constants {
     static pidVals standardInterceptPID(); /**< The standard PID values for Intercept */
     static pidVals standardKeeperPID(); /**< The standard PID values for Keeper*/
     static pidVals standardKeeperInterceptPID(); /**< The standard PID values for KeeperIntercept */
-
-   private:
-    static bool isInitialized; /**< Keeps track of whether the AI is initialized */
-    static bool robotOutputTargetGrSim; /**< Keeps track of whether the output should go to GrSim */
 };
 
 }  // namespace rtt::ai

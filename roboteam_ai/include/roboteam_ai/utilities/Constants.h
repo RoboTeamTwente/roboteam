@@ -23,6 +23,12 @@ class Constants {
     static bool FEEDBACK_ENABLED(); /**< Checks whether robot feedback is enabled */
 
     /**
+     * @brief Indicates the maximum amount of time the AI can run without receiving a new world update
+     * @return The maximum amount of time
+     */
+    static constexpr uint64_t WORLD_MAX_AGE_MILLISECONDS() { return 1000; }
+
+    /**
      * @brief Checks the amount of robots present
      * @return The amount of robots
      */

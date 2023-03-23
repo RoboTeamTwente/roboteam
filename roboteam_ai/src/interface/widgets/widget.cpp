@@ -44,15 +44,8 @@ void Visualizer::paintEvent(QPaintEvent *event) {
         }
 
         /* Check if world is not too old*/
-        // Timestamp in miliseconds when AI received this world state
-        uint64_t ms_world = world.value().get()->getTime() / 1000000;
-        // Timestamp in miliseconds of current time
-        uint64_t ms_now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        // Age of the world state in miliseconds
-        uint64_t ms_world_age = ms_now - ms_world;
-        // If world is too old, don't draw any robots or ball
-        if(rtt::ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < ms_world_age) {
-            painter.drawText(24, 24, "World state is too old! Age: " + QString::number(ms_world_age) + " ms. Waiting for new world state..");
+        if(rtt::ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+            painter.drawText(24, 24, "World state is too old! Age: " + QString::number(rtt::ai::io::io.getStateAgeMs()/1000) + " seconds. Waiting for new world state..");
             return;
         }
 

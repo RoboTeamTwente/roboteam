@@ -137,7 +137,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.dribbler = static_cast<float>(robotCommand.dribblerSpeed);
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
-        command.theta = static_cast<float>(robotCommand.velocity.angle());
+        command.theta = -1.0f * static_cast<float>(robotCommand.velocity.angle());
 
         command.useAbsoluteAngle = !robotCommand.useAngularVelocity;
         command.angle = static_cast<float>(robotCommand.targetAngle.getValue());

@@ -34,8 +34,9 @@ class STPManager {
     /**
      * @brief Function that decides whether to change plays given a world and field.
      * @param _world the current world state
+     * @param ignoreWorldAge Whether to ignore the age of the world
      */
-    void decidePlay(world::World* _world);
+    void decidePlay(world::World* _world, bool ignoreWorldAge = false);
 
    public:
     /**

@@ -11,6 +11,8 @@
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
 
+#include <chrono>
+
 namespace io = rtt::ai::io;
 namespace rtt::ai::interface {
 
@@ -28,6 +30,7 @@ void Visualizer::paintEvent(QPaintEvent *event) {
         auto const &world = worldPtr->getWorld();
         auto const &field = worldPtr->getField();
 
+
         if (!world.has_value()) {
             painter.drawText(24, 24, "Waiting for incoming world state");
             return;
@@ -39,6 +42,13 @@ void Visualizer::paintEvent(QPaintEvent *event) {
             drawFieldHints(field.value(), painter);
             drawFieldLines(field.value(), painter);
         }
+
+        /* Check if world is not too old*/
+        if(rtt::ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+            painter.drawText(24, 24, "World state is too old! Age: " + QString::number(rtt::ai::io::io.getStateAgeMs()/1000) + " seconds. Waiting for new world state..");
+            return;
+        }
+
 
         auto s = QString::fromStdString("We have " + std::to_string(world->getUs().size()) + " robots");
         painter.drawText(24, 48, s.fromStdString("We have " + std::to_string(world->getUs().size()) + " robots"));
@@ -173,7 +183,7 @@ void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
 
 /// draws background of the field
 void Visualizer::drawBackground(QPainter &painter) {
-    painter.setBrush(Constants::FIELD_COLOR());
+    painter.setBrush(QColor(30, 30, 30, 255));
     painter.drawRect(-10, -10, this->size().width() + 10, this->size().height() + 10);
 }
 

@@ -29,7 +29,10 @@ using namespace rtt::world;
  */
 class IOManager {
    private:
-    proto::State state; /**< State given by the referee */
+    proto::State state; /**< State given by the roboteam_observer */
+    uint64_t stateTimeMs; /** Time of the last state update in milliseconds since epoch */
+    uint64_t stateWorldLastTimestamp; /** Timestamp of the last world update in the state */
+
     std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber; /**< The socket that receives the world information */
     std::unique_ptr<rtt::net::SimulationConfigurationPublisher> simulationConfigurationPublisher; /**< The socket that publishes the configuration for the simulator */
 
@@ -98,6 +101,18 @@ class IOManager {
      * @return The state
      */
     proto::State getState();
+
+    /**
+     * @brief Get the time of the last state update in milliseconds since epoch
+     * @return The time 
+     */
+    uint64_t getStateTimeMs();
+
+    /**
+     * @brief Get the age of the last state update in milliseconds
+     * @return The age
+     */
+    uint64_t getStateAgeMs();
 
     /**
      * @brief Tries to set up a socket on the given channel

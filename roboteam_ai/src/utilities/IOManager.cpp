@@ -1,6 +1,8 @@
 #include "utilities/IOManager.h"
 
 #include <algorithm>
+#include <chrono>
+
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "interface/api/Input.h"
@@ -51,6 +53,12 @@ bool IOManager::init(bool isPrimaryAI) {
 void IOManager::handleState(const proto::State& stateMsg) {
     std::unique_lock<std::mutex> lock(stateMutex);  // write lock
     this->state.CopyFrom(stateMsg);
+    
+    if(state.has_last_seen_world() and state.last_seen_world().time() != stateWorldLastTimestamp){
+        stateWorldLastTimestamp = state.last_seen_world().time();
+        this->stateTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    }
+    
     if (state.has_referee()) {
         // Our name as specified by ssl-refbox : https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.conf
         std::string ROBOTEAM_TWENTE = "RoboTeam Twente";
@@ -135,6 +143,14 @@ proto::State IOManager::getState() {
     std::lock_guard<std::mutex> lock(stateMutex);  // read lock
     proto::State copy = state;
     return copy;
+}
+
+uint64_t IOManager::getStateTimeMs() {
+    return stateTimeMs;
+}
+
+uint64_t IOManager::getStateAgeMs() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - stateTimeMs;
 }
 
 bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {

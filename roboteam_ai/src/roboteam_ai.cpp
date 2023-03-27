@@ -34,10 +34,11 @@ void setDarkTheme() {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        RTT_ERROR("Incorrect amount of arguments")
-        RTT_INFO("Pass '0' as argument to indicate this is the primary AI, or anything else for a secondary AI")
-        return 0;
+
+    int id = 0;
+
+    if (argc == 2) {
+        id = *argv[1] - '0';
     }
 
     RTT_INFO("\n",
@@ -53,8 +54,6 @@ int main(int argc, char* argv[]) {
     RTT_DEBUG("Debug prints enabled")
 
     // get the id of the ai from the init
-    int id = *argv[1] - '0';
-
     rtt::SETTINGS.init(id);
 
     // If primary AI, we start at being yellow on the left
@@ -65,7 +64,7 @@ int main(int argc, char* argv[]) {
 
     rtt::SETTINGS.setLeft(rtt::SETTINGS.isPrimaryAI());
 
-    rtt::SETTINGS.setRobotHubMode(rtt::Settings::RobotHubMode::BASESTATION);
+    rtt::SETTINGS.setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
     rtt::SETTINGS.setVisionIp("127.0.0.1");
     rtt::SETTINGS.setVisionPort(10006);
     rtt::SETTINGS.setRefereeIp("224.5.23.1");

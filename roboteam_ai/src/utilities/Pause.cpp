@@ -2,6 +2,7 @@
 // Created by baris on 15-2-19.
 //
 
+#include <roboteam_utils/Print.h>
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "utilities/IOManager.h"
@@ -16,6 +17,7 @@ bool Pause::getPause() {
     std::lock_guard<std::mutex> lock(pauseLock);
     return pause;
 }
+
 void Pause::haltRobots(rtt::world::World const* data) {
     auto us = data->getWorld()->getUs();
     std::vector<rtt::RobotCommand> commands;
@@ -30,10 +32,11 @@ void Pause::haltRobots(rtt::world::World const* data) {
     }
     io::io.publishAllRobotCommands(commands);
 }
+
 void Pause::setPause(bool set) {
+    RTT_INFO(set ? "Halting" : "Unhalting", " the AI")
     std::lock_guard<std::mutex> lock(pauseLock);
     pause = set;
 }
-Pause::Pause() {}
 
 }  // namespace rtt::ai

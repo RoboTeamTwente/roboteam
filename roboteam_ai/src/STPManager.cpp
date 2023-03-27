@@ -175,9 +175,20 @@ void STPManager::runOneLoopCycle() {
     rtt::ai::control::ControlModule::sendAllCommands();
 }
 
-void STPManager::decidePlay(world::World *_world) {
+void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     ai::stp::PlayEvaluator::clearGlobalScores();  // reset all evaluations
     ai::stp::ComputationManager::clearStoredComputations();
+    
+    /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
+    if(!ignoreWorldAge){
+        if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+            RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
+            currentPlay = nullptr;
+            // Returning here prevents the play from being updated, which means that the play will not be able to send any commands, 
+            // which means that the robots will not be able to move. This is a safety measure to prevent the robots from moving when the AI is dealing with outdated information.
+            return;
+        }
+    }
 
     if (!currentPlay || rtt::ai::stp::PlayDecider::interfacePlayChanged || !currentPlay->isValidPlayToKeep()) {
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);

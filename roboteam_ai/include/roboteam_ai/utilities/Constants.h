@@ -19,7 +19,14 @@ typedef std::tuple<double, double, double> pidVals; /**< Defenition of the pidVa
  */
 class Constants {
    public:
+    static void init(); /**< Initializes the constants for either the simulator or basestation. */
     static bool FEEDBACK_ENABLED(); /**< Checks whether robot feedback is enabled */
+
+    /**
+     * @brief Indicates the maximum amount of time the AI can run without receiving a new world update
+     * @return The maximum amount of time
+     */
+    static constexpr uint64_t WORLD_MAX_AGE_MILLISECONDS() { return 1000; }
 
     /**
      * @brief Checks the amount of robots present
@@ -110,10 +117,6 @@ class Constants {
     static pidVals standardInterceptPID(); /**< The standard PID values for Intercept */
     static pidVals standardKeeperPID(); /**< The standard PID values for Keeper*/
     static pidVals standardKeeperInterceptPID(); /**< The standard PID values for KeeperIntercept */
-
-   private:
-    static bool isInitialized; /**< Keeps track of whether the AI is initialized */
-    static bool robotOutputTargetGrSim; /**< Keeps track of whether the output should go to GrSim */
 };
 
 }  // namespace rtt::ai

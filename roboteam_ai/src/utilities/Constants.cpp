@@ -189,8 +189,6 @@ bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
-QColor Constants::FIELD_COLOR() { return {30, 30, 30, 255}; }
-
 QColor Constants::FIELD_LINE_COLOR() { return Qt::white; }
 
 QColor Constants::ROBOT_COLOR_BLUE() { return {150, 150, 255, 255}; }
@@ -205,15 +203,15 @@ QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
 
 std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
 
-pidVals Constants::standardNumTreePID() { return {2.5, 0.0, 0}; }
+pidVals Constants::standardNumTreePID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardReceivePID() { return {4, 0, 0}; }
+pidVals Constants::standardReceivePID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
 
-pidVals Constants::standardInterceptPID() { return {6, 0, 1}; }
+pidVals Constants::standardInterceptPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-pidVals Constants::standardKeeperPID() { return {2.5, 0.0, 0}; }
+pidVals Constants::standardKeeperPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardKeeperInterceptPID() { return {6, 0, 1}; }
+pidVals Constants::standardKeeperInterceptPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {{"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true},

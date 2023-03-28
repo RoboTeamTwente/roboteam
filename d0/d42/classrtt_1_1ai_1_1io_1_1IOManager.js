@@ -2,6 +2,8 @@ var classrtt_1_1ai_1_1io_1_1IOManager =
 [
     [ "addCameraAngleToRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a72fefaf49186393174f420b3c08d0173", null ],
     [ "getState", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7a60af9ed7afea21381003f92e05c89e", null ],
+    [ "getStateAgeMs", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a415e63d61ced7bb424317265035fd2e1", null ],
+    [ "getStateTimeMs", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a2647280920c888c1d109f3c15350d3b9", null ],
     [ "handleState", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad06a4509dfdb3f7c6013799b27ed2c20", null ],
     [ "init", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ace78a184eddf90ac0b390bc031c10da0", null ],
     [ "obtainTeamColorChannel", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c", null ],
@@ -18,5 +20,7 @@ var classrtt_1_1ai_1_1io_1_1IOManager =
     [ "simulationConfigurationPublisher", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7821157d7818be91d6527b55a15d6797", null ],
     [ "state", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6f5a374a4afc6e8064d430933990039a", null ],
     [ "stateMutex", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6", null ],
+    [ "stateTimeMs", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a532cd4842266ef19fd981c7b4862da3b", null ],
+    [ "stateWorldLastTimestamp", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a1b0c8efa6d5234367ef323fe03d9d73e", null ],
     [ "worldSubscriber", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad5968054795bded97f41bbfcd41c95ae", null ]
 ];

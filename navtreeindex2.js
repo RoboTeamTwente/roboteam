@@ -1,5 +1,9 @@
 var NAVTREEINDEX2 =
 {
+"d2/d3b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallMovesSlowGlobalEvaluation.html#aff16bdcc97c22a18a1b7b7026657cce0":[3,0,1,0,3,1,25,1],
+"d2/d42/AnglePID_8h.html":[4,0,0,0,0,0,1],
+"d2/d42/AnglePID_8h_source.html":[4,0,0,0,0,0,1],
+"d2/d43/TestTactic_8h.html":[4,0,0,0,0,3,6,3],
 "d2/d43/TestTactic_8h_source.html":[4,0,0,0,0,3,6,3],
 "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html":[3,0,1,0,3,1,37],
 "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html#a56899a3ab52140bab55530cc5dee6c7b":[3,0,1,0,3,1,37,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX2 =
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af4e8d665496030778207457a85cb4f1d":[3,0,1,0,3,0,1,2],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af6a65675c3cf64e4b7a19d7e2dc6ef24":[3,0,1,0,3,0,1,1],
 "d3/dbe/WorldDataView_8cpp.html":[4,0,0,1,6,0,2],
-"d3/dc1/WorldDataView_8hpp.html":[4,0,0,0,0,5,0,2],
-"d3/dc1/WorldDataView_8hpp_source.html":[4,0,0,0,0,5,0,2],
-"d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html":[3,0,1,0,3,6,9],
-"d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a0dd3439d999970125264ce7fccadff49":[3,0,1,0,3,6,9,13],
-"d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a1510d2cbf825d91a17d35edacea7271a":[3,0,1,0,3,6,9,0]
+"d3/dc1/WorldDataView_8hpp.html":[4,0,0,0,0,5,0,2]
 };

@@ -76,22 +76,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dde/namespacertt_1_1BB.html#a2b13a15488b2e38d41330562a804003f",
-"d2/d43/TestTactic_8h_source.html",
-"d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a1a822a3bbfea420d3f522d241ac798f1",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a4eae9a3012c792896a9e59ed3e6f2879",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a775d0ce7887fa4de0aadf511dcd6fd71",
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a65cbbaae3f235ffb0b05d69dffff0bdb",
-"d6/d69/classRTT__AI__Tests.html",
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a8726a464fdb9e614c5cca8c7cd183155",
-"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a8ff0319d5018d2f697c38494d0568991",
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a0c13cbd482099fa139f3a5f08d964efe",
-"da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2acd8caf0460e547b781ced6f8f4e63b0e",
-"db/dd8/Settings_8cpp.html",
-"dc/dad/structnativeformat_1_1param_1_1ValueAtTimeEvent.html",
-"dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ae63525881610390f3a9e5a490377b32e",
-"df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html#af01a1db54af0451b6540fe8631625565",
-"dir_ea2c5a1d063bd2b5f137abdde3cfcc2c.html"
+"d0/dda/GraphWidget_8h_source.html",
+"d2/d3b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallMovesSlowGlobalEvaluation.html#aff16bdcc97c22a18a1b7b7026657cce0",
+"d3/dc1/WorldDataView_8hpp_source.html",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a34186a17934d3c06c94bd6a3bb607daf",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3",
+"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a5c4b3a8298530115a11dbc862dc8c6fc",
+"d6/d5e/CollisionDetector_8cpp.html",
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a805621fd748e3dfd6399ff69570f7e56",
+"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a390cf790dda0b20bdf7428ee3b853d8a",
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html",
+"da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ab814ca078159c72443842e27c00f6430",
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358",
+"dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b",
+"dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ad615d8c016ad2b14e3b7a1545513072b",
+"df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html",
+"dir_da313de16f3ef3dafe4a78332c822bbd.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -120,6 +120,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7a60af9ed7afea21381003f92e05c89e"><td class="memItemLeft" align="right" valign="top">proto::State&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7a60af9ed7afea21381003f92e05c89e">getState</a> ()</td></tr>
 <tr class="memdesc:a7a60af9ed7afea21381003f92e05c89e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the state published by the referee.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7a60af9ed7afea21381003f92e05c89e">More...</a><br /></td></tr>
 <tr class="separator:a7a60af9ed7afea21381003f92e05c89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2647280920c888c1d109f3c15350d3b9"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a2647280920c888c1d109f3c15350d3b9">getStateTimeMs</a> ()</td></tr>
+<tr class="memdesc:a2647280920c888c1d109f3c15350d3b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the time of the last state update in milliseconds since epoch.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a2647280920c888c1d109f3c15350d3b9">More...</a><br /></td></tr>
+<tr class="separator:a2647280920c888c1d109f3c15350d3b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a415e63d61ced7bb424317265035fd2e1"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a415e63d61ced7bb424317265035fd2e1">getStateAgeMs</a> ()</td></tr>
+<tr class="memdesc:a415e63d61ced7bb424317265035fd2e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the age of the last state update in milliseconds.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a415e63d61ced7bb424317265035fd2e1">More...</a><br /></td></tr>
+<tr class="separator:a415e63d61ced7bb424317265035fd2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c">obtainTeamColorChannel</a> (bool yellowChannel)</td></tr>
 <tr class="memdesc:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to set up a socket on the given channel.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c">More...</a><br /></td></tr>
 <tr class="separator:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,6 +151,10 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a6f5a374a4afc6e8064d430933990039a"><td class="memItemLeft" align="right" valign="top">proto::State&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6f5a374a4afc6e8064d430933990039a">state</a></td></tr>
 <tr class="separator:a6f5a374a4afc6e8064d430933990039a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a532cd4842266ef19fd981c7b4862da3b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a532cd4842266ef19fd981c7b4862da3b">stateTimeMs</a></td></tr>
+<tr class="separator:a532cd4842266ef19fd981c7b4862da3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b0c8efa6d5234367ef323fe03d9d73e"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a1b0c8efa6d5234367ef323fe03d9d73e">stateWorldLastTimestamp</a></td></tr>
+<tr class="separator:a1b0c8efa6d5234367ef323fe03d9d73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5968054795bded97f41bbfcd41c95ae"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; rtt::net::WorldSubscriber &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad5968054795bded97f41bbfcd41c95ae">worldSubscriber</a></td></tr>
 <tr class="separator:ad5968054795bded97f41bbfcd41c95ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7821157d7818be91d6527b55a15d6797"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; rtt::net::SimulationConfigurationPublisher &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7821157d7818be91d6527b55a15d6797">simulationConfigurationPublisher</a></td></tr>
@@ -214,6 +224,46 @@ Private Attributes</h2></td></tr>
 
 <p>Gets the state published by the referee. </p>
 <dl class="section return"><dt>Returns</dt><dd>The state </dd></dl>
+
+</div>
+</div>
+<a id="a415e63d61ced7bb424317265035fd2e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a415e63d61ced7bb424317265035fd2e1">&#9670;&nbsp;</a></span>getStateAgeMs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t rtt::ai::io::IOManager::getStateAgeMs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the age of the last state update in milliseconds. </p>
+<dl class="section return"><dt>Returns</dt><dd>The age </dd></dl>
+
+</div>
+</div>
+<a id="a2647280920c888c1d109f3c15350d3b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2647280920c888c1d109f3c15350d3b9">&#9670;&nbsp;</a></span>getStateTimeMs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t rtt::ai::io::IOManager::getStateTimeMs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the time of the last state update in milliseconds since epoch. </p>
+<dl class="section return"><dt>Returns</dt><dd>The time </dd></dl>
 
 </div>
 </div>
@@ -615,7 +665,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>State given by the referee </p>
+<p>State given by the roboteam_observer </p>
 
 </div>
 </div>
@@ -631,6 +681,51 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Synchronizer for the state </p>
+
+</div>
+</div>
+<a id="a532cd4842266ef19fd981c7b4862da3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a532cd4842266ef19fd981c7b4862da3b">&#9670;&nbsp;</a></span>stateTimeMs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t rtt::ai::io::IOManager::stateTimeMs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1b0c8efa6d5234367ef323fe03d9d73e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b0c8efa6d5234367ef323fe03d9d73e">&#9670;&nbsp;</a></span>stateWorldLastTimestamp</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t rtt::ai::io::IOManager::stateWorldLastTimestamp</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Time of the last state update in milliseconds since epoch </p>
 
 </div>
 </div>
@@ -653,7 +748,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The socket that receives the world information </p>
+<p>Timestamp of the last world update in the state The socket that receives the world information </p>
 
 </div>
 </div>

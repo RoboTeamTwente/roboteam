@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"d6/d5e/CollisionDetector_8cpp.html":[4,0,0,1,0,0,3],
+"d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html":[3,0,1,0,3,1,41],
+"d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html#ace05ccd67d79a52389c0e48556568213":[3,0,1,0,3,1,41,0],
+"d6/d69/LineOfSightEvaluation_8cpp.html":[4,0,0,1,4,2,2,2],
 "d6/d69/classRTT__AI__Tests.html":[3,0,4],
 "d6/d69/classRTT__AI__Tests.html#a0d94528768fc671a42c05981ec22f61e":[3,0,4,0],
 "d6/d69/classRTT__AI__Tests.html#a1fced78f7fd2239f032a80f00e73b279":[3,0,4,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a58560de6d2d6ca91e467deb1071aadbd":[3,0,1,0,3,11,12],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a5be299fd1dab79b7f656ca37631d6ef6":[3,0,1,0,3,11,11],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7164f241b13b1aa59b6e6b5c30a3094b":[3,0,1,0,3,11,24],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,3,11,7],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,3,11,20],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,3,11,23],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a85061f4ffd6e1cf9b1b1ac99ae6db082":[3,0,1,0,3,11,5],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,3,11,30]
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,3,11,7]
 };

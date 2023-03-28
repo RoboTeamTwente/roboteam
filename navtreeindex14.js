@@ -1,5 +1,8 @@
 var NAVTREEINDEX14 =
 {
+"dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ad615d8c016ad2b14e3b7a1545513072b":[3,0,1,0,3,3,13,0],
+"dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,3,3,13,15],
+"dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,3,3,13,26],
 "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ae63525881610390f3a9e5a490377b32e":[3,0,1,0,3,3,13,19],
 "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,3,3,13,27],
 "dd/dcc/Play_8hpp.html":[4,0,0,0,0,3,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX14 =
 "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html#ad1006ea0616a02c0fd39b7d1468a7843":[3,0,1,0,1,14,3],
 "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html#ad2b73ed77e440f6d20b21f9d39dcbb2e":[3,0,1,0,1,14,2],
 "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html#adcc088bb5e9a657c24dc4aab8180199b":[3,0,1,0,1,14,0],
-"df/d3f/JoystickHandler_8cpp.html":[4,0,0,1,2,0],
-"df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html":[3,0,1,0,1,11],
-"df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html#abcffbcb77c84e84c3924224825adcdba":[3,0,1,0,1,11,2],
-"df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html#ac6a53fb0a0651943ef7d63d8dd954e01":[3,0,1,0,1,11,1]
+"df/d3f/JoystickHandler_8cpp.html":[4,0,0,1,2,0]
 };

@@ -5,12 +5,11 @@ var classrtt_1_1ai_1_1Constants =
     [ "BALL_RADIUS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ad56b652c75763107576ae1e23d94bb0c", null ],
     [ "DEFAULT_KEEPER_ID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab2ca99fb72c5a2b76b225f6359e6a655", null ],
     [ "FEEDBACK_ENABLED", "d9/dc5/classrtt_1_1ai_1_1Constants.html#afb3cef21c26279b0bf54d9f7c8072925", null ],
-    [ "FIELD_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3eacadde4f79371e28fd72ecf83d05ca", null ],
+    [ "FIELD_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#acbd850b3f7887da3a15c6ebb8f1bd852", null ],
     [ "FIELD_LINE_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ae09a3ccf9681d3083b77e6ef4829ffb9", null ],
-    [ "GRSIM", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a6eac2a1a86c7fda40be9c686b4890032", null ],
     [ "HAS_BALL_ANGLE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a62eb895e0cb7ae60e03ef271815eca64", null ],
     [ "HAS_BALL_DISTANCE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a13d969c321fbb1165df2a63d7626665c", null ],
-    [ "init", "d9/dc5/classrtt_1_1ai_1_1Constants.html#aba5a4155cd67a2eb691dfa94b1f8fb79", null ],
+    [ "init", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a6527962ff711e76d753052369b635ed0", null ],
     [ "MAX_ACC_LOWER", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a1e1fd9faa7579b66baa47c13e098d23d", null ],
     [ "MAX_ACC_UPPER", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a05196b31cc4df145dc45fb579e0d0300", null ],
     [ "MAX_ANGLE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#afe9c7a7fe91c9518dc89ef816dc17dda", null ],
@@ -59,6 +58,5 @@ var classrtt_1_1ai_1_1Constants =
     [ "TACTIC_COLORS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3f4c33feb16c84096514cf4d6ce7e01c", null ],
     [ "TEXT_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a6701f6203658174e24b9b26556daed1b", null ],
     [ "WINDOW_FIELD_MARGIN", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ad82145a7f85d26c510af3411c3ccf4cc", null ],
-    [ "isInitialized", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ad173be49c6a1940deed54780f23df75f", null ],
-    [ "robotOutputTargetGrSim", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a58313db54e74f83dca98f4bf46cfef88", null ]
+    [ "WORLD_MAX_AGE_MILLISECONDS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab5890b8d3712aa04ba868658d49597da", null ]
 ];

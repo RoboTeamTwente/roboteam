@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,3,6,0,11],
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,3,6,0,9],
+"db/dd5/BallPlacementUsGameStateEvaluation_8cpp.html":[4,0,0,1,4,2,0,1],
 "db/dd8/Settings_8cpp.html":[4,0,0,1,5,7],
 "db/dd8/Settings_8cpp.html#a898ae63e0cea1a3bd280fd11e7fae506":[4,0,0,1,5,7,0],
 "db/ddd/BaseEvaluation_8h.html":[4,0,0,0,0,3,2,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "dc/d8f/namespacertt.html#a8b57043eb96f30d3547a04cdfd0d8b5a":[2,0,10,13],
 "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa":[2,0,10,22],
 "dc/d8f/namespacertt.html#ab0a1d9e64a911c4fb60835c147081af6":[2,0,10,24],
-"dc/d8f/namespacertt.html#ab8672b6bb09e9e87cf96d0f810666589":[2,0,10,18],
-"dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b":[2,0,10,21],
-"dc/d8f/namespacertt.html#af8ad8deff684d028612d473c6fedb6aa":[2,0,10,15],
-"dc/d8f/namespacertt.html#af962cfe6fd7d4a3e152e96f0e1c40e13":[2,0,10,17]
+"dc/d8f/namespacertt.html#ab8672b6bb09e9e87cf96d0f810666589":[2,0,10,18]
 };

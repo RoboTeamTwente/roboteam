@@ -9,6 +9,7 @@ var classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular =
     [ "terminate", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a0f136c2ac131c1b44b65cb9eeba823fe", null ],
     [ "update", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#aab9578d86a91f8a16f5c02200ca3b5e8", null ],
     [ "command", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#ae3db983eda1761d7ccd3f68a0ef731dd", null ],
+    [ "counter", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a6c6152e21a08243fc140ee63cd49ec8f", null ],
     [ "currentStatus", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a62d571b925906855b84dfc185a0b5ee8", null ],
     [ "robot", "d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a8625bf35b1b36ec18fd8ff68926ec0d4", null ]
 ];

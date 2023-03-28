@@ -125,9 +125,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ae2f6fcaa9e36e0cace65dfb1397ce568"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#ae2f6fcaa9e36e0cace65dfb1397ce568">runOneLoopCycle</a> ()</td></tr>
 <tr class="memdesc:ae2f6fcaa9e36e0cace65dfb1397ce568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs AI for one iteration.  <a href="../../da/de3/classrtt_1_1STPManager.html#ae2f6fcaa9e36e0cace65dfb1397ce568">More...</a><br /></td></tr>
 <tr class="separator:ae2f6fcaa9e36e0cace65dfb1397ce568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad17b68293977fd66cf70966bf46accde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#ad17b68293977fd66cf70966bf46accde">decidePlay</a> (<a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *_world)</td></tr>
-<tr class="memdesc:ad17b68293977fd66cf70966bf46accde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that decides whether to change plays given a world and field.  <a href="../../da/de3/classrtt_1_1STPManager.html#ad17b68293977fd66cf70966bf46accde">More...</a><br /></td></tr>
-<tr class="separator:ad17b68293977fd66cf70966bf46accde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f8bbad00b91fcb770a25e23532e1b05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a7f8bbad00b91fcb770a25e23532e1b05">decidePlay</a> (<a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *_world, bool ignoreWorldAge=false)</td></tr>
+<tr class="memdesc:a7f8bbad00b91fcb770a25e23532e1b05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that decides whether to change plays given a world and field.  <a href="../../da/de3/classrtt_1_1STPManager.html#a7f8bbad00b91fcb770a25e23532e1b05">More...</a><br /></td></tr>
+<tr class="separator:a7f8bbad00b91fcb770a25e23532e1b05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -206,8 +206,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad17b68293977fd66cf70966bf46accde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad17b68293977fd66cf70966bf46accde">&#9670;&nbsp;</a></span>decidePlay()</h2>
+<a id="a7f8bbad00b91fcb770a25e23532e1b05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f8bbad00b91fcb770a25e23532e1b05">&#9670;&nbsp;</a></span>decidePlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,8 +219,18 @@ Private Attributes</h2></td></tr>
           <td class="memname">void rtt::STPManager::decidePlay </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *&#160;</td>
-          <td class="paramname"><em>_world</em></td><td>)</td>
+          <td class="paramname"><em>_world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ignoreWorldAge</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -234,6 +244,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_world</td><td>the current world state </td></tr>
+    <tr><td class="paramname">ignoreWorldAge</td><td>Whether to ignore the age of the world </td></tr>
   </table>
   </dd>
 </dl>

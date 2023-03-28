@@ -1,5 +1,8 @@
 var NAVTREEINDEX11 =
 {
+"da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ab814ca078159c72443842e27c00f6430":[4,0,0,0,0,3,9,2,35],
+"da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2abe8f556061f5ee5c3439ebd5e9707216":[4,0,0,0,0,3,9,2,30],
+"da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2aca71e05faa7b1711d1367178d9c4e11f":[4,0,0,0,0,3,9,2,3],
 "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2acd8caf0460e547b781ced6f8f4e63b0e":[4,0,0,0,0,3,9,2,19],
 "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad0eccb3bf8b9bccf5974bf05174c07ea":[4,0,0,0,0,3,9,2,6],
 "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad51ff90a12d29afbe00c85d2af387945":[4,0,0,0,0,3,9,2,29],
@@ -28,10 +31,10 @@ var NAVTREEINDEX11 =
 "da/de3/classrtt_1_1STPManager.html#a398d2b8170beb38ec7f54495c29a0b85":[3,0,1,8,6],
 "da/de3/classrtt_1_1STPManager.html#a7a7653fec7cab61ab8312c9beaea2abc":[3,0,1,8,8],
 "da/de3/classrtt_1_1STPManager.html#a7a8473167698f237b45ee23f334fa538":[3,0,1,8,0],
+"da/de3/classrtt_1_1STPManager.html#a7f8bbad00b91fcb770a25e23532e1b05":[3,0,1,8,2],
 "da/de3/classrtt_1_1STPManager.html#a8795d7364c8c7ec513ea11eaaed859a2":[3,0,1,8,10],
 "da/de3/classrtt_1_1STPManager.html#a8edcab477fc8c4d1c1e9c782005ceb47":[3,0,1,8,1],
 "da/de3/classrtt_1_1STPManager.html#a8f00c279e449700988e0371ded4b6411":[3,0,1,8,7],
-"da/de3/classrtt_1_1STPManager.html#ad17b68293977fd66cf70966bf46accde":[3,0,1,8,2],
 "da/de3/classrtt_1_1STPManager.html#ae2f6fcaa9e36e0cace65dfb1397ce568":[3,0,1,8,4],
 "da/def/WeHaveBallGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,17],
 "da/df4/PenaltyThemGameStateEvaluation_8cpp.html":[4,0,0,1,4,2,0,12],
@@ -246,8 +249,5 @@ var NAVTREEINDEX11 =
 "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#aaf734f67bfc1307764cc1dcad509d587":[3,0,1,0,3,6,0,8],
 "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ab496bf1614c47ef3e466cd235eb84aab":[3,0,1,0,3,6,0,2],
 "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ab7650037eb092459aca7247ea77f2ad4":[3,0,1,0,3,6,0,5],
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac66cf9fe9def08172b053a6abc869ba1":[3,0,1,0,3,6,0,12],
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,3,6,0,11],
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,3,6,0,9],
-"db/dd5/BallPlacementUsGameStateEvaluation_8cpp.html":[4,0,0,1,4,2,0,1]
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac66cf9fe9def08172b053a6abc869ba1":[3,0,1,0,3,6,0,12]
 };

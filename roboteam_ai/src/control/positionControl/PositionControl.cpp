@@ -7,8 +7,12 @@
 #include <span>
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
+#include <os/log.h>
+#include <os/signpost.h>
 
 namespace rtt::ai::control {
+os_log_t log_handle = os_log_create("com.roboteam", OS_LOG_CATEGORY_POINTS_OF_INTEREST);
+os_signpost_id_t signpost_id = os_signpost_id_generate(log_handle);
 
 PositionControlCommand PositionControl::computeNextControlCommand(const PositionControlInput& input, stp::PIDType pidType) {
     auto command = PositionControlCommand{};
@@ -19,9 +23,11 @@ PositionControlCommand PositionControl::computeNextControlCommand(const Position
 
     auto& path = paths.at(input.robotId);
     if (pathTracking.shouldUpdatePath(input, path.remaining) != DONT_UPDATE) {
+        os_signpost_interval_begin(log_handle, signpost_id, "PathPlanning");
         path.full.clear();
         pathPlanning.generateNewPath(path.full, input);
         path.remaining = std::span(path.full);
+        os_signpost_interval_end(log_handle, signpost_id, "PathPlanning");
     }
 
     const auto [remainingPath, trackingVelocity] = pathTracking.trackPath(input.state, path.remaining, pidControllers.at(input.robotId), pidType);

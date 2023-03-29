@@ -20,10 +20,11 @@ std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateV
 //    interface::Input::drawData(interface::Visual::PATHFINDING, {remainingPath}, Qt::red, -1, interface::Drawing::DOTS);
 
     auto lookAhead = std::min(remainingPath.size(), STEPS_AHEAD);
-    const auto &currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
+    auto currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
     if (PositionControlUtils::isTargetReached(currentTarget->position, currentState.position)) {
         // Track the Nth point, or the last if the size is smaller than N; the untracked ones are discarded
         remainingPath = remainingPath.subspan(lookAhead);
+        currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
     }
 
     const auto newPid = PositionControlUtils::getPIDValue(pidType);

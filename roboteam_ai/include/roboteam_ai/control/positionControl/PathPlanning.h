@@ -28,8 +28,8 @@ struct ScoredTrajectoryPair {
  */
 class PathPlanning {
    private:
-    static constexpr std::array<int, 3> RADIUS_OFFSETS = {8, 4, 2};
-    static constexpr int POINTS_PER_CIRCLE = 6;
+    static constexpr std::array<int, 2> RADIUS_OFFSETS = {8, 2};
+    static constexpr int POINTS_PER_CIRCLE = 5;
     static constexpr int POINTS_COUNT = RADIUS_OFFSETS.size() * POINTS_PER_CIRCLE;
     static constexpr double ANGLE_BETWEEN_POINTS = 2 * M_PI / POINTS_PER_CIRCLE;
 

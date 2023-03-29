@@ -9,9 +9,18 @@
 #include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
 
+#include <os/log.h>
+#include <os/signpost.h>
+
+
 namespace rtt::ai::stp::skill {
 
+os_log_t log_handle = os_log_create("com.jviotti.my-app", OS_LOG_CATEGORY_POINTS_OF_INTEREST);
+os_signpost_id_t signpost_id = os_signpost_id_generate(log_handle);
+//assert(signpost_id != OS_SIGNPOST_ID_INVALID);
+
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
+
     Vector2 targetPos = info.getPositionToMoveTo().value();
 
     if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid())) {
@@ -26,6 +35,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         avoidObj.avoidBallDist = control_constants::AVOID_BALL_DISTANCE;
         avoidObj.shouldAvoidBall = true;
     }
+    os_signpost_interval_begin(log_handle, signpost_id, "My first interval", "Begin metadata: %s", "Foo");
 
 //    rtt::control::CommandCollision commandCollision;
     const auto positionControlCmd = info.getCurrentWorld()->getRobotPositionController()->computeNextControlCommand({
@@ -35,6 +45,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         .maxVel = info.getMaxRobotVelocity(),
         .avoidObjects = avoidObj
     }, info.getPidType().value());
+    os_signpost_interval_end(log_handle, signpost_id, "My first interval", "End metadata: %s", "Foo");
+
 
 //    bool useOldPathPlanning = false;
 //    rtt::control::CommandCollision commandCollision;
@@ -54,21 +66,22 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         return Status::Failure;
     }
 
-    double targetVelocityLength;
-    if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
-    } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
-    } else {
-        targetVelocityLength = std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity());
-    }
-    // Clamp and set velocity
-    Vector2 targetVelocity = positionControlCmd.robotCommand.velocity.stretchToLength(targetVelocityLength);
+//    double targetVelocityLength;
+//    if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
+//        targetVelocityLength = std::max(std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
+//    } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
+//        targetVelocityLength = std::max(std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
+//    } else {
+//        targetVelocityLength = std::clamp(positionControlCmd.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity());
+//    }
+//    // Clamp and set velocity
+//    Vector2 targetVelocity = positionControlCmd.robotCommand.velocity.stretchToLength(targetVelocityLength);
 
 //     Set velocity and angle commands
-    command.velocity = targetVelocity;
+    command.velocity = positionControlCmd.robotCommand.velocity;
+//    command.velocity = Vector2{1, 1};
 
-    command.targetAngle = info.getAngle();
+    command.targetAngle = positionControlCmd.robotCommand.targetAngle;
 
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);

@@ -45,7 +45,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
                 cmd = RefCommand::PREPARE_PENALTY_US;
                 break;
             case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-                cmd = RefCommand::PREPARE_SHOOTOUT_THEM;
+                cmd = RefCommand::PREPARE_PENALTY_THEM;
                 break;
             case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
                 cmd = RefCommand::DIRECT_FREE_US;

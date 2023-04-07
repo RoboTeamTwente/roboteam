@@ -8,18 +8,15 @@
 
 namespace rtt::ai::control {
 
-bool PositionControlUtils::isTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget) {
-    return (targetPos - oldTarget).length() > 0.05;;
-}
+bool PositionControlUtils::hasTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget) { return (targetPos - oldTarget).length() > MAX_TARGET_DEVIATION; }
 
-bool PositionControlUtils::isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition) {
-    return (targetPos - currentPosition).length() < 0.05;
-}
-bool PositionControlUtils::isMoving(const Vector2 &velocity) { return velocity.length() >  0.05; }
+bool PositionControlUtils::isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition) { return (targetPos - currentPosition).length() < MIN_DISTANCE_TO_TARGET; }
+bool PositionControlUtils::isMoving(const Vector2 &velocity) { return velocity.length() > MAX_STALE_VELOCITY; }
 
 pidVals PositionControlUtils::getPIDValue(const stp::PIDType &pidType) {
     switch (pidType) {
         case stp::PIDType::DEFAULT:
+            // TODO: Rename numTreePID
             return interface::Output::getNumTreePid();
         case stp::PIDType::RECEIVE:
             return interface::Output::getReceivePid();
@@ -31,12 +28,8 @@ pidVals PositionControlUtils::getPIDValue(const stp::PIDType &pidType) {
             return interface::Output::getKeeperInterceptPid();
     }
 }
-double PositionControlUtils::convertStepToTime(int step)  {
-    return step * TIME_STEP;
-}
+double PositionControlUtils::convertStepToTime(int step) { return step * TIME_STEP; }
 
-int PositionControlUtils::convertTimeToStep(double time) {
-    return static_cast<int>(std::round(time / TIME_STEP));
-}
+int PositionControlUtils::convertTimeToStep(double time) { return static_cast<int>(std::round(time / TIME_STEP)); }
 
 }  // namespace rtt::ai::control

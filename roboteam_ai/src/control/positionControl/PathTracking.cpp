@@ -12,12 +12,11 @@
 
 namespace rtt::ai::control {
 
-std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateVector& currentState, std::span<StateVector> remainingPath, std::pair<PID, PID> pidControllers, stp::PIDType pidType) const{
+std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateVector& currentState, std::span<StateVector> remainingPath, std::pair<PID, PID> pidControllers,
+                                                                    stp::PIDType pidType) const {
     if (remainingPath.empty()) {
         return {remainingPath, {0, 0, 0}};
     }
-
-//    interface::Input::drawData(interface::Visual::PATHFINDING, {remainingPath}, Qt::red, -1, interface::Drawing::DOTS);
 
     auto lookAhead = std::min(remainingPath.size(), STEPS_AHEAD);
     auto currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
@@ -31,29 +30,34 @@ std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateV
     pidControllers.first.setPID(newPid);
     pidControllers.second.setPID(newPid);
 
-    auto pidVelocity = Vector2 {
-        pidControllers.first.getOutput(currentState.position.x, currentTarget->position.x),
-        pidControllers.second.getOutput(currentState.position.y, currentTarget->position.y),
-    }.stretchToLength(currentTarget->velocity.length());
+    auto pidVelocity =
+        Vector2{
+            pidControllers.first.getOutput(currentState.position.x, currentTarget->position.x),
+            pidControllers.second.getOutput(currentState.position.y, currentTarget->position.y),
+        }
+            .stretchToLength(currentTarget->velocity.length());
 
     return {remainingPath, {pidVelocity.x, pidVelocity.y, (currentTarget->position - currentState.position).angle()}};
 }
 
 UpdatePath PathTracking::shouldUpdatePath(const PositionControlInput& input, std::span<StateVector> remainingPath) const {
     if (!remainingPath.empty()) {
-        if (PositionControlUtils::isTargetChanged(input.targetPos, remainingPath.back().position)) return UPDATE_TARGET_CHANGED;
-        if (PositionControlUtils::isTargetChanged(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
+        // Check if the target position has changed
+        if (PositionControlUtils::hasTargetChanged(input.targetPos, remainingPath.back().position)) return UPDATE_TARGET_CHANGED;
+
+        // If the robots suddenly moves a lot, we should update the path
+        if (PositionControlUtils::isTargetReached(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
     }
 
     if (remainingPath.empty() && !PositionControlUtils::isTargetReached(input.targetPos, input.state.position)) return UPDATE_TARGET_REACHED;
 
     for (int i = 0; i < static_cast<int>(remainingPath.size()); i++) {
-        if (!collisionDetector.doesCollideWithMovingObjects(remainingPath[i].position, input.robotId, input.avoidObjects.shouldAvoidBall, i)) continue;
+        if (!collisionDetector.doesCollideWithMovingObjects(remainingPath[i].position, input.robotId, input.avoidObjects, i)) continue;
         return UPDATE_COLLISION_DETECTED;
     }
     return DONT_UPDATE;
 }
 
-PathTracking::PathTracking(const CollisionDetector &collisionDetector) : collisionDetector(collisionDetector) {}
+PathTracking::PathTracking(const CollisionDetector& collisionDetector) : collisionDetector(collisionDetector) {}
 
 }  // namespace rtt::ai::control

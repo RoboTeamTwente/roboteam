@@ -254,7 +254,6 @@ add_library(roboteam_ai_control
         ${PROJECT_SOURCE_DIR}/src/control/ControlUtils.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectory1D.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectory2D.cpp
-        ${PROJECT_SOURCE_DIR}/src/control/positionControl/BBTrajectories/BBTrajectoryIterator.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/PathTracking.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/PositionControlUtils.cpp
         ${PROJECT_SOURCE_DIR}/src/control/positionControl/PathPlanning.cpp

@@ -22,7 +22,6 @@ struct ScoredTrajectoryPair {
     int cost;
 };
 
-
 /**
  * Path planning using the BBT algorithm for single robot.
  */
@@ -43,7 +42,7 @@ class PathPlanning {
      */
     [[nodiscard]] static int scorePath(double startTrajectoryDuration, double endTrajectoryDuration, std::optional<double> collisionTime);
 
-    std::pair<BBTrajectory2D, std::optional<double>> trajectoryFromState(const StateVector& forState, const PositionControlInput& forInput) const;
+    [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> trajectoryFromState(const StateVector& forState, const PositionControlInput& forInput) const;
 
     /**
      * \brief Find the best trajectory from initial position to the target position that is skewed towards the intermediatePoint.
@@ -76,7 +75,7 @@ class PathPlanning {
      * @param initialVel Initial Velocity
      * @param targetPos Target Position
      */
-    void generateNewPath(std::vector<StateVector>& pathBuffer, const PositionControlInput& input) const;
+    void generateNewPath(std::vector<StateVector>& pathBuffer, const PositionControlInput& input) const noexcept;
 
     /**
      * \brief Updates the path planning with new information about the world

@@ -21,28 +21,28 @@ namespace rtt::ai::control {
  */
 class BBTrajectory2D {
    public:
-    class Iterator  {
-       public:
-        using T = std::pair<double, StateVector>;
-        using difference_type = std::ptrdiff_t;
-        using value_type = T;
-        using pointer = T*;
-        using reference = T&;
-        using iterator_category = std::output_iterator_tag;
-
-        explicit Iterator(const BBTrajectory2D& trajectory, double time = 0);
-
-        reference operator*();
-        pointer operator->();
-        Iterator& operator++();
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
-
-       private:
-        const BBTrajectory2D& trajectory;
-        std::optional<T> item;
-        double time;
-    };
+//    class Iterator  {
+//       public:
+//        using T = std::pair<double, StateVector>;
+//        using difference_type = std::ptrdiff_t;
+//        using value_type = T;
+//        using pointer = T*;
+//        using reference = T&;
+//        using iterator_category = std::output_iterator_tag;
+//
+//        explicit Iterator(const BBTrajectory2D& trajectory, double time = 0);
+//
+//        reference operator*();
+//        pointer operator->();
+//        Iterator& operator++();
+//        bool operator==(const Iterator& other) const;
+//        bool operator!=(const Iterator& other) const;
+//
+//       private:
+//        const BBTrajectory2D& trajectory;
+//        std::optional<T> item;
+//        double time;
+//    };
 
     /**
      * @brief Default constructor
@@ -98,13 +98,13 @@ class BBTrajectory2D {
      */
     [[maybe_unused]] [[nodiscard]] double getTotalTime() const;
 
-    /**
-     * @brief Returns all the trajectory parts in both dimensions to use in the general trajectory class
-     */
-    [[nodiscard]] std::pair<std::vector<BBTrajectoryPart>, std::vector<BBTrajectoryPart>> getParts();
+//    /**
+//     * @brief Returns all the trajectory parts in both dimensions to use in the general trajectory class
+//     */
+//    [[nodiscard]] std::pair<std::vector<BBTrajectoryPart>, std::vector<BBTrajectoryPart>> getParts();
 
-    Iterator begin() const { return Iterator(*this, 0); }
-    Iterator end() const { return Iterator(*this, getTotalTime()); }
+//    Iterator begin() const { return Iterator(*this, 0); }
+//    Iterator end() const { return Iterator(*this, getTotalTime()); }
 
    private:
     /**

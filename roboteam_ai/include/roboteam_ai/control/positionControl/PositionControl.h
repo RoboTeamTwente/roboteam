@@ -8,7 +8,6 @@
 #include <queue>
 #include <roboteam_utils/RobotCommands.hpp>
 
-
 #include "control/positionControl/CollisionDetector.h"
 #include "control/positionControl/PathPlanning.h"
 #include "control/positionControl/PathTracking.h"
@@ -16,16 +15,18 @@
 
 namespace rtt::ai::control {
 
-struct PositionControlCommand {
-    RobotCommand robotCommand;
-    bool isOccupied = false;
-};
-
+/**
+ * This struct represents a computed path for a robot.
+ * The full path is stored as a vector of StateVector objects, while the remaining path is stored as a span
+ * (a non-owning view) of the full vector.
+ */
 struct ComputedPath {
+    // The entire path from the origin (where the robot was when the path was computed) to the target
     std::vector<StateVector> full;
+
+    // The remaining part of the path that the robot has to travel over
     std::span<StateVector> remaining;
 };
-
 
 /**
  * The main position control class. Use this for your robot position control
@@ -44,25 +45,24 @@ class PositionControl {
     std::unordered_map<int, ComputedPath> paths;
     std::unordered_map<int, std::pair<PID, PID>> pidControllers;
 
-    std::vector<Vector2> drawingBuffer;
-
    public:
     explicit PositionControl();
 
     /**
-     * @brief Generates a collision-free trajectory and tracks it.
-     * @param field the field object, used onwards by the collision detector
-     * @param robotId the ID of the robot for which the path is calculated
-     * @param currentPosition the current position of the aforementioned robot
-     * @param currentVelocity its velocity
-     * @param targetPosition the desired position that the robot has to reach
-     * @param maxRobotVelocity the maximum velocity that the robot is allowed to have
-     * @param pidType The desired PID type (intercept, regular, keeper etc.)
-     * @param avoidObjects The objects that the robot should avoid
-     * @return A PositionControlCommand containing the robot command and path flags
+     * @brief This function computes the next control command for a robot based on the given input and PID type.
+     * @param input PositionControlInput object containing information about the robot's current/desired position and other path constraints (such as the avoidance of moving
+     * objects)
+     * @param pidType The PID type to use for the path tracking
+     * @return Returns next position or nullopt if target position is not reachable (e.g. is occupied)
      */
-    PositionControlCommand computeNextControlCommand(const PositionControlInput& input, stp::PIDType pidType);
+    [[nodiscard]] std::optional<Position> computeNextPosition(const PositionControlInput& input, stp::PIDType pidType) noexcept;
 
+    /**
+     * @brief This function updates the position control with the latest world data and field data. **It is called once at the start of each tick**.
+     * @param world The latest world data
+     * @param field The latest field data
+     * @param gameState The latest game state
+     */
     void updatePositionControl(std::optional<WorldDataView> world, std::optional<FieldView> field, const GameStateView& gameState);
 };
 

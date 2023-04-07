@@ -16,25 +16,24 @@
 
 namespace rtt::ai::control {
 
+/**
+ * @brief This struct represents the obstacles on a field that a robot may encounter at specific time step. It is used in the timeline vector
+ */
 struct Obstacles {
+    // Position of the ball
     StateVector ball;
+    // Position of the enemy robots
     std::vector<StateVector> robotsThem;
+    // Position of our robots. It's a map because we need to know which robot is which (to avoid "collisions" with itself)
     std::unordered_map<int, StateVector> robotsUs;
 };
 
-
 class CollisionDetector {
-
    private:
     using RobotView = rtt::world::view::RobotView;
     using BallView = rtt::world::view::BallView;
-
-    Polygon ourDefenseArea = Polygon{Vector2{}, 0, 0};
-    Polygon theirDefenseArea = Polygon{Vector2{}, 0, 0};
-
-    double minBallDistance = 0.0;
+    Field field;
     std::array<Obstacles, PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT> timeline;
-//    std::optional<rtt::Field> field;
 
     /**
      * @brief Consolidation of collision detection logic.
@@ -43,46 +42,35 @@ class CollisionDetector {
      * @param minDistance Minimum distance between origin and obstacle.
      * */
     [[nodiscard]] static bool isCollision(const Vector2& position, const Vector2& obstaclePos, double minDistance);
+
    public:
     CollisionDetector() = default;
 
     /**
-     * @brief Finds the first (time-wise) collision with dynamic obstacles(ball and robots) on the path
-     * @tparam pathPoints Trajectory approximation
+     * @brief This method checks if a robot at a **given position** for a **given time** will collide with any other moving objects (ball / other robots) on the field.
+     * @tparam position Position to check for collisions.
      * @param robotId Robot id to ignore (i.e it self)
-     * @param timeOffset Time offset to start checking from
      * @param shouldAvoidBall Whether to avoid the ball or not
-     * @param timeLimit Time limit to check for collisions
+     * @param timeStep Time step on timeline to check for collisions.
      */
-    [[nodiscard]] bool doesCollideWithMovingObjects(const Vector2& position, int robotId, bool shouldAvoidBall, double time = 0) const;
+    [[nodiscard]] bool doesCollideWithMovingObjects(const Vector2& position, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep = 0) const;
 
     /**
-     * @brief Finds the first (time-wise) collision with the playing field.
-     * @tparam pathPoints Trajectory approximation
+     * @brief This method checks if given position is inside the field and outside defense areas.
+     * @param position Position to check.
      */
-    [[nodiscard]] bool doesCollideWithField(const Vector2& position) const;
+    [[nodiscard]] bool doesCollideWithStaticObjects(const Vector2& position, const stp::AvoidObjects& avoidObjects) const;
 
     /**
-     * @brief Finds the first (time-wise) collision with defense area.
-     * @tparam pathPoints Trajectory approximation
+     * @brief Generate the defense area polygons and store them in the class (the computation is really expensive operation)
      */
-    [[nodiscard]] bool doesCollideWithDefenseArea(const Vector2& position) const;
-
-
-    /**
-     * @brief Set minimal allowed distance from the ball.
-     * @tparam distance minimal allowed distance.
-     */
-    void setMinBallDistance(double distance);
-
-
-    void updateDefenseAreas(const std::optional<rtt::Field>& field);
+    void setField(const rtt::Field field);
 
     /**
      * @brief Updates the timeline with obstacles positions. Must be called *once* at the start of each tick.
-     * For enemy robots and the ball the position is approximated.
-     * For our robots only the observer position is updated (i.e the current position) or
-     * if our robot is not moving the current position is set for all time steps.
+     * For enemy robots and the ball => The position is approximated for each time step
+     * For our robots                => Only the observed (i.e. current position) is updated
+     *                                  If the robot is not moving the current position is set for all time steps.
      * @param robots Robots to update the timeline with
      * @param ball Ball to update the timeline with
      */
@@ -95,5 +83,7 @@ class CollisionDetector {
      * @param robotId Id of robot to update the path for
      */
     void updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId);
+
+    void drawTimeline() const;
 };
 }  // namespace rtt::ai::control

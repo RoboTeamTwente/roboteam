@@ -7,54 +7,50 @@
 #include <span>
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
-#include <os/log.h>
-#include <os/signpost.h>
 
 namespace rtt::ai::control {
-os_log_t log_handle = os_log_create("com.roboteam", OS_LOG_CATEGORY_POINTS_OF_INTEREST);
-os_signpost_id_t signpost_id = os_signpost_id_generate(log_handle);
 
-PositionControlCommand PositionControl::computeNextControlCommand(const PositionControlInput& input, stp::PIDType pidType) {
-    auto command = PositionControlCommand{};
-    if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects.shouldAvoidBall)) {
-        command.isOccupied = true;
-        return command;
+std::optional<Position> PositionControl::computeNextPosition(const PositionControlInput& input, stp::PIDType pidType) noexcept {
+    if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects)) {
     }
+
+
 
     auto& path = paths.at(input.robotId);
     if (pathTracking.shouldUpdatePath(input, path.remaining) != DONT_UPDATE) {
-        os_signpost_interval_begin(log_handle, signpost_id, "PathPlanning");
         path.full.clear();
         pathPlanning.generateNewPath(path.full, input);
         path.remaining = std::span(path.full);
-        os_signpost_interval_end(log_handle, signpost_id, "PathPlanning");
     }
 
     const auto [remainingPath, trackingVelocity] = pathTracking.trackPath(input.state, path.remaining, pidControllers.at(input.robotId), pidType);
     path.remaining = remainingPath;
     collisionDetector.updateTimelineForOurRobot(path.remaining, input.state.position, input.robotId);
 
-    drawingBuffer.clear();
+    std::vector<Vector2> drawingBuffer;
     std::transform(remainingPath.begin(), remainingPath.end(), std::back_inserter(drawingBuffer), [](const auto& state) { return state.position; });
     interface::Input::drawData(interface::Visual::PATHFINDING, drawingBuffer, Qt::yellow, input.robotId, interface::Drawing::LINES_CONNECTED);
     interface::Input::drawData(interface::Visual::PATHFINDING, drawingBuffer, Qt::green, input.robotId, interface::Drawing::DOTS);
-
-    collisionDetector.updateTimelineForOurRobot(path.remaining, input.state.position, input.robotId);
-    command.robotCommand.velocity = {trackingVelocity.x, trackingVelocity.y};
-    command.robotCommand.targetAngle = trackingVelocity.rot;
-    return command;
+    interface::Input::drawData(interface::Visual::PATHFINDING, {input.state.position, input.targetPos}, Qt::magenta, input.robotId, interface::Drawing::LINES_CONNECTED);
+    return {trackingVelocity};
 }
 
 void PositionControl::updatePositionControl(std::optional<WorldDataView> world, std::optional<FieldView> field, const GameStateView& gameState) {
-    if (!world.has_value() || !field.has_value()) { return; }
+    if (!world.has_value() || !field.has_value()) {
+        return;
+    }
 
-    collisionDetector.updateDefenseAreas(field);
-    collisionDetector.setMinBallDistance(gameState.getRuleSet().minDistanceToBall);
+//    pathPlanning.updateConstraints(field.value());
+//    collisionDetector.setField(field.value());
+
     collisionDetector.updateTimeline(world->getRobotsNonOwning(), world->getBall());
 
-    pathPlanning.updateConstraints(field.value());
+    collisionDetector.drawTimeline();
+
     for (const auto& ourRobot : world->getUs()) {
-        if (paths.contains(ourRobot->getId())) [[likely]] { continue; }
+        if (paths.contains(ourRobot->getId())) [[likely]] {
+            continue;
+        }
 
         auto emptyPath = std::vector<StateVector>();
         emptyPath.reserve(512);
@@ -69,7 +65,5 @@ void PositionControl::updatePositionControl(std::optional<WorldDataView> world, 
     }
 }
 
-PositionControl::PositionControl(): pathTracking(PathTracking(collisionDetector)), pathPlanning(PathPlanning(collisionDetector)) {
-    drawingBuffer.reserve(512);
-}
+PositionControl::PositionControl() : pathTracking(PathTracking(collisionDetector)), pathPlanning(PathPlanning(collisionDetector)) {}
 }  // namespace rtt::ai::control

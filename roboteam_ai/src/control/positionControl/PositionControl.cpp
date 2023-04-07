@@ -40,11 +40,10 @@ void PositionControl::updatePositionControl(std::optional<WorldDataView> world, 
         return;
     }
 
-//    pathPlanning.updateConstraints(field.value());
-//    collisionDetector.setField(field.value());
+    pathPlanning.updateConstraints(field.value());
+    collisionDetector.setField(field.value());
 
     collisionDetector.updateTimeline(world->getRobotsNonOwning(), world->getBall());
-
     collisionDetector.drawTimeline();
 
     for (const auto& ourRobot : world->getUs()) {

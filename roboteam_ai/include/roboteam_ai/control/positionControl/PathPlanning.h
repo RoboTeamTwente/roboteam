@@ -12,13 +12,13 @@ namespace rtt::ai::control {
 /**
  * \brief Wrapper container for 2 trajectories and path-score
  * Combining 2 trajectories is an _expensive_ operation, thus it's better to defer that step to the latest possible moment.
- * cutoffIndex indicates where endTrajectory connects with initialTrajectory (i.e how many points are used from the initialTrajectory)
+ * part1CutoffIndex indicates where endTrajectory connects with initialTrajectory (i.e how many points are used from the initialTrajectory)
  * Lower cost indicated better path (e.g cost = 100 is better than cost = 150)
  */
 struct ScoredTrajectoryPair {
-    BBTrajectory2D start;
-    BBTrajectory2D end;
-    int cutoffIndex;
+    BBTrajectory2D part1;
+    BBTrajectory2D part2;
+    int part1CutoffIndex;
     int cost;
 };
 
@@ -27,9 +27,10 @@ struct ScoredTrajectoryPair {
  */
 class PathPlanning {
    private:
-    static constexpr std::array<int, 2> RADIUS_OFFSETS = {8, 2};
-    static constexpr int POINTS_PER_CIRCLE = 5;
+    static constexpr std::array<int, 2> RADIUS_OFFSETS = {8, 4};
+    static constexpr int POINTS_PER_CIRCLE = 6;
     static constexpr int POINTS_COUNT = RADIUS_OFFSETS.size() * POINTS_PER_CIRCLE;
+    static constexpr double ROTATE_OFFSET = M_PI_2;
     static constexpr double ANGLE_BETWEEN_POINTS = 2 * M_PI / POINTS_PER_CIRCLE;
 
     const CollisionDetector& collisionDetector;
@@ -37,12 +38,13 @@ class PathPlanning {
 
     /**
      * \brief Calculates the score of given trajectory. Lower score indicated better path (e.g score = 100 is better than score = 150)
-     * @param duration How long the path is (i.e. how many path segments there are in the final path)
+     * @param part1Duration How long the 1st trajectory takes (from ScoredTrajectoryPair)
+     * @param part2Duration How long the 2nd trajectory takes (from ScoredTrajectoryPair)
      * @param collision information about *first* collision on the path
      */
-    [[nodiscard]] static int scorePath(double startTrajectoryDuration, double endTrajectoryDuration, std::optional<double> collisionTime);
+    [[nodiscard]] static int scorePath(double part1Duration, double part2Duration, std::optional<double> collisionTime);
 
-    [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> trajectoryFromState(int stepOffset, const StateVector& forState, const PositionControlInput& forInput) const;
+    [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> calculateTrajectoryWithCollisionDetection(int stepOffset, const StateVector& forState, const PositionControlInput& forInput) const;
 
     /**
      * \brief Find the best trajectory from initial position to the target position that is skewed towards the intermediatePoint.
@@ -54,7 +56,7 @@ class PathPlanning {
      * @param intermediatePoint Is used to generate intermediate trajectory.
      * @param targetPos Target Position
      */
-    [[nodiscard]] ScoredTrajectoryPair findTrajectoryForPoint(const BBTrajectory2D directTrajectory, const int directTrajectoryCost, const PositionControlInput& input, const Vector2& intermediatePoint) const;
+    [[nodiscard]] ScoredTrajectoryPair searchBestTrajectoryToIntermediatePoint(const BBTrajectory2D& directTrajectory, int directTrajectoryCost, const PositionControlInput& input, const Vector2& intermediatePoint) const;
 
     /**
      * \brief Generates vector of intermediate points

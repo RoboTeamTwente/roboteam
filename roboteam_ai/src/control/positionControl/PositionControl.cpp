@@ -7,14 +7,15 @@
 #include <span>
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
+#include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
 
 std::optional<Position> PositionControl::computeNextPosition(const PositionControlInput& input, stp::PIDType pidType) noexcept {
     if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects)) {
+        RTT_WARNING("Target position is occupied by a moving object, cannot compute path to target position")
+        return std::nullopt;
     }
-
-
 
     auto& path = paths.at(input.robotId);
     if (pathTracking.shouldUpdatePath(input, path.remaining) != DONT_UPDATE) {
@@ -27,11 +28,13 @@ std::optional<Position> PositionControl::computeNextPosition(const PositionContr
     path.remaining = remainingPath;
     collisionDetector.updateTimelineForOurRobot(path.remaining, input.state.position, input.robotId);
 
+    // TODO: Drawing overhead, remove this / better drawing interface
     std::vector<Vector2> drawingBuffer;
     std::transform(remainingPath.begin(), remainingPath.end(), std::back_inserter(drawingBuffer), [](const auto& state) { return state.position; });
     interface::Input::drawData(interface::Visual::PATHFINDING, drawingBuffer, Qt::yellow, input.robotId, interface::Drawing::LINES_CONNECTED);
     interface::Input::drawData(interface::Visual::PATHFINDING, drawingBuffer, Qt::green, input.robotId, interface::Drawing::DOTS);
-    interface::Input::drawData(interface::Visual::PATHFINDING, {input.state.position, input.targetPos}, Qt::magenta, input.robotId, interface::Drawing::LINES_CONNECTED);
+    interface::Input::drawData(interface::Visual::PATHFINDING_DEBUG, {input.state.position, input.targetPos}, Qt::magenta, input.robotId, interface::Drawing::LINES_CONNECTED);
+
     return {trackingVelocity};
 }
 

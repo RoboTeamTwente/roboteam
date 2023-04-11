@@ -46,7 +46,7 @@ UpdatePath PathTracking::shouldUpdatePath(const PositionControlInput& input, std
         if (PositionControlUtils::hasTargetChanged(input.targetPos, remainingPath.back().position)) return UPDATE_TARGET_CHANGED;
 
         // If the robots suddenly moves a lot, we should update the path
-        if (PositionControlUtils::isTargetReached(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
+        if (PositionControlUtils::hasTargetChanged(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
     }
 
     if (remainingPath.empty() && !PositionControlUtils::isTargetReached(input.targetPos, input.state.position)) return UPDATE_TARGET_REACHED;

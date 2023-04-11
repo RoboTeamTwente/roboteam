@@ -42,7 +42,7 @@ class PathPlanning {
      */
     [[nodiscard]] static int scorePath(double startTrajectoryDuration, double endTrajectoryDuration, std::optional<double> collisionTime);
 
-    [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> trajectoryFromState(const StateVector& forState, const PositionControlInput& forInput) const;
+    [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> trajectoryFromState(int stepOffset, const StateVector& forState, const PositionControlInput& forInput) const;
 
     /**
      * \brief Find the best trajectory from initial position to the target position that is skewed towards the intermediatePoint.
@@ -54,7 +54,7 @@ class PathPlanning {
      * @param intermediatePoint Is used to generate intermediate trajectory.
      * @param targetPos Target Position
      */
-    [[nodiscard]] ScoredTrajectoryPair findTrajectoryForPoint(const PositionControlInput& input, const Vector2& intermediatePoint) const;
+    [[nodiscard]] ScoredTrajectoryPair findTrajectoryForPoint(const BBTrajectory2D directTrajectory, const int directTrajectoryCost, const PositionControlInput& input, const Vector2& intermediatePoint) const;
 
     /**
      * \brief Generates vector of intermediate points

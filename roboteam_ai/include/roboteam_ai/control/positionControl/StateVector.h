@@ -17,6 +17,9 @@ struct StateVector {
 };
 
 
+/*
+ * A small wrapper for values that are commonly passed around the position control.
+*/
 struct PositionControlInput {
     const int robotId;
     const StateVector& state;

@@ -29,7 +29,7 @@ bool CollisionDetector::doesCollideWithMovingObjects(const Vector2& position, in
 
 bool CollisionDetector::isCollision(const Vector2& position, const Vector2& obstaclePos, double minDistance) {
     double distance = (position - obstaclePos).length();
-    return distance < minDistance;
+    return distance <  minDistance;
 }
 
 void CollisionDetector::updateTimeline(const std::vector<RobotView>& robots, const std::optional<BallView>& ball) {
@@ -79,7 +79,7 @@ bool CollisionDetector::doesCollideWithStaticObjects(const Vector2& position, co
     //     return rtt::ai::FieldComputations::pointIsInField(field.value(), position, rtt::ai::Constants::ROBOT_RADIUS());
     //    return theirDefenseArea.contains(position) || (avoidObjects.shouldAvoidDefenseArea && ourDefenseArea.contains(position));
     return field.rightDefenseArea.contains(position) || (avoidObjects.shouldAvoidDefenseArea && field.leftDefenseArea.contains(position)) ||
-           (avoidObjects.shouldAvoidOutOfField && field.playArea.contains(position));
+           (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(position));
 }
 void CollisionDetector::drawTimeline() const {
     for (int i = 0; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {

@@ -15,7 +15,7 @@ class PositionControlUtils {
    public:
     constexpr static const double TIME_STEP = 0.1;
     constexpr static const int COLLISION_DETECTOR_STEP_COUNT = 10;
-    constexpr static const double MIN_ROBOT_DISTANCE = 2 * ai::Constants::ROBOT_RADIUS_MAX();
+    constexpr static const double MIN_ROBOT_DISTANCE = 3 * ai::Constants::ROBOT_RADIUS_MAX();
 
     constexpr static const double MAX_TARGET_DEVIATION = 0.05;
     constexpr static const double MIN_DISTANCE_TO_TARGET = 0.05;

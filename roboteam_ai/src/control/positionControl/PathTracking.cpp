@@ -15,12 +15,12 @@ namespace rtt::ai::control {
 std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateVector& currentState, std::span<StateVector> remainingPath, std::pair<PID, PID> pidControllers,
                                                                     stp::PIDType pidType) const {
     if (remainingPath.empty()) {
-        return {remainingPath, {0, 0, 0}};
+        return {{}, {0, 0, 0}};
     }
 
     auto lookAhead = std::min(remainingPath.size(), STEPS_AHEAD);
     auto currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
-    if (PositionControlUtils::isTargetReached(currentTarget->position, currentState.position)) {
+    if (PositionControlUtils::positionWithinTolerance(currentTarget->position, currentState.position)) {
         // Track the Nth point, or the last if the size is smaller than N; the untracked ones are discarded
         remainingPath = remainingPath.subspan(lookAhead);
         currentTarget = std::next(remainingPath.begin(), lookAhead - 1);
@@ -42,15 +42,15 @@ std::pair<std::span<StateVector>, Position> PathTracking::trackPath(const StateV
 
 UpdatePath PathTracking::shouldUpdatePath(const PositionControlInput& input, std::span<StateVector> remainingPath) const {
     if (!remainingPath.empty()) {
-        // Check if the target position has changed
-        if (PositionControlUtils::hasTargetChanged(input.targetPos, remainingPath.back().position)) return UPDATE_TARGET_CHANGED;
+        // Check if the target position has changed in the middle of path traversal
+        if (!PositionControlUtils::positionWithinTolerance(input.targetPos, remainingPath.back().position)) return UPDATE_TARGET_CHANGED;
 
-        // If the robots suddenly moves a lot, we should update the path
-        if (PositionControlUtils::hasTargetChanged(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
+        // If the robots suddenly moves a lot from next position, we should update the path
+        if (PositionControlUtils::positionWithinTolerance(input.state.position, remainingPath.front().position)) return UPDATE_POSITION_CHANGED;
     }
 
-    if (remainingPath.empty() && !PositionControlUtils::isTargetReached(input.targetPos, input.state.position)) return UPDATE_TARGET_REACHED;
-
+    // Check if the target position has changed while the robot is still
+    if (remainingPath.empty() && !PositionControlUtils::positionWithinTolerance(input.targetPos, input.state.position)) return UPDATE_TARGET_REACHED;
     for (int i = 0; i < static_cast<int>(remainingPath.size()); i++) {
         if (!collisionDetector.doesCollideWithMovingObjects(remainingPath[i].position, input.robotId, input.avoidObjects, i)) continue;
         return UPDATE_COLLISION_DETECTED;

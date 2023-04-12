@@ -15,28 +15,36 @@ class PositionControlUtils {
    public:
     constexpr static const double TIME_STEP = 0.1;
     constexpr static const int COLLISION_DETECTOR_STEP_COUNT = 10;
-    constexpr static const double MIN_ROBOT_DISTANCE = 3 * ai::Constants::ROBOT_RADIUS_MAX();
+
+    constexpr static const double MIN_ENEMY_MOVING_ROBOT_DISTANCE = 3 * ai::Constants::ROBOT_RADIUS_MAX();
+    constexpr static const double MIN_ENEMY_STALE_ROBOT_DISTANCE = 2 * ai::Constants::ROBOT_RADIUS_MAX();
+
+    constexpr static const double MIN_OUR_ROBOT_DISTANCE_MOVING = 3 * ai::Constants::ROBOT_RADIUS_MAX();
 
     constexpr static const double MAX_TARGET_DEVIATION = 0.05;
     constexpr static const double MIN_DISTANCE_TO_TARGET = 0.05;
+    constexpr static const double POSITION_TOLERANCE_DISTANCE = 0.05;
     constexpr static const double MAX_STALE_VELOCITY = 0.05;
 
 
-    /**
-     * If the distance between the old target and the new target > MAX_TARGET_DEVIATION
-     * @param targetPos
-     * @param oldTarget
-     * @return
-     */
-    static bool hasTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget);
+//    /**
+//     * If the distance between the old target and the new target > MAX_TARGET_DEVIATION
+//     * @param targetPos
+//     * @param oldTarget
+//     * @return
+//     */
+//    static bool hasTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget);
+//
+//    /**
+//     * The target is considered to be reached if the distance between target and currentPosition < MIN_DISTANCE_TO_TARGET
+//     * @param targetPos
+//     * @param currentPosition
+//     * @return
+//     */
+//    static bool isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition);
 
-    /**
-     * The target is considered to be reached if the distance between target and currentPosition < MIN_DISTANCE_TO_TARGET
-     * @param targetPos
-     * @param currentPosition
-     * @return
-     */
-    static bool isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition);
+
+    static bool positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2);
 
     /**
      * Is the target moving velocity > MAX_STALE_VELOCITY

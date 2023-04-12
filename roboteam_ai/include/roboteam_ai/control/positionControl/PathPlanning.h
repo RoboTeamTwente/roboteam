@@ -27,10 +27,17 @@ struct ScoredTrajectoryPair {
  */
 class PathPlanning {
    private:
-    static constexpr std::array<int, 2> RADIUS_OFFSETS = {8, 4};
+    // Distance between robot and intermediate point (fieldWidth / RADIUS_OFFSETS)
+    static constexpr std::array<int, 3> RADIUS_OFFSETS = {8, 4, 2};
+    // How many intermediate points to generate per given radius offset
     static constexpr int POINTS_PER_CIRCLE = 6;
     static constexpr int POINTS_COUNT = RADIUS_OFFSETS.size() * POINTS_PER_CIRCLE;
+
+    // By how much to rotate the intermediate on a given radius offset
+    // (so that a no line from the center to the intermediate point overlaps with another)
     static constexpr double ROTATE_OFFSET = M_PI_2;
+
+    // Angle between intermediate points on a given radius offset
     static constexpr double ANGLE_BETWEEN_POINTS = 2 * M_PI / POINTS_PER_CIRCLE;
 
     const CollisionDetector& collisionDetector;

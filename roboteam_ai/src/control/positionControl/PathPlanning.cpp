@@ -97,8 +97,6 @@ std::pair<BBTrajectory2D, std::optional<double>> PathPlanning::calculateTrajecto
     auto collision = std::find_if(steps.begin(), steps.end(), [&](int step) {
         const double time = PositionControlUtils::convertStepToTime(step);
         const auto position = trajectory.getPosition(time);
-//        interface::Input::drawData(interface::Visual::PATHFINDING_DEBUG, {position}, Qt::magenta, forInput.robotId, interface::Drawing::CROSSES);
-
         return collisionDetector.doesCollideWithMovingObjects(position, forInput.robotId, forInput.avoidObjects, stepOffset + step) ||
                collisionDetector.doesCollideWithStaticObjects(position, forInput.avoidObjects);
     });

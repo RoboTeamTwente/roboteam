@@ -20,16 +20,18 @@ bool CollisionDetector::doesCollideWithMovingObjects(const Vector2& position, in
            (avoidObjects.shouldAvoidOurRobots && std::any_of(obstacles.robotsUs.cbegin(), obstacles.robotsUs.cend(),
                                                              [&](auto& otherRobot) {
                                                                  return otherRobot.first != robotId &&
-                                                                        isCollision(position, otherRobot.second.position, PositionControlUtils::MIN_ROBOT_DISTANCE);
+                                                                        isCollision(position, otherRobot.second.position, PositionControlUtils::MIN_OUR_ROBOT_DISTANCE_MOVING);
                                                              })) ||
            (avoidObjects.shouldAvoidTheirRobots && std::any_of(obstacles.robotsThem.cbegin(), obstacles.robotsThem.cend(), [&](auto& otherRobot) {
-                return isCollision(position, otherRobot.position, PositionControlUtils::MIN_ROBOT_DISTANCE);
+                auto avoidDist = PositionControlUtils::isMoving(otherRobot.velocity) ? PositionControlUtils::MIN_ENEMY_MOVING_ROBOT_DISTANCE
+                                                                                     : PositionControlUtils::MIN_ENEMY_STALE_ROBOT_DISTANCE;
+                return isCollision(position, otherRobot.position, avoidDist);
             }));
 }
 
 bool CollisionDetector::isCollision(const Vector2& position, const Vector2& obstaclePos, double minDistance) {
     double distance = (position - obstaclePos).length();
-    return distance <  minDistance;
+    return distance < minDistance;
 }
 
 void CollisionDetector::updateTimeline(const std::vector<RobotView>& robots, const std::optional<BallView>& ball) {
@@ -53,16 +55,14 @@ void CollisionDetector::updateTimeline(const std::vector<RobotView>& robots, con
     }
 }
 
-void CollisionDetector::setField(rtt::Field newField) {
-    field = std::move(newField);
-}
+void CollisionDetector::setField(rtt::Field newField) { field = std::move(newField); }
 
 void CollisionDetector::updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId) {
     int pathLength = static_cast<int>(path.size());
 
     // Sometimes robot did not reach the next step, thus we want to offset the collision by 1.
     // timeline[0] is filed with current position at the start of the tick
-    int offset = !path.empty() && !PositionControlUtils::isTargetReached(path[0].position, currentPosition) ? 1 : 0;
+    int offset = !path.empty() && PositionControlUtils::positionWithinTolerance(path[0].position, currentPosition) ? 1 : 0;
     for (int i = offset; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT && i < pathLength; i++) {
         timeline[i].robotsUs[robotId] = path[i];
     }
@@ -75,9 +75,6 @@ void CollisionDetector::updateTimelineForOurRobot(std::span<const StateVector> p
     }
 }
 bool CollisionDetector::doesCollideWithStaticObjects(const Vector2& position, const stp::AvoidObjects& avoidObjects) const {
-    // TODO: Restore pointIsInField method
-    //     return rtt::ai::FieldComputations::pointIsInField(field.value(), position, rtt::ai::Constants::ROBOT_RADIUS());
-    //    return theirDefenseArea.contains(position) || (avoidObjects.shouldAvoidDefenseArea && ourDefenseArea.contains(position));
     return field.rightDefenseArea.contains(position) || (avoidObjects.shouldAvoidDefenseArea && field.leftDefenseArea.contains(position)) ||
            (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(position));
 }

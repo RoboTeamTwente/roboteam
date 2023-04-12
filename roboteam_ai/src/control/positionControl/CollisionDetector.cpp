@@ -55,7 +55,7 @@ void CollisionDetector::updateTimeline(const std::vector<RobotView>& robots, con
     }
 }
 
-void CollisionDetector::setField(rtt::Field newField) { field = std::move(newField); }
+void CollisionDetector::setField(const rtt::Field newField) { field = std::move(newField); }
 
 void CollisionDetector::updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId) {
     int pathLength = static_cast<int>(path.size());

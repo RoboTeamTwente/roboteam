@@ -21,34 +21,23 @@ class PositionControlUtils {
 
     constexpr static const double MIN_OUR_ROBOT_DISTANCE_MOVING = 3 * ai::Constants::ROBOT_RADIUS_MAX();
 
-    constexpr static const double MAX_TARGET_DEVIATION = 0.05;
-    constexpr static const double MIN_DISTANCE_TO_TARGET = 0.05;
     constexpr static const double POSITION_TOLERANCE_DISTANCE = 0.05;
     constexpr static const double MAX_STALE_VELOCITY = 0.05;
 
-
-//    /**
-//     * If the distance between the old target and the new target > MAX_TARGET_DEVIATION
-//     * @param targetPos
-//     * @param oldTarget
-//     * @return
-//     */
-//    static bool hasTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget);
-//
-//    /**
-//     * The target is considered to be reached if the distance between target and currentPosition < MIN_DISTANCE_TO_TARGET
-//     * @param targetPos
-//     * @param currentPosition
-//     * @return
-//     */
-//    static bool isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition);
-
-
+    /**
+     * Checks if two 2D vectors are within a certain distance tolerance.
+     * @param pos1 The first 2D vector to compare.
+     * @param pos2 The second 2D vector to compare.
+     * @return True if the two vectors are within the distance tolerance, False otherwise.
+     */
     static bool positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2);
 
     /**
-     * Is the target moving velocity > MAX_STALE_VELOCITY
-     * @param velocity
+     * Determines if the object is currently moving based on its velocity.
+     *
+     * @param velocity The 2D velocity of the object.
+     * @return `true` if the magnitude of the velocity is greater than zero, indicating that the object is moving;
+     * `false` otherwise.
      */
     static bool isMoving(const Vector2 &velocity);
 

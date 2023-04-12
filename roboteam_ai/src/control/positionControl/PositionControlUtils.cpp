@@ -8,8 +8,6 @@
 
 namespace rtt::ai::control {
 
-//bool PositionControlUtils::hasTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget) { return (targetPos - oldTarget).length() > MAX_TARGET_DEVIATION; }
-//bool PositionControlUtils::isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition) { return (targetPos - currentPosition).length() < MIN_DISTANCE_TO_TARGET; }
 bool PositionControlUtils::positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2) { return pos1.dist(pos2) < POSITION_TOLERANCE_DISTANCE; }
 
 bool PositionControlUtils::isMoving(const Vector2 &velocity) { return velocity.length() > MAX_STALE_VELOCITY; }

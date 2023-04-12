@@ -18,8 +18,8 @@ namespace rtt::ai::control {
 struct ScoredTrajectoryPair {
     BBTrajectory2D part1;
     BBTrajectory2D part2;
-    int part1CutoffIndex;
-    int cost;
+    int part1CutoffIndex = 0;
+    int cost = -1;
 };
 
 /**
@@ -30,7 +30,7 @@ class PathPlanning {
     // Distance between robot and intermediate point (fieldWidth / RADIUS_OFFSETS)
     static constexpr std::array<int, 3> RADIUS_OFFSETS = {8, 4, 2};
     // How many intermediate points to generate per given radius offset
-    static constexpr int POINTS_PER_CIRCLE = 6;
+    static constexpr int POINTS_PER_CIRCLE = 8;
     static constexpr int POINTS_COUNT = RADIUS_OFFSETS.size() * POINTS_PER_CIRCLE;
 
     // By how much to rotate the intermediate on a given radius offset
@@ -51,6 +51,15 @@ class PathPlanning {
      */
     [[nodiscard]] static int scorePath(double part1Duration, double part2Duration, std::optional<double> collisionTime);
 
+    /**
+     * \brief Calculates the trajectory of an object and performs collision detection.
+     *
+     * @param stepOffset The number of steps to offset the trajectory time for collision detection
+     *                   (e.g. when generating trajectories that do not originate in current robot position).
+     * @param forState State of the robot at the start of the path
+     * @param forInput Information from STP about the robot
+     * @return A pair consisting of the calculated 2D bang-bang trajectory and an optional collision time.
+     */
     [[nodiscard]] std::pair<BBTrajectory2D, std::optional<double>> calculateTrajectoryWithCollisionDetection(int stepOffset, const StateVector& forState, const PositionControlInput& forInput) const;
 
     /**
@@ -66,13 +75,28 @@ class PathPlanning {
     [[nodiscard]] ScoredTrajectoryPair searchBestTrajectoryToIntermediatePoint(const BBTrajectory2D& directTrajectory, int directTrajectoryCost, const PositionControlInput& input, const Vector2& intermediatePoint) const;
 
     /**
-     * \brief Generates vector of intermediate points
-     * @param center Intermediate points are generated around this point
+     * \brief Generates an array of intermediate 2D vectors based on a center point.
+     *
+     * @param center The center point used to generate the intermediate points.
+     * @return An array of `Vector2` objects representing the intermediate points.
+     *
      */
     [[nodiscard]] std::array<Vector2, PathPlanning::POINTS_COUNT> generateIntermediatePoints(const Vector2& center) const;
 
+    /**
+     * \brief Fills a path buffer with state vectors from a scored trajectory pair.
+     *
+     * @param pathBuffer The path buffer to fill with state vectors.
+     * @param trajectoryPair The scored trajectory pair to extract state vectors from.
+     */
     static void fillPathBuffer(std::vector<StateVector>& pathBuffer, const ScoredTrajectoryPair& trajectoryPair);
 
+    /**
+     * \brief Fills a path buffer with state vectors based on bang-bang trajectory.
+     *
+     * @param pathBuffer The path buffer to fill with state vectors.
+     * @param trajectory The 2D bang-bang trajectory to generate the state vectors from.
+     */
     static void fillPathBuffer(std::vector<StateVector>& pathBuffer, const BBTrajectory2D& trajectory);
 
    public:

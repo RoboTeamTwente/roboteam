@@ -13,7 +13,7 @@ namespace rtt::ai::control {
 
 std::optional<Position> PositionControl::computeNextPosition(const PositionControlInput& input, stp::PIDType pidType) noexcept {
     if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects)) {
-        RTT_WARNING("Target position is occupied by a moving object, cannot compute path to target position")
+        RTT_WARNING("Target position is occupied by a moving object, cannot compute path to target position", input.targetPos, input.robotId)
         return std::nullopt;
     }
 

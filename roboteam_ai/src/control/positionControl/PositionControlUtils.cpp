@@ -8,7 +8,7 @@
 
 namespace rtt::ai::control {
 
-bool PositionControlUtils::positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2) { return pos1.dist(pos2) < POSITION_TOLERANCE_DISTANCE; }
+bool PositionControlUtils::positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2) { return pos1.dist(pos2) < stp::control_constants::GO_TO_POS_ERROR_MARGIN; }
 
 bool PositionControlUtils::isMoving(const Vector2 &velocity) { return velocity.length() > MAX_STALE_VELOCITY; }
 

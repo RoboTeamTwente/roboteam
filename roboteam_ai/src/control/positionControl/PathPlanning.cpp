@@ -27,8 +27,16 @@ void PathPlanning::generateNewPath(std::vector<StateVector>& pathBuffer, const P
         return;
     }
 
+    //TODO: Does this produces better results than the old method? (input.state.position)?
+    // fieldHeight vs fieldWidth?
+    auto firstCollision = directTrajectory.getPosition(directTrajectoryCollision.value());
+    float pointExtension = fieldHeight / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
+    Vector2 pointToDrawFrom = firstCollision + (firstCollision - input.targetPos).normalize() * pointExtension;
+
+
+
     int directTrajectoryCost = scorePath(directTrajectory.getTotalTime(), 0, directTrajectoryCollision);
-    const auto points = generateIntermediatePoints(input.state.position);
+    const auto points = generateIntermediatePoints(pointToDrawFrom);
     auto trajectories = std::array<ScoredTrajectoryPair, POINTS_COUNT>();
 
     std::transform(points.begin(), points.end(), trajectories.begin(), [&](const Vector2& point) {
@@ -44,7 +52,7 @@ std::array<Vector2, PathPlanning::POINTS_COUNT> PathPlanning::generateIntermedia
     auto intermediatePoints = std::array<Vector2, POINTS_COUNT>();
     for (int radiusOffset = 0; radiusOffset < static_cast<int>(RADIUS_OFFSETS.size()); radiusOffset++) {
         auto pointToRotate = (
-            center + Vector2{0, fieldWidth / RADIUS_OFFSETS[radiusOffset]}
+            center + Vector2{0, fieldHeight / RADIUS_OFFSETS[radiusOffset]}
         ).rotateAroundPoint(radiusOffset * ROTATE_OFFSET, center);
 
         for (int pointOffset = 0; pointOffset < POINTS_PER_CIRCLE; pointOffset++) {
@@ -139,7 +147,10 @@ void PathPlanning::fillPathBuffer(std::vector<StateVector>& pathBuffer, const BB
     }
 }
 
-void PathPlanning::updateConstraints(const rtt::Field& field) { fieldWidth = field.playArea.width(); }
+void PathPlanning::updateConstraints(const rtt::Field& field) {
+    fieldWidth = field.playArea.width();
+    fieldHeight = field.playArea.height();
+}
 
 }  // namespace rtt::ai::control
 #endif  // RTT_PATHPLANNING_H

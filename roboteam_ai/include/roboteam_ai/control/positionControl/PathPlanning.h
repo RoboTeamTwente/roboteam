@@ -42,6 +42,7 @@ class PathPlanning {
 
     const CollisionDetector& collisionDetector;
     double fieldWidth;
+    double fieldHeight;
 
     /**
      * \brief Calculates the score of given trajectory. Lower score indicated better path (e.g score = 100 is better than score = 150)

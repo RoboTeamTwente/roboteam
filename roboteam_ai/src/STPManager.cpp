@@ -11,11 +11,11 @@
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
+#include "utilities/WebSocketManager.h"
 
 /**
  * Plays are included here
  */
-#include "stp/plays/referee_specific/FormationPreHalf.h"
 #include "stp/plays/defensive/DefendPass.h"
 #include "stp/plays/defensive/DefendShot.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
@@ -79,7 +79,7 @@ void STPManager::start(std::atomic_bool& exitApplication) {
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
+//    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());
@@ -114,10 +114,15 @@ void STPManager::start(std::atomic_bool& exitApplication) {
                 },
                 fpsUpdateRate);
 
+            stpTimer.limit([&]() {
+                rtt::ai::io::WebSocketManager::instance().broadcastWorld();
+            },60);
+
             // If this is primary AI, broadcast settings every second
             if (SETTINGS.isPrimaryAI()) {
                 stpTimer.limit([&]() { io::io.publishSettings(SETTINGS); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
+
             if(exitApplication){
                 stpTimer.stop();
             }
@@ -190,6 +195,7 @@ void STPManager::decidePlay(world::World *_world) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
+    rtt::ai::io::WebSocketManager::instance().broadcastPlay(currentPlay);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

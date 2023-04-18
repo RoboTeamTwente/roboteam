@@ -2,6 +2,7 @@
 
 #include "STPManager.h"
 #include "utilities/IOManager.h"
+#include "utilities/WebSocketManager.h"
 #include "world/World.hpp"
 
 namespace ui = rtt::ai::interface;
@@ -51,6 +52,8 @@ int main(int argc, char* argv[]) {
              "                                           ")
 
     RTT_DEBUG("Debug prints enabled")
+
+    rtt::ai::io::WebSocketManager& wsm = rtt::ai::io::WebSocketManager::instance();
 
     rtt::ai::Constants::init();
 

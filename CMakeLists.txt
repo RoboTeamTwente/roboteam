@@ -12,6 +12,7 @@ include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing
 include(GetTracy) # For profiling
+include(GetIXWebSocket) # For networking between AI and Interface
 
 # Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
 include(GoogleTest)

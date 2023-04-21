@@ -5,9 +5,11 @@
 #ifndef RTT_WEBSOCKETMANAGER_H
 #define RTT_WEBSOCKETMANAGER_H
 
+#include <span>
 #include <world/World.hpp>
 
 #include "ixwebsocket/IXWebSocketServer.h"
+#include "proto/NewInterface.pb.h"
 #include "stp/Play.hpp"
 
 namespace rtt::ai::io {
@@ -17,18 +19,31 @@ namespace rtt::ai::io {
 
 class WebSocketManager {
    public:
-    static WebSocketManager& instance();
-    void broadcastWorld();
-    void broadcastPlay(stp::Play* play);
+    using PlaySpan = std::span<std::unique_ptr<rtt::ai::stp::Play>>;
+    using OnMessageCallback = std::function<void(const proto::InterfaceMessageEnvelope)>;
 
-   private:
-    WebSocketManager();
-    static std::string WebSocketMessageTypeToString(ix::WebSocketMessageType type);
-    ix::WebSocketServer webSocketServer;
+    static WebSocketManager& instance();
+
+    void broadcastWorld();
+    void broadcastPlay(stp::Play* selectedPlay, PlaySpan plays);
+    void broadcastDrawings();
+    void broadcastSetupMessage(PlaySpan plays);
+    void waitForConnection();
+
+    void setOnMessageCallback(OnMessageCallback callback);
+
 
    public:
     WebSocketManager(WebSocketManager const&) = delete;
     void operator=(WebSocketManager const&) = delete;
+
+   private:
+    WebSocketManager();
+    void sendMessage(const google::protobuf::Message& message, std::basic_string<char> messageType);
+    std::optional<OnMessageCallback> onMessageCallback;
+
+    static std::string WebSocketMessageTypeToString(ix::WebSocketMessageType type);
+    ix::WebSocketServer webSocketServer;
 };
 
 }

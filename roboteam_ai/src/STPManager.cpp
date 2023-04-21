@@ -92,6 +92,25 @@ void STPManager::start(std::atomic_bool& exitApplication) {
         }
     }
 
+    auto &wss = rtt::ai::io::WebSocketManager::instance();
+    wss.broadcastSetupMessage(plays);
+    wss.setOnMessageCallback([](auto message) {
+        switch (message.kind_case()) {
+            case proto::InterfaceMessageEnvelope::kSetPlay:
+                RTT_INFO("Play set to: ", message.setplay().playname())
+                ai::stp::PlayDecider::lockInterfacePlay(
+                    std::find_if(plays.begin(), plays.end(), [&message](auto &play) { return play->getName() == message.setplay().playname(); })->get());
+                ai::interface::Output::setRuleSetName(message.setplay().rulesetname());
+                break;
+            case proto::InterfaceMessageEnvelope::kSetGameSettings:
+                ai::interface::Output::setUseRefereeCommands(message.setgamesettings().usereferee());
+                SETTINGS.setLeft(message.setgamesettings().isleft());
+                SETTINGS.setYellow(message.setgamesettings().isyellow());
+                SETTINGS.setRobotHubMode(message.setgamesettings().hubmode() == proto::SetGameSettings::BASESTATION ? Settings::RobotHubMode::BASESTATION: Settings::RobotHubMode::SIMULATOR);
+                break;
+        }
+    });
+
     int amountOfCycles = 0;
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
@@ -114,16 +133,14 @@ void STPManager::start(std::atomic_bool& exitApplication) {
                 },
                 fpsUpdateRate);
 
-            stpTimer.limit([&]() {
-                rtt::ai::io::WebSocketManager::instance().broadcastWorld();
-            },60);
+            stpTimer.limit([&]() { rtt::ai::io::WebSocketManager::instance().broadcastWorld(); }, 60);
 
             // If this is primary AI, broadcast settings every second
             if (SETTINGS.isPrimaryAI()) {
                 stpTimer.limit([&]() { io::io.publishSettings(SETTINGS); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
 
-            if(exitApplication){
+            if (exitApplication) {
                 stpTimer.stop();
             }
         },
@@ -140,7 +157,6 @@ void STPManager::runOneLoopCycle() {
         // Note these calls Assume the proto field exist. Otherwise, all fields and subfields are initialized as empty!!
         auto worldMessage = state.last_seen_world();
         auto fieldMessage = state.field().field();
-
 
         std::vector<proto::SSL_WrapperPacket> vision_packets(state.processed_vision_packets().begin(), state.processed_vision_packets().end());
         if (!SETTINGS.isLeft()) {
@@ -195,7 +211,7 @@ void STPManager::decidePlay(world::World *_world) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
-    rtt::ai::io::WebSocketManager::instance().broadcastPlay(currentPlay);
+    rtt::ai::io::WebSocketManager::instance().broadcastPlay(currentPlay, plays);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

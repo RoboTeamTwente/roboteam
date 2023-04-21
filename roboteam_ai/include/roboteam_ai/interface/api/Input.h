@@ -13,6 +13,7 @@
 #include <tuple>
 
 #include "Toggles.h"
+#include "proto/NewInterface.pb.h"
 
 namespace rtt::ai::interface {
 
@@ -52,6 +53,7 @@ class Input {
 
    private:
     static std::vector<Drawing> drawings;
+    static std::vector<proto::Drawing> protoDrawings;
     static std::mutex drawingMutex;
     static std::mutex fpsMutex;
     static int FPS;

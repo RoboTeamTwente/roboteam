@@ -4,9 +4,12 @@
 
 #include "interface/api/Input.h"
 
+
 namespace rtt::ai::interface {
 
 // declare static variables
+std::vector<proto::Drawing> Input::protoDrawings;
+
 std::vector<Drawing> Input::drawings;
 std::mutex Input::drawingMutex;
 std::mutex Input::fpsMutex;
@@ -35,6 +38,9 @@ void Input::setFps(int fps) {
     FPS = fps;
 }
 
-Input::Input() { drawings.reserve(10000); }
+Input::Input() {
+    drawings.reserve(10000);
+    protoDrawings.reserve(10000);
+}
 
 }  // namespace rtt::ai::interface

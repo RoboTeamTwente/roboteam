@@ -1,0 +1,94 @@
+syntax = "proto3";
+import "World.proto";
+import "State.proto";
+import "Vector2f.proto";
+
+package proto;
+
+message Drawing {
+    uint32 retainForTicks = 1;
+    string label = 2;
+    string color = 3;
+    string method = 4;
+    repeated Vector2f points = 5;
+}
+
+message STPStatus {
+    message STPRobot {
+        enum Status {
+            Waiting = 0;
+            Success = 1;
+            Failure = 2;
+            Running = 3;
+        };
+
+        message Role {
+            string name = 1;
+            Status status = 2;
+        };
+
+        message Tactic {
+            string name = 1;
+            Status status = 2;
+        };
+
+        message Skill {
+            string name = 1;
+            Status status = 2;
+        };
+
+        uint32 id = 1;
+        Role role = 2;
+        Tactic tactic = 3;
+        Skill skill = 4;
+    }
+
+    message ScoredPlay {
+        string playName = 1;
+        uint32 playScore = 2;
+    }
+
+    ScoredPlay selectedPlay = 2;
+    map<int32, STPRobot> robots = 3;
+    repeated ScoredPlay scoredPlays = 4;
+}
+
+
+message SetupMessage {
+    repeated string availablePlays = 1;
+    repeated string availableRulesets = 2;
+}
+
+message MessageEnvelope {
+    oneof kind {
+        STPStatus stpStatus = 1;
+        SetupMessage setupMessage = 2;
+        State state = 3;
+    }
+}
+
+message SetPlay {
+    string playName = 1;
+    string rulesetName = 2;
+}
+
+message SetGameSettings {
+    enum RobotHubMode {
+        UNKNOWN = 0;
+        BASESTATION = 1;
+        SIMULATOR = 2;
+    }
+
+    bool useReferee = 1;
+    bool ignoreInvariants = 2;
+    RobotHubMode hubMode = 3; // true == simulator, false == basestation
+    bool isLeft = 4;
+    bool isYellow = 5;
+}
+
+message InterfaceMessageEnvelope {
+    oneof kind {
+        SetPlay setPlay = 1;
+        SetGameSettings setGameSettings = 2;
+    }
+}

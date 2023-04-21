@@ -22,7 +22,7 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "Handshake.proto"
     "AIData.proto"
     "RobotProcessedFeedback.proto"
-    "PlayData.proto"
+    "NewInterface.proto"
 )
 
 add_library(roboteam_networking_proto STATIC "${NET_PROTO_SRCS}" "${NET_PROTO_HDRS}")

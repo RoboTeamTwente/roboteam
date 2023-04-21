@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
     RTT_DEBUG("Debug prints enabled")
 
     rtt::ai::io::WebSocketManager& wsm = rtt::ai::io::WebSocketManager::instance();
+    wsm.waitForConnection();
 
     rtt::ai::Constants::init();
 

@@ -3,9 +3,11 @@ import {useWorldStateStore} from "../stores/world-store";
 import {computed} from "vue";
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {useUIStore} from "../stores/ui-store";
 
-const worldStore = useWorldStateStore()
-const gameSettingStore = useGameSettingsStore()
+const worldStore = useWorldStateStore();
+const uiStore = useUIStore();
+const gameSettingStore = useGameSettingsStore();
 
 const formatFloat = (pos?: number): string => {
   if (pos === undefined || pos === null) {
@@ -28,9 +30,11 @@ const robots = computed(() => {
 <template>
   <div class="grid grid-cols-fluid-12  gap-2 ">
     <template v-for="(robot, id) in robots" :key="id">
-      <div class="bg-base-200 p-2 rounded-xl border border-base-300">
+      <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
+        'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id)
+      }">
         <div class="flex flex-wrap gap-1 mb-2">
-          <div class="badge badge-sm badge-primary">
+          <div class="badge badge-sm">
             <font-awesome-icon icon="robot" class="w-3 h-3 mr-1"/>{{id}}
           </div>
           <div class="badge badge-sm badge-secondary  tooltip tooltip-bottom" data-tip="Battery level">

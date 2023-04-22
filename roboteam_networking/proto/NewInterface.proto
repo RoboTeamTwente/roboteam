@@ -6,10 +6,26 @@ import "Vector2f.proto";
 package proto;
 
 message Drawing {
+    enum Method {
+        LINES_CONNECTED = 0;
+        DOTS = 1;
+    }
+
+    enum Color {
+        RED = 0;
+        GREEN = 1;
+        BLUE = 2;
+        YELLOW = 3;
+        CYAN = 4;
+        MAGENTA = 5;
+        WHITE = 6;
+        BLACK = 7;
+    }
+
     uint32 retainForTicks = 1;
     string label = 2;
-    string color = 3;
-    string method = 4;
+    Color color = 3;
+    Method method = 4;
     repeated Vector2f points = 5;
 }
 
@@ -53,7 +69,6 @@ message STPStatus {
     repeated ScoredPlay scoredPlays = 4;
 }
 
-
 message SetupMessage {
     repeated string availablePlays = 1;
     repeated string availableRulesets = 2;
@@ -64,6 +79,7 @@ message MessageEnvelope {
         STPStatus stpStatus = 1;
         SetupMessage setupMessage = 2;
         State state = 3;
+        Drawing drawing = 4;
     }
 }
 

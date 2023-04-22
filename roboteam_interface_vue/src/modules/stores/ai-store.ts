@@ -9,8 +9,7 @@ export type AiStore = {
     play: string,
     ruleset: string,
     availablePlays: string[],
-    availableRulesets: string[],
-
+    availableRulesets: string[]
     playHistory: string[],
 }
 export const useAIStore = defineStore('aiStore', {

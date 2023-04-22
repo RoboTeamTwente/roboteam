@@ -32,6 +32,8 @@ class WebSocketManager {
 
     void setOnMessageCallback(OnMessageCallback callback);
 
+    void directDraw(std::basic_string<char> label, proto::Drawing::Color color, proto::Drawing::Method method, std::span<Vector2> points, int retainForTicks);
+
 
    public:
     WebSocketManager(WebSocketManager const&) = delete;

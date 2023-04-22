@@ -7,11 +7,14 @@ import {useWebSocket} from "@vueuse/core";
 import {proto} from "../generated/proto"
 import {GameSettingsStore, useGameSettingsStore} from "../modules/stores/game-settings-store";
 import RobotHubMode = proto.SetGameSettings.RobotHubMode;
+import {useVisualizationStore} from "../modules/stores/visualization-store";
 
 export const useAIClient = (url: string) => {
     const worldStore = useWorldStateStore();
     const stpStore = useSTPStore();
     const aiStore = useAIStore();
+    const visualizerStore = useVisualizationStore();
+
     const gameSettingsStore = useGameSettingsStore();
 
     const {ws, status, data, send} = useWebSocket(url, {
@@ -57,6 +60,9 @@ export const useAIClient = (url: string) => {
                 }
 
                 worldStore.pushNewState(envelope.state!!);
+                break;
+            case 'drawing':
+                visualizerStore.addDrawing(envelope.drawing!);
                 break;
             default:
                 console.log('unknown message', envelope);

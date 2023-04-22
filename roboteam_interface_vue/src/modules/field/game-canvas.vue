@@ -1,88 +1,37 @@
 <script setup lang="ts">
-import {Application, Container, Graphics, Text} from "pixi.js";
-import {computed, markRaw, onBeforeUpdate, onMounted, onUnmounted, onUpdated, ref, watch} from "vue";
-import {BallDrawing, CanvasSettings, Colors, RobotDrawing, Size} from "./FieldObjects";
+import {
+  Application,
+  Container,
+  Text,
+} from "pixi.js";
+import {onMounted, onUnmounted, ref, toRaw, watch} from "vue";
+import {
+  BallDrawing,
+  Colors,
+  FieldDrawing,
+  RobotDrawing,
+  ShapeDrawing,
+  initFieldObjectStorage
+} from "./FieldObjects";
 import {useWorldStateStore} from "../stores/world-store";
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {proto} from "../../generated/proto";
 import IWorldRobot = proto.IWorldRobot;
-import ISSL_GeometryData = proto.ISSL_GeometryData;
-import IVector2 = proto.IVector2;
+import {useUIStore} from "../stores/ui-store";
+import {useVisualizationStore} from "../stores/visualization-store";
 
 const props = defineProps<{
-  size: Size;
+  field: proto.ISSL_GeometryFieldSize;
 }>();
 
-let center: IVector2 = {x: 0, y: 0};
-
-const mousePos = ref<IVector2>({x: 0, y: 0});
 const canvas = ref<HTMLCanvasElement | null>(null);
 const worldStore = useWorldStateStore();
 const gameStore = useGameSettingsStore();
+const uiStore = useUIStore();
+const visualizationStore = useVisualizationStore();
 
-// TODO: Clean them on prop update
 let app: null | Application = null;
-let fieldGeometryLayer = new Container();
-let movingObjectsLayer = new Container();
-let cursor = new Text("", {fontSize: 16, fill: 'white'});
-cursor.anchor.set(0, 1.5);
-
-let drawings = markRaw({
-  blueRobots: new Map<number, RobotDrawing>(),
-  yellowRobots: new Map<number, RobotDrawing>(),
-  ball: {} as BallDrawing, // Ball is initialized in onMounted, so it's not a problem
-});
-
-const colors = computed(() => {
-  return {
-    leftGoal: gameStore.$state.team === "yellow" ? Colors.yellow : Colors.blue,
-    rightGoal: gameStore.$state.team === "yellow" ? Colors.blue : Colors.yellow,
-  }
-});
-
-const flipSide = computed(() => {
-  return {
-    x: gameStore.$state.side === "left" ? 1 : -1,
-    y: gameStore.$state.side === "left" ? -1 : 1,
-  };
-});
-
-let filedBuffer: Graphics[] = [];
-
-const drawFiled = (geometryData: ISSL_GeometryData) => {
-  filedBuffer.forEach((graphics) => {graphics.destroy();});
-  filedBuffer = [];
-
-  geometryData.field.fieldLines?.forEach((line) => {
-    // console.log(line.name)
-    const graphics = new Graphics();
-    let color = 'white';
-    let thickness = 1;
-    if (line.name === "LeftGoalDepthLine") {
-      color = colors.value.leftGoal
-      thickness = 2;
-    }
-
-    if (line.name === "RightGoalDepthLine") {
-      color = colors.value.rightGoal
-      thickness = 2;
-    }
-
-    graphics.lineStyle(thickness, color, 1);
-    graphics.moveTo(center.x  + line.p1!.x!  / 1000 * 100, center.y + line.p1!.y!  / 1000 * 100);
-    graphics.lineTo(center.x  + line.p2!.x!  / 1000 * 100, center.y + line.p2!.y!  / 1000 * 100);
-    filedBuffer.push(graphics);
-    fieldGeometryLayer.addChild(graphics);
-  });
-
-  geometryData.field.fieldArcs?.forEach((arc) => {
-    const graphics = new Graphics();
-    graphics.lineStyle(1, 'white', 1);
-    graphics.arc(center.x  + arc.center!.x!  / 1000 * 100, center.y + arc.center!.y!  / 1000 * 100, arc.radius!  / 1000 * 100, 0, 2 * Math.PI);
-    filedBuffer.push(graphics);
-    fieldGeometryLayer.addChild(graphics);
-  });
-};
+let {layers, drawings} = initFieldObjectStorage();
 
 // Clear drawings when team changes
 watch(() => gameStore.team, () => {
@@ -90,76 +39,100 @@ watch(() => gameStore.team, () => {
   drawings.blueRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
   drawings.yellowRobots.clear()
   drawings.blueRobots.clear()
+
+  layers.fieldGeometry.removeChildren(0).forEach((child) => child.destroy());
+  layers.fieldGeometry.addChild(new FieldDrawing({
+    fieldGeometry: props.field,
+    fieldColors: toRaw(gameStore.goalColor),
+  }));
 });
 
 const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, team: 'yellow' | 'blue') => {
   const robotId = robot.id ?? -1;
   if (!drawingsMap.has(robotId)) {
     const drawing = new RobotDrawing({
-      canvasCenter: center,
       team: team,
-      text: gameStore.team == team ? robotId.toString() : undefined,
+      text: robotId.toString(),
+      onClick: team == gameStore.team
+          ? () => uiStore.toggleRobotSelection(robotId)
+          : undefined,
     });
 
-    movingObjectsLayer.addChild(drawing);
+    layers.movingObjects.addChild(drawing);
     drawingsMap.set(robotId, drawing);
   }
   const drawing = drawingsMap.get(robotId)!;
-  drawing.moveOnField(flipSide.value.x * robot.pos!.x!, flipSide.value.y * robot.pos!.y!, robot.angle ?? 0);
+  drawing.toggleSelection(toRaw(uiStore.isaRobotSelected(robotId)) && team == gameStore.team);
+  drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + (-robot.angle ?? 0));
 }
 
-onUpdated(async () => {
-
+onMounted(async () => {
   app = new Application({
-    width: props.size.width * 1.15,
-    height: props.size.height * 1.15,
-    backgroundColor: CanvasSettings.backgroundColor,
+    width: worldStore.latest?.field?.field?.fieldLength! / 10 * 1.15,
+    height: worldStore.latest?.field?.field?.fieldWidth! / 10 * 1.15,
+    backgroundColor: Colors.backgroundColor,
     view: canvas.value!
   });
 
+  // Init field geometry drawings
+  layers.fieldGeometry.addChild(new FieldDrawing({
+    fieldGeometry: props.field,
+    fieldColors: toRaw(gameStore.goalColor),
+  }));
 
-  center = {x: app.screen.width / 2, y: app.screen.height / 2};
-  drawings.ball = new BallDrawing(center);
-  movingObjectsLayer.addChild(drawings.ball!);
+  // Init cursor position text
+  const cursor = new Text("", {fontSize: 16, fill: 'white'});
+  cursor.x = app.screen.width * 0.025;
+  cursor.y = app.screen.height * 0.025;
 
-  app.stage.addChild(fieldGeometryLayer);
-  app.stage.addChild(movingObjectsLayer);
-  app.stage.addChild(cursor);
+  // Init ball drawing
+  drawings.ball = new BallDrawing();
+  layers.movingObjects.addChild(drawings.ball!);
 
+  // this puts the (0, 0) coordinates to the center of the stage
+  const container = new Container();
+  container.x = app.screen.width / 2;
+  container.y = app.screen.height / 2;
+
+  // Add layers to the stage (ORDER MATTERS)
+  app.stage.addChild(container);
+  container.addChild(layers.fieldGeometry, layers.movingObjects, layers.shapeLayer);
+  app.stage.addChild(cursor)
+
+  // Setup mouse position text
+  app.stage.interactive = true;
+  app.stage.hitArea = app.screen;
+  app.stage.addEventListener('pointerleave', () => {cursor.text = "";});
+  app.stage.addEventListener('pointermove', (e) => {
+    const pos = e.getLocalPosition(container);
+    cursor.text = `[${((pos.x) / 100).toFixed(2)}x, ${((pos.y) / 100).toFixed(2)}y]`
+  });
+
+  // Update the translation and projection matrices every frame
   app.ticker.add(() => {
     const world = worldStore.latest?.lastSeenWorld;
     if (world === null || world === undefined) {return;}
 
-    drawFiled(worldStore.latest!.field!);
+    // Update robot drawings
+    world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, 'yellow'))
+    world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, 'blue'))
 
-    for (let robot of world.yellow!) {
-      updateRobotDrawing(drawings.yellowRobots, robot, 'yellow');
-    }
+    // Update ball drawing
+    drawings.ball.moveOnField(gameStore.fieldOrientation.x * world!.ball!.pos!.x!, gameStore.fieldOrientation.y * world.ball!.pos!.y!);
 
-    for (let robot of world.blue!) {
-      updateRobotDrawing(drawings.blueRobots, robot, 'blue');
-    }
-    // drawFiled(worldStore.latest!.field!);
-    drawings.ball.moveOnField(flipSide.value.x * world!.ball!.pos!.x!, flipSide.value.y * world.ball!.pos!.y!);
+    // Update shape drawings
+    drawings.shapes.removeExpiredShapes();
+    visualizationStore
+        .popAll()
+        .forEach(props => {
+            const shape = new ShapeDrawing({data: props});
+            layers.shapeLayer.addChild(shape);
+            drawings.shapes.set(props.label!, shape); // Drawings map will automatically call destroy on the old shape
+    });
   });
-
-  app.stage.interactive = true;
-  app.stage.hitArea = app.screen;
-
-  app.stage.addEventListener('pointerleave', (e) => {cursor.text = "";});
-  app.stage.addEventListener('pointermove', (e) => {
-    cursor.position.copyFrom(e.global);
-    cursor.text = `[${((center.x - e.data.global.x) / 100).toFixed(2)}x, ${((center.y - e.data.global.y) / 100).toFixed(2)}y]`
-
-  });
-
-
 });
 
-onUnmounted(async () => {
-  // listener();
-  app?.destroy();
-});
+onUnmounted(async () => app?.destroy());
 
 </script>
 <template>

@@ -6,6 +6,7 @@
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
 #include "roboteam_utils/Print.h"
+#include "utilities/WebSocketManager.h"
 
 namespace rtt::ai::control {
 RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
@@ -20,6 +21,9 @@ RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int r
     if (shouldRecalculatePath(currentPosition, targetPosition, currentVelocity, robotId)) {
         computedPaths[robotId] = pathPlanningAlgorithm.computePath(currentPosition, targetPosition);
     }
+//    rtt::ai::io::WebSocketManager::instance().directDraw(
+//        "path", "blue", "dots", computedPaths[robotId], 1
+//    );
     //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
     //interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
     //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::blue, robotId, interface::Drawing::DOTS);
@@ -77,6 +81,18 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             computedPathsPosVel[robotId].push_back(std::make_pair(computedPaths[robotId][i], computedPathsVel[robotId][i]));
         }
     }
+
+    rtt::ai::io::WebSocketManager::instance().directDraw(
+        "path_lines" + std::to_string(robotId), proto::Drawing::WHITE, proto::Drawing::LINES_CONNECTED, computedPaths[robotId], 5
+    );
+
+    rtt::ai::io::WebSocketManager::instance().directDraw(
+        "path_dots" + std::to_string(robotId), proto::Drawing::MAGENTA, proto::Drawing::DOTS, computedPaths[robotId], 5
+    );
+
+//    rtt::ai::io::WebSocketManager::instance().directDraw(
+//        "path", "blue", "dots", computedPaths[robotId], 1
+//    );
 
     //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::yellow, robotId, interface::Drawing::LINES_CONNECTED);
     //interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::darkMagenta, robotId, interface::Drawing::LINES_CONNECTED);

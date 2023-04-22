@@ -3802,6 +3802,432 @@ export const proto = $root.proto = (() => {
         return UiValues;
     })();
 
+    proto.Drawing = (function() {
+
+        /**
+         * Properties of a Drawing.
+         * @memberof proto
+         * @interface IDrawing
+         * @property {number|null} [retainForTicks] Drawing retainForTicks
+         * @property {string|null} [label] Drawing label
+         * @property {proto.Drawing.Color|null} [color] Drawing color
+         * @property {proto.Drawing.Method|null} [method] Drawing method
+         * @property {Array.<proto.IVector2f>|null} [points] Drawing points
+         */
+
+        /**
+         * Constructs a new Drawing.
+         * @memberof proto
+         * @classdesc Represents a Drawing.
+         * @implements IDrawing
+         * @constructor
+         * @param {proto.IDrawing=} [properties] Properties to set
+         */
+        function Drawing(properties) {
+            this.points = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Drawing retainForTicks.
+         * @member {number} retainForTicks
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.retainForTicks = 0;
+
+        /**
+         * Drawing label.
+         * @member {string} label
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.label = "";
+
+        /**
+         * Drawing color.
+         * @member {proto.Drawing.Color} color
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.color = 0;
+
+        /**
+         * Drawing method.
+         * @member {proto.Drawing.Method} method
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.method = 0;
+
+        /**
+         * Drawing points.
+         * @member {Array.<proto.IVector2f>} points
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.points = $util.emptyArray;
+
+        /**
+         * Creates a new Drawing instance using the specified properties.
+         * @function create
+         * @memberof proto.Drawing
+         * @static
+         * @param {proto.IDrawing=} [properties] Properties to set
+         * @returns {proto.Drawing} Drawing instance
+         */
+        Drawing.create = function create(properties) {
+            return new Drawing(properties);
+        };
+
+        /**
+         * Encodes the specified Drawing message. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @function encode
+         * @memberof proto.Drawing
+         * @static
+         * @param {proto.IDrawing} message Drawing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Drawing.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.retainForTicks != null && Object.hasOwnProperty.call(message, "retainForTicks"))
+                writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.retainForTicks);
+            if (message.label != null && Object.hasOwnProperty.call(message, "label"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.label);
+            if (message.color != null && Object.hasOwnProperty.call(message, "color"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.color);
+            if (message.method != null && Object.hasOwnProperty.call(message, "method"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.method);
+            if (message.points != null && message.points.length)
+                for (let i = 0; i < message.points.length; ++i)
+                    $root.proto.Vector2f.encode(message.points[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Drawing message, length delimited. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.Drawing
+         * @static
+         * @param {proto.IDrawing} message Drawing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Drawing.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Drawing message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.Drawing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.Drawing} Drawing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Drawing.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Drawing();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.retainForTicks = reader.uint32();
+                        break;
+                    }
+                case 2: {
+                        message.label = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.color = reader.int32();
+                        break;
+                    }
+                case 4: {
+                        message.method = reader.int32();
+                        break;
+                    }
+                case 5: {
+                        if (!(message.points && message.points.length))
+                            message.points = [];
+                        message.points.push($root.proto.Vector2f.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Drawing message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.Drawing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.Drawing} Drawing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Drawing.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Drawing message.
+         * @function verify
+         * @memberof proto.Drawing
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Drawing.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
+                if (!$util.isInteger(message.retainForTicks))
+                    return "retainForTicks: integer expected";
+            if (message.label != null && message.hasOwnProperty("label"))
+                if (!$util.isString(message.label))
+                    return "label: string expected";
+            if (message.color != null && message.hasOwnProperty("color"))
+                switch (message.color) {
+                default:
+                    return "color: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    break;
+                }
+            if (message.method != null && message.hasOwnProperty("method"))
+                switch (message.method) {
+                default:
+                    return "method: enum value expected";
+                case 0:
+                case 1:
+                    break;
+                }
+            if (message.points != null && message.hasOwnProperty("points")) {
+                if (!Array.isArray(message.points))
+                    return "points: array expected";
+                for (let i = 0; i < message.points.length; ++i) {
+                    let error = $root.proto.Vector2f.verify(message.points[i]);
+                    if (error)
+                        return "points." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a Drawing message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.Drawing
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.Drawing} Drawing
+         */
+        Drawing.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.Drawing)
+                return object;
+            let message = new $root.proto.Drawing();
+            if (object.retainForTicks != null)
+                message.retainForTicks = object.retainForTicks >>> 0;
+            if (object.label != null)
+                message.label = String(object.label);
+            switch (object.color) {
+            default:
+                if (typeof object.color === "number") {
+                    message.color = object.color;
+                    break;
+                }
+                break;
+            case "RED":
+            case 0:
+                message.color = 0;
+                break;
+            case "GREEN":
+            case 1:
+                message.color = 1;
+                break;
+            case "BLUE":
+            case 2:
+                message.color = 2;
+                break;
+            case "YELLOW":
+            case 3:
+                message.color = 3;
+                break;
+            case "CYAN":
+            case 4:
+                message.color = 4;
+                break;
+            case "MAGENTA":
+            case 5:
+                message.color = 5;
+                break;
+            case "WHITE":
+            case 6:
+                message.color = 6;
+                break;
+            case "BLACK":
+            case 7:
+                message.color = 7;
+                break;
+            }
+            switch (object.method) {
+            default:
+                if (typeof object.method === "number") {
+                    message.method = object.method;
+                    break;
+                }
+                break;
+            case "LINES_CONNECTED":
+            case 0:
+                message.method = 0;
+                break;
+            case "DOTS":
+            case 1:
+                message.method = 1;
+                break;
+            }
+            if (object.points) {
+                if (!Array.isArray(object.points))
+                    throw TypeError(".proto.Drawing.points: array expected");
+                message.points = [];
+                for (let i = 0; i < object.points.length; ++i) {
+                    if (typeof object.points[i] !== "object")
+                        throw TypeError(".proto.Drawing.points: object expected");
+                    message.points[i] = $root.proto.Vector2f.fromObject(object.points[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Drawing message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.Drawing
+         * @static
+         * @param {proto.Drawing} message Drawing
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Drawing.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults)
+                object.points = [];
+            if (options.defaults) {
+                object.retainForTicks = 0;
+                object.label = "";
+                object.color = options.enums === String ? "RED" : 0;
+                object.method = options.enums === String ? "LINES_CONNECTED" : 0;
+            }
+            if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
+                object.retainForTicks = message.retainForTicks;
+            if (message.label != null && message.hasOwnProperty("label"))
+                object.label = message.label;
+            if (message.color != null && message.hasOwnProperty("color"))
+                object.color = options.enums === String ? $root.proto.Drawing.Color[message.color] === undefined ? message.color : $root.proto.Drawing.Color[message.color] : message.color;
+            if (message.method != null && message.hasOwnProperty("method"))
+                object.method = options.enums === String ? $root.proto.Drawing.Method[message.method] === undefined ? message.method : $root.proto.Drawing.Method[message.method] : message.method;
+            if (message.points && message.points.length) {
+                object.points = [];
+                for (let j = 0; j < message.points.length; ++j)
+                    object.points[j] = $root.proto.Vector2f.toObject(message.points[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this Drawing to JSON.
+         * @function toJSON
+         * @memberof proto.Drawing
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Drawing.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Drawing
+         * @function getTypeUrl
+         * @memberof proto.Drawing
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Drawing.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.Drawing";
+        };
+
+        /**
+         * Method enum.
+         * @name proto.Drawing.Method
+         * @enum {number}
+         * @property {number} LINES_CONNECTED=0 LINES_CONNECTED value
+         * @property {number} DOTS=1 DOTS value
+         */
+        Drawing.Method = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "LINES_CONNECTED"] = 0;
+            values[valuesById[1] = "DOTS"] = 1;
+            return values;
+        })();
+
+        /**
+         * Color enum.
+         * @name proto.Drawing.Color
+         * @enum {number}
+         * @property {number} RED=0 RED value
+         * @property {number} GREEN=1 GREEN value
+         * @property {number} BLUE=2 BLUE value
+         * @property {number} YELLOW=3 YELLOW value
+         * @property {number} CYAN=4 CYAN value
+         * @property {number} MAGENTA=5 MAGENTA value
+         * @property {number} WHITE=6 WHITE value
+         * @property {number} BLACK=7 BLACK value
+         */
+        Drawing.Color = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "RED"] = 0;
+            values[valuesById[1] = "GREEN"] = 1;
+            values[valuesById[2] = "BLUE"] = 2;
+            values[valuesById[3] = "YELLOW"] = 3;
+            values[valuesById[4] = "CYAN"] = 4;
+            values[valuesById[5] = "MAGENTA"] = 5;
+            values[valuesById[6] = "WHITE"] = 6;
+            values[valuesById[7] = "BLACK"] = 7;
+            return values;
+        })();
+
+        return Drawing;
+    })();
+
     proto.STPStatus = (function() {
 
         /**
@@ -5694,6 +6120,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.ISTPStatus|null} [stpStatus] MessageEnvelope stpStatus
          * @property {proto.ISetupMessage|null} [setupMessage] MessageEnvelope setupMessage
          * @property {proto.IState|null} [state] MessageEnvelope state
+         * @property {proto.IDrawing|null} [drawing] MessageEnvelope drawing
          */
 
         /**
@@ -5735,17 +6162,25 @@ export const proto = $root.proto = (() => {
          */
         MessageEnvelope.prototype.state = null;
 
+        /**
+         * MessageEnvelope drawing.
+         * @member {proto.IDrawing|null|undefined} drawing
+         * @memberof proto.MessageEnvelope
+         * @instance
+         */
+        MessageEnvelope.prototype.drawing = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MessageEnvelope kind.
-         * @member {"stpStatus"|"setupMessage"|"state"|undefined} kind
+         * @member {"stpStatus"|"setupMessage"|"state"|"drawing"|undefined} kind
          * @memberof proto.MessageEnvelope
          * @instance
          */
         Object.defineProperty(MessageEnvelope.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state"]),
+            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawing"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -5779,6 +6214,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.SetupMessage.encode(message.setupMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.state != null && Object.hasOwnProperty.call(message, "state"))
                 $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.drawing != null && Object.hasOwnProperty.call(message, "drawing"))
+                $root.proto.Drawing.encode(message.drawing, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -5823,6 +6260,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 3: {
                         message.state = $root.proto.State.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 4: {
+                        message.drawing = $root.proto.Drawing.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -5889,6 +6330,16 @@ export const proto = $root.proto = (() => {
                         return "state." + error;
                 }
             }
+            if (message.drawing != null && message.hasOwnProperty("drawing")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.Drawing.verify(message.drawing);
+                    if (error)
+                        return "drawing." + error;
+                }
+            }
             return null;
         };
 
@@ -5918,6 +6369,11 @@ export const proto = $root.proto = (() => {
                 if (typeof object.state !== "object")
                     throw TypeError(".proto.MessageEnvelope.state: object expected");
                 message.state = $root.proto.State.fromObject(object.state);
+            }
+            if (object.drawing != null) {
+                if (typeof object.drawing !== "object")
+                    throw TypeError(".proto.MessageEnvelope.drawing: object expected");
+                message.drawing = $root.proto.Drawing.fromObject(object.drawing);
             }
             return message;
         };
@@ -5949,6 +6405,11 @@ export const proto = $root.proto = (() => {
                 object.state = $root.proto.State.toObject(message.state, options);
                 if (options.oneofs)
                     object.kind = "state";
+            }
+            if (message.drawing != null && message.hasOwnProperty("drawing")) {
+                object.drawing = $root.proto.Drawing.toObject(message.drawing, options);
+                if (options.oneofs)
+                    object.kind = "drawing";
             }
             return object;
         };

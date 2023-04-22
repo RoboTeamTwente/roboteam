@@ -1538,6 +1538,148 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** Properties of a Drawing. */
+    interface IDrawing {
+
+        /** Drawing retainForTicks */
+        retainForTicks?: (number|null);
+
+        /** Drawing label */
+        label?: (string|null);
+
+        /** Drawing color */
+        color?: (proto.Drawing.Color|null);
+
+        /** Drawing method */
+        method?: (proto.Drawing.Method|null);
+
+        /** Drawing points */
+        points?: (proto.IVector2f[]|null);
+    }
+
+    /** Represents a Drawing. */
+    class Drawing implements IDrawing {
+
+        /**
+         * Constructs a new Drawing.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IDrawing);
+
+        /** Drawing retainForTicks. */
+        public retainForTicks: number;
+
+        /** Drawing label. */
+        public label: string;
+
+        /** Drawing color. */
+        public color: proto.Drawing.Color;
+
+        /** Drawing method. */
+        public method: proto.Drawing.Method;
+
+        /** Drawing points. */
+        public points: proto.IVector2f[];
+
+        /**
+         * Creates a new Drawing instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Drawing instance
+         */
+        public static create(properties?: proto.IDrawing): proto.Drawing;
+
+        /**
+         * Encodes the specified Drawing message. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @param message Drawing message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Drawing message, length delimited. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @param message Drawing message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Drawing message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Drawing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Drawing;
+
+        /**
+         * Decodes a Drawing message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Drawing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Drawing;
+
+        /**
+         * Verifies a Drawing message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Drawing message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Drawing
+         */
+        public static fromObject(object: { [k: string]: any }): proto.Drawing;
+
+        /**
+         * Creates a plain object from a Drawing message. Also converts values to other types if specified.
+         * @param message Drawing
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.Drawing, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Drawing to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for Drawing
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace Drawing {
+
+        /** Method enum. */
+        enum Method {
+            LINES_CONNECTED = 0,
+            DOTS = 1
+        }
+
+        /** Color enum. */
+        enum Color {
+            RED = 0,
+            GREEN = 1,
+            BLUE = 2,
+            YELLOW = 3,
+            CYAN = 4,
+            MAGENTA = 5,
+            WHITE = 6,
+            BLACK = 7
+        }
+    }
+
     /** Properties of a STPStatus. */
     interface ISTPStatus {
 
@@ -2302,6 +2444,9 @@ export namespace proto {
 
         /** MessageEnvelope state */
         state?: (proto.IState|null);
+
+        /** MessageEnvelope drawing */
+        drawing?: (proto.IDrawing|null);
     }
 
     /** Represents a MessageEnvelope. */
@@ -2322,8 +2467,11 @@ export namespace proto {
         /** MessageEnvelope state. */
         public state?: (proto.IState|null);
 
+        /** MessageEnvelope drawing. */
+        public drawing?: (proto.IDrawing|null);
+
         /** MessageEnvelope kind. */
-        public kind?: ("stpStatus"|"setupMessage"|"state");
+        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawing");
 
         /**
          * Creates a new MessageEnvelope instance using the specified properties.

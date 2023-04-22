@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import {promiseTimeout, usePointerSwipe} from '@vueuse/core'
 import RobotsStatus from "./modules/components/stp-status.vue";
 import GameCanvas from "./modules/field/game-canvas.vue";
@@ -20,6 +20,12 @@ const uiStore = useUIStore();
 const worldStore = useWorldStateStore();
 
 const gridElement = ref<null | HTMLElement>(null);
+
+const fieldHash = computed(() => {
+  // TODO: Can we find better way to check if field properties have changed?
+  return JSON.stringify(worldStore.latest?.field?.field ?? '');
+})
+
 
 </script>
 
@@ -44,10 +50,7 @@ const gridElement = ref<null | HTMLElement>(null);
     </div>
 
     <main class="grid-in-main flex flex-col justify-center bg-base-200 min-h-0 p-4">
-      <game-canvas
-          v-memo="[worldStore.latest?.field?.field?.fieldLength, worldStore.latest?.field?.field?.fieldWidth]"
-          :size="{width: worldStore.latest?.field?.field?.fieldLength / 10, height:worldStore.latest?.field?.field?.fieldWidth / 10}"
-      />
+      <game-canvas :field="worldStore.latest?.field?.field" :key="fieldHash"/>
     </main>
 
     <panel-slider direction="y" class="grid-in-drag-y"

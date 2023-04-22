@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {useCssVar} from "@vueuse/core";
+import {Colors} from "../field/FieldObjects";
 
 export type GameSettingsStore = {
     useReferee: boolean,
@@ -8,6 +8,7 @@ export type GameSettingsStore = {
     side: 'left' | 'right',
     team: 'blue' | 'yellow',
 }
+
 export const useGameSettingsStore = defineStore('gameSettingsStore', {
     persist: true,
     state: (): GameSettingsStore => {return {
@@ -18,5 +19,16 @@ export const useGameSettingsStore = defineStore('gameSettingsStore', {
         team: 'blue',
     }},
     actions: {},
-    getters: {},
+    getters: {
+        goalColor(state){
+            return state.team === "yellow"
+                ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
+                : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
+        },
+        fieldOrientation(state) {
+            return state.side === "left"
+                ? {x: 1, y: -1, angle: 0}
+                : {x: -1, y: 1, angle: 180};
+        }
+    },
 })

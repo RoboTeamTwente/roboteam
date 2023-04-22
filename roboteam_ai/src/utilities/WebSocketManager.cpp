@@ -118,7 +118,7 @@ void WebSocketManager::broadcastWorld() {
 }
 
 void WebSocketManager::broadcastPlay(stp::Play* selectedPlay, PlaySpan plays) {
-    proto::MessageEnvelope envelope;
+    auto envelope = proto::MessageEnvelope();
     const auto stpStatus = envelope.mutable_stpstatus();
     stpStatus->mutable_selectedplay()->set_playname(selectedPlay->getName());
     stpStatus->mutable_selectedplay()->set_playscore(selectedPlay->lastScore.value_or(-1));
@@ -154,7 +154,7 @@ void WebSocketManager::broadcastPlay(stp::Play* selectedPlay, PlaySpan plays) {
 }
 
 void WebSocketManager::broadcastSetupMessage(PlaySpan plays) {
-    proto::MessageEnvelope envelope;
+    auto envelope = proto::MessageEnvelope();
     const auto setupMessage = envelope.mutable_setupmessage();
 
     for (auto& play : plays) {
@@ -172,8 +172,22 @@ void WebSocketManager::setOnMessageCallback(WebSocketManager::OnMessageCallback 
     onMessageCallback = {callback};
 }
 
-void WebSocketManager::broadcastDrawings() {
 
+void WebSocketManager::directDraw(std::basic_string<char> label, proto::Drawing::Color color, proto::Drawing::Method method, std::span<Vector2> points, int retainForTicks = 1){
+    auto envelope = proto::MessageEnvelope();
+    const auto drawing = envelope.mutable_drawing();
+    drawing->set_label(label);
+    drawing->set_color(color);
+    drawing->set_method(method);
+    drawing->set_retainforticks(retainForTicks);
+    for (auto& point : points) {
+        auto protoPoint = drawing->add_points();
+        protoPoint->set_x(point.x);
+        protoPoint->set_y(point.y);
+    }
+
+
+    sendMessage(envelope, "drawing");
 }
 
 }  // namespace rtt::ai::io

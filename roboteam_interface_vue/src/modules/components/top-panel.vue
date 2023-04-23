@@ -12,6 +12,8 @@ const disabled = computed(() => {
   return gameSettingsStore.useReferee
 });
 
+con
+
 </script>
 <template>
   <header class="grid-in-header bg-base flex justify-center border-b-2 border-base-300 items-center px-4">
@@ -57,6 +59,23 @@ const disabled = computed(() => {
       </div>
     </div>
     <div class="flex grow"/>
+    <div class="flex">
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-circle btn-ghost btn-sm">
+          <font-awesome-icon icon="fa-info-circle"/>
+        </label>
+        <div tabindex="0" class="card compact dropdown-content shadow bg-base-100 rounded-box w-64">
+          <div class="card-body ">
+            <h2 class="card-title">Performance Info</h2>
+            <ul class="font-mono">
+              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>
+              <li>FPS: XXX</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </header>
 </template>
 

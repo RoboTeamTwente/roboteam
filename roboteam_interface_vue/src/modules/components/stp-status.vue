@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import RobotStpBadge from "./robot-stp-badge.vue";
-import {useSTPStore} from "../stores/stp-store";
-import {ref} from "vue";
 import {useUIStore} from "../stores/ui-store";
-const stpStore = useSTPStore()
-const uiStore = useUIStore();
+import {useAIStore} from "../stores/ai-store";
 
+const aiStore = useAIStore()
+const uiStore = useUIStore();
 </script>
 
 <template>
   <div class="grid grid-cols-fluid-10 gap-2 auto-cols-max">
-    <template v-for="robot in stpStore.$state.latest?.robots" :key="robot.id">
+    <template v-for="robot in aiStore.$state.stpData.latest?.robots" :key="robot.id">
       <div class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border" :class="{
         'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id)
       }">

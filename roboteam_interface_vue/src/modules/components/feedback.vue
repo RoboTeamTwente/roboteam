@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import {useWorldStateStore} from "../stores/world-store";
-import {computed} from "vue";
-import {useGameSettingsStore} from "../stores/game-settings-store";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {useUIStore} from "../stores/ui-store";
+import {useAIStore} from "../stores/ai-store";
 
-const worldStore = useWorldStateStore();
+const aiStore = useAIStore();
 const uiStore = useUIStore();
-const gameSettingStore = useGameSettingsStore();
 
 const formatFloat = (pos?: number): string => {
   if (pos === undefined || pos === null) {
@@ -19,17 +16,11 @@ const formatFloat = (pos?: number): string => {
   return `${sign}${value}`;
 }
 
-const robots = computed(() => {
-  return gameSettingStore.$state.team === 'blue'
-      ? worldStore.$state.latest?.lastSeenWorld?.blue
-      : worldStore.$state.latest?.lastSeenWorld?.yellow
-});
-
 </script>
 
 <template>
   <div class="grid grid-cols-fluid-12  gap-2 ">
-    <template v-for="(robot, id) in robots" :key="id">
+    <template v-for="(robot, id) in aiStore.ourRobots" :key="id">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
         'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id)
       }">

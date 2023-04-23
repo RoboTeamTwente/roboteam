@@ -1,8 +1,8 @@
-import {Container, FederatedPointerEvent, Graphics, GraphicsGeometry, SimpleRope, Sprite, Text, Texture} from "pixi.js";
+import {Container, FederatedPointerEvent, Graphics, SimpleRope, Sprite, Text, Texture} from "pixi.js";
 import {proto} from "../../generated/proto";
 import IDrawing = proto.IDrawing;
 import {useGameSettingsStore} from "../stores/game-settings-store";
-import {toRaw} from "vue";
+import {DeepReadonly, toRaw} from "vue";
 
 import pixelWhite from '../../assets/pixel-white.png';
 import dot from '../../assets/dot-16x16.png';
@@ -23,7 +23,7 @@ export type FieldColors = {
     rightGoal: string,
 }
 
-export const initFieldObjectStorage = () => {
+export const useFieldObjectStorage = () => {
     const drawings = {
         ball: new BallDrawing(),
         blueRobots: new Map<number, RobotDrawing>(),
@@ -37,7 +37,18 @@ export const initFieldObjectStorage = () => {
         shapeLayer: new Container(),
     }
 
+    const clearRobotsDrawings = () => {
+        drawings.ball.destroy();
+        drawings.ball = new BallDrawing();
+
+        drawings.yellowRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
+        drawings.blueRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
+        drawings.yellowRobots.clear();
+        drawings.blueRobots.clear();
+    }
+
     return {
+        clearRobotsDrawings,
         drawings,
         layers,
     }
@@ -128,7 +139,7 @@ export class BallDrawing extends Graphics {
 }
 
 export class FieldDrawing extends Graphics {
-    constructor({fieldGeometry, fieldColors}: { fieldGeometry: proto.ISSL_GeometryFieldSize, fieldColors: FieldColors}) {
+    constructor({fieldGeometry, fieldColors}: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, fieldColors: FieldColors}) {
         super();
         fieldGeometry.fieldLines?.forEach((line) => {
             switch (line.name) {
@@ -155,11 +166,11 @@ export class FieldDrawing extends Graphics {
 }
 
 export class ShapeDrawing extends Container {
-    retainForTicks: number;
+    readonly retainUntilTick: number;
 
-    constructor({data}: { data: IDrawing }) {
+    constructor({data, currentTick}: { data: IDrawing, currentTick: number }) {
         super();
-        this.retainForTicks = data.retainForTicks!;
+        this.retainUntilTick = currentTick + data.retainForTicks!;
 
         const orientation = toRaw(useGameSettingsStore().fieldOrientation);
         const points = data.points!.map((point) => {
@@ -201,10 +212,9 @@ export class ShapeMap<K, V extends ShapeDrawing> extends Map<K, V> {
         return this;
     }
 
-    removeExpiredShapes(): void {
+    removeExpiredShapes(currentTick: number): void {
         this.forEach((value, key) => {
-            value.retainForTicks -= 1;
-            if (value.retainForTicks > 0) {
+            if (currentTick < value.retainUntilTick) {
                 return;
             }
 

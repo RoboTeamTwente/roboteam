@@ -4,48 +4,46 @@ import {
   Container,
   Text,
 } from "pixi.js";
-import {onMounted, onUnmounted, ref, toRaw, watch} from "vue";
+import {DeepReadonly, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
 import {
   BallDrawing,
   Colors,
   FieldDrawing,
   RobotDrawing,
   ShapeDrawing,
-  initFieldObjectStorage
-} from "./FieldObjects";
-import {useWorldStateStore} from "../stores/world-store";
+  useFieldObjectStorage
+} from "./field-objects";
+
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {proto} from "../../generated/proto";
 import IWorldRobot = proto.IWorldRobot;
 import {useUIStore} from "../stores/ui-store";
+import {useAIStore} from "../stores/ai-store";
 import {useVisualizationStore} from "../stores/visualization-store";
-
-const props = defineProps<{
-  field: proto.ISSL_GeometryFieldSize;
-}>();
-
 const canvas = ref<HTMLCanvasElement | null>(null);
-const worldStore = useWorldStateStore();
+
 const gameStore = useGameSettingsStore();
 const uiStore = useUIStore();
+const aiStore = useAIStore();
 const visualizationStore = useVisualizationStore();
 
 let app: null | Application = null;
-let {layers, drawings} = initFieldObjectStorage();
+let {clearRobotsDrawings, layers, drawings} = useFieldObjectStorage();
+
+//Each AI tick, remove drawings that are too old
+watch(() => aiStore.stpData.currentTick, (currentTick) => drawings.shapes.removeExpiredShapes(currentTick));
+
+// re-init the canvas on field change, since the field size could have change
+watch(() => aiStore.visionData.latestField, () => initPixiApp());
 
 // Clear drawings when team changes
 watch(() => gameStore.team, () => {
-  drawings.yellowRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
-  drawings.blueRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
-  drawings.yellowRobots.clear()
-  drawings.blueRobots.clear()
+  clearRobotsDrawings();
 
-  layers.fieldGeometry.removeChildren(0).forEach((child) => child.destroy());
-  layers.fieldGeometry.addChild(new FieldDrawing({
-    fieldGeometry: props.field,
-    fieldColors: toRaw(gameStore.goalColor),
-  }));
+  // When the team changes, we also have to redraw the field to update the goal colors
+  drawField(aiStore.visionData.latestField);
 });
+
 
 const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, team: 'yellow' | 'blue') => {
   const robotId = robot.id ?? -1;
@@ -66,19 +64,31 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
   drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + (-robot.angle ?? 0));
 }
 
-onMounted(async () => {
+const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => {
+  console.debug("Redraw field");
+
+  // Remove old field drawing
+  layers.fieldGeometry.removeChildren(0).forEach((child) => child.destroy());
+
+  if (field === null) return;
+  layers.fieldGeometry.addChild(new FieldDrawing({
+    fieldGeometry: field,
+    fieldColors: toRaw(gameStore.goalColor),
+  }));
+}
+
+const initPixiApp = () => {
+  console.debug("Init Pixi app");
+
   app = new Application({
-    width: worldStore.latest?.field?.field?.fieldLength! / 10 * 1.15,
-    height: worldStore.latest?.field?.field?.fieldWidth! / 10 * 1.15,
+    width: aiStore.visionData.latestField?.fieldLength! / 10 * 1.15,
+    height: aiStore.visionData.latestField?.fieldWidth! / 10 * 1.15,
     backgroundColor: Colors.backgroundColor,
     view: canvas.value!
   });
 
   // Init field geometry drawings
-  layers.fieldGeometry.addChild(new FieldDrawing({
-    fieldGeometry: props.field,
-    fieldColors: toRaw(gameStore.goalColor),
-  }));
+  drawField(aiStore.visionData.latestField!);
 
   // Init cursor position text
   const cursor = new Text("", {fontSize: 16, fill: 'white'});
@@ -100,41 +110,44 @@ onMounted(async () => {
   app.stage.addChild(cursor)
 
   // Setup mouse position text
-  app.stage.interactive = true;
+  app.stage.eventMode = 'static';
   app.stage.hitArea = app.screen;
-  app.stage.addEventListener('pointerleave', () => {cursor.text = "";});
+  app.stage.addEventListener('pointerleave', () => {
+    cursor.text = "";
+  });
   app.stage.addEventListener('pointermove', (e) => {
     const pos = e.getLocalPosition(container);
     cursor.text = `[${((pos.x) / 100).toFixed(2)}x, ${((pos.y) / 100).toFixed(2)}y]`
   });
 
-  // Update the translation and projection matrices every frame
-  app.ticker.add(() => {
-    const world = worldStore.latest?.lastSeenWorld;
-    if (world === null || world === undefined) {return;}
+  app.ticker.add(onPixiTick);
+}
 
-    // Update robot drawings
-    world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, 'yellow'))
-    world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, 'blue'))
+const onPixiTick = () => {
+  const world = aiStore.visionData.latestWorld;
+  if (world == null) { return;}
 
-    // Update ball drawing
-    drawings.ball.moveOnField(gameStore.fieldOrientation.x * world!.ball!.pos!.x!, gameStore.fieldOrientation.y * world.ball!.pos!.y!);
+  // Update robot drawings
+  world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, 'yellow'));
+  world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, 'blue'));
 
-    // Update shape drawings
-    drawings.shapes.removeExpiredShapes();
-    visualizationStore
-        .popAll()
-        .forEach(props => {
-            const shape = new ShapeDrawing({data: props});
-            layers.shapeLayer.addChild(shape);
-            drawings.shapes.set(props.label!, shape); // Drawings map will automatically call destroy on the old shape
-    });
-  });
-});
+  // Update ball drawing
+  drawings.ball.moveOnField(gameStore.fieldOrientation.x * world!.ball!.pos!.x!, gameStore.fieldOrientation.y * world.ball!.pos!.y!);
 
+  // Draw the latest shapes received from the AI
+  visualizationStore
+      .popAll()
+      .forEach(props => {
+        const shape = new ShapeDrawing({data: props, currentTick: aiStore.stpData.currentTick});
+        layers.shapeLayer.addChild(shape);
+        drawings.shapes.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
+      });
+}
+
+onMounted(initPixiApp);
 onUnmounted(async () => app?.destroy());
 
 </script>
 <template>
-  <canvas class="min-m-6 m-auto min-h-0 min-w-0 max-h-full max-w-full w-auto h-auto rounded-xl"  ref="canvas"></canvas>
+  <canvas class="min-m-6 m-auto min-h-0 min-w-0 max-h-full max-w-full w-auto h-auto rounded-xl" ref="canvas"></canvas>
 </template>

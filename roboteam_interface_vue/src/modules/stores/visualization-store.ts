@@ -1,33 +1,27 @@
 import {defineStore} from "pinia";
 import {proto} from "../../generated/proto";
-import IDrawing = proto.IDrawing;
-import {toRaw} from "vue";
+import {shallowRef} from "vue";
 
 
-type VisualizationStoreStateT = {
-    drawings: IDrawing[],
-}
-export const useVisualizationStore = defineStore('visualizationStore', {
-    state: (): VisualizationStoreStateT => { return {
-        drawings: []
-    }},
-    actions: {
-        addDrawing(drawing: IDrawing) {
-            if (this.drawings.length > 250) {
-                console.warn("Too many drawings, removing oldest");
-                this.drawings.shift();
-            }
-
-            this.drawings.push(drawing as IDrawing);
-        },
-        popAll(){
-            return toRaw(this.drawings.splice(0, this.drawings.length));
-        },
-        tick() {
-            this.drawings = this.drawings.filter(drawing => drawing.retainForTicks! > 0);
-            this.drawings.forEach(drawing => drawing.retainForTicks!--);
+export const useVisualizationStore = defineStore('useVisStore', () => {
+    const drawingsBuffer = shallowRef<Readonly<proto.IDrawing[]>>([]);
+    const push = (drawing: proto.IDrawing) => {
+        if (drawingsBuffer.value.length > 250) {
+            console.warn("Too many drawings, removing oldest");
+            drawingsBuffer.value = drawingsBuffer.value.slice(1);
         }
-    },
-});
 
-export {}
+        drawingsBuffer.value = [...drawingsBuffer.value, drawing];
+    }
+
+    const popAll = () => {
+        const drawings = drawingsBuffer.value;
+        drawingsBuffer.value = [];
+        return drawings;
+    }
+
+    return {
+        popAll,
+        push,
+    }
+});

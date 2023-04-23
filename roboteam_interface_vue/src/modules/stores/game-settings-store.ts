@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Colors} from "../field/FieldObjects";
+import {Colors} from "../field/field-objects";
 
 export type GameSettingsStore = {
     useReferee: boolean,

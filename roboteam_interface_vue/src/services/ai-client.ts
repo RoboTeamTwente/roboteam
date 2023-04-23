@@ -1,5 +1,5 @@
-import {useWorldStateStore} from "../modules/stores/world-store";
-import {useSTPStore} from "../modules/stores/stp-store";
+// import {useWorldStateStore} from "../modules/stores/world-store";
+// import {useSTPStore} from "../modules/stores/stp-store";
 import {useAIStore} from "../modules/stores/ai-store";
 import {watch} from "vue";
 import {useWebSocket} from "@vueuse/core";
@@ -10,11 +10,8 @@ import RobotHubMode = proto.SetGameSettings.RobotHubMode;
 import {useVisualizationStore} from "../modules/stores/visualization-store";
 
 export const useAIClient = (url: string) => {
-    const worldStore = useWorldStateStore();
-    const stpStore = useSTPStore();
     const aiStore = useAIStore();
     const visualizerStore = useVisualizationStore();
-
     const gameSettingsStore = useGameSettingsStore();
 
     const {ws, status, data, send} = useWebSocket(url, {
@@ -44,25 +41,19 @@ export const useAIClient = (url: string) => {
         const envelope = proto.MessageEnvelope.decode(messageBuffer);
         switch (envelope.kind) {
             case 'setupMessage':
-                aiStore.availablePlays = envelope.setupMessage!.availablePlays ?? [];
-                aiStore.availableRulesets = envelope.setupMessage!.availableRulesets ?? [];
+                aiStore.onConnectMsg(envelope.setupMessage!);
 
                 // Forwards current game settings to the backend
                 sendGameSettings(gameSettingsStore);
                 break;
             case 'stpStatus':
-                stpStore.pushNewStatus(envelope.stpStatus!);
+                aiStore.onSTPStatusMsg(envelope.stpStatus!);
                 break;
             case 'state':
-                if (envelope.state!.lastSeenWorld === undefined) {
-                    console.log('no last seen world');
-                    return;
-                }
-
-                worldStore.pushNewState(envelope.state!!);
+                aiStore.onVisionMsg(envelope.state!);
                 break;
             case 'drawing':
-                visualizerStore.addDrawing(envelope.drawing!);
+                visualizerStore.push(envelope.drawing!);
                 break;
             default:
                 console.log('unknown message', envelope);
@@ -70,11 +61,11 @@ export const useAIClient = (url: string) => {
     });
 
     const forcePlay = () => {
-        console.log('sending set play', aiStore.play, aiStore.ruleset);
+        console.log('sending set play', aiStore.gameController.play, aiStore.gameController.ruleset);
         const msg = proto.InterfaceMessageEnvelope.create({
             setPlay: proto.SetPlay.create({
-                playName: aiStore.play,
-                rulesetName: aiStore.ruleset,
+                playName: aiStore.gameController.play,
+                rulesetName: aiStore.gameController.ruleset,
             }),
         })
 
@@ -82,8 +73,8 @@ export const useAIClient = (url: string) => {
         ws.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
     }
 
-    watch(() => aiStore.play, forcePlay);
-    watch(() => aiStore.ruleset, forcePlay);
+    watch(() => aiStore.gameController.play, forcePlay);
+    watch(() => aiStore.gameController.ruleset, forcePlay);
 
     return {
         status,

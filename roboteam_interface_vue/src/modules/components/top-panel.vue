@@ -12,8 +12,6 @@ const disabled = computed(() => {
   return gameSettingsStore.useReferee
 });
 
-con
-
 </script>
 <template>
   <header class="grid-in-header bg-base flex justify-center border-b-2 border-base-300 items-center px-4">

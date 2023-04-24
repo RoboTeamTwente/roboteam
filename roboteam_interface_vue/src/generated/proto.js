@@ -4237,6 +4237,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.STPStatus.IScoredPlay|null} [selectedPlay] STPStatus selectedPlay
          * @property {Object.<string,proto.STPStatus.ISTPRobot>|null} [robots] STPStatus robots
          * @property {Array.<proto.STPStatus.IScoredPlay>|null} [scoredPlays] STPStatus scoredPlays
+         * @property {number|null} [currentTick] STPStatus currentTick
          */
 
         /**
@@ -4281,6 +4282,14 @@ export const proto = $root.proto = (() => {
         STPStatus.prototype.scoredPlays = $util.emptyArray;
 
         /**
+         * STPStatus currentTick.
+         * @member {number} currentTick
+         * @memberof proto.STPStatus
+         * @instance
+         */
+        STPStatus.prototype.currentTick = 0;
+
+        /**
          * Creates a new STPStatus instance using the specified properties.
          * @function create
          * @memberof proto.STPStatus
@@ -4314,6 +4323,8 @@ export const proto = $root.proto = (() => {
             if (message.scoredPlays != null && message.scoredPlays.length)
                 for (let i = 0; i < message.scoredPlays.length; ++i)
                     $root.proto.STPStatus.ScoredPlay.encode(message.scoredPlays[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.currentTick != null && Object.hasOwnProperty.call(message, "currentTick"))
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.currentTick);
             return writer;
         };
 
@@ -4381,6 +4392,10 @@ export const proto = $root.proto = (() => {
                         message.scoredPlays.push($root.proto.STPStatus.ScoredPlay.decode(reader, reader.uint32()));
                         break;
                     }
+                case 5: {
+                        message.currentTick = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4444,6 +4459,9 @@ export const proto = $root.proto = (() => {
                         return "scoredPlays." + error;
                 }
             }
+            if (message.currentTick != null && message.hasOwnProperty("currentTick"))
+                if (!$util.isInteger(message.currentTick))
+                    return "currentTick: integer expected";
             return null;
         };
 
@@ -4484,6 +4502,8 @@ export const proto = $root.proto = (() => {
                     message.scoredPlays[i] = $root.proto.STPStatus.ScoredPlay.fromObject(object.scoredPlays[i]);
                 }
             }
+            if (object.currentTick != null)
+                message.currentTick = object.currentTick | 0;
             return message;
         };
 
@@ -4504,8 +4524,10 @@ export const proto = $root.proto = (() => {
                 object.scoredPlays = [];
             if (options.objects || options.defaults)
                 object.robots = {};
-            if (options.defaults)
+            if (options.defaults) {
                 object.selectedPlay = null;
+                object.currentTick = 0;
+            }
             if (message.selectedPlay != null && message.hasOwnProperty("selectedPlay"))
                 object.selectedPlay = $root.proto.STPStatus.ScoredPlay.toObject(message.selectedPlay, options);
             let keys2;
@@ -4519,6 +4541,8 @@ export const proto = $root.proto = (() => {
                 for (let j = 0; j < message.scoredPlays.length; ++j)
                     object.scoredPlays[j] = $root.proto.STPStatus.ScoredPlay.toObject(message.scoredPlays[j], options);
             }
+            if (message.currentTick != null && message.hasOwnProperty("currentTick"))
+                object.currentTick = message.currentTick;
             return object;
         };
 
@@ -6120,7 +6144,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.ISTPStatus|null} [stpStatus] MessageEnvelope stpStatus
          * @property {proto.ISetupMessage|null} [setupMessage] MessageEnvelope setupMessage
          * @property {proto.IState|null} [state] MessageEnvelope state
-         * @property {proto.IDrawing|null} [drawing] MessageEnvelope drawing
+         * @property {proto.MessageEnvelope.IDrawingBuffer|null} [drawingBuffer] MessageEnvelope drawingBuffer
          */
 
         /**
@@ -6163,24 +6187,24 @@ export const proto = $root.proto = (() => {
         MessageEnvelope.prototype.state = null;
 
         /**
-         * MessageEnvelope drawing.
-         * @member {proto.IDrawing|null|undefined} drawing
+         * MessageEnvelope drawingBuffer.
+         * @member {proto.MessageEnvelope.IDrawingBuffer|null|undefined} drawingBuffer
          * @memberof proto.MessageEnvelope
          * @instance
          */
-        MessageEnvelope.prototype.drawing = null;
+        MessageEnvelope.prototype.drawingBuffer = null;
 
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MessageEnvelope kind.
-         * @member {"stpStatus"|"setupMessage"|"state"|"drawing"|undefined} kind
+         * @member {"stpStatus"|"setupMessage"|"state"|"drawingBuffer"|undefined} kind
          * @memberof proto.MessageEnvelope
          * @instance
          */
         Object.defineProperty(MessageEnvelope.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawing"]),
+            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawingBuffer"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -6214,8 +6238,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.SetupMessage.encode(message.setupMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.state != null && Object.hasOwnProperty.call(message, "state"))
                 $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.drawing != null && Object.hasOwnProperty.call(message, "drawing"))
-                $root.proto.Drawing.encode(message.drawing, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.drawingBuffer != null && Object.hasOwnProperty.call(message, "drawingBuffer"))
+                $root.proto.MessageEnvelope.DrawingBuffer.encode(message.drawingBuffer, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -6263,7 +6287,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 4: {
-                        message.drawing = $root.proto.Drawing.decode(reader, reader.uint32());
+                        message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -6330,14 +6354,14 @@ export const proto = $root.proto = (() => {
                         return "state." + error;
                 }
             }
-            if (message.drawing != null && message.hasOwnProperty("drawing")) {
+            if (message.drawingBuffer != null && message.hasOwnProperty("drawingBuffer")) {
                 if (properties.kind === 1)
                     return "kind: multiple values";
                 properties.kind = 1;
                 {
-                    let error = $root.proto.Drawing.verify(message.drawing);
+                    let error = $root.proto.MessageEnvelope.DrawingBuffer.verify(message.drawingBuffer);
                     if (error)
-                        return "drawing." + error;
+                        return "drawingBuffer." + error;
                 }
             }
             return null;
@@ -6370,10 +6394,10 @@ export const proto = $root.proto = (() => {
                     throw TypeError(".proto.MessageEnvelope.state: object expected");
                 message.state = $root.proto.State.fromObject(object.state);
             }
-            if (object.drawing != null) {
-                if (typeof object.drawing !== "object")
-                    throw TypeError(".proto.MessageEnvelope.drawing: object expected");
-                message.drawing = $root.proto.Drawing.fromObject(object.drawing);
+            if (object.drawingBuffer != null) {
+                if (typeof object.drawingBuffer !== "object")
+                    throw TypeError(".proto.MessageEnvelope.drawingBuffer: object expected");
+                message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.fromObject(object.drawingBuffer);
             }
             return message;
         };
@@ -6406,10 +6430,10 @@ export const proto = $root.proto = (() => {
                 if (options.oneofs)
                     object.kind = "state";
             }
-            if (message.drawing != null && message.hasOwnProperty("drawing")) {
-                object.drawing = $root.proto.Drawing.toObject(message.drawing, options);
+            if (message.drawingBuffer != null && message.hasOwnProperty("drawingBuffer")) {
+                object.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.toObject(message.drawingBuffer, options);
                 if (options.oneofs)
-                    object.kind = "drawing";
+                    object.kind = "drawingBuffer";
             }
             return object;
         };
@@ -6439,6 +6463,230 @@ export const proto = $root.proto = (() => {
             }
             return typeUrlPrefix + "/proto.MessageEnvelope";
         };
+
+        MessageEnvelope.DrawingBuffer = (function() {
+
+            /**
+             * Properties of a DrawingBuffer.
+             * @memberof proto.MessageEnvelope
+             * @interface IDrawingBuffer
+             * @property {Array.<proto.IDrawing>|null} [buffer] DrawingBuffer buffer
+             */
+
+            /**
+             * Constructs a new DrawingBuffer.
+             * @memberof proto.MessageEnvelope
+             * @classdesc Represents a DrawingBuffer.
+             * @implements IDrawingBuffer
+             * @constructor
+             * @param {proto.MessageEnvelope.IDrawingBuffer=} [properties] Properties to set
+             */
+            function DrawingBuffer(properties) {
+                this.buffer = [];
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * DrawingBuffer buffer.
+             * @member {Array.<proto.IDrawing>} buffer
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @instance
+             */
+            DrawingBuffer.prototype.buffer = $util.emptyArray;
+
+            /**
+             * Creates a new DrawingBuffer instance using the specified properties.
+             * @function create
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IDrawingBuffer=} [properties] Properties to set
+             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer instance
+             */
+            DrawingBuffer.create = function create(properties) {
+                return new DrawingBuffer(properties);
+            };
+
+            /**
+             * Encodes the specified DrawingBuffer message. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
+             * @function encode
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IDrawingBuffer} message DrawingBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DrawingBuffer.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.buffer != null && message.buffer.length)
+                    for (let i = 0; i < message.buffer.length; ++i)
+                        $root.proto.Drawing.encode(message.buffer[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DrawingBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IDrawingBuffer} message DrawingBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DrawingBuffer.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a DrawingBuffer message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DrawingBuffer.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MessageEnvelope.DrawingBuffer();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            if (!(message.buffer && message.buffer.length))
+                                message.buffer = [];
+                            message.buffer.push($root.proto.Drawing.decode(reader, reader.uint32()));
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a DrawingBuffer message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DrawingBuffer.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a DrawingBuffer message.
+             * @function verify
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DrawingBuffer.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.buffer != null && message.hasOwnProperty("buffer")) {
+                    if (!Array.isArray(message.buffer))
+                        return "buffer: array expected";
+                    for (let i = 0; i < message.buffer.length; ++i) {
+                        let error = $root.proto.Drawing.verify(message.buffer[i]);
+                        if (error)
+                            return "buffer." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a DrawingBuffer message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
+             */
+            DrawingBuffer.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.MessageEnvelope.DrawingBuffer)
+                    return object;
+                let message = new $root.proto.MessageEnvelope.DrawingBuffer();
+                if (object.buffer) {
+                    if (!Array.isArray(object.buffer))
+                        throw TypeError(".proto.MessageEnvelope.DrawingBuffer.buffer: array expected");
+                    message.buffer = [];
+                    for (let i = 0; i < object.buffer.length; ++i) {
+                        if (typeof object.buffer[i] !== "object")
+                            throw TypeError(".proto.MessageEnvelope.DrawingBuffer.buffer: object expected");
+                        message.buffer[i] = $root.proto.Drawing.fromObject(object.buffer[i]);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a DrawingBuffer message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {proto.MessageEnvelope.DrawingBuffer} message DrawingBuffer
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            DrawingBuffer.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.buffer = [];
+                if (message.buffer && message.buffer.length) {
+                    object.buffer = [];
+                    for (let j = 0; j < message.buffer.length; ++j)
+                        object.buffer[j] = $root.proto.Drawing.toObject(message.buffer[j], options);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this DrawingBuffer to JSON.
+             * @function toJSON
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            DrawingBuffer.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for DrawingBuffer
+             * @function getTypeUrl
+             * @memberof proto.MessageEnvelope.DrawingBuffer
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            DrawingBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.MessageEnvelope.DrawingBuffer";
+            };
+
+            return DrawingBuffer;
+        })();
 
         return MessageEnvelope;
     })();

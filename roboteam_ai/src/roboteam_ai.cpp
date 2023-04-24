@@ -1,6 +1,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "STPManager.h"
+#include "roboteam_utils/Timer.h"
 #include "utilities/IOManager.h"
 #include "utilities/WebSocketManager.h"
 #include "world/World.hpp"
@@ -12,6 +13,15 @@ ui::MainWindow* window;
 void runStp(std::atomic_bool& exitApplication) {
     rtt::STPManager app{window};
     app.start(exitApplication);
+}
+
+void runInterfacePublisher(std::atomic_bool& exitApplication) {
+    roboteam_utils::Timer interfaceTimer;
+    interfaceTimer.loop(
+    [&]() {
+        rtt::ai::io::WebSocketManager::instance().broadcastWorld();
+        if (exitApplication) {interfaceTimer.stop();}
+    }, 60);
 }
 
 void setDarkTheme() {
@@ -101,10 +111,12 @@ int main(int argc, char* argv[]) {
     //Create a flag which signals to the STP thread to stop if the interface is stopped
     std::atomic_bool exitApplication = false;
     std::thread stpThread(runStp,std::ref(exitApplication));
+    std::thread interfaceThread(runInterfacePublisher,std::ref(exitApplication));
 
     window->show();
     bool runQT = application.exec();
     exitApplication = true;
     stpThread.join();
+    interfaceThread.join();
     return runQT;
 }

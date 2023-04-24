@@ -25,6 +25,11 @@ class STPManager {
     ai::stp::Play* currentPlay{nullptr};
 
     /**
+     * Number of times the AI ticked since launch
+     */
+    int tickCounter = 0;
+
+    /**
      * Function that decides whether to change plays given a world and field.
      * @param _world the current world state
      */

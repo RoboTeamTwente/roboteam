@@ -24,9 +24,16 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
         playsWithScores.emplace_back(play, play->score(field));
     }
 
+    // For the OLD interface!
     if (interfacePlay) {
         interfacePlayChanged = false;
         return interfacePlay;
+    }
+
+    // For the NEW interface!
+    if (interfacePlayStr.has_value()) {
+        interfacePlayChanged = false;
+        return getPlayForName(interfacePlayStr.value(), plays);
     }
 
     // If there are no valid plays, default to defend pass
@@ -42,6 +49,11 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
 void PlayDecider::lockInterfacePlay(Play* play) {
     PlayDecider::interfacePlayChanged = true;
     interfacePlay = play;
+}
+
+void PlayDecider::lockInterfacePlay(const std::string playName) {
+    PlayDecider::interfacePlayChanged = true;
+    interfacePlayStr = std::move(playName);
 }
 
 Play* PlayDecider::getPlayForName(std::string name, const std::vector<std::unique_ptr<ai::stp::Play>>& plays) {

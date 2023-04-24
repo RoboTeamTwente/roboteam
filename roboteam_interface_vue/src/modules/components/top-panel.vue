@@ -28,19 +28,19 @@ const disabled = computed(() => {
     <div class="flex grow"/>
     <div class="flex gap-4">
       <div class="btn-group">
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-error gap-2 w-32" v-if="aiStore.$state.running" @click="aiStore.setRunning(false)"><font-awesome-icon icon="fa-square" /> Stop</button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-success gap-2 w-32" v-else @click="aiStore.setRunning(true)"><font-awesome-icon icon="fa-play" /> Resume</button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="aiStore.play = haltPlayName"><font-awesome-icon icon="fa-hand" /> Halt</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-error gap-2 w-32" v-if="true" @click="() => console.log('Not implemented')"><font-awesome-icon icon="fa-square" /> Stop</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-success gap-2 w-32" v-else @click="() => console.log('Not implemented')"><font-awesome-icon icon="fa-play" /> Resume</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="aiStore.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
       </div>
 
       <div class="input-group w-auto">
-        <select class="select select-sm select-bordered" v-model="aiStore.play" :disabled="disabled">
-          <option v-for="play in aiStore.$state.availablePlays" :value="play">
+        <select class="select select-sm select-bordered" v-model="aiStore.gameController.play" :disabled="disabled">
+          <option v-for="play in aiStore.gameController.availablePlays" :value="play">
             {{ play }}
           </option>
         </select>
-        <select class="select select-sm select-bordered" v-model="aiStore.ruleset" :disabled="disabled">
-          <option v-for="subPlay in aiStore.$state.availableRulesets" :value="subPlay">
+        <select class="select select-sm select-bordered" v-model="aiStore.gameController.ruleset" :disabled="disabled">
+          <option v-for="subPlay in aiStore.gameController.availableRulesets" :value="subPlay">
             {{ subPlay }}
           </option>
         </select>
@@ -66,7 +66,7 @@ const disabled = computed(() => {
           <div class="card-body ">
             <h2 class="card-title">Performance Info</h2>
             <ul class="font-mono">
-              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>
+<!--              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>-->
               <li>FPS: XXX</li>
             </ul>
           </div>

@@ -18,6 +18,7 @@ class PlayDecider {
      * play that's set from the interface in case it's overridden
      */
     static inline Play* interfacePlay;
+    static inline std::optional<std::string> interfacePlayStr;
 
    public:
     /**
@@ -25,6 +26,7 @@ class PlayDecider {
      * @param play Play to lock to
      */
     static void lockInterfacePlay(Play* play);
+    static void lockInterfacePlay(const std::string playName);
 
     /**
      * Bool indicating if the current play was manually changed in the interface

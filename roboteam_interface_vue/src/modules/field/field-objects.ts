@@ -14,7 +14,8 @@ export const Colors = {
     blue: '#9793ff',
     robotSelected: '#1aad1a',
     ball: '#FF6600',
-    backgroundColor: '#224922'
+    backgroundColor: '#224922',
+    fieldLines: '#ffffff',
 };
 
 export type Size = { width: number, height: number };
@@ -144,13 +145,13 @@ export class FieldDrawing extends Graphics {
         fieldGeometry.fieldLines?.forEach((line) => {
             switch (line.name) {
                 case 'LeftGoalDepthLine':
-                    this.lineStyle(2, fieldColors.leftGoal);
+                    this.lineStyle(4, fieldColors.leftGoal);
                     break;
                 case 'RightGoalDepthLine':
-                    this.lineStyle(2, fieldColors.rightGoal);
+                    this.lineStyle(4, fieldColors.rightGoal);
                     break;
                 default:
-                    this.lineStyle(1, '#FFFFFF');
+                    this.lineStyle(1, Colors.fieldLines);
             }
 
             this.moveTo(mmToPx(line.p1!.x!), mmToPx(line.p1!.y!))
@@ -158,7 +159,7 @@ export class FieldDrawing extends Graphics {
         });
 
         fieldGeometry.fieldArcs?.forEach((arc) => {
-            this.lineStyle(1, 'white', 1)
+            this.lineStyle(1, Colors.fieldLines, 1)
                 .moveTo(mmToPx(arc.center!.x!), mmToPx(arc.center!.y!))
                 .arc(mmToPx(arc.center!.x!), mmToPx(arc.center!.y!), mmToPx(arc.radius!), 0, 2 * Math.PI);
         });

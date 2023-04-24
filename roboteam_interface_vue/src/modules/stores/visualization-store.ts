@@ -5,14 +5,15 @@ import {shallowRef} from "vue";
 
 export const useVisualizationStore = defineStore('useVisStore', () => {
     const drawingsBuffer = shallowRef<Readonly<proto.IDrawing[]>>([]);
-    const push = (drawing: proto.IDrawing) => {
-        if (drawingsBuffer.value.length > 250) {
+
+    const push = (drawingBuffer: proto.IDrawingBuffer) => {
+        if (drawingsBuffer.value.length + (drawingBuffer.buffer?.length ?? 0)  > 250) {
             console.warn("Too many drawings, removing oldest");
-            drawingsBuffer.value = drawingsBuffer.value.slice(1);
+            drawingsBuffer.value = drawingsBuffer.value.slice(drawingBuffer.buffer?.length ?? 0);
         }
 
-        drawingsBuffer.value = [...drawingsBuffer.value, drawing];
-    }
+        drawingsBuffer.value = [...drawingsBuffer.value, ...drawingBuffer.buffer!];
+    };
 
     const popAll = () => {
         const drawings = drawingsBuffer.value;

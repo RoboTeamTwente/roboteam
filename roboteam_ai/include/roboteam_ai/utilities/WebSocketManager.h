@@ -19,20 +19,21 @@ namespace rtt::ai::io {
 
 class WebSocketManager {
    public:
-    using PlaySpan = std::span<std::unique_ptr<rtt::ai::stp::Play>>;
+    using PlayView = const std::vector<std::unique_ptr<rtt::ai::stp::Play>>&;
     using OnMessageCallback = std::function<void(const proto::InterfaceMessageEnvelope)>;
 
     static WebSocketManager& instance();
 
     void broadcastWorld();
-    void broadcastPlay(stp::Play* selectedPlay, PlaySpan plays);
-    void broadcastDrawings();
-    void broadcastSetupMessage(PlaySpan plays);
+    void broadcastSTPStatus(stp::Play* selectedPlay, PlayView plays, int currentTick);
+
+    void broadcastSetupMessageOnNewConnection(PlayView plays);
     void waitForConnection();
 
     void setOnMessageCallback(OnMessageCallback callback);
 
     void directDraw(std::basic_string<char> label, proto::Drawing::Color color, proto::Drawing::Method method, std::span<Vector2> points, int retainForTicks);
+    void broadcastDrawings();
 
 
    public:
@@ -41,10 +42,10 @@ class WebSocketManager {
 
    private:
     WebSocketManager();
-    void sendMessage(const google::protobuf::Message& message, std::basic_string<char> messageType);
-    std::optional<OnMessageCallback> onMessageCallback;
+    void sendMessage(const google::protobuf::Message& message);
 
-    static std::string WebSocketMessageTypeToString(ix::WebSocketMessageType type);
+    proto::MessageEnvelope drawingBufferEnveloper{};
+    bool newClientHasConnect = false;
     ix::WebSocketServer webSocketServer;
 };
 

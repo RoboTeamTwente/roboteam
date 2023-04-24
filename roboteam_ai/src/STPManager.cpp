@@ -79,7 +79,7 @@ void STPManager::start(std::atomic_bool& exitApplication) {
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
-//    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
+    //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());
@@ -92,48 +92,16 @@ void STPManager::start(std::atomic_bool& exitApplication) {
         }
     }
 
-    auto &wss = rtt::ai::io::WebSocketManager::instance();
-    wss.broadcastSetupMessage(plays);
-    wss.setOnMessageCallback([](auto message) {
-        switch (message.kind_case()) {
-            case proto::InterfaceMessageEnvelope::kSetPlay:
-                RTT_INFO("Play set to: ", message.setplay().playname())
-                ai::stp::PlayDecider::lockInterfacePlay(
-                    std::find_if(plays.begin(), plays.end(), [&message](auto &play) { return play->getName() == message.setplay().playname(); })->get());
-                ai::interface::Output::setRuleSetName(message.setplay().rulesetname());
-                break;
-            case proto::InterfaceMessageEnvelope::kSetGameSettings:
-                ai::interface::Output::setUseRefereeCommands(message.setgamesettings().usereferee());
-                SETTINGS.setLeft(message.setgamesettings().isleft());
-                SETTINGS.setYellow(message.setgamesettings().isyellow());
-                SETTINGS.setRobotHubMode(message.setgamesettings().hubmode() == proto::SetGameSettings::BASESTATION ? Settings::RobotHubMode::BASESTATION: Settings::RobotHubMode::SIMULATOR);
-                break;
-        }
-    });
-
-    int amountOfCycles = 0;
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
-            // uncomment the 4 lines of code below to time and display the duration of each loop of the AI
-            // std::chrono::steady_clock::time_point tStart = std::chrono::steady_clock::now();
+            // Broadcast the setup message to all clients
+            rtt::ai::io::WebSocketManager::instance().broadcastSetupMessageOnNewConnection(plays);
+
+            // Tick STP
             runOneLoopCycle();
-            // std::chrono::steady_clock::time_point tStop = std::chrono::steady_clock::now();
-
-            // auto loopcycleDuration = std::chrono::duration_cast<std::chrono::milliseconds>((tStop - tStart)).count();
-            // RTT_DEBUG("Loop cycle duration = ", loopcycleDuration);
-            amountOfCycles++;
-
-            // update the measured FPS, but limit this function call to only run 5 times/s at most
-            int fpsUpdateRate = 5;
-            stpTimer.limit(
-                [&]() {
-                    ai::interface::Input::setFps(amountOfCycles * fpsUpdateRate);
-                    amountOfCycles = 0;
-                },
-                fpsUpdateRate);
-
-            stpTimer.limit([&]() { rtt::ai::io::WebSocketManager::instance().broadcastWorld(); }, 60);
+            rtt::ai::io::WebSocketManager::instance().broadcastDrawings();
+            tickCounter++;
 
             // If this is primary AI, broadcast settings every second
             if (SETTINGS.isPrimaryAI()) {
@@ -162,7 +130,7 @@ void STPManager::runOneLoopCycle() {
         if (!SETTINGS.isLeft()) {
             roboteam_utils::rotate(&worldMessage);
             for (auto &packet : vision_packets) {
-                roboteam_utils::rotate(&packet);  //
+                roboteam_utils::rotate(&packet);
             }
         }
         mainWindow->updateProcessedVisionPackets(vision_packets);
@@ -211,7 +179,7 @@ void STPManager::decidePlay(world::World *_world) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
-    rtt::ai::io::WebSocketManager::instance().broadcastPlay(currentPlay, plays);
+//    rtt::ai::io::WebSocketManager::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

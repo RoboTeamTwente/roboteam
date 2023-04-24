@@ -52,8 +52,8 @@ export const useAIClient = (url: string) => {
             case 'state':
                 aiStore.onVisionMsg(envelope.state!);
                 break;
-            case 'drawing':
-                visualizerStore.push(envelope.drawing!);
+            case 'drawingBuffer':
+                visualizerStore.push(envelope.drawingBuffer!);
                 break;
             default:
                 console.log('unknown message', envelope);

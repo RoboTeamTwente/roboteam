@@ -1691,6 +1691,9 @@ export namespace proto {
 
         /** STPStatus scoredPlays */
         scoredPlays?: (proto.STPStatus.IScoredPlay[]|null);
+
+        /** STPStatus currentTick */
+        currentTick?: (number|null);
     }
 
     /** Represents a STPStatus. */
@@ -1710,6 +1713,9 @@ export namespace proto {
 
         /** STPStatus scoredPlays. */
         public scoredPlays: proto.STPStatus.IScoredPlay[];
+
+        /** STPStatus currentTick. */
+        public currentTick: number;
 
         /**
          * Creates a new STPStatus instance using the specified properties.
@@ -2445,8 +2451,8 @@ export namespace proto {
         /** MessageEnvelope state */
         state?: (proto.IState|null);
 
-        /** MessageEnvelope drawing */
-        drawing?: (proto.IDrawing|null);
+        /** MessageEnvelope drawingBuffer */
+        drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
     }
 
     /** Represents a MessageEnvelope. */
@@ -2467,11 +2473,11 @@ export namespace proto {
         /** MessageEnvelope state. */
         public state?: (proto.IState|null);
 
-        /** MessageEnvelope drawing. */
-        public drawing?: (proto.IDrawing|null);
+        /** MessageEnvelope drawingBuffer. */
+        public drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
 
         /** MessageEnvelope kind. */
-        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawing");
+        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawingBuffer");
 
         /**
          * Creates a new MessageEnvelope instance using the specified properties.
@@ -2549,6 +2555,106 @@ export namespace proto {
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace MessageEnvelope {
+
+        /** Properties of a DrawingBuffer. */
+        interface IDrawingBuffer {
+
+            /** DrawingBuffer buffer */
+            buffer?: (proto.IDrawing[]|null);
+        }
+
+        /** Represents a DrawingBuffer. */
+        class DrawingBuffer implements IDrawingBuffer {
+
+            /**
+             * Constructs a new DrawingBuffer.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.MessageEnvelope.IDrawingBuffer);
+
+            /** DrawingBuffer buffer. */
+            public buffer: proto.IDrawing[];
+
+            /**
+             * Creates a new DrawingBuffer instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DrawingBuffer instance
+             */
+            public static create(properties?: proto.MessageEnvelope.IDrawingBuffer): proto.MessageEnvelope.DrawingBuffer;
+
+            /**
+             * Encodes the specified DrawingBuffer message. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
+             * @param message DrawingBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.MessageEnvelope.IDrawingBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DrawingBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
+             * @param message DrawingBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.MessageEnvelope.IDrawingBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DrawingBuffer message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns DrawingBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MessageEnvelope.DrawingBuffer;
+
+            /**
+             * Decodes a DrawingBuffer message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns DrawingBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MessageEnvelope.DrawingBuffer;
+
+            /**
+             * Verifies a DrawingBuffer message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a DrawingBuffer message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns DrawingBuffer
+             */
+            public static fromObject(object: { [k: string]: any }): proto.MessageEnvelope.DrawingBuffer;
+
+            /**
+             * Creates a plain object from a DrawingBuffer message. Also converts values to other types if specified.
+             * @param message DrawingBuffer
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.MessageEnvelope.DrawingBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this DrawingBuffer to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for DrawingBuffer
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
     }
 
     /** Properties of a SetPlay. */

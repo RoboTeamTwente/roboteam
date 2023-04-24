@@ -67,6 +67,7 @@ message STPStatus {
     ScoredPlay selectedPlay = 2;
     map<int32, STPRobot> robots = 3;
     repeated ScoredPlay scoredPlays = 4;
+    int32 currentTick = 5;
 }
 
 message SetupMessage {
@@ -75,11 +76,15 @@ message SetupMessage {
 }
 
 message MessageEnvelope {
+    message DrawingBuffer {
+        repeated Drawing buffer = 1;
+    }
+
     oneof kind {
         STPStatus stpStatus = 1;
         SetupMessage setupMessage = 2;
         State state = 3;
-        Drawing drawing = 4;
+        DrawingBuffer drawingBuffer = 4;
     }
 }
 

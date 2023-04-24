@@ -57,6 +57,7 @@ export const useAIStore = defineStore('aiStore', () => {
     });
 
     const onConnectMsg = (msg: proto.ISetupMessage) => {
+        console.log(msg);
         gameController.value = {
             availablePlays: msg.availablePlays!,
             availableRulesets: msg.availableRulesets!,
@@ -90,6 +91,11 @@ export const useAIStore = defineStore('aiStore', () => {
         }
     }
 
+    const haltPlay = () => {
+        gameController.value.play = haltPlayName;
+        gameController.value.ruleset = 'default';
+    };
+
     const ourRobots = computed(() => {
         return gameSettingStore.team === 'blue'
             ? visionData.value.latestWorld?.blue
@@ -103,6 +109,7 @@ export const useAIStore = defineStore('aiStore', () => {
         onConnectMsg,
         onSTPStatusMsg,
         onVisionMsg,
+        haltPlay,
         ourRobots
     }
 });

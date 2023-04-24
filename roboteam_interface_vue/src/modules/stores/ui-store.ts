@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {toRaw} from "vue";
 
-const defaultState: UiStore = {
+const defaultState: () => UiStore = () => ({
     bottomPanel: {
         size: 250,
         collapsed: false
@@ -11,7 +11,7 @@ const defaultState: UiStore = {
         collapsed: false
     },
     selectedRobots: new Set([])
-};
+});
 
 type Panel = {
     size: number
@@ -29,17 +29,19 @@ export const useUIStore = defineStore('uiStore', {
             serialize: JSON.stringify,
             deserialize: (value: string) => {
                 const parsed = JSON.parse(value);
-                parsed.selectedRobots = new Set(parsed.selectedRobots);
+
+                // TODO: This is a hack to make the Set deserializable.
+                parsed.selectedRobots = new Set();
                 return parsed;
             }
         }
     },
-    state: () => defaultState,
+    state: () => defaultState(),
     actions: {
         toggleBottomPanel() {this.bottomPanel.collapsed = !this.bottomPanel.collapsed;},
         toggleLeftPanel() { this.leftPanel.collapsed = !this.leftPanel.collapsed; },
-        resizeBottomPanel(size: number) {this.bottomPanel.size = size < defaultState.bottomPanel.size ? defaultState.bottomPanel.size : size},
-        resizeLeftPanel(size: number) {this.leftPanel.size = size < defaultState.leftPanel.size ? defaultState.leftPanel.size : size},
+        resizeBottomPanel(size: number) {this.bottomPanel.size = size < defaultState().bottomPanel.size ? defaultState().bottomPanel.size : size},
+        resizeLeftPanel(size: number) {this.leftPanel.size = size < defaultState().leftPanel.size ? defaultState().leftPanel.size : size},
         toggleRobotSelection(id: number) {
             this.selectedRobots.has(id)
                 ? this.selectedRobots.delete(id)

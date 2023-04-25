@@ -28,8 +28,8 @@ const disabled = computed(() => {
     <div class="flex grow"/>
     <div class="flex gap-4">
       <div class="btn-group">
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-error gap-2 w-32" v-if="true" @click="() => console.log('Not implemented')"><font-awesome-icon icon="fa-square" /> Stop</button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-success gap-2 w-32" v-else @click="() => console.log('Not implemented')"><font-awesome-icon icon="fa-play" /> Resume</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-error gap-2 w-32" v-if="true" @click="aiStore.resetPlay"><font-awesome-icon icon="fa-square" /> Stop</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-success gap-2 w-32" v-else @click="aiStore.resetPlay"><font-awesome-icon icon="fa-play" /> Resume</button>
         <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="aiStore.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
       </div>
 
@@ -66,7 +66,7 @@ const disabled = computed(() => {
           <div class="card-body ">
             <h2 class="card-title">Performance Info</h2>
             <ul class="font-mono">
-<!--              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>-->
+              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>
               <li>FPS: XXX</li>
             </ul>
           </div>

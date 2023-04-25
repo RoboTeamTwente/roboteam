@@ -1,3 +1,5 @@
+// import Interface;
+
 #include "STPManager.h"
 
 #include <roboteam_utils/Timer.h>
@@ -11,7 +13,7 @@
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
-#include "utilities/WebSocketManager.h"
+#include "interface_api/InterfaceServer.h"
 
 /**
  * Plays are included here
@@ -41,20 +43,13 @@
 
 namespace io = rtt::ai::io;
 namespace ai = rtt::ai;
+namespace plays = rtt::ai::stp::play;
 
 namespace rtt {
 
-/// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
-void STPManager::start(std::atomic_bool& exitApplication) {
-    // make sure we start in halt state for safety
-    ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
-    RTT_INFO("Start looping")
-    RTT_INFO("Waiting for field_data and robots...")
-
-    plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>{};
-
-    /// This play is only used for testing purposes, when needed uncomment this play!
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::TestPlay>());
+/// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
+std::vector<std::unique_ptr<rtt::ai::stp::Play>> STPManager::plays = ([] {
+    auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
@@ -79,29 +74,58 @@ void STPManager::start(std::atomic_bool& exitApplication) {
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
-    //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
+    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());
+    return plays;
+})();
 
-    // Set the pointer to world for all plays
+/// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
+void STPManager::start(std::atomic_bool &exitApplication) {
+    // make sure we start in halt state for safety
+    ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
+    RTT_INFO("Start looping")
+    RTT_INFO("Waiting for field_data and robots...")
+
     {
+        // Set the pointer to world for all plays
         auto const &[_, world] = world::World::instance();
         for (auto &play : plays) {
             play->setWorld(world);
         }
     }
 
+    int index = 0;
+    std::array<long long, 100> tickDurations{0};
+    int fpsCounter = 0;
+
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
-            // Broadcast the setup message to all clients
-            rtt::ai::io::WebSocketManager::instance().broadcastSetupMessageOnNewConnection(plays);
-
             // Tick STP
+            const auto tStart = std::chrono::steady_clock::now();
             runOneLoopCycle();
-            rtt::ai::io::WebSocketManager::instance().broadcastDrawings();
+            const auto tStop = std::chrono::steady_clock::now();
+
+            const auto tickDuration = std::chrono::duration_cast<std::chrono::milliseconds>((tStop - tStart)).count();
+            if (index > tickDurations.size() - 1) {
+                index = 0;
+            }
+            tickDurations[index] = tickDuration;
+            index++;
+
+            rtt::ai::io::InterfaceServer::instance().broadcastWorld();
+            rtt::ai::io::InterfaceServer::instance().broadcastVisuals();
             tickCounter++;
+
+            stpTimer.limit(
+                [&]() {
+                    double avgDuration = std::accumulate(tickDurations.begin(), tickDurations.end(), 0) / static_cast<double>(tickDurations.size());
+//                    RTT_DEBUG("Avg duration = ", avgDuration);
+                    rtt::ai::new_interface::Interface::reportNumber("Average tick", avgDuration, "ms");
+                },
+                5);
 
             // If this is primary AI, broadcast settings every second
             if (SETTINGS.isPrimaryAI()) {
@@ -179,7 +203,7 @@ void STPManager::decidePlay(world::World *_world) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
-//    rtt::ai::io::WebSocketManager::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
+    rtt::ai::io::InterfaceServer::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

@@ -136,7 +136,7 @@ const onPixiTick = () => {
 
   // Draw the latest shapes received from the AI
   visualizationStore
-      .popAll()
+      .popAllDrawings()
       .forEach(props => {
         const shape = new ShapeDrawing({data: props, currentTick: aiStore.stpData.currentTick});
         layers.shapeLayer.addChild(shape);

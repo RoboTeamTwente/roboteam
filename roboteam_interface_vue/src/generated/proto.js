@@ -4228,6 +4228,838 @@ export const proto = $root.proto = (() => {
         return Drawing;
     })();
 
+    proto.Metric = (function() {
+
+        /**
+         * Properties of a Metric.
+         * @memberof proto
+         * @interface IMetric
+         * @property {string|null} [label] Metric label
+         * @property {proto.Metric.IBoundedValue|null} [boundedValue] Metric boundedValue
+         * @property {proto.Metric.IDecimal|null} [decimal] Metric decimal
+         */
+
+        /**
+         * Constructs a new Metric.
+         * @memberof proto
+         * @classdesc Represents a Metric.
+         * @implements IMetric
+         * @constructor
+         * @param {proto.IMetric=} [properties] Properties to set
+         */
+        function Metric(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Metric label.
+         * @member {string} label
+         * @memberof proto.Metric
+         * @instance
+         */
+        Metric.prototype.label = "";
+
+        /**
+         * Metric boundedValue.
+         * @member {proto.Metric.IBoundedValue|null|undefined} boundedValue
+         * @memberof proto.Metric
+         * @instance
+         */
+        Metric.prototype.boundedValue = null;
+
+        /**
+         * Metric decimal.
+         * @member {proto.Metric.IDecimal|null|undefined} decimal
+         * @memberof proto.Metric
+         * @instance
+         */
+        Metric.prototype.decimal = null;
+
+        // OneOf field names bound to virtual getters and setters
+        let $oneOfFields;
+
+        /**
+         * Metric value.
+         * @member {"boundedValue"|"decimal"|undefined} value
+         * @memberof proto.Metric
+         * @instance
+         */
+        Object.defineProperty(Metric.prototype, "value", {
+            get: $util.oneOfGetter($oneOfFields = ["boundedValue", "decimal"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+
+        /**
+         * Creates a new Metric instance using the specified properties.
+         * @function create
+         * @memberof proto.Metric
+         * @static
+         * @param {proto.IMetric=} [properties] Properties to set
+         * @returns {proto.Metric} Metric instance
+         */
+        Metric.create = function create(properties) {
+            return new Metric(properties);
+        };
+
+        /**
+         * Encodes the specified Metric message. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @function encode
+         * @memberof proto.Metric
+         * @static
+         * @param {proto.IMetric} message Metric message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Metric.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.label != null && Object.hasOwnProperty.call(message, "label"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.label);
+            if (message.boundedValue != null && Object.hasOwnProperty.call(message, "boundedValue"))
+                $root.proto.Metric.BoundedValue.encode(message.boundedValue, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.decimal != null && Object.hasOwnProperty.call(message, "decimal"))
+                $root.proto.Metric.Decimal.encode(message.decimal, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Metric message, length delimited. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.Metric
+         * @static
+         * @param {proto.IMetric} message Metric message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Metric.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.Metric
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.Metric} Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Metric.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Metric();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.label = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.boundedValue = $root.proto.Metric.BoundedValue.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 3: {
+                        message.decimal = $root.proto.Metric.Decimal.decode(reader, reader.uint32());
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.Metric
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.Metric} Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Metric.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Metric message.
+         * @function verify
+         * @memberof proto.Metric
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Metric.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            let properties = {};
+            if (message.label != null && message.hasOwnProperty("label"))
+                if (!$util.isString(message.label))
+                    return "label: string expected";
+            if (message.boundedValue != null && message.hasOwnProperty("boundedValue")) {
+                properties.value = 1;
+                {
+                    let error = $root.proto.Metric.BoundedValue.verify(message.boundedValue);
+                    if (error)
+                        return "boundedValue." + error;
+                }
+            }
+            if (message.decimal != null && message.hasOwnProperty("decimal")) {
+                if (properties.value === 1)
+                    return "value: multiple values";
+                properties.value = 1;
+                {
+                    let error = $root.proto.Metric.Decimal.verify(message.decimal);
+                    if (error)
+                        return "decimal." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a Metric message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.Metric
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.Metric} Metric
+         */
+        Metric.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.Metric)
+                return object;
+            let message = new $root.proto.Metric();
+            if (object.label != null)
+                message.label = String(object.label);
+            if (object.boundedValue != null) {
+                if (typeof object.boundedValue !== "object")
+                    throw TypeError(".proto.Metric.boundedValue: object expected");
+                message.boundedValue = $root.proto.Metric.BoundedValue.fromObject(object.boundedValue);
+            }
+            if (object.decimal != null) {
+                if (typeof object.decimal !== "object")
+                    throw TypeError(".proto.Metric.decimal: object expected");
+                message.decimal = $root.proto.Metric.Decimal.fromObject(object.decimal);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Metric message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.Metric
+         * @static
+         * @param {proto.Metric} message Metric
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Metric.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults)
+                object.label = "";
+            if (message.label != null && message.hasOwnProperty("label"))
+                object.label = message.label;
+            if (message.boundedValue != null && message.hasOwnProperty("boundedValue")) {
+                object.boundedValue = $root.proto.Metric.BoundedValue.toObject(message.boundedValue, options);
+                if (options.oneofs)
+                    object.value = "boundedValue";
+            }
+            if (message.decimal != null && message.hasOwnProperty("decimal")) {
+                object.decimal = $root.proto.Metric.Decimal.toObject(message.decimal, options);
+                if (options.oneofs)
+                    object.value = "decimal";
+            }
+            return object;
+        };
+
+        /**
+         * Converts this Metric to JSON.
+         * @function toJSON
+         * @memberof proto.Metric
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Metric.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Metric
+         * @function getTypeUrl
+         * @memberof proto.Metric
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Metric.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.Metric";
+        };
+
+        Metric.BoundedValue = (function() {
+
+            /**
+             * Properties of a BoundedValue.
+             * @memberof proto.Metric
+             * @interface IBoundedValue
+             * @property {number|null} [value] BoundedValue value
+             * @property {number|null} [min] BoundedValue min
+             * @property {number|null} [max] BoundedValue max
+             * @property {string|null} [unit] BoundedValue unit
+             */
+
+            /**
+             * Constructs a new BoundedValue.
+             * @memberof proto.Metric
+             * @classdesc Represents a BoundedValue.
+             * @implements IBoundedValue
+             * @constructor
+             * @param {proto.Metric.IBoundedValue=} [properties] Properties to set
+             */
+            function BoundedValue(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * BoundedValue value.
+             * @member {number} value
+             * @memberof proto.Metric.BoundedValue
+             * @instance
+             */
+            BoundedValue.prototype.value = 0;
+
+            /**
+             * BoundedValue min.
+             * @member {number} min
+             * @memberof proto.Metric.BoundedValue
+             * @instance
+             */
+            BoundedValue.prototype.min = 0;
+
+            /**
+             * BoundedValue max.
+             * @member {number} max
+             * @memberof proto.Metric.BoundedValue
+             * @instance
+             */
+            BoundedValue.prototype.max = 0;
+
+            /**
+             * BoundedValue unit.
+             * @member {string} unit
+             * @memberof proto.Metric.BoundedValue
+             * @instance
+             */
+            BoundedValue.prototype.unit = "";
+
+            /**
+             * Creates a new BoundedValue instance using the specified properties.
+             * @function create
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {proto.Metric.IBoundedValue=} [properties] Properties to set
+             * @returns {proto.Metric.BoundedValue} BoundedValue instance
+             */
+            BoundedValue.create = function create(properties) {
+                return new BoundedValue(properties);
+            };
+
+            /**
+             * Encodes the specified BoundedValue message. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @function encode
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {proto.Metric.IBoundedValue} message BoundedValue message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BoundedValue.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
+                    writer.uint32(/* id 1, wireType 5 =*/13).float(message.value);
+                if (message.min != null && Object.hasOwnProperty.call(message, "min"))
+                    writer.uint32(/* id 2, wireType 5 =*/21).float(message.min);
+                if (message.max != null && Object.hasOwnProperty.call(message, "max"))
+                    writer.uint32(/* id 3, wireType 5 =*/29).float(message.max);
+                if (message.unit != null && Object.hasOwnProperty.call(message, "unit"))
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.unit);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BoundedValue message, length delimited. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {proto.Metric.IBoundedValue} message BoundedValue message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BoundedValue.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a BoundedValue message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.Metric.BoundedValue} BoundedValue
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BoundedValue.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Metric.BoundedValue();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            message.value = reader.float();
+                            break;
+                        }
+                    case 2: {
+                            message.min = reader.float();
+                            break;
+                        }
+                    case 3: {
+                            message.max = reader.float();
+                            break;
+                        }
+                    case 4: {
+                            message.unit = reader.string();
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a BoundedValue message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.Metric.BoundedValue} BoundedValue
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BoundedValue.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a BoundedValue message.
+             * @function verify
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BoundedValue.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.value != null && message.hasOwnProperty("value"))
+                    if (typeof message.value !== "number")
+                        return "value: number expected";
+                if (message.min != null && message.hasOwnProperty("min"))
+                    if (typeof message.min !== "number")
+                        return "min: number expected";
+                if (message.max != null && message.hasOwnProperty("max"))
+                    if (typeof message.max !== "number")
+                        return "max: number expected";
+                if (message.unit != null && message.hasOwnProperty("unit"))
+                    if (!$util.isString(message.unit))
+                        return "unit: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a BoundedValue message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.Metric.BoundedValue} BoundedValue
+             */
+            BoundedValue.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.Metric.BoundedValue)
+                    return object;
+                let message = new $root.proto.Metric.BoundedValue();
+                if (object.value != null)
+                    message.value = Number(object.value);
+                if (object.min != null)
+                    message.min = Number(object.min);
+                if (object.max != null)
+                    message.max = Number(object.max);
+                if (object.unit != null)
+                    message.unit = String(object.unit);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a BoundedValue message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {proto.Metric.BoundedValue} message BoundedValue
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            BoundedValue.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.value = 0;
+                    object.min = 0;
+                    object.max = 0;
+                    object.unit = "";
+                }
+                if (message.value != null && message.hasOwnProperty("value"))
+                    object.value = options.json && !isFinite(message.value) ? String(message.value) : message.value;
+                if (message.min != null && message.hasOwnProperty("min"))
+                    object.min = options.json && !isFinite(message.min) ? String(message.min) : message.min;
+                if (message.max != null && message.hasOwnProperty("max"))
+                    object.max = options.json && !isFinite(message.max) ? String(message.max) : message.max;
+                if (message.unit != null && message.hasOwnProperty("unit"))
+                    object.unit = message.unit;
+                return object;
+            };
+
+            /**
+             * Converts this BoundedValue to JSON.
+             * @function toJSON
+             * @memberof proto.Metric.BoundedValue
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            BoundedValue.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for BoundedValue
+             * @function getTypeUrl
+             * @memberof proto.Metric.BoundedValue
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            BoundedValue.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.Metric.BoundedValue";
+            };
+
+            return BoundedValue;
+        })();
+
+        Metric.Decimal = (function() {
+
+            /**
+             * Properties of a Decimal.
+             * @memberof proto.Metric
+             * @interface IDecimal
+             * @property {number|null} [value] Decimal value
+             * @property {number|null} [minRecorded] Decimal minRecorded
+             * @property {number|null} [maxRecorded] Decimal maxRecorded
+             * @property {string|null} [unit] Decimal unit
+             */
+
+            /**
+             * Constructs a new Decimal.
+             * @memberof proto.Metric
+             * @classdesc Represents a Decimal.
+             * @implements IDecimal
+             * @constructor
+             * @param {proto.Metric.IDecimal=} [properties] Properties to set
+             */
+            function Decimal(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * Decimal value.
+             * @member {number} value
+             * @memberof proto.Metric.Decimal
+             * @instance
+             */
+            Decimal.prototype.value = 0;
+
+            /**
+             * Decimal minRecorded.
+             * @member {number} minRecorded
+             * @memberof proto.Metric.Decimal
+             * @instance
+             */
+            Decimal.prototype.minRecorded = 0;
+
+            /**
+             * Decimal maxRecorded.
+             * @member {number} maxRecorded
+             * @memberof proto.Metric.Decimal
+             * @instance
+             */
+            Decimal.prototype.maxRecorded = 0;
+
+            /**
+             * Decimal unit.
+             * @member {string} unit
+             * @memberof proto.Metric.Decimal
+             * @instance
+             */
+            Decimal.prototype.unit = "";
+
+            /**
+             * Creates a new Decimal instance using the specified properties.
+             * @function create
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {proto.Metric.IDecimal=} [properties] Properties to set
+             * @returns {proto.Metric.Decimal} Decimal instance
+             */
+            Decimal.create = function create(properties) {
+                return new Decimal(properties);
+            };
+
+            /**
+             * Encodes the specified Decimal message. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @function encode
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {proto.Metric.IDecimal} message Decimal message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Decimal.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
+                    writer.uint32(/* id 1, wireType 1 =*/9).double(message.value);
+                if (message.minRecorded != null && Object.hasOwnProperty.call(message, "minRecorded"))
+                    writer.uint32(/* id 2, wireType 1 =*/17).double(message.minRecorded);
+                if (message.maxRecorded != null && Object.hasOwnProperty.call(message, "maxRecorded"))
+                    writer.uint32(/* id 3, wireType 1 =*/25).double(message.maxRecorded);
+                if (message.unit != null && Object.hasOwnProperty.call(message, "unit"))
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.unit);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Decimal message, length delimited. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {proto.Metric.IDecimal} message Decimal message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Decimal.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.Metric.Decimal} Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Decimal.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Metric.Decimal();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            message.value = reader.double();
+                            break;
+                        }
+                    case 2: {
+                            message.minRecorded = reader.double();
+                            break;
+                        }
+                    case 3: {
+                            message.maxRecorded = reader.double();
+                            break;
+                        }
+                    case 4: {
+                            message.unit = reader.string();
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.Metric.Decimal} Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Decimal.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Decimal message.
+             * @function verify
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Decimal.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.value != null && message.hasOwnProperty("value"))
+                    if (typeof message.value !== "number")
+                        return "value: number expected";
+                if (message.minRecorded != null && message.hasOwnProperty("minRecorded"))
+                    if (typeof message.minRecorded !== "number")
+                        return "minRecorded: number expected";
+                if (message.maxRecorded != null && message.hasOwnProperty("maxRecorded"))
+                    if (typeof message.maxRecorded !== "number")
+                        return "maxRecorded: number expected";
+                if (message.unit != null && message.hasOwnProperty("unit"))
+                    if (!$util.isString(message.unit))
+                        return "unit: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a Decimal message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.Metric.Decimal} Decimal
+             */
+            Decimal.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.Metric.Decimal)
+                    return object;
+                let message = new $root.proto.Metric.Decimal();
+                if (object.value != null)
+                    message.value = Number(object.value);
+                if (object.minRecorded != null)
+                    message.minRecorded = Number(object.minRecorded);
+                if (object.maxRecorded != null)
+                    message.maxRecorded = Number(object.maxRecorded);
+                if (object.unit != null)
+                    message.unit = String(object.unit);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Decimal message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {proto.Metric.Decimal} message Decimal
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Decimal.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.value = 0;
+                    object.minRecorded = 0;
+                    object.maxRecorded = 0;
+                    object.unit = "";
+                }
+                if (message.value != null && message.hasOwnProperty("value"))
+                    object.value = options.json && !isFinite(message.value) ? String(message.value) : message.value;
+                if (message.minRecorded != null && message.hasOwnProperty("minRecorded"))
+                    object.minRecorded = options.json && !isFinite(message.minRecorded) ? String(message.minRecorded) : message.minRecorded;
+                if (message.maxRecorded != null && message.hasOwnProperty("maxRecorded"))
+                    object.maxRecorded = options.json && !isFinite(message.maxRecorded) ? String(message.maxRecorded) : message.maxRecorded;
+                if (message.unit != null && message.hasOwnProperty("unit"))
+                    object.unit = message.unit;
+                return object;
+            };
+
+            /**
+             * Converts this Decimal to JSON.
+             * @function toJSON
+             * @memberof proto.Metric.Decimal
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Decimal.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for Decimal
+             * @function getTypeUrl
+             * @memberof proto.Metric.Decimal
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            Decimal.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.Metric.Decimal";
+            };
+
+            return Decimal;
+        })();
+
+        return Metric;
+    })();
+
     proto.STPStatus = (function() {
 
         /**
@@ -6145,6 +6977,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.ISetupMessage|null} [setupMessage] MessageEnvelope setupMessage
          * @property {proto.IState|null} [state] MessageEnvelope state
          * @property {proto.MessageEnvelope.IDrawingBuffer|null} [drawingBuffer] MessageEnvelope drawingBuffer
+         * @property {proto.MessageEnvelope.IMetricBuffer|null} [metricBuffer] MessageEnvelope metricBuffer
          */
 
         /**
@@ -6194,17 +7027,25 @@ export const proto = $root.proto = (() => {
          */
         MessageEnvelope.prototype.drawingBuffer = null;
 
+        /**
+         * MessageEnvelope metricBuffer.
+         * @member {proto.MessageEnvelope.IMetricBuffer|null|undefined} metricBuffer
+         * @memberof proto.MessageEnvelope
+         * @instance
+         */
+        MessageEnvelope.prototype.metricBuffer = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MessageEnvelope kind.
-         * @member {"stpStatus"|"setupMessage"|"state"|"drawingBuffer"|undefined} kind
+         * @member {"stpStatus"|"setupMessage"|"state"|"drawingBuffer"|"metricBuffer"|undefined} kind
          * @memberof proto.MessageEnvelope
          * @instance
          */
         Object.defineProperty(MessageEnvelope.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawingBuffer"]),
+            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawingBuffer", "metricBuffer"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -6240,6 +7081,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.drawingBuffer != null && Object.hasOwnProperty.call(message, "drawingBuffer"))
                 $root.proto.MessageEnvelope.DrawingBuffer.encode(message.drawingBuffer, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.metricBuffer != null && Object.hasOwnProperty.call(message, "metricBuffer"))
+                $root.proto.MessageEnvelope.MetricBuffer.encode(message.metricBuffer, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             return writer;
         };
 
@@ -6288,6 +7131,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 4: {
                         message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 5: {
+                        message.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -6364,6 +7211,16 @@ export const proto = $root.proto = (() => {
                         return "drawingBuffer." + error;
                 }
             }
+            if (message.metricBuffer != null && message.hasOwnProperty("metricBuffer")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.MessageEnvelope.MetricBuffer.verify(message.metricBuffer);
+                    if (error)
+                        return "metricBuffer." + error;
+                }
+            }
             return null;
         };
 
@@ -6398,6 +7255,11 @@ export const proto = $root.proto = (() => {
                 if (typeof object.drawingBuffer !== "object")
                     throw TypeError(".proto.MessageEnvelope.drawingBuffer: object expected");
                 message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.fromObject(object.drawingBuffer);
+            }
+            if (object.metricBuffer != null) {
+                if (typeof object.metricBuffer !== "object")
+                    throw TypeError(".proto.MessageEnvelope.metricBuffer: object expected");
+                message.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.fromObject(object.metricBuffer);
             }
             return message;
         };
@@ -6434,6 +7296,11 @@ export const proto = $root.proto = (() => {
                 object.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.toObject(message.drawingBuffer, options);
                 if (options.oneofs)
                     object.kind = "drawingBuffer";
+            }
+            if (message.metricBuffer != null && message.hasOwnProperty("metricBuffer")) {
+                object.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.toObject(message.metricBuffer, options);
+                if (options.oneofs)
+                    object.kind = "metricBuffer";
             }
             return object;
         };
@@ -6686,6 +7553,230 @@ export const proto = $root.proto = (() => {
             };
 
             return DrawingBuffer;
+        })();
+
+        MessageEnvelope.MetricBuffer = (function() {
+
+            /**
+             * Properties of a MetricBuffer.
+             * @memberof proto.MessageEnvelope
+             * @interface IMetricBuffer
+             * @property {Array.<proto.IMetric>|null} [buffer] MetricBuffer buffer
+             */
+
+            /**
+             * Constructs a new MetricBuffer.
+             * @memberof proto.MessageEnvelope
+             * @classdesc Represents a MetricBuffer.
+             * @implements IMetricBuffer
+             * @constructor
+             * @param {proto.MessageEnvelope.IMetricBuffer=} [properties] Properties to set
+             */
+            function MetricBuffer(properties) {
+                this.buffer = [];
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * MetricBuffer buffer.
+             * @member {Array.<proto.IMetric>} buffer
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @instance
+             */
+            MetricBuffer.prototype.buffer = $util.emptyArray;
+
+            /**
+             * Creates a new MetricBuffer instance using the specified properties.
+             * @function create
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IMetricBuffer=} [properties] Properties to set
+             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer instance
+             */
+            MetricBuffer.create = function create(properties) {
+                return new MetricBuffer(properties);
+            };
+
+            /**
+             * Encodes the specified MetricBuffer message. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
+             * @function encode
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IMetricBuffer} message MetricBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MetricBuffer.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.buffer != null && message.buffer.length)
+                    for (let i = 0; i < message.buffer.length; ++i)
+                        $root.proto.Metric.encode(message.buffer[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MetricBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {proto.MessageEnvelope.IMetricBuffer} message MetricBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MetricBuffer.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a MetricBuffer message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MetricBuffer.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MessageEnvelope.MetricBuffer();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            if (!(message.buffer && message.buffer.length))
+                                message.buffer = [];
+                            message.buffer.push($root.proto.Metric.decode(reader, reader.uint32()));
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a MetricBuffer message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MetricBuffer.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a MetricBuffer message.
+             * @function verify
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MetricBuffer.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.buffer != null && message.hasOwnProperty("buffer")) {
+                    if (!Array.isArray(message.buffer))
+                        return "buffer: array expected";
+                    for (let i = 0; i < message.buffer.length; ++i) {
+                        let error = $root.proto.Metric.verify(message.buffer[i]);
+                        if (error)
+                            return "buffer." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a MetricBuffer message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
+             */
+            MetricBuffer.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.MessageEnvelope.MetricBuffer)
+                    return object;
+                let message = new $root.proto.MessageEnvelope.MetricBuffer();
+                if (object.buffer) {
+                    if (!Array.isArray(object.buffer))
+                        throw TypeError(".proto.MessageEnvelope.MetricBuffer.buffer: array expected");
+                    message.buffer = [];
+                    for (let i = 0; i < object.buffer.length; ++i) {
+                        if (typeof object.buffer[i] !== "object")
+                            throw TypeError(".proto.MessageEnvelope.MetricBuffer.buffer: object expected");
+                        message.buffer[i] = $root.proto.Metric.fromObject(object.buffer[i]);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a MetricBuffer message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {proto.MessageEnvelope.MetricBuffer} message MetricBuffer
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            MetricBuffer.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.buffer = [];
+                if (message.buffer && message.buffer.length) {
+                    object.buffer = [];
+                    for (let j = 0; j < message.buffer.length; ++j)
+                        object.buffer[j] = $root.proto.Metric.toObject(message.buffer[j], options);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this MetricBuffer to JSON.
+             * @function toJSON
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            MetricBuffer.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for MetricBuffer
+             * @function getTypeUrl
+             * @memberof proto.MessageEnvelope.MetricBuffer
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            MetricBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.MessageEnvelope.MetricBuffer";
+            };
+
+            return MetricBuffer;
         })();
 
         return MessageEnvelope;

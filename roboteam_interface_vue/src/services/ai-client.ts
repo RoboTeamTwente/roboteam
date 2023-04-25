@@ -11,7 +11,7 @@ import {useVisualizationStore} from "../modules/stores/visualization-store";
 
 export const useAIClient = (url: string) => {
     const aiStore = useAIStore();
-    const visualizerStore = useVisualizationStore();
+    const visualizationStore = useVisualizationStore();
     const gameSettingsStore = useGameSettingsStore();
 
     const {ws, status, data, send} = useWebSocket(url, {
@@ -41,6 +41,7 @@ export const useAIClient = (url: string) => {
         const envelope = proto.MessageEnvelope.decode(messageBuffer);
         switch (envelope.kind) {
             case 'setupMessage':
+                console.log('setupMessage', envelope.setupMessage);
                 aiStore.onConnectMsg(envelope.setupMessage!);
 
                 // Forwards current game settings to the backend
@@ -53,7 +54,10 @@ export const useAIClient = (url: string) => {
                 aiStore.onVisionMsg(envelope.state!);
                 break;
             case 'drawingBuffer':
-                visualizerStore.push(envelope.drawingBuffer!);
+                visualizationStore.pushDrawings(envelope.drawingBuffer!);
+                break;
+            case 'metricBuffer':
+                visualizationStore.pushMetrics(envelope.metricBuffer!);
                 break;
             default:
                 console.log('unknown message', envelope);

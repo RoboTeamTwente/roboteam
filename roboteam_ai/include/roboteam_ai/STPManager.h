@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 #include <gtest/gtest_prod.h>
 
 #include <stp/Play.hpp>
@@ -30,6 +31,15 @@ class STPManager {
     int tickCounter = 0;
 
     /**
+     * All the plays that are available to the AI
+     */
+    template <class... T, class Enable = std::enable_if_t<(... && std::is_base_of_v<ai::stp::Play, T>)>>
+    void registerPlays() {
+        plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>{};
+        (plays.emplace_back(std::make_unique<T>()),...);
+    }
+
+    /**
      * Function that decides whether to change plays given a world and field.
      * @param _world the current world state
      */
@@ -41,7 +51,7 @@ class STPManager {
     /**
      * The vector that contains all plays
      */
-    static inline std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays;
+    static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays;
 
     STPManager(STPManager const&) = delete;
     STPManager& operator=(STPManager const&) = delete;

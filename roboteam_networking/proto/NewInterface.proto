@@ -29,6 +29,30 @@ message Drawing {
     repeated Vector2f points = 5;
 }
 
+message Metric {
+    message BoundedValue {
+        float value = 1;
+        float min = 2;
+        float max = 3;
+        string unit = 4;
+    }
+
+    message Decimal {
+        double value = 1;
+
+        // If these are not set they will be computed on the fly in the UI
+        double minRecorded = 2;
+        double maxRecorded = 3;
+        string unit = 4;
+    }
+
+    string label = 1;
+    oneof value {
+        BoundedValue boundedValue = 2;
+        Decimal decimal = 3;
+    }
+}
+
 message STPStatus {
     message STPRobot {
         enum Status {
@@ -75,9 +99,14 @@ message SetupMessage {
     repeated string availableRulesets = 2;
 }
 
+
 message MessageEnvelope {
     message DrawingBuffer {
         repeated Drawing buffer = 1;
+    }
+
+    message MetricBuffer {
+        repeated Metric buffer = 1;
     }
 
     oneof kind {
@@ -85,8 +114,13 @@ message MessageEnvelope {
         SetupMessage setupMessage = 2;
         State state = 3;
         DrawingBuffer drawingBuffer = 4;
+        MetricBuffer metricBuffer = 5;
     }
 }
+
+
+
+
 
 message SetPlay {
     string playName = 1;

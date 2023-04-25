@@ -6,7 +6,7 @@
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
 #include "roboteam_utils/Print.h"
-#include "utilities/WebSocketManager.h"
+#include "interface_api/InterfaceServer.h"
 
 namespace rtt::ai::control {
 RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
@@ -82,17 +82,15 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         }
     }
 
-    rtt::ai::io::WebSocketManager::instance().directDraw(
+    rtt::ai::new_interface::Interface::draw(
         "path_lines" + std::to_string(robotId), proto::Drawing::WHITE, proto::Drawing::LINES_CONNECTED, computedPaths[robotId], 5
     );
 
-    rtt::ai::io::WebSocketManager::instance().directDraw(
+    rtt::ai::new_interface::Interface::draw(
         "path_dots" + std::to_string(robotId), proto::Drawing::MAGENTA, proto::Drawing::DOTS, computedPaths[robotId], 5
     );
 
-//    rtt::ai::io::WebSocketManager::instance().directDraw(
-//        "path", "blue", "dots", computedPaths[robotId], 1
-//    );
+    rtt::ai::new_interface::Interface::reportNumber("Path size for robot " + std::to_string(robotId), computedPaths[robotId].size());
 
     //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::yellow, robotId, interface::Drawing::LINES_CONNECTED);
     //interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::darkMagenta, robotId, interface::Drawing::LINES_CONNECTED);

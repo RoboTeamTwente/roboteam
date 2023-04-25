@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.26)
 project(rtt)
 
 # Get the targets of the dependencies
@@ -17,6 +17,10 @@ include(GetIXWebSocket) # For networking between AI and Interface
 # Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
 include(GoogleTest)
 enable_testing()
+
+# Enable C++ Modules support for Cmake
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API 2182bf5c-ef0d-489a-91da-49dbc3090d2a)
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
 
 # Testing compiler cxx support
 check_cxx_compiler_flag(-std=c++20 COMPILER_SUPPORTS_CXX_20)

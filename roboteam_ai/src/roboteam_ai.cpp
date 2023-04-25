@@ -1,10 +1,10 @@
+
 #include <roboteam_utils/Print.h>
 
 #include "STPManager.h"
+#include "interface_api/InterfaceServer.h"
 #include "roboteam_utils/Timer.h"
 #include "utilities/IOManager.h"
-#include "utilities/WebSocketManager.h"
-#include "world/World.hpp"
 
 namespace ui = rtt::ai::interface;
 
@@ -19,7 +19,7 @@ void runInterfacePublisher(std::atomic_bool& exitApplication) {
     roboteam_utils::Timer interfaceTimer;
     interfaceTimer.loop(
     [&]() {
-        rtt::ai::io::WebSocketManager::instance().broadcastWorld();
+        rtt::ai::io::InterfaceServer::instance().broadcastWorld();
         if (exitApplication) {interfaceTimer.stop();}
     }, 60);
 }
@@ -63,8 +63,9 @@ int main(int argc, char* argv[]) {
 
     RTT_DEBUG("Debug prints enabled")
 
-    rtt::ai::io::WebSocketManager& wsm = rtt::ai::io::WebSocketManager::instance();
-    wsm.waitForConnection();
+    RTT_DEBUG("Initialize Interface Server");
+    rtt::ai::io::InterfaceServer::instance();
+
 
     rtt::ai::Constants::init();
 
@@ -110,7 +111,9 @@ int main(int argc, char* argv[]) {
 
     //Create a flag which signals to the STP thread to stop if the interface is stopped
     std::atomic_bool exitApplication = false;
+
     std::thread stpThread(runStp,std::ref(exitApplication));
+
     std::thread interfaceThread(runInterfacePublisher,std::ref(exitApplication));
 
     window->show();

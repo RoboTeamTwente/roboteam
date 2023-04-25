@@ -14,6 +14,7 @@ add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/Settings.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/StrategyManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/normalize.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceServer.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/WebSocketManager.cpp
 )
 target_link_libraries(roboteam_ai_utils
@@ -21,6 +22,7 @@ target_link_libraries(roboteam_ai_utils
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE ixwebsocket
+        PRIVATE SDL2
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
@@ -322,6 +324,7 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
         # After removing the interface, only this file should remain
         #${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/Interface.cpp
 )
 target_include_directories(roboteam_ai_interface
         PRIVATE include/roboteam_ai

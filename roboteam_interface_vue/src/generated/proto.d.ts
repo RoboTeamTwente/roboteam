@@ -1680,6 +1680,351 @@ export namespace proto {
         }
     }
 
+    /** Properties of a Metric. */
+    interface IMetric {
+
+        /** Metric label */
+        label?: (string|null);
+
+        /** Metric boundedValue */
+        boundedValue?: (proto.Metric.IBoundedValue|null);
+
+        /** Metric decimal */
+        decimal?: (proto.Metric.IDecimal|null);
+    }
+
+    /** Represents a Metric. */
+    class Metric implements IMetric {
+
+        /**
+         * Constructs a new Metric.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IMetric);
+
+        /** Metric label. */
+        public label: string;
+
+        /** Metric boundedValue. */
+        public boundedValue?: (proto.Metric.IBoundedValue|null);
+
+        /** Metric decimal. */
+        public decimal?: (proto.Metric.IDecimal|null);
+
+        /** Metric value. */
+        public value?: ("boundedValue"|"decimal");
+
+        /**
+         * Creates a new Metric instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Metric instance
+         */
+        public static create(properties?: proto.IMetric): proto.Metric;
+
+        /**
+         * Encodes the specified Metric message. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @param message Metric message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Metric message, length delimited. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @param message Metric message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric;
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric;
+
+        /**
+         * Verifies a Metric message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Metric message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Metric
+         */
+        public static fromObject(object: { [k: string]: any }): proto.Metric;
+
+        /**
+         * Creates a plain object from a Metric message. Also converts values to other types if specified.
+         * @param message Metric
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.Metric, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Metric to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for Metric
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace Metric {
+
+        /** Properties of a BoundedValue. */
+        interface IBoundedValue {
+
+            /** BoundedValue value */
+            value?: (number|null);
+
+            /** BoundedValue min */
+            min?: (number|null);
+
+            /** BoundedValue max */
+            max?: (number|null);
+
+            /** BoundedValue unit */
+            unit?: (string|null);
+        }
+
+        /** Represents a BoundedValue. */
+        class BoundedValue implements IBoundedValue {
+
+            /**
+             * Constructs a new BoundedValue.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.Metric.IBoundedValue);
+
+            /** BoundedValue value. */
+            public value: number;
+
+            /** BoundedValue min. */
+            public min: number;
+
+            /** BoundedValue max. */
+            public max: number;
+
+            /** BoundedValue unit. */
+            public unit: string;
+
+            /**
+             * Creates a new BoundedValue instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BoundedValue instance
+             */
+            public static create(properties?: proto.Metric.IBoundedValue): proto.Metric.BoundedValue;
+
+            /**
+             * Encodes the specified BoundedValue message. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @param message BoundedValue message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BoundedValue message, length delimited. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @param message BoundedValue message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BoundedValue message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns BoundedValue
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.BoundedValue;
+
+            /**
+             * Decodes a BoundedValue message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns BoundedValue
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.BoundedValue;
+
+            /**
+             * Verifies a BoundedValue message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a BoundedValue message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns BoundedValue
+             */
+            public static fromObject(object: { [k: string]: any }): proto.Metric.BoundedValue;
+
+            /**
+             * Creates a plain object from a BoundedValue message. Also converts values to other types if specified.
+             * @param message BoundedValue
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.Metric.BoundedValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this BoundedValue to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for BoundedValue
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        /** Properties of a Decimal. */
+        interface IDecimal {
+
+            /** Decimal value */
+            value?: (number|null);
+
+            /** Decimal minRecorded */
+            minRecorded?: (number|null);
+
+            /** Decimal maxRecorded */
+            maxRecorded?: (number|null);
+
+            /** Decimal unit */
+            unit?: (string|null);
+        }
+
+        /** Represents a Decimal. */
+        class Decimal implements IDecimal {
+
+            /**
+             * Constructs a new Decimal.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.Metric.IDecimal);
+
+            /** Decimal value. */
+            public value: number;
+
+            /** Decimal minRecorded. */
+            public minRecorded: number;
+
+            /** Decimal maxRecorded. */
+            public maxRecorded: number;
+
+            /** Decimal unit. */
+            public unit: string;
+
+            /**
+             * Creates a new Decimal instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Decimal instance
+             */
+            public static create(properties?: proto.Metric.IDecimal): proto.Metric.Decimal;
+
+            /**
+             * Encodes the specified Decimal message. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @param message Decimal message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Decimal message, length delimited. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @param message Decimal message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.Decimal;
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.Decimal;
+
+            /**
+             * Verifies a Decimal message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Decimal message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Decimal
+             */
+            public static fromObject(object: { [k: string]: any }): proto.Metric.Decimal;
+
+            /**
+             * Creates a plain object from a Decimal message. Also converts values to other types if specified.
+             * @param message Decimal
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.Metric.Decimal, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Decimal to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for Decimal
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+    }
+
     /** Properties of a STPStatus. */
     interface ISTPStatus {
 
@@ -2453,6 +2798,9 @@ export namespace proto {
 
         /** MessageEnvelope drawingBuffer */
         drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
+
+        /** MessageEnvelope metricBuffer */
+        metricBuffer?: (proto.MessageEnvelope.IMetricBuffer|null);
     }
 
     /** Represents a MessageEnvelope. */
@@ -2476,8 +2824,11 @@ export namespace proto {
         /** MessageEnvelope drawingBuffer. */
         public drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
 
+        /** MessageEnvelope metricBuffer. */
+        public metricBuffer?: (proto.MessageEnvelope.IMetricBuffer|null);
+
         /** MessageEnvelope kind. */
-        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawingBuffer");
+        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawingBuffer"|"metricBuffer");
 
         /**
          * Creates a new MessageEnvelope instance using the specified properties.
@@ -2650,6 +3001,103 @@ export namespace proto {
 
             /**
              * Gets the default type url for DrawingBuffer
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        /** Properties of a MetricBuffer. */
+        interface IMetricBuffer {
+
+            /** MetricBuffer buffer */
+            buffer?: (proto.IMetric[]|null);
+        }
+
+        /** Represents a MetricBuffer. */
+        class MetricBuffer implements IMetricBuffer {
+
+            /**
+             * Constructs a new MetricBuffer.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.MessageEnvelope.IMetricBuffer);
+
+            /** MetricBuffer buffer. */
+            public buffer: proto.IMetric[];
+
+            /**
+             * Creates a new MetricBuffer instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MetricBuffer instance
+             */
+            public static create(properties?: proto.MessageEnvelope.IMetricBuffer): proto.MessageEnvelope.MetricBuffer;
+
+            /**
+             * Encodes the specified MetricBuffer message. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
+             * @param message MetricBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.MessageEnvelope.IMetricBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MetricBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
+             * @param message MetricBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.MessageEnvelope.IMetricBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MetricBuffer message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns MetricBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MessageEnvelope.MetricBuffer;
+
+            /**
+             * Decodes a MetricBuffer message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns MetricBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MessageEnvelope.MetricBuffer;
+
+            /**
+             * Verifies a MetricBuffer message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a MetricBuffer message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns MetricBuffer
+             */
+            public static fromObject(object: { [k: string]: any }): proto.MessageEnvelope.MetricBuffer;
+
+            /**
+             * Creates a plain object from a MetricBuffer message. Also converts values to other types if specified.
+             * @param message MetricBuffer
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.MessageEnvelope.MetricBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this MetricBuffer to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for MetricBuffer
              * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns The default type url
              */

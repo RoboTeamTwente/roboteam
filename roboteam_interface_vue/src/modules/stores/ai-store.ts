@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import {useCssVar} from "@vueuse/core";
-import {computed, ref, ShallowRef, shallowRef, watch} from "vue";
+import {computed, ref, ShallowRef, shallowRef, toRaw, watch} from "vue";
 
 import {proto} from "../../generated/proto";
 import ISTPStatus = proto.ISTPStatus;
@@ -10,6 +10,9 @@ import IWorld = proto.IWorld;
 import ISSL_GeometryFieldSize = proto.ISSL_GeometryFieldSize;
 import {useGameSettingsStore} from "./game-settings-store";
 
+const sleep = (time: number) => {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 type DeepReadonly<T> = T extends Function ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
 type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>;
@@ -56,7 +59,7 @@ export const useAIStore = defineStore('aiStore', () => {
         latestWorld: null,
     });
 
-    const onConnectMsg = (msg: proto.ISetupMessage) => {
+    const processSetupMsg = (msg: proto.ISetupMessage) => {
         console.log(msg);
         gameController.value = {
             availablePlays: msg.availablePlays!,
@@ -73,12 +76,14 @@ export const useAIStore = defineStore('aiStore', () => {
         };
     }
 
-    const onSTPStatusMsg = (msg: proto.ISTPStatus) => {
+    const processSTPMsg = (msg: proto.ISTPStatus) => {
         stpData.value.latest = msg;
-        stpData.value.currentTick++;
+
+        // TODO: Might be unnecesary, but this way we can observer the tick separately
+        stpData.value.currentTick = msg.currentTick ?? -1;
     }
 
-    const onVisionMsg = (msg: proto.IState) => {
+    const processVisionMsg = (msg: proto.IState) => {
         if (msg.lastSeenWorld == null) {
             console.warn("Received world is null");
         }
@@ -96,6 +101,19 @@ export const useAIStore = defineStore('aiStore', () => {
         gameController.value.ruleset = 'default';
     };
 
+    const resetPlay = async () => {
+        const play = toRaw(gameController.value.play);
+        const ruleset = toRaw(gameController.value.ruleset);
+
+        gameController.value.play = haltPlayName;
+        gameController.value.ruleset = 'default';
+
+        await sleep(10);
+
+        gameController.value.play = play;
+        gameController.value.ruleset = ruleset;
+    }
+
     const ourRobots = computed(() => {
         return gameSettingStore.team === 'blue'
             ? visionData.value.latestWorld?.blue
@@ -106,10 +124,11 @@ export const useAIStore = defineStore('aiStore', () => {
         gameController,
         stpData,
         visionData,
-        onConnectMsg,
-        onSTPStatusMsg,
-        onVisionMsg,
+        onConnectMsg: processSetupMsg,
+        onSTPStatusMsg: processSTPMsg,
+        onVisionMsg: processVisionMsg,
         haltPlay,
+        resetPlay,
         ourRobots
     }
 });

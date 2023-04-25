@@ -4,8 +4,11 @@ import IDrawing = proto.IDrawing;
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {DeepReadonly, toRaw} from "vue";
 
-import pixelWhite from '../../assets/pixel-white.png';
+import pixel from '../../assets/pixel-white.png';
 import dot from '../../assets/dot-16x16.png';
+import cross from '../../assets/cross-16x16.png';
+import pluses from '../../assets/pluses-16x16.png';
+import {valueOf} from "daisyui";
 
 type Team = 'yellow' | 'blue';
 
@@ -30,18 +33,15 @@ export const useFieldObjectStorage = () => {
         blueRobots: new Map<number, RobotDrawing>(),
         yellowRobots: new Map<number, RobotDrawing>(),
         shapes: new ShapeMap<string, ShapeDrawing>(),
-    }
-
+    };
     const layers = {
         fieldGeometry: new Container(),
         movingObjects: new Container(),
         shapeLayer: new Container(),
-    }
+    };
+
 
     const clearRobotsDrawings = () => {
-        drawings.ball.destroy();
-        drawings.ball = new BallDrawing();
-
         drawings.yellowRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
         drawings.blueRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
         drawings.yellowRobots.clear();
@@ -83,6 +83,7 @@ const mmToPx = (mm: number): number => {
 export class RobotDrawing extends Container {
     readonly originalColor: string;
     robotElem: Graphics;
+    velocityMeter: Graphics
     textElem?: Text;
 
     constructor({
@@ -93,10 +94,14 @@ export class RobotDrawing extends Container {
         super();
         this.originalColor = team === 'yellow' ? Colors.yellow : Colors.blue
 
-        // Robot drawing is always the first child
+        this.velocityMeter = new Graphics()
+            .lineStyle(4, Colors.fieldLines, 0)
+            .lineTo(100, 100)
+        this.addChild(this.velocityMeter);
+
         this.robotElem = new Graphics()
             .beginFill(this.originalColor)
-            .arc(0, 0, 15, 0.86707957, -0.86707957)
+            .arc(0, 0, 0.089 * 100, 0.86707957, -0.86707957)
             .endFill();
         this.addChild(this.robotElem);
 
@@ -120,6 +125,16 @@ export class RobotDrawing extends Container {
         this.x = x * 100;
         this.y = y * 100;
         this.robotElem.angle = angle * 57;
+
+    }
+
+    setVelocity(showVelocity: boolean, x: number, y: number) {
+        this.velocityMeter.clear()
+        if (showVelocity) {
+            this.velocityMeter
+                .lineStyle(1, Colors.fieldLines, 1)
+                .lineTo(x * 100, y * 100);
+        }
     }
 
 }
@@ -129,7 +144,7 @@ export class BallDrawing extends Graphics {
     constructor() {
         super();
         this.beginFill(Colors.ball)
-        this.drawCircle(0, 0, 10)
+        this.drawCircle(0, 0, 0.0215 * 100)
         this.endFill()
     }
 
@@ -140,7 +155,10 @@ export class BallDrawing extends Graphics {
 }
 
 export class FieldDrawing extends Graphics {
-    constructor({fieldGeometry, fieldColors}: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, fieldColors: FieldColors}) {
+    constructor({
+                    fieldGeometry,
+                    fieldColors
+                }: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, fieldColors: FieldColors }) {
         super();
         fieldGeometry.fieldLines?.forEach((line) => {
             switch (line.name) {
@@ -181,25 +199,37 @@ export class ShapeDrawing extends Container {
             }
         });
 
-        switch (data.method!) {
-            case proto.Drawing.Method.LINES_CONNECTED:
-                const lineTexture = Texture.from(pixelWhite);
-                const strip = new SimpleRope(lineTexture, points, 4);
-                strip.tint = protoColorToHex(data.color!);
-                this.addChild(strip);
-                break;
-            case proto.Drawing.Method.DOTS:
-                const dotTexture = Texture.from(dot);
-                points.forEach((point) => {
-                    const dot = new Sprite(dotTexture);
-                    dot.width = 6;
-                    dot.height = 6;
-                    dot.tint = protoColorToHex(data.color!);
-                    dot.position.copyFrom(point);
-                    this.addChild(dot);
-                });
-                break;
+        if (data.method! === proto.Drawing.Method.LINES_CONNECTED) {
+            const lineTexture = Texture.from(pixel);
+            const strip = new SimpleRope(lineTexture, points, 4);
+            strip.tint = protoColorToHex(data.color!);
+            this.addChild(strip);
+            return;
         }
+
+        // For proto.Drawing.Method.DOTS
+        let values = {
+            size: 6, texture: dot,
+        };
+        if (data.method == proto.Drawing.Method.PLUSES) {
+            values = {
+                size: 12, texture: pluses,
+            }
+        } else if (data.method === proto.Drawing.Method.CROSSES) {
+            values = {
+                size: 12, texture: cross,
+            }
+        }
+
+        const texture = Texture.from(values.texture);
+        points.forEach((point) => {
+            const sprite = new Sprite(texture);
+            sprite.width = values.size;
+            sprite.height = values.size;
+            sprite.tint = protoColorToHex(data.color!);
+            sprite.position.copyFrom(point);
+            this.addChild(sprite);
+        });
     }
 }
 

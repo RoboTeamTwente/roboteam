@@ -10,7 +10,13 @@ const defaultState: () => UiStore = () => ({
         size: 250,
         collapsed: false
     },
-    selectedRobots: new Set([])
+    selectedRobots: new Set([]),
+    scaling: {
+        ball: 1,
+        robots: 1,
+    },
+    showVelocity: true,
+    showDrawings: true,
 });
 
 type Panel = {
@@ -22,6 +28,12 @@ export type UiStore = {
     bottomPanel: Panel
     leftPanel: Panel
     selectedRobots: Set<number>
+    scaling: {
+        ball: number,
+        robots: number,
+    },
+    showVelocity: boolean,
+    showDrawings: boolean,
 }
 export const useUIStore = defineStore('uiStore', {
     persist: {

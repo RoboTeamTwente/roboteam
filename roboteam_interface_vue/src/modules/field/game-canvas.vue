@@ -20,6 +20,7 @@ import IWorldRobot = proto.IWorldRobot;
 import {useUIStore} from "../stores/ui-store";
 import {useAIStore} from "../stores/ai-store";
 import {useVisualizationStore} from "../stores/visualization-store";
+
 const canvas = ref<HTMLCanvasElement | null>(null);
 
 const gameStore = useGameSettingsStore();
@@ -44,6 +45,14 @@ watch(() => gameStore.team, () => {
   drawField(aiStore.visionData.latestField);
 });
 
+watch(() => uiStore.scaling.ball, () => scale());
+watch(() => uiStore.scaling.robots, () => scale());
+const scale = () => {
+  drawings.ball.scale.set(uiStore.scaling.ball);
+  drawings.blueRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
+  drawings.yellowRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
+};
+
 
 const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, team: 'yellow' | 'blue') => {
   const robotId = robot.id ?? -1;
@@ -56,12 +65,14 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
           : undefined,
     });
 
+    drawing.scale.set(uiStore.scaling.robots);
     layers.movingObjects.addChild(drawing);
     drawingsMap.set(robotId, drawing);
   }
   const drawing = drawingsMap.get(robotId)!;
   drawing.toggleSelection(toRaw(uiStore.isaRobotSelected(robotId)) && team == gameStore.team);
   drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + (-robot.angle ?? 0));
+  drawing.setVelocity(uiStore.showVelocity, gameStore.fieldOrientation.x * robot.vel!.x!, gameStore.fieldOrientation.y * robot.vel!.y!);
 }
 
 const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => {
@@ -79,7 +90,6 @@ const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => 
 
 const initPixiApp = () => {
   console.debug("Init Pixi app");
-
   app = new Application({
     width: aiStore.visionData.latestField?.fieldLength! / 10 * 1.15,
     height: aiStore.visionData.latestField?.fieldWidth! / 10 * 1.15,
@@ -97,6 +107,8 @@ const initPixiApp = () => {
 
   // Init ball drawing
   drawings.ball = new BallDrawing();
+  drawings.ball.scale.set(uiStore.scaling.ball);
+
   layers.movingObjects.addChild(drawings.ball!);
 
   // this puts the (0, 0) coordinates to the center of the stage
@@ -125,7 +137,9 @@ const initPixiApp = () => {
 
 const onPixiTick = () => {
   const world = aiStore.visionData.latestWorld;
-  if (world == null) { return;}
+  if (world == null) {
+    return;
+  }
 
   // Update robot drawings
   world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, 'yellow'));
@@ -135,13 +149,14 @@ const onPixiTick = () => {
   drawings.ball.moveOnField(gameStore.fieldOrientation.x * world!.ball!.pos!.x!, gameStore.fieldOrientation.y * world.ball!.pos!.y!);
 
   // Draw the latest shapes received from the AI
-  visualizationStore
-      .popAllDrawings()
-      .forEach(props => {
-        const shape = new ShapeDrawing({data: props, currentTick: aiStore.stpData.currentTick});
-        layers.shapeLayer.addChild(shape);
-        drawings.shapes.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
-      });
+  const buffer = visualizationStore.popAllDrawings();
+  if (uiStore.showDrawings) {
+    buffer.forEach(props => {
+      const shape = new ShapeDrawing({data: props, currentTick: aiStore.stpData.currentTick});
+      layers.shapeLayer.addChild(shape);
+      drawings.shapes.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
+    });
+  }
 }
 
 onMounted(initPixiApp);

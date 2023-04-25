@@ -4023,6 +4023,8 @@ export const proto = $root.proto = (() => {
                     return "method: enum value expected";
                 case 0:
                 case 1:
+                case 2:
+                case 3:
                     break;
                 }
             if (message.points != null && message.hasOwnProperty("points")) {
@@ -4108,6 +4110,14 @@ export const proto = $root.proto = (() => {
             case 1:
                 message.method = 1;
                 break;
+            case "CROSSES":
+            case 2:
+                message.method = 2;
+                break;
+            case "PLUSES":
+            case 3:
+                message.method = 3;
+                break;
             }
             if (object.points) {
                 if (!Array.isArray(object.points))
@@ -4191,11 +4201,15 @@ export const proto = $root.proto = (() => {
          * @enum {number}
          * @property {number} LINES_CONNECTED=0 LINES_CONNECTED value
          * @property {number} DOTS=1 DOTS value
+         * @property {number} CROSSES=2 CROSSES value
+         * @property {number} PLUSES=3 PLUSES value
          */
         Drawing.Method = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "LINES_CONNECTED"] = 0;
             values[valuesById[1] = "DOTS"] = 1;
+            values[valuesById[2] = "CROSSES"] = 2;
+            values[valuesById[3] = "PLUSES"] = 3;
             return values;
         })();
 

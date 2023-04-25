@@ -17,8 +17,8 @@ const uiStore = useUIStore();
           <font-awesome-icon icon="robot"/> {{robot.id}}
         </div>
         <robot-stp-badge :name="robot.role?.name" :status="robot.role?.status"/>
-        <robot-stp-badge :name="robot.tactic?.name" :status="robot.tactic?.status"/>
-        <robot-stp-badge :name="robot.skill?.name" :status="robot.skill?.status"/>
+        <robot-stp-badge v-if="robot.tactic != null" :name="robot.tactic.name" :status="robot.tactic.status"/>
+        <robot-stp-badge v-if="robot.skill != null" :name="robot.skill.name" :status="robot.skill.status"/>
       </div>
 
     </template>

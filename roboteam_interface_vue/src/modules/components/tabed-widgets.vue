@@ -5,6 +5,7 @@ import StpStatus from "./stp-status.vue";
 import Feedback from "./feedback.vue";
 import PlaysHistogram from "./plays-histogram.vue";
 import Metrics from "./metrics.vue";
+import UiSettings from "./ui-settings.vue";
 
 const activeTab = ref(0);
 </script>
@@ -32,6 +33,10 @@ const activeTab = ref(0);
         <font-awesome-icon icon="fa-gauge"/>
         Metrics
       </a>
+      <a class="tab tab-bordered gap-1 flex-nowrap" @click="activeTab = 5" :class="{'tab-active': activeTab ===5}">
+        <font-awesome-icon icon="fa-gear"/>
+        UI Setting
+      </a>
       <div class="tab tab-bordered gap-1 flex-nowrap w-full " />
     </div>
     <div class="p-2 overflow-auto">
@@ -40,6 +45,7 @@ const activeTab = ref(0);
       <feedback v-if="activeTab === 2"/>
       <plays-histogram v-if="activeTab === 3"/>
       <metrics v-if="activeTab === 4"/>
+      <ui-settings v-if="activeTab === 5"/>
     </div>
   </div>
 </template>

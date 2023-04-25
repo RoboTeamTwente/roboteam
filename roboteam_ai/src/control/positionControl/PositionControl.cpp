@@ -87,7 +87,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     );
 
     rtt::ai::new_interface::Interface::draw(
-        "path_dots" + std::to_string(robotId), proto::Drawing::MAGENTA, proto::Drawing::DOTS, computedPaths[robotId], 5
+        "path_dots" + std::to_string(robotId), proto::Drawing::MAGENTA, proto::Drawing::PLUSES, computedPaths[robotId], 5
     );
 
     rtt::ai::new_interface::Interface::reportNumber("Path size for robot " + std::to_string(robotId), computedPaths[robotId].size());

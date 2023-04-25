@@ -1664,7 +1664,9 @@ export namespace proto {
         /** Method enum. */
         enum Method {
             LINES_CONNECTED = 0,
-            DOTS = 1
+            DOTS = 1,
+            CROSSES = 2,
+            PLUSES = 3
         }
 
         /** Color enum. */

@@ -39,12 +39,16 @@ void InterfaceServer::broadcastSTPStatus(stp::Play* selectedPlay, const std::vec
         robotMsg.mutable_role()->set_status(proto::STPStatus::STPRobot::Status{static_cast<int>(status)});
 
         // Tactic status
-        robotMsg.mutable_tactic()->set_name(role->getCurrentTactic()->getName());
-        robotMsg.mutable_tactic()->set_status(proto::STPStatus::STPRobot::Status{static_cast<int>(role->getCurrentTactic()->getStatus())});
+        const auto tactic = role->getCurrentTactic();
+        if (!tactic) {continue;}
+        robotMsg.mutable_tactic()->set_name(tactic->getName());
+        robotMsg.mutable_tactic()->set_status(proto::STPStatus::STPRobot::Status{static_cast<int>(tactic->getStatus())});
 
         // Skill status
-        robotMsg.mutable_skill()->set_name(role->getCurrentTactic()->getCurrentSkill()->getName());
-        robotMsg.mutable_skill()->set_status(proto::STPStatus::STPRobot::Status{static_cast<int>(role->getCurrentTactic()->getCurrentSkill()->getStatus())});
+        const auto skill = tactic->getCurrentSkill();
+        if (!skill) {continue;}
+        robotMsg.mutable_skill()->set_name(skill->getName());
+        robotMsg.mutable_skill()->set_status(proto::STPStatus::STPRobot::Status{static_cast<int>(skill->getStatus())});
     }
     broadcastMessage(envelope);
 }

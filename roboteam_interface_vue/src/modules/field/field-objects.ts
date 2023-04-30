@@ -4,11 +4,14 @@ import IDrawing = proto.IDrawing;
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {DeepReadonly, toRaw} from "vue";
 
+// @ts-ignore
 import pixel from '../../assets/pixel-white.png';
+// @ts-ignore
 import dot from '../../assets/dot-16x16.png';
+// @ts-ignore
 import cross from '../../assets/cross-16x16.png';
+// @ts-ignore
 import pluses from '../../assets/pluses-16x16.png';
-import {valueOf} from "daisyui";
 
 type Team = 'yellow' | 'blue';
 
@@ -201,6 +204,7 @@ export class ShapeDrawing extends Container {
 
         if (data.method! === proto.Drawing.Method.LINES_CONNECTED) {
             const lineTexture = Texture.from(pixel);
+            // @ts-ignore Vector2[] is compatible with IPoint[] shape
             const strip = new SimpleRope(lineTexture, points, 4);
             strip.tint = protoColorToHex(data.color!);
             this.addChild(strip);

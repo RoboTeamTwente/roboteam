@@ -6,7 +6,7 @@ import {useAIStore} from "../stores/ai-store";
 const aiStore = useAIStore();
 const uiStore = useUIStore();
 
-const formatFloat = (pos?: number): string => {
+const formatFloat = (pos?: number | null): string => {
   if (pos === undefined || pos === null) {
     return '0.00';
   }
@@ -22,7 +22,7 @@ const formatFloat = (pos?: number): string => {
   <div class="grid grid-cols-fluid-12  gap-2 ">
     <template v-for="(robot, id) in aiStore.ourRobots" :key="id">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
-        'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id)
+        'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id!)
       }">
         <div class="flex flex-wrap gap-1 mb-2">
           <div class="badge badge-sm">

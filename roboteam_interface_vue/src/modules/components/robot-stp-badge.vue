@@ -2,6 +2,8 @@
 import {computed} from "vue";
 import {proto} from "../../generated/proto";
 import Status = proto.STPStatus.STPRobot.Status;
+import ISTPStatus = proto.ISTPStatus;
+import STPRobot = proto.STPStatus.STPRobot;
 
 export type Skill =
     | 'Chip'
@@ -55,72 +57,73 @@ export type Tactics =
 
 
 const props = defineProps<{
-  status: Status,
-  name: Skill | Role | Tactics
+    status: STPRobot.Status | 'Unknown'
+    name: string | 'Unknown'
 }>();
 
 const statusIcon = computed(() => {
-  return {
-    1: "fa-circle-check",
-    3: 'fa-arrows-rotate',
-    2: 'fa-triangle-exclamation',
-    0: 'fa-hourglass-start',
-  }[props.status] || 'fa-question';
-
+    return {
+        1: "fa-circle-check",
+        3: 'fa-arrows-rotate',
+        2: 'fa-triangle-exclamation',
+        0: 'fa-hourglass-start',
+        'Unknown': 'fa-question',
+    }[props.status]
 })
 
 const icon = computed(() => {
-  return {
-    'Chip': "fa-arrow-up-right",
-    'Go To Position': 'fa-arrow-right',
-    'Rotate': 'fa-undo',
-    'Orbit': 'fa-circle',
-    'Kick': 'fa-futbol',
-    'Orbit Angular': 'fa-circle',
-    'Attacker': 'fa-crosshairs',
-    'Ball Placer': 'fa-bullseye',
-    'Chipper': 'fa-arrow-up-right',
-    'Free Kick Taker': 'fa-futbol',
-    'Harasser': 'fa-hand-rock',
-    'Keeper Passer': 'fa-hands-helping',
-    'Passer': 'fa-long-arrow-alt-right',
-    'Pass Receiver': 'fa-circle',
-    'passive': 'fa-dizzy',
-    'Ball Avoider': 'fa-stop',
-    'Ball Defender': 'fa-shield-alt',
-    'Robot Defender': 'fa-robot',
-    'Keeper': 'fa-grip-vertical',
-    'Penalty Keeper': 'fa-grin-beam-sweat',
-    'Test Role': 'fa-flask',
-    'Get Behind Ball In Direction': "fa-chevron-circle-down",
-    'Chip At Position': 'fa-arrow-up-right',
-    'Drive With Ball': 'fa-forward',
-    'Get Ball': 'fa-dot-circle',
-    'Kick At Pos': 'fa-futbol',
-    'Orbit Kick': 'fa-circle',
-    'Receive': 'fa-circle',
-    'Avoid Ball': 'fa-exclamation-triangle',
-    'Ball Stand Back': 'fa-reply',
-    'Block Ball': 'fa-hand-paper',
-    'Block Robot': 'fa-shield-alt',
-    'Formation': 'fa-sitemap',
-    'Halt': 'fa-stop-circle',
-    'Keeper Block Ball': 'fa-hand-rock',
-    'Test Tactic': 'fa-cogs'
-  } [props.name] || 'fa-hashtag'
+    return {
+        'Chip': "fa-arrow-up-right",
+        'Go To Position': 'fa-arrow-right',
+        'Rotate': 'fa-undo',
+        'Orbit': 'fa-circle',
+        'Kick': 'fa-futbol',
+        'Orbit Angular': 'fa-circle',
+        'Attacker': 'fa-crosshairs',
+        'Ball Placer': 'fa-bullseye',
+        'Chipper': 'fa-arrow-up-right',
+        'Free Kick Taker': 'fa-futbol',
+        'Harasser': 'fa-hand-rock',
+        'Keeper Passer': 'fa-hands-helping',
+        'Passer': 'fa-long-arrow-alt-right',
+        'Pass Receiver': 'fa-circle',
+        'passive': 'fa-dizzy',
+        'Ball Avoider': 'fa-stop',
+        'Ball Defender': 'fa-shield-alt',
+        'Robot Defender': 'fa-robot',
+        'Keeper': 'fa-grip-vertical',
+        'Penalty Keeper': 'fa-grin-beam-sweat',
+        'Test Role': 'fa-flask',
+        'Get Behind Ball In Direction': "fa-chevron-circle-down",
+        'Chip At Position': 'fa-arrow-up-right',
+        'Drive With Ball': 'fa-forward',
+        'Get Ball': 'fa-dot-circle',
+        'Kick At Pos': 'fa-futbol',
+        'Orbit Kick': 'fa-circle',
+        'Receive': 'fa-circle',
+        'Avoid Ball': 'fa-exclamation-triangle',
+        'Ball Stand Back': 'fa-reply',
+        'Block Ball': 'fa-hand-paper',
+        'Block Robot': 'fa-shield-alt',
+        'Formation': 'fa-sitemap',
+        'Halt': 'fa-stop-circle',
+        'Keeper Block Ball': 'fa-hand-rock',
+        'Test Tactic': 'fa-cogs',
+        'Unknown': 'fa-question'
+    } [props.name] || 'fa-hashtag'
 
 });
 
 </script>
 
 <template>
-  <div class="kbd gap-2 text-sm md:text-base flex justify-between">
-    <font-awesome-icon :icon="icon" class="w-3 h-3"/>
-    {{ props.name }}
-    <font-awesome-icon :icon="statusIcon" :spin="props.status === 3" class="w-3 h-3 text-secondary" :class="{
+    <div class="kbd gap-2 text-sm md:text-base flex justify-between">
+        <font-awesome-icon :icon="icon" class="w-3 h-3"/>
+        {{ props.name }}
+        <font-awesome-icon :icon="statusIcon" :spin="props.status === 3" class="w-3 h-3 text-secondary" :class="{
         'text-success': props.status === 1,
         'text-error': props.status === 2,
     }"/>
-  </div>
+    </div>
 </template>
 

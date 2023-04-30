@@ -71,7 +71,7 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
   }
   const drawing = drawingsMap.get(robotId)!;
   drawing.toggleSelection(toRaw(uiStore.isaRobotSelected(robotId)) && team == gameStore.team);
-  drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + (-robot.angle ?? 0));
+  drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + -(robot.angle ?? 0));
   drawing.setVelocity(uiStore.showVelocity, gameStore.fieldOrientation.x * robot.vel!.x!, gameStore.fieldOrientation.y * robot.vel!.y!);
 }
 

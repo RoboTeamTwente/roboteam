@@ -1,16 +1,16 @@
 import {defineStore} from "pinia";
 import {proto} from "../../generated/proto";
 import {ref, shallowRef} from "vue";
-import IDrawingBuffer = proto.MessageEnvelope.IDrawingBuffer;
-import IMetricBuffer = proto.MessageEnvelope.IMetricBuffer;
+import IMetric = proto.IMetric;
+import IDrawing = proto.IDrawing;
 
 
 export const useVisualizationStore = defineStore('useVisStore', () => {
     const drawingsBuffer = shallowRef<Readonly<proto.IDrawing[]>>([]);
     const metrics = ref<Map<string, proto.IMetric>>(new Map());
 
-    const pushMetrics = (msg: IMetricBuffer) => {
-        msg.buffer?.forEach(metric => {
+    const pushMetrics = (msg: IMetric[]) => {
+        msg.forEach(metric => {
             if (metric.decimal != null) {
                 let decimal = {
                     ...metrics.value.get(metric.label!)?.decimal,
@@ -35,13 +35,13 @@ export const useVisualizationStore = defineStore('useVisStore', () => {
         });
     }
 
-    const pushDrawings = (drawingBuffer: IDrawingBuffer) => {
-        if (drawingsBuffer.value.length + (drawingBuffer.buffer?.length ?? 0)  > 250) {
+    const pushDrawings = (drawingBuffer: IDrawing[]) => {
+        if (drawingsBuffer.value.length + (drawingBuffer.length ?? 0)  > 250) {
             console.warn("Too many drawings, removing oldest");
-            drawingsBuffer.value = drawingsBuffer.value.slice(drawingBuffer.buffer?.length ?? 0);
+            drawingsBuffer.value = drawingsBuffer.value.slice(drawingBuffer.length ?? 0);
         }
 
-        drawingsBuffer.value = [...drawingsBuffer.value, ...drawingBuffer.buffer!];
+        drawingsBuffer.value = [...drawingsBuffer.value, ...drawingBuffer];
     };
 
     const popAllDrawings = () => {

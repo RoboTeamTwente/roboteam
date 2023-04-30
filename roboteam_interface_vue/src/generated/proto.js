@@ -3813,6 +3813,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.Drawing.Color|null} [color] Drawing color
          * @property {proto.Drawing.Method|null} [method] Drawing method
          * @property {Array.<proto.IVector2f>|null} [points] Drawing points
+         * @property {proto.Drawing.Category|null} [category] Drawing category
          */
 
         /**
@@ -3872,6 +3873,14 @@ export const proto = $root.proto = (() => {
         Drawing.prototype.points = $util.emptyArray;
 
         /**
+         * Drawing category.
+         * @member {proto.Drawing.Category} category
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.category = 0;
+
+        /**
          * Creates a new Drawing instance using the specified properties.
          * @function create
          * @memberof proto.Drawing
@@ -3906,6 +3915,8 @@ export const proto = $root.proto = (() => {
             if (message.points != null && message.points.length)
                 for (let i = 0; i < message.points.length; ++i)
                     $root.proto.Vector2f.encode(message.points[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.category != null && Object.hasOwnProperty.call(message, "category"))
+                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.category);
             return writer;
         };
 
@@ -3960,6 +3971,10 @@ export const proto = $root.proto = (() => {
                         if (!(message.points && message.points.length))
                             message.points = [];
                         message.points.push($root.proto.Vector2f.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 6: {
+                        message.category = reader.int32();
                         break;
                     }
                 default:
@@ -4036,6 +4051,14 @@ export const proto = $root.proto = (() => {
                         return "points." + error;
                 }
             }
+            if (message.category != null && message.hasOwnProperty("category"))
+                switch (message.category) {
+                default:
+                    return "category: enum value expected";
+                case 0:
+                case 1:
+                    break;
+                }
             return null;
         };
 
@@ -4129,6 +4152,22 @@ export const proto = $root.proto = (() => {
                     message.points[i] = $root.proto.Vector2f.fromObject(object.points[i]);
                 }
             }
+            switch (object.category) {
+            default:
+                if (typeof object.category === "number") {
+                    message.category = object.category;
+                    break;
+                }
+                break;
+            case "PATH_PLANNING":
+            case 0:
+                message.category = 0;
+                break;
+            case "DEBUG":
+            case 1:
+                message.category = 1;
+                break;
+            }
             return message;
         };
 
@@ -4152,6 +4191,7 @@ export const proto = $root.proto = (() => {
                 object.label = "";
                 object.color = options.enums === String ? "RED" : 0;
                 object.method = options.enums === String ? "LINES_CONNECTED" : 0;
+                object.category = options.enums === String ? "PATH_PLANNING" : 0;
             }
             if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
                 object.retainForTicks = message.retainForTicks;
@@ -4166,6 +4206,8 @@ export const proto = $root.proto = (() => {
                 for (let j = 0; j < message.points.length; ++j)
                     object.points[j] = $root.proto.Vector2f.toObject(message.points[j], options);
             }
+            if (message.category != null && message.hasOwnProperty("category"))
+                object.category = options.enums === String ? $root.proto.Drawing.Category[message.category] === undefined ? message.category : $root.proto.Drawing.Category[message.category] : message.category;
             return object;
         };
 
@@ -4236,6 +4278,20 @@ export const proto = $root.proto = (() => {
             values[valuesById[5] = "MAGENTA"] = 5;
             values[valuesById[6] = "WHITE"] = 6;
             values[valuesById[7] = "BLACK"] = 7;
+            return values;
+        })();
+
+        /**
+         * Category enum.
+         * @name proto.Drawing.Category
+         * @enum {number}
+         * @property {number} PATH_PLANNING=0 PATH_PLANNING value
+         * @property {number} DEBUG=1 DEBUG value
+         */
+        Drawing.Category = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "PATH_PLANNING"] = 0;
+            values[valuesById[1] = "DEBUG"] = 1;
             return values;
         })();
 
@@ -5707,17 +5763,17 @@ export const proto = $root.proto = (() => {
              * Status enum.
              * @name proto.STPStatus.STPRobot.Status
              * @enum {number}
-             * @property {number} Waiting=0 Waiting value
-             * @property {number} Success=1 Success value
-             * @property {number} Failure=2 Failure value
-             * @property {number} Running=3 Running value
+             * @property {number} WAITING=0 WAITING value
+             * @property {number} SUCCESSFUL=1 SUCCESSFUL value
+             * @property {number} FAILURE=2 FAILURE value
+             * @property {number} RUNNING=3 RUNNING value
              */
             STPRobot.Status = (function() {
                 const valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "Waiting"] = 0;
-                values[valuesById[1] = "Success"] = 1;
-                values[valuesById[2] = "Failure"] = 2;
-                values[valuesById[3] = "Running"] = 3;
+                values[valuesById[0] = "WAITING"] = 0;
+                values[valuesById[1] = "SUCCESSFUL"] = 1;
+                values[valuesById[2] = "FAILURE"] = 2;
+                values[valuesById[3] = "RUNNING"] = 3;
                 return values;
             })();
 
@@ -5904,19 +5960,19 @@ export const proto = $root.proto = (() => {
                             break;
                         }
                         break;
-                    case "Waiting":
+                    case "WAITING":
                     case 0:
                         message.status = 0;
                         break;
-                    case "Success":
+                    case "SUCCESSFUL":
                     case 1:
                         message.status = 1;
                         break;
-                    case "Failure":
+                    case "FAILURE":
                     case 2:
                         message.status = 2;
                         break;
-                    case "Running":
+                    case "RUNNING":
                     case 3:
                         message.status = 3;
                         break;
@@ -5939,7 +5995,7 @@ export const proto = $root.proto = (() => {
                     let object = {};
                     if (options.defaults) {
                         object.name = "";
-                        object.status = options.enums === String ? "Waiting" : 0;
+                        object.status = options.enums === String ? "WAITING" : 0;
                     }
                     if (message.name != null && message.hasOwnProperty("name"))
                         object.name = message.name;
@@ -6160,19 +6216,19 @@ export const proto = $root.proto = (() => {
                             break;
                         }
                         break;
-                    case "Waiting":
+                    case "WAITING":
                     case 0:
                         message.status = 0;
                         break;
-                    case "Success":
+                    case "SUCCESSFUL":
                     case 1:
                         message.status = 1;
                         break;
-                    case "Failure":
+                    case "FAILURE":
                     case 2:
                         message.status = 2;
                         break;
-                    case "Running":
+                    case "RUNNING":
                     case 3:
                         message.status = 3;
                         break;
@@ -6195,7 +6251,7 @@ export const proto = $root.proto = (() => {
                     let object = {};
                     if (options.defaults) {
                         object.name = "";
-                        object.status = options.enums === String ? "Waiting" : 0;
+                        object.status = options.enums === String ? "WAITING" : 0;
                     }
                     if (message.name != null && message.hasOwnProperty("name"))
                         object.name = message.name;
@@ -6416,19 +6472,19 @@ export const proto = $root.proto = (() => {
                             break;
                         }
                         break;
-                    case "Waiting":
+                    case "WAITING":
                     case 0:
                         message.status = 0;
                         break;
-                    case "Success":
+                    case "SUCCESSFUL":
                     case 1:
                         message.status = 1;
                         break;
-                    case "Failure":
+                    case "FAILURE":
                     case 2:
                         message.status = 2;
                         break;
-                    case "Running":
+                    case "RUNNING":
                     case 3:
                         message.status = 3;
                         break;
@@ -6451,7 +6507,7 @@ export const proto = $root.proto = (() => {
                     let object = {};
                     if (options.defaults) {
                         object.name = "";
-                        object.status = options.enums === String ? "Waiting" : 0;
+                        object.status = options.enums === String ? "WAITING" : 0;
                     }
                     if (message.name != null && message.hasOwnProperty("name"))
                         object.name = message.name;
@@ -6981,28 +7037,25 @@ export const proto = $root.proto = (() => {
         return SetupMessage;
     })();
 
-    proto.MessageEnvelope = (function() {
+    proto.GameState = (function() {
 
         /**
-         * Properties of a MessageEnvelope.
+         * Properties of a GameState.
          * @memberof proto
-         * @interface IMessageEnvelope
-         * @property {proto.ISTPStatus|null} [stpStatus] MessageEnvelope stpStatus
-         * @property {proto.ISetupMessage|null} [setupMessage] MessageEnvelope setupMessage
-         * @property {proto.IState|null} [state] MessageEnvelope state
-         * @property {proto.MessageEnvelope.IDrawingBuffer|null} [drawingBuffer] MessageEnvelope drawingBuffer
-         * @property {proto.MessageEnvelope.IMetricBuffer|null} [metricBuffer] MessageEnvelope metricBuffer
+         * @interface IGameState
+         * @property {string|null} [playName] GameState playName
+         * @property {string|null} [rulesetName] GameState rulesetName
          */
 
         /**
-         * Constructs a new MessageEnvelope.
+         * Constructs a new GameState.
          * @memberof proto
-         * @classdesc Represents a MessageEnvelope.
-         * @implements IMessageEnvelope
+         * @classdesc Represents a GameState.
+         * @implements IGameState
          * @constructor
-         * @param {proto.IMessageEnvelope=} [properties] Properties to set
+         * @param {proto.IGameState=} [properties] Properties to set
          */
-        function MessageEnvelope(properties) {
+        function GameState(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -7010,855 +7063,43 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * MessageEnvelope stpStatus.
-         * @member {proto.ISTPStatus|null|undefined} stpStatus
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        MessageEnvelope.prototype.stpStatus = null;
-
-        /**
-         * MessageEnvelope setupMessage.
-         * @member {proto.ISetupMessage|null|undefined} setupMessage
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        MessageEnvelope.prototype.setupMessage = null;
-
-        /**
-         * MessageEnvelope state.
-         * @member {proto.IState|null|undefined} state
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        MessageEnvelope.prototype.state = null;
-
-        /**
-         * MessageEnvelope drawingBuffer.
-         * @member {proto.MessageEnvelope.IDrawingBuffer|null|undefined} drawingBuffer
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        MessageEnvelope.prototype.drawingBuffer = null;
-
-        /**
-         * MessageEnvelope metricBuffer.
-         * @member {proto.MessageEnvelope.IMetricBuffer|null|undefined} metricBuffer
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        MessageEnvelope.prototype.metricBuffer = null;
-
-        // OneOf field names bound to virtual getters and setters
-        let $oneOfFields;
-
-        /**
-         * MessageEnvelope kind.
-         * @member {"stpStatus"|"setupMessage"|"state"|"drawingBuffer"|"metricBuffer"|undefined} kind
-         * @memberof proto.MessageEnvelope
-         * @instance
-         */
-        Object.defineProperty(MessageEnvelope.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "drawingBuffer", "metricBuffer"]),
-            set: $util.oneOfSetter($oneOfFields)
-        });
-
-        /**
-         * Creates a new MessageEnvelope instance using the specified properties.
-         * @function create
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {proto.IMessageEnvelope=} [properties] Properties to set
-         * @returns {proto.MessageEnvelope} MessageEnvelope instance
-         */
-        MessageEnvelope.create = function create(properties) {
-            return new MessageEnvelope(properties);
-        };
-
-        /**
-         * Encodes the specified MessageEnvelope message. Does not implicitly {@link proto.MessageEnvelope.verify|verify} messages.
-         * @function encode
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {proto.IMessageEnvelope} message MessageEnvelope message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        MessageEnvelope.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.stpStatus != null && Object.hasOwnProperty.call(message, "stpStatus"))
-                $root.proto.STPStatus.encode(message.stpStatus, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.setupMessage != null && Object.hasOwnProperty.call(message, "setupMessage"))
-                $root.proto.SetupMessage.encode(message.setupMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.state != null && Object.hasOwnProperty.call(message, "state"))
-                $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.drawingBuffer != null && Object.hasOwnProperty.call(message, "drawingBuffer"))
-                $root.proto.MessageEnvelope.DrawingBuffer.encode(message.drawingBuffer, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.metricBuffer != null && Object.hasOwnProperty.call(message, "metricBuffer"))
-                $root.proto.MessageEnvelope.MetricBuffer.encode(message.metricBuffer, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            return writer;
-        };
-
-        /**
-         * Encodes the specified MessageEnvelope message, length delimited. Does not implicitly {@link proto.MessageEnvelope.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {proto.IMessageEnvelope} message MessageEnvelope message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        MessageEnvelope.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a MessageEnvelope message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.MessageEnvelope} MessageEnvelope
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        MessageEnvelope.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MessageEnvelope();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.stpStatus = $root.proto.STPStatus.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 2: {
-                        message.setupMessage = $root.proto.SetupMessage.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 3: {
-                        message.state = $root.proto.State.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 4: {
-                        message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 5: {
-                        message.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.decode(reader, reader.uint32());
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a MessageEnvelope message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.MessageEnvelope} MessageEnvelope
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        MessageEnvelope.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a MessageEnvelope message.
-         * @function verify
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        MessageEnvelope.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            let properties = {};
-            if (message.stpStatus != null && message.hasOwnProperty("stpStatus")) {
-                properties.kind = 1;
-                {
-                    let error = $root.proto.STPStatus.verify(message.stpStatus);
-                    if (error)
-                        return "stpStatus." + error;
-                }
-            }
-            if (message.setupMessage != null && message.hasOwnProperty("setupMessage")) {
-                if (properties.kind === 1)
-                    return "kind: multiple values";
-                properties.kind = 1;
-                {
-                    let error = $root.proto.SetupMessage.verify(message.setupMessage);
-                    if (error)
-                        return "setupMessage." + error;
-                }
-            }
-            if (message.state != null && message.hasOwnProperty("state")) {
-                if (properties.kind === 1)
-                    return "kind: multiple values";
-                properties.kind = 1;
-                {
-                    let error = $root.proto.State.verify(message.state);
-                    if (error)
-                        return "state." + error;
-                }
-            }
-            if (message.drawingBuffer != null && message.hasOwnProperty("drawingBuffer")) {
-                if (properties.kind === 1)
-                    return "kind: multiple values";
-                properties.kind = 1;
-                {
-                    let error = $root.proto.MessageEnvelope.DrawingBuffer.verify(message.drawingBuffer);
-                    if (error)
-                        return "drawingBuffer." + error;
-                }
-            }
-            if (message.metricBuffer != null && message.hasOwnProperty("metricBuffer")) {
-                if (properties.kind === 1)
-                    return "kind: multiple values";
-                properties.kind = 1;
-                {
-                    let error = $root.proto.MessageEnvelope.MetricBuffer.verify(message.metricBuffer);
-                    if (error)
-                        return "metricBuffer." + error;
-                }
-            }
-            return null;
-        };
-
-        /**
-         * Creates a MessageEnvelope message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.MessageEnvelope} MessageEnvelope
-         */
-        MessageEnvelope.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.MessageEnvelope)
-                return object;
-            let message = new $root.proto.MessageEnvelope();
-            if (object.stpStatus != null) {
-                if (typeof object.stpStatus !== "object")
-                    throw TypeError(".proto.MessageEnvelope.stpStatus: object expected");
-                message.stpStatus = $root.proto.STPStatus.fromObject(object.stpStatus);
-            }
-            if (object.setupMessage != null) {
-                if (typeof object.setupMessage !== "object")
-                    throw TypeError(".proto.MessageEnvelope.setupMessage: object expected");
-                message.setupMessage = $root.proto.SetupMessage.fromObject(object.setupMessage);
-            }
-            if (object.state != null) {
-                if (typeof object.state !== "object")
-                    throw TypeError(".proto.MessageEnvelope.state: object expected");
-                message.state = $root.proto.State.fromObject(object.state);
-            }
-            if (object.drawingBuffer != null) {
-                if (typeof object.drawingBuffer !== "object")
-                    throw TypeError(".proto.MessageEnvelope.drawingBuffer: object expected");
-                message.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.fromObject(object.drawingBuffer);
-            }
-            if (object.metricBuffer != null) {
-                if (typeof object.metricBuffer !== "object")
-                    throw TypeError(".proto.MessageEnvelope.metricBuffer: object expected");
-                message.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.fromObject(object.metricBuffer);
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a MessageEnvelope message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {proto.MessageEnvelope} message MessageEnvelope
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        MessageEnvelope.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (message.stpStatus != null && message.hasOwnProperty("stpStatus")) {
-                object.stpStatus = $root.proto.STPStatus.toObject(message.stpStatus, options);
-                if (options.oneofs)
-                    object.kind = "stpStatus";
-            }
-            if (message.setupMessage != null && message.hasOwnProperty("setupMessage")) {
-                object.setupMessage = $root.proto.SetupMessage.toObject(message.setupMessage, options);
-                if (options.oneofs)
-                    object.kind = "setupMessage";
-            }
-            if (message.state != null && message.hasOwnProperty("state")) {
-                object.state = $root.proto.State.toObject(message.state, options);
-                if (options.oneofs)
-                    object.kind = "state";
-            }
-            if (message.drawingBuffer != null && message.hasOwnProperty("drawingBuffer")) {
-                object.drawingBuffer = $root.proto.MessageEnvelope.DrawingBuffer.toObject(message.drawingBuffer, options);
-                if (options.oneofs)
-                    object.kind = "drawingBuffer";
-            }
-            if (message.metricBuffer != null && message.hasOwnProperty("metricBuffer")) {
-                object.metricBuffer = $root.proto.MessageEnvelope.MetricBuffer.toObject(message.metricBuffer, options);
-                if (options.oneofs)
-                    object.kind = "metricBuffer";
-            }
-            return object;
-        };
-
-        /**
-         * Converts this MessageEnvelope to JSON.
-         * @function toJSON
-         * @memberof proto.MessageEnvelope
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        MessageEnvelope.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for MessageEnvelope
-         * @function getTypeUrl
-         * @memberof proto.MessageEnvelope
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        MessageEnvelope.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.MessageEnvelope";
-        };
-
-        MessageEnvelope.DrawingBuffer = (function() {
-
-            /**
-             * Properties of a DrawingBuffer.
-             * @memberof proto.MessageEnvelope
-             * @interface IDrawingBuffer
-             * @property {Array.<proto.IDrawing>|null} [buffer] DrawingBuffer buffer
-             */
-
-            /**
-             * Constructs a new DrawingBuffer.
-             * @memberof proto.MessageEnvelope
-             * @classdesc Represents a DrawingBuffer.
-             * @implements IDrawingBuffer
-             * @constructor
-             * @param {proto.MessageEnvelope.IDrawingBuffer=} [properties] Properties to set
-             */
-            function DrawingBuffer(properties) {
-                this.buffer = [];
-                if (properties)
-                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * DrawingBuffer buffer.
-             * @member {Array.<proto.IDrawing>} buffer
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @instance
-             */
-            DrawingBuffer.prototype.buffer = $util.emptyArray;
-
-            /**
-             * Creates a new DrawingBuffer instance using the specified properties.
-             * @function create
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IDrawingBuffer=} [properties] Properties to set
-             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer instance
-             */
-            DrawingBuffer.create = function create(properties) {
-                return new DrawingBuffer(properties);
-            };
-
-            /**
-             * Encodes the specified DrawingBuffer message. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
-             * @function encode
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IDrawingBuffer} message DrawingBuffer message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            DrawingBuffer.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.buffer != null && message.buffer.length)
-                    for (let i = 0; i < message.buffer.length; ++i)
-                        $root.proto.Drawing.encode(message.buffer[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                return writer;
-            };
-
-            /**
-             * Encodes the specified DrawingBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IDrawingBuffer} message DrawingBuffer message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            DrawingBuffer.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a DrawingBuffer message from the specified reader or buffer.
-             * @function decode
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            DrawingBuffer.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MessageEnvelope.DrawingBuffer();
-                while (reader.pos < end) {
-                    let tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1: {
-                            if (!(message.buffer && message.buffer.length))
-                                message.buffer = [];
-                            message.buffer.push($root.proto.Drawing.decode(reader, reader.uint32()));
-                            break;
-                        }
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Decodes a DrawingBuffer message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            DrawingBuffer.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a DrawingBuffer message.
-             * @function verify
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            DrawingBuffer.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.buffer != null && message.hasOwnProperty("buffer")) {
-                    if (!Array.isArray(message.buffer))
-                        return "buffer: array expected";
-                    for (let i = 0; i < message.buffer.length; ++i) {
-                        let error = $root.proto.Drawing.verify(message.buffer[i]);
-                        if (error)
-                            return "buffer." + error;
-                    }
-                }
-                return null;
-            };
-
-            /**
-             * Creates a DrawingBuffer message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {proto.MessageEnvelope.DrawingBuffer} DrawingBuffer
-             */
-            DrawingBuffer.fromObject = function fromObject(object) {
-                if (object instanceof $root.proto.MessageEnvelope.DrawingBuffer)
-                    return object;
-                let message = new $root.proto.MessageEnvelope.DrawingBuffer();
-                if (object.buffer) {
-                    if (!Array.isArray(object.buffer))
-                        throw TypeError(".proto.MessageEnvelope.DrawingBuffer.buffer: array expected");
-                    message.buffer = [];
-                    for (let i = 0; i < object.buffer.length; ++i) {
-                        if (typeof object.buffer[i] !== "object")
-                            throw TypeError(".proto.MessageEnvelope.DrawingBuffer.buffer: object expected");
-                        message.buffer[i] = $root.proto.Drawing.fromObject(object.buffer[i]);
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a DrawingBuffer message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {proto.MessageEnvelope.DrawingBuffer} message DrawingBuffer
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            DrawingBuffer.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                let object = {};
-                if (options.arrays || options.defaults)
-                    object.buffer = [];
-                if (message.buffer && message.buffer.length) {
-                    object.buffer = [];
-                    for (let j = 0; j < message.buffer.length; ++j)
-                        object.buffer[j] = $root.proto.Drawing.toObject(message.buffer[j], options);
-                }
-                return object;
-            };
-
-            /**
-             * Converts this DrawingBuffer to JSON.
-             * @function toJSON
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            DrawingBuffer.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            /**
-             * Gets the default type url for DrawingBuffer
-             * @function getTypeUrl
-             * @memberof proto.MessageEnvelope.DrawingBuffer
-             * @static
-             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns {string} The default type url
-             */
-            DrawingBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-                if (typeUrlPrefix === undefined) {
-                    typeUrlPrefix = "type.googleapis.com";
-                }
-                return typeUrlPrefix + "/proto.MessageEnvelope.DrawingBuffer";
-            };
-
-            return DrawingBuffer;
-        })();
-
-        MessageEnvelope.MetricBuffer = (function() {
-
-            /**
-             * Properties of a MetricBuffer.
-             * @memberof proto.MessageEnvelope
-             * @interface IMetricBuffer
-             * @property {Array.<proto.IMetric>|null} [buffer] MetricBuffer buffer
-             */
-
-            /**
-             * Constructs a new MetricBuffer.
-             * @memberof proto.MessageEnvelope
-             * @classdesc Represents a MetricBuffer.
-             * @implements IMetricBuffer
-             * @constructor
-             * @param {proto.MessageEnvelope.IMetricBuffer=} [properties] Properties to set
-             */
-            function MetricBuffer(properties) {
-                this.buffer = [];
-                if (properties)
-                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * MetricBuffer buffer.
-             * @member {Array.<proto.IMetric>} buffer
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @instance
-             */
-            MetricBuffer.prototype.buffer = $util.emptyArray;
-
-            /**
-             * Creates a new MetricBuffer instance using the specified properties.
-             * @function create
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IMetricBuffer=} [properties] Properties to set
-             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer instance
-             */
-            MetricBuffer.create = function create(properties) {
-                return new MetricBuffer(properties);
-            };
-
-            /**
-             * Encodes the specified MetricBuffer message. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
-             * @function encode
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IMetricBuffer} message MetricBuffer message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            MetricBuffer.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.buffer != null && message.buffer.length)
-                    for (let i = 0; i < message.buffer.length; ++i)
-                        $root.proto.Metric.encode(message.buffer[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                return writer;
-            };
-
-            /**
-             * Encodes the specified MetricBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {proto.MessageEnvelope.IMetricBuffer} message MetricBuffer message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            MetricBuffer.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes a MetricBuffer message from the specified reader or buffer.
-             * @function decode
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            MetricBuffer.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MessageEnvelope.MetricBuffer();
-                while (reader.pos < end) {
-                    let tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1: {
-                            if (!(message.buffer && message.buffer.length))
-                                message.buffer = [];
-                            message.buffer.push($root.proto.Metric.decode(reader, reader.uint32()));
-                            break;
-                        }
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Decodes a MetricBuffer message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            MetricBuffer.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies a MetricBuffer message.
-             * @function verify
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            MetricBuffer.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.buffer != null && message.hasOwnProperty("buffer")) {
-                    if (!Array.isArray(message.buffer))
-                        return "buffer: array expected";
-                    for (let i = 0; i < message.buffer.length; ++i) {
-                        let error = $root.proto.Metric.verify(message.buffer[i]);
-                        if (error)
-                            return "buffer." + error;
-                    }
-                }
-                return null;
-            };
-
-            /**
-             * Creates a MetricBuffer message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {proto.MessageEnvelope.MetricBuffer} MetricBuffer
-             */
-            MetricBuffer.fromObject = function fromObject(object) {
-                if (object instanceof $root.proto.MessageEnvelope.MetricBuffer)
-                    return object;
-                let message = new $root.proto.MessageEnvelope.MetricBuffer();
-                if (object.buffer) {
-                    if (!Array.isArray(object.buffer))
-                        throw TypeError(".proto.MessageEnvelope.MetricBuffer.buffer: array expected");
-                    message.buffer = [];
-                    for (let i = 0; i < object.buffer.length; ++i) {
-                        if (typeof object.buffer[i] !== "object")
-                            throw TypeError(".proto.MessageEnvelope.MetricBuffer.buffer: object expected");
-                        message.buffer[i] = $root.proto.Metric.fromObject(object.buffer[i]);
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Creates a plain object from a MetricBuffer message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {proto.MessageEnvelope.MetricBuffer} message MetricBuffer
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            MetricBuffer.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                let object = {};
-                if (options.arrays || options.defaults)
-                    object.buffer = [];
-                if (message.buffer && message.buffer.length) {
-                    object.buffer = [];
-                    for (let j = 0; j < message.buffer.length; ++j)
-                        object.buffer[j] = $root.proto.Metric.toObject(message.buffer[j], options);
-                }
-                return object;
-            };
-
-            /**
-             * Converts this MetricBuffer to JSON.
-             * @function toJSON
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            MetricBuffer.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            /**
-             * Gets the default type url for MetricBuffer
-             * @function getTypeUrl
-             * @memberof proto.MessageEnvelope.MetricBuffer
-             * @static
-             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns {string} The default type url
-             */
-            MetricBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-                if (typeUrlPrefix === undefined) {
-                    typeUrlPrefix = "type.googleapis.com";
-                }
-                return typeUrlPrefix + "/proto.MessageEnvelope.MetricBuffer";
-            };
-
-            return MetricBuffer;
-        })();
-
-        return MessageEnvelope;
-    })();
-
-    proto.SetPlay = (function() {
-
-        /**
-         * Properties of a SetPlay.
-         * @memberof proto
-         * @interface ISetPlay
-         * @property {string|null} [playName] SetPlay playName
-         * @property {string|null} [rulesetName] SetPlay rulesetName
-         */
-
-        /**
-         * Constructs a new SetPlay.
-         * @memberof proto
-         * @classdesc Represents a SetPlay.
-         * @implements ISetPlay
-         * @constructor
-         * @param {proto.ISetPlay=} [properties] Properties to set
-         */
-        function SetPlay(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * SetPlay playName.
+         * GameState playName.
          * @member {string} playName
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @instance
          */
-        SetPlay.prototype.playName = "";
+        GameState.prototype.playName = "";
 
         /**
-         * SetPlay rulesetName.
+         * GameState rulesetName.
          * @member {string} rulesetName
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @instance
          */
-        SetPlay.prototype.rulesetName = "";
+        GameState.prototype.rulesetName = "";
 
         /**
-         * Creates a new SetPlay instance using the specified properties.
+         * Creates a new GameState instance using the specified properties.
          * @function create
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
-         * @param {proto.ISetPlay=} [properties] Properties to set
-         * @returns {proto.SetPlay} SetPlay instance
+         * @param {proto.IGameState=} [properties] Properties to set
+         * @returns {proto.GameState} GameState instance
          */
-        SetPlay.create = function create(properties) {
-            return new SetPlay(properties);
+        GameState.create = function create(properties) {
+            return new GameState(properties);
         };
 
         /**
-         * Encodes the specified SetPlay message. Does not implicitly {@link proto.SetPlay.verify|verify} messages.
+         * Encodes the specified GameState message. Does not implicitly {@link proto.GameState.verify|verify} messages.
          * @function encode
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
-         * @param {proto.ISetPlay} message SetPlay message or plain object to encode
+         * @param {proto.IGameState} message GameState message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SetPlay.encode = function encode(message, writer) {
+        GameState.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
             if (message.playName != null && Object.hasOwnProperty.call(message, "playName"))
@@ -7869,33 +7110,33 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Encodes the specified SetPlay message, length delimited. Does not implicitly {@link proto.SetPlay.verify|verify} messages.
+         * Encodes the specified GameState message, length delimited. Does not implicitly {@link proto.GameState.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
-         * @param {proto.ISetPlay} message SetPlay message or plain object to encode
+         * @param {proto.IGameState} message GameState message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SetPlay.encodeDelimited = function encodeDelimited(message, writer) {
+        GameState.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes a SetPlay message from the specified reader or buffer.
+         * Decodes a GameState message from the specified reader or buffer.
          * @function decode
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {proto.SetPlay} SetPlay
+         * @returns {proto.GameState} GameState
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SetPlay.decode = function decode(reader, length) {
+        GameState.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SetPlay();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameState();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -7916,30 +7157,30 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Decodes a SetPlay message from the specified reader or buffer, length delimited.
+         * Decodes a GameState message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.SetPlay} SetPlay
+         * @returns {proto.GameState} GameState
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SetPlay.decodeDelimited = function decodeDelimited(reader) {
+        GameState.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies a SetPlay message.
+         * Verifies a GameState message.
          * @function verify
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        SetPlay.verify = function verify(message) {
+        GameState.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
             if (message.playName != null && message.hasOwnProperty("playName"))
@@ -7952,17 +7193,17 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Creates a SetPlay message from a plain object. Also converts values to their respective internal types.
+         * Creates a GameState message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {proto.SetPlay} SetPlay
+         * @returns {proto.GameState} GameState
          */
-        SetPlay.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.SetPlay)
+        GameState.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.GameState)
                 return object;
-            let message = new $root.proto.SetPlay();
+            let message = new $root.proto.GameState();
             if (object.playName != null)
                 message.playName = String(object.playName);
             if (object.rulesetName != null)
@@ -7971,15 +7212,15 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Creates a plain object from a SetPlay message. Also converts values to other types if specified.
+         * Creates a plain object from a GameState message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
-         * @param {proto.SetPlay} message SetPlay
+         * @param {proto.GameState} message GameState
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        SetPlay.toObject = function toObject(message, options) {
+        GameState.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             let object = {};
@@ -7995,56 +7236,56 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Converts this SetPlay to JSON.
+         * Converts this GameState to JSON.
          * @function toJSON
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        SetPlay.prototype.toJSON = function toJSON() {
+        GameState.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for SetPlay
+         * Gets the default type url for GameState
          * @function getTypeUrl
-         * @memberof proto.SetPlay
+         * @memberof proto.GameState
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        SetPlay.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        GameState.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/proto.SetPlay";
+            return typeUrlPrefix + "/proto.GameState";
         };
 
-        return SetPlay;
+        return GameState;
     })();
 
-    proto.SetGameSettings = (function() {
+    proto.GameSettings = (function() {
 
         /**
-         * Properties of a SetGameSettings.
+         * Properties of a GameSettings.
          * @memberof proto
-         * @interface ISetGameSettings
-         * @property {boolean|null} [useReferee] SetGameSettings useReferee
-         * @property {boolean|null} [ignoreInvariants] SetGameSettings ignoreInvariants
-         * @property {proto.SetGameSettings.RobotHubMode|null} [hubMode] SetGameSettings hubMode
-         * @property {boolean|null} [isLeft] SetGameSettings isLeft
-         * @property {boolean|null} [isYellow] SetGameSettings isYellow
+         * @interface IGameSettings
+         * @property {boolean|null} [useReferee] GameSettings useReferee
+         * @property {boolean|null} [ignoreInvariants] GameSettings ignoreInvariants
+         * @property {proto.GameSettings.RobotHubMode|null} [hubMode] GameSettings hubMode
+         * @property {boolean|null} [isLeft] GameSettings isLeft
+         * @property {boolean|null} [isYellow] GameSettings isYellow
          */
 
         /**
-         * Constructs a new SetGameSettings.
+         * Constructs a new GameSettings.
          * @memberof proto
-         * @classdesc Represents a SetGameSettings.
-         * @implements ISetGameSettings
+         * @classdesc Represents a GameSettings.
+         * @implements IGameSettings
          * @constructor
-         * @param {proto.ISetGameSettings=} [properties] Properties to set
+         * @param {proto.IGameSettings=} [properties] Properties to set
          */
-        function SetGameSettings(properties) {
+        function GameSettings(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -8052,67 +7293,67 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * SetGameSettings useReferee.
+         * GameSettings useReferee.
          * @member {boolean} useReferee
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @instance
          */
-        SetGameSettings.prototype.useReferee = false;
+        GameSettings.prototype.useReferee = false;
 
         /**
-         * SetGameSettings ignoreInvariants.
+         * GameSettings ignoreInvariants.
          * @member {boolean} ignoreInvariants
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @instance
          */
-        SetGameSettings.prototype.ignoreInvariants = false;
+        GameSettings.prototype.ignoreInvariants = false;
 
         /**
-         * SetGameSettings hubMode.
-         * @member {proto.SetGameSettings.RobotHubMode} hubMode
-         * @memberof proto.SetGameSettings
+         * GameSettings hubMode.
+         * @member {proto.GameSettings.RobotHubMode} hubMode
+         * @memberof proto.GameSettings
          * @instance
          */
-        SetGameSettings.prototype.hubMode = 0;
+        GameSettings.prototype.hubMode = 0;
 
         /**
-         * SetGameSettings isLeft.
+         * GameSettings isLeft.
          * @member {boolean} isLeft
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @instance
          */
-        SetGameSettings.prototype.isLeft = false;
+        GameSettings.prototype.isLeft = false;
 
         /**
-         * SetGameSettings isYellow.
+         * GameSettings isYellow.
          * @member {boolean} isYellow
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @instance
          */
-        SetGameSettings.prototype.isYellow = false;
+        GameSettings.prototype.isYellow = false;
 
         /**
-         * Creates a new SetGameSettings instance using the specified properties.
+         * Creates a new GameSettings instance using the specified properties.
          * @function create
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
-         * @param {proto.ISetGameSettings=} [properties] Properties to set
-         * @returns {proto.SetGameSettings} SetGameSettings instance
+         * @param {proto.IGameSettings=} [properties] Properties to set
+         * @returns {proto.GameSettings} GameSettings instance
          */
-        SetGameSettings.create = function create(properties) {
-            return new SetGameSettings(properties);
+        GameSettings.create = function create(properties) {
+            return new GameSettings(properties);
         };
 
         /**
-         * Encodes the specified SetGameSettings message. Does not implicitly {@link proto.SetGameSettings.verify|verify} messages.
+         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
          * @function encode
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
-         * @param {proto.ISetGameSettings} message SetGameSettings message or plain object to encode
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SetGameSettings.encode = function encode(message, writer) {
+        GameSettings.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
             if (message.useReferee != null && Object.hasOwnProperty.call(message, "useReferee"))
@@ -8129,33 +7370,33 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Encodes the specified SetGameSettings message, length delimited. Does not implicitly {@link proto.SetGameSettings.verify|verify} messages.
+         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
-         * @param {proto.ISetGameSettings} message SetGameSettings message or plain object to encode
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SetGameSettings.encodeDelimited = function encodeDelimited(message, writer) {
+        GameSettings.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes a SetGameSettings message from the specified reader or buffer.
+         * Decodes a GameSettings message from the specified reader or buffer.
          * @function decode
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {proto.SetGameSettings} SetGameSettings
+         * @returns {proto.GameSettings} GameSettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SetGameSettings.decode = function decode(reader, length) {
+        GameSettings.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SetGameSettings();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameSettings();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -8188,30 +7429,30 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Decodes a SetGameSettings message from the specified reader or buffer, length delimited.
+         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.SetGameSettings} SetGameSettings
+         * @returns {proto.GameSettings} GameSettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SetGameSettings.decodeDelimited = function decodeDelimited(reader) {
+        GameSettings.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies a SetGameSettings message.
+         * Verifies a GameSettings message.
          * @function verify
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        SetGameSettings.verify = function verify(message) {
+        GameSettings.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
             if (message.useReferee != null && message.hasOwnProperty("useReferee"))
@@ -8239,17 +7480,17 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Creates a SetGameSettings message from a plain object. Also converts values to their respective internal types.
+         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {proto.SetGameSettings} SetGameSettings
+         * @returns {proto.GameSettings} GameSettings
          */
-        SetGameSettings.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.SetGameSettings)
+        GameSettings.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.GameSettings)
                 return object;
-            let message = new $root.proto.SetGameSettings();
+            let message = new $root.proto.GameSettings();
             if (object.useReferee != null)
                 message.useReferee = Boolean(object.useReferee);
             if (object.ignoreInvariants != null)
@@ -8282,15 +7523,15 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Creates a plain object from a SetGameSettings message. Also converts values to other types if specified.
+         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
-         * @param {proto.SetGameSettings} message SetGameSettings
+         * @param {proto.GameSettings} message GameSettings
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        SetGameSettings.toObject = function toObject(message, options) {
+        GameSettings.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             let object = {};
@@ -8306,7 +7547,7 @@ export const proto = $root.proto = (() => {
             if (message.ignoreInvariants != null && message.hasOwnProperty("ignoreInvariants"))
                 object.ignoreInvariants = message.ignoreInvariants;
             if (message.hubMode != null && message.hasOwnProperty("hubMode"))
-                object.hubMode = options.enums === String ? $root.proto.SetGameSettings.RobotHubMode[message.hubMode] === undefined ? message.hubMode : $root.proto.SetGameSettings.RobotHubMode[message.hubMode] : message.hubMode;
+                object.hubMode = options.enums === String ? $root.proto.GameSettings.RobotHubMode[message.hubMode] === undefined ? message.hubMode : $root.proto.GameSettings.RobotHubMode[message.hubMode] : message.hubMode;
             if (message.isLeft != null && message.hasOwnProperty("isLeft"))
                 object.isLeft = message.isLeft;
             if (message.isYellow != null && message.hasOwnProperty("isYellow"))
@@ -8315,40 +7556,40 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Converts this SetGameSettings to JSON.
+         * Converts this GameSettings to JSON.
          * @function toJSON
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        SetGameSettings.prototype.toJSON = function toJSON() {
+        GameSettings.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for SetGameSettings
+         * Gets the default type url for GameSettings
          * @function getTypeUrl
-         * @memberof proto.SetGameSettings
+         * @memberof proto.GameSettings
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        SetGameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        GameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/proto.SetGameSettings";
+            return typeUrlPrefix + "/proto.GameSettings";
         };
 
         /**
          * RobotHubMode enum.
-         * @name proto.SetGameSettings.RobotHubMode
+         * @name proto.GameSettings.RobotHubMode
          * @enum {number}
          * @property {number} UNKNOWN=0 UNKNOWN value
          * @property {number} BASESTATION=1 BASESTATION value
          * @property {number} SIMULATOR=2 SIMULATOR value
          */
-        SetGameSettings.RobotHubMode = (function() {
+        GameSettings.RobotHubMode = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "UNKNOWN"] = 0;
             values[valuesById[1] = "BASESTATION"] = 1;
@@ -8356,28 +7597,30 @@ export const proto = $root.proto = (() => {
             return values;
         })();
 
-        return SetGameSettings;
+        return GameSettings;
     })();
 
-    proto.InterfaceMessageEnvelope = (function() {
+    proto.MsgToInterface = (function() {
 
         /**
-         * Properties of an InterfaceMessageEnvelope.
+         * Properties of a MsgToInterface.
          * @memberof proto
-         * @interface IInterfaceMessageEnvelope
-         * @property {proto.ISetPlay|null} [setPlay] InterfaceMessageEnvelope setPlay
-         * @property {proto.ISetGameSettings|null} [setGameSettings] InterfaceMessageEnvelope setGameSettings
+         * @interface IMsgToInterface
+         * @property {proto.ISTPStatus|null} [stpStatus] MsgToInterface stpStatus
+         * @property {proto.ISetupMessage|null} [setupMessage] MsgToInterface setupMessage
+         * @property {proto.IState|null} [state] MsgToInterface state
+         * @property {proto.MsgToInterface.IVisualizationBuffer|null} [visualizations] MsgToInterface visualizations
          */
 
         /**
-         * Constructs a new InterfaceMessageEnvelope.
+         * Constructs a new MsgToInterface.
          * @memberof proto
-         * @classdesc Represents an InterfaceMessageEnvelope.
-         * @implements IInterfaceMessageEnvelope
+         * @classdesc Represents a MsgToInterface.
+         * @implements IMsgToInterface
          * @constructor
-         * @param {proto.IInterfaceMessageEnvelope=} [properties] Properties to set
+         * @param {proto.IMsgToInterface=} [properties] Properties to set
          */
-        function InterfaceMessageEnvelope(properties) {
+        function MsgToInterface(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -8385,103 +7628,131 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * InterfaceMessageEnvelope setPlay.
-         * @member {proto.ISetPlay|null|undefined} setPlay
-         * @memberof proto.InterfaceMessageEnvelope
+         * MsgToInterface stpStatus.
+         * @member {proto.ISTPStatus|null|undefined} stpStatus
+         * @memberof proto.MsgToInterface
          * @instance
          */
-        InterfaceMessageEnvelope.prototype.setPlay = null;
+        MsgToInterface.prototype.stpStatus = null;
 
         /**
-         * InterfaceMessageEnvelope setGameSettings.
-         * @member {proto.ISetGameSettings|null|undefined} setGameSettings
-         * @memberof proto.InterfaceMessageEnvelope
+         * MsgToInterface setupMessage.
+         * @member {proto.ISetupMessage|null|undefined} setupMessage
+         * @memberof proto.MsgToInterface
          * @instance
          */
-        InterfaceMessageEnvelope.prototype.setGameSettings = null;
+        MsgToInterface.prototype.setupMessage = null;
+
+        /**
+         * MsgToInterface state.
+         * @member {proto.IState|null|undefined} state
+         * @memberof proto.MsgToInterface
+         * @instance
+         */
+        MsgToInterface.prototype.state = null;
+
+        /**
+         * MsgToInterface visualizations.
+         * @member {proto.MsgToInterface.IVisualizationBuffer|null|undefined} visualizations
+         * @memberof proto.MsgToInterface
+         * @instance
+         */
+        MsgToInterface.prototype.visualizations = null;
 
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
-         * InterfaceMessageEnvelope kind.
-         * @member {"setPlay"|"setGameSettings"|undefined} kind
-         * @memberof proto.InterfaceMessageEnvelope
+         * MsgToInterface kind.
+         * @member {"stpStatus"|"setupMessage"|"state"|"visualizations"|undefined} kind
+         * @memberof proto.MsgToInterface
          * @instance
          */
-        Object.defineProperty(InterfaceMessageEnvelope.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["setPlay", "setGameSettings"]),
+        Object.defineProperty(MsgToInterface.prototype, "kind", {
+            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "setupMessage", "state", "visualizations"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
         /**
-         * Creates a new InterfaceMessageEnvelope instance using the specified properties.
+         * Creates a new MsgToInterface instance using the specified properties.
          * @function create
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
-         * @param {proto.IInterfaceMessageEnvelope=} [properties] Properties to set
-         * @returns {proto.InterfaceMessageEnvelope} InterfaceMessageEnvelope instance
+         * @param {proto.IMsgToInterface=} [properties] Properties to set
+         * @returns {proto.MsgToInterface} MsgToInterface instance
          */
-        InterfaceMessageEnvelope.create = function create(properties) {
-            return new InterfaceMessageEnvelope(properties);
+        MsgToInterface.create = function create(properties) {
+            return new MsgToInterface(properties);
         };
 
         /**
-         * Encodes the specified InterfaceMessageEnvelope message. Does not implicitly {@link proto.InterfaceMessageEnvelope.verify|verify} messages.
+         * Encodes the specified MsgToInterface message. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
          * @function encode
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
-         * @param {proto.IInterfaceMessageEnvelope} message InterfaceMessageEnvelope message or plain object to encode
+         * @param {proto.IMsgToInterface} message MsgToInterface message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        InterfaceMessageEnvelope.encode = function encode(message, writer) {
+        MsgToInterface.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.setPlay != null && Object.hasOwnProperty.call(message, "setPlay"))
-                $root.proto.SetPlay.encode(message.setPlay, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.setGameSettings != null && Object.hasOwnProperty.call(message, "setGameSettings"))
-                $root.proto.SetGameSettings.encode(message.setGameSettings, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.stpStatus != null && Object.hasOwnProperty.call(message, "stpStatus"))
+                $root.proto.STPStatus.encode(message.stpStatus, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.setupMessage != null && Object.hasOwnProperty.call(message, "setupMessage"))
+                $root.proto.SetupMessage.encode(message.setupMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.state != null && Object.hasOwnProperty.call(message, "state"))
+                $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.visualizations != null && Object.hasOwnProperty.call(message, "visualizations"))
+                $root.proto.MsgToInterface.VisualizationBuffer.encode(message.visualizations, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
         /**
-         * Encodes the specified InterfaceMessageEnvelope message, length delimited. Does not implicitly {@link proto.InterfaceMessageEnvelope.verify|verify} messages.
+         * Encodes the specified MsgToInterface message, length delimited. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
-         * @param {proto.IInterfaceMessageEnvelope} message InterfaceMessageEnvelope message or plain object to encode
+         * @param {proto.IMsgToInterface} message MsgToInterface message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        InterfaceMessageEnvelope.encodeDelimited = function encodeDelimited(message, writer) {
+        MsgToInterface.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes an InterfaceMessageEnvelope message from the specified reader or buffer.
+         * Decodes a MsgToInterface message from the specified reader or buffer.
          * @function decode
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {proto.InterfaceMessageEnvelope} InterfaceMessageEnvelope
+         * @returns {proto.MsgToInterface} MsgToInterface
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        InterfaceMessageEnvelope.decode = function decode(reader, length) {
+        MsgToInterface.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.InterfaceMessageEnvelope();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MsgToInterface();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1: {
-                        message.setPlay = $root.proto.SetPlay.decode(reader, reader.uint32());
+                        message.stpStatus = $root.proto.STPStatus.decode(reader, reader.uint32());
                         break;
                     }
                 case 2: {
-                        message.setGameSettings = $root.proto.SetGameSettings.decode(reader, reader.uint32());
+                        message.setupMessage = $root.proto.SetupMessage.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 3: {
+                        message.state = $root.proto.State.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 4: {
+                        message.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -8493,39 +7764,610 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Decodes an InterfaceMessageEnvelope message from the specified reader or buffer, length delimited.
+         * Decodes a MsgToInterface message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.InterfaceMessageEnvelope} InterfaceMessageEnvelope
+         * @returns {proto.MsgToInterface} MsgToInterface
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        InterfaceMessageEnvelope.decodeDelimited = function decodeDelimited(reader) {
+        MsgToInterface.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies an InterfaceMessageEnvelope message.
+         * Verifies a MsgToInterface message.
          * @function verify
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgToInterface
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        InterfaceMessageEnvelope.verify = function verify(message) {
+        MsgToInterface.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
             let properties = {};
-            if (message.setPlay != null && message.hasOwnProperty("setPlay")) {
+            if (message.stpStatus != null && message.hasOwnProperty("stpStatus")) {
                 properties.kind = 1;
                 {
-                    let error = $root.proto.SetPlay.verify(message.setPlay);
+                    let error = $root.proto.STPStatus.verify(message.stpStatus);
                     if (error)
-                        return "setPlay." + error;
+                        return "stpStatus." + error;
+                }
+            }
+            if (message.setupMessage != null && message.hasOwnProperty("setupMessage")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.SetupMessage.verify(message.setupMessage);
+                    if (error)
+                        return "setupMessage." + error;
+                }
+            }
+            if (message.state != null && message.hasOwnProperty("state")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.State.verify(message.state);
+                    if (error)
+                        return "state." + error;
+                }
+            }
+            if (message.visualizations != null && message.hasOwnProperty("visualizations")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.MsgToInterface.VisualizationBuffer.verify(message.visualizations);
+                    if (error)
+                        return "visualizations." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a MsgToInterface message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.MsgToInterface
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.MsgToInterface} MsgToInterface
+         */
+        MsgToInterface.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.MsgToInterface)
+                return object;
+            let message = new $root.proto.MsgToInterface();
+            if (object.stpStatus != null) {
+                if (typeof object.stpStatus !== "object")
+                    throw TypeError(".proto.MsgToInterface.stpStatus: object expected");
+                message.stpStatus = $root.proto.STPStatus.fromObject(object.stpStatus);
+            }
+            if (object.setupMessage != null) {
+                if (typeof object.setupMessage !== "object")
+                    throw TypeError(".proto.MsgToInterface.setupMessage: object expected");
+                message.setupMessage = $root.proto.SetupMessage.fromObject(object.setupMessage);
+            }
+            if (object.state != null) {
+                if (typeof object.state !== "object")
+                    throw TypeError(".proto.MsgToInterface.state: object expected");
+                message.state = $root.proto.State.fromObject(object.state);
+            }
+            if (object.visualizations != null) {
+                if (typeof object.visualizations !== "object")
+                    throw TypeError(".proto.MsgToInterface.visualizations: object expected");
+                message.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.fromObject(object.visualizations);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a MsgToInterface message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.MsgToInterface
+         * @static
+         * @param {proto.MsgToInterface} message MsgToInterface
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        MsgToInterface.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (message.stpStatus != null && message.hasOwnProperty("stpStatus")) {
+                object.stpStatus = $root.proto.STPStatus.toObject(message.stpStatus, options);
+                if (options.oneofs)
+                    object.kind = "stpStatus";
+            }
+            if (message.setupMessage != null && message.hasOwnProperty("setupMessage")) {
+                object.setupMessage = $root.proto.SetupMessage.toObject(message.setupMessage, options);
+                if (options.oneofs)
+                    object.kind = "setupMessage";
+            }
+            if (message.state != null && message.hasOwnProperty("state")) {
+                object.state = $root.proto.State.toObject(message.state, options);
+                if (options.oneofs)
+                    object.kind = "state";
+            }
+            if (message.visualizations != null && message.hasOwnProperty("visualizations")) {
+                object.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.toObject(message.visualizations, options);
+                if (options.oneofs)
+                    object.kind = "visualizations";
+            }
+            return object;
+        };
+
+        /**
+         * Converts this MsgToInterface to JSON.
+         * @function toJSON
+         * @memberof proto.MsgToInterface
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        MsgToInterface.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for MsgToInterface
+         * @function getTypeUrl
+         * @memberof proto.MsgToInterface
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        MsgToInterface.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.MsgToInterface";
+        };
+
+        MsgToInterface.VisualizationBuffer = (function() {
+
+            /**
+             * Properties of a VisualizationBuffer.
+             * @memberof proto.MsgToInterface
+             * @interface IVisualizationBuffer
+             * @property {Array.<proto.IDrawing>|null} [drawings] VisualizationBuffer drawings
+             * @property {Array.<proto.IMetric>|null} [metrics] VisualizationBuffer metrics
+             */
+
+            /**
+             * Constructs a new VisualizationBuffer.
+             * @memberof proto.MsgToInterface
+             * @classdesc Represents a VisualizationBuffer.
+             * @implements IVisualizationBuffer
+             * @constructor
+             * @param {proto.MsgToInterface.IVisualizationBuffer=} [properties] Properties to set
+             */
+            function VisualizationBuffer(properties) {
+                this.drawings = [];
+                this.metrics = [];
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * VisualizationBuffer drawings.
+             * @member {Array.<proto.IDrawing>} drawings
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @instance
+             */
+            VisualizationBuffer.prototype.drawings = $util.emptyArray;
+
+            /**
+             * VisualizationBuffer metrics.
+             * @member {Array.<proto.IMetric>} metrics
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @instance
+             */
+            VisualizationBuffer.prototype.metrics = $util.emptyArray;
+
+            /**
+             * Creates a new VisualizationBuffer instance using the specified properties.
+             * @function create
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {proto.MsgToInterface.IVisualizationBuffer=} [properties] Properties to set
+             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer instance
+             */
+            VisualizationBuffer.create = function create(properties) {
+                return new VisualizationBuffer(properties);
+            };
+
+            /**
+             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @function encode
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {proto.MsgToInterface.IVisualizationBuffer} message VisualizationBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VisualizationBuffer.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.drawings != null && message.drawings.length)
+                    for (let i = 0; i < message.drawings.length; ++i)
+                        $root.proto.Drawing.encode(message.drawings[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.metrics != null && message.metrics.length)
+                    for (let i = 0; i < message.metrics.length; ++i)
+                        $root.proto.Metric.encode(message.metrics[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {proto.MsgToInterface.IVisualizationBuffer} message VisualizationBuffer message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VisualizationBuffer.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VisualizationBuffer.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MsgToInterface.VisualizationBuffer();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            if (!(message.drawings && message.drawings.length))
+                                message.drawings = [];
+                            message.drawings.push($root.proto.Drawing.decode(reader, reader.uint32()));
+                            break;
+                        }
+                    case 2: {
+                            if (!(message.metrics && message.metrics.length))
+                                message.metrics = [];
+                            message.metrics.push($root.proto.Metric.decode(reader, reader.uint32()));
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VisualizationBuffer.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a VisualizationBuffer message.
+             * @function verify
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            VisualizationBuffer.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.drawings != null && message.hasOwnProperty("drawings")) {
+                    if (!Array.isArray(message.drawings))
+                        return "drawings: array expected";
+                    for (let i = 0; i < message.drawings.length; ++i) {
+                        let error = $root.proto.Drawing.verify(message.drawings[i]);
+                        if (error)
+                            return "drawings." + error;
+                    }
+                }
+                if (message.metrics != null && message.hasOwnProperty("metrics")) {
+                    if (!Array.isArray(message.metrics))
+                        return "metrics: array expected";
+                    for (let i = 0; i < message.metrics.length; ++i) {
+                        let error = $root.proto.Metric.verify(message.metrics[i]);
+                        if (error)
+                            return "metrics." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             */
+            VisualizationBuffer.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.MsgToInterface.VisualizationBuffer)
+                    return object;
+                let message = new $root.proto.MsgToInterface.VisualizationBuffer();
+                if (object.drawings) {
+                    if (!Array.isArray(object.drawings))
+                        throw TypeError(".proto.MsgToInterface.VisualizationBuffer.drawings: array expected");
+                    message.drawings = [];
+                    for (let i = 0; i < object.drawings.length; ++i) {
+                        if (typeof object.drawings[i] !== "object")
+                            throw TypeError(".proto.MsgToInterface.VisualizationBuffer.drawings: object expected");
+                        message.drawings[i] = $root.proto.Drawing.fromObject(object.drawings[i]);
+                    }
+                }
+                if (object.metrics) {
+                    if (!Array.isArray(object.metrics))
+                        throw TypeError(".proto.MsgToInterface.VisualizationBuffer.metrics: array expected");
+                    message.metrics = [];
+                    for (let i = 0; i < object.metrics.length; ++i) {
+                        if (typeof object.metrics[i] !== "object")
+                            throw TypeError(".proto.MsgToInterface.VisualizationBuffer.metrics: object expected");
+                        message.metrics[i] = $root.proto.Metric.fromObject(object.metrics[i]);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {proto.MsgToInterface.VisualizationBuffer} message VisualizationBuffer
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            VisualizationBuffer.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.arrays || options.defaults) {
+                    object.drawings = [];
+                    object.metrics = [];
+                }
+                if (message.drawings && message.drawings.length) {
+                    object.drawings = [];
+                    for (let j = 0; j < message.drawings.length; ++j)
+                        object.drawings[j] = $root.proto.Drawing.toObject(message.drawings[j], options);
+                }
+                if (message.metrics && message.metrics.length) {
+                    object.metrics = [];
+                    for (let j = 0; j < message.metrics.length; ++j)
+                        object.metrics[j] = $root.proto.Metric.toObject(message.metrics[j], options);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this VisualizationBuffer to JSON.
+             * @function toJSON
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            VisualizationBuffer.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for VisualizationBuffer
+             * @function getTypeUrl
+             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            VisualizationBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.MsgToInterface.VisualizationBuffer";
+            };
+
+            return VisualizationBuffer;
+        })();
+
+        return MsgToInterface;
+    })();
+
+    proto.MsgFromInterface = (function() {
+
+        /**
+         * Properties of a MsgFromInterface.
+         * @memberof proto
+         * @interface IMsgFromInterface
+         * @property {proto.IGameState|null} [setGameState] MsgFromInterface setGameState
+         * @property {proto.IGameSettings|null} [setGameSettings] MsgFromInterface setGameSettings
+         */
+
+        /**
+         * Constructs a new MsgFromInterface.
+         * @memberof proto
+         * @classdesc Represents a MsgFromInterface.
+         * @implements IMsgFromInterface
+         * @constructor
+         * @param {proto.IMsgFromInterface=} [properties] Properties to set
+         */
+        function MsgFromInterface(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * MsgFromInterface setGameState.
+         * @member {proto.IGameState|null|undefined} setGameState
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.setGameState = null;
+
+        /**
+         * MsgFromInterface setGameSettings.
+         * @member {proto.IGameSettings|null|undefined} setGameSettings
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.setGameSettings = null;
+
+        // OneOf field names bound to virtual getters and setters
+        let $oneOfFields;
+
+        /**
+         * MsgFromInterface kind.
+         * @member {"setGameState"|"setGameSettings"|undefined} kind
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        Object.defineProperty(MsgFromInterface.prototype, "kind", {
+            get: $util.oneOfGetter($oneOfFields = ["setGameState", "setGameSettings"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+
+        /**
+         * Creates a new MsgFromInterface instance using the specified properties.
+         * @function create
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {proto.IMsgFromInterface=} [properties] Properties to set
+         * @returns {proto.MsgFromInterface} MsgFromInterface instance
+         */
+        MsgFromInterface.create = function create(properties) {
+            return new MsgFromInterface(properties);
+        };
+
+        /**
+         * Encodes the specified MsgFromInterface message. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @function encode
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {proto.IMsgFromInterface} message MsgFromInterface message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgFromInterface.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.setGameState != null && Object.hasOwnProperty.call(message, "setGameState"))
+                $root.proto.GameState.encode(message.setGameState, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.setGameSettings != null && Object.hasOwnProperty.call(message, "setGameSettings"))
+                $root.proto.GameSettings.encode(message.setGameSettings, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified MsgFromInterface message, length delimited. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {proto.IMsgFromInterface} message MsgFromInterface message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        MsgFromInterface.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.MsgFromInterface} MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgFromInterface.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MsgFromInterface();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.setGameState = $root.proto.GameState.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 2: {
+                        message.setGameSettings = $root.proto.GameSettings.decode(reader, reader.uint32());
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.MsgFromInterface} MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        MsgFromInterface.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a MsgFromInterface message.
+         * @function verify
+         * @memberof proto.MsgFromInterface
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        MsgFromInterface.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            let properties = {};
+            if (message.setGameState != null && message.hasOwnProperty("setGameState")) {
+                properties.kind = 1;
+                {
+                    let error = $root.proto.GameState.verify(message.setGameState);
+                    if (error)
+                        return "setGameState." + error;
                 }
             }
             if (message.setGameSettings != null && message.hasOwnProperty("setGameSettings")) {
@@ -8533,7 +8375,7 @@ export const proto = $root.proto = (() => {
                     return "kind: multiple values";
                 properties.kind = 1;
                 {
-                    let error = $root.proto.SetGameSettings.verify(message.setGameSettings);
+                    let error = $root.proto.GameSettings.verify(message.setGameSettings);
                     if (error)
                         return "setGameSettings." + error;
                 }
@@ -8542,50 +8384,50 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Creates an InterfaceMessageEnvelope message from a plain object. Also converts values to their respective internal types.
+         * Creates a MsgFromInterface message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgFromInterface
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {proto.InterfaceMessageEnvelope} InterfaceMessageEnvelope
+         * @returns {proto.MsgFromInterface} MsgFromInterface
          */
-        InterfaceMessageEnvelope.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.InterfaceMessageEnvelope)
+        MsgFromInterface.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.MsgFromInterface)
                 return object;
-            let message = new $root.proto.InterfaceMessageEnvelope();
-            if (object.setPlay != null) {
-                if (typeof object.setPlay !== "object")
-                    throw TypeError(".proto.InterfaceMessageEnvelope.setPlay: object expected");
-                message.setPlay = $root.proto.SetPlay.fromObject(object.setPlay);
+            let message = new $root.proto.MsgFromInterface();
+            if (object.setGameState != null) {
+                if (typeof object.setGameState !== "object")
+                    throw TypeError(".proto.MsgFromInterface.setGameState: object expected");
+                message.setGameState = $root.proto.GameState.fromObject(object.setGameState);
             }
             if (object.setGameSettings != null) {
                 if (typeof object.setGameSettings !== "object")
-                    throw TypeError(".proto.InterfaceMessageEnvelope.setGameSettings: object expected");
-                message.setGameSettings = $root.proto.SetGameSettings.fromObject(object.setGameSettings);
+                    throw TypeError(".proto.MsgFromInterface.setGameSettings: object expected");
+                message.setGameSettings = $root.proto.GameSettings.fromObject(object.setGameSettings);
             }
             return message;
         };
 
         /**
-         * Creates a plain object from an InterfaceMessageEnvelope message. Also converts values to other types if specified.
+         * Creates a plain object from a MsgFromInterface message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgFromInterface
          * @static
-         * @param {proto.InterfaceMessageEnvelope} message InterfaceMessageEnvelope
+         * @param {proto.MsgFromInterface} message MsgFromInterface
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        InterfaceMessageEnvelope.toObject = function toObject(message, options) {
+        MsgFromInterface.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             let object = {};
-            if (message.setPlay != null && message.hasOwnProperty("setPlay")) {
-                object.setPlay = $root.proto.SetPlay.toObject(message.setPlay, options);
+            if (message.setGameState != null && message.hasOwnProperty("setGameState")) {
+                object.setGameState = $root.proto.GameState.toObject(message.setGameState, options);
                 if (options.oneofs)
-                    object.kind = "setPlay";
+                    object.kind = "setGameState";
             }
             if (message.setGameSettings != null && message.hasOwnProperty("setGameSettings")) {
-                object.setGameSettings = $root.proto.SetGameSettings.toObject(message.setGameSettings, options);
+                object.setGameSettings = $root.proto.GameSettings.toObject(message.setGameSettings, options);
                 if (options.oneofs)
                     object.kind = "setGameSettings";
             }
@@ -8593,32 +8435,32 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Converts this InterfaceMessageEnvelope to JSON.
+         * Converts this MsgFromInterface to JSON.
          * @function toJSON
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgFromInterface
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        InterfaceMessageEnvelope.prototype.toJSON = function toJSON() {
+        MsgFromInterface.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for InterfaceMessageEnvelope
+         * Gets the default type url for MsgFromInterface
          * @function getTypeUrl
-         * @memberof proto.InterfaceMessageEnvelope
+         * @memberof proto.MsgFromInterface
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        InterfaceMessageEnvelope.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        MsgFromInterface.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/proto.InterfaceMessageEnvelope";
+            return typeUrlPrefix + "/proto.MsgFromInterface";
         };
 
-        return InterfaceMessageEnvelope;
+        return MsgFromInterface;
     })();
 
     proto.World = (function() {

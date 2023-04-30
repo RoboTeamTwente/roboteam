@@ -27,12 +27,12 @@ const aiStore = useAIStore()
       </tr>
       </thead>
       <tbody>
-      <tr v-for="play in aiStore.stpData.latest?.scoredPlays" :key="play.playName">
+      <tr v-for="play in aiStore.stpData.latest?.scoredPlays" :key="play.playName!">
 <!--      <tr v-for="x in stpStore." :key="name">-->
         <th class="inline-flex items-center gap-1"> <font-awesome-icon v-if="play.playName === aiStore.stpData.latest?.selectedPlay?.playName" icon="circle" class="text-success w-3 h-3" /> {{ play.playName }}</th>
         <td> {{ play.playScore }}</td>
         <td>
-          <progress class="progress w-56" :value="play.playScore" max="255"></progress>
+          <progress class="progress w-56" :value="play.playScore!" max="255"></progress>
         </td>
       </tr>
 

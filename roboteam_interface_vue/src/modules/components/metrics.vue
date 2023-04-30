@@ -11,7 +11,7 @@ const visualizationStore = useVisualizationStore();
       <div class="bg-base-200 p-2 rounded-xl border border-base-300 w-min">
         <div class="flex flex-row items-center gap-2" v-if="metric.boundedValue != null">
           <div class="text-sm text-gray-500">{{ label }}</div>
-          <progress class="progress w-56" :value="metric.boundedValue.value - metric.boundedValue.min" :max="metric.boundedValue.max - metric.boundedValue.min"></progress>
+          <progress class="progress w-56" :value="metric.boundedValue.value! - metric.boundedValue.min!" :max="metric.boundedValue.max! - metric.boundedValue.min!"></progress>
           <div class="text-sm text-gray-500">{{ metric.boundedValue.value }}</div>
         </div>
 

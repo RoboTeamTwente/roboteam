@@ -1555,6 +1555,9 @@ export namespace proto {
 
         /** Drawing points */
         points?: (proto.IVector2f[]|null);
+
+        /** Drawing category */
+        category?: (proto.Drawing.Category|null);
     }
 
     /** Represents a Drawing. */
@@ -1580,6 +1583,9 @@ export namespace proto {
 
         /** Drawing points. */
         public points: proto.IVector2f[];
+
+        /** Drawing category. */
+        public category: proto.Drawing.Category;
 
         /**
          * Creates a new Drawing instance using the specified properties.
@@ -1679,6 +1685,12 @@ export namespace proto {
             MAGENTA = 5,
             WHITE = 6,
             BLACK = 7
+        }
+
+        /** Category enum. */
+        enum Category {
+            PATH_PLANNING = 0,
+            DEBUG = 1
         }
     }
 
@@ -2263,10 +2275,10 @@ export namespace proto {
 
             /** Status enum. */
             enum Status {
-                Waiting = 0,
-                Success = 1,
-                Failure = 2,
-                Running = 3
+                WAITING = 0,
+                SUCCESSFUL = 1,
+                FAILURE = 2,
+                RUNNING = 3
             }
 
             /** Properties of a Role. */
@@ -2786,552 +2798,231 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a MessageEnvelope. */
-    interface IMessageEnvelope {
+    /** Properties of a GameState. */
+    interface IGameState {
 
-        /** MessageEnvelope stpStatus */
-        stpStatus?: (proto.ISTPStatus|null);
-
-        /** MessageEnvelope setupMessage */
-        setupMessage?: (proto.ISetupMessage|null);
-
-        /** MessageEnvelope state */
-        state?: (proto.IState|null);
-
-        /** MessageEnvelope drawingBuffer */
-        drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
-
-        /** MessageEnvelope metricBuffer */
-        metricBuffer?: (proto.MessageEnvelope.IMetricBuffer|null);
-    }
-
-    /** Represents a MessageEnvelope. */
-    class MessageEnvelope implements IMessageEnvelope {
-
-        /**
-         * Constructs a new MessageEnvelope.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IMessageEnvelope);
-
-        /** MessageEnvelope stpStatus. */
-        public stpStatus?: (proto.ISTPStatus|null);
-
-        /** MessageEnvelope setupMessage. */
-        public setupMessage?: (proto.ISetupMessage|null);
-
-        /** MessageEnvelope state. */
-        public state?: (proto.IState|null);
-
-        /** MessageEnvelope drawingBuffer. */
-        public drawingBuffer?: (proto.MessageEnvelope.IDrawingBuffer|null);
-
-        /** MessageEnvelope metricBuffer. */
-        public metricBuffer?: (proto.MessageEnvelope.IMetricBuffer|null);
-
-        /** MessageEnvelope kind. */
-        public kind?: ("stpStatus"|"setupMessage"|"state"|"drawingBuffer"|"metricBuffer");
-
-        /**
-         * Creates a new MessageEnvelope instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns MessageEnvelope instance
-         */
-        public static create(properties?: proto.IMessageEnvelope): proto.MessageEnvelope;
-
-        /**
-         * Encodes the specified MessageEnvelope message. Does not implicitly {@link proto.MessageEnvelope.verify|verify} messages.
-         * @param message MessageEnvelope message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IMessageEnvelope, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified MessageEnvelope message, length delimited. Does not implicitly {@link proto.MessageEnvelope.verify|verify} messages.
-         * @param message MessageEnvelope message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IMessageEnvelope, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a MessageEnvelope message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns MessageEnvelope
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MessageEnvelope;
-
-        /**
-         * Decodes a MessageEnvelope message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns MessageEnvelope
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MessageEnvelope;
-
-        /**
-         * Verifies a MessageEnvelope message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a MessageEnvelope message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns MessageEnvelope
-         */
-        public static fromObject(object: { [k: string]: any }): proto.MessageEnvelope;
-
-        /**
-         * Creates a plain object from a MessageEnvelope message. Also converts values to other types if specified.
-         * @param message MessageEnvelope
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.MessageEnvelope, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this MessageEnvelope to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for MessageEnvelope
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace MessageEnvelope {
-
-        /** Properties of a DrawingBuffer. */
-        interface IDrawingBuffer {
-
-            /** DrawingBuffer buffer */
-            buffer?: (proto.IDrawing[]|null);
-        }
-
-        /** Represents a DrawingBuffer. */
-        class DrawingBuffer implements IDrawingBuffer {
-
-            /**
-             * Constructs a new DrawingBuffer.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.MessageEnvelope.IDrawingBuffer);
-
-            /** DrawingBuffer buffer. */
-            public buffer: proto.IDrawing[];
-
-            /**
-             * Creates a new DrawingBuffer instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns DrawingBuffer instance
-             */
-            public static create(properties?: proto.MessageEnvelope.IDrawingBuffer): proto.MessageEnvelope.DrawingBuffer;
-
-            /**
-             * Encodes the specified DrawingBuffer message. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
-             * @param message DrawingBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.MessageEnvelope.IDrawingBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified DrawingBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.DrawingBuffer.verify|verify} messages.
-             * @param message DrawingBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.MessageEnvelope.IDrawingBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a DrawingBuffer message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns DrawingBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MessageEnvelope.DrawingBuffer;
-
-            /**
-             * Decodes a DrawingBuffer message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns DrawingBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MessageEnvelope.DrawingBuffer;
-
-            /**
-             * Verifies a DrawingBuffer message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a DrawingBuffer message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns DrawingBuffer
-             */
-            public static fromObject(object: { [k: string]: any }): proto.MessageEnvelope.DrawingBuffer;
-
-            /**
-             * Creates a plain object from a DrawingBuffer message. Also converts values to other types if specified.
-             * @param message DrawingBuffer
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.MessageEnvelope.DrawingBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this DrawingBuffer to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for DrawingBuffer
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-
-        /** Properties of a MetricBuffer. */
-        interface IMetricBuffer {
-
-            /** MetricBuffer buffer */
-            buffer?: (proto.IMetric[]|null);
-        }
-
-        /** Represents a MetricBuffer. */
-        class MetricBuffer implements IMetricBuffer {
-
-            /**
-             * Constructs a new MetricBuffer.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.MessageEnvelope.IMetricBuffer);
-
-            /** MetricBuffer buffer. */
-            public buffer: proto.IMetric[];
-
-            /**
-             * Creates a new MetricBuffer instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns MetricBuffer instance
-             */
-            public static create(properties?: proto.MessageEnvelope.IMetricBuffer): proto.MessageEnvelope.MetricBuffer;
-
-            /**
-             * Encodes the specified MetricBuffer message. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
-             * @param message MetricBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.MessageEnvelope.IMetricBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified MetricBuffer message, length delimited. Does not implicitly {@link proto.MessageEnvelope.MetricBuffer.verify|verify} messages.
-             * @param message MetricBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.MessageEnvelope.IMetricBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a MetricBuffer message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns MetricBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MessageEnvelope.MetricBuffer;
-
-            /**
-             * Decodes a MetricBuffer message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns MetricBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MessageEnvelope.MetricBuffer;
-
-            /**
-             * Verifies a MetricBuffer message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a MetricBuffer message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns MetricBuffer
-             */
-            public static fromObject(object: { [k: string]: any }): proto.MessageEnvelope.MetricBuffer;
-
-            /**
-             * Creates a plain object from a MetricBuffer message. Also converts values to other types if specified.
-             * @param message MetricBuffer
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.MessageEnvelope.MetricBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this MetricBuffer to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for MetricBuffer
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-    }
-
-    /** Properties of a SetPlay. */
-    interface ISetPlay {
-
-        /** SetPlay playName */
+        /** GameState playName */
         playName?: (string|null);
 
-        /** SetPlay rulesetName */
+        /** GameState rulesetName */
         rulesetName?: (string|null);
     }
 
-    /** Represents a SetPlay. */
-    class SetPlay implements ISetPlay {
+    /** Represents a GameState. */
+    class GameState implements IGameState {
 
         /**
-         * Constructs a new SetPlay.
+         * Constructs a new GameState.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISetPlay);
+        constructor(properties?: proto.IGameState);
 
-        /** SetPlay playName. */
+        /** GameState playName. */
         public playName: string;
 
-        /** SetPlay rulesetName. */
+        /** GameState rulesetName. */
         public rulesetName: string;
 
         /**
-         * Creates a new SetPlay instance using the specified properties.
+         * Creates a new GameState instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns SetPlay instance
+         * @returns GameState instance
          */
-        public static create(properties?: proto.ISetPlay): proto.SetPlay;
+        public static create(properties?: proto.IGameState): proto.GameState;
 
         /**
-         * Encodes the specified SetPlay message. Does not implicitly {@link proto.SetPlay.verify|verify} messages.
-         * @param message SetPlay message or plain object to encode
+         * Encodes the specified GameState message. Does not implicitly {@link proto.GameState.verify|verify} messages.
+         * @param message GameState message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ISetPlay, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IGameState, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified SetPlay message, length delimited. Does not implicitly {@link proto.SetPlay.verify|verify} messages.
-         * @param message SetPlay message or plain object to encode
+         * Encodes the specified GameState message, length delimited. Does not implicitly {@link proto.GameState.verify|verify} messages.
+         * @param message GameState message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ISetPlay, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IGameState, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a SetPlay message from the specified reader or buffer.
+         * Decodes a GameState message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns SetPlay
+         * @returns GameState
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SetPlay;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameState;
 
         /**
-         * Decodes a SetPlay message from the specified reader or buffer, length delimited.
+         * Decodes a GameState message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns SetPlay
+         * @returns GameState
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SetPlay;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameState;
 
         /**
-         * Verifies a SetPlay message.
+         * Verifies a GameState message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a SetPlay message from a plain object. Also converts values to their respective internal types.
+         * Creates a GameState message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns SetPlay
+         * @returns GameState
          */
-        public static fromObject(object: { [k: string]: any }): proto.SetPlay;
+        public static fromObject(object: { [k: string]: any }): proto.GameState;
 
         /**
-         * Creates a plain object from a SetPlay message. Also converts values to other types if specified.
-         * @param message SetPlay
+         * Creates a plain object from a GameState message. Also converts values to other types if specified.
+         * @param message GameState
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.SetPlay, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.GameState, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this SetPlay to JSON.
+         * Converts this GameState to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for SetPlay
+         * Gets the default type url for GameState
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a SetGameSettings. */
-    interface ISetGameSettings {
+    /** Properties of a GameSettings. */
+    interface IGameSettings {
 
-        /** SetGameSettings useReferee */
+        /** GameSettings useReferee */
         useReferee?: (boolean|null);
 
-        /** SetGameSettings ignoreInvariants */
+        /** GameSettings ignoreInvariants */
         ignoreInvariants?: (boolean|null);
 
-        /** SetGameSettings hubMode */
-        hubMode?: (proto.SetGameSettings.RobotHubMode|null);
+        /** GameSettings hubMode */
+        hubMode?: (proto.GameSettings.RobotHubMode|null);
 
-        /** SetGameSettings isLeft */
+        /** GameSettings isLeft */
         isLeft?: (boolean|null);
 
-        /** SetGameSettings isYellow */
+        /** GameSettings isYellow */
         isYellow?: (boolean|null);
     }
 
-    /** Represents a SetGameSettings. */
-    class SetGameSettings implements ISetGameSettings {
+    /** Represents a GameSettings. */
+    class GameSettings implements IGameSettings {
 
         /**
-         * Constructs a new SetGameSettings.
+         * Constructs a new GameSettings.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISetGameSettings);
+        constructor(properties?: proto.IGameSettings);
 
-        /** SetGameSettings useReferee. */
+        /** GameSettings useReferee. */
         public useReferee: boolean;
 
-        /** SetGameSettings ignoreInvariants. */
+        /** GameSettings ignoreInvariants. */
         public ignoreInvariants: boolean;
 
-        /** SetGameSettings hubMode. */
-        public hubMode: proto.SetGameSettings.RobotHubMode;
+        /** GameSettings hubMode. */
+        public hubMode: proto.GameSettings.RobotHubMode;
 
-        /** SetGameSettings isLeft. */
+        /** GameSettings isLeft. */
         public isLeft: boolean;
 
-        /** SetGameSettings isYellow. */
+        /** GameSettings isYellow. */
         public isYellow: boolean;
 
         /**
-         * Creates a new SetGameSettings instance using the specified properties.
+         * Creates a new GameSettings instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns SetGameSettings instance
+         * @returns GameSettings instance
          */
-        public static create(properties?: proto.ISetGameSettings): proto.SetGameSettings;
+        public static create(properties?: proto.IGameSettings): proto.GameSettings;
 
         /**
-         * Encodes the specified SetGameSettings message. Does not implicitly {@link proto.SetGameSettings.verify|verify} messages.
-         * @param message SetGameSettings message or plain object to encode
+         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @param message GameSettings message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ISetGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified SetGameSettings message, length delimited. Does not implicitly {@link proto.SetGameSettings.verify|verify} messages.
-         * @param message SetGameSettings message or plain object to encode
+         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @param message GameSettings message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ISetGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a SetGameSettings message from the specified reader or buffer.
+         * Decodes a GameSettings message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns SetGameSettings
+         * @returns GameSettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SetGameSettings;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameSettings;
 
         /**
-         * Decodes a SetGameSettings message from the specified reader or buffer, length delimited.
+         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns SetGameSettings
+         * @returns GameSettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SetGameSettings;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameSettings;
 
         /**
-         * Verifies a SetGameSettings message.
+         * Verifies a GameSettings message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a SetGameSettings message from a plain object. Also converts values to their respective internal types.
+         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns SetGameSettings
+         * @returns GameSettings
          */
-        public static fromObject(object: { [k: string]: any }): proto.SetGameSettings;
+        public static fromObject(object: { [k: string]: any }): proto.GameSettings;
 
         /**
-         * Creates a plain object from a SetGameSettings message. Also converts values to other types if specified.
-         * @param message SetGameSettings
+         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
+         * @param message GameSettings
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.SetGameSettings, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.GameSettings, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this SetGameSettings to JSON.
+         * Converts this GameSettings to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for SetGameSettings
+         * Gets the default type url for GameSettings
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    namespace SetGameSettings {
+    namespace GameSettings {
 
         /** RobotHubMode enum. */
         enum RobotHubMode {
@@ -3341,106 +3032,330 @@ export namespace proto {
         }
     }
 
-    /** Properties of an InterfaceMessageEnvelope. */
-    interface IInterfaceMessageEnvelope {
+    /** Properties of a MsgToInterface. */
+    interface IMsgToInterface {
 
-        /** InterfaceMessageEnvelope setPlay */
-        setPlay?: (proto.ISetPlay|null);
+        /** MsgToInterface stpStatus */
+        stpStatus?: (proto.ISTPStatus|null);
 
-        /** InterfaceMessageEnvelope setGameSettings */
-        setGameSettings?: (proto.ISetGameSettings|null);
+        /** MsgToInterface setupMessage */
+        setupMessage?: (proto.ISetupMessage|null);
+
+        /** MsgToInterface state */
+        state?: (proto.IState|null);
+
+        /** MsgToInterface visualizations */
+        visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
     }
 
-    /** Represents an InterfaceMessageEnvelope. */
-    class InterfaceMessageEnvelope implements IInterfaceMessageEnvelope {
+    /** Represents a MsgToInterface. */
+    class MsgToInterface implements IMsgToInterface {
 
         /**
-         * Constructs a new InterfaceMessageEnvelope.
+         * Constructs a new MsgToInterface.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IInterfaceMessageEnvelope);
+        constructor(properties?: proto.IMsgToInterface);
 
-        /** InterfaceMessageEnvelope setPlay. */
-        public setPlay?: (proto.ISetPlay|null);
+        /** MsgToInterface stpStatus. */
+        public stpStatus?: (proto.ISTPStatus|null);
 
-        /** InterfaceMessageEnvelope setGameSettings. */
-        public setGameSettings?: (proto.ISetGameSettings|null);
+        /** MsgToInterface setupMessage. */
+        public setupMessage?: (proto.ISetupMessage|null);
 
-        /** InterfaceMessageEnvelope kind. */
-        public kind?: ("setPlay"|"setGameSettings");
+        /** MsgToInterface state. */
+        public state?: (proto.IState|null);
+
+        /** MsgToInterface visualizations. */
+        public visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
+
+        /** MsgToInterface kind. */
+        public kind?: ("stpStatus"|"setupMessage"|"state"|"visualizations");
 
         /**
-         * Creates a new InterfaceMessageEnvelope instance using the specified properties.
+         * Creates a new MsgToInterface instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns InterfaceMessageEnvelope instance
+         * @returns MsgToInterface instance
          */
-        public static create(properties?: proto.IInterfaceMessageEnvelope): proto.InterfaceMessageEnvelope;
+        public static create(properties?: proto.IMsgToInterface): proto.MsgToInterface;
 
         /**
-         * Encodes the specified InterfaceMessageEnvelope message. Does not implicitly {@link proto.InterfaceMessageEnvelope.verify|verify} messages.
-         * @param message InterfaceMessageEnvelope message or plain object to encode
+         * Encodes the specified MsgToInterface message. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
+         * @param message MsgToInterface message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IInterfaceMessageEnvelope, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified InterfaceMessageEnvelope message, length delimited. Does not implicitly {@link proto.InterfaceMessageEnvelope.verify|verify} messages.
-         * @param message InterfaceMessageEnvelope message or plain object to encode
+         * Encodes the specified MsgToInterface message, length delimited. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
+         * @param message MsgToInterface message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IInterfaceMessageEnvelope, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an InterfaceMessageEnvelope message from the specified reader or buffer.
+         * Decodes a MsgToInterface message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns InterfaceMessageEnvelope
+         * @returns MsgToInterface
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.InterfaceMessageEnvelope;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface;
 
         /**
-         * Decodes an InterfaceMessageEnvelope message from the specified reader or buffer, length delimited.
+         * Decodes a MsgToInterface message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns InterfaceMessageEnvelope
+         * @returns MsgToInterface
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.InterfaceMessageEnvelope;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface;
 
         /**
-         * Verifies an InterfaceMessageEnvelope message.
+         * Verifies a MsgToInterface message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an InterfaceMessageEnvelope message from a plain object. Also converts values to their respective internal types.
+         * Creates a MsgToInterface message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns InterfaceMessageEnvelope
+         * @returns MsgToInterface
          */
-        public static fromObject(object: { [k: string]: any }): proto.InterfaceMessageEnvelope;
+        public static fromObject(object: { [k: string]: any }): proto.MsgToInterface;
 
         /**
-         * Creates a plain object from an InterfaceMessageEnvelope message. Also converts values to other types if specified.
-         * @param message InterfaceMessageEnvelope
+         * Creates a plain object from a MsgToInterface message. Also converts values to other types if specified.
+         * @param message MsgToInterface
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.InterfaceMessageEnvelope, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.MsgToInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this InterfaceMessageEnvelope to JSON.
+         * Converts this MsgToInterface to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for InterfaceMessageEnvelope
+         * Gets the default type url for MsgToInterface
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace MsgToInterface {
+
+        /** Properties of a VisualizationBuffer. */
+        interface IVisualizationBuffer {
+
+            /** VisualizationBuffer drawings */
+            drawings?: (proto.IDrawing[]|null);
+
+            /** VisualizationBuffer metrics */
+            metrics?: (proto.IMetric[]|null);
+        }
+
+        /** Represents a VisualizationBuffer. */
+        class VisualizationBuffer implements IVisualizationBuffer {
+
+            /**
+             * Constructs a new VisualizationBuffer.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.MsgToInterface.IVisualizationBuffer);
+
+            /** VisualizationBuffer drawings. */
+            public drawings: proto.IDrawing[];
+
+            /** VisualizationBuffer metrics. */
+            public metrics: proto.IMetric[];
+
+            /**
+             * Creates a new VisualizationBuffer instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns VisualizationBuffer instance
+             */
+            public static create(properties?: proto.MsgToInterface.IVisualizationBuffer): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @param message VisualizationBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @param message VisualizationBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Verifies a VisualizationBuffer message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns VisualizationBuffer
+             */
+            public static fromObject(object: { [k: string]: any }): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
+             * @param message VisualizationBuffer
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.MsgToInterface.VisualizationBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this VisualizationBuffer to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for VisualizationBuffer
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+    }
+
+    /** Properties of a MsgFromInterface. */
+    interface IMsgFromInterface {
+
+        /** MsgFromInterface setGameState */
+        setGameState?: (proto.IGameState|null);
+
+        /** MsgFromInterface setGameSettings */
+        setGameSettings?: (proto.IGameSettings|null);
+    }
+
+    /** Represents a MsgFromInterface. */
+    class MsgFromInterface implements IMsgFromInterface {
+
+        /**
+         * Constructs a new MsgFromInterface.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IMsgFromInterface);
+
+        /** MsgFromInterface setGameState. */
+        public setGameState?: (proto.IGameState|null);
+
+        /** MsgFromInterface setGameSettings. */
+        public setGameSettings?: (proto.IGameSettings|null);
+
+        /** MsgFromInterface kind. */
+        public kind?: ("setGameState"|"setGameSettings");
+
+        /**
+         * Creates a new MsgFromInterface instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns MsgFromInterface instance
+         */
+        public static create(properties?: proto.IMsgFromInterface): proto.MsgFromInterface;
+
+        /**
+         * Encodes the specified MsgFromInterface message. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @param message MsgFromInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified MsgFromInterface message, length delimited. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @param message MsgFromInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgFromInterface;
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgFromInterface;
+
+        /**
+         * Verifies a MsgFromInterface message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a MsgFromInterface message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns MsgFromInterface
+         */
+        public static fromObject(object: { [k: string]: any }): proto.MsgFromInterface;
+
+        /**
+         * Creates a plain object from a MsgFromInterface message. Also converts values to other types if specified.
+         * @param message MsgFromInterface
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.MsgFromInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this MsgFromInterface to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for MsgFromInterface
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

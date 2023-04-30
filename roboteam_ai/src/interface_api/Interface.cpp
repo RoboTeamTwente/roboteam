@@ -4,20 +4,17 @@
 
 #include "interface_api/Interface.h"
 
+#include "proto/NewInterface.pb.h"
 #include "utilities/Settings.h"
 
 namespace rtt::ai::new_interface {
 
-proto::MessageEnvelope Interface::drawingsBuffer;
-proto::MessageEnvelope Interface::metricsBuffer;
+google::protobuf::Arena Interface::arena;
+proto::MsgToInterface::VisualizationBuffer* Interface::visualizations = google::protobuf::Arena::CreateMessage<proto::MsgToInterface::VisualizationBuffer>(&arena);
 
-void Interface::draw(std::basic_string<char> label, proto::Drawing::Color color, proto::Drawing::Method method, std::span<Vector2> points, int retainForTicks) {
+void Interface::draw(const DrawArgs& args, std::span<Vector2> points) {
     const double orientation = SETTINGS.isLeft() ? -1 : 1;
-    const auto drawing = drawingsBuffer.mutable_drawingbuffer()->add_buffer();
-    drawing->set_label(label);
-    drawing->set_color(color);
-    drawing->set_method(method);
-    drawing->set_retainforticks(retainForTicks);
+    auto drawing = initDrawing(args);
     for (auto& point : points) {
         auto protoPoint = drawing->add_points();
         protoPoint->set_x(orientation * point.x);
@@ -26,16 +23,25 @@ void Interface::draw(std::basic_string<char> label, proto::Drawing::Color color,
 }
 
 void Interface::reportNumber(std::basic_string<char> label, double value, std::basic_string<char> unit) {
-    auto metric = metricsBuffer.mutable_metricbuffer()->add_buffer();
+    auto metric = visualizations->add_metrics();
     metric->set_label(label);
     metric->mutable_decimal()->set_value(value);
     metric->mutable_decimal()->set_unit(unit);
 }
 
-void Interface::consumeBuffers(std::function<void(proto::MessageEnvelope&, proto::MessageEnvelope&)> consumer) {
-    consumer(drawingsBuffer, metricsBuffer);
-    drawingsBuffer.mutable_drawingbuffer()->clear_buffer();
-    metricsBuffer.mutable_metricbuffer()->clear_buffer();
+proto::Drawing* Interface::initDrawing(const DrawArgs& args) {
+    const auto drawing = visualizations->add_drawings();
+    drawing->set_label(args.label);
+    drawing->set_color(args.color);
+    drawing->set_method(args.method);
+    drawing->set_retain_for_ticks(args.retainForTicks);
+    drawing->set_category(args.category);
+    return drawing;
+}
+
+void Interface::consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer&)> consumer){
+    consumer(*visualizations);
+    arena.Reset();
 }
 
 }  // namespace rtt::ai::new_interface

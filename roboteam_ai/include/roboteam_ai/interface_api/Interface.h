@@ -10,20 +10,27 @@
 #include "proto/NewInterface.pb.h"
 #include "roboteam_utils/Vector2.h"
 
-//using namespace rtt::ai::interface;
-
 namespace rtt::ai::new_interface {
 
 class Interface {
    public:
-    static void draw(std::basic_string<char> label, proto::Drawing::Color color, proto::Drawing::Method method, std::span<Vector2> points, int retainForTicks = 1);
+    struct DrawArgs {
+        std::basic_string<char> label;
+        proto::Drawing::Color color = proto::Drawing::WHITE;
+        proto::Drawing::Method method = proto::Drawing::DOTS;
+        proto::Drawing::Category category = proto::Drawing::DEBUG;
+        int retainForTicks = 10;
+    };
+
+    static void draw(const DrawArgs& args, std::span<Vector2> points);
     static void reportNumber(std::basic_string<char> label, double value, std::basic_string<char> unit = "");
 
-    static void consumeBuffers(std::function<void(proto::MessageEnvelope&, proto::MessageEnvelope&)> consumer);
+    static void consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer& visualizations)> consumer);
 
    private:
-    static proto::MessageEnvelope drawingsBuffer;
-    static proto::MessageEnvelope metricsBuffer;
+    static proto::Drawing* initDrawing(const DrawArgs& args);
+    static proto::MsgToInterface::VisualizationBuffer* visualizations;
+    static google::protobuf::Arena arena;
 };
 
 }

@@ -8,12 +8,12 @@
 #include <chrono>
 
 #include "control/ControlModule.h"
+#include "interface_api/InterfaceGateway.h"
 #include "stp/PlayDecider.hpp"
 #include "stp/PlayEvaluator.h"
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
-#include "interface_api/InterfaceServer.h"
 
 /**
  * Plays are included here
@@ -115,8 +115,8 @@ void STPManager::start(std::atomic_bool &exitApplication) {
             tickDurations[index] = tickDuration;
             index++;
 
-            rtt::ai::io::InterfaceServer::instance().broadcastWorld();
-            rtt::ai::io::InterfaceServer::instance().broadcastVisuals();
+            rtt::ai::io::InterfaceGateway::instance().broadcastWorld();
+            rtt::ai::io::InterfaceGateway::instance().broadcastVisuals();
             tickCounter++;
 
             stpTimer.limit(
@@ -203,7 +203,7 @@ void STPManager::decidePlay(world::World *_world) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
-    rtt::ai::io::InterfaceServer::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
+    rtt::ai::io::InterfaceGateway::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

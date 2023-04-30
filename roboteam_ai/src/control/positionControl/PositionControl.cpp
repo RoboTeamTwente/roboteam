@@ -5,12 +5,12 @@
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
+#include "interface_api/InterfaceGateway.h"
 #include "roboteam_utils/Print.h"
-#include "interface_api/InterfaceServer.h"
 
 namespace rtt::ai::control {
-RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
-                                                  Vector2 &targetPosition, stp::PIDType pidType) {
+RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
+                                                  stp::PIDType pidType) {
     collisionDetector.setField(field);
 
     // if the robot is close to the final position and can't get there, stop
@@ -21,12 +21,12 @@ RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int r
     if (shouldRecalculatePath(currentPosition, targetPosition, currentVelocity, robotId)) {
         computedPaths[robotId] = pathPlanningAlgorithm.computePath(currentPosition, targetPosition);
     }
-//    rtt::ai::io::WebSocketManager::instance().directDraw(
-//        "path", "blue", "dots", computedPaths[robotId], 1
-//    );
-    //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
-    //interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
-    //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::blue, robotId, interface::Drawing::DOTS);
+    //    rtt::ai::io::WebSocketManager::instance().directDraw(
+    //        "path", "blue", "dots", computedPaths[robotId], 1
+    //    );
+    // interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
+    // interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::green, robotId, interface::Drawing::LINES_CONNECTED);
+    // interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::blue, robotId, interface::Drawing::DOTS);
 
     RobotCommand command = {};
     Position trackingVelocity = pathTrackingAlgorithm.trackPathDefaultAngle(currentPosition, currentVelocity, computedPaths[robotId], robotId, pidType);
@@ -83,18 +83,26 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     }
 
     rtt::ai::new_interface::Interface::draw(
-        "path_lines" + std::to_string(robotId), proto::Drawing::WHITE, proto::Drawing::LINES_CONNECTED, computedPaths[robotId], 5
-    );
+        {
+            .label = "path_lines" + std::to_string(robotId),
+            .color = proto::Drawing::WHITE,
+            .method = proto::Drawing::LINES_CONNECTED,
+        },
+        computedPaths[robotId]);
 
     rtt::ai::new_interface::Interface::draw(
-        "path_dots" + std::to_string(robotId), proto::Drawing::MAGENTA, proto::Drawing::PLUSES, computedPaths[robotId], 5
-    );
+        {
+            .label = "path_dots" + std::to_string(robotId),
+            .color = proto::Drawing::MAGENTA,
+            .method = proto::Drawing::PLUSES,
+        },
+        computedPaths[robotId]);
 
     rtt::ai::new_interface::Interface::reportNumber("Path size for robot " + std::to_string(robotId), computedPaths[robotId].size());
 
-    //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::yellow, robotId, interface::Drawing::LINES_CONNECTED);
-    //interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::darkMagenta, robotId, interface::Drawing::LINES_CONNECTED);
-    //interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::magenta, robotId, interface::Drawing::DOTS);
+    // interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::yellow, robotId, interface::Drawing::LINES_CONNECTED);
+    // interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::darkMagenta, robotId, interface::Drawing::LINES_CONNECTED);
+    // interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::magenta, robotId, interface::Drawing::DOTS);
 
     // Current method is very hacky
     // If you are closer to the target than the first point of the approximated path, remove it
@@ -133,13 +141,13 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
         auto trajectoryAroundCollision = calculateTrajectoryAroundCollision(world, field, intermediatePathCollision, trajectoryToIntermediatePoint, targetPosition, robotId,
                                                                             maxRobotVelocity, timeStep, avoidObjects);
         if (trajectoryAroundCollision.has_value()) {
-            //interface::Input::drawData(interface::Visual::PATHFINDING, intermediatePoints, Qt::green, robotId, interface::Drawing::CROSSES);
-            //interface::Input::drawData(interface::Visual::PATHFINDING, {firstCollision->collisionPosition}, Qt::red, robotId, interface::Drawing::CROSSES);
+            // interface::Input::drawData(interface::Visual::PATHFINDING, intermediatePoints, Qt::green, robotId, interface::Drawing::CROSSES);
+            // interface::Input::drawData(interface::Visual::PATHFINDING, {firstCollision->collisionPosition}, Qt::red, robotId, interface::Drawing::CROSSES);
 
-            //interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryToIntermediatePoint.getPathApproach(timeStep), Qt::white, robotId,
-            //                           interface::Drawing::LINES_CONNECTED);
-            //interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryAroundCollision.value().getPathApproach(timeStep), Qt::yellow, robotId,
-            //                           interface::Drawing::LINES_CONNECTED);
+            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryToIntermediatePoint.getPathApproach(timeStep), Qt::white, robotId,
+            //                            interface::Drawing::LINES_CONNECTED);
+            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryAroundCollision.value().getPathApproach(timeStep), Qt::yellow, robotId,
+            //                            interface::Drawing::LINES_CONNECTED);
             return trajectoryAroundCollision.value();
         }
         intermediatePointsSorted.pop();
@@ -175,8 +183,7 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
     return std::nullopt;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
-                                                               Vector2 &targetPosition) {
+std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition) {
     double angleBetweenIntermediatePoints = M_PI_4 / 2;
 
     // Radius and point extension of intermediate points are based on the fieldHeight
@@ -225,8 +232,8 @@ std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Ve
     return intermediatePointsSorted;
 }
 
-bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition,
-                                                  const Vector2 &currentPosition, ai::stp::AvoidObjects avoidObjects) {
+bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
+                                                  ai::stp::AvoidObjects avoidObjects) {
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&
          (targetPosition - computedPaths[robotId][computedPaths[robotId].size() - 1]).length() > stp::control_constants::GO_TO_POS_ERROR_MARGIN) ||

@@ -2,7 +2,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "STPManager.h"
-#include "interface_api/InterfaceServer.h"
+#include "interface_api/InterfaceGateway.h"
 #include "roboteam_utils/Timer.h"
 #include "utilities/IOManager.h"
 
@@ -19,7 +19,7 @@ void runInterfacePublisher(std::atomic_bool& exitApplication) {
     roboteam_utils::Timer interfaceTimer;
     interfaceTimer.loop(
     [&]() {
-        rtt::ai::io::InterfaceServer::instance().broadcastWorld();
+        rtt::ai::io::InterfaceGateway::instance().broadcastWorld();
         if (exitApplication) {interfaceTimer.stop();}
     }, 60);
 }
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
     RTT_DEBUG("Debug prints enabled")
 
     RTT_DEBUG("Initialize Interface Server");
-    rtt::ai::io::InterfaceServer::instance();
+    rtt::ai::io::InterfaceGateway::instance();
 
 
     rtt::ai::Constants::init();

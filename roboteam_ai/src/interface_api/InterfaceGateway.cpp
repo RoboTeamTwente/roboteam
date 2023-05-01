@@ -65,7 +65,7 @@ void InterfaceGateway::broadcastWorld() {
 InterfaceGateway::InterfaceGateway() : webSocketServer(12676) {
     webSocketServer.setOnConnectionCallback([&](const std::weak_ptr<ix::WebSocket>& webSocketPtr, const std::shared_ptr<ix::ConnectionState>& connectionState) {
         RTT_INFO("WebSocket connection incoming from ", connectionState->getRemoteIp());
-        webSocketPtr.lock()->setOnMessageCallback([&, connectionState](const std::unique_ptr<ix::WebSocketMessage>& msg) {
+        webSocketPtr.lock()->setOnMessageCallback([&, webSocketPtr, connectionState](const std::unique_ptr<ix::WebSocketMessage>& msg) {
             RTT_INFO(connectionState->getRemoteIp(), ", ", connectionState->getId());
             if (msg->type == ix::WebSocketMessageType::Open) {
                 RTT_INFO("Sending setup message to client");

@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot =
     [ "calculateAngle", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a7dd6c78c3221ac4169ba76c579964bba", null ],
     [ "calculateDesiredRobotPosition", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a2ae333005e6ed27da3e9b68bbeb3a681", null ],
     [ "calculateInfoForSkill", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab483b0fde3fde2b73e16b3fe6b0ef866", null ],
+    [ "forceTacticSuccess", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a5406b768722523b54f2b7b61b1e78a13", null ],
     [ "getStatus", "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab7650037eb092459aca7247ea77f2ad4", null ],

@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation =
 [
     [ "Formation", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#a8cf5ff46bcb539cf888b98f60de2ef56", null ],
     [ "calculateInfoForSkill", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#a3d634febe8eb1fef189118fbb1ab4180", null ],
+    [ "forceTacticSuccess", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ae3c48407cf0e288159f5c0587ee238c5", null ],
     [ "getStatus", "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ab7650037eb092459aca7247ea77f2ad4", null ],

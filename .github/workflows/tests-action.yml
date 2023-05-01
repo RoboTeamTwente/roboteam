@@ -23,6 +23,18 @@ jobs:
       
       - name: Install dependecies
         run: sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build
+        
+      - name: Install Protobuf
+        if: steps.cache-build-restore.outputs.cache-hit != 'true'
+        run: git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&
+              cd /opt/protobuf &&
+              git checkout 3.19.x &&
+              git submodule update --init --recursive &&
+              ./autogen.sh &&
+              ./configure &&
+              make -j $(nproc) &&
+              make install &&
+              ldconfig &&
             
       - name: Configure
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

@@ -34,7 +34,7 @@ jobs:
               ./configure &&
               make -j $(nproc) &&
               make install &&
-              ldconfig &&
+              ldconfig
             
       - name: Configure
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

@@ -1,5 +1,5 @@
 export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
-    if (team === 'BLACK') {
+    if (team === 'PURPLE') {
         return{
             1: "Wall-E",
             2: "R2D2",

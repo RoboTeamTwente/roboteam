@@ -150,9 +150,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a1197153c427e64c749ef9fc57bacfc2e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a1197153c427e64c749ef9fc57bacfc2e">shouldTacticReset</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept override</td></tr>
 <tr class="memdesc:a1197153c427e64c749ef9fc57bacfc2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should this tactic be reset (go back to the first skill of this tactic) This tactic never resets, always false.  <a href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a1197153c427e64c749ef9fc57bacfc2e">More...</a><br /></td></tr>
 <tr class="separator:a1197153c427e64c749ef9fc57bacfc2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9ab4a91bf00c62dd623266195f48e66"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#aa9ab4a91bf00c62dd623266195f48e66">forceTacticSuccess</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept override</td></tr>
-<tr class="memdesc:aa9ab4a91bf00c62dd623266195f48e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should this tactic be forced to succeed (skip to the next tactic) This tactic should never be forced to succeed so always returns false.  <a href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#aa9ab4a91bf00c62dd623266195f48e66">More...</a><br /></td></tr>
-<tr class="separator:aa9ab4a91bf00c62dd623266195f48e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb1458c3773ef5d68fac7bf41966f0d5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#afb1458c3773ef5d68fac7bf41966f0d5">isEndTactic</a> () noexcept override</td></tr>
 <tr class="memdesc:afb1458c3773ef5d68fac7bf41966f0d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this is a passive tactic (formerly called endTactic.  <a href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#afb1458c3773ef5d68fac7bf41966f0d5">More...</a><br /></td></tr>
 <tr class="separator:afb1458c3773ef5d68fac7bf41966f0d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,43 +214,6 @@ Private Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>std::optional&lt;SkillInfo&gt; based on the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> parameter </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a4cfea3dd9c7299b30f32a1abf0cf2356">rtt::ai::stp::Tactic</a>.</p>
-
-</div>
-</div>
-<a id="aa9ab4a91bf00c62dd623266195f48e66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9ab4a91bf00c62dd623266195f48e66">&#9670;&nbsp;</a></span>forceTacticSuccess()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::stp::TestTactic::forceTacticSuccess </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
-          <td class="paramname"><em>info</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">private</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should this tactic be forced to succeed (skip to the next tactic) This tactic should never be forced to succeed so always returns false. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">info</td><td><a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> can be used to check some data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if tactic should succeed, false if execution should continue </dd></dl>
-
-<p>Reimplemented from <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab496bf1614c47ef3e466cd235eb84aab">rtt::ai::stp::Tactic</a>.</p>
 
 </div>
 </div>

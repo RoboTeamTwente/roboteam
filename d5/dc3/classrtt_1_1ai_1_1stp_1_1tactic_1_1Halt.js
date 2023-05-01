@@ -2,7 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt =
 [
     [ "Halt", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#aba5cd410f768ad2741e441a971e3123b", null ],
     [ "calculateInfoForSkill", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a9d6a2d03c48bf191150eab3f65f90eed", null ],
-    [ "forceTacticSuccess", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a1120c6c59b0d0cbf8a8c3f0de5b3cbfd", null ],
     [ "getStatus", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#ab7650037eb092459aca7247ea77f2ad4", null ],

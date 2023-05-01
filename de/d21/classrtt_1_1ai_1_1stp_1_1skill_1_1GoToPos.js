@@ -8,6 +8,7 @@ var classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos =
     [ "refreshRobotCommand", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#afa6b5f998d8ba252485177937d3724c7", null ],
     [ "terminate", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#a0f136c2ac131c1b44b65cb9eeba823fe", null ],
     [ "update", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#aab9578d86a91f8a16f5c02200ca3b5e8", null ],
+    [ "visualize", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#aa5def9b6b87ba470965eac3837600b03", null ],
     [ "command", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#ae3db983eda1761d7ccd3f68a0ef731dd", null ],
     [ "currentStatus", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#a62d571b925906855b84dfc185a0b5ee8", null ],
     [ "robot", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#a8625bf35b1b36ec18fd8ff68926ec0d4", null ]

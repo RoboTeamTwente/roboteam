@@ -11,10 +11,10 @@ const uiStore = useUIStore();
   <div class="grid grid-cols-fluid-10 gap-2 auto-cols-max">
     <template v-for="robot in aiStore.$state.stpData.latest?.robots" :key="robot.id">
       <div class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border" :class="{
-        'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id!)
+        'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)
       }">
         <div class="kbd gap-2 text-sm md:text-base flex justify-center">
-          <font-awesome-icon icon="robot"/> {{robot.id}}
+          <font-awesome-icon icon="robot"/> {{robot.id}} {{uiStore.robotName(robot.id)}}
         </div>
         <robot-stp-badge :name="robot.role?.name ?? 'Unknown'" :status="robot.role?.status ?? 'Unknown'"/>
         <robot-stp-badge v-if="robot.tactic != null" :name="robot.tactic!.name!" :status="robot.tactic!.status!"/>

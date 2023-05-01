@@ -22,13 +22,13 @@ const formatFloat = (pos?: number | null): string => {
   <div class="grid grid-cols-fluid-12  gap-2 ">
     <template v-for="(robot, id) in aiStore.ourRobots" :key="id">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
-        'bg-base-300 shadow-sm': uiStore.isaRobotSelected(robot.id!)
+        'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)
       }">
         <div class="flex flex-wrap gap-1 mb-2">
-          <div class="badge badge-sm">
+          <div class="badge badge-sm tooltip tooltip-bottom" :data-tip="uiStore.robotName(id)">
             <font-awesome-icon icon="robot" class="w-3 h-3 mr-1"/>{{id}}
           </div>
-          <div class="badge badge-sm badge-secondary  tooltip tooltip-bottom" data-tip="Battery level">
+          <div class="badge badge-sm badge-secondary tooltip tooltip-bottom" data-tip="Battery level">
             <font-awesome-icon icon="battery" class="h-3 w-3 mr-1"/> {{robot.feedbackInfo?.batteryLevel}}
           </div>
           <div class="badge badge-sm badge-secondary tooltip tooltip-bottom text-no-wrap" data-tip="Signal strength">

@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
 import {toRaw} from "vue";
+import {robotNameMap} from "../../utils";
 
 const defaultState: () => UiStore = () => ({
     bottomPanel: {
@@ -20,7 +21,8 @@ const defaultState: () => UiStore = () => ({
         drawings: 'SHOW',
         pathPlanning: 'SHOW',
         debug: 'SHOW',
-    }
+    },
+    internalTeam: 'PURPLE'
 });
 
 type Panel = {
@@ -42,7 +44,8 @@ export type UiStore = {
         velocities: TriState,
         pathPlanning: TriState,
         debug: TriState,
-    }
+    },
+    internalTeam: 'BLACK' | 'PURPLE'
 }
 export const useUIStore = defineStore('uiStore', {
     persist: {
@@ -95,6 +98,9 @@ export const useUIStore = defineStore('uiStore', {
         },
         showVelocities(state) {
             return (forRobot?: number | null) => state.visualizations.velocities === 'SHOW' || (state.visualizations.velocities === 'FOR_SELECTED_ROBOTS' && state.selectedRobots.has(forRobot ?? -1));
+        },
+        robotName(state) {
+            return (id: number) => robotNameMap(state.internalTeam, id);
         }
     }
 })

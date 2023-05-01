@@ -14,6 +14,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Macos files
+.DS_Store
+.fseventsd
+
+# Interface files
 node_modules
 /roboteam_interface_vue/node_modules/
 /roboteam_interface_vue/src-tauri/target/

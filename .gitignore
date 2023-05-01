@@ -17,6 +17,5 @@ lerna-debug.log*
 node_modules
 /roboteam_interface_vue/node_modules/
 /roboteam_interface_vue/src-tauri/target/
-dist
 *.local
 dist-ssr

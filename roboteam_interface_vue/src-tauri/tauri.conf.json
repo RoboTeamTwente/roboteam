@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "vite-tauri-template",
+    "productName": "com-rtt-interface",
     "version": "0.1.0"
   },
   "tauri": {
@@ -36,7 +36,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.khoshghadam.vite-tauri",
+      "identifier": "com.rtt.interface",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -65,7 +65,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Vite Tauri Template",
+        "title": "RTT Interface",
         "width": 800
       }
     ]

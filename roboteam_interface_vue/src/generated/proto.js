@@ -3814,6 +3814,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.Drawing.Method|null} [method] Drawing method
          * @property {Array.<proto.IVector2f>|null} [points] Drawing points
          * @property {proto.Drawing.Category|null} [category] Drawing category
+         * @property {number|null} [forRobotId] Drawing forRobotId
          */
 
         /**
@@ -3881,6 +3882,14 @@ export const proto = $root.proto = (() => {
         Drawing.prototype.category = 0;
 
         /**
+         * Drawing forRobotId.
+         * @member {number} forRobotId
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.forRobotId = 0;
+
+        /**
          * Creates a new Drawing instance using the specified properties.
          * @function create
          * @memberof proto.Drawing
@@ -3917,6 +3926,8 @@ export const proto = $root.proto = (() => {
                     $root.proto.Vector2f.encode(message.points[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             if (message.category != null && Object.hasOwnProperty.call(message, "category"))
                 writer.uint32(/* id 6, wireType 0 =*/48).int32(message.category);
+            if (message.forRobotId != null && Object.hasOwnProperty.call(message, "forRobotId"))
+                writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.forRobotId);
             return writer;
         };
 
@@ -3975,6 +3986,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 6: {
                         message.category = reader.int32();
+                        break;
+                    }
+                case 7: {
+                        message.forRobotId = reader.uint32();
                         break;
                     }
                 default:
@@ -4059,6 +4074,9 @@ export const proto = $root.proto = (() => {
                 case 1:
                     break;
                 }
+            if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
+                if (!$util.isInteger(message.forRobotId))
+                    return "forRobotId: integer expected";
             return null;
         };
 
@@ -4168,6 +4186,8 @@ export const proto = $root.proto = (() => {
                 message.category = 1;
                 break;
             }
+            if (object.forRobotId != null)
+                message.forRobotId = object.forRobotId >>> 0;
             return message;
         };
 
@@ -4192,6 +4212,7 @@ export const proto = $root.proto = (() => {
                 object.color = options.enums === String ? "RED" : 0;
                 object.method = options.enums === String ? "LINES_CONNECTED" : 0;
                 object.category = options.enums === String ? "PATH_PLANNING" : 0;
+                object.forRobotId = 0;
             }
             if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
                 object.retainForTicks = message.retainForTicks;
@@ -4208,6 +4229,8 @@ export const proto = $root.proto = (() => {
             }
             if (message.category != null && message.hasOwnProperty("category"))
                 object.category = options.enums === String ? $root.proto.Drawing.Category[message.category] === undefined ? message.category : $root.proto.Drawing.Category[message.category] : message.category;
+            if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
+                object.forRobotId = message.forRobotId;
             return object;
         };
 

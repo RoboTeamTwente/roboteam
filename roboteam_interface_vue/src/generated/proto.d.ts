@@ -1558,6 +1558,9 @@ export namespace proto {
 
         /** Drawing category */
         category?: (proto.Drawing.Category|null);
+
+        /** Drawing forRobotId */
+        forRobotId?: (number|null);
     }
 
     /** Represents a Drawing. */
@@ -1586,6 +1589,9 @@ export namespace proto {
 
         /** Drawing category. */
         public category: proto.Drawing.Category;
+
+        /** Drawing forRobotId. */
+        public forRobotId: number;
 
         /**
          * Creates a new Drawing instance using the specified properties.

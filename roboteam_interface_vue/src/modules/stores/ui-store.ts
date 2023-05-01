@@ -15,14 +15,20 @@ const defaultState: () => UiStore = () => ({
         ball: 1,
         robots: 1,
     },
-    showVelocity: true,
-    showDrawings: true,
+    visualizations: {
+        velocities: 'SHOW',
+        drawings: 'SHOW',
+        pathPlanning: 'SHOW',
+        debug: 'SHOW',
+    }
 });
 
 type Panel = {
     size: number
     collapsed: boolean
 }
+
+export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
 
 export type UiStore = {
     bottomPanel: Panel
@@ -32,8 +38,11 @@ export type UiStore = {
         ball: number,
         robots: number,
     },
-    showVelocity: boolean,
-    showDrawings: boolean,
+    visualizations: {
+        velocities: TriState,
+        pathPlanning: TriState,
+        debug: TriState,
+    }
 }
 export const useUIStore = defineStore('uiStore', {
     persist: {
@@ -50,10 +59,18 @@ export const useUIStore = defineStore('uiStore', {
     },
     state: () => defaultState(),
     actions: {
-        toggleBottomPanel() {this.bottomPanel.collapsed = !this.bottomPanel.collapsed;},
-        toggleLeftPanel() { this.leftPanel.collapsed = !this.leftPanel.collapsed; },
-        resizeBottomPanel(size: number) {this.bottomPanel.size = size < defaultState().bottomPanel.size ? defaultState().bottomPanel.size : size},
-        resizeLeftPanel(size: number) {this.leftPanel.size = size < defaultState().leftPanel.size ? defaultState().leftPanel.size : size},
+        toggleBottomPanel() {
+            this.bottomPanel.collapsed = !this.bottomPanel.collapsed;
+        },
+        toggleLeftPanel() {
+            this.leftPanel.collapsed = !this.leftPanel.collapsed;
+        },
+        resizeBottomPanel(size: number) {
+            this.bottomPanel.size = size < defaultState().bottomPanel.size ? defaultState().bottomPanel.size : size
+        },
+        resizeLeftPanel(size: number) {
+            this.leftPanel.size = size < defaultState().leftPanel.size ? defaultState().leftPanel.size : size
+        },
         toggleRobotSelection(id: number) {
             this.selectedRobots.has(id)
                 ? this.selectedRobots.delete(id)
@@ -69,6 +86,15 @@ export const useUIStore = defineStore('uiStore', {
         },
         isaRobotSelected(state) {
             return (id: number) => state.selectedRobots.has(id);
+        },
+        showDebug(state) {
+            return (forRobot?: number | null) => state.visualizations.debug === 'SHOW' || (state.visualizations.debug === 'FOR_SELECTED_ROBOTS' && state.selectedRobots.has(forRobot ?? -1));
+        },
+        showPathPlanning(state) {
+            return (forRobot?: number | null) => state.visualizations.pathPlanning === 'SHOW' || (state.visualizations.pathPlanning === 'FOR_SELECTED_ROBOTS' && state.selectedRobots.has(forRobot ?? -1));
+        },
+        showVelocities(state) {
+            return (forRobot?: number | null) => state.visualizations.velocities === 'SHOW' || (state.visualizations.velocities === 'FOR_SELECTED_ROBOTS' && state.selectedRobots.has(forRobot ?? -1));
         }
     }
 })

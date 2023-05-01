@@ -41,7 +41,8 @@ proto::Drawing* Interface::initDrawing(const DrawArgs& args) {
 
 void Interface::consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer&)> consumer){
     consumer(*visualizations);
-    arena.Reset();
+    visualizations->mutable_drawings()->Clear();
+    visualizations->mutable_metrics()->Clear();
 }
 
 }  // namespace rtt::ai::new_interface

@@ -30,8 +30,8 @@ jobs:
               cd /opt/protobuf &&
               git checkout 3.19.x &&
               git submodule update --init --recursive &&
-              ./autogen.sh &&
-              ./configure &&
+              sudo ./autogen.sh &&
+              sudo ./configure &&
               make -j $(nproc) &&
               make install &&
               ldconfig

@@ -22,10 +22,7 @@ jobs:
           key: ${{ runner.os }}-build
       
       - name: Install dependecies
-        run: |
-            chmod +x ./install_UBUNTU_20_04.sh
-            sudo ./install_UBUNTU_20_04.sh
-            sudo apt install -y qtcreator qtbase5-dev qt5-qmake cmake ccache
+        run: sudo apt-get install -y cmake g++ qt5-default libqt5Scharts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build
             
       - name: Configure
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

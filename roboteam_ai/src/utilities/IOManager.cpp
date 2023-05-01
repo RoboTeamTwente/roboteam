@@ -51,19 +51,22 @@ bool IOManager::init(bool isPrimaryAI) {
 void IOManager::handleState(const proto::State& stateMsg) {
     std::unique_lock<std::mutex> lock(stateMutex);  // write lock
     this->state.CopyFrom(stateMsg);
-    if (state.has_referee()) {
-        // Our name as specified by ssl-refbox : https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.conf
-        std::string ROBOTEAM_TWENTE = "RoboTeam Twente";
-        if (state.referee().yellow().name() == ROBOTEAM_TWENTE) {
-            SETTINGS.setYellow(true);
-        } else if (state.referee().blue().name() == ROBOTEAM_TWENTE) {
-            SETTINGS.setYellow(false);
-        }
-        SETTINGS.setLeft(!(state.referee().blue_team_on_positive_half() ^ SETTINGS.isYellow()));
-        if (!SETTINGS.isLeft()) roboteam_utils::rotate(state.mutable_referee());
-        auto const& [_, data] = World::instance();
-        ai::GameStateManager::setRefereeData(state.referee(), data);
+    if (!state.has_referee()) {
+        return;
     }
+
+    if (state.referee().yellow().name() == SLL_RTT_IDENTIFIER) {
+        SETTINGS.setYellow(true);
+    } else if (state.referee().blue().name() == SLL_RTT_IDENTIFIER) {
+        SETTINGS.setYellow(false);
+    } else {
+        RTT_WARNING("Received referee data, but neither team is ", SLL_RTT_IDENTIFIER)
+    }
+
+    SETTINGS.setLeft(!(state.referee().blue_team_on_positive_half() ^ SETTINGS.isYellow()));
+    if (!SETTINGS.isLeft()) roboteam_utils::rotate(state.mutable_referee());
+    auto const& [_, data] = World::instance();
+    ai::GameStateManager::setRefereeData(state.referee(), data);
 }
 
 void IOManager::publishSettings(const Settings& settings) {
@@ -108,7 +111,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 }
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
-    if (!pause->getPause() && !robotCommands.empty()) {
+    if (!Pause::isPaused() && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, rtt::SETTINGS.isYellow());

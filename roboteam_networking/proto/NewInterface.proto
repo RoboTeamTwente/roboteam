@@ -106,6 +106,7 @@ message STPStatus {
 message SetupMessage {
     repeated string available_plays = 1;
     repeated string available_rulesets = 2;
+    bool is_paused = 3;
 }
 
 
@@ -144,7 +145,8 @@ message MsgToInterface {
 
 message MsgFromInterface {
     oneof kind {
-        GameState setGameState = 1;
-        GameSettings setGameSettings = 2;
+        GameState set_game_state = 1;
+        GameSettings set_game_settings = 2;
+        bool stop_resume = 3; // true == stop, false == resume
     }
 }

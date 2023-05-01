@@ -2709,6 +2709,9 @@ export namespace proto {
 
         /** SetupMessage availableRulesets */
         availableRulesets?: (string[]|null);
+
+        /** SetupMessage isPaused */
+        isPaused?: (boolean|null);
     }
 
     /** Represents a SetupMessage. */
@@ -2725,6 +2728,9 @@ export namespace proto {
 
         /** SetupMessage availableRulesets. */
         public availableRulesets: string[];
+
+        /** SetupMessage isPaused. */
+        public isPaused: boolean;
 
         /**
          * Creates a new SetupMessage instance using the specified properties.
@@ -3270,6 +3276,9 @@ export namespace proto {
 
         /** MsgFromInterface setGameSettings */
         setGameSettings?: (proto.IGameSettings|null);
+
+        /** MsgFromInterface stopResume */
+        stopResume?: (boolean|null);
     }
 
     /** Represents a MsgFromInterface. */
@@ -3287,8 +3296,11 @@ export namespace proto {
         /** MsgFromInterface setGameSettings. */
         public setGameSettings?: (proto.IGameSettings|null);
 
+        /** MsgFromInterface stopResume. */
+        public stopResume?: (boolean|null);
+
         /** MsgFromInterface kind. */
-        public kind?: ("setGameState"|"setGameSettings");
+        public kind?: ("setGameState"|"setGameSettings"|"stopResume");
 
         /**
          * Creates a new MsgFromInterface instance using the specified properties.

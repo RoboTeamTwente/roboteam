@@ -6809,6 +6809,7 @@ export const proto = $root.proto = (() => {
          * @interface ISetupMessage
          * @property {Array.<string>|null} [availablePlays] SetupMessage availablePlays
          * @property {Array.<string>|null} [availableRulesets] SetupMessage availableRulesets
+         * @property {boolean|null} [isPaused] SetupMessage isPaused
          */
 
         /**
@@ -6845,6 +6846,14 @@ export const proto = $root.proto = (() => {
         SetupMessage.prototype.availableRulesets = $util.emptyArray;
 
         /**
+         * SetupMessage isPaused.
+         * @member {boolean} isPaused
+         * @memberof proto.SetupMessage
+         * @instance
+         */
+        SetupMessage.prototype.isPaused = false;
+
+        /**
          * Creates a new SetupMessage instance using the specified properties.
          * @function create
          * @memberof proto.SetupMessage
@@ -6874,6 +6883,8 @@ export const proto = $root.proto = (() => {
             if (message.availableRulesets != null && message.availableRulesets.length)
                 for (let i = 0; i < message.availableRulesets.length; ++i)
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.availableRulesets[i]);
+            if (message.isPaused != null && Object.hasOwnProperty.call(message, "isPaused"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isPaused);
             return writer;
         };
 
@@ -6918,6 +6929,10 @@ export const proto = $root.proto = (() => {
                         if (!(message.availableRulesets && message.availableRulesets.length))
                             message.availableRulesets = [];
                         message.availableRulesets.push(reader.string());
+                        break;
+                    }
+                case 3: {
+                        message.isPaused = reader.bool();
                         break;
                     }
                 default:
@@ -6969,6 +6984,9 @@ export const proto = $root.proto = (() => {
                     if (!$util.isString(message.availableRulesets[i]))
                         return "availableRulesets: string[] expected";
             }
+            if (message.isPaused != null && message.hasOwnProperty("isPaused"))
+                if (typeof message.isPaused !== "boolean")
+                    return "isPaused: boolean expected";
             return null;
         };
 
@@ -6998,6 +7016,8 @@ export const proto = $root.proto = (() => {
                 for (let i = 0; i < object.availableRulesets.length; ++i)
                     message.availableRulesets[i] = String(object.availableRulesets[i]);
             }
+            if (object.isPaused != null)
+                message.isPaused = Boolean(object.isPaused);
             return message;
         };
 
@@ -7018,6 +7038,8 @@ export const proto = $root.proto = (() => {
                 object.availablePlays = [];
                 object.availableRulesets = [];
             }
+            if (options.defaults)
+                object.isPaused = false;
             if (message.availablePlays && message.availablePlays.length) {
                 object.availablePlays = [];
                 for (let j = 0; j < message.availablePlays.length; ++j)
@@ -7028,6 +7050,8 @@ export const proto = $root.proto = (() => {
                 for (let j = 0; j < message.availableRulesets.length; ++j)
                     object.availableRulesets[j] = message.availableRulesets[j];
             }
+            if (message.isPaused != null && message.hasOwnProperty("isPaused"))
+                object.isPaused = message.isPaused;
             return object;
         };
 
@@ -8232,6 +8256,7 @@ export const proto = $root.proto = (() => {
          * @interface IMsgFromInterface
          * @property {proto.IGameState|null} [setGameState] MsgFromInterface setGameState
          * @property {proto.IGameSettings|null} [setGameSettings] MsgFromInterface setGameSettings
+         * @property {boolean|null} [stopResume] MsgFromInterface stopResume
          */
 
         /**
@@ -8265,17 +8290,25 @@ export const proto = $root.proto = (() => {
          */
         MsgFromInterface.prototype.setGameSettings = null;
 
+        /**
+         * MsgFromInterface stopResume.
+         * @member {boolean|null|undefined} stopResume
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.stopResume = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MsgFromInterface kind.
-         * @member {"setGameState"|"setGameSettings"|undefined} kind
+         * @member {"setGameState"|"setGameSettings"|"stopResume"|undefined} kind
          * @memberof proto.MsgFromInterface
          * @instance
          */
         Object.defineProperty(MsgFromInterface.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["setGameState", "setGameSettings"]),
+            get: $util.oneOfGetter($oneOfFields = ["setGameState", "setGameSettings", "stopResume"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -8307,6 +8340,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.GameState.encode(message.setGameState, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
             if (message.setGameSettings != null && Object.hasOwnProperty.call(message, "setGameSettings"))
                 $root.proto.GameSettings.encode(message.setGameSettings, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.stopResume != null && Object.hasOwnProperty.call(message, "stopResume"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.stopResume);
             return writer;
         };
 
@@ -8347,6 +8382,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 2: {
                         message.setGameSettings = $root.proto.GameSettings.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 3: {
+                        message.stopResume = reader.bool();
                         break;
                     }
                 default:
@@ -8403,6 +8442,13 @@ export const proto = $root.proto = (() => {
                         return "setGameSettings." + error;
                 }
             }
+            if (message.stopResume != null && message.hasOwnProperty("stopResume")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                if (typeof message.stopResume !== "boolean")
+                    return "stopResume: boolean expected";
+            }
             return null;
         };
 
@@ -8428,6 +8474,8 @@ export const proto = $root.proto = (() => {
                     throw TypeError(".proto.MsgFromInterface.setGameSettings: object expected");
                 message.setGameSettings = $root.proto.GameSettings.fromObject(object.setGameSettings);
             }
+            if (object.stopResume != null)
+                message.stopResume = Boolean(object.stopResume);
             return message;
         };
 
@@ -8453,6 +8501,11 @@ export const proto = $root.proto = (() => {
                 object.setGameSettings = $root.proto.GameSettings.toObject(message.setGameSettings, options);
                 if (options.oneofs)
                     object.kind = "setGameSettings";
+            }
+            if (message.stopResume != null && message.hasOwnProperty("stopResume")) {
+                object.stopResume = message.stopResume;
+                if (options.oneofs)
+                    object.kind = "stopResume";
             }
             return object;
         };

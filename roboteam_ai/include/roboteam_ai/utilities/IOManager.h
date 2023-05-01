@@ -12,6 +12,7 @@
 #include <WorldNetworker.hpp>
 #include <iostream>
 #include <mutex>
+#include <string_view>
 
 namespace rtt::world {
 class World;
@@ -25,6 +26,9 @@ using namespace rtt::world;
 
 class IOManager {
    private:
+    //https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.conf
+    static constexpr std::string_view SLL_RTT_IDENTIFIER = "RoboTeam Twente";
+
     proto::State state;
     std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber;
     std::unique_ptr<rtt::net::SimulationConfigurationPublisher> simulationConfigurationPublisher;
@@ -36,8 +40,6 @@ class IOManager {
     // Only the primary AI publishes settings. The secondary AI subscribes to those settings so they are on the same line
     std::unique_ptr<rtt::net::SettingsPublisher> settingsPublisher;
     std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
-
-    rtt::ai::Pause* pause;
 
     void addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands);
     bool publishRobotCommands(const rtt::RobotCommands& robotCommands, bool isForTeamYellow);

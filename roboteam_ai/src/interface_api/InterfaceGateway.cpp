@@ -7,6 +7,7 @@
 #include "proto/NewInterface.pb.h"
 #include "stp/PlayDecider.hpp"
 #include "utilities/IOManager.h"
+#include "utilities/Pause.h"
 
 namespace rtt::ai::io {
 InterfaceGateway& InterfaceGateway::instance() {
@@ -104,8 +105,11 @@ void InterfaceGateway::onConnection(const std::shared_ptr<ix::WebSocket>& wss) {
         setupMessage->add_available_rulesets(ruleSet.title);
     }
 
+    setupMessage->set_is_paused(Pause::isPaused());
+
     std::string state_str = envelope.SerializeAsString();
-    wss->sendText("setup");
+    RTT_DEBUG("Sending setup message to client", setupMessage->DebugString());
+
     wss->sendBinary(state_str);
 }
 
@@ -114,15 +118,24 @@ void InterfaceGateway::onMessage(const proto::MsgFromInterface&& message) {
 
     switch (message.kind_case()) {
         case proto::MsgFromInterface::kSetGameState:
-            ai::stp::PlayDecider::lockInterfacePlay(message.setgamestate().playname());  // TODO: How is(was) this thread safe?
-            ai::interface::Output::setRuleSetName(message.setgamestate().rulesetname());
+            ai::stp::PlayDecider::lockInterfacePlay(message.set_game_state().playname());  // TODO: How is(was) this thread safe?
+            ai::interface::Output::setRuleSetName(message.set_game_state().rulesetname());
             break;
         case proto::MsgFromInterface::kSetGameSettings: {
-            const auto& gameSettings = message.setgamesettings();
+            const auto& gameSettings = message.set_game_settings();
             ai::interface::Output::setUseRefereeCommands(gameSettings.use_referee());
             SETTINGS.setLeft(gameSettings.is_left());
             SETTINGS.setYellow(gameSettings.is_yellow());
             SETTINGS.setRobotHubMode(gameSettings.hub_mode() == proto::GameSettings::BASESTATION ? Settings::RobotHubMode::BASESTATION : Settings::RobotHubMode::SIMULATOR);
+        }
+            break;
+        case proto::MsgFromInterface::kStopResume: {
+            if (message.stop_resume()) {
+                auto const& [_, world] = rtt::world::World::instance();
+                Pause::pause(world->getWorld());
+            } else {
+                Pause::resume();
+            }
         }
             break;
         case proto::MsgFromInterface::KIND_NOT_SET:

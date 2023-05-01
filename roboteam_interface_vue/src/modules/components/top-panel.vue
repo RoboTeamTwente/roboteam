@@ -28,8 +28,14 @@ const disabled = computed(() => {
     <div class="flex grow"/>
     <div class="flex gap-4">
       <div class="btn-group">
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-error gap-2 w-32" v-if="true" @click="aiStore.resetPlay"><font-awesome-icon icon="fa-square" /> Stop</button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-success gap-2 w-32" v-else @click="aiStore.resetPlay"><font-awesome-icon icon="fa-play" /> Resume</button>
+        <button :class="{
+            'btn-disabled': disabled,
+            'btn-success': aiStore.isAIPaused,
+            'btn-error': !aiStore.isAIPaused
+        }" class="btn btn-sm gap-2 w-32" @click="aiStore.toggleAIPaused">
+            <template v-if="!aiStore.isAIPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
+            <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
+        </button>
         <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="aiStore.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
       </div>
 

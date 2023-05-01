@@ -6,6 +6,8 @@
 #define ROBOTEAM_AI_PAUSE_H
 
 #include <mutex>
+#include <optional>
+#include "world/views/WorldDataView.hpp"
 
 namespace rtt::world {
 class World;
@@ -19,14 +21,13 @@ class IOManager;
 
 class Pause {
    private:
-    static bool pause;
-    static std::mutex pauseLock;
+    static std::atomic<bool> state;
 
    public:
-    Pause();
-    bool getPause();
-    void haltRobots(rtt::world::World const* data);
-    void setPause(bool set);
+    Pause() = delete;
+    static bool isPaused();
+    static void pause(std::optional<rtt::world::view::WorldDataView> data);
+    static void resume();
 };
 }  // namespace rtt::ai
 

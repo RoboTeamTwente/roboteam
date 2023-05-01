@@ -39,8 +39,11 @@ type VisionData = {
 }
 
 export const useAIStore = defineStore('aiStore', () => {
+    // Composable
     const gameSettingStore = useGameSettingsStore();
 
+    // State
+    const isAIPaused = ref(false);
     const gameController = ref<GameController>({
         play: haltPlayName,
         ruleset: 'default',
@@ -59,6 +62,9 @@ export const useAIStore = defineStore('aiStore', () => {
         latestWorld: null,
     });
 
+    // Actions
+    const toggleAIPaused = () => isAIPaused.value = !isAIPaused.value;
+
     const processSetupMsg = (msg: proto.ISetupMessage) => {
         console.log(msg);
         gameController.value = {
@@ -74,6 +80,8 @@ export const useAIStore = defineStore('aiStore', () => {
             latestField: null,
             latestWorld: null,
         };
+
+        isAIPaused.value = msg.isPaused ?? false;
     }
 
     const processSTPMsg = (msg: proto.ISTPStatus) => {
@@ -114,6 +122,7 @@ export const useAIStore = defineStore('aiStore', () => {
         gameController.value.ruleset = ruleset;
     }
 
+    // Getters
     const ourRobots = computed(() => {
         return gameSettingStore.team === 'blue'
             ? visionData.value.latestWorld?.blue
@@ -121,6 +130,8 @@ export const useAIStore = defineStore('aiStore', () => {
     });
 
     return {
+        isAIPaused,
+        toggleAIPaused,
         gameController,
         stpData,
         visionData,

@@ -122,7 +122,6 @@ void STPManager::start(std::atomic_bool &exitApplication) {
             stpTimer.limit(
                 [&]() {
                     double avgDuration = std::accumulate(tickDurations.begin(), tickDurations.end(), 0) / static_cast<double>(tickDurations.size());
-//                    RTT_DEBUG("Avg duration = ", avgDuration);
                     rtt::ai::new_interface::Interface::reportNumber("Average tick", avgDuration, "ms");
                 },
                 5);

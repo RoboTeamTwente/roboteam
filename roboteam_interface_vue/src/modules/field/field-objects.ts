@@ -109,9 +109,9 @@ export class RobotDrawing extends Container {
         this.addChild(this.robotElem);
 
         if (onClick !== undefined) {
-            this.robotElem.eventMode = 'static';
-            this.robotElem.cursor = 'pointer';
-            this.robotElem.on('click', (event) => onClick(this, event));
+            this.eventMode = 'static';
+            this.cursor = 'pointer';
+            this.on('click', (event) => onClick(this, event));
         }
 
         if (text !== undefined) {

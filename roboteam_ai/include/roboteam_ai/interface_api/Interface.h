@@ -19,6 +19,7 @@ class Interface {
         proto::Drawing::Color color = proto::Drawing::WHITE;
         proto::Drawing::Method method = proto::Drawing::DOTS;
         proto::Drawing::Category category = proto::Drawing::DEBUG;
+        int forRobotId = -1;
         int retainForTicks = 10;
     };
 

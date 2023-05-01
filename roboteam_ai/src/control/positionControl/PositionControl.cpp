@@ -87,6 +87,8 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             .label = "path_lines" + std::to_string(robotId),
             .color = proto::Drawing::WHITE,
             .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::PATH_PLANNING,
+            .forRobotId = robotId,
         },
         computedPaths[robotId]);
 
@@ -95,6 +97,8 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             .label = "path_dots" + std::to_string(robotId),
             .color = proto::Drawing::MAGENTA,
             .method = proto::Drawing::PLUSES,
+            .category = proto::Drawing::PATH_PLANNING,
+            .forRobotId = robotId,
         },
         computedPaths[robotId]);
 

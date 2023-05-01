@@ -22,7 +22,6 @@ jobs:
           key: ${{ runner.os }}-build
       
       - name: Install dependecies
-        if: steps.cache-build-restore.outputs.cache-hit != 'true'
         run: |
             chmod +x ./install_UBUNTU_20_04.sh
             sudo ./install_UBUNTU_20_04.sh

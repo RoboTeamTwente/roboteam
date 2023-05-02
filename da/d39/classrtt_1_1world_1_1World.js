@@ -6,7 +6,7 @@ var classrtt_1_1world_1_1World =
     ] ],
     [ "World", "da/d39/classrtt_1_1world_1_1World.html#aa38b84c189b17e15649a9a58b4dbd346", null ],
     [ "World", "da/d39/classrtt_1_1world_1_1World.html#a64558ef47d03743ba2b2b61ce97a083b", null ],
-    [ "World", "da/d39/classrtt_1_1world_1_1World.html#ac6ed0185698e4c627a71fc94646f9b54", null ],
+    [ "World", "da/d39/classrtt_1_1world_1_1World.html#a01920a9431542b4cd236dbf26e9b58e1", null ],
     [ "getField", "da/d39/classrtt_1_1world_1_1World.html#ae705fc38ff82aabe5bd375ff823bb9c2", null ],
     [ "getHistorySize", "da/d39/classrtt_1_1world_1_1World.html#a4eede1970e8d64b3db0857361d0813ca", null ],
     [ "getHistoryWorld", "da/d39/classrtt_1_1world_1_1World.html#a985f126be0f2907af1c94594bdd3a6c1", null ],
@@ -29,7 +29,6 @@ var classrtt_1_1world_1_1World =
     [ "HISTORY_SIZE", "da/d39/classrtt_1_1world_1_1World.html#a180a2fb20d870f79f35f23e422db25ac", null ],
     [ "lastTick", "da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f", null ],
     [ "positionControl", "da/d39/classrtt_1_1world_1_1World.html#abceba3734a6a81257d95b038843674e3", null ],
-    [ "settings", "da/d39/classrtt_1_1world_1_1World.html#ade7077c71dd1255b56e116e3cbf8b8df", null ],
     [ "tickDuration", "da/d39/classrtt_1_1world_1_1World.html#a9db7bcdeb956aac56a65e1d2874fa3b8", null ],
     [ "updateMutex", "da/d39/classrtt_1_1world_1_1World.html#aef21ad06dd8c0993f12ef3f696d0c22b", null ]
 ];

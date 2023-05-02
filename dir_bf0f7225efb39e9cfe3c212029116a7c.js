@@ -19,7 +19,9 @@ var dir_bf0f7225efb39e9cfe3c212029116a7c =
     [ "RuleSet.h", "d5/d8d/RuleSet_8h.html", [
       [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ]
     ] ],
-    [ "Settings.h", "dd/dbc/Settings_8h.html", "dd/dbc/Settings_8h" ],
+    [ "Settings.h", "dd/dbc/Settings_8h.html", [
+      [ "Settings", "d1/dfb/classrtt_1_1Settings.html", "d1/dfb/classrtt_1_1Settings" ]
+    ] ],
     [ "StpInfoEnums.h", "d7/d06/StpInfoEnums_8h.html", "d7/d06/StpInfoEnums_8h" ],
     [ "StrategyManager.h", "d5/d18/StrategyManager_8h.html", [
       [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ]

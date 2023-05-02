@@ -121,11 +121,11 @@ void Visualizer::paintEvent(QPaintEvent *event) {
     if (showBallPlacementMarker) drawBallPlacementTarget(painter);
 
     /* Ball dragging using middle mouse button. Hold it to drag the ball */
-    if (middle_mouse_pressed and SETTINGS.getRobotHubMode() == Settings::RobotHubMode::SIMULATOR) {
+    if (middle_mouse_pressed and Settings::getRobotHubMode() == Settings::RobotHubMode::SIMULATOR) {
         QPoint qt_mouse_position = mapFromGlobal(QCursor::pos());              // Get mouse position on the widget
         Vector2 mouse_position(qt_mouse_position.x(), qt_mouse_position.y());  // Convert Qt to Vector2
         Vector2 field_position = toFieldPosition(mouse_position);              // Convert position on widget to position on field
-        if (!SETTINGS.isLeft()) field_position *= -1;                          // Invert ball position if we play on the other side of the field
+        if (!Settings::isLeft()) field_position *= -1;                          // Invert ball position if we play on the other side of the field
 
         proto::SimulationConfiguration configuration;                    // Create packet
         configuration.mutable_ball_location()->set_x(field_position.x);  // Set x
@@ -239,7 +239,7 @@ void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     pen.setWidth(3);
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = Settings::isYellow();
 
     // draw the hint for us
     LineSegment usGoalLine = field.leftGoalArea.rightLine();
@@ -343,7 +343,7 @@ void Visualizer::drawRobot(QPainter &painter, rtt::world::view::RobotView robot,
     Vector2 robotpos = toScreenPosition(robot->getPos());
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = Settings::isYellow();
 
     QColor robotColor;
     if (ourTeam) {
@@ -674,7 +674,7 @@ void Visualizer::drawDetectionRobot(QPainter &painter, bool robotIsBlue, const p
     Vector2 robotpos = toScreenPosition(robotWorldPos);
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = Settings::isYellow();
 
     QColor robotColor = robotIsBlue ? Qt::green : Qt::red;  // use contrasting colors
 

@@ -6,6 +6,7 @@
 
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
+#include "utilities/Settings.h"
 
 namespace rtt::ai::interface {
 
@@ -137,25 +138,25 @@ void MainControlsWidget::setUseReferee(bool useRef) {
 
 /// toggle the setting 'isYellow'
 void MainControlsWidget::toggleOurColorParam() {
-    SETTINGS.setYellow(!SETTINGS.isYellow());
+    Settings::setYellow(!Settings::isYellow());
     setToggleColorBtnLayout();
 }
 
 /// toggle the the setting 'isLeft'
 void MainControlsWidget::toggleOurSideParam() {
-    SETTINGS.setLeft(!SETTINGS.isLeft());
+    Settings::setLeft(!Settings::isLeft());
     setToggleSideBtnLayout();
 }
 
 /// toggle the the setting 'isSerialMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
-    switch (SETTINGS.getRobotHubMode()) {
+    switch (Settings::getRobotHubMode()) {
         case Settings::RobotHubMode::BASESTATION: {
-            SETTINGS.setRobotHubMode(Settings::RobotHubMode::SIMULATOR);
+            Settings::setRobotHubMode(Settings::RobotHubMode::SIMULATOR);
             break;
         }
         case Settings::RobotHubMode::SIMULATOR: {
-            SETTINGS.setRobotHubMode(Settings::RobotHubMode::BASESTATION);
+            Settings::setRobotHubMode(Settings::RobotHubMode::BASESTATION);
             break;
         }
         default: {
@@ -184,7 +185,7 @@ void MainControlsWidget::sendPauseSignal() {
 }
 
 void MainControlsWidget::setToggleColorBtnLayout() const {
-    if (SETTINGS.isYellow()) {
+    if (Settings::isYellow()) {
         toggleColorBtn->setStyleSheet("background-color: orange;");  // orange is more readable
         toggleColorBtn->setText("Playing as Yellow");
     } else {
@@ -194,7 +195,7 @@ void MainControlsWidget::setToggleColorBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleSideBtnLayout() const {
-    if (SETTINGS.isLeft()) {
+    if (Settings::isLeft()) {
         toggleSideBtn->setText("◀ Playing as left");
     } else {
         toggleSideBtn->setText("Playing as right ▶");
@@ -202,9 +203,9 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string modeText = Settings::robotHubModeToString(SETTINGS.getRobotHubMode());
+    std::string_view modeText = Settings::robotHubModeToString(Settings::getRobotHubMode());
 
-    QString buttonText = QString::fromStdString(modeText);
+    QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);
 }
 

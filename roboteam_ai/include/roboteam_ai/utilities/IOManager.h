@@ -75,7 +75,7 @@ class IOManager {
      * @brief Publishes the settings on the settingsPublisher channel
      * @param settings The settings that need to be published
      */
-    void publishSettings(const Settings& settings);
+    void publishSettings();
 
     /**
      * @brief Handles the settings received from the primary AI

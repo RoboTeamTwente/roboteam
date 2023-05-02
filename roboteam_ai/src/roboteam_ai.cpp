@@ -2,6 +2,7 @@
 
 #include "STPManager.h"
 #include "utilities/IOManager.h"
+#include "utilities/Settings.h"
 #include "world/World.hpp"
 
 namespace ui = rtt::ai::interface;
@@ -54,30 +55,24 @@ int main(int argc, char* argv[]) {
     RTT_DEBUG("Debug prints enabled")
 
     // get the id of the ai from the init
-    rtt::SETTINGS.init(id);
+    rtt::Settings::setId(id);
 
     // If primary AI, we start at being yellow on the left
-    if (!rtt::SETTINGS.setYellow(rtt::SETTINGS.isPrimaryAI())) {
+    if (!rtt::Settings::setYellow(rtt::Settings::isPrimaryAI())) {
         RTT_ERROR("Could not obtain command publishing channel. Exiting...")
         return 0;
     }
 
-    rtt::SETTINGS.setLeft(rtt::SETTINGS.isPrimaryAI());
+    rtt::Settings::setLeft(rtt::Settings::isPrimaryAI());
+    rtt::Settings::setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
 
-    rtt::SETTINGS.setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
-    rtt::SETTINGS.setVisionIp("127.0.0.1");
-    rtt::SETTINGS.setVisionPort(10006);
-    rtt::SETTINGS.setRefereeIp("224.5.23.1");
-    rtt::SETTINGS.setRefereePort(10003);
-    rtt::SETTINGS.setRobothubSendIp("127.0.0.1");
-    rtt::SETTINGS.setRobothubSendPort(20011);
 
-    RTT_INFO("AI initialized as: ", (rtt::SETTINGS.isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
-    RTT_INFO("Starting as color: ", (rtt::SETTINGS.isYellow() ? "YELLOW" : "BLUE"))
-    RTT_INFO("Playing on side: ", (rtt::SETTINGS.isLeft() ? "LEFT" : "RIGHT"))
-    RTT_INFO("This AI will ", rtt::SETTINGS.isPrimaryAI() ? "" : "NOT ", "broadcast settings")
+    RTT_INFO("AI initialized as: ", (rtt::Settings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
+    RTT_INFO("Starting as color: ", (rtt::Settings::isYellow() ? "YELLOW" : "BLUE"))
+    RTT_INFO("Playing on side: ", (rtt::Settings::isLeft() ? "LEFT" : "RIGHT"))
+    RTT_INFO("This AI will ", rtt::Settings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 
-    if (!rtt::ai::io::io.init(rtt::SETTINGS.isPrimaryAI())) {
+    if (!rtt::ai::io::io.init(rtt::Settings::isPrimaryAI())) {
         RTT_ERROR("Failed to initialize IO Manager. Exiting...")
         return 0;
     }

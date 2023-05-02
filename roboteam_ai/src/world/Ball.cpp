@@ -6,6 +6,7 @@
 
 #include "interface/api/Input.h"
 #include "utilities/Constants.h"
+#include "utilities/Settings.h"
 #include "world/World.hpp"
 
 namespace rtt::world::ball {
@@ -51,7 +52,7 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     auto ball = previousWorld->getBall().value();
 
     double ballVelSquared = ball->velocity.length2();
-    const double frictionCoefficient = SETTINGS.getRobotHubMode() == Settings::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
+    const double frictionCoefficient = Settings::getRobotHubMode() == Settings::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
     ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
 

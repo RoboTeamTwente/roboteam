@@ -21,7 +21,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
     GameStateManager::refMsg = refMsg;
     RefCommand cmd;
     // COLOR DEPENDENT STATES
-    if (SETTINGS.isYellow()) {
+    if (Settings::isYellow()) {
         switch (refMsg.command()) {
             case proto::SSL_Referee_Command_HALT:
                 cmd = RefCommand::HALT;
@@ -160,7 +160,7 @@ GameState GameStateManager::getCurrentGameState() {
     if (interface::Output::usesRefereeCommands()) {
         newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
 
-        if (SETTINGS.isYellow()) {
+        if (Settings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();

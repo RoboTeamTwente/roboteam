@@ -41,7 +41,8 @@ jobs:
         run: mkdir build && cd build && cmake ..
         
       - name: Build
-        run: cmake --build build --target roboteam_ai_tests -j $(nproc) &&
+        run: ls /usr/local/bin/protoc &&
+             cmake --build build --target roboteam_ai_tests -j $(nproc) &&
              cmake --build build --target roboteam_utils_tests -j $(nproc) &&
              cmake --build build --target roboteam_networking_tests -j $(nproc)
              

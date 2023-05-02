@@ -22,33 +22,41 @@ jobs:
           key: ${{ runner.os }}-build
       
       - name: Install dependecies
-        run: sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build
+        run: sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build ccache
         
-      - name: Install Protobuf
+      - name: Build Protobuf
         if: steps.cache-build-restore.outputs.cache-hit != 'true'
-        run: git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&
-              cd /opt/protobuf &&
-              git checkout 3.19.x &&
-              git submodule update --init --recursive &&
-              sudo ./autogen.sh &&
-              sudo ./configure &&
-              sudo make -j $(nproc) &&
-              sudo make install &&
+        run: |
+              git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf
+              cd protobuf
+              git checkout 3.19.x
+              git submodule update --init --recursive
+              ./autogen.sh
+              ./autogen.sh
+              ./configure
+              make
+              make check
+              
+      - name: Install Protobuf
+        run: |
+              cd protobuf
+              sudo make install
               sudo ldconfig
             
-      - name: Configure
+      - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'
         run: mkdir build && cd build && cmake ..
         
-      - name: Build
-        run: ls /usr/local/bin/protoc &&
-             cmake --build build --target roboteam_ai_tests -j $(nproc) &&
-             cmake --build build --target roboteam_utils_tests -j $(nproc) &&
+      - name: Install tests
+        run: |
+             cmake --build build --target roboteam_ai_tests -j $(nproc)
+             cmake --build build --target roboteam_utils_tests -j $(nproc)
              cmake --build build --target roboteam_networking_tests -j $(nproc)
              
       - name: Run
-        run: ./build/roboteam_ai/roboteam_ai_tests && 
-             ./build/roboteam_networking/roboteam_networking_tests &&
+        run: |
+             ./build/roboteam_ai/roboteam_ai_tests
+             ./build/roboteam_networking/roboteam_networking_tests
              ./build/roboteam_utils/roboteam_utils_tests
       
       - name: Save build

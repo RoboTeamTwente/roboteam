@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1interface_1_1Input =
 [
     [ "Input", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#ac5469d7d1e4ec4d909b44a423d5afac5", null ],
     [ "~Input", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a1df42b8fabc4e194e606e251e4ffd077", null ],
+    [ "addDrawing", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a28bb0fc4618311a8c6aee8118b26e3cd", null ],
     [ "clearDrawings", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#aa04c116afe64c41f055d249652202867", null ],
     [ "getDrawings", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#ae497b1c2daba9e67cbaaef55caa37b3e", null ],
     [ "getFps", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#ad258c0db0e27b4d4ed5b4445b51e81ba", null ],

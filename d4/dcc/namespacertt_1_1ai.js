@@ -36,7 +36,6 @@ var namespacertt_1_1ai =
       [ "CAN_DETECT_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9", null ],
       [ "CAN_KICK_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b", null ]
     ] ],
-    [ "TEST", "d4/dcc/namespacertt_1_1ai.html#aa2a4c7c293225bf00bd8ad219beb9c8b", null ],
     [ "ballPossession", "d4/dcc/namespacertt_1_1ai.html#a9457b19246a0fad5b0fa54eee2dd7afa", null ],
     [ "ballPossessionPtr", "d4/dcc/namespacertt_1_1ai.html#a560334d047a2b7748e4f3cde1c108663", null ],
     [ "PriorityOrder", "d4/dcc/namespacertt_1_1ai.html#a7d554a3f16aad4c232be90471be5952a", null ]

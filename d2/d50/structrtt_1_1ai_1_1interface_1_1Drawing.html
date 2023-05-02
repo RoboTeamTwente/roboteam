@@ -94,6 +94,9 @@ $(document).ready(function(){initNavTree('d2/d50/structrtt_1_1ai_1_1interface_1_
 </div><!--header-->
 <div class="contents">
 
+<p>For drawing to the interface we keep 'drawings' to draw data to the screen. a drawing represents a vector of points and some specifications on how to display those. e.g: form, color, size, and depth.  
+ <a href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="../../d9/da6/Input_8h_source.html">Input.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -110,11 +113,13 @@ Public Types</h2></td></tr>
 , <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3aca717b5060eb07f66c6de02ccf95d35e6c">REAL_LIFE_CIRCLES</a>
 <br />
  }</td></tr>
+<tr class="memdesc:af19bf534f3bd5384ae71df536b01f3ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerator for the drawing method used in interface.  <a href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3ac">More...</a><br /></td></tr>
 <tr class="separator:af19bf534f3bd5384ae71df536b01f3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1158edbbe53b3813fae002d402167f99"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a1158edbbe53b3813fae002d402167f99">Drawing</a> (<a class="el" href="../../d8/d44/namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850b">Visual</a> <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#aa69893022e2dc56f1a831c40efb3e07b">visual</a>, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a7133db42d98edaae47129566c822bcf8">points</a>, QColor <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a420ba2ef040811f1a88b4a8ba90468da">color</a>, int <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af7704c3508056da674b7fe5bc8f9d583">robotId</a>=-1, <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3ac">DrawingMethod</a> <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af4fca11307f4320fcdb46581752c6005">method</a>=<a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3aca55b082fd7f24463df1e7cf8d0d12b881">DOTS</a>, double <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#acba0c724c7dce279473573e00c0b7999">width</a>=0.0, double <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a3636cc1d7a8cd31baffb46ef5f9a9059">height</a>=0.0, double <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a418ae564796a59e45a492a3f76320f0f">strokeWidth</a>=0.0)</td></tr>
+<tr class="memdesc:a1158edbbe53b3813fae002d402167f99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html" title="For drawing to the interface we keep &#39;drawings&#39; to draw data to the screen. a drawing represents a ve...">Drawing</a> struct.  <a href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a1158edbbe53b3813fae002d402167f99">More...</a><br /></td></tr>
 <tr class="separator:a1158edbbe53b3813fae002d402167f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -136,7 +141,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a418ae564796a59e45a492a3f76320f0f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a418ae564796a59e45a492a3f76320f0f">strokeWidth</a> = 2.0</td></tr>
 <tr class="separator:a418ae564796a59e45a492a3f76320f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>For drawing to the interface we keep 'drawings' to draw data to the screen. a drawing represents a vector of points and some specifications on how to display those. e.g: form, color, size, and depth. </p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="af19bf534f3bd5384ae71df536b01f3ac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af19bf534f3bd5384ae71df536b01f3ac">&#9670;&nbsp;</a></span>DrawingMethod</h2>
 
@@ -148,6 +155,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Enumerator for the drawing method used in interface. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af19bf534f3bd5384ae71df536b01f3aca31673787acc28e1995ca9fa539277273"></a>LINES_CONNECTED&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af19bf534f3bd5384ae71df536b01f3aca55b082fd7f24463df1e7cf8d0d12b881"></a>DOTS&#160;</td><td class="fielddoc"></td></tr>
@@ -232,6 +241,21 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructor of the <a class="el" href="../../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html" title="For drawing to the interface we keep &#39;drawings&#39; to draw data to the screen. a drawing represents a ve...">Drawing</a> struct. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">visual</td><td>Type of visualization, these can be toggled in the interface settings </td></tr>
+    <tr><td class="paramname">points</td><td>Vector of locations the drawing should be drawn at </td></tr>
+    <tr><td class="paramname">color</td><td>Color of the drawing </td></tr>
+    <tr><td class="paramname">robotId</td><td>ID of the robot, which the drawing corresponds to </td></tr>
+    <tr><td class="paramname">method</td><td>Type of shape we want the drawing to be </td></tr>
+    <tr><td class="paramname">width</td><td>Width of the drawing points </td></tr>
+    <tr><td class="paramname">height</td><td>Height of the drawing points </td></tr>
+    <tr><td class="paramname">strokeWidth</td><td>Thickness of the drawing </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -246,6 +270,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Color of the drawing </p>
 
 </div>
 </div>
@@ -260,6 +285,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Height of the drawing points </p>
 
 </div>
 </div>
@@ -274,6 +300,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Type of shape we want the drawing to be </p>
 
 </div>
 </div>
@@ -288,6 +315,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Vector of locations the drawing should be drawn at </p>
 
 </div>
 </div>
@@ -302,6 +330,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>ID of the robot, which the drawing corresponds to </p>
 
 </div>
 </div>
@@ -316,6 +345,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Thickness of the drawing </p>
 
 </div>
 </div>
@@ -330,6 +360,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Type of visualization, these can be toggled in the interface settings </p>
 
 </div>
 </div>
@@ -344,6 +375,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Width of the drawing points </p>
 
 </div>
 </div>

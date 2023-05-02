@@ -2,7 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos =
 [
     [ "ChipAtPos", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a25c7267147b6743052c0d6ca8e0c43f4", null ],
     [ "calculateInfoForSkill", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a42592fc5d5938ecb5ae0a91b8323eb98", null ],
-    [ "forceTacticSuccess", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a7b46f686df7448297b5739d2df55b63d", null ],
     [ "getStatus", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ab7650037eb092459aca7247ea77f2ad4", null ],

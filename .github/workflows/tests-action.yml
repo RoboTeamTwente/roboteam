@@ -32,9 +32,9 @@ jobs:
               git submodule update --init --recursive &&
               sudo ./autogen.sh &&
               sudo ./configure &&
-              make -j $(nproc) &&
-              make install &&
-              ldconfig
+              sudo make -j $(nproc) &&
+              sudo make install &&
+              sudo ldconfig
             
       - name: Configure
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

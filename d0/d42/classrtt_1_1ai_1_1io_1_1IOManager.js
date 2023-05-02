@@ -10,7 +10,7 @@ var classrtt_1_1ai_1_1io_1_1IOManager =
     [ "onSettingsOfPrimaryAI", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a42597771a0253e9baecf3c24a0c11eb6", null ],
     [ "publishAllRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a55382a03a2cf2331dc248689184a9104", null ],
     [ "publishRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a0f0f4a00275a57156911cd1da3388124", null ],
-    [ "publishSettings", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a3adae449c9345d234258d35f061a1468", null ],
+    [ "publishSettings", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#afc19199ebefe884a5c2ada36c3015c3d", null ],
     [ "sendSimulationConfiguration", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a098aa8b814331a0206b16a7cac95e2c9", null ],
     [ "pause", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a4e6ec2ee7675a119c7db912b1452a15b", null ],
     [ "robotCommandsBluePublisher", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6bf5a4699ab935a3fb7af4185cdaeb18", null ],

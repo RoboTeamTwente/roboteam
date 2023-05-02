@@ -22,5 +22,7 @@ var namespacertt =
     [ "TEST", "dc/d8f/namespacertt.html#a29cdd07cdb75d18d0025d75054db1366", null ],
     [ "TEST", "dc/d8f/namespacertt.html#a169db5a7e6efa4afcdfb8423b25bd0e8", null ],
     [ "TEST", "dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b", null ],
-    [ "MAXIMUM_DIFFERENCE", "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa", null ]
+    [ "MAXIMUM_DIFFERENCE", "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa", null ],
+    [ "PRIMARY_AI_ID", "dc/d8f/namespacertt.html#a898ae63e0cea1a3bd280fd11e7fae506", null ],
+    [ "SETTINGS", "dc/d8f/namespacertt.html#ab0a1d9e64a911c4fb60835c147081af6", null ]
 ];

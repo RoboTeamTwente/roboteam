@@ -12,26 +12,45 @@
 
 namespace rtt {
 
+/**
+ * @author Tijmen
+ * @brief Class that stores 2 dimensional trajectories
+ */
 class Trajectory2D {
    public:
     /**
-     * @brief Default constructor
+     * @brief Default constructor of the Trajectory2D class
      */
     Trajectory2D() = default;
 
+    /**
+     * @brief Constructor of the Trajectory2D class
+     * @param initialPos Initial position of the robot
+     * @param initialVel Initial velocity of the robot
+     * @param finalPos Target position to got to
+     * @param maxVel Maximum allowed velocity
+     * @param maxAcc Maximum allowed acceleration or deceleration
+     */
     Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc);
 
+    /**
+     * @brief Stores the trajectory
+     * @param newParts Trajectory which needs to be stored
+     * @param addFromTime Time the trajectory was created
+     */
     void addTrajectory(const Trajectory2D &extraTrajectory, double addFromTime);
 
     /**
      * @brief Approaches the Trajectory by dividing the path in points which are separated by timeStep seconds
      * @param timeStep time between pathpoints
-     * @return
+     * @return Vector of directions which make up the trajectory
      */
     [[nodiscard]] std::vector<Vector2> getPathApproach(double timeStep) const;
 
     /**
-     * @brief Returns a vector with all the velocities (Vector2) at specified timeSteps
+     * @brief Retrieves the vector which stores the velocities of each trajectory part
+     * @param timeStep time between pathpoints
+     * @return Vector of velocities which follow the trajectory
      */
     [[nodiscard]] std::vector<Vector2> getVelocityVector(double timeStep) const;
 
@@ -63,8 +82,8 @@ class Trajectory2D {
     [[nodiscard]] double getTotalTime() const;
 
    private:
-    Trajectory1D x;
-    Trajectory1D y;
+    Trajectory1D x; /**< 1D x component of the 2D Trajectory */
+    Trajectory1D y; /**< 1D y component of the 2D Trajectory */
 };
 
 }  // namespace rtt

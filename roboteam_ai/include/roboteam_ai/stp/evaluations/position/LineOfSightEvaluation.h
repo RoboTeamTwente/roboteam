@@ -9,11 +9,13 @@
 #include <vector>
 
 namespace rtt::ai::stp::evaluation {
-
+/**
+ * @brief Class that evaluates the Line of Sight score
+ */
 class LineOfSightEvaluation {
    public:
     /**
-     * Score line of sight to position based on enemy positions
+     * @brief Score line of sight to position based on enemy positions
      * @param receiverDistance Receiver distance from ball
      * @param enemyDistances Vector of all enemy distances from ball
      * @param enemyAngles Vector of all enemy angels from ball compared to Receiver angle (= 0 degrees)

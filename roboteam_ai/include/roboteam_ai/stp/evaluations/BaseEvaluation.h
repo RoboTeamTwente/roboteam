@@ -8,10 +8,13 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp::evaluation {
+/**
+ * @brief Base class for evaluations
+ */
 class BaseEvaluation {
    public:
     /**
-     * Calculates the 'true-ness' of the invariant between 0 and 255. 0 == false, 255 == true
+     * @brief Calculates the 'true-ness' of the invariant between 0 and 255. 0 == false, 255 == true
      * @param world the world
      * @param field the field
      * @return the 'true-ness' of this invariant during this tick
@@ -19,10 +22,14 @@ class BaseEvaluation {
     [[nodiscard]] virtual uint8_t metricCheck(const world::World *world, const Field *field) const noexcept = 0;
 
     /**
-     * dtor
+     * @brief Destructor of the BaseEvaluation class
      */
     virtual ~BaseEvaluation() = default;
 
+    /**
+     * @brief Retrieves the name of an evaluation
+     * @return The name of an evaluation as string
+     */
     virtual const char *getName() = 0;
 };
 }  // namespace rtt::ai::stp::evaluation

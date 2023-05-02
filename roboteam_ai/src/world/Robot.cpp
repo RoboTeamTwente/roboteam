@@ -8,7 +8,7 @@
 #include "world/World.hpp"
 
 namespace rtt::world::robot {
-Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional<view::BallView> ball, unsigned char dribblerState, unsigned long worldNumber)
+Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional<view::BallView> ball)
     : id{static_cast<int>(copy.id())},
       team{team},
       pos{copy.pos().x(), copy.pos().y()},

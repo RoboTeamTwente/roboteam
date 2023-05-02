@@ -61,6 +61,11 @@ else()
     message("Tracy Profiler is disabled")
 endif()
 
+if (APPLE)
+    include_directories("/usr/local/include")     # macOS x86 bottles (includes rosette2)
+    include_directories("/opt/homebrew/include")  # Apple silicon bottles
+endif()
+
 # internal projects
 add_subdirectory(roboteam_networking)
 add_subdirectory(roboteam_utils)

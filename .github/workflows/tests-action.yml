@@ -27,7 +27,7 @@ jobs:
       - name: Build Protobuf
         if: steps.cache-build-restore.outputs.cache-hit != 'true'
         run: |
-              git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf
+              git clone https://github.com/protocolbuffers/protobuf.git protobuf
               cd protobuf
               git checkout 3.19.x
               git submodule update --init --recursive

@@ -4,6 +4,7 @@
 
 #include "interface/widgets/MainControlsWidget.h"
 
+#include <ostream>
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
 #include "utilities/Settings.h"

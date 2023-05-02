@@ -1,6 +1,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "STPManager.h"
+#include "roboteam_utils/ArgParser.h"
 #include "utilities/IOManager.h"
 #include "utilities/Settings.h"
 #include "world/World.hpp"
@@ -34,12 +35,16 @@ void setDarkTheme() {
     qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
+    RTT_INFO("Starting RoboTeam AI. Supported flags are: (--primary-ai | --secondary-ai), --basesation")
 
-    int id = 0;
+    const std::vector<std::string> args(argv, argv + argc);
+    bool isPrimaryFlag = rtt::findFlagValue(args, "--primary-ai", true).has_value();
+    bool isSecondaryFlag = rtt::findFlagValue(args, "--secondary-ai", true).has_value();
 
-    if (argc == 2) {
-        id = *argv[1] - '0';
+    if ((!isPrimaryFlag && !isSecondaryFlag) || (isPrimaryFlag && isSecondaryFlag)) {
+        RTT_ERROR("You must provide either \"--primary-ai\" or \"--secondary-ai\" as a command line argument.");
+        return 1;
     }
 
     RTT_INFO("\n",
@@ -54,22 +59,26 @@ int main(int argc, char* argv[]) {
 
     RTT_DEBUG("Debug prints enabled")
 
-    // get the id of the ai from the init
-    rtt::Settings::setId(id);
+    // Set up the settings based on cmd arguments
+    isPrimaryFlag ? rtt::Settings::setId(0) : rtt::Settings::setId(1);
 
     // If primary AI, we start at being yellow on the left
+    rtt::Settings::setLeft(rtt::Settings::isPrimaryAI());
     if (!rtt::Settings::setYellow(rtt::Settings::isPrimaryAI())) {
         RTT_ERROR("Could not obtain command publishing channel. Exiting...")
-        return 0;
+        return 1;
     }
 
-    rtt::Settings::setLeft(rtt::Settings::isPrimaryAI());
-    rtt::Settings::setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
+    // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
+    rtt::Settings::setRobotHubMode(
+        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::Settings::RobotHubMode::BASESTATION : rtt::Settings::RobotHubMode::SIMULATOR
+    );
 
 
     RTT_INFO("AI initialized as: ", (rtt::Settings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
-    RTT_INFO("Starting as color: ", (rtt::Settings::isYellow() ? "YELLOW" : "BLUE"))
-    RTT_INFO("Playing on side: ", (rtt::Settings::isLeft() ? "LEFT" : "RIGHT"))
+    RTT_INFO("Starting as color: ", (rtt::Settings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
+    RTT_INFO("Starting in mode: ", rtt::Settings::robotHubModeToString(rtt::Settings::getRobotHubMode()))
+    RTT_INFO("Playing on side: ", (rtt::Settings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
     RTT_INFO("This AI will ", rtt::Settings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 
     if (!rtt::ai::io::io.init(rtt::Settings::isPrimaryAI())) {

@@ -23,8 +23,5 @@ var dir_e25200390a6f274b8415c653e93ab645 =
     ] ],
     [ "PassReceiver.h", "d2/d6d/PassReceiver_8h.html", [
       [ "PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver" ]
-    ] ],
-    [ "PenaltyTaker.h", "dd/d0a/PenaltyTaker_8h.html", [
-      [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ]
     ] ]
 ];

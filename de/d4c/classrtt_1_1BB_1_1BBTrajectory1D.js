@@ -9,7 +9,7 @@ var classrtt_1_1BB_1_1BBTrajectory1D =
     [ "getParts", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a352197ae1db0b8b32db86008044d728c", null ],
     [ "getPosition", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#af073c5d73169926ee80522793cae0c88", null ],
     [ "getTotalTime", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a0603d33e5925737ade7e96b8c84ff25b", null ],
-    [ "getValues", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a227258c68fea5651b1133e4d1cb6010f", null ],
+    [ "getValues", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a06e8ec8f94b4b391931b41b0b06cb123", null ],
     [ "getVelocity", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a218a6e4955fa15e521514826bbb5df3a", null ],
     [ "inLastPart", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ad9cc8803a3f1166bd11a78c7353f0c3e", null ],
     [ "trapezoidalProfile", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a1ba9366f7f3b0598af0a3084904234e2", null ],

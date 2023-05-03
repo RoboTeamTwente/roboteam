@@ -2,6 +2,7 @@
 #define RTT_ARGPARSER_H
 
 #include <string>
+#include "roboteam_utils/Print.h"
 
 
 namespace rtt {

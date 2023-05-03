@@ -51,17 +51,13 @@ class RTT_AI_Tests : public ::testing::Test {
 
     /// This function is called before each test is run, ensuring the default environment for each test
     void SetUp() override {
-        // Set SETTINGS to new settings class, defaulting to us being left and yellow
-        rtt::SETTINGS = rtt::Settings();
 
+        // Defaulting to us being left and yellow
         // Set these fields just like they are set in roboteam_ai.cpp
-        rtt::SETTINGS.setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
-        rtt::SETTINGS.setVisionIp("127.0.0.1");
-        rtt::SETTINGS.setVisionPort(10006);
-        rtt::SETTINGS.setRefereeIp("224.5.23.1");
-        rtt::SETTINGS.setRefereePort(10003);
-        rtt::SETTINGS.setRobothubSendIp("127.0.0.1");
-        rtt::SETTINGS.setRobothubSendPort(20011);
+        rtt::Settings::setId(0);
+        rtt::Settings::setYellow(true);
+        rtt::Settings::setLeft(true);
+        rtt::Settings::setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
 
         // Set other variables to their default values
         rtt::ai::interface::Output::setKeeperId(-1);

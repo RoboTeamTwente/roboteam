@@ -43,7 +43,7 @@ TEST(worldTest, HistorySizeTestSimple) {
 }
 
 TEST(worldTest, ResetWorldTest) {
-    rtt::SETTINGS.setYellow(false);
+    rtt::Settings::setYellow(false);
 
     namespace w_n = rtt::world;
     proto::SSL_GeometryFieldSize size{};

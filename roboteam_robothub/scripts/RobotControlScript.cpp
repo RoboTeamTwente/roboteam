@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include "roboteam_utils/RobotHubMode.h"
 
 using namespace rtt::net;
 
@@ -18,9 +19,6 @@ constexpr int SETTINGS_TRANSMISSION_INTERVAL_MS = 1000;
 ///////////////////////////////////////////////////////////
 /// All things related to the sending of robot commands ///
 ///////////////////////////////////////////////////////////
-enum class Mode {
-    BASESTATION, SIMULATOR
-};
 enum class Rotation {
     NO_ROTATION, LEFT_ROTATION, RIGHT_ROTATION
 };
@@ -44,7 +42,7 @@ bool shouldSendSettings = false;
 
 auto lastTimeCommandWasUsed = std::chrono::steady_clock::now();
 
-Mode currentMode = Mode::SIMULATOR;
+rtt::RobotHubMode currentMode = rtt::RobotHubMode::SIMULATOR;
 Team currentTeam = Team::NEITHER;
 Rotation currentRotation = Rotation::NO_ROTATION;
 Movement currentMovement = Movement::STILL;
@@ -156,7 +154,7 @@ void runSettingsSending() {
 
     while (shouldSendSettings) {
         proto::Setting settings;
-        settings.set_serialmode(currentMode == Mode::BASESTATION);
+        settings.set_robot_hub_mode(currentMode == rtt::RobotHubMode::BASESTATION ? proto::Setting::BASESTATION : proto::Setting::SIMULATOR);
 
         settingsPublisher.publish(settings);
 
@@ -249,9 +247,9 @@ bool handleCommand(std::string cmd) {
         currentTeam = Team::BOTH;
         useDribbler = false;
     } else if (cmd == "BASESTATION") {
-        currentMode = Mode::BASESTATION;
+        currentMode = rtt::RobotHubMode::BASESTATION;
     } else if (cmd == "SIMULATION") {
-        currentMode = Mode::SIMULATOR;
+        currentMode = rtt::RobotHubMode::SIMULATOR;
     } else if (cmd == "NEITHER") {
         currentTeam = Team::NEITHER;
     } else if (cmd == "YELLOW") {
@@ -367,17 +365,6 @@ std::string targetTeamToString() {
     }
 }
 
-std::string currentModeToString() {
-    switch (currentMode) {
-        case Mode::SIMULATOR:
-            return "the simulator";
-        case Mode::BASESTATION:
-            return "the basestation";
-        default:
-            return "UNKNOWN";
-    }
-}
-
 void printStatus() {
     std::cout << "Sending "
               << currentMovementToString()
@@ -388,7 +375,7 @@ void printStatus() {
               << " of "
               << targetTeamToString()
               << " from "
-              << currentModeToString()
+              << rtt::modeToString(currentMode)
               << std::endl;
 }
 

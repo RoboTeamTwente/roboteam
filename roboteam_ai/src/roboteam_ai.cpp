@@ -2,6 +2,7 @@
 
 #include "STPManager.h"
 #include "roboteam_utils/ArgParser.h"
+#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/IOManager.h"
 #include "utilities/Settings.h"
 #include "world/World.hpp"
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
     RTT_DEBUG("Debug prints enabled")
 
     // Set up the settings based on cmd arguments
-    isPrimaryFlag ? rtt::Settings::setId(0) : rtt::Settings::setId(1);
+    rtt::Settings::setPrimaryAI(isPrimaryFlag);
 
     // If primary AI, we start at being yellow on the left
     rtt::Settings::setLeft(rtt::Settings::isPrimaryAI());
@@ -71,13 +72,13 @@ int main(int argc, char** argv) {
 
     // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
     rtt::Settings::setRobotHubMode(
-        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::Settings::RobotHubMode::BASESTATION : rtt::Settings::RobotHubMode::SIMULATOR
+        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::RobotHubMode::BASESTATION : rtt::RobotHubMode::SIMULATOR
     );
 
 
     RTT_INFO("AI initialized as: ", (rtt::Settings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
     RTT_INFO("Starting as color: ", (rtt::Settings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
-    RTT_INFO("Starting in mode: ", rtt::Settings::robotHubModeToString(rtt::Settings::getRobotHubMode()))
+    RTT_INFO("Starting in mode: ", rtt::modeToString(rtt::Settings::getRobotHubMode()))
     RTT_INFO("Playing on side: ", (rtt::Settings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
     RTT_INFO("This AI will ", rtt::Settings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 

@@ -2,6 +2,8 @@
 
 #include <atomic>
 #include <string>
+#include "proto/Setting.pb.h"
+#include "roboteam_utils/RobotHubMode.h"
 
 namespace rtt {
 
@@ -15,22 +17,14 @@ namespace rtt {
  */
 class Settings {
    public:
-    static constexpr int PRIMARY_AI_ID = 0;
 
     Settings() = delete;
 
     /**
-     * @brief Enumerator that tells where RobotHub should send the robot commands
-     */
-    enum RobotHubMode { UNKNOWN, BASESTATION, SIMULATOR };
-
-    /**
      * This function takes directly the values of the settings of Primary AI, and will convert them to settings this AI should have.
-     * @param isYellow Indicates whether this is they yellow team
-     * @param isLeft Indicates whether we are playing on the left side
-     * @param mode Mode of RobotHub
+     * @param settings The settings of the primary AI received from the Settings subscriber
      */
-    static void handleSettingsFromPrimaryAI(bool isYellow, bool isLeft, RobotHubMode mode);
+    static void handleSettingsFromPrimaryAI(const proto::Setting& settings);
 
     /**
      * @brief Checks whether this AI is the primary AI
@@ -39,16 +33,10 @@ class Settings {
     static bool isPrimaryAI();
 
     /**
-     * @brief Gets the ID of this AI
-     * @return The ID of this AI
-     */
-    static int getId();
-
-    /**
      * @brief Sets the ID of this AI
      * @param id The ID of this AI
      */
-    static void setId(int id);
+    static void setPrimaryAI(bool value);
 
     /**
      * @brief Checks whether this is the yellow team
@@ -88,15 +76,8 @@ class Settings {
      */
     static bool setRobotHubMode(RobotHubMode mode);
 
-    /**
-     * @brief Turns the mode in which RobotHub is sending the robot commands, into a string
-     * @param mode The mode in which RobotHub is sending the robot commands
-     * @return A string with name of the mode in which RobotHub is sending the robot commands
-     */
-    static std::string_view robotHubModeToString(RobotHubMode mode);
-
    private:
-    static std::atomic<int> id; /**< ID of the AI */
+    static std::atomic<bool> primaryAI;
     static std::atomic<bool> yellow; /**< Indicates whether this is the yellow team */
     static std::atomic<bool> left; /**< Indicates whether we are playing on the left side */
     static std::atomic<RobotHubMode> robotHubMode; /**< The mode in which RobotHub is sending robot commands */

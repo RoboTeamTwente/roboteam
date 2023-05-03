@@ -54,10 +54,10 @@ class RTT_AI_Tests : public ::testing::Test {
 
         // Defaulting to us being left and yellow
         // Set these fields just like they are set in roboteam_ai.cpp
-        rtt::Settings::setId(0);
+        rtt::Settings::setPrimaryAI(true);
         rtt::Settings::setYellow(true);
         rtt::Settings::setLeft(true);
-        rtt::Settings::setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
+        rtt::Settings::setRobotHubMode(rtt::RobotHubMode::SIMULATOR);
 
         // Set other variables to their default values
         rtt::ai::interface::Output::setKeeperId(-1);

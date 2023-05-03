@@ -6,16 +6,18 @@
 #include <helpers/WorldHelper.h>
 
 #include <world/World.hpp>
+#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/Settings.h"
 
 // TODO: Format the currently copy-pasted tests below properly together
 TEST(worldTest, WhichRobotHasBallTest) {
     // set us to yellow
+    rtt::Settings::setPrimaryAI(true);
     rtt::Settings::setYellow(true);
 
     // TODO: Extend test to also work in SIM environment making use of dribbler encoder and / or dedicated ballsensor
     // Base our test on vision information (instead of ballsensor/dribbler information)
-    rtt::Settings::setRobotHubMode(rtt::Settings::BASESTATION);
+    rtt::Settings::setRobotHubMode(rtt::RobotHubMode::BASESTATION);
 
     auto const& [_, worldInstance] = rtt::world::World::instance();
 
@@ -81,7 +83,7 @@ TEST(worldTest, NoRobotHasBall) {
     rtt::Settings::setYellow(true);
 
     // Base our test on vision information (instead of ballsensor/dribbler information)
-    rtt::Settings::setRobotHubMode(rtt::Settings::BASESTATION);
+    rtt::Settings::setRobotHubMode(rtt::RobotHubMode::BASESTATION);
 
     auto const& [_, worldInstance] = rtt::world::World::instance();
 

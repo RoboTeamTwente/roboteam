@@ -71,14 +71,14 @@ TEST(RTTChannels, testRobotFeedbackLoop) {
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = settings.isyellow() == TEST_BOOL; }
+void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL; }
 TEST(RTTChannels, testSettingsLoop) {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     proto::Setting settings;
-    settings.set_isyellow(TEST_BOOL);
+    settings.set_is_yellow(TEST_BOOL);
 
     pub.publish(settings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));

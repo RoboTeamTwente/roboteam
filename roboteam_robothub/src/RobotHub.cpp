@@ -197,7 +197,7 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
 void RobotHub::onSettings(const proto::Setting &_settings) {
     this->settings = _settings;
 
-    utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
+    utils::RobotHubMode newMode = settings.robot_hub_mode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
 
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;

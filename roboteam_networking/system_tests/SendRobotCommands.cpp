@@ -21,9 +21,7 @@ rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
 
 proto::Setting getRobotHubBasestationModePacket() {
     proto::Setting settings;
-
-    settings.set_serialmode(true);
-
+    settings.set_robot_hub_mode(proto::Setting::BASESTATION);
     return settings;
 }
 

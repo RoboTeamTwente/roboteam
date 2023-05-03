@@ -7,6 +7,7 @@
 #include <ostream>
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
+#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/Settings.h"
 
 namespace rtt::ai::interface {
@@ -152,12 +153,12 @@ void MainControlsWidget::toggleOurSideParam() {
 /// toggle the the setting 'isSerialMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
     switch (Settings::getRobotHubMode()) {
-        case Settings::RobotHubMode::BASESTATION: {
-            Settings::setRobotHubMode(Settings::RobotHubMode::SIMULATOR);
+        case RobotHubMode::BASESTATION: {
+            Settings::setRobotHubMode(RobotHubMode::SIMULATOR);
             break;
         }
-        case Settings::RobotHubMode::SIMULATOR: {
-            Settings::setRobotHubMode(Settings::RobotHubMode::BASESTATION);
+        case RobotHubMode::SIMULATOR: {
+            Settings::setRobotHubMode(RobotHubMode::BASESTATION);
             break;
         }
         default: {
@@ -204,7 +205,7 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string_view modeText = Settings::robotHubModeToString(Settings::getRobotHubMode());
+    std::string_view modeText = modeToString(Settings::getRobotHubMode());
 
     QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);

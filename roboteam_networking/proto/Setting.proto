@@ -3,8 +3,14 @@ syntax = "proto3";
 package proto;
 
 message Setting {
-    uint32 id = 1; // the id of the AI which this setting corresponds to
-    bool isYellow = 2;
-    bool isLeft = 3;
-    bool serialMode = 4;
+    enum RobotHubMode {
+        UNKNOWN = 0;
+        BASESTATION = 1;
+        SIMULATOR = 2;
+    }
+
+    bool is_primary_ai = 1;
+    bool is_yellow = 2;
+    bool is_left = 3;
+    RobotHubMode robot_hub_mode = 4;
 }

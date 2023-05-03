@@ -3,24 +3,24 @@
 #include <roboteam_utils/Print.h>
 #include <utilities/IOManager.h>
 #include <string_view>
+#include "roboteam_utils/RobotHubMode.h"
 
 namespace rtt {
 
-std::atomic<int> Settings::id = Settings::PRIMARY_AI_ID;
+std::atomic<bool> Settings::primaryAI = false;
 std::atomic<bool> Settings::yellow = false;
 std::atomic<bool> Settings::left = false;
-std::atomic<Settings::RobotHubMode> Settings::robotHubMode = Settings::RobotHubMode::SIMULATOR;
+std::atomic<RobotHubMode> Settings::robotHubMode = RobotHubMode::SIMULATOR;
 
-void Settings::handleSettingsFromPrimaryAI(bool otherIsYellow, bool isLeft, RobotHubMode otherMode) {
-    setYellow(!otherIsYellow);
-    left = !isLeft;
-    robotHubMode = otherMode;
+void Settings::handleSettingsFromPrimaryAI(const proto::Setting& settings) {
+    setYellow(!settings.is_yellow());
+    setLeft(!settings.is_left());
+    robotHubMode = modeFromProto(settings.robot_hub_mode());
 }
 
-int Settings::getId() { return id; }
-bool Settings::isPrimaryAI() { return id == PRIMARY_AI_ID; }
+bool Settings::isPrimaryAI() { return primaryAI; }
 
-void Settings::setId(int _id) { id = _id; }
+void Settings::setPrimaryAI(bool value) {  primaryAI = value; }
 
 bool Settings::isYellow() { return yellow; }
 
@@ -45,7 +45,7 @@ void Settings::setLeft(bool _left) {
     RTT_INFO("This secondary AI can not alter settings")
 }
 
-Settings::RobotHubMode Settings::getRobotHubMode() { return robotHubMode; }
+RobotHubMode Settings::getRobotHubMode() { return robotHubMode; }
 
 bool Settings::setRobotHubMode(RobotHubMode mode) {
     // We can only switch mode if we are the primary AI
@@ -56,17 +56,6 @@ bool Settings::setRobotHubMode(RobotHubMode mode) {
 
     RTT_INFO("This secondary AI can not alter settings")
     return false;
-}
-
-std::string_view Settings::robotHubModeToString(RobotHubMode mode) {
-    switch (mode) {
-        case RobotHubMode::BASESTATION:
-            return "Basestation";
-        case RobotHubMode::SIMULATOR:
-            return "Simulator";
-        default:
-            return "Unknown";
-    }
 }
 
 }  // namespace rtt

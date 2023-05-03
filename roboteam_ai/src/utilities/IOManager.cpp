@@ -5,6 +5,8 @@
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "interface/api/Input.h"
+#include "proto/Setting.pb.h"
+#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
 #include "utilities/Settings.h"
@@ -37,7 +39,9 @@ bool IOManager::init(bool isPrimaryAI) {
         }
     } else {
         try {
-            this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting& settings) { this->onSettingsOfPrimaryAI(settings); });
+            this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting& settings) {
+                Settings::handleSettingsFromPrimaryAI(settings);
+            });
         } catch (const zmqpp::zmq_internal_exception& e) {
             success = false;
             RTT_ERROR("Failed to open settings subscriber channel")
@@ -76,18 +80,14 @@ void IOManager::handleState(const proto::State& stateMsg) {
 void IOManager::publishSettings() {
     proto::Setting protoSetting;
 
-    protoSetting.set_id(Settings::getId());
-    protoSetting.set_isleft(Settings::isLeft());
-    protoSetting.set_isyellow(Settings::isYellow());
-    protoSetting.set_serialmode(Settings::getRobotHubMode() == Settings::RobotHubMode::BASESTATION);
+    protoSetting.set_is_primary_ai(Settings::isPrimaryAI());
+    protoSetting.set_is_left(Settings::isLeft());
+    protoSetting.set_is_yellow(Settings::isYellow());
+    protoSetting.set_robot_hub_mode(modeToProto(Settings::getRobotHubMode()));
 
     if (this->settingsPublisher != nullptr) {
         this->settingsPublisher->publish(protoSetting);
     }
-}
-
-void IOManager::onSettingsOfPrimaryAI(const proto::Setting& settings) {
-    Settings::handleSettingsFromPrimaryAI(settings.isyellow(), settings.isleft(), settings.serialmode() ? Settings::RobotHubMode::BASESTATION : Settings::RobotHubMode::SIMULATOR);
 }
 
 void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands) {

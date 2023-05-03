@@ -78,11 +78,6 @@ class IOManager {
     void publishSettings();
 
     /**
-     * @brief Handles the settings received from the primary AI
-     * @param settings the settings that are received
-     */
-    void onSettingsOfPrimaryAI(const proto::Setting& settings);
-    /**
      * @brief Publishes the simulation configuration on the simulationConfiguration channel. Only the primary AI is allowed to send this.
      * @param configuration The simulation configuration that needs to be published
      * @return Boolean that tells whether the simulation configuration has been sent successfully

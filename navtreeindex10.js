@@ -1,13 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,3,3,20,28],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a8726a464fdb9e614c5cca8c7cd183155":[3,0,1,0,3,3,20,15],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a8750ea230c633dcf6a0f09e28e4f47b1":[3,0,1,0,3,3,20,26],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a93c2079abaeb77c36a0d47d197423d19":[3,0,1,0,3,3,20,13],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a977b3063d4d26bee4be08d71c2ab7ccc":[3,0,1,0,3,3,20,4],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,3,3,20,11],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ab23ad33458ed975661cdc593bdf40968":[3,0,1,0,3,3,20,14],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,3,3,20,7],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ac94e8512988b8a7a866f7896bcb28d13":[3,0,1,0,3,3,20,3],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,3,3,20,12],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,3,3,20,23],
@@ -90,8 +82,8 @@ var NAVTREEINDEX10 =
 "da/d39/classrtt_1_1world_1_1World.html#a2dae5f1da4f100d9b65971a24fdd7229":[3,0,1,4,3,16],
 "da/d39/classrtt_1_1world_1_1World.html#a3c7cbd450ac3b8e5d436b98e2a1c7fc6":[3,0,1,4,3,0,0],
 "da/d39/classrtt_1_1world_1_1World.html#a3c7cbd450ac3b8e5d436b98e2a1c7fc6":[4,0,0,0,0,5,6,1,0],
-"da/d39/classrtt_1_1world_1_1World.html#a41746281952027473de74bc81a240d4f":[4,0,0,0,0,5,6,1,1],
 "da/d39/classrtt_1_1world_1_1World.html#a41746281952027473de74bc81a240d4f":[3,0,1,4,3,0,1],
+"da/d39/classrtt_1_1world_1_1World.html#a41746281952027473de74bc81a240d4f":[4,0,0,0,0,5,6,1,1],
 "da/d39/classrtt_1_1world_1_1World.html#a4eede1970e8d64b3db0857361d0813ca":[3,0,1,4,3,5],
 "da/d39/classrtt_1_1world_1_1World.html#a639e895a7af6abe1c09d3b94b2f99e4b":[3,0,1,4,3,22],
 "da/d39/classrtt_1_1world_1_1World.html#a64558ef47d03743ba2b2b61ce97a083b":[3,0,1,4,3,2],
@@ -249,5 +241,13 @@ var NAVTREEINDEX10 =
 "da/dc6/PlayEvaluator_8h_source.html":[4,0,0,0,0,3,9],
 "da/dcc/PidBox_8cpp.html":[4,0,0,1,1,1,4],
 "da/dcd/TimeOutGameStateEvaluation_8cpp.html":[4,0,0,1,4,2,0,17],
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html":[3,0,1,0,3,1,30]
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html":[3,0,1,0,3,1,30],
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a0dbf374ea7c57522d71147eb8c03273c":[3,0,1,0,3,1,30,3],
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a74f7d0b43f656aa44648bd57ce06832c":[3,0,1,0,3,1,30,0],
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a7f9fa9c8a1930a1b37b593c12626bbbd":[3,0,1,0,3,1,30,2],
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a8b659a126866d207206dd9d20037a325":[3,0,1,0,3,1,30,4],
+"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#ad569cab970b118680c0e4c5dfe6c425f":[3,0,1,0,3,1,30,1],
+"da/de3/classrtt_1_1STPManager.html":[3,0,1,8],
+"da/de3/classrtt_1_1STPManager.html#a01f0633364a8500e40ad85095cd76ec4":[3,0,1,8,3],
+"da/de3/classrtt_1_1STPManager.html#a19ff13e5cb21a8afa41e92ecb6a56945":[3,0,1,8,9]
 };

@@ -7,7 +7,6 @@ var classrtt_1_1ai_1_1io_1_1IOManager =
     [ "handleState", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad06a4509dfdb3f7c6013799b27ed2c20", null ],
     [ "init", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ace78a184eddf90ac0b390bc031c10da0", null ],
     [ "obtainTeamColorChannel", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c", null ],
-    [ "onSettingsOfPrimaryAI", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a42597771a0253e9baecf3c24a0c11eb6", null ],
     [ "publishAllRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a55382a03a2cf2331dc248689184a9104", null ],
     [ "publishRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a0f0f4a00275a57156911cd1da3388124", null ],
     [ "publishSettings", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a3adae449c9345d234258d35f061a1468", null ],

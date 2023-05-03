@@ -1,13 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a0dbf374ea7c57522d71147eb8c03273c":[3,0,1,0,3,1,30,3],
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a74f7d0b43f656aa44648bd57ce06832c":[3,0,1,0,3,1,30,0],
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a7f9fa9c8a1930a1b37b593c12626bbbd":[3,0,1,0,3,1,30,2],
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a8b659a126866d207206dd9d20037a325":[3,0,1,0,3,1,30,4],
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#ad569cab970b118680c0e4c5dfe6c425f":[3,0,1,0,3,1,30,1],
-"da/de3/classrtt_1_1STPManager.html":[3,0,1,8],
-"da/de3/classrtt_1_1STPManager.html#a01f0633364a8500e40ad85095cd76ec4":[3,0,1,8,3],
-"da/de3/classrtt_1_1STPManager.html#a19ff13e5cb21a8afa41e92ecb6a56945":[3,0,1,8,9],
 "da/de3/classrtt_1_1STPManager.html#a1c4f16dc197ba38002fdd964f1488ace":[3,0,1,8,5],
 "da/de3/classrtt_1_1STPManager.html#a398d2b8170beb38ec7f54495c29a0b85":[3,0,1,8,6],
 "da/de3/classrtt_1_1STPManager.html#a7a7653fec7cab61ab8312c9beaea2abc":[3,0,1,8,8],
@@ -249,5 +241,13 @@ var NAVTREEINDEX11 =
 "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#a97aca306adb701181c5726a09cac208c":[3,0,1,0,3,5,0,3],
 "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#aab9578d86a91f8a16f5c02200ca3b5e8":[3,0,1,0,3,5,0,7],
 "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#ae3db983eda1761d7ccd3f68a0ef731dd":[3,0,1,0,3,5,0,9],
-"db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#afa6b5f998d8ba252485177937d3724c7":[3,0,1,0,3,5,0,5]
+"db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#afa6b5f998d8ba252485177937d3724c7":[3,0,1,0,3,5,0,5],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html":[3,0,1,0,7],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f":[3,0,1,0,7,3],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5748de7bec33e3e323632e2b46f483d5":[3,0,1,0,7,2],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6025d1c2249168a49833163228e08589":[3,0,1,0,7,6],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475":[3,0,1,0,7,0],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa6526bff46d12b87ec56028d7dfbffbd":[3,0,1,0,7,7],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac1b896d1149a04b5fd2963754e9a87fb":[3,0,1,0,7,5],
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac835a19e0cb277c15d19d8e882f64dc1":[3,0,1,0,7,4]
 };

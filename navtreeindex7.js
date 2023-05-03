@@ -1,13 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a4cd903ac47c7857e6f95fa8203a68525":[3,0,2,1,5],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a62246662bddfba53f3fa2d710e5ff5e2":[3,0,2,1,9],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a71264c6c02cc6f4b1ee597e3a2320686":[3,0,2,1,3],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a7345cb932c2dfbe340051d04969d2b7b":[3,0,2,1,6],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a923101faaff976777ba290d051bdbaf4":[3,0,2,1,7],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a9b4c89c1867e9814e20b515ea848511d":[3,0,2,1,8],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#ab0fe933bb083e04a9ce4ee772a6ac5b6":[3,0,2,1,4],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#ac8a3a86e75d7ef2f0b9ff6fa70ad48c4":[3,0,2,1,1],
 "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html":[3,0,1,0,1,15],
 "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html#a1097f0b79c0e4e53dbf661e58e0a17db":[3,0,1,0,1,15,8],
 "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html#a22416ac3409face035c5828a1ff313c4":[3,0,1,0,1,15,9],
@@ -249,5 +241,13 @@ var NAVTREEINDEX7 =
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,3,11,25],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae1fb3941c44c1eed411a838fca110a96":[3,0,1,0,3,11,0],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae63525881610390f3a9e5a490377b32e":[3,0,1,0,3,11,18],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,3,11,26]
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,3,11,26],
+"d7/d93/HistoryRetrievalTest_8cpp.html":[4,0,0,2,8,3],
+"d7/d93/HistoryRetrievalTest_8cpp.html#afbe6cdef5e0ea1a34685af88709f9855":[4,0,0,2,8,3,0],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html":[3,0,1,0,3,3,14],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,14,30],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,3,3,14,34],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,3,3,14,35],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,3,3,14,24],
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a193d5fef143c93145b2e1e8f2b2a04f2":[3,0,1,0,3,3,14,12]
 };

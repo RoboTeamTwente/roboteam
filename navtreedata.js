@@ -76,22 +76,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dda/GraphWidget_8h_source.html",
-"d2/d47/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUs.html#a52fc8b6075367b48ae05021829ebcc8f",
-"d3/dc4/Constants_8cpp.html",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a97437af3584cf8be229aca8658681e39",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2adc4fbe3b6b328eb999604733412ae78b",
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a9f4ed29616a0a17189253dd2d9a5a165",
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a4cd903ac47c7857e6f95fa8203a68525",
-"d7/d93/HistoryRetrievalTest_8cpp.html",
-"d8/d68/BallAvoider_8h.html",
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a859e8c8abae48115eab588736926368f",
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a0dbf374ea7c57522d71147eb8c03273c",
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html",
-"dc/dfb/Ball_8hpp.html",
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a52fc8b6075367b48ae05021829ebcc8f",
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab483b0fde3fde2b73e16b3fe6b0ef866",
-"functions_func.html"
+"d0/dde/namespacertt_1_1BB.html",
+"d2/d47/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUs.html#a8750ea230c633dcf6a0f09e28e4f47b1",
+"d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#abe641e59db2be8221416e1495943a905",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#aa1d71b577deca9bd07b1bbb8be856d62",
+"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#ab9922e759babf44b3e7c295aa2bd89a1",
+"d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html",
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e",
+"d8/d88/GoalVisionGlobalEvaluation_8cpp.html",
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ac94e8512988b8a7a866f7896bcb28d13",
+"da/de3/classrtt_1_1STPManager.html#a1c4f16dc197ba38002fdd964f1488ace",
+"db/de9/classrtt_1_1ai_1_1GameStateManager.html#acee6100d4704ad3654bcac597efcb6e9",
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a692cb6f9ade70bebc8f56e5175036c9a",
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a81d204e55bab023d2937c1420abd04ad",
+"df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html#a62b2b0a44297b2342839141db7782320",
+"functions_func_h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

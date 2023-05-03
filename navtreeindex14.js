@@ -1,13 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a52fc8b6075367b48ae05021829ebcc8f":[3,0,1,0,3,3,7,17],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a58560de6d2d6ca91e467deb1071aadbd":[3,0,1,0,3,3,7,10],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6":[3,0,1,0,3,3,7,9],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a6092b3d25cc226ab22f25b2f19568644":[3,0,1,0,3,3,7,2],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a60fb9e707be353790ae62a777ca14909":[3,0,1,0,3,3,7,6],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7164f241b13b1aa59b6e6b5c30a3094b":[3,0,1,0,3,3,7,22],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,3,3,7,5],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,3,3,7,18],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,3,3,7,21],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,3,3,7,28],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a8726a464fdb9e614c5cca8c7cd183155":[3,0,1,0,3,3,7,15],
@@ -249,5 +241,13 @@ var NAVTREEINDEX14 =
 "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a5406b768722523b54f2b7b61b1e78a13":[3,0,1,0,3,6,11,6],
 "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a56c3974b89cc3649374c914ea0c9480d":[3,0,1,0,3,6,11,9],
 "df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a684db9afe3727e37496c49235072a38e":[3,0,1,0,3,6,11,12],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a7dd6c78c3221ac4169ba76c579964bba":[3,0,1,0,3,6,11,1]
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#a7dd6c78c3221ac4169ba76c579964bba":[3,0,1,0,3,6,11,1],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab483b0fde3fde2b73e16b3fe6b0ef866":[3,0,1,0,3,6,11,3],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab496bf1614c47ef3e466cd235eb84aab":[3,0,1,0,3,6,11,4],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab7650037eb092459aca7247ea77f2ad4":[3,0,1,0,3,6,11,7],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ac66cf9fe9def08172b053a6abc869ba1":[3,0,1,0,3,6,11,14],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,3,6,11,13],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ad6728186ef4d96fc825a44a7a474da89":[3,0,1,0,3,6,11,0],
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,3,6,11,11],
+"df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html":[3,0,1,0,3,7]
 };

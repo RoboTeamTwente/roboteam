@@ -1,13 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab483b0fde3fde2b73e16b3fe6b0ef866":[3,0,1,0,3,6,11,3],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab496bf1614c47ef3e466cd235eb84aab":[3,0,1,0,3,6,11,4],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab7650037eb092459aca7247ea77f2ad4":[3,0,1,0,3,6,11,7],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ac66cf9fe9def08172b053a6abc869ba1":[3,0,1,0,3,6,11,14],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,3,6,11,13],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ad6728186ef4d96fc825a44a7a474da89":[3,0,1,0,3,6,11,0],
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,3,6,11,11],
-"df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html":[3,0,1,0,3,7],
 "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html#a62b2b0a44297b2342839141db7782320":[3,0,1,0,3,7,1],
 "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html#accbe69483aa12acac95e77a8c28dba65":[3,0,1,0,3,7,0],
 "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html#ae3b2e8773461dae3685de3a7a3c5dfa6":[3,0,1,0,3,7,2],
@@ -249,5 +241,13 @@ var NAVTREEINDEX15 =
 "functions_e.html":[3,3,0,5],
 "functions_enum.html":[3,3,4],
 "functions_eval.html":[3,3,5],
-"functions_f.html":[3,3,0,6]
+"functions_f.html":[3,3,0,6],
+"functions_func.html":[3,3,1,0],
+"functions_func.html":[3,3,1],
+"functions_func_b.html":[3,3,1,1],
+"functions_func_c.html":[3,3,1,2],
+"functions_func_d.html":[3,3,1,3],
+"functions_func_e.html":[3,3,1,4],
+"functions_func_f.html":[3,3,1,5],
+"functions_func_g.html":[3,3,1,6]
 };

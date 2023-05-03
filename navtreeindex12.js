@@ -1,13 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html":[3,0,1,0,7],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f":[3,0,1,0,7,3],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5748de7bec33e3e323632e2b46f483d5":[3,0,1,0,7,2],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6025d1c2249168a49833163228e08589":[3,0,1,0,7,6],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475":[3,0,1,0,7,0],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa6526bff46d12b87ec56028d7dfbffbd":[3,0,1,0,7,7],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac1b896d1149a04b5fd2963754e9a87fb":[3,0,1,0,7,5],
-"db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac835a19e0cb277c15d19d8e882f64dc1":[3,0,1,0,7,4],
 "db/de9/classrtt_1_1ai_1_1GameStateManager.html#acee6100d4704ad3654bcac597efcb6e9":[3,0,1,0,7,8],
 "db/de9/classrtt_1_1ai_1_1GameStateManager.html#adc403506e6cf24a6c8c60b0545099f6a":[3,0,1,0,7,1],
 "db/ded/RobotDefender_8h.html":[4,0,0,0,0,3,4,1,4],
@@ -249,5 +241,13 @@ var NAVTREEINDEX12 =
 "dc/dd8/BallOnTheirSideGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,9],
 "dc/ddd/FreeKickUsPass_8h.html":[4,0,0,0,0,3,3,2,7],
 "dc/ddd/FreeKickUsPass_8h_source.html":[4,0,0,0,0,3,3,2,7],
-"dc/ddd/PassReceiver_8cpp.html":[4,0,0,1,4,4,0,7]
+"dc/ddd/PassReceiver_8cpp.html":[4,0,0,1,4,4,0,7],
+"dc/dfb/Ball_8hpp.html":[4,0,0,0,0,5,1],
+"dc/dfb/Ball_8hpp_source.html":[4,0,0,0,0,5,1],
+"dd/d01/BallClosestToUsGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,0],
+"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2],
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html":[3,0,1,0,3,4,5],
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,3,4,5,10],
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,3,4,5,2],
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a4ff09c5a0803236b90ca9e14abb1ae6e":[3,0,1,0,3,4,5,5]
 };

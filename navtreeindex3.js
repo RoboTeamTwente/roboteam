@@ -1,13 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"d3/dc4/Constants_8cpp.html":[4,0,0,1,5,0],
-"d3/dc9/PositionControlUtils_8h.html":[4,0,0,0,0,0,0,6],
-"d3/dc9/PositionControlUtils_8h_source.html":[4,0,0,0,0,0,0,6],
-"d3/ddf/Output_8h.html":[4,0,0,0,0,1,0,1],
-"d3/ddf/Output_8h.html#ae7a8ba08753cb5cf54ad728ce6a2f5a6":[4,0,0,0,0,1,0,1,1],
-"d3/ddf/Output_8h_source.html":[4,0,0,0,0,1,0,1],
-"d3/de1/KeeperPasser_8h.html":[4,0,0,0,0,3,4,0,5],
-"d3/de1/KeeperPasser_8h_source.html":[4,0,0,0,0,3,4,0,5],
 "d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html":[3,0,1,4,2,1],
 "d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html#a078a3e37a8e5884f7b39a8f0e3b91f3d":[3,0,1,4,2,1,7],
 "d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html#a0f578e585836d29271589edb0e20d5d4":[3,0,1,4,2,1,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX3 =
 "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a828fb5223242dd7b9827a7c8cfafc332":[3,0,1,4,1,1,35],
 "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a86a0b6cf894b09b81dfe06a29b8b82b4":[3,0,1,4,1,1,3],
 "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a8aeb56889e7c35ddf29ece162d7bd332":[3,0,1,4,1,1,39],
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a92aef306c1c6032751056f20bac14eee":[3,0,1,4,1,1,30]
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a92aef306c1c6032751056f20bac14eee":[3,0,1,4,1,1,30],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a97437af3584cf8be229aca8658681e39":[3,0,1,4,1,1,37],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a9b45a6f4db069db89c7084e1c93a69f3":[3,0,1,4,1,1,43],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a9f06171d96a142c918a79977b13a988b":[3,0,1,4,1,1,31],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#aa2b26725675b6f750f1192c8c68d6f31":[3,0,1,4,1,1,15],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#aaa618cb99b322262f8fbee9944242a2e":[3,0,1,4,1,1,33],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#ab12607d0697b28b32e67e54b26b04998":[3,0,1,4,1,1,42],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#ab78be163cedca5d834b97380dbee90c7":[3,0,1,4,1,1,38],
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#abd8e0c88d11f5953c7a22eaf10dbd882":[3,0,1,4,1,1,1]
 };

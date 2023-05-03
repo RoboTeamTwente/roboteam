@@ -1,13 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"d8/d68/BallAvoider_8h.html":[4,0,0,0,0,3,4,1,0],
-"d8/d68/BallAvoider_8h_source.html":[4,0,0,0,0,3,4,1,0],
-"d8/d6e/IOManager_8h.html":[4,0,0,0,0,4,4],
-"d8/d6e/IOManager_8h.html#a3a3059343c59e8dc266f41990749c3ef":[4,0,0,0,0,4,4,1],
-"d8/d6e/IOManager_8h_source.html":[4,0,0,0,0,4,4],
-"d8/d73/BallMovesSlowGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,6],
-"d8/d80/tactics_2passive_2Halt_8h.html":[4,0,0,0,0,3,6,1,5],
-"d8/d80/tactics_2passive_2Halt_8h_source.html":[4,0,0,0,0,3,6,1,5],
 "d8/d88/GoalVisionGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,13],
 "d8/d89/structnativeformat_1_1param_1_1LinearRampEvent.html":[3,0,0,0,4],
 "d8/d89/structnativeformat_1_1param_1_1LinearRampEvent.html#a0aa80e6619f565900d9604a68f5fce23":[3,0,0,0,4,9],
@@ -249,5 +241,13 @@ var NAVTREEINDEX9 =
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,3,3,20,5],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7f851d4dcedf21a9b7f14021d3d7600a":[3,0,1,0,3,3,20,0],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,3,3,20,18],
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,3,3,20,21]
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,3,3,20,21],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,3,3,20,28],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a8726a464fdb9e614c5cca8c7cd183155":[3,0,1,0,3,3,20,15],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a8750ea230c633dcf6a0f09e28e4f47b1":[3,0,1,0,3,3,20,26],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a93c2079abaeb77c36a0d47d197423d19":[3,0,1,0,3,3,20,13],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a977b3063d4d26bee4be08d71c2ab7ccc":[3,0,1,0,3,3,20,4],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,3,3,20,11],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ab23ad33458ed975661cdc593bdf40968":[3,0,1,0,3,3,20,14],
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,3,3,20,7]
 };

@@ -1,13 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"d7/d93/HistoryRetrievalTest_8cpp.html":[4,0,0,2,8,3],
-"d7/d93/HistoryRetrievalTest_8cpp.html#afbe6cdef5e0ea1a34685af88709f9855":[4,0,0,2,8,3,0],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html":[3,0,1,0,3,3,14],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,14,30],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,3,3,14,34],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,3,3,14,35],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,3,3,14,24],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a193d5fef143c93145b2e1e8f2b2a04f2":[3,0,1,0,3,3,14,12],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,3,3,14,23],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a2d89ad0a7210fc1abc253b66182ba345":[3,0,1,0,3,3,14,4],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a447b46dba282ae0e1452f52744b382e1":[3,0,1,0,3,3,14,26],
@@ -133,8 +125,8 @@ var NAVTREEINDEX8 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa5f6e5e7bca9ca5c98b3784d220b8621":[4,0,0,0,0,4,1,4,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aad8a4055abc33454fce6cf0966ee3d9e":[3,0,1,0,5,6],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ab3d3176a7d6bee6d573b23f5140fdbea":[3,0,1,0,5,20],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb":[4,0,0,0,0,4,1,2,0],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb":[3,0,1,0,5,3,0],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb":[4,0,0,0,0,4,1,2,0],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac12d70a58bd77b035de627742eca229e":[3,0,1,0,5,17],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac65212d347ada31e2c26b74f60a0a651":[3,0,1,0,5,11],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#accad1a84e4899ec6a0d78b3607db4d64":[3,0,1,0,5,13],
@@ -143,8 +135,8 @@ var NAVTREEINDEX8 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore":[4,0,0,0,0,4,1,3],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo":[3,0,1,0,5,3],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo":[4,0,0,0,0,4,1,2],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore":[3,0,1,0,5,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore":[4,0,0,0,0,4,1,4],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore":[3,0,1,0,5,2],
 "d7/de0/BallOnOurSideGlobalEvaluation_8h.html":[4,0,0,0,0,3,2,1,8],
 "d7/de0/BallOnOurSideGlobalEvaluation_8h_source.html":[4,0,0,0,0,3,2,1,8],
 "d7/de6/KickOffThemPrepareGameStateEvaluation_8h.html":[4,0,0,0,0,3,2,0,6],
@@ -249,5 +241,13 @@ var NAVTREEINDEX8 =
 "d8/d60/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemGameStateEvaluation.html#a5fc4cea5bbd3cb4e1fb8744ad71776bf":[3,0,1,0,3,1,13,1],
 "d8/d60/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemGameStateEvaluation.html#a6ad96d849825aee031e192e55c1f6f87":[3,0,1,0,3,1,13,0],
 "d8/d67/Trajectory2D_8h.html":[4,0,0,0,0,0,0,0,3],
-"d8/d67/Trajectory2D_8h_source.html":[4,0,0,0,0,0,0,0,3]
+"d8/d67/Trajectory2D_8h_source.html":[4,0,0,0,0,0,0,0,3],
+"d8/d68/BallAvoider_8h.html":[4,0,0,0,0,3,4,1,0],
+"d8/d68/BallAvoider_8h_source.html":[4,0,0,0,0,3,4,1,0],
+"d8/d6e/IOManager_8h.html":[4,0,0,0,0,4,4],
+"d8/d6e/IOManager_8h.html#a3a3059343c59e8dc266f41990749c3ef":[4,0,0,0,0,4,4,1],
+"d8/d6e/IOManager_8h_source.html":[4,0,0,0,0,4,4],
+"d8/d73/BallMovesSlowGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,6],
+"d8/d80/tactics_2passive_2Halt_8h.html":[4,0,0,0,0,3,6,1,5],
+"d8/d80/tactics_2passive_2Halt_8h_source.html":[4,0,0,0,0,3,6,1,5]
 };

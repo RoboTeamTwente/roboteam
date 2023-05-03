@@ -85,10 +85,8 @@ $(document).ready(function(){initNavTree('d1/dfb/classrtt_1_1Settings.html','../
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../d9/d03/classrtt_1_1Settings-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -98,15 +96,6 @@ $(document).ready(function(){initNavTree('d1/dfb/classrtt_1_1Settings.html','../
 
 <p><code>#include &lt;<a class="el" href="../../dd/dbc/Settings_8h_source.html">Settings.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:accfc2ef1af7f3331ef9a5b2abc345fa0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a> { <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0aba7aea80b79f366a37ccc9ade9553982">UNKNOWN</a>
-, <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0a403506f398d777478fa03a2d5c8c5e89">BASESTATION</a>
-, <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0a54471d7868fb9a4e2b670e4226be571a">SIMULATOR</a>
- }</td></tr>
-<tr class="memdesc:accfc2ef1af7f3331ef9a5b2abc345fa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerator that tells where RobotHub should send the robot commands.  <a href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">More...</a><br /></td></tr>
-<tr class="separator:accfc2ef1af7f3331ef9a5b2abc345fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7312acf73c6e652f886df06b62d0fc4a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a7312acf73c6e652f886df06b62d0fc4a">Settings</a> ()=delete</td></tr>
@@ -114,17 +103,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac05b4a1acb6ae56673e2b1a9f0716d56"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ac05b4a1acb6ae56673e2b1a9f0716d56">handleSettingsFromPrimaryAI</a> (bool <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a95acf4b52124a221108aaa249af6e391">isYellow</a>, bool <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ac5b077d26e87b252f76901eb3718c8a7">isLeft</a>, <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a> mode)</td></tr>
-<tr class="separator:ac05b4a1acb6ae56673e2b1a9f0716d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d24c422291c7d5f2f6a199db68770cc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a5d24c422291c7d5f2f6a199db68770cc">handleSettingsFromPrimaryAI</a> (const proto::Setting &amp;settings)</td></tr>
+<tr class="separator:a5d24c422291c7d5f2f6a199db68770cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d0353ba5f03e285ad11eeaf65942cc"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a73d0353ba5f03e285ad11eeaf65942cc">isPrimaryAI</a> ()</td></tr>
 <tr class="memdesc:a73d0353ba5f03e285ad11eeaf65942cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this AI is the primary AI.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a73d0353ba5f03e285ad11eeaf65942cc">More...</a><br /></td></tr>
 <tr class="separator:a73d0353ba5f03e285ad11eeaf65942cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af682492677abd173f9b00a02a6a59a01"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#af682492677abd173f9b00a02a6a59a01">getId</a> ()</td></tr>
-<tr class="memdesc:af682492677abd173f9b00a02a6a59a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ID of this AI.  <a href="../../d1/dfb/classrtt_1_1Settings.html#af682492677abd173f9b00a02a6a59a01">More...</a><br /></td></tr>
-<tr class="separator:af682492677abd173f9b00a02a6a59a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64b9c3296544065d60e0227a59c661d8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a64b9c3296544065d60e0227a59c661d8">setId</a> (int <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a78d99a6f92569173ce72e31b32a911c6">id</a>)</td></tr>
-<tr class="memdesc:a64b9c3296544065d60e0227a59c661d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ID of this AI.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a64b9c3296544065d60e0227a59c661d8">More...</a><br /></td></tr>
-<tr class="separator:a64b9c3296544065d60e0227a59c661d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c97db9bb6bb5389860a9f79543e1d8a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a5c97db9bb6bb5389860a9f79543e1d8a">setPrimaryAI</a> (bool value)</td></tr>
+<tr class="memdesc:a5c97db9bb6bb5389860a9f79543e1d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ID of this AI.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a5c97db9bb6bb5389860a9f79543e1d8a">More...</a><br /></td></tr>
+<tr class="separator:a5c97db9bb6bb5389860a9f79543e1d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95acf4b52124a221108aaa249af6e391"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a95acf4b52124a221108aaa249af6e391">isYellow</a> ()</td></tr>
 <tr class="memdesc:a95acf4b52124a221108aaa249af6e391"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this is the yellow team.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a95acf4b52124a221108aaa249af6e391">More...</a><br /></td></tr>
 <tr class="separator:a95acf4b52124a221108aaa249af6e391"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,58 +123,28 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a2f56b25ceda1c9ddca5b60d1deaee503"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a2f56b25ceda1c9ddca5b60d1deaee503">setLeft</a> (bool <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a60bebb39c88b208a575e4176f0f0f0c4">left</a>)</td></tr>
 <tr class="memdesc:a2f56b25ceda1c9ddca5b60d1deaee503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the side we are playing on.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a2f56b25ceda1c9ddca5b60d1deaee503">More...</a><br /></td></tr>
 <tr class="separator:a2f56b25ceda1c9ddca5b60d1deaee503"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad36c981b18023d892116a7221e0379b4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ad36c981b18023d892116a7221e0379b4">getRobotHubMode</a> ()</td></tr>
-<tr class="memdesc:ad36c981b18023d892116a7221e0379b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the mode that RobotHub is in.  <a href="../../d1/dfb/classrtt_1_1Settings.html#ad36c981b18023d892116a7221e0379b4">More...</a><br /></td></tr>
-<tr class="separator:ad36c981b18023d892116a7221e0379b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9728cdcb8c6b48115eb68e85ce10d77b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a9728cdcb8c6b48115eb68e85ce10d77b">setRobotHubMode</a> (<a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a> mode)</td></tr>
+<tr class="memitem:a77ad6e7e5a875b7860e9a1ec2abf7e4b"><td class="memItemLeft" align="right" valign="top">static RobotHubMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a77ad6e7e5a875b7860e9a1ec2abf7e4b">getRobotHubMode</a> ()</td></tr>
+<tr class="memdesc:a77ad6e7e5a875b7860e9a1ec2abf7e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the mode that RobotHub is in.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a77ad6e7e5a875b7860e9a1ec2abf7e4b">More...</a><br /></td></tr>
+<tr class="separator:a77ad6e7e5a875b7860e9a1ec2abf7e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9728cdcb8c6b48115eb68e85ce10d77b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a9728cdcb8c6b48115eb68e85ce10d77b">setRobotHubMode</a> (RobotHubMode mode)</td></tr>
 <tr class="memdesc:a9728cdcb8c6b48115eb68e85ce10d77b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the RobotHub mode.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a9728cdcb8c6b48115eb68e85ce10d77b">More...</a><br /></td></tr>
 <tr class="separator:a9728cdcb8c6b48115eb68e85ce10d77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39677bdb2e786d5d39b582d13f3ca78f"><td class="memItemLeft" align="right" valign="top">static std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a39677bdb2e786d5d39b582d13f3ca78f">robotHubModeToString</a> (<a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a> mode)</td></tr>
-<tr class="memdesc:a39677bdb2e786d5d39b582d13f3ca78f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns the mode in which RobotHub is sending the robot commands, into a string.  <a href="../../d1/dfb/classrtt_1_1Settings.html#a39677bdb2e786d5d39b582d13f3ca78f">More...</a><br /></td></tr>
-<tr class="separator:a39677bdb2e786d5d39b582d13f3ca78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:ad28f46a3d98305bcbd96a583b0f58d68"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ad28f46a3d98305bcbd96a583b0f58d68">PRIMARY_AI_ID</a> = 0</td></tr>
-<tr class="separator:ad28f46a3d98305bcbd96a583b0f58d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:a78d99a6f92569173ce72e31b32a911c6"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a78d99a6f92569173ce72e31b32a911c6">id</a> = <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ad28f46a3d98305bcbd96a583b0f58d68">Settings::PRIMARY_AI_ID</a></td></tr>
-<tr class="separator:a78d99a6f92569173ce72e31b32a911c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6839cc1b41213aaec43690976166ac2a"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a6839cc1b41213aaec43690976166ac2a">primaryAI</a> = false</td></tr>
+<tr class="separator:a6839cc1b41213aaec43690976166ac2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31fb9ed3ac179323c8a1e9b237130fd1"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a31fb9ed3ac179323c8a1e9b237130fd1">yellow</a> = false</td></tr>
 <tr class="separator:a31fb9ed3ac179323c8a1e9b237130fd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60bebb39c88b208a575e4176f0f0f0c4"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a60bebb39c88b208a575e4176f0f0f0c4">left</a> = false</td></tr>
 <tr class="separator:a60bebb39c88b208a575e4176f0f0f0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e82b8deb7070efc714928b504670968"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a0e82b8deb7070efc714928b504670968">robotHubMode</a> = Settings::RobotHubMode::SIMULATOR</td></tr>
-<tr class="separator:a0e82b8deb7070efc714928b504670968"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ab015ae8d6ae23284b7713b715f19b1"><td class="memItemLeft" align="right" valign="top">static std::atomic&lt; RobotHubMode &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#a8ab015ae8d6ae23284b7713b715f19b1">robotHubMode</a> = RobotHubMode::SIMULATOR</td></tr>
+<tr class="separator:a8ab015ae8d6ae23284b7713b715f19b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Game settings that must be shared between all players and the referee (e.g. who is playing on which side, which team is yellow, etc.) These settings are set by the primary AI, and are read-only for secondary AIs. Importantly referee can also change these settings, thus this class must be thread-safe, since referee is handled in a separate (IO) thread.</p>
 <p>The AI has to be able to handle any changes to these settings WITHOUT restart. Thus settings such as visions_port that require a restart of the AI, are not included here. </p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="accfc2ef1af7f3331ef9a5b2abc345fa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#accfc2ef1af7f3331ef9a5b2abc345fa0">&#9670;&nbsp;</a></span>RobotHubMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">rtt::Settings::RobotHubMode</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enumerator that tells where RobotHub should send the robot commands. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="accfc2ef1af7f3331ef9a5b2abc345fa0aba7aea80b79f366a37ccc9ade9553982"></a>UNKNOWN&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="accfc2ef1af7f3331ef9a5b2abc345fa0a403506f398d777478fa03a2d5c8c5e89"></a>BASESTATION&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="accfc2ef1af7f3331ef9a5b2abc345fa0a54471d7868fb9a4e2b670e4226be571a"></a>SIMULATOR&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7312acf73c6e652f886df06b62d0fc4a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7312acf73c6e652f886df06b62d0fc4a">&#9670;&nbsp;</a></span>Settings()</h2>
 
@@ -215,8 +171,8 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af682492677abd173f9b00a02a6a59a01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af682492677abd173f9b00a02a6a59a01">&#9670;&nbsp;</a></span>getId()</h2>
+<a id="a77ad6e7e5a875b7860e9a1ec2abf7e4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77ad6e7e5a875b7860e9a1ec2abf7e4b">&#9670;&nbsp;</a></span>getRobotHubMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,35 +181,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int rtt::Settings::getId </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets the ID of this AI. </p>
-<dl class="section return"><dt>Returns</dt><dd>The ID of this AI </dd></dl>
-
-</div>
-</div>
-<a id="ad36c981b18023d892116a7221e0379b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad36c981b18023d892116a7221e0379b4">&#9670;&nbsp;</a></span>getRobotHubMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">Settings::RobotHubMode</a> rtt::Settings::getRobotHubMode </td>
+          <td class="memname">RobotHubMode rtt::Settings::getRobotHubMode </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -271,8 +199,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac05b4a1acb6ae56673e2b1a9f0716d56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac05b4a1acb6ae56673e2b1a9f0716d56">&#9670;&nbsp;</a></span>handleSettingsFromPrimaryAI()</h2>
+<a id="a5d24c422291c7d5f2f6a199db68770cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d24c422291c7d5f2f6a199db68770cc">&#9670;&nbsp;</a></span>handleSettingsFromPrimaryAI()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,25 +211,9 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void rtt::Settings::handleSettingsFromPrimaryAI </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isYellow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const proto::Setting &amp;&#160;</td>
+          <td class="paramname"><em>settings</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isLeft</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a>&#160;</td>
-          <td class="paramname"><em>mode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -312,9 +224,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>This function takes directly the values of the settings of Primary AI, and will convert them to settings this AI should have. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">isYellow</td><td>Indicates whether this is they yellow team </td></tr>
-    <tr><td class="paramname">isLeft</td><td>Indicates whether we are playing on the left side </td></tr>
-    <tr><td class="paramname">mode</td><td>Mode of RobotHub </td></tr>
+    <tr><td class="paramname">settings</td><td>The settings of the primary AI received from the <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html">Settings</a> subscriber </td></tr>
   </table>
   </dd>
 </dl>
@@ -405,75 +315,6 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a39677bdb2e786d5d39b582d13f3ca78f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39677bdb2e786d5d39b582d13f3ca78f">&#9670;&nbsp;</a></span>robotHubModeToString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string_view rtt::Settings::robotHubModeToString </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a>&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Turns the mode in which RobotHub is sending the robot commands, into a string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mode</td><td>The mode in which RobotHub is sending the robot commands </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A string with name of the mode in which RobotHub is sending the robot commands </dd></dl>
-
-</div>
-</div>
-<a id="a64b9c3296544065d60e0227a59c661d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64b9c3296544065d60e0227a59c661d8">&#9670;&nbsp;</a></span>setId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::Settings::setId </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the ID of this AI. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>The ID of this AI </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a2f56b25ceda1c9ddca5b60d1deaee503"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f56b25ceda1c9ddca5b60d1deaee503">&#9670;&nbsp;</a></span>setLeft()</h2>
 
@@ -508,6 +349,40 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a5c97db9bb6bb5389860a9f79543e1d8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c97db9bb6bb5389860a9f79543e1d8a">&#9670;&nbsp;</a></span>setPrimaryAI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::Settings::setPrimaryAI </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the ID of this AI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The ID of this AI </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a9728cdcb8c6b48115eb68e85ce10d77b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9728cdcb8c6b48115eb68e85ce10d77b">&#9670;&nbsp;</a></span>setRobotHubMode()</h2>
 
@@ -520,7 +395,7 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool rtt::Settings::setRobotHubMode </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">RobotHubMode</a>&#160;</td>
+          <td class="paramtype">RobotHubMode&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
           <td></td>
         </tr>
@@ -579,29 +454,6 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a78d99a6f92569173ce72e31b32a911c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78d99a6f92569173ce72e31b32a911c6">&#9670;&nbsp;</a></span>id</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::atomic&lt; int &gt; rtt::Settings::id = <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#ad28f46a3d98305bcbd96a583b0f58d68">Settings::PRIMARY_AI_ID</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>ID of the AI </p>
-
-</div>
-</div>
 <a id="a60bebb39c88b208a575e4176f0f0f0c4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a60bebb39c88b208a575e4176f0f0f0c4">&#9670;&nbsp;</a></span>left</h2>
 
@@ -625,8 +477,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad28f46a3d98305bcbd96a583b0f58d68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad28f46a3d98305bcbd96a583b0f58d68">&#9670;&nbsp;</a></span>PRIMARY_AI_ID</h2>
+<a id="a6839cc1b41213aaec43690976166ac2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6839cc1b41213aaec43690976166ac2a">&#9670;&nbsp;</a></span>primaryAI</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -635,20 +487,20 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr int rtt::Settings::PRIMARY_AI_ID = 0</td>
+          <td class="memname">std::atomic&lt; bool &gt; rtt::Settings::primaryAI = false</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0e82b8deb7070efc714928b504670968"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e82b8deb7070efc714928b504670968">&#9670;&nbsp;</a></span>robotHubMode</h2>
+<a id="a8ab015ae8d6ae23284b7713b715f19b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ab015ae8d6ae23284b7713b715f19b1">&#9670;&nbsp;</a></span>robotHubMode</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -657,7 +509,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt; <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html#accfc2ef1af7f3331ef9a5b2abc345fa0">Settings::RobotHubMode</a> &gt; rtt::Settings::robotHubMode = Settings::RobotHubMode::SIMULATOR</td>
+          <td class="memname">std::atomic&lt; RobotHubMode &gt; rtt::Settings::robotHubMode = RobotHubMode::SIMULATOR</td>
         </tr>
       </table>
   </td>

@@ -7,12 +7,4 @@ message Setting {
     bool isYellow = 2;
     bool isLeft = 3;
     bool serialMode = 4;
-
-    // ports
-    string visionIp = 5;
-    uint32 visionPort = 6;
-    string refereeIp = 7;
-    uint32 refereePort = 8;
-    string robothubSendIp = 9;
-    uint32 robothubSendPort = 10;
 }

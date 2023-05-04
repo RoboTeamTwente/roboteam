@@ -9,7 +9,7 @@ var namespacertt =
     [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
     [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
     [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
-    [ "Settings", "d1/dfb/classrtt_1_1Settings.html", "d1/dfb/classrtt_1_1Settings" ],
+    [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ],
     [ "createTestField", "dc/d8f/namespacertt.html#a0d98d219a6e2900e4ec939378b987a81", null ],
     [ "generateWorld", "dc/d8f/namespacertt.html#a3c7f39951eb291b23d6f3a06262f365e", null ],
     [ "getMaxScore", "dc/d8f/namespacertt.html#a8847521dcba2851a25b8194ec1379579", null ],

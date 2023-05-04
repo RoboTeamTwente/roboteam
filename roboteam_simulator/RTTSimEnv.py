@@ -94,7 +94,7 @@ class RTTSimEnv(gym.Env):
         self.action_space = spaces.Box(low=np.array([[0, -1, -1, 0, -10, 0, 0, 0, 0, 0, 0, 0, 1, 0]] * 11),
                                        high=np.array(
                                            [[+10, +1, +1, +360, +10, +1, +360, +1, +65, +0, +360, +2, +1, +1]] * 11),
-                                       shape=(11, 14), dtype=np.int)
+                                       shape=(11, 14), dtype=int)
         # define observation space
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(size(get_observation(self.field)),),
                                             dtype=np.float64)

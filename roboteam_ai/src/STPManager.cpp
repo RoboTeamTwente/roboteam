@@ -115,7 +115,7 @@ void STPManager::start(std::atomic_bool& exitApplication) {
                 fpsUpdateRate);
 
             // If this is primary AI, broadcast settings every second
-            if (Settings::isPrimaryAI()) {
+            if (GameSettings::isPrimaryAI()) {
                 stpTimer.limit([&]() { io::io.publishSettings(); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
             if(exitApplication){
@@ -138,7 +138,7 @@ void STPManager::runOneLoopCycle() {
 
 
         std::vector<proto::SSL_WrapperPacket> vision_packets(state.processed_vision_packets().begin(), state.processed_vision_packets().end());
-        if (!Settings::isLeft()) {
+        if (!GameSettings::isLeft()) {
             roboteam_utils::rotate(&worldMessage);
             for (auto &packet : vision_packets) {
                 roboteam_utils::rotate(&packet);  //

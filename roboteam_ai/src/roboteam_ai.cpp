@@ -3,8 +3,8 @@
 #include "STPManager.h"
 #include "roboteam_utils/ArgParser.h"
 #include "roboteam_utils/RobotHubMode.h"
+#include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
-#include "utilities/Settings.h"
 #include "world/World.hpp"
 
 namespace ui = rtt::ai::interface;
@@ -61,28 +61,28 @@ int main(int argc, char** argv) {
     RTT_DEBUG("Debug prints enabled")
 
     // Set up the settings based on cmd arguments
-    rtt::Settings::setPrimaryAI(isPrimaryFlag);
+    rtt::GameSettings::setPrimaryAI(isPrimaryFlag);
 
     // If primary AI, we start at being yellow on the left
-    rtt::Settings::setLeft(rtt::Settings::isPrimaryAI());
-    if (!rtt::Settings::setYellow(rtt::Settings::isPrimaryAI())) {
+    rtt::GameSettings::setLeft(rtt::GameSettings::isPrimaryAI());
+    if (!rtt::GameSettings::setYellow(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Could not obtain command publishing channel. Exiting...")
         return 1;
     }
 
     // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
-    rtt::Settings::setRobotHubMode(
+    rtt::GameSettings::setRobotHubMode(
         rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::RobotHubMode::BASESTATION : rtt::RobotHubMode::SIMULATOR
     );
 
 
-    RTT_INFO("AI initialized as: ", (rtt::Settings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
-    RTT_INFO("Starting as color: ", (rtt::Settings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
-    RTT_INFO("Starting in mode: ", rtt::modeToString(rtt::Settings::getRobotHubMode()))
-    RTT_INFO("Playing on side: ", (rtt::Settings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
-    RTT_INFO("This AI will ", rtt::Settings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
+    RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
+    RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
+    RTT_INFO("Starting in mode: ", rtt::modeToString(rtt::GameSettings::getRobotHubMode()))
+    RTT_INFO("Playing on side: ", (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
+    RTT_INFO("This AI will ", rtt::GameSettings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 
-    if (!rtt::ai::io::io.init(rtt::Settings::isPrimaryAI())) {
+    if (!rtt::ai::io::io.init(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Failed to initialize IO Manager. Exiting...")
         return 0;
     }

@@ -27,22 +27,22 @@ namespace rtt {
         }
     }
 
-    inline proto::Setting::RobotHubMode modeToProto(RobotHubMode mode) {
+    inline proto::GameSettings::RobotHubMode modeToProto(RobotHubMode mode) {
         switch (mode) {
             case RobotHubMode::BASESTATION:
-                return proto::Setting::BASESTATION;
+                return proto::GameSettings::BASESTATION;
             case RobotHubMode::SIMULATOR:
-                return proto::Setting::SIMULATOR;
+                return proto::GameSettings::SIMULATOR;
             default:
-                return proto::Setting::UNKNOWN;
+                return proto::GameSettings::UNKNOWN;
         }
     }
 
-    inline RobotHubMode modeFromProto(proto::Setting::RobotHubMode mode) {
+    inline RobotHubMode modeFromProto(proto::GameSettings::RobotHubMode mode) {
         switch (mode) {
-            case proto::Setting::BASESTATION:
+            case proto::GameSettings::BASESTATION:
                 return RobotHubMode::BASESTATION;
-            case proto::Setting::SIMULATOR:
+            case proto::GameSettings::SIMULATOR:
                 return RobotHubMode::SIMULATOR;
             default:
                 return RobotHubMode::UNKNOWN;

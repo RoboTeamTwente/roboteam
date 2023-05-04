@@ -3,7 +3,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "interface/widgets/mainWindow.h"
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::interface {
 

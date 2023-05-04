@@ -3,14 +3,15 @@
 //
 
 #include "world/WorldData.hpp"
+
 #include "roboteam_utils/Print.h"
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::world {
 WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
     : time{protoMsg.time()} {
-    auto &ours = Settings::isYellow() ? protoMsg.yellow() : protoMsg.blue();
-    auto &others = Settings::isYellow() ? protoMsg.blue() : protoMsg.yellow();
+    auto &ours = GameSettings::isYellow() ? protoMsg.yellow() : protoMsg.blue();
+    auto &others = GameSettings::isYellow() ? protoMsg.blue() : protoMsg.yellow();
 
     // If there is a ball in the protobuf message, add it to the world
     ball = ball::Ball{protoMsg.ball(), data};
@@ -33,9 +34,9 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
     setViewVectors();
 
     //TODO: add information from robots which were only seen on feedback but not on vision
-    if (Settings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0){
+    if (GameSettings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0){
         RTT_WARNING("Received feedback from unseen robots!")
-    } else if (!Settings::isYellow() && protoMsg.blue_unseen_robots_size() > 0){
+    } else if (!GameSettings::isYellow() && protoMsg.blue_unseen_robots_size() > 0){
         RTT_WARNING("Received feedback from unseen robots!")
     }
 }

@@ -17,7 +17,7 @@ using namespace rtt::net;
 
 void sharedOnRobotCommands(const rtt::RobotCommands& command) {}
 void sharedOnRobotsFeedback(const rtt::RobotsFeedback& robotFeedback) {}
-void sharedOnSettings(const proto::Setting& settings) {}
+void sharedOnSettings(const proto::GameSettings& settings) {}
 void sharedOnWorld(const proto::State& world) {}
 void sharedOnAIData(const rtt::AIData& data) {}
 

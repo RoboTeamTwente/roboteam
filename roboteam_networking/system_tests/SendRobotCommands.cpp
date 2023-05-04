@@ -19,9 +19,9 @@ rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
     return commands;
 }
 
-proto::Setting getRobotHubBasestationModePacket() {
-    proto::Setting settings;
-    settings.set_robot_hub_mode(proto::Setting::BASESTATION);
+proto::GameSettings getRobotHubBasestationModePacket() {
+    proto::GameSettings settings;
+    settings.set_robot_hub_mode(proto::GameSettings::BASESTATION);
     return settings;
 }
 

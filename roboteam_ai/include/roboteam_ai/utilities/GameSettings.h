@@ -2,7 +2,7 @@
 
 #include <atomic>
 #include <string>
-#include "proto/Setting.pb.h"
+#include "proto/GameSettings.pb.h"
 #include "roboteam_utils/RobotHubMode.h"
 
 namespace rtt {
@@ -14,17 +14,18 @@ namespace rtt {
  *
  * The AI has to be able to handle any changes to these settings WITHOUT restart. Thus settings such as visions_port that require a restart of
  * the AI, are not included here.
+ *
+ * This class should map one-to-one to the settings in the proto file!
  */
-class Settings {
+class GameSettings {
    public:
-
-    Settings() = delete;
+    GameSettings() = delete;
 
     /**
      * This function takes directly the values of the settings of Primary AI, and will convert them to settings this AI should have.
      * @param settings The settings of the primary AI received from the Settings subscriber
      */
-    static void handleSettingsFromPrimaryAI(const proto::Setting& settings);
+    static void handleSettingsFromPrimaryAI(const proto::GameSettings& settings);
 
     /**
      * @brief Checks whether this AI is the primary AI

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-message Setting {
+message GameSettings {
     enum RobotHubMode {
         UNKNOWN = 0;
         BASESTATION = 1;

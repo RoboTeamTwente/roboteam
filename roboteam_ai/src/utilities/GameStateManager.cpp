@@ -2,7 +2,7 @@
 
 #include <roboteam_utils/Print.h>
 
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 #include "world/World.hpp"
 
 namespace rtt::ai {
@@ -21,7 +21,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
     GameStateManager::refMsg = refMsg;
     RefCommand cmd;
     // COLOR DEPENDENT STATES
-    if (Settings::isYellow()) {
+    if (GameSettings::isYellow()) {
         switch (refMsg.command()) {
             case proto::SSL_Referee_Command_HALT:
                 cmd = RefCommand::HALT;
@@ -160,7 +160,7 @@ GameState GameStateManager::getCurrentGameState() {
     if (interface::Output::usesRefereeCommands()) {
         newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
 
-        if (Settings::isYellow()) {
+        if (GameSettings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();

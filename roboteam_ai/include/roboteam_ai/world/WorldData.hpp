@@ -6,13 +6,13 @@
 #define RTT_WORLD_DATA_HPP
 
 #include <proto/RobotFeedback.pb.h>
-#include <proto/Setting.pb.h>
+#include <proto/GameSettings.pb.h>
 #include <proto/World.pb.h>
 
 #include <optional>
 #include <vector>
 
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::world {

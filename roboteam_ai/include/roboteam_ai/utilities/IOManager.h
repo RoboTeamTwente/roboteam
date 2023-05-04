@@ -3,8 +3,7 @@
 
 #include <proto/SimulationConfiguration.pb.h>
 #include <utilities/Constants.h>
-#include <utilities/Settings.h>
-#include <roboteam_utils/Field.hpp>
+#include <utilities/GameSettings.h>
 
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
@@ -12,6 +11,7 @@
 #include <WorldNetworker.hpp>
 #include <iostream>
 #include <mutex>
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::world {
 class World;

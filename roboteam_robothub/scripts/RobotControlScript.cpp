@@ -153,8 +153,8 @@ void runSettingsSending() {
     shouldSendSettings = true;
 
     while (shouldSendSettings) {
-        proto::Setting settings;
-        settings.set_robot_hub_mode(currentMode == rtt::RobotHubMode::BASESTATION ? proto::Setting::BASESTATION : proto::Setting::SIMULATOR);
+        proto::GameSettings settings;
+        settings.set_robot_hub_mode(currentMode == rtt::RobotHubMode::BASESTATION ? proto::GameSettings::BASESTATION : proto::GameSettings::SIMULATOR);
 
         settingsPublisher.publish(settings);
 

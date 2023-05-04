@@ -9,8 +9,8 @@
 #include "control/ControlUtils.h"
 #include "iostream"
 #include "utilities/Constants.h"
+#include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
-#include "utilities/Settings.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::control {
@@ -40,7 +40,7 @@ void ControlModule::limitAngularVel(rtt::RobotCommand& command, std::optional<rt
         // TODO: Why use optional robotView if we never check for the case where it does not contain one?
         auto robotAngle = robot.value()->getAngle();
 
-        if (!Settings::isLeft()) {
+        if (!GameSettings::isLeft()) {
             robotAngle += M_PI;
         }
 
@@ -67,14 +67,14 @@ void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView>
         //                           interface::Drawing::LINES_CONNECTED);
     }
     // If we are not left, commands should be rotated (because we play as right)
-    if (!Settings::isLeft()) {
+    if (!GameSettings::isLeft()) {
         rotateRobotCommand(robot_command);
     }
 
     if (robot) limitRobotCommand(robot_command, robot);
 
     // if we are in simulation; adjust w() to be angular velocity)
-    if (Settings::getRobotHubMode() == RobotHubMode::SIMULATOR && !robot_command.useAngularVelocity) {
+    if (GameSettings::getRobotHubMode() == RobotHubMode::SIMULATOR && !robot_command.useAngularVelocity) {
         simulator_angular_control(robot, robot_command);
     }
 
@@ -90,7 +90,7 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
     double ang_velocity_out = 0.0;  // in case there is no robot visible, we just adjust the command to not have any angular velocity
     if (robot) {
         Angle current_angle = robot->get()->getAngle();
-        if (!Settings::isLeft()) {
+        if (!GameSettings::isLeft()) {
             current_angle += M_PI;
         }
         Angle target_angle(robot_command.targetAngle);

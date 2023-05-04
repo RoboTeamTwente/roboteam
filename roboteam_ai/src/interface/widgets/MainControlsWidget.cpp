@@ -7,8 +7,9 @@
 #include <ostream>
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
+
 #include "roboteam_utils/RobotHubMode.h"
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::interface {
 
@@ -140,25 +141,25 @@ void MainControlsWidget::setUseReferee(bool useRef) {
 
 /// toggle the setting 'isYellow'
 void MainControlsWidget::toggleOurColorParam() {
-    Settings::setYellow(!Settings::isYellow());
+    GameSettings::setYellow(!GameSettings::isYellow());
     setToggleColorBtnLayout();
 }
 
 /// toggle the the setting 'isLeft'
 void MainControlsWidget::toggleOurSideParam() {
-    Settings::setLeft(!Settings::isLeft());
+    GameSettings::setLeft(!GameSettings::isLeft());
     setToggleSideBtnLayout();
 }
 
 /// toggle the the setting 'isSerialMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
-    switch (Settings::getRobotHubMode()) {
+    switch (GameSettings::getRobotHubMode()) {
         case RobotHubMode::BASESTATION: {
-            Settings::setRobotHubMode(RobotHubMode::SIMULATOR);
+            GameSettings::setRobotHubMode(RobotHubMode::SIMULATOR);
             break;
         }
         case RobotHubMode::SIMULATOR: {
-            Settings::setRobotHubMode(RobotHubMode::BASESTATION);
+            GameSettings::setRobotHubMode(RobotHubMode::BASESTATION);
             break;
         }
         default: {
@@ -187,7 +188,7 @@ void MainControlsWidget::sendPauseSignal() {
 }
 
 void MainControlsWidget::setToggleColorBtnLayout() const {
-    if (Settings::isYellow()) {
+    if (GameSettings::isYellow()) {
         toggleColorBtn->setStyleSheet("background-color: orange;");  // orange is more readable
         toggleColorBtn->setText("Playing as Yellow");
     } else {
@@ -197,7 +198,7 @@ void MainControlsWidget::setToggleColorBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleSideBtnLayout() const {
-    if (Settings::isLeft()) {
+    if (GameSettings::isLeft()) {
         toggleSideBtn->setText("◀ Playing as left");
     } else {
         toggleSideBtn->setText("Playing as right ▶");
@@ -205,7 +206,7 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string_view modeText = modeToString(Settings::getRobotHubMode());
+    std::string_view modeText = modeToString(GameSettings::getRobotHubMode());
 
     QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);

@@ -8,15 +8,15 @@
 #include <gtest/gtest.h>
 #include <interface/api/Output.h>
 #include <utilities/Constants.h>
-#include <utilities/Settings.h>
+#include <utilities/GameSettings.h>
 
 #include <QtWidgets/QApplication>
 #include <iostream>
 
 #include "helpers/FieldHelper.h"
 #include "helpers/WorldHelper.h"
+#include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
-#include "utilities/Settings.h"
 #include "world/World.hpp"
 
 /**
@@ -54,10 +54,10 @@ class RTT_AI_Tests : public ::testing::Test {
 
         // Defaulting to us being left and yellow
         // Set these fields just like they are set in roboteam_ai.cpp
-        rtt::Settings::setPrimaryAI(true);
-        rtt::Settings::setYellow(true);
-        rtt::Settings::setLeft(true);
-        rtt::Settings::setRobotHubMode(rtt::RobotHubMode::SIMULATOR);
+        rtt::GameSettings::setPrimaryAI(true);
+        rtt::GameSettings::setYellow(true);
+        rtt::GameSettings::setLeft(true);
+        rtt::GameSettings::setRobotHubMode(rtt::RobotHubMode::SIMULATOR);
 
         // Set other variables to their default values
         rtt::ai::interface::Output::setKeeperId(-1);

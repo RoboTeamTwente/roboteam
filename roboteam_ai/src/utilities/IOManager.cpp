@@ -5,11 +5,11 @@
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "interface/api/Input.h"
-#include "proto/Setting.pb.h"
+#include "proto/GameSettings.pb.h"
 #include "roboteam_utils/RobotHubMode.h"
+#include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
-#include "utilities/Settings.h"
 #include "utilities/normalize.h"
 #include "world/World.hpp"
 
@@ -39,8 +39,7 @@ bool IOManager::init(bool isPrimaryAI) {
         }
     } else {
         try {
-            this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting& settings) {
-                Settings::handleSettingsFromPrimaryAI(settings);
+            this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings& settings) { GameSettings::handleSettingsFromPrimaryAI(settings);
             });
         } catch (const zmqpp::zmq_internal_exception& e) {
             success = false;
@@ -66,24 +65,24 @@ void IOManager::handleState(const proto::State& stateMsg) {
         // Our name as specified by ssl-refbox : https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.conf
         std::string ROBOTEAM_TWENTE = "RoboTeam Twente";
         if (state.referee().yellow().name() == ROBOTEAM_TWENTE) {
-            Settings::setYellow(true);
+            GameSettings::setYellow(true);
         } else if (state.referee().blue().name() == ROBOTEAM_TWENTE) {
-            Settings::setYellow(false);
+            GameSettings::setYellow(false);
         }
-        Settings::setLeft(!(state.referee().blue_team_on_positive_half() ^ Settings::isYellow()));
-        if (!Settings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
+        GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
+        if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
         ai::GameStateManager::setRefereeData(state.referee(), data);
     }
 }
 
 void IOManager::publishSettings() {
-    proto::Setting protoSetting;
+    proto::GameSettings protoSetting;
 
-    protoSetting.set_is_primary_ai(Settings::isPrimaryAI());
-    protoSetting.set_is_left(Settings::isLeft());
-    protoSetting.set_is_yellow(Settings::isYellow());
-    protoSetting.set_robot_hub_mode(modeToProto(Settings::getRobotHubMode()));
+    protoSetting.set_is_primary_ai(GameSettings::isPrimaryAI());
+    protoSetting.set_is_left(GameSettings::isLeft());
+    protoSetting.set_is_yellow(GameSettings::isYellow());
+    protoSetting.set_robot_hub_mode(modeToProto(GameSettings::getRobotHubMode()));
 
     if (this->settingsPublisher != nullptr) {
         this->settingsPublisher->publish(protoSetting);
@@ -94,7 +93,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
     const auto state = this->getState();
     if (state.has_last_seen_world()) {
         const auto world = getState().last_seen_world();
-        const auto robots = rtt::Settings::isYellow() ? world.yellow() : world.blue();
+        const auto robots = rtt::GameSettings::isYellow() ? world.yellow() : world.blue();
         for (auto& robotCommand : robotCommands) {
             for (const auto robot : robots) {
                 if (robot.id() == robotCommand.id) {
@@ -110,7 +109,7 @@ void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
     if (!pause->getPause() && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
-        this->publishRobotCommands(robotCommands, Settings::isYellow());
+        this->publishRobotCommands(robotCommands, GameSettings::isYellow());
     }
 }
 

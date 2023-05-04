@@ -1,18 +1,25 @@
-// import {useWorldStateStore} from "../modules/stores/world-store";
-// import {useSTPStore} from "../modules/stores/stp-store";
-import {useAIStore} from "../modules/stores/ai-store";
+import {useGameControllerStore} from "../modules/stores/ai-store";
 import {watch} from "vue";
 import {useWebSocket} from "@vueuse/core";
 
 import {proto} from "../generated/proto"
-import {GameSettingsStore, useGameSettingsStore} from "../modules/stores/game-settings-store";
-import {useVisualizationStore} from "../modules/stores/visualization-store";
-import RobotHubMode = proto.GameSettings.RobotHubMode;
+import {useGameSettingsStore} from "../modules/stores/game-settings-store";
+import {useVisualizationStore} from "../modules/stores/dataStores/visualization-store";
+import {useSTPDataStore} from "../modules/stores/dataStores/stp-data-store";
+import {useVisionDataStore} from "../modules/stores/dataStores/vision-data-store";
+import IGameSettings = proto.IGameSettings;
+
+const sendMsg = (ws: WebSocket, msg: proto.MsgFromInterface) => {
+    const buffer = proto.MsgFromInterface.encode(msg).finish();
+    ws.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
+}
 
 export const useAIClient = (url: string) => {
-    const aiStore = useAIStore();
-    const visualizationStore = useVisualizationStore();
     const gameSettingsStore = useGameSettingsStore();
+    const gameControllerStore = useGameControllerStore();
+    const stpDataStore = useSTPDataStore();
+    const visionDataStore = useVisionDataStore();
+    const visualizationStore = useVisualizationStore();
 
     const {ws, status, data, send} = useWebSocket(url, {autoReconnect: true});
 
@@ -23,16 +30,13 @@ export const useAIClient = (url: string) => {
         switch (envelope.kind) {
             case 'setupMessage':
                 console.log('setupMessage', envelope.setupMessage);
-                aiStore.onConnectMsg(envelope.setupMessage!);
-
-                // Forwards current game settings to the backend
-                sendGameSettings(gameSettingsStore);
+                gameControllerStore.processSetupMsg(envelope.setupMessage!);
                 break;
             case 'stpStatus':
-                aiStore.onSTPStatusMsg(envelope.stpStatus!);
+                stpDataStore.processSTPMsg(envelope.stpStatus!);
                 break;
             case 'state':
-                aiStore.onVisionMsg(envelope.state!);
+                visionDataStore.processVisionMsg(envelope.state!);
                 break;
             case 'visualizations':
                 visualizationStore.pushDrawings(envelope.visualizations!.drawings!);
@@ -44,38 +48,22 @@ export const useAIClient = (url: string) => {
     });
 
     // Callbacks to the AI backend
-    const sendGameSettings = (gameSettings: GameSettingsStore) => {
-        const msg = proto.MsgFromInterface.create({
-            setGameSettings: proto.GameSettings.create({
-                useReferee: gameSettings.useReferee,
-                hubMode: gameSettings.hubMode === 'basestation' ? RobotHubMode.BASESTATION : RobotHubMode.SIMULATOR,
-                isYellow: gameSettings.team === 'yellow',
-                isLeft: gameSettings.side === 'left',
-                ignoreInvariants: gameSettings.ignoreInvariants,
-            }),
-        });
-
-        const buffer = proto.MsgFromInterface.encode(msg).finish();
-        ws.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
-    }
-
-    const forcePlay = () => {
-        console.log('sending set play', aiStore.gameController.play, aiStore.gameController.ruleset);
-        const msg = proto.MsgFromInterface.create({
-            setGameState: proto.GameState.create({
-                playName: aiStore.gameController.play,
-                rulesetName: aiStore.gameController.ruleset,
-            }),
-        })
-
-        const buffer = proto.MsgFromInterface.encode(msg).finish();
-        ws.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
-    }
-
     // Setup watchers for the callbacks to the backend
-    watch(gameSettingsStore, sendGameSettings);
-    watch(() => aiStore.gameController.play, forcePlay);
-    watch(() => aiStore.gameController.ruleset, forcePlay);
+    watch(gameSettingsStore, (gameSettings: IGameSettings) => {
+        sendMsg(ws.value!, proto.MsgFromInterface.create({
+            setGameSettings: proto.GameSettings.fromObject(gameSettings),
+        }));
+    });
+
+    watch(() => gameControllerStore.currentPlay, () => {
+        console.log('Sending set play', gameControllerStore.currentPlay);
+        sendMsg(ws.value!, proto.MsgFromInterface.create({
+            setGameState: proto.GameState.create({
+                playName: gameControllerStore.currentPlay.name,
+                rulesetName: gameControllerStore.currentPlay.ruleset,
+            }),
+        }));
+    });
 
     return {
         status,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {proto} from "../../generated/proto";
+import {proto} from "../../../../generated/proto";
 import Status = proto.STPStatus.STPRobot.Status;
 import ISTPStatus = proto.ISTPStatus;
 import STPRobot = proto.STPStatus.STPRobot;

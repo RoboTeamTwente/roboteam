@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import GameSettings from "./game-settings.vue";
-import StpStatus from "./stp-status.vue";
-import Feedback from "./feedback.vue";
-import PlaysHistogram from "./plays-histogram.vue";
-import Metrics from "./metrics.vue";
-import UiSettings from "./ui-settings.vue";
+import GameSettings from "../game-settings.vue";
+import StpStatus from "../panels/stp-panel/stp-status.vue";
+import Feedback from "../panels/feedback.vue";
+import PlaysHistogram from "../panels/play-evaluation.vue";
+import Metrics from "../panels/metrics.vue";
+import UiSettings from "../ui-settings/ui-settings.vue";
 
 const activeTab = ref(0);
 </script>

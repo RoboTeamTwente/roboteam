@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {proto} from "../../generated/proto";
+import {proto} from "../../../generated/proto";
 import {ref, shallowRef} from "vue";
 import IMetric = proto.IMetric;
 import IDrawing = proto.IDrawing;

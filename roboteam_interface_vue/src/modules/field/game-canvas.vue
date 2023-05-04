@@ -6,51 +6,56 @@ import {BallDrawing, Colors, FieldDrawing, RobotDrawing, ShapeDrawing, useFieldO
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {proto} from "../../generated/proto";
 import {useUIStore} from "../stores/ui-store";
-import {useAIStore} from "../stores/ai-store";
-import {useVisualizationStore} from "../stores/visualization-store";
+import {useGameControllerStore} from "../stores/ai-store";
+import {useVisualizationStore} from "../stores/dataStores/visualization-store";
 import IWorldRobot = proto.IWorldRobot;
 import Category = proto.Drawing.Category;
+import {useSTPDataStore} from "../stores/dataStores/stp-data-store";
+import {useVisionDataStore} from "../stores/dataStores/vision-data-store";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
-const gameStore = useGameSettingsStore();
 const uiStore = useUIStore();
-const aiStore = useAIStore();
+
+const stpData = useSTPDataStore();
+const visionData = useVisionDataStore();
 const visualizationStore = useVisualizationStore();
+const gameSettingsStore = useGameSettingsStore();
+const gameController = useGameControllerStore();
 
 let app: null | Application = null;
 let {clearRobotsDrawings, layers, drawings} = useFieldObjectStorage();
 
 //Each AI tick, remove drawings that are too old
-watch(() => aiStore.stpData.currentTick, (currentTick) => drawings.shapes.removeExpiredShapes(currentTick));
+watch(() => stpData.currentTick, (currentTick) => drawings.shapes.removeExpiredShapes(currentTick));
 
 // re-init the canvas on field change, since the field size could have change
-watch(() => aiStore.visionData.latestField, () => initPixiApp());
+watch(() => visionData.latestField, () => initPixiApp());
 
 // Clear drawings when team changes
-watch(() => gameStore.team, () => {
+watch(() => gameSettingsStore.isYellow, () => {
     clearRobotsDrawings();
-
-    // When the team changes, we also have to redraw the field to update the goal colors
-    drawField(aiStore.visionData.latestField);
+    drawField(visionData.latestField); // When the team changes, we also have to redraw the field to update the goal colors
 });
 
-watch(() => uiStore.scaling.ball, () => scale());
-watch(() => uiStore.scaling.robots, () => scale());
-const scale = () => {
+// When the scaling setting changes, update the scaling of the drawings
+watch(() => uiStore.scaling, () => {
     drawings.ball.scale.set(uiStore.scaling.ball);
     drawings.blueRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
     drawings.yellowRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
-};
+});
 
 
-const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, team: 'yellow' | 'blue') => {
+const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, isYellow: boolean) => {
     const robotId = robot.id ?? -1;
+    const isUs = isYellow == gameSettingsStore.isYellow // Only allow clicking on robots of your own team
+    const fieldOrientation = gameSettingsStore.fieldOrientation;
+
     if (!drawingsMap.has(robotId)) {
         const drawing = new RobotDrawing({
-            team: team,
+            isYellow: isYellow,
             text: robotId.toString(),
-            onClick: team == gameStore.team
+            onClick: isUs
                 ? () => uiStore.toggleRobotSelection(robotId)
                 : undefined,
         });
@@ -59,10 +64,8 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
         layers.movingObjects.addChild(drawing);
         drawingsMap.set(robotId, drawing);
     }
-    const drawing = drawingsMap.get(robotId)!;
-    drawing.toggleSelection(toRaw(uiStore.isaRobotSelected(robotId)) && team == gameStore.team);
-    drawing.moveOnField(gameStore.fieldOrientation.x * robot.pos!.x!, gameStore.fieldOrientation.y * robot.pos!.y!, gameStore.fieldOrientation.angle + -(robot.angle ?? 0));
-    drawing.setVelocity(team == gameStore.team && uiStore.showVelocities(robotId), gameStore.fieldOrientation.x * robot.vel!.x!, gameStore.fieldOrientation.y * robot.vel!.y!);
+
+    drawingsMap.get(robotId)!.update(isUs && uiStore.isaRobotSelected(robotId), isUs, fieldOrientation, robot);
 }
 
 const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => {
@@ -74,21 +77,21 @@ const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => 
     if (field === null) return;
     layers.fieldGeometry.addChild(new FieldDrawing({
         fieldGeometry: field,
-        fieldColors: toRaw(gameStore.goalColor),
+        fieldColors: toRaw(gameSettingsStore.goalColor),
     }));
 }
 
 const initPixiApp = () => {
     console.debug("Init Pixi app");
     app = new Application({
-        width: aiStore.visionData.latestField?.fieldLength! / 10 * 1.15,
-        height: aiStore.visionData.latestField?.fieldWidth! / 10 * 1.15,
+        width: visionData.latestField?.fieldLength! / 10 * 1.15,
+        height: visionData.latestField?.fieldWidth! / 10 * 1.15,
         backgroundColor: Colors.backgroundColor,
         view: canvas.value!
     });
 
     // Init field geometry drawings
-    drawField(aiStore.visionData.latestField!);
+    drawField(visionData.latestField!);
 
     // Init cursor position text
     const cursor = new Text("", {fontSize: 16, fill: 'white'});
@@ -126,17 +129,17 @@ const initPixiApp = () => {
 }
 
 const onPixiTick = () => {
-    const world = aiStore.visionData.latestWorld;
+    const world = visionData.latestWorld;
     if (world == null) {
         return;
     }
 
     // Update robot drawings
-    world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, 'yellow'));
-    world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, 'blue'));
+    world.yellow!.forEach(robot => updateRobotDrawing(drawings.yellowRobots, robot, true));
+    world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, false));
 
     // Update ball drawing
-    drawings.ball.moveOnField(gameStore.fieldOrientation.x * world!.ball!.pos!.x!, gameStore.fieldOrientation.y * world.ball!.pos!.y!);
+    drawings.ball.moveOnField(gameSettingsStore.fieldOrientation.x * world!.ball!.pos!.x!, gameSettingsStore.fieldOrientation.y * world.ball!.pos!.y!);
 
     // Draw the latest shapes received from the AI
     const buffer = visualizationStore.popAllDrawings();
@@ -144,7 +147,7 @@ const onPixiTick = () => {
         if (props.category == Category.PATH_PLANNING && !uiStore.showPathPlanning(props.forRobotId)) return;
         if (props.category == Category.DEBUG && !uiStore.showDebug(props.forRobotId)) return;
 
-        const shape = new ShapeDrawing({data: props, currentTick: aiStore.stpData.currentTick});
+        const shape = new ShapeDrawing({data: props, currentTick: stpData.currentTick});
         layers.shapeLayer.addChild(shape);
         drawings.shapes.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
     });

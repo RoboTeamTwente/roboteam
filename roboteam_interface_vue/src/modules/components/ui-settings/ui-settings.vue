@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useUIStore} from "../stores/ui-store";
+import {useUIStore} from "../../stores/ui-store";
 import TriState from "./tri-state.vue";
 
 const uiStore = useUIStore();

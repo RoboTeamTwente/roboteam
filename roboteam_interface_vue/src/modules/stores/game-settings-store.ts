@@ -1,34 +1,27 @@
 import {defineStore} from 'pinia'
 import {Colors} from "../field/field-objects";
+import {computed, reactive} from "vue";
+import {proto} from "../../generated/proto";
+import IGameSettings = proto.IGameSettings;
 
-export type GameSettingsStore = {
-    useReferee: boolean,
-    ignoreInvariants: boolean,
-    hubMode: 'basestation' | 'simulator',
-    side: 'left' | 'right',
-    team: 'blue' | 'yellow',
-}
 
-export const useGameSettingsStore = defineStore('gameSettingsStore', {
-    persist: true,
-    state: (): GameSettingsStore => {return {
-        useReferee: true,
-        ignoreInvariants: false,
-        hubMode: 'basestation',
-        side: 'right',
-        team: 'blue',
-    }},
-    actions: {},
-    getters: {
-        goalColor(state){
-            return state.team === "yellow"
-                ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
-                : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
-        },
-        fieldOrientation(state) {
-            return state.side === "left"
-                ? {x: 1, y: -1, angle: 0}
-                : {x: -1, y: 1, angle: 180};
-        }
-    },
+export const useGameSettingsStore = defineStore('gameSettingsStore', () => {
+    const value = reactive<IGameSettings>({})
+    const goalColor = computed(() => {
+        return value.isYellow
+            ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
+            : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
+    });
+
+    const fieldOrientation = computed(() => {
+        return value.isLeft
+            ? {x: 1, y: -1, angle: 0}
+            : {x: -1, y: 1, angle: 180};
+    });
+
+    return {
+        ...value,
+        goalColor,
+        fieldOrientation,
+    }
 })

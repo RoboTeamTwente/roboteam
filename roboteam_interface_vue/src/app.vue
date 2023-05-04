@@ -3,17 +3,18 @@
 import {computed, ref} from "vue";
 import GameCanvas from "./modules/field/game-canvas.vue";
 import {useUIStore} from "./modules/stores/ui-store";
-import TopPanel from "./modules/components/top-panel.vue";
+import TopPanel from "./modules/components/layout/top-panel.vue";
 import {useAIClient} from "./services/ai-client";
-import ResizableSlider from "./modules/components/panel-slider.vue";
-import PanelSlider from "./modules/components/panel-slider.vue";
-import TabedWidgets from "./modules/components/tabed-widgets.vue";
-import {useAIStore} from "./modules/stores/ai-store";
+import ResizableSlider from "./modules/components/layout/panel-slider.vue";
+import PanelSlider from "./modules/components/layout/panel-slider.vue";
+import TabedWidgets from "./modules/components/layout/tabed-widgets.vue";
+import {useGameControllerStore} from "./modules/stores/ai-store";
+import {useVisionDataStore} from "./modules/stores/dataStores/vision-data-store";
 
 
 let {status} = useAIClient("ws://localhost:12676");
 const uiStore = useUIStore();
-const aiStore = useAIStore();
+const visionData = useVisionDataStore();
 
 const gridElement = ref<null | HTMLElement>(null);
 
@@ -41,13 +42,13 @@ const gridElement = ref<null | HTMLElement>(null);
     </div>
 
     <main class="grid-in-main flex flex-col justify-center bg-base-200 min-h-0 p-4">
-      <game-canvas v-if="aiStore.$state.visionData.latestWorld !== null"/>
+      <game-canvas v-if="visionData.latestWorld !== null"/>
     </main>
 
     <panel-slider direction="y" class="grid-in-drag-y"
                   @drag="uiStore.resizeBottomPanel(uiStore.bottomPanel.size + $event.y)"/>
 
-    <div class="grid-in-footer bg-base-100 flex flex-col bg-base-100" v-if="!uiStore.$state.bottomPanel.collapsed">
+    <div class="grid-in-footer bg-base-100 flex flex-col" v-if="!uiStore.$state.bottomPanel.collapsed">
       <tabed-widgets />
     </div>
   </div>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {useUIStore} from "../stores/ui-store";
-import {useAIStore} from "../stores/ai-store";
+import {useUIStore} from "../../stores/ui-store";
+import {useVisionDataStore} from "../../stores/dataStores/vision-data-store";
 
-const aiStore = useAIStore();
+const visionData = useVisionDataStore();
 const uiStore = useUIStore();
 
 const formatFloat = (pos?: number | null): string => {
@@ -20,7 +20,7 @@ const formatFloat = (pos?: number | null): string => {
 
 <template>
   <div class="grid grid-cols-fluid-12  gap-2 ">
-    <template v-for="(robot, id) in aiStore.ourRobots" :key="id">
+    <template v-for="(robot, id) in visionData.ourRobots" :key="id">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
         'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)
       }">

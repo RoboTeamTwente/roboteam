@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import {useUIStore} from "../stores/ui-store";
-import {haltPlayName, useAIStore} from "../stores/ai-store";
+import {useUIStore} from "../../stores/ui-store";
+import {haltPlayName, useGameControllerStore} from "../../stores/ai-store";
 import {computed} from "vue";
-import {useGameSettingsStore} from "../stores/game-settings-store";
+import {useGameSettingsStore} from "../../stores/game-settings-store";
+import {useSTPDataStore} from "../../stores/dataStores/stp-data-store";
 
 const uiStore = useUIStore();
-const aiStore = useAIStore();
 const gameSettingsStore = useGameSettingsStore();
+const gameController = useGameControllerStore();
+const stpData = useSTPDataStore();
 
 const disabled = computed(() => {
-  return gameSettingsStore.useReferee
+  return gameSettingsStore.useReferee ?? false;
 });
 
 </script>
@@ -30,36 +32,29 @@ const disabled = computed(() => {
       <div class="btn-group">
         <button :class="{
             'btn-disabled': disabled,
-            'btn-success': aiStore.isAIPaused,
-            'btn-error': !aiStore.isAIPaused
-        }" class="btn btn-sm gap-2 w-32" @click="aiStore.toggleAIPaused">
-            <template v-if="!aiStore.isAIPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
+            'btn-success': gameController.isAIPaused,
+            'btn-error': !gameController.isAIPaused
+        }" class="btn btn-sm gap-2 w-32" @click="gameController.toggleAIPaused">
+            <template v-if="!gameController.isAIPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
             <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
         </button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="aiStore.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="gameController.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
       </div>
 
       <div class="input-group w-auto">
-        <select class="select select-sm select-bordered" v-model="aiStore.gameController.play" :disabled="disabled">
-          <option v-for="play in aiStore.gameController.availablePlays" :value="play">
+        <select class="select select-sm select-bordered" v-model="gameController.currentPlay.name" :disabled="disabled">
+          <option v-for="play in gameController.availablePlays" :value="play">
             {{ play }}
           </option>
         </select>
-        <select class="select select-sm select-bordered" v-model="aiStore.gameController.ruleset" :disabled="disabled">
-          <option v-for="subPlay in aiStore.gameController.availableRulesets" :value="subPlay">
-            {{ subPlay }}
+        <select class="select select-sm select-bordered" v-model="gameController.currentPlay.ruleset" :disabled="disabled">
+          <option v-for="ruleset in gameController.availablePlays.rule_sets" :value="ruleset">
+            {{ ruleset }}
           </option>
         </select>
-<!--        <select class="select select-sm select-bordered">-->
-<!--          <option>Homer</option>-->
-<!--          <option>Marge</option>-->
-<!--          <option>Bart</option>-->
-<!--          <option>Lisa</option>-->
-<!--          <option>Maggie</option>-->
-<!--        </select>-->
       </div>
       <div class="btn-group">
-        <button class="btn btn-sm btn-primary gap-2" @click="aiStore.resetPlay" :class="{'btn-disabled': disabled}"><font-awesome-icon icon="fa-rotate-right" /> Reset Play</button>
+        <button class="btn btn-sm btn-primary gap-2" @click="gameController.resetPlay" :class="{'btn-disabled': disabled}"><font-awesome-icon icon="fa-rotate-right" /> Reset Play</button>
       </div>
     </div>
     <div class="flex grow"/>
@@ -72,7 +67,7 @@ const disabled = computed(() => {
           <div class="card-body ">
             <h2 class="card-title">Performance Info</h2>
             <ul class="font-mono">
-              <li>Tick: {{aiStore.$state.stpData.currentTick}}</li>
+              <li>Tick: {{stpData.currentTick}}</li>
               <li>FPS: XXX</li>
             </ul>
           </div>

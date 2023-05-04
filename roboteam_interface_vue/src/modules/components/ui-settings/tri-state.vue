@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {TriState} from "../stores/ui-store";
+import {TriState} from "../../stores/ui-store";
 import {computed} from "vue";
 
 const props = defineProps<{

@@ -1,3 +1,12 @@
+import {ShallowRef} from "vue";
+
+export type DeepReadonly<T> = T extends Function ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
+export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>;
+
+export const sleep = (time: number) => {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
     if (team === 'PURPLE') {
         return{
@@ -17,7 +26,7 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
             14: "",
             15: "Herman",
         }[id]
-    } else {
-
     }
+
+    return ""
 }

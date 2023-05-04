@@ -12,8 +12,7 @@ import dot from '../../assets/dot-16x16.png';
 import cross from '../../assets/cross-16x16.png';
 // @ts-ignore
 import pluses from '../../assets/pluses-16x16.png';
-
-type Team = 'yellow' | 'blue';
+import IWorldRobot = proto.IWorldRobot;
 
 export const Colors = {
     yellow: '#feff00',
@@ -90,12 +89,12 @@ export class RobotDrawing extends Container {
     textElem?: Text;
 
     constructor({
-                    team,
+                    isYellow,
                     text,
                     onClick
-                }: { team: Team, text?: string, onClick?: (self?: RobotDrawing, event?: FederatedPointerEvent) => void }) {
+                }: { isYellow: boolean, text?: string, onClick?: (self?: RobotDrawing, event?: FederatedPointerEvent) => void }) {
         super();
-        this.originalColor = team === 'yellow' ? Colors.yellow : Colors.blue
+        this.originalColor = isYellow ? Colors.yellow : Colors.blue
 
         this.velocityMeter = new Graphics()
             .lineStyle(4, Colors.fieldLines, 0)
@@ -120,6 +119,12 @@ export class RobotDrawing extends Container {
         }
     }
 
+    update(isSelected: boolean, showVelocity: boolean, fieldOrientation: {x: number, y: number, angle: number},  data: IWorldRobot) {
+        this.toggleSelection(isSelected);
+        this.moveOnField(fieldOrientation.x * data.pos!.x!, fieldOrientation.y * data.pos!.y!, fieldOrientation.angle + -(data.angle ?? 0));
+        this.updateVelocityDrawing(showVelocity, fieldOrientation.x * data.vel!.x!, fieldOrientation.y * data.vel!.y!);
+    }
+
     toggleSelection(selected: boolean) {
         this.robotElem.tint = selected ? Colors.robotSelected : this.originalColor;
     }
@@ -131,7 +136,7 @@ export class RobotDrawing extends Container {
 
     }
 
-    setVelocity(showVelocity: boolean, x: number, y: number) {
+    updateVelocityDrawing(showVelocity: boolean, x: number, y: number) {
         this.velocityMeter.clear()
         if (showVelocity) {
             this.velocityMeter
@@ -139,6 +144,7 @@ export class RobotDrawing extends Container {
                 .lineTo(x * 100, y * 100);
         }
     }
+
 
 }
 

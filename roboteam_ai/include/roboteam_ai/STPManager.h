@@ -22,6 +22,8 @@ class STPManager {
      */
     void runOneLoopCycle();
 
+
+    int tickCounter = 0; /**< Counter that keeps track of the ticks */
     bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
     ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
@@ -45,7 +47,7 @@ class STPManager {
      */
     void start(std::atomic_bool& exitApplication);
 
-    static inline std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
+    static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
 
     /**
      * @brief Delete copy constructor of the STPManager class

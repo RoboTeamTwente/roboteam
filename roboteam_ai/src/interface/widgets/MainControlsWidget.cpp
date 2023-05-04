@@ -176,7 +176,7 @@ void MainControlsWidget::toggleRobotHubModeParam() {
 void MainControlsWidget::sendPauseSignal() { 
     Output::sendHaltCommand();
 
-    if(rtt::ai::Pause::getPause()){
+    if(rtt::ai::Pause::isPaused()){
         pauseBtn->setText("Start");
         pauseBtn->setStyleSheet("background-color: #00cc00;");
     }else{

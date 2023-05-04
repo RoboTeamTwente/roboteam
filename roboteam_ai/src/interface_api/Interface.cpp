@@ -5,7 +5,7 @@
 #include "interface_api/Interface.h"
 
 #include "proto/NewInterface.pb.h"
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::new_interface {
 
@@ -13,7 +13,7 @@ google::protobuf::Arena Interface::arena;
 proto::MsgToInterface::VisualizationBuffer* Interface::visualizations = google::protobuf::Arena::CreateMessage<proto::MsgToInterface::VisualizationBuffer>(&arena);
 
 void Interface::draw(const DrawArgs& args, std::span<Vector2> points) {
-    const double orientation = SETTINGS.isLeft() ? -1 : 1;
+    const double orientation = GameSettings::isLeft() ? -1 : 1;
     auto drawing = initDrawing(args);
     for (auto& point : points) {
         auto protoPoint = drawing->add_points();

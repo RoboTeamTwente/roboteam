@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "GameSettings.proto";
 import "World.proto";
 import "State.proto";
 import "Vector2f.proto";
@@ -115,18 +116,23 @@ message GameState {
     string rulesetName = 2;
 }
 
-message GameSettings {
-    enum RobotHubMode {
-        UNKNOWN = 0;
-        BASESTATION = 1;
-        SIMULATOR = 2;
-    }
+//message GameSettings {
+//    enum RobotHubMode {
+//        UNKNOWN = 0;
+//        BASESTATION = 1;
+//        SIMULATOR = 2;
+//    }
+//
+//    bool use_referee = 1;
+//    bool ignore_invariants = 2;
+//    RobotHubMode hub_mode = 3; // true == simulator, false == basestation
+//    bool is_left = 4;
+//    bool is_yellow = 5;
+//}
 
+message AISettings {
     bool use_referee = 1;
     bool ignore_invariants = 2;
-    RobotHubMode hub_mode = 3; // true == simulator, false == basestation
-    bool is_left = 4;
-    bool is_yellow = 5;
 }
 
 message MsgToInterface {
@@ -148,5 +154,6 @@ message MsgFromInterface {
         GameState set_game_state = 1;
         GameSettings set_game_settings = 2;
         bool stop_resume = 3; // true == stop, false == resume
+        AISettings set_ai_settings = 4;
     }
 }

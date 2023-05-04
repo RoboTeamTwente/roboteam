@@ -121,12 +121,15 @@ void InterfaceGateway::onMessage(const proto::MsgFromInterface&& message) {
             ai::stp::PlayDecider::lockInterfacePlay(message.set_game_state().playname());  // TODO: How is(was) this thread safe?
             ai::interface::Output::setRuleSetName(message.set_game_state().rulesetname());
             break;
+        case proto::MsgFromInterface::kSetAiSettings: {
+            ai::interface::Output::setUseRefereeCommands(message.set_ai_settings().use_referee());
+        }
+            break;
         case proto::MsgFromInterface::kSetGameSettings: {
             const auto& gameSettings = message.set_game_settings();
-            ai::interface::Output::setUseRefereeCommands(gameSettings.use_referee());
-            SETTINGS.setLeft(gameSettings.is_left());
-            SETTINGS.setYellow(gameSettings.is_yellow());
-            SETTINGS.setRobotHubMode(gameSettings.hub_mode() == proto::GameSettings::BASESTATION ? Settings::RobotHubMode::BASESTATION : Settings::RobotHubMode::SIMULATOR);
+            GameSettings::setLeft(gameSettings.is_left());
+            GameSettings::setYellow(gameSettings.is_yellow());
+            GameSettings::setRobotHubMode(rtt::modeFromProto(gameSettings.robot_hub_mode()));
         }
             break;
         case proto::MsgFromInterface::kStopResume: {

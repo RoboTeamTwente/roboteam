@@ -16,12 +16,12 @@
 namespace rtt::world {
 
 /**
- * Structure that represents the world and history of the world.
+ * @brief Class that represents the world and history of the world.
  *
- * This structure operates under the assumption of an immutable state
+ * This Class operates under the assumption of an immutable state
  * Adjusting any value inside this world after construction may
  * result in undefined behavior. Any sort of mutation of already constructed
- * WorldData will break the entire system and introduce dataraces due to
+ * WorldData will break the entire system and introduce data-races due to
  * a shared immutable state.
  *
  * WorldData is a snapshot of the current world as seen by the camera
@@ -37,8 +37,8 @@ namespace rtt::world {
  */
 class World {
     /**
-     * Structure that provides structured binding support for the world.
-     * @tparam T Type of data to lock (a pointer to!)
+     * @brief Structure that provides structured binding support for the world.
+     * @param T Type of data to lock (a pointer to!)
      *
      * AcquireInfo<int> get_int() {
      *     static std::mutex mtx;
@@ -52,83 +52,93 @@ class World {
      */
     template <typename T>
     struct AcquireInfo {
-        std::lock_guard<std::mutex> mtx;
-        T *data;
+        std::lock_guard<std::mutex> mtx; /**< Lock guard for the info */
+        T *data; /**< Pointer to the type of data to lock */
     };
 
    public:
     /**
-     * Global singleton for World, scott-meyers style
+     * @brief Global singleton for World, scott-meyers style
      * @param[in] resetWorld Boolean that marks whether to reset the world before returning
      * if set to true, world.clear() is called
      * if set to false, worldInstance is simply reset
      * @return A pointer to a static World
      */
     inline static AcquireInfo<World> instance() {
-        static World worldInstance{&rtt::SETTINGS};
+        static World worldInstance{};
         return {std::lock_guard(worldInstance.updateMutex), &worldInstance};
     }
 
     /**
-     * Not copyable, movable or assignable, global state
+     * @brief Delete copy constructor for the World class
      */
     World(World const &) = delete;
+
+    /**
+     * @brief Delete copy assignment
+     */
     World &operator=(World &) = delete;
 
+    /**
+     * @brief Delete move constructor for the World class
+     */
     World(World &&) = delete;
+
+    /**
+     * @brief Delete move assignment operator
+     */
     World &operator=(World &&) = delete;
 
-    /**
-     * Amount of ticks to store in history
-     */
-    constexpr static size_t HISTORY_SIZE = 200;
+    constexpr static size_t HISTORY_SIZE = 200; /**< Amount of ticks to store in history */
 
     /**
-     * Constructs a World from settings
+     * @brief Constructs a World from settings
      * @param settings Settings to use to construct the world, will be stored
-     *
      * Undefined behavior if the pointer to settings outlives the lifetime of the settings instance
-     *
      * Usage of settings before construction of the STPManager will result in undefined
      * behavior due to uninitialized memory
      */
-    explicit World(Settings *settings);
+    explicit World();
 
 
     /**
-     * Updates the currentWorld
+     * @brief Updates the currentWorld
      * @param world World to construct currentWorld from
      */
     void updateWorld(proto::World &protoWorld);
 
     /**
-     * Updates the currentField
+     * @brief Updates the currentField
      * @param field Field to construct currentField from
      */
     void updateField(proto::SSL_GeometryFieldSize &protoField);
 
+    /**
+     * @brief Updates the current field
+     * @param protoField Field to update the current field with
+     */
     void updateField(Field &protoField);
 
     /**
-     * Update the position control using the new robot position
+     * @brief Update the position control using the new robot position
      */
     void updatePositionControl();
 
     /**
-     * Gets the current world
+     * @brief Gets the current world
      * @return std::nullopt if there is no currentWorld, otherwise Some with the value
      */
     [[nodiscard]] std::optional<view::WorldDataView> getWorld() const noexcept;
 
     /**
-     * Gets the current field
+     * @brief Gets the current field
      * @return std::nullopt if there is no currentField, otherwise Some with the value
      */
     [[nodiscard]] std::optional<Field> getField() const noexcept;
 
     /**
-     * Gets a certain world from history
-     * @param ticksAgo Ticks ago to fetch from.
+     * @brief Gets a certain world from history
+     * @param ticksAgo Amount of ticks ago to fetch world from.
      *     0 gives the current world
      *     1 gives the freshest world in history
      *     HISTORY_SIZE gives the oldest world in history
@@ -137,13 +147,13 @@ class World {
     [[nodiscard]] std::optional<view::WorldDataView> getHistoryWorld(size_t ticksAgo) const noexcept;
 
     /**
-     * Gets the history size
+     * @brief Gets the history size
      * @return size_t The amount of elements in the history
      */
     [[nodiscard]] size_t getHistorySize() const noexcept;
 
     /**
-     * Get a pointer to the general position control, which can be used by all robots.
+     * @brief Get a pointer to the general position control, which can be used by all robots.
      * If the object does not exist, it is created
      * @return position control object. See its documentation for more info
      */
@@ -167,13 +177,12 @@ class World {
 
    private:
     /**
-     * Updates the tickCount, sets lastTick to now(), sets duration to
-     * oldNow - now();
+     * @brief Updates the tickCount, sets lastTick to now(), sets duration to oldNow - now();
      */
     void updateTickTime() noexcept;
 
     /**
-     * Sets the current world, also pushes the old currentWorld into history if this is Some
+     * @brief Sets the current world, also pushes the old currentWorld into history if this is Some
      * Usage of currentWorld after call will result in UB
      * @param currentWorld New currentWorld
      * @return Returns a reference to the new currentWorld
@@ -181,57 +190,19 @@ class World {
     WorldData const &setWorld(WorldData &currentWorld) noexcept;
 
     /**
-     * Pushes a world to history, takes ownership of world
+     * @brief Pushes a world to history, takes ownership of world
      * @param world WorldData to be taken ownership of
      */
     void toHistory(WorldData &world) noexcept;
 
-    /**
-     * Pointer to GUI settings
-     */
-    Settings *settings;
-
-    /**
-     * Mutex used when constructing robots to prevent updating of updateMap without wanting it
-     */
-    std::mutex updateMutex;
-
-
-
-    /**
-     * History of the world, this is where old world data is pushed to
-     */
-    std::vector<rtt::world::WorldData> history;
-
-    /**
-     * Current index into the ringbuffer that's the world history
-     * https://en.wikipedia.org/wiki/Circular_buffer
-     */
-    size_t currentIndex{0};
-
-    /**
-     * Current world
-     * None if no world has been constructed yet
-     * Some if a world is valid
-     */
-    std::optional<WorldData> currentWorld = std::nullopt;
-
-    std::optional<Field> currentField;
-
-    /**
-     * Timestamp of the last tick
-     */
-    uint64_t lastTick;
-
-    /**
-     * Duration between ticks
-     */
-    uint64_t tickDuration{};
-
-    /**
-     * The position controller, initially null
-     */
-    ai::control::PositionControl positionControl;
+    std::mutex updateMutex; /**< Mutex used when constructing robots to prevent updating of updateMap without wanting it */
+    std::vector<rtt::world::WorldData> history; /**< History of the world, this is where old world data is pushed to */
+    size_t currentIndex{0}; /**< Current index into the circular buffer that is the world history */
+    std::optional<WorldData> currentWorld = std::nullopt; /**< Current world, None if no world has been constructed yet, Some if a world is valid */
+    std::optional<Field> currentField; /**< The current field data */
+    uint64_t lastTick; /**< Timestamp of the last tick */
+    uint64_t tickDuration{}; /**< Duration between ticks */
+    ai::control::PositionControl positionControl; /**< The position controller, initially null */
 };
 }  // namespace rtt::world
 

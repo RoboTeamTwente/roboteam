@@ -4,8 +4,12 @@
 
 #include "interface/widgets/MainControlsWidget.h"
 
+#include <ostream>
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
+
+#include "roboteam_utils/RobotHubMode.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::interface {
 
@@ -137,25 +141,25 @@ void MainControlsWidget::setUseReferee(bool useRef) {
 
 /// toggle the setting 'isYellow'
 void MainControlsWidget::toggleOurColorParam() {
-    SETTINGS.setYellow(!SETTINGS.isYellow());
+    GameSettings::setYellow(!GameSettings::isYellow());
     setToggleColorBtnLayout();
 }
 
 /// toggle the the setting 'isLeft'
 void MainControlsWidget::toggleOurSideParam() {
-    SETTINGS.setLeft(!SETTINGS.isLeft());
+    GameSettings::setLeft(!GameSettings::isLeft());
     setToggleSideBtnLayout();
 }
 
 /// toggle the the setting 'isSerialMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
-    switch (SETTINGS.getRobotHubMode()) {
-        case Settings::RobotHubMode::BASESTATION: {
-            SETTINGS.setRobotHubMode(Settings::RobotHubMode::SIMULATOR);
+    switch (GameSettings::getRobotHubMode()) {
+        case RobotHubMode::BASESTATION: {
+            GameSettings::setRobotHubMode(RobotHubMode::SIMULATOR);
             break;
         }
-        case Settings::RobotHubMode::SIMULATOR: {
-            SETTINGS.setRobotHubMode(Settings::RobotHubMode::BASESTATION);
+        case RobotHubMode::SIMULATOR: {
+            GameSettings::setRobotHubMode(RobotHubMode::BASESTATION);
             break;
         }
         default: {
@@ -169,10 +173,22 @@ void MainControlsWidget::toggleRobotHubModeParam() {
 }
 
 /// send a halt signal to stop all trees from executing
-void MainControlsWidget::sendPauseSignal() { Output::sendHaltCommand(); }
+void MainControlsWidget::sendPauseSignal() { 
+    Output::sendHaltCommand();
+
+    if(rtt::ai::Pause::getPause()){
+        pauseBtn->setText("Start");
+        pauseBtn->setStyleSheet("background-color: #00cc00;");
+    }else{
+        pauseBtn->setText("Stop");
+        pauseBtn->setStyleSheet("background-color: #cc0000;");
+    }
+
+
+}
 
 void MainControlsWidget::setToggleColorBtnLayout() const {
-    if (SETTINGS.isYellow()) {
+    if (GameSettings::isYellow()) {
         toggleColorBtn->setStyleSheet("background-color: orange;");  // orange is more readable
         toggleColorBtn->setText("Playing as Yellow");
     } else {
@@ -182,7 +198,7 @@ void MainControlsWidget::setToggleColorBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleSideBtnLayout() const {
-    if (SETTINGS.isLeft()) {
+    if (GameSettings::isLeft()) {
         toggleSideBtn->setText("◀ Playing as left");
     } else {
         toggleSideBtn->setText("Playing as right ▶");
@@ -190,9 +206,9 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string modeText = Settings::robotHubModeToString(SETTINGS.getRobotHubMode());
+    std::string_view modeText = modeToString(GameSettings::getRobotHubMode());
 
-    QString buttonText = QString::fromStdString(modeText);
+    QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);
 }
 

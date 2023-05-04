@@ -19,6 +19,9 @@ namespace io {
 class IOManager;
 }
 
+/**
+ * @brief Class that allows us to pause the robots from the interface.
+ */
 class Pause {
    private:
     static std::atomic<bool> state;

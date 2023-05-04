@@ -1,59 +1,60 @@
 #pragma once
-#include <type_traits>
-#include <gtest/gtest_prod.h>
 
 #include <stp/Play.hpp>
-
 #include "interface/widgets/mainWindow.h"
 
 namespace rtt {
 
+/**
+ * @brief Class that describes the STPManager. The STPManager manages the overall strategy of the robots: the plays
+ */
 class STPManager {
    public:
+    /**
+     * @brief Constructs the STPManager with an interface
+     * @param mainWindow The interface that belongs to this AI
+     */
     explicit STPManager(ai::interface::MainWindow* mainWindow);
 
    private:
-    FRIEND_TEST(STPManagerTest, it_handles_ROS_data);
-
+    /**
+     * @brief Runs AI for one iteration
+     */
     void runOneLoopCycle();
-    bool fieldInitialized = false;
-    bool robotsInitialized = false;
-    ai::interface::MainWindow* mainWindow;
+
+    bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
+    bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
+    ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
 
     /**
-     * Current best play as picked by the playDecider
+     *
      */
-    ai::stp::Play* currentPlay{nullptr};
+    ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 
     /**
-     * Number of times the AI ticked since launch
-     */
-    int tickCounter = 0;
-
-    /**
-     * All the plays that are available to the AI
-     */
-    template <class... T, class Enable = std::enable_if_t<(... && std::is_base_of_v<ai::stp::Play, T>)>>
-    void registerPlays() {
-        plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>{};
-        (plays.emplace_back(std::make_unique<T>()),...);
-    }
-
-    /**
-     * Function that decides whether to change plays given a world and field.
+     * @brief Function that decides whether to change plays given a world and field.
      * @param _world the current world state
+     * @param ignoreWorldAge Whether to ignore the age of the world
      */
-    void decidePlay(world::World* _world);
+    void decidePlay(world::World* _world, bool ignoreWorldAge = false);
 
    public:
+    /**
+     * @brief Starts the AI with a synchronized boolean to ensure that AI exits correctly
+     * @param exitApplication Indicates whether the AI should exit
+     */
     void start(std::atomic_bool& exitApplication);
 
-    /**
-     * The vector that contains all plays
-     */
-    static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays;
+    static inline std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
 
+    /**
+     * @brief Delete copy constructor of the STPManager class
+     */
     STPManager(STPManager const&) = delete;
+
+    /**
+     * @brief delete copy assignment operator
+     */
     STPManager& operator=(STPManager const&) = delete;
 };
 

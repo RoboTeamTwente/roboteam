@@ -22,10 +22,13 @@
 
 namespace rtt::ai::stp {
 
+/**
+ * @brief class with computations about positions
+ */
 class PositionComputations {
    public:
     /**
-     * Determines the location for defenders around the defense area
+     * @brief Determines the location for defenders around the defense area
      * Uses the defence area boundaries and the path from ball to center of goal to find the intersects of circles to
      * find the various positions.
      * @param field
@@ -36,7 +39,7 @@ class PositionComputations {
     static std::vector<Vector2> determineWallPositions(const Field &field, const world::World *world, int amountDefenders);
 
     /**
-     * Returns the best scored position from a grid with a profile
+     * @brief Returns the best scored position from a grid with a profile
      * @param currentPosition The position the robot it currently going to (small biased) if it exists
      * @param searchGrid the area (with points) that should be searched
      * @param profile combination of weights for different factors that should be scored
@@ -48,7 +51,7 @@ class PositionComputations {
                                            const world::World *world);
 
     /**
-     * Makes a wall if not ready done, saves it in calculatedWallPositions and deals the index
+     * @brief Makes a wall if not ready done, saves it in calculatedWallPositions and deals the index
      * @param index Index of the wall position (do unique positions)
      * @param amountDefenders Amount of defenders the wall is made of
      * @param field
@@ -58,7 +61,7 @@ class PositionComputations {
     static Vector2 getWallPosition(int index, int amountDefenders, const Field &field, world::World *world);
 
     /**
-     * Calculates where a robot should stand to prevent the ball from going in the goal
+     * @brief Calculates where a robot should stand to prevent the ball from going in the goal
      * @param field The current field
      * @param world The current world
      * @return The position a robot should go to to block the ball (this does not depend on the position of any of our robots)
@@ -66,7 +69,7 @@ class PositionComputations {
     static Vector2 getBallBlockPosition(const Field &field, const world::World *world);
 
     /**
-     * Calculates a position, near the target position, that is not too close to the ball
+     * @brief Calculates a position, near the target position, that is not too close to the ball
      * @param targetPosition The initial target position
      * @param ballPosition The position of the ball
      * @param field The current field
@@ -75,6 +78,13 @@ class PositionComputations {
     static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
 
    private:
+    /**
+     * @brief Calculates a position outside of a given shape
+     * @param ballPos The position of the ball
+     * @param field The current field
+     * @param avoidShape The shape to avoid
+     * @return A position that is outside the given shape
+     */
     static Vector2 calculatePositionOutsideOfShape(Vector2 ballPos, const Field &field, const std::unique_ptr<Shape> &avoidShape);
 };
 }  // namespace rtt::ai::stp

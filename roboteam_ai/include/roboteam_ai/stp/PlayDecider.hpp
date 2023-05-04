@@ -10,41 +10,34 @@
 namespace rtt::ai::stp {
 
 /**
- * Decides the best play from a vector of plays.
+ * @brief Class that defines the play decider. It decides the best play from a vector of plays.
  * If there is a play set in the interface, this play will be picked.
  */
 class PlayDecider {
-    /**
-     * play that's set from the interface in case it's overridden
-     */
-    static inline Play* interfacePlay;
+    static inline Play* interfacePlay; /**< play that's set from the interface in case it's overridden */
     static inline std::optional<std::string> interfacePlayStr;
 
    public:
     /**
-     * Sets the locked play, read variable above
+     * @brief Sets the locked play, read variable above
      * @param play Play to lock to
      */
     static void lockInterfacePlay(Play* play);
     static void lockInterfacePlay(const std::string playName);
 
-    /**
-     * Bool indicating if the current play was manually changed in the interface
-     */
-    static bool interfacePlayChanged;
+    static bool interfacePlayChanged; /**< Bool indicating if the current play was manually changed in the interface */
 
     /**
-     * This function checks if there is a locked play. If there is, pick that play.
-     * If there isn't, pick the play with the highest score
+     * @brief This function checks if there is a locked play. If there is, pick that play.
+     * If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play)
      * @param World The world pointer
      * @param plays the vector of plays
      * @return The best play for the current tick
-     * (either a locked play through the interface or just the highest scored play)
      */
     static Play* decideBestPlay(const rtt::world::World* world, const std::vector<std::unique_ptr<ai::stp::Play>>& plays) noexcept;
 
     /**
-     * Returns (a pointer to) a play with a given name
+     * @brief Returns (a pointer to) a play with a given name
      * @param name name of the play. Should exactly match the name returned by the getName() method in the play
      * @param plays all plays to check the name for
      * @return the play with the given name, or a nullptr if no such play is found

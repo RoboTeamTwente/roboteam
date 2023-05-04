@@ -11,6 +11,8 @@
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
 
+#include <chrono>
+
 namespace io = rtt::ai::io;
 namespace rtt::ai::interface {
 
@@ -28,6 +30,7 @@ void Visualizer::paintEvent(QPaintEvent *event) {
         auto const &world = worldPtr->getWorld();
         auto const &field = worldPtr->getField();
 
+
         if (!world.has_value()) {
             painter.drawText(24, 24, "Waiting for incoming world state");
             return;
@@ -39,6 +42,13 @@ void Visualizer::paintEvent(QPaintEvent *event) {
             drawFieldHints(field.value(), painter);
             drawFieldLines(field.value(), painter);
         }
+
+        /* Check if world is not too old*/
+        if(rtt::ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+            painter.drawText(24, 24, "World state is too old! Age: " + QString::number(rtt::ai::io::io.getStateAgeMs()/1000) + " seconds. Waiting for new world state..");
+            return;
+        }
+
 
         auto s = QString::fromStdString("We have " + std::to_string(world->getUs().size()) + " robots");
         painter.drawText(24, 48, s.fromStdString("We have " + std::to_string(world->getUs().size()) + " robots"));
@@ -111,11 +121,11 @@ void Visualizer::paintEvent(QPaintEvent *event) {
     if (showBallPlacementMarker) drawBallPlacementTarget(painter);
 
     /* Ball dragging using middle mouse button. Hold it to drag the ball */
-    if (middle_mouse_pressed and SETTINGS.getRobotHubMode() == Settings::RobotHubMode::SIMULATOR) {
+    if (middle_mouse_pressed and GameSettings::getRobotHubMode() == RobotHubMode::SIMULATOR) {
         QPoint qt_mouse_position = mapFromGlobal(QCursor::pos());              // Get mouse position on the widget
         Vector2 mouse_position(qt_mouse_position.x(), qt_mouse_position.y());  // Convert Qt to Vector2
         Vector2 field_position = toFieldPosition(mouse_position);              // Convert position on widget to position on field
-        if (!SETTINGS.isLeft()) field_position *= -1;                          // Invert ball position if we play on the other side of the field
+        if (!GameSettings::isLeft()) field_position *= -1;                          // Invert ball position if we play on the other side of the field
 
         proto::SimulationConfiguration configuration;                    // Create packet
         configuration.mutable_ball_location()->set_x(field_position.x);  // Set x
@@ -173,7 +183,7 @@ void Visualizer::calculateFieldSizeFactor(const rtt::Field &field) {
 
 /// draws background of the field
 void Visualizer::drawBackground(QPainter &painter) {
-    painter.setBrush(Constants::FIELD_COLOR());
+    painter.setBrush(QColor(30, 30, 30, 255));
     painter.drawRect(-10, -10, this->size().width() + 10, this->size().height() + 10);
 }
 
@@ -229,7 +239,7 @@ void Visualizer::drawFieldLines(const rtt::Field &field, QPainter &painter) {
     pen.setWidth(3);
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = GameSettings::isYellow();
 
     // draw the hint for us
     LineSegment usGoalLine = field.leftGoalArea.rightLine();
@@ -333,7 +343,7 @@ void Visualizer::drawRobot(QPainter &painter, rtt::world::view::RobotView robot,
     Vector2 robotpos = toScreenPosition(robot->getPos());
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = GameSettings::isYellow();
 
     QColor robotColor;
     if (ourTeam) {
@@ -664,7 +674,7 @@ void Visualizer::drawDetectionRobot(QPainter &painter, bool robotIsBlue, const p
     Vector2 robotpos = toScreenPosition(robotWorldPos);
 
     // update the we are yellow
-    bool weAreYellow = SETTINGS.isYellow();
+    bool weAreYellow = GameSettings::isYellow();
 
     QColor robotColor = robotIsBlue ? Qt::green : Qt::red;  // use contrasting colors
 

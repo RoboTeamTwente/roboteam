@@ -11,70 +11,79 @@
 #include "stp/computations/PassComputations.h"
 
 namespace rtt::ai::stp::play {
-
+/**
+ * @brief The chipping pass play is executed when we want to pass the ball to a robot that can not be passed to directly
+ */
 class ChippingPass : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     ChippingPass();
 
     /**
-     *  Calculate how beneficial we expect this play to be
+     * @brief Calculate how beneficial we expect this play to be
+     * @param field The current field
+     * @return A score of this play
      */
     uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return A mapping of dealer flags per role
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculates info for the defenders
+     * @brief Calculates info for the defenders
      */
     void calculateInfoForDefenders() noexcept;
 
     /**
-     * Calculates info for the midfielders
+     * @brief Calculates info for the midfielders
      */
     void calculateInfoForMidfielders() noexcept;
 
     /**
-     * Calculates info for the attackers
+     * @brief Calculates info for the attackers
      */
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
+     * @brief Calculate info for the roles that need to be calculated for scoring
+     * @param world The current world data
      */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
+    void calculateInfoForScoredRoles(world::World* world) noexcept override{};
 
     /**
-     * Gets the play name
+     * @brief Gets the name of the play
+     * @return The name of the play
      */
     const char* getName() override;
 
     /**
-     * Check if play should end. True if pass arrived, if the ball is not moving anymore after pass, or if there is a better pass available
+     * @brief Check if play should end. True if pass arrived, if the ball is not moving anymore after pass, or if there is a better pass available
+     * @return Boolean that indicates whether the play should end
      */
     bool shouldEndPlay() noexcept override;
 
    private:
     /**
-     * Return true if passer is done with ChipAtPos tactic
+     * @brief Return true if passer is done with ChipAtPos tactic
+     * @return Boolean that indicates whether the passer is done with the ChipAtPos tactic
      */
     bool ballKicked();
 
-    /**
-     * Struct containing info about the pass. Calculated once for each time this play is run
-     */
-    PassInfo passInfo;
+    PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
 
+    /**
+     * @brief Calculate info for the blocker roles
+     */
     void calculateInfoForBlocker () noexcept;
 };
 }  // namespace rtt::ai::stp::play

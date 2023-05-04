@@ -15,7 +15,7 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "World.proto"
     "WorldBall.proto"
     "WorldRobot.proto"
-    "Setting.proto"
+    "GameSettings.proto"
     "RobotParameters.proto"
     "SimulationConfiguration.proto"
     "UiOptions.proto"

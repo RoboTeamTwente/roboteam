@@ -127,8 +127,8 @@ void STPManager::start(std::atomic_bool &exitApplication) {
                 5);
 
             // If this is primary AI, broadcast settings every second
-            if (SETTINGS.isPrimaryAI()) {
-                stpTimer.limit([&]() { io::io.publishSettings(SETTINGS); }, ai::Constants::SETTINGS_BROADCAST_RATE());
+            if (GameSettings::isPrimaryAI()) {
+                stpTimer.limit([&]() { io::io.publishSettings(); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
 
             if (exitApplication) {
@@ -150,7 +150,7 @@ void STPManager::runOneLoopCycle() {
         auto fieldMessage = state.field().field();
 
         std::vector<proto::SSL_WrapperPacket> vision_packets(state.processed_vision_packets().begin(), state.processed_vision_packets().end());
-        if (!SETTINGS.isLeft()) {
+        if (!GameSettings::isLeft()) {
             roboteam_utils::rotate(&worldMessage);
             for (auto &packet : vision_packets) {
                 roboteam_utils::rotate(&packet);
@@ -187,9 +187,20 @@ void STPManager::runOneLoopCycle() {
     rtt::ai::control::ControlModule::sendAllCommands();
 }
 
-void STPManager::decidePlay(world::World *_world) {
+void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     ai::stp::PlayEvaluator::clearGlobalScores();  // reset all evaluations
     ai::stp::ComputationManager::clearStoredComputations();
+    
+    /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
+    if(!ignoreWorldAge){
+        if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+            RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
+            currentPlay = nullptr;
+            // Returning here prevents the play from being updated, which means that the play will not be able to send any commands, 
+            // which means that the robots will not be able to move. This is a safety measure to prevent the robots from moving when the AI is dealing with outdated information.
+            return;
+        }
+    }
 
     if (!currentPlay || rtt::ai::stp::PlayDecider::interfacePlayChanged || !currentPlay->isValidPlayToKeep()) {
         ai::stp::gen::PlayInfos previousPlayInfo{};

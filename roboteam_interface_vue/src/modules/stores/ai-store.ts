@@ -43,11 +43,8 @@ export const useGameControllerStore = defineStore('gameController', () => {
             rule_sets: msg.availableRulesets!,
         }
 
-        stpDataStore.currentTick = 0;
-        stpDataStore.latest = null;
-
-        visionDataStore.latestField = null;
-        visionDataStore.latestWorld = null;
+        stpDataStore.$reset();
+        visionDataStore.$reset();
 
         isAIPaused.value = msg.isPaused ?? false;
     }

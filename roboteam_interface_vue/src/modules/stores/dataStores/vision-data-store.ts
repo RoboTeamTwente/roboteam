@@ -3,14 +3,19 @@ import {proto} from "../../../generated/proto";
 import IWorld = proto.IWorld;
 import ISSL_GeometryFieldSize = proto.ISSL_GeometryFieldSize;
 import {defineStore} from "pinia";
-import {computed, shallowRef} from "vue";
+import {computed, readonly, shallowRef} from "vue";
 import {useGameSettingsStore} from "../game-settings-store";
 
 export const useVisionDataStore = defineStore('visionDataStore', () => {
     const gameSettingStore = useGameSettingsStore();
 
-    const latestWorld = shallowRef<DeepReadonly<IWorld> | null>(null);
-    const latestField = shallowRef<DeepReadonly<ISSL_GeometryFieldSize> | null>(null);
+    const latestWorld = shallowRef<IWorld | null>(null);
+    const latestField = shallowRef<ISSL_GeometryFieldSize | null>(null);
+
+    const $reset = () => {
+        latestWorld.value = null;
+        latestField.value = null;
+    }
 
     const processVisionMsg = (msg: proto.IState) => {
         if (msg.lastSeenWorld == null) {
@@ -32,8 +37,9 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     });
 
     return {
-        latestWorld,
-        latestField,
+        latestWorld: readonly(latestWorld),
+        latestField: readonly(latestField),
+        $reset,
         processVisionMsg,
         ourRobots
     }

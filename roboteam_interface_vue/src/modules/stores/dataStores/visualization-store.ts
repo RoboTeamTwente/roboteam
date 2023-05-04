@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {proto} from "../../../generated/proto";
-import {ref, shallowRef} from "vue";
+import {readonly, ref, shallowRef} from "vue";
 import IMetric = proto.IMetric;
 import IDrawing = proto.IDrawing;
 
@@ -51,7 +51,7 @@ export const useVisualizationStore = defineStore('useVisStore', () => {
     }
 
     return {
-        metrics,
+        metrics: readonly(metrics),
         pushMetrics,
         popAllDrawings,
         pushDrawings

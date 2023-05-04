@@ -11,8 +11,12 @@
 #include "helpers/FieldHelper.h"
 #include "helpers/WorldHelper.h"
 #include "utilities/GameStateManager.hpp"
+#include "utilities/Settings.h"
 
 TEST(RefereeTest, it_gets_and_sets_the_ref) {
+    rtt::Settings::setPrimaryAI(true);
+    rtt::Settings::setYellow(true);
+
     auto world = testhelpers::WorldHelper::getWorldMsg(11, 11, true, testhelpers::FieldHelper::generateField());
     auto const& [_, worldPtr] = rtt::world::World::instance();
     worldPtr->updateWorld(world);

@@ -1,0 +1,10 @@
+cloudpickle==2.2.1
+gym==0.26.2
+gym-notices==0.0.8
+numpy==1.24.3
+opencv-python==4.7.0.72
+protobuf==4.22.3
+PyQt5==5.15.9
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.12.1
+pyzmq==25.0.2

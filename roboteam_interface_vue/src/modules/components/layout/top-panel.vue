@@ -43,7 +43,7 @@ const disabled = computed(() => {
 
       <div class="input-group w-auto">
         <select class="select select-sm select-bordered" v-model="gameController.currentPlay.name" :disabled="disabled">
-          <option v-for="play in gameController.availablePlays" :value="play">
+          <option v-for="play in gameController.availablePlays.plays" :value="play">
             {{ play }}
           </option>
         </select>

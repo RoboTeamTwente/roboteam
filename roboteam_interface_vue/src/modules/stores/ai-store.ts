@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 
 import {proto} from "../../generated/proto";
 import {useSTPDataStore} from "./dataStores/stp-data-store";

@@ -1,6 +1,6 @@
 import {useGameControllerStore} from "../modules/stores/ai-store";
 import {watch} from "vue";
-import {useWebSocket} from "@vueuse/core";
+import {useWebSocket, watchDeep} from "@vueuse/core";
 
 import {proto} from "../generated/proto"
 import {useGameSettingsStore} from "../modules/stores/game-settings-store";
@@ -55,7 +55,7 @@ export const useAIClient = (url: string) => {
         }));
     });
 
-    watch(() => gameControllerStore.currentPlay, () => {
+    watchDeep(() => gameControllerStore.currentPlay, () => {
         console.log('Sending set play', gameControllerStore.currentPlay);
         sendMsg(ws.value!, proto.MsgFromInterface.create({
             setGameState: proto.GameState.create({

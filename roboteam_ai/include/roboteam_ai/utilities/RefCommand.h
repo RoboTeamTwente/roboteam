@@ -5,6 +5,8 @@
 #ifndef RTT_REFCOMMAND_H
 #define RTT_REFCOMMAND_H
 
+#include <unordered_map>
+
 #include <roboteam_utils/Print.h>
 #include <proto/messages_robocup_ssl_referee.pb.h>
 
@@ -90,9 +92,10 @@ namespace rtt {
             {proto::SSL_Referee_Command_BALL_PLACEMENT_BLUE, RefCommand::BALL_PLACEMENT_US}
         };
 
-        if (isYellow && yellowMap.contains(sslRefCmd)) {
+        // .find() != .end() could be replaced by contains in C++20
+        if (isYellow && yellowMap.find(sslRefCmd) != yellowMap.end()) {
             return yellowMap.at(sslRefCmd);
-        } else if (!isYellow && blueMap.contains(sslRefCmd)){
+        } else if (!isYellow && blueMap.find(sslRefCmd) != yellowMap.end()){
             return blueMap.at(sslRefCmd);
         }
 

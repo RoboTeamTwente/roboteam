@@ -9,7 +9,6 @@
 #include "utilities/GameState.h"
 #include "utilities/RefCommand.h"
 #include "utilities/RefGameState.h"
-#include "utilities/StrategyManager.h"
 #include "world/World.hpp"
 
 namespace rtt::ai {

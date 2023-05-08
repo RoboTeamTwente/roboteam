@@ -37,7 +37,6 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
 export const useProtoWebSocket = <TKey extends string>(url: string, options: UseWebSocketOptions, debounce: Record<TKey, boolean>) => {
     const protoData = shallowRef<MsgToInterface | null>(null);
 
-
     const onMessage = async (ws: WebSocket, event: MessageEvent) => {
         const messageBuffer = new Uint8Array(await event.data.arrayBuffer());
         protoData.value = proto.MsgToInterface.decode(messageBuffer);
@@ -54,7 +53,7 @@ export const useProtoWebSocket = <TKey extends string>(url: string, options: Use
         send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
     };
 
-    const {status, data, send} = useWebSocket<Blob>(url, {
+    const {status, send} = useWebSocket<Blob>(url, {
         autoReconnect: true,
         onMessage: onMessage
     });

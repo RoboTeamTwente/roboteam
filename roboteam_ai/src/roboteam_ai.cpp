@@ -1,10 +1,10 @@
 #include <roboteam_utils/Print.h>
 
+#include "RobotHubMode.h"
 #include "STPManager.h"
 #include "interface_api/InterfaceGateway.h"
-#include "roboteam_utils/Timer.h"
 #include "roboteam_utils/ArgParser.h"
-#include "roboteam_utils/RobotHubMode.h"
+#include "roboteam_utils/Timer.h"
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 
@@ -73,13 +73,13 @@ int main(int argc, char** argv) {
 
     // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
     rtt::GameSettings::setRobotHubMode(
-        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::RobotHubMode::BASESTATION : rtt::RobotHubMode::SIMULATOR
+        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::net::RobotHubMode::BASESTATION : rtt::net::RobotHubMode::SIMULATOR
     );
 
 
     RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
     RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
-    RTT_INFO("Starting in mode: ", rtt::modeToString(rtt::GameSettings::getRobotHubMode()))
+    RTT_INFO("Starting in mode: ", rtt::net::modeToString(rtt::GameSettings::getRobotHubMode()))
     RTT_INFO("Playing on side: ", (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
     RTT_INFO("This AI will ", rtt::GameSettings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 

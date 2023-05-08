@@ -10,9 +10,7 @@ const gameSettingsStore = useGameSettingsStore();
 const gameController = useGameControllerStore();
 const stpData = useSTPDataStore();
 
-const disabled = computed(() => {
-  return gameSettingsStore.useReferee ?? false;
-});
+const disabled = computed(() => gameController.useReferee);
 
 </script>
 <template>

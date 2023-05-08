@@ -8,7 +8,6 @@ import {useAIClient} from "./services/ai-client";
 import ResizableSlider from "./modules/components/layout/panel-slider.vue";
 import PanelSlider from "./modules/components/layout/panel-slider.vue";
 import TabedWidgets from "./modules/components/layout/tabed-widgets.vue";
-import {useGameControllerStore} from "./modules/stores/ai-store";
 import {useVisionDataStore} from "./modules/stores/dataStores/vision-data-store";
 
 

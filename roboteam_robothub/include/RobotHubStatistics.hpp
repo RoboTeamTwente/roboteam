@@ -7,6 +7,8 @@
 #include <chrono>
 #include <string>
 
+#include "RobotHubMode.h"
+
 namespace rtt::robothub {
 
 constexpr int MAX_ROBOT_STATISTICS = 16;
@@ -19,7 +21,7 @@ class RobotHubStatistics {
 
     basestation::BasestationManagerStatus basestationManagerStatus{};
 
-    utils::RobotHubMode robotHubMode;
+    net::RobotHubMode robotHubMode;
 
     std::size_t yellowTeamBytesSent;
     std::size_t blueTeamBytesSent;

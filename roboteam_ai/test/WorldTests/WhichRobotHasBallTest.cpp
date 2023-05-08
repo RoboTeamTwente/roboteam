@@ -7,7 +7,7 @@
 
 #include <world/World.hpp>
 
-#include "roboteam_utils/RobotHubMode.h"
+#include "RobotHubMode.h"
 #include "utilities/GameSettings.h"
 
 // TODO: Format the currently copy-pasted tests below properly together

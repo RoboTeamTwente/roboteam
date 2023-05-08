@@ -4,10 +4,10 @@
 
 #include "interface_api/InterfaceGateway.h"
 
+#include "RobotHubMode.h"
 #include "STPManager.h"
 #include "interface_api/RuntimeConfig.h"
 #include "proto/NewInterface.pb.h"
-#include "roboteam_utils/RobotHubMode.h"
 #include "stp/PlayDecider.hpp"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
@@ -68,7 +68,7 @@ void InterfaceGateway::broadcastWorld() {
 
 //// r = 114. t = 116. rtt = 11400+1160+116 = 12676
 InterfaceGateway::InterfaceGateway() : webSocketServer(12676) {
-    webSocketServer.setOnConnectionCallback([&](const std::weak_ptr<ix::WebSocket>& webSocketPtr, const std::shared_ptr<ix::ConnectionState>& connectionState) {
+    webSocketServer.setOnConnectionCallback([&](const std::weak_ptr<ix::WebSocket> webSocketPtr, const std::shared_ptr<ix::ConnectionState>& connectionState) {
         RTT_INFO("WebSocket connection incoming from ", connectionState->getRemoteIp());
         webSocketPtr.lock()->setOnMessageCallback([&, webSocketPtr, connectionState](const std::unique_ptr<ix::WebSocketMessage>& msg) {
             RTT_INFO(connectionState->getRemoteIp(), ", ", connectionState->getId());
@@ -122,7 +122,7 @@ void InterfaceGateway::onConnection(const std::shared_ptr<ix::WebSocket>& wss) {
     ai_settings->set_ignore_invariants(new_interface::RuntimeConfig::ignoreInvariants);
 
     std::string state_str = envelope.SerializeAsString();
-    RTT_DEBUG("Sending setup message to client", setupMessage->DebugString());
+//    RTT_DEBUG("Sending setup message to client");
 
     wss->sendBinary(state_str);
 }
@@ -148,7 +148,7 @@ void InterfaceGateway::onMessage(const proto::MsgFromInterface&& message) {
             const auto& gameSettings = message.set_game_settings();
             GameSettings::setLeft(gameSettings.is_left());
             GameSettings::setYellow(gameSettings.is_yellow());
-            GameSettings::setRobotHubMode(rtt::modeFromProto(gameSettings.robot_hub_mode()));
+            GameSettings::setRobotHubMode(net::modeFromProto(gameSettings.robot_hub_mode()));
         }
             break;
         case proto::MsgFromInterface::kStopResume: {

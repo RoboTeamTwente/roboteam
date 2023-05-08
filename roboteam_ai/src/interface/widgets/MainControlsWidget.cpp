@@ -8,7 +8,7 @@
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
 
-#include "roboteam_utils/RobotHubMode.h"
+#include "RobotHubMode.h"
 #include "utilities/GameSettings.h"
 
 namespace rtt::ai::interface {
@@ -154,12 +154,12 @@ void MainControlsWidget::toggleOurSideParam() {
 /// toggle the the setting 'isSerialMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
     switch (GameSettings::getRobotHubMode()) {
-        case RobotHubMode::BASESTATION: {
-            GameSettings::setRobotHubMode(RobotHubMode::SIMULATOR);
+        case net::RobotHubMode::BASESTATION: {
+            GameSettings::setRobotHubMode(net::RobotHubMode::SIMULATOR);
             break;
         }
-        case RobotHubMode::SIMULATOR: {
-            GameSettings::setRobotHubMode(RobotHubMode::BASESTATION);
+        case net::RobotHubMode::SIMULATOR: {
+            GameSettings::setRobotHubMode(net::RobotHubMode::BASESTATION);
             break;
         }
         default: {

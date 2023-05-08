@@ -36,7 +36,7 @@ class RobotHub {
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::GameSettings settings;
-    utils::RobotHubMode mode = utils::RobotHubMode::NEITHER;
+    net::RobotHubMode mode = net::RobotHubMode::UNKNOWN;
 
     RobotHubStatistics statistics;
 

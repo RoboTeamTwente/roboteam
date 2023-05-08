@@ -4,9 +4,9 @@
 #include <chrono>
 #include <roboteam_utils/RobotCommands.hpp>
 
+#include "RobotHubMode.h"
 #include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
-#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
@@ -123,6 +123,7 @@ bool IOManager::publishRobotCommands(const rtt::RobotCommands& aiCommand, bool f
     }
 
     if (!sentCommands) {
+//        TODO: Uncomment
 //        RTT_ERROR("Failed to send command: Publisher is not initialized (yet)");
     }
 

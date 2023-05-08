@@ -1,11 +1,11 @@
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
-
-#include <iostream>
 #include <chrono>
-#include <thread>
+#include <iostream>
 #include <string>
-#include "roboteam_utils/RobotHubMode.h"
+#include <thread>
+
+#include "RobotHubMode.h"
 
 using namespace rtt::net;
 

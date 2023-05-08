@@ -7,8 +7,9 @@
 
 #include <string>
 #include <string_view>
+#include <proto/GameSettings.pb.h>
 
-namespace rtt {
+namespace rtt::net {
     /**
      * Enumerator that tells where RobotHub should send the robot commands
      */

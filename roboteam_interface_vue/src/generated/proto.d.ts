@@ -448,6 +448,131 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** Properties of a GameSettings. */
+    interface IGameSettings {
+
+        /** GameSettings isPrimaryAi */
+        isPrimaryAi?: (boolean|null);
+
+        /** GameSettings isYellow */
+        isYellow?: (boolean|null);
+
+        /** GameSettings isLeft */
+        isLeft?: (boolean|null);
+
+        /** GameSettings robotHubMode */
+        robotHubMode?: (proto.GameSettings.RobotHubMode|null);
+    }
+
+    /** Represents a GameSettings. */
+    class GameSettings implements IGameSettings {
+
+        /**
+         * Constructs a new GameSettings.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IGameSettings);
+
+        /** GameSettings isPrimaryAi. */
+        public isPrimaryAi: boolean;
+
+        /** GameSettings isYellow. */
+        public isYellow: boolean;
+
+        /** GameSettings isLeft. */
+        public isLeft: boolean;
+
+        /** GameSettings robotHubMode. */
+        public robotHubMode: proto.GameSettings.RobotHubMode;
+
+        /**
+         * Creates a new GameSettings instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GameSettings instance
+         */
+        public static create(properties?: proto.IGameSettings): proto.GameSettings;
+
+        /**
+         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @param message GameSettings message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @param message GameSettings message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameSettings;
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameSettings;
+
+        /**
+         * Verifies a GameSettings message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GameSettings
+         */
+        public static fromObject(object: { [k: string]: any }): proto.GameSettings;
+
+        /**
+         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
+         * @param message GameSettings
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.GameSettings, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GameSettings to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for GameSettings
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace GameSettings {
+
+        /** RobotHubMode enum. */
+        enum RobotHubMode {
+            UNKNOWN = 0,
+            BASESTATION = 1,
+            SIMULATOR = 2
+        }
+    }
+
     /** Properties of a Handshake. */
     interface IHandshake {
 
@@ -2712,6 +2837,12 @@ export namespace proto {
 
         /** SetupMessage isPaused */
         isPaused?: (boolean|null);
+
+        /** SetupMessage gameSettings */
+        gameSettings?: (proto.IGameSettings|null);
+
+        /** SetupMessage aiSettings */
+        aiSettings?: (proto.IAISettings|null);
     }
 
     /** Represents a SetupMessage. */
@@ -2731,6 +2862,12 @@ export namespace proto {
 
         /** SetupMessage isPaused. */
         public isPaused: boolean;
+
+        /** SetupMessage gameSettings. */
+        public gameSettings?: (proto.IGameSettings|null);
+
+        /** SetupMessage aiSettings. */
+        public aiSettings?: (proto.IAISettings|null);
 
         /**
          * Creates a new SetupMessage instance using the specified properties.
@@ -2818,6 +2955,9 @@ export namespace proto {
 
         /** GameState rulesetName */
         rulesetName?: (string|null);
+
+        /** GameState keeperId */
+        keeperId?: (number|null);
     }
 
     /** Represents a GameState. */
@@ -2834,6 +2974,9 @@ export namespace proto {
 
         /** GameState rulesetName. */
         public rulesetName: string;
+
+        /** GameState keeperId. */
+        public keeperId: number;
 
         /**
          * Creates a new GameState instance using the specified properties.
@@ -2913,135 +3056,107 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a GameSettings. */
-    interface IGameSettings {
+    /** Properties of a AISettings. */
+    interface IAISettings {
 
-        /** GameSettings useReferee */
+        /** AISettings useReferee */
         useReferee?: (boolean|null);
 
-        /** GameSettings ignoreInvariants */
+        /** AISettings ignoreInvariants */
         ignoreInvariants?: (boolean|null);
-
-        /** GameSettings hubMode */
-        hubMode?: (proto.GameSettings.RobotHubMode|null);
-
-        /** GameSettings isLeft */
-        isLeft?: (boolean|null);
-
-        /** GameSettings isYellow */
-        isYellow?: (boolean|null);
     }
 
-    /** Represents a GameSettings. */
-    class GameSettings implements IGameSettings {
+    /** Represents a AISettings. */
+    class AISettings implements IAISettings {
 
         /**
-         * Constructs a new GameSettings.
+         * Constructs a new AISettings.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IGameSettings);
+        constructor(properties?: proto.IAISettings);
 
-        /** GameSettings useReferee. */
+        /** AISettings useReferee. */
         public useReferee: boolean;
 
-        /** GameSettings ignoreInvariants. */
+        /** AISettings ignoreInvariants. */
         public ignoreInvariants: boolean;
 
-        /** GameSettings hubMode. */
-        public hubMode: proto.GameSettings.RobotHubMode;
-
-        /** GameSettings isLeft. */
-        public isLeft: boolean;
-
-        /** GameSettings isYellow. */
-        public isYellow: boolean;
-
         /**
-         * Creates a new GameSettings instance using the specified properties.
+         * Creates a new AISettings instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns GameSettings instance
+         * @returns AISettings instance
          */
-        public static create(properties?: proto.IGameSettings): proto.GameSettings;
+        public static create(properties?: proto.IAISettings): proto.AISettings;
 
         /**
-         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
-         * @param message GameSettings message or plain object to encode
+         * Encodes the specified AISettings message. Does not implicitly {@link proto.AISettings.verify|verify} messages.
+         * @param message AISettings message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IAISettings, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
-         * @param message GameSettings message or plain object to encode
+         * Encodes the specified AISettings message, length delimited. Does not implicitly {@link proto.AISettings.verify|verify} messages.
+         * @param message AISettings message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IGameSettings, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IAISettings, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a GameSettings message from the specified reader or buffer.
+         * Decodes a AISettings message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns GameSettings
+         * @returns AISettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameSettings;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.AISettings;
 
         /**
-         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
+         * Decodes a AISettings message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns GameSettings
+         * @returns AISettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameSettings;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.AISettings;
 
         /**
-         * Verifies a GameSettings message.
+         * Verifies a AISettings message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
+         * Creates a AISettings message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns GameSettings
+         * @returns AISettings
          */
-        public static fromObject(object: { [k: string]: any }): proto.GameSettings;
+        public static fromObject(object: { [k: string]: any }): proto.AISettings;
 
         /**
-         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
-         * @param message GameSettings
+         * Creates a plain object from a AISettings message. Also converts values to other types if specified.
+         * @param message AISettings
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.GameSettings, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.AISettings, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this GameSettings to JSON.
+         * Converts this AISettings to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for GameSettings
+         * Gets the default type url for AISettings
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace GameSettings {
-
-        /** RobotHubMode enum. */
-        enum RobotHubMode {
-            UNKNOWN = 0,
-            BASESTATION = 1,
-            SIMULATOR = 2
-        }
     }
 
     /** Properties of a MsgToInterface. */
@@ -3279,6 +3394,9 @@ export namespace proto {
 
         /** MsgFromInterface stopResume */
         stopResume?: (boolean|null);
+
+        /** MsgFromInterface setAiSettings */
+        setAiSettings?: (proto.IAISettings|null);
     }
 
     /** Represents a MsgFromInterface. */
@@ -3299,8 +3417,11 @@ export namespace proto {
         /** MsgFromInterface stopResume. */
         public stopResume?: (boolean|null);
 
+        /** MsgFromInterface setAiSettings. */
+        public setAiSettings?: (proto.IAISettings|null);
+
         /** MsgFromInterface kind. */
-        public kind?: ("setGameState"|"setGameSettings"|"stopResume");
+        public kind?: ("setGameState"|"setGameSettings"|"stopResume"|"setAiSettings");
 
         /**
          * Creates a new MsgFromInterface instance using the specified properties.
@@ -12111,157 +12232,6 @@ export namespace proto {
 
         /**
          * Gets the default type url for RobotsFeedback
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a Setting. */
-    interface ISetting {
-
-        /** Setting id */
-        id?: (number|null);
-
-        /** Setting isYellow */
-        isYellow?: (boolean|null);
-
-        /** Setting isLeft */
-        isLeft?: (boolean|null);
-
-        /** Setting serialMode */
-        serialMode?: (boolean|null);
-
-        /** Setting visionIp */
-        visionIp?: (string|null);
-
-        /** Setting visionPort */
-        visionPort?: (number|null);
-
-        /** Setting refereeIp */
-        refereeIp?: (string|null);
-
-        /** Setting refereePort */
-        refereePort?: (number|null);
-
-        /** Setting robothubSendIp */
-        robothubSendIp?: (string|null);
-
-        /** Setting robothubSendPort */
-        robothubSendPort?: (number|null);
-    }
-
-    /** Represents a Setting. */
-    class Setting implements ISetting {
-
-        /**
-         * Constructs a new Setting.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISetting);
-
-        /** Setting id. */
-        public id: number;
-
-        /** Setting isYellow. */
-        public isYellow: boolean;
-
-        /** Setting isLeft. */
-        public isLeft: boolean;
-
-        /** Setting serialMode. */
-        public serialMode: boolean;
-
-        /** Setting visionIp. */
-        public visionIp: string;
-
-        /** Setting visionPort. */
-        public visionPort: number;
-
-        /** Setting refereeIp. */
-        public refereeIp: string;
-
-        /** Setting refereePort. */
-        public refereePort: number;
-
-        /** Setting robothubSendIp. */
-        public robothubSendIp: string;
-
-        /** Setting robothubSendPort. */
-        public robothubSendPort: number;
-
-        /**
-         * Creates a new Setting instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns Setting instance
-         */
-        public static create(properties?: proto.ISetting): proto.Setting;
-
-        /**
-         * Encodes the specified Setting message. Does not implicitly {@link proto.Setting.verify|verify} messages.
-         * @param message Setting message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISetting, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified Setting message, length delimited. Does not implicitly {@link proto.Setting.verify|verify} messages.
-         * @param message Setting message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISetting, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a Setting message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns Setting
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Setting;
-
-        /**
-         * Decodes a Setting message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns Setting
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Setting;
-
-        /**
-         * Verifies a Setting message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a Setting message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns Setting
-         */
-        public static fromObject(object: { [k: string]: any }): proto.Setting;
-
-        /**
-         * Creates a plain object from a Setting message. Also converts values to other types if specified.
-         * @param message Setting
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.Setting, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this Setting to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for Setting
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

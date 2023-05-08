@@ -1102,6 +1102,319 @@ export const proto = $root.proto = (() => {
         return AIData;
     })();
 
+    proto.GameSettings = (function() {
+
+        /**
+         * Properties of a GameSettings.
+         * @memberof proto
+         * @interface IGameSettings
+         * @property {boolean|null} [isPrimaryAi] GameSettings isPrimaryAi
+         * @property {boolean|null} [isYellow] GameSettings isYellow
+         * @property {boolean|null} [isLeft] GameSettings isLeft
+         * @property {proto.GameSettings.RobotHubMode|null} [robotHubMode] GameSettings robotHubMode
+         */
+
+        /**
+         * Constructs a new GameSettings.
+         * @memberof proto
+         * @classdesc Represents a GameSettings.
+         * @implements IGameSettings
+         * @constructor
+         * @param {proto.IGameSettings=} [properties] Properties to set
+         */
+        function GameSettings(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GameSettings isPrimaryAi.
+         * @member {boolean} isPrimaryAi
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isPrimaryAi = false;
+
+        /**
+         * GameSettings isYellow.
+         * @member {boolean} isYellow
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isYellow = false;
+
+        /**
+         * GameSettings isLeft.
+         * @member {boolean} isLeft
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isLeft = false;
+
+        /**
+         * GameSettings robotHubMode.
+         * @member {proto.GameSettings.RobotHubMode} robotHubMode
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.robotHubMode = 0;
+
+        /**
+         * Creates a new GameSettings instance using the specified properties.
+         * @function create
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings=} [properties] Properties to set
+         * @returns {proto.GameSettings} GameSettings instance
+         */
+        GameSettings.create = function create(properties) {
+            return new GameSettings(properties);
+        };
+
+        /**
+         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @function encode
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameSettings.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.isPrimaryAi != null && Object.hasOwnProperty.call(message, "isPrimaryAi"))
+                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isPrimaryAi);
+            if (message.isYellow != null && Object.hasOwnProperty.call(message, "isYellow"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isYellow);
+            if (message.isLeft != null && Object.hasOwnProperty.call(message, "isLeft"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isLeft);
+            if (message.robotHubMode != null && Object.hasOwnProperty.call(message, "robotHubMode"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.robotHubMode);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameSettings.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.GameSettings
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.GameSettings} GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameSettings.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameSettings();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.isPrimaryAi = reader.bool();
+                        break;
+                    }
+                case 2: {
+                        message.isYellow = reader.bool();
+                        break;
+                    }
+                case 3: {
+                        message.isLeft = reader.bool();
+                        break;
+                    }
+                case 4: {
+                        message.robotHubMode = reader.int32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.GameSettings
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.GameSettings} GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameSettings.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GameSettings message.
+         * @function verify
+         * @memberof proto.GameSettings
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GameSettings.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
+                if (typeof message.isPrimaryAi !== "boolean")
+                    return "isPrimaryAi: boolean expected";
+            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
+                if (typeof message.isYellow !== "boolean")
+                    return "isYellow: boolean expected";
+            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
+                if (typeof message.isLeft !== "boolean")
+                    return "isLeft: boolean expected";
+            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
+                switch (message.robotHubMode) {
+                default:
+                    return "robotHubMode: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            return null;
+        };
+
+        /**
+         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.GameSettings
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.GameSettings} GameSettings
+         */
+        GameSettings.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.GameSettings)
+                return object;
+            let message = new $root.proto.GameSettings();
+            if (object.isPrimaryAi != null)
+                message.isPrimaryAi = Boolean(object.isPrimaryAi);
+            if (object.isYellow != null)
+                message.isYellow = Boolean(object.isYellow);
+            if (object.isLeft != null)
+                message.isLeft = Boolean(object.isLeft);
+            switch (object.robotHubMode) {
+            default:
+                if (typeof object.robotHubMode === "number") {
+                    message.robotHubMode = object.robotHubMode;
+                    break;
+                }
+                break;
+            case "UNKNOWN":
+            case 0:
+                message.robotHubMode = 0;
+                break;
+            case "BASESTATION":
+            case 1:
+                message.robotHubMode = 1;
+                break;
+            case "SIMULATOR":
+            case 2:
+                message.robotHubMode = 2;
+                break;
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.GameSettings} message GameSettings
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GameSettings.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.isPrimaryAi = false;
+                object.isYellow = false;
+                object.isLeft = false;
+                object.robotHubMode = options.enums === String ? "UNKNOWN" : 0;
+            }
+            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
+                object.isPrimaryAi = message.isPrimaryAi;
+            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
+                object.isYellow = message.isYellow;
+            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
+                object.isLeft = message.isLeft;
+            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
+                object.robotHubMode = options.enums === String ? $root.proto.GameSettings.RobotHubMode[message.robotHubMode] === undefined ? message.robotHubMode : $root.proto.GameSettings.RobotHubMode[message.robotHubMode] : message.robotHubMode;
+            return object;
+        };
+
+        /**
+         * Converts this GameSettings to JSON.
+         * @function toJSON
+         * @memberof proto.GameSettings
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GameSettings.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for GameSettings
+         * @function getTypeUrl
+         * @memberof proto.GameSettings
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        GameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.GameSettings";
+        };
+
+        /**
+         * RobotHubMode enum.
+         * @name proto.GameSettings.RobotHubMode
+         * @enum {number}
+         * @property {number} UNKNOWN=0 UNKNOWN value
+         * @property {number} BASESTATION=1 BASESTATION value
+         * @property {number} SIMULATOR=2 SIMULATOR value
+         */
+        GameSettings.RobotHubMode = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "UNKNOWN"] = 0;
+            values[valuesById[1] = "BASESTATION"] = 1;
+            values[valuesById[2] = "SIMULATOR"] = 2;
+            return values;
+        })();
+
+        return GameSettings;
+    })();
+
     proto.Handshake = (function() {
 
         /**
@@ -6810,6 +7123,8 @@ export const proto = $root.proto = (() => {
          * @property {Array.<string>|null} [availablePlays] SetupMessage availablePlays
          * @property {Array.<string>|null} [availableRulesets] SetupMessage availableRulesets
          * @property {boolean|null} [isPaused] SetupMessage isPaused
+         * @property {proto.IGameSettings|null} [gameSettings] SetupMessage gameSettings
+         * @property {proto.IAISettings|null} [aiSettings] SetupMessage aiSettings
          */
 
         /**
@@ -6854,6 +7169,22 @@ export const proto = $root.proto = (() => {
         SetupMessage.prototype.isPaused = false;
 
         /**
+         * SetupMessage gameSettings.
+         * @member {proto.IGameSettings|null|undefined} gameSettings
+         * @memberof proto.SetupMessage
+         * @instance
+         */
+        SetupMessage.prototype.gameSettings = null;
+
+        /**
+         * SetupMessage aiSettings.
+         * @member {proto.IAISettings|null|undefined} aiSettings
+         * @memberof proto.SetupMessage
+         * @instance
+         */
+        SetupMessage.prototype.aiSettings = null;
+
+        /**
          * Creates a new SetupMessage instance using the specified properties.
          * @function create
          * @memberof proto.SetupMessage
@@ -6885,6 +7216,10 @@ export const proto = $root.proto = (() => {
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.availableRulesets[i]);
             if (message.isPaused != null && Object.hasOwnProperty.call(message, "isPaused"))
                 writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isPaused);
+            if (message.gameSettings != null && Object.hasOwnProperty.call(message, "gameSettings"))
+                $root.proto.GameSettings.encode(message.gameSettings, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.aiSettings != null && Object.hasOwnProperty.call(message, "aiSettings"))
+                $root.proto.AISettings.encode(message.aiSettings, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             return writer;
         };
 
@@ -6933,6 +7268,14 @@ export const proto = $root.proto = (() => {
                     }
                 case 3: {
                         message.isPaused = reader.bool();
+                        break;
+                    }
+                case 4: {
+                        message.gameSettings = $root.proto.GameSettings.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 5: {
+                        message.aiSettings = $root.proto.AISettings.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -6987,6 +7330,16 @@ export const proto = $root.proto = (() => {
             if (message.isPaused != null && message.hasOwnProperty("isPaused"))
                 if (typeof message.isPaused !== "boolean")
                     return "isPaused: boolean expected";
+            if (message.gameSettings != null && message.hasOwnProperty("gameSettings")) {
+                let error = $root.proto.GameSettings.verify(message.gameSettings);
+                if (error)
+                    return "gameSettings." + error;
+            }
+            if (message.aiSettings != null && message.hasOwnProperty("aiSettings")) {
+                let error = $root.proto.AISettings.verify(message.aiSettings);
+                if (error)
+                    return "aiSettings." + error;
+            }
             return null;
         };
 
@@ -7018,6 +7371,16 @@ export const proto = $root.proto = (() => {
             }
             if (object.isPaused != null)
                 message.isPaused = Boolean(object.isPaused);
+            if (object.gameSettings != null) {
+                if (typeof object.gameSettings !== "object")
+                    throw TypeError(".proto.SetupMessage.gameSettings: object expected");
+                message.gameSettings = $root.proto.GameSettings.fromObject(object.gameSettings);
+            }
+            if (object.aiSettings != null) {
+                if (typeof object.aiSettings !== "object")
+                    throw TypeError(".proto.SetupMessage.aiSettings: object expected");
+                message.aiSettings = $root.proto.AISettings.fromObject(object.aiSettings);
+            }
             return message;
         };
 
@@ -7038,8 +7401,11 @@ export const proto = $root.proto = (() => {
                 object.availablePlays = [];
                 object.availableRulesets = [];
             }
-            if (options.defaults)
+            if (options.defaults) {
                 object.isPaused = false;
+                object.gameSettings = null;
+                object.aiSettings = null;
+            }
             if (message.availablePlays && message.availablePlays.length) {
                 object.availablePlays = [];
                 for (let j = 0; j < message.availablePlays.length; ++j)
@@ -7052,6 +7418,10 @@ export const proto = $root.proto = (() => {
             }
             if (message.isPaused != null && message.hasOwnProperty("isPaused"))
                 object.isPaused = message.isPaused;
+            if (message.gameSettings != null && message.hasOwnProperty("gameSettings"))
+                object.gameSettings = $root.proto.GameSettings.toObject(message.gameSettings, options);
+            if (message.aiSettings != null && message.hasOwnProperty("aiSettings"))
+                object.aiSettings = $root.proto.AISettings.toObject(message.aiSettings, options);
             return object;
         };
 
@@ -7092,6 +7462,7 @@ export const proto = $root.proto = (() => {
          * @interface IGameState
          * @property {string|null} [playName] GameState playName
          * @property {string|null} [rulesetName] GameState rulesetName
+         * @property {number|null} [keeperId] GameState keeperId
          */
 
         /**
@@ -7126,6 +7497,14 @@ export const proto = $root.proto = (() => {
         GameState.prototype.rulesetName = "";
 
         /**
+         * GameState keeperId.
+         * @member {number} keeperId
+         * @memberof proto.GameState
+         * @instance
+         */
+        GameState.prototype.keeperId = 0;
+
+        /**
          * Creates a new GameState instance using the specified properties.
          * @function create
          * @memberof proto.GameState
@@ -7153,6 +7532,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.playName);
             if (message.rulesetName != null && Object.hasOwnProperty.call(message, "rulesetName"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.rulesetName);
+            if (message.keeperId != null && Object.hasOwnProperty.call(message, "keeperId"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.keeperId);
             return writer;
         };
 
@@ -7193,6 +7574,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 2: {
                         message.rulesetName = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.keeperId = reader.int32();
                         break;
                     }
                 default:
@@ -7236,6 +7621,9 @@ export const proto = $root.proto = (() => {
             if (message.rulesetName != null && message.hasOwnProperty("rulesetName"))
                 if (!$util.isString(message.rulesetName))
                     return "rulesetName: string expected";
+            if (message.keeperId != null && message.hasOwnProperty("keeperId"))
+                if (!$util.isInteger(message.keeperId))
+                    return "keeperId: integer expected";
             return null;
         };
 
@@ -7255,6 +7643,8 @@ export const proto = $root.proto = (() => {
                 message.playName = String(object.playName);
             if (object.rulesetName != null)
                 message.rulesetName = String(object.rulesetName);
+            if (object.keeperId != null)
+                message.keeperId = object.keeperId | 0;
             return message;
         };
 
@@ -7274,11 +7664,14 @@ export const proto = $root.proto = (() => {
             if (options.defaults) {
                 object.playName = "";
                 object.rulesetName = "";
+                object.keeperId = 0;
             }
             if (message.playName != null && message.hasOwnProperty("playName"))
                 object.playName = message.playName;
             if (message.rulesetName != null && message.hasOwnProperty("rulesetName"))
                 object.rulesetName = message.rulesetName;
+            if (message.keeperId != null && message.hasOwnProperty("keeperId"))
+                object.keeperId = message.keeperId;
             return object;
         };
 
@@ -7311,28 +7704,25 @@ export const proto = $root.proto = (() => {
         return GameState;
     })();
 
-    proto.GameSettings = (function() {
+    proto.AISettings = (function() {
 
         /**
-         * Properties of a GameSettings.
+         * Properties of a AISettings.
          * @memberof proto
-         * @interface IGameSettings
-         * @property {boolean|null} [useReferee] GameSettings useReferee
-         * @property {boolean|null} [ignoreInvariants] GameSettings ignoreInvariants
-         * @property {proto.GameSettings.RobotHubMode|null} [hubMode] GameSettings hubMode
-         * @property {boolean|null} [isLeft] GameSettings isLeft
-         * @property {boolean|null} [isYellow] GameSettings isYellow
+         * @interface IAISettings
+         * @property {boolean|null} [useReferee] AISettings useReferee
+         * @property {boolean|null} [ignoreInvariants] AISettings ignoreInvariants
          */
 
         /**
-         * Constructs a new GameSettings.
+         * Constructs a new AISettings.
          * @memberof proto
-         * @classdesc Represents a GameSettings.
-         * @implements IGameSettings
+         * @classdesc Represents a AISettings.
+         * @implements IAISettings
          * @constructor
-         * @param {proto.IGameSettings=} [properties] Properties to set
+         * @param {proto.IAISettings=} [properties] Properties to set
          */
-        function GameSettings(properties) {
+        function AISettings(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -7340,110 +7730,80 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * GameSettings useReferee.
+         * AISettings useReferee.
          * @member {boolean} useReferee
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @instance
          */
-        GameSettings.prototype.useReferee = false;
+        AISettings.prototype.useReferee = false;
 
         /**
-         * GameSettings ignoreInvariants.
+         * AISettings ignoreInvariants.
          * @member {boolean} ignoreInvariants
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @instance
          */
-        GameSettings.prototype.ignoreInvariants = false;
+        AISettings.prototype.ignoreInvariants = false;
 
         /**
-         * GameSettings hubMode.
-         * @member {proto.GameSettings.RobotHubMode} hubMode
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.hubMode = 0;
-
-        /**
-         * GameSettings isLeft.
-         * @member {boolean} isLeft
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.isLeft = false;
-
-        /**
-         * GameSettings isYellow.
-         * @member {boolean} isYellow
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.isYellow = false;
-
-        /**
-         * Creates a new GameSettings instance using the specified properties.
+         * Creates a new AISettings instance using the specified properties.
          * @function create
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
-         * @param {proto.IGameSettings=} [properties] Properties to set
-         * @returns {proto.GameSettings} GameSettings instance
+         * @param {proto.IAISettings=} [properties] Properties to set
+         * @returns {proto.AISettings} AISettings instance
          */
-        GameSettings.create = function create(properties) {
-            return new GameSettings(properties);
+        AISettings.create = function create(properties) {
+            return new AISettings(properties);
         };
 
         /**
-         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * Encodes the specified AISettings message. Does not implicitly {@link proto.AISettings.verify|verify} messages.
          * @function encode
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
-         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {proto.IAISettings} message AISettings message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        GameSettings.encode = function encode(message, writer) {
+        AISettings.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
             if (message.useReferee != null && Object.hasOwnProperty.call(message, "useReferee"))
                 writer.uint32(/* id 1, wireType 0 =*/8).bool(message.useReferee);
             if (message.ignoreInvariants != null && Object.hasOwnProperty.call(message, "ignoreInvariants"))
                 writer.uint32(/* id 2, wireType 0 =*/16).bool(message.ignoreInvariants);
-            if (message.hubMode != null && Object.hasOwnProperty.call(message, "hubMode"))
-                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.hubMode);
-            if (message.isLeft != null && Object.hasOwnProperty.call(message, "isLeft"))
-                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isLeft);
-            if (message.isYellow != null && Object.hasOwnProperty.call(message, "isYellow"))
-                writer.uint32(/* id 5, wireType 0 =*/40).bool(message.isYellow);
             return writer;
         };
 
         /**
-         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * Encodes the specified AISettings message, length delimited. Does not implicitly {@link proto.AISettings.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
-         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {proto.IAISettings} message AISettings message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        GameSettings.encodeDelimited = function encodeDelimited(message, writer) {
+        AISettings.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes a GameSettings message from the specified reader or buffer.
+         * Decodes a AISettings message from the specified reader or buffer.
          * @function decode
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {proto.GameSettings} GameSettings
+         * @returns {proto.AISettings} AISettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        GameSettings.decode = function decode(reader, length) {
+        AISettings.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameSettings();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.AISettings();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -7455,18 +7815,6 @@ export const proto = $root.proto = (() => {
                         message.ignoreInvariants = reader.bool();
                         break;
                     }
-                case 3: {
-                        message.hubMode = reader.int32();
-                        break;
-                    }
-                case 4: {
-                        message.isLeft = reader.bool();
-                        break;
-                    }
-                case 5: {
-                        message.isYellow = reader.bool();
-                        break;
-                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -7476,30 +7824,30 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
+         * Decodes a AISettings message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.GameSettings} GameSettings
+         * @returns {proto.AISettings} AISettings
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        GameSettings.decodeDelimited = function decodeDelimited(reader) {
+        AISettings.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies a GameSettings message.
+         * Verifies a AISettings message.
          * @function verify
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        GameSettings.verify = function verify(message) {
+        AISettings.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
             if (message.useReferee != null && message.hasOwnProperty("useReferee"))
@@ -7508,143 +7856,79 @@ export const proto = $root.proto = (() => {
             if (message.ignoreInvariants != null && message.hasOwnProperty("ignoreInvariants"))
                 if (typeof message.ignoreInvariants !== "boolean")
                     return "ignoreInvariants: boolean expected";
-            if (message.hubMode != null && message.hasOwnProperty("hubMode"))
-                switch (message.hubMode) {
-                default:
-                    return "hubMode: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                if (typeof message.isLeft !== "boolean")
-                    return "isLeft: boolean expected";
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                if (typeof message.isYellow !== "boolean")
-                    return "isYellow: boolean expected";
             return null;
         };
 
         /**
-         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
+         * Creates a AISettings message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {proto.GameSettings} GameSettings
+         * @returns {proto.AISettings} AISettings
          */
-        GameSettings.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.GameSettings)
+        AISettings.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.AISettings)
                 return object;
-            let message = new $root.proto.GameSettings();
+            let message = new $root.proto.AISettings();
             if (object.useReferee != null)
                 message.useReferee = Boolean(object.useReferee);
             if (object.ignoreInvariants != null)
                 message.ignoreInvariants = Boolean(object.ignoreInvariants);
-            switch (object.hubMode) {
-            default:
-                if (typeof object.hubMode === "number") {
-                    message.hubMode = object.hubMode;
-                    break;
-                }
-                break;
-            case "UNKNOWN":
-            case 0:
-                message.hubMode = 0;
-                break;
-            case "BASESTATION":
-            case 1:
-                message.hubMode = 1;
-                break;
-            case "SIMULATOR":
-            case 2:
-                message.hubMode = 2;
-                break;
-            }
-            if (object.isLeft != null)
-                message.isLeft = Boolean(object.isLeft);
-            if (object.isYellow != null)
-                message.isYellow = Boolean(object.isYellow);
             return message;
         };
 
         /**
-         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
+         * Creates a plain object from a AISettings message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
-         * @param {proto.GameSettings} message GameSettings
+         * @param {proto.AISettings} message AISettings
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        GameSettings.toObject = function toObject(message, options) {
+        AISettings.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             let object = {};
             if (options.defaults) {
                 object.useReferee = false;
                 object.ignoreInvariants = false;
-                object.hubMode = options.enums === String ? "UNKNOWN" : 0;
-                object.isLeft = false;
-                object.isYellow = false;
             }
             if (message.useReferee != null && message.hasOwnProperty("useReferee"))
                 object.useReferee = message.useReferee;
             if (message.ignoreInvariants != null && message.hasOwnProperty("ignoreInvariants"))
                 object.ignoreInvariants = message.ignoreInvariants;
-            if (message.hubMode != null && message.hasOwnProperty("hubMode"))
-                object.hubMode = options.enums === String ? $root.proto.GameSettings.RobotHubMode[message.hubMode] === undefined ? message.hubMode : $root.proto.GameSettings.RobotHubMode[message.hubMode] : message.hubMode;
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                object.isLeft = message.isLeft;
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                object.isYellow = message.isYellow;
             return object;
         };
 
         /**
-         * Converts this GameSettings to JSON.
+         * Converts this AISettings to JSON.
          * @function toJSON
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        GameSettings.prototype.toJSON = function toJSON() {
+        AISettings.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for GameSettings
+         * Gets the default type url for AISettings
          * @function getTypeUrl
-         * @memberof proto.GameSettings
+         * @memberof proto.AISettings
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        GameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        AISettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/proto.GameSettings";
+            return typeUrlPrefix + "/proto.AISettings";
         };
 
-        /**
-         * RobotHubMode enum.
-         * @name proto.GameSettings.RobotHubMode
-         * @enum {number}
-         * @property {number} UNKNOWN=0 UNKNOWN value
-         * @property {number} BASESTATION=1 BASESTATION value
-         * @property {number} SIMULATOR=2 SIMULATOR value
-         */
-        GameSettings.RobotHubMode = (function() {
-            const valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "UNKNOWN"] = 0;
-            values[valuesById[1] = "BASESTATION"] = 1;
-            values[valuesById[2] = "SIMULATOR"] = 2;
-            return values;
-        })();
-
-        return GameSettings;
+        return AISettings;
     })();
 
     proto.MsgToInterface = (function() {
@@ -8257,6 +8541,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.IGameState|null} [setGameState] MsgFromInterface setGameState
          * @property {proto.IGameSettings|null} [setGameSettings] MsgFromInterface setGameSettings
          * @property {boolean|null} [stopResume] MsgFromInterface stopResume
+         * @property {proto.IAISettings|null} [setAiSettings] MsgFromInterface setAiSettings
          */
 
         /**
@@ -8298,17 +8583,25 @@ export const proto = $root.proto = (() => {
          */
         MsgFromInterface.prototype.stopResume = null;
 
+        /**
+         * MsgFromInterface setAiSettings.
+         * @member {proto.IAISettings|null|undefined} setAiSettings
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.setAiSettings = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MsgFromInterface kind.
-         * @member {"setGameState"|"setGameSettings"|"stopResume"|undefined} kind
+         * @member {"setGameState"|"setGameSettings"|"stopResume"|"setAiSettings"|undefined} kind
          * @memberof proto.MsgFromInterface
          * @instance
          */
         Object.defineProperty(MsgFromInterface.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["setGameState", "setGameSettings", "stopResume"]),
+            get: $util.oneOfGetter($oneOfFields = ["setGameState", "setGameSettings", "stopResume", "setAiSettings"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -8342,6 +8635,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.GameSettings.encode(message.setGameSettings, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.stopResume != null && Object.hasOwnProperty.call(message, "stopResume"))
                 writer.uint32(/* id 3, wireType 0 =*/24).bool(message.stopResume);
+            if (message.setAiSettings != null && Object.hasOwnProperty.call(message, "setAiSettings"))
+                $root.proto.AISettings.encode(message.setAiSettings, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -8386,6 +8681,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 3: {
                         message.stopResume = reader.bool();
+                        break;
+                    }
+                case 4: {
+                        message.setAiSettings = $root.proto.AISettings.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -8449,6 +8748,16 @@ export const proto = $root.proto = (() => {
                 if (typeof message.stopResume !== "boolean")
                     return "stopResume: boolean expected";
             }
+            if (message.setAiSettings != null && message.hasOwnProperty("setAiSettings")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.AISettings.verify(message.setAiSettings);
+                    if (error)
+                        return "setAiSettings." + error;
+                }
+            }
             return null;
         };
 
@@ -8476,6 +8785,11 @@ export const proto = $root.proto = (() => {
             }
             if (object.stopResume != null)
                 message.stopResume = Boolean(object.stopResume);
+            if (object.setAiSettings != null) {
+                if (typeof object.setAiSettings !== "object")
+                    throw TypeError(".proto.MsgFromInterface.setAiSettings: object expected");
+                message.setAiSettings = $root.proto.AISettings.fromObject(object.setAiSettings);
+            }
             return message;
         };
 
@@ -8506,6 +8820,11 @@ export const proto = $root.proto = (() => {
                 object.stopResume = message.stopResume;
                 if (options.oneofs)
                     object.kind = "stopResume";
+            }
+            if (message.setAiSettings != null && message.hasOwnProperty("setAiSettings")) {
+                object.setAiSettings = $root.proto.AISettings.toObject(message.setAiSettings, options);
+                if (options.oneofs)
+                    object.kind = "setAiSettings";
             }
             return object;
         };
@@ -32629,417 +32948,6 @@ export const proto = $root.proto = (() => {
         };
 
         return RobotsFeedback;
-    })();
-
-    proto.Setting = (function() {
-
-        /**
-         * Properties of a Setting.
-         * @memberof proto
-         * @interface ISetting
-         * @property {number|null} [id] Setting id
-         * @property {boolean|null} [isYellow] Setting isYellow
-         * @property {boolean|null} [isLeft] Setting isLeft
-         * @property {boolean|null} [serialMode] Setting serialMode
-         * @property {string|null} [visionIp] Setting visionIp
-         * @property {number|null} [visionPort] Setting visionPort
-         * @property {string|null} [refereeIp] Setting refereeIp
-         * @property {number|null} [refereePort] Setting refereePort
-         * @property {string|null} [robothubSendIp] Setting robothubSendIp
-         * @property {number|null} [robothubSendPort] Setting robothubSendPort
-         */
-
-        /**
-         * Constructs a new Setting.
-         * @memberof proto
-         * @classdesc Represents a Setting.
-         * @implements ISetting
-         * @constructor
-         * @param {proto.ISetting=} [properties] Properties to set
-         */
-        function Setting(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * Setting id.
-         * @member {number} id
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.id = 0;
-
-        /**
-         * Setting isYellow.
-         * @member {boolean} isYellow
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.isYellow = false;
-
-        /**
-         * Setting isLeft.
-         * @member {boolean} isLeft
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.isLeft = false;
-
-        /**
-         * Setting serialMode.
-         * @member {boolean} serialMode
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.serialMode = false;
-
-        /**
-         * Setting visionIp.
-         * @member {string} visionIp
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.visionIp = "";
-
-        /**
-         * Setting visionPort.
-         * @member {number} visionPort
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.visionPort = 0;
-
-        /**
-         * Setting refereeIp.
-         * @member {string} refereeIp
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.refereeIp = "";
-
-        /**
-         * Setting refereePort.
-         * @member {number} refereePort
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.refereePort = 0;
-
-        /**
-         * Setting robothubSendIp.
-         * @member {string} robothubSendIp
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.robothubSendIp = "";
-
-        /**
-         * Setting robothubSendPort.
-         * @member {number} robothubSendPort
-         * @memberof proto.Setting
-         * @instance
-         */
-        Setting.prototype.robothubSendPort = 0;
-
-        /**
-         * Creates a new Setting instance using the specified properties.
-         * @function create
-         * @memberof proto.Setting
-         * @static
-         * @param {proto.ISetting=} [properties] Properties to set
-         * @returns {proto.Setting} Setting instance
-         */
-        Setting.create = function create(properties) {
-            return new Setting(properties);
-        };
-
-        /**
-         * Encodes the specified Setting message. Does not implicitly {@link proto.Setting.verify|verify} messages.
-         * @function encode
-         * @memberof proto.Setting
-         * @static
-         * @param {proto.ISetting} message Setting message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        Setting.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
-                writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.id);
-            if (message.isYellow != null && Object.hasOwnProperty.call(message, "isYellow"))
-                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isYellow);
-            if (message.isLeft != null && Object.hasOwnProperty.call(message, "isLeft"))
-                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isLeft);
-            if (message.serialMode != null && Object.hasOwnProperty.call(message, "serialMode"))
-                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.serialMode);
-            if (message.visionIp != null && Object.hasOwnProperty.call(message, "visionIp"))
-                writer.uint32(/* id 5, wireType 2 =*/42).string(message.visionIp);
-            if (message.visionPort != null && Object.hasOwnProperty.call(message, "visionPort"))
-                writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.visionPort);
-            if (message.refereeIp != null && Object.hasOwnProperty.call(message, "refereeIp"))
-                writer.uint32(/* id 7, wireType 2 =*/58).string(message.refereeIp);
-            if (message.refereePort != null && Object.hasOwnProperty.call(message, "refereePort"))
-                writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.refereePort);
-            if (message.robothubSendIp != null && Object.hasOwnProperty.call(message, "robothubSendIp"))
-                writer.uint32(/* id 9, wireType 2 =*/74).string(message.robothubSendIp);
-            if (message.robothubSendPort != null && Object.hasOwnProperty.call(message, "robothubSendPort"))
-                writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.robothubSendPort);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified Setting message, length delimited. Does not implicitly {@link proto.Setting.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.Setting
-         * @static
-         * @param {proto.ISetting} message Setting message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        Setting.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a Setting message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.Setting
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.Setting} Setting
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        Setting.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Setting();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.id = reader.uint32();
-                        break;
-                    }
-                case 2: {
-                        message.isYellow = reader.bool();
-                        break;
-                    }
-                case 3: {
-                        message.isLeft = reader.bool();
-                        break;
-                    }
-                case 4: {
-                        message.serialMode = reader.bool();
-                        break;
-                    }
-                case 5: {
-                        message.visionIp = reader.string();
-                        break;
-                    }
-                case 6: {
-                        message.visionPort = reader.uint32();
-                        break;
-                    }
-                case 7: {
-                        message.refereeIp = reader.string();
-                        break;
-                    }
-                case 8: {
-                        message.refereePort = reader.uint32();
-                        break;
-                    }
-                case 9: {
-                        message.robothubSendIp = reader.string();
-                        break;
-                    }
-                case 10: {
-                        message.robothubSendPort = reader.uint32();
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a Setting message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.Setting
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.Setting} Setting
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        Setting.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a Setting message.
-         * @function verify
-         * @memberof proto.Setting
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        Setting.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.id != null && message.hasOwnProperty("id"))
-                if (!$util.isInteger(message.id))
-                    return "id: integer expected";
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                if (typeof message.isYellow !== "boolean")
-                    return "isYellow: boolean expected";
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                if (typeof message.isLeft !== "boolean")
-                    return "isLeft: boolean expected";
-            if (message.serialMode != null && message.hasOwnProperty("serialMode"))
-                if (typeof message.serialMode !== "boolean")
-                    return "serialMode: boolean expected";
-            if (message.visionIp != null && message.hasOwnProperty("visionIp"))
-                if (!$util.isString(message.visionIp))
-                    return "visionIp: string expected";
-            if (message.visionPort != null && message.hasOwnProperty("visionPort"))
-                if (!$util.isInteger(message.visionPort))
-                    return "visionPort: integer expected";
-            if (message.refereeIp != null && message.hasOwnProperty("refereeIp"))
-                if (!$util.isString(message.refereeIp))
-                    return "refereeIp: string expected";
-            if (message.refereePort != null && message.hasOwnProperty("refereePort"))
-                if (!$util.isInteger(message.refereePort))
-                    return "refereePort: integer expected";
-            if (message.robothubSendIp != null && message.hasOwnProperty("robothubSendIp"))
-                if (!$util.isString(message.robothubSendIp))
-                    return "robothubSendIp: string expected";
-            if (message.robothubSendPort != null && message.hasOwnProperty("robothubSendPort"))
-                if (!$util.isInteger(message.robothubSendPort))
-                    return "robothubSendPort: integer expected";
-            return null;
-        };
-
-        /**
-         * Creates a Setting message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.Setting
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.Setting} Setting
-         */
-        Setting.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.Setting)
-                return object;
-            let message = new $root.proto.Setting();
-            if (object.id != null)
-                message.id = object.id >>> 0;
-            if (object.isYellow != null)
-                message.isYellow = Boolean(object.isYellow);
-            if (object.isLeft != null)
-                message.isLeft = Boolean(object.isLeft);
-            if (object.serialMode != null)
-                message.serialMode = Boolean(object.serialMode);
-            if (object.visionIp != null)
-                message.visionIp = String(object.visionIp);
-            if (object.visionPort != null)
-                message.visionPort = object.visionPort >>> 0;
-            if (object.refereeIp != null)
-                message.refereeIp = String(object.refereeIp);
-            if (object.refereePort != null)
-                message.refereePort = object.refereePort >>> 0;
-            if (object.robothubSendIp != null)
-                message.robothubSendIp = String(object.robothubSendIp);
-            if (object.robothubSendPort != null)
-                message.robothubSendPort = object.robothubSendPort >>> 0;
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a Setting message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.Setting
-         * @static
-         * @param {proto.Setting} message Setting
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        Setting.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.id = 0;
-                object.isYellow = false;
-                object.isLeft = false;
-                object.serialMode = false;
-                object.visionIp = "";
-                object.visionPort = 0;
-                object.refereeIp = "";
-                object.refereePort = 0;
-                object.robothubSendIp = "";
-                object.robothubSendPort = 0;
-            }
-            if (message.id != null && message.hasOwnProperty("id"))
-                object.id = message.id;
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                object.isYellow = message.isYellow;
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                object.isLeft = message.isLeft;
-            if (message.serialMode != null && message.hasOwnProperty("serialMode"))
-                object.serialMode = message.serialMode;
-            if (message.visionIp != null && message.hasOwnProperty("visionIp"))
-                object.visionIp = message.visionIp;
-            if (message.visionPort != null && message.hasOwnProperty("visionPort"))
-                object.visionPort = message.visionPort;
-            if (message.refereeIp != null && message.hasOwnProperty("refereeIp"))
-                object.refereeIp = message.refereeIp;
-            if (message.refereePort != null && message.hasOwnProperty("refereePort"))
-                object.refereePort = message.refereePort;
-            if (message.robothubSendIp != null && message.hasOwnProperty("robothubSendIp"))
-                object.robothubSendIp = message.robothubSendIp;
-            if (message.robothubSendPort != null && message.hasOwnProperty("robothubSendPort"))
-                object.robothubSendPort = message.robothubSendPort;
-            return object;
-        };
-
-        /**
-         * Converts this Setting to JSON.
-         * @function toJSON
-         * @memberof proto.Setting
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        Setting.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for Setting
-         * @function getTypeUrl
-         * @memberof proto.Setting
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        Setting.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.Setting";
-        };
-
-        return Setting;
     })();
 
     proto.SimulationBallLocation = (function() {

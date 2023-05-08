@@ -108,12 +108,15 @@ message SetupMessage {
     repeated string available_plays = 1;
     repeated string available_rulesets = 2;
     bool is_paused = 3;
+    GameSettings game_settings = 4;
+    AISettings ai_settings = 5;
 }
 
 
 message GameState {
     string playName = 1;
     string rulesetName = 2;
+    int32 keeper_id = 3;
 }
 
 //message GameSettings {

@@ -11,7 +11,7 @@ export const useGameSettingsStore = defineStore('gameSettingsStore', () => {
     const robotHubMode = ref<RobotHubMode>(RobotHubMode.UNKNOWN);
 
     const goalColor = computed(() => {
-        return isYellow
+        return isYellow.value
             ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
             : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
     });
@@ -25,7 +25,7 @@ export const useGameSettingsStore = defineStore('gameSettingsStore', () => {
 
 
     const fieldOrientation = computed(() => {
-        return isLeft
+        return isLeft.value
             ? {x: 1, y: -1, angle: 0}
             : {x: -1, y: 1, angle: 180};
     });

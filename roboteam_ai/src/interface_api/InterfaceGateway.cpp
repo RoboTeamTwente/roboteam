@@ -132,8 +132,6 @@ void InterfaceGateway::onMessage(const proto::MsgFromInterface&& message) {
 
     switch (message.kind_case()) {
         case proto::MsgFromInterface::kSetGameState: {
-            //            ai::stp::PlayDecider::lockInterfacePlay(message.set_game_state().playname());  // TODO: How is(was) this thread safe?
-            //            ai::interface::Output::setRuleSetName(message.set_game_state().rulesetname());
             const auto& data = message.set_game_state();
             ai::GameStateManager::setGameStateFromInterface(data.playname(), data.rulesetname(), data.keeper_id());
             new_interface::RuntimeConfig::interfacePlay.push(data.playname());

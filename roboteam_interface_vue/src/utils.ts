@@ -55,13 +55,13 @@ export const useProtoWebSocket = <TKey extends string>(url: string, options: Use
 
     const {status, send} = useWebSocket<Blob>(url, {
         autoReconnect: true,
-        onMessage: onMessage
+        onMessage: onMessage,
     });
 
     return {
         data: protoData as ShallowRef<proto.MsgToInterface>,
         status,
         send: sendProtoMsg,
-        debounce
+        debounce,
     }
 }

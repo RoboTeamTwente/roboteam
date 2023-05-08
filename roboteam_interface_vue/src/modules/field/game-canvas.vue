@@ -12,6 +12,7 @@ import IWorldRobot = proto.IWorldRobot;
 import Category = proto.Drawing.Category;
 import {useSTPDataStore} from "../stores/dataStores/stp-data-store";
 import {useVisionDataStore} from "../stores/dataStores/vision-data-store";
+import {watchDeep} from "@vueuse/core";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -39,7 +40,7 @@ watch(() => gameSettingsStore.isYellow, () => {
 });
 
 // When the scaling setting changes, update the scaling of the drawings
-watch(() => uiStore.scaling, () => {
+watchDeep(() => uiStore.scaling, () => {
     drawings.ball.scale.set(uiStore.scaling.ball);
     drawings.blueRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
     drawings.yellowRobots.forEach(robot => robot.scale.set(uiStore.scaling.robots));
@@ -69,6 +70,8 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
 }
 
 const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => {
+    console.log("Drawing field");
+
     // Remove old field drawing
     layers.fieldGeometry.removeChildren(0).forEach((child) => child.destroy());
 

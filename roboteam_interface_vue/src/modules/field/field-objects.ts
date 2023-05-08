@@ -166,7 +166,7 @@ export class BallDrawing extends Graphics {
 export class FieldDrawing extends Graphics {
     constructor({
                     fieldGeometry,
-                    fieldColors
+                    fieldColors,
                 }: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, fieldColors: FieldColors }) {
         super();
         fieldGeometry.fieldLines?.forEach((line) => {

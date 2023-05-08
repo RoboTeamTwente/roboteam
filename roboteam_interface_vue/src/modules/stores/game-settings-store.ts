@@ -1,27 +1,41 @@
 import {defineStore} from 'pinia'
 import {Colors} from "../field/field-objects";
-import {computed, reactive} from "vue";
+import {computed, ref} from "vue";
 import {proto} from "../../generated/proto";
-import IGameSettings = proto.IGameSettings;
+import RobotHubMode = proto.GameSettings.RobotHubMode;
 
 
 export const useGameSettingsStore = defineStore('gameSettingsStore', () => {
-    const value = reactive<IGameSettings>({})
+    const isYellow = ref(false);
+    const isLeft = ref(false);
+    const robotHubMode = ref<RobotHubMode>(RobotHubMode.UNKNOWN);
+
     const goalColor = computed(() => {
-        return value.isYellow
+        return isYellow
             ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
             : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
     });
 
+    const processSetupMsg = (msg: proto.ISetupMessage) => {
+        isYellow.value = msg.gameSettings!.isYellow!;
+        isLeft.value = msg.gameSettings!.isLeft!;
+        robotHubMode.value = msg.gameSettings!.robotHubMode!;
+
+    }
+
+
     const fieldOrientation = computed(() => {
-        return value.isLeft
+        return isLeft
             ? {x: 1, y: -1, angle: 0}
             : {x: -1, y: 1, angle: 180};
     });
 
     return {
-        ...value,
+        isYellow,
+        isLeft,
+        robotHubMode,
         goalColor,
+        processSetupMsg,
         fieldOrientation,
     }
 })

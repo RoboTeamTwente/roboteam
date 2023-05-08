@@ -107,8 +107,8 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
             return;
         }
         // simply plays[index] because they're inserted in-order
-        stp::PlayDecider::lockInterfacePlay(rtt::STPManager::plays[index].get());
-        GameStateManager::updateInterfaceGameState(rtt::STPManager::plays[index].get()->getName());
+//        stp::PlayDecider::lockInterfacePlay(rtt::STPManager::plays[index].get());
+//        GameStateManager::updateInterfaceGameState(rtt::STPManager::plays[index].get()->getName());
     });
 
     QObject::connect(select_goalie, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [=](const QString &goalieId) {

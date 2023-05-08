@@ -2,10 +2,15 @@
 // Created by Martin Miksik on 25/04/2023.
 //
 
-#include "STPManager.h"
 #include "interface_api/InterfaceGateway.h"
+
+#include "STPManager.h"
+#include "interface_api/RuntimeConfig.h"
 #include "proto/NewInterface.pb.h"
+#include "roboteam_utils/RobotHubMode.h"
 #include "stp/PlayDecider.hpp"
+#include "utilities/GameSettings.h"
+#include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
 #include "utilities/Pause.h"
 
@@ -107,6 +112,15 @@ void InterfaceGateway::onConnection(const std::shared_ptr<ix::WebSocket>& wss) {
 
     setupMessage->set_is_paused(Pause::isPaused());
 
+    const auto game_settings = setupMessage->mutable_game_settings();
+    game_settings->set_robot_hub_mode(modeToProto(GameSettings::getRobotHubMode()));
+    game_settings->set_is_left(GameSettings::isLeft());
+    game_settings->set_is_yellow(GameSettings::isYellow());
+
+    const auto ai_settings = setupMessage->mutable_ai_settings();
+    ai_settings->set_use_referee(new_interface::RuntimeConfig::useReferee);
+    ai_settings->set_ignore_invariants(new_interface::RuntimeConfig::ignoreInvariants);
+
     std::string state_str = envelope.SerializeAsString();
     RTT_DEBUG("Sending setup message to client", setupMessage->DebugString());
 
@@ -117,12 +131,17 @@ void InterfaceGateway::onMessage(const proto::MsgFromInterface&& message) {
     RTT_INFO(message.DebugString());
 
     switch (message.kind_case()) {
-        case proto::MsgFromInterface::kSetGameState:
-            ai::stp::PlayDecider::lockInterfacePlay(message.set_game_state().playname());  // TODO: How is(was) this thread safe?
-            ai::interface::Output::setRuleSetName(message.set_game_state().rulesetname());
+        case proto::MsgFromInterface::kSetGameState: {
+            //            ai::stp::PlayDecider::lockInterfacePlay(message.set_game_state().playname());  // TODO: How is(was) this thread safe?
+            //            ai::interface::Output::setRuleSetName(message.set_game_state().rulesetname());
+            const auto& data = message.set_game_state();
+            ai::GameStateManager::setGameStateFromInterface(data.playname(), data.rulesetname(), data.keeper_id());
+            new_interface::RuntimeConfig::interfacePlay.push(data.playname());
+        }
             break;
         case proto::MsgFromInterface::kSetAiSettings: {
-            ai::interface::Output::setUseRefereeCommands(message.set_ai_settings().use_referee());
+            new_interface::RuntimeConfig::useReferee = message.set_ai_settings().use_referee();
+            new_interface::RuntimeConfig::ignoreInvariants = message.set_ai_settings().ignore_invariants();
         }
             break;
         case proto::MsgFromInterface::kSetGameSettings: {

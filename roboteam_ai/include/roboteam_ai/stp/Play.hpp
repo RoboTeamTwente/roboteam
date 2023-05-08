@@ -13,6 +13,7 @@
 #include "constants/GeneralizationConstants.h"
 #include "stp/evaluations/BaseEvaluation.h"
 #include "utilities/Dealer.h"
+#include "utilities/GameState.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

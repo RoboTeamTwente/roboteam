@@ -17,15 +17,6 @@ void runStp(std::atomic_bool& exitApplication) {
     app.start(exitApplication);
 }
 
-void runInterfacePublisher(std::atomic_bool& exitApplication) {
-    roboteam_utils::Timer interfaceTimer;
-    interfaceTimer.loop(
-    [&]() {
-        rtt::ai::io::InterfaceGateway::instance().broadcastWorld();
-        if (exitApplication) {interfaceTimer.stop();}
-    }, 60);
-}
-
 void setDarkTheme() {
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette darkPalette;
@@ -114,12 +105,9 @@ int main(int argc, char** argv) {
 
     std::thread stpThread(runStp,std::ref(exitApplication));
 
-    std::thread interfaceThread(runInterfacePublisher,std::ref(exitApplication));
-
     window->show();
     bool runQT = application.exec();
     exitApplication = true;
     stpThread.join();
-    interfaceThread.join();
     return runQT;
 }

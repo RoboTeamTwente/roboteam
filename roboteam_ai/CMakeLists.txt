@@ -321,6 +321,7 @@ add_library(roboteam_ai_interface
         # After removing the interface, only this file should remain
         ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceGateway.cpp
         ${PROJECT_SOURCE_DIR}/src/interface_api/Interface.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/RuntimeConfig.cpp
 )
 target_include_directories(roboteam_ai_interface
         PRIVATE include/roboteam_ai

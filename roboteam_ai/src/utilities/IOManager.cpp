@@ -72,7 +72,7 @@ void IOManager::handleState(const proto::State& stateMsg) {
         GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
         if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
-        ai::GameStateManager::setRefereeData(state.referee(), data);
+        ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
     }
 }
 
@@ -123,7 +123,7 @@ bool IOManager::publishRobotCommands(const rtt::RobotCommands& aiCommand, bool f
     }
 
     if (!sentCommands) {
-        RTT_ERROR("Failed to send command: Publisher is not initialized (yet)");
+//        RTT_ERROR("Failed to send command: Publisher is not initialized (yet)");
     }
 
     return sentCommands;

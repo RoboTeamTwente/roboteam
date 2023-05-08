@@ -2,7 +2,9 @@
 
 import {useGameSettingsStore} from "../stores/game-settings-store";
 import {proto} from "../../generated/proto";
+import {useGameControllerStore} from "../stores/ai-store";
 const gameSettings = useGameSettingsStore();
+const gameController = useGameControllerStore();
 
 </script>
 <template>
@@ -11,11 +13,11 @@ const gameSettings = useGameSettingsStore();
       <span class="">General</span>
       <label class="label cursor-pointer gap-2">
         <span class="label-text">AutoRef</span>
-        <input type="checkbox" v-model="gameSettings.useReferee" class="toggle toggle-primary" checked/>
+        <input type="checkbox" v-model="gameController.useReferee" class="toggle toggle-primary" checked/>
       </label>
       <label class="label cursor-pointer gap-2">
         <span class="label-text">Ignore Invariants</span>
-        <input type="checkbox" v-model="gameSettings.ignoreInvariants" class="toggle toggle-primary" checked/>
+        <input type="checkbox" v-model="gameController.ignoreInvariants" class="toggle toggle-primary" checked/>
       </label>
     </div>
 
@@ -24,13 +26,13 @@ const gameSettings = useGameSettingsStore();
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text"><font-awesome-icon icon="fa-vr-cardboard"/> Simulator</span>
-          <input type="radio" class="radio" v-model="gameSettings.hubMode" :value="proto.GameSettings.RobotHubMode.SIMULATOR" />
+          <input type="radio" class="radio" v-model="gameSettings.robotHubMode" :value="proto.GameSettings.RobotHubMode.SIMULATOR" />
         </label>
       </div>
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text"><font-awesome-icon icon="fa-robot"/> Basestation</span>
-          <input type="radio" class="radio" v-model="gameSettings.hubMode" :value="proto.GameSettings.RobotHubMode.BASESTATION" />
+          <input type="radio" class="radio" v-model="gameSettings.robotHubMode" :value="proto.GameSettings.RobotHubMode.BASESTATION" />
         </label>
       </div>
     </div>

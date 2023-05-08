@@ -25,6 +25,7 @@ export const useGameControllerStore = defineStore('gameController', () => {
 
     // State
     const isAIPaused = ref(false);
+    const useReferee = ref(false);
     const ignoreInvariants = ref(false);
 
     const currentPlay = ref<CurrentPlay>({name: haltPlayName, ruleset: 'default'});
@@ -38,6 +39,9 @@ export const useGameControllerStore = defineStore('gameController', () => {
 
     const processSetupMsg = (msg: proto.ISetupMessage) => {
         haltPlay();
+        useReferee.value = msg.aiSettings!.useReferee!;
+        ignoreInvariants.value = msg.aiSettings!.useReferee!;
+
         availablePlays.value = {
             plays: msg.availablePlays!,
             rule_sets: msg.availableRulesets!,
@@ -62,6 +66,7 @@ export const useGameControllerStore = defineStore('gameController', () => {
     }
 
     return {
+        useReferee,
         isAIPaused,
         ignoreInvariants,
         currentPlay,

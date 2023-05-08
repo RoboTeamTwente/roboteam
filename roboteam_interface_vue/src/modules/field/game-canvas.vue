@@ -69,8 +69,6 @@ const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorl
 }
 
 const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => {
-    console.debug("Redraw field");
-
     // Remove old field drawing
     layers.fieldGeometry.removeChildren(0).forEach((child) => child.destroy());
 
@@ -82,7 +80,6 @@ const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => 
 }
 
 const initPixiApp = () => {
-    console.debug("Init Pixi app");
     app = new Application({
         width: visionData.latestField?.fieldLength! / 10 * 1.15,
         height: visionData.latestField?.fieldWidth! / 10 * 1.15,

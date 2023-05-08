@@ -1,4 +1,7 @@
-import {ShallowRef} from "vue";
+import {shallowRef, ShallowRef} from "vue";
+import {useWebSocket, UseWebSocketOptions} from "@vueuse/core";
+import {proto} from "./generated/proto";
+import MsgToInterface = proto.MsgToInterface;
 
 export type DeepReadonly<T> = T extends Function ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
 export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>;
@@ -29,4 +32,37 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
     }
 
     return ""
+};
+
+export const useProtoWebSocket = <TKey extends string>(url: string, options: UseWebSocketOptions, debounce: Record<TKey, boolean>) => {
+    const protoData = shallowRef<MsgToInterface | null>(null);
+
+
+    const onMessage = async (ws: WebSocket, event: MessageEvent) => {
+        const messageBuffer = new Uint8Array(await event.data.arrayBuffer());
+        protoData.value = proto.MsgToInterface.decode(messageBuffer);
+    };
+
+    const sendProtoMsg = (msg: proto.MsgFromInterface, debounceKey?: TKey) => {
+        if (debounceKey && debounce[debounceKey]) {
+            console.log('Debounced', debounceKey, msg)
+            debounce[debounceKey] = false;
+            return;
+        }
+
+        const buffer = proto.MsgFromInterface.encode(msg).finish();
+        send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
+    };
+
+    const {status, data, send} = useWebSocket<Blob>(url, {
+        autoReconnect: true,
+        onMessage: onMessage
+    });
+
+    return {
+        data: protoData as ShallowRef<proto.MsgToInterface>,
+        status,
+        send: sendProtoMsg,
+        debounce
+    }
 }

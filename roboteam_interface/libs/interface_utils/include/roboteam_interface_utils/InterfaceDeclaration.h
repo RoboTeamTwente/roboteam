@@ -73,7 +73,9 @@ struct InterfaceDropdown {
         proto::Dropdown dropdown;
 
         dropdown.set_text(this->text);
-        dropdown.mutable_options()->Add(options.begin(), options.end());
+        for(auto option : options){
+            dropdown.mutable_options()->Add(std::move(option));
+        }
 
         return dropdown;
     }
@@ -95,7 +97,9 @@ struct InterfaceRadio {
     proto::RadioButton toProto() const {
         proto::RadioButton radio;
 
-        radio.mutable_options()->Add(options.begin(), options.end());
+        for(auto option : options){
+            radio.mutable_options()->Add(std::move(option));
+        }
         return radio;
     }
 

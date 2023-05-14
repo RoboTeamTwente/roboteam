@@ -9,7 +9,7 @@ var namespacertt =
     [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
     [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
     [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
-    [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ],
+    [ "Settings", "d1/dfb/classrtt_1_1Settings.html", "d1/dfb/classrtt_1_1Settings" ],
     [ "createTestField", "dc/d8f/namespacertt.html#a0d98d219a6e2900e4ec939378b987a81", null ],
     [ "generateWorld", "dc/d8f/namespacertt.html#a3c7f39951eb291b23d6f3a06262f365e", null ],
     [ "getMaxScore", "dc/d8f/namespacertt.html#a8847521dcba2851a25b8194ec1379579", null ],
@@ -22,5 +22,7 @@ var namespacertt =
     [ "TEST", "dc/d8f/namespacertt.html#a29cdd07cdb75d18d0025d75054db1366", null ],
     [ "TEST", "dc/d8f/namespacertt.html#a169db5a7e6efa4afcdfb8423b25bd0e8", null ],
     [ "TEST", "dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b", null ],
-    [ "MAXIMUM_DIFFERENCE", "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa", null ]
+    [ "MAXIMUM_DIFFERENCE", "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa", null ],
+    [ "PRIMARY_AI_ID", "dc/d8f/namespacertt.html#a898ae63e0cea1a3bd280fd11e7fae506", null ],
+    [ "SETTINGS", "dc/d8f/namespacertt.html#ab0a1d9e64a911c4fb60835c147081af6", null ]
 ];

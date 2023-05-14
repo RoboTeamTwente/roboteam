@@ -138,9 +138,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a5ea8862e190dc68870a8de3d1069c0d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/db9/classrtt_1_1world_1_1WorldData.html#a5ea8862e190dc68870a8de3d1069c0d3">WorldData</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">World</a> *data, proto::World &amp;protoMsg) noexcept</td></tr>
-<tr class="memdesc:a5ea8862e190dc68870a8de3d1069c0d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs new world data.  <a href="../../d5/db9/classrtt_1_1world_1_1WorldData.html#a5ea8862e190dc68870a8de3d1069c0d3">More...</a><br /></td></tr>
-<tr class="separator:a5ea8862e190dc68870a8de3d1069c0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02c57dec82142c10b46d85f96ec1b8d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/db9/classrtt_1_1world_1_1WorldData.html#ae02c57dec82142c10b46d85f96ec1b8d">WorldData</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">World</a> *data, proto::World &amp;protoMsg, <a class="el" href="../../d1/dfb/classrtt_1_1Settings.html">rtt::Settings</a> const &amp;settings) noexcept</td></tr>
+<tr class="memdesc:ae02c57dec82142c10b46d85f96ec1b8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs new world data.  <a href="../../d5/db9/classrtt_1_1world_1_1WorldData.html#ae02c57dec82142c10b46d85f96ec1b8d">More...</a><br /></td></tr>
+<tr class="separator:ae02c57dec82142c10b46d85f96ec1b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -165,8 +165,8 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="../../d5/db9/classrtt_1_1world_1_1WorldData.html" title="WorldData class that holds data about a specific time point in the world. Holds: Robots Ball Time poi...">WorldData</a> class that holds data about a specific time point in the world. Holds: Robots Ball Time point. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5ea8862e190dc68870a8de3d1069c0d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ea8862e190dc68870a8de3d1069c0d3">&#9670;&nbsp;</a></span>WorldData() <span class="overload">[1/4]</span></h2>
+<a id="ae02c57dec82142c10b46d85f96ec1b8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae02c57dec82142c10b46d85f96ec1b8d">&#9670;&nbsp;</a></span>WorldData() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +184,13 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">proto::World &amp;&#160;</td>
-          <td class="paramname"><em>protoMsg</em>&#160;</td>
+          <td class="paramname"><em>protoMsg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html">rtt::Settings</a> const &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -203,7 +209,8 @@ Friends</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">protoMsg</td><td>Proto message to construct he world from </td></tr>
-    <tr><td class="paramname">feedback</td><td>Feedback to apply to robots that'll be constructed Ownership is taken of protoMsg //TODO: This is documentation is outdated, where is feedback, and data doc is missing </td></tr>
+    <tr><td class="paramname">settings</td><td><a class="el" href="../../d1/dfb/classrtt_1_1Settings.html" title="Class that defines the settings handler for the interface.">Settings</a> for team stuff etc </td></tr>
+    <tr><td class="paramname">feedback</td><td>Feedback to apply to robots that'll be constructed Ownership is taken of protoMsg </td></tr>
   </table>
   </dd>
 </dl>

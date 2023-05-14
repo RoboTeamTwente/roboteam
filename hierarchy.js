@@ -64,7 +64,6 @@ var hierarchy =
     [ "rtt::ai::FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", null ],
     [ "testhelpers::FieldHelper", "de/da9/classtesthelpers_1_1FieldHelper.html", null ],
     [ "rtt::ai::Dealer::FlagScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore", null ],
-    [ "rtt::GameSettings", "df/db4/classrtt_1_1GameSettings.html", null ],
     [ "rtt::ai::GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", [
       [ "rtt::ai::RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", null ]
     ] ],
@@ -183,6 +182,7 @@ var hierarchy =
     [ "rtt::ai::RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", null ],
     [ "rtt::ai::stp::gen::ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition", null ],
     [ "rtt::ai::stp::gen::ScoreProfile", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile", null ],
+    [ "rtt::Settings", "d1/dfb/classrtt_1_1Settings.html", null ],
     [ "rtt::ai::stp::Skill", "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html", [
       [ "TestSkill", "d4/ded/classTestSkill.html", null ],
       [ "rtt::ai::stp::skill::Chip", "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html", null ],

@@ -12,7 +12,7 @@
 #include <memory>
 #include <vector>
 #include <exception>
-
+#include <roboteam_logging/LogFileReader.h>
 
 class Handler {
    private:
@@ -34,6 +34,7 @@ class Handler {
     bool initializeNetworkers();
     bool setupSSLClients(std::string visionip, std::string refereeip, int visionport, int refereeport);
 
+    void startReplay(rtt::LogFileReader& reader);
     void start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog = false);
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::SSL_Referee> receiveRefereePackets();

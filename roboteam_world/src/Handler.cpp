@@ -153,6 +153,29 @@ void Handler::onRobotFeedback(const rtt::RobotsFeedback& feedback) {
     std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(feedback);
 }
+void Handler::startReplay(rtt::LogFileReader& reader) {
+    std::cout<<"Replaying log file with "<<reader.fileMessageCount()<<" messages\n";
+    reader.resetToStartOfFile();
+    std::size_t numMessagesProcessed = 0;
+
+    while(true){
+     auto result = reader.readNext();
+     rtt::logged_time_type time = result.first;
+     auto& state = result.second;
+     if(time == rtt::INVALID_LOGGED_TIME ){
+         break;
+     }
+
+     std::vector<proto::SSL_WrapperPacket> visionPackets(state.processed_vision_packets().begin(),state.processed_vision_packets().end());
+     std::vector<proto::SSL_Referee> refereePackets(state.processed_referee_packets().begin(),state.processed_referee_packets().end());
+     //TODO: also store robothub feedback which was processed in State!
+     auto check = observer.process(visionPackets,refereePackets,{});
+
+     numMessagesProcessed++;
+     std::cout<<"Num Messages processed: "<< numMessagesProcessed<<"\n";
+    }
+
+}
 
 const char* FailedToInitializeNetworkersException::what() const noexcept(true) { return "Failed to initialize networker(s). Is another observer running?"; }
 const char* FailedToSetupSSLClients::what() const noexcept(true){ return "Failed to setup SSL client(s). Is another observer running?"; }

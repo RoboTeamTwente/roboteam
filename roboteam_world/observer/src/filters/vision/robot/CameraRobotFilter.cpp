@@ -92,7 +92,7 @@ FilteredRobot CameraRobotFilter::estimate(const Time &time) const {
 bool CameraRobotFilter::acceptObservation(const RobotObservation& observation) const{
   double angleDif = abs(rtt::Angle(angleFilter.getPosition()-observation.orientation));
   double posDifSq = (observation.position-positionFilter.getPosition()).squaredNorm();
-  return posDifSq<0.4*0.4 && angleDif < M_PI_2;
+  return posDifSq<0.4*0.4 && angleDif < M_PI_2; //TODO: remove hardcoded constants
 }
 
 RobotVel CameraRobotFilter::velocityEstimate(const Time &time) const {

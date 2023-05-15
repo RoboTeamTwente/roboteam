@@ -187,8 +187,12 @@ void Handler::startReplay(rtt::LogFileReader& reader) {
 
      std::vector<proto::SSL_WrapperPacket> visionPackets(state.processed_vision_packets().begin(),state.processed_vision_packets().end());
      std::vector<proto::SSL_Referee> refereePackets(state.processed_referee_packets().begin(),state.processed_referee_packets().end());
-     //TODO: also store robothub feedback which was processed in State!
-     auto check = observer.process(visionPackets,refereePackets,{});
+     std::vector<rtt::RobotsFeedback> feedbackPackets;
+     for(const auto& feedback : state.processed_feedback_packets()){
+         feedbackPackets.push_back(rtt::net::protoFeedbackToRobotsFeedback(feedback));
+     }
+
+     auto check = observer.process(visionPackets,refereePackets,feedbackPackets);
 
      numMessagesProcessed++;
      std::cout<<"Num Messages processed: "<< numMessagesProcessed<<"\n";

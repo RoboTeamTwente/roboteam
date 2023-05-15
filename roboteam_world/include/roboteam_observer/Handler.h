@@ -13,6 +13,7 @@
 #include <vector>
 #include <exception>
 #include <roboteam_logging/LogFileReader.h>
+#include <roboteam_logging/LogFileWriter.h>
 
 class Handler {
    private:
@@ -25,6 +26,9 @@ class Handler {
     Observer observer;
     std::vector<rtt::RobotsFeedback> receivedRobotData;
     std::mutex sub_mutex;
+
+    static std::optional<rtt::LogFileWriter> fileWriter;
+
    public:
     Handler() = default;
 

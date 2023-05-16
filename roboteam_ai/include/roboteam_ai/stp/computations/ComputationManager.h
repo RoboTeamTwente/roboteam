@@ -11,27 +11,20 @@
 namespace rtt::ai::stp {
 
 /**
- * Class that stores computation results that can be re-used in the same tick to prevent identical computations happening within a tick
+ * @brief Class that stores computation results that can be re-used in the same tick to prevent identical computations happening within a tick
  */
 class ComputationManager {
    public:
     /**
-     * Clear computation results that are used to avoid computing the same thing more than once in a tick. This function should be called after every tick
+     * @brief Clear computation results that are used to avoid computing the same thing more than once in a tick. This function should be called after every tick
      */
     static void clearStoredComputations() {
         calculatedScores.clear();
         calculatedWallPositions.clear();
     }
 
-    /**
-     * vector of calculated position scores
-     */
-    inline static std::unordered_map<Vector2, gen::PositionScores> calculatedScores{};
-
-    /**
-     * vector of determined wall positions
-     */
-    inline static std::vector<Vector2> calculatedWallPositions{};
+    inline static std::unordered_map<Vector2, gen::PositionScores> calculatedScores{}; /**< vector of calculated position scores */
+    inline static std::vector<Vector2> calculatedWallPositions{}; /**< vector of determined wall positions */
 };
 }  // namespace rtt::ai::stp
 

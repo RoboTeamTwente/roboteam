@@ -22,7 +22,7 @@ namespace rtt::ai::control {
 class BBTrajectory2D {
    public:
     /**
-     * @brief Default constructor
+     * @brief Default constructor of the BBTrajectory2D class
      */
     BBTrajectory2D() = default;
 
@@ -90,8 +90,8 @@ class BBTrajectory2D {
      */
     void generateTrajectory(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc, double alpha);
 
-    BBTrajectory1D x;
-    BBTrajectory1D y;
+    BBTrajectory1D x; /**< 1D x component of the 2D BBT */
+    BBTrajectory1D y; /**< 1D y component of the 2D BBT */
 };
 }  // namespace rtt::BB
 #endif  // RTT_BBTRAJECTORY2D_H

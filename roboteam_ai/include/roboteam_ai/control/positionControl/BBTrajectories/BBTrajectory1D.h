@@ -13,20 +13,26 @@ namespace rtt::ai::control {
  * @brief Represents a segment of a one-dimensional bang-bang trajectory.
  */
 struct BBTrajectoryPart {
-    double tEnd;
-    double acc;
-    double startVel;
-    double startPos;
+    double tEnd; /**< Time it takes to get to the end of trajectory part */
+    double acc; /**< Acceleration of the current trajectory part */
+    double startVel; /**< Velocity at the start of the trajectory part */
+    double startPos; /**< Position at the start of the trajectory part */
 };
 
 /**
  * @brief small struct to keep Position, Velocity and Acceleration in at once.
  */
 struct BBPosVelAcc {
+    /**
+     * @brief Explicit constructor for th BBPosVelAcc struct
+     * @param pos Position
+     * @param vel Velocity
+     * @param acc Acceleration
+     */
     explicit BBPosVelAcc(double pos, double vel, double acc) : pos{pos}, vel{vel} {};
 
-    double pos;
-    double vel;
+    double pos; /**< Position */
+    double vel; /**< Velocity */
 };
 
 /**
@@ -100,13 +106,24 @@ class BBTrajectory1D {
     void generateTrajectory(double initialPos, double initialVel, double finalPos, double maxVel, double maxAcc);
 
     /**
-     * @brief Returns all the parts of a BBTrajectory as a vector
-     * @return All parts as a vector
+     * @brief Puts all BBT parts in a vector
+     * @return All BBT parts as a vector
      */
     std::vector<BBTrajectoryPart> getParts();
 
+    /**
+     * @brief Constructor for the BBTrajectory1D class
+     * @param initialPos Initial position of the robot
+     * @param initialVel Initial velocity of the robot
+     * @param finalPos Target position to go to
+     * @param maxVel Maximum allowed velocity
+     * @param maxAcc Maximum allowed acceleration or deceleration
+     */
     BBTrajectory1D(double initialPos, double initialVel, double finalPos, double maxVel, double maxAcc);
 
+    /**
+     * @brief Default constructor for the BBTrajectory1D class
+     */
     BBTrajectory1D() = default;
 
    private:
@@ -150,13 +167,10 @@ class BBTrajectory1D {
      */
     void updatePart(int index, double tEnd, double acc, double vel, double pos);
 
-    std::array<BBTrajectoryPart, 3> parts;
-    unsigned short int numParts = 0;
-    // m
-    double finalPos;    // m
-    // m/s
-    // m/s^2
-    double maxVel;      // m/s
+    std::array<BBTrajectoryPart, 3> parts; /**< Array of length 3 containing all parts of a BBT */
+    unsigned short int numParts = 0; /**< Unsigned short integer which stores the amount of parts used in the BBT */
+    double finalPos; /**< Target position to go to */
+    double maxVel; /**< Maximum allowed velocity */
 };
 }  // namespace rtt::BB
 

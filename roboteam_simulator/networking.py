@@ -15,12 +15,16 @@ from PyQt5.QtCore import QByteArray
 
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_DetectionBall, SSL_DetectionRobot
+from proto import RobotCommands_pb2
 
 # Addresses and ports used to communicate with the teams
 PUBLISH_ADDRESS = '224.5.23.2'  # The address the packages should be published on
 PUBLISH_PORT = '10006'  # The port the packages should be published on
-SUB_ADDRESS = '224.5.23.2'  # The address the packages should be received on
-SUB_PORT = '10006'  # The port the packages should be received on
+
+# Receival of robot commands from robothub
+SUB_ADDRESS = '127.0.0.1'  # The address the packages should be received on
+SUB_PORT_BLUE = '5559'
+SUB_PORT_YELLOW = '5560'
 
 
 class Publisher:
@@ -123,10 +127,27 @@ class Publisher:
 class Subscriber:
     def __init__(self):
         self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.SUB)
-        self.socket.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT}')
+
+        self.socket_blue = self.context.socket(zmq.SUB)
+        self.socket_blue.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT_BLUE}')
+        self.socket_blue.setsockopt_string(zmq.SUBSCRIBE, '')
+
+        self.socket_yellow = self.context.socket(zmq.SUB)
+        self.socket_yellow.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT_YELLOW}')
+        self.socket_yellow.setsockopt_string(zmq.SUBSCRIBE, '')
+
+        self.robot_command_parser = RobotCommands_pb2.RobotCommands()
 
     def receive(self):
-        msg = self.socket.recv()
-        print(msg)
-        return msg
+        """
+
+        :return: Robotcommand for blue and yellow in tuple
+        """
+        msg_blue = self.socket_blue.recv()
+        msg_yellow = self.socket_yellow.recv()
+
+        # Parse raw bytes with protobuf
+        robot_command_blue = self.robot_command_parser.ParseFromString(msg_blue)
+        robot_command_yellow = self.robot_command_parser.ParseFromString(msg_yellow)
+
+        return robot_command_blue, robot_command_yellow

@@ -2,14 +2,14 @@
 // Created by martin on 11-5-22.
 //
 
-#pragma once
+#ifndef RTT_COLLISIONDETECTOR_H
+#define RTT_COLLISIONDETECTOR_H
 
 #include <optional>
 #include <span>
 #include <vector>
 
 #include "PositionControlUtils.h"
-#include "StateVector.h"
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
 #include "utilities/Constants.h"
 #include "world/FieldComputations.h"
@@ -20,12 +20,9 @@ namespace rtt::ai::control {
  * @brief This struct represents the obstacles on a field that a robot may encounter at specific time step. It is used in the timeline vector
  */
 struct Obstacles {
-    // Position of the ball
-    StateVector ball;
-    // Position of the enemy robots
-    std::vector<StateVector> robotsThem;
-    // Position of our robots. It's a map because we need to know which robot is which (to avoid "collisions" with itself)
-    std::unordered_map<int, StateVector> robotsUs;
+    StateVector ball; /// Position of the ball
+    std::vector<StateVector> robotsThem; /// Position of the enemy robots
+    std::unordered_map<int, StateVector> robotsUs; /// Position of our robots. It's a map because we need to know which robot is which (to avoid "collisions" with itself)
 };
 
 class CollisionDetector {
@@ -84,6 +81,11 @@ class CollisionDetector {
      */
     void updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId);
 
+    /**
+     * @brief Draws the timeline to the interface for debugging purposes
+     */
     void drawTimeline() const;
 };
 }  // namespace rtt::ai::control
+
+#endif  // RTT_COLLISIONDETECTOR_H

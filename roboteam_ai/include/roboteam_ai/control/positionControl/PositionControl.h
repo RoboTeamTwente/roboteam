@@ -42,8 +42,8 @@ class PositionControl {
     PathTracking pathTracking;
     PathPlanning pathPlanning;
 
-    std::unordered_map<int, ComputedPath> paths;
-    std::unordered_map<int, std::pair<PID, PID>> pidControllers;
+    std::unordered_map<int, ComputedPath> paths; /// Holds computed paths for each robot [RobotId -> ComputedPath]
+    std::unordered_map<int, std::pair<PID, PID>> pidControllers; /// Holds x and y PID for each robot [RobotId -> (xPID, yPID)]
 
    public:
     explicit PositionControl();

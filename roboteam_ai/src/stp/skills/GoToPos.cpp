@@ -8,15 +8,7 @@
 #include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
 
-#include <os/log.h>
-#include <os/signpost.h>
-
-
 namespace rtt::ai::stp::skill {
-
-//os_log_t log_handle = os_log_create("com.jviotti.my-app", OS_LOG_CATEGORY_POINTS_OF_INTEREST);
-//os_signpost_id_t signpost_id = os_signpost_id_generate(log_handle);
-////assert(signpost_id != OS_SIGNPOST_ID_INVALID);
 
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     Vector2 targetPos = info.getPositionToMoveTo().value();

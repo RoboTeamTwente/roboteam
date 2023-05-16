@@ -11,6 +11,25 @@
 
 namespace rtt::ai::control {
 
+/**
+ * @brief A wrapper for a position and velocity vectors.
+ */
+struct StateVector {
+    Vector2 position;
+    Vector2 velocity;
+};
+
+/**
+ * @brief A small wrapper for values that are commonly passed around the position control.
+ */
+struct PositionControlInput {
+    const int robotId;
+    const StateVector& state;
+    const Vector2& targetPos;
+    const double maxVel;
+    const stp::AvoidObjects& avoidObjects;
+};
+
 class PositionControlUtils {
    public:
     constexpr static const double TIME_STEP = 0.1;
@@ -21,8 +40,7 @@ class PositionControlUtils {
 
     constexpr static const double MIN_OUR_ROBOT_DISTANCE_MOVING = 3 * ai::Constants::ROBOT_RADIUS_MAX();
 
-    constexpr static const double POSITION_TOLERANCE_DISTANCE = 0.05;
-    constexpr static const double MAX_STALE_VELOCITY = 0.05;
+    constexpr static const double MAX_STALE_VELOCITY = 0.05; /// Velocity threshold for determining if a robot is moving or not
 
     /**
      * Checks if two 2D vectors are within a certain distance tolerance.
@@ -30,7 +48,7 @@ class PositionControlUtils {
      * @param pos2 The second 2D vector to compare.
      * @return True if the two vectors are within the distance tolerance, False otherwise.
      */
-    static bool positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2);
+    [[nodiscard]] static bool positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2);
 
     /**
      * Determines if the object is currently moving based on its velocity.
@@ -39,7 +57,7 @@ class PositionControlUtils {
      * @return `true` if the magnitude of the velocity is greater than zero, indicating that the object is moving;
      * `false` otherwise.
      */
-    static bool isMoving(const Vector2 &velocity);
+    [[nodiscard]] static bool isMoving(const Vector2 &velocity);
 
     /**
      * The getPIDValue function takes a stp::PIDType enum class as input and returns a given pid value
@@ -47,21 +65,21 @@ class PositionControlUtils {
      *                 receiving a pass, intercepting the ball, and playing as the goalkeeper.
      * @return pidVals struct, which contains the proportional gain (kp), integral gain (ki), and derivative gain (kd) for a PID
      */
-    static pidVals getPIDValue(const stp::PIDType &pidType);
+    [[nodiscard]] static pidVals getPIDValue(const stp::PIDType &pidType);
 
     /**
      *  This function takes value in seconds and converts it to an integer value representing the number of time steps
      * @param time in seconds
      * @return number of time steps
      */
-    static int convertTimeToStep(double time);
+    [[nodiscard]] static int convertTimeToStep(double time);
 
     /**
      * This function takes value in time steps and converts it to a double value representing the number of seconds
      * @param step number of time steps
      * @return time in seconds
      */
-    static double convertStepToTime(int step);
+    [[nodiscard]] static double convertStepToTime(int step);
 };
 }  // namespace rtt::ai::control
 

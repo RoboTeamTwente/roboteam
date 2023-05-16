@@ -23,7 +23,6 @@ export const useGameSettingsStore = defineStore('gameSettingsStore', () => {
 
     }
 
-
     const fieldOrientation = computed(() => {
         return isLeft.value
             ? {x: 1, y: -1, angle: 0}

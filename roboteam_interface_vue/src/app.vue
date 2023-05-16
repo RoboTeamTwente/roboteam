@@ -40,8 +40,16 @@ const gridElement = ref<null | HTMLElement>(null);
      <tabed-widgets />
     </div>
 
-    <main class="grid-in-main flex flex-col justify-center bg-base-200 min-h-0 p-4">
+    <main class="grid-in-main flex flex-col justify-center bg-base-200 min-h-0 p-4" :class="{
+      '!justify-start': visionData.latestWorld == null,
+    }">
       <game-canvas v-if="visionData.latestWorld !== null"/>
+        <div class="alert alert-warning" v-else>
+            <div>
+                <font-awesome-icon icon="fa-circle-exclamation" />
+                <span>No field data</span>
+            </div>
+        </div>
     </main>
 
     <panel-slider direction="y" class="grid-in-drag-y"

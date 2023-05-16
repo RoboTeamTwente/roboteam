@@ -119,20 +119,6 @@ message GameState {
     int32 keeper_id = 3;
 }
 
-//message GameSettings {
-//    enum RobotHubMode {
-//        UNKNOWN = 0;
-//        BASESTATION = 1;
-//        SIMULATOR = 2;
-//    }
-//
-//    bool use_referee = 1;
-//    bool ignore_invariants = 2;
-//    RobotHubMode hub_mode = 3; // true == simulator, false == basestation
-//    bool is_left = 4;
-//    bool is_yellow = 5;
-//}
-
 message AISettings {
     bool use_referee = 1;
     bool ignore_invariants = 2;

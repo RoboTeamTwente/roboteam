@@ -1,13 +1,14 @@
 var namespacertt =
 [
     [ "ai", "d4/dcc/namespacertt_1_1ai.html", "d4/dcc/namespacertt_1_1ai" ],
-    [ "BB", "d0/dde/namespacertt_1_1BB.html", "d0/dde/namespacertt_1_1BB" ],
+    [ "BB", "d0/dde/namespacertt_1_1BB.html", [
+      [ "TEST", "d0/dde/namespacertt_1_1BB.html#a6ff890ea6b3075d4680b02ba4528042b", null ],
+      [ "TEST", "d0/dde/namespacertt_1_1BB.html#ada5a143b1be01ef3a8437fbb65171cfe", null ]
+    ] ],
     [ "input", "d4/d8b/namespacertt_1_1input.html", "d4/d8b/namespacertt_1_1input" ],
     [ "Interface", "db/ded/namespacertt_1_1Interface.html", "db/ded/namespacertt_1_1Interface" ],
     [ "world", "db/d1b/namespacertt_1_1world.html", "db/d1b/namespacertt_1_1world" ],
     [ "AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", "dc/d0b/classrtt_1_1AnglePID" ],
-    [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
-    [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
     [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
     [ "Settings", "d1/dfb/classrtt_1_1Settings.html", "d1/dfb/classrtt_1_1Settings" ],
     [ "createTestField", "dc/d8f/namespacertt.html#a0d98d219a6e2900e4ec939378b987a81", null ],

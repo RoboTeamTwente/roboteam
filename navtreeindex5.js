@@ -1,5 +1,9 @@
 var NAVTREEINDEX5 =
 {
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a52e638a2d35b495523933ae29854444b":[2,0,10,0,3,25,26],
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a56c8f055459577051738d1f33b55cbcc":[2,0,10,0,3,25,15],
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a5fb2385fbd0166e0c9d58c7921526f34":[2,0,10,0,3,25,28],
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a698caeb6b4058c2a72299a4714ea4f85":[2,0,10,0,3,25,18],
 "d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3":[2,0,10,0,3,25,23],
 "d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6ba59a078887ab3a8e64d33eb9df2c44":[2,0,10,0,3,25,8],
 "d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6fba6016b854c0c8ab1899f15bf9a6de":[2,0,10,0,3,25,31],
@@ -155,7 +159,6 @@ var NAVTREEINDEX5 =
 "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs.html#ae2ed71093fcc2675c105c7012bee372e":[3,0,1,0,3,3,9,13],
 "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs.html#ae63525881610390f3a9e5a490377b32e":[3,0,1,0,3,3,9,16],
 "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,3,3,9,24],
-"d5/d79/DensePathTracking_8cpp.html":[4,0,0,1,0,0,2,1],
 "d5/d7b/Keeper_8cpp.html":[4,0,0,1,4,4,2],
 "d5/d7c/classrtt_1_1ai_1_1stp_1_1play_1_1FormationPreHalf.html":[3,0,1,0,3,3,11],
 "d5/d7c/classrtt_1_1ai_1_1stp_1_1play_1_1FormationPreHalf.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,11,25],
@@ -231,7 +234,6 @@ var NAVTREEINDEX5 =
 "d5/d8d/RuleSet_8h.html":[4,0,0,0,0,4,8],
 "d5/d8d/RuleSet_8h_source.html":[4,0,0,0,0,4,8],
 "d5/d96/BallIsFreeGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,5],
-"d5/da0/BBTPathTracking_8cpp.html":[4,0,0,1,0,0,2,0],
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html":[3,0,1,0,1,17],
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a12747eece4b6c2f24a7096238b06e5c1":[3,0,1,0,1,17,52],
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a16413d21de2407c89cf01ab859d9531f":[3,0,1,0,1,17,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a3a294d242f168fa4784bf4eebbe83a10":[3,0,1,0,1,17,2],
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a3ba420929973ca2d1fb764503fb87458":[3,0,1,0,1,17,48],
 "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a48b1f4434eef8f8f59bcd0a86c54004e":[3,0,1,0,1,17,29],
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a4c2d484f0b69a2179033e83a35e655eb":[3,0,1,0,1,17,46],
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a57f4f1302e97e5d5765aaedda78e0df2":[3,0,1,0,1,17,45],
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a586bf3c64a3d5c72c79fb7a0d2a650c4":[3,0,1,0,1,17,30]
+"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a4c2d484f0b69a2179033e83a35e655eb":[3,0,1,0,1,17,46]
 };

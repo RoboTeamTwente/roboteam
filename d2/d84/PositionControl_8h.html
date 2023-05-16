@@ -91,22 +91,20 @@ $(document).ready(function(){initNavTree('d2/d84/PositionControl_8h.html','../..
 <div class="title">PositionControl.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;roboteam_utils/RobotCommands.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d67/Trajectory2D_8h_source.html">BBTrajectories/Trajectory2D.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/d58/CollisionDetector_8h_source.html">CollisionDetector.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/df1/WorldObjects_8h_source.html">control/positionControl/BBTrajectories/WorldObjects.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/dec/NumTreesPlanning_8h_source.html">control/positionControl/pathPlanning/NumTreesPlanning.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dd/d67/BBTPathTracking_8h_source.html">control/positionControl/pathTracking/BBTPathTracking.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/d73/DensePathTracking_8h_source.html">control/positionControl/pathTracking/DensePathTracking.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/dff/PidTracking_8h_source.html">control/positionControl/pathTracking/PidTracking.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;roboteam_utils/RobotCommands.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d58/CollisionDetector_8h_source.html">control/positionControl/CollisionDetector.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d58/PathPlanning_8h_source.html">control/positionControl/PathPlanning.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d68/PathTracking_8h_source.html">control/positionControl/PathTracking.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/d06/StpInfoEnums_8h_source.html">utilities/StpInfoEnums.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d2/d84/PositionControl_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">rtt::ai::control::ComputedPath</a></td></tr>
+<tr class="separator:d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html">rtt::ai::control::PositionControl</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main position control class. Use this for your robot position control requirements.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -118,6 +116,37 @@ Namespaces</h2></td></tr>
 <tr class="memitem:d0/d4f/namespacertt_1_1ai_1_1control"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html">rtt::ai::control</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath" id="d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">&#9670;&nbsp;</a></span>rtt::ai::control::ComputedPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct rtt::ai::control::ComputedPath</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>This struct represents a computed path for a robot. The full path is stored as a vector of <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector" title="A wrapper for a position and velocity vectors.">StateVector</a> objects, while the remaining path is stored as a span (a non-owning view) of the full vector. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="ab6ec9bebbfa3496d0e61e2ff33817983"></a>vector&lt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector">StateVector</a> &gt;</td>
+<td class="fieldname">
+full</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a9d484ebaba28dafd898b215cf3413351"></a>span&lt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector">StateVector</a> &gt;</td>
+<td class="fieldname">
+remaining</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

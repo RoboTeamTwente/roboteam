@@ -91,16 +91,22 @@ $(document).ready(function(){initNavTree('d4/d58/CollisionDetector_8h.html','../
 <div class="title">CollisionDetector.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d1/d45/Constants_8h_source.html">utilities/Constants.h</a>&quot;</code><br />
-<code>#include &lt;roboteam_utils/Field.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/dc3/RobotView_8hpp_source.html">world/views/RobotView.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/dc9/PositionControlUtils_8h_source.html">PositionControlUtils.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d81/BBTrajectory2D_8h_source.html">control/positionControl/BBTrajectories/BBTrajectory2D.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d45/Constants_8h_source.html">utilities/Constants.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/dc0/FieldComputations_8h_source.html">world/FieldComputations.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d4/d58/CollisionDetector_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:db/d64/structrtt_1_1ai_1_1control_1_1Obstacles"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles">rtt::ai::control::Obstacles</a></td></tr>
+<tr class="memdesc:db/d64/structrtt_1_1ai_1_1control_1_1Obstacles"><td class="mdescLeft">&#160;</td><td class="mdescRight">This struct represents the obstacles on a field that a robot may encounter at specific time step. It is used in the timeline vector.  <a href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles">More...</a><br /></td></tr>
+<tr class="separator:db/d64/structrtt_1_1ai_1_1control_1_1Obstacles"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html">rtt::ai::control::CollisionDetector</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for collision between points and different components of the field: robots, defence area, etc. Check isCollisionBetweenPoints method for more details.  <a href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -112,6 +118,43 @@ Namespaces</h2></td></tr>
 <tr class="memitem:d0/d4f/namespacertt_1_1ai_1_1control"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html">rtt::ai::control</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="db/d64/structrtt_1_1ai_1_1control_1_1Obstacles" id="db/d64/structrtt_1_1ai_1_1control_1_1Obstacles"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles">&#9670;&nbsp;</a></span>rtt::ai::control::Obstacles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct rtt::ai::control::Obstacles</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>This struct represents the obstacles on a field that a robot may encounter at specific time step. It is used in the timeline vector. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="ae5016454c730984dd3c06475c6579dbb"></a><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector">StateVector</a></td>
+<td class="fieldname">
+ball</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa1b959fc51892cef397d76cb77984700"></a>vector&lt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector">StateVector</a> &gt;</td>
+<td class="fieldname">
+robotsThem</td>
+<td class="fielddoc">
+Position of the ball. </td></tr>
+<tr><td class="fieldtype">
+<a id="a4b190192c7cc6f10d57337defec16f12"></a>unordered_map&lt; int, <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector">StateVector</a> &gt;</td>
+<td class="fieldname">
+robotsUs</td>
+<td class="fielddoc">
+Position of the enemy robots. </td></tr>
+</table>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

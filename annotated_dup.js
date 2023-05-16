@@ -15,15 +15,19 @@ var annotated_dup =
         [ "control", "d0/d4f/namespacertt_1_1ai_1_1control.html", [
           [ "ControlModule", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule" ],
           [ "ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils" ],
+          [ "BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control_dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart_dup" ],
+          [ "BBPosVelAcc", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc.html", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc" ],
+          [ "BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D" ],
+          [ "BBTrajectory2D", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D" ],
+          [ "Obstacles", "d0/d4f/namespacertt_1_1ai_1_1control.html#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles", "d0/d4f/namespacertt_1_1ai_1_1control_db/d64/structrtt_1_1ai_1_1control_1_1Obstacles_dup" ],
           [ "CollisionDetector", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector" ],
-          [ "NumTreesPlanning", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning" ],
-          [ "PathPlanningAlgorithm", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm" ],
-          [ "PathPointNode", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode" ],
-          [ "BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking" ],
-          [ "DensePathTracking", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking" ],
-          [ "PathTrackingAlgorithm", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm" ],
-          [ "PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking" ],
+          [ "ScoredTrajectoryPair", "d0/d4f/namespacertt_1_1ai_1_1control.html#de/da4/structrtt_1_1ai_1_1control_1_1ScoredTrajectoryPair", "d0/d4f/namespacertt_1_1ai_1_1control_de/da4/structrtt_1_1ai_1_1control_1_1ScoredTrajectoryPair_dup" ],
+          [ "PathPlanning", "d0/df7/classrtt_1_1ai_1_1control_1_1PathPlanning.html", "d0/df7/classrtt_1_1ai_1_1control_1_1PathPlanning" ],
+          [ "PathTracking", "d9/dbd/classrtt_1_1ai_1_1control_1_1PathTracking.html", "d9/dbd/classrtt_1_1ai_1_1control_1_1PathTracking" ],
+          [ "ComputedPath", "d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath", "d0/d4f/namespacertt_1_1ai_1_1control_d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath_dup" ],
           [ "PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl" ],
+          [ "StateVector", "d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector", "d0/d4f/namespacertt_1_1ai_1_1control_d3/d58/structrtt_1_1ai_1_1control_1_1StateVector_dup" ],
+          [ "PositionControlInput", "d0/d4f/namespacertt_1_1ai_1_1control.html#d5/d0e/structrtt_1_1ai_1_1control_1_1PositionControlInput", "d0/d4f/namespacertt_1_1ai_1_1control_d5/d0e/structrtt_1_1ai_1_1control_1_1PositionControlInput_dup" ],
           [ "PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils" ]
         ] ],
         [ "interface", "d8/d44/namespacertt_1_1ai_1_1interface.html", [
@@ -198,15 +202,6 @@ var annotated_dup =
         [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
         [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ]
       ] ],
-      [ "BB", "d0/dde/namespacertt_1_1BB.html", [
-        [ "BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", "d0/dde/namespacertt_1_1BB_dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart_dup" ],
-        [ "BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc" ],
-        [ "BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D" ],
-        [ "BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D" ],
-        [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],
-        [ "CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", "d0/dde/namespacertt_1_1BB_d0/d57/structrtt_1_1BB_1_1CommandCollision_dup" ],
-        [ "WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", "de/d06/classrtt_1_1BB_1_1WorldObjects" ]
-      ] ],
       [ "input", "d4/d8b/namespacertt_1_1input.html", [
         [ "JoystickHandler", "d0/d75/classrtt_1_1input_1_1JoystickHandler.html", "d0/d75/classrtt_1_1input_1_1JoystickHandler" ],
         [ "JoystickManager", "de/d5f/classrtt_1_1input_1_1JoystickManager.html", "de/d5f/classrtt_1_1input_1_1JoystickManager" ],
@@ -232,8 +227,6 @@ var annotated_dup =
         [ "WorldData", "d5/db9/classrtt_1_1world_1_1WorldData.html", "d5/db9/classrtt_1_1world_1_1WorldData" ]
       ] ],
       [ "AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", "dc/d0b/classrtt_1_1AnglePID" ],
-      [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
-      [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
       [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
       [ "Settings", "d1/dfb/classrtt_1_1Settings.html", "d1/dfb/classrtt_1_1Settings" ]
     ] ],

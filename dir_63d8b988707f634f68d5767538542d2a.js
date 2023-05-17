@@ -7,7 +7,7 @@ var dir_63d8b988707f634f68d5767538542d2a =
         [ "startVel", "d0/d4f/namespacertt_1_1ai_1_1control.html#a6c3d0515e19a6c2df5240d5226e0f65c", null ],
         [ "tEnd", "d0/d4f/namespacertt_1_1ai_1_1control.html#ad99b338fbfa97dfe4abe91c64e7b6b5c", null ]
       ] ],
-      [ "BBPosVelAcc", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc.html", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc" ],
+      [ "BBPosVel", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel" ],
       [ "BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D" ]
     ] ],
     [ "BBTrajectory2D.h", "d4/d81/BBTrajectory2D_8h.html", [

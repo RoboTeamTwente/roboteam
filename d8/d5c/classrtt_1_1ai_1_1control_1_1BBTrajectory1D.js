@@ -9,7 +9,7 @@ var classrtt_1_1ai_1_1control_1_1BBTrajectory1D =
     [ "getParts", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#afe0113668b28235f63a5afa3db65c32d", null ],
     [ "getPosition", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a13742e127e52d0bf68e3113131dad245", null ],
     [ "getTotalTime", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a9a34565360482fd78d8434d0986b464d", null ],
-    [ "getValues", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#aef0b8493e57290a1db45b689c7ca3d32", null ],
+    [ "getValues", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a8a1e848da23270d00f1d854b60e39494", null ],
     [ "getVelocity", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#ad844e051f1754ca1dafb2a960c216139", null ],
     [ "inLastPart", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#acdd308aa72d1f9aa98d0963b41f6c37f", null ],
     [ "trapezoidalProfile", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a2cf5ae89f197afbbe071d67ba2b0500c", null ],

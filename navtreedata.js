@@ -76,22 +76,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#ab23ad33458ed975661cdc593bdf40968",
-"d2/d2c/namespacenativeformat_1_1param.html#a36e3777cc72a692df95c3896a0340019ab1a326c06d88bf042f73d70f50197905",
+"d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#a767d949fe08138278346c2604f4cc16e",
+"d2/d2a/DefensiveStopFormation_8h_source.html",
 "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html#af9a9c436e9711e707dfb0f43b5601d91",
-"d4/d8b/namespacertt_1_1input.html#afc086bdbe6f0c066fc0ff80f3f1d313b",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a52e638a2d35b495523933ae29854444b",
-"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a57f4f1302e97e5d5765aaedda78e0df2",
-"d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html",
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ad7b71d56f8b8d8d62b7ec945847a2bec",
-"d8/d60/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemGameStateEvaluation.html",
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a93c2079abaeb77c36a0d47d197423d19",
-"da/dd4/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreedomOfRobotsGlobalEvaluation.html#a7f9fa9c8a1930a1b37b593c12626bbbd",
-"db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#a5bcb1194a71b4699e4108d134d679db5",
-"dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html",
-"dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#aa60de4365b546afe1c5643659a88fdbc",
-"df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#ae37bbc212bbf3af61007918004e13678",
-"functions_g.html"
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a1406b017329e1f25c9c44c0bb7f47468",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3",
+"d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a73a12597f66d69cd33cf9d021e84d2f9",
+"d6/d74/classtesthelpers_1_1WorldHelper.html#a71264c6c02cc6f4b1ee597e3a2320686",
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a7439c6149abbc461640c9ecdad2ba8d6",
+"d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a483d158a091f8347c3c25983b22d015f",
+"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a977b3063d4d26bee4be08d71c2ab7ccc",
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a58560de6d2d6ca91e467deb1071aadbd",
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a81d204e55bab023d2937c1420abd04ad",
+"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a16e607c86f0a605e25561caf3ecb7099",
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a242748b42fbc99613b65f6500eb12f8f",
+"df/dac/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockBall.html#af4a9f63577d36c0cf178aae99fb0fd00",
+"namespacemembers_enum.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

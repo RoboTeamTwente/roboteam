@@ -3,7 +3,7 @@ var namespacertt_1_1ai_1_1control =
     [ "ControlModule", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule" ],
     [ "ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils" ],
     [ "BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control_dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart_dup" ],
-    [ "BBPosVelAcc", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc.html", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc" ],
+    [ "BBPosVel", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel" ],
     [ "BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D" ],
     [ "BBTrajectory2D", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D" ],
     [ "Obstacles", "d0/d4f/namespacertt_1_1ai_1_1control.html#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles", "d0/d4f/namespacertt_1_1ai_1_1control_db/d64/structrtt_1_1ai_1_1control_1_1Obstacles_dup" ],
@@ -22,6 +22,5 @@ var namespacertt_1_1ai_1_1control =
       [ "UPDATE_TARGET_REACHED", "d0/d4f/namespacertt_1_1ai_1_1control.html#acc60c14cde3bafcdccee07e9f9d9d460a9db87f0d12fe84022207ab98cf09124f", null ],
       [ "UPDATE_POSITION_CHANGED", "d0/d4f/namespacertt_1_1ai_1_1control.html#acc60c14cde3bafcdccee07e9f9d9d460a7ceb898ab0b34bc6196a885433d0eb7f", null ],
       [ "UPDATE_COLLISION_DETECTED", "d0/d4f/namespacertt_1_1ai_1_1control.html#acc60c14cde3bafcdccee07e9f9d9d460a2293c73bd6da30c17157b6fbff8671f6", null ]
-    ] ],
-    [ "TEST", "d0/d4f/namespacertt_1_1ai_1_1control.html#aefb443efdf757a2d73ffe34c622055e4", null ]
+    ] ]
 ];

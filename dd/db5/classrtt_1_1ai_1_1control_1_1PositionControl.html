@@ -99,7 +99,6 @@ $(document).ready(function(){initNavTree('dd/db5/classrtt_1_1ai_1_1control_1_1Po
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a78f299c3d8b50420c49ff1456954448f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a78f299c3d8b50420c49ff1456954448f">PositionControl</a> ()</td></tr>
-<tr class="memdesc:a78f299c3d8b50420c49ff1456954448f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds x and y PID for each robot [RobotId -&gt; (xPID, yPID)].  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a78f299c3d8b50420c49ff1456954448f">More...</a><br /></td></tr>
 <tr class="separator:a78f299c3d8b50420c49ff1456954448f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84ba87927a6de4a730ff0dd1d0bede02"><td class="memItemLeft" align="right" valign="top">std::optional&lt; Position &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a84ba87927a6de4a730ff0dd1d0bede02">computeNextPosition</a> (const <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d5/d0e/structrtt_1_1ai_1_1control_1_1PositionControlInput">PositionControlInput</a> &amp;input, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType) noexcept</td></tr>
 <tr class="memdesc:a84ba87927a6de4a730ff0dd1d0bede02"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function computes the next control command for a robot based on the given input and PID type.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a84ba87927a6de4a730ff0dd1d0bede02">More...</a><br /></td></tr>
@@ -128,7 +127,6 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:af26a6b31ecd174320c94686d3eaf0bb1"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">ComputedPath</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#af26a6b31ecd174320c94686d3eaf0bb1">paths</a></td></tr>
 <tr class="separator:af26a6b31ecd174320c94686d3eaf0bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d00e1fefcd8a214dd558b3782a0c838"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, std::pair&lt; PID, PID &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a4d00e1fefcd8a214dd558b3782a0c838">pidControllers</a></td></tr>
-<tr class="memdesc:a4d00e1fefcd8a214dd558b3782a0c838"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds computed paths for each robot [RobotId -&gt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">ComputedPath</a>].  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a4d00e1fefcd8a214dd558b3782a0c838">More...</a><br /></td></tr>
 <tr class="separator:a4d00e1fefcd8a214dd558b3782a0c838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -223,8 +221,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Holds x and y PID for each robot [RobotId -&gt; (xPID, yPID)]. </p>
 
 </div>
 </div>
@@ -339,6 +335,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Detects collisions on the trajectory </p>
 
 </div>
 </div>
@@ -361,6 +358,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Creates new trajectories when a collision is detected </p>
 
 </div>
 </div>
@@ -383,6 +381,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Holds computed paths for each robot [RobotId -&gt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">ComputedPath</a>] </p>
 
 </div>
 </div>
@@ -405,6 +404,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Tracks the path </p>
 
 </div>
 </div>
@@ -427,8 +427,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Holds computed paths for each robot [RobotId -&gt; <a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath">ComputedPath</a>]. </p>
+<p>Holds x and y PID for each robot [RobotId -&gt; (xPID, yPID)] </p>
 
 </div>
 </div>

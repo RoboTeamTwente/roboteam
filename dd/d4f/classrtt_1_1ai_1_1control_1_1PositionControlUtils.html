@@ -86,47 +86,42 @@ $(document).ready(function(){initNavTree('dd/d4f/classrtt_1_1ai_1_1control_1_1Po
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../d5/d76/classrtt_1_1ai_1_1control_1_1PositionControlUtils-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">rtt::ai::control::PositionControlUtils Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
+<p>Class containing useful functions used in position control.  
+ <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="../../d3/dc9/PositionControlUtils_8h_source.html">PositionControlUtils.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2fc56599b1a44d235be6256576bd023e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a2fc56599b1a44d235be6256576bd023e">positionWithinTolerance</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;pos1, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;pos2)</td></tr>
-<tr class="memdesc:a2fc56599b1a44d235be6256576bd023e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity threshold for determining if a robot is moving or not.  <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a2fc56599b1a44d235be6256576bd023e">More...</a><br /></td></tr>
-<tr class="separator:a2fc56599b1a44d235be6256576bd023e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36bfc7cbae5bc0859508aeabf4586716"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a36bfc7cbae5bc0859508aeabf4586716">isMoving</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;velocity)</td></tr>
-<tr class="separator:a36bfc7cbae5bc0859508aeabf4586716"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addaabebf023387cd8ef1d795ee053653"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#acc65523a472ce38a6f294d661c234725">pidVals</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#addaabebf023387cd8ef1d795ee053653">getPIDValue</a> (const <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> &amp;pidType)</td></tr>
-<tr class="separator:addaabebf023387cd8ef1d795ee053653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f6e81b3bee2cca1a89446737720952c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a5f6e81b3bee2cca1a89446737720952c">convertTimeToStep</a> (double time)</td></tr>
-<tr class="separator:a5f6e81b3bee2cca1a89446737720952c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f22a7059712b1926baa339637cdec30"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a4f22a7059712b1926baa339637cdec30">convertStepToTime</a> (int step)</td></tr>
-<tr class="separator:a4f22a7059712b1926baa339637cdec30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad343ac5541f373836c0c54f107e93a4d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#ad343ac5541f373836c0c54f107e93a4d">isTargetChanged</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPos, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;oldTarget)</td></tr>
+<tr class="memdesc:ad343ac5541f373836c0c54f107e93a4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the distance between the old target and the new target is greater than MAX_TARGET_DEVIATION.  <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#ad343ac5541f373836c0c54f107e93a4d">More...</a><br /></td></tr>
+<tr class="separator:ad343ac5541f373836c0c54f107e93a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ba68e7c1b9f6d8b2e6380e8be39f9ca"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a4ba68e7c1b9f6d8b2e6380e8be39f9ca">isTargetReached</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPos, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition)</td></tr>
+<tr class="memdesc:a4ba68e7c1b9f6d8b2e6380e8be39f9ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">checks whether the distance between target and currentPosition is greater than MIN_DISTANCE  <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a4ba68e7c1b9f6d8b2e6380e8be39f9ca">More...</a><br /></td></tr>
+<tr class="separator:a4ba68e7c1b9f6d8b2e6380e8be39f9ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d827ae798f994365071745c2ea3b4fe"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a9d827ae798f994365071745c2ea3b4fe">removeFirstIfReached</a> (std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;path, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition)</td></tr>
+<tr class="memdesc:a9d827ae798f994365071745c2ea3b4fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the first element in the path in the case the first point is reached.  <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a9d827ae798f994365071745c2ea3b4fe">More...</a><br /></td></tr>
+<tr class="separator:a9d827ae798f994365071745c2ea3b4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a48b063d5dac3bde52a288289f3bb5517"><td class="memItemLeft" align="right" valign="top">constexpr static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a48b063d5dac3bde52a288289f3bb5517">TIME_STEP</a> = 0.1</td></tr>
-<tr class="separator:a48b063d5dac3bde52a288289f3bb5517"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e8042036f440b2dcba8438527ce25ba"><td class="memItemLeft" align="right" valign="top">constexpr static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a8e8042036f440b2dcba8438527ce25ba">COLLISION_DETECTOR_STEP_COUNT</a> = 10</td></tr>
-<tr class="separator:a8e8042036f440b2dcba8438527ce25ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5008e16f9acc17c655c8e737fa5be3c6"><td class="memItemLeft" align="right" valign="top">constexpr static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a5008e16f9acc17c655c8e737fa5be3c6">MIN_ENEMY_MOVING_ROBOT_DISTANCE</a> = 3 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td></tr>
-<tr class="separator:a5008e16f9acc17c655c8e737fa5be3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad0515aacfb46d91e6a36037723e82ee"><td class="memItemLeft" align="right" valign="top">constexpr static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#aad0515aacfb46d91e6a36037723e82ee">MIN_ENEMY_STALE_ROBOT_DISTANCE</a> = 2 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td></tr>
-<tr class="separator:aad0515aacfb46d91e6a36037723e82ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa10d1180fbec744edf320a36d844b87a"><td class="memItemLeft" align="right" valign="top">constexpr static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#aa10d1180fbec744edf320a36d844b87a">MIN_OUR_ROBOT_DISTANCE_MOVING</a> = 3 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td></tr>
-<tr class="separator:aa10d1180fbec744edf320a36d844b87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a902fecd3f3548dc8d180b5fcc8e856b1"><td class="memItemLeft" align="right" valign="top">constexpr static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a902fecd3f3548dc8d180b5fcc8e856b1">MAX_STALE_VELOCITY</a> = 0.05</td></tr>
-<tr class="separator:a902fecd3f3548dc8d180b5fcc8e856b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a795a88eaf75ecfe780fc29b4e9cef7cb"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a795a88eaf75ecfe780fc29b4e9cef7cb">MAX_TARGET_DEVIATION</a> = 0.05</td></tr>
+<tr class="separator:a795a88eaf75ecfe780fc29b4e9cef7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7d3d95b3fd1f48b8c88258eaa30b98d"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#af7d3d95b3fd1f48b8c88258eaa30b98d">MIN_DISTANCE_TARGET_REACHED</a> = 2 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>()</td></tr>
+<tr class="separator:af7d3d95b3fd1f48b8c88258eaa30b98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4f22a7059712b1926baa339637cdec30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f22a7059712b1926baa339637cdec30">&#9670;&nbsp;</a></span>convertStepToTime()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class containing useful functions used in position control. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad343ac5541f373836c0c54f107e93a4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad343ac5541f373836c0c54f107e93a4d">&#9670;&nbsp;</a></span>isTargetChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,149 +130,16 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::ai::control::PositionControlUtils::convertStepToTime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>step</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This function takes value in time steps and converts it to a double value representing the number of seconds </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">step</td><td>number of time steps </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>time in seconds </dd></dl>
-
-</div>
-</div>
-<a id="a5f6e81b3bee2cca1a89446737720952c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f6e81b3bee2cca1a89446737720952c">&#9670;&nbsp;</a></span>convertTimeToStep()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int rtt::ai::control::PositionControlUtils::convertTimeToStep </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>time</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This function takes value in seconds and converts it to an integer value representing the number of time steps </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">time</td><td>in seconds </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>number of time steps </dd></dl>
-
-</div>
-</div>
-<a id="addaabebf023387cd8ef1d795ee053653"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addaabebf023387cd8ef1d795ee053653">&#9670;&nbsp;</a></span>getPIDValue()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#acc65523a472ce38a6f294d661c234725">pidVals</a> rtt::ai::control::PositionControlUtils::getPIDValue </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> &amp;&#160;</td>
-          <td class="paramname"><em>pidType</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>The getPIDValue function takes a <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb" title="The PIDType to be used by this robot for path planning/tracking.">stp::PIDType</a> enum class as input and returns a given pid value </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pidType</td><td>The different <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb" title="The PIDType to be used by this robot for path planning/tracking.">stp::PIDType</a> options correspond to different robot behaviors, such as default movement, receiving a pass, intercepting the ball, and playing as the goalkeeper. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>pidVals struct, which contains the proportional gain (kp), integral gain (ki), and derivative gain (kd) for a PID </dd></dl>
-
-</div>
-</div>
-<a id="a36bfc7cbae5bc0859508aeabf4586716"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36bfc7cbae5bc0859508aeabf4586716">&#9670;&nbsp;</a></span>isMoving()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::control::PositionControlUtils::isMoving </td>
+          <td class="memname">bool rtt::ai::control::PositionControlUtils::isTargetChanged </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>velocity</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Determines if the object is currently moving based on its velocity.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">velocity</td><td>The 2D velocity of the object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the magnitude of the velocity is greater than zero, indicating that the object is moving; <code>false</code> otherwise. </dd></dl>
-
-</div>
-</div>
-<a id="a2fc56599b1a44d235be6256576bd023e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fc56599b1a44d235be6256576bd023e">&#9670;&nbsp;</a></span>positionWithinTolerance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::control::PositionControlUtils::positionWithinTolerance </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>pos1</em>, </td>
+          <td class="paramname"><em>targetPos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>pos2</em>&#160;</td>
+          <td class="paramname"><em>oldTarget</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -292,21 +154,112 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Velocity threshold for determining if a robot is moving or not. </p>
-<p>Checks if two 2D vectors are within a certain distance tolerance. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Checks whether the distance between the old target and the new target is greater than MAX_TARGET_DEVIATION. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pos1</td><td>The first 2D vector to compare. </td></tr>
-    <tr><td class="paramname">pos2</td><td>The second 2D vector to compare. </td></tr>
+    <tr><td class="paramname">targetPos</td><td>Target position to go to </td></tr>
+    <tr><td class="paramname">oldTarget</td><td>Previous target position </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the two vectors are within the distance tolerance, False otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Boolean that tells whether the target position changed </dd></dl>
+
+</div>
+</div>
+<a id="a4ba68e7c1b9f6d8b2e6380e8be39f9ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ba68e7c1b9f6d8b2e6380e8be39f9ca">&#9670;&nbsp;</a></span>isTargetReached()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rtt::ai::control::PositionControlUtils::isTargetReached </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>targetPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>currentPosition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>checks whether the distance between target and currentPosition is greater than MIN_DISTANCE </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">targetPos</td><td>Target position to got to </td></tr>
+    <tr><td class="paramname">currentPosition</td><td>Previous target positions </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Boolean that tells whether the target position has been reached </dd></dl>
+
+</div>
+</div>
+<a id="a9d827ae798f994365071745c2ea3b4fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d827ae798f994365071745c2ea3b4fe">&#9670;&nbsp;</a></span>removeFirstIfReached()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::control::PositionControlUtils::removeFirstIfReached </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>currentPosition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes the first element in the path in the case the first point is reached. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>the vector of path points </td></tr>
+    <tr><td class="paramname">currentPosition</td><td>the current position of the robot </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8e8042036f440b2dcba8438527ce25ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e8042036f440b2dcba8438527ce25ba">&#9670;&nbsp;</a></span>COLLISION_DETECTOR_STEP_COUNT</h2>
+<a id="a795a88eaf75ecfe780fc29b4e9cef7cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a795a88eaf75ecfe780fc29b4e9cef7cb">&#9670;&nbsp;</a></span>MAX_TARGET_DEVIATION</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -315,20 +268,21 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr static const int rtt::ai::control::PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT = 10</td>
+          <td class="memname">constexpr double rtt::ai::control::PositionControlUtils::MAX_TARGET_DEVIATION = 0.05</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Maximum distance a target can deviate before it is defined as a new position </p>
 
 </div>
 </div>
-<a id="a902fecd3f3548dc8d180b5fcc8e856b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a902fecd3f3548dc8d180b5fcc8e856b1">&#9670;&nbsp;</a></span>MAX_STALE_VELOCITY</h2>
+<a id="af7d3d95b3fd1f48b8c88258eaa30b98d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7d3d95b3fd1f48b8c88258eaa30b98d">&#9670;&nbsp;</a></span>MIN_DISTANCE_TARGET_REACHED</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -337,103 +291,16 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr static const double rtt::ai::control::PositionControlUtils::MAX_STALE_VELOCITY = 0.05</td>
+          <td class="memname">constexpr double rtt::ai::control::PositionControlUtils::MIN_DISTANCE_TARGET_REACHED = 2 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>()</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5008e16f9acc17c655c8e737fa5be3c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5008e16f9acc17c655c8e737fa5be3c6">&#9670;&nbsp;</a></span>MIN_ENEMY_MOVING_ROBOT_DISTANCE</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr static const double rtt::ai::control::PositionControlUtils::MIN_ENEMY_MOVING_ROBOT_DISTANCE = 3 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aad0515aacfb46d91e6a36037723e82ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad0515aacfb46d91e6a36037723e82ee">&#9670;&nbsp;</a></span>MIN_ENEMY_STALE_ROBOT_DISTANCE</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr static const double rtt::ai::control::PositionControlUtils::MIN_ENEMY_STALE_ROBOT_DISTANCE = 2 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa10d1180fbec744edf320a36d844b87a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa10d1180fbec744edf320a36d844b87a">&#9670;&nbsp;</a></span>MIN_OUR_ROBOT_DISTANCE_MOVING</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr static const double rtt::ai::control::PositionControlUtils::MIN_OUR_ROBOT_DISTANCE_MOVING = 3 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a68673839b62305c8822c4d2cf75381e9">ai::Constants::ROBOT_RADIUS_MAX</a>()</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a48b063d5dac3bde52a288289f3bb5517"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48b063d5dac3bde52a288289f3bb5517">&#9670;&nbsp;</a></span>TIME_STEP</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr static const double rtt::ai::control::PositionControlUtils::TIME_STEP = 0.1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>minimum distance needed to consider the current target reached </p>
 
 </div>
 </div>

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['negligible_5flength_3186',['NEGLIGIBLE_LENGTH',['../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3580ec8ed627658402f4fd08c236d7fd',1,'rtt::ai::FieldComputations']]],
-  ['numparts_3187',['numParts',['../d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a509d99d89d3461271167f5e6fb4f5312',1,'rtt::ai::control::BBTrajectory1D']]],
-  ['numtreepid_3188',['numTreePID',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a1425e3df0b771ad3d84463c1e151c4d2',1,'rtt::ai::interface::Output']]]
+  ['obstacleposition_3141',['obstaclePosition',['../d0/dde/namespacertt_1_1BB.html#a15b57dbcf85e12fcc1f7888c0c5ea856',1,'rtt::BB::CollisionData']]],
+  ['offensiveposition_3142',['OffensivePosition',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#a0467eea12ee571e71b285fd1baf02364',1,'rtt::ai::stp::gen']]],
+  ['open_3143',['Open',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#aea74bbddaa4d900c85190a28b3953c83',1,'rtt::ai::stp::gen']]],
+  ['our_5fpossession_5frelative_5flength_5fthreshold_3144',['OUR_POSSESSION_RELATIVE_LENGTH_THRESHOLD',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#af62c7481ecaaf4508de7570a9883a81c',1,'rtt::ai::BallPossession']]]
 ];

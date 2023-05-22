@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['lineofsightevaluation_2ecpp_2153',['LineOfSightEvaluation.cpp',['../d6/d69/LineOfSightEvaluation_8cpp.html',1,'']]],
-  ['lineofsightevaluation_2eh_2154',['LineOfSightEvaluation.h',['../db/d9b/LineOfSightEvaluation_8h.html',1,'']]]
+  ['main_2ecpp_2117',['main.cpp',['../df/d0a/main_8cpp.html',1,'']]],
+  ['maincontrolswidget_2ecpp_2118',['MainControlsWidget.cpp',['../d8/d23/MainControlsWidget_8cpp.html',1,'']]],
+  ['maincontrolswidget_2eh_2119',['MainControlsWidget.h',['../d2/df8/MainControlsWidget_8h.html',1,'']]],
+  ['mainwindow_2ecpp_2120',['mainWindow.cpp',['../d6/d94/mainWindow_8cpp.html',1,'']]],
+  ['mainwindow_2eh_2121',['mainWindow.h',['../d2/d11/mainWindow_8h.html',1,'']]]
 ];

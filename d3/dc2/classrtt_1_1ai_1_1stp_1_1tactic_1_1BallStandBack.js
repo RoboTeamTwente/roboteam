@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack =
 [
     [ "BallStandBack", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a1510d2cbf825d91a17d35edacea7271a", null ],
     [ "calculateInfoForSkill", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a543ffae65ad04a52ff8bb97da847dffe", null ],
+    [ "forceTacticSuccess", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a3980e34a266bc158ee16bb272ac9e2b3", null ],
     [ "getStatus", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#ab7650037eb092459aca7247ea77f2ad4", null ],

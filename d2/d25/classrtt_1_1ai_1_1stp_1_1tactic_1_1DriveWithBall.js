@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall =
 [
     [ "DriveWithBall", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#abe97fc8f338154e02b1f7747bed78287", null ],
     [ "calculateInfoForSkill", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#adfab981037d0e44130a2342dd240df13", null ],
+    [ "forceTacticSuccess", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a5befa67548f6af84122085e538a9acc2", null ],
     [ "getCurrentSkill", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a78172b4882b55c20460ce48c503d503f", null ],
     [ "getStatus", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#ab7650037eb092459aca7247ea77f2ad4", null ],

@@ -94,9 +94,6 @@ $(document).ready(function(){initNavTree('functions_d.html',''); initResizable()
 : <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a83f577f86afedffe2d161038916d578a">rtt::world::view::WorldDataView</a>
 , <a class="el" href="da/d39/classrtt_1_1world_1_1World.html#a3c7cbd450ac3b8e5d436b98e2a1c7fc6">rtt::world::World::AcquireInfo&lt; T &gt;</a>
 </li>
-<li>deactivate()
-: <a class="el" href="de/d5f/classrtt_1_1input_1_1JoystickManager.html#a15573df589cf35f5cc7e7d63b65a40f5">rtt::input::JoystickManager</a>
-</li>
 <li>Dealer()
 : <a class="el" href="d7/ddc/classrtt_1_1ai_1_1Dealer.html#a38e5570d819dc8de80c478c5deba6703">rtt::ai::Dealer</a>
 </li>
@@ -138,6 +135,9 @@ $(document).ready(function(){initNavTree('functions_d.html',''); initResizable()
 </li>
 <li>DEFAULT_KEEPER_ID()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#ab2ca99fb72c5a2b76b225f6359e6a655">rtt::ai::Constants</a>
+</li>
+<li>DEFAULT_ROBOT_COLLISION_RADIUS
+: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ac9969c2b4849e60788aa414ebe745ee0">rtt::ai::control::CollisionDetector</a>
 </li>
 <li>defaultY()
 : <a class="el" href="d2/d80/classnativeformat_1_1param_1_1Param.html#a4822a56885c39fdd09af27ae80640f5e">nativeformat::param::Param</a>
@@ -206,26 +206,8 @@ $(document).ready(function(){initNavTree('functions_d.html',''); initResizable()
 <li>distributeRoles()
 : <a class="el" href="d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a977b3063d4d26bee4be08d71c2ab7ccc">rtt::ai::stp::Play</a>
 </li>
-<li>doChip()
-: <a class="el" href="d0/d75/classrtt_1_1input_1_1JoystickHandler.html#a5d81aed878364759c2edad6a4612a2a3">rtt::input::JoystickHandler</a>
-</li>
-<li>doesCollideWithMovingObjects()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a42b36b45f62e6f6512a4e481b2854d23">rtt::ai::control::CollisionDetector</a>
-</li>
-<li>doesCollideWithStaticObjects()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a124d05c79ad66a8e398e6e3a1fa6889e">rtt::ai::control::CollisionDetector</a>
-</li>
-<li>doKick()
-: <a class="el" href="d0/d75/classrtt_1_1input_1_1JoystickHandler.html#ae4cbe4a8d40031e60f82e52c2d5f62fe">rtt::input::JoystickHandler</a>
-</li>
 <li>DOTS
 : <a class="el" href="d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3aca55b082fd7f24463df1e7cf8d0d12b881">rtt::ai::interface::Drawing</a>
-</li>
-<li>dpadLeft
-: <a class="el" href="d4/d8b/namespacertt_1_1input.html#ab0cc1bc2c7858e43d01f0d5357a4f085">rtt::input::JoystickState</a>
-</li>
-<li>dpadRight
-: <a class="el" href="d4/d8b/namespacertt_1_1input.html#aa5bbe3bfc2cdf79f401f96d8b76926d2">rtt::input::JoystickState</a>
 </li>
 <li>drawArrows()
 : <a class="el" href="d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a3a294d242f168fa4784bf4eebbe83a10">rtt::ai::interface::Visualizer</a>
@@ -241,12 +223,6 @@ $(document).ready(function(){initNavTree('functions_d.html',''); initResizable()
 </li>
 <li>drawCrosses()
 : <a class="el" href="d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#aac189a42aa335fca0c83c6a78563a0c1">rtt::ai::interface::Visualizer</a>
-</li>
-<li>drawData()
-: <a class="el" href="db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a536be38b9a0ceb22def407599353187b">rtt::ai::interface::Input</a>
-</li>
-<li>drawDebugData()
-: <a class="el" href="db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a514a5d0c60e4eed2821975c3a2dd635f">rtt::ai::interface::Input</a>
 </li>
 <li>drawDetectionBall()
 : <a class="el" href="d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#aa42c8bab7cead44b5d57567a6c89f48c">rtt::ai::interface::Visualizer</a>
@@ -298,12 +274,6 @@ $(document).ready(function(){initNavTree('functions_d.html',''); initResizable()
 </li>
 <li>drawTacticColorForRobot()
 : <a class="el" href="d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#abd0f52d97c416ab9824697ff35241b20">rtt::ai::interface::Visualizer</a>
-</li>
-<li>drawTimeline()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a2cce934ae17aef87ef58ccde75f02bd9">rtt::ai::control::CollisionDetector</a>
-</li>
-<li>dribbler_vel
-: <a class="el" href="d0/d75/classrtt_1_1input_1_1JoystickHandler.html#a18b289c54f45f35608eb00c2aac44067">rtt::input::JoystickHandler</a>
 </li>
 <li>dribblerSeesBall
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a828fb5223242dd7b9827a7c8cfafc332">rtt::world::robot::Robot</a>

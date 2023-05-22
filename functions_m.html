@@ -101,13 +101,6 @@ $(document).ready(function(){initNavTree('functions_m.html',''); initResizable()
 </li>
 <li>manager
 : <a class="el" href="d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#abd10ad3f7c19d1a4915443951376d816">rtt::ai::interface::MainControlsWidget</a>
-, <a class="el" href="d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html#a66b907b684c27d975c065aba69197d01">rtt::ai::interface::ManualControlWidget</a>
-</li>
-<li>manualControlWidget
-: <a class="el" href="d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a0e01d6b7eb967565051d944f7f040fc2">rtt::ai::interface::MainWindow</a>
-</li>
-<li>ManualControlWidget()
-: <a class="el" href="d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html#a98d2fd801b6d879929f457321c01ce2a">rtt::ai::interface::ManualControlWidget</a>
 </li>
 <li>markerMutex
 : <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a0b46b84bb4f410c968a9cd1e81260e45">rtt::ai::interface::Output</a>
@@ -130,20 +123,29 @@ $(document).ready(function(){initNavTree('functions_m.html',''); initResizable()
 <li>MAX_ANGULAR_VELOCITY()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#aa6c8415408d2e5493a86278331a327c6">rtt::ai::Constants</a>
 </li>
+<li>MAX_BRANCHING
+: <a class="el" href="d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html#ac5c25fb953a6d4f41c6657c728839c23">rtt::ai::control::NumTreesPlanning</a>
+</li>
 <li>MAX_DEC_LOWER()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#aeee2868b9d0114f424d68ed201554738">rtt::ai::Constants</a>
 </li>
 <li>MAX_DEC_UPPER()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a926316de36cd5dc06146ef9511aed321">rtt::ai::Constants</a>
 </li>
-<li>MAX_STALE_VELOCITY
-: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a902fecd3f3548dc8d180b5fcc8e856b1">rtt::ai::control::PositionControlUtils</a>
+<li>MAX_ITERATIONS
+: <a class="el" href="d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html#a53c861052a09716e008d05b5cf4b1321">rtt::ai::control::NumTreesPlanning</a>
+</li>
+<li>MAX_TARGET_DEVIATION
+: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a795a88eaf75ecfe780fc29b4e9cef7cb">rtt::ai::control::PositionControlUtils</a>
 </li>
 <li>MAX_VEL()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a9113165eb919d1bbb08eeda60d35d9b0">rtt::ai::Constants</a>
 </li>
 <li>MAX_VEL_CMD()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a03ff0877dfc096d474b6a1f4ec937bda">rtt::ai::Constants</a>
+</li>
+<li>MAX_VELOCITY
+: <a class="el" href="d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html#abbadcb93be045dee27d8f7dbdfb89b9d">rtt::ai::control::PidTracking</a>
 </li>
 <li>maxBallVel
 : <a class="el" href="dd/d26/structrtt_1_1ai_1_1RuleSet.html#afc49da7f80d1c10cb9e0440d9ed596ae">rtt::ai::RuleSet</a>
@@ -155,8 +157,8 @@ $(document).ready(function(){initNavTree('functions_m.html',''); initResizable()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a79ba3f581e2b53fa4ee8bd269e5fcdc3">rtt::ai::stp::StpInfo</a>
 </li>
 <li>maxVel
-: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#ae4f40f633c6bb83c1352a10823cfe6e3">rtt::ai::control::BBTrajectory1D</a>
-, <a class="el" href="d0/d4f/namespacertt_1_1ai_1_1control.html#a5e696003cf8672b131bd8520d3e152f5">rtt::ai::control::PositionControlInput</a>
+: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#abf0d066cf359054865fbd07b10862905">rtt::BB::BBTrajectory1D</a>
+, <a class="el" href="d0/d62/classrtt_1_1Trajectory1D.html#a932d6aa52b3ee5651f6d6f426c1a8da4">rtt::Trajectory1D</a>
 </li>
 <li>maxY()
 : <a class="el" href="d2/d80/classnativeformat_1_1param_1_1Param.html#a7b13f4ab653967a8c9705beb5e84a2cd">nativeformat::param::Param</a>
@@ -224,14 +226,8 @@ $(document).ready(function(){initNavTree('functions_m.html',''); initResizable()
 <li>MIN_ANGLE()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a588134b99830c3193cfbff96db37398e">rtt::ai::Constants</a>
 </li>
-<li>MIN_ENEMY_MOVING_ROBOT_DISTANCE
-: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#a5008e16f9acc17c655c8e737fa5be3c6">rtt::ai::control::PositionControlUtils</a>
-</li>
-<li>MIN_ENEMY_STALE_ROBOT_DISTANCE
-: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#aad0515aacfb46d91e6a36037723e82ee">rtt::ai::control::PositionControlUtils</a>
-</li>
-<li>MIN_OUR_ROBOT_DISTANCE_MOVING
-: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#aa10d1180fbec744edf320a36d844b87a">rtt::ai::control::PositionControlUtils</a>
+<li>MIN_DISTANCE_TARGET_REACHED
+: <a class="el" href="dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#af7d3d95b3fd1f48b8c88258eaa30b98d">rtt::ai::control::PositionControlUtils</a>
 </li>
 <li>minDistanceToBall
 : <a class="el" href="dd/d26/structrtt_1_1ai_1_1RuleSet.html#a9501fa83ad350c89c1b56edaea7a5e73">rtt::ai::RuleSet</a>

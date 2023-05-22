@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['x_3402',['X',['../d4/d8b/namespacertt_1_1input.html#a023721e62941ffbce3773e93f0801f84',1,'rtt::input::JoystickState']]],
-  ['x_3403',['x',['../dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#a0821e6901c1bcbbfbabe1f7b0b15cc91',1,'rtt::ai::control::BBTrajectory2D']]],
-  ['xbox_3404',['XBOX',['../d4/d8b/namespacertt_1_1input.html#a30ff2b7c6ddd45a61c1e59ddb3f77581',1,'rtt::input::JoystickState']]]
+  ['y_3338',['y',['../d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#a43065dd7523a7d537f7f10da439c2ce4',1,'rtt::BB::BBTrajectory2D::y()'],['../d9/da4/classrtt_1_1Trajectory2D.html#a9cca6ff323bf0ac8a3c06a627040d233',1,'rtt::Trajectory2D::y()']]],
+  ['yellow_3339',['yellow',['../d1/dfb/classrtt_1_1Settings.html#a6c5af274c3d1bd790dff266349c53c93',1,'rtt::Settings']]]
 ];

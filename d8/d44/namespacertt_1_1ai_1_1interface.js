@@ -8,7 +8,6 @@ var namespacertt_1_1ai_1_1interface =
     [ "GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget" ],
     [ "MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget" ],
     [ "MainWindow", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow" ],
-    [ "ManualControlWidget", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget" ],
     [ "PidBox", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox" ],
     [ "PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget" ],
     [ "PlaysWidget", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget" ],

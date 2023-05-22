@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1TestTactic =
 [
     [ "TestTactic", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ab8d1e4dfb359b1438512e1ac9a0dfb84", null ],
     [ "calculateInfoForSkill", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a8baca77e1e5e2f138b7416d1e8ebde41", null ],
+    [ "forceTacticSuccess", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#aa9ab4a91bf00c62dd623266195f48e66", null ],
     [ "getCurrentSkill", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a8a1d28595cec987d07345bc4dbd52ed7", null ],
     [ "getStatus", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ab7650037eb092459aca7247ea77f2ad4", null ],

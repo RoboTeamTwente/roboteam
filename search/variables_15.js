@@ -1,13 +1,17 @@
 var searchData=
 [
-  ['vel_3379',['vel',['../d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html#a3d9b2c13715029ae9c8f15cf547a80c2',1,'rtt::ai::control::BBPosVel::vel()'],['../d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#adcd2e31e375cfb5e967d04138e5c1f5a',1,'rtt::world::robot::Robot::vel()']]],
-  ['velocity_3380',['velocity',['../d0/d4f/namespacertt_1_1ai_1_1control.html#a94edf87eb2d3ad94010b30d03cf27dda',1,'rtt::ai::control::StateVector::velocity()'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#a47474ae800a011d2857635b9815eac73',1,'rtt::world::ball::Ball::velocity()']]],
-  ['velpid_3381',['velPid',['../d5/db9/classrtt_1_1ai_1_1stp_1_1skill_1_1Orbit.html#a284c5c563ccda2dcdbd29b73d1dde9cc',1,'rtt::ai::stp::skill::Orbit']]],
-  ['visible_3382',['visible',['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#ac55b1835844f7bd1e15fa555f0d41dd2',1,'rtt::world::ball::Ball']]],
-  ['visionip_3383',['visionIp',['../d1/dfb/classrtt_1_1Settings.html#ade86ec3597b3cf5d34c520824188c6b4',1,'rtt::Settings']]],
-  ['visionport_3384',['visionPort',['../d1/dfb/classrtt_1_1Settings.html#aba5e2e8466d32805436f7a98caffc18f',1,'rtt::Settings']]],
-  ['visual_3385',['visual',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#aa69893022e2dc56f1a831c40efb3e07b',1,'rtt::ai::interface::Drawing::visual()'],['../de/db2/classrtt_1_1ai_1_1interface_1_1Toggle.html#ab79ef3499cf766052bfdc9c401973753',1,'rtt::ai::interface::Toggle::visual()']]],
-  ['visualizer_3386',['visualizer',['../d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#ae69f20e96a43f3dfcb032c66747a323e',1,'rtt::ai::interface::MainWindow']]],
-  ['vlayout_3387',['vLayout',['../d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#a79d07bbf3562abe5e44543b42e71cb86',1,'rtt::ai::interface::MainControlsWidget::vLayout()'],['../d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a4c0d8be12425061ce0908058cd2aa82b',1,'rtt::ai::interface::MainWindow::vLayout()'],['../d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget.html#af84f3d8ae66640b23f0b63920891dcf9',1,'rtt::ai::interface::RuleSetWidget::vLayout()'],['../df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html#abedf4f6d997598de5ff44b05d6eba165',1,'rtt::ai::interface::SettingsWidget::vLayout()']]],
-  ['vlayout_3388',['VLayout',['../da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget.html#af04b2fdf8fc7f1cdf40d14692673ec7e',1,'rtt::ai::interface::RobotsWidget']]]
+  ['weight_3323',['weight',['../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5',1,'rtt::ai::Dealer::FlagScore::weight()'],['../dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc',1,'rtt::ai::stp::PlayEvaluator::PlayScoring::weight()']]],
+  ['weightblocking_3324',['weightBlocking',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#a1a65e08074c43376d63a306b9075d6af',1,'rtt::ai::stp::gen::ScoreProfile']]],
+  ['weightgoalshot_3325',['weightGoalShot',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#acc62e5a823dd94fa378b5c675aa825be',1,'rtt::ai::stp::gen::ScoreProfile']]],
+  ['weightlineofsight_3326',['weightLineOfSight',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ad3d0ebb02049b8fc34765bd5a265b854',1,'rtt::ai::stp::gen::ScoreProfile']]],
+  ['weightopen_3327',['weightOpen',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ab6f890afce98bddf12ab97b4f088b874',1,'rtt::ai::stp::gen::ScoreProfile']]],
+  ['width_3328',['width',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#acba0c724c7dce279473573e00c0b7999',1,'rtt::ai::interface::Drawing']]],
+  ['window_3329',['window',['../dc/d3c/roboteam__ai_8cpp.html#ab1c36c25a5e22d4490aa64686f9ece9c',1,'roboteam_ai.cpp']]],
+  ['withinmargincount_3330',['withinMarginCount',['../d1/d10/classrtt_1_1ai_1_1stp_1_1skill_1_1Rotate.html#a9553030ee0ed13a6802a70b35df77ac5',1,'rtt::ai::stp::skill::Rotate']]],
+  ['workingballsensor_3331',['workingBallSensor',['../d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#ab12607d0697b28b32e67e54b26b04998',1,'rtt::world::robot::Robot']]],
+  ['workingdribbler_3332',['workingDribbler',['../d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a9b45a6f4db069db89c7084e1c93a69f3',1,'rtt::world::robot::Robot']]],
+  ['world_3333',['world',['../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a0c13cbd482099fa139f3a5f08d964efe',1,'rtt::ai::stp::Play::world()'],['../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a10b762714097d7afe3ad688f418538fd',1,'rtt::ai::Dealer::world()'],['../d6/d69/classRTT__AI__Tests.html#a91aa205731170ebfe29ecf08bf2eea21',1,'RTT_AI_Tests::world()']]],
+  ['worlddetectionsmutex_3334',['worldDetectionsMutex',['../d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#a778bc5eb56bc8f499f2e9096deee0e54',1,'rtt::ai::interface::Visualizer']]],
+  ['worldobjects_3335',['worldObjects',['../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a51bcfe99ceaa453d48a4aa9791ccb9d2',1,'rtt::ai::control::PositionControl']]],
+  ['worldsubscriber_3336',['worldSubscriber',['../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad5968054795bded97f41bbfcd41c95ae',1,'rtt::ai::io::IOManager']]]
 ];

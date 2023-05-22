@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     auto pidWidget = new PidsWidget();
     robotsWidget = new RobotsWidget(this);
     refWidget = new RuleSetWidget(this);
-    manualControlWidget = new ManualControlWidget(this);
 
     // add the tab widget
     auto tabWidget = new QTabWidget;
@@ -66,7 +65,6 @@ MainWindow::MainWindow(QWidget *parent, STPManager *manager) : QMainWindow(paren
     SettingsTabWidget->addTab(visualizationSettingsWidget, tr("Visualisation Settings"));
     SettingsTabWidget->addTab(pidWidget, tr("PID"));
     tabWidget->addTab(SettingsTabWidget, tr("Settings"));
-    tabWidget->addTab(manualControlWidget, tr("Manual"));
 
     vLayout->addWidget(tabWidget);
 

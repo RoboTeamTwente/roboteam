@@ -26,7 +26,7 @@ void GameSettings::setPrimaryAI(bool value) {  primaryAI = value; }
 bool GameSettings::isYellow() { return yellow; }
 
 bool GameSettings::setYellow(bool isYellow) {
-    if (ai::io::io.obtainTeamColorChannel(yellow)) {
+    if (ai::io::io.obtainTeamColorChannel(isYellow)) {
         yellow = isYellow;
         return true;
     }

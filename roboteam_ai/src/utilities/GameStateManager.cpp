@@ -87,6 +87,7 @@ void GameStateManager::setGameStateFromReferee(proto::SSL_Referee refMsg, std::o
     currentRefGameState = findNextRefGameState(refMsg.stage(), newRefCmd, world.value()->getBall());
     currentRefGameState.keeperId = static_cast<int>((GameSettings::isYellow() ? refMsg.yellow() : refMsg.blue()).goalkeeper()); // TODO: Will this work? IE is setGameStateFromReferee called everytime the ref sends a new message?
 
+    RTT_DEBUG("Referee changed the GameState: ", currentRefGameState);
     // TODO: Forward changes to the interface
 }
 
@@ -108,6 +109,7 @@ void GameStateManager::setGameStateFromInterface(std::string_view playName, std:
     }
 
     currentInterfaceGameState = std::move(gameState);
+    RTT_DEBUG("Interface changed the GameState: ", currentInterfaceGameState);
 }
 
 GameState GameStateManager::getCurrentGameState() {

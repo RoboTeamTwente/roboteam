@@ -221,7 +221,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
 
         // If play was set from the interface override the play selected by PlayDecider
-        if (rtt::ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) [[unlikely]]{
+        if (rtt::ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) [[unlikely]] {
             currentPlay = ai::stp::PlayDecider::getPlayForName(
                 rtt::ai::new_interface::RuntimeConfig::interfacePlay.pop(), plays
             );
@@ -234,7 +234,6 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     }
     currentPlay->update();
     mainWindow->updatePlay(currentPlay);
-//    rtt::ai::io::InterfaceGateway::instance().broadcastSTPStatus(currentPlay, plays, tickCounter);
 }
 
 STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }

@@ -9,6 +9,9 @@ var dir_ea2c5a1d063bd2b5f137abdde3cfcc2c =
     [ "mainWindow.h", "d2/d11/mainWindow_8h.html", [
       [ "MainWindow", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow" ]
     ] ],
+    [ "ManualControlWidget.h", "d2/d6f/ManualControlWidget_8h.html", [
+      [ "ManualControlWidget", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget" ]
+    ] ],
     [ "PidBox.h", "d1/d13/PidBox_8h.html", [
       [ "PidBox", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox" ]
     ] ],

@@ -128,6 +128,8 @@ Static Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
+<tr class="memitem:ad0ee0903224fd00f63bdba27639a3428"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#ad0ee0903224fd00f63bdba27639a3428">robotCommandsMutex</a></td></tr>
+<tr class="separator:ad0ee0903224fd00f63bdba27639a3428"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e296b3b7426b09bd3d4ca57ce94da58"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; rtt::RobotCommand &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a6e296b3b7426b09bd3d4ca57ce94da58">robotCommands</a></td></tr>
 <tr class="separator:a6e296b3b7426b09bd3d4ca57ce94da58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74653484152b631fc32cbcb09f29bebd"><td class="memItemLeft" align="right" valign="top">static std::map&lt; unsigned int, <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html">AnglePID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a74653484152b631fc32cbcb09f29bebd">simulatorAnglePIDmap</a></td></tr>
@@ -451,6 +453,29 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Vector of all robot commands </p>
+
+</div>
+</div>
+<a id="ad0ee0903224fd00f63bdba27639a3428"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0ee0903224fd00f63bdba27639a3428">&#9670;&nbsp;</a></span>robotCommandsMutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex rtt::ai::control::ControlModule::robotCommandsMutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Synchronizes the robot commands </p>
 
 </div>
 </div>

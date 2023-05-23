@@ -17,6 +17,7 @@ var classrtt_1_1ai_1_1interface_1_1MainWindow =
     [ "horizontalLayout", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#ad5a6a01c484ef54d0e51414200a41d4d", null ],
     [ "keeperStpWidget", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#affc848e72e629cb96f0db57c273ecbdb", null ],
     [ "mainLayout", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#aaf6320e9e8493c14f746e2a0bdda92b0", null ],
+    [ "manualControlWidget", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a0e01d6b7eb967565051d944f7f040fc2", null ],
     [ "playsWidget", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#ad25dc2c1615a0de1cc6fdf4cb07d8280", null ],
     [ "refWidget", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a6e117e857e1f6f97adbdf0d4e258db80", null ],
     [ "robotsWidget", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a66d02c4e588be4d1f093a6f4e570743c", null ],

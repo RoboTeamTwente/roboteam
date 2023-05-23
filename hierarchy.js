@@ -45,16 +45,14 @@ var hierarchy =
       [ "rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::WeHaveMajorityGlobalEvaluation", "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html", null ]
     ] ],
-    [ "rtt::BB::BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", null ],
-    [ "rtt::ai::control::BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", null ],
-    [ "rtt::BB::BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", null ],
-    [ "rtt::BB::BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", null ],
-    [ "rtt::BB::BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", null ],
+    [ "rtt::ai::control::BBPosVelAcc", "d8/d33/structrtt_1_1ai_1_1control_1_1BBPosVelAcc.html", null ],
+    [ "rtt::ai::control::BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", null ],
+    [ "rtt::ai::control::BBTrajectory2D", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html", null ],
+    [ "rtt::ai::control::BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart", null ],
     [ "rtt::ai::stp::evaluation::BlockingEvaluation", "db/d9f/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BlockingEvaluation.html", null ],
-    [ "rtt::BB::CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", null ],
     [ "rtt::ai::control::CollisionDetector", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html", null ],
-    [ "rtt::BB::CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", null ],
     [ "rtt::ai::stp::ComputationManager", "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html", null ],
+    [ "rtt::ai::control::ComputedPath", "d0/d4f/namespacertt_1_1ai_1_1control.html#d3/dc5/structrtt_1_1ai_1_1control_1_1ComputedPath", null ],
     [ "rtt::ai::Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", null ],
     [ "rtt::ai::control::ControlModule", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html", null ],
     [ "rtt::ai::control::ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", null ],
@@ -76,7 +74,11 @@ var hierarchy =
       [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
     ] ],
     [ "rtt::ai::io::IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", null ],
+    [ "rtt::input::JoystickHandler", "d0/d75/classrtt_1_1input_1_1JoystickHandler.html", null ],
+    [ "rtt::input::JoystickManager", "de/d5f/classrtt_1_1input_1_1JoystickManager.html", null ],
+    [ "rtt::input::JoystickState", "d4/d8b/namespacertt_1_1input.html#db/d56/classrtt_1_1input_1_1JoystickState", null ],
     [ "rtt::ai::stp::evaluation::LineOfSightEvaluation", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation.html", null ],
+    [ "rtt::ai::control::Obstacles", "d0/d4f/namespacertt_1_1ai_1_1control.html#db/d64/structrtt_1_1ai_1_1control_1_1Obstacles", null ],
     [ "rtt::ai::stp::evaluation::OpennessEvaluation", "d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html", null ],
     [ "rtt::ai::interface::Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", null ],
     [ "nativeformat::param::Param", "d2/d80/classnativeformat_1_1param_1_1Param.html", [
@@ -89,14 +91,8 @@ var hierarchy =
     ] ],
     [ "rtt::ai::stp::computations::PassComputations", "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html", null ],
     [ "rtt::ai::stp::PassInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo", null ],
-    [ "rtt::ai::control::PathPlanningAlgorithm", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html", [
-      [ "rtt::ai::control::NumTreesPlanning", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html", null ]
-    ] ],
-    [ "rtt::ai::control::PathPointNode", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html", null ],
-    [ "rtt::ai::control::PathTrackingAlgorithm", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html", [
-      [ "rtt::ai::control::DensePathTracking", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html", null ],
-      [ "rtt::ai::control::PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", null ]
-    ] ],
+    [ "rtt::ai::control::PathPlanning", "d0/df7/classrtt_1_1ai_1_1control_1_1PathPlanning.html", null ],
+    [ "rtt::ai::control::PathTracking", "d9/dbd/classrtt_1_1ai_1_1control_1_1PathTracking.html", null ],
     [ "rtt::ai::Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", null ],
     [ "rtt::ai::stp::Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", [
       [ "rtt::ai::stp::play::AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", null ],
@@ -129,6 +125,7 @@ var hierarchy =
     [ "rtt::ai::stp::PlayEvaluator::PlayScoring", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring", null ],
     [ "rtt::ai::stp::PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", null ],
     [ "rtt::ai::control::PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", null ],
+    [ "rtt::ai::control::PositionControlInput", "d0/d4f/namespacertt_1_1ai_1_1control.html#d5/d0e/structrtt_1_1ai_1_1control_1_1PositionControlInput", null ],
     [ "rtt::ai::control::PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", null ],
     [ "rtt::ai::stp::gen::PositionScores", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores", null ],
     [ "rtt::ai::stp::PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", null ],
@@ -145,6 +142,7 @@ var hierarchy =
     [ "QWidget", null, [
       [ "rtt::ai::interface::GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", null ],
       [ "rtt::ai::interface::MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", null ],
+      [ "rtt::ai::interface::ManualControlWidget", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html", null ],
       [ "rtt::ai::interface::PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", null ],
       [ "rtt::ai::interface::RobotsWidget", "da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget.html", null ],
       [ "rtt::ai::interface::RuleSetWidget", "d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget.html", null ],
@@ -177,6 +175,7 @@ var hierarchy =
     [ "rtt::ai::Dealer::RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", null ],
     [ "rtt::ai::RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", null ],
     [ "rtt::ai::stp::gen::ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition", null ],
+    [ "rtt::ai::control::ScoredTrajectoryPair", "d0/d4f/namespacertt_1_1ai_1_1control.html#de/da4/structrtt_1_1ai_1_1control_1_1ScoredTrajectoryPair", null ],
     [ "rtt::ai::stp::gen::ScoreProfile", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile", null ],
     [ "rtt::Settings", "d1/dfb/classrtt_1_1Settings.html", null ],
     [ "rtt::ai::stp::Skill", "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html", [
@@ -189,6 +188,7 @@ var hierarchy =
       [ "rtt::ai::stp::skill::Rotate", "d1/d10/classrtt_1_1ai_1_1stp_1_1skill_1_1Rotate.html", null ],
       [ "rtt::ai::stp::skill::TestSkill", "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html", null ]
     ] ],
+    [ "rtt::ai::control::StateVector", "d0/d4f/namespacertt_1_1ai_1_1control.html#d3/d58/structrtt_1_1ai_1_1control_1_1StateVector", null ],
     [ "rtt::ai::stp::gen::StoreInfo", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d2/dab/structrtt_1_1ai_1_1stp_1_1gen_1_1StoreInfo", null ],
     [ "rtt::ai::stp::StpInfo", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html", null ],
     [ "rtt::STPManager", "da/de3/classrtt_1_1STPManager.html", null ],
@@ -216,11 +216,8 @@ var hierarchy =
     ] ],
     [ "rtt::ai::interface::Toggle", "de/db2/classrtt_1_1ai_1_1interface_1_1Toggle.html", null ],
     [ "rtt::ai::interface::Toggles", "da/d33/classrtt_1_1ai_1_1interface_1_1Toggles.html", null ],
-    [ "rtt::Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", null ],
-    [ "rtt::Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", null ],
     [ "rtt::world::World", "da/d39/classrtt_1_1world_1_1World.html", null ],
     [ "rtt::world::WorldData", "d5/db9/classrtt_1_1world_1_1WorldData.html", null ],
     [ "rtt::world::view::WorldDataView", "d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html", null ],
-    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ],
-    [ "rtt::BB::WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", null ]
+    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ]
 ];

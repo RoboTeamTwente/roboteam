@@ -62,7 +62,7 @@ Follow the steps used for the other compound executable, only now add 2 extra ta
 
 ### List of dependencies
 
-- [CMake >3.16](https://cmake.org/)
+- [CMake 3.22](https://cmake.org/)
 - [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
 - [ZeroMQ 4.2.5](https://zeromq.org/)
 - [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)

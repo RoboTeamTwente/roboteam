@@ -1,56 +1,104 @@
 //
-// Created by ratoone on 10-12-19.
+// Created by martin on 11-5-22.
 //
 
 #include "control/positionControl/CollisionDetector.h"
 
-#include "control/ControlUtils.h"
-#include "world/FieldComputations.h"
+#include <Eigen/Dense>
+#include <cmath>
+#include <span>
+
+#include "control/positionControl/PositionControlUtils.h"
 
 namespace rtt::ai::control {
 
-bool CollisionDetector::isCollisionBetweenPoints(const Vector2& initialPoint, const Vector2& nextPoint) {
-    bool isFieldColliding = field ? !isPointInsideField(nextPoint) || getDefenseAreaCollision(initialPoint, nextPoint) : false;
-
-    // colliding with the outside of the field, the defense area, or collision with a robot
-    return isFieldColliding || getRobotCollisionBetweenPoints(initialPoint, nextPoint);
-}
-
-std::optional<Vector2> CollisionDetector::getCollisionBetweenPoints(const Vector2& point, const Vector2& nextPoint) {
-    auto robotCollision = getRobotCollisionBetweenPoints(point, nextPoint);
-    auto defenseCollision = getDefenseAreaCollision(point, nextPoint);
-
-    return (defenseCollision.value_or(nextPoint) - point).length2() < (robotCollision.value_or(nextPoint) - point).length2() ? defenseCollision : robotCollision;
-}
-
-bool CollisionDetector::isPointInsideField(const Vector2& point) { return field->playArea.contains(point, Constants::ROBOT_RADIUS()); }
-
-std::optional<Vector2> CollisionDetector::getDefenseAreaCollision(const Vector2& point, const Vector2& nextPoint) {
-    auto ourDefenseCollision = FieldComputations::lineIntersectionWithDefenseArea(*field, true, point, nextPoint, DEFAULT_ROBOT_COLLISION_RADIUS);
-    if (ourDefenseCollision) {
-        return *ourDefenseCollision;
+bool CollisionDetector::doesCollideWithMovingObjects(const StateVector& state, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep) const {
+    if (timeStep >= static_cast<int>(timeline.size())) {
+        return false;
     }
 
-    auto theirDefenseCollision = FieldComputations::lineIntersectionWithDefenseArea(*field, false, point, nextPoint, DEFAULT_ROBOT_COLLISION_RADIUS);
-    if (!theirDefenseCollision) {
-        return std::nullopt;
-    }
-    return *theirDefenseCollision;
+    // Minimal avoidance distance is dependent on the robot speed.
+    // It is always at lest 0.5 * ROBOT_RADIUS_MAX, but can be higher if the robot is moving faster.
+    // At maximum, it 3 * ROBOT_RADIUS_MAX. (0.5 and 3 are arbitrary chosen numbers)
+    const auto minDistance = [&](Vector2 obstacleVel, Vector2 robotVel) {
+        if (robotVel.length() <= 0.3) {
+            return 0.0;
+        }
+
+        //  return (obstacleVelocity > PositionControlUtils::MAX_STALE_VELOCITY ? 2 : 0 + obstacleVelocity + robotVelocity) * ai::Constants::ROBOT_RADIUS_MAX();
+        return std::min((0.5  + (obstacleVel - robotVel).length()), 3.0) * ai::Constants::ROBOT_RADIUS_MAX();
+    };
+
+
+    const auto& obstacles = timeline[timeStep];
+    return (avoidObjects.shouldAvoidBall && isCollision(state.position, obstacles.ball.position, avoidObjects.avoidBallDist)) ||
+           (avoidObjects.shouldAvoidOurRobots && std::any_of(obstacles.robotsUs.cbegin(), obstacles.robotsUs.cend(),
+                                                             [&](auto& otherRobot) {
+                                                                 return otherRobot.first != robotId &&
+                                                                        isCollision(state.position, otherRobot.second.position, minDistance(otherRobot.second.velocity, state.velocity));
+                                                             })) ||
+           (avoidObjects.shouldAvoidTheirRobots && std::any_of(obstacles.robotsThem.cbegin(), obstacles.robotsThem.cend(), [&](auto& otherRobot) {
+                return isCollision(state.position, otherRobot.position, minDistance(otherRobot.velocity, state.velocity));
+            }));
 }
 
-std::optional<Vector2> CollisionDetector::getRobotCollisionBetweenPoints(const Vector2& initialPoint, const Vector2& nextPoint) {
-    for (const auto& position : robotPositions) {
-        // if the initial point is already close to a robot, then either 1. there is a collision, or 2. it is the original robot
-        if ((position - initialPoint).length() > Constants::ROBOT_RADIUS() && LineSegment(initialPoint, nextPoint).distanceToLine(position) < DEFAULT_ROBOT_COLLISION_RADIUS) {
-            return position;
+bool CollisionDetector::isCollision(const Vector2& position, const Vector2& obstaclePos, double minDistance) {
+    double distance = (position - obstaclePos).length();
+    return distance < minDistance;
+}
+
+void CollisionDetector::updateTimeline(const std::vector<RobotView>& robots, const std::optional<BallView>& ball) {
+    for (int i = 0; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {
+        const double time = PositionControlUtils::convertStepToTime(i);
+        auto& positionsAtTime = timeline[i];
+        positionsAtTime.robotsThem.clear();
+
+        for (const auto& robot : robots) {
+            if (robot->getTeam() == rtt::world::Team::them) {
+                positionsAtTime.robotsThem.emplace_back(StateVector{robot->getPos() + robot->getVel() * time, robot->getVel()});
+                continue;
+            }
+
+            if (!PositionControlUtils::isMoving(robot->getPos()) || i == 0) {
+                positionsAtTime.robotsUs[robot->getId()] = StateVector{robot->getPos(), Vector2{0, 0}};
+            }
+        }
+
+        positionsAtTime.ball = ball.has_value() ? StateVector{ball->get()->position + ball->get()->velocity * time, ball->get()->velocity} : StateVector{};
+    }
+}
+
+void CollisionDetector::setField(const rtt::Field newField) { field = std::move(newField); }
+
+void CollisionDetector::updateTimelineForOurRobot(std::span<const StateVector> path, const Vector2& currentPosition, int robotId) {
+    int pathLength = static_cast<int>(path.size());
+
+    // Sometimes robot did not reach the next step, thus we want to offset the collision by 1.
+    // timeline[0] is filed with current position at the start of the tick
+    int offset = !path.empty() && PositionControlUtils::positionWithinTolerance(path[0].position, currentPosition) ? 1 : 0;
+    for (int i = offset; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT && i < pathLength; i++) {
+        timeline[i].robotsUs[robotId] = path[i];
+    }
+
+    // Fill the rest of the timeline with the last position
+    const auto endState = path.empty() ? StateVector{currentPosition, Vector2{0, 0}} : StateVector{path[pathLength - 1].position, Vector2{0, 0}};
+
+    for (int i = pathLength; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {
+        timeline[i].robotsUs[robotId] = endState;
+    }
+}
+bool CollisionDetector::doesCollideWithStaticObjects(const Vector2& position, const stp::AvoidObjects& avoidObjects) const {
+    return field.rightDefenseArea.contains(position) || (avoidObjects.shouldAvoidDefenseArea && field.leftDefenseArea.contains(position)) ||
+           (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(position));
+}
+void CollisionDetector::drawTimeline() const {
+    for (int i = 0; i < PositionControlUtils::COLLISION_DETECTOR_STEP_COUNT; i++) {
+        const auto& obstacles = timeline[i];
+        interface::Input::drawData(interface::Visual::PATHFINDING, {obstacles.ball.position}, Qt::red, interface::Drawing::CROSSES);
+
+        for (const auto& robot : obstacles.robotsThem) {
+            interface::Input::drawData(interface::Visual::PATHFINDING, {robot.position}, Qt::red, interface::Drawing::CROSSES);
         }
     }
-
-    return std::nullopt;
 }
-
-void CollisionDetector::setField(const rtt::Field& field_) { this->field = &field_; }
-
-void CollisionDetector::setRobotPositions(std::vector<Vector2>& robotPositions_) { this->robotPositions = robotPositions_; }
-
 }  // namespace rtt::ai::control

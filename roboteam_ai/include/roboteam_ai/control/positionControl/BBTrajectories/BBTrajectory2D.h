@@ -10,8 +10,9 @@
 #include <vector>
 
 #include "BBTrajectory1D.h"
+#include "control/positionControl/PositionControlUtils.h"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 /**
  * @author Rolf
@@ -73,11 +74,6 @@ class BBTrajectory2D {
      * @brief Gets tEnd of the current part
      */
     [[maybe_unused]] [[nodiscard]] double getTotalTime() const;
-
-    /**
-     * @brief Returns all the trajectory parts in both dimensions to use in the Trajectory2D class
-     */
-    [[nodiscard]] std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> getParts();
 
    private:
     /**

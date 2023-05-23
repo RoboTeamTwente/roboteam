@@ -5,42 +5,81 @@
 #ifndef RTT_POSITIONCONTROLUTILS_H
 #define RTT_POSITIONCONTROLUTILS_H
 
+#include "interface/api/Output.h"
 #include "roboteam_utils/Vector2.h"
-#include "utilities/Constants.h"
+#include "utilities/StpInfoEnums.h"
 
 namespace rtt::ai::control {
 
 /**
- * @brief Class containing useful functions used in position control
+ * @brief A wrapper for a position and velocity vectors.
  */
+struct StateVector {
+    Vector2 position;
+    Vector2 velocity;
+};
+
+/**
+ * @brief A small wrapper for values that are commonly passed around the position control.
+ */
+struct PositionControlInput {
+    const int robotId;
+    const StateVector& state;
+    const Vector2& targetPos;
+    const double maxVel;
+    const stp::AvoidObjects& avoidObjects;
+};
+
 class PositionControlUtils {
-   private:
-    static constexpr double MAX_TARGET_DEVIATION = 0.05; /**< Maximum distance a target can deviate before it is defined as a new position */
-    static constexpr double MIN_DISTANCE_TARGET_REACHED = 2 * Constants::ROBOT_RADIUS(); /**< minimum distance needed to consider the current target reached */
-
    public:
-    /**
-     * @brief Checks whether the distance between the old target and the new target is greater than MAX_TARGET_DEVIATION
-     * @param targetPos Target position to go to
-     * @param oldTarget Previous target position
-     * @return Boolean that tells whether the target position changed
-     */
-    static bool isTargetChanged(const Vector2 &targetPos, const Vector2 &oldTarget);
+    constexpr static const double TIME_STEP = 0.1;
+    constexpr static const int COLLISION_DETECTOR_STEP_COUNT = 10;
+
+    constexpr static const double MIN_ENEMY_MOVING_ROBOT_DISTANCE = 3 * ai::Constants::ROBOT_RADIUS_MAX();
+    constexpr static const double MIN_ENEMY_STALE_ROBOT_DISTANCE = 2 * ai::Constants::ROBOT_RADIUS_MAX();
+
+    constexpr static const double MIN_OUR_ROBOT_DISTANCE_MOVING = 3 * ai::Constants::ROBOT_RADIUS_MAX();
+
+    constexpr static const double MAX_STALE_VELOCITY = 0.05; /// Velocity threshold for determining if a robot is moving or not
 
     /**
-     * @brief checks whether the distance between target and currentPosition is greater than MIN_DISTANCE
-     * @param targetPos Target position to got to
-     * @param currentPosition Previous target positions
-     * @return Boolean that tells whether the target position has been reached
+     * Checks if two 2D vectors are within a certain distance tolerance.
+     * @param pos1 The first 2D vector to compare.
+     * @param pos2 The second 2D vector to compare.
+     * @return True if the two vectors are within the distance tolerance, False otherwise.
      */
-    static bool isTargetReached(const Vector2 &targetPos, const Vector2 &currentPosition);
+    [[nodiscard]] static bool positionWithinTolerance(const Vector2 &pos1, const Vector2 &pos2);
 
     /**
-     * @brief Removes the first element in the path in the case the first point is reached
-     * @param path the vector of path points
-     * @param currentPosition the current position of the robot
+     * Determines if the object is currently moving based on its velocity.
+     *
+     * @param velocity The 2D velocity of the object.
+     * @return `true` if the magnitude of the velocity is greater than zero, indicating that the object is moving;
+     * `false` otherwise.
      */
-    static void removeFirstIfReached(std::vector<Vector2> &path, const Vector2 &currentPosition);
+    [[nodiscard]] static bool isMoving(const Vector2 &velocity);
+
+    /**
+     * The getPIDValue function takes a stp::PIDType enum class as input and returns a given pid value
+     * @param pidType  The different stp::PIDType options correspond to different robot behaviors, such as default movement,
+     *                 receiving a pass, intercepting the ball, and playing as the goalkeeper.
+     * @return pidVals struct, which contains the proportional gain (kp), integral gain (ki), and derivative gain (kd) for a PID
+     */
+    [[nodiscard]] static pidVals getPIDValue(const stp::PIDType &pidType);
+
+    /**
+     *  This function takes value in seconds and converts it to an integer value representing the number of time steps
+     * @param time in seconds
+     * @return number of time steps
+     */
+    [[nodiscard]] static int convertTimeToStep(double time);
+
+    /**
+     * This function takes value in time steps and converts it to a double value representing the number of seconds
+     * @param step number of time steps
+     * @return time in seconds
+     */
+    [[nodiscard]] static double convertStepToTime(int step);
 };
 }  // namespace rtt::ai::control
 

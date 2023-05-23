@@ -9,6 +9,7 @@
 #include "stp/roles/active/Harasser.h"
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/GameStateManager.hpp"
 
 namespace rtt::ai::stp::play {
 

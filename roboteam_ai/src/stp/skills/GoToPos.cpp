@@ -4,15 +4,14 @@
 
 #include "stp/skills/GoToPos.h"
 
-#include "control/positionControl/BBTrajectories/WorldObjects.h"
 #include "stp/computations/PositionComputations.h"
+#include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp::skill {
 
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     Vector2 targetPos = info.getPositionToMoveTo().value();
-
     if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid())) {
         RTT_WARNING("Target point is not a valid position for robot id: ", info.getRobot().value()->getId())
         targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid());
@@ -26,46 +25,42 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         avoidObj.shouldAvoidBall = true;
     }
 
-    bool useOldPathPlanning = false;
-    rtt::BB::CommandCollision commandCollision;
+    const auto nextPosition = info.getCurrentWorld()->getRobotPositionController()->computeNextPosition({
+        .robotId = robot.value()->getId(),
+        .state = {robot.value()->getPos(), robot.value()->getVel()},
+        .targetPos = targetPos,
+        .maxVel = info.getMaxRobotVelocity(),
+        .avoidObjects = avoidObj
+    }, info.getPidType().value());
 
-    if (useOldPathPlanning) {
-        // Calculate commands from path planning and tracking
-        commandCollision.robotCommand = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackPath(
-            info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos, info.getPidType().value());
-    } else {
-        // _______Use this one for the BBT pathplanning and tracking_______
-        commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
-            info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
-            info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
+
+    if (nextPosition.has_value()) {
+        command.velocity = {nextPosition->x, nextPosition->y};
+        command.targetAngle = nextPosition->rot;
+
+//        TODO: What is the purpose of this? Shouldn't the path planing already received max possible velocity?
+//              I mean, bang-bang generates optimal as well, changing it will mess up with the path won't it?
+//        double targetVelocityLength = 1.0;
+
+
+//            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
+//        } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
+//            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
+//        } else {
+//            targetVelocityLength = std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity());
+//        }
+        // Clamp and set velocity
+
+        double targetVelocityLength = std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity());
+        command.velocity = command.velocity.stretchToLength(targetVelocityLength);
+
+        // Clamp and set dribbler speed
+        int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
+        double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
+
+        // Set dribbler speed command
+        command.dribblerSpeed = targetDribblerSpeed;
     }
-
-    if (commandCollision.collisionData.has_value()) {
-        // return Status::Failure;
-    }
-
-    double targetVelocityLength;
-    if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
-    } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5); // TODO: Tune this value better
-    } else {
-        targetVelocityLength = std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity());
-    }
-    // Clamp and set velocity
-    Vector2 targetVelocity = commandCollision.robotCommand.velocity.stretchToLength(targetVelocityLength);
-
-    // Set velocity and angle commands
-    command.velocity = targetVelocity;
-
-    command.targetAngle = info.getAngle();
-
-    // Clamp and set dribbler speed
-    int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
-    double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
-
-    // Set dribbler speed command
-    command.dribblerSpeed = targetDribblerSpeed;
 
     // set command ID
     command.id = info.getRobot().value()->getId();

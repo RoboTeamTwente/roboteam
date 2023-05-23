@@ -6,6 +6,7 @@
 
 #include "stp/roles/Keeper.h"
 #include "stp/roles/passive/BallAvoider.h"
+#include "utilities/GameStateManager.hpp"
 
 namespace rtt::ai::stp::play {
 

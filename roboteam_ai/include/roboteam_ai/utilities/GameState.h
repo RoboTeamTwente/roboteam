@@ -30,7 +30,7 @@ struct GameState {
      * @brief Getter for the ruleset according to its name
      * @return Ruleset that belongs to the name
      */
-    RuleSet getRuleSet() {
+    RuleSet getRuleSet() const {
         for (auto ruleSet : Constants::ruleSets()) {
             if (ruleSet.title == ruleSetName) {
                 return ruleSet;

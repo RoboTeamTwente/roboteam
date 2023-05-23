@@ -12,13 +12,13 @@
 namespace rtt::ai::control {
 
 std::optional<Position> PositionControl::computeNextPosition(const PositionControlInput& input, stp::PIDType pidType) noexcept {
-    if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects)) {
-        RTT_WARNING("Target position is occupied by a moving object, cannot compute path to target position", input.targetPos, input.robotId)
-        return std::nullopt;
-    }
+//    if (collisionDetector.doesCollideWithMovingObjects(input.targetPos, input.robotId, input.avoidObjects)) {
+//        RTT_WARNING("Target position is occupied by a moving object, cannot compute path to target position", input.targetPos, input.robotId)
+//        return std::nullopt;
+//    }
 
     auto& path = paths.at(input.robotId);
-    if (pathTracking.shouldUpdatePath(input, path.remaining) != DONT_UPDATE) {
+    if (path.remaining.size() > 124 || pathTracking.shouldUpdatePath(input, path.remaining) != DONT_UPDATE) {
         path.full.clear();
         pathPlanning.generateNewPath(path.full, input);
         path.remaining = std::span(path.full);

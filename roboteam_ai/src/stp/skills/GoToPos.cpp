@@ -38,15 +38,20 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         command.velocity = {nextPosition->x, nextPosition->y};
         command.targetAngle = nextPosition->rot;
 
-        double targetVelocityLength = 1.0;
-        if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
-        } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
-        } else {
-            targetVelocityLength = std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity());
-        }
+//        TODO: What is the purpose of this? Shouldn't the path planing already received max possible velocity?
+//              I mean, bang-bang generates optimal as well, changing it will mess up with the path won't it?
+//        double targetVelocityLength = 1.0;
+
+
+//            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
+//        } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
+//            targetVelocityLength = std::max(std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
+//        } else {
+//            targetVelocityLength = std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity());
+//        }
         // Clamp and set velocity
+
+        double targetVelocityLength = std::clamp(command.velocity.length(), 0.0, info.getMaxRobotVelocity());
         command.velocity = command.velocity.stretchToLength(targetVelocityLength);
 
         // Clamp and set dribbler speed

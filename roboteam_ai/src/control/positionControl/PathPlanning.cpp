@@ -16,7 +16,7 @@
 
 namespace rtt::ai::control {
 
-PathPlanning::PathPlanning(const CollisionDetector& collisionDetector) : collisionDetector(collisionDetector) {}
+PathPlanning::PathPlanning(const CollisionDetector& collisionDetector) : collisionDetector(collisionDetector), fieldWidth(0), fieldHeight(0) {}
 
 void PathPlanning::generateNewPath(std::vector<StateVector>& pathBuffer, const PositionControlInput& input) const noexcept {
     const auto& [directTrajectory, directTrajectoryCollision] = calculateTrajectoryWithCollisionDetection(0, input.state, input);
@@ -30,7 +30,7 @@ void PathPlanning::generateNewPath(std::vector<StateVector>& pathBuffer, const P
     //TODO: Does this produces better results than the old method? (input.state.position)?
     // fieldHeight vs fieldWidth?
     auto firstCollision = directTrajectory.getPosition(directTrajectoryCollision.value());
-    float pointExtension = fieldHeight / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
+    double pointExtension = fieldHeight / 18;  // How far the pointToDrawFrom has to be from the obstaclePosition
     Vector2 pointToDrawFrom = firstCollision + (firstCollision - input.targetPos).normalize() * pointExtension;
 
 
@@ -46,6 +46,21 @@ void PathPlanning::generateNewPath(std::vector<StateVector>& pathBuffer, const P
 
     const auto bestTrajectory = std::min_element(trajectories.begin(), trajectories.end(), [](const auto a, const auto b) { return a.cost < b.cost; });
     fillPathBuffer(pathBuffer, *bestTrajectory);
+    if (bestTrajectory->cost < 1500 || input.maxVel <= 0.3) {
+        fillPathBuffer(pathBuffer, *bestTrajectory);
+    } else {
+        RTT_WARNING("No good path found, limiting maxVel to half (", input.robotId, ",", input.maxVel / 2, ")");
+        PositionControlInput newInput = {
+            .robotId = input.robotId,
+            .state = input.state,
+            .targetPos = input.targetPos,
+            .maxVel = 0.1,
+            .avoidObjects = input.avoidObjects,
+        };
+        generateNewPath(pathBuffer, newInput);
+//        const auto& [directTrajectory2, directTrajectoryCollision2] = calculateTrajectoryWithCollisionDetection(0, newInput.state, newInput);
+//        fillPathBuffer(pathBuffer, bestTrajectory);
+    }
 }
 
 std::array<Vector2, PathPlanning::POINTS_COUNT> PathPlanning::generateIntermediatePoints(const Vector2& center) const {
@@ -75,7 +90,7 @@ ScoredTrajectoryPair PathPlanning::searchBestTrajectoryToIntermediatePoint(const
         const auto state = StateVector{part1.getPosition(startTrajectoryTime), part1.getVelocity(startTrajectoryTime)};
 
         // If the start trajectory is already colliding, we can stop searching.
-        if (collisionDetector.doesCollideWithMovingObjects(state.position, input.robotId, input.avoidObjects, step)) {
+        if (collisionDetector.doesCollideWithMovingObjects(state, input.robotId, input.avoidObjects, step)) {
             break;
         }
 
@@ -105,7 +120,8 @@ std::pair<BBTrajectory2D, std::optional<double>> PathPlanning::calculateTrajecto
     auto collision = std::find_if(steps.begin(), steps.end(), [&](int step) {
         const double time = PositionControlUtils::convertStepToTime(step);
         const auto position = trajectory.getPosition(time);
-        return collisionDetector.doesCollideWithMovingObjects(position, forInput.robotId, forInput.avoidObjects, stepOffset + step) ||
+        const auto velocity = trajectory.getVelocity(time);
+        return collisionDetector.doesCollideWithMovingObjects({position, velocity}, forInput.robotId, forInput.avoidObjects, stepOffset + step) ||
                collisionDetector.doesCollideWithStaticObjects(position, forInput.avoidObjects);
     });
 
@@ -126,16 +142,20 @@ int PathPlanning::scorePath(double part1Duration, double part2Duration, std::opt
 }
 
 void PathPlanning::fillPathBuffer(std::vector<StateVector>& pathBuffer, const ScoredTrajectoryPair& trajectoryPair) {
+
+
     auto steps = std::views::iota(0, trajectoryPair.part1CutoffIndex);
     for (int step : steps) {
         const auto time = PositionControlUtils::convertStepToTime(step);
-        pathBuffer.emplace_back(StateVector{trajectoryPair.part1.getPosition(time), trajectoryPair.part1.getVelocity(time)});
+        auto vel = trajectoryPair.part1.getVelocity(time);
+        pathBuffer.emplace_back(StateVector{trajectoryPair.part1.getPosition(time), trajectoryPair.cost >= 1500 ? vel.stretchToLength(0.3) : vel});
     }
 
     steps = std::views::iota(0, PositionControlUtils::convertTimeToStep(trajectoryPair.part2.getTotalTime()));
     for (int step : steps) {
         const auto time = PositionControlUtils::convertStepToTime(step);
-        pathBuffer.emplace_back(StateVector{trajectoryPair.part2.getPosition(time), trajectoryPair.part2.getVelocity(time)});
+        auto vel = trajectoryPair.part2.getVelocity(time);
+        pathBuffer.emplace_back(StateVector{trajectoryPair.part2.getPosition(time), trajectoryPair.cost >= 1500 ? vel.stretchToLength(0.3) : vel});
     }
 }
 

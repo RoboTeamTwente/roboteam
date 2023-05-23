@@ -4,28 +4,41 @@
 
 #include "control/positionControl/CollisionDetector.h"
 
+#include <Eigen/Dense>
+#include <cmath>
 #include <span>
 
 #include "control/positionControl/PositionControlUtils.h"
 
 namespace rtt::ai::control {
 
-bool CollisionDetector::doesCollideWithMovingObjects(const Vector2& position, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep) const {
+bool CollisionDetector::doesCollideWithMovingObjects(const StateVector& state, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep) const {
     if (timeStep >= static_cast<int>(timeline.size())) {
         return false;
     }
 
+    // Minimal avoidance distance is dependent on the robot speed.
+    // It is always at lest 0.5 * ROBOT_RADIUS_MAX, but can be higher if the robot is moving faster.
+    // At maximum, it 3 * ROBOT_RADIUS_MAX. (0.5 and 3 are arbitrary chosen numbers)
+    const auto minDistance = [&](Vector2 obstacleVel, Vector2 robotVel) {
+        if (robotVel.length() <= 0.3) {
+            return 0.0;
+        }
+
+        //  return (obstacleVelocity > PositionControlUtils::MAX_STALE_VELOCITY ? 2 : 0 + obstacleVelocity + robotVelocity) * ai::Constants::ROBOT_RADIUS_MAX();
+        return std::min((0.5  + (obstacleVel - robotVel).length()), 3.0) * ai::Constants::ROBOT_RADIUS_MAX();
+    };
+
+
     const auto& obstacles = timeline[timeStep];
-    return (avoidObjects.shouldAvoidBall && isCollision(position, obstacles.ball.position, avoidObjects.avoidBallDist)) ||
+    return (avoidObjects.shouldAvoidBall && isCollision(state.position, obstacles.ball.position, avoidObjects.avoidBallDist)) ||
            (avoidObjects.shouldAvoidOurRobots && std::any_of(obstacles.robotsUs.cbegin(), obstacles.robotsUs.cend(),
                                                              [&](auto& otherRobot) {
                                                                  return otherRobot.first != robotId &&
-                                                                        isCollision(position, otherRobot.second.position, PositionControlUtils::MIN_OUR_ROBOT_DISTANCE_MOVING);
+                                                                        isCollision(state.position, otherRobot.second.position, minDistance(otherRobot.second.velocity, state.velocity));
                                                              })) ||
            (avoidObjects.shouldAvoidTheirRobots && std::any_of(obstacles.robotsThem.cbegin(), obstacles.robotsThem.cend(), [&](auto& otherRobot) {
-                auto avoidDist = PositionControlUtils::isMoving(otherRobot.velocity) ? PositionControlUtils::MIN_ENEMY_MOVING_ROBOT_DISTANCE
-                                                                                     : PositionControlUtils::MIN_ENEMY_STALE_ROBOT_DISTANCE;
-                return isCollision(position, otherRobot.position, avoidDist);
+                return isCollision(state.position, otherRobot.position, minDistance(otherRobot.velocity, state.velocity));
             }));
 }
 

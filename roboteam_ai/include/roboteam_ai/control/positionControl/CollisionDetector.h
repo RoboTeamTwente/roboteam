@@ -45,12 +45,12 @@ class CollisionDetector {
 
     /**
      * @brief This method checks if a robot at a **given position** for a **given time** will collide with any other moving objects (ball / other robots) on the field.
-     * @tparam position Position to check for collisions.
+     * @param position Position to check for collisions.
      * @param robotId Robot id to ignore (i.e it self)
      * @param shouldAvoidBall Whether to avoid the ball or not
      * @param timeStep Time step on timeline to check for collisions.
      */
-    [[nodiscard]] bool doesCollideWithMovingObjects(const Vector2& position, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep = 0) const;
+    [[nodiscard]] bool doesCollideWithMovingObjects(const StateVector& state, int robotId, const stp::AvoidObjects& avoidObjects, int timeStep = 0) const;
 
     /**
      * @brief This method checks if given position is inside the field and outside defense areas.

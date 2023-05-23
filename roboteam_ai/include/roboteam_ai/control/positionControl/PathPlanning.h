@@ -41,8 +41,8 @@ class PathPlanning {
     static constexpr double ANGLE_BETWEEN_POINTS = 2 * M_PI / POINTS_PER_CIRCLE;
 
     const CollisionDetector& collisionDetector;
-    double fieldWidth;
-    double fieldHeight;
+    double fieldWidth{};
+    double fieldHeight{};
 
     /**
      * \brief Calculates the score of given trajectory. Lower score indicated better path (e.g score = 100 is better than score = 150)

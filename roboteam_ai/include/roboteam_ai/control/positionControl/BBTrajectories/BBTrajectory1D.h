@@ -45,9 +45,9 @@ struct BBPosVel {
 class BBTrajectory1D {
    public:
     /**
-     * @brief Gets the position, velocity and acceleration at time t
+     * @brief Gets the position and velocity at time t
      * @param t time to get values at
-     * @return The PosVelAcc
+     * @return The PosVel
      */
     [[nodiscard]] BBPosVel getValues(double t) const;
 

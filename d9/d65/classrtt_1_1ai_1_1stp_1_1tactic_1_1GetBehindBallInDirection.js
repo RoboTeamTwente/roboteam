@@ -3,7 +3,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection =
     [ "GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a3716131f1a2a53704ba04c1779cece03", null ],
     [ "calculateInfoForSkill", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a356ab58f042195851d593a8de2d6b4b4", null ],
     [ "calculateTargetPosition", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a3b0808217ab13a033db08c32cd7a2bf9", null ],
-    [ "forceTacticSuccess", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#abcac7a65df91d8ea9dee07613c607291", null ],
     [ "getStatus", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#ab7650037eb092459aca7247ea77f2ad4", null ],

@@ -7,5 +7,6 @@ var dir_8f6aefef7690cc09b464fd2591dfc406 =
     [ "Harasser.cpp", "d7/d82/Harasser_8cpp.html", null ],
     [ "KeeperPasser.cpp", "df/d99/KeeperPasser_8cpp.html", null ],
     [ "Passer.cpp", "d9/d38/Passer_8cpp.html", null ],
-    [ "PassReceiver.cpp", "dc/ddd/PassReceiver_8cpp.html", null ]
+    [ "PassReceiver.cpp", "dc/ddd/PassReceiver_8cpp.html", null ],
+    [ "PenaltyTaker.cpp", "dd/d7c/PenaltyTaker_8cpp.html", null ]
 ];

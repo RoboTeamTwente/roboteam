@@ -30,7 +30,7 @@ constexpr double TURN_ON_DRIBBLER_DISTANCE = 5 * ROBOT_RADIUS;
 constexpr double BALL_STILL_VEL = 0.1;
 constexpr double BALL_STILL_VEL2 = BALL_STILL_VEL * BALL_STILL_VEL;
 constexpr double BALL_GOT_SHOT_LIMIT = 1.3;
-constexpr double BALL_IS_MOVING_SLOW_LIMIT = 0.5;
+constexpr double BALL_IS_MOVING_SLOW_LIMIT = 1;
 constexpr double BALL_IS_CLOSE = 0.5;
 constexpr double BALL_RADIUS = 0.0215;
 constexpr double HAS_KICKED_ERROR_MARGIN = 1;
@@ -46,9 +46,9 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0;
 
 /// GTP Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ERROR_MARGIN = 0.11;
+constexpr double GO_TO_POS_ERROR_MARGIN = 0.06;
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.009 * 6.0;
+constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.04;
 // Maximum inaccuracy during ballplacement
 constexpr double BALL_PLACEMENT_MARGIN = 0.15;
 

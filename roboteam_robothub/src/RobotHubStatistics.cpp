@@ -124,7 +124,7 @@ namespace rtt::robothub {
     }
 
     std::string RobotHubStatistics::getRobotHubMode() const {
-    std::string mode = std::string(modeToString(this->robotHubMode));
+    std::string mode = std::string(robotHubModeToString(this->robotHubMode));
     std::string text = formatString("%-11s", mode.c_str());
     return text;
 }

@@ -319,8 +319,11 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
         # After removing the interface, only this file should remain
         ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceGateway.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface_api/Interface.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/Out.cpp
         ${PROJECT_SOURCE_DIR}/src/interface_api/RuntimeConfig.cpp
+
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfacePublisher.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceSubscriber.cpp
 )
 target_include_directories(roboteam_ai_interface
         PRIVATE include/roboteam_ai

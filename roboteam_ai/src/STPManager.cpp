@@ -116,21 +116,22 @@ void STPManager::start(std::atomic_bool &exitApplication) {
             tickDurations[index] = tickDuration;
             index++;
             stpTimer.limit([&]() {
-                auto& interfaceGateway = rtt::ai::io::InterfaceGateway::instance();
                 if (currentPlay == nullptr) {
                     return;
                 }
 
-                interfaceGateway.broadcastSTPStatus(currentPlay, plays, tickCounter);
-                interfaceGateway.broadcastWorld();
-                interfaceGateway.broadcastVisuals();
+                rtt::ai::io::InterfaceGateway::publisher()
+                    .publishStpStatus(currentPlay, plays, tickCounter)
+                    .publishWorld()
+                    .publishVisuals();
+
             }, 30);
             tickCounter++;
 
             stpTimer.limit(
                 [&]() {
                     double avgDuration = std::accumulate(tickDurations.begin(), tickDurations.end(), 0) / static_cast<double>(tickDurations.size());
-                    rtt::ai::new_interface::Interface::reportNumber("Average tick", avgDuration, "ms");
+                    rtt::ai::new_interface::Out::reportNumber("Average tick", avgDuration, "ms");
                 },
                 5);
 

@@ -198,7 +198,7 @@ namespace rtt::robothub {
     void RobotHub::onSettings(const proto::GameSettings &_settings) {
         this->settings = _settings;
 
-        net::RobotHubMode newMode = net::modeFromProto(settings.robot_hub_mode());
+        net::RobotHubMode newMode = net::robotHubModeFromProto(settings.robot_hub_mode());
 
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;

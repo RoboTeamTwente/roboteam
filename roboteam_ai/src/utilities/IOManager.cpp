@@ -82,7 +82,7 @@ void IOManager::publishSettings() {
     protoSetting.set_is_primary_ai(GameSettings::isPrimaryAI());
     protoSetting.set_is_left(GameSettings::isLeft());
     protoSetting.set_is_yellow(GameSettings::isYellow());
-    protoSetting.set_robot_hub_mode(modeToProto(GameSettings::getRobotHubMode()));
+    protoSetting.set_robot_hub_mode(robotHubModeToProto(GameSettings::getRobotHubMode()));
 
     if (this->settingsPublisher != nullptr) {
         this->settingsPublisher->publish(protoSetting);

@@ -16,7 +16,7 @@ std::atomic<net::RobotHubMode> GameSettings::robotHubMode = net::RobotHubMode::S
 void GameSettings::handleSettingsFromPrimaryAI(const proto::GameSettings& settings) {
     setYellow(!settings.is_yellow());
     setLeft(!settings.is_left());
-    robotHubMode = net::modeFromProto(settings.robot_hub_mode());
+    robotHubMode = net::robotHubModeFromProto(settings.robot_hub_mode());
 }
 
 bool GameSettings::isPrimaryAI() { return primaryAI; }

@@ -17,6 +17,8 @@ namespace rtt {
  * the AI, are not included here.
  *
  * This class should map one-to-one to the settings in the proto file!
+ *
+ * !!! Settings that cannot be changed by the referee should be placed in RuntimeConfig instead !!!
  */
 class GameSettings {
    public:

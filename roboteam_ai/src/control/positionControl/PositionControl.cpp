@@ -79,7 +79,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         }
     }
 
-    rtt::ai::new_interface::Interface::draw(
+    rtt::ai::new_interface::Out::draw(
         {
             .label = "path_lines" + std::to_string(robotId),
             .color = proto::Drawing::WHITE,
@@ -89,7 +89,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         },
         computedPaths[robotId]);
 
-    rtt::ai::new_interface::Interface::draw(
+    rtt::ai::new_interface::Out::draw(
         {
             .label = "path_dots" + std::to_string(robotId),
             .color = proto::Drawing::MAGENTA,
@@ -99,7 +99,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         },
         computedPaths[robotId]);
 
-    rtt::ai::new_interface::Interface::reportNumber("Path size for robot " + std::to_string(robotId), computedPaths[robotId].size());
+    rtt::ai::new_interface::Out::reportNumber("Path size for robot " + std::to_string(robotId), computedPaths[robotId].size());
 
     // interface::Input::drawData(interface::Visual::PATHFINDING, computedPaths[robotId], Qt::yellow, robotId, interface::Drawing::LINES_CONNECTED);
     // interface::Input::drawData(interface::Visual::PATHFINDING, {computedPaths[robotId].front(), currentPosition}, Qt::darkMagenta, robotId, interface::Drawing::LINES_CONNECTED);

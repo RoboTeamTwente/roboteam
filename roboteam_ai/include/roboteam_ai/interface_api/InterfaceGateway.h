@@ -5,37 +5,68 @@
 #ifndef RTT_INTERFACEGATEWAY_H
 #define RTT_INTERFACEGATEWAY_H
 
+#include <memory>
 #include <span>
-#include "ixwebsocket/IXWebSocketServer.h"
 
-#include "Interface.h"
+#include "InterfacePublisher.h"
+#include "Out.h"
+#include "ixwebsocket/IXWebSocketServer.h"
 #include "proto/NewInterface.pb.h"
 #include "stp/Play.hpp"
 
 namespace rtt::ai::io {
+class InterfaceSubscriber;
 
+/**
+ * @class InterfaceGateway
+ * @brief Singleton class that handles the communication between the Interface and the rest of the AI.
+ *
+ * The communication is split into two parts:
+ * -> out: InterfacePublisher takes care of sending messages to the Interface.
+ * -> in:  InterfaceSubscriber takes care of receiving messages from the Interface.
+ */
 class InterfaceGateway {
-   public:
-    using PlayView = const std::vector<std::unique_ptr<rtt::ai::stp::Play>>&;
-    InterfaceGateway(InterfaceGateway const&) = delete;
-    void operator=(InterfaceGateway const&) = delete;
-
-    static InterfaceGateway& instance();
-
-    void broadcastSTPStatus(stp::Play* selectedPlay, PlayView plays, int currentTick);
-    void broadcastWorld();
-    void broadcastVisuals();
-
-
    private:
     ix::WebSocketServer webSocketServer;
 
+    /// Publisher is not forward declared, because it is accessed from outside the InterfaceGateway, so we need to know the available methods;
+    InterfacePublisher publisher_;
+
+    /// Subscriber is forward declared, so that changes to the subscriber do not require recompilation of the InterfaceGateway
+    /// On that account it has to be a unique_ptr, because the compiler does not know the size of the object
+    std::unique_ptr<InterfaceSubscriber> subscriber_;
+
     InterfaceGateway();
+
+    /**
+     * @brief Callback function invoked when a new WebSocket connection is established.
+     * Sends the setup message to the new client containing available plays, rulesets, and game settings.
+     *
+     * @param wss Shared pointer to the WebSocket connection.
+     */
     void onConnection(const std::shared_ptr<ix::WebSocket>& wss);
-    void onMessage(const proto::MsgFromInterface&& message);
-    void broadcastMessage(const google::protobuf::Message& message);
+
+   public:
+    ~InterfaceGateway();
+    InterfaceGateway(InterfaceGateway const&) = delete;
+    void operator=(InterfaceGateway const&) = delete;
+
+    /**
+     * @brief Retrieves the singleton instance of the InterfacePublisher.
+     * It also initializes the InterfaceGateway singleton if it has not been initialized yet.
+     * @return Reference to the InterfaceGateway instance.
+     */
+    inline static InterfacePublisher& publisher() {
+        static InterfaceGateway instance;
+        return instance.publisher_;
+    };
+
+    /**
+     * @brief Initializes the InterfaceGateway singleton, but do not provide a reference to it!
+     */
+    inline static void init() { publisher(); }
 };
 
-}  // namespace rtt::ai::new_interface
+}  // namespace rtt::ai::io
 
 #endif  // RTT_INTERFACEGATEWAY_H

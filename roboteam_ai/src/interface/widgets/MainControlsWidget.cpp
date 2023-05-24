@@ -215,7 +215,7 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string_view modeText = modeToString(GameSettings::getRobotHubMode());
+    std::string_view modeText = robotHubModeToString(GameSettings::getRobotHubMode());
 
     QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);

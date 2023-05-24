@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
     RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
     RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
-    RTT_INFO("Starting in mode: ", rtt::net::modeToString(rtt::GameSettings::getRobotHubMode()))
+    RTT_INFO("Starting in mode: ", rtt::net::robotHubModeToString(rtt::GameSettings::getRobotHubMode()))
     RTT_INFO("Playing on side: ", (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
     RTT_INFO("This AI will ", rtt::GameSettings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     }
 
     RTT_DEBUG("Initialize Interface Server");
-    rtt::ai::io::InterfaceGateway::instance();
+    rtt::ai::io::InterfaceGateway::init();
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     // initialize the interface

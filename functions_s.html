@@ -208,9 +208,6 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>setBlockDistance()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a2ab5274fddf81c116192db5120ac44f2">rtt::ai::stp::StpInfo</a>
 </li>
-<li>setCurrentRefGameState()
-: <a class="el" href="dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a9827acb107fcc04991c68a72915cd738">rtt::ai::StrategyManager</a>
-</li>
 <li>setCurrentWorld()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a8bb3b9031b3ed4776a37366326f6c866">rtt::ai::stp::StpInfo</a>
 </li>
@@ -232,6 +229,12 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 </li>
 <li>setFps()
 : <a class="el" href="db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a4ba370255ba0058e6408baa015ff571c">rtt::ai::interface::Input</a>
+</li>
+<li>setGameStateFromInterface()
+: <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#a62f1d3c77f43cb98b031aab6940c28ca">rtt::ai::GameStateManager</a>
+</li>
+<li>setGameStateFromReferee()
+: <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa40a0729e82db1e5716b53a4ee14218a">rtt::ai::GameStateManager</a>
 </li>
 <li>setGameStateRoleIds()
 : <a class="el" href="d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18c5060ec7b4d6baa7f4b19b71579ea8">rtt::ai::Dealer</a>
@@ -278,9 +281,6 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>setNumTreePid()
 : <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a794101e0ccee80fc488b148694c992b7">rtt::ai::interface::Output</a>
 </li>
-<li>setPause()
-: <a class="el" href="d2/d05/classrtt_1_1ai_1_1Pause.html#a3ea052093052d878382f016978aec7ff">rtt::ai::Pause</a>
-</li>
 <li>setPid()
 : <a class="el" href="d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html#af21a0d196087da2d26e6e77ab5bce04e">rtt::ai::interface::PidBox</a>
 </li>
@@ -306,14 +306,11 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>setReceivePid()
 : <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#af511f029baa8fb9f4ff62a0cbc46b16a">rtt::ai::interface::Output</a>
 </li>
-<li>setRefereeData()
-: <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac835a19e0cb277c15d19d8e882f64dc1">rtt::ai::GameStateManager</a>
-</li>
 <li>setRobot()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ad17b089b563d35faebe66ae0128db93f">rtt::ai::stp::StpInfo</a>
 </li>
 <li>setRobotHubMode()
-: <a class="el" href="df/db4/classrtt_1_1GameSettings.html#ab9d7a3275f5f982547e1e5a7bcbaf59b">rtt::GameSettings</a>
+: <a class="el" href="df/db4/classrtt_1_1GameSettings.html#a857c0851b84c1c977c42a2981a39bdf0">rtt::GameSettings</a>
 </li>
 <li>setRobotPositions()
 : <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#af1aa682e09acef1df076a73804591757">rtt::ai::control::CollisionDetector</a>
@@ -545,6 +542,7 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>state
 : <a class="el" href="d7/d54/classrtt_1_1ai_1_1BallPossession.html#a63b5e6634ada60a691d7b0258e3097e0">rtt::ai::BallPossession</a>
 , <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6f5a374a4afc6e8064d430933990039a">rtt::ai::io::IOManager</a>
+, <a class="el" href="d2/d05/classrtt_1_1ai_1_1Pause.html#a3c1d771aeb22e4e88e3236e069001d36">rtt::ai::Pause</a>
 </li>
 <li>stateMutex
 : <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">rtt::ai::io::IOManager</a>
@@ -606,17 +604,14 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>stpWidget
 : <a class="el" href="d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html#a978b7df7fa75e5ba98a295fe5a8b341b">rtt::ai::interface::MainWindow</a>
 </li>
-<li>strategymanager
-: <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#acee6100d4704ad3654bcac597efcb6e9">rtt::ai::GameStateManager</a>
-</li>
-<li>StrategyManager()
-: <a class="el" href="dc/d52/classrtt_1_1ai_1_1StrategyManager.html#aaa0a09adb7ef5e6af6548e57a592d19c">rtt::ai::StrategyManager</a>
-</li>
 <li>strategyName
 : <a class="el" href="d6/dc7/structrtt_1_1ai_1_1GameState.html#abb284fc0415590320f3d3251a5879b82">rtt::ai::GameState</a>
 </li>
 <li>strokeWidth
 : <a class="el" href="d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#a418ae564796a59e45a492a3f76320f0f">rtt::ai::interface::Drawing</a>
+</li>
+<li>subscriber_
+: <a class="el" href="de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html#aad7e7966bded6fd2fe179ad11989389f">rtt::ai::io::InterfaceGateway</a>
 </li>
 <li>sumScore
 : <a class="el" href="d7/ddc/classrtt_1_1ai_1_1Dealer.html#a3bbf524d6fc7b7f8ac7516bed9219d2d">rtt::ai::Dealer::RobotRoleScore</a>

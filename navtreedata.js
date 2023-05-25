@@ -66,7 +66,6 @@ var NAVTREE =
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
-        [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -76,21 +75,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d10/classrtt_1_1ai_1_1stp_1_1skill_1_1Rotate.html#a8625bf35b1b36ec18fd8ff68926ec0d4",
-"d2/d6d/PassReceiver_8h.html",
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a251c3ea06ae994224d288bac151f23e9",
-"d4/de2/PenaltyThemPrepareGameStateEvaluation_8h.html",
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ac66cf9fe9def08172b053a6abc869ba1",
-"d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a9d6a2d03c48bf191150eab3f65f90eed",
-"d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html",
-"d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#ac39a5ef30b0027a5cf1ed07d2084aad6",
-"d8/dfe/FormationPreHalf_8cpp.html",
-"da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html#a880dc393ab923c56184fa67b0ad67311",
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a39f7f3e46cab97f2db6fbd41f448d9c3",
-"dc/d0b/classrtt_1_1AnglePID.html#abbb8cd0afbaa91e5ec00eb92c4709493",
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a60674abf0185e5577b287300f3a20d49",
-"de/d2f/namespacertt_1_1world_1_1robot.html",
-"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ae5089387641148d139b3f6c7a662915f"
+"d0/dc6/StpInfo_8h.html",
+"d2/d6d/PassReceiver_8h_source.html",
+"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a071fed8ba48c9358ee71c230bc9b8f8b",
+"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a2b4671aba77bf173ab74c6d65817a114",
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a242748b42fbc99613b65f6500eb12f8f",
+"d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac67952380d471ce18b24284d08028877",
+"d6/dc7/structrtt_1_1ai_1_1GameState.html#aee23d2e0d9c9d23be78ad66f895fce34",
+"d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a67191a47e00a95c16729b04398aa9739",
+"d8/dcc/BallTests_8cpp.html#adecfc7e019ba06f5f3402703977930b6",
+"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a193d5fef143c93145b2e1e8f2b2a04f2",
+"da/df8/FieldHelperTest_8cpp.html#a6255ace35491390bb400d55f2301ef73",
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a193d5fef143c93145b2e1e8f2b2a04f2",
+"dc/db4/GameState_8h_source.html",
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a0329d2814e2651902bb05f23659e0084",
+"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab496bf1614c47ef3e466cd235eb84aab",
+"dir_ff7bab2f878481c7f00fafbde64f720d.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

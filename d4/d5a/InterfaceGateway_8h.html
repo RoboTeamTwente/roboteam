@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roboteam AI: Member List</title>
+<title>Roboteam AI: roboteam_ai/include/roboteam_ai/interface_api/InterfaceGateway.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('dc/d52/classrtt_1_1ai_1_1StrategyManager.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d4/d5a/InterfaceGateway_8h.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -84,26 +84,44 @@ $(document).ready(function(){initNavTree('dc/d52/classrtt_1_1ai_1_1StrategyManag
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
-<div class="title">rtt::ai::StrategyManager Member List</div>  </div>
+<div class="title">InterfaceGateway.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This is the complete list of members for <a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#ab5c8c6cf6e68eedd56e3bc5c53c3a78d">currentRefCmd</a></td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a99e50e8613b2b2d9c8956ed075187500">currentRefGameState</a></td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a5de1a858070c602ab11b7feeae53f7cc">forceCurrentRefGameState</a>(RefCommand command, std::optional&lt; rtt::world::view::BallView &gt; ballOpt)</td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a1fbe1caaf73fa08b9c5e5c31d6fc7dd7">gameStates</a></td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a6229a0b0f74da440ac3a9b3d565a07be">getCurrentRefGameState</a>()</td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#ade3b6c98ec12f1d960d4651fa8314f19">getRefGameStateForRefCommand</a>(RefCommand command)</td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a9827acb107fcc04991c68a72915cd738">setCurrentRefGameState</a>(RefCommand command, proto::SSL_Referee_Stage stage, std::optional&lt; rtt::world::view::BallView &gt; ballOpt)</td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#aaa0a09adb7ef5e6af6548e57a592d19c">StrategyManager</a>()=default</td><td class="entry"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">rtt::ai::StrategyManager</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-</table></div><!-- contents -->
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d06/InterfacePublisher_8h_source.html">InterfacePublisher.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/da0/Out_8h_source.html">Out.h</a>&quot;</code><br />
+<code>#include &quot;ixwebsocket/IXWebSocketServer.h&quot;</code><br />
+<code>#include &quot;proto/NewInterface.pb.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/dcc/Play_8hpp_source.html">stp/Play.hpp</a>&quot;</code><br />
+</div>
+<p><a href="../../d4/d5a/InterfaceGateway_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html">rtt::ai::io::InterfaceGateway</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Singleton class that handles the communication between the <a class="el" href="../../db/ded/namespacertt_1_1Interface.html">Interface</a> and the rest of the AI.  <a href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:dc/d8f/namespacertt"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html">rtt</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d4/dcc/namespacertt_1_1ai"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dcc/namespacertt_1_1ai.html">rtt::ai</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:dd/d1e/namespacertt_1_1ai_1_1io"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1e/namespacertt_1_1ai_1_1io.html">rtt::ai::io</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a class="el" href="../../dir_50f0153f528c810051dffd2bb4bf2701.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_bbb6d9c6e1ec46a5917265ba3c1454a0.html">include</a></li><li class="navelem"><a class="el" href="../../dir_f05b0dc76e3df98305e815f3f2af1cb1.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_ad8fea0a99787db87d9dbf9bcf61f086.html">interface_api</a></li><li class="navelem"><a class="el" href="../../d4/d5a/InterfaceGateway_8h.html">InterfaceGateway.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

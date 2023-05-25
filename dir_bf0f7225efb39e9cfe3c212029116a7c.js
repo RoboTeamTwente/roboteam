@@ -2,6 +2,9 @@ var dir_bf0f7225efb39e9cfe3c212029116a7c =
 [
     [ "Constants.h", "d1/d45/Constants_8h.html", "d1/d45/Constants_8h" ],
     [ "Dealer.h", "d4/dab/Dealer_8h.html", "d4/dab/Dealer_8h" ],
+    [ "GameSettings.h", "d7/d66/GameSettings_8h.html", [
+      [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ]
+    ] ],
     [ "GameState.h", "dc/db4/GameState_8h.html", [
       [ "GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", "d6/dc7/structrtt_1_1ai_1_1GameState" ]
     ] ],
@@ -19,7 +22,6 @@ var dir_bf0f7225efb39e9cfe3c212029116a7c =
     [ "RuleSet.h", "d5/d8d/RuleSet_8h.html", [
       [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ]
     ] ],
-    [ "Settings.h", "dd/dbc/Settings_8h.html", "dd/dbc/Settings_8h" ],
     [ "StpInfoEnums.h", "d7/d06/StpInfoEnums_8h.html", "d7/d06/StpInfoEnums_8h" ],
     [ "StrategyManager.h", "d5/d18/StrategyManager_8h.html", [
       [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ]

@@ -93,15 +93,15 @@ $(document).ready(function(){initNavTree('d8/d6e/IOManager_8h_source.html','../.
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;proto/SimulationConfiguration.pb.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="../../d1/d45/Constants_8h.html">utilities/Constants.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="../../dd/dbc/Settings_8h.html">utilities/Settings.h</a>&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;roboteam_utils/Field.hpp&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;RobotCommandsNetworker.hpp&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;SettingsNetworker.hpp&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;SimulationConfigurationNetworker.hpp&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;WorldNetworker.hpp&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="../../d7/d66/GameSettings_8h.html">utilities/GameSettings.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;RobotCommandsNetworker.hpp&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;SettingsNetworker.hpp&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;SimulationConfigurationNetworker.hpp&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;WorldNetworker.hpp&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;roboteam_utils/Field.hpp&gt;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="../../db/d1b/namespacertt_1_1world.html">   16</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="../../db/d1b/namespacertt_1_1world.html">rtt::world</a> {</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">class </span><a class="code" href="../../da/d39/classrtt_1_1world_1_1World.html">World</a>;</div>
@@ -133,33 +133,31 @@ $(document).ready(function(){initNavTree('d8/d6e/IOManager_8h_source.html','../.
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> publishAllRobotCommands(rtt::RobotCommands&amp; robotCommands);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> publishSettings(<span class="keyword">const</span> <a class="code" href="../../d1/dfb/classrtt_1_1Settings.html">Settings</a>&amp; settings);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> publishSettings();</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> onSettingsOfPrimaryAI(<span class="keyword">const</span> proto::Setting&amp; settings);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">bool</span> sendSimulationConfiguration(<span class="keyword">const</span> proto::SimulationConfiguration&amp; configuration);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> init(<span class="keywordtype">bool</span> isPrimaryAI);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    proto::State getState();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    uint64_t getStateTimeMs();</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    uint64_t getStateAgeMs();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">bool</span> obtainTeamColorChannel(<span class="keywordtype">bool</span> yellowChannel);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">bool</span> sendSimulationConfiguration(<span class="keyword">const</span> proto::SimulationConfiguration&amp; configuration);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">bool</span> init(<span class="keywordtype">bool</span> isPrimaryAI);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    proto::State getState();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    uint64_t getStateTimeMs();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    uint64_t getStateAgeMs();</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">bool</span> obtainTeamColorChannel(<span class="keywordtype">bool</span> yellowChannel);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">  119</a></span>&#160;    std::mutex <a class="code" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">stateMutex</a>; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">extern</span> <a class="code" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html">IOManager</a> <a class="code" href="../../dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef">io</a>;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">  124</a></span>&#160;    std::mutex <a class="code" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">stateMutex</a>; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}  <span class="comment">// namespace io</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}  <span class="comment">// namespace rtt::ai</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">extern</span> <a class="code" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html">IOManager</a> <a class="code" href="../../dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef">io</a>;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}  <span class="comment">// namespace io</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}  <span class="comment">// namespace rtt::ai</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// ROBOTEAM_AI_IO_MANAGER_H</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// ROBOTEAM_AI_IO_MANAGER_H</span></div>
 <div class="ttc" id="aConstants_8h_html"><div class="ttname"><a href="../../d1/d45/Constants_8h.html">Constants.h</a></div></div>
-<div class="ttc" id="aSettings_8h_html"><div class="ttname"><a href="../../dd/dbc/Settings_8h.html">Settings.h</a></div></div>
-<div class="ttc" id="aclassrtt_1_1Settings_html"><div class="ttname"><a href="../../d1/dfb/classrtt_1_1Settings.html">rtt::Settings</a></div><div class="ttdoc">Class that defines the settings handler for the interface.</div><div class="ttdef"><b>Definition:</b> Settings.h:10</div></div>
+<div class="ttc" id="aGameSettings_8h_html"><div class="ttname"><a href="../../d7/d66/GameSettings_8h.html">GameSettings.h</a></div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1Pause_html"><div class="ttname"><a href="../../d2/d05/classrtt_1_1ai_1_1Pause.html">rtt::ai::Pause</a></div><div class="ttdoc">Class that allows us to pause the robots from the interface.</div><div class="ttdef"><b>Definition:</b> Pause.h:23</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html">rtt::ai::io::IOManager</a></div><div class="ttdoc">Class that defines the IOManager. The IOManager manages the input and output of AI....</div><div class="ttdef"><b>Definition:</b> IOManager.h:30</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a1b0c8efa6d5234367ef323fe03d9d73e"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a1b0c8efa6d5234367ef323fe03d9d73e">rtt::ai::io::IOManager::stateWorldLastTimestamp</a></div><div class="ttdeci">uint64_t stateWorldLastTimestamp</div><div class="ttdef"><b>Definition:</b> IOManager.h:34</div></div>
@@ -168,14 +166,14 @@ $(document).ready(function(){initNavTree('d8/d6e/IOManager_8h_source.html','../.
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a532cd4842266ef19fd981c7b4862da3b"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a532cd4842266ef19fd981c7b4862da3b">rtt::ai::io::IOManager::stateTimeMs</a></div><div class="ttdeci">uint64_t stateTimeMs</div><div class="ttdef"><b>Definition:</b> IOManager.h:33</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a6bf5a4699ab935a3fb7af4185cdaeb18"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6bf5a4699ab935a3fb7af4185cdaeb18">rtt::ai::io::IOManager::robotCommandsBluePublisher</a></div><div class="ttdeci">std::unique_ptr&lt; rtt::net::RobotCommandsBluePublisher &gt; robotCommandsBluePublisher</div><div class="ttdef"><b>Definition:</b> IOManager.h:45</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a6f5a374a4afc6e8064d430933990039a"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6f5a374a4afc6e8064d430933990039a">rtt::ai::io::IOManager::state</a></div><div class="ttdeci">proto::State state</div><div class="ttdef"><b>Definition:</b> IOManager.h:32</div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a77b84bfe0fe4e6879be25d0066b90fd6"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">rtt::ai::io::IOManager::stateMutex</a></div><div class="ttdeci">std::mutex stateMutex</div><div class="ttdef"><b>Definition:</b> IOManager.h:124</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a77b84bfe0fe4e6879be25d0066b90fd6"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">rtt::ai::io::IOManager::stateMutex</a></div><div class="ttdeci">std::mutex stateMutex</div><div class="ttdef"><b>Definition:</b> IOManager.h:119</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_a7821157d7818be91d6527b55a15d6797"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7821157d7818be91d6527b55a15d6797">rtt::ai::io::IOManager::simulationConfigurationPublisher</a></div><div class="ttdeci">std::unique_ptr&lt; rtt::net::SimulationConfigurationPublisher &gt; simulationConfigurationPublisher</div><div class="ttdef"><b>Definition:</b> IOManager.h:37</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_ad5968054795bded97f41bbfcd41c95ae"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad5968054795bded97f41bbfcd41c95ae">rtt::ai::io::IOManager::worldSubscriber</a></div><div class="ttdeci">std::unique_ptr&lt; rtt::net::WorldSubscriber &gt; worldSubscriber</div><div class="ttdef"><b>Definition:</b> IOManager.h:36</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_aefbe4d8d95bdb635f0d4398eaf116222"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#aefbe4d8d95bdb635f0d4398eaf116222">rtt::ai::io::IOManager::settingsPublisher</a></div><div class="ttdeci">std::unique_ptr&lt; rtt::net::SettingsPublisher &gt; settingsPublisher</div><div class="ttdef"><b>Definition:</b> IOManager.h:49</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1io_1_1IOManager_html_af5af3d63f79ed376e7ed842bff1efe6e"><div class="ttname"><a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#af5af3d63f79ed376e7ed842bff1efe6e">rtt::ai::io::IOManager::robotCommandsYellowPublisher</a></div><div class="ttdeci">std::unique_ptr&lt; rtt::net::RobotCommandsYellowPublisher &gt; robotCommandsYellowPublisher</div><div class="ttdef"><b>Definition:</b> IOManager.h:46</div></div>
 <div class="ttc" id="aclassrtt_1_1world_1_1World_html"><div class="ttname"><a href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a></div><div class="ttdoc">Class that represents the world and history of the world.</div><div class="ttdef"><b>Definition:</b> World.hpp:38</div></div>
 <div class="ttc" id="anamespacertt_1_1ai_1_1io_html"><div class="ttname"><a href="../../dd/d1e/namespacertt_1_1ai_1_1io.html">rtt::ai::io</a></div><div class="ttdef"><b>Definition:</b> IOManager.h:23</div></div>
-<div class="ttc" id="anamespacertt_1_1ai_1_1io_html_a3a3059343c59e8dc266f41990749c3ef"><div class="ttname"><a href="../../dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef">rtt::ai::io::io</a></div><div class="ttdeci">IOManager io</div><div class="ttdef"><b>Definition:</b> IOManager.cpp:17</div></div>
+<div class="ttc" id="anamespacertt_1_1ai_1_1io_html_a3a3059343c59e8dc266f41990749c3ef"><div class="ttname"><a href="../../dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef">rtt::ai::io::io</a></div><div class="ttdeci">IOManager io</div><div class="ttdef"><b>Definition:</b> IOManager.cpp:18</div></div>
 <div class="ttc" id="anamespacertt_1_1ai_html"><div class="ttname"><a href="../../d4/dcc/namespacertt_1_1ai.html">rtt::ai</a></div><div class="ttdef"><b>Definition:</b> ControlModule.h:14</div></div>
 <div class="ttc" id="anamespacertt_1_1world_html"><div class="ttname"><a href="../../db/d1b/namespacertt_1_1world.html">rtt::world</a></div><div class="ttdef"><b>Definition:</b> IOManager.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->

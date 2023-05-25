@@ -62,7 +62,7 @@ std::optional<view::WorldDataView> World::getHistoryWorld(size_t ticksAgo) const
 }
 
 void World::updateWorld(proto::World &protoWorld) {
-    WorldData data{this, protoWorld, *settings};
+    WorldData data{this, protoWorld};
     setWorld(data);
 }
 
@@ -106,7 +106,7 @@ void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
 
 void World::updateField(rtt::Field &protoField) { this->currentField = protoField; }
 
-World::World(Settings *settings) : settings{settings}, currentWorld{std::nullopt}, lastTick{0} { history.reserve(HISTORY_SIZE); }
+World::World() : currentWorld{std::nullopt}, lastTick{0} { history.reserve(HISTORY_SIZE); }
 
 
 void World::updateTickTime() noexcept {

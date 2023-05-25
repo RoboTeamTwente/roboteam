@@ -1,22 +1,5 @@
 #include "Handler.h"
-
-std::optional<std::string> findFlagValue(const std::vector<std::string>& args, std::string flag){
-    // Search for flag
-    auto it = std::find(args.begin(), args.end(), flag);
-    // If flag is present in arguments
-    if(it != args.end()){
-        // No value found for flag.. 
-        if(it == args.end() - 1){
-            std::cout << "Warning! flag '" << flag << "' raised but no value given." << std::endl << std::endl;
-            return std::nullopt;
-        }
-        // Return value right after flag
-        return { *(it + 1) };
-    }   
-
-    // Flag not present, return "nothing"
-    return std::nullopt;
-}
+#include "roboteam_utils/ArgParser.h"
 
 int main(int argc, char** argv) {
     std::cout << "Usage: ./roboteam_observer --log --vision-ip <ip-address> --referee-ip <ip-address> --vision-port <port> --referee-port <port>" << std::endl;
@@ -41,16 +24,16 @@ int main(int argc, char** argv) {
 
     std::optional<std::string> val;
 
-    val = findFlagValue(args, "--vision-ip");
+    val = rtt::findFlagValue(args, "--vision-ip");
     if(val){ visionip = *val; }
 
-    val = findFlagValue(args, "--referee-ip");
+    val = rtt::findFlagValue(args, "--referee-ip");
     if(val){ refereeip = *val; }
 
-    val = findFlagValue(args, "--vision-port");
+    val = rtt::findFlagValue(args, "--vision-port");
     if(val){ visionport_str = *val; }
 
-    val = findFlagValue(args, "--referee-port");
+    val = rtt::findFlagValue(args, "--referee-port");
     if(val){ refereeport_str = *val; }
 
     int visionport  = std::stoi( visionport_str );

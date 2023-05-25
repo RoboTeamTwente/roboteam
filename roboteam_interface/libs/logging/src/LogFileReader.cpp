@@ -45,24 +45,25 @@ bool rtt::LogFileReader::open(const std::string &file_name) {
 }
 
 std::pair<rtt::logged_time_type, rtt::logged_proto_type> rtt::LogFileReader::readPacket(long file_offset) {
-    file->seekg(file_offset);
-    if(!file->eof()){
-        LogDataHeader dataHeader;
-        file->read(reinterpret_cast<char*>(&dataHeader),sizeof(LogDataHeader));
-        char * buffer = new char[dataHeader.message_size];
-        file->read(buffer,dataHeader.message_size);
-        rtt::logged_proto_type message;
-        bool success = message.ParseFromArray(buffer,dataHeader.message_size);
-        delete[] buffer;
-        if(success){
-            return std::make_pair(dataHeader.timestamp,message);
-        }else{
-            return std::make_pair(-1,rtt::logged_proto_type());
+    if(file_offset != index.back()){
+        file->seekg(file_offset);
+        if(!file->eof()){
+            LogDataHeader dataHeader;
+            file->read(reinterpret_cast<char*>(&dataHeader),sizeof(LogDataHeader));
+            char * buffer = new char[dataHeader.message_size];
+            file->read(buffer,dataHeader.message_size);
+            rtt::logged_proto_type message;
+            bool success = message.ParseFromArray(buffer,dataHeader.message_size);
+            delete[] buffer;
+            if(success){
+                return std::make_pair(dataHeader.timestamp,message);
+            }else{
+                return std::make_pair(INVALID_LOGGED_TIME,rtt::logged_proto_type());
+            }
         }
-
     }
     file->clear();
-    return std::make_pair(-1,rtt::logged_proto_type());
+    return std::make_pair(INVALID_LOGGED_TIME,rtt::logged_proto_type());
 }
 
 bool rtt::LogFileReader::indexFile() {

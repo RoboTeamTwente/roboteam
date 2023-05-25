@@ -111,11 +111,7 @@ Inheritance diagram for rtt::ai::control::PathPlanningAlgorithm:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae45b1bdb6669a56372500aac75fa9621"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#ae45b1bdb6669a56372500aac75fa9621">PathPlanningAlgorithm</a> (<a class="el" href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html">CollisionDetector</a> &amp;<a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#ad565bfd76cc7ceb2834bcc41c2e3e63c">collisionDetector</a>)</td></tr>
 <tr class="separator:ae45b1bdb6669a56372500aac75fa9621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a772f693e1291979d48a593ace2bc4aea"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#a772f693e1291979d48a593ace2bc4aea">~PathPlanningAlgorithm</a> ()=default</td></tr>
-<tr class="memdesc:a772f693e1291979d48a593ace2bc4aea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor of the <a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html" title="The base class for the path planning algorithms. All future algorithms should inherit from this.">PathPlanningAlgorithm</a>.  <a href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#a772f693e1291979d48a593ace2bc4aea">More...</a><br /></td></tr>
-<tr class="separator:a772f693e1291979d48a593ace2bc4aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a526717d3b400aa8277afdba55edd1006"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#a526717d3b400aa8277afdba55edd1006">computePath</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;robotPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition)=0</td></tr>
-<tr class="memdesc:a526717d3b400aa8277afdba55edd1006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Algorithm specific path computation. It should take into account the obstacles in the field.  <a href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#a526717d3b400aa8277afdba55edd1006">More...</a><br /></td></tr>
 <tr class="separator:a526717d3b400aa8277afdba55edd1006"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -158,33 +154,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a772f693e1291979d48a593ace2bc4aea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a772f693e1291979d48a593ace2bc4aea">&#9670;&nbsp;</a></span>~PathPlanningAlgorithm()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual rtt::ai::control::PathPlanningAlgorithm::~PathPlanningAlgorithm </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Virtual destructor of the <a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html" title="The base class for the path planning algorithms. All future algorithms should inherit from this.">PathPlanningAlgorithm</a>. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a526717d3b400aa8277afdba55edd1006"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a526717d3b400aa8277afdba55edd1006">&#9670;&nbsp;</a></span>computePath()</h2>
@@ -219,9 +188,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Algorithm specific path computation. It should take into account the obstacles in the field. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Algorithm specific path computation. It should take into account the obstacles in the field </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">robotPosition</td><td>the current robot position </td></tr>
     <tr><td class="paramname">targetPosition</td><td>the target position to move to </td></tr>

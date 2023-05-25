@@ -35,7 +35,6 @@ var annotated_dup =
           [ "GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget" ],
           [ "MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget" ],
           [ "MainWindow", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow" ],
-          [ "ManualControlWidget", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget" ],
           [ "PidBox", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox" ],
           [ "PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget" ],
           [ "PlaysWidget", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget" ],
@@ -139,7 +138,6 @@ var annotated_dup =
             [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],
             [ "Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer" ],
             [ "PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver" ],
-            [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ],
             [ "Keeper", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper" ],
             [ "BallAvoider", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider" ],
             [ "BallDefender", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender.html", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender" ],
@@ -201,17 +199,12 @@ var annotated_dup =
       ] ],
       [ "BB", "d0/dde/namespacertt_1_1BB.html", [
         [ "BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", "d0/dde/namespacertt_1_1BB_dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart_dup" ],
-        [ "BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", "da/d73/structrtt_1_1BB_1_1BBPosVel" ],
+        [ "BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc" ],
         [ "BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D" ],
         [ "BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D" ],
         [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],
         [ "CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", "d0/dde/namespacertt_1_1BB_d0/d57/structrtt_1_1BB_1_1CommandCollision_dup" ],
         [ "WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", "de/d06/classrtt_1_1BB_1_1WorldObjects" ]
-      ] ],
-      [ "input", "d4/d8b/namespacertt_1_1input.html", [
-        [ "JoystickHandler", "d0/d75/classrtt_1_1input_1_1JoystickHandler.html", "d0/d75/classrtt_1_1input_1_1JoystickHandler" ],
-        [ "JoystickManager", "de/d5f/classrtt_1_1input_1_1JoystickManager.html", "de/d5f/classrtt_1_1input_1_1JoystickManager" ],
-        [ "JoystickState", "d4/d8b/namespacertt_1_1input.html#db/d56/classrtt_1_1input_1_1JoystickState", "d4/d8b/namespacertt_1_1input_db/d56/classrtt_1_1input_1_1JoystickState_dup" ]
       ] ],
       [ "Interface", "db/ded/namespacertt_1_1Interface.html", [
         [ "InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer" ]

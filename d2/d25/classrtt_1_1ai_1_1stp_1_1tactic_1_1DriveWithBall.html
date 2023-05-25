@@ -150,6 +150,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a01328342628815ac1a1eb3bd5c648112"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a01328342628815ac1a1eb3bd5c648112">shouldTacticReset</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept override</td></tr>
 <tr class="memdesc:a01328342628815ac1a1eb3bd5c648112"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should this tactic be reset (go back to the first skill of this tactic) Should reset if the angle the robot is at is no longer correct.  <a href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a01328342628815ac1a1eb3bd5c648112">More...</a><br /></td></tr>
 <tr class="separator:a01328342628815ac1a1eb3bd5c648112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5befa67548f6af84122085e538a9acc2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a5befa67548f6af84122085e538a9acc2">forceTacticSuccess</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept override</td></tr>
+<tr class="memdesc:a5befa67548f6af84122085e538a9acc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this tactic should be forced success It is forced success whenever we are at the right location.  <a href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a5befa67548f6af84122085e538a9acc2">More...</a><br /></td></tr>
+<tr class="separator:a5befa67548f6af84122085e538a9acc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12a56866f0d664af5fd27895d52e9f99"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a12a56866f0d664af5fd27895d52e9f99">isEndTactic</a> () noexcept override</td></tr>
 <tr class="memdesc:a12a56866f0d664af5fd27895d52e9f99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the tactic is a passive tactic (formerly endTactic)  <a href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a12a56866f0d664af5fd27895d52e9f99">More...</a><br /></td></tr>
 <tr class="separator:a12a56866f0d664af5fd27895d52e9f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -214,6 +217,43 @@ Private Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>std::optional&lt;SkillInfo&gt; based on the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> parameter </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a4cfea3dd9c7299b30f32a1abf0cf2356">rtt::ai::stp::Tactic</a>.</p>
+
+</div>
+</div>
+<a id="a5befa67548f6af84122085e538a9acc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5befa67548f6af84122085e538a9acc2">&#9670;&nbsp;</a></span>forceTacticSuccess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rtt::ai::stp::tactic::DriveWithBall::forceTacticSuccess </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">private</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if this tactic should be forced success It is forced success whenever we are at the right location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>whether the tactic is forced success </dd></dl>
+
+<p>Reimplemented from <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab496bf1614c47ef3e466cd235eb84aab">rtt::ai::stp::Tactic</a>.</p>
 
 </div>
 </div>

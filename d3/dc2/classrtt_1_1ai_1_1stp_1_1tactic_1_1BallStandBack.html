@@ -132,6 +132,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a483d158a091f8347c3c25983b22d015f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html">Skill</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a483d158a091f8347c3c25983b22d015f">getCurrentSkill</a> ()</td></tr>
 <tr class="memdesc:a483d158a091f8347c3c25983b22d015f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the skill whose turn it is.  <a href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a483d158a091f8347c3c25983b22d015f">More...</a><br /></td></tr>
 <tr class="separator:a483d158a091f8347c3c25983b22d015f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab496bf1614c47ef3e466cd235eb84aab"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab496bf1614c47ef3e466cd235eb84aab">forceTacticSuccess</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept</td></tr>
+<tr class="memdesc:ab496bf1614c47ef3e466cd235eb84aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces a tactic to be success, when we have the ball for example.  <a href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab496bf1614c47ef3e466cd235eb84aab">More...</a><br /></td></tr>
+<tr class="separator:ab496bf1614c47ef3e466cd235eb84aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -220,6 +223,43 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>std::optional&lt;SkillInfo&gt; based on the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> parameter </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a4cfea3dd9c7299b30f32a1abf0cf2356">rtt::ai::stp::Tactic</a>.</p>
+
+</div>
+</div>
+<a id="ab496bf1614c47ef3e466cd235eb84aab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab496bf1614c47ef3e466cd235eb84aab">&#9670;&nbsp;</a></span>forceTacticSuccess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rtt::ai::stp::Tactic::forceTacticSuccess </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">noexcept</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Forces a tactic to be success, when we have the ball for example. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>to do calculations on </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a bool whether the tactic is forced successful or not </dd></dl>
+
+<p>Reimplemented in <a class="el" href="../../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#aa9ab4a91bf00c62dd623266195f48e66">rtt::ai::stp::TestTactic</a>, <a class="el" href="../../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a578681eb373e850612625b9898d6886d">rtt::ai::stp::tactic::GetBall</a>, and <a class="el" href="../../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a5befa67548f6af84122085e538a9acc2">rtt::ai::stp::tactic::DriveWithBall</a>.</p>
 
 </div>
 </div>

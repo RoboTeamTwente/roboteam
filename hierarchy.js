@@ -45,7 +45,7 @@ var hierarchy =
       [ "rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::WeHaveMajorityGlobalEvaluation", "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html", null ]
     ] ],
-    [ "rtt::BB::BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", null ],
+    [ "rtt::BB::BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", null ],
     [ "rtt::ai::control::BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", null ],
     [ "rtt::BB::BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", null ],
     [ "rtt::BB::BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", null ],
@@ -76,9 +76,6 @@ var hierarchy =
       [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
     ] ],
     [ "rtt::ai::io::IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", null ],
-    [ "rtt::input::JoystickHandler", "d0/d75/classrtt_1_1input_1_1JoystickHandler.html", null ],
-    [ "rtt::input::JoystickManager", "de/d5f/classrtt_1_1input_1_1JoystickManager.html", null ],
-    [ "rtt::input::JoystickState", "d4/d8b/namespacertt_1_1input.html#db/d56/classrtt_1_1input_1_1JoystickState", null ],
     [ "rtt::ai::stp::evaluation::LineOfSightEvaluation", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation.html", null ],
     [ "rtt::ai::stp::evaluation::OpennessEvaluation", "d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html", null ],
     [ "rtt::ai::interface::Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", null ],
@@ -148,7 +145,6 @@ var hierarchy =
     [ "QWidget", null, [
       [ "rtt::ai::interface::GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", null ],
       [ "rtt::ai::interface::MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", null ],
-      [ "rtt::ai::interface::ManualControlWidget", "d3/df2/classrtt_1_1ai_1_1interface_1_1ManualControlWidget.html", null ],
       [ "rtt::ai::interface::PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", null ],
       [ "rtt::ai::interface::RobotsWidget", "da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget.html", null ],
       [ "rtt::ai::interface::RuleSetWidget", "d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget.html", null ],
@@ -176,7 +172,6 @@ var hierarchy =
       [ "rtt::ai::stp::role::KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", null ],
       [ "rtt::ai::stp::role::PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", null ],
       [ "rtt::ai::stp::role::Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", null ],
-      [ "rtt::ai::stp::role::PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", null ],
       [ "rtt::ai::stp::role::RobotDefender", "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html", null ]
     ] ],
     [ "rtt::ai::Dealer::RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", null ],

@@ -2,7 +2,6 @@ var namespacertt =
 [
     [ "ai", "d4/dcc/namespacertt_1_1ai.html", "d4/dcc/namespacertt_1_1ai" ],
     [ "BB", "d0/dde/namespacertt_1_1BB.html", "d0/dde/namespacertt_1_1BB" ],
-    [ "input", "d4/d8b/namespacertt_1_1input.html", "d4/d8b/namespacertt_1_1input" ],
     [ "Interface", "db/ded/namespacertt_1_1Interface.html", "db/ded/namespacertt_1_1Interface" ],
     [ "world", "db/d1b/namespacertt_1_1world.html", "db/d1b/namespacertt_1_1world" ],
     [ "AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", "dc/d0b/classrtt_1_1AnglePID" ],

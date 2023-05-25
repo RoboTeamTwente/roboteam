@@ -5,7 +5,6 @@ var classrtt_1_1ai_1_1control_1_1PositionControl =
     [ "computeAndTrackTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a664e1d190e12c59dc7ff985f6e481e6f", null ],
     [ "createIntermediatePoints", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ab45c4e149be6834cccb3691ec3ed904b", null ],
     [ "findNewTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ac9638fba08efe07a287281836d812ba4", null ],
-    [ "getComputedPath", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3", null ],
     [ "scoreIntermediatePoints", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d50398e7b85759b70ffb60f1eb495a5", null ],
     [ "setRobotPositions", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aebe89d070c772826f309714387686315", null ],
     [ "shouldRecalculatePath", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a544d739feb3aea71d107b801e2a4054d", null ],

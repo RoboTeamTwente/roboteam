@@ -11,5 +11,6 @@ var namespacertt_1_1ai_1_1control =
     [ "PathTrackingAlgorithm", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm" ],
     [ "PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking" ],
     [ "PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl" ],
-    [ "PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils" ]
+    [ "PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils" ],
+    [ "TEST", "d0/d4f/namespacertt_1_1ai_1_1control.html#aefb443efdf757a2d73ffe34c622055e4", null ]
 ];

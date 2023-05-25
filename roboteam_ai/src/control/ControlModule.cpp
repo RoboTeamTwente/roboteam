@@ -79,8 +79,6 @@ void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView>
     }
 
     // Only add commands with a robotID that is not in the vector yet
-    // This mutex is required because robotCommands is accessed from both the main thread and joystick thread
-    std::lock_guard<std::mutex> guard(robotCommandsMutex);
     if (robot_command.id >= 0 && robot_command.id < 16) {
         robotCommands.emplace_back(robot_command);
     }
@@ -119,8 +117,6 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
 void ControlModule::sendAllCommands() {
     // TODO: check for double commands (But do we really have to do that?)
 
-    // This mutex is required because robotCommands is accessed from both the main thread and joystick thread
-    std::lock_guard<std::mutex> guard(robotCommandsMutex);
     io::io.publishAllRobotCommands(robotCommands);  // When vector has all commands, send in one go
     robotCommands.clear();
 }

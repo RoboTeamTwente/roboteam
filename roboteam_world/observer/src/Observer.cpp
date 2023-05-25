@@ -3,6 +3,7 @@
 //
 
 #include "Observer.h"
+#include <RobotFeedbackNetworker.hpp>
 
 proto::State
 Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
@@ -12,8 +13,6 @@ Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, co
     proto::State state;
     proto::World world = visionFilter.process(visionPackets,robotData);
     updateReferee(refereePackets);
-
-
 
     state.mutable_last_seen_world()->CopyFrom(world);
     state.mutable_command_extrapolated_world()->CopyFrom(world);//TODO; actually do extrapolation
@@ -42,7 +41,11 @@ Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, co
     }
     for(const auto& refpacket : refereePackets){
         proto::SSL_Referee * packet = state.add_processed_referee_packets();
-        packet->CopyFrom(refpacket);    }
+        packet->CopyFrom(refpacket);
+    }
+    for(const auto& data : robotData){
+        state.mutable_processed_feedback_packets()->Add(rtt::net::feedbackToProto(data));
+    }
     return state;
 }
 

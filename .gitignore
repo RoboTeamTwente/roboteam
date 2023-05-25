@@ -24,3 +24,13 @@ node_modules
 /roboteam_interface_vue/src-tauri/target/
 *.local
 dist-ssr
+
+# Python
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+__pycache__/

@@ -28,7 +28,6 @@ RUN /bin/bash -c "apt-get -y install \
     unzip \
     cmake \
     libqt5charts5-dev \
-    libsdl2-dev \
     qtdeclarative5-dev \
     git \
     nano"

@@ -6,6 +6,9 @@
 #include <proto/messages_robocup_ssl_wrapper.pb.h>
 
 #include <roboteam_logging/LogFileWriter.h>
+#include <csignal>
+
+std::optional<rtt::LogFileWriter> Handler::fileWriter = std::nullopt;
 
 void Handler::start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog) {
     if (!initializeNetworkers()) {
@@ -17,7 +20,6 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
 
     roboteam_utils::Timer t;
 
-    std::optional<rtt::LogFileWriter> fileWriter = std::nullopt;
 
     if (shouldLog) {
         auto now = Time::now();
@@ -31,6 +33,23 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
         std::string file_name = "world_log_" + std::to_string(days) + "_" +std::to_string(hours) + "_" + std::to_string(minutes) +"_" + std::to_string(seconds) + "_" + std::to_string(mili)+".log";
         fileWriter = rtt::LogFileWriter();
         fileWriter.value().open(file_name);
+        //Create a signal handler so that when we crash data is still saved,
+        // so that the file is still closed when the program is unexpectedly terminated or an error is thrown
+        //If we do not do this, the filestream buffer may contain the messages which caused the crash,
+        // making it impossible to debug the issue afterwards
+        auto signalHandler = [](int signum){
+            if(Handler::fileWriter.has_value()){
+                Handler::fileWriter->close();
+            }
+            exit(signum);
+        };
+        std::signal(SIGABRT,signalHandler);
+        std::signal(SIGTERM,signalHandler);
+        std::signal(SIGSEGV,signalHandler);
+        std::signal(SIGFPE,signalHandler);
+        std::signal(SIGILL,signalHandler);
+        std::signal(SIGKILL,signalHandler);
+        std::signal(SIGQUIT,signalHandler);
     }
 
     // Feedback for user
@@ -70,7 +89,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                 std::lock_guard guard(sub_mutex);
                 std::swap(robothub_info, this->receivedRobotData);
             }
-
+            //TODO: try-catch here?
             auto state = observer.process(vision_packets,referee_packets,robothub_info); //TODO: fix time extrapolation
             std::size_t iterations = 0;
             bool sent = false;
@@ -152,6 +171,33 @@ std::vector<proto::SSL_Referee> Handler::receiveRefereePackets()  {
 void Handler::onRobotFeedback(const rtt::RobotsFeedback& feedback) {
     std::lock_guard guard(sub_mutex);
     receivedRobotData.push_back(feedback);
+}
+void Handler::startReplay(rtt::LogFileReader& reader) {
+    std::cout<<"Replaying log file with "<<reader.fileMessageCount()<<" messages\n";
+    reader.resetToStartOfFile();
+    std::size_t numMessagesProcessed = 0;
+
+    while(true){
+     auto result = reader.readNext();
+     rtt::logged_time_type time = result.first;
+     auto& state = result.second;
+     if(time == rtt::INVALID_LOGGED_TIME ){
+         break;
+     }
+
+     std::vector<proto::SSL_WrapperPacket> visionPackets(state.processed_vision_packets().begin(),state.processed_vision_packets().end());
+     std::vector<proto::SSL_Referee> refereePackets(state.processed_referee_packets().begin(),state.processed_referee_packets().end());
+     std::vector<rtt::RobotsFeedback> feedbackPackets;
+     for(const auto& feedback : state.processed_feedback_packets()){
+         feedbackPackets.push_back(rtt::net::protoFeedbackToRobotsFeedback(feedback));
+     }
+
+     auto check = observer.process(visionPackets,refereePackets,feedbackPackets);
+
+     numMessagesProcessed++;
+     std::cout<<"Num Messages processed: "<< numMessagesProcessed<<"\n";
+    }
+
 }
 
 const char* FailedToInitializeNetworkersException::what() const noexcept(true) { return "Failed to initialize networker(s). Is another observer running?"; }

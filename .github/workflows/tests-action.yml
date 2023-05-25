@@ -22,7 +22,9 @@ jobs:
           key: ${{ runner.os }}-build
       
       - name: Install dependecies
-        run: sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build ccache
+        run: |
+              sudo apt-get update
+              sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build ccache
         
       - name: Build Protobuf
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

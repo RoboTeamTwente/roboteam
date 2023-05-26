@@ -18,9 +18,9 @@ namespace rtt::ai::io {
 InterfaceGateway::~InterfaceGateway() = default;
 
 //// r = 114. t = 116. rtt = 11400+1160+116 = 12676
-//// 1 => Maximal number of connections
-InterfaceGateway::InterfaceGateway()
-    : webSocketServer(12676), publisher_(InterfacePublisher(webSocketServer)) {
+
+InterfaceGateway::InterfaceGateway(int port)
+    : webSocketServer(port), publisher_(InterfacePublisher(webSocketServer)) {
     webSocketServer.setOnConnectionCallback([&](const std::weak_ptr<ix::WebSocket> webSocketPtr, const std::shared_ptr<ix::ConnectionState>& connectionState) {
         RTT_INFO("WebSocket connection incoming from ", connectionState->getRemoteIp());
         webSocketPtr.lock()->setOnMessageCallback([&, webSocketPtr, connectionState](const std::unique_ptr<ix::WebSocketMessage>& msg) {

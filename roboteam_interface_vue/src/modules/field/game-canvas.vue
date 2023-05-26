@@ -154,7 +154,7 @@ const onPixiTick = () => {
 }
 
 onMounted(initPixiApp);
-onUnmounted(async () => app?.destroy());
+onUnmounted(() => app?.destroy());
 
 </script>
 <template>

@@ -9,9 +9,12 @@ import ResizableSlider from "./modules/components/layout/panel-slider.vue";
 import PanelSlider from "./modules/components/layout/panel-slider.vue";
 import TabedWidgets from "./modules/components/layout/tabed-widgets.vue";
 import {useVisionDataStore} from "./modules/stores/dataStores/vision-data-store";
+import {useProtoWebSocket} from "./utils";
 
+let url = ref("ws://localhost:12676");
+// const {isReady, data, send, open} = useProtoWebSocket();
 
-let {status} = useAIClient("ws://localhost:12676");
+let aiClient = useAIClient();
 const uiStore = useUIStore();
 const visionData = useVisionDataStore();
 
@@ -21,10 +24,16 @@ const gridElement = ref<null | HTMLElement>(null);
 </script>
 
 <template>
-  <div class="modal" :class="{'modal-open': status !== 'OPEN',}">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Waiting for connection to the AI</h3>
-      <p>[status: {{status}}]</p>
+  <div class="modal" :class="{'modal-open': aiClient.status.value !== 'OPENED'}">
+    <div class="modal-box flex flex-col gap-4">
+        Status: {{aiClient.status.value}}
+        <div class="form-control w-full max-w">
+            <label class="label">
+                <span class="label-text">AI InterfaceGateway url</span>
+            </label>
+            <input class="input input-bordered" v-model="url">
+        </div>
+        <button class="btn btn-primary" @click="() => aiClient.open(url)">Connect</button>
     </div>
   </div>
 

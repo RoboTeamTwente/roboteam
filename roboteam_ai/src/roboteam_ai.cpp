@@ -1,4 +1,5 @@
 #include <roboteam_utils/Print.h>
+#include <memory>
 
 #include "RobotHubMode.h"
 #include "STPManager.h"
@@ -12,8 +13,8 @@ namespace ui = rtt::ai::interface;
 
 ui::MainWindow* window;
 
-void runStp(std::atomic_bool& exitApplication) {
-    rtt::STPManager app{window};
+void runStp(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, std::atomic_bool& exitApplication) {
+    rtt::STPManager app{interfaceGateway, window};
     app.start(exitApplication);
 }
 
@@ -76,7 +77,6 @@ int main(int argc, char** argv) {
         rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::net::RobotHubMode::BASESTATION : rtt::net::RobotHubMode::SIMULATOR
     );
 
-
     RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
     RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
     RTT_INFO("Starting in mode: ", rtt::net::robotHubModeToString(rtt::GameSettings::getRobotHubMode()))
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     }
 
     RTT_DEBUG("Initialize Interface Server");
-    rtt::ai::io::InterfaceGateway::init();
+    auto interfaceGateway = std::make_shared<rtt::ai::io::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677); /// Shared-prt because the variable is shared accross threads
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     // initialize the interface
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
     //Create a flag which signals to the STP thread to stop if the interface is stopped
     std::atomic_bool exitApplication = false;
 
-    std::thread stpThread(runStp,std::ref(exitApplication));
+    std::thread stpThread(runStp, interfaceGateway, std::ref(exitApplication));
 
     window->show();
     bool runQT = application.exec();

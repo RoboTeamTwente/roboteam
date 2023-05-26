@@ -36,30 +36,21 @@ class InterfaceGateway {
     InterfacePublisher publisher_;
 
     /// Subscriber is forward declared, so that changes to the subscriber do not require recompilation of the InterfaceGateway
+    /// !This is purely for convenience!
     /// On that account it has to be a unique_ptr, because the compiler does not know the size of the object
     std::unique_ptr<InterfaceSubscriber> subscriber_;
 
-    InterfaceGateway();
-
    public:
+    explicit InterfaceGateway(int port);
     ~InterfaceGateway();
     InterfaceGateway(InterfaceGateway const&) = delete;
     void operator=(InterfaceGateway const&) = delete;
 
     /**
-     * @brief Retrieves the singleton instance of the InterfacePublisher.
-     * It also initializes the InterfaceGateway singleton if it has not been initialized yet.
-     * @return Reference to the InterfaceGateway instance.
+     * @brief Reference to the InterfaceGateway instance.
+     * @return InterfaceGateway instance.
      */
-    inline static InterfacePublisher& publisher() {
-        static InterfaceGateway instance;
-        return instance.publisher_;
-    };
-
-    /**
-     * @brief Initializes the InterfaceGateway singleton, but do not provide a reference to it!
-     */
-    inline static void init() { publisher(); }
+    inline InterfacePublisher& publisher() { return publisher_; }
 };
 
 }  // namespace rtt::ai::io

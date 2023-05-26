@@ -6,6 +6,7 @@
 #include <utilities/normalize.h>
 
 #include <chrono>
+#include <utility>
 
 #include "control/ControlModule.h"
 #include "interface_api/InterfaceGateway.h"
@@ -120,7 +121,7 @@ void STPManager::start(std::atomic_bool &exitApplication) {
                     return;
                 }
 
-                rtt::ai::io::InterfaceGateway::publisher()
+                interfaceGateway->publisher()
                     .publishStpStatus(currentPlay, plays, tickCounter)
                     .publishWorld()
                     .publishVisuals();
@@ -237,5 +238,5 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     mainWindow->updatePlay(currentPlay);
 }
 
-STPManager::STPManager(ai::interface::MainWindow *mainWindow) { this->mainWindow = mainWindow; }
+STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow *mainWindow): interfaceGateway(std::move(interfaceGateway)) { this->mainWindow = mainWindow; }
 }  // namespace rtt

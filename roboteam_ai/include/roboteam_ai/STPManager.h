@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stp/Play.hpp>
+
 #include "interface/widgets/mainWindow.h"
+#include "interface_api/InterfaceGateway.h"
 
 namespace rtt {
 
@@ -12,9 +14,10 @@ class STPManager {
    public:
     /**
      * @brief Constructs the STPManager with an interface
+     * @param interfaceGateway The interface that belongs to this AI
      * @param mainWindow The interface that belongs to this AI
      */
-    explicit STPManager(ai::interface::MainWindow* mainWindow);
+    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway>, ai::interface::MainWindow* mainWindow);
 
    private:
     /**
@@ -27,6 +30,7 @@ class STPManager {
     bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
     ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
+    std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
 
     static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 

@@ -1,19 +1,15 @@
 import {useGameControllerStore} from "../modules/stores/ai-store";
 import {watch} from "vue";
-import {watchDeep} from "@vueuse/core";
 
-import {proto} from "../generated/proto"
-// import {useGameSettingsStore} from "../modules/stores/game-settings-store";
 import {useVisualizationStore} from "../modules/stores/dataStores/visualization-store";
 import {useSTPDataStore} from "../modules/stores/dataStores/stp-data-store";
 import {useVisionDataStore} from "../modules/stores/dataStores/vision-data-store";
-import IGameSettings = proto.IGameSettings;
 import {useProtoWebSocket} from "../utils";
 import {emitter} from "../services/ai-events";
 import {useAIDataStore} from "../modules/stores/dataStores/ai-data-store";
 
 
-export const useAIClient = (url: string) => {
+export const useAIClient = () => {
     // const gameSettingsStore = useGameSettingsStore();
     const gameControllerStore = useGameControllerStore();
     const stpDataStore = useSTPDataStore();
@@ -21,10 +17,8 @@ export const useAIClient = (url: string) => {
     const visualizationStore = useVisualizationStore();
 
     const aiData = useAIDataStore();
-
     // const {status, data, send} = useWebSocket(url, {autoReconnect: true});
-    const {status, data, send} = useProtoWebSocket(url, {autoReconnect: true});
-
+    const {status, data, send, open} = useProtoWebSocket();
 
     // On message received
     watch(data, (message) => {
@@ -65,6 +59,7 @@ export const useAIClient = (url: string) => {
     });
 
     return {
+        open,
         status,
     }
 };

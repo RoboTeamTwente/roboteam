@@ -1,6 +1,5 @@
 #include <RobotFeedbackNetworker.hpp>
 
-#include <proto/RobotFeedback.pb.h>
 
 namespace rtt::net {
 

@@ -5,7 +5,6 @@ project(rtt)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 include(ccache) # For daster compiling
 include(FindSodium) # ? Not required...
-include(GetSDL) # For connecting joysticks to the GUI
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
@@ -44,7 +43,7 @@ set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=native
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake
-if (CMAKE_BUILD_TYPE MATCHES RELEASE)
+if (CMAKE_BUILD_TYPE MATCHES RELEASE OR CMAKE_BUILD_TYPE MATCHES Release)
     message("Building in release mode")
 
     set(COMPILER_FLAGS "${RELEASE_COMPILE_FLAGS}")

@@ -23,3 +23,22 @@ target_include_directories(roboteam_observer
         )
 
 target_compile_options(roboteam_observer PRIVATE "${COMPILER_FLAGS}")
+
+add_executable(roboteam_observerReplayLog
+        src/replayLog.cpp
+        src/Handler.cpp
+        )
+
+target_link_libraries(roboteam_observerReplayLog
+        PRIVATE observer
+        PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
+        PRIVATE roboteam_logging
+        PRIVATE Qt5::Network
+        )
+target_include_directories(roboteam_observerReplayLog
+        PRIVATE include/roboteam_observer
+        INTERFACE include
+        )
+
+target_compile_options(roboteam_observerReplayLog PRIVATE "${COMPILER_FLAGS}")

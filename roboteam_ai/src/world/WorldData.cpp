@@ -22,12 +22,29 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
     them.reserve(amountThem);
     robots.reserve(amountUs + amountThem);
 
+    // NOTE: This is a (hopefully) temporary fix for issue #57 (https://github.com/RoboTeamTwente/roboteam/issues/57)
+    // for (auto &each : ours) {
+    //     robots.emplace_back( each, Team::us, getBall());
+    // }
+    // for (auto &each : others) {
+    //     robots.emplace_back( each, Team::them, getBall());
+    // }
+    
     for (auto &each : ours) {
-        robots.emplace_back( each, Team::us, getBall());
+        if(isnan(each.pos().x())){
+            RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
+        }else {
+            robots.emplace_back(each, Team::us, getBall());
+        }
     }
     for (auto &each : others) {
-        robots.emplace_back( each, Team::them, getBall());
+        if(isnan(each.pos().x())){
+            RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
+        }else {
+            robots.emplace_back(each, Team::them, getBall());
+        }
     }
+    // End of temporary fix
 
     us.reserve(amountUs);
     them.reserve(amountThem);

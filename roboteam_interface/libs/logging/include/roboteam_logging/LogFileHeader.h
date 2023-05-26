@@ -8,10 +8,12 @@
 #include <proto/State.pb.h>
 #include <cassert>
 #include <cstring>
+#include <limits>
 namespace rtt{
 
     using logged_proto_type = proto::State;
     using logged_time_type = unsigned long long int;
+    static constexpr logged_time_type  INVALID_LOGGED_TIME = std::numeric_limits<logged_time_type>::max();
 
     static const char * DEFAULT_LOGFILE_HEADER_NAME = "RTT_LOG_FILE";
     static constexpr std::size_t LOGFILE_HEADER_NAME_SIZE = 12; //The number of characters used in the header.

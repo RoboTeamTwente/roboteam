@@ -11,6 +11,7 @@
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
+#include "interface/widgets/MainControlsWidget.h"
 
 /**
  * Plays are included here
@@ -190,7 +191,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
-    if (!currentPlay || rtt::ai::stp::PlayDecider::interfacePlayChanged || !currentPlay->isValidPlayToKeep()) {
+    if (!currentPlay || rtt::ai::stp::PlayDecider::interfacePlayChanged || rtt::ai::interface::MainControlsWidget::ignoreInvariants || !currentPlay->isValidPlayToKeep()) {
         ai::stp::gen::PlayInfos previousPlayInfo{};
         if (currentPlay) currentPlay->storePlayInfo(previousPlayInfo);
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);

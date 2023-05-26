@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick =
 [
     [ "OrbitKick", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a557abc1bba78f4fdae7e0da6bf150354", null ],
     [ "calculateInfoForSkill", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#abbf6e76d81e85ea48f9b4a4d528eea64", null ],
+    [ "forceTacticSuccess", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a69a1fd27f2854ceb733c5b5686aa36bc", null ],
     [ "getStatus", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab7650037eb092459aca7247ea77f2ad4", null ],

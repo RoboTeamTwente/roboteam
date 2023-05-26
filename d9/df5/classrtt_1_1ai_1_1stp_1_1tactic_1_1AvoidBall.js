@@ -3,6 +3,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall =
     [ "AvoidBall", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#ad06d6499248ab06d3824042d1736594d", null ],
     [ "calculateInfoForSkill", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#a4a7d0d02c48846340b3c97a84e5237da", null ],
     [ "calculateNewPosition", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#a5ac88ac7eedd502016494ea158eda62b", null ],
+    [ "forceTacticSuccess", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#ac0fd5d86d4348615c2796e619bac1686", null ],
     [ "getStatus", "d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#ab7650037eb092459aca7247ea77f2ad4", null ],

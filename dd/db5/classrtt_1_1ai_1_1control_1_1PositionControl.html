@@ -102,9 +102,6 @@ $(document).ready(function(){initNavTree('dd/db5/classrtt_1_1ai_1_1control_1_1Po
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3">getComputedPath</a> (int ID)</td></tr>
-<tr class="memdesc:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the computed path of the given robot.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3">More...</a><br /></td></tr>
-<tr class="separator:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d2a27bd0f710250eb75312c5e851a2c"><td class="memItemLeft" align="right" valign="top">RobotCommand&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d2a27bd0f710250eb75312c5e851a2c">computeAndTrackPath</a> (const rtt::Field &amp;field, int robotId, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType)</td></tr>
 <tr class="memdesc:a9d2a27bd0f710250eb75312c5e851a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a path according to the selected planning algorithm, and tracks it using the selected tracking algorithm. In the case a collision is detected (using the collision detector), the path is recalculated.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d2a27bd0f710250eb75312c5e851a2c">More...</a><br /></td></tr>
 <tr class="separator:a9d2a27bd0f710250eb75312c5e851a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -545,33 +542,6 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An optional with a new path </dd></dl>
-
-</div>
-</div>
-<a id="abf40e5bec88c3741b9d17eaf8ca0ecd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf40e5bec88c3741b9d17eaf8ca0ecd3">&#9670;&nbsp;</a></span>getComputedPath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::control::PositionControl::getComputedPath </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>ID</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the computed path of the given robot. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ID</td><td>ID of the robot who's path we want to retrieve </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Path that of the given robot </dd></dl>
 
 </div>
 </div>

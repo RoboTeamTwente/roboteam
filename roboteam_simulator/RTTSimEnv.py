@@ -4,25 +4,27 @@ import numpy as np
 import cv2 as cv
 from numpy import size, floor
 
-from collisions import check_collisions, ball_field_collision, ball_goal_collision
+from collisions import check_collisions, ball_field_collision
 from static_classes import Field
 
 
-# robot commands
-# id = robot_command[0]
-# velocity_x = robot_command[1]
-# velocity_y = robot_command[2]
-# angle = robot_command[3]
-# angular_velocity = robot_command[4]
-# use_angular_velocity = robot_command[5]
-# camera_angle_of_robot = robot_command[6]
-# camera_angle_of_robot_is_set = robot_command[7]
-# kick_speed = robot_command[8]
-# wait_for_ball = robot_command[9]
-# kick_at_angle = robot_command[10]
-# kick_type = robot_command[11]
-# dribbler_speed = robot_command[12]
-# ignore_packet = robot_command[13]
+# Robot commands (accessed as robot_command[i])
+# index | action            | low   | high
+# 0     | ID                | 0     | +10
+# 1     | x acceleration    | -1    | +1
+# 2     | y acceleration    | -1    | +1
+# 3     | angle             | 0     | +360
+# 4     | angular velocity  | -10   | +10
+# 5     | use ang vel       | 0     | 1
+# 6     | camera angle      | 0     | +360
+# 7     | camera angle set  | 0     | 1
+# 8     | kick speed        | 0     | 7
+# 9     | wait for ball     | 0     | 1
+# 10    | kick at angle     | 0     | 360
+# 11    | kick type         | 0     | 2
+# 12    | dribbler speed    | 0     | 1
+# 13    | ignore_packet     | 0     | 1
+# Low and high artefacts of original ML ideas
 
 def get_observation(field):
     obs = []
@@ -67,73 +69,34 @@ def get_observation(field):
 class RTTSimEnv(gym.Env):
     def __init__(self):
         super(RTTSimEnv, self).__init__()
-        self.steps = 0
         # Initialize the field
         self.field = Field(1340, 1040)
         cv.namedWindow("RTTSim", cv.WND_PROP_FULLSCREEN)
         cv.resizeWindow("RTTSim", 1920, 1080)
 
-        # define action space
-        # shape --> 11X14
-        # for each robot:
-        # index | action            | low   | high
-        # 0     | ID                | 0     | +10
-        # 1     | x acceleration    | -1    | +1
-        # 2     | y acceleration    | -1    | +1
-        # 3     | angle             | 0     | +360
-        # 4     | angular velocity  | -10   | +10
-        # 5     | use ang vel       | 0     | 1
-        # 6     | camera angle      | 0     | +360
-        # 7     | camera angle set  | 0     | 1
-        # 8     | kick speed        | 0     | 7
-        # 9     | wait for ball     | 0     | 1
-        # 10    | kick at angle     | 0     | 360
-        # 11    | kick type         | 0     | 2
-        # 12    | dribbler speed    | 0     | 1
-        # 13    | ignore_packet     | 0     | 1
-        self.action_space = spaces.Box(low=np.array([[0, -1, -1, 0, -10, 0, 0, 0, 0, 0, 0, 0, 1, 0]] * 11),
-                                       high=np.array(
-                                           [[+10, +1, +1, +360, +10, +1, +360, +1, +65, +0, +360, +2, +1, +1]] * 11),
-                                       shape=(11, 14), dtype=int)
         # define observation space
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(size(get_observation(self.field)),),
                                             dtype=np.float64)
 
-    def step(self, action):
-        self.steps += 1
-        done = False if self.steps < 100000 else True
-        reward = 0
+    def update(self):
+        # Update location of objects
+        # Location of ball
         self.field.ball.update()
+
+        # Location of robots
+        for robot in self.field.yellowTeam.robots + self.field.blueTeam.robots:
+            robot.update()
+
+        # Check and handle collisions of objects
         ball_field_collision(self.field)
-        reward += ball_goal_collision(self.field)
-        if reward:
-            done = True
-        for command in action:
-            self.field.yellowTeam.robots[int(command[0])].command(command)
-        for robot in self.field.yellowTeam.robots:
-            temp_x, temp_y = robot.pos_x, robot.pos_y
-            robot.update()
-            reward += check_collisions(self.field, robot)
-            # if robot.pos_x == temp_x and robot.pos_y == temp_y:
-            #     reward += -10
-
-        # blue team takes random actions
-        action = self.action_space.sample()
-        for command in action:
-            self.field.blueTeam.robots[command[0]].command(command)
-        for robot in self.field.blueTeam.robots:
-            robot.update()
+        for robot in self.field.yellowTeam.robots + self.field.blueTeam.robots:
             check_collisions(self.field, robot)
-        obs = get_observation(self.field)
 
-        info = {}
-
-        return obs, reward, done, info
+        return
 
     def reset(self, **kwargs):
         # reset simulator to initial position
         self.field = Field(1340, 1040)
-        self.steps = 0
         obs = get_observation(self.field)
         return obs
 

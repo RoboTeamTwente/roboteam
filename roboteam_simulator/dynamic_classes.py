@@ -99,6 +99,8 @@ class Robot:
         # Initial dribbler speed
         self.dribbler_speed = 0
 
+        self.last_command_received = None
+
     def render(self, img):
         """! Render the robot on the screen
 
@@ -142,6 +144,13 @@ class Robot:
         else:
             print("ERROR: Wrong id")
             exit()
+
+    def step(self):
+        # Set course of action to be last command received
+        if self.last_command_received is not None:
+            self.command(self.last_command_received)
+
+        self.update()
 
 
 class Team:

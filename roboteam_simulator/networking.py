@@ -17,6 +17,8 @@ from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_DetectionBall, SSL_DetectionRobot
 from proto import RobotCommands_pb2
 
+from threading import Thread
+
 # Addresses and ports used to communicate with the teams
 PUBLISH_ADDRESS = '224.5.23.2'  # The address the packages should be published on
 PUBLISH_PORT = '10006'  # The port the packages should be published on
@@ -27,15 +29,16 @@ SUB_PORT_BLUE = '5559'
 SUB_PORT_YELLOW = '5560'
 
 
-class Publisher:
+class Publisher(Thread):
     """! The Publisher class
 
     The Publisher is responsible for multicasting the data by the simulator in custom protobuf packages
     """
 
-    def __init__(self):
+    def __init__(self, env):
         """! Initializes the Publisher by creating a socket and binding it to the defined publishing address/port
         """
+        super().__init__()
         self.context = zmq.Context()  # The zmq context that manages the sockets
         self.socket = self.context.socket(zmq.PUB)  # The socket we will be publishing with
         self.socket.bind(f'tcp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
@@ -46,8 +49,9 @@ class Publisher:
         self.frame_number = 0  # Frame number of the current SSL_DetectionFrame
         self.detection_frame = SSL_DetectionFrame()  # The SSL_DetectionFrame package containing data from the simulator
 
+        self.env = env
+
     def send(self, field):
-        # noinspection GrazieInspection
         """! Sends the package to the earlier initialized socket
 
         @param field Field data that needs to be sent
@@ -123,11 +127,16 @@ class Publisher:
         """
         self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message
 
+    def run(self):
+        self.send(self.env.field)
 
-class Subscriber:
-    def __init__(self):
+
+class Subscriber(Thread):
+    def __init__(self, env):
+        super().__init__()
         self.context = zmq.Context()
 
+        # Separate sockets for blue and yellow messages
         self.socket_blue = self.context.socket(zmq.SUB)
         self.socket_blue.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT_BLUE}')
         self.socket_blue.setsockopt_string(zmq.SUBSCRIBE, '')
@@ -138,16 +147,15 @@ class Subscriber:
 
         self.robot_command_parser = RobotCommands_pb2.RobotCommands()
 
-    def receive(self):
-        """
+        self.env = env
 
-        :return: Robotcommand for blue and yellow in tuple
-        """
-        msg_blue = self.socket_blue.recv()
-        msg_yellow = self.socket_yellow.recv()
+    def run(self):
+        while True:
+            msg_blue = self.socket_blue.recv()
+            msg_yellow = self.socket_yellow.recv()
 
-        # Parse raw bytes with protobuf
-        robot_command_blue = self.robot_command_parser.ParseFromString(msg_blue)
-        robot_command_yellow = self.robot_command_parser.ParseFromString(msg_yellow)
+            robot_command_yellow = self.robot_command_parser.ParseFromString(msg_yellow)
+            robot_command_blue = self.robot_command_parser.ParseFromString(msg_blue)
 
-        return robot_command_blue, robot_command_yellow
+            self.env.field.yellowTeam.robots[robot_command_yellow[0]].last_command_received = robot_command_yellow
+            self.env.field.blueTeam.robots[robot_command_blue[0]].last_command_received = robot_command_blue

@@ -1,14 +1,12 @@
 from RTTSimEnv import RTTSimEnv
 from networking import Publisher, Subscriber
-import threading
 
 env = RTTSimEnv()
-pub = Publisher()
-sub = Subscriber()
+pub = Publisher(env)
+sub = Subscriber(env)
 
-done = False
-while not done:
-    env.reset()
-    pub.send(env.field)
-    sub.receive()
-    obs, reward, done, info = env.step(env.action_space.sample())
+pub.start()
+sub.start()
+
+while True:
+    env.update()

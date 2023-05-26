@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"dc/db4/GameState_8h.html":[4,0,0,0,0,4,3],
 "dc/db4/GameState_8h.html#ac25dd24ee79c671234cf430f216f437f":[4,0,0,0,0,4,3,1],
 "dc/db4/GameState_8h_source.html":[4,0,0,0,0,4,3],
 "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html":[3,0,1,0,4,1,16],
@@ -85,8 +86,8 @@ var NAVTREEINDEX13 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,4,13,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[4,0,0,0,0,3,9,1,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#afdcb1e9041507c8a71b63521041203b2":[3,0,1,0,4,13,4],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,4,13,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[4,0,0,0,0,3,9,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,4,13,0],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html":[3,0,1,0,4,1,17],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a293504db20d6b1a7e6d40c5060b60a89":[3,0,1,0,4,1,17,1],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9":[3,0,1,0,4,1,17,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "dd/ddd/RuleSetWidget_8cpp.html":[4,0,0,1,1,1,7],
 "dd/de5/PathPlanningAlgorithm_8h.html":[4,0,0,0,0,0,0,1,1],
 "dd/de5/PathPlanningAlgorithm_8h_source.html":[4,0,0,0,0,0,0,1,1],
-"dd/dfc/Attacker_8h.html":[4,0,0,0,0,3,4,0,0],
-"dd/dfc/Attacker_8h_source.html":[4,0,0,0,0,3,4,0,0]
+"dd/dfc/Attacker_8h.html":[4,0,0,0,0,3,4,0,0]
 };

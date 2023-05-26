@@ -179,7 +179,7 @@ var searchData=
   ['stpinfo_2eh_1490',['StpInfo.h',['../d0/dc6/StpInfo_8h.html',1,'']]],
   ['stpinfoenums_2eh_1491',['StpInfoEnums.h',['../d7/d06/StpInfoEnums_8h.html',1,'']]],
   ['stpinfos_1492',['stpInfos',['../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa',1,'rtt::ai::stp::Play']]],
-  ['stpmanager_1493',['STPManager',['../da/de3/classrtt_1_1STPManager.html',1,'rtt::STPManager'],['../da/de3/classrtt_1_1STPManager.html#a8edcab477fc8c4d1c1e9c782005ceb47',1,'rtt::STPManager::STPManager(STPManager const &amp;)=delete'],['../da/de3/classrtt_1_1STPManager.html#a7a8473167698f237b45ee23f334fa538',1,'rtt::STPManager::STPManager(ai::interface::MainWindow *mainWindow)']]],
+  ['stpmanager_1493',['STPManager',['../da/de3/classrtt_1_1STPManager.html',1,'rtt::STPManager'],['../da/de3/classrtt_1_1STPManager.html#a8edcab477fc8c4d1c1e9c782005ceb47',1,'rtt::STPManager::STPManager(STPManager const &amp;)=delete'],['../da/de3/classrtt_1_1STPManager.html#a6ac60dc92dbc77c679d4f59409474f4d',1,'rtt::STPManager::STPManager(std::shared_ptr&lt; rtt::ai::io::InterfaceGateway &gt;, ai::interface::MainWindow *mainWindow)']]],
   ['stpmanager_2ecpp_1494',['STPManager.cpp',['../df/da1/STPManager_8cpp.html',1,'']]],
   ['stpmanager_2eh_1495',['STPManager.h',['../dd/d23/STPManager_8h.html',1,'']]],
   ['stpvisualizerwidget_1496',['STPVisualizerWidget',['../d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html',1,'rtt::ai::interface::STPVisualizerWidget'],['../d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html#a2c9ca901ec55a6d0c069210724f8fabf',1,'rtt::ai::interface::STPVisualizerWidget::STPVisualizerWidget()']]],

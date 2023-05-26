@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['gamesettings_496',['GameSettings',['../df/db4/classrtt_1_1GameSettings.html#ac75e138a081be08e15a70359a4be9991',1,'rtt::GameSettings::GameSettings()'],['../df/db4/classrtt_1_1GameSettings.html',1,'rtt::GameSettings']]],
-  ['gamesettings_2eh_497',['GameSettings.h',['../d7/d66/GameSettings_8h.html',1,'']]],
-  ['gamestate_498',['GameState',['../d6/dc7/structrtt_1_1ai_1_1GameState.html#aee23d2e0d9c9d23be78ad66f895fce34',1,'rtt::ai::GameState::GameState(std::string strategyName, std::string ruleSetName)'],['../d6/dc7/structrtt_1_1ai_1_1GameState.html#a553a6c06f4073342e4e10197c5a459a0',1,'rtt::ai::GameState::GameState()=default']]],
+  ['gamesettings_497',['GameSettings',['../df/db4/classrtt_1_1GameSettings.html#ac75e138a081be08e15a70359a4be9991',1,'rtt::GameSettings::GameSettings()'],['../df/db4/classrtt_1_1GameSettings.html',1,'rtt::GameSettings']]],
+  ['gamesettings_2eh_498',['GameSettings.h',['../d7/d66/GameSettings_8h.html',1,'']]],
   ['gamestate_499',['gameState',['../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a166ea79d07b3379374c3c9a3f0df89fd',1,'rtt::BB::WorldObjects']]],
-  ['gamestate_500',['GameState',['../d6/dc7/structrtt_1_1ai_1_1GameState.html',1,'rtt::ai']]],
+  ['gamestate_500',['GameState',['../d6/dc7/structrtt_1_1ai_1_1GameState.html#aee23d2e0d9c9d23be78ad66f895fce34',1,'rtt::ai::GameState::GameState(std::string strategyName, std::string ruleSetName)'],['../d6/dc7/structrtt_1_1ai_1_1GameState.html#a553a6c06f4073342e4e10197c5a459a0',1,'rtt::ai::GameState::GameState()=default'],['../d6/dc7/structrtt_1_1ai_1_1GameState.html',1,'rtt::ai::GameState']]],
   ['gamestate_2eh_501',['GameState.h',['../dc/db4/GameState_8h.html',1,'']]],
   ['gamestatemanager_502',['gameStateManager',['../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a1bae573dc843db2d2dc90d2717807ac8',1,'rtt::BB::WorldObjects']]],
   ['gamestatemanager_503',['GameStateManager',['../db/de9/classrtt_1_1ai_1_1GameStateManager.html',1,'rtt::ai']]],

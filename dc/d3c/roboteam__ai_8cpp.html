@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('dc/d3c/roboteam__ai_8cpp.html','../../
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;roboteam_utils/Print.h&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &quot;RobotHubMode.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dd/d23/STPManager_8h_source.html">STPManager.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d4/d5a/InterfaceGateway_8h_source.html">interface_api/InterfaceGateway.h</a>&quot;</code><br />
@@ -102,8 +103,8 @@ $(document).ready(function(){initNavTree('dc/d3c/roboteam__ai_8cpp.html','../../
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7304e401f483260a14549a6b0881b0a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d3c/roboteam__ai_8cpp.html#a7304e401f483260a14549a6b0881b0a1">runStp</a> (std::atomic_bool &amp;exitApplication)</td></tr>
-<tr class="separator:a7304e401f483260a14549a6b0881b0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33ec384237964e1067da0cd1932cfe49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d3c/roboteam__ai_8cpp.html#a33ec384237964e1067da0cd1932cfe49">runStp</a> (std::shared_ptr&lt; <a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html">rtt::ai::io::InterfaceGateway</a> &gt; interfaceGateway, std::atomic_bool &amp;exitApplication)</td></tr>
+<tr class="separator:a33ec384237964e1067da0cd1932cfe49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdb77dac8b0b9901fdfb86ac9724ce88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d3c/roboteam__ai_8cpp.html#afdb77dac8b0b9901fdfb86ac9724ce88">setDarkTheme</a> ()</td></tr>
 <tr class="separator:afdb77dac8b0b9901fdfb86ac9724ce88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d3c/roboteam__ai_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
@@ -140,11 +141,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Shared-prt because the variable is shared accross threads</p>
 
 </div>
 </div>
-<a id="a7304e401f483260a14549a6b0881b0a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7304e401f483260a14549a6b0881b0a1">&#9670;&nbsp;</a></span>runStp()</h2>
+<a id="a33ec384237964e1067da0cd1932cfe49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33ec384237964e1067da0cd1932cfe49">&#9670;&nbsp;</a></span>runStp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -152,9 +154,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void runStp </td>
           <td>(</td>
-          <td class="paramtype">std::atomic_bool &amp;&#160;</td>
-          <td class="paramname"><em>exitApplication</em></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html">rtt::ai::io::InterfaceGateway</a> &gt;&#160;</td>
+          <td class="paramname"><em>interfaceGateway</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::atomic_bool &amp;&#160;</td>
+          <td class="paramname"><em>exitApplication</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

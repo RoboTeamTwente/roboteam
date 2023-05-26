@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['ball_56',['Ball',['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#a6c2d10db386c41ed5992a80bea2d0352',1,'rtt::world::ball::Ball::Ball(const proto::WorldBall &amp;copy, const world::World *data)'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#abe96820f972a4976bf42f390896be51a',1,'rtt::world::ball::Ball::Ball()=default'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#aacc3b43d97a8783514baff9acd371f03',1,'rtt::world::ball::Ball::Ball(Ball const &amp;)=default'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#af480afa0cf383a9772a93d968e0263ef',1,'rtt::world::ball::Ball::Ball(Ball &amp;&amp;)=default']]],
   ['ball_57',['ball',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a071fed8ba48c9358ee71c230bc9b8f8b',1,'rtt::ai::stp::StpInfo::ball()'],['../d5/db9/classrtt_1_1world_1_1WorldData.html#acbdf94728bf3742338859822ef67a7b4',1,'rtt::world::WorldData::ball()']]],
-  ['ball_58',['Ball',['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html',1,'rtt::world::ball']]],
+  ['ball_58',['Ball',['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#a6c2d10db386c41ed5992a80bea2d0352',1,'rtt::world::ball::Ball::Ball(const proto::WorldBall &amp;copy, const world::World *data)'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#abe96820f972a4976bf42f390896be51a',1,'rtt::world::ball::Ball::Ball()=default'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#aacc3b43d97a8783514baff9acd371f03',1,'rtt::world::ball::Ball::Ball(Ball const &amp;)=default'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#af480afa0cf383a9772a93d968e0263ef',1,'rtt::world::ball::Ball::Ball(Ball &amp;&amp;)=default'],['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html',1,'rtt::world::ball::Ball']]],
   ['ball_2ecpp_59',['Ball.cpp',['../d2/deb/Ball_8cpp.html',1,'']]],
   ['ball_2ehpp_60',['Ball.hpp',['../dc/dfb/Ball_8hpp.html',1,'']]],
   ['ball_5fcolor_61',['BALL_COLOR',['../d9/dc5/classrtt_1_1ai_1_1Constants.html#a8884e626b305383a93bf7e61dade8349',1,'rtt::ai::Constants']]],
@@ -13,8 +12,8 @@ var searchData=
   ['ball_5fis_5fclose_66',['BALL_IS_CLOSE',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a698051354245c440ac40068a61237b48',1,'rtt::ai::stp::control_constants']]],
   ['ball_5fis_5fmoving_5fslow_5flimit_67',['BALL_IS_MOVING_SLOW_LIMIT',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a296817cdf1a97b2ebd3ccff76d2dcf5b',1,'rtt::ai::stp::control_constants']]],
   ['ball_5fplacement_5fmargin_68',['BALL_PLACEMENT_MARGIN',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab9a25435f59d30d9fbed119582370ff6',1,'rtt::ai::stp::control_constants']]],
-  ['ball_5fplacement_5fthem_69',['BALL_PLACEMENT_THEM',['../d1/d45/Constants_8h.html#a83e242d5478dff7460995b612ed14ef5a4abfa514bf71ac46359cd47ef3aa6c7e',1,'Constants.h']]],
-  ['ball_5fplacement_5fus_70',['BALL_PLACEMENT_US',['../d1/d45/Constants_8h.html#a83e242d5478dff7460995b612ed14ef5aaa94a644a66e971a67a1865b6256bda0',1,'Constants.h']]],
+  ['ball_5fplacement_5fthem_69',['BALL_PLACEMENT_THEM',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e',1,'rtt']]],
+  ['ball_5fplacement_5fus_70',['BALL_PLACEMENT_US',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0',1,'rtt']]],
   ['ball_5fradius_71',['BALL_RADIUS',['../d9/dc5/classrtt_1_1ai_1_1Constants.html#ad56b652c75763107576ae1e23d94bb0c',1,'rtt::ai::Constants::BALL_RADIUS()'],['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8fbe72118c5a9251e3a531ce4b7ce257',1,'rtt::ai::stp::control_constants::BALL_RADIUS()']]],
   ['ball_5fstill_5fvel_72',['BALL_STILL_VEL',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a5baaa7b811964a3a0afdf32840b9cd42',1,'rtt::ai::stp::control_constants']]],
   ['ball_5fstill_5fvel2_73',['BALL_STILL_VEL2',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab5d9ab2c942d0063751c3492c7230a97',1,'rtt::ai::stp::control_constants']]],

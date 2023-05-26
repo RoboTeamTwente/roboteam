@@ -6,7 +6,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare =
     [ "decideRoleFlags", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ace7c7e972aab2f73b72e79db66d30a23", null ],
     [ "distributeRoles", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a1ea9974ff5effc48f60c71d28924101c", null ],
+    [ "getName", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ad1f3135ac24c15579af66127071806fb", null ],
     [ "getRoleStatuses", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

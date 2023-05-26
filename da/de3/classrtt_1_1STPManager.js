@@ -9,6 +9,7 @@ var classrtt_1_1STPManager =
     [ "currentPlay", "da/de3/classrtt_1_1STPManager.html#a398d2b8170beb38ec7f54495c29a0b85", null ],
     [ "fieldInitialized", "da/de3/classrtt_1_1STPManager.html#a8f00c279e449700988e0371ded4b6411", null ],
     [ "mainWindow", "da/de3/classrtt_1_1STPManager.html#a7a7653fec7cab61ab8312c9beaea2abc", null ],
-    [ "plays", "da/de3/classrtt_1_1STPManager.html#a19ff13e5cb21a8afa41e92ecb6a56945", null ],
-    [ "robotsInitialized", "da/de3/classrtt_1_1STPManager.html#a8795d7364c8c7ec513ea11eaaed859a2", null ]
+    [ "plays", "da/de3/classrtt_1_1STPManager.html#ac8807b5b4a176c47e743585ebf33f4f5", null ],
+    [ "robotsInitialized", "da/de3/classrtt_1_1STPManager.html#a8795d7364c8c7ec513ea11eaaed859a2", null ],
+    [ "tickCounter", "da/de3/classrtt_1_1STPManager.html#a60cf94d664bc0c69b88ca3b8ff4973a3", null ]
 ];

@@ -128,9 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a02e6b395c9cb4fd1deac237db5a293f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a02e6b395c9cb4fd1deac237db5a293f7">calculateInfoForScoredRoles</a> (<a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *) noexcept override</td></tr>
 <tr class="memdesc:a02e6b395c9cb4fd1deac237db5a293f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate info for the roles that need to be calculated for scoring.  <a href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a02e6b395c9cb4fd1deac237db5a293f7">More...</a><br /></td></tr>
 <tr class="separator:a02e6b395c9cb4fd1deac237db5a293f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ea9974ff5effc48f60c71d28924101c"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a1ea9974ff5effc48f60c71d28924101c">getName</a> () override</td></tr>
-<tr class="memdesc:a1ea9974ff5effc48f60c71d28924101c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the play.  <a href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#a1ea9974ff5effc48f60c71d28924101c">More...</a><br /></td></tr>
-<tr class="separator:a1ea9974ff5effc48f60c71d28924101c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1f3135ac24c15579af66127071806fb"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ad1f3135ac24c15579af66127071806fb">getName</a> () const override</td></tr>
+<tr class="memdesc:ad1f3135ac24c15579af66127071806fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the play.  <a href="../../d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ad1f3135ac24c15579af66127071806fb">More...</a><br /></td></tr>
+<tr class="separator:ad1f3135ac24c15579af66127071806fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae63525881610390f3a9e5a490377b32e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae63525881610390f3a9e5a490377b32e">storePlayInfo</a> (<a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#afc45c97a42c443e6884bd95502426d0d">gen::PlayInfos</a> &amp;previousPlayInfo) noexcept</td></tr>
 <tr class="memdesc:ae63525881610390f3a9e5a490377b32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves all necessary information (that is needed for a potential next <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a>), when this <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a> will be finished.  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae63525881610390f3a9e5a490377b32e">More...</a><br /></td></tr>
 <tr class="separator:ae63525881610390f3a9e5a490377b32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -379,8 +379,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ea9974ff5effc48f60c71d28924101c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ea9974ff5effc48f60c71d28924101c">&#9670;&nbsp;</a></span>getName()</h2>
+<a id="ad1f3135ac24c15579af66127071806fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1f3135ac24c15579af66127071806fb">&#9670;&nbsp;</a></span>getName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -392,7 +392,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">const char * rtt::ai::stp::play::KickOffThemPrepare::getName </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -405,7 +405,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the name of the play. </p>
 <dl class="section return"><dt>Returns</dt><dd>The name of the play as a string </dd></dl>
 
-<p>Implements <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#acf33cb27bb25a7c3016925441bafd3c1">rtt::ai::stp::Play</a>.</p>
+<p>Implements <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a727ddaebc6547c71775d10cdad0bdad2">rtt::ai::stp::Play</a>.</p>
 
 </div>
 </div>

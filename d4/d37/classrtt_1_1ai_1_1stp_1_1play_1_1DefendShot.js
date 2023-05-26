@@ -11,7 +11,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot =
     [ "decideRoleFlags", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a75fa97a5f7426cec8c308538d1455e0e", null ],
     [ "distributeRoles", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a26e64d2985034aa32c617601d4145bfb", null ],
+    [ "getName", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af8495d8ff9e59726b4744fb0cef93207", null ],
     [ "getRoleStatuses", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

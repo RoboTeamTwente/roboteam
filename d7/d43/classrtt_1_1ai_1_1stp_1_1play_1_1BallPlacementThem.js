@@ -9,7 +9,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem =
     [ "decideRoleFlags", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#ab268b99ef196efd790c42706bd220071", null ],
     [ "distributeRoles", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a5815eb37ead1f5ef8e6b36f575854228", null ],
+    [ "getName", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#afd36854b3fa2fcde6bb75185f898da91", null ],
     [ "getRoleStatuses", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

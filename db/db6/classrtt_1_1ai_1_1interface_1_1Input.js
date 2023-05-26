@@ -9,5 +9,6 @@ var classrtt_1_1ai_1_1interface_1_1Input =
     [ "drawingMutex", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a6a16f314c6c09547999b5c29106c2930", null ],
     [ "drawings", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a1e795a635fab0c9bd4c1cac1eb7bc0a7", null ],
     [ "FPS", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#acb20cbfbe39cc425a3a6f08b6aa9d664", null ],
-    [ "fpsMutex", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a39241e78487ea6bbf937d7eee03ca97e", null ]
+    [ "fpsMutex", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a39241e78487ea6bbf937d7eee03ca97e", null ],
+    [ "protoDrawings", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html#a415b0e33833e8db8a372e4ebb1ef784c", null ]
 ];

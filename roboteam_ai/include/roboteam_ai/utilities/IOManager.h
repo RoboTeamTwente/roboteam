@@ -3,8 +3,7 @@
 
 #include <proto/SimulationConfiguration.pb.h>
 #include <utilities/Constants.h>
-#include <utilities/Settings.h>
-#include <roboteam_utils/Field.hpp>
+#include <utilities/GameSettings.h>
 
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
@@ -12,6 +11,7 @@
 #include <WorldNetworker.hpp>
 #include <iostream>
 #include <mutex>
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt::world {
 class World;
@@ -75,13 +75,8 @@ class IOManager {
      * @brief Publishes the settings on the settingsPublisher channel
      * @param settings The settings that need to be published
      */
-    void publishSettings(const Settings& settings);
+    void publishSettings();
 
-    /**
-     * @brief Handles the settings received from the primary AI
-     * @param settings the settings that are received
-     */
-    void onSettingsOfPrimaryAI(const proto::Setting& settings);
     /**
      * @brief Publishes the simulation configuration on the simulationConfiguration channel. Only the primary AI is allowed to send this.
      * @param configuration The simulation configuration that needs to be published

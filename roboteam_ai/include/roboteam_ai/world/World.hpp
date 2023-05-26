@@ -65,7 +65,7 @@ class World {
      * @return A pointer to a static World
      */
     inline static AcquireInfo<World> instance() {
-        static World worldInstance{&rtt::SETTINGS};
+        static World worldInstance{};
         return {std::lock_guard(worldInstance.updateMutex), &worldInstance};
     }
 
@@ -98,7 +98,7 @@ class World {
      * Usage of settings before construction of the STPManager will result in undefined
      * behavior due to uninitialized memory
      */
-    explicit World(Settings *settings);
+    explicit World();
 
 
     /**
@@ -195,7 +195,6 @@ class World {
      */
     void toHistory(WorldData &world) noexcept;
 
-    Settings *settings; /**< Pointer to GUI settings */
     std::mutex updateMutex; /**< Mutex used when constructing robots to prevent updating of updateMap without wanting it */
     std::vector<rtt::world::WorldData> history; /**< History of the world, this is where old world data is pushed to */
     size_t currentIndex{0}; /**< Current index into the circular buffer that is the world history */

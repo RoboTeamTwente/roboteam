@@ -60,7 +60,7 @@ bool RobotHub::initializeNetworkers() {
         this->robotCommandsYellowSubscriber =
             std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
-        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &_settings) { this->onSettings(_settings); });
+        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings &_settings) { this->onSettings(_settings); });
 
         this->simulationConfigurationSubscriber =
             std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration &config) { this->onSimulationConfiguration(config); });
@@ -194,10 +194,10 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
     // if (this->logger.has_value()) { this->logger.value().logRobotCommands(commands, color); }
 }
 
-void RobotHub::onSettings(const proto::Setting &_settings) {
+void RobotHub::onSettings(const proto::GameSettings &_settings) {
     this->settings = _settings;
 
-    utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
+    utils::RobotHubMode newMode = settings.robot_hub_mode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
 
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;

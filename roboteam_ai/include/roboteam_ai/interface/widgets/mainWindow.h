@@ -18,7 +18,6 @@
 #include <memory>
 
 #include "GraphWidget.h"
-#include "ManualControlWidget.h"
 #include "PidBox.h"
 #include "PlaysWidget.hpp"
 #include "QColor"
@@ -68,7 +67,6 @@ class MainWindow : public QMainWindow {
     QVBoxLayout *vLayout;
     RobotsWidget *robotsWidget;
     RuleSetWidget *refWidget;
-    ManualControlWidget *manualControlWidget;
     STPVisualizerWidget *stpWidget;
     STPVisualizerWidget *keeperStpWidget;
     Visualizer *visualizer;

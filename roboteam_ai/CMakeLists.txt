@@ -25,22 +25,6 @@ target_include_directories(roboteam_ai_utils
 )
 target_compile_options(roboteam_ai_utils PRIVATE "${COMPILER_FLAGS}")
 
-###### MANUAL #######
-add_library(roboteam_ai_manual
-        ${PROJECT_SOURCE_DIR}/src/manual/JoystickManager.cpp
-        ${PROJECT_SOURCE_DIR}/src/manual/JoystickHandler.cpp
-)
-target_include_directories(roboteam_ai_manual
-        PRIVATE include/roboteam_ai
-)
-target_link_libraries(roboteam_ai_manual
-        PRIVATE roboteam_networking
-        PRIVATE roboteam_utils
-        PRIVATE SDL2
-        PRIVATE Qt5::Widgets
-)
-target_compile_options(roboteam_ai_manual PRIVATE "${COMPILER_FLAGS}")
-
 ###### SKILLS #######
 add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/Skill.cpp
@@ -167,7 +151,6 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE SDL2
         PRIVATE NFParam
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
@@ -293,7 +276,6 @@ set(INTERFACE_HEADERS
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/VisualizationSettingsWidget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/widget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/SettingsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/ManualControlWidget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PlaysWidget.hpp
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/GraphWidget.h
 )
@@ -315,7 +297,6 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/RuleSetWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/GraphWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/SettingsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/ManualControlWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
         # After removing the interface, only this file should remain
         #${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
@@ -327,7 +308,6 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE SDL2
         PRIVATE roboteam_interface_utils_lib
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
@@ -365,7 +345,6 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -373,7 +352,6 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
@@ -429,14 +407,12 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
@@ -463,12 +439,10 @@ target_include_directories(positionScoringTest
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics

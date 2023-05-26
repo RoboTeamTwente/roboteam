@@ -35,7 +35,7 @@ class RobotHub {
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
-    proto::Setting settings;
+    proto::GameSettings settings;
     utils::RobotHubMode mode = utils::RobotHubMode::NEITHER;
 
     RobotHubStatistics statistics;
@@ -54,7 +54,7 @@ class RobotHub {
     std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
     void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
 
-    void onSettings(const proto::Setting &setting);
+    void onSettings(const proto::GameSettings &setting);
 
     void onSimulationConfiguration(const proto::SimulationConfiguration &configuration);
 

@@ -6,13 +6,13 @@
 #define RTT_WORLD_DATA_HPP
 
 #include <proto/RobotFeedback.pb.h>
-#include <proto/Setting.pb.h>
+#include <proto/GameSettings.pb.h>
 #include <proto/World.pb.h>
 
 #include <optional>
 #include <vector>
 
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::world {
@@ -36,11 +36,11 @@ class WorldData {
     /**
      * @brief Constructs new world data
      * @param protoMsg Proto message to construct he world from
-     * @param settings Settings for team stuff etc
      * @param feedback Feedback to apply to robots that'll be constructed
      * Ownership is taken of protoMsg
+     * //TODO: This is documentation is outdated, where is feedback, and data doc is missing
      */
-    WorldData(const World *data, proto::World &protoMsg, rtt::Settings const &settings) noexcept;
+    WorldData(const World *data, proto::World &protoMsg) noexcept;
 
     std::vector<rtt::world::robot::Robot> robots; /**< Owning container of robots */
     std::vector<world::view::RobotView> robotsNonOwning = {}; /**< Non owning vector of views */

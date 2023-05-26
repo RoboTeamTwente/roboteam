@@ -6,7 +6,12 @@
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
 
+#include <proto/RobotFeedback.pb.h>
+
 namespace rtt::net {
+
+proto::RobotsFeedback feedbackToProto(const rtt::RobotsFeedback& robotsFeedback);
+rtt::RobotsFeedback protoFeedbackToRobotsFeedback(const proto::RobotsFeedback& protoFeedbacks);
 
 class RobotFeedbackPublisher : private utils::Publisher {
    public:

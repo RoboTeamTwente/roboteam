@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto;
+
+message GameSettings {
+    enum RobotHubMode {
+        UNKNOWN = 0;
+        BASESTATION = 1;
+        SIMULATOR = 2;
+    }
+
+    bool is_primary_ai = 1;
+    bool is_yellow = 2;
+    bool is_left = 3;
+    RobotHubMode robot_hub_mode = 4;
+}

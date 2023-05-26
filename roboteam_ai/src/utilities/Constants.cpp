@@ -3,7 +3,10 @@
 //
 
 #include "utilities/Constants.h"
-#include "utilities/Settings.h"
+
+#include <roboteam_utils/Print.h>
+
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai {
 
@@ -62,7 +65,7 @@ bool Constants::STD_USE_REFEREE() { return true; }
 bool Constants::STD_TIMEOUT_TO_TOP() { return false; }
 
 // The max distance the ball can be from the robot for the robot to have the ball
-double Constants::HAS_BALL_DISTANCE() { return (SETTINGS.getRobotHubMode() == Settings::BASESTATION) ? 0.11 : 0.12; }
+double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == rtt::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 
 // The max angle the ball can have to the robot for the robot to have the ball
 double Constants::HAS_BALL_ANGLE() { return 0.10 * M_PI; }
@@ -203,15 +206,15 @@ QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
 
 std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
 
-pidVals Constants::standardNumTreePID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardNumTreePID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardReceivePID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
+pidVals Constants::standardReceivePID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
 
-pidVals Constants::standardInterceptPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardInterceptPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-pidVals Constants::standardKeeperPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardKeeperInterceptPID() { return SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {{"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true},

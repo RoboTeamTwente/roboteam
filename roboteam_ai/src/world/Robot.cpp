@@ -5,6 +5,7 @@
 #include "world/Robot.hpp"
 
 #include "utilities/Constants.h"
+#include "utilities/GameSettings.h"
 #include "world/World.hpp"
 
 namespace rtt::world::robot {
@@ -103,7 +104,7 @@ void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     }
 
     // On the field, use data from the dribbler and vision to determine if we have the ball
-    if (SETTINGS.getRobotHubMode() == Settings::RobotHubMode::BASESTATION) {
+    if (GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION) {
         // If the ball is not visible, we should go closer to the ball before thinking we have it, for safety (since we can't actually see if we have the ball or not)
         auto hasBallDist = ball->get()->visible ? ai::Constants::HAS_BALL_DISTANCE() : ai::Constants::HAS_BALL_DISTANCE() * 0.75;
         auto hasBallAccordingToVision = distanceToBall < hasBallDist && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();

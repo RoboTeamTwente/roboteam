@@ -3,7 +3,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "interface/widgets/mainWindow.h"
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::interface {
 
@@ -15,12 +15,14 @@ SettingsWidget::SettingsWidget(QWidget *parent) {
     QGroupBox *grsimSettingsGroup = new QGroupBox("grsim transmission ip + port");
     auto grsimSettingsWidgetLayout = new QHBoxLayout();
     grsimIpText = new QLineEdit();
-    grsimIpText->setText(QString::fromStdString(SETTINGS.getRobothubSendIp()));
+    RTT_WARNING("grsimIpText is no longer supported");
+
     QObject::connect(grsimIpText, SIGNAL(textChanged(QString)), this, SLOT(changeGrSimIp(QString)));
     grsimSettingsWidgetLayout->addWidget(grsimIpText);
     grsimPort = new QSpinBox();
     grsimPort->setRange(0, 999999);
-    grsimPort->setValue(SETTINGS.getRobothubSendPort());
+    RTT_WARNING("grsimPort is no longer supported");
+
     grsimSettingsWidgetLayout->addWidget(grsimPort);
     grsimSettingsGroup->setLayout(grsimSettingsWidgetLayout);
     vLayout->addWidget(grsimSettingsGroup);
@@ -30,8 +32,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) {
 }
 
 void SettingsWidget::changeGrSimIp(QString ip) {
-    RTT_INFO("Setting GrSim IP address")
-    SETTINGS.setRobothubSendIp(ip.toStdString());
+    RTT_WARNING("This is no longer supported");
 }
 
 }  // namespace rtt::ai::interface

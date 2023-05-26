@@ -87,7 +87,8 @@ FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
   for (const auto &filter : cameraFilters) {
     FilteredRobot robot = filter.second.estimate(time);
     //Use the filter health and uncertainties for a weighted average of observations
-    double weight = 100.0/robot.health; //TODO: call MAXIMUM here from object
+    double health = std::max(robot.health,0.01); //Use a limit so we do not divide by zero
+    double weight = 100.0/health; //TODO: call MAXIMUM here from object
     double posWeight = pow(robot.posUncertainty*weight, - mergeFactor);
     double velWeight = pow(robot.velocityUncertainty*weight, - mergeFactor);
     double angleWeight = pow(robot.angleUncertainty*weight,-mergeFactor);

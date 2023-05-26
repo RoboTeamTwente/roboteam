@@ -4,6 +4,7 @@
 #include <REM_Packet.h>
 #include <REM_Log.h>
 #include <roboteam_utils/Print.h>
+#include <sstream>
 
 namespace rtt::robothub::basestation {
 

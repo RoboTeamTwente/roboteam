@@ -1,6 +1,9 @@
 #include <roboteam_utils/Print.h>
 
 #include "STPManager.h"
+#include "roboteam_utils/ArgParser.h"
+#include "roboteam_utils/RobotHubMode.h"
+#include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 #include "world/World.hpp"
 
@@ -33,12 +36,16 @@ void setDarkTheme() {
     qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
+    RTT_INFO("Starting RoboTeam AI. Supported flags are: (--primary-ai | --secondary-ai), --basesation")
 
-    int id = 0;
+    const std::vector<std::string> args(argv, argv + argc);
+    bool isPrimaryFlag = rtt::findFlagValue(args, "--primary-ai", true).has_value();
+    bool isSecondaryFlag = rtt::findFlagValue(args, "--secondary-ai", true).has_value();
 
-    if (argc == 2) {
-        id = *argv[1] - '0';
+    if ((!isPrimaryFlag && !isSecondaryFlag) || (isPrimaryFlag && isSecondaryFlag)) {
+        RTT_ERROR("You must provide either \"--primary-ai\" or \"--secondary-ai\" as a command line argument.");
+        return 1;
     }
 
     RTT_INFO("\n",
@@ -53,31 +60,29 @@ int main(int argc, char* argv[]) {
 
     RTT_DEBUG("Debug prints enabled")
 
-    // get the id of the ai from the init
-    rtt::SETTINGS.init(id);
+    // Set up the settings based on cmd arguments
+    rtt::GameSettings::setPrimaryAI(isPrimaryFlag);
 
     // If primary AI, we start at being yellow on the left
-    if (!rtt::SETTINGS.setYellow(rtt::SETTINGS.isPrimaryAI())) {
+    rtt::GameSettings::setLeft(rtt::GameSettings::isPrimaryAI());
+    if (!rtt::GameSettings::setYellow(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Could not obtain command publishing channel. Exiting...")
-        return 0;
+        return 1;
     }
 
-    rtt::SETTINGS.setLeft(rtt::SETTINGS.isPrimaryAI());
+    // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
+    rtt::GameSettings::setRobotHubMode(
+        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::RobotHubMode::BASESTATION : rtt::RobotHubMode::SIMULATOR
+    );
 
-    rtt::SETTINGS.setRobotHubMode(rtt::Settings::RobotHubMode::SIMULATOR);
-    rtt::SETTINGS.setVisionIp("127.0.0.1");
-    rtt::SETTINGS.setVisionPort(10006);
-    rtt::SETTINGS.setRefereeIp("224.5.23.1");
-    rtt::SETTINGS.setRefereePort(10003);
-    rtt::SETTINGS.setRobothubSendIp("127.0.0.1");
-    rtt::SETTINGS.setRobothubSendPort(20011);
 
-    RTT_INFO("AI initialized as: ", (rtt::SETTINGS.isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
-    RTT_INFO("Starting as color: ", (rtt::SETTINGS.isYellow() ? "YELLOW" : "BLUE"))
-    RTT_INFO("Playing on side: ", (rtt::SETTINGS.isLeft() ? "LEFT" : "RIGHT"))
-    RTT_INFO("This AI will ", rtt::SETTINGS.isPrimaryAI() ? "" : "NOT ", "broadcast settings")
+    RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
+    RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
+    RTT_INFO("Starting in mode: ", rtt::modeToString(rtt::GameSettings::getRobotHubMode()))
+    RTT_INFO("Playing on side: ", (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
+    RTT_INFO("This AI will ", rtt::GameSettings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
 
-    if (!rtt::ai::io::io.init(rtt::SETTINGS.isPrimaryAI())) {
+    if (!rtt::ai::io::io.init(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Failed to initialize IO Manager. Exiting...")
         return 0;
     }

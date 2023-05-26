@@ -128,6 +128,6 @@ bool FreeKickUsAtGoal::shouldEndPlay() noexcept {
     });
 }
 
-const char* FreeKickUsAtGoal::getName() { return "Free Kick Us At Goal"; }
+const char* FreeKickUsAtGoal::getName() const { return "Free Kick Us At Goal"; }
 
 }  // namespace rtt::ai::stp::play

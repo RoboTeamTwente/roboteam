@@ -115,7 +115,7 @@ class Play {
      * @brief Gets the current play name
      * @return name of the play
      */
-    virtual const char* getName() = 0;
+    virtual const char* getName() const = 0;
 
     std::optional<uint8_t> lastScore; /**< If score was calculated, save here */
 

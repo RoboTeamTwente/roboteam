@@ -6,7 +6,9 @@
 
 #include "STPManager.h"
 #include "interface_api/Out.h"
+#include "interface_api/RuntimeConfig.h"
 #include "stp/Play.hpp"
+#include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 
 namespace rtt::ai::io {
@@ -17,8 +19,15 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     auto envelope = proto::MsgToInterface();
     const auto stpStatus = envelope.mutable_stp_status();
     stpStatus->set_current_tick(currentTick);
-    stpStatus->mutable_selected_play()->set_play_name(selectedPlay->getName());
-    stpStatus->mutable_selected_play()->set_play_score(selectedPlay->lastScore.value_or(-1));
+
+    stpStatus->set_score(selectedPlay->lastScore.value_or(-1));
+
+    auto currentPlay = stpStatus->mutable_current_play();
+    currentPlay->set_play_name(selectedPlay->getName());
+
+    auto gameState = GameStateManager::getCurrentGameState();
+    currentPlay->set_ruleset_name(gameState.ruleSetName);
+    currentPlay->set_keeper_id(gameState.keeperId);
 
     for (const auto& play : plays) {
         auto scoredPlay = stpStatus->add_scored_plays();
@@ -74,6 +83,31 @@ InterfacePublisher& InterfacePublisher::publishVisuals() {
         publishProtoMessage(envelope);
     });
 
+    return *this;
+}
+InterfacePublisher& InterfacePublisher::publishAIStatus() {
+    auto envelope = proto::MsgToInterface();
+    const auto aiState = envelope.mutable_ai_state();
+    for (auto& play : rtt::STPManager::plays) {  // TODO: How is(was) this thread safe?
+        aiState->add_plays(play->getName());
+    }
+
+    for (const auto& ruleSet : Constants::ruleSets()) {
+        aiState->add_rule_sets(ruleSet.title);
+    }
+
+    aiState->set_is_paused(Pause::isPaused());
+
+    const auto game_settings = aiState->mutable_game_settings();
+    game_settings->set_robot_hub_mode(net::robotHubModeToProto(GameSettings::getRobotHubMode()));
+    game_settings->set_is_left(GameSettings::isLeft());
+    game_settings->set_is_yellow(GameSettings::isYellow());
+
+    const auto ai_settings = aiState->mutable_runtime_config();
+    ai_settings->set_use_referee(new_interface::RuntimeConfig::useReferee);
+    ai_settings->set_ignore_invariants(new_interface::RuntimeConfig::ignoreInvariants);
+
+    publishProtoMessage(envelope);
     return *this;
 }
 

@@ -1,7 +1,7 @@
 import {Container, FederatedPointerEvent, Graphics, SimpleRope, Sprite, Text, Texture} from "pixi.js";
 import {proto} from "../../generated/proto";
 import IDrawing = proto.IDrawing;
-import {useGameSettingsStore} from "../stores/game-settings-store";
+import {useAIDataStore} from "../stores/dataStores/ai-data-store";
 import {DeepReadonly, toRaw} from "vue";
 
 // @ts-ignore
@@ -200,7 +200,7 @@ export class ShapeDrawing extends Container {
         super();
         this.retainUntilTick = currentTick + data.retainForTicks!;
 
-        const orientation = toRaw(useGameSettingsStore().fieldOrientation);
+        const orientation = toRaw(useAIDataStore().fieldOrientation);
         const points = data.points!.map((point) => {
             return {
                 x: -orientation.x * point.x! * 100,

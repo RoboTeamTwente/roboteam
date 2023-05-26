@@ -172,7 +172,7 @@ void DefendShot::calculateInfoForKeeper() noexcept {
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }
 
-const char* DefendShot::getName() { return "Defend Shot"; }
+const char* DefendShot::getName() const { return "Defend Shot"; }
 
 // If we have the ball we should end doing defendShot
 bool DefendShot::shouldEndPlay() noexcept {

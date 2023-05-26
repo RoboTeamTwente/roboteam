@@ -56,6 +56,6 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
 
 bool KickOffThem::shouldEndPlay() noexcept { return false; }
 
-const char* KickOffThem::getName() { return "Kick Off Them"; }
+const char* KickOffThem::getName() const { return "Kick Off Them"; }
 
 }  // namespace rtt::ai::stp::play

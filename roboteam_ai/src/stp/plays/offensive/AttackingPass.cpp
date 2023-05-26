@@ -200,5 +200,5 @@ bool AttackingPass::shouldEndPlay() noexcept {
     return false;
 }
 
-const char* AttackingPass::getName() { return "AttackingPass"; }
+const char* AttackingPass::getName() const { return "AttackingPass"; }
 }  // namespace rtt::ai::stp::play

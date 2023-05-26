@@ -3,37 +3,34 @@ import {watch} from "vue";
 import {watchDeep} from "@vueuse/core";
 
 import {proto} from "../generated/proto"
-import {useGameSettingsStore} from "../modules/stores/game-settings-store";
+// import {useGameSettingsStore} from "../modules/stores/game-settings-store";
 import {useVisualizationStore} from "../modules/stores/dataStores/visualization-store";
 import {useSTPDataStore} from "../modules/stores/dataStores/stp-data-store";
 import {useVisionDataStore} from "../modules/stores/dataStores/vision-data-store";
 import IGameSettings = proto.IGameSettings;
 import {useProtoWebSocket} from "../utils";
+import {emitter} from "../services/ai-events";
+import {useAIDataStore} from "../modules/stores/dataStores/ai-data-store";
 
 
 export const useAIClient = (url: string) => {
-    const gameSettingsStore = useGameSettingsStore();
+    // const gameSettingsStore = useGameSettingsStore();
     const gameControllerStore = useGameControllerStore();
     const stpDataStore = useSTPDataStore();
     const visionDataStore = useVisionDataStore();
     const visualizationStore = useVisualizationStore();
 
+    const aiData = useAIDataStore();
+
     // const {status, data, send} = useWebSocket(url, {autoReconnect: true});
-    const {status, data, send, debounce} = useProtoWebSocket(url, {autoReconnect: true}, {
-        gameSettings: false,
-        currentPlay: false,
-    });
+    const {status, data, send} = useProtoWebSocket(url, {autoReconnect: true});
+
 
     // On message received
     watch(data, (message) => {
         switch (message.kind) {
-            case 'setupMessage':
-                debounce.gameSettings = true;
-                debounce.currentPlay = true;
-
-                console.log('setupMessage', message.setupMessage);
-                gameControllerStore.processSetupMsg(message.setupMessage!);
-                gameSettingsStore.processSetupMsg(message.setupMessage!);
+            case 'aiState':
+                aiData.updateStateFromProto(message.aiState!);
                 break;
             case 'stpStatus':
                 stpDataStore.processSTPMsg(message.stpStatus!);
@@ -50,18 +47,22 @@ export const useAIClient = (url: string) => {
         }
     });
 
-    // Callbacks to the AI backend
-    // Setup watchers for the callbacks to the backend
-    watch(gameSettingsStore, (gameSettings: IGameSettings) => send(proto.MsgFromInterface.create({
-        setGameSettings: proto.GameSettings.fromObject(gameSettings),
-    }), 'gameSettings'));
+    emitter.on('update:runtimeConfiguration', (config) => {
+        send({setRuntimeConfig: config})
+    });
 
-    watchDeep(() => gameControllerStore.currentPlay, () => send(proto.MsgFromInterface.create({
-        setGameState: proto.GameState.create({
-            playName: gameControllerStore.currentPlay.name,
-            rulesetName: gameControllerStore.currentPlay.ruleset,
-        }),
-    }), 'currentPlay'));
+    emitter.on('update:gameSettings', (config) => {
+        send({setGameSettings: config})
+    });
+
+    emitter.on('update:pause', (value) => {
+        send({pauseAi: value})
+    });
+
+    emitter.on('update:play', (value) => {
+        console.log('update:play', value);
+        send({setPlay: value})
+    });
 
     return {
         status,

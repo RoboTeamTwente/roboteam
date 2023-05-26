@@ -40,6 +40,8 @@ class InterfacePublisher {
      */
     InterfacePublisher& publishVisuals();
 
+    InterfacePublisher& publishAIStatus();
+
    private:
     ix::WebSocketServer& wss;
     explicit InterfacePublisher(ix::WebSocketServer& wss);

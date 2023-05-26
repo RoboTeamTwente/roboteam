@@ -1,16 +1,36 @@
 <script setup lang="ts">
 import {useUIStore} from "../../stores/ui-store";
 import {haltPlayName, useGameControllerStore} from "../../stores/ai-store";
-import {computed} from "vue";
-import {useGameSettingsStore} from "../../stores/game-settings-store";
+import {computed, toRaw} from "vue";
+// import {useGameSettingsStore} from "../../stores/game-settings-store";
 import {useSTPDataStore} from "../../stores/dataStores/stp-data-store";
+import {useAIDataStore} from "../../stores/dataStores/ai-data-store";
+import {emitter} from "../../../services/ai-events";
+import {proto} from "../../../generated/proto";
+import {sleep} from "../../../utils";
 
 const uiStore = useUIStore();
-const gameSettingsStore = useGameSettingsStore();
 const gameController = useGameControllerStore();
 const stpData = useSTPDataStore();
 
-const disabled = computed(() => gameController.useReferee);
+// const gameSettingsStore = useGameSettingsStore();
+const aiData = useAIDataStore();
+const disabled = computed(() => aiData.state?.runtimeConfig?.useReferee!);
+
+const haltPlay = () => {
+    stpData.$state.currentPlayName = 'Halt';
+}
+
+const resetPlay = async () => {
+    const tmp = toRaw(stpData.currentPlayName);
+    stpData.$state.currentPlayName = 'Halt';
+    await sleep(100);
+    stpData.$state.currentPlayName = tmp;
+}
+
+const togglePause = () => {
+    aiData.$state.isPaused = !aiData.isPaused;
+}
 
 </script>
 <template>
@@ -30,29 +50,29 @@ const disabled = computed(() => gameController.useReferee);
       <div class="btn-group">
         <button :class="{
             'btn-disabled': disabled,
-            'btn-success': gameController.isAIPaused,
-            'btn-error': !gameController.isAIPaused
-        }" class="btn btn-sm gap-2 w-32" @click="gameController.toggleAIPaused">
-            <template v-if="!gameController.isAIPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
+            'btn-success': aiData.isPaused,
+            'btn-error': !aiData.isPaused
+        }" class="btn btn-sm gap-2 w-32" @click="togglePause">
+            <template v-if="!aiData.state!.isPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
             <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
         </button>
-        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="gameController.haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
+        <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>
       </div>
 
       <div class="input-group w-auto">
-        <select class="select select-sm select-bordered" v-model="gameController.currentPlay.name" :disabled="disabled">
-          <option v-for="play in gameController.availablePlays.plays" :value="play">
+        <select class="select select-sm select-bordered" v-model="stpData.currentPlayName" :disabled="disabled">
+          <option v-for="play in aiData.state!.plays" :value="play">
             {{ play }}
           </option>
         </select>
-        <select class="select select-sm select-bordered" v-model="gameController.currentPlay.ruleset" :disabled="disabled">
-          <option v-for="ruleset in gameController.availablePlays.rule_sets" :value="ruleset">
+        <select class="select select-sm select-bordered" v-model="stpData.currentRuleset" :disabled="disabled">
+          <option v-for="ruleset in aiData.state!.ruleSets" :value="ruleset">
             {{ ruleset }}
           </option>
         </select>
       </div>
       <div class="btn-group">
-        <button class="btn btn-sm btn-primary gap-2" @click="gameController.resetPlay" :class="{'btn-disabled': disabled}"><font-awesome-icon icon="fa-rotate-right" /> Reset Play</button>
+        <button class="btn btn-sm btn-primary gap-2" @click="resetPlay" :class="{'btn-disabled': disabled}"><font-awesome-icon icon="fa-rotate-right" /> Reset Play</button>
       </div>
     </div>
     <div class="flex grow"/>

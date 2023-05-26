@@ -108,5 +108,5 @@ bool KickOffUs::ballKicked() {
     });
 }
 
-const char *KickOffUs::getName() { return "Kick Off Us"; }
+const char *KickOffUs::getName() const { return "Kick Off Us"; }
 }  // namespace rtt::ai::stp::play

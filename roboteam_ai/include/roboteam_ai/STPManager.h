@@ -28,10 +28,7 @@ class STPManager {
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
     ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
 
-    /**
-     *
-     */
-    ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
+    static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 
     /**
      * @brief Function that decides whether to change plays given a world and field.

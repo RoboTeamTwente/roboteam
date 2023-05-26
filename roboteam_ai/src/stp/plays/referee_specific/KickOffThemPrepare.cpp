@@ -72,6 +72,6 @@ Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-const char* KickOffThemPrepare::getName() { return "Kick Off Them Prepare"; }
+const char* KickOffThemPrepare::getName() const { return "Kick Off Them Prepare"; }
 
 }  // namespace rtt::ai::stp::play

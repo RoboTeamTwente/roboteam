@@ -47,7 +47,7 @@ class AggressiveStopFormation : public Play {
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */
-    const char* getName() override;
+    const char* getName() const override;
 
     /**
      * @brief Optional function to save information for the next play

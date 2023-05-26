@@ -98,30 +98,39 @@ message STPStatus {
         uint32 play_score = 2;
     }
 
-    ScoredPlay selected_play = 2;
-    map<int32, STPRobot> robots = 3;
-    repeated ScoredPlay scored_plays = 4;
-    int32 current_tick = 5;
+    PlayInfo current_play = 2;
+    uint32 score = 3;
+    map<int32, STPRobot> robots = 4;
+    repeated ScoredPlay scored_plays = 5;
+    int32 current_tick = 6;
 }
 
-message SetupMessage {
-    repeated string available_plays = 1;
-    repeated string available_rulesets = 2;
-    bool is_paused = 3;
-    GameSettings game_settings = 4;
-    AISettings ai_settings = 5;
-}
+//message SetupMessage {
+//    repeated string available_plays = 1;
+//    repeated string available_rulesets = 2;
+//    bool is_paused = 3;
+//    GameSettings game_settings = 4;
+//    RuntimeConfig runtime_config = 5;
+//}
 
-
-message GameState {
-    string playName = 1;
-    string rulesetName = 2;
-    int32 keeper_id = 3;
-}
-
-message AISettings {
+message RuntimeConfig {
     bool use_referee = 1;
     bool ignore_invariants = 2;
+}
+
+message AIState {
+    bool is_paused = 1;
+    repeated string plays = 2;
+    repeated string rule_sets = 3;
+    GameSettings game_settings = 5;
+    RuntimeConfig runtime_config = 6;
+}
+
+
+message PlayInfo {
+    string play_name = 1;
+    string ruleset_name = 2;
+    int32 keeper_id = 3;
 }
 
 message MsgToInterface {
@@ -132,17 +141,19 @@ message MsgToInterface {
 
     oneof kind {
         STPStatus stp_status = 1;
-        SetupMessage setup_message = 2;
+        AIState ai_state = 2;
         State state = 3;
         VisualizationBuffer visualizations = 4;
+
     }
 }
 
 message MsgFromInterface {
     oneof kind {
-        GameState set_game_state = 1;
+        PlayInfo set_play = 1;
         GameSettings set_game_settings = 2;
-        bool stop_resume = 3; // true == stop, false == resume
-        AISettings set_ai_settings = 4;
+        RuntimeConfig set_runtime_config = 3;
+
+        bool pause_ai = 4; // true == stop, false == resume
     }
 }

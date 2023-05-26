@@ -60,5 +60,5 @@ void PenaltyThem::calculateInfoForRoles() noexcept {
     stpInfos["keeper"].setPidType(stp::PIDType::DEFAULT);
 }
 
-const char* PenaltyThem::getName() { return "Penalty Them"; }
+const char* PenaltyThem::getName() const { return "Penalty Them"; }
 }  // namespace rtt::ai::stp::play

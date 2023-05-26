@@ -44,5 +44,5 @@ void Halt::calculateInfoForRoles() noexcept {}
 
 void Halt::calculateInfoForScoredRoles(world::World *) noexcept {}
 
-const char *Halt::getName() { return "Halt"; }
+const char *Halt::getName() const { return "Halt"; }
 }  // namespace rtt::ai::stp::play

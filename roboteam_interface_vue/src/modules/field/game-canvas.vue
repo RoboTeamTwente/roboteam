@@ -3,7 +3,6 @@ import {Application, Container, Text,} from "pixi.js";
 import {DeepReadonly, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
 import {BallDrawing, Colors, FieldDrawing, RobotDrawing, ShapeDrawing, useFieldObjectStorage} from "./field-objects";
 
-import {useGameSettingsStore} from "../stores/game-settings-store";
 import {proto} from "../../generated/proto";
 import {useUIStore} from "../stores/ui-store";
 import {useGameControllerStore} from "../stores/ai-store";
@@ -13,6 +12,7 @@ import Category = proto.Drawing.Category;
 import {useSTPDataStore} from "../stores/dataStores/stp-data-store";
 import {useVisionDataStore} from "../stores/dataStores/vision-data-store";
 import {watchDeep} from "@vueuse/core";
+import {useAIDataStore} from "../stores/dataStores/ai-data-store";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -21,8 +21,8 @@ const uiStore = useUIStore();
 const stpData = useSTPDataStore();
 const visionData = useVisionDataStore();
 const visualizationStore = useVisualizationStore();
-const gameSettingsStore = useGameSettingsStore();
 const gameController = useGameControllerStore();
+const aiData = useAIDataStore();
 
 let app: null | Application = null;
 let {clearRobotsDrawings, layers, drawings} = useFieldObjectStorage();
@@ -34,7 +34,7 @@ watch(() => stpData.currentTick, (currentTick) => drawings.shapes.removeExpiredS
 watch(() => visionData.latestField, () => initPixiApp());
 
 // Clear drawings when team changes
-watch(() => gameSettingsStore.isYellow, () => {
+watch(() => aiData.state!.gameSettings?.isYellow, () => {
     clearRobotsDrawings();
     drawField(visionData.latestField); // When the team changes, we also have to redraw the field to update the goal colors
 });
@@ -49,8 +49,8 @@ watchDeep(() => uiStore.scaling, () => {
 
 const updateRobotDrawing = (drawingsMap: Map<number, RobotDrawing>, robot: IWorldRobot, isYellow: boolean) => {
     const robotId = robot.id ?? -1;
-    const isUs = isYellow == gameSettingsStore.isYellow // Only allow clicking on robots of your own team
-    const fieldOrientation = gameSettingsStore.fieldOrientation;
+    const isUs = isYellow == aiData.state!.gameSettings?.isYellow // Only allow clicking on robots of your own team
+    const fieldOrientation = aiData.fieldOrientation;
 
     if (!drawingsMap.has(robotId)) {
         const drawing = new RobotDrawing({
@@ -78,7 +78,7 @@ const drawField = (field: DeepReadonly<proto.ISSL_GeometryFieldSize> | null) => 
     if (field === null) return;
     layers.fieldGeometry.addChild(new FieldDrawing({
         fieldGeometry: field,
-        fieldColors: toRaw(gameSettingsStore.goalColor),
+        fieldColors: toRaw(aiData.goalColor),
     }));
 }
 
@@ -139,7 +139,7 @@ const onPixiTick = () => {
     world.blue!.forEach(robot => updateRobotDrawing(drawings.blueRobots, robot, false));
 
     // Update ball drawing
-    drawings.ball.moveOnField(gameSettingsStore.fieldOrientation.x * world!.ball!.pos!.x!, gameSettingsStore.fieldOrientation.y * world.ball!.pos!.y!);
+    drawings.ball.moveOnField(aiData.fieldOrientation.x * world!.ball!.pos!.x!, aiData.fieldOrientation.y * world.ball!.pos!.y!);
 
     // Draw the latest shapes received from the AI
     const buffer = visualizationStore.popAllDrawings();

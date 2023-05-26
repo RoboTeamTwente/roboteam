@@ -12,6 +12,7 @@ export const haltPlayName = 'Halt';
 type CurrentPlay = {
     name: string,
     ruleset: string,
+    keeperId: number,
 }
 
 type AvailablePlays = {
@@ -24,56 +25,61 @@ export const useGameControllerStore = defineStore('gameController', () => {
     const visionDataStore = useVisionDataStore();
 
     // State
-    const isAIPaused = ref(false);
-    const useReferee = ref(false);
-    const ignoreInvariants = ref(false);
+    // const isAIPaused = ref(false);
+    // const useReferee = ref(false);
+    // const ignoreInvariants = ref(false);
 
-    const currentPlay = ref<CurrentPlay>({name: haltPlayName, ruleset: 'default'});
-    const availablePlays = ref<AvailablePlays>({
-        plays: [],
-        rule_sets: [],
-    });
+    // const currentPlay = ref<CurrentPlay>({name: haltPlayName, ruleset: 'default', keeperId: 0});
+    // const availablePlays = ref<AvailablePlays>({
+    //     plays: [],
+    //     rule_sets: [],
+    // });
 
     // Actions
-    const toggleAIPaused = () => isAIPaused.value = !isAIPaused.value;
+    // const toggleAIPaused = () => isAIPaused.value = !isAIPaused.value;
 
-    const processSetupMsg = (msg: proto.ISetupMessage) => {
-        haltPlay();
-        useReferee.value = msg.aiSettings!.useReferee!;
-        ignoreInvariants.value = msg.aiSettings!.useReferee!;
-
-        availablePlays.value = {
-            plays: msg.availablePlays!,
-            rule_sets: msg.availableRulesets!,
-        }
+    const updateFromProtoMessage = (msg: proto.IAIState) => {
+        // isAIPaused.value = msg.isPaused ?? false;
+        // useReferee.value = msg.runtimeConfig!.useReferee!;
+        // ignoreInvariants.value = msg.runtimeConfig!.ignoreInvariants!;
+        //
+        // currentPlay.value = {
+        //     name: msg.currentPlay?.playName!,
+        //     ruleset: msg.currentPlay?.rulesetName!,
+        //     keeperId: msg.currentPlay?.keeperId!,
+        // };
+        //
+        // availablePlays.value = {
+        //     plays: msg.plays!,
+        //     rule_sets: msg.ruleSets!,
+        // }
 
         stpDataStore.$reset();
         visionDataStore.$reset();
-
-        isAIPaused.value = msg.isPaused ?? false;
     }
 
-    const haltPlay = () => currentPlay.value = {
-        name: haltPlayName,
-        ruleset: 'default',
-    };
+    // const haltPlay = () => currentPlay.value = {
+    //     ...currentPlay.value,
+    //     name: haltPlayName,
+    //     ruleset: 'default',
+    // };
 
-    const resetPlay = async () => {
-        const playToRest = currentPlay.value;
-        haltPlay();
-        await sleep(10);
-        currentPlay.value = playToRest;
-    }
+    // const resetPlay = async () => {
+    //     const playToRest = currentPlay.value;
+    //     haltPlay();
+    //     await sleep(10);
+    //     currentPlay.value = playToRest;
+    // }
 
     return {
-        useReferee,
-        isAIPaused,
-        ignoreInvariants,
-        currentPlay,
-        availablePlays,
-        toggleAIPaused,
-        processSetupMsg,
-        haltPlay,
-        resetPlay,
+        // useReferee,
+        // isAIPaused,
+        // ignoreInvariants,
+        // currentPlay,
+        // availablePlays,
+        // toggleAIPaused,
+        updateFromProtoMessage,
+        // haltPlay,
+        // resetPlay,
     }
 });

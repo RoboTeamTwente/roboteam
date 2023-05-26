@@ -78,5 +78,5 @@ Dealer::FlagMap AggressiveStopFormation::decideRoleFlags() const noexcept {
     return flagMap;  // DONT TOUCH.
 }
 
-const char* AggressiveStopFormation::getName() { return "Aggressive Stop Formation"; }
+const char* AggressiveStopFormation::getName() const { return "Aggressive Stop Formation"; }
 }  // namespace rtt::ai::stp::play

@@ -24,6 +24,9 @@ class InterfaceSubscriber;
  * The communication is split into two parts:
  * -> out: InterfacePublisher takes care of sending messages to the Interface.
  * -> in:  InterfaceSubscriber takes care of receiving messages from the Interface.
+ *
+ * While both parts are relatively small and could be part of the InterfaceGateway, they are separated
+ * to make the data flow (hopefully) more clear.
  */
 class InterfaceGateway {
    private:
@@ -37,14 +40,6 @@ class InterfaceGateway {
     std::unique_ptr<InterfaceSubscriber> subscriber_;
 
     InterfaceGateway();
-
-    /**
-     * @brief Callback function invoked when a new WebSocket connection is established.
-     * Sends the setup message to the new client containing available plays, rulesets, and game settings.
-     *
-     * @param wss Shared pointer to the WebSocket connection.
-     */
-    void onConnection(const std::shared_ptr<ix::WebSocket>& wss);
 
    public:
     ~InterfaceGateway();

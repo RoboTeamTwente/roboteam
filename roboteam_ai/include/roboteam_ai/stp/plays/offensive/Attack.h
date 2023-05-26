@@ -66,7 +66,7 @@ class Attack : public Play {
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */
-    const char* getName() override;
+    const char* getName() const override;
 
     /**
      * @brief calculates info for the blocker roll

@@ -71,6 +71,6 @@ Dealer::FlagMap FormationPreHalf::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-const char* FormationPreHalf::getName() { return "Formation Pre Half"; }
+const char* FormationPreHalf::getName() const { return "Formation Pre Half"; }
 
 }  // namespace rtt::ai::stp::play

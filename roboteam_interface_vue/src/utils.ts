@@ -12,7 +12,7 @@ export const sleep = (time: number) => {
 
 export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
     if (team === 'PURPLE') {
-        return{
+        return {
             1: "Wall-E",
             2: "R2D2",
             3: "Tron",
@@ -34,7 +34,7 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
     return ""
 };
 
-export const useProtoWebSocket = <TKey extends string>(url: string, options: UseWebSocketOptions, debounce: Record<TKey, boolean>) => {
+export const useProtoWebSocket = (url: string, options: UseWebSocketOptions) => {
     const protoData = shallowRef<MsgToInterface | null>(null);
 
     const onMessage = async (ws: WebSocket, event: MessageEvent) => {
@@ -42,14 +42,10 @@ export const useProtoWebSocket = <TKey extends string>(url: string, options: Use
         protoData.value = proto.MsgToInterface.decode(messageBuffer);
     };
 
-    const sendProtoMsg = (msg: proto.MsgFromInterface, debounceKey?: TKey) => {
-        if (debounceKey && debounce[debounceKey]) {
-            console.log('Debounced', debounceKey, msg)
-            debounce[debounceKey] = false;
-            return;
-        }
-
-        const buffer = proto.MsgFromInterface.encode(msg).finish();
+    const sendProtoMsg = (properties?: proto.IMsgFromInterface) => {
+        const buffer = proto.MsgFromInterface.encode(
+            proto.MsgFromInterface.create(properties)
+        ).finish();
         send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
     };
 
@@ -62,6 +58,5 @@ export const useProtoWebSocket = <TKey extends string>(url: string, options: Use
         data: protoData as ShallowRef<proto.MsgToInterface>,
         status,
         send: sendProtoMsg,
-        debounce,
     }
 }

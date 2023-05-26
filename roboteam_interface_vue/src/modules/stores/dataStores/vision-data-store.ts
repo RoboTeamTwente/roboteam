@@ -4,10 +4,10 @@ import IWorld = proto.IWorld;
 import ISSL_GeometryFieldSize = proto.ISSL_GeometryFieldSize;
 import {defineStore} from "pinia";
 import {computed, readonly, shallowRef} from "vue";
-import {useGameSettingsStore} from "../game-settings-store";
+import {useAIDataStore} from "./ai-data-store";
 
 export const useVisionDataStore = defineStore('visionDataStore', () => {
-    const gameSettingStore = useGameSettingsStore();
+    const aiData = useAIDataStore();
 
     const latestWorld = shallowRef<IWorld | null>(null);
     const latestField = shallowRef<ISSL_GeometryFieldSize | null>(null);
@@ -31,7 +31,7 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     };
 
     const ourRobots = computed(() => {
-        return gameSettingStore.isYellow
+        return aiData.state?.gameSettings?.isYellow
             ? latestWorld.value?.blue
             : latestWorld.value?.yellow;
     });

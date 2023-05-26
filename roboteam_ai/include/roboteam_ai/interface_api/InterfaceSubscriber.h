@@ -4,6 +4,7 @@
 
 #ifndef RTT_INTERFACESUBSCRIBER_H
 #define RTT_INTERFACESUBSCRIBER_H
+#include <atomic>
 #include "proto/NewInterface.pb.h"
 
 namespace rtt::ai::io {

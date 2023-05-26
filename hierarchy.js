@@ -45,7 +45,7 @@ var hierarchy =
       [ "rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::WeHaveMajorityGlobalEvaluation", "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html", null ]
     ] ],
-    [ "rtt::BB::BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", null ],
+    [ "rtt::BB::BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", null ],
     [ "rtt::ai::control::BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", null ],
     [ "rtt::BB::BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", null ],
     [ "rtt::BB::BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", null ],
@@ -60,7 +60,6 @@ var hierarchy =
     [ "rtt::ai::control::ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", null ],
     [ "rtt::ai::Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", null ],
     [ "rtt::ai::Dealer::DealerFlag", "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html", null ],
-    [ "rtt::ai::new_interface::Out::DrawArgs", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#d2/dfd/structrtt_1_1ai_1_1new__interface_1_1Out_1_1DrawArgs", null ],
     [ "rtt::ai::interface::Drawing", "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html", null ],
     [ "rtt::ai::FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", null ],
     [ "testhelpers::FieldHelper", "de/da9/classtesthelpers_1_1FieldHelper.html", null ],
@@ -77,14 +76,9 @@ var hierarchy =
     [ "InterfaceController", null, [
       [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
     ] ],
-    [ "rtt::ai::io::InterfaceGateway", "de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html", null ],
-    [ "rtt::ai::new_interface::InterfacePlay", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay.html", null ],
-    [ "rtt::ai::io::InterfacePublisher", "d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html", null ],
-    [ "rtt::ai::io::InterfaceSubscriber", "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html", null ],
     [ "rtt::ai::io::IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", null ],
     [ "rtt::ai::stp::evaluation::LineOfSightEvaluation", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation.html", null ],
     [ "rtt::ai::stp::evaluation::OpennessEvaluation", "d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html", null ],
-    [ "rtt::ai::new_interface::Out", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html", null ],
     [ "rtt::ai::interface::Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", null ],
     [ "nativeformat::param::Param", "d2/d80/classnativeformat_1_1param_1_1Param.html", [
       [ "nativeformat::param::ParamImplementation", "da/d80/classnativeformat_1_1param_1_1ParamImplementation.html", null ]
@@ -179,11 +173,11 @@ var hierarchy =
       [ "rtt::ai::stp::role::KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", null ],
       [ "rtt::ai::stp::role::PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", null ],
       [ "rtt::ai::stp::role::Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", null ],
+      [ "rtt::ai::stp::role::PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", null ],
       [ "rtt::ai::stp::role::RobotDefender", "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html", null ]
     ] ],
     [ "rtt::ai::Dealer::RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", null ],
     [ "rtt::ai::RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", null ],
-    [ "rtt::ai::new_interface::RuntimeConfig", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html", null ],
     [ "rtt::ai::stp::gen::ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition", null ],
     [ "rtt::ai::stp::gen::ScoreProfile", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile", null ],
     [ "rtt::ai::stp::Skill", "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html", [
@@ -199,6 +193,7 @@ var hierarchy =
     [ "rtt::ai::stp::gen::StoreInfo", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d2/dab/structrtt_1_1ai_1_1stp_1_1gen_1_1StoreInfo", null ],
     [ "rtt::ai::stp::StpInfo", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html", null ],
     [ "rtt::STPManager", "da/de3/classrtt_1_1STPManager.html", null ],
+    [ "rtt::ai::StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", null ],
     [ "rtt::ai::stp::Tactic", "d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html", [
       [ "MockTactic", "d4/d01/classMockTactic.html", null ],
       [ "rtt::ai::stp::TestTactic", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html", null ],

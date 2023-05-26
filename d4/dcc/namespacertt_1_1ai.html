@@ -89,7 +89,6 @@ $(document).ready(function(){initNavTree('d4/dcc/namespacertt_1_1ai.html','../..
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">rtt::ai Namespace Reference</div>  </div>
@@ -103,8 +102,6 @@ Namespaces</h2></td></tr>
 <tr class="memitem:d8/d44/namespacertt_1_1ai_1_1interface"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d44/namespacertt_1_1ai_1_1interface.html">interface</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:dd/d1e/namespacertt_1_1ai_1_1io"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d1e/namespacertt_1_1ai_1_1io.html">io</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:dc/da2/namespacertt_1_1ai_1_1new__interface"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da2/namespacertt_1_1ai_1_1new__interface.html">new_interface</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d5/d14/namespacertt_1_1ai_1_1stp"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html">stp</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,6 +128,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d26/structrtt_1_1ai_1_1RuleSet.html">RuleSet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure that contains the ruleset of a certain game state.  <a href="../../dd/d26/structrtt_1_1ai_1_1RuleSet.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">StrategyManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the <a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html" title="Class that defines the StrategyManager. The StrategyManager manages the rule sets of each game state.">StrategyManager</a>. The <a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html" title="Class that defines the StrategyManager. The StrategyManager manages the rule sets of each game state.">StrategyManager</a> manages the rule sets of each game state.  <a href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d54/classrtt_1_1ai_1_1BallPossession.html">BallPossession</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,11 +174,6 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a749f4888e489115d32ef0cf1417cd617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerator that defines the priority of the dealerFlags.  <a href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">More...</a><br /></td></tr>
 <tr class="separator:a749f4888e489115d32ef0cf1417cd617"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aa2a4c7c293225bf00bd8ad219beb9c8b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#aa2a4c7c293225bf00bd8ad219beb9c8b">TEST</a> (HistoryTest, it_saves_world_states)</td></tr>
-<tr class="separator:aa2a4c7c293225bf00bd8ad219beb9c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -275,35 +270,6 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9"></a>CAN_DETECT_BALL&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b"></a>CAN_KICK_BALL&#160;</td><td class="fielddoc"></td></tr>
 </table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="aa2a4c7c293225bf00bd8ad219beb9c8b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2a4c7c293225bf00bd8ad219beb9c8b">&#9670;&nbsp;</a></span>TEST()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rtt::ai::TEST </td>
-          <td>(</td>
-          <td class="paramtype">HistoryTest&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">it_saves_world_states&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>

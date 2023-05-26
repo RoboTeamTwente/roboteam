@@ -66,6 +66,7 @@ var NAVTREE =
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -75,22 +76,21 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dc6/StpInfo_8h.html",
+"d1/d10/classrtt_1_1ai_1_1stp_1_1skill_1_1Rotate.html#a0a6fc736385ed0f389fdf15c26cfe1ef",
 "d2/d6d/PassReceiver_8h_source.html",
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a071fed8ba48c9358ee71c230bc9b8f8b",
-"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a2b4671aba77bf173ab74c6d65817a114",
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a242748b42fbc99613b65f6500eb12f8f",
-"d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac67952380d471ce18b24284d08028877",
-"d6/dc7/structrtt_1_1ai_1_1GameState.html#aee23d2e0d9c9d23be78ad66f895fce34",
-"d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a67191a47e00a95c16729b04398aa9739",
-"d8/dcc/BallTests_8cpp.html#adecfc7e019ba06f5f3402703977930b6",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a193d5fef143c93145b2e1e8f2b2a04f2",
-"da/df8/FieldHelperTest_8cpp.html#a6255ace35491390bb400d55f2301ef73",
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a193d5fef143c93145b2e1e8f2b2a04f2",
-"dc/db4/GameState_8h_source.html",
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a0329d2814e2651902bb05f23659e0084",
-"df/d73/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockRobot.html#ab496bf1614c47ef3e466cd235eb84aab",
-"dir_ff7bab2f878481c7f00fafbde64f720d.html"
+"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a3008bb5a126402244273321a93a3cafd",
+"d4/de4/ControlConstants_8h.html#a296817cdf1a97b2ebd3ccff76d2dcf5b",
+"d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html",
+"d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a5be299fd1dab79b7f656ca37631d6ef6",
+"d7/d06/StpInfoEnums_8h.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d",
+"d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ae037baa0bfb300499c04aa9e834e0c00",
+"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae9c573acec4e3999f6b1695c386c06a7",
+"da/d39/classrtt_1_1world_1_1World.html#ac6d5c8cfd2a11317d19dcdb2770785ef",
+"db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6826aa8fe94a2b35cbcef306b5d9d40e",
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a4598ba530d29d7f4f53bcec0c9845100",
+"dd/d71/PassComputations_8h.html",
+"de/d8b/Passer_8h.html",
+"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a58560de6d2d6ca91e467deb1071aadbd"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

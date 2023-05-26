@@ -46,15 +46,7 @@ var annotated_dup =
           [ "Visualizer", "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html", "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer" ]
         ] ],
         [ "io", "dd/d1e/namespacertt_1_1ai_1_1io.html", [
-          [ "InterfaceGateway", "de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html", "de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway" ],
-          [ "InterfacePublisher", "d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html", "d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher" ],
-          [ "InterfaceSubscriber", "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html", "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber" ],
           [ "IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager" ]
-        ] ],
-        [ "new_interface", "dc/da2/namespacertt_1_1ai_1_1new__interface.html", [
-          [ "Out", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out" ],
-          [ "InterfacePlay", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay.html", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay" ],
-          [ "RuntimeConfig", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig" ]
         ] ],
         [ "stp", "d5/d14/namespacertt_1_1ai_1_1stp.html", [
           [ "computations", "d8/d97/namespacertt_1_1ai_1_1stp_1_1computations.html", [
@@ -146,6 +138,7 @@ var annotated_dup =
             [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],
             [ "Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer" ],
             [ "PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver" ],
+            [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ],
             [ "Keeper", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper" ],
             [ "BallAvoider", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider" ],
             [ "BallDefender", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender.html", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender" ],
@@ -201,12 +194,13 @@ var annotated_dup =
         [ "Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", "d2/d05/classrtt_1_1ai_1_1Pause" ],
         [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ],
         [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ],
+        [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
         [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
         [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ]
       ] ],
       [ "BB", "d0/dde/namespacertt_1_1BB.html", [
         [ "BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", "d0/dde/namespacertt_1_1BB_dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart_dup" ],
-        [ "BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc" ],
+        [ "BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", "da/d73/structrtt_1_1BB_1_1BBPosVel" ],
         [ "BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D" ],
         [ "BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D" ],
         [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],

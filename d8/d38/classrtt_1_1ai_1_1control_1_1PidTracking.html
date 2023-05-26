@@ -107,6 +107,9 @@ Inheritance diagram for rtt::ai::control::PidTracking:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a8c9d0e4f3c22c913a3a137178875ca91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html#a8c9d0e4f3c22c913a3a137178875ca91">~PidTracking</a> () override=default</td></tr>
+<tr class="memdesc:a8c9d0e4f3c22c913a3a137178875ca91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor for the <a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html">PidTracking</a> class.  <a href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html#a8c9d0e4f3c22c913a3a137178875ca91">More...</a><br /></td></tr>
+<tr class="separator:a8c9d0e4f3c22c913a3a137178875ca91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba9aecbcb1721b835e65e011dfb6a35e"><td class="memItemLeft" align="right" valign="top">Position&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html#aba9aecbcb1721b835e65e011dfb6a35e">trackPath</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, int robotId, double angle, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType) override</td></tr>
 <tr class="separator:aba9aecbcb1721b835e65e011dfb6a35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dce6e4dd8cc6252467d0ebd708677c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html#a4dce6e4dd8cc6252467d0ebd708677c7">updatePIDValues</a> (<a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType, int robotID)</td></tr>
@@ -126,7 +129,35 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Path tracking algorithm. See method computePath for details. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8c9d0e4f3c22c913a3a137178875ca91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c9d0e4f3c22c913a3a137178875ca91">&#9670;&nbsp;</a></span>~PidTracking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rtt::ai::control::PidTracking::~PidTracking </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default constructor for the <a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html">PidTracking</a> class. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="aba9aecbcb1721b835e65e011dfb6a35e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba9aecbcb1721b835e65e011dfb6a35e">&#9670;&nbsp;</a></span>trackPath()</h2>
 

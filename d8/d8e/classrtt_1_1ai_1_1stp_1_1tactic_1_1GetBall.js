@@ -2,7 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall =
 [
     [ "GetBall", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a7758e77ed04f99538afdde249313caf1", null ],
     [ "calculateInfoForSkill", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a6283ec2f34526b32d413624c456ce841", null ],
-    [ "forceTacticSuccess", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a578681eb373e850612625b9898d6886d", null ],
     [ "getCurrentSkill", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a36b6dfcfe1a0075caad58aaa0dbdf436", null ],
     [ "getStatus", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#ab7650037eb092459aca7247ea77f2ad4", null ],

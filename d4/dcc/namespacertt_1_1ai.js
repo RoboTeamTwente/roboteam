@@ -3,7 +3,6 @@ var namespacertt_1_1ai =
     [ "control", "d0/d4f/namespacertt_1_1ai_1_1control.html", "d0/d4f/namespacertt_1_1ai_1_1control" ],
     [ "interface", "d8/d44/namespacertt_1_1ai_1_1interface.html", "d8/d44/namespacertt_1_1ai_1_1interface" ],
     [ "io", "dd/d1e/namespacertt_1_1ai_1_1io.html", "dd/d1e/namespacertt_1_1ai_1_1io" ],
-    [ "new_interface", "dc/da2/namespacertt_1_1ai_1_1new__interface.html", "dc/da2/namespacertt_1_1ai_1_1new__interface" ],
     [ "stp", "d5/d14/namespacertt_1_1ai_1_1stp.html", "d5/d14/namespacertt_1_1ai_1_1stp" ],
     [ "Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", "d9/dc5/classrtt_1_1ai_1_1Constants" ],
     [ "Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", "d7/ddc/classrtt_1_1ai_1_1Dealer" ],
@@ -12,6 +11,7 @@ var namespacertt_1_1ai =
     [ "Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", "d2/d05/classrtt_1_1ai_1_1Pause" ],
     [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ],
     [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ],
+    [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
     [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
     [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ],
     [ "pidVals", "d4/dcc/namespacertt_1_1ai.html#acc65523a472ce38a6f294d661c234725", null ],
@@ -36,7 +36,6 @@ var namespacertt_1_1ai =
       [ "CAN_DETECT_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9", null ],
       [ "CAN_KICK_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b", null ]
     ] ],
-    [ "TEST", "d4/dcc/namespacertt_1_1ai.html#aa2a4c7c293225bf00bd8ad219beb9c8b", null ],
     [ "ballPossession", "d4/dcc/namespacertt_1_1ai.html#a9457b19246a0fad5b0fa54eee2dd7afa", null ],
     [ "ballPossessionPtr", "d4/dcc/namespacertt_1_1ai.html#a560334d047a2b7748e4f3cde1c108663", null ],
     [ "PriorityOrder", "d4/dcc/namespacertt_1_1ai.html#a7d554a3f16aad4c232be90471be5952a", null ]

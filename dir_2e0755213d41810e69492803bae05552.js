@@ -6,6 +6,7 @@ var dir_2e0755213d41810e69492803bae05552 =
     [ "IOManager.cpp", "d5/d6f/IOManager_8cpp.html", null ],
     [ "normalize.cpp", "de/daf/normalize_8cpp.html", "de/daf/normalize_8cpp" ],
     [ "Pause.cpp", "da/d7e/Pause_8cpp.html", null ],
-    [ "RefGameState.cpp", "d9/d29/RefGameState_8cpp.html", "d9/d29/RefGameState_8cpp" ],
-    [ "Settings.cpp", "db/dd8/Settings_8cpp.html", null ]
+    [ "RefGameState.cpp", "d9/d29/RefGameState_8cpp.html", null ],
+    [ "Settings.cpp", "db/dd8/Settings_8cpp.html", null ],
+    [ "StrategyManager.cpp", "d2/d93/StrategyManager_8cpp.html", null ]
 ];

@@ -6,7 +6,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare =
     [ "decideRoleFlags", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a40f3cfa2d897defdf7a4cf369c6fd5c5", null ],
     [ "distributeRoles", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#af4275579e2e89d8c944ee9993662957a", null ],
+    [ "getName", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#aec6cf5db4e361a60e84d5c7f384739c3", null ],
     [ "getRoleStatuses", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

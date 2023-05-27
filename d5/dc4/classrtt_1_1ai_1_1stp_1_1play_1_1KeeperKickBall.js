@@ -10,7 +10,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall =
     [ "decideRoleFlags", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a9ac7ac1dfabba0707048bb2dbcaefe38", null ],
     [ "distributeRoles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a4a02b1ca3b45f46291cdfeeb44b52fde", null ],
+    [ "getName", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#abb4d7886d97c9c19204e23ce96fb32dc", null ],
     [ "getRoleStatuses", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

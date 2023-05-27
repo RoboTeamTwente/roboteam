@@ -86,7 +86,6 @@ $(document).ready(function(){initNavTree('db/de9/classrtt_1_1ai_1_1GameStateMana
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../d4/d6a/classrtt_1_1ai_1_1GameStateManager-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -101,97 +100,37 @@ $(document).ready(function(){initNavTree('db/de9/classrtt_1_1ai_1_1GameStateMana
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa40a0729e82db1e5716b53a4ee14218a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa40a0729e82db1e5716b53a4ee14218a">setGameStateFromReferee</a> (proto::SSL_Referee <a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6025d1c2249168a49833163228e08589">refMsg</a>, std::optional&lt; <a class="el" href="../../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html">world::view::WorldDataView</a> &gt; world)</td></tr>
-<tr class="memdesc:aa40a0729e82db1e5716b53a4ee14218a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the game state based on the referee data (i.e. when playing with a referee)  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa40a0729e82db1e5716b53a4ee14218a">More...</a><br /></td></tr>
-<tr class="separator:aa40a0729e82db1e5716b53a4ee14218a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62f1d3c77f43cb98b031aab6940c28ca"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a62f1d3c77f43cb98b031aab6940c28ca">setGameStateFromInterface</a> (std::string_view playName, std::optional&lt; std::string_view &gt; ruleset, std::optional&lt; int &gt; keeperId)</td></tr>
-<tr class="memdesc:a62f1d3c77f43cb98b031aab6940c28ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the game state based on message from the interface (i.e. when playing WITHOUT a referee)  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a62f1d3c77f43cb98b031aab6940c28ca">More...</a><br /></td></tr>
-<tr class="separator:a62f1d3c77f43cb98b031aab6940c28ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa37f1dbea08a127c3965d2f39d3ac475"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475">forceNewGameState</a> (<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> cmd, std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">rtt::world::view::BallView</a> &gt; ball)</td></tr>
-<tr class="memdesc:aa37f1dbea08a127c3965d2f39d3ac475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force a new game state. This overrules the referee.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475">More...</a><br /></td></tr>
-<tr class="separator:aa37f1dbea08a127c3965d2f39d3ac475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac835a19e0cb277c15d19d8e882f64dc1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac835a19e0cb277c15d19d8e882f64dc1">setRefereeData</a> (proto::SSL_Referee <a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6025d1c2249168a49833163228e08589">refMsg</a>, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *data)</td></tr>
+<tr class="memdesc:ac835a19e0cb277c15d19d8e882f64dc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the referee data.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac835a19e0cb277c15d19d8e882f64dc1">More...</a><br /></td></tr>
+<tr class="separator:ac835a19e0cb277c15d19d8e882f64dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5748de7bec33e3e323632e2b46f483d5"><td class="memItemLeft" align="right" valign="top">static proto::SSL_Referee&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5748de7bec33e3e323632e2b46f483d5">getRefereeData</a> ()</td></tr>
 <tr class="memdesc:a5748de7bec33e3e323632e2b46f483d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the referee data.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5748de7bec33e3e323632e2b46f483d5">More...</a><br /></td></tr>
 <tr class="separator:a5748de7bec33e3e323632e2b46f483d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc403506e6cf24a6c8c60b0545099f6a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html">GameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#adc403506e6cf24a6c8c60b0545099f6a">getCurrentGameState</a> ()</td></tr>
-<tr class="memdesc:adc403506e6cf24a6c8c60b0545099f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the current game state (either the referee or the interface one based on useReferee flag)  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#adc403506e6cf24a6c8c60b0545099f6a">More...</a><br /></td></tr>
+<tr class="memdesc:adc403506e6cf24a6c8c60b0545099f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the current game state.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#adc403506e6cf24a6c8c60b0545099f6a">More...</a><br /></td></tr>
 <tr class="separator:adc403506e6cf24a6c8c60b0545099f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa37f1dbea08a127c3965d2f39d3ac475"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475">forceNewGameState</a> (<a class="el" href="../../d1/d45/Constants_8h.html#a83e242d5478dff7460995b612ed14ef5">RefCommand</a> cmd, std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">rtt::world::view::BallView</a> &gt; ball)</td></tr>
+<tr class="memdesc:aa37f1dbea08a127c3965d2f39d3ac475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force a new game state. This overrules the referee.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475">More...</a><br /></td></tr>
+<tr class="separator:aa37f1dbea08a127c3965d2f39d3ac475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e4c49fd7aff3554bc992b407bd5912f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f">getRefereeDesignatedPosition</a> ()</td></tr>
 <tr class="memdesc:a3e4c49fd7aff3554bc992b407bd5912f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for a designated position from the referee. For example: ball placement position.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f">More...</a><br /></td></tr>
 <tr class="separator:a3e4c49fd7aff3554bc992b407bd5912f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
-Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a9b1ccd213d4ecf8ada7bb168606a6638"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a9b1ccd213d4ecf8ada7bb168606a6638">findNextRefGameState</a> (const proto::SSL_Referee_Stage &amp;stage, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> newRefCmd, std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &gt; ballView)</td></tr>
-<tr class="memdesc:a9b1ccd213d4ecf8ada7bb168606a6638"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next game state based on multiple parameters (current ref command, new ref command, ball position etc.) This is important because some commands have a follow up command or command interpretation could depend on the SSL_Referee_Stage or ball position.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a9b1ccd213d4ecf8ada7bb168606a6638">More...</a><br /></td></tr>
-<tr class="separator:a9b1ccd213d4ecf8ada7bb168606a6638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1b896d1149a04b5fd2963754e9a87fb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac1b896d1149a04b5fd2963754e9a87fb">updateInterfaceGameState</a> (const char *name)</td></tr>
+<tr class="memdesc:ac1b896d1149a04b5fd2963754e9a87fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the interface according to the current game state.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ac1b896d1149a04b5fd2963754e9a87fb">More...</a><br /></td></tr>
+<tr class="separator:ac1b896d1149a04b5fd2963754e9a87fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:a1cf8180cac0466fe775fb0a1308db55a"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; std::string_view, <a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html">GameState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a1cf8180cac0466fe775fb0a1308db55a">playNameGameStateMapping</a></td></tr>
-<tr class="separator:a1cf8180cac0466fe775fb0a1308db55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b59e52a4b88815be595ba3216b90b6c"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>, <a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a4b59e52a4b88815be595ba3216b90b6c">refCommandToGameStateMapping</a></td></tr>
-<tr class="separator:a4b59e52a4b88815be595ba3216b90b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eaef8e23fa3a6f91c9f2700d37f8d79"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6eaef8e23fa3a6f91c9f2700d37f8d79">currentRefGameState</a> = {<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">RefCommand::UNDEFINED</a>, &quot;halt&quot;, &quot;halt&quot;}</td></tr>
-<tr class="separator:a6eaef8e23fa3a6f91c9f2700d37f8d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9f1dbf7ff51ba5e8a1441c08b0f7632"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html">GameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#af9f1dbf7ff51ba5e8a1441c08b0f7632">currentInterfaceGameState</a> = {&quot;halt&quot;, &quot;halt&quot;}</td></tr>
-<tr class="separator:af9f1dbf7ff51ba5e8a1441c08b0f7632"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6025d1c2249168a49833163228e08589"><td class="memItemLeft" align="right" valign="top">static proto::SSL_Referee&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a6025d1c2249168a49833163228e08589">refMsg</a></td></tr>
 <tr class="separator:a6025d1c2249168a49833163228e08589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae19e914ae5235f5ac8b24d575961a554"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ae19e914ae5235f5ac8b24d575961a554">lock</a></td></tr>
-<tr class="separator:ae19e914ae5235f5ac8b24d575961a554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acee6100d4704ad3654bcac597efcb6e9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">StrategyManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#acee6100d4704ad3654bcac597efcb6e9">strategymanager</a></td></tr>
+<tr class="separator:acee6100d4704ad3654bcac597efcb6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6526bff46d12b87ec56028d7dfbffbd"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa6526bff46d12b87ec56028d7dfbffbd">refMsgLock</a></td></tr>
+<tr class="separator:aa6526bff46d12b87ec56028d7dfbffbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that describes the game state manager. The game state manager will manage the game state and its rules. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9b1ccd213d4ecf8ada7bb168606a6638"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b1ccd213d4ecf8ada7bb168606a6638">&#9670;&nbsp;</a></span>findNextRefGameState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a> rtt::ai::GameStateManager::findNextRefGameState </td>
-          <td>(</td>
-          <td class="paramtype">const proto::SSL_Referee_Stage &amp;&#160;</td>
-          <td class="paramname"><em>stage</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>&#160;</td>
-          <td class="paramname"><em>newRefCmd</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &gt;&#160;</td>
-          <td class="paramname"><em>ballView</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Finds the next game state based on multiple parameters (current ref command, new ref command, ball position etc.) This is important because some commands have a follow up command or command interpretation could depend on the SSL_Referee_Stage or ball position. </p>
-<ul>
-<li>Mapping of ref commands to a game state *&zwj;/ <dl class="section return"><dt>Returns</dt><dd>The next game state </dd></dl>
-</li>
-</ul>
-
-</div>
-</div>
 <a id="aa37f1dbea08a127c3965d2f39d3ac475"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa37f1dbea08a127c3965d2f39d3ac475">&#9670;&nbsp;</a></span>forceNewGameState()</h2>
 
@@ -204,7 +143,7 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void rtt::ai::GameStateManager::forceNewGameState </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d1/d45/Constants_8h.html#a83e242d5478dff7460995b612ed14ef5">RefCommand</a>&#160;</td>
           <td class="paramname"><em>cmd</em>, </td>
         </tr>
         <tr>
@@ -260,7 +199,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Getter for the current game state (either the referee or the interface one based on useReferee flag) </p>
+<p>Getter for the current game state. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current game state </dd></dl>
 
 </div>
@@ -321,8 +260,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a62f1d3c77f43cb98b031aab6940c28ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62f1d3c77f43cb98b031aab6940c28ca">&#9670;&nbsp;</a></span>setGameStateFromInterface()</h2>
+<a id="ac835a19e0cb277c15d19d8e882f64dc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac835a19e0cb277c15d19d8e882f64dc1">&#9670;&nbsp;</a></span>setRefereeData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -331,59 +270,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void rtt::ai::GameStateManager::setGameStateFromInterface </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>playName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; std::string_view &gt;&#160;</td>
-          <td class="paramname"><em>ruleset</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>keeperId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the game state based on message from the interface (i.e. when playing WITHOUT a referee) </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">playName</td><td>The name of the play we want to play received from the interface </td></tr>
-    <tr><td class="paramname">ruleset</td><td>The ruleset we want to use received from the interface </td></tr>
-    <tr><td class="paramname">keeperId</td><td>The id of the keeper we want to use received from the interface </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aa40a0729e82db1e5716b53a4ee14218a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa40a0729e82db1e5716b53a4ee14218a">&#9670;&nbsp;</a></span>setGameStateFromReferee()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::GameStateManager::setGameStateFromReferee </td>
+          <td class="memname">void rtt::ai::GameStateManager::setRefereeData </td>
           <td>(</td>
           <td class="paramtype">proto::SSL_Referee&#160;</td>
           <td class="paramname"><em>refMsg</em>, </td>
@@ -391,8 +278,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html">world::view::WorldDataView</a> &gt;&#160;</td>
-          <td class="paramname"><em>world</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -407,11 +294,45 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the game state based on the referee data (i.e. when playing with a referee) </p>
+<p>Setter for the referee data. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">refMsg</td><td>The data we get from the referee </td></tr>
-    <tr><td class="paramname">world</td><td>world view </td></tr>
+    <tr><td class="paramname">data</td><td>The current world </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac1b896d1149a04b5fd2963754e9a87fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1b896d1149a04b5fd2963754e9a87fb">&#9670;&nbsp;</a></span>updateInterfaceGameState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::GameStateManager::updateInterfaceGameState </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the interface according to the current game state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the current game state </td></tr>
   </table>
   </dd>
 </dl>
@@ -419,196 +340,6 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af9f1dbf7ff51ba5e8a1441c08b0f7632"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9f1dbf7ff51ba5e8a1441c08b0f7632">&#9670;&nbsp;</a></span>currentInterfaceGameState</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html">GameState</a> rtt::ai::GameStateManager::currentInterfaceGameState = {&quot;halt&quot;, &quot;halt&quot;}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6eaef8e23fa3a6f91c9f2700d37f8d79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6eaef8e23fa3a6f91c9f2700d37f8d79">&#9670;&nbsp;</a></span>currentRefGameState</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a> rtt::ai::GameStateManager::currentRefGameState = {<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">RefCommand::UNDEFINED</a>, &quot;halt&quot;, &quot;halt&quot;}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae19e914ae5235f5ac8b24d575961a554"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae19e914ae5235f5ac8b24d575961a554">&#9670;&nbsp;</a></span>lock</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::mutex rtt::ai::GameStateManager::lock</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Data from the referee </p>
-
-</div>
-</div>
-<a id="a1cf8180cac0466fe775fb0a1308db55a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cf8180cac0466fe775fb0a1308db55a">&#9670;&nbsp;</a></span>playNameGameStateMapping</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::unordered_map&lt; std::string_view, <a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html">GameState</a> &gt; rtt::ai::GameStateManager::playNameGameStateMapping</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;Ball Placement Us&quot;</span>, {<span class="stringliteral">&quot;ball_placement_us&quot;</span>, <span class="stringliteral">&quot;ballplacement_us&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Halt&quot;</span>, {<span class="stringliteral">&quot;halt&quot;</span>, <span class="stringliteral">&quot;halt&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Free Kick Them&quot;</span>, {<span class="stringliteral">&quot;free_kick_them&quot;</span>, <span class="stringliteral">&quot;stop&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Free Kick Us At Goal&quot;</span>, {<span class="stringliteral">&quot;free_kick_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Free Kick Us Pass&quot;</span>, {<span class="stringliteral">&quot;free_kick_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Ball Placement Them&quot;</span>, {<span class="stringliteral">&quot;ball_placement_them&quot;</span>, <span class="stringliteral">&quot;ballplacement_them&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Kick Off Them Prepare&quot;</span>, {<span class="stringliteral">&quot;kickoff_them_prepare&quot;</span>, <span class="stringliteral">&quot;kickoff&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Kick Off Us Prepare&quot;</span>, {<span class="stringliteral">&quot;kickoff_us_prepare&quot;</span>, <span class="stringliteral">&quot;kickoff&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Kick Off Them&quot;</span>, {<span class="stringliteral">&quot;kickoff_them&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Kick Off Us&quot;</span>, {<span class="stringliteral">&quot;kickoff_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Penalty Them Prepare&quot;</span>, {<span class="stringliteral">&quot;penalty_them_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Penalty Us Prepare&quot;</span>, {<span class="stringliteral">&quot;penalty_us_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Penalty Them&quot;</span>, {<span class="stringliteral">&quot;penalty_them&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Penalty Us&quot;</span>, {<span class="stringliteral">&quot;penalty_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Time Out&quot;</span>, {<span class="stringliteral">&quot;time_out&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Defensive Stop Formation&quot;</span>, {<span class="stringliteral">&quot;stop&quot;</span>, <span class="stringliteral">&quot;stop&quot;</span>}},</div>
-<div class="line">    {<span class="stringliteral">&quot;Aggressive Stop Formation&quot;</span>, {<span class="stringliteral">&quot;stop&quot;</span>, <span class="stringliteral">&quot;stop&quot;</span>}},</div>
-<div class="line">}</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a4b59e52a4b88815be595ba3216b90b6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b59e52a4b88815be595ba3216b90b6c">&#9670;&nbsp;</a></span>refCommandToGameStateMapping</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::unordered_map&lt; <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>, <a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a> &gt; rtt::ai::GameStateManager::refCommandToGameStateMapping</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">RefCommand::UNDEFINED</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">RefCommand::UNDEFINED</a>, <span class="stringliteral">&quot;halt&quot;</span>, <span class="stringliteral">&quot;halt&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc">RefCommand::NORMAL_START</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc">RefCommand::NORMAL_START</a>, <span class="stringliteral">&quot;normal_play&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ae2f4e36957bfefd9000cb5bb950c4dda">RefCommand::FORCED_START</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ae2f4e36957bfefd9000cb5bb950c4dda">RefCommand::FORCED_START</a>, <span class="stringliteral">&quot;normal_play&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd">RefCommand::HALT</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd">RefCommand::HALT</a>, <span class="stringliteral">&quot;halt&quot;</span>, <span class="stringliteral">&quot;halt&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111">RefCommand::STOP</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111">RefCommand::STOP</a>, <span class="stringliteral">&quot;ball_placement_them&quot;</span>, <span class="stringliteral">&quot;ballplacement_them&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382">RefCommand::TIMEOUT_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382">RefCommand::TIMEOUT_US</a>, <span class="stringliteral">&quot;halt&quot;</span>, <span class="stringliteral">&quot;halt&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd">RefCommand::TIMEOUT_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd">RefCommand::TIMEOUT_THEM</a>, <span class="stringliteral">&quot;halt&quot;</span>, <span class="stringliteral">&quot;halt&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d">RefCommand::GOAL_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d">RefCommand::GOAL_US</a>, <span class="stringliteral">&quot;kickoff_them_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2">RefCommand::GOAL_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2">RefCommand::GOAL_THEM</a>, <span class="stringliteral">&quot;kickoff_us_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0">RefCommand::BALL_PLACEMENT_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0">RefCommand::BALL_PLACEMENT_US</a>, <span class="stringliteral">&quot;ball_placement_us&quot;</span>, <span class="stringliteral">&quot;ballplacement_us&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e">RefCommand::BALL_PLACEMENT_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e">RefCommand::BALL_PLACEMENT_THEM</a>, <span class="stringliteral">&quot;ball_placement_them&quot;</span>, <span class="stringliteral">&quot;ballplacement_them&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d">RefCommand::DIRECT_FREE_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d">RefCommand::DIRECT_FREE_US</a>, <span class="stringliteral">&quot;free_kick_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31">RefCommand::DIRECT_FREE_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31">RefCommand::DIRECT_FREE_THEM</a>, <span class="stringliteral">&quot;free_kick_them&quot;</span>, <span class="stringliteral">&quot;stop&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a34c4eae181fc0ccdff9a99b78334eb53">RefCommand::INDIRECT_FREE_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a34c4eae181fc0ccdff9a99b78334eb53">RefCommand::INDIRECT_FREE_US</a>, <span class="stringliteral">&quot;free_kick_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723">RefCommand::INDIRECT_FREE_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723">RefCommand::INDIRECT_FREE_THEM</a>, <span class="stringliteral">&quot;free_kick_them&quot;</span>, <span class="stringliteral">&quot;stop&quot;</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b">RefCommand::PREPARE_KICKOFF_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b">RefCommand::PREPARE_KICKOFF_US</a>, <span class="stringliteral">&quot;kickoff_us_prepare&quot;</span>, <span class="stringliteral">&quot;kickoff&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80">RefCommand::DO_KICKOFF</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a605d4c9e57ea162973c0d8681035c2d1">RefCommand::PREPARE_KICKOFF_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a605d4c9e57ea162973c0d8681035c2d1">RefCommand::PREPARE_KICKOFF_THEM</a>, <span class="stringliteral">&quot;kickoff_them_prepare&quot;</span>, <span class="stringliteral">&quot;kickoff&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977">RefCommand::DEFEND_KICKOFF</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a51fb032d2ec071f1b8cdbcdffaa5a947">RefCommand::PREPARE_PENALTY_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a51fb032d2ec071f1b8cdbcdffaa5a947">RefCommand::PREPARE_PENALTY_US</a>, <span class="stringliteral">&quot;penalty_us_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">RefCommand::DO_PENALTY</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a">RefCommand::PREPARE_PENALTY_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a">RefCommand::PREPARE_PENALTY_THEM</a>, <span class="stringliteral">&quot;penalty_them_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752">RefCommand::DEFEND_PENALTY</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80">RefCommand::DO_KICKOFF</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80">RefCommand::DO_KICKOFF</a>, <span class="stringliteral">&quot;kickoff_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977">RefCommand::DEFEND_KICKOFF</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977">RefCommand::DEFEND_KICKOFF</a>, <span class="stringliteral">&quot;kickoff_them&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">RefCommand::DO_PENALTY</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">RefCommand::DO_PENALTY</a>, <span class="stringliteral">&quot;penalty_us&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752">RefCommand::DEFEND_PENALTY</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752">RefCommand::DEFEND_PENALTY</a>, <span class="stringliteral">&quot;penalty_them&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0">RefCommand::DO_SHOOTOUT</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0">RefCommand::DO_SHOOTOUT</a>, <span class="stringliteral">&quot;time_out&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5">RefCommand::DEFEND_SHOOTOUT</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5">RefCommand::DEFEND_SHOOTOUT</a>, <span class="stringliteral">&quot;time_out&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">true</span>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a10684e2f808b973f63f052a73ed9fbc8">RefCommand::PREPARE_SHOOTOUT_US</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a10684e2f808b973f63f052a73ed9fbc8">RefCommand::PREPARE_SHOOTOUT_US</a>, <span class="stringliteral">&quot;penalty_us_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">RefCommand::DO_PENALTY</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52">RefCommand::PREPARE_SHOOTOUT_THEM</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52">RefCommand::PREPARE_SHOOTOUT_THEM</a>, <span class="stringliteral">&quot;penalty_them_prepare&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">false</span>, <a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5">RefCommand::DEFEND_SHOOTOUT</a>)},</div>
-<div class="line">    {<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac60d706414e773e40e5ed75f08fdd174">RefCommand::PRE_HALF</a>, RefGameState(<a class="code" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac60d706414e773e40e5ed75f08fdd174">RefCommand::PRE_HALF</a>, <span class="stringliteral">&quot;formation_pre_half&quot;</span>, <span class="stringliteral">&quot;default&quot;</span>, <span class="keyword">false</span>)}}</div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">rtt::RefCommand::UNDEFINED</a></div><div class="ttdeci">@ UNDEFINED</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a10684e2f808b973f63f052a73ed9fbc8"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a10684e2f808b973f63f052a73ed9fbc8">rtt::RefCommand::PREPARE_SHOOTOUT_US</a></div><div class="ttdeci">@ PREPARE_SHOOTOUT_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a34c4eae181fc0ccdff9a99b78334eb53"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a34c4eae181fc0ccdff9a99b78334eb53">rtt::RefCommand::INDIRECT_FREE_US</a></div><div class="ttdeci">@ INDIRECT_FREE_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d">rtt::RefCommand::GOAL_US</a></div><div class="ttdeci">@ GOAL_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31">rtt::RefCommand::DIRECT_FREE_THEM</a></div><div class="ttdeci">@ DIRECT_FREE_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e">rtt::RefCommand::BALL_PLACEMENT_THEM</a></div><div class="ttdeci">@ BALL_PLACEMENT_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd">rtt::RefCommand::TIMEOUT_THEM</a></div><div class="ttdeci">@ TIMEOUT_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a51fb032d2ec071f1b8cdbcdffaa5a947"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a51fb032d2ec071f1b8cdbcdffaa5a947">rtt::RefCommand::PREPARE_PENALTY_US</a></div><div class="ttdeci">@ PREPARE_PENALTY_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a605d4c9e57ea162973c0d8681035c2d1"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a605d4c9e57ea162973c0d8681035c2d1">rtt::RefCommand::PREPARE_KICKOFF_THEM</a></div><div class="ttdeci">@ PREPARE_KICKOFF_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111">rtt::RefCommand::STOP</a></div><div class="ttdeci">@ STOP</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52">rtt::RefCommand::PREPARE_SHOOTOUT_THEM</a></div><div class="ttdeci">@ PREPARE_SHOOTOUT_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977">rtt::RefCommand::DEFEND_KICKOFF</a></div><div class="ttdeci">@ DEFEND_KICKOFF</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d">rtt::RefCommand::DIRECT_FREE_US</a></div><div class="ttdeci">@ DIRECT_FREE_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a">rtt::RefCommand::PREPARE_PENALTY_THEM</a></div><div class="ttdeci">@ PREPARE_PENALTY_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752">rtt::RefCommand::DEFEND_PENALTY</a></div><div class="ttdeci">@ DEFEND_PENALTY</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0">rtt::RefCommand::BALL_PLACEMENT_US</a></div><div class="ttdeci">@ BALL_PLACEMENT_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b">rtt::RefCommand::PREPARE_KICKOFF_US</a></div><div class="ttdeci">@ PREPARE_KICKOFF_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2">rtt::RefCommand::GOAL_THEM</a></div><div class="ttdeci">@ GOAL_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723">rtt::RefCommand::INDIRECT_FREE_THEM</a></div><div class="ttdeci">@ INDIRECT_FREE_THEM</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382">rtt::RefCommand::TIMEOUT_US</a></div><div class="ttdeci">@ TIMEOUT_US</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc">rtt::RefCommand::NORMAL_START</a></div><div class="ttdeci">@ NORMAL_START</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0">rtt::RefCommand::DO_SHOOTOUT</a></div><div class="ttdeci">@ DO_SHOOTOUT</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd">rtt::RefCommand::HALT</a></div><div class="ttdeci">@ HALT</div><div class="ttdoc">OFFICIAL REFEREE GAME STATES ///.</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5">rtt::RefCommand::DEFEND_SHOOTOUT</a></div><div class="ttdeci">@ DEFEND_SHOOTOUT</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ac60d706414e773e40e5ed75f08fdd174"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac60d706414e773e40e5ed75f08fdd174">rtt::RefCommand::PRE_HALF</a></div><div class="ttdeci">@ PRE_HALF</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80">rtt::RefCommand::DO_KICKOFF</a></div><div class="ttdeci">@ DO_KICKOFF</div><div class="ttdoc">CUSTOM GAME STATES ///.</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843ae2f4e36957bfefd9000cb5bb950c4dda"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ae2f4e36957bfefd9000cb5bb950c4dda">rtt::RefCommand::FORCED_START</a></div><div class="ttdeci">@ FORCED_START</div></div>
-<div class="ttc" id="anamespacertt_html_ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029"><div class="ttname"><a href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">rtt::RefCommand::DO_PENALTY</a></div><div class="ttdeci">@ DO_PENALTY</div></div>
-</div><!-- fragment --><ul>
-<li>Mapping of play name to a game state used when setting gamestate from the interface *&zwj;/ </li>
-</ul>
-
-</div>
-</div>
 <a id="a6025d1c2249168a49833163228e08589"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6025d1c2249168a49833163228e08589">&#9670;&nbsp;</a></span>refMsg</h2>
 
@@ -628,6 +359,53 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Data from the referee </p>
+
+</div>
+</div>
+<a id="aa6526bff46d12b87ec56028d7dfbffbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6526bff46d12b87ec56028d7dfbffbd">&#9670;&nbsp;</a></span>refMsgLock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex rtt::ai::GameStateManager::refMsgLock</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Synchronizer for referee data </p>
+
+</div>
+</div>
+<a id="acee6100d4704ad3654bcac597efcb6e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acee6100d4704ad3654bcac597efcb6e9">&#9670;&nbsp;</a></span>strategymanager</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">StrategyManager</a> rtt::ai::GameStateManager::strategymanager</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Manager that updates the play according to the game state </p>
 
 </div>
 </div>

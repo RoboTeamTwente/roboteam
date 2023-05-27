@@ -10,7 +10,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass =
     [ "decideRoleFlags", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aec45346e5c63f48e60fa5fa523f3570f", null ],
     [ "distributeRoles", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a554c384fee1f7d5d689355b3cd9573ee", null ],
+    [ "getName", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a850537fcc997b9fb6dc1f494807da669", null ],
     [ "getRoleStatuses", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a193d5fef143c93145b2e1e8f2b2a04f2", null ],
     [ "isValidPlayToKeep", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

@@ -219,13 +219,22 @@ pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() 
 
 pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
+RuleSet Constants::RULESET_DEFAULT()            { return {"default",            2,   6.5, 0.0, ROBOT_RADIUS(), true}; }
+RuleSet Constants::RULESET_HALT()               { return {"halt",               0.0, 0.0, 0.0, -1,             true}; }
+RuleSet Constants::RULESET_STOP()               { return {"stop",               1.3, 0.0, 0.8, -1,             false};}
+RuleSet Constants::RULESET_BALLPLACEMENT_THEM() { return {"ballplacement_them", 1.3, 6.5, 0.8, -1,             true}; }
+RuleSet Constants::RULESET_BALLPLACEMENT_US()   { return {"ballplacement_us",   1.5, 6.5, 0.0, -1,             true}; }
+RuleSet Constants::RULESET_KICKOFF()            { return {"kickoff",            1.5, 6.5, 0.5, -1,             true}; }
+
 std::vector<RuleSet> Constants::ruleSets() {
-    return {{"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true},
-            {"halt", 0.0, 0.0, 0.0, -1, true},
-            {"stop", 1.3, 0.0, 0.8, -1, false},
-            {"ballplacement_them", 1.3, 6.5, 0.8, -1, true},
-            {"ballplacement_us", 1.5 /*2.5*/, 6.5, 0.0, -1, true},
-            {"kickoff", 1.5, 6.5, 0.5, 0.0, true}};
+    return {
+        RULESET_DEFAULT(),
+        RULESET_HALT(),
+        RULESET_STOP(),
+        RULESET_BALLPLACEMENT_THEM(),
+        RULESET_BALLPLACEMENT_US(),
+        RULESET_KICKOFF(),
+    };
 }
 
 }  // namespace rtt::ai

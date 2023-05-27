@@ -22,7 +22,7 @@ bool Output::timeOutAtTop = Constants::STD_TIMEOUT_TO_TOP();
 std::mutex Output::markerMutex;
 std::mutex Output::refMutex;
 
-GameState Output::interfaceGameState("halt_strategy", "default");
+GameState Output::interfaceGameState("halt_strategy", Constants::RULESET_DEFAULT());
 
 void Output::sendHaltCommand() {
     auto const &[_, world] = rtt::world::World::instance();
@@ -65,7 +65,7 @@ void Output::setUseRefereeCommands(bool useRefereeCommands) {
 
 bool Output::isTimeOutAtTop() { return timeOutAtTop; }
 
-void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSetName = std::move(name); }
+void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSet.title = std::move(name); }
 
 void Output::setKeeperId(int id) { Output::interfaceGameState.keeperId = id; }
 

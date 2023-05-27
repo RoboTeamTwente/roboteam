@@ -34,7 +34,7 @@ struct RefGameState : public GameState {
      * @param isFollowUpCommand Indicates whether the command is a follow up command from the previous command
      * @param followUpCommandId The follow up command that has been sent by the referee
      */
-    RefGameState(RefCommand commandId, std::string strategyName, std::string ruleSet, bool isFollowUpCommand = false, RefCommand followUpCommandId = RefCommand::UNDEFINED);
+    RefGameState(RefCommand commandId, std::string strategyName, RuleSet ruleSet, bool isFollowUpCommand = false, RefCommand followUpCommandId = RefCommand::UNDEFINED);
 
     /**
      * @brief Checks whether this command has a follow up command

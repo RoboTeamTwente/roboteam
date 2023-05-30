@@ -101,10 +101,10 @@ void DefendPass::calculateInfoForDefenders() noexcept {
 
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToOurGoalTwo && enemyRobot->getId() == enemyClosestToOurGoalTwo.value()->getId(); });
 
-    stpInfos["defender_helper_1"].setPositionToDefend(enemyClosestToOurGoalOne->get()->getPos());
+    stpInfos["defender_helper_1"].setPositionToDefend(!enemyClosestToOurGoalOne.has_value() ? field.topLeftGrid.getPoints()[field.topLeftGrid.getNumPointsX()/2][field.topLeftGrid.getNumPointsY()/2] : enemyClosestToOurGoalOne->get()->getPos());
     stpInfos["defender_helper_1"].setBlockDistance(BlockDistance::HALFWAY);
 
-    stpInfos["defender_helper_2"].setPositionToDefend(enemyClosestToOurGoalTwo->get()->getPos());
+    stpInfos["defender_helper_2"].setPositionToDefend(!enemyClosestToOurGoalTwo.has_value() ? field.bottomLeftGrid.getPoints()[field.bottomLeftGrid.getNumPointsX()/2][field.bottomLeftGrid.getNumPointsY()/2] : enemyClosestToOurGoalTwo->get()->getPos());
     stpInfos["defender_helper_2"].setBlockDistance(BlockDistance::HALFWAY);
 
     std::map<double, Vector2> enemyMap;

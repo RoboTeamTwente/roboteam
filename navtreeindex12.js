@@ -1,5 +1,11 @@
 var NAVTREEINDEX12 =
 {
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,3,3,5,34],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,3,3,5,23],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,3,3,5,22],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a2f095d04a2b1a6d5f9a5adbe42363a09":[3,0,1,0,3,3,5,2],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a3653164b44b490dfbf02429dcfd01f4a":[3,0,1,0,3,3,5,3],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a407877bf2ca555c0e6e7027241bcc5e8":[3,0,1,0,3,3,5,10],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a4598ba530d29d7f4f53bcec0c9845100":[3,0,1,0,3,3,5,31],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a52fc8b6075367b48ae05021829ebcc8f":[3,0,1,0,3,3,5,20],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a58560de6d2d6ca91e467deb1071aadbd":[3,0,1,0,3,3,5,14],
@@ -209,14 +215,14 @@ var NAVTREEINDEX12 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a3716f303528e6c66fc6d4f5c97db5f93":[3,0,1,0,3,13,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a4c981f92e8bca5864cf26f0cee2886ab":[3,0,1,0,3,13,6],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a51bce1d5d8502db006cdced1300f36da":[3,0,1,0,3,13,5],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[4,0,0,0,0,2,9,1,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[3,0,1,0,3,13,0,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[4,0,0,0,0,2,9,1,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a60674abf0185e5577b287300f3a20d49":[3,0,1,0,3,13,3],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,3,13,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[4,0,0,0,0,2,9,1,0],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,3,13,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#afdcb1e9041507c8a71b63521041203b2":[3,0,1,0,3,13,4],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,3,13,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[4,0,0,0,0,2,9,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,3,13,0],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html":[3,0,1,0,3,1,17],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a293504db20d6b1a7e6d40c5060b60a89":[3,0,1,0,3,1,17,1],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9":[3,0,1,0,3,1,17,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX12 =
 "dd/d6d/ControlUtilsTest_8cpp.html":[4,0,0,2,0,1],
 "dd/d6d/ControlUtilsTest_8cpp.html#a17000514ed97774597f8ea6b1c01e29a":[4,0,0,2,0,1,6],
 "dd/d6d/ControlUtilsTest_8cpp.html#a4a46470680ddc7c18b051296095b9efd":[4,0,0,2,0,1,3],
-"dd/d6d/ControlUtilsTest_8cpp.html#a767bb323b97c99d519fa8af0c528a0b9":[4,0,0,2,0,1,0],
-"dd/d6d/ControlUtilsTest_8cpp.html#a7d2150a68568ac641fb1570019756cce":[4,0,0,2,0,1,1],
-"dd/d6d/ControlUtilsTest_8cpp.html#ab9e43f749b93878b749525e91fcc9be1":[4,0,0,2,0,1,5],
-"dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82":[4,0,0,2,0,1,2],
-"dd/d6d/ControlUtilsTest_8cpp.html#aea976c053e2f11dce57b6ad11f5d397b":[4,0,0,2,0,1,4],
-"dd/d6e/BallPlacementThemGameStateEvaluation_8h.html":[4,0,0,0,0,2,2,0,0],
-"dd/d6e/BallPlacementThemGameStateEvaluation_8h_source.html":[4,0,0,0,0,2,2,0,0]
+"dd/d6d/ControlUtilsTest_8cpp.html#a767bb323b97c99d519fa8af0c528a0b9":[4,0,0,2,0,1,0]
 };

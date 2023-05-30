@@ -85,12 +85,12 @@ var NAVTREEINDEX =
 "d7/d06/StpInfoEnums_8h.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d",
 "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ae037baa0bfb300499c04aa9e834e0c00",
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae9c573acec4e3999f6b1695c386c06a7",
-"da/d39/classrtt_1_1world_1_1World.html#ac6d5c8cfd2a11317d19dcdb2770785ef",
-"db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6826aa8fe94a2b35cbcef306b5d9d40e",
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a4598ba530d29d7f4f53bcec0c9845100",
-"dd/d71/PassComputations_8h.html",
-"de/d8b/Passer_8h.html",
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a58560de6d2d6ca91e467deb1071aadbd"
+"da/d39/classrtt_1_1world_1_1World.html#a96baed371423474a119eb6fd55b5ae59",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#abd94b835220f65a1d26e2e5834cacef3",
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0c13cbd482099fa139f3a5f08d964efe",
+"dd/d6d/ControlUtilsTest_8cpp.html#a7d2150a68568ac641fb1570019756cce",
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae27fbb9778792333e48980525e08e7cf",
+"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a17fc7a716064d918aa29c072832c2ef8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -155,5 +155,6 @@ message MsgFromInterface {
         RuntimeConfig set_runtime_config = 3;
 
         bool pause_ai = 4; // true == stop, false == resume
+        Vector2f set_ball_pos = 5;
     }
 }

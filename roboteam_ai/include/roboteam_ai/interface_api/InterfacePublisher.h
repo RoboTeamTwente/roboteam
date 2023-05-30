@@ -5,13 +5,12 @@
 #ifndef RTT_INTERFACEPUBLISHER_H
 #define RTT_INTERFACEPUBLISHER_H
 
+#include "stp/Play.hpp"
+
 #include <proto/NewInterface.pb.h>
+#include <ixwebsocket/IXWebSocketServer.h>
 
 #include <functional>
-
-#include "ixwebsocket/IXWebSocket.h"
-#include "ixwebsocket/IXWebSocketServer.h"
-#include "stp/Play.hpp"
 
 namespace rtt::ai::io {
 class InterfaceGateway;

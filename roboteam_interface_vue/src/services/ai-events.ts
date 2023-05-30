@@ -6,6 +6,7 @@ export type Events = {
     'update:gameSettings': proto.GameSettings,
     'update:pause': boolean,
     'update:play': proto.PlayInfo,
+    'setBallPos': proto.IVector2f,
 };
 
 export const emitter: Emitter<Events> = mitt<Events>();

@@ -3403,6 +3403,9 @@ export namespace proto {
 
         /** MsgFromInterface pauseAi */
         pauseAi?: (boolean|null);
+
+        /** MsgFromInterface setBallPos */
+        setBallPos?: (proto.IVector2f|null);
     }
 
     /** Represents a MsgFromInterface. */
@@ -3426,8 +3429,11 @@ export namespace proto {
         /** MsgFromInterface pauseAi. */
         public pauseAi?: (boolean|null);
 
+        /** MsgFromInterface setBallPos. */
+        public setBallPos?: (proto.IVector2f|null);
+
         /** MsgFromInterface kind. */
-        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi");
+        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos");
 
         /**
          * Creates a new MsgFromInterface instance using the specified properties.
@@ -4492,6 +4498,9 @@ export namespace proto {
 
         /** State processedRefereePackets */
         processedRefereePackets?: (proto.ISSL_Referee[]|null);
+
+        /** State processedFeedbackPackets */
+        processedFeedbackPackets?: (proto.IRobotsFeedback[]|null);
     }
 
     /** Represents a State. */
@@ -4529,6 +4538,9 @@ export namespace proto {
 
         /** State processedRefereePackets. */
         public processedRefereePackets: proto.ISSL_Referee[];
+
+        /** State processedFeedbackPackets. */
+        public processedFeedbackPackets: proto.IRobotsFeedback[];
 
         /**
          * Creates a new State instance using the specified properties.
@@ -11666,288 +11678,6 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a RobotCommand. */
-    interface IRobotCommand {
-
-        /** RobotCommand id */
-        id?: (number|null);
-
-        /** RobotCommand velocityX */
-        velocityX?: (number|null);
-
-        /** RobotCommand velocityY */
-        velocityY?: (number|null);
-
-        /** RobotCommand angle */
-        angle?: (number|null);
-
-        /** RobotCommand angularVelocity */
-        angularVelocity?: (number|null);
-
-        /** RobotCommand useAngularVelocity */
-        useAngularVelocity?: (boolean|null);
-
-        /** RobotCommand cameraAngleOfRobot */
-        cameraAngleOfRobot?: (number|null);
-
-        /** RobotCommand cameraAngleOfRobotIsSet */
-        cameraAngleOfRobotIsSet?: (boolean|null);
-
-        /** RobotCommand kickSpeed */
-        kickSpeed?: (number|null);
-
-        /** RobotCommand waitForBall */
-        waitForBall?: (boolean|null);
-
-        /** RobotCommand kickAtAngle */
-        kickAtAngle?: (boolean|null);
-
-        /** RobotCommand kickType */
-        kickType?: (proto.RobotCommand.KickType|null);
-
-        /** RobotCommand dribblerSpeed */
-        dribblerSpeed?: (number|null);
-
-        /** RobotCommand ignorePacket */
-        ignorePacket?: (boolean|null);
-    }
-
-    /** Represents a RobotCommand. */
-    class RobotCommand implements IRobotCommand {
-
-        /**
-         * Constructs a new RobotCommand.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotCommand);
-
-        /** RobotCommand id. */
-        public id: number;
-
-        /** RobotCommand velocityX. */
-        public velocityX: number;
-
-        /** RobotCommand velocityY. */
-        public velocityY: number;
-
-        /** RobotCommand angle. */
-        public angle: number;
-
-        /** RobotCommand angularVelocity. */
-        public angularVelocity: number;
-
-        /** RobotCommand useAngularVelocity. */
-        public useAngularVelocity: boolean;
-
-        /** RobotCommand cameraAngleOfRobot. */
-        public cameraAngleOfRobot: number;
-
-        /** RobotCommand cameraAngleOfRobotIsSet. */
-        public cameraAngleOfRobotIsSet: boolean;
-
-        /** RobotCommand kickSpeed. */
-        public kickSpeed: number;
-
-        /** RobotCommand waitForBall. */
-        public waitForBall: boolean;
-
-        /** RobotCommand kickAtAngle. */
-        public kickAtAngle: boolean;
-
-        /** RobotCommand kickType. */
-        public kickType: proto.RobotCommand.KickType;
-
-        /** RobotCommand dribblerSpeed. */
-        public dribblerSpeed: number;
-
-        /** RobotCommand ignorePacket. */
-        public ignorePacket: boolean;
-
-        /**
-         * Creates a new RobotCommand instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotCommand instance
-         */
-        public static create(properties?: proto.IRobotCommand): proto.RobotCommand;
-
-        /**
-         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @param message RobotCommand message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotCommand, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @param message RobotCommand message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotCommand, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotCommand;
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotCommand;
-
-        /**
-         * Verifies a RobotCommand message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotCommand
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotCommand;
-
-        /**
-         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
-         * @param message RobotCommand
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotCommand, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotCommand to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotCommand
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace RobotCommand {
-
-        /** KickType enum. */
-        enum KickType {
-            NO_KICK = 0,
-            KICK = 1,
-            CHIP = 2
-        }
-    }
-
-    /** Properties of a RobotCommands. */
-    interface IRobotCommands {
-
-        /** RobotCommands robotCommands */
-        robotCommands?: (proto.IRobotCommand[]|null);
-    }
-
-    /** Represents a RobotCommands. */
-    class RobotCommands implements IRobotCommands {
-
-        /**
-         * Constructs a new RobotCommands.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotCommands);
-
-        /** RobotCommands robotCommands. */
-        public robotCommands: proto.IRobotCommand[];
-
-        /**
-         * Creates a new RobotCommands instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotCommands instance
-         */
-        public static create(properties?: proto.IRobotCommands): proto.RobotCommands;
-
-        /**
-         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @param message RobotCommands message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotCommands, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @param message RobotCommands message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotCommands, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotCommands;
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotCommands;
-
-        /**
-         * Verifies a RobotCommands message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotCommands
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotCommands;
-
-        /**
-         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
-         * @param message RobotCommands
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotCommands, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotCommands to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotCommands
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
     /** RobotTeam enum. */
     enum RobotTeam {
         YELLOW_TEAM = 0,
@@ -12238,6 +11968,288 @@ export namespace proto {
 
         /**
          * Gets the default type url for RobotsFeedback
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a RobotCommand. */
+    interface IRobotCommand {
+
+        /** RobotCommand id */
+        id?: (number|null);
+
+        /** RobotCommand velocityX */
+        velocityX?: (number|null);
+
+        /** RobotCommand velocityY */
+        velocityY?: (number|null);
+
+        /** RobotCommand angle */
+        angle?: (number|null);
+
+        /** RobotCommand angularVelocity */
+        angularVelocity?: (number|null);
+
+        /** RobotCommand useAngularVelocity */
+        useAngularVelocity?: (boolean|null);
+
+        /** RobotCommand cameraAngleOfRobot */
+        cameraAngleOfRobot?: (number|null);
+
+        /** RobotCommand cameraAngleOfRobotIsSet */
+        cameraAngleOfRobotIsSet?: (boolean|null);
+
+        /** RobotCommand kickSpeed */
+        kickSpeed?: (number|null);
+
+        /** RobotCommand waitForBall */
+        waitForBall?: (boolean|null);
+
+        /** RobotCommand kickAtAngle */
+        kickAtAngle?: (boolean|null);
+
+        /** RobotCommand kickType */
+        kickType?: (proto.RobotCommand.KickType|null);
+
+        /** RobotCommand dribblerSpeed */
+        dribblerSpeed?: (number|null);
+
+        /** RobotCommand ignorePacket */
+        ignorePacket?: (boolean|null);
+    }
+
+    /** Represents a RobotCommand. */
+    class RobotCommand implements IRobotCommand {
+
+        /**
+         * Constructs a new RobotCommand.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IRobotCommand);
+
+        /** RobotCommand id. */
+        public id: number;
+
+        /** RobotCommand velocityX. */
+        public velocityX: number;
+
+        /** RobotCommand velocityY. */
+        public velocityY: number;
+
+        /** RobotCommand angle. */
+        public angle: number;
+
+        /** RobotCommand angularVelocity. */
+        public angularVelocity: number;
+
+        /** RobotCommand useAngularVelocity. */
+        public useAngularVelocity: boolean;
+
+        /** RobotCommand cameraAngleOfRobot. */
+        public cameraAngleOfRobot: number;
+
+        /** RobotCommand cameraAngleOfRobotIsSet. */
+        public cameraAngleOfRobotIsSet: boolean;
+
+        /** RobotCommand kickSpeed. */
+        public kickSpeed: number;
+
+        /** RobotCommand waitForBall. */
+        public waitForBall: boolean;
+
+        /** RobotCommand kickAtAngle. */
+        public kickAtAngle: boolean;
+
+        /** RobotCommand kickType. */
+        public kickType: proto.RobotCommand.KickType;
+
+        /** RobotCommand dribblerSpeed. */
+        public dribblerSpeed: number;
+
+        /** RobotCommand ignorePacket. */
+        public ignorePacket: boolean;
+
+        /**
+         * Creates a new RobotCommand instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns RobotCommand instance
+         */
+        public static create(properties?: proto.IRobotCommand): proto.RobotCommand;
+
+        /**
+         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @param message RobotCommand message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IRobotCommand, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @param message RobotCommand message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IRobotCommand, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotCommand;
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotCommand;
+
+        /**
+         * Verifies a RobotCommand message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns RobotCommand
+         */
+        public static fromObject(object: { [k: string]: any }): proto.RobotCommand;
+
+        /**
+         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
+         * @param message RobotCommand
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.RobotCommand, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this RobotCommand to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for RobotCommand
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace RobotCommand {
+
+        /** KickType enum. */
+        enum KickType {
+            NO_KICK = 0,
+            KICK = 1,
+            CHIP = 2
+        }
+    }
+
+    /** Properties of a RobotCommands. */
+    interface IRobotCommands {
+
+        /** RobotCommands robotCommands */
+        robotCommands?: (proto.IRobotCommand[]|null);
+    }
+
+    /** Represents a RobotCommands. */
+    class RobotCommands implements IRobotCommands {
+
+        /**
+         * Constructs a new RobotCommands.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IRobotCommands);
+
+        /** RobotCommands robotCommands. */
+        public robotCommands: proto.IRobotCommand[];
+
+        /**
+         * Creates a new RobotCommands instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns RobotCommands instance
+         */
+        public static create(properties?: proto.IRobotCommands): proto.RobotCommands;
+
+        /**
+         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @param message RobotCommands message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IRobotCommands, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @param message RobotCommands message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IRobotCommands, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotCommands;
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotCommands;
+
+        /**
+         * Verifies a RobotCommands message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns RobotCommands
+         */
+        public static fromObject(object: { [k: string]: any }): proto.RobotCommands;
+
+        /**
+         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
+         * @param message RobotCommands
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.RobotCommands, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this RobotCommands to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for RobotCommands
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

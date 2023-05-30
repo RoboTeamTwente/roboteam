@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {useGameControllerStore} from "../../stores/ai-store";
-import {useSTPDataStore} from "../../stores/dataStores/stp-data-store";
+import {useSTPDataStore} from "../../stores/data-stores/stp-data-store";
 
 const stpData = useSTPDataStore();
 

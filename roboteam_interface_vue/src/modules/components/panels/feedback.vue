@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {useUIStore} from "../../stores/ui-store";
-import {useVisionDataStore} from "../../stores/dataStores/vision-data-store";
+import {useVisionDataStore} from "../../stores/data-stores/vision-data-store";
 
 const visionData = useVisionDataStore();
 const uiStore = useUIStore();

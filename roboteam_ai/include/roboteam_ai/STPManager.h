@@ -17,7 +17,7 @@ class STPManager {
      * @param interfaceGateway The interface that belongs to this AI
      * @param mainWindow The interface that belongs to this AI
      */
-    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway>, ai::interface::MainWindow* mainWindow);
+    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow* mainWindow);
 
    private:
     /**

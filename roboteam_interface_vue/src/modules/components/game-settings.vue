@@ -1,12 +1,9 @@
 <script setup lang="ts">
 
 import {proto} from "../../generated/proto";
-import {useAIDataStore} from "../stores/dataStores/ai-data-store";
-import {emitter} from "../../services/ai-events";
-import {computed} from "vue";
+import {useAiController} from "../composables/ai-controller";
 
-const aiData = useAIDataStore();
-
+const aiController = useAiController();
 
 </script>
 <template>
@@ -15,12 +12,11 @@ const aiData = useAIDataStore();
             <span class="">General</span>
             <label class="label cursor-pointer gap-2">
                 <span class="label-text">AutoRef</span>
-                <input type="checkbox" v-model="aiData.useReferee" class="toggle toggle-primary"/>
+                <input type="checkbox" v-model="aiController.useReferee.value" class="toggle toggle-primary"/>
             </label>
             <label class="label cursor-pointer gap-2">
                 <span class="label-text">Ignore Invariants</span>
-                <!--        <input type="checkbox" v-model="state?.runtimeConfig?.ignoreInvariants" class="toggle toggle-primary" checked/>-->
-                <input type="checkbox" v-model="aiData.ignoreInvariants" class="toggle toggle-primary"/>
+                <input type="checkbox" v-model="aiController.ignoreInvariants.value" class="toggle toggle-primary"/>
             </label>
         </div>
 
@@ -31,7 +27,7 @@ const aiData = useAIDataStore();
                     <span class="label-text"><font-awesome-icon icon="fa-vr-cardboard"/> Simulator</span>
                     <input type="radio" class="radio"
                            :value="proto.GameSettings.RobotHubMode.SIMULATOR"
-                           v-model="aiData.robotHubMode"
+                           v-model="aiController.robotHubMode.value"
                     />
                 </label>
             </div>
@@ -40,7 +36,7 @@ const aiData = useAIDataStore();
                     <span class="label-text"><font-awesome-icon icon="fa-robot"/> Basestation</span>
                     <input type="radio" class="radio"
                            :value="proto.GameSettings.RobotHubMode.BASESTATION"
-                           v-model="aiData.robotHubMode"
+                           v-model="aiController.robotHubMode.value"
                     />
                 </label>
             </div>
@@ -51,13 +47,13 @@ const aiData = useAIDataStore();
             <div class="form-control">
                 <label class="label cursor-pointer">
                     <span class="label-text"><font-awesome-icon icon="fa-arrow-left"/> Left</span>
-                    <input type="radio" class="radio" v-model="aiData.isLeft" :value="true"/>
+                    <input type="radio" class="radio" v-model="aiController.isLeft.value" :value="true"/>
                 </label>
             </div>
             <div class="form-control">
                 <label class="label cursor-pointer">
                     <span class="label-text"><font-awesome-icon icon="fa-arrow-right"/> Right</span>
-                    <input type="radio" class="radio" v-model="aiData.isLeft" :value="false"/>
+                    <input type="radio" class="radio" v-model="aiController.isLeft.value" :value="false"/>
                 </label>
             </div>
         </div>
@@ -68,7 +64,7 @@ const aiData = useAIDataStore();
                 <label class="label cursor-pointer">
                     <span class="label-text"><font-awesome-icon icon="fa-people-group"
                                                                 class="text-warning"/> Yellow</span>
-                    <input type="radio" class="radio radio-warning" v-model="aiData.isYellow" :value="true"
+                    <input type="radio" class="radio radio-warning" v-model="aiController.isYellow.value" :value="true"
 
                     />
                 </label>
@@ -77,7 +73,7 @@ const aiData = useAIDataStore();
                 <label class="label cursor-pointer">
                     <span class="label-text"><font-awesome-icon icon="fa-people-group"
                                                                 class="text-primary"/> Blue</span>
-                    <input type="radio" class="radio radio-primary" v-model="aiData.isYellow" :value="false"/>
+                    <input type="radio" class="radio radio-primary" v-model="aiController.isYellow.value" :value="false"/>
                 </label>
             </div>
         </div>

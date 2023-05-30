@@ -5,8 +5,6 @@
 #include "stp/Play.hpp"
 
 #include "control/ControlUtils.h"
-#include "interface/widgets/MainControlsWidget.h"
-#include "interface_api/Out.h"
 #include "interface_api/RuntimeConfig.h"
 
 namespace rtt::ai::stp {

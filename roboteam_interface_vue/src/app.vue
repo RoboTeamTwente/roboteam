@@ -8,8 +8,9 @@ import {useAIClient} from "./services/ai-client";
 import ResizableSlider from "./modules/components/layout/panel-slider.vue";
 import PanelSlider from "./modules/components/layout/panel-slider.vue";
 import TabedWidgets from "./modules/components/layout/tabed-widgets.vue";
-import {useVisionDataStore} from "./modules/stores/dataStores/vision-data-store";
+import {useVisionDataStore} from "./modules/stores/data-stores/vision-data-store";
 import {useProtoWebSocket} from "./utils";
+import GameCanvas2 from "./modules/field/game-canvas.vue";
 
 let url = ref("ws://localhost:12676");
 // const {isReady, data, send, open} = useProtoWebSocket();
@@ -52,7 +53,7 @@ const gridElement = ref<null | HTMLElement>(null);
     <main class="grid-in-main flex flex-col justify-center bg-base-200 min-h-0 p-4" :class="{
       '!justify-start': visionData.latestWorld == null,
     }">
-      <game-canvas v-if="visionData.latestWorld !== null"/>
+      <game-canvas-2 v-if="visionData.latestWorld !== null"/>
         <div class="alert alert-warning" v-else>
             <div>
                 <font-awesome-icon icon="fa-circle-exclamation" />

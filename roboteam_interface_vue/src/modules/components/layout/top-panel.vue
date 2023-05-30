@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import {useUIStore} from "../../stores/ui-store";
-import {haltPlayName, useGameControllerStore} from "../../stores/ai-store";
 import {computed, toRaw} from "vue";
-// import {useGameSettingsStore} from "../../stores/game-settings-store";
-import {useSTPDataStore} from "../../stores/dataStores/stp-data-store";
-import {useAIDataStore} from "../../stores/dataStores/ai-data-store";
-import {emitter} from "../../../services/ai-events";
-import {proto} from "../../../generated/proto";
+import {useSTPDataStore} from "../../stores/data-stores/stp-data-store";
+import {useAIDataStore} from "../../stores/data-stores/ai-data-store";
 import {sleep} from "../../../utils";
+import {useAiController} from "../../composables/ai-controller";
 
 const uiStore = useUIStore();
-const gameController = useGameControllerStore();
 const stpData = useSTPDataStore();
-
-// const gameSettingsStore = useGameSettingsStore();
 const aiData = useAIDataStore();
-const disabled = computed(() => aiData.state?.runtimeConfig?.useReferee!);
+const aiController = useAiController();
+const disabled = computed(() => aiController.useReferee.value);
 
 const haltPlay = () => {
     stpData.$state.currentPlayName = 'Halt';
@@ -29,7 +24,7 @@ const resetPlay = async () => {
 }
 
 const togglePause = () => {
-    aiData.$state.isPaused = !aiData.isPaused;
+    aiController.isPaused.value = !aiController.isPaused.value;
 }
 
 </script>
@@ -50,10 +45,10 @@ const togglePause = () => {
       <div class="btn-group">
         <button :class="{
             'btn-disabled': disabled,
-            'btn-success': aiData.isPaused,
-            'btn-error': !aiData.isPaused
+            'btn-success': aiController.isPaused.value,
+            'btn-error': !aiController.isPaused.value
         }" class="btn btn-sm gap-2 w-32" @click="togglePause">
-            <template v-if="!aiData.state!.isPaused"> <font-awesome-icon icon="fa-square" /> Pause </template>
+            <template v-if="!aiController.isPaused.value"> <font-awesome-icon icon="fa-square" /> Pause </template>
             <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
         </button>
         <button :class="{'btn-disabled': disabled}" class="btn btn-sm btn-secondary gap-2" @click="haltPlay"><font-awesome-icon icon="fa-hand" /> Halt</button>

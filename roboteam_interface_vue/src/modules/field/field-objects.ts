@@ -1,7 +1,7 @@
-import {Container, FederatedPointerEvent, Graphics, SimpleRope, Sprite, Text, Texture} from "pixi.js";
+import {Application, Container, FederatedPointerEvent, Graphics, SimpleRope, Sprite, Text, Texture} from "pixi.js";
 import {proto} from "../../generated/proto";
 import IDrawing = proto.IDrawing;
-import {useAIDataStore} from "../stores/dataStores/ai-data-store";
+import {useAIDataStore} from "../stores/data-stores/ai-data-store";
 import {DeepReadonly, toRaw} from "vue";
 
 // @ts-ignore
@@ -13,6 +13,7 @@ import cross from '../../assets/cross-16x16.png';
 // @ts-ignore
 import pluses from '../../assets/pluses-16x16.png';
 import IWorldRobot = proto.IWorldRobot;
+import {IApplicationOptions} from "@pixi/app/lib/Application";
 
 export const Colors = {
     yellow: '#feff00',
@@ -28,34 +29,6 @@ export type FieldColors = {
     leftGoal: string,
     rightGoal: string,
 }
-
-export const useFieldObjectStorage = () => {
-    const drawings = {
-        ball: new BallDrawing(),
-        blueRobots: new Map<number, RobotDrawing>(),
-        yellowRobots: new Map<number, RobotDrawing>(),
-        shapes: new ShapeMap<string, ShapeDrawing>(),
-    };
-    const layers = {
-        fieldGeometry: new Container(),
-        movingObjects: new Container(),
-        shapeLayer: new Container(),
-    };
-
-
-    const clearRobotsDrawings = () => {
-        drawings.yellowRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
-        drawings.blueRobots.forEach((robotDrawing, _) => robotDrawing.destroy());
-        drawings.yellowRobots.clear();
-        drawings.blueRobots.clear();
-    }
-
-    return {
-        clearRobotsDrawings,
-        drawings,
-        layers,
-    }
-};
 
 const protoColorToHex = (color: proto.Drawing.Color): string => {
     switch (color) {
@@ -82,6 +55,20 @@ const mmToPx = (mm: number): number => {
     return mm / 1000 * 100;
 }
 
+export class CustomPixiApplication extends Application {
+    drawingsContainer: Container;
+
+    constructor(options?: Partial<IApplicationOptions>) {
+        super(options);
+        this.drawingsContainer = new Container();
+
+        // this puts the (0, 0) coordinates to the center of the stage
+        this.drawingsContainer.x = this.screen.width / 2;
+        this.drawingsContainer.y = this.screen.height / 2;
+        this.stage.addChild(this.drawingsContainer);
+    }
+}
+
 export class RobotDrawing extends Container {
     readonly originalColor: string;
     robotElem: Graphics;
@@ -92,7 +79,11 @@ export class RobotDrawing extends Container {
                     isYellow,
                     text,
                     onClick
-                }: { isYellow: boolean, text?: string, onClick?: (self?: RobotDrawing, event?: FederatedPointerEvent) => void }) {
+                }: {
+        isYellow: boolean,
+        text?: string,
+        onClick?: (self?: RobotDrawing, event?: FederatedPointerEvent) => void
+    }) {
         super();
         this.originalColor = isYellow ? Colors.yellow : Colors.blue
 
@@ -119,7 +110,11 @@ export class RobotDrawing extends Container {
         }
     }
 
-    update(isSelected: boolean, showVelocity: boolean, fieldOrientation: {x: number, y: number, angle: number},  data: IWorldRobot) {
+    update(isSelected: boolean, showVelocity: boolean, fieldOrientation: {
+        x: number,
+        y: number,
+        angle: number
+    }, data: IWorldRobot) {
         this.toggleSelection(isSelected);
         this.moveOnField(fieldOrientation.x * data.pos!.x!, fieldOrientation.y * data.pos!.y!, fieldOrientation.angle + -(data.angle ?? 0));
         this.updateVelocityDrawing(showVelocity, fieldOrientation.x * data.vel!.x!, fieldOrientation.y * data.vel!.y!);
@@ -144,8 +139,6 @@ export class RobotDrawing extends Container {
                 .lineTo(x * 100, y * 100);
         }
     }
-
-
 }
 
 export class BallDrawing extends Graphics {
@@ -166,9 +159,14 @@ export class BallDrawing extends Graphics {
 export class FieldDrawing extends Graphics {
     constructor({
                     fieldGeometry,
-                    fieldColors,
-                }: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, fieldColors: FieldColors }) {
+                    isYellow,
+                }: { fieldGeometry: DeepReadonly<proto.ISSL_GeometryFieldSize>, isYellow: boolean }) {
         super();
+
+        const fieldColors = isYellow
+            ? {leftGoal: Colors.yellow, rightGoal: Colors.blue}
+            : {leftGoal: Colors.blue, rightGoal: Colors.yellow};
+
         fieldGeometry.fieldLines?.forEach((line) => {
             switch (line.name) {
                 case 'LeftGoalDepthLine':

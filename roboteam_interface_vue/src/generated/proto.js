@@ -8565,6 +8565,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.IGameSettings|null} [setGameSettings] MsgFromInterface setGameSettings
          * @property {proto.IRuntimeConfig|null} [setRuntimeConfig] MsgFromInterface setRuntimeConfig
          * @property {boolean|null} [pauseAi] MsgFromInterface pauseAi
+         * @property {proto.IVector2f|null} [setBallPos] MsgFromInterface setBallPos
          */
 
         /**
@@ -8614,17 +8615,25 @@ export const proto = $root.proto = (() => {
          */
         MsgFromInterface.prototype.pauseAi = null;
 
+        /**
+         * MsgFromInterface setBallPos.
+         * @member {proto.IVector2f|null|undefined} setBallPos
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.setBallPos = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MsgFromInterface kind.
-         * @member {"setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|undefined} kind
+         * @member {"setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|undefined} kind
          * @memberof proto.MsgFromInterface
          * @instance
          */
         Object.defineProperty(MsgFromInterface.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["setPlay", "setGameSettings", "setRuntimeConfig", "pauseAi"]),
+            get: $util.oneOfGetter($oneOfFields = ["setPlay", "setGameSettings", "setRuntimeConfig", "pauseAi", "setBallPos"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -8660,6 +8669,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.RuntimeConfig.encode(message.setRuntimeConfig, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.pauseAi != null && Object.hasOwnProperty.call(message, "pauseAi"))
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.pauseAi);
+            if (message.setBallPos != null && Object.hasOwnProperty.call(message, "setBallPos"))
+                $root.proto.Vector2f.encode(message.setBallPos, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             return writer;
         };
 
@@ -8708,6 +8719,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 4: {
                         message.pauseAi = reader.bool();
+                        break;
+                    }
+                case 5: {
+                        message.setBallPos = $root.proto.Vector2f.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -8781,6 +8796,16 @@ export const proto = $root.proto = (() => {
                 if (typeof message.pauseAi !== "boolean")
                     return "pauseAi: boolean expected";
             }
+            if (message.setBallPos != null && message.hasOwnProperty("setBallPos")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.proto.Vector2f.verify(message.setBallPos);
+                    if (error)
+                        return "setBallPos." + error;
+                }
+            }
             return null;
         };
 
@@ -8813,6 +8838,11 @@ export const proto = $root.proto = (() => {
             }
             if (object.pauseAi != null)
                 message.pauseAi = Boolean(object.pauseAi);
+            if (object.setBallPos != null) {
+                if (typeof object.setBallPos !== "object")
+                    throw TypeError(".proto.MsgFromInterface.setBallPos: object expected");
+                message.setBallPos = $root.proto.Vector2f.fromObject(object.setBallPos);
+            }
             return message;
         };
 
@@ -8848,6 +8878,11 @@ export const proto = $root.proto = (() => {
                 object.pauseAi = message.pauseAi;
                 if (options.oneofs)
                     object.kind = "pauseAi";
+            }
+            if (message.setBallPos != null && message.hasOwnProperty("setBallPos")) {
+                object.setBallPos = $root.proto.Vector2f.toObject(message.setBallPos, options);
+                if (options.oneofs)
+                    object.kind = "setBallPos";
             }
             return object;
         };
@@ -11378,6 +11413,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.ISSL_Referee|null} [referee] State referee
          * @property {Array.<proto.ISSL_WrapperPacket>|null} [processedVisionPackets] State processedVisionPackets
          * @property {Array.<proto.ISSL_Referee>|null} [processedRefereePackets] State processedRefereePackets
+         * @property {Array.<proto.IRobotsFeedback>|null} [processedFeedbackPackets] State processedFeedbackPackets
          */
 
         /**
@@ -11391,6 +11427,7 @@ export const proto = $root.proto = (() => {
         function State(properties) {
             this.processedVisionPackets = [];
             this.processedRefereePackets = [];
+            this.processedFeedbackPackets = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -11470,6 +11507,14 @@ export const proto = $root.proto = (() => {
         State.prototype.processedRefereePackets = $util.emptyArray;
 
         /**
+         * State processedFeedbackPackets.
+         * @member {Array.<proto.IRobotsFeedback>} processedFeedbackPackets
+         * @memberof proto.State
+         * @instance
+         */
+        State.prototype.processedFeedbackPackets = $util.emptyArray;
+
+        /**
          * Creates a new State instance using the specified properties.
          * @function create
          * @memberof proto.State
@@ -11513,6 +11558,9 @@ export const proto = $root.proto = (() => {
             if (message.processedRefereePackets != null && message.processedRefereePackets.length)
                 for (let i = 0; i < message.processedRefereePackets.length; ++i)
                     $root.proto.SSL_Referee.encode(message.processedRefereePackets[i], writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+            if (message.processedFeedbackPackets != null && message.processedFeedbackPackets.length)
+                for (let i = 0; i < message.processedFeedbackPackets.length; ++i)
+                    $root.proto.RobotsFeedback.encode(message.processedFeedbackPackets[i], writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
             return writer;
         };
 
@@ -11585,6 +11633,12 @@ export const proto = $root.proto = (() => {
                         if (!(message.processedRefereePackets && message.processedRefereePackets.length))
                             message.processedRefereePackets = [];
                         message.processedRefereePackets.push($root.proto.SSL_Referee.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 12: {
+                        if (!(message.processedFeedbackPackets && message.processedFeedbackPackets.length))
+                            message.processedFeedbackPackets = [];
+                        message.processedFeedbackPackets.push($root.proto.RobotsFeedback.decode(reader, reader.uint32()));
                         break;
                     }
                 default:
@@ -11675,6 +11729,15 @@ export const proto = $root.proto = (() => {
                         return "processedRefereePackets." + error;
                 }
             }
+            if (message.processedFeedbackPackets != null && message.hasOwnProperty("processedFeedbackPackets")) {
+                if (!Array.isArray(message.processedFeedbackPackets))
+                    return "processedFeedbackPackets: array expected";
+                for (let i = 0; i < message.processedFeedbackPackets.length; ++i) {
+                    let error = $root.proto.RobotsFeedback.verify(message.processedFeedbackPackets[i]);
+                    if (error)
+                        return "processedFeedbackPackets." + error;
+                }
+            }
             return null;
         };
 
@@ -11745,6 +11808,16 @@ export const proto = $root.proto = (() => {
                     message.processedRefereePackets[i] = $root.proto.SSL_Referee.fromObject(object.processedRefereePackets[i]);
                 }
             }
+            if (object.processedFeedbackPackets) {
+                if (!Array.isArray(object.processedFeedbackPackets))
+                    throw TypeError(".proto.State.processedFeedbackPackets: array expected");
+                message.processedFeedbackPackets = [];
+                for (let i = 0; i < object.processedFeedbackPackets.length; ++i) {
+                    if (typeof object.processedFeedbackPackets[i] !== "object")
+                        throw TypeError(".proto.State.processedFeedbackPackets: object expected");
+                    message.processedFeedbackPackets[i] = $root.proto.RobotsFeedback.fromObject(object.processedFeedbackPackets[i]);
+                }
+            }
             return message;
         };
 
@@ -11764,6 +11837,7 @@ export const proto = $root.proto = (() => {
             if (options.arrays || options.defaults) {
                 object.processedVisionPackets = [];
                 object.processedRefereePackets = [];
+                object.processedFeedbackPackets = [];
             }
             if (options.defaults) {
                 object.lastSeenWorld = null;
@@ -11797,6 +11871,11 @@ export const proto = $root.proto = (() => {
                 object.processedRefereePackets = [];
                 for (let j = 0; j < message.processedRefereePackets.length; ++j)
                     object.processedRefereePackets[j] = $root.proto.SSL_Referee.toObject(message.processedRefereePackets[j], options);
+            }
+            if (message.processedFeedbackPackets && message.processedFeedbackPackets.length) {
+                object.processedFeedbackPackets = [];
+                for (let j = 0; j < message.processedFeedbackPackets.length; ++j)
+                    object.processedFeedbackPackets[j] = $root.proto.RobotsFeedback.toObject(message.processedFeedbackPackets[j], options);
             }
             return object;
         };
@@ -31365,773 +31444,6 @@ export const proto = $root.proto = (() => {
         return Vector3;
     })();
 
-    proto.RobotCommand = (function() {
-
-        /**
-         * Properties of a RobotCommand.
-         * @memberof proto
-         * @interface IRobotCommand
-         * @property {number|null} [id] RobotCommand id
-         * @property {number|null} [velocityX] RobotCommand velocityX
-         * @property {number|null} [velocityY] RobotCommand velocityY
-         * @property {number|null} [angle] RobotCommand angle
-         * @property {number|null} [angularVelocity] RobotCommand angularVelocity
-         * @property {boolean|null} [useAngularVelocity] RobotCommand useAngularVelocity
-         * @property {number|null} [cameraAngleOfRobot] RobotCommand cameraAngleOfRobot
-         * @property {boolean|null} [cameraAngleOfRobotIsSet] RobotCommand cameraAngleOfRobotIsSet
-         * @property {number|null} [kickSpeed] RobotCommand kickSpeed
-         * @property {boolean|null} [waitForBall] RobotCommand waitForBall
-         * @property {boolean|null} [kickAtAngle] RobotCommand kickAtAngle
-         * @property {proto.RobotCommand.KickType|null} [kickType] RobotCommand kickType
-         * @property {number|null} [dribblerSpeed] RobotCommand dribblerSpeed
-         * @property {boolean|null} [ignorePacket] RobotCommand ignorePacket
-         */
-
-        /**
-         * Constructs a new RobotCommand.
-         * @memberof proto
-         * @classdesc Represents a RobotCommand.
-         * @implements IRobotCommand
-         * @constructor
-         * @param {proto.IRobotCommand=} [properties] Properties to set
-         */
-        function RobotCommand(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotCommand id.
-         * @member {number} id
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.id = 0;
-
-        /**
-         * RobotCommand velocityX.
-         * @member {number} velocityX
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.velocityX = 0;
-
-        /**
-         * RobotCommand velocityY.
-         * @member {number} velocityY
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.velocityY = 0;
-
-        /**
-         * RobotCommand angle.
-         * @member {number} angle
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.angle = 0;
-
-        /**
-         * RobotCommand angularVelocity.
-         * @member {number} angularVelocity
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.angularVelocity = 0;
-
-        /**
-         * RobotCommand useAngularVelocity.
-         * @member {boolean} useAngularVelocity
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.useAngularVelocity = false;
-
-        /**
-         * RobotCommand cameraAngleOfRobot.
-         * @member {number} cameraAngleOfRobot
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.cameraAngleOfRobot = 0;
-
-        /**
-         * RobotCommand cameraAngleOfRobotIsSet.
-         * @member {boolean} cameraAngleOfRobotIsSet
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.cameraAngleOfRobotIsSet = false;
-
-        /**
-         * RobotCommand kickSpeed.
-         * @member {number} kickSpeed
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickSpeed = 0;
-
-        /**
-         * RobotCommand waitForBall.
-         * @member {boolean} waitForBall
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.waitForBall = false;
-
-        /**
-         * RobotCommand kickAtAngle.
-         * @member {boolean} kickAtAngle
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickAtAngle = false;
-
-        /**
-         * RobotCommand kickType.
-         * @member {proto.RobotCommand.KickType} kickType
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickType = 0;
-
-        /**
-         * RobotCommand dribblerSpeed.
-         * @member {number} dribblerSpeed
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.dribblerSpeed = 0;
-
-        /**
-         * RobotCommand ignorePacket.
-         * @member {boolean} ignorePacket
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.ignorePacket = false;
-
-        /**
-         * Creates a new RobotCommand instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand=} [properties] Properties to set
-         * @returns {proto.RobotCommand} RobotCommand instance
-         */
-        RobotCommand.create = function create(properties) {
-            return new RobotCommand(properties);
-        };
-
-        /**
-         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommand.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
-                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
-            if (message.velocityX != null && Object.hasOwnProperty.call(message, "velocityX"))
-                writer.uint32(/* id 2, wireType 1 =*/17).double(message.velocityX);
-            if (message.velocityY != null && Object.hasOwnProperty.call(message, "velocityY"))
-                writer.uint32(/* id 3, wireType 1 =*/25).double(message.velocityY);
-            if (message.angle != null && Object.hasOwnProperty.call(message, "angle"))
-                writer.uint32(/* id 4, wireType 1 =*/33).double(message.angle);
-            if (message.angularVelocity != null && Object.hasOwnProperty.call(message, "angularVelocity"))
-                writer.uint32(/* id 5, wireType 1 =*/41).double(message.angularVelocity);
-            if (message.useAngularVelocity != null && Object.hasOwnProperty.call(message, "useAngularVelocity"))
-                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.useAngularVelocity);
-            if (message.cameraAngleOfRobot != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobot"))
-                writer.uint32(/* id 7, wireType 1 =*/57).double(message.cameraAngleOfRobot);
-            if (message.cameraAngleOfRobotIsSet != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobotIsSet"))
-                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.cameraAngleOfRobotIsSet);
-            if (message.kickSpeed != null && Object.hasOwnProperty.call(message, "kickSpeed"))
-                writer.uint32(/* id 9, wireType 1 =*/73).double(message.kickSpeed);
-            if (message.waitForBall != null && Object.hasOwnProperty.call(message, "waitForBall"))
-                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.waitForBall);
-            if (message.kickAtAngle != null && Object.hasOwnProperty.call(message, "kickAtAngle"))
-                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.kickAtAngle);
-            if (message.kickType != null && Object.hasOwnProperty.call(message, "kickType"))
-                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.kickType);
-            if (message.dribblerSpeed != null && Object.hasOwnProperty.call(message, "dribblerSpeed"))
-                writer.uint32(/* id 13, wireType 1 =*/105).double(message.dribblerSpeed);
-            if (message.ignorePacket != null && Object.hasOwnProperty.call(message, "ignorePacket"))
-                writer.uint32(/* id 14, wireType 0 =*/112).bool(message.ignorePacket);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommand.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotCommand} RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommand.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommand();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.id = reader.int32();
-                        break;
-                    }
-                case 2: {
-                        message.velocityX = reader.double();
-                        break;
-                    }
-                case 3: {
-                        message.velocityY = reader.double();
-                        break;
-                    }
-                case 4: {
-                        message.angle = reader.double();
-                        break;
-                    }
-                case 5: {
-                        message.angularVelocity = reader.double();
-                        break;
-                    }
-                case 6: {
-                        message.useAngularVelocity = reader.bool();
-                        break;
-                    }
-                case 7: {
-                        message.cameraAngleOfRobot = reader.double();
-                        break;
-                    }
-                case 8: {
-                        message.cameraAngleOfRobotIsSet = reader.bool();
-                        break;
-                    }
-                case 9: {
-                        message.kickSpeed = reader.double();
-                        break;
-                    }
-                case 10: {
-                        message.waitForBall = reader.bool();
-                        break;
-                    }
-                case 11: {
-                        message.kickAtAngle = reader.bool();
-                        break;
-                    }
-                case 12: {
-                        message.kickType = reader.int32();
-                        break;
-                    }
-                case 13: {
-                        message.dribblerSpeed = reader.double();
-                        break;
-                    }
-                case 14: {
-                        message.ignorePacket = reader.bool();
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotCommand} RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommand.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotCommand message.
-         * @function verify
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotCommand.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.id != null && message.hasOwnProperty("id"))
-                if (!$util.isInteger(message.id))
-                    return "id: integer expected";
-            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
-                if (typeof message.velocityX !== "number")
-                    return "velocityX: number expected";
-            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
-                if (typeof message.velocityY !== "number")
-                    return "velocityY: number expected";
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                if (typeof message.angle !== "number")
-                    return "angle: number expected";
-            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
-                if (typeof message.angularVelocity !== "number")
-                    return "angularVelocity: number expected";
-            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
-                if (typeof message.useAngularVelocity !== "boolean")
-                    return "useAngularVelocity: boolean expected";
-            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
-                if (typeof message.cameraAngleOfRobot !== "number")
-                    return "cameraAngleOfRobot: number expected";
-            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
-                if (typeof message.cameraAngleOfRobotIsSet !== "boolean")
-                    return "cameraAngleOfRobotIsSet: boolean expected";
-            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
-                if (typeof message.kickSpeed !== "number")
-                    return "kickSpeed: number expected";
-            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
-                if (typeof message.waitForBall !== "boolean")
-                    return "waitForBall: boolean expected";
-            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
-                if (typeof message.kickAtAngle !== "boolean")
-                    return "kickAtAngle: boolean expected";
-            if (message.kickType != null && message.hasOwnProperty("kickType"))
-                switch (message.kickType) {
-                default:
-                    return "kickType: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
-                if (typeof message.dribblerSpeed !== "number")
-                    return "dribblerSpeed: number expected";
-            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
-                if (typeof message.ignorePacket !== "boolean")
-                    return "ignorePacket: boolean expected";
-            return null;
-        };
-
-        /**
-         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotCommand} RobotCommand
-         */
-        RobotCommand.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotCommand)
-                return object;
-            let message = new $root.proto.RobotCommand();
-            if (object.id != null)
-                message.id = object.id | 0;
-            if (object.velocityX != null)
-                message.velocityX = Number(object.velocityX);
-            if (object.velocityY != null)
-                message.velocityY = Number(object.velocityY);
-            if (object.angle != null)
-                message.angle = Number(object.angle);
-            if (object.angularVelocity != null)
-                message.angularVelocity = Number(object.angularVelocity);
-            if (object.useAngularVelocity != null)
-                message.useAngularVelocity = Boolean(object.useAngularVelocity);
-            if (object.cameraAngleOfRobot != null)
-                message.cameraAngleOfRobot = Number(object.cameraAngleOfRobot);
-            if (object.cameraAngleOfRobotIsSet != null)
-                message.cameraAngleOfRobotIsSet = Boolean(object.cameraAngleOfRobotIsSet);
-            if (object.kickSpeed != null)
-                message.kickSpeed = Number(object.kickSpeed);
-            if (object.waitForBall != null)
-                message.waitForBall = Boolean(object.waitForBall);
-            if (object.kickAtAngle != null)
-                message.kickAtAngle = Boolean(object.kickAtAngle);
-            switch (object.kickType) {
-            default:
-                if (typeof object.kickType === "number") {
-                    message.kickType = object.kickType;
-                    break;
-                }
-                break;
-            case "NO_KICK":
-            case 0:
-                message.kickType = 0;
-                break;
-            case "KICK":
-            case 1:
-                message.kickType = 1;
-                break;
-            case "CHIP":
-            case 2:
-                message.kickType = 2;
-                break;
-            }
-            if (object.dribblerSpeed != null)
-                message.dribblerSpeed = Number(object.dribblerSpeed);
-            if (object.ignorePacket != null)
-                message.ignorePacket = Boolean(object.ignorePacket);
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.RobotCommand} message RobotCommand
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotCommand.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.id = 0;
-                object.velocityX = 0;
-                object.velocityY = 0;
-                object.angle = 0;
-                object.angularVelocity = 0;
-                object.useAngularVelocity = false;
-                object.cameraAngleOfRobot = 0;
-                object.cameraAngleOfRobotIsSet = false;
-                object.kickSpeed = 0;
-                object.waitForBall = false;
-                object.kickAtAngle = false;
-                object.kickType = options.enums === String ? "NO_KICK" : 0;
-                object.dribblerSpeed = 0;
-                object.ignorePacket = false;
-            }
-            if (message.id != null && message.hasOwnProperty("id"))
-                object.id = message.id;
-            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
-                object.velocityX = options.json && !isFinite(message.velocityX) ? String(message.velocityX) : message.velocityX;
-            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
-                object.velocityY = options.json && !isFinite(message.velocityY) ? String(message.velocityY) : message.velocityY;
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                object.angle = options.json && !isFinite(message.angle) ? String(message.angle) : message.angle;
-            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
-                object.angularVelocity = options.json && !isFinite(message.angularVelocity) ? String(message.angularVelocity) : message.angularVelocity;
-            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
-                object.useAngularVelocity = message.useAngularVelocity;
-            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
-                object.cameraAngleOfRobot = options.json && !isFinite(message.cameraAngleOfRobot) ? String(message.cameraAngleOfRobot) : message.cameraAngleOfRobot;
-            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
-                object.cameraAngleOfRobotIsSet = message.cameraAngleOfRobotIsSet;
-            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
-                object.kickSpeed = options.json && !isFinite(message.kickSpeed) ? String(message.kickSpeed) : message.kickSpeed;
-            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
-                object.waitForBall = message.waitForBall;
-            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
-                object.kickAtAngle = message.kickAtAngle;
-            if (message.kickType != null && message.hasOwnProperty("kickType"))
-                object.kickType = options.enums === String ? $root.proto.RobotCommand.KickType[message.kickType] === undefined ? message.kickType : $root.proto.RobotCommand.KickType[message.kickType] : message.kickType;
-            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
-                object.dribblerSpeed = options.json && !isFinite(message.dribblerSpeed) ? String(message.dribblerSpeed) : message.dribblerSpeed;
-            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
-                object.ignorePacket = message.ignorePacket;
-            return object;
-        };
-
-        /**
-         * Converts this RobotCommand to JSON.
-         * @function toJSON
-         * @memberof proto.RobotCommand
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotCommand.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotCommand
-         * @function getTypeUrl
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotCommand";
-        };
-
-        /**
-         * KickType enum.
-         * @name proto.RobotCommand.KickType
-         * @enum {number}
-         * @property {number} NO_KICK=0 NO_KICK value
-         * @property {number} KICK=1 KICK value
-         * @property {number} CHIP=2 CHIP value
-         */
-        RobotCommand.KickType = (function() {
-            const valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "NO_KICK"] = 0;
-            values[valuesById[1] = "KICK"] = 1;
-            values[valuesById[2] = "CHIP"] = 2;
-            return values;
-        })();
-
-        return RobotCommand;
-    })();
-
-    proto.RobotCommands = (function() {
-
-        /**
-         * Properties of a RobotCommands.
-         * @memberof proto
-         * @interface IRobotCommands
-         * @property {Array.<proto.IRobotCommand>|null} [robotCommands] RobotCommands robotCommands
-         */
-
-        /**
-         * Constructs a new RobotCommands.
-         * @memberof proto
-         * @classdesc Represents a RobotCommands.
-         * @implements IRobotCommands
-         * @constructor
-         * @param {proto.IRobotCommands=} [properties] Properties to set
-         */
-        function RobotCommands(properties) {
-            this.robotCommands = [];
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotCommands robotCommands.
-         * @member {Array.<proto.IRobotCommand>} robotCommands
-         * @memberof proto.RobotCommands
-         * @instance
-         */
-        RobotCommands.prototype.robotCommands = $util.emptyArray;
-
-        /**
-         * Creates a new RobotCommands instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands=} [properties] Properties to set
-         * @returns {proto.RobotCommands} RobotCommands instance
-         */
-        RobotCommands.create = function create(properties) {
-            return new RobotCommands(properties);
-        };
-
-        /**
-         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommands.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.robotCommands != null && message.robotCommands.length)
-                for (let i = 0; i < message.robotCommands.length; ++i)
-                    $root.proto.RobotCommand.encode(message.robotCommands[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommands.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotCommands} RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommands.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommands();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        if (!(message.robotCommands && message.robotCommands.length))
-                            message.robotCommands = [];
-                        message.robotCommands.push($root.proto.RobotCommand.decode(reader, reader.uint32()));
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotCommands} RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommands.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotCommands message.
-         * @function verify
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotCommands.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.robotCommands != null && message.hasOwnProperty("robotCommands")) {
-                if (!Array.isArray(message.robotCommands))
-                    return "robotCommands: array expected";
-                for (let i = 0; i < message.robotCommands.length; ++i) {
-                    let error = $root.proto.RobotCommand.verify(message.robotCommands[i]);
-                    if (error)
-                        return "robotCommands." + error;
-                }
-            }
-            return null;
-        };
-
-        /**
-         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotCommands} RobotCommands
-         */
-        RobotCommands.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotCommands)
-                return object;
-            let message = new $root.proto.RobotCommands();
-            if (object.robotCommands) {
-                if (!Array.isArray(object.robotCommands))
-                    throw TypeError(".proto.RobotCommands.robotCommands: array expected");
-                message.robotCommands = [];
-                for (let i = 0; i < object.robotCommands.length; ++i) {
-                    if (typeof object.robotCommands[i] !== "object")
-                        throw TypeError(".proto.RobotCommands.robotCommands: object expected");
-                    message.robotCommands[i] = $root.proto.RobotCommand.fromObject(object.robotCommands[i]);
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.RobotCommands} message RobotCommands
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotCommands.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.arrays || options.defaults)
-                object.robotCommands = [];
-            if (message.robotCommands && message.robotCommands.length) {
-                object.robotCommands = [];
-                for (let j = 0; j < message.robotCommands.length; ++j)
-                    object.robotCommands[j] = $root.proto.RobotCommand.toObject(message.robotCommands[j], options);
-            }
-            return object;
-        };
-
-        /**
-         * Converts this RobotCommands to JSON.
-         * @function toJSON
-         * @memberof proto.RobotCommands
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotCommands.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotCommands
-         * @function getTypeUrl
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotCommands.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotCommands";
-        };
-
-        return RobotCommands;
-    })();
-
     /**
      * RobotTeam enum.
      * @name proto.RobotTeam
@@ -32971,6 +32283,773 @@ export const proto = $root.proto = (() => {
         };
 
         return RobotsFeedback;
+    })();
+
+    proto.RobotCommand = (function() {
+
+        /**
+         * Properties of a RobotCommand.
+         * @memberof proto
+         * @interface IRobotCommand
+         * @property {number|null} [id] RobotCommand id
+         * @property {number|null} [velocityX] RobotCommand velocityX
+         * @property {number|null} [velocityY] RobotCommand velocityY
+         * @property {number|null} [angle] RobotCommand angle
+         * @property {number|null} [angularVelocity] RobotCommand angularVelocity
+         * @property {boolean|null} [useAngularVelocity] RobotCommand useAngularVelocity
+         * @property {number|null} [cameraAngleOfRobot] RobotCommand cameraAngleOfRobot
+         * @property {boolean|null} [cameraAngleOfRobotIsSet] RobotCommand cameraAngleOfRobotIsSet
+         * @property {number|null} [kickSpeed] RobotCommand kickSpeed
+         * @property {boolean|null} [waitForBall] RobotCommand waitForBall
+         * @property {boolean|null} [kickAtAngle] RobotCommand kickAtAngle
+         * @property {proto.RobotCommand.KickType|null} [kickType] RobotCommand kickType
+         * @property {number|null} [dribblerSpeed] RobotCommand dribblerSpeed
+         * @property {boolean|null} [ignorePacket] RobotCommand ignorePacket
+         */
+
+        /**
+         * Constructs a new RobotCommand.
+         * @memberof proto
+         * @classdesc Represents a RobotCommand.
+         * @implements IRobotCommand
+         * @constructor
+         * @param {proto.IRobotCommand=} [properties] Properties to set
+         */
+        function RobotCommand(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * RobotCommand id.
+         * @member {number} id
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.id = 0;
+
+        /**
+         * RobotCommand velocityX.
+         * @member {number} velocityX
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.velocityX = 0;
+
+        /**
+         * RobotCommand velocityY.
+         * @member {number} velocityY
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.velocityY = 0;
+
+        /**
+         * RobotCommand angle.
+         * @member {number} angle
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.angle = 0;
+
+        /**
+         * RobotCommand angularVelocity.
+         * @member {number} angularVelocity
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.angularVelocity = 0;
+
+        /**
+         * RobotCommand useAngularVelocity.
+         * @member {boolean} useAngularVelocity
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.useAngularVelocity = false;
+
+        /**
+         * RobotCommand cameraAngleOfRobot.
+         * @member {number} cameraAngleOfRobot
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.cameraAngleOfRobot = 0;
+
+        /**
+         * RobotCommand cameraAngleOfRobotIsSet.
+         * @member {boolean} cameraAngleOfRobotIsSet
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.cameraAngleOfRobotIsSet = false;
+
+        /**
+         * RobotCommand kickSpeed.
+         * @member {number} kickSpeed
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickSpeed = 0;
+
+        /**
+         * RobotCommand waitForBall.
+         * @member {boolean} waitForBall
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.waitForBall = false;
+
+        /**
+         * RobotCommand kickAtAngle.
+         * @member {boolean} kickAtAngle
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickAtAngle = false;
+
+        /**
+         * RobotCommand kickType.
+         * @member {proto.RobotCommand.KickType} kickType
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickType = 0;
+
+        /**
+         * RobotCommand dribblerSpeed.
+         * @member {number} dribblerSpeed
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.dribblerSpeed = 0;
+
+        /**
+         * RobotCommand ignorePacket.
+         * @member {boolean} ignorePacket
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.ignorePacket = false;
+
+        /**
+         * Creates a new RobotCommand instance using the specified properties.
+         * @function create
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand=} [properties] Properties to set
+         * @returns {proto.RobotCommand} RobotCommand instance
+         */
+        RobotCommand.create = function create(properties) {
+            return new RobotCommand(properties);
+        };
+
+        /**
+         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @function encode
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommand.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
+            if (message.velocityX != null && Object.hasOwnProperty.call(message, "velocityX"))
+                writer.uint32(/* id 2, wireType 1 =*/17).double(message.velocityX);
+            if (message.velocityY != null && Object.hasOwnProperty.call(message, "velocityY"))
+                writer.uint32(/* id 3, wireType 1 =*/25).double(message.velocityY);
+            if (message.angle != null && Object.hasOwnProperty.call(message, "angle"))
+                writer.uint32(/* id 4, wireType 1 =*/33).double(message.angle);
+            if (message.angularVelocity != null && Object.hasOwnProperty.call(message, "angularVelocity"))
+                writer.uint32(/* id 5, wireType 1 =*/41).double(message.angularVelocity);
+            if (message.useAngularVelocity != null && Object.hasOwnProperty.call(message, "useAngularVelocity"))
+                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.useAngularVelocity);
+            if (message.cameraAngleOfRobot != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobot"))
+                writer.uint32(/* id 7, wireType 1 =*/57).double(message.cameraAngleOfRobot);
+            if (message.cameraAngleOfRobotIsSet != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobotIsSet"))
+                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.cameraAngleOfRobotIsSet);
+            if (message.kickSpeed != null && Object.hasOwnProperty.call(message, "kickSpeed"))
+                writer.uint32(/* id 9, wireType 1 =*/73).double(message.kickSpeed);
+            if (message.waitForBall != null && Object.hasOwnProperty.call(message, "waitForBall"))
+                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.waitForBall);
+            if (message.kickAtAngle != null && Object.hasOwnProperty.call(message, "kickAtAngle"))
+                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.kickAtAngle);
+            if (message.kickType != null && Object.hasOwnProperty.call(message, "kickType"))
+                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.kickType);
+            if (message.dribblerSpeed != null && Object.hasOwnProperty.call(message, "dribblerSpeed"))
+                writer.uint32(/* id 13, wireType 1 =*/105).double(message.dribblerSpeed);
+            if (message.ignorePacket != null && Object.hasOwnProperty.call(message, "ignorePacket"))
+                writer.uint32(/* id 14, wireType 0 =*/112).bool(message.ignorePacket);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommand.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.RobotCommand} RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommand.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommand();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.id = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.velocityX = reader.double();
+                        break;
+                    }
+                case 3: {
+                        message.velocityY = reader.double();
+                        break;
+                    }
+                case 4: {
+                        message.angle = reader.double();
+                        break;
+                    }
+                case 5: {
+                        message.angularVelocity = reader.double();
+                        break;
+                    }
+                case 6: {
+                        message.useAngularVelocity = reader.bool();
+                        break;
+                    }
+                case 7: {
+                        message.cameraAngleOfRobot = reader.double();
+                        break;
+                    }
+                case 8: {
+                        message.cameraAngleOfRobotIsSet = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        message.kickSpeed = reader.double();
+                        break;
+                    }
+                case 10: {
+                        message.waitForBall = reader.bool();
+                        break;
+                    }
+                case 11: {
+                        message.kickAtAngle = reader.bool();
+                        break;
+                    }
+                case 12: {
+                        message.kickType = reader.int32();
+                        break;
+                    }
+                case 13: {
+                        message.dribblerSpeed = reader.double();
+                        break;
+                    }
+                case 14: {
+                        message.ignorePacket = reader.bool();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.RobotCommand} RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommand.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a RobotCommand message.
+         * @function verify
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        RobotCommand.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.id != null && message.hasOwnProperty("id"))
+                if (!$util.isInteger(message.id))
+                    return "id: integer expected";
+            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
+                if (typeof message.velocityX !== "number")
+                    return "velocityX: number expected";
+            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
+                if (typeof message.velocityY !== "number")
+                    return "velocityY: number expected";
+            if (message.angle != null && message.hasOwnProperty("angle"))
+                if (typeof message.angle !== "number")
+                    return "angle: number expected";
+            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
+                if (typeof message.angularVelocity !== "number")
+                    return "angularVelocity: number expected";
+            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
+                if (typeof message.useAngularVelocity !== "boolean")
+                    return "useAngularVelocity: boolean expected";
+            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
+                if (typeof message.cameraAngleOfRobot !== "number")
+                    return "cameraAngleOfRobot: number expected";
+            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
+                if (typeof message.cameraAngleOfRobotIsSet !== "boolean")
+                    return "cameraAngleOfRobotIsSet: boolean expected";
+            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
+                if (typeof message.kickSpeed !== "number")
+                    return "kickSpeed: number expected";
+            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
+                if (typeof message.waitForBall !== "boolean")
+                    return "waitForBall: boolean expected";
+            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
+                if (typeof message.kickAtAngle !== "boolean")
+                    return "kickAtAngle: boolean expected";
+            if (message.kickType != null && message.hasOwnProperty("kickType"))
+                switch (message.kickType) {
+                default:
+                    return "kickType: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
+                if (typeof message.dribblerSpeed !== "number")
+                    return "dribblerSpeed: number expected";
+            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
+                if (typeof message.ignorePacket !== "boolean")
+                    return "ignorePacket: boolean expected";
+            return null;
+        };
+
+        /**
+         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.RobotCommand} RobotCommand
+         */
+        RobotCommand.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.RobotCommand)
+                return object;
+            let message = new $root.proto.RobotCommand();
+            if (object.id != null)
+                message.id = object.id | 0;
+            if (object.velocityX != null)
+                message.velocityX = Number(object.velocityX);
+            if (object.velocityY != null)
+                message.velocityY = Number(object.velocityY);
+            if (object.angle != null)
+                message.angle = Number(object.angle);
+            if (object.angularVelocity != null)
+                message.angularVelocity = Number(object.angularVelocity);
+            if (object.useAngularVelocity != null)
+                message.useAngularVelocity = Boolean(object.useAngularVelocity);
+            if (object.cameraAngleOfRobot != null)
+                message.cameraAngleOfRobot = Number(object.cameraAngleOfRobot);
+            if (object.cameraAngleOfRobotIsSet != null)
+                message.cameraAngleOfRobotIsSet = Boolean(object.cameraAngleOfRobotIsSet);
+            if (object.kickSpeed != null)
+                message.kickSpeed = Number(object.kickSpeed);
+            if (object.waitForBall != null)
+                message.waitForBall = Boolean(object.waitForBall);
+            if (object.kickAtAngle != null)
+                message.kickAtAngle = Boolean(object.kickAtAngle);
+            switch (object.kickType) {
+            default:
+                if (typeof object.kickType === "number") {
+                    message.kickType = object.kickType;
+                    break;
+                }
+                break;
+            case "NO_KICK":
+            case 0:
+                message.kickType = 0;
+                break;
+            case "KICK":
+            case 1:
+                message.kickType = 1;
+                break;
+            case "CHIP":
+            case 2:
+                message.kickType = 2;
+                break;
+            }
+            if (object.dribblerSpeed != null)
+                message.dribblerSpeed = Number(object.dribblerSpeed);
+            if (object.ignorePacket != null)
+                message.ignorePacket = Boolean(object.ignorePacket);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.RobotCommand} message RobotCommand
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        RobotCommand.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.id = 0;
+                object.velocityX = 0;
+                object.velocityY = 0;
+                object.angle = 0;
+                object.angularVelocity = 0;
+                object.useAngularVelocity = false;
+                object.cameraAngleOfRobot = 0;
+                object.cameraAngleOfRobotIsSet = false;
+                object.kickSpeed = 0;
+                object.waitForBall = false;
+                object.kickAtAngle = false;
+                object.kickType = options.enums === String ? "NO_KICK" : 0;
+                object.dribblerSpeed = 0;
+                object.ignorePacket = false;
+            }
+            if (message.id != null && message.hasOwnProperty("id"))
+                object.id = message.id;
+            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
+                object.velocityX = options.json && !isFinite(message.velocityX) ? String(message.velocityX) : message.velocityX;
+            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
+                object.velocityY = options.json && !isFinite(message.velocityY) ? String(message.velocityY) : message.velocityY;
+            if (message.angle != null && message.hasOwnProperty("angle"))
+                object.angle = options.json && !isFinite(message.angle) ? String(message.angle) : message.angle;
+            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
+                object.angularVelocity = options.json && !isFinite(message.angularVelocity) ? String(message.angularVelocity) : message.angularVelocity;
+            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
+                object.useAngularVelocity = message.useAngularVelocity;
+            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
+                object.cameraAngleOfRobot = options.json && !isFinite(message.cameraAngleOfRobot) ? String(message.cameraAngleOfRobot) : message.cameraAngleOfRobot;
+            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
+                object.cameraAngleOfRobotIsSet = message.cameraAngleOfRobotIsSet;
+            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
+                object.kickSpeed = options.json && !isFinite(message.kickSpeed) ? String(message.kickSpeed) : message.kickSpeed;
+            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
+                object.waitForBall = message.waitForBall;
+            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
+                object.kickAtAngle = message.kickAtAngle;
+            if (message.kickType != null && message.hasOwnProperty("kickType"))
+                object.kickType = options.enums === String ? $root.proto.RobotCommand.KickType[message.kickType] === undefined ? message.kickType : $root.proto.RobotCommand.KickType[message.kickType] : message.kickType;
+            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
+                object.dribblerSpeed = options.json && !isFinite(message.dribblerSpeed) ? String(message.dribblerSpeed) : message.dribblerSpeed;
+            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
+                object.ignorePacket = message.ignorePacket;
+            return object;
+        };
+
+        /**
+         * Converts this RobotCommand to JSON.
+         * @function toJSON
+         * @memberof proto.RobotCommand
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        RobotCommand.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for RobotCommand
+         * @function getTypeUrl
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        RobotCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.RobotCommand";
+        };
+
+        /**
+         * KickType enum.
+         * @name proto.RobotCommand.KickType
+         * @enum {number}
+         * @property {number} NO_KICK=0 NO_KICK value
+         * @property {number} KICK=1 KICK value
+         * @property {number} CHIP=2 CHIP value
+         */
+        RobotCommand.KickType = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "NO_KICK"] = 0;
+            values[valuesById[1] = "KICK"] = 1;
+            values[valuesById[2] = "CHIP"] = 2;
+            return values;
+        })();
+
+        return RobotCommand;
+    })();
+
+    proto.RobotCommands = (function() {
+
+        /**
+         * Properties of a RobotCommands.
+         * @memberof proto
+         * @interface IRobotCommands
+         * @property {Array.<proto.IRobotCommand>|null} [robotCommands] RobotCommands robotCommands
+         */
+
+        /**
+         * Constructs a new RobotCommands.
+         * @memberof proto
+         * @classdesc Represents a RobotCommands.
+         * @implements IRobotCommands
+         * @constructor
+         * @param {proto.IRobotCommands=} [properties] Properties to set
+         */
+        function RobotCommands(properties) {
+            this.robotCommands = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * RobotCommands robotCommands.
+         * @member {Array.<proto.IRobotCommand>} robotCommands
+         * @memberof proto.RobotCommands
+         * @instance
+         */
+        RobotCommands.prototype.robotCommands = $util.emptyArray;
+
+        /**
+         * Creates a new RobotCommands instance using the specified properties.
+         * @function create
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands=} [properties] Properties to set
+         * @returns {proto.RobotCommands} RobotCommands instance
+         */
+        RobotCommands.create = function create(properties) {
+            return new RobotCommands(properties);
+        };
+
+        /**
+         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @function encode
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommands.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.robotCommands != null && message.robotCommands.length)
+                for (let i = 0; i < message.robotCommands.length; ++i)
+                    $root.proto.RobotCommand.encode(message.robotCommands[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommands.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.RobotCommands} RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommands.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommands();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        if (!(message.robotCommands && message.robotCommands.length))
+                            message.robotCommands = [];
+                        message.robotCommands.push($root.proto.RobotCommand.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.RobotCommands} RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommands.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a RobotCommands message.
+         * @function verify
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        RobotCommands.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.robotCommands != null && message.hasOwnProperty("robotCommands")) {
+                if (!Array.isArray(message.robotCommands))
+                    return "robotCommands: array expected";
+                for (let i = 0; i < message.robotCommands.length; ++i) {
+                    let error = $root.proto.RobotCommand.verify(message.robotCommands[i]);
+                    if (error)
+                        return "robotCommands." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.RobotCommands} RobotCommands
+         */
+        RobotCommands.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.RobotCommands)
+                return object;
+            let message = new $root.proto.RobotCommands();
+            if (object.robotCommands) {
+                if (!Array.isArray(object.robotCommands))
+                    throw TypeError(".proto.RobotCommands.robotCommands: array expected");
+                message.robotCommands = [];
+                for (let i = 0; i < object.robotCommands.length; ++i) {
+                    if (typeof object.robotCommands[i] !== "object")
+                        throw TypeError(".proto.RobotCommands.robotCommands: object expected");
+                    message.robotCommands[i] = $root.proto.RobotCommand.fromObject(object.robotCommands[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.RobotCommands} message RobotCommands
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        RobotCommands.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults)
+                object.robotCommands = [];
+            if (message.robotCommands && message.robotCommands.length) {
+                object.robotCommands = [];
+                for (let j = 0; j < message.robotCommands.length; ++j)
+                    object.robotCommands[j] = $root.proto.RobotCommand.toObject(message.robotCommands[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this RobotCommands to JSON.
+         * @function toJSON
+         * @memberof proto.RobotCommands
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        RobotCommands.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for RobotCommands
+         * @function getTypeUrl
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        RobotCommands.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.RobotCommands";
+        };
+
+        return RobotCommands;
     })();
 
     proto.SimulationBallLocation = (function() {

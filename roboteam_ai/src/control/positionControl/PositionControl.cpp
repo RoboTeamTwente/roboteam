@@ -5,7 +5,7 @@
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
-#include "interface_api/InterfaceGateway.h"
+#include "interface_api/Out.h"
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {

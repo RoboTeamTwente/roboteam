@@ -1,20 +1,17 @@
-import {useGameControllerStore} from "../modules/stores/ai-store";
 import {watch} from "vue";
 
-import {useVisualizationStore} from "../modules/stores/dataStores/visualization-store";
-import {useSTPDataStore} from "../modules/stores/dataStores/stp-data-store";
-import {useVisionDataStore} from "../modules/stores/dataStores/vision-data-store";
+import {useVisualizationStore} from "../modules/stores/data-stores/visualization-store";
+import {useSTPDataStore} from "../modules/stores/data-stores/stp-data-store";
+import {useVisionDataStore} from "../modules/stores/data-stores/vision-data-store";
 import {useProtoWebSocket} from "../utils";
 import {emitter} from "../services/ai-events";
-import {useAIDataStore} from "../modules/stores/dataStores/ai-data-store";
+import {useAIDataStore} from "../modules/stores/data-stores/ai-data-store";
 
 
 export const useAIClient = () => {
-    // const gameSettingsStore = useGameSettingsStore();
-    const gameControllerStore = useGameControllerStore();
-    const stpDataStore = useSTPDataStore();
-    const visionDataStore = useVisionDataStore();
-    const visualizationStore = useVisualizationStore();
+    const stpData = useSTPDataStore();
+    const visionData = useVisionDataStore();
+    const visualizationData = useVisualizationStore();
 
     const aiData = useAIDataStore();
     // const {status, data, send} = useWebSocket(url, {autoReconnect: true});
@@ -27,14 +24,14 @@ export const useAIClient = () => {
                 aiData.updateStateFromProto(message.aiState!);
                 break;
             case 'stpStatus':
-                stpDataStore.processSTPMsg(message.stpStatus!);
+                stpData.processSTPMsg(message.stpStatus!);
                 break;
             case 'state':
-                visionDataStore.processVisionMsg(message.state!);
+                visionData.processVisionMsg(message.state!);
                 break;
             case 'visualizations':
-                visualizationStore.pushDrawings(message.visualizations!.drawings!);
-                visualizationStore.pushMetrics(message.visualizations!.metrics!);
+                visualizationData.pushDrawings(message.visualizations!.drawings!);
+                visualizationData.pushMetrics(message.visualizations!.metrics!);
                 break;
             default:
                 console.log('unknown message', message);
@@ -46,6 +43,7 @@ export const useAIClient = () => {
     });
 
     emitter.on('update:gameSettings', (config) => {
+        console.log('update:gameSettings', config);
         send({setGameSettings: config})
     });
 
@@ -54,8 +52,12 @@ export const useAIClient = () => {
     });
 
     emitter.on('update:play', (value) => {
-        console.log('update:play', value);
         send({setPlay: value})
+    });
+
+    emitter.on('setBallPos', (value) => {
+        console.log('setBallPos', value)
+        send({setBallPos: value})
     });
 
     return {

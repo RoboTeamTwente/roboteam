@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useVisualizationStore} from "../../stores/dataStores/visualization-store";
+import {useVisualizationStore} from "../../stores/data-stores/visualization-store";
 
 const visualizationStore = useVisualizationStore();
 

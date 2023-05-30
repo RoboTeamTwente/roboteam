@@ -119,20 +119,15 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    constexpr auto midfielderNames = std::array{"pass_defender_1", "pass_defender_2", "pass_defender_3"};
-    auto activeMidfielderNames = std::vector<std::string>{};
-    for (auto name : midfielderNames) {
-        if (stpInfos[name].getRobot().has_value()) activeMidfielderNames.emplace_back(name);
+    if (enemyMap.empty()) {
+        stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     }
-
-    for (int i = 0; i < activeMidfielderNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        auto& midfielderStpInfo = stpInfos[activeMidfielderNames[i]];
-        if (enemyMap.empty()) break;
-        midfielderStpInfo.setPositionToDefend(enemyMap.begin()->second);
-        midfielderStpInfo.setBlockDistance(BlockDistance::ROBOTRADIUS);
-        enemyMap.erase(enemyMap.begin());
+    else {
+        stpInfos["pass_defender_1" "pass_defender_2" "pass_defender3"].setPositionToDefend(enemyMap.begin()->second);
     }
+    stpInfos["pass_defender_1" "pass_defender_2" "pass_defender3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void AttackingPass::calculateInfoForDefenders() noexcept {

@@ -8,6 +8,7 @@ var namespacertt_1_1ai_1_1stp_1_1role =
     [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],
     [ "Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer" ],
     [ "PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver" ],
+    [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ],
     [ "Keeper", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper" ],
     [ "BallAvoider", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider" ],
     [ "BallDefender", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender.html", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender" ],

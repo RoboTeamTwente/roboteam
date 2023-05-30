@@ -2,7 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos =
 [
     [ "KickAtPos", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#a8953fce5339c0188caf1ee7e0f5c05a3", null ],
     [ "calculateInfoForSkill", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#ad88137e2f86c846345d9d1cbafb1ad95", null ],
-    [ "forceTacticSuccess", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#ab496bf1614c47ef3e466cd235eb84aab", null ],
     [ "getCurrentSkill", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#aa6f92e63b646d2772c2c244b48738cca", null ],
     [ "getStatus", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#ab7650037eb092459aca7247ea77f2ad4", null ],

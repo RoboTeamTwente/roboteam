@@ -45,7 +45,7 @@ var hierarchy =
       [ "rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::WeHaveMajorityGlobalEvaluation", "d2/d43/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveMajorityGlobalEvaluation.html", null ]
     ] ],
-    [ "rtt::BB::BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", null ],
+    [ "rtt::BB::BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", null ],
     [ "rtt::ai::control::BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", null ],
     [ "rtt::BB::BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", null ],
     [ "rtt::BB::BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", null ],
@@ -173,6 +173,7 @@ var hierarchy =
       [ "rtt::ai::stp::role::KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", null ],
       [ "rtt::ai::stp::role::PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", null ],
       [ "rtt::ai::stp::role::Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", null ],
+      [ "rtt::ai::stp::role::PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", null ],
       [ "rtt::ai::stp::role::RobotDefender", "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html", null ]
     ] ],
     [ "rtt::ai::Dealer::RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", null ],

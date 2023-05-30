@@ -138,6 +138,7 @@ var annotated_dup =
             [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],
             [ "Passer", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer.html", "d0/d04/classrtt_1_1ai_1_1stp_1_1role_1_1Passer" ],
             [ "PassReceiver", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html", "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver" ],
+            [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ],
             [ "Keeper", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html", "db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper" ],
             [ "BallAvoider", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html", "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider" ],
             [ "BallDefender", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender.html", "dd/d6a/classrtt_1_1ai_1_1stp_1_1role_1_1BallDefender" ],
@@ -199,7 +200,7 @@ var annotated_dup =
       ] ],
       [ "BB", "d0/dde/namespacertt_1_1BB.html", [
         [ "BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", "d0/dde/namespacertt_1_1BB_dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart_dup" ],
-        [ "BBPosVelAcc", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc.html", "d0/d34/structrtt_1_1BB_1_1BBPosVelAcc" ],
+        [ "BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", "da/d73/structrtt_1_1BB_1_1BBPosVel" ],
         [ "BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D" ],
         [ "BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D" ],
         [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],

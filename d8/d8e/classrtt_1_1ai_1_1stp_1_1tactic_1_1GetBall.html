@@ -156,9 +156,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a36b6dfcfe1a0075caad58aaa0dbdf436"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a36b6dfcfe1a0075caad58aaa0dbdf436">getName</a> () override</td></tr>
 <tr class="memdesc:a36b6dfcfe1a0075caad58aaa0dbdf436"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the tactic name.  <a href="../../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a36b6dfcfe1a0075caad58aaa0dbdf436">More...</a><br /></td></tr>
 <tr class="separator:a36b6dfcfe1a0075caad58aaa0dbdf436"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a578681eb373e850612625b9898d6886d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a578681eb373e850612625b9898d6886d">forceTacticSuccess</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info) noexcept override</td></tr>
-<tr class="memdesc:a578681eb373e850612625b9898d6886d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this tactic should be forced success It is forced success whenever the corresponding robot has the ball.  <a href="../../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a578681eb373e850612625b9898d6886d">More...</a><br /></td></tr>
-<tr class="separator:a578681eb373e850612625b9898d6886d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that describes the get ball <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html" title="Base class of tactic.">Tactic</a>. This tactic is used for getting the ball. It has 3 skills: GoToPos, Rotate, and SetDribbler. It cannot fail, and it's getting reset when there the robot loses the ball. It's not an end tactic, therefore it can succeed. </p>
@@ -217,43 +214,6 @@ Private Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>std::optional&lt;SkillInfo&gt; based on the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> parameter </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a4cfea3dd9c7299b30f32a1abf0cf2356">rtt::ai::stp::Tactic</a>.</p>
-
-</div>
-</div>
-<a id="a578681eb373e850612625b9898d6886d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a578681eb373e850612625b9898d6886d">&#9670;&nbsp;</a></span>forceTacticSuccess()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::stp::tactic::GetBall::forceTacticSuccess </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
-          <td class="paramname"><em>info</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">private</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Checks if this tactic should be forced success It is forced success whenever the corresponding robot has the ball. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">info</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>whether the tactic is forced success </dd></dl>
-
-<p>Reimplemented from <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab496bf1614c47ef3e466cd235eb84aab">rtt::ai::stp::Tactic</a>.</p>
 
 </div>
 </div>

@@ -73,6 +73,10 @@ target_include_directories(roboteam_utils
         PUBLIC include
         )
 
+target_link_libraries(roboteam_utils
+        PRIVATE roboteam_networking
+)
+
 target_compile_options(roboteam_utils PRIVATE "${COMPILER_FLAGS}")
 
 # -- TESTS --

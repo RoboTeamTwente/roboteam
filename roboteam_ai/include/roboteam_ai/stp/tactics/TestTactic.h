@@ -43,14 +43,6 @@ class TestTactic : public Tactic {
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 
     /**
-     * @brief Should this tactic be forced to succeed (skip to the next tactic)
-     * This tactic should never be forced to succeed so always returns false
-     * @param info StpInfo can be used to check some data
-     * @return true if tactic should succeed, false if execution should continue
-     */
-    bool forceTacticSuccess(const StpInfo &info) noexcept override;
-
-    /**
      * @brief Checks whether this is a passive tactic (formerly called endTactic
      * @return This will always return false, since it is NOT an endTactic
      */

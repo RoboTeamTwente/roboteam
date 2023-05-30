@@ -50,12 +50,6 @@ class PlayTemplate : public Play {
     const char *getName() override;
 
     /**
-     * @brief Optional function to save information for the next play
-     * @param info Map-Struct to save info in
-     */
-    void storePlayInfo(gen::PlayInfos &info) noexcept override;
-
-    /**
      * @brief Optional function to force end a play
      * @return Boolean that tells whether the play should end
      */

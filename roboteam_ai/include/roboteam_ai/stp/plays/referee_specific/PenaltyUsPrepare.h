@@ -37,11 +37,6 @@ class PenaltyUsPrepare : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Info that should be calculated for scoring of the play
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * @brief Retrieves the name of the play
      * @return The name of the play as a string
      */

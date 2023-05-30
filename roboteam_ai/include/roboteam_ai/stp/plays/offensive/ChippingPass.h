@@ -55,12 +55,6 @@ class ChippingPass : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * @brief Calculate info for the roles that need to be calculated for scoring
-     * @param world The current world data
-     */
-    void calculateInfoForScoredRoles(world::World* world) noexcept override{};
-
-    /**
      * @brief Gets the name of the play
      * @return The name of the play
      */

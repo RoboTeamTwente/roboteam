@@ -6,6 +6,8 @@
 
 #include "interface/api/Input.h"
 
+#include "roboteam_utils/Print.h"
+
 namespace rtt::ai::interface {
 
 GraphWidget::GraphWidget(QWidget *parent) {
@@ -32,7 +34,7 @@ GraphWidget::GraphWidget(QWidget *parent) {
 
         if (y > fpsGraphYMax) {
             if (y > fpsGraphYMax) fpsGraphYMax = y;
-            fpsView->chart()->axes(Qt::Horizontal).back()->setRange(0, fpsGraphYMax + 20);
+            fpsView->chart()->axes(Qt::Vertical).back()->setRange(0, fpsGraphYMax + 20);
         }
 
         if (x < fpsGraphXMin || x > fpsGraphXMax) {
@@ -42,7 +44,7 @@ GraphWidget::GraphWidget(QWidget *parent) {
             if (fpsGraphXMax - fpsGraphXMin > 30) {
                 fpsGraphXMin = fpsGraphXMax - 30;
             }
-            fpsView->chart()->axes(Qt::Vertical).back()->setRange(fpsGraphXMin, fpsGraphXMax);
+            fpsView->chart()->axes(Qt::Horizontal).back()->setRange(fpsGraphXMin, fpsGraphXMax);
         }
     });
 

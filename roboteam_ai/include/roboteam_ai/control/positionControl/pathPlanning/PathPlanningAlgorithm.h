@@ -23,7 +23,12 @@ class PathPlanningAlgorithm {
     explicit PathPlanningAlgorithm(CollisionDetector &collisionDetector);
 
     /**
-     * Algorithm specific path computation. It should take into account the obstacles in the field
+     * @brief Virtual destructor of the PathPlanningAlgorithm
+     */
+     virtual ~PathPlanningAlgorithm() = default;
+
+    /**
+     * @brief Algorithm specific path computation. It should take into account the obstacles in the field
      * @param robotPosition the current robot position
      * @param targetPosition the target position to move to
      * @return a vector of points representing the path

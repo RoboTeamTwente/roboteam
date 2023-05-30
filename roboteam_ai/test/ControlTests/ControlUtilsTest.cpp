@@ -80,7 +80,7 @@ TEST(ControlUtils, accelerationLimiter) {
 
 // the function should return weight/distance^2 * normalized vector IF within minDistance, otherwise 0.
 TEST(ControlUtils, it_calculates_forces) {
-    Vector2 force = {0, 0};
+    Vector2 force;
 
     // distance should be ok. 2/2^2
     force = cr::ControlUtils::calculateForce(Vector2(0, -2), 2, 3);

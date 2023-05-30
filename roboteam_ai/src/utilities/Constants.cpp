@@ -4,12 +4,9 @@
 
 #include "utilities/Constants.h"
 
-#include <assert.h>
 #include <roboteam_utils/Print.h>
 
 #include "utilities/GameSettings.h"
-
-// TODO: Clean this up and remove unneeded variables
 
 namespace rtt::ai {
 

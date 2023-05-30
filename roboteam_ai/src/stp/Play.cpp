@@ -9,12 +9,7 @@
 
 namespace rtt::ai::stp {
 
-void Play::initialize(gen::PlayInfos &_previousPlayInfos) noexcept {
-    //        previousPlayInfos = _previousPlayInfos;
-    //        if (!previousPlayInfos->empty()) {
-    //            RTT_DEBUG(
-    //                std::to_string(previousPlayInfos->begin()->second.robotID.value_or(-1)));
-    //        }
+void Play::initialize() noexcept {
     stpInfos.clear();
     for (auto &role : roles) {
         if (role != nullptr) role->reset();
@@ -146,11 +141,7 @@ bool Play::isValidPlayToStart() const noexcept {
             std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); }));
 }
 
-void Play::calculateInfoForScoredRoles(world::World *_world) noexcept {}
-
 uint8_t Play::getLastScore() const { return lastScore.value_or(0); }
-
-void Play::storePlayInfo(gen::PlayInfos &previousPlayInfo) noexcept {}
 
 bool Play::shouldEndPlay() noexcept { return false; }
 

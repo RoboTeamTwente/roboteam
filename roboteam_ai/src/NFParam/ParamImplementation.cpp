@@ -128,7 +128,7 @@ void ParamImplementation::updateTimes(EVENT_PTR &prev, EVENT_PTR &event) {
     Anchor prev_anchor = prev->anchor;
     if ((event->anchor & Anchor::START) == Anchor::NONE) {
         // If event does not have a fixed start, get it from previous event
-        double prev_anchor_time = 0.0;
+        double prev_anchor_time;
         if ((prev_anchor & Anchor::END) == Anchor::END) {
             prev_anchor_time = prev->end_time;
         } else {

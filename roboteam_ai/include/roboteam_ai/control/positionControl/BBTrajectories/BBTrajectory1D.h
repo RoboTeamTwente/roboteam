@@ -22,14 +22,14 @@ struct BBTrajectoryPart {
 /**
  * @brief small struct to keep Position, Velocity and Acceleration in at once.
  */
-struct BBPosVelAcc {
+struct BBPosVel {
     /**
      * @brief Explicit constructor for th BBPosVelAcc struct
      * @param pos Position
      * @param vel Velocity
-     * @param acc Acceleration
+     *
      */
-    explicit BBPosVelAcc(double pos, double vel, double acc) : pos{pos}, vel{vel} {};
+    explicit BBPosVel(double pos, double vel) : pos{pos}, vel{vel} {};
 
     double pos; /**< Position */
     double vel; /**< Velocity */
@@ -45,11 +45,11 @@ struct BBPosVelAcc {
 class BBTrajectory1D {
    public:
     /**
-     * @brief Gets the position, velocity and acceleration at time t
+     * @brief Gets the position and velocity at time t
      * @param t time to get values at
-     * @return The PosVelAcc
+     * @return The PosVel
      */
-    [[nodiscard]] BBPosVelAcc getValues(double t) const;
+    [[nodiscard]] BBPosVel getValues(double t) const;
 
     /**
      * @brief Gets the position at time t

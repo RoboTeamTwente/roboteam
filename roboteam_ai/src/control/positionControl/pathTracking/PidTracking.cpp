@@ -35,9 +35,6 @@ void PidTracking::updatePIDValues(stp::PIDType pidType, int robotID) {
             newPID = interface::Output::getReceivePid();
             break;
         }
-        case stp::PIDType::INTERCEPT: {
-            newPID = interface::Output::getInterceptPid();
-        }
         case stp::PIDType::KEEPER: {
             newPID = interface::Output::getKeeperPid();
             break;

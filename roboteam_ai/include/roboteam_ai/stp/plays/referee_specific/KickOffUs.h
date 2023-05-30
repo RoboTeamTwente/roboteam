@@ -37,11 +37,6 @@ class KickOffUs : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * @brief Check if the play should end. True after kickoff
      * @return Boolean that tells whether the play should end
      */

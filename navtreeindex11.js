@@ -1,5 +1,11 @@
 var NAVTREEINDEX11 =
 {
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#abd94b835220f65a1d26e2e5834cacef3":[2,0,10,0,3,1,19],
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d":[2,0,10,0,3,1,40],
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688":[2,0,10,0,3,1,33],
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#af1e19f022e604ab0b8189b660cb9d863":[2,0,10,0,3,1,28],
+"db/d1b/namespacertt_1_1world.html":[2,0,10,3],
+"db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727":[2,0,10,3,5],
 "db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6826aa8fe94a2b35cbcef306b5d9d40e":[2,0,10,3,5,1],
 "db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6e5f2747daba8cda60dca36edf058525":[2,0,10,3,5,2],
 "db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727acf22de144f22db9f78a42e1cea77e026":[2,0,10,3,5,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX11 =
 "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html#af9a9c436e9711e707dfb0f43b5601d91":[3,0,1,0,3,4,1,9],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html":[3,0,1,0,3,3,5],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,5,29],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,3,3,5,33],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,3,3,5,34],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,3,3,5,23],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,3,3,5,22],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a2f095d04a2b1a6d5f9a5adbe42363a09":[3,0,1,0,3,3,5,2],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a3653164b44b490dfbf02429dcfd01f4a":[3,0,1,0,3,3,5,3],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a407877bf2ca555c0e6e7027241bcc5e8":[3,0,1,0,3,3,5,10]
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,3,3,5,33]
 };

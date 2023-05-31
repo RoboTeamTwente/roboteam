@@ -119,13 +119,14 @@ void DefendPass::calculateInfoForDefenders() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    if (enemyMap.empty()) {
+    if (enemyMap.size() < 2) {
         stpInfos["midfielder_1"].setPositionToDefend(
             Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
         stpInfos["midfielder_2"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
                                                              field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     } else {
         stpInfos["midfielder_1"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
         stpInfos["midfielder_2"].setPositionToDefend(enemyMap.begin()->second);
     }
     stpInfos["midfielder_1"].setBlockDistance(BlockDistance::HALFWAY);

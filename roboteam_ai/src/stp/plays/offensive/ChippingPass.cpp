@@ -118,14 +118,16 @@ void ChippingPass::calculateInfoForRoles() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    if (enemyMap.empty()) {
+    if (enemyMap.size() < 3) {
         stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
         stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
         stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     }
     else {
         stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
         stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
         stpInfos["pass_defender_3"].setPositionToDefend(enemyMap.begin()->second);
     }
     stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);

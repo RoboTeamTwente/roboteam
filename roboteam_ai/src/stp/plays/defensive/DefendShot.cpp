@@ -126,9 +126,11 @@ void DefendShot::calculateInfoForDefenders() noexcept {
         stpInfos["midfielder_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
                                                              field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     } else {
-        stpInfos["midfielder_1"].setPositionToDefend(enemyMap[0]);
-        stpInfos["midfielder_3"].setPositionToDefend(enemyMap[1]);
-        stpInfos["midfielder_2"].setPositionToDefend(enemyMap[2]);
+        stpInfos["midfielder_1"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
+        stpInfos["midfielder_2"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
+        stpInfos["midfielder_3"].setPositionToDefend(enemyMap.begin()->second);
     }
     stpInfos["midfielder_1"].setBlockDistance(BlockDistance::HALFWAY);
     stpInfos["midfielder_3"].setBlockDistance(BlockDistance::HALFWAY);

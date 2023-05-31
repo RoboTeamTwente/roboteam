@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae37bbc212bbf3af61007918004e13678":[3,0,1,0,3,4,14,7],
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae9c573acec4e3999f6b1695c386c06a7":[3,0,1,0,3,4,14,1],
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#af1b0700403b9dc8eb62bdfffd585a7c4":[3,0,1,0,3,4,14,0],
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#af9a9c436e9711e707dfb0f43b5601d91":[3,0,1,0,3,4,14,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "da/d39/classrtt_1_1world_1_1World.html#a64558ef47d03743ba2b2b61ce97a083b":[3,0,1,3,3,2],
 "da/d39/classrtt_1_1world_1_1World.html#a67eccfd0e7e13fc4ce20a5dd5df55c31":[3,0,1,3,3,9],
 "da/d39/classrtt_1_1world_1_1World.html#a7a081491cf90e5710bb464d553ff9790":[3,0,1,3,3,18],
-"da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f":[3,0,1,3,3,24],
-"da/d39/classrtt_1_1world_1_1World.html#a840a30aa25c67c3a11ac7cd003ef22f3":[3,0,1,3,3,15]
+"da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f":[3,0,1,3,3,24]
 };

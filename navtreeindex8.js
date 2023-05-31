@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ad485d50284d7e9cbd1af75a98e2c5b68":[3,0,1,1,3,4],
 "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ae037baa0bfb300499c04aa9e834e0c00":[3,0,1,1,3,8],
 "d7/dcc/SettingsWidget_8h.html":[4,0,0,0,0,1,1,8],
 "d7/dcc/SettingsWidget_8h_source.html":[4,0,0,0,0,1,1,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#a692cb6f9ade70bebc8f56e5175036c9a":[3,0,1,0,3,4,14,4],
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#a79b97d8f1a5eec0916220c20fb95db68":[3,0,1,0,3,4,14,8],
 "d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#a89bcbea7b61a816c97caec1cbef1eaff":[3,0,1,0,3,4,14,3],
-"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ab3a4dd278c94db922409c690ae5d13b4":[3,0,1,0,3,4,14,6],
-"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae37bbc212bbf3af61007918004e13678":[3,0,1,0,3,4,14,7]
+"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ab3a4dd278c94db922409c690ae5d13b4":[3,0,1,0,3,4,14,6]
 };

@@ -213,7 +213,7 @@ void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
 }
 
 void MainControlsWidget::updateContents() {
-    auto ruleSetText = QString::fromStdString(GameStateManager::getCurrentGameState().ruleSetName);
+    auto ruleSetText = QString::fromStdString(GameStateManager::getCurrentGameState().ruleSet.title);
     if (ruleSetText != select_ruleset->currentText()) {
         select_ruleset->setCurrentText(ruleSetText);
     }

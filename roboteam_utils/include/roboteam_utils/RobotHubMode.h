@@ -7,6 +7,7 @@
 
 #include <string>
 #include <string_view>
+#include <proto/GameSettings.pb.h>
 
 namespace rtt {
     /**

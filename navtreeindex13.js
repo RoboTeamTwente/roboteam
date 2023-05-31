@@ -1,11 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"dd/d6d/ControlUtilsTest_8cpp.html#a7d2150a68568ac641fb1570019756cce":[4,0,0,2,0,1,1],
-"dd/d6d/ControlUtilsTest_8cpp.html#ab9e43f749b93878b749525e91fcc9be1":[4,0,0,2,0,1,5],
-"dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82":[4,0,0,2,0,1,2],
-"dd/d6d/ControlUtilsTest_8cpp.html#aea976c053e2f11dce57b6ad11f5d397b":[4,0,0,2,0,1,4],
-"dd/d6e/BallPlacementThemGameStateEvaluation_8h.html":[4,0,0,0,0,2,2,0,0],
-"dd/d6e/BallPlacementThemGameStateEvaluation_8h_source.html":[4,0,0,0,0,2,2,0,0],
 "dd/d71/PassComputations_8h.html":[4,0,0,0,0,2,0,2],
 "dd/d71/PassComputations_8h_source.html":[4,0,0,0,0,2,0,2],
 "dd/d7c/PenaltyTaker_8cpp.html":[4,0,0,1,3,4,0,8],
@@ -249,5 +243,11 @@ var NAVTREEINDEX13 =
 "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#abf0d066cf359054865fbd07b10862905":[3,0,1,1,2,16],
 "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ad9cc8803a3f1166bd11a78c7353f0c3e":[3,0,1,1,2,11],
 "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ad9d0aed118aa92d7f38df19b7a850e85":[3,0,1,1,2,0],
-"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae0a23dfd3c949008d8d488cf0800fd3d":[3,0,1,1,2,13]
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae0a23dfd3c949008d8d488cf0800fd3d":[3,0,1,1,2,13],
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae27fbb9778792333e48980525e08e7cf":[3,0,1,1,2,5],
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#aec54d15ae61b6adeba0bf26829b46202":[3,0,1,1,2,2],
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#af073c5d73169926ee80522793cae0c88":[3,0,1,1,2,7],
+"de/d5d/GoalComputations_8cpp.html":[4,0,0,1,3,0,0],
+"de/d86/Harasser_8h.html":[4,0,0,0,0,2,4,0,4],
+"de/d86/Harasser_8h_source.html":[4,0,0,0,0,2,4,0,4]
 };

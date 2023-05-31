@@ -124,9 +124,13 @@ void ChippingPass::calculateInfoForRoles() noexcept {
         stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     }
     else {
-        stpInfos["pass_defender_1" "pass_defender_2" "pass_defender3"].setPositionToDefend(enemyMap.begin()->second);
+        stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
+        stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
+        stpInfos["pass_defender_3"].setPositionToDefend(enemyMap.begin()->second);
     }
-    stpInfos["pass_defender_1" "pass_defender_2" "pass_defender3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_2"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void ChippingPass::calculateInfoForDefenders() noexcept {

@@ -151,7 +151,7 @@ void MainControlsWidget::toggleOurSideParam() {
     setToggleSideBtnLayout();
 }
 
-/// toggle the the setting 'isSerialMode'
+/// toggle the the setting 'robotHubMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
     switch (GameSettings::getRobotHubMode()) {
         case RobotHubMode::BASESTATION: {

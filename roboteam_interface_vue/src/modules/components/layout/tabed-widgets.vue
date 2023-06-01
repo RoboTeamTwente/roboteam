@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Tab} from "../../stores/ui-store";
+import {Tab, TabComponents} from "../../stores/ui-store";
 
 const props = defineProps<{
     activeTab: Tab,
@@ -23,7 +23,7 @@ const emit = defineEmits<{
             <div class="tab tab-bordered gap-1 flex-nowrap w-full "/>
         </div>
         <div class="p-2 overflow-auto">
-            <Component :is="activeTab.component"/>
+            <Component :is="TabComponents[activeTab.name]"/>
         </div>
     </div>
 </template>

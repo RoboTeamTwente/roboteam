@@ -34,42 +34,44 @@ export type UiStore = {
     internalTeam: 'BLACK' | 'PURPLE'
 }
 
+export const TabComponents = {
+    'Game Settings': markRaw(GameSettings),
+    'STP': markRaw(StpStatus),
+    'Feedback': markRaw(Feedback),
+    'Plays History': markRaw(PlayEvaluation),
+    'Metrics': markRaw(Metrics),
+    'UI Settings': markRaw(UiSettings)
+}
+
 export type Tab = {
     name: string,
     icon: string,
-    component: string
 };
 
 export const TABS: Tab[] = [
     {
         name: 'Game Settings',
         icon: 'fa-gear',
-        component: markRaw(GameSettings)
     },
     {
         name: 'STP',
         icon: 'fa-layer-group',
-        component: markRaw(StpStatus)
     },
     {
         name: 'Feedback',
         icon: 'fa-rss',
-        component: markRaw(Feedback)
     },
     {
         name: 'Plays History',
         icon: 'fa-history',
-        component: markRaw(PlayEvaluation)
     },
     {
         name: 'Metrics',
         icon: 'fa-gauge',
-        component: markRaw(Metrics)
     },
     {
         name: 'UI Settings',
         icon: 'fa-gear',
-        component: markRaw(UiSettings)
     }
 ];
 

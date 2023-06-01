@@ -29,7 +29,7 @@ const togglePause = () => {
 
 </script>
 <template>
-  <header class="grid-in-header bg-base flex justify-center border-b-2 border-base-300 items-center px-4">
+  <header class="top-panel bg-base flex justify-center border-b-2 border-base-300 items-center px-4">
     <div class="flex">
       <button class="btn btn-sm btn-ghost gap-2" :class="{'btn-active': !uiStore.$state.leftPanel.collapsed}"
               @click="uiStore.toggleLeftPanel">
@@ -81,7 +81,6 @@ const togglePause = () => {
             <h2 class="card-title">Performance Info</h2>
             <ul class="font-mono">
               <li>Tick: {{stpData.currentTick}}</li>
-              <li>FPS: XXX</li>
             </ul>
           </div>
         </div>

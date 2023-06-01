@@ -1,8 +1,19 @@
 <script setup lang="ts">
-import {useUIStore} from "../../stores/ui-store";
+import {Tab, TABS, useUIStore} from "../../stores/ui-store";
 import TriState from "./tri-state.vue";
+import {computed} from "vue";
 
 const uiStore = useUIStore();
+
+// This makes sure the UI Settings tab is always in the left panel
+const leftPanelSelectedTabs = computed({
+    get: () => uiStore.leftPanel.selectableTabs,
+    set: (val: Tab[]) => {
+        val = val.filter(e => e.name !== 'UI Settings');
+        val.push(...TABS.filter(e => e.name === 'UI Settings'));
+        uiStore.leftPanel.selectableTabs = val
+    }
+})
 
 </script>
 <template>
@@ -33,6 +44,26 @@ const uiStore = useUIStore();
                     <span class="label-text">Black </span>
                     <input type="radio" class="radio radio-sm" v-model="uiStore.internalTeam" value="BLACK"/>
                 </label>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Select left bar tabs</span>
+                </label>
+                <select class="select select-bordered" multiple v-model="leftPanelSelectedTabs">
+                    <template v-for="tab in TABS">
+                        <option v-if="tab.name !== 'UI Settings'" :value="tab">{{ tab.name }}</option>
+                        <option v-else :value="tab" disabled :selected="true">{{ tab.name }}</option>
+                    </template>
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Select bottom bar tabs</span>
+                </label>
+                <select class="select select-bordered" multiple v-model="uiStore.bottomPanel.selectableTabs">
+                    <option v-for="tab in TABS" :value="tab">{{ tab.name }}</option>
+                </select>
             </div>
 
 

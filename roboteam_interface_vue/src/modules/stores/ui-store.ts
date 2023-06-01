@@ -1,32 +1,19 @@
 import {defineStore} from 'pinia'
 import {robotNameMap} from "../../utils";
-
-const defaultState: () => UiStore = () => ({
-    bottomPanel: {
-        size: 250,
-        collapsed: false
-    },
-    leftPanel: {
-        size: 250,
-        collapsed: false
-    },
-    selectedRobots: new Set([]),
-    scaling: {
-        ball: 1,
-        robots: 1,
-    },
-    visualizations: {
-        velocities: 'SHOW',
-        drawings: 'SHOW',
-        pathPlanning: 'SHOW',
-        debug: 'SHOW',
-    },
-    internalTeam: 'PURPLE'
-});
+import GameSettings from "../components/game-settings.vue";
+import {Component, markRaw} from "vue";
+import StpStatus from "../components/panels/stp-panel/stp-status.vue";
+import Feedback from "../components/panels/feedback.vue";
+import PlayEvaluation from "../components/panels/play-evaluation.vue";
+import Metrics from "../components/panels/metrics.vue";
+import UiSettings from "../components/ui-settings/ui-settings.vue";
+import {s} from "@tauri-apps/api/shell-cbf4da8b";
 
 type Panel = {
     size: number
     collapsed: boolean
+    selectedTab: Tab,
+    selectableTabs: Tab[]
 }
 
 export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
@@ -46,13 +33,80 @@ export type UiStore = {
     },
     internalTeam: 'BLACK' | 'PURPLE'
 }
+
+export type Tab = {
+    name: string,
+    icon: string,
+    component: string
+};
+
+export const TABS: Tab[] = [
+    {
+        name: 'Game Settings',
+        icon: 'fa-gear',
+        component: markRaw(GameSettings)
+    },
+    {
+        name: 'STP',
+        icon: 'fa-layer-group',
+        component: markRaw(StpStatus)
+    },
+    {
+        name: 'Feedback',
+        icon: 'fa-rss',
+        component: markRaw(Feedback)
+    },
+    {
+        name: 'Plays History',
+        icon: 'fa-history',
+        component: markRaw(PlayEvaluation)
+    },
+    {
+        name: 'Metrics',
+        icon: 'fa-gauge',
+        component: markRaw(Metrics)
+    },
+    {
+        name: 'UI Settings',
+        icon: 'fa-gear',
+        component: markRaw(UiSettings)
+    }
+];
+
+const defaultState: () => UiStore = () => ({
+    bottomPanel: {
+        size: 250,
+        collapsed: false,
+        selectedTab: TABS[0],
+        selectableTabs: TABS
+    },
+    leftPanel: {
+        size: 250,
+        collapsed: false,
+        selectedTab: TABS[0],
+        selectableTabs: TABS
+    },
+    selectedRobots: new Set([]),
+    scaling: {
+        ball: 1,
+        robots: 1,
+    },
+    visualizations: {
+        velocities: 'SHOW',
+        drawings: 'SHOW',
+        pathPlanning: 'SHOW',
+        debug: 'SHOW',
+    },
+    internalTeam: 'PURPLE'
+});
+
+
 export const useUIStore = defineStore('uiStore', {
     persist: {
         serializer: {
             serialize: JSON.stringify,
             deserialize: (value: string) => {
                 const parsed = JSON.parse(value);
-
                 // TODO: This is a hack to make the Set deserializable.
                 parsed.selectedRobots = new Set();
                 return parsed;

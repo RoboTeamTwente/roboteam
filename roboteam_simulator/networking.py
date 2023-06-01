@@ -128,7 +128,8 @@ class Publisher(Thread):
         self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message
 
     def run(self):
-        self.send(self.env.field)
+        while True:
+            self.send(self.env.field)
 
 
 class Subscriber(Thread):
@@ -145,8 +146,6 @@ class Subscriber(Thread):
         self.socket_yellow.connect(f'tcp://{SUB_ADDRESS}:{SUB_PORT_YELLOW}')
         self.socket_yellow.setsockopt_string(zmq.SUBSCRIBE, '')
 
-        self.robot_command_parser = RobotCommands_pb2.RobotCommands()
-
         self.env = env
 
     def run(self):
@@ -154,8 +153,14 @@ class Subscriber(Thread):
             msg_blue = self.socket_blue.recv()
             msg_yellow = self.socket_yellow.recv()
 
-            robot_command_yellow = self.robot_command_parser.ParseFromString(msg_yellow)
-            robot_command_blue = self.robot_command_parser.ParseFromString(msg_blue)
+            robot_commands_yellow = RobotCommands_pb2.RobotCommands()
+            robot_commands_blue = RobotCommands_pb2.RobotCommands()
 
-            self.env.field.yellowTeam.robots[robot_command_yellow[0]].last_command_received = robot_command_yellow
-            self.env.field.blueTeam.robots[robot_command_blue[0]].last_command_received = robot_command_blue
+            robot_commands_yellow.ParseFromString(msg_yellow)
+            robot_commands_blue.ParseFromString(msg_blue)
+
+            for robot_command in robot_commands_yellow.robot_commands:
+                self.env.field.yellowTeam.robots[robot_command.id].last_command_received = robot_command
+
+            for robot_command in robot_commands_blue.robot_commands:
+                self.env.field.blueTeam.robots[robot_command.id].last_command_received = robot_command

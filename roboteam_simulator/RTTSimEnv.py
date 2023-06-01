@@ -7,25 +7,6 @@ from numpy import size, floor
 from collisions import check_collisions, ball_field_collision
 from static_classes import Field
 
-
-# Robot commands (accessed as robot_command[i])
-# index | action            | low   | high
-# 0     | ID                | 0     | +10
-# 1     | x acceleration    | -1    | +1
-# 2     | y acceleration    | -1    | +1
-# 3     | angle             | 0     | +360
-# 4     | angular velocity  | -10   | +10
-# 5     | use ang vel       | 0     | 1
-# 6     | camera angle      | 0     | +360
-# 7     | camera angle set  | 0     | 1
-# 8     | kick speed        | 0     | 7
-# 9     | wait for ball     | 0     | 1
-# 10    | kick at angle     | 0     | 360
-# 11    | kick type         | 0     | 2
-# 12    | dribbler speed    | 0     | 1
-# 13    | ignore_packet     | 0     | 1
-# Low and high artefacts of original ML ideas
-
 def get_observation(field):
     obs = []
     # Ball
@@ -85,7 +66,7 @@ class RTTSimEnv(gym.Env):
 
         # Location of robots
         for robot in self.field.yellowTeam.robots + self.field.blueTeam.robots:
-            robot.update()
+            robot.step()
 
         # Check and handle collisions of objects
         ball_field_collision(self.field)

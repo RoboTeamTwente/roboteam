@@ -118,9 +118,6 @@ class Robot:
     def update(self):
         """! Update the status of the robot
         """
-        # Update velocity
-        self.vel_x = min(self.vel_x + self.acc_x, 6)
-        self.vel_y = min(self.vel_y + self.acc_y, 6)
         # Update position
         self.pos_x += self.vel_x
         self.pos_y += self.vel_y
@@ -133,12 +130,13 @@ class Robot:
         @param robot_command    List of attributes the robot should adhere to
         """
         # Check for correct ID
-        if int(robot_command[0]) == self.id or robot_command[0] == -1:
-            self.acc_x = robot_command[1]
-            self.acc_y = robot_command[2]
-            self.ang_vel = robot_command[4] if robot_command[5] else 0
-            self.kick_speed = robot_command[8]
-            self.dribbler_speed = robot_command[12]
+        if robot_command.id == self.id or robot_command.id == -1:
+            self.vel_x = robot_command.velocity_x
+            self.vel_y = robot_command.velocity_y
+            if robot_command.use_angular_velocity:
+                self.ang_vel = robot_command.angular_velocity
+            self.kick_speed = robot_command.kick_speed
+            self.dribbler_speed = robot_command.dribbler_speed
 
         # Exit if ID is wrong
         else:

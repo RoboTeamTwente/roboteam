@@ -74,6 +74,7 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);
     stpInfos["kicker"].setShotType(ShotType::MAX);
+    if (stpInfos["kicker"].getRobot().has_value()) stpInfos["kicker"].setMaxRobotVelocity(std::max((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length(), 0.5));
 }
 
 }  // namespace rtt::ai::stp::play

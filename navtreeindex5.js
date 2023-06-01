@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"d5/d51/TestSkill_8h_source.html":[4,0,0,0,0,2,5,6],
 "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html":[3,0,1,0,3,4,3],
 "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,3,4,3,10],
 "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,3,4,3,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,3,3,2,21],
 "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a27b85bd78c2729c47421a5e485d268a7":[3,0,1,0,3,3,2,1],
 "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a4598ba530d29d7f4f53bcec0c9845100":[3,0,1,0,3,3,2,30],
-"d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a52fc8b6075367b48ae05021829ebcc8f":[3,0,1,0,3,3,2,19]
+"d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a52fc8b6075367b48ae05021829ebcc8f":[3,0,1,0,3,3,2,19],
+"d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a58560de6d2d6ca91e467deb1071aadbd":[3,0,1,0,3,3,2,13]
 };

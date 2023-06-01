@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab9a25435f59d30d9fbed119582370ff6":[2,0,10,0,3,1,5],
 "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#abd94b835220f65a1d26e2e5834cacef3":[2,0,10,0,3,1,19],
 "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d":[2,0,10,0,3,1,40],
 "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688":[2,0,10,0,3,1,33],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html#ae9c573acec4e3999f6b1695c386c06a7":[3,0,1,0,3,4,1,1],
 "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html#af9a9c436e9711e707dfb0f43b5601d91":[3,0,1,0,3,4,1,9],
 "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html":[3,0,1,0,3,3,5],
-"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,5,29]
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,3,3,5,29],
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,3,3,5,33]
 };

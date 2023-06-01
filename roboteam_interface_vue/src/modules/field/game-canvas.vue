@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Application, Container, FederatedPointerEvent, Text,} from "pixi.js";
+import {Application, Container, FederatedPointerEvent, Text, utils,} from "pixi.js";
 import {onMounted, onUnmounted, ref, shallowRef, ShallowRef, watch} from "vue";
 import {Colors, CustomPixiApplication} from "./field-objects";
 

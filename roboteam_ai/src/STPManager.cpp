@@ -126,7 +126,7 @@ void STPManager::start(std::atomic_bool &exitApplication) {
                     .publishWorld()
                     .publishVisuals();
 
-            }, 60);
+            }, 45);
             tickCounter++;
 
             stpTimer.limit(

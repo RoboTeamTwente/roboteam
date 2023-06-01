@@ -43,6 +43,8 @@ const
             layer?.addChild(shape);
             visuals.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
         });
+
+        visuals.removeExpiredShapes(stpData.currentTick);
     };
 
 watch([() => props.app], () => {

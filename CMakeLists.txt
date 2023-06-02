@@ -3,7 +3,6 @@ project(rtt)
 
 # Get the targets of the dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-include(ccache) # For daster compiling
 include(ccache) # For faster compiling
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub

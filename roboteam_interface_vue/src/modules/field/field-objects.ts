@@ -1,4 +1,14 @@
-import {Application, Container, FederatedPointerEvent, Graphics, SimpleRope, Sprite, Text, Texture} from "pixi.js";
+import {
+    Application,
+    BaseImageResource,
+    Container,
+    FederatedPointerEvent,
+    Graphics, IRenderer,
+    SimpleRope,
+    Sprite,
+    Text,
+    Texture
+} from "pixi.js";
 import {proto} from "../../generated/proto";
 import IDrawing = proto.IDrawing;
 import {useAIDataStore} from "../stores/data-stores/ai-data-store";
@@ -14,6 +24,10 @@ import cross from '../../assets/cross-16x16.png';
 import pluses from '../../assets/pluses-16x16.png';
 import IWorldRobot = proto.IWorldRobot;
 import {IApplicationOptions} from "@pixi/app/lib/Application";
+
+import {CanvasTextureAllocator, RenderTextureAllocator} from '@pixi-essentials/texture-allocator';
+// const allocator = new CanvasTextureAllocator();
+const allocator = new RenderTextureAllocator();
 
 export const Colors = {
     yellow: '#feff00',
@@ -209,39 +223,52 @@ export class ShapeDrawing extends Container {
         if (data.method! === proto.Drawing.Method.LINES_CONNECTED) {
             const lineTexture = Texture.from(pixel);
             // @ts-ignore Vector2[] is compatible with IPoint[] shape
-            const strip = new SimpleRope(lineTexture, points, data.size);
+            const strip = new SimpleRope(lineTexture, points, data.thickness);
             strip.tint = protoColorToHex(data.color!);
             this.addChild(strip);
             return;
         }
 
-        // For proto.Drawing.Method.DOTS
-        let values = {
-            size: data.size!, texture: dot,
-        };
-        if (data.method == proto.Drawing.Method.PLUSES) {
-            values = {
-                ...values,
-                texture: pluses,
-            }
-        } else if (data.method === proto.Drawing.Method.CROSSES) {
-            values = {
-                ...values,
-                texture: cross,
-            }
+        const graphicsPrototype = new Graphics();
+        switch (data.method) {
+            case proto.Drawing.Method.DOTS:
+                graphicsPrototype.beginFill(protoColorToHex(data.color!));
+                graphicsPrototype.drawCircle(0, 0, data.size);
+                break;
+            case proto.Drawing.Method.PLUSES:
+                graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!));
+                graphicsPrototype.drawPolygon([
+                    {x: -data.size, y:0},
+                    {x: data.size, y:0},
+                    {x:0, y:0},
+                    {x: 0, y: -data.size},
+                    {x: 0, y: data.size},
+                    {x:0, y:0},
+                ]);
+                break;
+            case proto.Drawing.Method.CROSSES:
+                graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!));
+                graphicsPrototype.drawPolygon([
+                    {x: -data.size, y:-data.size},
+                    {x: data.size, y:data.size},
+                    {x:0, y:0},
+                    {x: data.size, y:-data.size},
+                    {x: -data.size, y:data.size},
+                    {x:0, y:0},
+                ]);
+            case proto.Drawing.Method.CIRCLES:
+                graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!));
+                graphicsPrototype.drawCircle(0, 0, data.size);
         }
-
-        const texture = Texture.from(values.texture);
         points.forEach((point) => {
-            const sprite = new Sprite(texture);
-            sprite.width = values.size;
-            sprite.height = values.size;
-            sprite.anchor.set(0.5);
-            sprite.tint = protoColorToHex(data.color!);
-            sprite.position.copyFrom(point);
-            this.addChild(sprite);
+            const graphics = graphicsPrototype.clone();
+            graphics.x = point.x;
+            graphics.y = point.y;
+            this.addChild(graphics);
         });
     }
+
+
 }
 
 export class ShapeMap<K, V extends ShapeDrawing> extends Map<K, V> {
@@ -260,7 +287,7 @@ export class ShapeMap<K, V extends ShapeDrawing> extends Map<K, V> {
                 return;
             }
 
-            value.destroy();
+            value.destroy({children: true, texture: true, baseTexture: true});
             this.delete(key);
         });
     }

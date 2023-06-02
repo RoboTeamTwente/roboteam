@@ -218,6 +218,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@pixi-essentials/area-allocator@~2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@pixi-essentials/area-allocator/-/area-allocator-2.0.0.tgz#176c33f3390b3bea95551ad9118093c63207a30d"
+  integrity sha512-FidYh9x5LMNx4A1ucKbWlysCYZZ5Znx1Ii0x6HayHU1jywS7MPQBrI0G1eIAHm9K4QEWPli9Xt76XDhM5S640w==
+
+"@pixi-essentials/texture-allocator@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@pixi-essentials/texture-allocator/-/texture-allocator-2.0.1.tgz#e5dc2007d8669ea30d9198babeb6f51f32ac08c4"
+  integrity sha512-uSyMaSKLT23q4Q6Eb1Rfa3heH5M5VzBubVkTO8U/GAnmR6ZJH7+Ugfy4rS8E841Z7+RWRYhPYAa0URQc3Qw2lA==
+  dependencies:
+    "@pixi-essentials/area-allocator" "~2.0.0"
+
 "@pixi/accessibility@7.2.4":
   version "7.2.4"
   resolved "https://registry.yarnpkg.com/@pixi/accessibility/-/accessibility-7.2.4.tgz#3198d0059c230c668b1179457346a3b5dcba6e64"

@@ -29,7 +29,8 @@ class Out {
         proto::Drawing::Category category = proto::Drawing::DEBUG;
         int forRobotId = -1;
         int retainForTicks = 10;
-        int size = 12;
+        int size = 4;
+        int thickness = 4;
     };
 
     /**

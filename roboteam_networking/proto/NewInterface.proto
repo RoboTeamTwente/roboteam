@@ -12,6 +12,7 @@ message Drawing {
         DOTS = 1;
         CROSSES = 2;
         PLUSES = 3;
+        CIRCLES = 4;
     }
 
     enum Color {
@@ -38,6 +39,7 @@ message Drawing {
     Category category = 6;
     uint32 for_robot_id = 7; // -1 means the drawing is for not for a specific robot
     uint32 size = 8;
+    uint32 thickness = 9;
 }
 
 message Metric {

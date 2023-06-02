@@ -35,36 +35,16 @@ const
     },
     onPixiTick = () => {
         const buffer = visualizationStore.popAllDrawings();
-        buffer.forEach(props => {
-            if (props.category == Category.PATH_PLANNING && !uiStore.showPathPlanning(props.forRobotId)) return;
-            if (props.category == Category.DEBUG && !uiStore.showDebug(props.forRobotId)) return;
+        buffer.forEach(data => {
+            if (data.category == Category.PATH_PLANNING && !uiStore.showPathPlanning(data.forRobotId)) return;
+            if (data.category == Category.DEBUG && !uiStore.showDebug(data.forRobotId)) return;
 
-            const shape = new ShapeDrawing({data: props, currentTick: stpData.currentTick});
+            const shape = new ShapeDrawing({data: data, currentTick: stpData.currentTick});
             layer?.addChild(shape);
-            visuals.set(props.label!, shape); // Drawings map automatically calls destroy on the old shape
+            visuals.set(data.label!, shape); // Drawings map automatically calls destroy on the old shape
         });
 
         visuals.removeExpiredShapes(stpData.currentTick);
-
-        visuals.set("test", new ShapeDrawing(
-            {
-                data: {
-                    size: 190,
-                    category: Category.PATH_PLANNING,
-                    forRobotId: -1,
-                    color: proto.Drawing.Color.RED,
-                    points: [{
-                        x: 0,
-                        y: 0
-                    }],
-                    label: "test",
-                    method: proto.Drawing.Method.DOTS,
-                    retainForTicks: 100,
-                },
-                currentTick: stpData.currentTick
-            }
-        ));
-        layer?.addChild(visuals.get("test")!);
     };
 
 watch([() => props.app], () => {

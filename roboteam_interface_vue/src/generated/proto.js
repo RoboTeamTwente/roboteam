@@ -4129,6 +4129,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.Drawing.Category|null} [category] Drawing category
          * @property {number|null} [forRobotId] Drawing forRobotId
          * @property {number|null} [size] Drawing size
+         * @property {number|null} [thickness] Drawing thickness
          */
 
         /**
@@ -4212,6 +4213,14 @@ export const proto = $root.proto = (() => {
         Drawing.prototype.size = 0;
 
         /**
+         * Drawing thickness.
+         * @member {number} thickness
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.thickness = 0;
+
+        /**
          * Creates a new Drawing instance using the specified properties.
          * @function create
          * @memberof proto.Drawing
@@ -4252,6 +4261,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.forRobotId);
             if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                 writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.size);
+            if (message.thickness != null && Object.hasOwnProperty.call(message, "thickness"))
+                writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.thickness);
             return writer;
         };
 
@@ -4320,6 +4331,10 @@ export const proto = $root.proto = (() => {
                         message.size = reader.uint32();
                         break;
                     }
+                case 9: {
+                        message.thickness = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4383,6 +4398,7 @@ export const proto = $root.proto = (() => {
                 case 1:
                 case 2:
                 case 3:
+                case 4:
                     break;
                 }
             if (message.points != null && message.hasOwnProperty("points")) {
@@ -4408,6 +4424,9 @@ export const proto = $root.proto = (() => {
             if (message.size != null && message.hasOwnProperty("size"))
                 if (!$util.isInteger(message.size))
                     return "size: integer expected";
+            if (message.thickness != null && message.hasOwnProperty("thickness"))
+                if (!$util.isInteger(message.thickness))
+                    return "thickness: integer expected";
             return null;
         };
 
@@ -4490,6 +4509,10 @@ export const proto = $root.proto = (() => {
             case 3:
                 message.method = 3;
                 break;
+            case "CIRCLES":
+            case 4:
+                message.method = 4;
+                break;
             }
             if (object.points) {
                 if (!Array.isArray(object.points))
@@ -4521,6 +4544,8 @@ export const proto = $root.proto = (() => {
                 message.forRobotId = object.forRobotId >>> 0;
             if (object.size != null)
                 message.size = object.size >>> 0;
+            if (object.thickness != null)
+                message.thickness = object.thickness >>> 0;
             return message;
         };
 
@@ -4547,6 +4572,7 @@ export const proto = $root.proto = (() => {
                 object.category = options.enums === String ? "PATH_PLANNING" : 0;
                 object.forRobotId = 0;
                 object.size = 0;
+                object.thickness = 0;
             }
             if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
                 object.retainForTicks = message.retainForTicks;
@@ -4567,6 +4593,8 @@ export const proto = $root.proto = (() => {
                 object.forRobotId = message.forRobotId;
             if (message.size != null && message.hasOwnProperty("size"))
                 object.size = message.size;
+            if (message.thickness != null && message.hasOwnProperty("thickness"))
+                object.thickness = message.thickness;
             return object;
         };
 
@@ -4604,6 +4632,7 @@ export const proto = $root.proto = (() => {
          * @property {number} DOTS=1 DOTS value
          * @property {number} CROSSES=2 CROSSES value
          * @property {number} PLUSES=3 PLUSES value
+         * @property {number} CIRCLES=4 CIRCLES value
          */
         Drawing.Method = (function() {
             const valuesById = {}, values = Object.create(valuesById);
@@ -4611,6 +4640,7 @@ export const proto = $root.proto = (() => {
             values[valuesById[1] = "DOTS"] = 1;
             values[valuesById[2] = "CROSSES"] = 2;
             values[valuesById[3] = "PLUSES"] = 3;
+            values[valuesById[4] = "CIRCLES"] = 4;
             return values;
         })();
 

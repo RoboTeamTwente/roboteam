@@ -86,7 +86,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             .method = proto::Drawing::LINES_CONNECTED,
             .category = proto::Drawing::PATH_PLANNING,
             .forRobotId = robotId,
-            .size = 1,
+            .thickness = 1,
         },
         computedPaths[robotId]);
 
@@ -97,7 +97,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             .method = proto::Drawing::DOTS,
             .category = proto::Drawing::PATH_PLANNING,
             .forRobotId = robotId,
-            .size = 4,
+            .size = 2,
         },
         computedPaths[robotId]);
 

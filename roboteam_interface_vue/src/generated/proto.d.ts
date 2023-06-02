@@ -1689,6 +1689,9 @@ export namespace proto {
 
         /** Drawing size */
         size?: (number|null);
+
+        /** Drawing thickness */
+        thickness?: (number|null);
     }
 
     /** Represents a Drawing. */
@@ -1723,6 +1726,9 @@ export namespace proto {
 
         /** Drawing size. */
         public size: number;
+
+        /** Drawing thickness. */
+        public thickness: number;
 
         /**
          * Creates a new Drawing instance using the specified properties.
@@ -1809,7 +1815,8 @@ export namespace proto {
             LINES_CONNECTED = 0,
             DOTS = 1,
             CROSSES = 2,
-            PLUSES = 3
+            PLUSES = 3,
+            CIRCLES = 4
         }
 
         /** Color enum. */

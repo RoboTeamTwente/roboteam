@@ -37,6 +37,7 @@ proto::Drawing* Out::initDrawing(const DrawArgs& args) {
     drawing->set_category(args.category);
     drawing->set_for_robot_id(args.forRobotId);
     drawing->set_size(args.size);
+    drawing->set_thickness(args.thickness);
     return drawing;
 }
 

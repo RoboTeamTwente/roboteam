@@ -13,7 +13,7 @@
 #include "world/FieldComputations.h"
 
 namespace rtt::ai::stp::tactic {
-GetBall::GetBall() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos(), skill::Rotate()}; }
+GetBall::GetBall() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
 
 std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
@@ -53,8 +53,6 @@ bool GetBall::isEndTactic() noexcept {
     // This is not an end tactic
     return false;
 }
-
-bool GetBall::forceTacticSuccess(const StpInfo &info) noexcept { return info.getRobot().value()->hasBall(); }
 
 const char *GetBall::getName() { return "Get Ball"; }
 

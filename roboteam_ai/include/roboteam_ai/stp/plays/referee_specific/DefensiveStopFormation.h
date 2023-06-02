@@ -37,11 +37,6 @@ class DefensiveStopFormation : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * @brief Retrieves the name of the play
      * @return The name of the play as a string
      */

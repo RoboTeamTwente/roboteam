@@ -5,6 +5,9 @@
 #include "stp/PlayDecider.hpp"
 #include "interface_api/RuntimeConfig.h"
 
+#include <roboteam_utils/Print.h>
+#include "interface/widgets/MainControlsWidget.h"
+
 namespace rtt::ai::stp {
 
 //bool PlayDecider::interfacePlayChanged = false;
@@ -13,7 +16,8 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
     std::vector<Play*> validPlays;
     // Only add plays that are valid
     for (auto& each : plays) {
-        if (each->isValidPlayToStart()) {
+        
+        if (interface::MainControlsWidget::ignoreInvariants || each->isValidPlayToStart()) {
             validPlays.push_back(each.get());
         }
     }

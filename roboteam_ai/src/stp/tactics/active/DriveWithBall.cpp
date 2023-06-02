@@ -1,15 +1,11 @@
 //
 // Created by timovdk on 3/16/20.
 /// Rotates the target position and drives towards it
-/// TODO-Max Add functionallity of backwards dribbling
-/// TODO-Max Dynamic dribblerspeed
 
 /// ACTIVE
 //
 
 #include "stp/tactics/active/DriveWithBall.h"
-
-#include "stp/constants/ControlConstants.h"
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Rotate.h"
 
@@ -27,7 +23,7 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(StpInfo const& info)
     if (!skillStpInfo.getPositionToMoveTo() || !skillStpInfo.getBall()) return std::nullopt;
 
     if (skills.current_num() == 0) {
-        skillStpInfo.setAngle((info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).angle());
+        skillStpInfo.setAngle((info.getPositionToMoveTo().value() - info.getRobot()->get()->getPos()).angle());
     } else {
         double angleToBall = (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle();
         skillStpInfo.setAngle(angleToBall);
@@ -54,10 +50,5 @@ bool DriveWithBall::isEndTactic() noexcept {
 }
 
 const char* DriveWithBall::getName() { return "Drive With Ball"; }
-
-bool DriveWithBall::forceTacticSuccess(const StpInfo& info) noexcept {
-    // If were already at the right place, force success
-    return (info.getRobot()->get()->getPos() - info.getPositionToMoveTo().value()).length() < control_constants::GO_TO_POS_ERROR_MARGIN;
-}
 
 }  // namespace rtt::ai::stp::tactic

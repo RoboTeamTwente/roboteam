@@ -34,7 +34,7 @@ Status Tactic::update(StpInfo const &info) noexcept {
     }
 
     // Check if the skills are all finished
-    if (skills.finished() || forceTacticSuccess(skill_info.value())) {
+    if (skills.finished()) {
         if (!isEndTactic()) {
             currentStatus = Status::Success;
             return Status::Success;
@@ -66,6 +66,4 @@ void Tactic::reset() noexcept { skills.reset(); }
 Skill *Tactic::getCurrentSkill() { return skills.get_current(); }
 
 [[nodiscard]] Status Tactic::getStatus() const { return currentStatus; }
-
-bool Tactic::forceTacticSuccess(const StpInfo &info) noexcept { return false; }
 }  // namespace rtt::ai::stp

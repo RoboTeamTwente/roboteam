@@ -55,11 +55,6 @@ class KeeperKickBall : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
-     * @brief Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World* world) noexcept override{};
-
-    /**
      * @brief Retrieve name of the play
      * @return The name of the play as a string
      */

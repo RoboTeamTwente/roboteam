@@ -26,12 +26,6 @@ using eval = GlobalEvaluation;
  */
 class Play {
    public:
-    /**
-     * @brief Saves all necessary information (that is needed for a potential next Play), when this Play will be finished
-     * @return Map of all the necessary information
-     */
-    virtual void storePlayInfo(gen::PlayInfos& previousPlayInfo) noexcept;
-
     std::vector<GlobalEvaluation> keepPlayEvaluation; /**< Invariant vector that contains invariants that need to be true to continue execution of this play */
 
     std::vector<GlobalEvaluation> startPlayEvaluation; /**< Invariant vector that contains invariants that need to be true to start this play */
@@ -39,7 +33,7 @@ class Play {
     /**
      * @brief Initializes stpInfos struct, distributes roles, sets the previousRobotNum variable and calls onInitialize()
      */
-    void initialize(gen::PlayInfos& previousPlayInfo) noexcept;
+    void initialize() noexcept;
 
     /**
      * @brief Sets the Play's world pointer to the static world class
@@ -63,12 +57,6 @@ class Play {
      * This is a purely virtual function, so it is implemented in every play.
      */
     virtual void calculateInfoForRoles() noexcept = 0;
-
-    /**
-     * @brief Calculate info for roles that are used in the scoring of the play.
-     * This is a purely virtual function, so it is implemented in every play.
-     */
-    virtual void calculateInfoForScoredRoles(world::World* world) noexcept = 0;
 
     /**
      * @brief Scores the play based on how effective this play would be given the current world

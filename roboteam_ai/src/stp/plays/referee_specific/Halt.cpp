@@ -42,7 +42,5 @@ Dealer::FlagMap Halt::decideRoleFlags() const noexcept {
 
 void Halt::calculateInfoForRoles() noexcept {}
 
-void Halt::calculateInfoForScoredRoles(world::World *) noexcept {}
-
-const char *Halt::getName() const { return "Halt"; }
+const char *Halt::getName() { return "Halt"; }
 }  // namespace rtt::ai::stp::play

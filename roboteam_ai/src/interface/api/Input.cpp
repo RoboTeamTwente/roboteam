@@ -16,6 +16,11 @@ std::mutex Input::fpsMutex;
 
 int Input::FPS;
 
+void Input::addDrawing(Drawing drawing) {
+    std::lock_guard<std::mutex> drawingLock(drawingMutex);
+    drawings.emplace_back(drawing);
+}
+
 const std::vector<Drawing> Input::getDrawings() {
     std::lock_guard<std::mutex> lock(drawingMutex);
     return drawings;

@@ -18,7 +18,7 @@ struct RuleSet {
 
     /**
      * @brief Constructor for the RuleSet structure
-     * @param title Name of the game state
+     * @param title Title of the RuleSet
      * @param maxRobotVel Maximum allowed velocities for robots
      * @param maxBallVel Maximum allowed velocity for the ball
      * @param minDistanceToBall Minimum distance to the ball the robots have to keep
@@ -33,12 +33,12 @@ struct RuleSet {
           minDistanceToDefenseArea(minDistanceToDefenseArea),
           robotsCanGoOutOfField(robotsCanGoOutOfField) {}
 
-    std::string title; /**< Name of the game state */
-    double maxRobotVel; /**< Maximum allowed velocities for robots */
-    double maxBallVel; /**< Maximum allowed velocity for the ball */
-    double minDistanceToBall; /**< Minimum distance to the ball the robots have to keep */
-    double minDistanceToDefenseArea; /**< Minimum distance to the defense area the robots have to keep */
-    bool robotsCanGoOutOfField; /**< Indicates whether the robots are allowed to go out of the field */
+    std::string title;
+    double maxRobotVel;
+    double maxBallVel;
+    double minDistanceToBall;
+    double minDistanceToDefenseArea;
+    bool robotsCanGoOutOfField;
 
     /**
      * @brief Checks whether the robots are allowed to enter the defense area

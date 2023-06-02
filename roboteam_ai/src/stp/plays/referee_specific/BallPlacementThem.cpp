@@ -38,7 +38,6 @@ uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {
 Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER, DealerFlagPriority::KEEPER);
-    Dealer::DealerFlag closeToOurGoalFlag(DealerFlagTitle::CLOSE_TO_OUR_GOAL, DealerFlagPriority::HIGH_PRIORITY);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});

@@ -33,27 +33,15 @@ class AggressiveStopFormation : public Play {
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * @brief Calculates info for the roles
+     * Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
-
-    /**
-     * @brief Calculate info for the roles that need to be calculated for scoring
-     * @param world The current world
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
 
     /**
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */
-    const char* getName() const override;
-
-    /**
-     * @brief Optional function to save information for the next play
-     * @param info Map-Struct to save info in
-     */
-    void storePlayInfo(gen::PlayInfos& info) noexcept override{};
+    const char* getName() override;
 };
 }  // namespace rtt::ai::stp::play
 

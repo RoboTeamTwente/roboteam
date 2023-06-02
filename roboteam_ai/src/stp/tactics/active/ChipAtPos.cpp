@@ -10,13 +10,13 @@
 #include "control/ControlUtils.h"
 #include "stp/constants/ControlConstants.h"
 #include "stp/skills/Chip.h"
-#include "stp/skills/Rotate.h"
+#include "stp/skills/OrbitAngular.h"
 
 namespace rtt::ai::stp::tactic {
 
 ChipAtPos::ChipAtPos() {
     // Create state machine of skills and initialize first skill
-    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::Rotate(), skill::Chip()};
+    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::OrbitAngular(), skill::Chip()};
 }
 
 std::optional<StpInfo> ChipAtPos::calculateInfoForSkill(StpInfo const &info) noexcept {

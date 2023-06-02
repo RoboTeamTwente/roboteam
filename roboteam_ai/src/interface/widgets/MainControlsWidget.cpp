@@ -152,7 +152,7 @@ void MainControlsWidget::toggleOurSideParam() {
     setToggleSideBtnLayout();
 }
 
-/// toggle the the setting 'isSerialMode'
+/// toggle the the setting 'robotHubMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
     switch (GameSettings::getRobotHubMode()) {
         case net::RobotHubMode::BASESTATION: {
@@ -222,7 +222,7 @@ void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
 }
 
 void MainControlsWidget::updateContents() {
-    auto ruleSetText = QString::fromStdString(GameStateManager::getCurrentGameState().ruleSetName);
+    auto ruleSetText = QString::fromStdString(GameStateManager::getCurrentGameState().ruleSet.title);
     if (ruleSetText != select_ruleset->currentText()) {
         select_ruleset->setCurrentText(ruleSetText);
     }

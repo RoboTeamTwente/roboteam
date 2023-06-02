@@ -40,11 +40,6 @@ class DefendPass : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */
@@ -70,6 +65,11 @@ class DefendPass : public Play {
      * @brief Calculates info for the offenders
      */
     void calculateInfoForOffenders() noexcept;
+
+    /**
+     * @brief Calculates info for the harasser role
+     */
+    void calculateInfoForHarasser() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

@@ -6,6 +6,8 @@
 #include "Constants.h"
 #include "RuleSet.h"
 
+#include <roboteam_utils/Print.h>
+
 namespace rtt::ai {
 /**
  * @brief Structure that contains the GameState and its respective properties
@@ -19,25 +21,19 @@ struct GameState {
     /**
      * @brief Constructor for the GameState class
      * @param strategyName Name of the game state
-     * @param ruleSetName Name of the ruleset that belongs to the game state
+     * @param ruleSet Ruleset that belongs to the game state
      */
-    GameState(std::string strategyName, std::string ruleSetName) : ruleSetName(std::move(ruleSetName)), strategyName(std::move(strategyName)){};
+    GameState(std::string strategyName, RuleSet ruleSet) : ruleSet(std::move(ruleSet)), strategyName(std::move(strategyName)){};
 
-    std::string ruleSetName; /**< Name of the ruleset that belongs to the game state */
-    int keeperId = Constants::DEFAULT_KEEPER_ID(); /**< ID of the keeper */
+    RuleSet ruleSet;
+    int keeperId = Constants::DEFAULT_KEEPER_ID();
 
     /**
      * @brief Getter for the ruleset according to its name
      * @return Ruleset that belongs to the name
      */
     RuleSet getRuleSet() {
-        for (auto ruleSet : Constants::ruleSets()) {
-            if (ruleSet.title == ruleSetName) {
-                return ruleSet;
-            }
-        }
-        std::cerr << "Returning empty ruleset with name '" << ruleSetName << "', this should never happen!" << std::endl;
-        return {};
+        return ruleSet;
     }
 
     /**

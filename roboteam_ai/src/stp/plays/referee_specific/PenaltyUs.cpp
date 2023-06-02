@@ -4,10 +4,10 @@
 
 #include "stp/plays/referee_specific/PenaltyUs.h"
 
+#include "stp/computations/GoalComputations.h"
 #include "stp/computations/PositionComputations.h"
 #include "stp/roles/Keeper.h"
-#include "stp/roles/PenaltyKeeper.h"
-#include "stp/roles/active/Attacker.h"
+#include "stp/roles/active/PenaltyTaker.h"
 #include "stp/roles/passive/Halt.h"
 
 namespace rtt::ai::stp::play {
@@ -24,7 +24,7 @@ PenaltyUs::PenaltyUs() : Play() {
 
     /// Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::Keeper>(role::Keeper("keeper")), std::make_unique<role::Attacker>(role::Attacker("kicker")), std::make_unique<role::Halt>(role::Halt("halt_0")),
+        std::make_unique<role::Keeper>(role::Keeper("keeper")), std::make_unique<role::PenaltyTaker>(role::PenaltyTaker("kicker")), std::make_unique<role::Halt>(role::Halt("halt_0")),
         std::make_unique<role::Halt>(role::Halt("halt_1")),     std::make_unique<role::Halt>(role::Halt("halt_2")),         std::make_unique<role::Halt>(role::Halt("halt_3")),
         std::make_unique<role::Halt>(role::Halt("halt_4")),     std::make_unique<role::Halt>(role::Halt("halt_5")),         std::make_unique<role::Halt>(role::Halt("halt_6")),
         std::make_unique<role::Halt>(role::Halt("halt_7")),     std::make_unique<role::Halt>(role::Halt("halt_8")),
@@ -69,9 +69,11 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
-    // TODO: the shoot position might need to change
-    stpInfos["kicker"].setPositionToShootAt(field.rightGoalArea.leftLine().center() + Vector2{1.0, 0.5});
-    stpInfos["kicker"].setShotType(ShotType::PASS);
+    auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world);
+    stpInfos["kicker"].setPositionToMoveTo(positionTarget);
+    auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
+    stpInfos["kicker"].setPositionToShootAt(goalTarget);
+    stpInfos["kicker"].setShotType(ShotType::MAX);
 }
 
 }  // namespace rtt::ai::stp::play

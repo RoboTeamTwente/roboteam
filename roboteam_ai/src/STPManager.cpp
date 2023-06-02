@@ -1,12 +1,9 @@
-// import Interface;
-
 #include "STPManager.h"
 
 #include <roboteam_utils/Timer.h>
 #include <utilities/normalize.h>
 
 #include <chrono>
-#include <utility>
 
 #include "control/ControlModule.h"
 #include "interface_api/InterfaceGateway.h"
@@ -212,13 +209,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
-    if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) {
-
-        // Store the play info of the previous play
-        ai::stp::gen::PlayInfos previousPlayInfo{};
-        if (currentPlay) currentPlay->storePlayInfo(previousPlayInfo);
-
-
+    if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::new_interface::RuntimeConfig::ignoreInvariants || ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
 
@@ -230,7 +221,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
 
         currentPlay->updateField(_world->getField().value());
-        currentPlay->initialize(previousPlayInfo);
+        currentPlay->initialize();
     } else {
         currentPlay->updateField(_world->getField().value());
     }

@@ -1,13 +1,10 @@
 #pragma once
 
-#include <utilities.h>
-
 #include <array>
 #include <basestation/BasestationManager.hpp>
 #include <chrono>
 #include <string>
-
-#include "RobotHubMode.h"
+#include <roboteam_utils/RobotHubMode.h>
 
 namespace rtt::robothub {
 
@@ -21,7 +18,7 @@ class RobotHubStatistics {
 
     basestation::BasestationManagerStatus basestationManagerStatus{};
 
-    net::RobotHubMode robotHubMode;
+    rtt::RobotHubMode robotHubMode;
 
     std::size_t yellowTeamBytesSent;
     std::size_t blueTeamBytesSent;

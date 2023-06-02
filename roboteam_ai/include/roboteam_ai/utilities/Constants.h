@@ -46,12 +46,6 @@ class Constants {
      */
     static constexpr int SETTINGS_BROADCAST_RATE() { return 1; }
 
-    /**
-     * @brief Checks which rules apply for the current game state
-     * @return The ruleset according to the current game state
-     */
-    static std::vector<RuleSet> ruleSets();
-
     /// ROBOT COMMANDS ///
     static double MAX_VEL_CMD(); /**< The maximum allowed velocity of the robot */
     static double MIN_ANGLE(); /**< The minimum angle the robot can have */
@@ -117,6 +111,19 @@ class Constants {
     static pidVals standardInterceptPID(); /**< The standard PID values for Intercept */
     static pidVals standardKeeperPID(); /**< The standard PID values for Keeper*/
     static pidVals standardKeeperInterceptPID(); /**< The standard PID values for KeeperIntercept */
+
+    static RuleSet RULESET_DEFAULT();
+    static RuleSet RULESET_HALT();
+    static RuleSet RULESET_STOP();
+    static RuleSet RULESET_BALLPLACEMENT_THEM();
+    static RuleSet RULESET_BALLPLACEMENT_US();
+    static RuleSet RULESET_KICKOFF();
+
+    /**
+     * @brief Returns a vector of all the predefined rulesets
+     * @return a vector of all the predefined rulesets
+     */
+    static std::vector<RuleSet> ruleSets();
 };
 
 }  // namespace rtt::ai

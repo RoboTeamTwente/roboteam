@@ -177,6 +177,6 @@ void DefendPass::calculateInfoForHarasser() noexcept {
     }
 }
 
-const char* DefendPass::getName() { return "Defend Pass"; }
+const char* DefendPass::getName() const { return "Defend Pass"; }
 
 }  // namespace rtt::ai::stp::play

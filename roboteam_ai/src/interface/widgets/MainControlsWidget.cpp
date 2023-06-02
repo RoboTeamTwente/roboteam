@@ -10,6 +10,7 @@
 #include <utilities/GameStateManager.hpp>
 
 #include "RobotHubMode.h"
+#include "interface/api/Output.h"
 #include "utilities/GameSettings.h"
 #include "interface_api/RuntimeConfig.h"
 
@@ -109,17 +110,24 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
 
         const auto playName = select_play->currentText().toStdString();
         new_interface::RuntimeConfig::interfacePlay.push(playName);
-        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
+        GameStateManager::updateInterfaceGameState(playName.c_str());
+
+        //TODO: Fix for the new interface
+//        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
     QObject::connect(select_goalie, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [&](const QString &goalieId) {
         // http://doc.qt.io/qt-5/qcombobox.html#currentIndexChanged-1
-        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
+        interface::Output::setKeeperId(select_goalie->currentText().toInt());
+
+        // TODO: Fix for the new interface
+        // GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
     QObject::connect(select_ruleset, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [&](const QString &rulesetName) {
         // http://doc.qt.io/qt-5/qcombobox.html#currentIndexChanged-1
-        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
+        interface::Output::setRuleSetName(rulesetName.toStdString());
+//        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
     setUseReferee(Output::usesRefereeCommands());

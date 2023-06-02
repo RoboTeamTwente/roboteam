@@ -72,7 +72,11 @@ void IOManager::handleState(const proto::State& stateMsg) {
         GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
         if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
-        ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
+
+        ai::GameStateManager::setRefereeData(state.referee(), data);
+
+        // TODO: Fix for new GameStateManager
+        //ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
     }
 }
 

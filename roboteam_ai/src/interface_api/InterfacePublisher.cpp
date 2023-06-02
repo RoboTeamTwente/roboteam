@@ -26,7 +26,7 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     currentPlay->set_play_name(selectedPlay->getName());
 
     auto gameState = GameStateManager::getCurrentGameState();
-    currentPlay->set_ruleset_name(gameState.ruleSetName);
+    currentPlay->set_ruleset_name(gameState.getRuleSet().title);
     currentPlay->set_keeper_id(gameState.keeperId);
 
     for (const auto& play : plays) {

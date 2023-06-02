@@ -5,6 +5,7 @@
 #include "interface_api/InterfaceSubscriber.h"
 
 #include "RobotHubMode.h"
+#include "interface/api/Output.h"
 #include "interface_api/RuntimeConfig.h"
 #include "proto/SimulationConfiguration.pb.h"
 #include "utilities/GameSettings.h"
@@ -21,7 +22,11 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
     switch (message.kind_case()) {
         case proto::MsgFromInterface::kSetPlay: {
             const auto& data = message.set_play();
-            ai::GameStateManager::setGameStateFromInterface(data.play_name(), data.ruleset_name(), data.keeper_id());
+//            ai::GameStateManager::setGameStateFromInterface(data.play_name(), data.ruleset_name(), data.keeper_id());
+            GameStateManager::updateInterfaceGameState(data.play_name().c_str());
+
+            interface::Output::setKeeperId(data.keeper_id());
+            interface::Output::setRuleSetName(data.ruleset_name());
             new_interface::RuntimeConfig::interfacePlay.push(data.play_name());
         } break;
         case proto::MsgFromInterface::kSetRuntimeConfig: {

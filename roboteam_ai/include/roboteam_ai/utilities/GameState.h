@@ -32,7 +32,7 @@ struct GameState {
      * @brief Getter for the ruleset according to its name
      * @return Ruleset that belongs to the name
      */
-    RuleSet getRuleSet() {
+    RuleSet getRuleSet() const {
         return ruleSet;
     }
 
@@ -50,7 +50,7 @@ struct GameState {
 inline std::ostream& operator<<(std::ostream& os, const rtt::ai::GameState& gs) {
     os << "GameState{"
        << "\n.strategyName = " << gs.getStrategyName()
-       << "\n.ruleSetName = " << gs.ruleSetName
+       << "\n.ruleSetName = " << gs.getRuleSet().title
        << "\n.keeperId = " << gs.keeperId
        << "\n}";
     return os;

@@ -17,7 +17,7 @@ bool RefGameState::hasFollowUpCommand() const { return followUpCommandId != RefC
 inline std::ostream& operator<<(std::ostream& os, const rtt::ai::RefGameState& gs) {
     os << "RefGameState{"
        << "\n.strategyName = " << gs.getStrategyName()
-       << "\n.ruleSetName = " << gs.ruleSetName
+       << "\n.ruleSetName = " << gs.getRuleSet().title
        << "\n.keeperId = " << gs.keeperId
        << "\n.commandId = " << static_cast<std::underlying_type<rtt::RefCommand>::type>(gs.commandId)
        << "\n.isFollowUpCommand = " << gs.isfollowUpCommand

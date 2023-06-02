@@ -17,7 +17,7 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
     // Only add plays that are valid
     for (auto& each : plays) {
         
-        if (interface::MainControlsWidget::ignoreInvariants || each->isValidPlayToStart()) {
+        if (new_interface::RuntimeConfig::ignoreInvariants || each->isValidPlayToStart()) {
             validPlays.push_back(each.get());
         }
     }

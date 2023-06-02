@@ -1686,6 +1686,9 @@ export namespace proto {
 
         /** Drawing forRobotId */
         forRobotId?: (number|null);
+
+        /** Drawing size */
+        size?: (number|null);
     }
 
     /** Represents a Drawing. */
@@ -1717,6 +1720,9 @@ export namespace proto {
 
         /** Drawing forRobotId. */
         public forRobotId: number;
+
+        /** Drawing size. */
+        public size: number;
 
         /**
          * Creates a new Drawing instance using the specified properties.

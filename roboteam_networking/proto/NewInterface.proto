@@ -37,6 +37,7 @@ message Drawing {
     repeated Vector2f points = 5;
     Category category = 6;
     uint32 for_robot_id = 7; // -1 means the drawing is for not for a specific robot
+    uint32 size = 8;
 }
 
 message Metric {

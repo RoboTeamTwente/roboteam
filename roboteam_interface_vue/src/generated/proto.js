@@ -4128,6 +4128,7 @@ export const proto = $root.proto = (() => {
          * @property {Array.<proto.IVector2f>|null} [points] Drawing points
          * @property {proto.Drawing.Category|null} [category] Drawing category
          * @property {number|null} [forRobotId] Drawing forRobotId
+         * @property {number|null} [size] Drawing size
          */
 
         /**
@@ -4203,6 +4204,14 @@ export const proto = $root.proto = (() => {
         Drawing.prototype.forRobotId = 0;
 
         /**
+         * Drawing size.
+         * @member {number} size
+         * @memberof proto.Drawing
+         * @instance
+         */
+        Drawing.prototype.size = 0;
+
+        /**
          * Creates a new Drawing instance using the specified properties.
          * @function create
          * @memberof proto.Drawing
@@ -4241,6 +4250,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 6, wireType 0 =*/48).int32(message.category);
             if (message.forRobotId != null && Object.hasOwnProperty.call(message, "forRobotId"))
                 writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.forRobotId);
+            if (message.size != null && Object.hasOwnProperty.call(message, "size"))
+                writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.size);
             return writer;
         };
 
@@ -4303,6 +4314,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 7: {
                         message.forRobotId = reader.uint32();
+                        break;
+                    }
+                case 8: {
+                        message.size = reader.uint32();
                         break;
                     }
                 default:
@@ -4390,6 +4405,9 @@ export const proto = $root.proto = (() => {
             if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
                 if (!$util.isInteger(message.forRobotId))
                     return "forRobotId: integer expected";
+            if (message.size != null && message.hasOwnProperty("size"))
+                if (!$util.isInteger(message.size))
+                    return "size: integer expected";
             return null;
         };
 
@@ -4501,6 +4519,8 @@ export const proto = $root.proto = (() => {
             }
             if (object.forRobotId != null)
                 message.forRobotId = object.forRobotId >>> 0;
+            if (object.size != null)
+                message.size = object.size >>> 0;
             return message;
         };
 
@@ -4526,6 +4546,7 @@ export const proto = $root.proto = (() => {
                 object.method = options.enums === String ? "LINES_CONNECTED" : 0;
                 object.category = options.enums === String ? "PATH_PLANNING" : 0;
                 object.forRobotId = 0;
+                object.size = 0;
             }
             if (message.retainForTicks != null && message.hasOwnProperty("retainForTicks"))
                 object.retainForTicks = message.retainForTicks;
@@ -4544,6 +4565,8 @@ export const proto = $root.proto = (() => {
                 object.category = options.enums === String ? $root.proto.Drawing.Category[message.category] === undefined ? message.category : $root.proto.Drawing.Category[message.category] : message.category;
             if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
                 object.forRobotId = message.forRobotId;
+            if (message.size != null && message.hasOwnProperty("size"))
+                object.size = message.size;
             return object;
         };
 

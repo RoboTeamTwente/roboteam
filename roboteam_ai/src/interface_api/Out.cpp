@@ -36,6 +36,7 @@ proto::Drawing* Out::initDrawing(const DrawArgs& args) {
     drawing->set_retain_for_ticks(args.retainForTicks);
     drawing->set_category(args.category);
     drawing->set_for_robot_id(args.forRobotId);
+    drawing->set_size(args.size);
     return drawing;
 }
 

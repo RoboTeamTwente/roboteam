@@ -209,7 +209,7 @@ export class ShapeDrawing extends Container {
         if (data.method! === proto.Drawing.Method.LINES_CONNECTED) {
             const lineTexture = Texture.from(pixel);
             // @ts-ignore Vector2[] is compatible with IPoint[] shape
-            const strip = new SimpleRope(lineTexture, points, 4);
+            const strip = new SimpleRope(lineTexture, points, data.size);
             strip.tint = protoColorToHex(data.color!);
             this.addChild(strip);
             return;
@@ -217,15 +217,17 @@ export class ShapeDrawing extends Container {
 
         // For proto.Drawing.Method.DOTS
         let values = {
-            size: 6, texture: dot,
+            size: data.size!, texture: dot,
         };
         if (data.method == proto.Drawing.Method.PLUSES) {
             values = {
-                size: 12, texture: pluses,
+                ...values,
+                texture: pluses,
             }
         } else if (data.method === proto.Drawing.Method.CROSSES) {
             values = {
-                size: 12, texture: cross,
+                ...values,
+                texture: cross,
             }
         }
 
@@ -234,6 +236,7 @@ export class ShapeDrawing extends Container {
             const sprite = new Sprite(texture);
             sprite.width = values.size;
             sprite.height = values.size;
+            sprite.anchor.set(0.5);
             sprite.tint = protoColorToHex(data.color!);
             sprite.position.copyFrom(point);
             this.addChild(sprite);

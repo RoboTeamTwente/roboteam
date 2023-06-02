@@ -45,6 +45,26 @@ const
         });
 
         visuals.removeExpiredShapes(stpData.currentTick);
+
+        visuals.set("test", new ShapeDrawing(
+            {
+                data: {
+                    size: 190,
+                    category: Category.PATH_PLANNING,
+                    forRobotId: -1,
+                    color: proto.Drawing.Color.RED,
+                    points: [{
+                        x: 0,
+                        y: 0
+                    }],
+                    label: "test",
+                    method: proto.Drawing.Method.DOTS,
+                    retainForTicks: 100,
+                },
+                currentTick: stpData.currentTick
+            }
+        ));
+        layer?.addChild(visuals.get("test")!);
     };
 
 watch([() => props.app], () => {

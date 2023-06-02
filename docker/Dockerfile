@@ -1,4 +1,29 @@
-FROM ubuntu:22.04
+# ========================== #
+#        INSTRUCTIONS        #
+# ========================== #
+#   Step 1: Build
+#     $ docker build . --target develop -t rtt-develop
+#     $ docker build . --target release -t rtt-release   
+#   
+#   Step 2: Allow X11 access
+#     $ xhost local:
+#   This will give local VMs acces to the X11-server, which is needed to do GUI stuff
+#   https://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers
+#   
+#   Step 3.1: Create a development container, to which you can e.g. hook into with VSCode
+#     $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt-develop
+#
+#	Step 3.2: Start any executable
+#	  $ docker run --init --rm --net=host rtt-release /roboteam_observer
+#	  $ docker run --init --rm --net=host -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY rtt-release /roboteam_ai
+#	  $ docker run --init --rm --net=host rtt-release /roboteam_robothub
+
+
+
+# ========================== #
+#   DEVELOPMENT CONTAINER    #
+# ========================== #
+FROM ubuntu:22.04 AS develop
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y vim git cmake pkg-config python3 python3-pip ccache
 
@@ -7,16 +32,26 @@ WORKDIR /roboteam
 RUN ./install_UBUNTU_20_04.sh
 RUN mkdir build 
 WORKDIR /roboteam/build
-RUN cmake .. -DCMAKE_BUILD_TYPE=Debug && make -j$(nproc) roboteam_observer roboteam_ai roboteam_world
+RUN cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) roboteam_observer roboteam_ai roboteam_robothub
+WORKDIR /roboteam
 
 
-# Step 1: Build
-# $ docker build . -t rtt
-#
-### https://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers
-# Step 2: Allow X11 access
-# $ xhost local:
-# This will give local VMs acces to the X11-server, which is needed to do GUI stuff
-#
-# Step 3: create the container
-# $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt
+
+# ========================== #
+#     RELEASE CONTAINER      #
+# ========================== #
+FROM ubuntu:22.04 AS release
+COPY --from=develop /roboteam/build/roboteam_world/roboteam_observer      /roboteam_observer
+COPY --from=develop /roboteam/build/roboteam_ai/roboteam_ai               /roboteam_ai
+COPY --from=develop /roboteam/build/roboteam_robothub/roboteam_robothub   /roboteam_robothub
+
+COPY --from=develop /usr/lib/x86_64-linux-gnu                             /usr/lib/x86_64-linux-gnu
+COPY --from=develop /usr/share/fonts                                      /usr/share/fonts
+COPY --from=develop /roboteam/build/_deps/proj_libzmqpp-build/libzmqpp.so /usr/lib/libzmqpp.so
+COPY --from=develop /roboteam/build/roboteam_ai/src/NFParam/libNFParam.so /usr/lib/libNFParam.so
+COPY --from=develop /usr/local/lib/libprotobuf.so.30.0.6                  /usr/lib/libprotobuf.so.30
+
+# The entire /usr/lib/x86_64-linux-gnu folder is cloned since it's too much of a hassle to figure out what is and isn't needed
+# TODO figure out how to exlude large files such as /usr/lib/x86_64-linux-gnu/libLLVM* (200+MB)
+# Can't use .dockerignore for this https://github.com/moby/moby/issues/33923
+

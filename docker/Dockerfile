@@ -2,7 +2,7 @@
 #        INSTRUCTIONS        #
 # ========================== #
 #   Step 1: Build
-#     $ docker build . --target develop -t rtt-develop
+#     $ docker build . --target development -t rtt-development
 #     $ docker build . --target release -t rtt-release   
 #   
 #   Step 2: Allow X11 access
@@ -11,7 +11,7 @@
 #   https://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers
 #   
 #   Step 3.1: Create a development container, to which you can e.g. hook into with VSCode
-#     $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt-develop
+#     $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt-development
 #
 #	Step 3.2: Start any executable
 #	  $ docker run --init --rm --net=host rtt-release /roboteam_observer
@@ -23,7 +23,7 @@
 # ========================== #
 #   DEVELOPMENT CONTAINER    #
 # ========================== #
-FROM ubuntu:22.04 AS develop
+FROM ubuntu:22.04 AS development
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y vim git cmake pkg-config python3 python3-pip ccache
 
@@ -41,15 +41,15 @@ WORKDIR /roboteam
 #     RELEASE CONTAINER      #
 # ========================== #
 FROM ubuntu:22.04 AS release
-COPY --from=develop /roboteam/build/roboteam_world/roboteam_observer      /roboteam_observer
-COPY --from=develop /roboteam/build/roboteam_ai/roboteam_ai               /roboteam_ai
-COPY --from=develop /roboteam/build/roboteam_robothub/roboteam_robothub   /roboteam_robothub
+COPY --from=development /roboteam/build/roboteam_world/roboteam_observer      /roboteam_observer
+COPY --from=development /roboteam/build/roboteam_ai/roboteam_ai               /roboteam_ai
+COPY --from=development /roboteam/build/roboteam_robothub/roboteam_robothub   /roboteam_robothub
 
-COPY --from=develop /usr/lib/x86_64-linux-gnu                             /usr/lib/x86_64-linux-gnu
-COPY --from=develop /usr/share/fonts                                      /usr/share/fonts
-COPY --from=develop /roboteam/build/_deps/proj_libzmqpp-build/libzmqpp.so /usr/lib/libzmqpp.so
-COPY --from=develop /roboteam/build/roboteam_ai/src/NFParam/libNFParam.so /usr/lib/libNFParam.so
-COPY --from=develop /usr/local/lib/libprotobuf.so.30.0.6                  /usr/lib/libprotobuf.so.30
+COPY --from=development /usr/lib/x86_64-linux-gnu                             /usr/lib/x86_64-linux-gnu
+COPY --from=development /usr/share/fonts                                      /usr/share/fonts
+COPY --from=development /roboteam/build/_deps/proj_libzmqpp-build/libzmqpp.so /usr/lib/libzmqpp.so
+COPY --from=development /roboteam/build/roboteam_ai/src/NFParam/libNFParam.so /usr/lib/libNFParam.so
+COPY --from=development /usr/local/lib/libprotobuf.so.30.0.6                  /usr/lib/libprotobuf.so.30
 
 # The entire /usr/lib/x86_64-linux-gnu folder is cloned since it's too much of a hassle to figure out what is and isn't needed
 # TODO figure out how to exlude large files such as /usr/lib/x86_64-linux-gnu/libLLVM* (200+MB)

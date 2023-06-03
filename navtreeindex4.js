@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29":[2,0,10,0,17,2],
 "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9":[2,0,10,0,17,10],
 "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a9d6d6e074c36a06bc5e2b1aa9c2776b8":[2,0,10,0,17,0],
 "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67aac0e2e4aa6cbbee20fe1379efba0836c":[2,0,10,0,17,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html":[3,0,1,0,4,6,5],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a0dd3439d999970125264ce7fccadff49":[3,0,1,0,4,6,5,12],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a2406ddec88191f369b72206849a1d9a4":[3,0,1,0,4,6,5,5],
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a242748b42fbc99613b65f6500eb12f8f":[3,0,1,0,4,6,5,13],
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a483d158a091f8347c3c25983b22d015f":[3,0,1,0,4,6,5,2]
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a242748b42fbc99613b65f6500eb12f8f":[3,0,1,0,4,6,5,13]
 };

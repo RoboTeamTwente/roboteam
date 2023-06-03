@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#addf737d170c5e01d48694435670d7b12":[3,0,1,0,4,3,3,5],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,4,3,3,25],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae97b7333b51d0a0d07f4f56561baa652":[3,0,1,0,4,3,3,0],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#af8fab1c6a79e6c62bb0bdea609cc0ada":[3,0,1,0,4,3,3,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a4ff09c5a0803236b90ca9e14abb1ae6e":[3,0,1,0,4,4,5,5],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a692cb6f9ade70bebc8f56e5175036c9a":[3,0,1,0,4,4,5,4],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a79b97d8f1a5eec0916220c20fb95db68":[3,0,1,0,4,4,5,8],
-"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a89bcbea7b61a816c97caec1cbef1eaff":[3,0,1,0,4,4,5,3],
-"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ab3a4dd278c94db922409c690ae5d13b4":[3,0,1,0,4,4,5,6]
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a89bcbea7b61a816c97caec1cbef1eaff":[3,0,1,0,4,4,5,3]
 };

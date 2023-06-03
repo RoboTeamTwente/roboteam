@@ -10,10 +10,11 @@ var classrtt_1_1ai_1_1new__interface_1_1Out =
       [ "size", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#a15b60514ad6e1c84f7b439ccaaff56fe", null ],
       [ "thickness", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#aeef7e00494fc2430b6139eb3361260c1", null ]
     ] ],
+    [ "bounded", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#af3c94420fe14a3f08ed138ca86cffa04", null ],
     [ "consumeVisualizations", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#ac5348f50c24f6e49c50f6c07bff6cc25", null ],
+    [ "decimal", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#adc51974b8368d9e9babe9638585392f3", null ],
     [ "draw", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#aed27055b0563f2957eae9e72162a85b1", null ],
     [ "initDrawing", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#ad5175214c2d03d4c87d19ef8211e3e21", null ],
-    [ "reportNumber", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#a05cf20861545231224a332ba8f4d1e4a", null ],
     [ "arena", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#a9370a4d4b0da8988146187af1d1b4c71", null ],
     [ "visualizations", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#a13779f84457477d89c2944d80b61cade", null ]
 ];

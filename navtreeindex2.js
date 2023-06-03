@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af4fca11307f4320fcdb46581752c6005":[3,0,1,0,1,0,4],
 "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af7704c3508056da674b7fe5bc8f9d583":[3,0,1,0,1,0,6],
 "d2/d60/WorldData_8hpp.html":[4,0,0,0,0,5,7],
 "d2/d60/WorldData_8hpp_source.html":[4,0,0,0,0,5,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "d3/dec/NumTreesPlanning_8h.html":[4,0,0,0,0,0,0,1,0],
 "d3/dec/NumTreesPlanning_8h_source.html":[4,0,0,0,0,0,0,1,0],
 "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html":[3,0,1,0,4,1,39],
-"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,39,0],
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html":[3,0,1,0,4,17]
+"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,39,0]
 };

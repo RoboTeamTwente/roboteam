@@ -75,22 +75,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#ae0c6ce7335a11d00664df9351a446551",
-"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af7704c3508056da674b7fe5bc8f9d583",
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a010b914f84632c97e54730a7b84b23b0",
-"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9",
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a557abc1bba78f4fdae7e0da6bf150354",
-"d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a9d6a2d03c48bf191150eab3f65f90eed",
-"d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#afada13c03a31c960cdf202a5630588d2",
-"d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a755ac5c77306354a2f460dfe6b7514a7",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#acc7c31d01bd4a7cb2ab8106b1e50673c",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a5be299fd1dab79b7f656ca37631d6ef6",
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae0c6ce7335a11d00664df9351a446551",
-"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ab63b95181398ce9f0791e95f4b2feff7",
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#aa0405b45c69fc25464bec621fbcbe0cc",
-"df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md13",
-"functions_func_~.html"
+"d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#ad7b71d56f8b8d8d62b7ec945847a2bec",
+"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af4fca11307f4320fcdb46581752c6005",
+"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html",
+"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29",
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a483d158a091f8347c3c25983b22d015f",
+"d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a842ee55b04c8078f0a409209aa69ec02",
+"d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#af713171fd39791c8be81b904e364ff22",
+"d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a26418e2555104ba88b8fe0686a3a1134",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2",
+"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691",
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a58560de6d2d6ca91e467deb1071aadbd",
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#addf737d170c5e01d48694435670d7b12",
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ab3a4dd278c94db922409c690ae5d13b4",
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a977b3063d4d26bee4be08d71c2ab7ccc",
+"df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md12",
+"functions_func_y.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -12,7 +12,7 @@ import Ball from "./ball.vue";
 import Field from "./field.vue";
 import Visualizations from "./pointer-location.vue";
 import PointerLocation from "./visualizarions.vue";
-import {emitter} from "../../services/ai-events";
+import {aiEmitter} from "../../services/events";
 import {proto} from "../../generated/proto";
 
 const
@@ -38,7 +38,7 @@ const
     onStageClick = (e: FederatedPointerEvent) => {
         if (e.button != 0|| !e.shiftKey) { return; } // Only allow left click + shift
         const pos = e.getLocalPosition(appRef.value!.drawingsContainer);
-        emitter.emit('setBallPos', proto.Vector2f.create({x: pos.x / 100, y: -pos.y / 100}));
+        aiEmitter.emit('setBallPos', proto.Vector2f.create({x: pos.x / 100, y: -pos.y / 100}));
         e.preventDefault();
     },
     cleanUp = () => {

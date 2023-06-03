@@ -13,24 +13,39 @@ import {useProtoWebSocket} from "./utils";
 import GameCanvas2 from "./modules/field/game-canvas.vue";
 import SidebarResizer from "./modules/components/layout/sidebar-resizer.vue";
 
-let url = ref("ws://localhost:12676");
+let url = ref("localhost:12676");
+
+
 let aiClient = useAIClient();
 const uiStore = useUIStore();
 const visionData = useVisionDataStore();
+
+//
+// icon name for status open: check
 
 </script>
 
 <template>
     <div class="modal" :class="{'modal-open': aiClient.status.value !== 'OPENED'}">
         <div class="modal-box flex flex-col gap-4">
-            Status: {{ aiClient.status.value }}
+            <div class="m-auto">
+                <img src="/favicon.svg" class="w-32"/>
+            </div>
+
+
+            <span class="flex items-center">Status: <span class="inline-block rounded-full w-2 h-2 bg-red-600 ml-2 mr-1" :class="{
+                'bg-green-600': aiClient.status.value == 'OPENED'
+            }"/> {{ aiClient.status.value }}</span>
             <div class="form-control w-full max-w">
                 <label class="label">
                     <span class="label-text">AI InterfaceGateway url</span>
                 </label>
-                <input class="input input-bordered" v-model="url">
+                <label class="input-group">
+                <span>ws://</span>
+                <input class="input input-bordered w-full" v-model="url">
+                </label>
             </div>
-            <button class="btn btn-primary" @click="() => aiClient.open(url)">Connect</button>
+            <button class="btn btn-primary" @click="() => aiClient.open( 'ws://' + url)">Connect</button>
         </div>
     </div>
 

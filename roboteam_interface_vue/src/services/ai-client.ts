@@ -4,7 +4,7 @@ import {useVisualizationStore} from "../modules/stores/data-stores/visualization
 import {useSTPDataStore} from "../modules/stores/data-stores/stp-data-store";
 import {useVisionDataStore} from "../modules/stores/data-stores/vision-data-store";
 import {useProtoWebSocket} from "../utils";
-import {emitter} from "../services/ai-events";
+import {aiEmitter} from "./events";
 import {useAIDataStore} from "../modules/stores/data-stores/ai-data-store";
 
 
@@ -38,24 +38,24 @@ export const useAIClient = () => {
         }
     });
 
-    emitter.on('update:runtimeConfiguration', (config) => {
+    aiEmitter.on('update:runtimeConfiguration', (config) => {
         send({setRuntimeConfig: config})
     });
 
-    emitter.on('update:gameSettings', (config) => {
+    aiEmitter.on('update:gameSettings', (config) => {
         console.log('update:gameSettings', config);
         send({setGameSettings: config})
     });
 
-    emitter.on('update:pause', (value) => {
+    aiEmitter.on('update:pause', (value) => {
         send({pauseAi: value})
     });
 
-    emitter.on('update:play', (value) => {
+    aiEmitter.on('update:play', (value) => {
         send({setPlay: value})
     });
 
-    emitter.on('setBallPos', (value) => {
+    aiEmitter.on('setBallPos', (value) => {
         console.log('setBallPos', value)
         send({setBallPos: value})
     });

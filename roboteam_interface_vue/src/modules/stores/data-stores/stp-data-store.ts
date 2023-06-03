@@ -3,7 +3,7 @@ import {proto} from "../../../generated/proto";
 import ISTPStatus = proto.ISTPStatus;
 import {DeepReadonly} from "../../../utils";
 import {computed, readonly, ref, shallowRef} from "vue";
-import {emitter} from "../../../services/ai-events";
+import {aiEmitter} from "../../../services/events";
 
 export const useSTPDataStore = defineStore('stpDataStore', () => {
     // State
@@ -24,7 +24,7 @@ export const useSTPDataStore = defineStore('stpDataStore', () => {
     const currentPlayName = computed({
         get() { return latest.value?.currentPlay!.playName!},
         set(value: string) {
-            emitter.emit('update:play', proto.PlayInfo.create({
+            aiEmitter.emit('update:play', proto.PlayInfo.create({
                 ...latest.value?.currentPlay!,
                 playName: value
             }));
@@ -34,7 +34,7 @@ export const useSTPDataStore = defineStore('stpDataStore', () => {
     const currentRuleset = computed({
         get() { return latest.value?.currentPlay!.rulesetName!},
         set(value: string) {
-            emitter.emit('update:play', proto.PlayInfo.create({
+            aiEmitter.emit('update:play', proto.PlayInfo.create({
                 ...latest.value?.currentPlay!,
                 rulesetName: value
             }));

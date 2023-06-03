@@ -5,6 +5,7 @@ import {useSTPDataStore} from "../../stores/data-stores/stp-data-store";
 import {useAIDataStore} from "../../stores/data-stores/ai-data-store";
 import {sleep} from "../../../utils";
 import {useAiController} from "../../composables/ai-controller";
+import {uiEmitter} from "../../../services/events";
 
 const uiStore = useUIStore();
 const stpData = useSTPDataStore();
@@ -78,6 +79,7 @@ const togglePause = () => {
         </label>
         <div tabindex="0" class="card compact dropdown-content shadow bg-base-100 rounded-box w-64">
           <div class="card-body ">
+            <button class="btn btn-error btn-sm" @click="() => uiEmitter.emit('wss:disconnect')">Disconnect from AI</button>
             <h2 class="card-title">Performance Info</h2>
             <ul class="font-mono">
               <li>Tick: {{stpData.currentTick}}</li>

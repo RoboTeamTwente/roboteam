@@ -1,5 +1,5 @@
 import {computed} from "vue";
-import {emitter} from "../../services/ai-events";
+import {aiEmitter} from "../../services/events";
 import {proto} from "../../generated/proto";
 import {useAIDataStore} from "../stores/data-stores/ai-data-store";
 
@@ -12,7 +12,7 @@ export const useAiController = () => {
         },
         set(value: boolean) {
             console.log('useReferee', value);
-            emitter.emit('update:runtimeConfiguration', proto.RuntimeConfig.create({
+            aiEmitter.emit('update:runtimeConfiguration', proto.RuntimeConfig.create({
                 ...aiData.state?.runtimeConfig,
                 useReferee: value
             }));
@@ -24,7 +24,7 @@ export const useAiController = () => {
             return aiData.state?.runtimeConfig?.ignoreInvariants!
         },
         set(value: boolean) {
-            emitter.emit('update:runtimeConfiguration', proto.RuntimeConfig.create({
+            aiEmitter.emit('update:runtimeConfiguration', proto.RuntimeConfig.create({
                 ...aiData.state?.runtimeConfig,
                 ignoreInvariants: value
             }));
@@ -36,7 +36,7 @@ export const useAiController = () => {
             return aiData.state?.gameSettings?.isLeft!
         },
         set(value: boolean) {
-            emitter.emit('update:gameSettings', proto.GameSettings.create({
+            aiEmitter.emit('update:gameSettings', proto.GameSettings.create({
                 ...aiData.state?.gameSettings,
                 isLeft: value
             }));
@@ -48,7 +48,7 @@ export const useAiController = () => {
             return aiData.state?.gameSettings?.isYellow!
         },
         set(value: boolean) {
-            emitter.emit('update:gameSettings', proto.GameSettings.create({
+            aiEmitter.emit('update:gameSettings', proto.GameSettings.create({
                 ...aiData.state?.gameSettings,
                 isYellow: value
             }));
@@ -60,7 +60,7 @@ export const useAiController = () => {
             return aiData.state?.gameSettings?.robotHubMode!
         },
         set(value: proto.GameSettings.RobotHubMode) {
-            emitter.emit('update:gameSettings', proto.GameSettings.create({
+            aiEmitter.emit('update:gameSettings', proto.GameSettings.create({
                 ...aiData.state?.gameSettings,
                 robotHubMode: value
             }));
@@ -72,7 +72,7 @@ export const useAiController = () => {
             return aiData.state?.isPaused!
         },
         set(value: boolean) {
-            emitter.emit('update:pause', value);
+            aiEmitter.emit('update:pause', value);
         },
     });
 

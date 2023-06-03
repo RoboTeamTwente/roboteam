@@ -44,18 +44,16 @@ message Drawing {
 
 message Metric {
     message BoundedValue {
-        float value = 1;
-        float min = 2;
-        float max = 3;
+        double value = 1;
+        double min = 2;
+        double max = 3;
         string unit = 4;
     }
 
     message Decimal {
         double value = 1;
-
-        // If these are not set they will be computed on the fly in the UI
-        double min_recorded = 2;
-        double max_recorded = 3;
+        double min_recorded = 2; // If set they will be computed on the fly in the UI
+        double max_recorded = 3; // If set they will be computed on the fly in the UI
         string unit = 4;
     }
 

@@ -17,16 +17,10 @@ const visualizationStore = useVisualizationStore();
 
         <template v-if="metric.decimal != null">
           <div class="stat-title">{{ label }}</div>
-          <div class="stat-value font-mono">{{ metric.decimal.value }} {{ metric.decimal.unit }}</div>
-          <div class="stat-desc font-mono">{{ metric.decimal.minRecorded }} - {{metric.decimal.maxRecorded }}</div>
+          <div class="stat-value font-mono">{{ metric.decimal.value!.toFixed(2) }} {{ metric.decimal.unit }}</div>
+          <div class="stat-desc font-mono">{{ metric.decimal.minRecorded.toFixed(2) }} - {{metric.decimal.maxRecorded.toFixed(2) }}</div>
         </template>
       </div>
-<!--      <div class="stats shadow w-min" v-if="metric.decimal != null">-->
-<!--      <div class="stat">-->
-<!--        <div class="stat-title">{{ label }}</div>-->
-<!--        <div class="stat-value">{{ metric.decimal }}</div>-->
-<!--      </div>-->
-<!--      </div>-->
     </template>
   </div>
 </template>

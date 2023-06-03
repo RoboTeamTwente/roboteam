@@ -21,11 +21,20 @@ void Out::draw(const DrawArgs& args, std::span<Vector2> points) {
     }
 }
 
-void Out::reportNumber(std::basic_string<char> label, double value, std::basic_string<char> unit) {
+void Out::decimal(std::basic_string<char> label, double value, std::basic_string<char> unit) {
     auto metric = visualizations->add_metrics();
     metric->set_label(label);
     metric->mutable_decimal()->set_value(value);
     metric->mutable_decimal()->set_unit(unit);
+}
+
+void Out::bounded(std::basic_string<char> label, double value, double min, double max, std::basic_string<char> unit) {
+    auto metric = visualizations->add_metrics();
+    metric->set_label(label);
+    metric->mutable_bounded_value()->set_value(value);
+    metric->mutable_bounded_value()->set_min(min);
+    metric->mutable_bounded_value()->set_max(max);
+    metric->mutable_bounded_value()->set_unit(unit);
 }
 
 proto::Drawing* Out::initDrawing(const DrawArgs& args) {

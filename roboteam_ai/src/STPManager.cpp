@@ -95,43 +95,37 @@ void STPManager::start(std::atomic_bool &exitApplication) {
         }
     }
 
-    int index = 0;
-    std::array<long long, 100> tickDurations{0};
-    int fpsCounter = 0;
+    double accumulator = 0;
+    double alpha = 1.0/100.0; // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
+    int lastTickCount = 0;
+    int statsUpdateRate = 5;
 
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
-            // Tick STP
-            const auto tStart = std::chrono::steady_clock::now();
-            runOneLoopCycle();
-            const auto tStop = std::chrono::steady_clock::now();
+            const auto tickDuration = roboteam_utils::Timer::measure([&]() {
+                // Tick AI
+                runOneLoopCycle();
+                tickCounter++;
+            }).count();
 
-            const auto tickDuration = std::chrono::duration_cast<std::chrono::milliseconds>((tStop - tStart)).count();
-            if (index > tickDurations.size() - 1) {
-                index = 0;
-            }
-            tickDurations[index] = tickDuration;
-            index++;
             stpTimer.limit([&]() {
-                if (currentPlay == nullptr) {
-                    return;
-                }
-
+                if (currentPlay == nullptr) { return; }
                 interfaceGateway->publisher()
                     .publishStpStatus(currentPlay, plays, tickCounter)
                     .publishWorld()
                     .publishVisuals();
 
             }, 45);
-            tickCounter++;
 
+            accumulator = alpha * tickDuration + (1 - alpha) * accumulator; // Exponential moving average
             stpTimer.limit(
                 [&]() {
-                    double avgDuration = std::accumulate(tickDurations.begin(), tickDurations.end(), 0) / static_cast<double>(tickDurations.size());
-                    rtt::ai::new_interface::Out::reportNumber("Average tick", avgDuration, "ms");
+                    rtt::ai::new_interface::Out::decimal("Average tick", accumulator, "ms");
+                    rtt::ai::new_interface::Out::bounded("FPS", (tickCounter - lastTickCount) * statsUpdateRate, 0, 60, "fps");
+                    lastTickCount = tickCounter;
                 },
-                5);
+                statsUpdateRate);
 
             // If this is primary AI, broadcast settings every second
             if (GameSettings::isPrimaryAI()) {
@@ -197,13 +191,13 @@ void STPManager::runOneLoopCycle() {
 void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     ai::stp::PlayEvaluator::clearGlobalScores();  // reset all evaluations
     ai::stp::ComputationManager::clearStoredComputations();
-    
+
     /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
     if(!ignoreWorldAge){
         if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
             RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
             currentPlay = nullptr;
-            // Returning here prevents the play from being updated, which means that the play will not be able to send any commands, 
+            // Returning here prevents the play from being updated, which means that the play will not be able to send any commands,
             // which means that the robots will not be able to move. This is a safety measure to prevent the robots from moving when the AI is dealing with outdated information.
             return;
         }

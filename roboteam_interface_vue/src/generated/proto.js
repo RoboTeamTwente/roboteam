@@ -5054,11 +5054,11 @@ export const proto = $root.proto = (() => {
                 if (!writer)
                     writer = $Writer.create();
                 if (message.value != null && Object.hasOwnProperty.call(message, "value"))
-                    writer.uint32(/* id 1, wireType 5 =*/13).float(message.value);
+                    writer.uint32(/* id 1, wireType 1 =*/9).double(message.value);
                 if (message.min != null && Object.hasOwnProperty.call(message, "min"))
-                    writer.uint32(/* id 2, wireType 5 =*/21).float(message.min);
+                    writer.uint32(/* id 2, wireType 1 =*/17).double(message.min);
                 if (message.max != null && Object.hasOwnProperty.call(message, "max"))
-                    writer.uint32(/* id 3, wireType 5 =*/29).float(message.max);
+                    writer.uint32(/* id 3, wireType 1 =*/25).double(message.max);
                 if (message.unit != null && Object.hasOwnProperty.call(message, "unit"))
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.unit);
                 return writer;
@@ -5096,15 +5096,15 @@ export const proto = $root.proto = (() => {
                     let tag = reader.uint32();
                     switch (tag >>> 3) {
                     case 1: {
-                            message.value = reader.float();
+                            message.value = reader.double();
                             break;
                         }
                     case 2: {
-                            message.min = reader.float();
+                            message.min = reader.double();
                             break;
                         }
                     case 3: {
-                            message.max = reader.float();
+                            message.max = reader.double();
                             break;
                         }
                     case 4: {

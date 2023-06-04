@@ -65,9 +65,8 @@ const leftPanelSelectedTabs = computed({
           <span class="label-text">Select left bar tabs</span>
         </label>
         <select class="select select-bordered" multiple v-model="leftPanelSelectedTabs">
-          <template v-for="tab in Object.keys(TABS_DEFINITION)">
-            <option v-if="tab !== 'UI Settings'" :value="tab" :key="tab">{{ tab }}</option>
-            <option v-else :value="tab" disabled :selected="true" :key="tab">{{ tab }}</option>
+          <template v-for="tab in Object.keys(TABS_DEFINITION)" :key="tab">
+            <option :value="tab" :disabled="tab === 'UI Settings'">{{ tab }}</option>
           </template>
         </select>
       </div>

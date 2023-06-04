@@ -1,86 +1,88 @@
-import {ref, shallowRef, ShallowRef} from "vue";
-import {proto} from "./generated/proto";
-import MsgToInterface = proto.MsgToInterface;
-import {uiEmitter} from "./services/events";
+import { ref, shallowRef, ShallowRef } from 'vue'
+import { proto } from './generated/proto'
+import MsgToInterface = proto.MsgToInterface
+import { uiEmitter } from './services/events'
 
-export type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
-export type DeepReadonly<T> = T extends Function ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
-export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>;
+export type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> }
+export type DeepReadonly<T> = T extends Function
+  ? T
+  : T extends object
+  ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+  : T
+export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>
 
 export const sleep = (time: number) => {
-    return new Promise((resolve) => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
-    if (team === 'PURPLE') {
-        return {
-            1: "Wall-E",
-            2: "R2D2",
-            3: "Tron",
-            4: "Marvin",
-            5: "Jarvis",
-            6: "Baymax",
-            7: "Noo-Noo",
-            8: "T-800",
-            9: "K-9",
-            10: "Bender",
-            11: "Holt",
-            12: "Chappie",
-            13: "TARS",
-            14: "",
-            15: "Herman",
-        }[id]
-    }
+  if (team === 'PURPLE') {
+    return {
+      1: 'Wall-E',
+      2: 'R2D2',
+      3: 'Tron',
+      4: 'Marvin',
+      5: 'Jarvis',
+      6: 'Baymax',
+      7: 'Noo-Noo',
+      8: 'T-800',
+      9: 'K-9',
+      10: 'Bender',
+      11: 'Holt',
+      12: 'Chappie',
+      13: 'TARS',
+      14: '',
+      15: 'Herman'
+    }[id]
+  }
 
-    return ""
-};
+  return ''
+}
 
 export const useProtoWebSocket = () => {
-    const status = ref<"CLOSED" | "OPENED" | "OPENING">("CLOSED");
-    const wsRef = ref<WebSocket | undefined>();
-    const protoData = shallowRef<MsgToInterface | null>(null);
+  const status = ref<'CLOSED' | 'OPENED' | 'OPENING'>('CLOSED')
+  const wsRef = ref<WebSocket | undefined>()
+  const protoData = shallowRef<MsgToInterface | null>(null)
 
-    const onMessage = async (event: MessageEvent) => {
-        const messageBuffer = new Uint8Array(await event.data.arrayBuffer());
-        protoData.value = proto.MsgToInterface.decode(messageBuffer);
-    };
+  const onMessage = async (event: MessageEvent) => {
+    const messageBuffer = new Uint8Array(await event.data.arrayBuffer())
+    protoData.value = proto.MsgToInterface.decode(messageBuffer)
+  }
 
-    const sendProtoMsg = (properties?: proto.IMsgFromInterface) => {
-        const buffer = proto.MsgFromInterface.encode(
-            proto.MsgFromInterface.create(properties)
-        ).finish();
-        wsRef.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length));
-    };
+  const sendProtoMsg = (properties?: proto.IMsgFromInterface) => {
+    const buffer = proto.MsgFromInterface.encode(proto.MsgFromInterface.create(properties)).finish()
+    wsRef.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length))
+  }
 
-    const open = (url: string) => {
-        if (wsRef.value !== undefined) {
-            // Status code 1000 -> Normal Closure https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
-            wsRef.value.close(1000);
-        }
-
-        const ws = new WebSocket(url);
-        wsRef.value = ws;
-        status.value = "OPENING";
-
-        ws.onmessage = onMessage;
-        ws.onopen = () => status.value = "OPENED";
-        ws.onclose = () => {
-            status.value = "CLOSED"
-            wsRef.value = undefined;
-        };
+  const open = (url: string) => {
+    if (wsRef.value !== undefined) {
+      // Status code 1000 -> Normal Closure https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
+      wsRef.value.close(1000)
     }
 
-    uiEmitter.on('wss:disconnect', () => {
-        console.log("Disconnecting from websocket");
-        if (wsRef.value !== undefined) {
-            wsRef.value.close(1000);
-        }
-    });
+    const ws = new WebSocket(url)
+    wsRef.value = ws
+    status.value = 'OPENING'
 
-    return {
-        data: protoData as ShallowRef<proto.MsgToInterface>,
-        status,
-        open,
-        send: sendProtoMsg,
+    ws.onmessage = onMessage
+    ws.onopen = () => (status.value = 'OPENED')
+    ws.onclose = () => {
+      status.value = 'CLOSED'
+      wsRef.value = undefined
     }
+  }
+
+  uiEmitter.on('wss:disconnect', () => {
+    console.log('Disconnecting from websocket')
+    if (wsRef.value !== undefined) {
+      wsRef.value.close(1000)
+    }
+  })
+
+  return {
+    data: protoData as ShallowRef<proto.MsgToInterface>,
+    status,
+    open,
+    send: sendProtoMsg
+  }
 }

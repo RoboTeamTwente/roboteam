@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .alert-warning {
-    --tw-bg-opacity: 0.8;
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
+  --tw-bg-opacity: 0.8;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }

@@ -20,6 +20,10 @@ export default defineConfig({
     }
   },
   plugins: [
-    vue(),
+    vue({
+      script: {
+        propsDestructure: true
+      }
+    })
   ],
 });

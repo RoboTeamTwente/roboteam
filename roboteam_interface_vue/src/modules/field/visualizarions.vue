@@ -8,6 +8,8 @@ import {useUIStore} from "../stores/ui-store";
 import {useVisualizationStore} from "../stores/data-stores/visualization-store";
 import Category = proto.Drawing.Category;
 import {useSTPDataStore} from "../stores/data-stores/stp-data-store";
+import {NoUndefinedField} from "../../utils";
+import IDrawing = proto.IDrawing;
 
 // Internal (non-reactive) variables
 let visuals = new ShapeMap<string, ShapeDrawing>(),
@@ -39,7 +41,7 @@ const
             if (data.category == Category.PATH_PLANNING && !uiStore.showPathPlanning(data.forRobotId)) return;
             if (data.category == Category.DEBUG && !uiStore.showDebug(data.forRobotId)) return;
 
-            const shape = new ShapeDrawing({data: data, currentTick: stpData.currentTick});
+            const shape = new ShapeDrawing({data: data as NoUndefinedField<IDrawing>, currentTick: stpData.currentTick});
             layer?.addChild(shape);
             visuals.set(data.label!, shape); // Drawings map automatically calls destroy on the old shape
         });

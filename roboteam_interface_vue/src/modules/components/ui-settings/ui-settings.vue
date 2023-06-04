@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import {Tab, TABS, useUIStore} from "../../stores/ui-store";
+import {useUIStore} from "../../stores/ui-store";
 import TriState from "./tri-state.vue";
 import {computed} from "vue";
+import {TabKey, TABS_DEFINITION} from "../../../tabs";
 
 const uiStore = useUIStore();
 
 // This makes sure the UI Settings tab is always in the left panel
 const leftPanelSelectedTabs = computed({
     get: () => uiStore.leftPanel.selectableTabs,
-    set: (val: Tab[]) => {
-        val = val.filter(e => e.name !== 'UI Settings');
-        val.push(...TABS.filter(e => e.name === 'UI Settings'));
+    set: (val: TabKey[]) => {
+        val = val.filter(e => e !== 'UI Settings');
+        val.push('UI Settings');
         uiStore.leftPanel.selectableTabs = val
     }
 })
@@ -50,9 +51,9 @@ const leftPanelSelectedTabs = computed({
                     <span class="label-text">Select left bar tabs</span>
                 </label>
                 <select class="select select-bordered" multiple v-model="leftPanelSelectedTabs">
-                    <template v-for="tab in TABS">
-                        <option v-if="tab.name !== 'UI Settings'" :value="tab">{{ tab.name }}</option>
-                        <option v-else :value="tab" disabled :selected="true">{{ tab.name }}</option>
+                    <template v-for="tab in Object.keys(TABS_DEFINITION)">
+                        <option v-if="tab !== 'UI Settings'" :value="tab">{{ tab }}</option>
+                        <option v-else :value="tab" disabled :selected="true">{{ tab }}</option>
                     </template>
                 </select>
             </div>
@@ -62,7 +63,7 @@ const leftPanelSelectedTabs = computed({
                     <span class="label-text">Select bottom bar tabs</span>
                 </label>
                 <select class="select select-bordered" multiple v-model="uiStore.bottomPanel.selectableTabs">
-                    <option v-for="tab in TABS" :value="tab">{{ tab.name }}</option>
+                    <option v-for="tab in Object.keys(TABS_DEFINITION)" :value="tab">{{ tab }}</option>
                 </select>
             </div>
 

@@ -2,6 +2,7 @@
 import RobotStpBadge from "./robot-stp-badge.vue";
 import {useUIStore} from "../../../stores/ui-store";
 import {useSTPDataStore} from "../../../stores/data-stores/stp-data-store";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const stpData = useSTPDataStore();
 const uiStore = useUIStore();
@@ -9,6 +10,11 @@ const uiStore = useUIStore();
 
 <template>
     <div class="grid grid-cols-fluid-10 gap-2 auto-cols-max">
+        <div v-if="stpData.latest == null" class="alert alert-sm alert-warning justify-start">
+            <font-awesome-icon icon="fa-triangle-exclamation"/>
+            No data
+        </div>
+
         <template v-for="robot in stpData.latest?.robots" :key="robot.id">
             <div class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border"
                  :class="{

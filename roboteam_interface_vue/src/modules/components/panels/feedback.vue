@@ -20,6 +20,11 @@ const formatFloat = (pos?: number | null): string => {
 
 <template>
   <div class="grid grid-cols-fluid-12  gap-2 ">
+    <div v-if="visionData.ourRobots == null || visionData.ourRobots?.length == 0" class="alert alert-sm alert-warning justify-start">
+          <font-awesome-icon icon="fa-triangle-exclamation"/>
+          No data
+    </div>
+
     <template v-for="(robot, id) in visionData.ourRobots" :key="id">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300" :class="{
         'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)

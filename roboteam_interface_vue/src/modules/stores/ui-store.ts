@@ -8,12 +8,13 @@ import PlayEvaluation from "../components/panels/play-evaluation.vue";
 import Metrics from "../components/panels/metrics.vue";
 import UiSettings from "../components/ui-settings/ui-settings.vue";
 import {s} from "@tauri-apps/api/shell-cbf4da8b";
+import {TabKey, TABS_DEFINITION} from "../../tabs";
 
 type Panel = {
     size: number
     collapsed: boolean
-    selectedTab: Tab,
-    selectableTabs: Tab[]
+    selectedTab: TabKey,
+    selectableTabs: TabKey[]
 }
 
 export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
@@ -34,59 +35,19 @@ export type UiStore = {
     internalTeam: 'BLACK' | 'PURPLE'
 }
 
-export const TabComponents = {
-    'Game Settings': markRaw(GameSettings),
-    'STP': markRaw(StpStatus),
-    'Feedback': markRaw(Feedback),
-    'Plays History': markRaw(PlayEvaluation),
-    'Metrics': markRaw(Metrics),
-    'UI Settings': markRaw(UiSettings)
-}
-
-export type Tab = {
-    name: string,
-    icon: string,
-};
-
-export const TABS: Tab[] = [
-    {
-        name: 'Game Settings',
-        icon: 'fa-gear',
-    },
-    {
-        name: 'STP',
-        icon: 'fa-layer-group',
-    },
-    {
-        name: 'Feedback',
-        icon: 'fa-rss',
-    },
-    {
-        name: 'Plays History',
-        icon: 'fa-history',
-    },
-    {
-        name: 'Metrics',
-        icon: 'fa-gauge',
-    },
-    {
-        name: 'UI Settings',
-        icon: 'fa-gear',
-    }
-];
 
 const defaultState: () => UiStore = () => ({
     bottomPanel: {
         size: 250,
         collapsed: false,
-        selectedTab: TABS[0],
-        selectableTabs: TABS
+        selectedTab: 'Game Settings',
+        selectableTabs: Object.keys(TABS_DEFINITION) as TabKey[]
     },
     leftPanel: {
         size: 250,
         collapsed: false,
-        selectedTab: TABS[0],
-        selectableTabs: TABS
+        selectedTab: 'STP',
+        selectableTabs: Object.keys(TABS_DEFINITION) as TabKey[]
     },
     selectedRobots: new Set([]),
     scaling: {

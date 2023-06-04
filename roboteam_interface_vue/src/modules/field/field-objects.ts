@@ -1,11 +1,9 @@
 import {
     Application,
-    BaseImageResource,
     Container,
     FederatedPointerEvent,
-    Graphics, IRenderer,
+    Graphics,
     SimpleRope,
-    Sprite,
     Text,
     Texture
 } from "pixi.js";
@@ -24,10 +22,8 @@ import cross from '../../assets/cross-16x16.png';
 import pluses from '../../assets/pluses-16x16.png';
 import IWorldRobot = proto.IWorldRobot;
 import {IApplicationOptions} from "@pixi/app/lib/Application";
+import {NoUndefinedField} from "../../utils";
 
-import {CanvasTextureAllocator, RenderTextureAllocator} from '@pixi-essentials/texture-allocator';
-// const allocator = new CanvasTextureAllocator();
-const allocator = new RenderTextureAllocator();
 
 export const Colors = {
     yellow: '#feff00',
@@ -208,7 +204,7 @@ export class FieldDrawing extends Graphics {
 export class ShapeDrawing extends Container {
     readonly retainUntilTick: number;
 
-    constructor({data, currentTick}: { data: IDrawing, currentTick: number }) {
+    constructor({data, currentTick}: { data: NoUndefinedField<IDrawing>, currentTick: number }) {
         super();
         this.retainUntilTick = currentTick + data.retainForTicks!;
 
@@ -256,9 +252,11 @@ export class ShapeDrawing extends Container {
                     {x: -data.size, y:data.size},
                     {x:0, y:0},
                 ]);
+                break;
             case proto.Drawing.Method.CIRCLES:
                 graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!));
                 graphicsPrototype.drawCircle(0, 0, data.size);
+                break;
         }
         points.forEach((point) => {
             const graphics = graphicsPrototype.clone();

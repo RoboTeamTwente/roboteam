@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {useVisualizationStore} from "../../stores/data-stores/visualization-store";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const visualizationStore = useVisualizationStore();
 
@@ -7,7 +8,12 @@ const visualizationStore = useVisualizationStore();
 
 <template>
   <div class="grid grid-cols-fluid-10 gap-2 auto-cols-max">
-    <template v-for="[label, metric] in visualizationStore.$state.metrics" :key="label">
+    <div v-if="visualizationStore.metrics.size == 0" class="alert alert-sm alert-warning justify-start">
+        <font-awesome-icon icon="fa-triangle-exclamation"/>
+        No data
+    </div>
+
+    <template v-for="[label, metric] in visualizationStore.metrics.entries()" :key="label">
       <div class="bg-base-200 p-2 rounded-xl border border-base-300 w-min">
         <div class="flex flex-row items-center gap-2" v-if="metric.boundedValue != null">
           <div class="text-sm text-gray-500">{{ label }}</div>
@@ -18,7 +24,7 @@ const visualizationStore = useVisualizationStore();
         <template v-if="metric.decimal != null">
           <div class="stat-title">{{ label }}</div>
           <div class="stat-value font-mono">{{ metric.decimal.value!.toFixed(2) }} {{ metric.decimal.unit }}</div>
-          <div class="stat-desc font-mono">{{ metric.decimal.minRecorded.toFixed(2) }} - {{metric.decimal.maxRecorded.toFixed(2) }}</div>
+          <div class="stat-desc font-mono">{{ metric.decimal.minRecorded!.toFixed(2) }} - {{metric.decimal.maxRecorded!.toFixed(2) }}</div>
         </template>
       </div>
     </template>

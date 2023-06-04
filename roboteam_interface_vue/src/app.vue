@@ -1,16 +1,12 @@
 <script setup lang='ts'>
 
-import {computed, ref} from "vue";
+import {ref} from "vue";
 import GameCanvas from "./modules/field/game-canvas.vue";
-import {TABS, useUIStore} from "./modules/stores/ui-store";
+import {useUIStore} from "./modules/stores/ui-store";
 import TopPanel from "./modules/components/layout/top-panel.vue";
 import {useAIClient} from "./services/ai-client";
-import ResizableSlider from "./modules/components/layout/sidebar-resizer.vue";
-import PanelSlider from "./modules/components/layout/sidebar-resizer.vue";
 import TabedWidgets from "./modules/components/layout/tabed-widgets.vue";
 import {useVisionDataStore} from "./modules/stores/data-stores/vision-data-store";
-import {useProtoWebSocket} from "./utils";
-import GameCanvas2 from "./modules/field/game-canvas.vue";
 import SidebarResizer from "./modules/components/layout/sidebar-resizer.vue";
 
 let url = ref("localhost:12676");
@@ -62,7 +58,7 @@ const visionData = useVisionDataStore();
                     class="left-sidebar-resize"
                     @drag="uiStore.resizeLeftPanel(uiStore.leftPanel.size - $event.x)"
             />
-            <Transition name="left-sidebar" duration="300">
+            <Transition name="left-sidebar" :duration="300">
                 <div class="left-sidebar" v-if="!uiStore.$state.leftPanel.collapsed">
                     <tabed-widgets v-model:active-tab="uiStore.leftPanel.selectedTab" :tabs="uiStore.leftPanel.selectableTabs"/>
 <!--                    <tabed-widgets v-model:active-tab="uiStore.leftPanel.selectedTab" :tabs="TABS"/>-->
@@ -88,7 +84,7 @@ const visionData = useVisionDataStore();
                     class="bottom-sidebar-resize"
                     @drag="uiStore.resizeBottomPanel(uiStore.bottomPanel.size + $event.y)"
             />
-            <Transition name="bottom-sidebar" duration="300">
+            <Transition name="bottom-sidebar" :duration="300">
                 <div class="bottom-sidebar" v-if="!uiStore.$state.bottomPanel.collapsed">
                     <tabed-widgets v-model:active-tab="uiStore.bottomPanel.selectedTab" :tabs="uiStore.bottomPanel.selectableTabs"/>
                 </div>

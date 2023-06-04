@@ -19,7 +19,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@mdi/font": "7.1.96",
-    "@pixi-essentials/texture-allocator": "^2.0.1",
     "@tauri-apps/api": "1.2.0",
     "@vueuse/core": "^10.0.2",
     "daisyui": "^2.51.5",

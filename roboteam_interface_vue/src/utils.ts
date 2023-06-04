@@ -1,9 +1,9 @@
-import {computed, ref, shallowRef, ShallowRef} from "vue";
-import {useWebSocket, UseWebSocketOptions} from "@vueuse/core";
+import {ref, shallowRef, ShallowRef} from "vue";
 import {proto} from "./generated/proto";
 import MsgToInterface = proto.MsgToInterface;
 import {uiEmitter} from "./services/events";
 
+export type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
 export type DeepReadonly<T> = T extends Function ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
 export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>;
 

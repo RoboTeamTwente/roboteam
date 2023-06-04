@@ -4,13 +4,14 @@ import {CustomPixiApplication, FieldDrawing} from "./field-objects";
 import {onUnmounted, shallowRef, toRaw, watch} from "vue";
 import {proto} from "../../generated/proto";
 import ISSL_GeometryFieldSize = proto.ISSL_GeometryFieldSize;
+import {DeepReadonly} from "@vue/reactivity";
 
 
 // Reactive values
 const props = defineProps<{
         app: CustomPixiApplication,
         isYellow: boolean,
-        fieldGeometry: ISSL_GeometryFieldSize | null,
+        fieldGeometry: DeepReadonly<ISSL_GeometryFieldSize> | null,
     }>(),
     field = shallowRef<FieldDrawing | null>(null);
 

@@ -2,8 +2,8 @@ var structrtt_1_1ai_1_1RefGameState =
 [
     [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a46115cbc7e68884ae55da415be8c4095", null ],
     [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a4dc2fc6ff4bdf8f3657362029a339c29", null ],
-    [ "getRuleSet", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a27c9e9d9d2c0dbedbde14ccc941dcd16", null ],
-    [ "getStrategyName", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a27df2487e0a1ce81d91ac399bc4e2d62", null ],
+    [ "getRuleSet", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a78322939ad4a90d9184fa9deee7d5607", null ],
+    [ "getStrategyName", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a659a0bd20fb301add0b094902d123069", null ],
     [ "hasFollowUpCommand", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#ac826243573eba96d270835057d933e40", null ],
     [ "commandId", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#ae8d388941cca4a6780b1a4d88de533aa", null ],
     [ "followUpCommandId", "d0/d56/structrtt_1_1ai_1_1RefGameState.html#a134b0ed0630b2fba3fe874e08d487844", null ],

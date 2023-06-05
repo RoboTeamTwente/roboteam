@@ -9,7 +9,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass =
     [ "decideRoleFlags", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a238a4a849d60ed017555553c9f34bbf8", null ],
     [ "distributeRoles", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ae9f0bf19d745b41a516eb30dd7c898ef", null ],
+    [ "getName", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ac436f5e2a479e8965b530efbe35b2a2c", null ],
     [ "getRoleStatuses", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#aa0405b45c69fc25464bec621fbcbe0cc", null ],
     [ "isValidPlayToKeep", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

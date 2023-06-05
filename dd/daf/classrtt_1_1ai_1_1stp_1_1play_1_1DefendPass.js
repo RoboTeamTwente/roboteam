@@ -10,7 +10,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass =
     [ "decideRoleFlags", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ab06e52ac2b80f853f7793e67e2e7b46e", null ],
     [ "distributeRoles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ac31f319dc520b09dc0e52834aa8fa586", null ],
+    [ "getName", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#afb742f304eb3659010cb4220fbd4f6f2", null ],
     [ "getRoleStatuses", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#aa0405b45c69fc25464bec621fbcbe0cc", null ],
     [ "isValidPlayToKeep", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

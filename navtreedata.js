@@ -66,6 +66,7 @@ var NAVTREE =
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -75,22 +76,21 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#ad7b71d56f8b8d8d62b7ec945847a2bec",
-"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af4fca11307f4320fcdb46581752c6005",
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html",
-"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29",
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a483d158a091f8347c3c25983b22d015f",
-"d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a842ee55b04c8078f0a409209aa69ec02",
-"d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#af713171fd39791c8be81b904e364ff22",
-"d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a26418e2555104ba88b8fe0686a3a1134",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a58560de6d2d6ca91e467deb1071aadbd",
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#addf737d170c5e01d48694435670d7b12",
-"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ab3a4dd278c94db922409c690ae5d13b4",
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a977b3063d4d26bee4be08d71c2ab7ccc",
-"df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md12",
-"functions_func_y.html"
+"d1/d10/classrtt_1_1ai_1_1stp_1_1skill_1_1Rotate.html#a0a6fc736385ed0f389fdf15c26cfe1ef",
+"d2/d6d/PassReceiver_8h_source.html",
+"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a3008bb5a126402244273321a93a3cafd",
+"d4/de4/ControlConstants_8h.html#a2065e692775cf964b93006329a1b0b15",
+"d5/d51/TestSkill_8h_source.html",
+"d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a58560de6d2d6ca91e467deb1071aadbd",
+"d7/d06/StpInfoEnums_8h.html#ab40410d00349ef6102ce3d0fd36a58d3a31234537adb52d5df18dc9596010708b",
+"d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ad485d50284d7e9cbd1af75a98e2c5b68",
+"d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#ae37bbc212bbf3af61007918004e13678",
+"da/d39/classrtt_1_1world_1_1World.html#a840a30aa25c67c3a11ac7cd003ef22f3",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab9a25435f59d30d9fbed119582370ff6",
+"dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa",
+"dd/d6d/ControlUtilsTest_8cpp.html#a767bb323b97c99d519fa8af0c528a0b9",
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae0a23dfd3c949008d8d488cf0800fd3d",
+"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a0c13cbd482099fa139f3a5f08d964efe"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

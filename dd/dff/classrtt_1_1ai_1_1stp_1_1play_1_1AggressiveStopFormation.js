@@ -5,7 +5,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation =
     [ "decideRoleFlags", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a26b286af6920c3d4129166542d80d433", null ],
     [ "distributeRoles", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7f018f5b5248711a658fa076eb6e480a", null ],
+    [ "getName", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a60fb9e707be353790ae62a777ca14909", null ],
     [ "getRoleStatuses", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#aa0405b45c69fc25464bec621fbcbe0cc", null ],
     [ "isValidPlayToKeep", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

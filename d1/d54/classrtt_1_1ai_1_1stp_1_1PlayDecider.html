@@ -86,6 +86,8 @@ $(document).ready(function(){initNavTree('d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDe
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../d5/d3d/classrtt_1_1ai_1_1stp_1_1PlayDecider-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">rtt::ai::stp::PlayDecider Class Reference</div>  </div>
@@ -99,12 +101,25 @@ $(document).ready(function(){initNavTree('d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDe
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac6f1dd2004af803ed8f3d4162fea75c7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#ac6f1dd2004af803ed8f3d4162fea75c7">lockInterfacePlay</a> (<a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *play)</td></tr>
+<tr class="memdesc:ac6f1dd2004af803ed8f3d4162fea75c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the locked play, read variable above.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#ac6f1dd2004af803ed8f3d4162fea75c7">More...</a><br /></td></tr>
+<tr class="separator:ac6f1dd2004af803ed8f3d4162fea75c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46abbae5c2dbca1a311088e3da3982b8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8">decideBestPlay</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">ai::stp::Play</a> &gt;&gt; &amp;plays) noexcept</td></tr>
-<tr class="memdesc:a46abbae5c2dbca1a311088e3da3982b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the locked play, read variable above.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8">More...</a><br /></td></tr>
+<tr class="memdesc:a46abbae5c2dbca1a311088e3da3982b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function checks if there is a locked play. If there is, pick that play. If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play)  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8">More...</a><br /></td></tr>
 <tr class="separator:a46abbae5c2dbca1a311088e3da3982b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a467730235935818dbf342e0089d46791"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a467730235935818dbf342e0089d46791">getPlayForName</a> (std::string name, const std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">ai::stp::Play</a> &gt;&gt; &amp;plays)</td></tr>
 <tr class="memdesc:a467730235935818dbf342e0089d46791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns (a pointer to) a play with a given name.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a467730235935818dbf342e0089d46791">More...</a><br /></td></tr>
 <tr class="separator:a467730235935818dbf342e0089d46791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a9dada5915e03258cb3c95b2dec2f9330"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a9dada5915e03258cb3c95b2dec2f9330">interfacePlayChanged</a> = false</td></tr>
+<tr class="separator:a9dada5915e03258cb3c95b2dec2f9330"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a21a9a4e7636de524049c012f57882e0e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a21a9a4e7636de524049c012f57882e0e">interfacePlay</a></td></tr>
+<tr class="separator:a21a9a4e7636de524049c012f57882e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that defines the play decider. It decides the best play from a vector of plays. If there is a play set in the interface, this play will be picked. </p>
@@ -143,14 +158,8 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the locked play, read variable above. </p>
+<p>This function checks if there is a locked play. If there is, pick that play. If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play) </p>
 <dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">play</td><td><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a> to lock to</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>This function checks if there is a locked play. If there is, pick that play. If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">World</td><td>The world pointer </td></tr>
     <tr><td class="paramname">plays</td><td>the vector of plays </td></tr>
@@ -204,6 +213,87 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the play with the given name, or a nullptr if no such play is found </dd></dl>
+
+</div>
+</div>
+<a id="ac6f1dd2004af803ed8f3d4162fea75c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6f1dd2004af803ed8f3d4162fea75c7">&#9670;&nbsp;</a></span>lockInterfacePlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::stp::PlayDecider::lockInterfacePlay </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *&#160;</td>
+          <td class="paramname"><em>play</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the locked play, read variable above. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">play</td><td><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a> to lock to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a21a9a4e7636de524049c012f57882e0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21a9a4e7636de524049c012f57882e0e">&#9670;&nbsp;</a></span>interfacePlay</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a>* rtt::ai::stp::PlayDecider::interfacePlay</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>play that's set from the interface in case it's overridden </p>
+
+</div>
+</div>
+<a id="a9dada5915e03258cb3c95b2dec2f9330"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dada5915e03258cb3c95b2dec2f9330">&#9670;&nbsp;</a></span>interfacePlayChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rtt::ai::stp::PlayDecider::interfacePlayChanged = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Bool indicating if the current play was manually changed in the interface </p>
 
 </div>
 </div>

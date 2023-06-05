@@ -31,7 +31,7 @@ const formatFloat = (pos?: number | null): string => {
       <div
         class="bg-base-200 p-2 rounded-xl border border-base-300"
         :class="{
-        'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)
+        'border-base-300 outline outline-2 outline-accent shadow-md': uiStore.isaRobotSelected(robot.id!)
       }"
       >
         <div class="flex flex-wrap gap-1 mb-2">

@@ -19,7 +19,7 @@ const uiStore = useUIStore()
       <div
         class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border"
         :class="{
-        'outline outline-2 outline-accent/50': uiStore.isaRobotSelected(robot.id!)
+        'border-base-300 outline outline-2 outline-accent shadow-md': uiStore.isaRobotSelected(robot.id!)
       }"
       >
         <div class="kbd gap-2 text-sm md:text-base flex justify-center">

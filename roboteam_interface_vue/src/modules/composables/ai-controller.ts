@@ -79,6 +79,7 @@ export const useAiController = defineStore('aiController', () => {
       set: (value: string) =>
         send('setPlay', {
           ...stpData.latest?.currentPlay!,
+          rulesetName: 'default',
           playName: value
         })
     }),

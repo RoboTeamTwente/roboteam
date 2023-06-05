@@ -125,6 +125,7 @@ add_library(roboteam_ai_plays
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/Attack.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/AttackingPass.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/ChippingPass.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/OneTwoAttack.cpp
         # referee_specific/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/AggressiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementThem.cpp

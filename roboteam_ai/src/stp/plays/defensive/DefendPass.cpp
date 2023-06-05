@@ -145,7 +145,12 @@ void DefendPass::calculateInfoForRobotDefenders() noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
 
     if (!enemyClosestToBall.has_value()) {
-        roles.at(8) = std::make_unique<role::BallDefender>(role::BallDefender("robot_defender"));
+        for (auto &role : roles){
+            if (role->getName() == "robot_defender") {
+                role = std::make_unique<role::BallDefender>(role::BallDefender("robot_defender"));
+                break;
+            }
+        }
     } else {
         stpInfos["robot_defender"].setEnemyRobot(enemyClosestToBall);
     }

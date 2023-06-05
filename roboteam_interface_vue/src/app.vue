@@ -3,50 +3,19 @@ import { ref } from 'vue'
 import GameCanvas from './modules/field/game-canvas.vue'
 import { useUIStore } from './modules/stores/ui-store'
 import TopPanel from './modules/components/layout/top-panel.vue'
-import { useAIClient } from './services/ai-client'
 import TabedWidgets from './modules/components/layout/tabed-widgets.vue'
 import { useVisionDataStore } from './modules/stores/data-stores/vision-data-store'
 import SidebarResizer from './modules/components/layout/sidebar-resizer.vue'
+import ConnectModal from './modules/components/connect-modal.vue'
+import { useAiController } from './modules/composables/ai-controller'
 
-let url = ref('localhost:12676')
-
-let aiClient = useAIClient()
+const aiController = useAiController()
 const uiStore = useUIStore()
 const visionData = useVisionDataStore()
-
-//
-// icon name for status open: check
 </script>
 
 <template>
-  <div class="modal" :class="{ 'modal-open': aiClient.status.value !== 'OPENED' }">
-    <div class="modal-box flex flex-col gap-4">
-      <div class="m-auto">
-        <img src="/favicon.svg" class="w-32" />
-      </div>
-
-      <span class="flex items-center"
-        >Status:
-        <span
-          class="inline-block rounded-full w-2 h-2 bg-red-600 ml-2 mr-1"
-          :class="{
-            'bg-green-600': aiClient.status.value == 'OPENED'
-          }"
-        />
-        {{ aiClient.status.value }}</span
-      >
-      <div class="form-control w-full max-w">
-        <label class="label">
-          <span class="label-text">AI InterfaceGateway url</span>
-        </label>
-        <label class="input-group">
-          <span>ws://</span>
-          <input class="input input-bordered w-full" v-model="url" />
-        </label>
-      </div>
-      <button class="btn btn-primary" @click="() => aiClient.open('ws://' + url)">Connect</button>
-    </div>
-  </div>
+  <connect-modal :status="aiController.status" @connect="aiController.open" />
 
   <div
     class="contents"
@@ -70,7 +39,6 @@ const visionData = useVisionDataStore()
             v-model:active-tab="uiStore.leftPanel.selectedTab"
             :tabs="uiStore.leftPanel.selectableTabs"
           />
-          <!--                    <tabed-widgets v-model:active-tab="uiStore.leftPanel.selectedTab" :tabs="TABS"/>-->
         </div>
       </Transition>
       <!-- Left Sidebar END -->

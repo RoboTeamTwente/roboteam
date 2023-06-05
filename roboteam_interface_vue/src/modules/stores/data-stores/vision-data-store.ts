@@ -22,7 +22,6 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     }
 
     latestWorld.value = msg.lastSeenWorld ?? null
-
     // Update field geometry only if it has changed
     if (JSON.stringify(msg.field?.field) !== JSON.stringify(latestField.value)) {
       latestField.value = msg.field?.field ?? null

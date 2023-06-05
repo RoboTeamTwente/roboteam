@@ -1,7 +1,4 @@
-import { ref, shallowRef, ShallowRef } from 'vue'
-import { proto } from './generated/proto'
-import MsgToInterface = proto.MsgToInterface
-import { uiEmitter } from './services/events'
+import { ShallowRef } from 'vue'
 
 export type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> }
 export type DeepReadonly<T> = T extends Function
@@ -37,52 +34,4 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
   }
 
   return ''
-}
-
-export const useProtoWebSocket = () => {
-  const status = ref<'CLOSED' | 'OPENED' | 'OPENING'>('CLOSED')
-  const wsRef = ref<WebSocket | undefined>()
-  const protoData = shallowRef<MsgToInterface | null>(null)
-
-  const onMessage = async (event: MessageEvent) => {
-    const messageBuffer = new Uint8Array(await event.data.arrayBuffer())
-    protoData.value = proto.MsgToInterface.decode(messageBuffer)
-  }
-
-  const sendProtoMsg = (properties?: proto.IMsgFromInterface) => {
-    const buffer = proto.MsgFromInterface.encode(proto.MsgFromInterface.create(properties)).finish()
-    wsRef.value?.send(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.length))
-  }
-
-  const open = (url: string) => {
-    if (wsRef.value !== undefined) {
-      // Status code 1000 -> Normal Closure https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code
-      wsRef.value.close(1000)
-    }
-
-    const ws = new WebSocket(url)
-    wsRef.value = ws
-    status.value = 'OPENING'
-
-    ws.onmessage = onMessage
-    ws.onopen = () => (status.value = 'OPENED')
-    ws.onclose = () => {
-      status.value = 'CLOSED'
-      wsRef.value = undefined
-    }
-  }
-
-  uiEmitter.on('wss:disconnect', () => {
-    console.log('Disconnecting from websocket')
-    if (wsRef.value !== undefined) {
-      wsRef.value.close(1000)
-    }
-  })
-
-  return {
-    data: protoData as ShallowRef<proto.MsgToInterface>,
-    status,
-    open,
-    send: sendProtoMsg
-  }
 }

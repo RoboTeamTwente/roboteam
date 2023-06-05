@@ -10,13 +10,13 @@ import Ball from './ball-graphics.vue'
 import Field from './field-graphics.vue'
 import Visualizations from './pointer-location.vue'
 import PointerLocation from './visualizarions-graphics.vue'
-import { aiEmitter } from '../../services/events'
-import { proto } from '../../generated/proto'
+import { useAiController } from '../composables/ai-controller'
 
 const canvas = ref<HTMLCanvasElement | null>(null),
   appRef: ShallowRef<null | CustomPixiApplication> = shallowRef(null),
   visionData = useVisionDataStore(),
-  aiData = useAIDataStore()
+  aiData = useAIDataStore(),
+  aiController = useAiController()
 
 const init = (length: number, width: number) => {
     const app = new CustomPixiApplication({
@@ -34,7 +34,7 @@ const init = (length: number, width: number) => {
       return
     } // Only allow left click + shift
     const pos = e.getLocalPosition(appRef.value!.drawingsContainer)
-    aiEmitter.emit('setBallPos', proto.Vector2f.create({ x: pos.x / 100, y: -pos.y / 100 }))
+    aiController.setBallPos(pos.x / 100, -pos.y / 100)
     e.preventDefault()
   },
   cleanUp = () => {

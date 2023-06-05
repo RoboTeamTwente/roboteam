@@ -10,17 +10,13 @@ const aiController = useAiController()
       <span class="">General</span>
       <label class="label cursor-pointer gap-2">
         <span class="label-text">AutoRef</span>
-        <input
-          type="checkbox"
-          v-model="aiController.useReferee.value"
-          class="toggle toggle-primary"
-        />
+        <input type="checkbox" v-model="aiController.useReferee" class="toggle toggle-primary" />
       </label>
       <label class="label cursor-pointer gap-2">
         <span class="label-text">Ignore Invariants</span>
         <input
           type="checkbox"
-          v-model="aiController.ignoreInvariants.value"
+          v-model="aiController.ignoreInvariants"
           class="toggle toggle-primary"
         />
       </label>
@@ -35,7 +31,7 @@ const aiController = useAiController()
             type="radio"
             class="radio"
             :value="proto.GameSettings.RobotHubMode.SIMULATOR"
-            v-model="aiController.robotHubMode.value"
+            v-model="aiController.robotHubMode"
           />
         </label>
       </div>
@@ -46,7 +42,7 @@ const aiController = useAiController()
             type="radio"
             class="radio"
             :value="proto.GameSettings.RobotHubMode.BASESTATION"
-            v-model="aiController.robotHubMode.value"
+            v-model="aiController.robotHubMode"
           />
         </label>
       </div>
@@ -57,13 +53,13 @@ const aiController = useAiController()
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text"><font-awesome-icon icon="fa-arrow-left" /> Left</span>
-          <input type="radio" class="radio" v-model="aiController.isLeft.value" :value="true" />
+          <input type="radio" class="radio" v-model="aiController.isLeft" :value="true" />
         </label>
       </div>
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text"><font-awesome-icon icon="fa-arrow-right" /> Right</span>
-          <input type="radio" class="radio" v-model="aiController.isLeft.value" :value="false" />
+          <input type="radio" class="radio" v-model="aiController.isLeft" :value="false" />
         </label>
       </div>
     </div>
@@ -78,7 +74,7 @@ const aiController = useAiController()
           <input
             type="radio"
             class="radio radio-warning"
-            v-model="aiController.isYellow.value"
+            v-model="aiController.isYellow"
             :value="true"
           />
         </label>
@@ -91,7 +87,7 @@ const aiController = useAiController()
           <input
             type="radio"
             class="radio radio-primary"
-            v-model="aiController.isYellow.value"
+            v-model="aiController.isYellow"
             :value="false"
           />
         </label>

@@ -1,6 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,3,3,4,33],
 "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,3,3,4,22],
 "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,3,3,4,21],
 "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a238a4a849d60ed017555553c9f34bbf8":[3,0,1,0,3,3,4,6],
@@ -159,8 +158,8 @@ var NAVTREEINDEX15 =
 "functions_type.html":[3,3,3],
 "functions_u.html":[3,3,0,19],
 "functions_v.html":[3,3,0,20],
-"functions_vars.html":[3,3,2,0],
 "functions_vars.html":[3,3,2],
+"functions_vars.html":[3,3,2,0],
 "functions_vars_a.html":[3,3,2,1],
 "functions_vars_b.html":[3,3,2,2],
 "functions_vars_c.html":[3,3,2,3],

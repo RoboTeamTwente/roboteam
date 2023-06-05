@@ -3,12 +3,11 @@
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
 #include <roboteam_utils/Time.h>
-#include <roboteam_utils/RobotHubMode.h>
+#include <RobotHubMode.h>
 
 #include <cmath>
 
 #include <sstream>
-#include "RobotHubMode.h"
 #include <roboteam_utils/Vector2.h>
 
 namespace rtt::robothub {
@@ -30,7 +29,7 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
         throw FailedToInitializeNetworkersException();
     }
 
-    this->mode = rtt::RobotHubMode::UNKNOWN;
+    this->mode = rtt::net::RobotHubMode::UNKNOWN;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
@@ -178,13 +177,13 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
     std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
 
     switch (this->mode) {
-        case rtt::RobotHubMode::SIMULATOR:
+        case rtt::net::RobotHubMode::SIMULATOR:
             this->sendCommandsToSimulator(commands, color);
             break;
-        case rtt::RobotHubMode::BASESTATION:
+        case rtt::net::RobotHubMode::BASESTATION:
             this->sendCommandsToBasestation(commands, color);
             break;
-        case rtt::RobotHubMode::UNKNOWN:
+        case rtt::net::RobotHubMode::UNKNOWN:
             // Do not handle commands
             break;
         default:
@@ -197,7 +196,7 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
 
 void RobotHub::onSettings(const proto::GameSettings &_settings) {
     this->settings = _settings;
-    RobotHubMode newMode = modeFromProto(_settings.robot_hub_mode());
+    rtt::net::RobotHubMode newMode = rtt::net::robotHubModeFromProto(_settings.robot_hub_mode());
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;
 }

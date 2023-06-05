@@ -4,7 +4,7 @@
 #include <basestation/BasestationManager.hpp>
 #include <chrono>
 #include <string>
-#include <roboteam_utils/RobotHubMode.h>
+#include <RobotHubMode.h>
 
 namespace rtt::robothub {
 
@@ -18,7 +18,7 @@ class RobotHubStatistics {
 
     basestation::BasestationManagerStatus basestationManagerStatus{};
 
-    rtt::RobotHubMode robotHubMode;
+    rtt::net::RobotHubMode robotHubMode;
 
     std::size_t yellowTeamBytesSent;
     std::size_t blueTeamBytesSent;

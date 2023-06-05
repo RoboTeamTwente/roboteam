@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['scoredposition_1852',['ScoredPosition',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition',1,'rtt::ai::stp::gen']]],
-  ['scoreprofile_1853',['ScoreProfile',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile',1,'rtt::ai::stp::gen']]],
-  ['settingswidget_1854',['SettingsWidget',['../df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html',1,'rtt::ai::interface']]],
-  ['skill_1855',['Skill',['../da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html',1,'rtt::ai::stp']]],
-  ['stopgamestateevaluation_1856',['StopGameStateEvaluation',['../dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['storeinfo_1857',['StoreInfo',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d2/dab/structrtt_1_1ai_1_1stp_1_1gen_1_1StoreInfo',1,'rtt::ai::stp::gen']]],
-  ['stpinfo_1858',['StpInfo',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html',1,'rtt::ai::stp']]],
-  ['stpmanager_1859',['STPManager',['../da/de3/classrtt_1_1STPManager.html',1,'rtt']]],
-  ['stpvisualizerwidget_1860',['STPVisualizerWidget',['../d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html',1,'rtt::ai::interface']]],
-  ['strategymanager_1861',['StrategyManager',['../dc/d52/classrtt_1_1ai_1_1StrategyManager.html',1,'rtt::ai']]]
+  ['scoredposition_1850',['ScoredPosition',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition',1,'rtt::ai::stp::gen']]],
+  ['scoreprofile_1851',['ScoreProfile',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile',1,'rtt::ai::stp::gen']]],
+  ['settingswidget_1852',['SettingsWidget',['../df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html',1,'rtt::ai::interface']]],
+  ['skill_1853',['Skill',['../da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html',1,'rtt::ai::stp']]],
+  ['stopgamestateevaluation_1854',['StopGameStateEvaluation',['../dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
+  ['storeinfo_1855',['StoreInfo',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d2/dab/structrtt_1_1ai_1_1stp_1_1gen_1_1StoreInfo',1,'rtt::ai::stp::gen']]],
+  ['stpinfo_1856',['StpInfo',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html',1,'rtt::ai::stp']]],
+  ['stpmanager_1857',['STPManager',['../da/de3/classrtt_1_1STPManager.html',1,'rtt']]],
+  ['stpvisualizerwidget_1858',['STPVisualizerWidget',['../d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html',1,'rtt::ai::interface']]],
+  ['strategymanager_1859',['StrategyManager',['../dc/d52/classrtt_1_1ai_1_1StrategyManager.html',1,'rtt::ai']]]
 ];

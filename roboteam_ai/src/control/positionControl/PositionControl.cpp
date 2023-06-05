@@ -102,6 +102,9 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     commandCollision.robotCommand.velocity = trackingVelocityVector;
     commandCollision.robotCommand.targetAngle = trackingVelocity.rot;
 
+    interface::Input::addDrawing(interface::Drawing(interface::Visual::PATHFINDING, computedPaths[robotId], QColorConstants::Magenta, robotId,
+                                                    interface::Drawing::LINES_CONNECTED, 10, 10, 10));
+
     return commandCollision;
 }
 

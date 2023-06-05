@@ -2,8 +2,6 @@
 // Created by tijmen on 13-01-22.
 //
 
-#include <utilities.h>
-
 #include <simulation/SimulatorManager.hpp>
 
 #include <roboteam_utils/Teams.hpp>

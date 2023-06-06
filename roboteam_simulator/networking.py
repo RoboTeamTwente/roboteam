@@ -40,8 +40,8 @@ class Publisher(Thread):
         """
         super().__init__()
         self.context = zmq.Context()  # The zmq context that manages the sockets
-        self.socket = self.context.socket(zmq.PUB)  # The socket we will be publishing with
-        self.socket.bind(f'tcp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
+        self.socket = self.context.socket(zmq.RADIO)  # The socket we will be publishing with
+        self.socket.connect(f'udp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
         self.ball = SSL_DetectionBall()  # The SSL_DetectionBall package containing data about the ball
         self.robots_yellow = []  # List of SSL_DetectionRobot packages containing data about the yellow robots
         self.robots_blue = []  # List of SSL_DetectionRobot packages containing data about the blue robots
@@ -130,6 +130,7 @@ class Publisher(Thread):
     def run(self):
         while True:
             self.send(self.env.field)
+            time.sleep(0.5)  # TODO: Figure out correct timing -> 80 Hz
 
 
 class Subscriber(Thread):

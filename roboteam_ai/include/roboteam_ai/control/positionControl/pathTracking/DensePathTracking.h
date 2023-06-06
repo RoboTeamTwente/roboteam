@@ -16,22 +16,26 @@
 namespace rtt::ai::control {
 
 /**
- * Path tracking algorithm. See method computePath for details.
+ * @brief Path tracking algorithm. See method computePath for details.
  */
 class DensePathTracking : public PathTrackingAlgorithm {
    private:
-    static constexpr unsigned long STEPS_AHEAD = 1;
-
-    PidTracking pidTracking;
+    static constexpr unsigned long STEPS_AHEAD = 1; /**< Maximum amount of steps that can be taken into account */
+    PidTracking pidTracking; /**< PID tracker of the trajectory */
 
    public:
+    /**
+     * @brief Default destructor for the DensePathTracking class
+     */
+    ~DensePathTracking() override = default;
+    
     /**
      * Generates an output velocity and angle according to the implemented algorithm.
      * After reaching a certain distance to the closest path point, it will go to the next one. <br><br>
      * DensePathTracking looks at the target position after N steps and follows that
      * using a PID controller (the PidTracking). It is assumed that the path is dense.
-     * @param currentPosition
-     * @param currentVelocity
+    * @param currentPosition current position of the robot
+    * @param currentVelocity current velocity of the robot
      * @param pathPoints the path as a list of points
      * @param robotId the ID of the current robot
      * @param angle the desired orientation angle of the robot - if omitted, the robot will face its velocity

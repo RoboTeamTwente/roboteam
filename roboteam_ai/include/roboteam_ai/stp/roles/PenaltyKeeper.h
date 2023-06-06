@@ -17,15 +17,18 @@ namespace rtt::ai::stp::role {
 //
 
 class PenaltyKeeper : public Keeper {
+    /**
+     * @brief Class that defines the penalty keeper. The penalty keeper will keep the ball out of the goal during a penalty
+     */
    public:
     /**
-     * Ctor that sets the name of the role and creates a state machine of tactics
+     * @brief Constructor that sets the name of the role and creates a state machine of tactics
      * @param name name of the role
      */
     explicit PenaltyKeeper(std::string name);
 
     /**
-     * Besides the default update from base class Role, it also switches between tactics depending on the ball position and velocity
+     * @brief Besides the default update from base class Role, it also switches between tactics depending on the ball position and velocity
      * @param info TacticInfo to be passed to update()
      * @return The status that the current tactic returns
      */

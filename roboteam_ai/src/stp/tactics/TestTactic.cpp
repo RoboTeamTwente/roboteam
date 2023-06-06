@@ -23,8 +23,6 @@ bool TestTactic::isTacticFailing(const StpInfo &info) noexcept { return false; }
 
 bool TestTactic::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
-bool TestTactic::forceTacticSuccess(const StpInfo &info) noexcept { return false; }
-
 bool TestTactic::isEndTactic() noexcept {
     // This is not an end tactic
     return false;

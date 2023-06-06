@@ -15,7 +15,6 @@ WorldObjects::WorldObjects() = default;
 std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const Trajectory2D &Trajectory,
                                                              const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects) {
     gameState = rtt::ai::GameStateManager::getCurrentGameState();
-    ruleset = gameState.getRuleSet();
     // TODO: return the kind of collision
     //^-Question from Max not high priority
     // TODO: find a good value for the timeStep

@@ -22,19 +22,19 @@ bool Output::timeOutAtTop = Constants::STD_TIMEOUT_TO_TOP();
 std::mutex Output::markerMutex;
 std::mutex Output::refMutex;
 
-GameState Output::interfaceGameState("halt_strategy", "default");
+GameState Output::interfaceGameState("halt_strategy", Constants::RULESET_DEFAULT());
 
 void Output::sendHaltCommand() {
-    rtt::ai::Pause pause;
     auto const &[_, world] = rtt::world::World::instance();
-    // TODO: This check prevents a segfault when we don't have a world (roobthub_world is off), but it should be checked earlier I think
+    // TODO: This check prevents a segfault when we don't have a world (roboteam_observer is off), but it should be checked earlier I think
     if (world->getWorld().has_value()) {
-        if (pause.getPause()) {
+        if (rtt::ai::Pause::getPause()) {
             // Already halted so unhalt
-            pause.setPause(false);
+            rtt::ai::Pause::setPause(false);
         } else {
-            pause.setPause(true);
-            pause.haltRobots(world);
+            rtt::ai::Pause::setPause(true);
+            // grSim will continue moving the robots unless halt commands are explicitly sent
+            rtt::ai::Pause::haltRobots(world);
         }
     }
 
@@ -65,7 +65,7 @@ void Output::setUseRefereeCommands(bool useRefereeCommands) {
 
 bool Output::isTimeOutAtTop() { return timeOutAtTop; }
 
-void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSetName = std::move(name); }
+void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSet.title = std::move(name); }
 
 void Output::setKeeperId(int id) { Output::interfaceGameState.keeperId = id; }
 

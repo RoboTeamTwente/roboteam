@@ -3,7 +3,7 @@
 #include <RobotHub.h>
 #include <roboteam_utils/Print.h>
 #include <roboteam_utils/Time.h>
-
+#include <roboteam_utils/RobotHubMode.h>
 
 #include <cmath>
 
@@ -29,7 +29,7 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
         throw FailedToInitializeNetworkersException();
     }
 
-    this->mode = utils::RobotHubMode::NEITHER;
+    this->mode = rtt::RobotHubMode::UNKNOWN;
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
@@ -60,7 +60,7 @@ bool RobotHub::initializeNetworkers() {
         this->robotCommandsYellowSubscriber =
             std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
-        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::Setting &_settings) { this->onSettings(_settings); });
+        this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings &_settings) { this->onSettings(_settings); });
 
         this->simulationConfigurationSubscriber =
             std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration &config) { this->onSimulationConfiguration(config); });
@@ -92,7 +92,11 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
             RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
         }
 
-        simCommand.addRobotControlWithGlobalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, xVelocity, yVelocity, angularVelocity);
+        /* addRobotControlWithLocalSpeeds works with both grSim and ER-Force sim, while addRobotControlWithGlobalSpeeds only works with grSim*/
+        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraAngleOfRobot);
+        auto forward = relativeVelocity.x;
+        auto left = relativeVelocity.y;
+        simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
 
         // Update received commands stats
         this->statistics.incrementCommandsReceivedCounter(id, color);
@@ -137,7 +141,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.dribbler = static_cast<float>(robotCommand.dribblerSpeed);
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
-        command.theta = static_cast<float>(robotCommand.velocity.angle());
+        command.theta = -1.0f * static_cast<float>(robotCommand.velocity.angle());
 
         command.useAbsoluteAngle = !robotCommand.useAngularVelocity;
         command.angle = static_cast<float>(robotCommand.targetAngle.getValue());
@@ -173,13 +177,13 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
     std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
 
     switch (this->mode) {
-        case utils::RobotHubMode::SIMULATOR:
+        case rtt::RobotHubMode::SIMULATOR:
             this->sendCommandsToSimulator(commands, color);
             break;
-        case utils::RobotHubMode::BASESTATION:
+        case rtt::RobotHubMode::BASESTATION:
             this->sendCommandsToBasestation(commands, color);
             break;
-        case utils::RobotHubMode::NEITHER:
+        case rtt::RobotHubMode::UNKNOWN:
             // Do not handle commands
             break;
         default:
@@ -190,11 +194,9 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
     // if (this->logger.has_value()) { this->logger.value().logRobotCommands(commands, color); }
 }
 
-void RobotHub::onSettings(const proto::Setting &_settings) {
-    this->settings = _settings;
-
-    utils::RobotHubMode newMode = settings.serialmode() ? utils::RobotHubMode::BASESTATION : utils::RobotHubMode::SIMULATOR;
-
+void RobotHub::onSettings(const proto::GameSettings &_settings) {
+    this->settings = _settings; 
+    RobotHubMode newMode = modeFromProto(_settings.robot_hub_mode());
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;
 }
@@ -327,11 +329,11 @@ void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationEr
     for (const auto& error : errors) {
         std::string message;
         if (error.code.has_value() && error.message.has_value())
-            message = "Received Simulation error ", error.code.value(), ": ", error.message.value();
+            message = "Received Simulation error! code=" + error.code.value() + "    message=" + error.message.value();
         else if (error.code.has_value())
-            message = "Received Simulation error with code: ", error.code.value();
+            message = "Received Simulation error! code=" + error.code.value();
         else if (error.message.has_value())
-            message = "Received Simulation error: ", error.message.value();
+            message = "Received Simulation error! message=" + error.message.value();
         else
             message = "Received unknown Simulation error";
 

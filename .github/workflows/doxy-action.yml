@@ -1,35 +1,37 @@
 #
 # Created by Max Thielen on Oct. 15, 2021
+# Updated by Jibbe Andringa on Mar. 7, 2023
 #
 
 name: Doxygen Documentation
 
 on:
-  # Triggers the action on push or pull request events but only for the development branch
+  # Triggers the action on push or pull request events but only for the main branch
   push:
-    branches: [ development ]
+    branches: [ main ]
   pull_request:
-    branches: [ development ]
+    branches: [ main ]
 
   # Allows you to run this action manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   deploy_doxy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: 'Build'
-        uses: mattnotmitt/doxygen-action@v1.3.1  # action to create the documentation from the specified doxygen config file
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
-          working-directory: "."
-          doxyfile-path: "doxygen"
-
-      - name: 'Deploy'
-        uses: peaceiris/actions-gh-pages@v3.8.0  # action to deploy the documentation in a separate branch
+          submodules: "true"
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen -y
+        shell: bash
+      - name: Generate Doxygen Documentation
+        run: doxygen doxygen
+        shell: bash
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          publish_branch: doxygen_docs  # documentation can be found in this branch
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: "./html"
-          commit_message: ${{ github.event.head_commit.message }}
+          github_token: ${{ secrets.github_token }}
+          branch: gh_pages
+          folder: docs/html

@@ -5,16 +5,10 @@
 #include "stp/Play.hpp"
 
 #include "control/ControlUtils.h"
-#include "interface/widgets/MainControlsWidget.h"
 
 namespace rtt::ai::stp {
 
-void Play::initialize(gen::PlayInfos &_previousPlayInfos) noexcept {
-    //        previousPlayInfos = _previousPlayInfos;
-    //        if (!previousPlayInfos->empty()) {
-    //            RTT_DEBUG(
-    //                std::to_string(previousPlayInfos->begin()->second.robotID.value_or(-1)));
-    //        }
+void Play::initialize() noexcept {
     stpInfos.clear();
     for (auto &role : roles) {
         if (role != nullptr) role->reset();
@@ -137,20 +131,18 @@ void Play::distributeRoles() noexcept {
 std::unordered_map<Role *, Status> const &Play::getRoleStatuses() const { return roleStatuses; }
 
 bool Play::isValidPlayToKeep() noexcept {
-    return (interface::MainControlsWidget::ignoreInvariants ||
-            (!shouldEndPlay() && std::all_of(keepPlayEvaluation.begin(), keepPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); })));
+    return  (!shouldEndPlay() && std::all_of(keepPlayEvaluation.begin(), keepPlayEvaluation.end(), [this](auto &x) { 
+        return PlayEvaluator::checkEvaluation(x, world); 
+    }));
 }
 
 bool Play::isValidPlayToStart() const noexcept {
-    return (interface::MainControlsWidget::ignoreInvariants ||
-            std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); }));
+    return std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) {
+        return PlayEvaluator::checkEvaluation(x, world); 
+    });
 }
 
-void Play::calculateInfoForScoredRoles(world::World *_world) noexcept {}
-
 uint8_t Play::getLastScore() const { return lastScore.value_or(0); }
-
-void Play::storePlayInfo(gen::PlayInfos &previousPlayInfo) noexcept {}
 
 bool Play::shouldEndPlay() noexcept { return false; }
 

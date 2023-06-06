@@ -10,64 +10,66 @@
 namespace rtt::ai::stp::play {
 
 /**
- * DefendPass Play is executed when the opponent has or is close to the ball but not necessarily on our side of the field.
+ * @brief DefendPass Play is executed when the opponent has or is close to the ball but not necessarily on our side of the field.
  * In this case the opponent most likely will pass to another robot. Our robots will namely block off robots that can
  * be passed to.
  */
 class DefendPass : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     DefendPass();
 
     /**
-     * Calculates the score of this play to determine which play is best in this situation
+     * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
     uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return Map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
-     * Gets the play name
+     * @brief Retrieves the name of the play
+     * @return The name of the play as string
      */
     const char* getName() override;
 
    protected:
     /**
-     * Calculates info for the defenders
+     * @brief Calculates info for the defenders
      */
     void calculateInfoForDefenders() noexcept;
 
     /**
-     * Calculates info for the keeper
+     * @brief Calculates info for the keeper
      */
     void calculateInfoForKeeper() noexcept;
 
     /**
-     * Calculates info for the RobotDefenders
+     * @brief Calculates info for the RobotDefenders
      */
     void calculateInfoForRobotDefenders() noexcept;
 
     /**
-     * Calculates info for the offenders
+     * @brief Calculates info for the offenders
      */
     void calculateInfoForOffenders() noexcept;
+
+    /**
+     * @brief Calculates info for the harasser role
+     */
+    void calculateInfoForHarasser() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

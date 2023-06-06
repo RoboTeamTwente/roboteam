@@ -6,29 +6,44 @@
 #include "Constants.h"
 #include "RuleSet.h"
 
+#include <roboteam_utils/Print.h>
+
 namespace rtt::ai {
-
+/**
+ * @brief Structure that contains the GameState and its respective properties
+ */
 struct GameState {
+    /**
+     * @brief Default constructor for the GameState class
+     */
     GameState() = default;
-    GameState(std::string strategyName, std::string ruleSetName) : ruleSetName(std::move(ruleSetName)), strategyName(std::move(strategyName)){};
 
-    std::string ruleSetName;
+    /**
+     * @brief Constructor for the GameState class
+     * @param strategyName Name of the game state
+     * @param ruleSet Ruleset that belongs to the game state
+     */
+    GameState(std::string strategyName, RuleSet ruleSet) : ruleSet(std::move(ruleSet)), strategyName(std::move(strategyName)){};
+
+    RuleSet ruleSet;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
 
+    /**
+     * @brief Getter for the ruleset according to its name
+     * @return Ruleset that belongs to the name
+     */
     RuleSet getRuleSet() {
-        for (auto ruleSet : Constants::ruleSets()) {
-            if (ruleSet.title == ruleSetName) {
-                return ruleSet;
-            }
-        }
-        std::cerr << "Returning empty ruleset with name '" << ruleSetName << "', this should never happen!" << std::endl;
-        return {};
+        return ruleSet;
     }
 
+    /**
+     * @brief Getter for the name of the current game state
+     * @return The name of the current game state
+     */
     std::string getStrategyName() { return strategyName; }
 
    private:
-    std::string strategyName;
+    std::string strategyName; /**< The name of the current game state */
 };
 
 }  // namespace rtt::ai

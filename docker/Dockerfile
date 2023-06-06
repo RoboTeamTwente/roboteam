@@ -1,63 +1,57 @@
-FROM robocupssl/ubuntu-vnc:latest
+# ========================== #
+#        INSTRUCTIONS        #
+# ========================== #
+#   Step 1: Build
+#     $ docker build . --target development -t rtt-development
+#     $ docker build . --target release -t rtt-release   
+#   
+#   Step 2: Allow X11 access
+#     $ xhost local:
+#   This will give local VMs acces to the X11-server, which is needed to do GUI stuff
+#   https://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers
+#   
+#   Step 3.1: Create a development container, to which you can e.g. hook into with VSCode
+#     $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt-development
+#
+#	Step 3.2: Start any executable
+#	  $ docker run --init --rm --net=host rtt-release /roboteam_observer
+#	  $ docker run --init --rm --net=host -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY rtt-release /roboteam_ai
+#	  $ docker run --init --rm --net=host rtt-release /roboteam_robothub
 
-LABEL Maintainer Roboteam <roboteamtwente@gmail.com>
 
-# Some settings need root privileges
-USER root
 
-# Update lists
-RUN /bin/bash -c "apt-get update -y; apt-get upgrade -y"
+# ========================== #
+#   DEVELOPMENT CONTAINER    #
+# ========================== #
+FROM ubuntu:22.04 AS development
+RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get install -y vim git cmake pkg-config python3 python3-pip ccache
 
-# Install dependencies
-RUN /bin/bash -c "apt-get -y install \
-    ccache \
-    libzmq3-dev \
-    clang \
-    clang-format \
-    ninja-build \
-    autoconf \
-    automake \
-    libtool \
-    libtbb-dev \
-    apt-utils \
-    libboost-all-dev \
-    libeigen3-dev \
-    curl \
-    make \
-    g++ \
-    unzip \
-    cmake \
-    libqt5charts5-dev \
-    libsdl2-dev \
-    qtdeclarative5-dev \
-    git \
-    nano"
+RUN git clone https://github.com/RoboTeamTwente/roboteam.git --recursive
+WORKDIR /roboteam
+RUN ./install_UBUNTU_20_04.sh
+RUN mkdir build 
+WORKDIR /roboteam/build
+RUN cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) roboteam_observer roboteam_ai roboteam_robothub
+WORKDIR /roboteam
 
-# Install sublime text
-RUN /bin/bash -c "wget -q 'https://download.sublimetext.com/sublime-text_build-3211_amd64.deb' -O sublime.deb"
-RUN /bin/bash -c "apt-get install ./sublime.deb"
 
-# Setup protobuf
-RUN /bin/bash -c "git clone https://github.com/protocolbuffers/protobuf.git /opt/protobuf &&\
-    cd /opt/protobuf &&\
-    git submodule update --init --recursive &&\
-    ./autogen.sh &&\
-    ./configure &&\
-    make -j $(nproc)&&\
-    make install &&\
-    ldconfig"
 
-# Setup gtest
-RUN /bin/bash -c "git clone https://github.com/google/googletest.git /opt/googletest &&\
-    cd /opt/googletest &&\
-    mkdir install &&\
-    cd install &&\
-    cmake .. &&\
-    make -j $(nproc)&&\
-    make install"
+# ========================== #
+#     RELEASE CONTAINER      #
+# ========================== #
+FROM ubuntu:22.04 AS release
+COPY --from=development /roboteam/build/roboteam_world/roboteam_observer      /roboteam_observer
+COPY --from=development /roboteam/build/roboteam_ai/roboteam_ai               /roboteam_ai
+COPY --from=development /roboteam/build/roboteam_robothub/roboteam_robothub   /roboteam_robothub
 
-# Copy the clone script
-COPY clone.sh /clone.sh
+COPY --from=development /usr/lib/x86_64-linux-gnu                             /usr/lib/x86_64-linux-gnu
+COPY --from=development /usr/share/fonts                                      /usr/share/fonts
+COPY --from=development /roboteam/build/_deps/proj_libzmqpp-build/libzmqpp.so /usr/lib/libzmqpp.so
+COPY --from=development /roboteam/build/roboteam_ai/src/NFParam/libNFParam.so /usr/lib/libNFParam.so
+COPY --from=development /usr/local/lib/libprotobuf.so.30.0.6                  /usr/lib/libprotobuf.so.30
 
-# Switch back to the default user
-USER default
+# The entire /usr/lib/x86_64-linux-gnu folder is cloned since it's too much of a hassle to figure out what is and isn't needed
+# TODO figure out how to exlude large files such as /usr/lib/x86_64-linux-gnu/libLLVM* (200+MB)
+# Can't use .dockerignore for this https://github.com/moby/moby/issues/33923
+

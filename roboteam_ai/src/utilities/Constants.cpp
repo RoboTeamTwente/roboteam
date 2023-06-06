@@ -4,32 +4,11 @@
 
 #include "utilities/Constants.h"
 
-#include <assert.h>
 #include <roboteam_utils/Print.h>
 
-#include "utilities/Settings.h"
-
-// TODO: Clean this up and remove unneeded variables
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai {
-
-// static initializers
-bool Constants::isInitialized = false;
-bool Constants::robotOutputTargetGrSim = true;
-
-void Constants::init() {
-    std::string target = robotOutputTargetGrSim ? "GRSIM" : "SERIAL";
-    RTT_INFO("robot_output_target is set to ", target)
-    isInitialized = true;
-}
-
-bool Constants::GRSIM() {
-    if (!isInitialized) {
-        RTT_ERROR("You use a value dependent on an unkown environment! This may result in unexepected behaviour")
-        assert(false);
-    }
-    return robotOutputTargetGrSim;
-}
 
 double Constants::PENALTY_DISTANCE_BEHIND_BALL() {
     // The minimum is 1 meter, but do 1.5 to be sure
@@ -86,7 +65,7 @@ bool Constants::STD_USE_REFEREE() { return true; }
 bool Constants::STD_TIMEOUT_TO_TOP() { return false; }
 
 // The max distance the ball can be from the robot for the robot to have the ball
-double Constants::HAS_BALL_DISTANCE() { return (SETTINGS.getRobotHubMode() == Settings::BASESTATION) ? 0.11 : 0.12; }
+double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == rtt::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 
 // The max angle the ball can have to the robot for the robot to have the ball
 double Constants::HAS_BALL_ANGLE() { return 0.10 * M_PI; }
@@ -213,8 +192,6 @@ bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
-QColor Constants::FIELD_COLOR() { return GRSIM() ? QColor(30, 30, 30, 255) : QColor(50, 0, 0, 255); }
-
 QColor Constants::FIELD_LINE_COLOR() { return Qt::white; }
 
 QColor Constants::ROBOT_COLOR_BLUE() { return {150, 150, 255, 255}; }
@@ -229,23 +206,32 @@ QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
 
 std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
 
-pidVals Constants::standardNumTreePID() { return GRSIM() ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardNumTreePID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardReceivePID() { return GRSIM() ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
+pidVals Constants::standardReceivePID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
 
-pidVals Constants::standardInterceptPID() { return GRSIM() ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardInterceptPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-pidVals Constants::standardKeeperPID() { return GRSIM() ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
+pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
-pidVals Constants::standardKeeperInterceptPID() { return GRSIM() ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
+
+RuleSet Constants::RULESET_DEFAULT()            { return {"default",            2,   6.5, 0.0, ROBOT_RADIUS(), true}; }
+RuleSet Constants::RULESET_HALT()               { return {"halt",               0.0, 0.0, 0.0, -1,             true}; }
+RuleSet Constants::RULESET_STOP()               { return {"stop",               1.3, 0.0, 0.8, -1,             false};}
+RuleSet Constants::RULESET_BALLPLACEMENT_THEM() { return {"ballplacement_them", 1.3, 6.5, 0.8, -1,             true}; }
+RuleSet Constants::RULESET_BALLPLACEMENT_US()   { return {"ballplacement_us",   1.5, 6.5, 0.0, -1,             true}; }
+RuleSet Constants::RULESET_KICKOFF()            { return {"kickoff",            1.5, 6.5, 0.5, -1,             true}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
-    return {{"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true},
-            {"halt", 0.0, 0.0, 0.0, -1, true},
-            {"stop", 1.3, 0.0, 0.8, -1, false},
-            {"ballplacement_them", 1.3, 6.5, 0.8, -1, true},
-            {"ballplacement_us", 1.5 /*2.5*/, 6.5, 0.0, -1, true},
-            {"kickoff", 1.5, 6.5, 0.5, 0.0, true}};
+    return {
+        RULESET_DEFAULT(),
+        RULESET_HALT(),
+        RULESET_STOP(),
+        RULESET_BALLPLACEMENT_THEM(),
+        RULESET_BALLPLACEMENT_US(),
+        RULESET_KICKOFF(),
+    };
 }
 
 }  // namespace rtt::ai

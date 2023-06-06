@@ -2,7 +2,7 @@
 
 #include <roboteam_utils/Print.h>
 
-#include "utilities/Settings.h"
+#include "utilities/GameSettings.h"
 #include "world/World.hpp"
 
 namespace rtt::ai {
@@ -21,7 +21,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
     GameStateManager::refMsg = refMsg;
     RefCommand cmd;
     // COLOR DEPENDENT STATES
-    if (SETTINGS.isYellow()) {
+    if (GameSettings::isYellow()) {
         switch (refMsg.command()) {
             case proto::SSL_Referee_Command_HALT:
                 cmd = RefCommand::HALT;
@@ -45,7 +45,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
                 cmd = RefCommand::PREPARE_PENALTY_US;
                 break;
             case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-                cmd = RefCommand::PREPARE_SHOOTOUT_THEM;
+                cmd = RefCommand::PREPARE_PENALTY_THEM;
                 break;
             case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
                 cmd = RefCommand::DIRECT_FREE_US;
@@ -65,12 +65,6 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
             case proto::SSL_Referee_Command_TIMEOUT_BLUE:
                 cmd = RefCommand::TIMEOUT_THEM;
                 break;
-            // case proto::SSL_Referee_Command_GOAL_YELLOW: // TODO: Change these deprecated fields
-            //     cmd = RefCommand::GOAL_US;
-            //     break;
-            // case proto::SSL_Referee_Command_GOAL_BLUE:
-            //     cmd = RefCommand::GOAL_THEM;
-            //     break;
             case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
                 cmd = RefCommand::BALL_PLACEMENT_US;
                 break;
@@ -127,12 +121,6 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
             case proto::SSL_Referee_Command_TIMEOUT_BLUE:
                 cmd = RefCommand::TIMEOUT_US;
                 break;
-            // case proto::SSL_Referee_Command_GOAL_YELLOW: //TODO: Fix replacements for these
-            //     cmd = RefCommand::GOAL_THEM;
-            //     break;
-            // case proto::SSL_Referee_Command_GOAL_BLUE:
-            //     cmd = RefCommand::GOAL_US;
-            //     break;
             case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
                 cmd = RefCommand::BALL_PLACEMENT_THEM;
                 break;
@@ -160,7 +148,7 @@ GameState GameStateManager::getCurrentGameState() {
     if (interface::Output::usesRefereeCommands()) {
         newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
 
-        if (SETTINGS.isYellow()) {
+        if (GameSettings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();
@@ -191,42 +179,42 @@ Vector2 GameStateManager::getRefereeDesignatedPosition() {
 
 void GameStateManager::updateInterfaceGameState(const char* name) {
     if (strcmp(name, "Ball Placement Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("ball_placement_us", "ballplacement_us"));
+        interface::Output::setInterfaceGameState(GameState("ball_placement_us", Constants::RULESET_BALLPLACEMENT_US()));
     } else if (strcmp(name, "Halt") == 0) {
-        interface::Output::setInterfaceGameState(GameState("halt", "halt"));
+        interface::Output::setInterfaceGameState(GameState("halt", Constants::RULESET_HALT()));
     } else if (strcmp(name, "Free Kick Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_them", "stop"));
+        interface::Output::setInterfaceGameState(GameState("free_kick_them", Constants::RULESET_STOP()));
     } else if (strcmp(name, "Free Kick Us At Goal") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_us", "default"));
+        interface::Output::setInterfaceGameState(GameState("free_kick_us", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Free Kick Us Pass") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_us", "default"));
+        interface::Output::setInterfaceGameState(GameState("free_kick_us", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Ball Placement Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("ball_placement_them", "ballplacement_them"));
+        interface::Output::setInterfaceGameState(GameState("ball_placement_them", Constants::RULESET_BALLPLACEMENT_THEM()));
     } else if (strcmp(name, "Kick Off Them Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_them_prepare", "kickoff"));
+        interface::Output::setInterfaceGameState(GameState("kickoff_them_prepare", Constants::RULESET_KICKOFF()));
     } else if (strcmp(name, "Kick Off Us Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_us_prepare", "kickoff"));
+        interface::Output::setInterfaceGameState(GameState("kickoff_us_prepare", Constants::RULESET_KICKOFF()));
     } else if (strcmp(name, "Kick Off Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_them", "default"));
+        interface::Output::setInterfaceGameState(GameState("kickoff_them", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Kick Off Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_us", "default"));
+        interface::Output::setInterfaceGameState(GameState("kickoff_us", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Penalty Them Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_them_prepare", "default"));
+        interface::Output::setInterfaceGameState(GameState("penalty_them_prepare", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Penalty Us Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_us_prepare", "default"));
+        interface::Output::setInterfaceGameState(GameState("penalty_us_prepare", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Penalty Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_them", "default"));
+        interface::Output::setInterfaceGameState(GameState("penalty_them", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Penalty Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_us", "default"));
+        interface::Output::setInterfaceGameState(GameState("penalty_us", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Time Out") == 0) {
-        interface::Output::setInterfaceGameState(GameState("time_out", "default"));
+        interface::Output::setInterfaceGameState(GameState("time_out", Constants::RULESET_DEFAULT()));
     } else if (strcmp(name, "Defensive Stop Formation") == 0) {
-        interface::Output::setInterfaceGameState(GameState("stop", "stop"));
+        interface::Output::setInterfaceGameState(GameState("stop", Constants::RULESET_STOP()));
     } else if (strcmp(name, "Aggressive Stop Formation") == 0) {
-        interface::Output::setInterfaceGameState(GameState("stop", "stop"));
+        interface::Output::setInterfaceGameState(GameState("stop", Constants::RULESET_STOP()));
     } else {
         RTT_WARNING("Play has been selected for which no ruleset is found!");
-        interface::Output::setInterfaceGameState(GameState("normal_play", "default"));
+        interface::Output::setInterfaceGameState(GameState("normal_play", Constants::RULESET_DEFAULT()));
     }
 }
 }  // namespace rtt::ai

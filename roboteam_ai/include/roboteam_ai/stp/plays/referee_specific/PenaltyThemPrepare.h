@@ -8,38 +8,37 @@
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {
-
+/**
+ * @brief The penalty them prepare play is executed when the penalty them prepare game state is selected
+ */
 class PenaltyThemPrepare : public Play {
    public:
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     PenaltyThemPrepare();
 
     /**
-     * Calculates the score of this play to determine which play is best in this situation
+     * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
     uint8_t score(const rtt::Field& field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return A map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Info that should be calculated for scoring of the play
-     */
-    void calculateInfoForScoredRoles(world::World*) noexcept override{};
-
-    /**
-     * Gets the play name
+     * @brief Retrieves the name of the play
+     * @return The name of the play as a string
      */
     const char* getName() override;
 };

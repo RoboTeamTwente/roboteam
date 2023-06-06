@@ -92,7 +92,7 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
+        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
         // Passer now goes to a front grid, where the receiver is not
         if (receiverLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
@@ -119,20 +119,21 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    constexpr auto midfielderNames = std::array{"pass_defender_1", "pass_defender_2", "pass_defender_3"};
-    auto activeMidfielderNames = std::vector<std::string>{};
-    for (auto name : midfielderNames) {
-        if (stpInfos[name].getRobot().has_value()) activeMidfielderNames.emplace_back(name);
+    if (enemyMap.size() < 3) {
+        stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     }
-
-    for (int i = 0; i < activeMidfielderNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        auto& midfielderStpInfo = stpInfos[activeMidfielderNames[i]];
-        if (enemyMap.empty()) break;
-        midfielderStpInfo.setPositionToDefend(enemyMap.begin()->second);
-        midfielderStpInfo.setBlockDistance(BlockDistance::ROBOTRADIUS);
+    else {
+        stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
         enemyMap.erase(enemyMap.begin());
+        stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
+        stpInfos["pass_defender_3"].setPositionToDefend(enemyMap.begin()->second);
     }
+    stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_2"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void AttackingPass::calculateInfoForDefenders() noexcept {

@@ -15,42 +15,68 @@ class World;
 
 namespace rtt::world::ball {
 
+/**
+ * @brief Ball class that stores info about the ball and adds some utilities
+ */
 class Ball {
 public:
-    Vector2 position; /// Position of the ball
-    Vector2 velocity; /// Velocity of the ball
-    bool visible = false; /// Whether the ball is visible by any camera
-    /// Expected position of the ball after it stopped moving
+    Vector2 position; /**< Position of the ball */
+    Vector2 velocity; /**< Velocity of the ball */
+    bool visible = false; /**< Whether the ball is visible by any camera */
 
     /**
-     * Initializes ball at the previously seen position, if the current ball is not visible
+     * @brief Initializes ball at the previously seen position, if the current ball is not visible
+     * @param data The current world
      */
     void initBallAtExpectedPosition(const world::World *data) noexcept;
 
     /**
-     * Updates the expected ball end position
+     * @brief Updates the expected ball end position
+     * @param data The current world
      */
     void updateExpectedBallEndPosition(const world::World *data) noexcept;
 
     /**
-     * Places the ball in front of the robot that has the ball, if any
+     * @brief Places the ball in front of the robot that has the ball, if any
+     * @param data The current world
      */
     void updateBallAtRobotPosition(const world::World *data) noexcept;
 
     /**
-     * Create a Ball object with the current data about the ball.
+     * @brief Create a Ball object with the current data about the ball.
      * @param copy The current data about the ball
+     * @param data The current world
      */
     explicit Ball(const proto::WorldBall &copy, const world::World *data);
 
     /**
-     * Defaulted constructors
+     * @brief Default constructor
      */
     Ball() = default;
+
+    /**
+     * @brief Default copy assignment operator, does nothing
+     */
     Ball &operator=(Ball const &) = default;
+
+    /**
+     * @brief Default copy constructor
+     */
     Ball(Ball const &) = default;
+
+    /**
+     * @brief Default move assignment operator, does nothing
+     */
     Ball &operator=(Ball &&) = default;
+
+    /**
+     * @brief default move constructor
+     */
     Ball(Ball &&) = default;
+
+    /**
+     * @brief Default destructor
+     */
     ~Ball() = default;
 };
 

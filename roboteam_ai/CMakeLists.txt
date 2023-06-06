@@ -25,26 +25,11 @@ target_include_directories(roboteam_ai_utils
 )
 target_compile_options(roboteam_ai_utils PRIVATE "${COMPILER_FLAGS}")
 
-###### MANUAL #######
-add_library(roboteam_ai_manual
-        ${PROJECT_SOURCE_DIR}/src/manual/JoystickManager.cpp
-        ${PROJECT_SOURCE_DIR}/src/manual/JoystickHandler.cpp
-)
-target_include_directories(roboteam_ai_manual
-        PRIVATE include/roboteam_ai
-)
-target_link_libraries(roboteam_ai_manual
-        PRIVATE roboteam_networking
-        PRIVATE roboteam_utils
-        PRIVATE SDL2
-        PRIVATE Qt5::Widgets
-)
-target_compile_options(roboteam_ai_manual PRIVATE "${COMPILER_FLAGS}")
-
 ###### SKILLS #######
 add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/Skill.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Kick.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/skills/Chip.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Rotate.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/GoToPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Orbit.cpp
@@ -73,6 +58,7 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/GetBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/GetBehindBallInDirection.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/KickAtPos.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/ChipAtPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/OrbitKick.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
         # passive/
@@ -105,8 +91,10 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/BallPlacer.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/FreeKickTaker.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Passer.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Chipper.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/KeeperPasser.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PassReceiver.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PenaltyTaker.cpp
         # passive
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallAvoider.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallDefender.cpp
@@ -136,6 +124,7 @@ add_library(roboteam_ai_plays
         # offensive/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/Attack.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/AttackingPass.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/ChippingPass.cpp
         # referee_specific/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/AggressiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementThem.cpp
@@ -163,7 +152,6 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
-        PRIVATE SDL2
         PRIVATE NFParam
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
@@ -289,7 +277,6 @@ set(INTERFACE_HEADERS
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/VisualizationSettingsWidget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/widget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/SettingsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/ManualControlWidget.h
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PlaysWidget.hpp
         ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/GraphWidget.h
 )
@@ -311,7 +298,6 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/RuleSetWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/GraphWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/SettingsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/ManualControlWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
         # After removing the interface, only this file should remain
         #${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
@@ -323,7 +309,6 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE SDL2
         PRIVATE roboteam_interface_utils_lib
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
@@ -361,7 +346,6 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         # Watch out! The order of these libraries apparently matters!
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
@@ -369,7 +353,6 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
@@ -425,14 +408,11 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         # Watch out! The order of these libraries apparently matters!
-        PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
@@ -440,6 +420,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_skills
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_interface_utils_lib
+        PRIVATE roboteam_ai_interface
         )
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")
@@ -459,12 +440,10 @@ target_include_directories(positionScoringTest
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
-        PRIVATE SDL2
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_manual
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics

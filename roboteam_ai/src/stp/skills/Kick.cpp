@@ -6,12 +6,18 @@
 
 #include "stp/constants/ControlConstants.h"
 
+#include "roboteam_utils/Print.h"
+
 namespace rtt::ai::stp::skill {
 
 Status Kick::onUpdate(const StpInfo &info) noexcept {
+    // Check for robot optional
+    if(!info.getRobot()){
+        return Status::Failure;
+    }
+
     // Clamp and set kick velocity
     float kickVelocity = std::clamp(info.getKickChipVelocity(), control_constants::MIN_KICK_POWER, control_constants::MAX_KICK_POWER);
-
     // Set kick command
     command.kickType = KickType::KICK;
     command.kickSpeed = kickVelocity;
@@ -24,17 +30,7 @@ Status Kick::onUpdate(const StpInfo &info) noexcept {
     command.dribblerSpeed = targetDribblerSpeed;
 
     // Set angle command
-    command.targetAngle = info.getRobot().value()->getAngle();  // TODO: Should there be a check for robot optional?
-
-    // TODO: test and use this code again once the ballsensor works
-//    // Set chip_kick_forced if we can chip but did not chip for MAX_CHIP_ATTEMPTS amount of ticks
-//    if (kickAttempts > control_constants::MAX_KICK_ATTEMPTS) {
-//        command.waitForBall = false;
-//        kickAttempts = 0;
-//    } else {
-//        command.waitForBall = true;  // Apparently, waiting for the ball is the default
-//        ++kickAttempts;
-//    }
+    command.targetAngle = info.getRobot().value()->getAngle();
 
     command.waitForBall = false;
 

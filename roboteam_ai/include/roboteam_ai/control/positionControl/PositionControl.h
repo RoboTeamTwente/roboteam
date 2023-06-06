@@ -19,25 +19,21 @@
 namespace rtt::ai::control {
 
 /**
- * The main position control class. Use this for your robot position control
- * requirements.
+ * @brief The main position control class. Use this for your robot position control requirements.
  */
 class PositionControl {
    private:
-    /// the distance to the target position at which the robot will stop if it
-    /// detects a collision (e.g. target is inside a robot)
-    static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS();
+    static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot will keep to avoid collisions */
+    CollisionDetector collisionDetector; /**< Detects collisions on the trajectory */
+    rtt::BB::WorldObjects worldObjects; /**< Calculates collisions */
+    NumTreesPlanning pathPlanningAlgorithm = NumTreesPlanning(collisionDetector); /**< Creates new trajectories when a collision is detected */
+    DensePathTracking pathTrackingAlgorithm; /**< Tracks the path */
+    BBTPathTracking pathTrackingAlgorithmBBT; /**< Tracks the BBT path */
 
-    CollisionDetector collisionDetector;
-    rtt::BB::WorldObjects worldObjects;
-    NumTreesPlanning pathPlanningAlgorithm = NumTreesPlanning(collisionDetector);
-    DensePathTracking pathTrackingAlgorithm;
-    BBTPathTracking pathTrackingAlgorithmBBT;
-
-    std::unordered_map<int, Trajectory2D> computedTrajectories;
-    std::unordered_map<int, std::vector<Vector2>> computedPaths;
-    std::unordered_map<int, std::vector<Vector2>> computedPathsVel;
-    std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel;
+    std::unordered_map<int, Trajectory2D> computedTrajectories; /**< Map of computed trajectories for each robot */
+    std::unordered_map<int, std::vector<Vector2>> computedPaths; /**< Map of computed paths for each robot */
+    std::unordered_map<int, std::vector<Vector2>> computedPathsVel; /**< Map of computed velocities for each robot */
+    std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel; /**< Map of pairs containing position and velocity for each robot */
 
     /**
      * @brief Checks if the current path should be recalculated:
@@ -54,7 +50,14 @@ class PositionControl {
 
    public:
     /**
-     * Generates a path according to the selected planning algorithm,
+     * @brief Retrieves the computed path of the given robot
+     * @param ID ID of the robot who's path we want to retrieve
+     * @return Path that of the given robot
+     */
+    std::vector<Vector2> getComputedPath(int ID);
+
+    /**
+     * @brief Generates a path according to the selected planning algorithm,
      * and tracks it using the selected tracking algorithm. In the case a collision
      * is detected (using the collision detector), the path is recalculated.
      * @param field the field object, used onwards by the collision detector
@@ -69,13 +72,13 @@ class PositionControl {
                                      stp::PIDType pidType);
 
     /**
-     * Updates the robot view vector
+     * @brief Updates the robot view vector
      * @param robotPositions the position vector of the robots
      */
     void setRobotPositions(std::vector<Vector2> &robotPositions);
 
     /**
-     * The computed path should be recalculated if: <br>
+     * @brief The computed path should be recalculated if: <br>
      * - it is empty (no path yet) <br>
      * - the target position changed with at least MAX_TARGET_DEVIATION <br>
      * - the robot will collide with another one by the next path point (ignored if the robot is not moving)
@@ -121,9 +124,6 @@ class PositionControl {
                                                   std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
                                                   stp::AvoidObjects AvoidObjects);
 
-    // If no collision on trajectory to intermediatePoint, create new points along this trajectory in timeStep increments.
-    // Then loop through these new points, generate trajectories from these to the original target and check for collisions.
-    // Return the first trajectory without collisions, or pop() this point and start checking the next one.
     /**
      * @brief Calculates a path to the targetPosition from a point on the path to an intermediate path and
      * return it if there are no collisions
@@ -141,7 +141,7 @@ class PositionControl {
                                                                    Vector2 &targetPosition, int robotId, double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects);
 
     /**
-     * Creates intermediate points to make a path to. First, a pointToDrawFrom is picked by drawing a line
+     * @brief Creates intermediate points to make a path to. First, a pointToDrawFrom is picked by drawing a line
      * from the target position to the obstacle and extending that line further towards our currentPosition.
      * Second, make half circle of intermediatePoints pointed towards obstaclePosition, originating from pointToDrawFrom
      * @param field the field object, used onwards by the collision detector

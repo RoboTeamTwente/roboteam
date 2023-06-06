@@ -17,7 +17,8 @@
 
 using namespace rtt::net;
 
-constexpr int TEST_VALUE = 69;
+constexpr int TEST_BOOL = true;
+constexpr int TEST_VALUE = 69; // Nice
 constexpr int PAUSE_MS = 50;
 
 // Robot commands loop test
@@ -70,14 +71,14 @@ TEST(RTTChannels, testRobotFeedbackLoop) {
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::Setting& settings) { settingsLoopTestPassed = settings.visionport() == TEST_VALUE; }
+void onSettings(const proto::GameSettings& settings) { settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL; }
 TEST(RTTChannels, testSettingsLoop) {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-    proto::Setting settings;
-    settings.set_visionport(TEST_VALUE);
+    proto::GameSettings settings;
+    settings.set_is_yellow(TEST_BOOL);
 
     pub.publish(settings);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));

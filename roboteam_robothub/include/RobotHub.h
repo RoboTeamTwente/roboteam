@@ -19,6 +19,7 @@
 #include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
 #include <roboteam_utils/FileLogger.hpp>
+#include <roboteam_utils/RobotHubMode.h>
 
 namespace rtt::robothub {
 
@@ -35,8 +36,8 @@ class RobotHub {
     std::unique_ptr<simulation::SimulatorManager> simulatorManager;
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
-    proto::Setting settings;
-    utils::RobotHubMode mode = utils::RobotHubMode::NEITHER;
+    proto::GameSettings settings;
+    rtt::RobotHubMode mode = rtt::RobotHubMode::UNKNOWN;
 
     RobotHubStatistics statistics;
 
@@ -54,7 +55,7 @@ class RobotHub {
     std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
     void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
 
-    void onSettings(const proto::Setting &setting);
+    void onSettings(const proto::GameSettings &setting);
 
     void onSimulationConfiguration(const proto::SimulationConfiguration &configuration);
 

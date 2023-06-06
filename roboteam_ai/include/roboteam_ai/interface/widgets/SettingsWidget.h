@@ -5,7 +5,7 @@
 #ifndef RTT_SETTINGSWIDGET_H
 #define RTT_SETTINGSWIDGET_H
 
-#include <utilities/Settings.h>
+#include <utilities/GameSettings.h>
 
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSpinBox>

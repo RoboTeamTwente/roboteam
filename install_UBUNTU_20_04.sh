@@ -9,10 +9,10 @@ apt-get install -y cmake
 apt-get install -y g++
 apt-get install -y qt5-default
 apt-get install -y libqt5charts5-dev
-apt-get install -y libsdl2-dev
 apt-get install -y libzmq3-dev
 apt-get install -y libeigen3-dev
 apt-get install -y libgtest-dev
+apt-get install -y libudev-dev
 
 echo Installing other useful packages
 apt-get install -y clang

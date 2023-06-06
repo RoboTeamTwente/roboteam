@@ -11,6 +11,7 @@
 class PosVelFilter1D {
  public:
   PosVelFilter1D() = default;
+  virtual ~PosVelFilter1D() = default;
   PosVelFilter1D(const Eigen::Vector2d &initialState, const Eigen::Matrix2d& initialCovariance,
                  double modelError, double measurementError, const Time& timeStamp);
   /**

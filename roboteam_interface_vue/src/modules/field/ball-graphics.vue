@@ -37,8 +37,8 @@ const init = () => {
     }
 
     ballRef.value?.moveOnField(
-      aiData.fieldOrientation.x * world!.ball!.pos!.x!,
-      aiData.fieldOrientation.y * world!.ball!.pos!.y!
+      aiData.fieldOrientation.x * world.ball.pos!.x!,
+      aiData.fieldOrientation.y * world.ball.pos!.y!
     );
   }
 

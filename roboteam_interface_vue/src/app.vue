@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import GameCanvas from './modules/field/game-canvas.vue'
 import { useUIStore } from './modules/stores/ui-store'
 import TopPanel from './modules/components/layout/top-panel.vue'
@@ -12,18 +12,14 @@ import { useAiController } from './modules/composables/ai-controller'
 const aiController = useAiController()
 const uiStore = useUIStore()
 const visionData = useVisionDataStore()
+
+const leftPanelSize = computed(() => `${uiStore.panelSize('leftPanel')}px`);
+const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`);
+
 </script>
 
 <template>
   <connect-modal :status="aiController.status" @connect="aiController.open" />
-
-  <div
-    class="contents"
-    :style="{
-      '--left-bar-width': `${uiStore.leftPanel.size}px`,
-      '--bottom-bar-height': `${uiStore.bottomPanel.size}px`
-    }"
-  >
     <div class="scaffold h-screen w-screen">
       <top-panel />
 
@@ -31,7 +27,7 @@ const visionData = useVisionDataStore()
       <sidebar-resizer
         direction="x"
         class="left-sidebar-resize"
-        @drag="uiStore.resizeLeftPanel(uiStore.leftPanel.size - $event.x)"
+        @drag="uiStore.resizePanel('leftPanel',uiStore.leftPanel.size - $event.x)"
       />
       <Transition name="left-sidebar" :duration="300">
         <div class="left-sidebar" v-if="!uiStore.$state.leftPanel.collapsed">
@@ -62,7 +58,7 @@ const visionData = useVisionDataStore()
       <sidebar-resizer
         direction="y"
         class="bottom-sidebar-resize"
-        @drag="uiStore.resizeBottomPanel(uiStore.bottomPanel.size + $event.y)"
+        @drag="uiStore.resizePanel('bottomPanel',uiStore.bottomPanel.size + $event.y)"
       />
       <Transition name="bottom-sidebar" :duration="300">
         <div class="bottom-sidebar" v-if="!uiStore.$state.bottomPanel.collapsed">
@@ -74,14 +70,9 @@ const visionData = useVisionDataStore()
       </Transition>
       <!-- Bottom sidebar END -->
     </div>
-  </div>
 </template>
 
 <style>
-body {
-  --left-bar-width: 320px;
-  --bottom-bar-height: 320px;
-}
 
 .scaffold {
   display: grid;
@@ -91,8 +82,8 @@ body {
     'lsb   lbr   bbr   bbr'
     'lsb   lbr   bsb   bsb';
 
-  grid-template-columns: min(90vw, var(--left-bar-width)) 3px 1fr 1fr auto;
-  grid-template-rows: 3rem 1fr 3px min(80vh, var(--bottom-bar-height)) auto;
+  grid-template-columns: min(90vw, v-bind(leftPanelSize)) 3px 1fr 1fr auto;
+  grid-template-rows: 3rem 1fr 3px min(80vh, v-bind(bottomPanelSize)) auto;
 }
 
 .top-panel {
@@ -128,27 +119,4 @@ body {
   transition: all 400ms;
 }
 
-.scaffold:has(.left-sidebar-enter-from) {
-  --left-bar-width: 0px !important;
-}
-
-.scaffold:has(.left-sidebar-leave-to) {
-  --left-bar-width: 0px !important;
-}
-
-.scaffold:not(:has(.left-sidebar)) {
-  --left-bar-width: 0px !important;
-}
-
-.scaffold:has(.bottom-sidebar-enter-from) {
-  --bottom-bar-height: 0px !important;
-}
-
-.scaffold:has(.bottom-sidebar-leave-to) {
-  --bottom-bar-height: 0px !important;
-}
-
-.scaffold:not(:has(.bottom-sidebar)) {
-  --bottom-bar-height: 0px !important;
-}
 </style>

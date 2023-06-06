@@ -27,7 +27,7 @@ const formatFloat = (pos?: number | null): string => {
       No data
     </div>
 
-    <template v-for="(robot, id) in visionData.ourRobots" :key="id">
+    <template v-for="[id, robot] in visionData.ourRobots?.entries()!" :key="id">
       <div
         class="bg-base-200 p-2 rounded-xl border border-base-300"
         :class="{

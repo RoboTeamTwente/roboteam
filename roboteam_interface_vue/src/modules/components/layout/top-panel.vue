@@ -35,14 +35,14 @@ const togglePause = () => {
       <button
         class="btn btn-sm btn-ghost gap-2"
         :class="{ 'btn-active': !uiStore.leftPanel.collapsed }"
-        @click="uiStore.toggleLeftPanel"
+        @click="() => uiStore.togglePanel('leftPanel')"
       >
         <font-awesome-icon icon="fa-table-columns" rotation="270" />
       </button>
       <button
         class="btn btn-sm btn-ghost gap-2"
         :class="{ 'btn-active': !uiStore.bottomPanel.collapsed }"
-        @click="uiStore.toggleBottomPanel"
+        @click="() => uiStore.togglePanel('bottomPanel')"
       >
         <font-awesome-icon icon="fa-table-columns" rotation="180" />
       </button>

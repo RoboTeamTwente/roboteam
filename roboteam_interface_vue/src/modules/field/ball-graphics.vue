@@ -29,7 +29,13 @@ const init = () => {
     props.app.ticker.remove(onPixiTick)
   },
   onPixiTick = () => {
-    const world = visionData.latestWorld
+    const world = visionData.latestWorld;
+    if (world?.ball == null) {
+      console.warn('Ball is null');
+      ballRef.value?.moveOnField(100, 100); // Move the ball out of the canvas to hide it
+      return;
+    }
+
     ballRef.value?.moveOnField(
       aiData.fieldOrientation.x * world!.ball!.pos!.x!,
       aiData.fieldOrientation.y * world!.ball!.pos!.y!

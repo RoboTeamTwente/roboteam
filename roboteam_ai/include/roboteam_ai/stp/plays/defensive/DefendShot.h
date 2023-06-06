@@ -74,6 +74,11 @@ class DefendShot : public Play {
      * @brief Calculates info for the keeper
      */
     void calculateInfoForKeeper() noexcept;
+
+    /**
+     * @brief Calculates info for the offenders
+     */
+    void calculateInfoForOffenders() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

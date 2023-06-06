@@ -119,20 +119,21 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    constexpr auto midfielderNames = std::array{"pass_defender_1", "pass_defender_2", "pass_defender_3"};
-    auto activeMidfielderNames = std::vector<std::string>{};
-    for (auto name : midfielderNames) {
-        if (stpInfos[name].getRobot().has_value()) activeMidfielderNames.emplace_back(name);
+    if (enemyMap.size() < 3) {
+        stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
     }
-
-    for (int i = 0; i < activeMidfielderNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        auto& midfielderStpInfo = stpInfos[activeMidfielderNames[i]];
-        if (enemyMap.empty()) break;
-        midfielderStpInfo.setPositionToDefend(enemyMap.begin()->second);
-        midfielderStpInfo.setBlockDistance(BlockDistance::ROBOTRADIUS);
+    else {
+        stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
         enemyMap.erase(enemyMap.begin());
+        stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
+        stpInfos["pass_defender_3"].setPositionToDefend(enemyMap.begin()->second);
     }
+    stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_2"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void AttackingPass::calculateInfoForDefenders() noexcept {
@@ -187,9 +188,6 @@ bool AttackingPass::ballKicked() {
 bool AttackingPass::shouldEndPlay() noexcept {
     // If the receiver has the ball, the play finished successfully
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&

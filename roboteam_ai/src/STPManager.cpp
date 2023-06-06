@@ -16,17 +16,18 @@
 /**
  * Plays are included here
  */
-#include "stp/plays/referee_specific/FormationPreHalf.h"
 #include "stp/plays/defensive/DefendPass.h"
 #include "stp/plays/defensive/DefendShot.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
 #include "stp/plays/offensive/ChippingPass.h"
+#include "stp/plays/offensive/OneTwoAttack.hpp"
 #include "stp/plays/referee_specific/AggressiveStopFormation.h"
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 #include "stp/plays/referee_specific/BallPlacementUs.h"
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
+#include "stp/plays/referee_specific/FormationPreHalf.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 #include "stp/plays/referee_specific/FreeKickUsPass.h"
@@ -54,9 +55,6 @@ void STPManager::start(std::atomic_bool& exitApplication) {
 
     plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>{};
 
-    /// This play is only used for testing purposes, when needed uncomment this play!
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::TestPlay>());
-
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::Attack>());
@@ -68,7 +66,6 @@ void STPManager::start(std::atomic_bool& exitApplication) {
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AggressiveStopFormation>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUs>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementThem>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::TimeOut>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThemPrepare>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUsPrepare>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThem>());
@@ -81,9 +78,7 @@ void STPManager::start(std::atomic_bool& exitApplication) {
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());
+    plays.emplace_back(std::make_unique<rtt::ai::stp::play::OneTwoAttack>());
 
     // Set the pointer to world for all plays
     {

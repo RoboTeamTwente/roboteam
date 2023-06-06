@@ -11,6 +11,8 @@
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Rotate.h"
 
+#include "roboteam_utils/Print.h"
+
 namespace rtt::ai::stp::tactic {
 
 Receive::Receive() {
@@ -30,7 +32,6 @@ std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexc
 
     // If ball is close to robot, turn on dribbler
     skillStpInfo.setDribblerSpeed(100);
-
     return skillStpInfo;
 }
 

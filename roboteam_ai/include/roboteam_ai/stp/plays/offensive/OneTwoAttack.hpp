@@ -6,54 +6,73 @@
 #define RTT_ONETWOATTACK_HPP
 
 #include "stp/Play.hpp"
+#include "stp/computations/PassComputations.h"
 
 namespace rtt::ai::stp::play {
 
 class OneTwoAttack : public Play {
    public:
+    PassInfo firstPassInfo; /**< Struct containing info about the first pass. Pass to a location in one of the two offensive corner grids */
+    PassInfo secondPassInfo; /**< Struct containing info about the first pass. Pass to a location from where the striker can shoot */
+
     /**
-     * Constructor that initializes roles with roles that are necessary for this play
+     * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     OneTwoAttack();
 
     /**
-     * Calculates the score of this play to determine which play is best in this situation
+     * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
     uint8_t score(const rtt::Field &field) noexcept override;
 
     /**
-     * Assigns robots to roles of this play
+     * @brief Assigns robots to roles of this play
+     * @return Map with assigned roles
      */
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * Calculate info for the roles that need to be calculated for scoring
-     */
-    void calculateInfoForScoredRoles(world::World *) noexcept override{};
-
-    /**
-     * Gets the play name
+     * @brief Retrieves the name of the play
+     * @return The name of the play as string
      */
     const char *getName() override;
 
     /**
-     * Optional function to save information for the next play
-     * @param info Map-Struct to save info in
-     */
-    void storePlayInfo(gen::PlayInfos &info) noexcept override;
-
-    /**
-     * Optional function to force end a play
-     * @return is play should end
+     * @brief Check if play should end. True when attacker role is finished.
      */
     bool shouldEndPlay() noexcept override;
+
+    /**
+     * @brief calculates info for the keeper
+     */
+    void calculateInfoForKeeper() noexcept;
+
+    /**
+     * @brief calculates info for the striker
+     */
+    void calculateInfoForStriker() noexcept;
+
+    /**
+     * @brief calculates info for the assistant
+     */
+    void calculateInfoForAssistant() noexcept;
+
+    /**
+     * @brief calculates info for the wallers
+     */
+    void calculateInfoForWallers() noexcept;
+
+    /**
+     * @brief calculates info for the defenders
+     */
+    void calculateInfoForDefenders() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 #endif  // RTT_ONETWOATTACK_HPP

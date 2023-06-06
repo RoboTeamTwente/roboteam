@@ -3,8 +3,7 @@ project(rtt)
 
 # Get the targets of the dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-include(ccache) # For daster compiling
-include(FindSodium) # ? Not required...
+include(ccache) # For faster compiling
 include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
@@ -39,14 +38,17 @@ set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=native
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake
 if (CMAKE_BUILD_TYPE MATCHES RELEASE OR CMAKE_BUILD_TYPE MATCHES Release)
-    message("Building in release mode")
-
+    message("Building in Release mode")
     set(COMPILER_FLAGS "${RELEASE_COMPILE_FLAGS}")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release/lib)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/release/lib)
 else ()
-    message("Building in debug mode")
-
-    # The default compiler flags are for debugging
+    message("Building in Debug mode")
     set(COMPILER_FLAGS "${DEBUG_COMPILE_FLAGS}")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/lib)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/lib)
 endif()
 
 message("Compile flags: " "${COMPILER_FLAGS}")

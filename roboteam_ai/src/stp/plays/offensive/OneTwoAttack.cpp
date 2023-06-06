@@ -3,8 +3,11 @@
 //
 #include "stp/plays/offensive/OneTwoAttack.hpp"
 
+#include "stp/computations/GoalComputations.h"
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/Assistant.hpp"
+#include "stp/roles/active/Attacker.h"
+#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/active/Passer.h"
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
@@ -95,10 +98,26 @@ namespace rtt::ai::stp::play {
     }
 
     void OneTwoAttack::calculateInfoForStriker() noexcept {
-        stpInfos["striker"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
-        stpInfos["striker"].setPositionToShootAt(firstPassInfo.passLocation);
-        stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
-        stpInfos["striker"].setShotType(ShotType::PASS);
+        for (auto& role : roles){
+            if(role->getName() == "striker"){
+                if (typeid(*role).name() == typeid(role::Passer).name()){
+                    if(strcmp(role.get()->getCurrentTactic()->getName(), "Formation") == 0){
+                        role = std::make_unique<role::PassReceiver>(role::PassReceiver("striker"));
+                    }
+                    else {
+                        stpInfos["striker"].setPositionToShootAt(firstPassInfo.passLocation);
+                        stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
+                        stpInfos["striker"].setShotType(ShotType::PASS);
+                    }
+                }
+                if (typeid(*role).name() == typeid(role::PassReceiver).name()){
+                    stpInfos["striker"].setPositionToMoveTo(secondPassInfo.passLocation);
+                    stpInfos["striker"].setPositionToShootAt(computations::GoalComputations::calculateGoalTarget(world, field));
+                    stpInfos["striker"].setShotType(ShotType::MAX);
+                    stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
+                }
+            }
+        }
     }
 
     void OneTwoAttack::calculateInfoForAssistant() noexcept {

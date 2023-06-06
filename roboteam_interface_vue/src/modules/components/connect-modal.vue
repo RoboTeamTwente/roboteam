@@ -23,7 +23,7 @@ const props = defineProps<{
         <span
           class="inline-block rounded-full w-2 h-2 bg-red-600 ml-2 mr-1"
           :class="{
-            'bg-green-600': props.status == 'OPENED'
+            '!bg-green-600': props.status == 'OPENED'
           }"
         />
         {{ props.status }}

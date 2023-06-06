@@ -7,10 +7,10 @@
 #include <world/views/RobotView.hpp>
 
 #include "stp/roles/Keeper.h"
+#include "stp/roles/active/Harasser.h"
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
 #include "stp/roles/passive/RobotDefender.h"
-#include "stp/roles/active/Harasser.h"
 
 namespace rtt::ai::stp::play {
 
@@ -101,10 +101,14 @@ void DefendPass::calculateInfoForDefenders() noexcept {
 
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToOurGoalTwo && enemyRobot->getId() == enemyClosestToOurGoalTwo.value()->getId(); });
 
-    stpInfos["defender_helper_1"].setPositionToDefend(enemyClosestToOurGoalOne->get()->getPos());
+    stpInfos["defender_helper_1"].setPositionToDefend(!enemyClosestToOurGoalOne.has_value()
+                                                          ? field.topLeftGrid.getPoints()[field.topLeftGrid.getNumPointsX() / 2][field.topLeftGrid.getNumPointsY() / 2]
+                                                          : enemyClosestToOurGoalOne->get()->getPos());
     stpInfos["defender_helper_1"].setBlockDistance(BlockDistance::HALFWAY);
 
-    stpInfos["defender_helper_2"].setPositionToDefend(enemyClosestToOurGoalTwo->get()->getPos());
+    stpInfos["defender_helper_2"].setPositionToDefend(!enemyClosestToOurGoalTwo.has_value()
+                                                          ? field.bottomLeftGrid.getPoints()[field.bottomLeftGrid.getNumPointsX() / 2][field.bottomLeftGrid.getNumPointsY() / 2]
+                                                          : enemyClosestToOurGoalTwo->get()->getPos());
     stpInfos["defender_helper_2"].setBlockDistance(BlockDistance::HALFWAY);
 
     std::map<double, Vector2> enemyMap;
@@ -115,15 +119,18 @@ void DefendPass::calculateInfoForDefenders() noexcept {
         enemyMap.insert({score, enemy->getPos()});
     }
 
-    for (int i = 1; i <= 3; i++) {
-        if (!enemyMap.empty()) {
-            stpInfos["midfielder_" + std::to_string(i)].setPositionToDefend(enemyMap.rbegin()->second);
-            stpInfos["midfielder_" + std::to_string(i)].setBlockDistance(BlockDistance::HALFWAY);
-            enemyMap.erase(prev(enemyMap.end()));
-        } else {
-            break;
-        }
+    if (enemyMap.size() < 2) {
+        stpInfos["midfielder_1"].setPositionToDefend(
+            Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["midfielder_2"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
+                                                             field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
+    } else {
+        stpInfos["midfielder_1"].setPositionToDefend(enemyMap.begin()->second);
+        enemyMap.erase(enemyMap.begin());
+        stpInfos["midfielder_2"].setPositionToDefend(enemyMap.begin()->second);
     }
+    stpInfos["midfielder_1"].setBlockDistance(BlockDistance::HALFWAY);
+    stpInfos["midfielder_2"].setBlockDistance(BlockDistance::HALFWAY);
 }
 
 void DefendPass::calculateInfoForKeeper() noexcept {
@@ -137,9 +144,19 @@ void DefendPass::calculateInfoForRobotDefenders() noexcept {
     auto enemyRobots = world->getWorld()->getThem();
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
 
+    if (!enemyClosestToBall.has_value()) {
+        for (auto &role : roles){
+            if (role->getName() == "robot_defender") {
+                role = std::make_unique<role::BallDefender>(role::BallDefender("robot_defender"));
+                break;
+            }
+        }
+    } else {
+        stpInfos["robot_defender"].setEnemyRobot(enemyClosestToBall);
+    }
+
     stpInfos["robot_defender"].setPositionToDefend(field.leftGoalArea.rightLine().center());
-    stpInfos["robot_defender"].setEnemyRobot(enemyClosestToBall);
-    stpInfos["robot_defender"].setBlockDistance(BlockDistance::CLOSE);
+    stpInfos["robot_defender"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void DefendPass::calculateInfoForOffenders() noexcept {

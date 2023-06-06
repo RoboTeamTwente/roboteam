@@ -419,7 +419,6 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         # Watch out! The order of these libraries apparently matters!
-        PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_roles
@@ -431,6 +430,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_skills
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_interface_utils_lib
+        PRIVATE roboteam_ai_interface
         )
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")

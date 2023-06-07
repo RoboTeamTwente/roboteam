@@ -73,6 +73,12 @@ class OneTwoAttack : public Play {
      * @brief calculates info for the defenders
      */
     void calculateInfoForDefenders() noexcept;
+
+    /**
+     * @brief determines whether the ball has been kicked or not
+     * @return boolean that tells whether the ball has been kicked
+     */
+    bool ballKicked();
 };
 }  // namespace rtt::ai::stp::play
 #endif  // RTT_ONETWOATTACK_HPP

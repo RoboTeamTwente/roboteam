@@ -31,7 +31,7 @@ namespace rtt::ai::stp::play {
         //roles
         roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
             std::make_unique<role::Passer>("striker"),
-            std::make_unique<role::Assistant>("assistant"),
+            std::make_unique<role::PassReceiver>("assistant"),
             std::make_unique<role::Keeper>("keeper"),
             std::make_unique<role::RobotDefender>("robot_defender"),
             std::make_unique<role::BallDefender>("ball_defender_1"),
@@ -45,8 +45,6 @@ namespace rtt::ai::stp::play {
     }
 
     uint8_t OneTwoAttack::score(const Field& field) noexcept {
-        firstPassInfo = computations::PassComputations::calculatePass(gen::SafePass, world, field);
-        secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field);
         return 0;
     }
 
@@ -74,6 +72,9 @@ namespace rtt::ai::stp::play {
         return flagMap;
     }
     void OneTwoAttack::calculateInfoForRoles() noexcept {
+        firstPassInfo = computations::PassComputations::calculatePass(gen::SafePass, world, field, {field.bottomRightGrid, field.topRightGrid});
+        secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.middleRightGrid});
+        interface::Input::addDrawing(interface::Drawing(interface::Visual::DEBUG, {firstPassInfo.passLocation, secondPassInfo.passLocation}, Qt::green));
         calculateInfoForKeeper();
         calculateInfoForStriker();
         calculateInfoForAssistant();
@@ -84,7 +85,14 @@ namespace rtt::ai::stp::play {
     const char* OneTwoAttack::getName() { return "OneTwoAttack"; }
 
     bool OneTwoAttack::shouldEndPlay() noexcept {
-        return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role != nullptr && role->getName() == "striker" && role->finished(); });
+        return false;
+    }
+
+    bool OneTwoAttack::ballKicked() {
+        // TODO: create better way of checking when ball has been kicked
+        return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {
+            return role != nullptr && role->getName() == "striker" && typeid(*role).name() == typeid(role::PassReceiver).name();
+        });
     }
 
     void OneTwoAttack::calculateInfoForKeeper() noexcept {
@@ -121,8 +129,31 @@ namespace rtt::ai::stp::play {
     }
 
     void OneTwoAttack::calculateInfoForAssistant() noexcept {
-        stpInfos["assistant"].setPositionToMoveTo(firstPassInfo.passLocation);
-        stpInfos["assistant"].setPositionToShootAt(secondPassInfo.passLocation);
+        for (auto& role:roles) {
+            if(role->getName() == "assistant") {
+                if(strcmp(typeid(*role).name(), typeid(role::PassReceiver).name()) == 0) {
+                    if (!ballKicked()) {
+                        stpInfos["assistant"].setPositionToMoveTo(firstPassInfo.passLocation);
+                    } else {
+                        auto ball = world->getWorld()->getBall()->get();
+                        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
+                        auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, firstPassInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+                        stpInfos["assistant"].setPositionToMoveTo(receiverLocation);
+                        stpInfos["assistant"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
+                    }
+                    RTT_DEBUG(stpInfos["assistant"].getRobot().has_value())
+                    if(stpInfos["assistant"].getRobot().has_value() && stpInfos["assistant"].getRobot()->get()->hasBall()){
+                        role = std::make_unique<role::Passer>(role::Passer("assistant"));
+                    }
+                }
+                if(strcmp(typeid(*role).name(), typeid(role::PassReceiver).name()) == 0){
+                    stpInfos["assistant"].setPositionToShootAt(secondPassInfo.passLocation);
+                    stpInfos["assistant"].setShotType(ShotType::PASS);
+                    stpInfos["assistant"].setKickOrChip(KickOrChip::KICK);
+                    RTT_DEBUG(secondPassInfo.passLocation)
+                }
+            }
+        }
     }
 
     void OneTwoAttack::calculateInfoForWallers() noexcept {

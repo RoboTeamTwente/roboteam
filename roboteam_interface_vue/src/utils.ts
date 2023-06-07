@@ -12,6 +12,12 @@ export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
+export const OUT_OF_CANVAS_COORDINATES = {
+  x: 100,
+  y: 100,
+  angle: 0
+}
+
 export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
   if (team === 'PURPLE') {
     return {

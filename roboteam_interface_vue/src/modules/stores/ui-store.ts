@@ -68,10 +68,10 @@ export const useUIStore = defineStore('uiStore', {
   },
   state: () => defaultState(),
   actions: {
-    togglePanel (panel: 'bottomPanel' | 'leftPanel') {
+    togglePanel(panel: 'bottomPanel' | 'leftPanel') {
       this[panel].collapsed = !this[panel].collapsed
     },
-    resizePanel (panel: 'bottomPanel' | 'leftPanel', size: number) {
+    resizePanel(panel: 'bottomPanel' | 'leftPanel', size: number) {
       this[panel].size = size < defaultState()[panel].size ? defaultState()[panel].size : size
     },
     toggleRobotSelection(id: number) {
@@ -80,7 +80,8 @@ export const useUIStore = defineStore('uiStore', {
   },
   getters: {
     panelSize(state) {
-      return (panel: 'bottomPanel' | 'leftPanel') => state[panel].collapsed ? 0 : state[panel].size
+      return (panel: 'bottomPanel' | 'leftPanel') =>
+        state[panel].collapsed ? 0 : state[panel].size
     },
     isaRobotSelected(state) {
       return (id: number) => state.selectedRobots.has(id)

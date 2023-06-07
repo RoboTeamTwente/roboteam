@@ -7,6 +7,7 @@ import { proto } from '../../generated/proto'
 import IWorldRobot = proto.IWorldRobot
 import { useUIStore } from '../stores/ui-store'
 import { useAIDataStore } from '../stores/data-stores/ai-data-store'
+import { OUT_OF_CANVAS_COORDINATES } from '../../utils'
 
 // Internal (non-reactive) variables
 let layer: Container | null = new Container(),
@@ -60,6 +61,22 @@ const init = () => {
   },
   onPixiTick = () => {
     const world = visionData.latestWorld
+    // Move all robots off the field, so that robots that are no longer in the world are hidden
+    yellowRobots.forEach((robot) => {
+      robot.moveOnField(
+        OUT_OF_CANVAS_COORDINATES.x,
+        OUT_OF_CANVAS_COORDINATES.y,
+        OUT_OF_CANVAS_COORDINATES.angle
+      )
+    })
+    blueRobots.forEach((robot) => {
+      robot.moveOnField(
+        OUT_OF_CANVAS_COORDINATES.x,
+        OUT_OF_CANVAS_COORDINATES.y,
+        OUT_OF_CANVAS_COORDINATES.angle
+      )
+    })
+
     world?.yellow!.forEach((robot) => renderRobot(robot, true))
     world?.blue!.forEach((robot) => renderRobot(robot, false))
   }

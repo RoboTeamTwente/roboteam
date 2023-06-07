@@ -13,67 +13,65 @@ const aiController = useAiController()
 const uiStore = useUIStore()
 const visionData = useVisionDataStore()
 
-const leftPanelSize = computed(() => `${uiStore.panelSize('leftPanel')}px`);
-const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`);
-
+const leftPanelSize = computed(() => `${uiStore.panelSize('leftPanel')}px`)
+const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
 </script>
 
 <template>
   <connect-modal :status="aiController.status" @connect="aiController.open" />
-    <div class="scaffold h-screen w-screen">
-      <top-panel />
+  <div class="scaffold h-screen w-screen">
+    <top-panel />
 
-      <!-- Left Sidebar START -->
-      <sidebar-resizer
-        direction="x"
-        class="left-sidebar-resize"
-        @drag="uiStore.resizePanel('leftPanel',uiStore.leftPanel.size - $event.x)"
-      />
-      <Transition name="left-sidebar" :duration="300">
-        <div class="left-sidebar" v-if="!uiStore.$state.leftPanel.collapsed">
-          <tabed-widgets
-            v-model:active-tab="uiStore.leftPanel.selectedTab"
-            :tabs="uiStore.leftPanel.selectableTabs"
-          />
-        </div>
-      </Transition>
-      <!-- Left Sidebar END -->
+    <!-- Left Sidebar START -->
+    <sidebar-resizer
+      direction="x"
+      class="left-sidebar-resize"
+      @drag="uiStore.resizePanel('leftPanel', uiStore.leftPanel.size - $event.x)"
+    />
+    <Transition name="left-sidebar" :duration="300">
+      <div class="left-sidebar" v-if="!uiStore.$state.leftPanel.collapsed">
+        <tabed-widgets
+          v-model:active-tab="uiStore.leftPanel.selectedTab"
+          :tabs="uiStore.leftPanel.selectableTabs"
+        />
+      </div>
+    </Transition>
+    <!-- Left Sidebar END -->
 
-      <!-- Game Canvas START -->
-      <main
-        class="game-canvas flex flex-col justify-center bg-base-200 min-h-0 p-4"
-        :class="{
-          '!justify-start': visionData.latestWorld == null
-        }"
-      >
-        <game-canvas v-if="visionData.latestWorld !== null" />
-        <div v-else class="alert alert-warning justify-start">
-          <font-awesome-icon icon="fa-circle-exclamation" />
-          No field data
-        </div>
-      </main>
-      <!-- Game Canvas END -->
+    <!-- Game Canvas START -->
+    <main
+      class="game-canvas flex flex-col justify-center bg-base-200 min-h-0 p-4"
+      :class="{
+        '!justify-start': visionData.latestWorld == null
+      }"
+    >
+      <game-canvas v-if="visionData.latestWorld !== null" />
+      <div v-else class="alert alert-warning justify-start">
+        <font-awesome-icon icon="fa-circle-exclamation" />
+        No field data
+      </div>
+    </main>
+    <!-- Game Canvas END -->
 
-      <!-- Bottom sidebar START -->
-      <sidebar-resizer
-        direction="y"
-        class="bottom-sidebar-resize"
-        @drag="uiStore.resizePanel('bottomPanel',uiStore.bottomPanel.size + $event.y)"
-      />
-      <Transition name="bottom-sidebar" :duration="300">
-        <div class="bottom-sidebar" v-if="!uiStore.$state.bottomPanel.collapsed">
-          <tabed-widgets
-            v-model:active-tab="uiStore.bottomPanel.selectedTab"
-            :tabs="uiStore.bottomPanel.selectableTabs"
-          />
-        </div>
-      </Transition>
-      <!-- Bottom sidebar END -->
-    </div>
+    <!-- Bottom sidebar START -->
+    <sidebar-resizer
+      direction="y"
+      class="bottom-sidebar-resize"
+      @drag="uiStore.resizePanel('bottomPanel', uiStore.bottomPanel.size + $event.y)"
+    />
+    <Transition name="bottom-sidebar" :duration="300">
+      <div class="bottom-sidebar" v-if="!uiStore.$state.bottomPanel.collapsed">
+        <tabed-widgets
+          v-model:active-tab="uiStore.bottomPanel.selectedTab"
+          :tabs="uiStore.bottomPanel.selectableTabs"
+        />
+      </div>
+    </Transition>
+    <!-- Bottom sidebar END -->
+  </div>
 </template>
 
 <style>
-
 .scaffold {
   display: grid;
   grid-template-areas:
@@ -118,5 +116,4 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`);
   ) {
   transition: all 400ms;
 }
-
 </style>

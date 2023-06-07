@@ -29,7 +29,7 @@ const { distanceX, distanceY } = usePointerSwipe(sliderElem, {
     }
     lastPos = { x: distanceX.value, y: distanceY.value }
 
-    const rect = sliderElem.value!.getBoundingClientRect();
+    const rect = sliderElem.value!.getBoundingClientRect()
     if (rect.x > e.clientX && delta.x < 0) {
       delta.x = 0
     }

@@ -4,6 +4,7 @@ import { onUnmounted, shallowRef, ShallowRef, watch } from 'vue'
 import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
 import { useUIStore } from '../stores/ui-store'
 import { useAIDataStore } from '../stores/data-stores/ai-data-store'
+import { OUT_OF_CANVAS_COORDINATES } from '../../utils'
 
 // Internal (non-reactive) variables
 
@@ -29,17 +30,18 @@ const init = () => {
     props.app.ticker.remove(onPixiTick)
   },
   onPixiTick = () => {
-    const world = visionData.latestWorld;
+    const world = visionData.latestWorld
     if (world?.ball == null) {
-      console.warn('Ball is null');
-      ballRef.value?.moveOnField(100, 100); // Move the ball out of the canvas to hide it
-      return;
+      console.warn('Ball is null')
+      // Move the ball out of the canvas to hide it
+      ballRef.value?.moveOnField(OUT_OF_CANVAS_COORDINATES.x, OUT_OF_CANVAS_COORDINATES.y)
+      return
     }
 
     ballRef.value?.moveOnField(
       aiData.fieldOrientation.x * world.ball.pos!.x!,
       aiData.fieldOrientation.y * world.ball.pos!.y!
-    );
+    )
   }
 
 watch([() => uiStore.scaling.ball, () => ballRef.value], () =>

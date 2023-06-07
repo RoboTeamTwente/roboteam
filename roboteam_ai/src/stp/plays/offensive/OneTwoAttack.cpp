@@ -72,8 +72,8 @@ namespace rtt::ai::stp::play {
         return flagMap;
     }
     void OneTwoAttack::calculateInfoForRoles() noexcept {
-        firstPassInfo = computations::PassComputations::calculatePass(gen::SafePass, world, field, {field.bottomRightGrid, field.topRightGrid});
-        secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.middleRightGrid});
+        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::SafePass, world, field, {field.bottomRightGrid, field.topRightGrid});
+        if(secondPassInfo.passLocation == Vector2(0, 0)) secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.middleRightGrid});
         interface::Input::addDrawing(interface::Drawing(interface::Visual::DEBUG, {firstPassInfo.passLocation, secondPassInfo.passLocation}, Qt::green));
         calculateInfoForKeeper();
         calculateInfoForStriker();
@@ -96,6 +96,8 @@ namespace rtt::ai::stp::play {
     }
 
     void OneTwoAttack::reset() {
+        firstPassInfo = {};
+        secondPassInfo = {};
         roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
             std::make_unique<role::Passer>("striker"),
             std::make_unique<role::PassReceiver>("assistant"),
@@ -135,7 +137,24 @@ namespace rtt::ai::stp::play {
                     }
                 }
                 if (typeid(*role).name() == typeid(role::PassReceiver).name()){
-                    stpInfos["striker"].setPositionToMoveTo(secondPassInfo.passLocation);
+                    if (std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {return role != nullptr && role->getName() == "assistant" && strcmp(role.get()->getCurrentTactic()->getName(), "Formation") == 0;})) {
+                        if(role->getCurrentRobot()->get()->hasBall()) {
+                            role = std::make_unique<role::Attacker>(role::Attacker("striker"));
+                        }
+                        else{
+                            auto ball = world->getWorld()->getBall()->get();
+                            auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
+                            auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, secondPassInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+                            interface::Input::addDrawing(interface::Drawing(interface::Visual::BALL_DATA, {ballTrajectory.start, ballTrajectory.end}, Qt::red, -1, interface::Drawing::LINES_CONNECTED));
+                            stpInfos["striker"].setPositionToMoveTo(receiverLocation);
+                            stpInfos["striker"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
+                        }
+                    }
+                    else {
+                        stpInfos["striker"].setPositionToMoveTo(secondPassInfo.passLocation);
+                    }
+                }
+                if (typeid(*role).name() == typeid(role::Attacker).name()) {
                     stpInfos["striker"].setPositionToShootAt(computations::GoalComputations::calculateGoalTarget(world, field));
                     stpInfos["striker"].setShotType(ShotType::MAX);
                     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
@@ -148,7 +167,7 @@ namespace rtt::ai::stp::play {
         for (auto& role:roles) {
             if(role->getName() == "assistant") {
                 if(strcmp(typeid(*role).name(), typeid(role::PassReceiver).name()) == 0) {
-                    if (!ballKicked()) {
+                    if (std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {return role != nullptr && role->getName() == "striker" && typeid(*role).name() == typeid(role::Passer).name();})) {
                         stpInfos["assistant"].setPositionToMoveTo(firstPassInfo.passLocation);
                     } else {
                         auto ball = world->getWorld()->getBall()->get();
@@ -157,16 +176,14 @@ namespace rtt::ai::stp::play {
                         stpInfos["assistant"].setPositionToMoveTo(receiverLocation);
                         stpInfos["assistant"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
                     }
-                    RTT_DEBUG(stpInfos["assistant"].getRobot().has_value())
                     if(stpInfos["assistant"].getRobot().has_value() && stpInfos["assistant"].getRobot()->get()->hasBall()){
                         role = std::make_unique<role::Passer>(role::Passer("assistant"));
                     }
                 }
-                if(strcmp(typeid(*role).name(), typeid(role::PassReceiver).name()) == 0){
+                if(strcmp(typeid(*role).name(), typeid(role::Passer).name()) == 0){
                     stpInfos["assistant"].setPositionToShootAt(secondPassInfo.passLocation);
                     stpInfos["assistant"].setShotType(ShotType::PASS);
                     stpInfos["assistant"].setKickOrChip(KickOrChip::KICK);
-                    RTT_DEBUG(secondPassInfo.passLocation)
                 }
             }
         }

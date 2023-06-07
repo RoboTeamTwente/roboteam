@@ -12,7 +12,6 @@ var classrtt_1_1ai_1_1interface_1_1MainControlsWidget =
     [ "toggleRobotHubModeParam", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#a5f237eb7d582d15aa9e344ce37ae6c33", null ],
     [ "updateContents", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#ac223b90e1e4ac4d678a2fa0d33055bfc", null ],
     [ "updatePlays", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#a7b21703a36f7e9afe5270f33485eba5f", null ],
-    [ "ignoreInvariants", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#a14ec0065046236f33bc0c7d41e6683ad", null ],
     [ "manager", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#abd10ad3f7c19d1a4915443951376d816", null ],
     [ "pauseBtn", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#af61ad498ac55531fc7e0574d4e218ed9", null ],
     [ "select_goalie", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#a56339430e8a7fac5e721b5676e5f68f4", null ],

@@ -72,9 +72,8 @@ namespace rtt::ai::stp::play {
         return flagMap;
     }
     void OneTwoAttack::calculateInfoForRoles() noexcept {
-        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::SafePass, world, field, {field.bottomRightGrid, field.topRightGrid});
+        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.bottomRightGrid, field.topRightGrid});
         if(secondPassInfo.passLocation == Vector2(0, 0)) secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.middleRightGrid});
-        interface::Input::addDrawing(interface::Drawing(interface::Visual::DEBUG, {firstPassInfo.passLocation, secondPassInfo.passLocation}, Qt::green));
         calculateInfoForKeeper();
         calculateInfoForStriker();
         calculateInfoForAssistant();

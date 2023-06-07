@@ -5,6 +5,7 @@ import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
 import { sleep } from '../../../utils'
 import { useAiController } from '../../composables/ai-controller'
+import InfoDropdown from './top-panel/info-dropdown.vue'
 
 const uiStore = useUIStore()
 const stpData = useSTPDataStore()
@@ -29,7 +30,7 @@ const togglePause = () => {
 </script>
 <template>
   <header
-    class="top-panel bg-base flex justify-center border-b-2 border-base-300 items-center px-4"
+    class="top-panel bg-base flex flex-wrap md:flex-nowrap gap-2 lg:gap-4 justify-center border-b-2 border-base-300 items-center p-2"
   >
     <div class="flex">
       <button
@@ -48,79 +49,61 @@ const togglePause = () => {
       </button>
     </div>
     <div class="flex grow" />
-    <div class="flex gap-4">
-      <div class="btn-group">
-        <button
-          :class="{
-            'btn-disabled': disabled,
-            'btn-success': aiController.isPaused,
-            'btn-error': !aiController.isPaused
-          }"
-          class="btn btn-sm gap-2 w-32"
-          @click="togglePause"
-        >
-          <template v-if="!aiController.isPaused">
-            <font-awesome-icon icon="fa-square" /> Pause
-          </template>
-          <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
-        </button>
-        <button
-          :class="{ 'btn-disabled': disabled }"
-          class="btn btn-sm btn-secondary gap-2"
-          @click="haltPlay"
-        >
-          <font-awesome-icon icon="fa-hand" /> Halt
-        </button>
-      </div>
-
-      <div class="input-group w-auto">
-        <select
-          class="select select-sm select-bordered"
-          v-model="aiController.currentPlayName"
-          :disabled="disabled"
-        >
-          <option v-for="play in aiData.state!.plays" :value="play" :key="play">
-            {{ play }}
-          </option>
-        </select>
-        <select
-          class="select select-sm select-bordered"
-          v-model="aiController.currentRuleset"
-          :disabled="disabled"
-        >
-          <option v-for="ruleset in aiData.state!.ruleSets" :value="ruleset" :key="ruleset">
-            {{ ruleset }}
-          </option>
-        </select>
-      </div>
-      <div class="btn-group">
-        <button
-          class="btn btn-sm btn-primary gap-2"
-          @click="resetPlay"
-          :class="{ 'btn-disabled': disabled }"
-        >
-          <font-awesome-icon icon="fa-rotate-right" /> Reset Play
-        </button>
-      </div>
+    <div class="btn-group">
+      <button
+        :class="{
+          'btn-disabled': disabled,
+          'btn-success': aiController.isPaused,
+          'btn-error': !aiController.isPaused
+        }"
+        class="btn btn-sm gap-2 lg:w-32"
+        @click="togglePause"
+      >
+        <template v-if="!aiController.isPaused">
+          <font-awesome-icon icon="fa-square" /> Pause
+        </template>
+        <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
+      </button>
+      <button
+        :class="{ 'btn-disabled': disabled }"
+        class="btn btn-sm btn-secondary gap-2"
+        @click="haltPlay"
+      >
+        <font-awesome-icon icon="fa-hand" /> Halt
+      </button>
+    </div>
+    <div class="input-group w-auto order-last md:order-none">
+      <select
+        class="select select-sm select-bordered"
+        v-model="aiController.currentPlayName"
+        :disabled="disabled"
+      >
+        <option v-for="play in aiData.state!.plays" :value="play" :key="play">
+          {{ play }}
+        </option>
+      </select>
+      <select
+        class="select select-sm select-bordered"
+        v-model="aiController.currentRuleset"
+        :disabled="disabled"
+      >
+        <option v-for="ruleset in aiData.state!.ruleSets" :value="ruleset" :key="ruleset">
+          {{ ruleset }}
+        </option>
+      </select>
+    </div>
+    <div class="btn-group">
+      <button
+        class="btn btn-sm btn-primary gap-2"
+        @click="resetPlay"
+        :class="{ 'btn-disabled': disabled }"
+      >
+        <font-awesome-icon icon="fa-rotate-right" /> Reset Play
+      </button>
     </div>
     <div class="flex grow" />
     <div class="flex">
-      <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-circle btn-ghost btn-sm">
-          <font-awesome-icon icon="fa-info-circle" />
-        </label>
-        <div tabindex="0" class="card compact dropdown-content shadow bg-base-100 rounded-box w-64">
-          <div class="card-body">
-            <button class="btn btn-error btn-sm" @click="aiController.close">
-              Disconnect from AI
-            </button>
-            <h2 class="card-title">Performance Info</h2>
-            <ul class="font-mono">
-              <li>Tick: {{ stpData.currentTick }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <info-dropdown :current-tick="stpData.currentTick" @disconnect-from-ai="aiController.close" />
     </div>
   </header>
 </template>

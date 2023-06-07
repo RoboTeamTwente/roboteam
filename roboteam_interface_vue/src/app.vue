@@ -81,7 +81,7 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
     'lsb   lbr   bsb   bsb';
 
   grid-template-columns: min(90vw, v-bind(leftPanelSize)) 3px 1fr 1fr auto;
-  grid-template-rows: 3rem 1fr 3px min(80vh, v-bind(bottomPanelSize)) auto;
+  grid-template-rows: auto 1fr 3px min(80vh, v-bind(bottomPanelSize)) auto;
 }
 
 .top-panel {

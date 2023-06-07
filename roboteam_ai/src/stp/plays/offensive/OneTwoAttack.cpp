@@ -95,6 +95,22 @@ namespace rtt::ai::stp::play {
         });
     }
 
+    void OneTwoAttack::reset() {
+        roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+            std::make_unique<role::Passer>("striker"),
+            std::make_unique<role::PassReceiver>("assistant"),
+            std::make_unique<role::Keeper>("keeper"),
+            std::make_unique<role::RobotDefender>("robot_defender"),
+            std::make_unique<role::BallDefender>("ball_defender_1"),
+            std::make_unique<role::BallDefender>("ball_defender_2"),
+            std::make_unique<role::BallDefender>("ball_defender_3"),
+            std::make_unique<role::Formation>("waller_1"),
+            std::make_unique<role::Formation>("waller_2"),
+            std::make_unique<role::Formation>("waller_3"),
+            std::make_unique<role::Formation>("waller_4")
+        };
+    }
+
     void OneTwoAttack::calculateInfoForKeeper() noexcept {
         stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
         if(!world->getWorld()->getThem().empty()){

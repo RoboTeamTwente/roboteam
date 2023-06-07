@@ -79,6 +79,8 @@ class OneTwoAttack : public Play {
      * @return boolean that tells whether the ball has been kicked
      */
     bool ballKicked();
+
+    void reset() override;
 };
 }  // namespace rtt::ai::stp::play
 #endif  // RTT_ONETWOATTACK_HPP

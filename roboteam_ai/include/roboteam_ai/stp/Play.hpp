@@ -112,6 +112,11 @@ class Play {
      */
     uint8_t getLastScore() const;
 
+    /**
+     * @brief Resets the play if necessary
+     */
+    virtual void reset(){};
+
    protected:
     std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()> roles; /**< The roles, constructed in ctor of a play */
 

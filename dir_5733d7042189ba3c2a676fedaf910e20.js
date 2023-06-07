@@ -2,7 +2,6 @@ var dir_5733d7042189ba3c2a676fedaf910e20 =
 [
     [ "control", "dir_6bc947faea4de03dbc9589911230c09a.html", "dir_6bc947faea4de03dbc9589911230c09a" ],
     [ "interface", "dir_7ac9aa37db97f6bb75ae646c84146962.html", "dir_7ac9aa37db97f6bb75ae646c84146962" ],
-    [ "interface_api", "dir_761f1826639a5dbf71606170cd5fd9ca.html", "dir_761f1826639a5dbf71606170cd5fd9ca" ],
     [ "NFParam", "dir_81fd9f2670a3a1b7ea9253a09d69c6f1.html", "dir_81fd9f2670a3a1b7ea9253a09d69c6f1" ],
     [ "stp", "dir_ff7bab2f878481c7f00fafbde64f720d.html", "dir_ff7bab2f878481c7f00fafbde64f720d" ],
     [ "utilities", "dir_2e0755213d41810e69492803bae05552.html", "dir_2e0755213d41810e69492803bae05552" ],

@@ -32,7 +32,7 @@ const togglePause = () => {
   <header
     class="top-panel bg-base flex flex-wrap md:flex-nowrap gap-2 lg:gap-4 justify-center border-b-2 border-base-300 items-center p-2"
   >
-    <div class="flex">
+    <div class="flex w-20">
       <button
         class="btn btn-sm btn-ghost gap-2"
         :class="{ 'btn-active': !uiStore.leftPanel.collapsed }"
@@ -72,9 +72,9 @@ const togglePause = () => {
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
-    <div class="input-group w-auto order-last md:order-none">
+    <div class="input-group w-auto  order-last md:order-none">
       <select
-        class="select select-sm select-bordered"
+        class="select select-sm sm:w-auto md:w-40 lg:w-auto select-bordered"
         v-model="aiController.currentPlayName"
         :disabled="disabled"
       >
@@ -83,7 +83,7 @@ const togglePause = () => {
         </option>
       </select>
       <select
-        class="select select-sm select-bordered"
+        class="select select-sm sm:w-auto md:w-24 lg:w-auto select-bordered"
         v-model="aiController.currentRuleset"
         :disabled="disabled"
       >
@@ -102,7 +102,7 @@ const togglePause = () => {
       </button>
     </div>
     <div class="flex grow" />
-    <div class="flex">
+    <div class="flex w-20 justify-end">
       <info-dropdown :current-tick="stpData.currentTick" @disconnect-from-ai="aiController.close" />
     </div>
   </header>

@@ -13,7 +13,7 @@
 
 namespace rtt::ai::stp::computations {
 
-PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const Field& field, bool keeperCanPass) {
+PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const Field& field, std::vector<Grid> passGrids, bool keeperCanPass) {
     PassInfo passInfo;  // Struct used to store the information needed to execute the pass
     if (world->getWorld()->getUs().size() < (keeperCanPass ? 2 : 3)) {
         return passInfo;
@@ -55,7 +55,12 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     }
 
     // Now find out the best pass location and corresponding info
-    auto possiblePassLocationsVector = getPassGrid(field).getPoints();
+    std::vector<std::vector<Vector2>> possiblePassLocationsVector;
+    if (passGrids.empty()) passGrids.emplace_back(getPassGrid(field));
+    for (const auto& grid : passGrids){
+        possiblePassLocationsVector.insert(possiblePassLocationsVector.end(), grid.getPoints().begin(), grid.getPoints().end());
+    }
+
     for (auto& pointVector : possiblePassLocationsVector) {
         for (auto& point : pointVector) {
             if (pointIsValidPassLocation(point, ballLocation, possibleReceiverLocations, passerLocation, field, world)) {

@@ -42,7 +42,7 @@ class PassComputations {
      * @param keeperCanPass indicate whether the keeper can pass and be passed to
      * @return a PassInfo struct which contains the relevant information needed to complete the pass
      */
-    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
+    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, std::vector<Grid> passGrids = {}, bool keeperCanPass = false);
 
     /**
      * @brief Scores a given pass based on how likely it is to score from the passLocation, adjusted for the riskiness of the pass

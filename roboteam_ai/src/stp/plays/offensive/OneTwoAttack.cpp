@@ -145,7 +145,6 @@ namespace rtt::ai::stp::play {
                             auto ball = world->getWorld()->getBall()->get();
                             auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
                             auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, secondPassInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
-                            interface::Input::addDrawing(interface::Drawing(interface::Visual::BALL_DATA, {ballTrajectory.start, ballTrajectory.end}, Qt::red, -1, interface::Drawing::LINES_CONNECTED));
                             stpInfos["striker"].setPositionToMoveTo(receiverLocation);
                             stpInfos["striker"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
                         }

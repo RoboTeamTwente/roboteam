@@ -45,7 +45,10 @@ namespace rtt::ai::stp::play {
     }
 
     uint8_t OneTwoAttack::score(const Field& field) noexcept {
-        return 0;
+        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::Open, world, field, {field.bottomRightGrid, field.topRightGrid});
+        if(secondPassInfo.passLocation == Vector2(0, 0)) secondPassInfo = computations::PassComputations::calculatePass(gen::GoalShot, world, field, {field.middleRightGrid});
+
+        return (stp::computations::PassComputations::scorePass(firstPassInfo, world, field) + stp::computations::PassComputations::scorePass(secondPassInfo, world, field)) / 2;
     }
 
     Dealer::FlagMap OneTwoAttack::decideRoleFlags() const noexcept {
@@ -72,8 +75,8 @@ namespace rtt::ai::stp::play {
         return flagMap;
     }
     void OneTwoAttack::calculateInfoForRoles() noexcept {
-        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.bottomRightGrid, field.topRightGrid});
-        if(secondPassInfo.passLocation == Vector2(0, 0)) secondPassInfo = computations::PassComputations::calculatePass(gen::OffensivePosition, world, field, {field.middleRightGrid});
+        if(firstPassInfo.passLocation == Vector2(0, 0)) firstPassInfo = computations::PassComputations::calculatePass(gen::Open, world, field, {field.bottomRightGrid, field.topRightGrid});
+        if(secondPassInfo.passLocation == Vector2(0, 0)) secondPassInfo = computations::PassComputations::calculatePass(gen::GoalShot, world, field, {field.middleRightGrid});
         calculateInfoForKeeper();
         calculateInfoForStriker();
         calculateInfoForAssistant();

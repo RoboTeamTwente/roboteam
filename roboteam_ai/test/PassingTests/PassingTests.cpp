@@ -71,7 +71,7 @@ TEST_F(RTT_AI_Tests, keeperPassTest) {
 
     PassInfo passInfo;
     do {
-        passInfo = computations::PassComputations::calculatePass(gen::AttackingPass, world, world->getField().value(), true);
+        passInfo = computations::PassComputations::calculatePass(gen::AttackingPass, world, world->getField().value(), {}, true);
     } while (passInfo.passScore == 0);
 
     auto keeper = world->getWorld()->getRobotClosestToPoint(world->getField()->leftGoalArea.rightLine().center(), rtt::world::Team::us);

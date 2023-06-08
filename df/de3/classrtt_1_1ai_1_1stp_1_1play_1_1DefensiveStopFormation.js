@@ -5,7 +5,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation =
     [ "decideRoleFlags", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a541b4d7ccd8d412b39c1a2b1087008ec", null ],
     [ "distributeRoles", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
-    [ "getName", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#aa55f26ef3ac4c5ec67744c4d48c8a3fe", null ],
+    [ "getName", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a1cb900cb312f0aea58bfe08a773803a6", null ],
     [ "getRoleStatuses", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],
     [ "initialize", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#aa0405b45c69fc25464bec621fbcbe0cc", null ],
     [ "isValidPlayToKeep", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6", null ],

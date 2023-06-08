@@ -84,7 +84,8 @@ namespace rtt::ai::stp::play {
     const char* OneTwoAttack::getName() { return "OneTwoAttack"; }
 
     bool OneTwoAttack::shouldEndPlay() noexcept {
-        return false;
+        std::optional<world::view::RobotView> robotClosestToBall = world->getWorld()->getRobotClosestToBall();
+        return robotClosestToBall.has_value() && robotClosestToBall->get()->getTeam() == world::them;
     }
 
     bool OneTwoAttack::ballKicked() {

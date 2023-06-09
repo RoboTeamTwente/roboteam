@@ -68,9 +68,9 @@ class Goal:
         @return     Updated image as numpy array
         """
         # Draw the goal
-        cv.line(img, (self.margin_left, self.margin_top), (self.margin_right, self.margin_bottom), self.color, 2)
+        cv.line(img, (self.margin_left, self.margin_top), (self.margin_right, self.margin_bottom), self.color, 20)
         # Draw the penalty mark
-        cv.circle(img, (self.penalty_x, self.penalty_y), 4, (255, 255, 255), -1)
+        cv.circle(img, (self.penalty_x, self.penalty_y), 4, (255, 255, 255), 10)
         return img
 
 
@@ -99,9 +99,9 @@ class CenterCircle:
         @return     Updated image as numpy array
         """
         # Draw the center circle
-        cv.circle(img, (self.x, self.y), self.radius, (255, 255, 255), 1)
+        cv.circle(img, (self.x, self.y), self.radius, (255, 255, 255), 10)
         # Draw the kick-off mark
-        cv.circle(img, (self.x, self.y), 4, (255, 255, 255), -1)
+        cv.circle(img, (self.x, self.y), 4, (255, 255, 255), 10)
         return img
 
 
@@ -142,7 +142,7 @@ class DefenseArea:
         @return     Updated image as numpy array
         """
         cv.rectangle(img, (self.margin_left, self.margin_top), (self.margin_right, self.margin_bottom), (255, 255, 255),
-                     1)
+                     10)
         return img
 
 
@@ -174,7 +174,7 @@ class Border:
         @return     Updated image as numpy array
         """
         cv.rectangle(img, (self.margin_left, self.margin_top), (self.margin_right, self.margin_bottom), (255, 255, 255),
-                     1)
+                     10)
         return img
 
 
@@ -223,9 +223,9 @@ class Field:
         img = self.yellowGoal.render(img)
         img = self.blueGoal.render(img)
         cv.line(img, (self.centerCircle.x, self.border.margin_top), (self.centerCircle.x, self.border.margin_bottom),
-                (255, 255, 255), 1)
+                (255, 255, 255), 10)
         cv.line(img, (self.border.margin_left, self.centerCircle.y), (self.border.margin_right, self.centerCircle.y),
-                (255, 255, 255), 1)
+                (255, 255, 255), 10)
         img = self.ball.render(img)
         img = self.yellowTeam.render(img)
         img = self.blueTeam.render(img)

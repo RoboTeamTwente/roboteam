@@ -5,9 +5,10 @@ env = RTTSimEnv()
 pub = Publisher(env)
 sub = Subscriber(env)
 
-pub.start()
-# sub.start()
-env.reset()
+env.set_pub(pub)
+
+sub.start()
+# env.reset()
 
 while True:
     env.update()

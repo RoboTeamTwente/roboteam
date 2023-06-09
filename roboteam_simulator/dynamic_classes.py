@@ -35,7 +35,7 @@ class Ball:
         # color in bgr (orange)
         self.color = (0, 123, 255)
         # radius of the ball
-        self.size = 4
+        self.size = 40
 
     def render(self, img):
         """! Render the ball on the screen
@@ -85,7 +85,7 @@ class Robot:
         self.acc_x = 0
         self.acc_y = 0
         # Size of the robot
-        self.radius = 9
+        self.radius = 90
         # Initial angle of the robot
         self.angle = 0
         self.x_angle = math.cos(math.radians(self.angle))
@@ -112,7 +112,7 @@ class Robot:
         # Render angle indicator
         self.x_angle = math.cos(math.radians(self.angle))
         self.y_angle = math.sin(math.radians(self.angle))
-        cv.line(img, (int(self.pos_x), int(self.pos_y)), (int(self.pos_x + 20 * self.x_angle), int(self.pos_y + 20 * self.y_angle)), self.color, 1)
+        cv.line(img, (int(self.pos_x), int(self.pos_y)), (int(self.pos_x + 200 * self.x_angle), int(self.pos_y + 200 * self.y_angle)), self.color, 10)
         return img
 
     def update(self):
@@ -167,7 +167,7 @@ class Team:
         self.side = side
         self.robots = []
         for i in range(self.size):
-            self.robots.append(Robot(self.side, i, 670 - 20 * (i + 1) if side == "yellow" else 670 + 20 * (i + 1), 100))
+            self.robots.append(Robot(self.side, i, 6000 - 200 * (i + 1) if side == "yellow" else 6000 + 200 * (i + 1), 1000))
 
     def render(self, img):
         """! Render all robots in the team

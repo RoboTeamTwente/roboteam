@@ -4,9 +4,11 @@
 
 #ifndef RTT_ROBOTEAM_WORLD_INCLUDE_ROBOTEAM_OBSERVER_ROBOCUPRECEIVER_H_
 #define RTT_ROBOTEAM_WORLD_INCLUDE_ROBOTEAM_OBSERVER_ROBOCUPRECEIVER_H_
-#include <QUdpSocket>
-#include <QNetworkProxy>
 #include <QNetworkInterface>
+#include <QNetworkProxy>
+#include <QUdpSocket>
+
+#include "roboteam_utils/Print.h"
 
 template<typename ProtoMessageType>
 class RobocupReceiver {
@@ -59,8 +61,9 @@ class RobocupReceiver {
       }else{
         ProtoMessageType proto_message;
         bool success = proto_message.ParseFromArray(data.data(),data.size());
-        if(!success){
-          no_error = false;
+        std::cout << proto_message.DebugString() << std::endl;
+        if(!success) {
+            no_error = false;
         }
         packets.push_back(proto_message);
       }

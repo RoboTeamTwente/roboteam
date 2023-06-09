@@ -11,10 +11,12 @@ published as multicast. Meaning that multiple applications will be able to liste
 """
 import zmq
 import time
+import PyQt5.QtNetwork
 from PyQt5.QtCore import QByteArray
 
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionFrame, SSL_DetectionBall, SSL_DetectionRobot
+from proto.messages_robocup_ssl_geometry_pb2 import SSL_GeometryData, SSL_GeometryFieldSize
 from proto import RobotCommands_pb2
 
 from threading import Thread
@@ -29,7 +31,7 @@ SUB_PORT_BLUE = '5559'
 SUB_PORT_YELLOW = '5560'
 
 
-class Publisher(Thread):
+class Publisher:
     """! The Publisher class
 
     The Publisher is responsible for multicasting the data by the simulator in custom protobuf packages
@@ -38,16 +40,18 @@ class Publisher(Thread):
     def __init__(self, env):
         """! Initializes the Publisher by creating a socket and binding it to the defined publishing address/port
         """
-        super().__init__()
-        self.context = zmq.Context()  # The zmq context that manages the sockets
-        self.socket = self.context.socket(zmq.RADIO)  # The socket we will be publishing with
-        self.socket.connect(f'udp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
+        # Original ZMQ implementation
+        # self.context = zmq.Context()  # The zmq context that manages the sockets
+        # self.socket = self.context.socket(zmq.RADIO)  # The socket we will be publishing with
+        # self.socket.connect(f'udp://{PUBLISH_ADDRESS}:{PUBLISH_PORT}')  # Bind the socket to the publishing address/port
+        self.socket = PyQt5.QtNetwork.QUdpSocket()
+
         self.ball = SSL_DetectionBall()  # The SSL_DetectionBall package containing data about the ball
         self.robots_yellow = []  # List of SSL_DetectionRobot packages containing data about the yellow robots
         self.robots_blue = []  # List of SSL_DetectionRobot packages containing data about the blue robots
         self.wrapper = SSL_WrapperPacket()  # The SSL_WrapperPacket package containing all data to be published
-        self.frame_number = 0  # Frame number of the current SSL_DetectionFrame
         self.detection_frame = SSL_DetectionFrame()  # The SSL_DetectionFrame package containing data from the simulator
+        self.geometry_data = SSL_GeometryData()
 
         self.env = env
 
@@ -59,9 +63,15 @@ class Publisher(Thread):
         self.wrap_ball(field.ball)  # Wrap the ball in na SSL_DetectionBall package
         self.wrap_robots(field.yellowTeam.robots, field.blueTeam.robots)  # Wrap robots in SSL_DetectionRobot packages
         self.wrap_detection_frame()  # Wrap all data in an SSL_DetectionFrame package
+
+        self.wrap_geometry_data()
+
         self.wrap_packet()
-        packet = self.wrapper.SerializeToString()  # Serializes the wrapper packet
-        self.socket.send(packet)  # Sends the serialized packet to the socket
+        packet = QByteArray(self.wrapper.SerializeToString())  # Serializes the wrapper packet
+
+        # Original ZQM implementation
+        # self.socket.send(packet)  # Sends the serialized packet to the socket
+        self.socket.writeDatagram(packet, PyQt5.QtNetwork.QHostAddress(PUBLISH_ADDRESS), int(PUBLISH_PORT))
 
     def wrap_ball(self, ball):
         """! Wraps the ball data in an SSL_DetectionBall package
@@ -109,7 +119,7 @@ class Publisher(Thread):
     def wrap_detection_frame(self):
         """! Wraps all data from the simulation into the SSL_DetectionFrame package
         """
-        self.detection_frame.frame_number = ++self.frame_number  # The number of this frame, is incremented by one.
+        self.detection_frame.frame_number = self.env.frame_number  # The number of this frame
         self.detection_frame.t_capture = time.time()  # The time at which the frame was captured
         self.detection_frame.t_sent = time.time()  # The time at which the frame is sent
         self.detection_frame.camera_id = 0  # ID of the camera which captured the frame
@@ -122,15 +132,23 @@ class Publisher(Thread):
         for robot in self.robots_blue:  # Add blue robots to the detection frame
             self.detection_frame.robots_blue.append(robot)
 
+    def wrap_geometry_data(self):
+        # Wrap geometry field size
+        temp_geometry_field_size = SSL_GeometryFieldSize()
+
+        temp_geometry_field_size.field_length = 12000
+        temp_geometry_field_size.field_width = 9000
+        temp_geometry_field_size.goal_width = 1800
+        temp_geometry_field_size.goal_depth = 180
+        temp_geometry_field_size.boundary_width = 300
+
+        self.geometry_data.field.CopyFrom(temp_geometry_field_size)
+
     def wrap_packet(self):
         """! Wraps the detection frame and geometry data into the SSL_WrapperPacket package
         """
         self.wrapper.detection.CopyFrom(self.detection_frame)  # Add the detection frame the SSL_WrapperPacket message
-
-    def run(self):
-        while True:
-            self.send(self.env.field)
-            time.sleep(0.5)  # TODO: Figure out correct timing -> 80 Hz
+        self.wrapper.geometry.CopyFrom(self.geometry_data)
 
 
 class Subscriber(Thread):

@@ -1,4 +1,5 @@
 import gym
+import time
 from gym import spaces
 import numpy as np
 import cv2 as cv
@@ -49,15 +50,20 @@ def get_observation(field):
 
 class RTTSimEnv(gym.Env):
     def __init__(self):
+        self.frame_number = 0
+
         super(RTTSimEnv, self).__init__()
         # Initialize the field
-        self.field = Field(1340, 1040)
+        self.field = Field(12000, 9000)
+        # self.field = Field(1340, 1040)
         cv.namedWindow("RTTSim", cv.WND_PROP_FULLSCREEN)
         cv.resizeWindow("RTTSim", 1920, 1080)
 
         # define observation space
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(size(get_observation(self.field)),),
                                             dtype=np.float64)
+
+        self.pub = None
 
     def update(self):
         # Update location of objects
@@ -72,6 +78,12 @@ class RTTSimEnv(gym.Env):
         ball_field_collision(self.field)
         for robot in self.field.yellowTeam.robots + self.field.blueTeam.robots:
             check_collisions(self.field, robot)
+
+        self.pub.send(self.pub.env.field)
+
+        self.frame_number += 1
+
+        time.sleep(0.3)
 
         return
 
@@ -94,3 +106,6 @@ class RTTSimEnv(gym.Env):
     def close(self):
         # close the simulator
         return 0
+
+    def set_pub(self, pub):
+        self.pub = pub

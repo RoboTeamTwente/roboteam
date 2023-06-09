@@ -393,6 +393,7 @@ target_compile_options(testHelpers PRIVATE "${COMPILER_FLAGS}")
 
 ###### TEST #######
 add_executable(roboteam_ai_tests
+        ${PROJECT_SOURCE_DIR}/src/STPManager.cpp
         ${PROJECT_SOURCE_DIR}/test/main.cpp
         ${PROJECT_SOURCE_DIR}/test/ControlTests/ControlUtilsTest.cpp
         ${PROJECT_SOURCE_DIR}/test/HelperTests/FieldHelperTest.cpp
@@ -416,12 +417,15 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE GTest::gtest
         PRIVATE GTest::gmock
         PRIVATE testHelpers
+        PRIVATE ixwebsocket
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         # Watch out! The order of these libraries apparently matters!
+        PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
+        PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
         PRIVATE roboteam_ai_utils
@@ -429,9 +433,6 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation
         PRIVATE roboteam_ai_skills
-        PRIVATE roboteam_ai_control
-        PRIVATE roboteam_interface_utils_lib
-        PRIVATE roboteam_ai_interface
         )
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")
@@ -450,12 +451,12 @@ target_include_directories(positionScoringTest
 
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
+        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_networking
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation

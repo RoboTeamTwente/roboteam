@@ -30,5 +30,8 @@ var RefCommand_8h =
       [ "DEFEND_SHOOTOUT", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5", null ],
       [ "UNDEFINED", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3", null ]
     ] ],
+    [ "protoRefCommandToString", "d8/dd4/RefCommand_8h.html#a7e8f65a38263e01e77c81f756469438d", null ],
+    [ "protoRefStageToString", "d8/dd4/RefCommand_8h.html#abdc2a487fd9f466c21c58910160c4e4e", null ],
+    [ "refCommandToString", "d8/dd4/RefCommand_8h.html#a67b8dcc3285025260f8505a53d8a1ffc", null ],
     [ "sslRefCmdToRefCmd", "d8/dd4/RefCommand_8h.html#a3c11569b8eb84d7b10a7c3a11dad11e6", null ]
 ];

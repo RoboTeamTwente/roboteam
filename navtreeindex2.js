@@ -23,7 +23,7 @@ var NAVTREEINDEX2 =
 "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#a5253eaad27f3549b30f9483bf9d96813":[3,0,1,0,0,8,0],
 "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#ab116ff0f4b17e84ec0c34b13b8168091":[3,0,1,0,0,8,2],
 "d2/d8c/OrbitAngular_8cpp.html":[4,0,0,1,4,5,4],
-"d2/d93/StrategyManager_8cpp.html":[4,0,0,1,5,8],
+"d2/d93/StrategyManager_8cpp.html":[4,0,0,1,5,9],
 "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html":[3,0,1,0,4,14],
 "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,14,13],
 "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a23d36121a6af4845b15b613bcd03433e":[3,0,1,0,4,14,2],

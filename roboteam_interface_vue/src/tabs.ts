@@ -1,9 +1,9 @@
 import { markRaw } from 'vue'
 import GameSettings from './modules/components/game-settings.vue'
-import StpStatus from './modules/components/panels/stp-panel/stp-panel.vue'
-import Feedback from './modules/components/panels/feedback-panel.vue'
-import PlayEvaluation from './modules/components/panels/play-evaluation-panel.vue'
-import Metrics from './modules/components/panels/metrics-panel.vue'
+import StpStatus from './modules/components/panels/stp-panel/stp-widget.vue'
+import Feedback from './modules/components/panels/feedback-widget.vue'
+import PlayEvaluation from './modules/components/panels/play-evaluation-widget.vue'
+import Metrics from './modules/components/panels/metrics-widget.vue'
 import UiSettings from './modules/components/ui-settings/ui-settings.vue'
 
 export const TABS_DEFINITION = {

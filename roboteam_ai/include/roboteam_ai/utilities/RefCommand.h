@@ -102,6 +102,11 @@ namespace rtt {
         RTT_ERROR("Unknown refstate, halting all robots for safety!")
         return RefCommand::HALT;
     }
+
+    std::string refCommandToString(RefCommand command);
+    std::string protoRefCommandToString(proto::SSL_Referee_Command command);
+    std::string protoRefStageToString(proto::SSL_Referee_Stage stage);
+
 }  // namespace rtt
 
 #endif  // RTT_REFCOMMAND_H

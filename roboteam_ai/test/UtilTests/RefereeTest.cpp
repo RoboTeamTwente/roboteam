@@ -17,6 +17,7 @@
 TEST(RefereeTest, it_gets_and_sets_the_ref) {
     rtt::GameSettings::setPrimaryAI(true);
     rtt::GameSettings::setYellow(true);
+    rtt::ai::new_interface::RuntimeConfig::useReferee = true;
 
     auto world = testhelpers::WorldHelper::getWorldMsg(11, 11, true, testhelpers::FieldHelper::generateField());
     auto const& [_, worldPtr] = rtt::world::World::instance();
@@ -26,7 +27,6 @@ TEST(RefereeTest, it_gets_and_sets_the_ref) {
     refereeData.set_command(proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE);
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
     
-
     EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE);
 
     refereeData.set_command(proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW);
@@ -48,4 +48,6 @@ TEST(RefereeTest, it_gets_and_sets_the_ref) {
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
 
     EXPECT_EQ(rtt::ai::GameStateManager::getCurrentGameState().getStrategyName(), "penalty_them_prepare");
+
+    rtt::ai::new_interface::RuntimeConfig::useReferee = false;
 }

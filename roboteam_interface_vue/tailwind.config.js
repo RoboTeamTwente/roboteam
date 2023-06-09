@@ -26,15 +26,16 @@ module.exports = {
     },
     plugins: [
         require('@savvywombat/tailwindcss-grid-areas'),
+        require("@tailwindcss/typography"),
         require("daisyui")
     ],
     daisyui: {
         themes: [
             {
-                light: {
-                    ...require("daisyui/src/colors/themes")["[data-theme=light]"],
+                rttTheme: {
                     '--padding-card': '1rem',
                     "primary": "#2563eb",
+                    "primary-content": "rgba(255,255,255,0.75)",
                     "secondary": "#6b7280",
                     "accent": "#5a1c74",
                     "neutral": "#3D4451",
@@ -44,19 +45,19 @@ module.exports = {
                     "warning": "#facc17",
                     "error": "#dc2626",
                 },
-                dark: {
-                    ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
-                    '--padding-card': '1rem',
-                    "primary": "#2563eb",
-                    "secondary": "#6b7280",
-                    "accent": "#5a1c74",
-                    "neutral": "#3D4451",
-                    // "base-100": "#FFFFFF",
-                    "info": "#37bdf8",
-                    "success": "#22c55e",
-                    "warning": "#facc17",
-                    "error": "#dc2626",
-                }
+                // dark: {
+                //     ...require("daisyui/src/theming/themes")["[data-theme=dark]"],
+                //     '--padding-card': '1rem',
+                //     "primary": "#2563eb",
+                //     "secondary": "#6b7280",
+                //     "accent": "#5a1c74",
+                //     "neutral": "#3D4451",
+                //     // "base-100": "#FFFFFF",
+                //     "info": "#37bdf8",
+                //     "success": "#22c55e",
+                //     "warning": "#facc17",
+                //     "error": "#dc2626",
+                // }
             }
         ]
     },

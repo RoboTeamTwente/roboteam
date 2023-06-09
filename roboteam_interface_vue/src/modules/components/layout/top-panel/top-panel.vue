@@ -52,7 +52,6 @@ const togglePause = () => {
     <div class="btn-group">
       <button
         :class="{
-          'btn-disabled': disabled,
           'btn-success': aiController.isPaused,
           'btn-error': !aiController.isPaused
         }"
@@ -63,13 +62,6 @@ const togglePause = () => {
           <font-awesome-icon icon="fa-square" /> Pause
         </template>
         <template v-else> <font-awesome-icon icon="fa-play" /> Resume </template>
-      </button>
-      <button
-        :class="{ 'btn-disabled': disabled }"
-        class="btn btn-sm btn-secondary gap-2"
-        @click="haltPlay"
-      >
-        <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
     <div class="input-group w-auto order-last md:order-none">
@@ -94,11 +86,18 @@ const togglePause = () => {
     </div>
     <div class="btn-group">
       <button
+        :disabled='disabled'
         class="btn btn-sm btn-primary gap-2"
         @click="resetPlay"
-        :class="{ 'btn-disabled': disabled }"
       >
         <font-awesome-icon icon="fa-rotate-right" /> Reset Play
+      </button>
+      <button
+        :disabled='disabled'
+        class="btn btn-sm btn-secondary gap-2"
+        @click="haltPlay"
+      >
+        <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
     <div class="flex grow" />

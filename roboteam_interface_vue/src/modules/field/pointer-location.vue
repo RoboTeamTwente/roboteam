@@ -13,10 +13,6 @@ const props = defineProps<{
 const init = () => {
     console.log('Setting up pointer location')
 
-    // Setup mouse position text
-    props.app.stage.eventMode = 'static'
-    props.app.stage.hitArea = props.app.screen
-
     // Init cursor position text
     const cursor = new Text('', { fontSize: 16, fill: 'white' })
     cursor.x = props.app.screen.width * 0.025
@@ -36,7 +32,6 @@ const init = () => {
   },
   cleanUp = () => {
     console.log('Cleaning up pointer location')
-    props.app.stage.eventMode = 'none'
     props.app.stage.removeAllListeners('pointermove')
     props.app.stage.removeAllListeners('pointerleave')
     props.app.stage.removeEventListener('pointerleave', onPointerLeave)

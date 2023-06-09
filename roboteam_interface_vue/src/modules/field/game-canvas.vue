@@ -26,6 +26,10 @@ const init = (length: number, width: number) => {
       view: canvas.value!
     })
 
+    // Setup click events
+    app.stage.eventMode = 'static'
+    app.stage.hitArea = app.screen
+
     app.stage.addEventListener('pointerdown', onStageClick)
     appRef.value = app
   },

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useUIStore } from '../../stores/ui-store'
+import { useUIStore } from '../../../stores/ui-store'
 import { computed, toRaw } from 'vue'
-import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
-import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
-import { sleep } from '../../../utils'
-import { useAiController } from '../../composables/ai-controller'
-import InfoDropdown from './top-panel/info-dropdown.vue'
+import { useSTPDataStore } from '../../../stores/data-stores/stp-data-store'
+import { useAIDataStore } from '../../../stores/data-stores/ai-data-store'
+import { sleep } from '../../../../utils'
+import { useAiController } from '../../../composables/ai-controller'
+import InfoDropdown from './info-dropdown.vue'
 
 const uiStore = useUIStore()
 const stpData = useSTPDataStore()
@@ -72,7 +72,7 @@ const togglePause = () => {
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
-    <div class="input-group w-auto  order-last md:order-none">
+    <div class="input-group w-auto order-last md:order-none">
       <select
         class="select select-sm sm:w-auto md:w-40 lg:w-auto select-bordered"
         v-model="aiController.currentPlayName"

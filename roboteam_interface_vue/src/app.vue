@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import GameCanvas from './modules/field/game-canvas.vue'
 import { useUIStore } from './modules/stores/ui-store'
-import TopPanel from './modules/components/layout/top-panel.vue'
+import TopPanel from './modules/components/layout/top-panel/top-panel.vue'
 import TabedWidgets from './modules/components/layout/tabed-widgets.vue'
 import { useVisionDataStore } from './modules/stores/data-stores/vision-data-store'
 import SidebarResizer from './modules/components/layout/sidebar-resizer.vue'

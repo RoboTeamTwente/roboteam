@@ -90,5 +90,5 @@ void BallPlacementThem::calculateInfoForKeeper() noexcept {
     stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
 }
 
-const char* BallPlacementThem::getName() { return "Ball Placement Them"; }
+const char* BallPlacementThem::getName() const { return "Ball Placement Them"; }
 }  // namespace rtt::ai::stp::play

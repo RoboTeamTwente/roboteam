@@ -3,6 +3,27 @@ cmake-build-debug/
 cmake-build-release/
 build/
 /.vscode
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Macos files
+.DS_Store
+.fseventsd
+
+# Interface files
+node_modules
+/roboteam_interface_vue/node_modules/
+/roboteam_interface_vue/src-tauri/target/
+*.local
+dist-ssr
 
 # Python
 .env

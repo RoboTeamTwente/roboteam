@@ -13,6 +13,7 @@
 #include "constants/GeneralizationConstants.h"
 #include "stp/evaluations/BaseEvaluation.h"
 #include "utilities/Dealer.h"
+#include "utilities/GameState.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {
@@ -102,7 +103,7 @@ class Play {
      * @brief Gets the current play name
      * @return name of the play
      */
-    virtual const char* getName() = 0;
+    virtual const char* getName() const = 0;
 
     std::optional<uint8_t> lastScore; /**< If score was calculated, save here */
 

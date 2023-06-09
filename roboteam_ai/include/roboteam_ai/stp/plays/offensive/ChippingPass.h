@@ -58,7 +58,7 @@ class ChippingPass : public Play {
      * @brief Gets the name of the play
      * @return The name of the play
      */
-    const char* getName() override;
+    const char* getName() const override;
 
     /**
      * @brief Check if play should end. True if pass arrived, if the ball is not moving anymore after pass, or if there is a better pass available

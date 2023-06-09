@@ -1,33 +1,46 @@
-# roboteam_suite
+# RoboTeam
 
-This repo contains:
+[TOC]
 
-- Roboteam AI, which makes decisions on what the robots should do based on the vision data, and feedback data (received from robots) which it receives from Roboteam World and Roboteam Robothub respectively.
-- Roboteam World, which interprets vision data (received from GRSim, or from a physical camera)
-- Roboteam Robothub, used to send commands to the robots (either through GRSim or the base station)
-- Roboteam Utils, which contains a lot of helper functions, primarily geometrical in nature, such as Lines, Triangles, etc. These are used in other repo's, such as Roboteam AI and Roboteam World
-- Roboteam Proto, which contains the protocol used to send and receive messages over TCP/UDP
+## Overview
+This software is tested on Ubuntu 22.04 LTS, and the installation instructions are written with that distro/OS in mind. However, other distro's of Linux are also likely to be able to run this software, albeit with some modifications.
 
-Please note:
-This software is tested on Ubuntu 20.04 LTS, and the installation instructions are written with that distro/OS in mind. However, other distro's of Linux are also likely to be able to run this software, albeit with some modifications.
+This repository contains the following projects:
 
-## Usage
+- `RoboTeam World`. It is responsible from receiving and combining all sources of information into one coherent world state, which can be used by `RoboTeam AI`. These sources include data from either a simulator or SSL-Vision, and feedback from our robots (WIP). Note: The executable is called `roboteam_observer`*. 
+- `RoboTeam AI`. The brain of RoboTeam. It makes decisions on what robots should do based on data received from `RoboTeam World`.
+- `RoboTeam Robothub`. Responsible for the communication with a simulator or the basestation (and thus the robots). `RoboTeam AI` sends its commands here, to be forwarded.
+- `RoboTeam Utils`. It contains a lot of helper functions, primarily geometrical in nature, such as Lines, Triangles, etc. These are used in other repo's, such as RoboTeam AI and RoboTeam World
+- `RoboTeam Networking`. This repository contains all our `Protobuf` messages, and classes for publishing and subscribing to `ZMQ` channels. It lets `RoboTeam World`, `RoboTeam AI`, and `RoboTeam Robothub` communicate with eachother. 
 
-First, clone this repository. We recommend using an SSH key if you are able to do so, as this immediately authorizes your future pushes to the repositories.
+\* `RoboTeam World` its executable is named `roboteam_observer`, since `RoboTeam AI` also contains a class named `World`, which caused confusion.
 
-```bash
-$ mkdir -p ~/roboteam
-$ git clone --recursive https://github.com/RoboTeamTwente/roboteam_suite.git ~/roboteam/roboteam_suite
-```
 
-Now, you can open the roboteam_suite project with an IDE of your choice. We recommed CLion, as it has a lot of very helpful features and you can get a student license for it.
 
-Make sure you have the dependencies installed. Go to the CMakeLists.txt and click on it. CLion will generate a pop-up saying "project files not loaded" in blue in the top right corner. Clicking it will have CMake load the project. This means it generates instructions on how the files should be compiled in order to produce the executables specified in the CMakeLists.txt file. You can now compile the targets!
+## Dependencies
+All dependencies are listed in `install_dependencies_ubuntu22-04.sh`. Simply run this file to install all of them. Additionally, it installs other useful packages.
 
-The easiest way to run the application is to make some [compound executables](https://www.jetbrains.com/help/clion/run-debug-configuration.html#config-folders) in CLion that boot everything you need. To run 1 team in GRSim, the simulator, you will need to add roboteam_ai, roboteam_world, and roboteam_robothub.
-Make sure you have GRSim or ssl-vision running and are listening to the right ports. In general, the GRSim vision multicast port should be set to 10006.
+## IDEs
+### VSCode
+You can install VSCode from the [website](https://code.visualstudio.com/download) or via `apt` or `snap`. We recommend to install the [`C/C++ Extension Pack`](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack) extension, which will provide you with IntelliSense (code completion), debugging, code browsing, and CMake support. Other neat extensions are [`GitLens`](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens), [`Git Graph`](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph), [`GoogleTest Adapter`](https://marketplace.visualstudio.com/items?itemName=DavidSchuldenfrei.gtest-adapter), and [`Copilot`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot). If you want to develop from within a container, install [`Remote Development`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack).
 
-### Auxiliary Software
+### Clion
+To install [CLion](https://www.jetbrains.com/clion/), you need a [student license](https://www.jetbrains.com/community/education/#students/).
+
+Make sure you have the dependencies installed. Within CLion, go to the CMakeLists.txt and click on it. CLion will generate a pop-up saying "project files not loaded" in blue in the top right corner. Clicking it will have CMake load the project. This means it generates instructions on how the files should be compiled in order to produce the executables specified in the CMakeLists.txt file. You can now compile the targets!
+
+## Running a game
+![alt text](readme_images/rtt_software_stack.png)
+
+To run a game, you will need to boot up `RoboTeam AI`, `RoboTeam World`, and `RoboTeam Robothub`. The executables are named `roboteam_ai`, `roboteam_observer`, and `roboteam_robothub` respectively. Next to that, either boot up a simulator or SSL-Vision.
+ 
+## SSL Software / Simulators
+* (`SSL Vision`)[https://github.com/RoboCup-SSL/ssl-vision]
+* (`SSL Game Controller`)[https://github.com/RoboCup-SSL/ssl-game-controller]
+* (`GrSim simulator`)[https://github.com/RoboCup-SSL/grSim]
+* (`ER-Force simulator`)[https://github.com/robotics-erlangen/framework#simulator-cli]
+* RTT simulator
+* (`Other SSL software`)[https://github.com/RoboCup-SSL]
 
 It is recommended to use the game controller to control the gamestates. You can do so by downloading the latest binary release of the [SSL-Game-Controller](https://github.com/RoboCup-SSL/ssl-game-controller) repo, and executing it. For example, when downloaded to the Downloads folder:
 
@@ -43,43 +56,37 @@ Also, make sure you have installed GRSim using the instructions found on the [Ro
 /directory_you_cloned_grsim/grSim/bin/grsim
 ```
 
-### Making the executables
 
-Make sure the vision multicast port is set to 10006
 
-#### One Team
 
-Make the compound executable shown below:
-![run_one_team](https://github.com/RoboTeamTwente/roboteam_suite/blob/RobotJesse-patch-1/readme_images/run_two_teams.png?raw=true)
-Then run this compound executable and run GRSim.
 
-#### Two Teams
 
-Follow the steps used for the other compound executable, only now add 2 extra targets: roboteam_ai_1 and roboteam_robothub_1, as seen in the screenshot, to the compound. While creating the new CMake Targets, be sure to include a "1" in the program arguments, as seen in the image.
-![run_two_teams](https://github.com/RoboTeamTwente/roboteam_suite/blob/RobotJesse-patch-1/readme_images/run_two_teams.png?raw=true)
+Running with camera's and real robots:
+
+- [SSL-Vision](https://github.com/RoboCup-SSL/ssl-vision)
+
+Working with a referee
+
+- [SSL-Game-controller](https://github.com/RoboCup-SSL/ssl-game-controller)
+- [SSL-vision-client](https://github.com/RoboCup-SSL/ssl-vision-client)
+
+Working with the grSim simulator
+
+- [grSim](https://github.com/RoboTeamTwente/grSim)
+
+
+
+
+
 
 ## Installation Ubuntu
-
-### List of dependencies
-
-- [CMake >3.16](https://cmake.org/)
-- [Protobuf 3.9.1](https://developers.google.com/protocol-buffers/)
-- [ZeroMQ 4.2.5](https://zeromq.org/)
-- [Eigen3 3.3.7-2](http://eigen.tuxfamily.org/index.php?title=Main_Page)
-- [QT5](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
-- [QT5Charts](https://doc.qt.io/qt-5/qtcharts-index.html)
-- [Ninja](http://ninja-build.org)
-- [CCache](https://ccache.dev)
-- [Google Test and Google Mock](https://github.com/google/googletest)
-
-Either install these manually or run the script called `install_UBUNTU_20_04.sh`
+All dependencies are listed in `install_dependencies_ubuntu22-04.sh`. Simply run the script to install all of these, and some useful other packages.
 
 ## Installation on macOS (tested on macOS 12.2.1 Monterey)
 Make sure you already have the following:
 - XCode
 - XCode Command Line Tools (Run XCode once, then `xcode-select --install`)
 - Homebrew
-
 
 Install remaining dependencies
 ```
@@ -133,23 +140,6 @@ clang-format has been properly set up
 - If you now right click a folder in your Project Tree and go to External Tools then you can click on clang-format which will format the entire folder (not this unfortunately does not yet work on single files).
 
 ## See also
-
-### VSCode
-
-To run roboteam code within VSCode, which John thinks is nicer, but nobody else agrees with :(, you can always ask him for help on setting up.
-
-Running with camera's and real robots:
-
-- [SSL-Vision](https://github.com/RoboCup-SSL/ssl-vision)
-
-Working with a referee
-
-- [SSL-Game-controller](https://github.com/RoboCup-SSL/ssl-game-controller)
-- [SSL-vision-client](https://github.com/RoboCup-SSL/ssl-vision-client)
-
-Working with the grSim simulator
-
-- [grSim](https://github.com/RoboTeamTwente/grSim)
 
 ### Tracy Profiler
 Tracy is quite cool(and lightweight) profiler, that can help you analyze the performance of your code.

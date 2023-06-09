@@ -2,8 +2,9 @@
 
 #include <atomic>
 #include <string>
+
+#include "RobotHubMode.h"
 #include "proto/GameSettings.pb.h"
-#include "roboteam_utils/RobotHubMode.h"
 
 namespace rtt {
 
@@ -16,6 +17,8 @@ namespace rtt {
  * the AI, are not included here.
  *
  * This class should map one-to-one to the settings in the proto file!
+ *
+ * !!! Settings that cannot be changed by the referee should be placed in RuntimeConfig instead !!!
  */
 class GameSettings {
    public:
@@ -68,20 +71,20 @@ class GameSettings {
      * @brief Gets the mode that RobotHub is in
      * @return The mode that RobotHub is in
      */
-    static  RobotHubMode getRobotHubMode();
+    static  net::RobotHubMode getRobotHubMode();
 
     /**
      * @brief Sets the RobotHub mode
      * @param mode The mode RobotHub should be in
      * @return Boolean that tells whether the mode has been set successfully
      */
-    static bool setRobotHubMode(RobotHubMode mode);
+    static bool setRobotHubMode(net::RobotHubMode mode);
 
    private:
     static std::atomic<bool> primaryAI;
     static std::atomic<bool> yellow; /**< Indicates whether this is the yellow team */
     static std::atomic<bool> left; /**< Indicates whether we are playing on the left side */
-    static std::atomic<RobotHubMode> robotHubMode; /**< The mode in which RobotHub is sending robot commands */
+    static std::atomic<net::RobotHubMode> robotHubMode; /**< The mode in which RobotHub is sending robot commands */
 };
 
 }  // namespace rtt

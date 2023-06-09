@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(rtt)
 
 # Check for Release or Debug build
@@ -24,10 +24,15 @@ include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing
 include(GetTracy) # For profiling
+include(GetIXWebSocket) # For networking between AI and Interface
 
 # Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
 include(GoogleTest)
 enable_testing()
+
+# Enable C++ Modules support for Cmake
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API 2182bf5c-ef0d-489a-91da-49dbc3090d2a)
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
 
 # Testing compiler cxx support
 check_cxx_compiler_flag(-std=c++20 COMPILER_SUPPORTS_CXX_20)
@@ -46,7 +51,7 @@ else ()
 endif ()
 
 # Build type compile flags
-set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-g" "-Og" "-Wall" "-Wextra" "-Wnon-virtual-dtor" "-pedantic" "-fdiagnostics-color=always")
+set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-g" "-O0" "-Wall" "-Wextra" "-Wnon-virtual-dtor" "-pedantic" "-fdiagnostics-color=always")
 set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=native" "-fdiagnostics-color=always")
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones

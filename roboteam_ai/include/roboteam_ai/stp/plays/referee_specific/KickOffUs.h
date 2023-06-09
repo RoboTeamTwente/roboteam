@@ -46,7 +46,7 @@ class KickOffUs : public Play {
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */
-    const char* getName() override;
+    const char* getName() const override;
 
     /**
      * @brief Checks if the passer has finished kickAtPos

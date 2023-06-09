@@ -127,42 +127,5 @@ class Constants {
 };
 
 }  // namespace rtt::ai
- /**
-  * @brief Enumerators for the different game state given by the referee
-  */
-enum class RefCommand {
-    /// OFFICIAL REFEREE GAME STATES ///
-    HALT = 0,
-    STOP = 1,
-    NORMAL_START = 2,
-    FORCED_START = 3,
-    PREPARE_KICKOFF_US = 4,
-    PREPARE_KICKOFF_THEM = 5,
-    PREPARE_PENALTY_US = 6,
-    PREPARE_PENALTY_THEM = 7,
-    DIRECT_FREE_US = 8,
-    DIRECT_FREE_THEM = 9,
-    INDIRECT_FREE_US = 10,
-    INDIRECT_FREE_THEM = 11,
-    TIMEOUT_US = 12,
-    TIMEOUT_THEM = 13,
-    GOAL_US = 14,
-    GOAL_THEM = 15,
-    BALL_PLACEMENT_US = 16,
-    BALL_PLACEMENT_THEM = 17,
-    PRE_HALF = 26,
-
-    /// CUSTOM GAME STATES ///
-    DO_KICKOFF = 18,
-    DEFEND_KICKOFF = 19,
-    DO_PENALTY = 20,
-    DEFEND_PENALTY = 21,
-    PREPARE_SHOOTOUT_US = 22,
-    PREPARE_SHOOTOUT_THEM = 23,
-    DO_SHOOTOUT = 24,
-    DEFEND_SHOOTOUT = 25,
-
-    UNDEFINED = -1
-};
 
 #endif  // ROBOTEAM_AI_CONSTANTS_H

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.22)
 project(roboteam_world)
 
 find_package(Eigen3 REQUIRED)

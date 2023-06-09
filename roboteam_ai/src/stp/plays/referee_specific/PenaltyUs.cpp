@@ -11,7 +11,7 @@
 #include "stp/roles/passive/Halt.h"
 
 namespace rtt::ai::stp::play {
-const char* PenaltyUs::getName() { return "Penalty Us"; }
+const char* PenaltyUs::getName() const { return "Penalty Us"; }
 
 PenaltyUs::PenaltyUs() : Play() {
     /// Evaluations that have to be true to be considered when changing plays.

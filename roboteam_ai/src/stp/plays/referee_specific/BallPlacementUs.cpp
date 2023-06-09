@@ -75,5 +75,5 @@ Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-const char* BallPlacementUs::getName() { return "Ball Placement Us"; }
+const char* BallPlacementUs::getName() const { return "Ball Placement Us"; }
 }  // namespace rtt::ai::stp::play

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stp/Play.hpp>
+
 #include "interface/widgets/mainWindow.h"
+#include "interface_api/InterfaceGateway.h"
 
 namespace rtt {
 
@@ -12,9 +14,10 @@ class STPManager {
    public:
     /**
      * @brief Constructs the STPManager with an interface
+     * @param interfaceGateway The interface that belongs to this AI
      * @param mainWindow The interface that belongs to this AI
      */
-    explicit STPManager(ai::interface::MainWindow* mainWindow);
+    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow* mainWindow);
 
    private:
     /**
@@ -22,14 +25,14 @@ class STPManager {
      */
     void runOneLoopCycle();
 
+
+    int tickCounter = 0; /**< Counter that keeps track of the ticks */
     bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
     ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
+    std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
 
-    /**
-     *
-     */
-    ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
+    static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 
     /**
      * @brief Function that decides whether to change plays given a world and field.
@@ -45,7 +48,7 @@ class STPManager {
      */
     void start(std::atomic_bool& exitApplication);
 
-    static inline std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
+    static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
 
     /**
      * @brief Delete copy constructor of the STPManager class

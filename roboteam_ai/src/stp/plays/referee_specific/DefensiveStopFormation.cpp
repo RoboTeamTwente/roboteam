@@ -78,5 +78,5 @@ Dealer::FlagMap DefensiveStopFormation::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-const char* DefensiveStopFormation::getName() { return "Defensive Stop Formation"; }
+const char* DefensiveStopFormation::getName() const { return "Defensive Stop Formation"; }
 }  // namespace rtt::ai::stp::play

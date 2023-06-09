@@ -14,16 +14,18 @@ namespace rtt::ai::stp {
  * If there is a play set in the interface, this play will be picked.
  */
 class PlayDecider {
-    static inline Play* interfacePlay; /**< play that's set from the interface in case it's overridden */
+//    static inline Play* interfacePlay; /**< play that's set from the interface in case it's overridden */
+//    static inline std::optional<std::string> interfacePlayStr;
 
    public:
     /**
      * @brief Sets the locked play, read variable above
      * @param play Play to lock to
      */
-    static void lockInterfacePlay(Play* play);
-
-    static bool interfacePlayChanged; /**< Bool indicating if the current play was manually changed in the interface */
+//    static void lockInterfacePlay(Play* play);
+//    static void lockInterfacePlay(const std::string playName);
+//
+//    static bool interfacePlayChanged; /**< Bool indicating if the current play was manually changed in the interface */
 
     /**
      * @brief This function checks if there is a locked play. If there is, pick that play.

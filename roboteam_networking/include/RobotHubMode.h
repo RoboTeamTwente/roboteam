@@ -9,7 +9,7 @@
 #include <string_view>
 #include <proto/GameSettings.pb.h>
 
-namespace rtt {
+namespace rtt::net {
     /**
      * Enumerator that tells where RobotHub should send the robot commands
      */
@@ -17,7 +17,7 @@ namespace rtt {
                         SIMULATOR,
                         BASESTATION };
 
-    inline std::string_view modeToString(RobotHubMode mode) {
+    inline std::string_view robotHubModeToString(RobotHubMode mode) {
         switch (mode) {
             case RobotHubMode::BASESTATION:
                 return "Basestation";
@@ -28,7 +28,7 @@ namespace rtt {
         }
     }
 
-    inline proto::GameSettings::RobotHubMode modeToProto(RobotHubMode mode) {
+    inline proto::GameSettings::RobotHubMode robotHubModeToProto(RobotHubMode mode) {
         switch (mode) {
             case RobotHubMode::BASESTATION:
                 return proto::GameSettings::BASESTATION;
@@ -39,7 +39,7 @@ namespace rtt {
         }
     }
 
-    inline RobotHubMode modeFromProto(proto::GameSettings::RobotHubMode mode) {
+    inline RobotHubMode robotHubModeFromProto(proto::GameSettings::RobotHubMode mode) {
         switch (mode) {
             case proto::GameSettings::BASESTATION:
                 return RobotHubMode::BASESTATION;

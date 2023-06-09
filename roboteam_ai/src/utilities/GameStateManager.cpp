@@ -2,7 +2,9 @@
 
 #include <roboteam_utils/Print.h>
 
+#include "interface_api/RuntimeConfig.h"
 #include "utilities/GameSettings.h"
+#include "utilities/StrategyManager.h"
 #include "world/World.hpp"
 
 namespace rtt::ai {
@@ -145,7 +147,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
 // Initialize static variables
 GameState GameStateManager::getCurrentGameState() {
     GameState newGameState;
-    if (interface::Output::usesRefereeCommands()) {
+    if (new_interface::RuntimeConfig::useReferee){
         newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
 
         if (GameSettings::isYellow()) {
@@ -153,6 +155,8 @@ GameState GameStateManager::getCurrentGameState() {
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();
         }
+
+        // TODO: FIX for the new config system
         // if there is a ref we set the interface gamestate to these values as well
         // this makes sure that when we stop using the referee we don't return to an unknown state,
         // // so now we keep the same.
@@ -168,7 +172,6 @@ void GameStateManager::forceNewGameState(RefCommand cmd, std::optional<rtt::worl
 
     // overwrite both the interface and the strategy manager.
     interface::Output::setInterfaceGameState(strategymanager.getRefGameStateForRefCommand(cmd));
-
     strategymanager.forceCurrentRefGameState(cmd, ball);
 }
 

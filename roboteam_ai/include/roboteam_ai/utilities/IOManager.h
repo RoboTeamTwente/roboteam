@@ -12,6 +12,7 @@
 #include <iostream>
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
+#include <string_view>
 
 namespace rtt::world {
 class World;
@@ -99,7 +100,7 @@ class IOManager {
 
     /**
      * @brief Get the time of the last state update in milliseconds since epoch
-     * @return The time 
+     * @return The time
      */
     uint64_t getStateTimeMs();
 

@@ -123,6 +123,6 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
 
     return false;
 }
-const char* KeeperKickBall::getName() { return "Keeper Kick Ball"; }
+const char* KeeperKickBall::getName() const { return "Keeper Kick Ball"; }
 
 }  // namespace rtt::ai::stp::play

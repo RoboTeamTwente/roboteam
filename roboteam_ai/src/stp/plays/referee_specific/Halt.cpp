@@ -42,5 +42,5 @@ Dealer::FlagMap Halt::decideRoleFlags() const noexcept {
 
 void Halt::calculateInfoForRoles() noexcept {}
 
-const char *Halt::getName() { return "Halt"; }
+const char *Halt::getName() const { return "Halt"; }
 }  // namespace rtt::ai::stp::play

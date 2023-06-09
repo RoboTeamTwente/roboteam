@@ -28,13 +28,12 @@ void Output::sendHaltCommand() {
     auto const &[_, world] = rtt::world::World::instance();
     // TODO: This check prevents a segfault when we don't have a world (roboteam_observer is off), but it should be checked earlier I think
     if (world->getWorld().has_value()) {
-        if (rtt::ai::Pause::getPause()) {
+        if (rtt::ai::Pause::isPaused()) {
             // Already halted so unhalt
-            rtt::ai::Pause::setPause(false);
+            rtt::ai::Pause::resume();
         } else {
-            rtt::ai::Pause::setPause(true);
             // grSim will continue moving the robots unless halt commands are explicitly sent
-            rtt::ai::Pause::haltRobots(world);
+            rtt::ai::Pause::pause(world->getWorld());
         }
     }
 

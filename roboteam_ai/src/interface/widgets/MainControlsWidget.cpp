@@ -4,12 +4,15 @@
 
 #include "interface/widgets/MainControlsWidget.h"
 
+#include <optional>
 #include <ostream>
 #include <stp/PlayDecider.hpp>
 #include <utilities/GameStateManager.hpp>
 
-#include "roboteam_utils/RobotHubMode.h"
+#include "RobotHubMode.h"
+#include "interface/api/Output.h"
 #include "utilities/GameSettings.h"
+#include "interface_api/RuntimeConfig.h"
 
 namespace rtt::ai::interface {
 
@@ -101,24 +104,30 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
     vLayout->addWidget(gameStateBox);
 
     // todo: figure out why this cast exists
-    QObject::connect(select_play, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), [=](int index) {
+    QObject::connect(select_play, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), [&](int index) {
         // if number == -1 then the plays were refreshed, hence just keep the current play
-        if (index == -1) {
-            return;
-        }
-        // simply plays[index] because they're inserted in-order
-        stp::PlayDecider::lockInterfacePlay(rtt::STPManager::plays[index].get());
-        GameStateManager::updateInterfaceGameState(rtt::STPManager::plays[index].get()->getName());
+        if (index == -1) { return; }
+
+        const auto playName = select_play->currentText().toStdString();
+        new_interface::RuntimeConfig::interfacePlay.push(playName);
+        GameStateManager::updateInterfaceGameState(playName.c_str());
+
+        //TODO: Fix for the new interface
+//        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
-    QObject::connect(select_goalie, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [=](const QString &goalieId) {
+    QObject::connect(select_goalie, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [&](const QString &goalieId) {
         // http://doc.qt.io/qt-5/qcombobox.html#currentIndexChanged-1
-        interface::Output::setKeeperId(goalieId.toInt());
+        interface::Output::setKeeperId(select_goalie->currentText().toInt());
+
+        // TODO: Fix for the new interface
+        // GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
-    QObject::connect(select_ruleset, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [=](const QString &rulesetName) {
+    QObject::connect(select_ruleset, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated), [&](const QString &rulesetName) {
         // http://doc.qt.io/qt-5/qcombobox.html#currentIndexChanged-1
         interface::Output::setRuleSetName(rulesetName.toStdString());
+//        GameStateManager::setGameStateFromInterface(select_play->currentText().toStdString(), select_ruleset->currentText().toStdString(), select_goalie->currentText().toInt());
     });
 
     setUseReferee(Output::usesRefereeCommands());
@@ -126,7 +135,7 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
 }
 
 void MainControlsWidget::setUseReferee(bool useRef) {
-    Output::setUseRefereeCommands(useRef);
+    new_interface::RuntimeConfig::useReferee = useRef;
 
     select_play->setDisabled(useRef);
     select_ruleset->setDisabled(useRef);
@@ -154,19 +163,22 @@ void MainControlsWidget::toggleOurSideParam() {
 /// toggle the the setting 'robotHubMode'
 void MainControlsWidget::toggleRobotHubModeParam() {
     switch (GameSettings::getRobotHubMode()) {
-        case RobotHubMode::BASESTATION: {
-            GameSettings::setRobotHubMode(RobotHubMode::SIMULATOR);
+        case net::RobotHubMode::BASESTATION: {
+            GameSettings::setRobotHubMode(net::RobotHubMode::SIMULATOR);
             break;
         }
-        case RobotHubMode::SIMULATOR: {
-            GameSettings::setRobotHubMode(RobotHubMode::BASESTATION);
+        case net::RobotHubMode::SIMULATOR: {
+            GameSettings::setRobotHubMode(net::RobotHubMode::BASESTATION);
             break;
         }
         default: {
             // In other cases, do not change anything
+            RTT_WARNING("Unknown RobotHubMode, not changing anything");
             break;
         }
     }
+
+    GameSettings::setYellow(GameSettings::isYellow());
 
     // Wether the setting has changed or not, update the text anyways
     setToggleRobotHubModeBtnLayout();
@@ -174,9 +186,14 @@ void MainControlsWidget::toggleRobotHubModeParam() {
 
 /// send a halt signal to stop all trees from executing
 void MainControlsWidget::sendPauseSignal() { 
-    Output::sendHaltCommand();
+    if (!rtt::ai::Pause::isPaused()) {
+        auto const& [_, world] = rtt::world::World::instance();
+        Pause::pause(world->getWorld());
+    } else {
+        Pause::resume();
+    }
 
-    if(rtt::ai::Pause::getPause()){
+    if(rtt::ai::Pause::isPaused()){
         pauseBtn->setText("Start");
         pauseBtn->setStyleSheet("background-color: #00cc00;");
     }else{
@@ -206,7 +223,7 @@ void MainControlsWidget::setToggleSideBtnLayout() const {
 }
 
 void MainControlsWidget::setToggleRobotHubModeBtnLayout() const {
-    std::string_view modeText = modeToString(GameSettings::getRobotHubMode());
+    std::string_view modeText = robotHubModeToString(GameSettings::getRobotHubMode());
 
     QString buttonText = QString::fromStdString(std::string(modeText));
     toggleRobotHubModeBtn->setText(buttonText);
@@ -242,6 +259,6 @@ void MainControlsWidget::updatePlays() {
     }
 }
 
-void MainControlsWidget::setIgnoreInvariants(bool ignore) { MainControlsWidget::ignoreInvariants = ignore; }
+void MainControlsWidget::setIgnoreInvariants(bool ignore) { new_interface::RuntimeConfig::ignoreInvariants = ignore; }
 
 }  // namespace rtt::ai::interface

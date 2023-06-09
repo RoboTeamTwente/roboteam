@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(roboteam_utils VERSION 0.1 DESCRIPTION "utils for Roboteam Twente")
 
 set(ROBOTEAM_UTILS_SRC

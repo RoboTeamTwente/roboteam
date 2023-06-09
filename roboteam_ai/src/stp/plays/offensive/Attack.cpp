@@ -183,6 +183,6 @@ bool Attack::shouldEndPlay() noexcept {
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role != nullptr && role->getName() == "striker" && role->finished(); });
 }
 
-const char* Attack::getName() { return "Attack"; }
+const char* Attack::getName() const { return "Attack"; }
 
 }  // namespace rtt::ai::stp::play

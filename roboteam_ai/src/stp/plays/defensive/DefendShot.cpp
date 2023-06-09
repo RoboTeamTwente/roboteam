@@ -175,11 +175,12 @@ void DefendShot::calculateInfoForKeeper() noexcept {
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }
 
+
 void DefendShot::calculateInfoForOffenders() noexcept {
     stpInfos["offender_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
 }
 
-const char* DefendShot::getName() { return "Defend Shot"; }
+const char* DefendShot::getName() const { return "Defend Shot"; }
 
 // If we have the ball we should end doing defendShot
 bool DefendShot::shouldEndPlay() noexcept {

@@ -52,7 +52,7 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     auto ball = previousWorld->getBall().value();
 
     double ballVelSquared = ball->velocity.length2();
-    const double frictionCoefficient = GameSettings::getRobotHubMode() == RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
     ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
 

@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(roboteam_ai)
 
 add_subdirectory(src)
 
 ###### UTILS #######
 add_library(roboteam_ai_utils
+        ${PROJECT_SOURCE_DIR}/src/utilities/StrategyManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/GameStateManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Constants.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Pause.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/RefGameState.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Dealer.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/IOManager.cpp
+        ${PROJECT_SOURCE_DIR}/src/utilities/RefCommand.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Settings.cpp
-        ${PROJECT_SOURCE_DIR}/src/utilities/StrategyManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/normalize.cpp
 )
 target_link_libraries(roboteam_ai_utils
@@ -149,8 +150,10 @@ target_include_directories(roboteam_ai_plays
 )
 target_link_libraries(roboteam_ai_plays
         PUBLIC roboteam_interface_utils_lib
+        PRIVATE ixwebsocket #TODO: Why do we need this dependency here?
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
+        PRIVATE roboteam_ai_interface
         PRIVATE Qt5::Widgets
         PRIVATE NFParam
 )
@@ -261,6 +264,7 @@ target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
+        PRIVATE roboteam_ai_interface
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 
@@ -300,13 +304,19 @@ add_library(roboteam_ai_interface
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/SettingsWidget.cpp
         ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
         # After removing the interface, only this file should remain
-        #${PROJECT_SOURCE_DIR}/src/interface/InterfaceControllerServer.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceGateway.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/Out.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/RuntimeConfig.cpp
+
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfacePublisher.cpp
+        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceSubscriber.cpp
 )
 target_include_directories(roboteam_ai_interface
         PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
+        PRIVATE ixwebsocket
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE roboteam_interface_utils_lib
@@ -343,6 +353,7 @@ target_include_directories(roboteam_ai
         PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai
+        PRIVATE ixwebsocket
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
@@ -382,6 +393,7 @@ target_compile_options(testHelpers PRIVATE "${COMPILER_FLAGS}")
 
 ###### TEST #######
 add_executable(roboteam_ai_tests
+        ${PROJECT_SOURCE_DIR}/src/STPManager.cpp
         ${PROJECT_SOURCE_DIR}/test/main.cpp
         ${PROJECT_SOURCE_DIR}/test/ControlTests/ControlUtilsTest.cpp
         ${PROJECT_SOURCE_DIR}/test/HelperTests/FieldHelperTest.cpp
@@ -405,12 +417,15 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE GTest::gtest
         PRIVATE GTest::gmock
         PRIVATE testHelpers
+        PRIVATE ixwebsocket
         PRIVATE roboteam_utils
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         # Watch out! The order of these libraries apparently matters!
+        PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
+        PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
         PRIVATE roboteam_ai_utils
@@ -418,9 +433,6 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation
         PRIVATE roboteam_ai_skills
-        PRIVATE roboteam_ai_control
-        PRIVATE roboteam_interface_utils_lib
-        PRIVATE roboteam_ai_interface
         )
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")
@@ -439,12 +451,12 @@ target_include_directories(positionScoringTest
 
 target_link_libraries(positionScoringTest
         PRIVATE Qt5::Widgets
+        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_networking
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation

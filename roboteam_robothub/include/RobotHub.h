@@ -19,7 +19,7 @@
 #include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
 #include <roboteam_utils/FileLogger.hpp>
-#include <roboteam_utils/RobotHubMode.h>
+#include <RobotHubMode.h>
 
 namespace rtt::robothub {
 
@@ -37,7 +37,7 @@ class RobotHub {
     std::unique_ptr<basestation::BasestationManager> basestationManager;
 
     proto::GameSettings settings;
-    rtt::RobotHubMode mode = rtt::RobotHubMode::UNKNOWN;
+    rtt::net::RobotHubMode mode = rtt::net::RobotHubMode::UNKNOWN;
 
     RobotHubStatistics statistics;
 

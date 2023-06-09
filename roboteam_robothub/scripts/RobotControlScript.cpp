@@ -1,11 +1,11 @@
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
-
-#include <iostream>
 #include <chrono>
-#include <thread>
+#include <iostream>
 #include <string>
-#include "roboteam_utils/RobotHubMode.h"
+#include <thread>
+
+#include "RobotHubMode.h"
 
 using namespace rtt::net;
 
@@ -42,7 +42,7 @@ bool shouldSendSettings = false;
 
 auto lastTimeCommandWasUsed = std::chrono::steady_clock::now();
 
-rtt::RobotHubMode currentMode = rtt::RobotHubMode::SIMULATOR;
+rtt::net::RobotHubMode currentMode = rtt::net::RobotHubMode::SIMULATOR;
 Team currentTeam = Team::NEITHER;
 Rotation currentRotation = Rotation::NO_ROTATION;
 Movement currentMovement = Movement::STILL;
@@ -154,7 +154,7 @@ void runSettingsSending() {
 
     while (shouldSendSettings) {
         proto::GameSettings settings;
-        settings.set_robot_hub_mode(currentMode == rtt::RobotHubMode::BASESTATION ? proto::GameSettings::BASESTATION : proto::GameSettings::SIMULATOR);
+        settings.set_robot_hub_mode(rtt::net::robotHubModeToProto(currentMode));
 
         settingsPublisher.publish(settings);
 
@@ -247,9 +247,9 @@ bool handleCommand(std::string cmd) {
         currentTeam = Team::BOTH;
         useDribbler = false;
     } else if (cmd == "BASESTATION") {
-        currentMode = rtt::RobotHubMode::BASESTATION;
+        currentMode = rtt::net::RobotHubMode::BASESTATION;
     } else if (cmd == "SIMULATION") {
-        currentMode = rtt::RobotHubMode::SIMULATOR;
+        currentMode = rtt::net::RobotHubMode::SIMULATOR;
     } else if (cmd == "NEITHER") {
         currentTeam = Team::NEITHER;
     } else if (cmd == "YELLOW") {
@@ -375,7 +375,7 @@ void printStatus() {
               << " of "
               << targetTeamToString()
               << " from "
-              << rtt::modeToString(currentMode)
+              << rtt::net::robotHubModeToString(currentMode)
               << std::endl;
 }
 

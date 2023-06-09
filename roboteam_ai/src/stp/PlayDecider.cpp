@@ -3,20 +3,21 @@
 //
 
 #include "stp/PlayDecider.hpp"
+#include "interface_api/RuntimeConfig.h"
 
 #include <roboteam_utils/Print.h>
 #include "interface/widgets/MainControlsWidget.h"
 
 namespace rtt::ai::stp {
 
-bool PlayDecider::interfacePlayChanged = false;
+//bool PlayDecider::interfacePlayChanged = false;
 
 Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vector<std::unique_ptr<ai::stp::Play>>& plays) noexcept {
     std::vector<Play*> validPlays;
     // Only add plays that are valid
     for (auto& each : plays) {
         
-        if (interface::MainControlsWidget::ignoreInvariants || each->isValidPlayToStart()) {
+        if (new_interface::RuntimeConfig::ignoreInvariants || each->isValidPlayToStart()) {
             validPlays.push_back(each.get());
         }
     }
@@ -28,10 +29,21 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
         playsWithScores.emplace_back(play, play->score(field));
     }
 
-    if (interfacePlay) {
-        interfacePlayChanged = false;
-        return interfacePlay;
-    }
+//    if (const auto interfacePlay = rtt::ai::new_interface::RuntimeConfig::interfacePlay.pop()) {
+//        return getPlayForName(interfacePlay->first, plays);
+//    }
+
+//    // For the OLD interface!
+//    if (interfacePlay) {
+//        interfacePlayChanged = false;
+//        return interfacePlay;
+//    }
+//
+//    // For the NEW interface!
+//    if (interfacePlayStr.has_value()) {
+//        interfacePlayChanged = false;
+//        return getPlayForName(interfacePlayStr.value(), plays);
+//    }
 
     // If there are no valid plays, default to defend pass
     if (playsWithScores.empty()) {
@@ -43,10 +55,15 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
 }
 
 // This is only used by the interface to force new plays
-void PlayDecider::lockInterfacePlay(Play* play) {
-    PlayDecider::interfacePlayChanged = true;
-    interfacePlay = play;
-}
+//void PlayDecider::lockInterfacePlay(Play* play) {
+//    PlayDecider::interfacePlayChanged = true;
+//    interfacePlay = play;
+//}
+//
+//void PlayDecider::lockInterfacePlay(const std::string playName) {
+//    PlayDecider::interfacePlayChanged = true;
+//    interfacePlayStr = std::move(playName);
+//}
 
 Play* PlayDecider::getPlayForName(std::string name, const std::vector<std::unique_ptr<ai::stp::Play>>& plays) {
     auto found = std::find_if(plays.begin(), plays.end(), [&](auto& play) { return play->getName() == name; });

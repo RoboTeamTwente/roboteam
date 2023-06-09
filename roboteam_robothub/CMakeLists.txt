@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(roboteam_robothub)
 
 # for MacOS X or iOS, watchOS, tvOS (since 3.10.3)

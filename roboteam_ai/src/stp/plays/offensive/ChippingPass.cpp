@@ -197,5 +197,5 @@ bool ChippingPass::shouldEndPlay() noexcept {
     return false;
 }
 
-const char* ChippingPass::getName() { return "ChippingPass"; }
+const char* ChippingPass::getName() const { return "ChippingPass"; }
 }  // namespace rtt::ai::stp::play

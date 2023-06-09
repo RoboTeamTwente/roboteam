@@ -9,6 +9,7 @@
 
 #include "Constants.h"
 #include "GameState.h"
+#include "RefCommand.h"
 #include "RuleSet.h"
 
 namespace rtt::ai {

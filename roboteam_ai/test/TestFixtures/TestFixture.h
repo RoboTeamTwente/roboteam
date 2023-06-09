@@ -18,6 +18,7 @@
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
+#include "RobotHubMode.h"
 
 /**
  * Plays are included here
@@ -57,11 +58,11 @@ class RTT_AI_Tests : public ::testing::Test {
         rtt::GameSettings::setPrimaryAI(true);
         rtt::GameSettings::setYellow(true);
         rtt::GameSettings::setLeft(true);
-        rtt::GameSettings::setRobotHubMode(rtt::RobotHubMode::SIMULATOR);
+        rtt::GameSettings::setRobotHubMode(rtt::net::RobotHubMode::SIMULATOR);
 
         // Set other variables to their default values
         rtt::ai::interface::Output::setKeeperId(-1);
-        rtt::ai::GameStateManager::forceNewGameState(RefCommand::NORMAL_START, std::nullopt);
+        rtt::ai::GameStateManager::forceNewGameState(rtt::RefCommand::NORMAL_START, std::nullopt);
         rtt::ai::interface::Output::setUseRefereeCommands(false);
 
         // Make sure all plays exist as new

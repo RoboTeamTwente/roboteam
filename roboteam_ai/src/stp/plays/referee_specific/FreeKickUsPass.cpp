@@ -147,5 +147,5 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
                1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score;
 }
 
-const char* FreeKickUsPass::getName() { return "Free Kick Us Pass"; }
+const char* FreeKickUsPass::getName() const { return "Free Kick Us Pass"; }
 }  // namespace rtt::ai::stp::play

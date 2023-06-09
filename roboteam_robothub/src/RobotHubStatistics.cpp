@@ -122,7 +122,7 @@ std::string RobotHubStatistics::getRunTime() const {
 }
 
 std::string RobotHubStatistics::getRobotHubMode() const {
-    std::string mode = std::string(rtt::modeToString(this->robotHubMode));
+    std::string mode = std::string(rtt::net::robotHubModeToString(this->robotHubMode));
     std::string text = formatString("%-11s", mode.c_str());
     return text;
 }

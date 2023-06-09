@@ -42,7 +42,7 @@ class DefendShot : public Play {
     /**
      * @brief Gets the play name
      */
-    const char* getName() override;
+    const char* getName() const override;
 
     /**
      * @brief Check if play should end

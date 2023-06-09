@@ -4,9 +4,9 @@
 #include <chrono>
 #include <roboteam_utils/RobotCommands.hpp>
 
+#include "RobotHubMode.h"
 #include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
-#include "roboteam_utils/RobotHubMode.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
@@ -72,7 +72,11 @@ void IOManager::handleState(const proto::State& stateMsg) {
         GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
         if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
+
         ai::GameStateManager::setRefereeData(state.referee(), data);
+
+        // TODO: Fix for new GameStateManager
+        //ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
     }
 }
 
@@ -82,7 +86,7 @@ void IOManager::publishSettings() {
     protoSetting.set_is_primary_ai(GameSettings::isPrimaryAI());
     protoSetting.set_is_left(GameSettings::isLeft());
     protoSetting.set_is_yellow(GameSettings::isYellow());
-    protoSetting.set_robot_hub_mode(modeToProto(GameSettings::getRobotHubMode()));
+    protoSetting.set_robot_hub_mode(robotHubModeToProto(GameSettings::getRobotHubMode()));
 
     if (this->settingsPublisher != nullptr) {
         this->settingsPublisher->publish(protoSetting);
@@ -106,7 +110,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 }
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
-    if (!pause->getPause() && !robotCommands.empty()) {
+    if (!Pause::isPaused() && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, GameSettings::isYellow());
@@ -123,6 +127,7 @@ bool IOManager::publishRobotCommands(const rtt::RobotCommands& aiCommand, bool f
     }
 
     if (!sentCommands) {
+        // TODO: Uncomment
         RTT_ERROR("Failed to send command: Publisher is not initialized (yet)");
     }
 

@@ -2,7 +2,6 @@
 // Created by baris on 15-2-19.
 //
 
-#include <roboteam_utils/Print.h>
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "utilities/IOManager.h"
@@ -10,16 +9,16 @@
 
 namespace rtt::ai {
 
-bool Pause::pause = false;
-std::mutex Pause::pauseLock;
+std::atomic<bool> Pause::state = false;
 
-bool Pause::getPause() {
-    std::lock_guard<std::mutex> lock(pauseLock);
-    return pause;
-}
+bool Pause::isPaused() { return state; }
+void Pause::pause(std::optional<rtt::world::view::WorldDataView> data) {
+    state = true;
+    if (!data) {
+        return;
+    }
 
-void Pause::haltRobots(rtt::world::World const* data) {
-    auto us = data->getWorld()->getUs();
+    auto us = data->getUs();
     std::vector<rtt::RobotCommand> commands;
     for (const auto& robot : us) {
         rtt::RobotCommand cmd = {};
@@ -32,11 +31,6 @@ void Pause::haltRobots(rtt::world::World const* data) {
     }
     io::io.publishAllRobotCommands(commands);
 }
-
-void Pause::setPause(bool set) {
-    RTT_INFO(set ? "Halting" : "Unhalting", " the AI")
-    std::lock_guard<std::mutex> lock(pauseLock);
-    pause = set;
-}
+void Pause::resume() { state = false; }
 
 }  // namespace rtt::ai

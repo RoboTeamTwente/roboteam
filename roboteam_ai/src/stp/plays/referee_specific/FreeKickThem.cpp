@@ -154,5 +154,5 @@ void FreeKickThem::calculateInfoForKeeper() noexcept {
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }
 
-const char* FreeKickThem::getName() { return "Free Kick Them"; }
+const char* FreeKickThem::getName() const { return "Free Kick Them"; }
 }  // namespace rtt::ai::stp::play

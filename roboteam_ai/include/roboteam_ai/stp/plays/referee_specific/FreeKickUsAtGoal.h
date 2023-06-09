@@ -60,7 +60,7 @@ class FreeKickUsAtGoal : public Play {
      * @brief Retrieves the name of the play
      * @return The name of the play as a string
      */
-    const char* getName() override;
+    const char* getName() const override;
 };
 
 }  // namespace rtt::ai::stp::play

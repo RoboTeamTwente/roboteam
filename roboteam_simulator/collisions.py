@@ -116,15 +116,19 @@ def ball_field_collision(field):
     @param field    The field which the game is played on
     """
     ball = field.ball
+    # Top
     if ball.pos_y - ball.size <= 0:
         ball.pos_y = 0 + ball.size
         ball.vel_y //= -2
+    # Bottom
     if ball.pos_y + ball.size >= field.size_y:
         ball.pos_y = field.size_y - ball.size
         ball.vel_y //= -2
+    # Left
     if ball.pos_x - ball.size <= 0:
         ball.pos_x = 0 + ball.size
         ball.vel_x //= -2
+    # Right
     if ball.pos_x + ball.size >= field.size_x:
         ball.pos_x = field.size_x - ball.size
         ball.vel_x //= -2

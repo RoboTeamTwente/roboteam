@@ -53,16 +53,19 @@ class RTTSimEnv(gym.Env):
         self.frame_number = 0
 
         super(RTTSimEnv, self).__init__()
+
         # Initialize the field
-        self.field = Field(12000, 9000)
-        # self.field = Field(1340, 1040)
+        self.field = Field()
+
+        # Create window to show simulator state in
         cv.namedWindow("RTTSim", cv.WND_PROP_FULLSCREEN)
         cv.resizeWindow("RTTSim", 1920, 1080)
 
-        # define observation space
+        # Define observation space (required for machine learning)
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(size(get_observation(self.field)),),
                                             dtype=np.float64)
 
+        # Hack to be able to access Publisher
         self.pub = None
 
     def update(self):

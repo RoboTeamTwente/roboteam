@@ -17,6 +17,12 @@ import numpy as np
 import cv2 as cv
 from dynamic_classes import Team, Ball
 
+# Global variables related to sizes
+border_size_x = 12000
+border_size_y = 9000
+
+border_margin = 500  # Distance between border and field
+
 
 class Goal:
     """! The goal class
@@ -152,20 +158,20 @@ class Border:
     Defines the borders of the playing area
     """
 
-    def __init__(self, size_x, size_y):
+    def __init__(self, field_size_x, field_size_y):
         """! Initializes the border
 
-        @param size_x   X-component of the size of the field
-        @param size_y   Y-component of the size of the field
+        @param field_size_x   X-component of the size of the field
+        @param field_size_y   Y-component of the size of the field
         """
         # Size of the border
-        self.size_x = int(1200 / 1340 * size_x)
-        self.size_y = int(900 / 1040 * size_y)
+        self.size_x = int(1200 / 1340 * field_size_x)
+        self.size_y = int(900 / 1040 * field_size_y)
         # Margins of the border
-        self.margin_left = int((size_x - self.size_x) / 2)
-        self.margin_top = int((size_y - self.size_y) / 2)
-        self.margin_right = int(size_x - ((size_x - self.size_x) / 2))
-        self.margin_bottom = int(size_y - ((size_y - self.size_y) / 2))
+        self.margin_left = int((field_size_x - self.size_x) / 2)
+        self.margin_top = int((field_size_y - self.size_y) / 2)
+        self.margin_right = int(field_size_x - ((field_size_x - self.size_x) / 2))
+        self.margin_bottom = int(field_size_y - ((field_size_y - self.size_y) / 2))
 
     def render(self, img):
         """! Render the border
@@ -184,15 +190,15 @@ class Field:
     Defines the Field including everything that belongs to the field
     """
 
-    def __init__(self, size_x, size_y):
+    def __init__(self, window_size_x, window_size_y):
         """! Initializes the field
 
-        @param size_x   X-component of the size of the screen
-        @param size_y   Y-component of the size of the screen
+        @param window_size_x   X-component of the size of the screen
+        @param window_size_y   Y-component of the size of the screen
         """
         # Size of the field
-        self.size_x = size_x
-        self.size_y = size_y
+        self.size_x = window_size_x
+        self.size_y = window_size_y
         # Border of the playing area
         self.border = Border(self.size_x, self.size_y)
         # Defense areas
@@ -210,8 +216,6 @@ class Field:
         # Teams
         self.yellowTeam = Team(11, "yellow")
         self.blueTeam = Team(11, "blue")
-        cv.namedWindow("RTTSim", cv.WND_PROP_FULLSCREEN)
-        cv.resizeWindow("RTTSim", 1920, 1080)
 
     def render(self, img):
         """! Render the field

@@ -169,6 +169,7 @@ class Team:
         for i in range(self.size):
             self.robots.append(Robot(self.side, i, 6000 - 200 * (i + 1) if side == "yellow" else 6000 + 200 * (i + 1), 1000))
 
+
     def render(self, img):
         """! Render all robots in the team
 

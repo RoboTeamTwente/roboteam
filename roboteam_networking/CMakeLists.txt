@@ -51,9 +51,9 @@ target_link_libraries(roboteam_networking_tests
 
 gtest_discover_tests(roboteam_networking_tests)
 
-add_executable(roboteam_networking_systest
+add_executable(roboteam_networking_syscheck
         system_tests/SendRobotCommands.cpp)
 
-target_link_libraries(roboteam_networking_systest
+target_link_libraries(roboteam_networking_syscheck
         PRIVATE roboteam_networking)
 

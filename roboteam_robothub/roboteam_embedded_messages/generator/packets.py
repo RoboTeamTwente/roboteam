@@ -18,7 +18,7 @@ generic_packet_header = [
 
     ["remVersion",  4,      None, "Version of roboteam_embedded_messages"],
     ["messageId",   4,      None, "messageId. Can be used for aligning packets"],
-    ["timestamp",  16,      None, "Timestamp in milliseconds"],
+    ["timestamp",  24,      None, "Timestamp in milliseconds"],
     ["payloadSize", 8,      None, "Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind"]
 ]
 

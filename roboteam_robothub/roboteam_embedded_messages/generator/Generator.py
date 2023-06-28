@@ -147,6 +147,8 @@ class Generator:
 		raise NotImplementedError()
 	def get_indent(self):
 		return ""
+	def to_float(self):
+		return ""
 
 	def to_begin(self, packet_name):
 		return ""
@@ -239,7 +241,9 @@ class Generator:
 				a, b = getConversion(n_bits, _range) # y = ax + b
 				variable_type = "" if self.convert_type(_type) is None else f"{self.convert_type(_type)} "
 				conversion_string  = f"{self.get_indent()}    {variable_type}_{variable_name} = {bitwise_operations_string};\n"
-				conversion_string += f"{self.get_indent()}    return (_{variable_name} * {a:.16f}) + {b:.16f};\n"
+				conversion_string += f"{self.get_indent()}    return (_{variable_name} * {a:.16f}{self.to_float()})"
+				if b != 0: conversion_string += f" + {b:.16f}{self.to_float()}"
+				conversion_string += ";\n"
 				return conversion_string
 
 
@@ -257,8 +261,8 @@ class Generator:
 			# Formula : y = ax + b => x = (y - b) / a
 			a, b = getConversion(n_bits, _range)
 			variable_type = "" if self.convert_type(_type) is None else f"{self.convert_type(_type)} "
-			subtract_string = f"{variable_name}" if b == 0 else f"({variable_name} {-b:+.16f})"
-			division_string = f" / {int(a)}" if int(a) == float(a) else f" / {a:.16f}"
+			subtract_string = f"{variable_name}" if b == 0 else f"({variable_name} {-b:+.16f}{self.to_float()})"
+			division_string = f" / {int(a)}" if int(a) == float(a) else f" / {a:.16f}{self.to_float()}"
 			calculation_string = self.cast_to_type(f"{subtract_string}{division_string}", _type)
 			conversion_string += f"{self.get_indent()}    {variable_type}_{variable_name} = {calculation_string};\n"
 			variable_name = f"_{variable_name}"
@@ -331,6 +335,8 @@ class C_Generator(Generator):
 		return f"{CamelCaseToAbbrev(packet_name)}p"
 	def get_payload_variable(self, packet_name):
 		return f"{self.get_payload_name(packet_name)}->payload"
+	def to_float(self):
+		return "F"
 
 	def to_begin(self, packet_name):
 		begin_string = ""

@@ -7,6 +7,7 @@
 
 #include "observer/filters/vision/ball/BallFilter.h"
 #include "observer/filters/vision/robot/RobotFilter.h"
+#include "observer/filters/vision/RobotTrajectorySegment.h"
 #include "DetectionFrame.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 #include "RobotFeedbackFilter.h"
@@ -43,7 +44,7 @@ class WorldFilter {
   robotMap blue;
   robotMap yellow;
   std::vector<BallFilter> balls;
-
+  std::vector<rtt::RobotTrajectorySegment> robotTrajectories;
   RobotParameters blueParams;
   RobotParameters yellowParams;
 
@@ -56,6 +57,8 @@ class WorldFilter {
   void processFrame(const DetectionFrame& frame);
   void processRobots(const DetectionFrame& frame, bool blueBots);
   void processBalls(const DetectionFrame& frame);
+  void getRobotTrajectories(int cameraID);
+  void getTeamRobotTrajectories(bool isBlue, int cameraID);
   [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time)  const;
   [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
   void addRobotPredictionsToMessage(proto::World& world, Time time) const;

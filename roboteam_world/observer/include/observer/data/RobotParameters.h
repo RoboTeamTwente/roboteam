@@ -16,6 +16,12 @@ public:
     [[nodiscard]] proto::RobotParameters toProto() const;
     static RobotParameters from_default();
     static RobotParameters from_rtt2020();
+
+    [[nodiscard]] double getRadius() const;
+    [[nodiscard]] double getHeight() const;
+    [[nodiscard]] double centerToFrontDistance() const;
+    [[nodiscard]] double getFrontWidth() const;
+
 private:
     double radius;
     double height;

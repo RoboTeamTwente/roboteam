@@ -9,7 +9,7 @@ import Robots from './robots-graphics.vue'
 import Ball from './ball-graphics.vue'
 import Field from './field-graphics.vue'
 import Visualizations from './pointer-location.vue'
-import PointerLocation from './visualizarions-graphics.vue'
+import PointerLocation from './visualizations-graphics.vue'
 import { useAiController } from '../composables/ai-controller'
 
 const canvas = ref<HTMLCanvasElement | null>(null),

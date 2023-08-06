@@ -91,23 +91,25 @@ int main(int argc, char** argv) {
     RTT_DEBUG("Initialize Interface Server");
     auto interfaceGateway = std::make_shared<rtt::ai::io::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677); /// Shared-prt because the variable is shared accross threads
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    // initialize the interface
-    QApplication application(argc, argv);
-    setDarkTheme();
-
-    // Todo make this a not-global-static thingy
-    window = new ui::MainWindow{};
-    window->setWindowState(Qt::WindowMaximized);
+    // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    // QApplication application(argc, argv);
+    // setDarkTheme();
+    // window = new ui::MainWindow{};
+    // window->setWindowState(Qt::WindowMaximized);
 
     //Create a flag which signals to the STP thread to stop if the interface is stopped
     std::atomic_bool exitApplication = false;
 
     std::thread stpThread(runStp, interfaceGateway, std::ref(exitApplication));
 
-    window->show();
-    bool runQT = application.exec();
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+
+    // window->show();
+    // bool runQT = application.exec();
+
     exitApplication = true;
     stpThread.join();
-    return runQT;
+    return false;
 }

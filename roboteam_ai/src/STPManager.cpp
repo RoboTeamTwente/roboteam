@@ -157,7 +157,7 @@ void STPManager::runOneLoopCycle() {
                 roboteam_utils::rotate(&packet);
             }
         }
-        mainWindow->updateProcessedVisionPackets(vision_packets);
+        // mainWindow->updateProcessedVisionPackets(vision_packets);
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);
@@ -220,7 +220,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         currentPlay->updateField(_world->getField().value());
     }
     currentPlay->update();
-    mainWindow->updatePlay(currentPlay);
+    // mainWindow->updatePlay(currentPlay);
 }
 
 STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow *mainWindow): interfaceGateway(std::move(interfaceGateway)) { this->mainWindow = mainWindow; }

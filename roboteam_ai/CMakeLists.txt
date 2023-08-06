@@ -316,6 +316,7 @@ target_include_directories(roboteam_ai_interface
 )
 target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
+        PRIVATE Qt5::Network
         PRIVATE ixwebsocket
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils

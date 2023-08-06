@@ -20,11 +20,13 @@ InterfaceGateway::~InterfaceGateway() = default;
 //// r = 114. t = 116. rtt = 11400+1160+116 = 12676
 
 InterfaceGateway::InterfaceGateway(int port)
-    : webSocketServer(port), publisher_(InterfacePublisher(webSocketServer)) {
+    : webSocketServer(port), publisher_(InterfacePublisher(webSocketServer)), subscriber_(std::make_unique<InterfaceSubscriber>()) {
     webSocketServer.setOnConnectionCallback([&](const std::weak_ptr<ix::WebSocket> webSocketPtr, const std::shared_ptr<ix::ConnectionState>& connectionState) {
         RTT_INFO("WebSocket connection incoming from ", connectionState->getRemoteIp());
+        
         webSocketPtr.lock()->setOnMessageCallback([&, webSocketPtr, connectionState](const std::unique_ptr<ix::WebSocketMessage>& msg) {
             RTT_INFO(connectionState->getRemoteIp(), ", ", connectionState->getId());
+            
             if (msg->type == ix::WebSocketMessageType::Open) [[unlikely]] {
                 RTT_INFO("Sending setup message to client");
                 connectionState->getId();

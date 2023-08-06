@@ -7,7 +7,7 @@
 #include "RobotHubMode.h"
 #include "interface/api/Output.h"
 #include "interface_api/RuntimeConfig.h"
-#include "proto/SimulationConfiguration.pb.h"
+#include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 #include "utilities/GameStateManager.hpp"
@@ -29,16 +29,19 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
             interface::Output::setRuleSetName(data.ruleset_name());
             new_interface::RuntimeConfig::interfacePlay.push(data.play_name());
         } break;
+        
         case proto::MsgFromInterface::kSetRuntimeConfig: {
             new_interface::RuntimeConfig::useReferee = message.set_runtime_config().use_referee();
             new_interface::RuntimeConfig::ignoreInvariants = message.set_runtime_config().ignore_invariants();
         } break;
+        
         case proto::MsgFromInterface::kSetGameSettings: {
             const auto& gameSettings = message.set_game_settings();
             GameSettings::setLeft(gameSettings.is_left());
             GameSettings::setYellow(gameSettings.is_yellow());
             GameSettings::setRobotHubMode(net::robotHubModeFromProto(gameSettings.robot_hub_mode()));
         } break;
+        
         case proto::MsgFromInterface::kPauseAi: {
             if (message.pause_ai()) {
                 auto const& [_, world] = rtt::world::World::instance();
@@ -47,9 +50,10 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
                 Pause::resume();
             }
         } break;
+        
         case proto::MsgFromInterface::kSetBallPos: {
             const auto& ballPos = message.set_ball_pos();
-            proto::SimulationConfiguration configuration;                    // Create packet
+            proto::SimulationConfiguration configuration;               // Create packet
             configuration.mutable_ball_location()->set_x(ballPos.x());  // Set x
             configuration.mutable_ball_location()->set_y(ballPos.y());  // Set y
 
@@ -58,10 +62,23 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
                 RTT_WARNING("Failed to send Simulation Configuration command. Is this the primary AI?")
             }
         } break;
+
+        case proto::MsgFromInterface::kSimulatorCommand: {
+            const SimulatorCommand& command = message.simulator_command();
+            sendPacketToSimulator(command);
+        } break;
+
         case proto::MsgFromInterface::KIND_NOT_SET:
             RTT_ERROR("Received message with no kind set");
             break;
     }
+}
+
+void InterfaceSubscriber::sendPacketToSimulator(const SimulatorCommand& packet) {
+    QByteArray datagram;
+    datagram.resize(packet.ByteSizeLong());
+    packet.SerializeToArray(datagram.data(), datagram.size());
+    auto bytesSent = simulator_socket.writeDatagram(datagram, QHostAddress::LocalHost, 10300);
 }
 
 }  // namespace rtt::ai::io

@@ -11,7 +11,6 @@
 namespace rtt::ai::io {
 class InterfaceGateway;
 class InterfaceSubscriber {
-    InterfaceSubscriber() = default;
 
    public:
     /**
@@ -21,6 +20,7 @@ class InterfaceSubscriber {
      * @param message The received message from the client.
      */
     void onMessage(const proto::MsgFromInterface&& message);
+    InterfaceSubscriber() = default;
 
    private:
     void sendPacketToSimulator(const SimulatorCommand& packet);

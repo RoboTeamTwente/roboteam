@@ -10646,6 +10646,9 @@ export namespace proto {
 
         /** MsgFromInterface setBallPos */
         setBallPos?: (proto.IVector2f|null);
+
+        /** MsgFromInterface simulatorCommand */
+        simulatorCommand?: (ISimulatorCommand|null);
     }
 
     /** Represents a MsgFromInterface. */
@@ -10672,8 +10675,11 @@ export namespace proto {
         /** MsgFromInterface setBallPos. */
         public setBallPos?: (proto.IVector2f|null);
 
+        /** MsgFromInterface simulatorCommand. */
+        public simulatorCommand?: (ISimulatorCommand|null);
+
         /** MsgFromInterface kind. */
-        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos");
+        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|"simulatorCommand");
 
         /**
          * Creates a new MsgFromInterface instance using the specified properties.
@@ -13279,6 +13285,605 @@ export namespace proto {
     }
 }
 
+/** Properties of a TeleportBall. */
+export interface ITeleportBall {
+
+    /** TeleportBall x */
+    x?: (number|null);
+
+    /** TeleportBall y */
+    y?: (number|null);
+
+    /** TeleportBall z */
+    z?: (number|null);
+
+    /** TeleportBall vx */
+    vx?: (number|null);
+
+    /** TeleportBall vy */
+    vy?: (number|null);
+
+    /** TeleportBall vz */
+    vz?: (number|null);
+
+    /** TeleportBall teleportSafely */
+    teleportSafely?: (boolean|null);
+
+    /** TeleportBall roll */
+    roll?: (boolean|null);
+
+    /** TeleportBall byForce */
+    byForce?: (boolean|null);
+}
+
+/** Represents a TeleportBall. */
+export class TeleportBall implements ITeleportBall {
+
+    /**
+     * Constructs a new TeleportBall.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ITeleportBall);
+
+    /** TeleportBall x. */
+    public x: number;
+
+    /** TeleportBall y. */
+    public y: number;
+
+    /** TeleportBall z. */
+    public z: number;
+
+    /** TeleportBall vx. */
+    public vx: number;
+
+    /** TeleportBall vy. */
+    public vy: number;
+
+    /** TeleportBall vz. */
+    public vz: number;
+
+    /** TeleportBall teleportSafely. */
+    public teleportSafely: boolean;
+
+    /** TeleportBall roll. */
+    public roll: boolean;
+
+    /** TeleportBall byForce. */
+    public byForce: boolean;
+
+    /**
+     * Creates a new TeleportBall instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns TeleportBall instance
+     */
+    public static create(properties?: ITeleportBall): TeleportBall;
+
+    /**
+     * Encodes the specified TeleportBall message. Does not implicitly {@link TeleportBall.verify|verify} messages.
+     * @param message TeleportBall message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ITeleportBall, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified TeleportBall message, length delimited. Does not implicitly {@link TeleportBall.verify|verify} messages.
+     * @param message TeleportBall message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: ITeleportBall, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a TeleportBall message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns TeleportBall
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TeleportBall;
+
+    /**
+     * Decodes a TeleportBall message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns TeleportBall
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): TeleportBall;
+
+    /**
+     * Verifies a TeleportBall message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a TeleportBall message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns TeleportBall
+     */
+    public static fromObject(object: { [k: string]: any }): TeleportBall;
+
+    /**
+     * Creates a plain object from a TeleportBall message. Also converts values to other types if specified.
+     * @param message TeleportBall
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: TeleportBall, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this TeleportBall to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for TeleportBall
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a TeleportRobot. */
+export interface ITeleportRobot {
+
+    /** TeleportRobot id */
+    id: IRobotId;
+
+    /** TeleportRobot x */
+    x?: (number|null);
+
+    /** TeleportRobot y */
+    y?: (number|null);
+
+    /** TeleportRobot orientation */
+    orientation?: (number|null);
+
+    /** TeleportRobot vX */
+    vX?: (number|null);
+
+    /** TeleportRobot vY */
+    vY?: (number|null);
+
+    /** TeleportRobot vAngular */
+    vAngular?: (number|null);
+
+    /** TeleportRobot present */
+    present?: (boolean|null);
+
+    /** TeleportRobot byForce */
+    byForce?: (boolean|null);
+}
+
+/** Represents a TeleportRobot. */
+export class TeleportRobot implements ITeleportRobot {
+
+    /**
+     * Constructs a new TeleportRobot.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ITeleportRobot);
+
+    /** TeleportRobot id. */
+    public id: IRobotId;
+
+    /** TeleportRobot x. */
+    public x: number;
+
+    /** TeleportRobot y. */
+    public y: number;
+
+    /** TeleportRobot orientation. */
+    public orientation: number;
+
+    /** TeleportRobot vX. */
+    public vX: number;
+
+    /** TeleportRobot vY. */
+    public vY: number;
+
+    /** TeleportRobot vAngular. */
+    public vAngular: number;
+
+    /** TeleportRobot present. */
+    public present: boolean;
+
+    /** TeleportRobot byForce. */
+    public byForce: boolean;
+
+    /**
+     * Creates a new TeleportRobot instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns TeleportRobot instance
+     */
+    public static create(properties?: ITeleportRobot): TeleportRobot;
+
+    /**
+     * Encodes the specified TeleportRobot message. Does not implicitly {@link TeleportRobot.verify|verify} messages.
+     * @param message TeleportRobot message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ITeleportRobot, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified TeleportRobot message, length delimited. Does not implicitly {@link TeleportRobot.verify|verify} messages.
+     * @param message TeleportRobot message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: ITeleportRobot, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a TeleportRobot message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns TeleportRobot
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TeleportRobot;
+
+    /**
+     * Decodes a TeleportRobot message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns TeleportRobot
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): TeleportRobot;
+
+    /**
+     * Verifies a TeleportRobot message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a TeleportRobot message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns TeleportRobot
+     */
+    public static fromObject(object: { [k: string]: any }): TeleportRobot;
+
+    /**
+     * Creates a plain object from a TeleportRobot message. Also converts values to other types if specified.
+     * @param message TeleportRobot
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: TeleportRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this TeleportRobot to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for TeleportRobot
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a SimulatorControl. */
+export interface ISimulatorControl {
+
+    /** SimulatorControl teleportBall */
+    teleportBall?: (ITeleportBall|null);
+
+    /** SimulatorControl teleportRobot */
+    teleportRobot?: (ITeleportRobot[]|null);
+
+    /** SimulatorControl simulationSpeed */
+    simulationSpeed?: (number|null);
+}
+
+/** Represents a SimulatorControl. */
+export class SimulatorControl implements ISimulatorControl {
+
+    /**
+     * Constructs a new SimulatorControl.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ISimulatorControl);
+
+    /** SimulatorControl teleportBall. */
+    public teleportBall?: (ITeleportBall|null);
+
+    /** SimulatorControl teleportRobot. */
+    public teleportRobot: ITeleportRobot[];
+
+    /** SimulatorControl simulationSpeed. */
+    public simulationSpeed: number;
+
+    /**
+     * Creates a new SimulatorControl instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns SimulatorControl instance
+     */
+    public static create(properties?: ISimulatorControl): SimulatorControl;
+
+    /**
+     * Encodes the specified SimulatorControl message. Does not implicitly {@link SimulatorControl.verify|verify} messages.
+     * @param message SimulatorControl message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ISimulatorControl, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified SimulatorControl message, length delimited. Does not implicitly {@link SimulatorControl.verify|verify} messages.
+     * @param message SimulatorControl message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: ISimulatorControl, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a SimulatorControl message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns SimulatorControl
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorControl;
+
+    /**
+     * Decodes a SimulatorControl message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns SimulatorControl
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorControl;
+
+    /**
+     * Verifies a SimulatorControl message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a SimulatorControl message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns SimulatorControl
+     */
+    public static fromObject(object: { [k: string]: any }): SimulatorControl;
+
+    /**
+     * Creates a plain object from a SimulatorControl message. Also converts values to other types if specified.
+     * @param message SimulatorControl
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: SimulatorControl, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this SimulatorControl to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for SimulatorControl
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a SimulatorCommand. */
+export interface ISimulatorCommand {
+
+    /** SimulatorCommand control */
+    control?: (ISimulatorControl|null);
+
+    /** SimulatorCommand config */
+    config?: (ISimulatorConfig|null);
+}
+
+/** Represents a SimulatorCommand. */
+export class SimulatorCommand implements ISimulatorCommand {
+
+    /**
+     * Constructs a new SimulatorCommand.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ISimulatorCommand);
+
+    /** SimulatorCommand control. */
+    public control?: (ISimulatorControl|null);
+
+    /** SimulatorCommand config. */
+    public config?: (ISimulatorConfig|null);
+
+    /**
+     * Creates a new SimulatorCommand instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns SimulatorCommand instance
+     */
+    public static create(properties?: ISimulatorCommand): SimulatorCommand;
+
+    /**
+     * Encodes the specified SimulatorCommand message. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
+     * @param message SimulatorCommand message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ISimulatorCommand, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified SimulatorCommand message, length delimited. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
+     * @param message SimulatorCommand message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: ISimulatorCommand, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a SimulatorCommand message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns SimulatorCommand
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorCommand;
+
+    /**
+     * Decodes a SimulatorCommand message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns SimulatorCommand
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorCommand;
+
+    /**
+     * Verifies a SimulatorCommand message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a SimulatorCommand message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns SimulatorCommand
+     */
+    public static fromObject(object: { [k: string]: any }): SimulatorCommand;
+
+    /**
+     * Creates a plain object from a SimulatorCommand message. Also converts values to other types if specified.
+     * @param message SimulatorCommand
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: SimulatorCommand, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this SimulatorCommand to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for SimulatorCommand
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Properties of a SimulatorResponse. */
+export interface ISimulatorResponse {
+
+    /** SimulatorResponse errors */
+    errors?: (ISimulatorError[]|null);
+}
+
+/** Represents a SimulatorResponse. */
+export class SimulatorResponse implements ISimulatorResponse {
+
+    /**
+     * Constructs a new SimulatorResponse.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: ISimulatorResponse);
+
+    /** SimulatorResponse errors. */
+    public errors: ISimulatorError[];
+
+    /**
+     * Creates a new SimulatorResponse instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns SimulatorResponse instance
+     */
+    public static create(properties?: ISimulatorResponse): SimulatorResponse;
+
+    /**
+     * Encodes the specified SimulatorResponse message. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
+     * @param message SimulatorResponse message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: ISimulatorResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified SimulatorResponse message, length delimited. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
+     * @param message SimulatorResponse message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: ISimulatorResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a SimulatorResponse message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns SimulatorResponse
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorResponse;
+
+    /**
+     * Decodes a SimulatorResponse message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns SimulatorResponse
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorResponse;
+
+    /**
+     * Verifies a SimulatorResponse message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a SimulatorResponse message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns SimulatorResponse
+     */
+    public static fromObject(object: { [k: string]: any }): SimulatorResponse;
+
+    /**
+     * Creates a plain object from a SimulatorResponse message. Also converts values to other types if specified.
+     * @param message SimulatorResponse
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: SimulatorResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this SimulatorResponse to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for SimulatorResponse
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
 /** Team enum. */
 export enum Team {
     UNKNOWN = 0,
@@ -14959,513 +15564,6 @@ export namespace google {
             public static getTypeUrl(typeUrlPrefix?: string): string;
         }
     }
-}
-
-/** Represents a TeleportBall. */
-export class TeleportBall implements ITeleportBall {
-
-    /**
-     * Constructs a new TeleportBall.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ITeleportBall);
-
-    /** TeleportBall x. */
-    public x: number;
-
-    /** TeleportBall y. */
-    public y: number;
-
-    /** TeleportBall z. */
-    public z: number;
-
-    /** TeleportBall vx. */
-    public vx: number;
-
-    /** TeleportBall vy. */
-    public vy: number;
-
-    /** TeleportBall vz. */
-    public vz: number;
-
-    /** TeleportBall teleportSafely. */
-    public teleportSafely: boolean;
-
-    /** TeleportBall roll. */
-    public roll: boolean;
-
-    /** TeleportBall byForce. */
-    public byForce: boolean;
-
-    /**
-     * Creates a new TeleportBall instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns TeleportBall instance
-     */
-    public static create(properties?: ITeleportBall): TeleportBall;
-
-    /**
-     * Encodes the specified TeleportBall message. Does not implicitly {@link TeleportBall.verify|verify} messages.
-     * @param message TeleportBall message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ITeleportBall, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified TeleportBall message, length delimited. Does not implicitly {@link TeleportBall.verify|verify} messages.
-     * @param message TeleportBall message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: ITeleportBall, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a TeleportBall message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns TeleportBall
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TeleportBall;
-
-    /**
-     * Decodes a TeleportBall message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns TeleportBall
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): TeleportBall;
-
-    /**
-     * Verifies a TeleportBall message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a TeleportBall message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns TeleportBall
-     */
-    public static fromObject(object: { [k: string]: any }): TeleportBall;
-
-    /**
-     * Creates a plain object from a TeleportBall message. Also converts values to other types if specified.
-     * @param message TeleportBall
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: TeleportBall, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this TeleportBall to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for TeleportBall
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Represents a TeleportRobot. */
-export class TeleportRobot implements ITeleportRobot {
-
-    /**
-     * Constructs a new TeleportRobot.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ITeleportRobot);
-
-    /** TeleportRobot id. */
-    public id: IRobotId;
-
-    /** TeleportRobot x. */
-    public x: number;
-
-    /** TeleportRobot y. */
-    public y: number;
-
-    /** TeleportRobot orientation. */
-    public orientation: number;
-
-    /** TeleportRobot vX. */
-    public vX: number;
-
-    /** TeleportRobot vY. */
-    public vY: number;
-
-    /** TeleportRobot vAngular. */
-    public vAngular: number;
-
-    /** TeleportRobot present. */
-    public present: boolean;
-
-    /** TeleportRobot byForce. */
-    public byForce: boolean;
-
-    /**
-     * Creates a new TeleportRobot instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns TeleportRobot instance
-     */
-    public static create(properties?: ITeleportRobot): TeleportRobot;
-
-    /**
-     * Encodes the specified TeleportRobot message. Does not implicitly {@link TeleportRobot.verify|verify} messages.
-     * @param message TeleportRobot message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ITeleportRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified TeleportRobot message, length delimited. Does not implicitly {@link TeleportRobot.verify|verify} messages.
-     * @param message TeleportRobot message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: ITeleportRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a TeleportRobot message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns TeleportRobot
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TeleportRobot;
-
-    /**
-     * Decodes a TeleportRobot message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns TeleportRobot
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): TeleportRobot;
-
-    /**
-     * Verifies a TeleportRobot message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a TeleportRobot message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns TeleportRobot
-     */
-    public static fromObject(object: { [k: string]: any }): TeleportRobot;
-
-    /**
-     * Creates a plain object from a TeleportRobot message. Also converts values to other types if specified.
-     * @param message TeleportRobot
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: TeleportRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this TeleportRobot to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for TeleportRobot
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Represents a SimulatorControl. */
-export class SimulatorControl implements ISimulatorControl {
-
-    /**
-     * Constructs a new SimulatorControl.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ISimulatorControl);
-
-    /** SimulatorControl teleportBall. */
-    public teleportBall?: (ITeleportBall|null);
-
-    /** SimulatorControl teleportRobot. */
-    public teleportRobot: ITeleportRobot[];
-
-    /** SimulatorControl simulationSpeed. */
-    public simulationSpeed: number;
-
-    /**
-     * Creates a new SimulatorControl instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns SimulatorControl instance
-     */
-    public static create(properties?: ISimulatorControl): SimulatorControl;
-
-    /**
-     * Encodes the specified SimulatorControl message. Does not implicitly {@link SimulatorControl.verify|verify} messages.
-     * @param message SimulatorControl message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ISimulatorControl, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified SimulatorControl message, length delimited. Does not implicitly {@link SimulatorControl.verify|verify} messages.
-     * @param message SimulatorControl message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: ISimulatorControl, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a SimulatorControl message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns SimulatorControl
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorControl;
-
-    /**
-     * Decodes a SimulatorControl message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns SimulatorControl
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorControl;
-
-    /**
-     * Verifies a SimulatorControl message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a SimulatorControl message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns SimulatorControl
-     */
-    public static fromObject(object: { [k: string]: any }): SimulatorControl;
-
-    /**
-     * Creates a plain object from a SimulatorControl message. Also converts values to other types if specified.
-     * @param message SimulatorControl
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: SimulatorControl, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this SimulatorControl to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for SimulatorControl
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Represents a SimulatorCommand. */
-export class SimulatorCommand implements ISimulatorCommand {
-
-    /**
-     * Constructs a new SimulatorCommand.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ISimulatorCommand);
-
-    /** SimulatorCommand control. */
-    public control?: (ISimulatorControl|null);
-
-    /** SimulatorCommand config. */
-    public config?: (ISimulatorConfig|null);
-
-    /**
-     * Creates a new SimulatorCommand instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns SimulatorCommand instance
-     */
-    public static create(properties?: ISimulatorCommand): SimulatorCommand;
-
-    /**
-     * Encodes the specified SimulatorCommand message. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
-     * @param message SimulatorCommand message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ISimulatorCommand, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified SimulatorCommand message, length delimited. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
-     * @param message SimulatorCommand message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: ISimulatorCommand, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a SimulatorCommand message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns SimulatorCommand
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorCommand;
-
-    /**
-     * Decodes a SimulatorCommand message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns SimulatorCommand
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorCommand;
-
-    /**
-     * Verifies a SimulatorCommand message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a SimulatorCommand message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns SimulatorCommand
-     */
-    public static fromObject(object: { [k: string]: any }): SimulatorCommand;
-
-    /**
-     * Creates a plain object from a SimulatorCommand message. Also converts values to other types if specified.
-     * @param message SimulatorCommand
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: SimulatorCommand, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this SimulatorCommand to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for SimulatorCommand
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Represents a SimulatorResponse. */
-export class SimulatorResponse implements ISimulatorResponse {
-
-    /**
-     * Constructs a new SimulatorResponse.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: ISimulatorResponse);
-
-    /** SimulatorResponse errors. */
-    public errors: ISimulatorError[];
-
-    /**
-     * Creates a new SimulatorResponse instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns SimulatorResponse instance
-     */
-    public static create(properties?: ISimulatorResponse): SimulatorResponse;
-
-    /**
-     * Encodes the specified SimulatorResponse message. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
-     * @param message SimulatorResponse message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: ISimulatorResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified SimulatorResponse message, length delimited. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
-     * @param message SimulatorResponse message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: ISimulatorResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a SimulatorResponse message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns SimulatorResponse
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SimulatorResponse;
-
-    /**
-     * Decodes a SimulatorResponse message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns SimulatorResponse
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SimulatorResponse;
-
-    /**
-     * Verifies a SimulatorResponse message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a SimulatorResponse message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns SimulatorResponse
-     */
-    public static fromObject(object: { [k: string]: any }): SimulatorResponse;
-
-    /**
-     * Creates a plain object from a SimulatorResponse message. Also converts values to other types if specified.
-     * @param message SimulatorResponse
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: SimulatorResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this SimulatorResponse to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for SimulatorResponse
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
 /** Represents a SimulatorError. */

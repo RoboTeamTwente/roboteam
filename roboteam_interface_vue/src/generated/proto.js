@@ -28630,6 +28630,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.IRuntimeConfig|null} [setRuntimeConfig] MsgFromInterface setRuntimeConfig
          * @property {boolean|null} [pauseAi] MsgFromInterface pauseAi
          * @property {proto.IVector2f|null} [setBallPos] MsgFromInterface setBallPos
+         * @property {ISimulatorCommand|null} [simulatorCommand] MsgFromInterface simulatorCommand
          */
 
         /**
@@ -28687,17 +28688,25 @@ export const proto = $root.proto = (() => {
          */
         MsgFromInterface.prototype.setBallPos = null;
 
+        /**
+         * MsgFromInterface simulatorCommand.
+         * @member {ISimulatorCommand|null|undefined} simulatorCommand
+         * @memberof proto.MsgFromInterface
+         * @instance
+         */
+        MsgFromInterface.prototype.simulatorCommand = null;
+
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MsgFromInterface kind.
-         * @member {"setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|undefined} kind
+         * @member {"setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|"simulatorCommand"|undefined} kind
          * @memberof proto.MsgFromInterface
          * @instance
          */
         Object.defineProperty(MsgFromInterface.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["setPlay", "setGameSettings", "setRuntimeConfig", "pauseAi", "setBallPos"]),
+            get: $util.oneOfGetter($oneOfFields = ["setPlay", "setGameSettings", "setRuntimeConfig", "pauseAi", "setBallPos", "simulatorCommand"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -28735,6 +28744,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.pauseAi);
             if (message.setBallPos != null && Object.hasOwnProperty.call(message, "setBallPos"))
                 $root.proto.Vector2f.encode(message.setBallPos, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.simulatorCommand != null && Object.hasOwnProperty.call(message, "simulatorCommand"))
+                $root.SimulatorCommand.encode(message.simulatorCommand, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -28787,6 +28798,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 5: {
                         message.setBallPos = $root.proto.Vector2f.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 6: {
+                        message.simulatorCommand = $root.SimulatorCommand.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -28870,6 +28885,16 @@ export const proto = $root.proto = (() => {
                         return "setBallPos." + error;
                 }
             }
+            if (message.simulatorCommand != null && message.hasOwnProperty("simulatorCommand")) {
+                if (properties.kind === 1)
+                    return "kind: multiple values";
+                properties.kind = 1;
+                {
+                    let error = $root.SimulatorCommand.verify(message.simulatorCommand);
+                    if (error)
+                        return "simulatorCommand." + error;
+                }
+            }
             return null;
         };
 
@@ -28906,6 +28931,11 @@ export const proto = $root.proto = (() => {
                 if (typeof object.setBallPos !== "object")
                     throw TypeError(".proto.MsgFromInterface.setBallPos: object expected");
                 message.setBallPos = $root.proto.Vector2f.fromObject(object.setBallPos);
+            }
+            if (object.simulatorCommand != null) {
+                if (typeof object.simulatorCommand !== "object")
+                    throw TypeError(".proto.MsgFromInterface.simulatorCommand: object expected");
+                message.simulatorCommand = $root.SimulatorCommand.fromObject(object.simulatorCommand);
             }
             return message;
         };
@@ -28947,6 +28977,11 @@ export const proto = $root.proto = (() => {
                 object.setBallPos = $root.proto.Vector2f.toObject(message.setBallPos, options);
                 if (options.oneofs)
                     object.kind = "setBallPos";
+            }
+            if (message.simulatorCommand != null && message.hasOwnProperty("simulatorCommand")) {
+                object.simulatorCommand = $root.SimulatorCommand.toObject(message.simulatorCommand, options);
+                if (options.oneofs)
+                    object.kind = "simulatorCommand";
             }
             return object;
         };
@@ -35877,6 +35912,1526 @@ export const proto = $root.proto = (() => {
     return proto;
 })();
 
+export const TeleportBall = $root.TeleportBall = (() => {
+
+    /**
+     * Properties of a TeleportBall.
+     * @exports ITeleportBall
+     * @interface ITeleportBall
+     * @property {number|null} [x] TeleportBall x
+     * @property {number|null} [y] TeleportBall y
+     * @property {number|null} [z] TeleportBall z
+     * @property {number|null} [vx] TeleportBall vx
+     * @property {number|null} [vy] TeleportBall vy
+     * @property {number|null} [vz] TeleportBall vz
+     * @property {boolean|null} [teleportSafely] TeleportBall teleportSafely
+     * @property {boolean|null} [roll] TeleportBall roll
+     * @property {boolean|null} [byForce] TeleportBall byForce
+     */
+
+    /**
+     * Constructs a new TeleportBall.
+     * @exports TeleportBall
+     * @classdesc Represents a TeleportBall.
+     * @implements ITeleportBall
+     * @constructor
+     * @param {ITeleportBall=} [properties] Properties to set
+     */
+    function TeleportBall(properties) {
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * TeleportBall x.
+     * @member {number} x
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.x = 0;
+
+    /**
+     * TeleportBall y.
+     * @member {number} y
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.y = 0;
+
+    /**
+     * TeleportBall z.
+     * @member {number} z
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.z = 0;
+
+    /**
+     * TeleportBall vx.
+     * @member {number} vx
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.vx = 0;
+
+    /**
+     * TeleportBall vy.
+     * @member {number} vy
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.vy = 0;
+
+    /**
+     * TeleportBall vz.
+     * @member {number} vz
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.vz = 0;
+
+    /**
+     * TeleportBall teleportSafely.
+     * @member {boolean} teleportSafely
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.teleportSafely = false;
+
+    /**
+     * TeleportBall roll.
+     * @member {boolean} roll
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.roll = false;
+
+    /**
+     * TeleportBall byForce.
+     * @member {boolean} byForce
+     * @memberof TeleportBall
+     * @instance
+     */
+    TeleportBall.prototype.byForce = false;
+
+    /**
+     * Creates a new TeleportBall instance using the specified properties.
+     * @function create
+     * @memberof TeleportBall
+     * @static
+     * @param {ITeleportBall=} [properties] Properties to set
+     * @returns {TeleportBall} TeleportBall instance
+     */
+    TeleportBall.create = function create(properties) {
+        return new TeleportBall(properties);
+    };
+
+    /**
+     * Encodes the specified TeleportBall message. Does not implicitly {@link TeleportBall.verify|verify} messages.
+     * @function encode
+     * @memberof TeleportBall
+     * @static
+     * @param {ITeleportBall} message TeleportBall message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    TeleportBall.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
+            writer.uint32(/* id 1, wireType 5 =*/13).float(message.x);
+        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
+            writer.uint32(/* id 2, wireType 5 =*/21).float(message.y);
+        if (message.z != null && Object.hasOwnProperty.call(message, "z"))
+            writer.uint32(/* id 3, wireType 5 =*/29).float(message.z);
+        if (message.vx != null && Object.hasOwnProperty.call(message, "vx"))
+            writer.uint32(/* id 4, wireType 5 =*/37).float(message.vx);
+        if (message.vy != null && Object.hasOwnProperty.call(message, "vy"))
+            writer.uint32(/* id 5, wireType 5 =*/45).float(message.vy);
+        if (message.vz != null && Object.hasOwnProperty.call(message, "vz"))
+            writer.uint32(/* id 6, wireType 5 =*/53).float(message.vz);
+        if (message.teleportSafely != null && Object.hasOwnProperty.call(message, "teleportSafely"))
+            writer.uint32(/* id 7, wireType 0 =*/56).bool(message.teleportSafely);
+        if (message.roll != null && Object.hasOwnProperty.call(message, "roll"))
+            writer.uint32(/* id 8, wireType 0 =*/64).bool(message.roll);
+        if (message.byForce != null && Object.hasOwnProperty.call(message, "byForce"))
+            writer.uint32(/* id 9, wireType 0 =*/72).bool(message.byForce);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified TeleportBall message, length delimited. Does not implicitly {@link TeleportBall.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof TeleportBall
+     * @static
+     * @param {ITeleportBall} message TeleportBall message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    TeleportBall.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a TeleportBall message from the specified reader or buffer.
+     * @function decode
+     * @memberof TeleportBall
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {TeleportBall} TeleportBall
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    TeleportBall.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.TeleportBall();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1: {
+                    message.x = reader.float();
+                    break;
+                }
+            case 2: {
+                    message.y = reader.float();
+                    break;
+                }
+            case 3: {
+                    message.z = reader.float();
+                    break;
+                }
+            case 4: {
+                    message.vx = reader.float();
+                    break;
+                }
+            case 5: {
+                    message.vy = reader.float();
+                    break;
+                }
+            case 6: {
+                    message.vz = reader.float();
+                    break;
+                }
+            case 7: {
+                    message.teleportSafely = reader.bool();
+                    break;
+                }
+            case 8: {
+                    message.roll = reader.bool();
+                    break;
+                }
+            case 9: {
+                    message.byForce = reader.bool();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a TeleportBall message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof TeleportBall
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {TeleportBall} TeleportBall
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    TeleportBall.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a TeleportBall message.
+     * @function verify
+     * @memberof TeleportBall
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    TeleportBall.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.x != null && message.hasOwnProperty("x"))
+            if (typeof message.x !== "number")
+                return "x: number expected";
+        if (message.y != null && message.hasOwnProperty("y"))
+            if (typeof message.y !== "number")
+                return "y: number expected";
+        if (message.z != null && message.hasOwnProperty("z"))
+            if (typeof message.z !== "number")
+                return "z: number expected";
+        if (message.vx != null && message.hasOwnProperty("vx"))
+            if (typeof message.vx !== "number")
+                return "vx: number expected";
+        if (message.vy != null && message.hasOwnProperty("vy"))
+            if (typeof message.vy !== "number")
+                return "vy: number expected";
+        if (message.vz != null && message.hasOwnProperty("vz"))
+            if (typeof message.vz !== "number")
+                return "vz: number expected";
+        if (message.teleportSafely != null && message.hasOwnProperty("teleportSafely"))
+            if (typeof message.teleportSafely !== "boolean")
+                return "teleportSafely: boolean expected";
+        if (message.roll != null && message.hasOwnProperty("roll"))
+            if (typeof message.roll !== "boolean")
+                return "roll: boolean expected";
+        if (message.byForce != null && message.hasOwnProperty("byForce"))
+            if (typeof message.byForce !== "boolean")
+                return "byForce: boolean expected";
+        return null;
+    };
+
+    /**
+     * Creates a TeleportBall message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof TeleportBall
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {TeleportBall} TeleportBall
+     */
+    TeleportBall.fromObject = function fromObject(object) {
+        if (object instanceof $root.TeleportBall)
+            return object;
+        let message = new $root.TeleportBall();
+        if (object.x != null)
+            message.x = Number(object.x);
+        if (object.y != null)
+            message.y = Number(object.y);
+        if (object.z != null)
+            message.z = Number(object.z);
+        if (object.vx != null)
+            message.vx = Number(object.vx);
+        if (object.vy != null)
+            message.vy = Number(object.vy);
+        if (object.vz != null)
+            message.vz = Number(object.vz);
+        if (object.teleportSafely != null)
+            message.teleportSafely = Boolean(object.teleportSafely);
+        if (object.roll != null)
+            message.roll = Boolean(object.roll);
+        if (object.byForce != null)
+            message.byForce = Boolean(object.byForce);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a TeleportBall message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof TeleportBall
+     * @static
+     * @param {TeleportBall} message TeleportBall
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    TeleportBall.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.defaults) {
+            object.x = 0;
+            object.y = 0;
+            object.z = 0;
+            object.vx = 0;
+            object.vy = 0;
+            object.vz = 0;
+            object.teleportSafely = false;
+            object.roll = false;
+            object.byForce = false;
+        }
+        if (message.x != null && message.hasOwnProperty("x"))
+            object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
+        if (message.y != null && message.hasOwnProperty("y"))
+            object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
+        if (message.z != null && message.hasOwnProperty("z"))
+            object.z = options.json && !isFinite(message.z) ? String(message.z) : message.z;
+        if (message.vx != null && message.hasOwnProperty("vx"))
+            object.vx = options.json && !isFinite(message.vx) ? String(message.vx) : message.vx;
+        if (message.vy != null && message.hasOwnProperty("vy"))
+            object.vy = options.json && !isFinite(message.vy) ? String(message.vy) : message.vy;
+        if (message.vz != null && message.hasOwnProperty("vz"))
+            object.vz = options.json && !isFinite(message.vz) ? String(message.vz) : message.vz;
+        if (message.teleportSafely != null && message.hasOwnProperty("teleportSafely"))
+            object.teleportSafely = message.teleportSafely;
+        if (message.roll != null && message.hasOwnProperty("roll"))
+            object.roll = message.roll;
+        if (message.byForce != null && message.hasOwnProperty("byForce"))
+            object.byForce = message.byForce;
+        return object;
+    };
+
+    /**
+     * Converts this TeleportBall to JSON.
+     * @function toJSON
+     * @memberof TeleportBall
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    TeleportBall.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for TeleportBall
+     * @function getTypeUrl
+     * @memberof TeleportBall
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    TeleportBall.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/TeleportBall";
+    };
+
+    return TeleportBall;
+})();
+
+export const TeleportRobot = $root.TeleportRobot = (() => {
+
+    /**
+     * Properties of a TeleportRobot.
+     * @exports ITeleportRobot
+     * @interface ITeleportRobot
+     * @property {IRobotId} id TeleportRobot id
+     * @property {number|null} [x] TeleportRobot x
+     * @property {number|null} [y] TeleportRobot y
+     * @property {number|null} [orientation] TeleportRobot orientation
+     * @property {number|null} [vX] TeleportRobot vX
+     * @property {number|null} [vY] TeleportRobot vY
+     * @property {number|null} [vAngular] TeleportRobot vAngular
+     * @property {boolean|null} [present] TeleportRobot present
+     * @property {boolean|null} [byForce] TeleportRobot byForce
+     */
+
+    /**
+     * Constructs a new TeleportRobot.
+     * @exports TeleportRobot
+     * @classdesc Represents a TeleportRobot.
+     * @implements ITeleportRobot
+     * @constructor
+     * @param {ITeleportRobot=} [properties] Properties to set
+     */
+    function TeleportRobot(properties) {
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * TeleportRobot id.
+     * @member {IRobotId} id
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.id = null;
+
+    /**
+     * TeleportRobot x.
+     * @member {number} x
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.x = 0;
+
+    /**
+     * TeleportRobot y.
+     * @member {number} y
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.y = 0;
+
+    /**
+     * TeleportRobot orientation.
+     * @member {number} orientation
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.orientation = 0;
+
+    /**
+     * TeleportRobot vX.
+     * @member {number} vX
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.vX = 0;
+
+    /**
+     * TeleportRobot vY.
+     * @member {number} vY
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.vY = 0;
+
+    /**
+     * TeleportRobot vAngular.
+     * @member {number} vAngular
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.vAngular = 0;
+
+    /**
+     * TeleportRobot present.
+     * @member {boolean} present
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.present = false;
+
+    /**
+     * TeleportRobot byForce.
+     * @member {boolean} byForce
+     * @memberof TeleportRobot
+     * @instance
+     */
+    TeleportRobot.prototype.byForce = false;
+
+    /**
+     * Creates a new TeleportRobot instance using the specified properties.
+     * @function create
+     * @memberof TeleportRobot
+     * @static
+     * @param {ITeleportRobot=} [properties] Properties to set
+     * @returns {TeleportRobot} TeleportRobot instance
+     */
+    TeleportRobot.create = function create(properties) {
+        return new TeleportRobot(properties);
+    };
+
+    /**
+     * Encodes the specified TeleportRobot message. Does not implicitly {@link TeleportRobot.verify|verify} messages.
+     * @function encode
+     * @memberof TeleportRobot
+     * @static
+     * @param {ITeleportRobot} message TeleportRobot message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    TeleportRobot.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        $root.RobotId.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
+            writer.uint32(/* id 2, wireType 5 =*/21).float(message.x);
+        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
+            writer.uint32(/* id 3, wireType 5 =*/29).float(message.y);
+        if (message.orientation != null && Object.hasOwnProperty.call(message, "orientation"))
+            writer.uint32(/* id 4, wireType 5 =*/37).float(message.orientation);
+        if (message.vX != null && Object.hasOwnProperty.call(message, "vX"))
+            writer.uint32(/* id 5, wireType 5 =*/45).float(message.vX);
+        if (message.vY != null && Object.hasOwnProperty.call(message, "vY"))
+            writer.uint32(/* id 6, wireType 5 =*/53).float(message.vY);
+        if (message.vAngular != null && Object.hasOwnProperty.call(message, "vAngular"))
+            writer.uint32(/* id 7, wireType 5 =*/61).float(message.vAngular);
+        if (message.present != null && Object.hasOwnProperty.call(message, "present"))
+            writer.uint32(/* id 8, wireType 0 =*/64).bool(message.present);
+        if (message.byForce != null && Object.hasOwnProperty.call(message, "byForce"))
+            writer.uint32(/* id 9, wireType 0 =*/72).bool(message.byForce);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified TeleportRobot message, length delimited. Does not implicitly {@link TeleportRobot.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof TeleportRobot
+     * @static
+     * @param {ITeleportRobot} message TeleportRobot message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    TeleportRobot.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a TeleportRobot message from the specified reader or buffer.
+     * @function decode
+     * @memberof TeleportRobot
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {TeleportRobot} TeleportRobot
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    TeleportRobot.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.TeleportRobot();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1: {
+                    message.id = $root.RobotId.decode(reader, reader.uint32());
+                    break;
+                }
+            case 2: {
+                    message.x = reader.float();
+                    break;
+                }
+            case 3: {
+                    message.y = reader.float();
+                    break;
+                }
+            case 4: {
+                    message.orientation = reader.float();
+                    break;
+                }
+            case 5: {
+                    message.vX = reader.float();
+                    break;
+                }
+            case 6: {
+                    message.vY = reader.float();
+                    break;
+                }
+            case 7: {
+                    message.vAngular = reader.float();
+                    break;
+                }
+            case 8: {
+                    message.present = reader.bool();
+                    break;
+                }
+            case 9: {
+                    message.byForce = reader.bool();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        if (!message.hasOwnProperty("id"))
+            throw $util.ProtocolError("missing required 'id'", { instance: message });
+        return message;
+    };
+
+    /**
+     * Decodes a TeleportRobot message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof TeleportRobot
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {TeleportRobot} TeleportRobot
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    TeleportRobot.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a TeleportRobot message.
+     * @function verify
+     * @memberof TeleportRobot
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    TeleportRobot.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        {
+            let error = $root.RobotId.verify(message.id);
+            if (error)
+                return "id." + error;
+        }
+        if (message.x != null && message.hasOwnProperty("x"))
+            if (typeof message.x !== "number")
+                return "x: number expected";
+        if (message.y != null && message.hasOwnProperty("y"))
+            if (typeof message.y !== "number")
+                return "y: number expected";
+        if (message.orientation != null && message.hasOwnProperty("orientation"))
+            if (typeof message.orientation !== "number")
+                return "orientation: number expected";
+        if (message.vX != null && message.hasOwnProperty("vX"))
+            if (typeof message.vX !== "number")
+                return "vX: number expected";
+        if (message.vY != null && message.hasOwnProperty("vY"))
+            if (typeof message.vY !== "number")
+                return "vY: number expected";
+        if (message.vAngular != null && message.hasOwnProperty("vAngular"))
+            if (typeof message.vAngular !== "number")
+                return "vAngular: number expected";
+        if (message.present != null && message.hasOwnProperty("present"))
+            if (typeof message.present !== "boolean")
+                return "present: boolean expected";
+        if (message.byForce != null && message.hasOwnProperty("byForce"))
+            if (typeof message.byForce !== "boolean")
+                return "byForce: boolean expected";
+        return null;
+    };
+
+    /**
+     * Creates a TeleportRobot message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof TeleportRobot
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {TeleportRobot} TeleportRobot
+     */
+    TeleportRobot.fromObject = function fromObject(object) {
+        if (object instanceof $root.TeleportRobot)
+            return object;
+        let message = new $root.TeleportRobot();
+        if (object.id != null) {
+            if (typeof object.id !== "object")
+                throw TypeError(".TeleportRobot.id: object expected");
+            message.id = $root.RobotId.fromObject(object.id);
+        }
+        if (object.x != null)
+            message.x = Number(object.x);
+        if (object.y != null)
+            message.y = Number(object.y);
+        if (object.orientation != null)
+            message.orientation = Number(object.orientation);
+        if (object.vX != null)
+            message.vX = Number(object.vX);
+        if (object.vY != null)
+            message.vY = Number(object.vY);
+        if (object.vAngular != null)
+            message.vAngular = Number(object.vAngular);
+        if (object.present != null)
+            message.present = Boolean(object.present);
+        if (object.byForce != null)
+            message.byForce = Boolean(object.byForce);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a TeleportRobot message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof TeleportRobot
+     * @static
+     * @param {TeleportRobot} message TeleportRobot
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    TeleportRobot.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.defaults) {
+            object.id = null;
+            object.x = 0;
+            object.y = 0;
+            object.orientation = 0;
+            object.vX = 0;
+            object.vY = 0;
+            object.vAngular = 0;
+            object.present = false;
+            object.byForce = false;
+        }
+        if (message.id != null && message.hasOwnProperty("id"))
+            object.id = $root.RobotId.toObject(message.id, options);
+        if (message.x != null && message.hasOwnProperty("x"))
+            object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
+        if (message.y != null && message.hasOwnProperty("y"))
+            object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
+        if (message.orientation != null && message.hasOwnProperty("orientation"))
+            object.orientation = options.json && !isFinite(message.orientation) ? String(message.orientation) : message.orientation;
+        if (message.vX != null && message.hasOwnProperty("vX"))
+            object.vX = options.json && !isFinite(message.vX) ? String(message.vX) : message.vX;
+        if (message.vY != null && message.hasOwnProperty("vY"))
+            object.vY = options.json && !isFinite(message.vY) ? String(message.vY) : message.vY;
+        if (message.vAngular != null && message.hasOwnProperty("vAngular"))
+            object.vAngular = options.json && !isFinite(message.vAngular) ? String(message.vAngular) : message.vAngular;
+        if (message.present != null && message.hasOwnProperty("present"))
+            object.present = message.present;
+        if (message.byForce != null && message.hasOwnProperty("byForce"))
+            object.byForce = message.byForce;
+        return object;
+    };
+
+    /**
+     * Converts this TeleportRobot to JSON.
+     * @function toJSON
+     * @memberof TeleportRobot
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    TeleportRobot.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for TeleportRobot
+     * @function getTypeUrl
+     * @memberof TeleportRobot
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    TeleportRobot.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/TeleportRobot";
+    };
+
+    return TeleportRobot;
+})();
+
+export const SimulatorControl = $root.SimulatorControl = (() => {
+
+    /**
+     * Properties of a SimulatorControl.
+     * @exports ISimulatorControl
+     * @interface ISimulatorControl
+     * @property {ITeleportBall|null} [teleportBall] SimulatorControl teleportBall
+     * @property {Array.<ITeleportRobot>|null} [teleportRobot] SimulatorControl teleportRobot
+     * @property {number|null} [simulationSpeed] SimulatorControl simulationSpeed
+     */
+
+    /**
+     * Constructs a new SimulatorControl.
+     * @exports SimulatorControl
+     * @classdesc Represents a SimulatorControl.
+     * @implements ISimulatorControl
+     * @constructor
+     * @param {ISimulatorControl=} [properties] Properties to set
+     */
+    function SimulatorControl(properties) {
+        this.teleportRobot = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * SimulatorControl teleportBall.
+     * @member {ITeleportBall|null|undefined} teleportBall
+     * @memberof SimulatorControl
+     * @instance
+     */
+    SimulatorControl.prototype.teleportBall = null;
+
+    /**
+     * SimulatorControl teleportRobot.
+     * @member {Array.<ITeleportRobot>} teleportRobot
+     * @memberof SimulatorControl
+     * @instance
+     */
+    SimulatorControl.prototype.teleportRobot = $util.emptyArray;
+
+    /**
+     * SimulatorControl simulationSpeed.
+     * @member {number} simulationSpeed
+     * @memberof SimulatorControl
+     * @instance
+     */
+    SimulatorControl.prototype.simulationSpeed = 0;
+
+    /**
+     * Creates a new SimulatorControl instance using the specified properties.
+     * @function create
+     * @memberof SimulatorControl
+     * @static
+     * @param {ISimulatorControl=} [properties] Properties to set
+     * @returns {SimulatorControl} SimulatorControl instance
+     */
+    SimulatorControl.create = function create(properties) {
+        return new SimulatorControl(properties);
+    };
+
+    /**
+     * Encodes the specified SimulatorControl message. Does not implicitly {@link SimulatorControl.verify|verify} messages.
+     * @function encode
+     * @memberof SimulatorControl
+     * @static
+     * @param {ISimulatorControl} message SimulatorControl message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorControl.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.teleportBall != null && Object.hasOwnProperty.call(message, "teleportBall"))
+            $root.TeleportBall.encode(message.teleportBall, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+        if (message.teleportRobot != null && message.teleportRobot.length)
+            for (let i = 0; i < message.teleportRobot.length; ++i)
+                $root.TeleportRobot.encode(message.teleportRobot[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+        if (message.simulationSpeed != null && Object.hasOwnProperty.call(message, "simulationSpeed"))
+            writer.uint32(/* id 3, wireType 5 =*/29).float(message.simulationSpeed);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified SimulatorControl message, length delimited. Does not implicitly {@link SimulatorControl.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof SimulatorControl
+     * @static
+     * @param {ISimulatorControl} message SimulatorControl message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorControl.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a SimulatorControl message from the specified reader or buffer.
+     * @function decode
+     * @memberof SimulatorControl
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {SimulatorControl} SimulatorControl
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorControl.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorControl();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1: {
+                    message.teleportBall = $root.TeleportBall.decode(reader, reader.uint32());
+                    break;
+                }
+            case 2: {
+                    if (!(message.teleportRobot && message.teleportRobot.length))
+                        message.teleportRobot = [];
+                    message.teleportRobot.push($root.TeleportRobot.decode(reader, reader.uint32()));
+                    break;
+                }
+            case 3: {
+                    message.simulationSpeed = reader.float();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a SimulatorControl message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof SimulatorControl
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {SimulatorControl} SimulatorControl
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorControl.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a SimulatorControl message.
+     * @function verify
+     * @memberof SimulatorControl
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    SimulatorControl.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.teleportBall != null && message.hasOwnProperty("teleportBall")) {
+            let error = $root.TeleportBall.verify(message.teleportBall);
+            if (error)
+                return "teleportBall." + error;
+        }
+        if (message.teleportRobot != null && message.hasOwnProperty("teleportRobot")) {
+            if (!Array.isArray(message.teleportRobot))
+                return "teleportRobot: array expected";
+            for (let i = 0; i < message.teleportRobot.length; ++i) {
+                let error = $root.TeleportRobot.verify(message.teleportRobot[i]);
+                if (error)
+                    return "teleportRobot." + error;
+            }
+        }
+        if (message.simulationSpeed != null && message.hasOwnProperty("simulationSpeed"))
+            if (typeof message.simulationSpeed !== "number")
+                return "simulationSpeed: number expected";
+        return null;
+    };
+
+    /**
+     * Creates a SimulatorControl message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof SimulatorControl
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {SimulatorControl} SimulatorControl
+     */
+    SimulatorControl.fromObject = function fromObject(object) {
+        if (object instanceof $root.SimulatorControl)
+            return object;
+        let message = new $root.SimulatorControl();
+        if (object.teleportBall != null) {
+            if (typeof object.teleportBall !== "object")
+                throw TypeError(".SimulatorControl.teleportBall: object expected");
+            message.teleportBall = $root.TeleportBall.fromObject(object.teleportBall);
+        }
+        if (object.teleportRobot) {
+            if (!Array.isArray(object.teleportRobot))
+                throw TypeError(".SimulatorControl.teleportRobot: array expected");
+            message.teleportRobot = [];
+            for (let i = 0; i < object.teleportRobot.length; ++i) {
+                if (typeof object.teleportRobot[i] !== "object")
+                    throw TypeError(".SimulatorControl.teleportRobot: object expected");
+                message.teleportRobot[i] = $root.TeleportRobot.fromObject(object.teleportRobot[i]);
+            }
+        }
+        if (object.simulationSpeed != null)
+            message.simulationSpeed = Number(object.simulationSpeed);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a SimulatorControl message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof SimulatorControl
+     * @static
+     * @param {SimulatorControl} message SimulatorControl
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    SimulatorControl.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.teleportRobot = [];
+        if (options.defaults) {
+            object.teleportBall = null;
+            object.simulationSpeed = 0;
+        }
+        if (message.teleportBall != null && message.hasOwnProperty("teleportBall"))
+            object.teleportBall = $root.TeleportBall.toObject(message.teleportBall, options);
+        if (message.teleportRobot && message.teleportRobot.length) {
+            object.teleportRobot = [];
+            for (let j = 0; j < message.teleportRobot.length; ++j)
+                object.teleportRobot[j] = $root.TeleportRobot.toObject(message.teleportRobot[j], options);
+        }
+        if (message.simulationSpeed != null && message.hasOwnProperty("simulationSpeed"))
+            object.simulationSpeed = options.json && !isFinite(message.simulationSpeed) ? String(message.simulationSpeed) : message.simulationSpeed;
+        return object;
+    };
+
+    /**
+     * Converts this SimulatorControl to JSON.
+     * @function toJSON
+     * @memberof SimulatorControl
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    SimulatorControl.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for SimulatorControl
+     * @function getTypeUrl
+     * @memberof SimulatorControl
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    SimulatorControl.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/SimulatorControl";
+    };
+
+    return SimulatorControl;
+})();
+
+export const SimulatorCommand = $root.SimulatorCommand = (() => {
+
+    /**
+     * Properties of a SimulatorCommand.
+     * @exports ISimulatorCommand
+     * @interface ISimulatorCommand
+     * @property {ISimulatorControl|null} [control] SimulatorCommand control
+     * @property {ISimulatorConfig|null} [config] SimulatorCommand config
+     */
+
+    /**
+     * Constructs a new SimulatorCommand.
+     * @exports SimulatorCommand
+     * @classdesc Represents a SimulatorCommand.
+     * @implements ISimulatorCommand
+     * @constructor
+     * @param {ISimulatorCommand=} [properties] Properties to set
+     */
+    function SimulatorCommand(properties) {
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * SimulatorCommand control.
+     * @member {ISimulatorControl|null|undefined} control
+     * @memberof SimulatorCommand
+     * @instance
+     */
+    SimulatorCommand.prototype.control = null;
+
+    /**
+     * SimulatorCommand config.
+     * @member {ISimulatorConfig|null|undefined} config
+     * @memberof SimulatorCommand
+     * @instance
+     */
+    SimulatorCommand.prototype.config = null;
+
+    /**
+     * Creates a new SimulatorCommand instance using the specified properties.
+     * @function create
+     * @memberof SimulatorCommand
+     * @static
+     * @param {ISimulatorCommand=} [properties] Properties to set
+     * @returns {SimulatorCommand} SimulatorCommand instance
+     */
+    SimulatorCommand.create = function create(properties) {
+        return new SimulatorCommand(properties);
+    };
+
+    /**
+     * Encodes the specified SimulatorCommand message. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
+     * @function encode
+     * @memberof SimulatorCommand
+     * @static
+     * @param {ISimulatorCommand} message SimulatorCommand message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorCommand.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.control != null && Object.hasOwnProperty.call(message, "control"))
+            $root.SimulatorControl.encode(message.control, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+        if (message.config != null && Object.hasOwnProperty.call(message, "config"))
+            $root.SimulatorConfig.encode(message.config, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified SimulatorCommand message, length delimited. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof SimulatorCommand
+     * @static
+     * @param {ISimulatorCommand} message SimulatorCommand message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorCommand.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a SimulatorCommand message from the specified reader or buffer.
+     * @function decode
+     * @memberof SimulatorCommand
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {SimulatorCommand} SimulatorCommand
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorCommand.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorCommand();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1: {
+                    message.control = $root.SimulatorControl.decode(reader, reader.uint32());
+                    break;
+                }
+            case 2: {
+                    message.config = $root.SimulatorConfig.decode(reader, reader.uint32());
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a SimulatorCommand message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof SimulatorCommand
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {SimulatorCommand} SimulatorCommand
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorCommand.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a SimulatorCommand message.
+     * @function verify
+     * @memberof SimulatorCommand
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    SimulatorCommand.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.control != null && message.hasOwnProperty("control")) {
+            let error = $root.SimulatorControl.verify(message.control);
+            if (error)
+                return "control." + error;
+        }
+        if (message.config != null && message.hasOwnProperty("config")) {
+            let error = $root.SimulatorConfig.verify(message.config);
+            if (error)
+                return "config." + error;
+        }
+        return null;
+    };
+
+    /**
+     * Creates a SimulatorCommand message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof SimulatorCommand
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {SimulatorCommand} SimulatorCommand
+     */
+    SimulatorCommand.fromObject = function fromObject(object) {
+        if (object instanceof $root.SimulatorCommand)
+            return object;
+        let message = new $root.SimulatorCommand();
+        if (object.control != null) {
+            if (typeof object.control !== "object")
+                throw TypeError(".SimulatorCommand.control: object expected");
+            message.control = $root.SimulatorControl.fromObject(object.control);
+        }
+        if (object.config != null) {
+            if (typeof object.config !== "object")
+                throw TypeError(".SimulatorCommand.config: object expected");
+            message.config = $root.SimulatorConfig.fromObject(object.config);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a SimulatorCommand message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof SimulatorCommand
+     * @static
+     * @param {SimulatorCommand} message SimulatorCommand
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    SimulatorCommand.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.defaults) {
+            object.control = null;
+            object.config = null;
+        }
+        if (message.control != null && message.hasOwnProperty("control"))
+            object.control = $root.SimulatorControl.toObject(message.control, options);
+        if (message.config != null && message.hasOwnProperty("config"))
+            object.config = $root.SimulatorConfig.toObject(message.config, options);
+        return object;
+    };
+
+    /**
+     * Converts this SimulatorCommand to JSON.
+     * @function toJSON
+     * @memberof SimulatorCommand
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    SimulatorCommand.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for SimulatorCommand
+     * @function getTypeUrl
+     * @memberof SimulatorCommand
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    SimulatorCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/SimulatorCommand";
+    };
+
+    return SimulatorCommand;
+})();
+
+export const SimulatorResponse = $root.SimulatorResponse = (() => {
+
+    /**
+     * Properties of a SimulatorResponse.
+     * @exports ISimulatorResponse
+     * @interface ISimulatorResponse
+     * @property {Array.<ISimulatorError>|null} [errors] SimulatorResponse errors
+     */
+
+    /**
+     * Constructs a new SimulatorResponse.
+     * @exports SimulatorResponse
+     * @classdesc Represents a SimulatorResponse.
+     * @implements ISimulatorResponse
+     * @constructor
+     * @param {ISimulatorResponse=} [properties] Properties to set
+     */
+    function SimulatorResponse(properties) {
+        this.errors = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * SimulatorResponse errors.
+     * @member {Array.<ISimulatorError>} errors
+     * @memberof SimulatorResponse
+     * @instance
+     */
+    SimulatorResponse.prototype.errors = $util.emptyArray;
+
+    /**
+     * Creates a new SimulatorResponse instance using the specified properties.
+     * @function create
+     * @memberof SimulatorResponse
+     * @static
+     * @param {ISimulatorResponse=} [properties] Properties to set
+     * @returns {SimulatorResponse} SimulatorResponse instance
+     */
+    SimulatorResponse.create = function create(properties) {
+        return new SimulatorResponse(properties);
+    };
+
+    /**
+     * Encodes the specified SimulatorResponse message. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
+     * @function encode
+     * @memberof SimulatorResponse
+     * @static
+     * @param {ISimulatorResponse} message SimulatorResponse message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorResponse.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.errors != null && message.errors.length)
+            for (let i = 0; i < message.errors.length; ++i)
+                $root.SimulatorError.encode(message.errors[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified SimulatorResponse message, length delimited. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof SimulatorResponse
+     * @static
+     * @param {ISimulatorResponse} message SimulatorResponse message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    SimulatorResponse.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a SimulatorResponse message from the specified reader or buffer.
+     * @function decode
+     * @memberof SimulatorResponse
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {SimulatorResponse} SimulatorResponse
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorResponse.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorResponse();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1: {
+                    if (!(message.errors && message.errors.length))
+                        message.errors = [];
+                    message.errors.push($root.SimulatorError.decode(reader, reader.uint32()));
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a SimulatorResponse message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof SimulatorResponse
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {SimulatorResponse} SimulatorResponse
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    SimulatorResponse.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a SimulatorResponse message.
+     * @function verify
+     * @memberof SimulatorResponse
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    SimulatorResponse.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.errors != null && message.hasOwnProperty("errors")) {
+            if (!Array.isArray(message.errors))
+                return "errors: array expected";
+            for (let i = 0; i < message.errors.length; ++i) {
+                let error = $root.SimulatorError.verify(message.errors[i]);
+                if (error)
+                    return "errors." + error;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Creates a SimulatorResponse message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof SimulatorResponse
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {SimulatorResponse} SimulatorResponse
+     */
+    SimulatorResponse.fromObject = function fromObject(object) {
+        if (object instanceof $root.SimulatorResponse)
+            return object;
+        let message = new $root.SimulatorResponse();
+        if (object.errors) {
+            if (!Array.isArray(object.errors))
+                throw TypeError(".SimulatorResponse.errors: array expected");
+            message.errors = [];
+            for (let i = 0; i < object.errors.length; ++i) {
+                if (typeof object.errors[i] !== "object")
+                    throw TypeError(".SimulatorResponse.errors: object expected");
+                message.errors[i] = $root.SimulatorError.fromObject(object.errors[i]);
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a SimulatorResponse message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof SimulatorResponse
+     * @static
+     * @param {SimulatorResponse} message SimulatorResponse
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    SimulatorResponse.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.errors = [];
+        if (message.errors && message.errors.length) {
+            object.errors = [];
+            for (let j = 0; j < message.errors.length; ++j)
+                object.errors[j] = $root.SimulatorError.toObject(message.errors[j], options);
+        }
+        return object;
+    };
+
+    /**
+     * Converts this SimulatorResponse to JSON.
+     * @function toJSON
+     * @memberof SimulatorResponse
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    SimulatorResponse.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for SimulatorResponse
+     * @function getTypeUrl
+     * @memberof SimulatorResponse
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    SimulatorResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/SimulatorResponse";
+    };
+
+    return SimulatorResponse;
+})();
+
 /**
  * Team enum.
  * @exports Team
@@ -41091,1526 +42646,6 @@ export const google = $root.google = (() => {
     })();
 
     return google;
-})();
-
-export const TeleportBall = $root.TeleportBall = (() => {
-
-    /**
-     * Properties of a TeleportBall.
-     * @exports ITeleportBall
-     * @interface ITeleportBall
-     * @property {number|null} [x] TeleportBall x
-     * @property {number|null} [y] TeleportBall y
-     * @property {number|null} [z] TeleportBall z
-     * @property {number|null} [vx] TeleportBall vx
-     * @property {number|null} [vy] TeleportBall vy
-     * @property {number|null} [vz] TeleportBall vz
-     * @property {boolean|null} [teleportSafely] TeleportBall teleportSafely
-     * @property {boolean|null} [roll] TeleportBall roll
-     * @property {boolean|null} [byForce] TeleportBall byForce
-     */
-
-    /**
-     * Constructs a new TeleportBall.
-     * @exports TeleportBall
-     * @classdesc Represents a TeleportBall.
-     * @implements ITeleportBall
-     * @constructor
-     * @param {ITeleportBall=} [properties] Properties to set
-     */
-    function TeleportBall(properties) {
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * TeleportBall x.
-     * @member {number} x
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.x = 0;
-
-    /**
-     * TeleportBall y.
-     * @member {number} y
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.y = 0;
-
-    /**
-     * TeleportBall z.
-     * @member {number} z
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.z = 0;
-
-    /**
-     * TeleportBall vx.
-     * @member {number} vx
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.vx = 0;
-
-    /**
-     * TeleportBall vy.
-     * @member {number} vy
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.vy = 0;
-
-    /**
-     * TeleportBall vz.
-     * @member {number} vz
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.vz = 0;
-
-    /**
-     * TeleportBall teleportSafely.
-     * @member {boolean} teleportSafely
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.teleportSafely = false;
-
-    /**
-     * TeleportBall roll.
-     * @member {boolean} roll
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.roll = false;
-
-    /**
-     * TeleportBall byForce.
-     * @member {boolean} byForce
-     * @memberof TeleportBall
-     * @instance
-     */
-    TeleportBall.prototype.byForce = false;
-
-    /**
-     * Creates a new TeleportBall instance using the specified properties.
-     * @function create
-     * @memberof TeleportBall
-     * @static
-     * @param {ITeleportBall=} [properties] Properties to set
-     * @returns {TeleportBall} TeleportBall instance
-     */
-    TeleportBall.create = function create(properties) {
-        return new TeleportBall(properties);
-    };
-
-    /**
-     * Encodes the specified TeleportBall message. Does not implicitly {@link TeleportBall.verify|verify} messages.
-     * @function encode
-     * @memberof TeleportBall
-     * @static
-     * @param {ITeleportBall} message TeleportBall message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    TeleportBall.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
-            writer.uint32(/* id 1, wireType 5 =*/13).float(message.x);
-        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
-            writer.uint32(/* id 2, wireType 5 =*/21).float(message.y);
-        if (message.z != null && Object.hasOwnProperty.call(message, "z"))
-            writer.uint32(/* id 3, wireType 5 =*/29).float(message.z);
-        if (message.vx != null && Object.hasOwnProperty.call(message, "vx"))
-            writer.uint32(/* id 4, wireType 5 =*/37).float(message.vx);
-        if (message.vy != null && Object.hasOwnProperty.call(message, "vy"))
-            writer.uint32(/* id 5, wireType 5 =*/45).float(message.vy);
-        if (message.vz != null && Object.hasOwnProperty.call(message, "vz"))
-            writer.uint32(/* id 6, wireType 5 =*/53).float(message.vz);
-        if (message.teleportSafely != null && Object.hasOwnProperty.call(message, "teleportSafely"))
-            writer.uint32(/* id 7, wireType 0 =*/56).bool(message.teleportSafely);
-        if (message.roll != null && Object.hasOwnProperty.call(message, "roll"))
-            writer.uint32(/* id 8, wireType 0 =*/64).bool(message.roll);
-        if (message.byForce != null && Object.hasOwnProperty.call(message, "byForce"))
-            writer.uint32(/* id 9, wireType 0 =*/72).bool(message.byForce);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified TeleportBall message, length delimited. Does not implicitly {@link TeleportBall.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof TeleportBall
-     * @static
-     * @param {ITeleportBall} message TeleportBall message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    TeleportBall.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a TeleportBall message from the specified reader or buffer.
-     * @function decode
-     * @memberof TeleportBall
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {TeleportBall} TeleportBall
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    TeleportBall.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.TeleportBall();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1: {
-                    message.x = reader.float();
-                    break;
-                }
-            case 2: {
-                    message.y = reader.float();
-                    break;
-                }
-            case 3: {
-                    message.z = reader.float();
-                    break;
-                }
-            case 4: {
-                    message.vx = reader.float();
-                    break;
-                }
-            case 5: {
-                    message.vy = reader.float();
-                    break;
-                }
-            case 6: {
-                    message.vz = reader.float();
-                    break;
-                }
-            case 7: {
-                    message.teleportSafely = reader.bool();
-                    break;
-                }
-            case 8: {
-                    message.roll = reader.bool();
-                    break;
-                }
-            case 9: {
-                    message.byForce = reader.bool();
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a TeleportBall message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof TeleportBall
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {TeleportBall} TeleportBall
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    TeleportBall.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a TeleportBall message.
-     * @function verify
-     * @memberof TeleportBall
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    TeleportBall.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.x != null && message.hasOwnProperty("x"))
-            if (typeof message.x !== "number")
-                return "x: number expected";
-        if (message.y != null && message.hasOwnProperty("y"))
-            if (typeof message.y !== "number")
-                return "y: number expected";
-        if (message.z != null && message.hasOwnProperty("z"))
-            if (typeof message.z !== "number")
-                return "z: number expected";
-        if (message.vx != null && message.hasOwnProperty("vx"))
-            if (typeof message.vx !== "number")
-                return "vx: number expected";
-        if (message.vy != null && message.hasOwnProperty("vy"))
-            if (typeof message.vy !== "number")
-                return "vy: number expected";
-        if (message.vz != null && message.hasOwnProperty("vz"))
-            if (typeof message.vz !== "number")
-                return "vz: number expected";
-        if (message.teleportSafely != null && message.hasOwnProperty("teleportSafely"))
-            if (typeof message.teleportSafely !== "boolean")
-                return "teleportSafely: boolean expected";
-        if (message.roll != null && message.hasOwnProperty("roll"))
-            if (typeof message.roll !== "boolean")
-                return "roll: boolean expected";
-        if (message.byForce != null && message.hasOwnProperty("byForce"))
-            if (typeof message.byForce !== "boolean")
-                return "byForce: boolean expected";
-        return null;
-    };
-
-    /**
-     * Creates a TeleportBall message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof TeleportBall
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {TeleportBall} TeleportBall
-     */
-    TeleportBall.fromObject = function fromObject(object) {
-        if (object instanceof $root.TeleportBall)
-            return object;
-        let message = new $root.TeleportBall();
-        if (object.x != null)
-            message.x = Number(object.x);
-        if (object.y != null)
-            message.y = Number(object.y);
-        if (object.z != null)
-            message.z = Number(object.z);
-        if (object.vx != null)
-            message.vx = Number(object.vx);
-        if (object.vy != null)
-            message.vy = Number(object.vy);
-        if (object.vz != null)
-            message.vz = Number(object.vz);
-        if (object.teleportSafely != null)
-            message.teleportSafely = Boolean(object.teleportSafely);
-        if (object.roll != null)
-            message.roll = Boolean(object.roll);
-        if (object.byForce != null)
-            message.byForce = Boolean(object.byForce);
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a TeleportBall message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof TeleportBall
-     * @static
-     * @param {TeleportBall} message TeleportBall
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    TeleportBall.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.defaults) {
-            object.x = 0;
-            object.y = 0;
-            object.z = 0;
-            object.vx = 0;
-            object.vy = 0;
-            object.vz = 0;
-            object.teleportSafely = false;
-            object.roll = false;
-            object.byForce = false;
-        }
-        if (message.x != null && message.hasOwnProperty("x"))
-            object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-        if (message.y != null && message.hasOwnProperty("y"))
-            object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-        if (message.z != null && message.hasOwnProperty("z"))
-            object.z = options.json && !isFinite(message.z) ? String(message.z) : message.z;
-        if (message.vx != null && message.hasOwnProperty("vx"))
-            object.vx = options.json && !isFinite(message.vx) ? String(message.vx) : message.vx;
-        if (message.vy != null && message.hasOwnProperty("vy"))
-            object.vy = options.json && !isFinite(message.vy) ? String(message.vy) : message.vy;
-        if (message.vz != null && message.hasOwnProperty("vz"))
-            object.vz = options.json && !isFinite(message.vz) ? String(message.vz) : message.vz;
-        if (message.teleportSafely != null && message.hasOwnProperty("teleportSafely"))
-            object.teleportSafely = message.teleportSafely;
-        if (message.roll != null && message.hasOwnProperty("roll"))
-            object.roll = message.roll;
-        if (message.byForce != null && message.hasOwnProperty("byForce"))
-            object.byForce = message.byForce;
-        return object;
-    };
-
-    /**
-     * Converts this TeleportBall to JSON.
-     * @function toJSON
-     * @memberof TeleportBall
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    TeleportBall.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for TeleportBall
-     * @function getTypeUrl
-     * @memberof TeleportBall
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    TeleportBall.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/TeleportBall";
-    };
-
-    return TeleportBall;
-})();
-
-export const TeleportRobot = $root.TeleportRobot = (() => {
-
-    /**
-     * Properties of a TeleportRobot.
-     * @exports ITeleportRobot
-     * @interface ITeleportRobot
-     * @property {IRobotId} id TeleportRobot id
-     * @property {number|null} [x] TeleportRobot x
-     * @property {number|null} [y] TeleportRobot y
-     * @property {number|null} [orientation] TeleportRobot orientation
-     * @property {number|null} [vX] TeleportRobot vX
-     * @property {number|null} [vY] TeleportRobot vY
-     * @property {number|null} [vAngular] TeleportRobot vAngular
-     * @property {boolean|null} [present] TeleportRobot present
-     * @property {boolean|null} [byForce] TeleportRobot byForce
-     */
-
-    /**
-     * Constructs a new TeleportRobot.
-     * @exports TeleportRobot
-     * @classdesc Represents a TeleportRobot.
-     * @implements ITeleportRobot
-     * @constructor
-     * @param {ITeleportRobot=} [properties] Properties to set
-     */
-    function TeleportRobot(properties) {
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * TeleportRobot id.
-     * @member {IRobotId} id
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.id = null;
-
-    /**
-     * TeleportRobot x.
-     * @member {number} x
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.x = 0;
-
-    /**
-     * TeleportRobot y.
-     * @member {number} y
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.y = 0;
-
-    /**
-     * TeleportRobot orientation.
-     * @member {number} orientation
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.orientation = 0;
-
-    /**
-     * TeleportRobot vX.
-     * @member {number} vX
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.vX = 0;
-
-    /**
-     * TeleportRobot vY.
-     * @member {number} vY
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.vY = 0;
-
-    /**
-     * TeleportRobot vAngular.
-     * @member {number} vAngular
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.vAngular = 0;
-
-    /**
-     * TeleportRobot present.
-     * @member {boolean} present
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.present = false;
-
-    /**
-     * TeleportRobot byForce.
-     * @member {boolean} byForce
-     * @memberof TeleportRobot
-     * @instance
-     */
-    TeleportRobot.prototype.byForce = false;
-
-    /**
-     * Creates a new TeleportRobot instance using the specified properties.
-     * @function create
-     * @memberof TeleportRobot
-     * @static
-     * @param {ITeleportRobot=} [properties] Properties to set
-     * @returns {TeleportRobot} TeleportRobot instance
-     */
-    TeleportRobot.create = function create(properties) {
-        return new TeleportRobot(properties);
-    };
-
-    /**
-     * Encodes the specified TeleportRobot message. Does not implicitly {@link TeleportRobot.verify|verify} messages.
-     * @function encode
-     * @memberof TeleportRobot
-     * @static
-     * @param {ITeleportRobot} message TeleportRobot message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    TeleportRobot.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        $root.RobotId.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
-            writer.uint32(/* id 2, wireType 5 =*/21).float(message.x);
-        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
-            writer.uint32(/* id 3, wireType 5 =*/29).float(message.y);
-        if (message.orientation != null && Object.hasOwnProperty.call(message, "orientation"))
-            writer.uint32(/* id 4, wireType 5 =*/37).float(message.orientation);
-        if (message.vX != null && Object.hasOwnProperty.call(message, "vX"))
-            writer.uint32(/* id 5, wireType 5 =*/45).float(message.vX);
-        if (message.vY != null && Object.hasOwnProperty.call(message, "vY"))
-            writer.uint32(/* id 6, wireType 5 =*/53).float(message.vY);
-        if (message.vAngular != null && Object.hasOwnProperty.call(message, "vAngular"))
-            writer.uint32(/* id 7, wireType 5 =*/61).float(message.vAngular);
-        if (message.present != null && Object.hasOwnProperty.call(message, "present"))
-            writer.uint32(/* id 8, wireType 0 =*/64).bool(message.present);
-        if (message.byForce != null && Object.hasOwnProperty.call(message, "byForce"))
-            writer.uint32(/* id 9, wireType 0 =*/72).bool(message.byForce);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified TeleportRobot message, length delimited. Does not implicitly {@link TeleportRobot.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof TeleportRobot
-     * @static
-     * @param {ITeleportRobot} message TeleportRobot message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    TeleportRobot.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a TeleportRobot message from the specified reader or buffer.
-     * @function decode
-     * @memberof TeleportRobot
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {TeleportRobot} TeleportRobot
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    TeleportRobot.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.TeleportRobot();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1: {
-                    message.id = $root.RobotId.decode(reader, reader.uint32());
-                    break;
-                }
-            case 2: {
-                    message.x = reader.float();
-                    break;
-                }
-            case 3: {
-                    message.y = reader.float();
-                    break;
-                }
-            case 4: {
-                    message.orientation = reader.float();
-                    break;
-                }
-            case 5: {
-                    message.vX = reader.float();
-                    break;
-                }
-            case 6: {
-                    message.vY = reader.float();
-                    break;
-                }
-            case 7: {
-                    message.vAngular = reader.float();
-                    break;
-                }
-            case 8: {
-                    message.present = reader.bool();
-                    break;
-                }
-            case 9: {
-                    message.byForce = reader.bool();
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        if (!message.hasOwnProperty("id"))
-            throw $util.ProtocolError("missing required 'id'", { instance: message });
-        return message;
-    };
-
-    /**
-     * Decodes a TeleportRobot message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof TeleportRobot
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {TeleportRobot} TeleportRobot
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    TeleportRobot.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a TeleportRobot message.
-     * @function verify
-     * @memberof TeleportRobot
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    TeleportRobot.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        {
-            let error = $root.RobotId.verify(message.id);
-            if (error)
-                return "id." + error;
-        }
-        if (message.x != null && message.hasOwnProperty("x"))
-            if (typeof message.x !== "number")
-                return "x: number expected";
-        if (message.y != null && message.hasOwnProperty("y"))
-            if (typeof message.y !== "number")
-                return "y: number expected";
-        if (message.orientation != null && message.hasOwnProperty("orientation"))
-            if (typeof message.orientation !== "number")
-                return "orientation: number expected";
-        if (message.vX != null && message.hasOwnProperty("vX"))
-            if (typeof message.vX !== "number")
-                return "vX: number expected";
-        if (message.vY != null && message.hasOwnProperty("vY"))
-            if (typeof message.vY !== "number")
-                return "vY: number expected";
-        if (message.vAngular != null && message.hasOwnProperty("vAngular"))
-            if (typeof message.vAngular !== "number")
-                return "vAngular: number expected";
-        if (message.present != null && message.hasOwnProperty("present"))
-            if (typeof message.present !== "boolean")
-                return "present: boolean expected";
-        if (message.byForce != null && message.hasOwnProperty("byForce"))
-            if (typeof message.byForce !== "boolean")
-                return "byForce: boolean expected";
-        return null;
-    };
-
-    /**
-     * Creates a TeleportRobot message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof TeleportRobot
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {TeleportRobot} TeleportRobot
-     */
-    TeleportRobot.fromObject = function fromObject(object) {
-        if (object instanceof $root.TeleportRobot)
-            return object;
-        let message = new $root.TeleportRobot();
-        if (object.id != null) {
-            if (typeof object.id !== "object")
-                throw TypeError(".TeleportRobot.id: object expected");
-            message.id = $root.RobotId.fromObject(object.id);
-        }
-        if (object.x != null)
-            message.x = Number(object.x);
-        if (object.y != null)
-            message.y = Number(object.y);
-        if (object.orientation != null)
-            message.orientation = Number(object.orientation);
-        if (object.vX != null)
-            message.vX = Number(object.vX);
-        if (object.vY != null)
-            message.vY = Number(object.vY);
-        if (object.vAngular != null)
-            message.vAngular = Number(object.vAngular);
-        if (object.present != null)
-            message.present = Boolean(object.present);
-        if (object.byForce != null)
-            message.byForce = Boolean(object.byForce);
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a TeleportRobot message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof TeleportRobot
-     * @static
-     * @param {TeleportRobot} message TeleportRobot
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    TeleportRobot.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.defaults) {
-            object.id = null;
-            object.x = 0;
-            object.y = 0;
-            object.orientation = 0;
-            object.vX = 0;
-            object.vY = 0;
-            object.vAngular = 0;
-            object.present = false;
-            object.byForce = false;
-        }
-        if (message.id != null && message.hasOwnProperty("id"))
-            object.id = $root.RobotId.toObject(message.id, options);
-        if (message.x != null && message.hasOwnProperty("x"))
-            object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-        if (message.y != null && message.hasOwnProperty("y"))
-            object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-        if (message.orientation != null && message.hasOwnProperty("orientation"))
-            object.orientation = options.json && !isFinite(message.orientation) ? String(message.orientation) : message.orientation;
-        if (message.vX != null && message.hasOwnProperty("vX"))
-            object.vX = options.json && !isFinite(message.vX) ? String(message.vX) : message.vX;
-        if (message.vY != null && message.hasOwnProperty("vY"))
-            object.vY = options.json && !isFinite(message.vY) ? String(message.vY) : message.vY;
-        if (message.vAngular != null && message.hasOwnProperty("vAngular"))
-            object.vAngular = options.json && !isFinite(message.vAngular) ? String(message.vAngular) : message.vAngular;
-        if (message.present != null && message.hasOwnProperty("present"))
-            object.present = message.present;
-        if (message.byForce != null && message.hasOwnProperty("byForce"))
-            object.byForce = message.byForce;
-        return object;
-    };
-
-    /**
-     * Converts this TeleportRobot to JSON.
-     * @function toJSON
-     * @memberof TeleportRobot
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    TeleportRobot.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for TeleportRobot
-     * @function getTypeUrl
-     * @memberof TeleportRobot
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    TeleportRobot.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/TeleportRobot";
-    };
-
-    return TeleportRobot;
-})();
-
-export const SimulatorControl = $root.SimulatorControl = (() => {
-
-    /**
-     * Properties of a SimulatorControl.
-     * @exports ISimulatorControl
-     * @interface ISimulatorControl
-     * @property {ITeleportBall|null} [teleportBall] SimulatorControl teleportBall
-     * @property {Array.<ITeleportRobot>|null} [teleportRobot] SimulatorControl teleportRobot
-     * @property {number|null} [simulationSpeed] SimulatorControl simulationSpeed
-     */
-
-    /**
-     * Constructs a new SimulatorControl.
-     * @exports SimulatorControl
-     * @classdesc Represents a SimulatorControl.
-     * @implements ISimulatorControl
-     * @constructor
-     * @param {ISimulatorControl=} [properties] Properties to set
-     */
-    function SimulatorControl(properties) {
-        this.teleportRobot = [];
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * SimulatorControl teleportBall.
-     * @member {ITeleportBall|null|undefined} teleportBall
-     * @memberof SimulatorControl
-     * @instance
-     */
-    SimulatorControl.prototype.teleportBall = null;
-
-    /**
-     * SimulatorControl teleportRobot.
-     * @member {Array.<ITeleportRobot>} teleportRobot
-     * @memberof SimulatorControl
-     * @instance
-     */
-    SimulatorControl.prototype.teleportRobot = $util.emptyArray;
-
-    /**
-     * SimulatorControl simulationSpeed.
-     * @member {number} simulationSpeed
-     * @memberof SimulatorControl
-     * @instance
-     */
-    SimulatorControl.prototype.simulationSpeed = 0;
-
-    /**
-     * Creates a new SimulatorControl instance using the specified properties.
-     * @function create
-     * @memberof SimulatorControl
-     * @static
-     * @param {ISimulatorControl=} [properties] Properties to set
-     * @returns {SimulatorControl} SimulatorControl instance
-     */
-    SimulatorControl.create = function create(properties) {
-        return new SimulatorControl(properties);
-    };
-
-    /**
-     * Encodes the specified SimulatorControl message. Does not implicitly {@link SimulatorControl.verify|verify} messages.
-     * @function encode
-     * @memberof SimulatorControl
-     * @static
-     * @param {ISimulatorControl} message SimulatorControl message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorControl.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.teleportBall != null && Object.hasOwnProperty.call(message, "teleportBall"))
-            $root.TeleportBall.encode(message.teleportBall, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-        if (message.teleportRobot != null && message.teleportRobot.length)
-            for (let i = 0; i < message.teleportRobot.length; ++i)
-                $root.TeleportRobot.encode(message.teleportRobot[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-        if (message.simulationSpeed != null && Object.hasOwnProperty.call(message, "simulationSpeed"))
-            writer.uint32(/* id 3, wireType 5 =*/29).float(message.simulationSpeed);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified SimulatorControl message, length delimited. Does not implicitly {@link SimulatorControl.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof SimulatorControl
-     * @static
-     * @param {ISimulatorControl} message SimulatorControl message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorControl.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a SimulatorControl message from the specified reader or buffer.
-     * @function decode
-     * @memberof SimulatorControl
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {SimulatorControl} SimulatorControl
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorControl.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorControl();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1: {
-                    message.teleportBall = $root.TeleportBall.decode(reader, reader.uint32());
-                    break;
-                }
-            case 2: {
-                    if (!(message.teleportRobot && message.teleportRobot.length))
-                        message.teleportRobot = [];
-                    message.teleportRobot.push($root.TeleportRobot.decode(reader, reader.uint32()));
-                    break;
-                }
-            case 3: {
-                    message.simulationSpeed = reader.float();
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a SimulatorControl message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof SimulatorControl
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {SimulatorControl} SimulatorControl
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorControl.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a SimulatorControl message.
-     * @function verify
-     * @memberof SimulatorControl
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    SimulatorControl.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.teleportBall != null && message.hasOwnProperty("teleportBall")) {
-            let error = $root.TeleportBall.verify(message.teleportBall);
-            if (error)
-                return "teleportBall." + error;
-        }
-        if (message.teleportRobot != null && message.hasOwnProperty("teleportRobot")) {
-            if (!Array.isArray(message.teleportRobot))
-                return "teleportRobot: array expected";
-            for (let i = 0; i < message.teleportRobot.length; ++i) {
-                let error = $root.TeleportRobot.verify(message.teleportRobot[i]);
-                if (error)
-                    return "teleportRobot." + error;
-            }
-        }
-        if (message.simulationSpeed != null && message.hasOwnProperty("simulationSpeed"))
-            if (typeof message.simulationSpeed !== "number")
-                return "simulationSpeed: number expected";
-        return null;
-    };
-
-    /**
-     * Creates a SimulatorControl message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof SimulatorControl
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {SimulatorControl} SimulatorControl
-     */
-    SimulatorControl.fromObject = function fromObject(object) {
-        if (object instanceof $root.SimulatorControl)
-            return object;
-        let message = new $root.SimulatorControl();
-        if (object.teleportBall != null) {
-            if (typeof object.teleportBall !== "object")
-                throw TypeError(".SimulatorControl.teleportBall: object expected");
-            message.teleportBall = $root.TeleportBall.fromObject(object.teleportBall);
-        }
-        if (object.teleportRobot) {
-            if (!Array.isArray(object.teleportRobot))
-                throw TypeError(".SimulatorControl.teleportRobot: array expected");
-            message.teleportRobot = [];
-            for (let i = 0; i < object.teleportRobot.length; ++i) {
-                if (typeof object.teleportRobot[i] !== "object")
-                    throw TypeError(".SimulatorControl.teleportRobot: object expected");
-                message.teleportRobot[i] = $root.TeleportRobot.fromObject(object.teleportRobot[i]);
-            }
-        }
-        if (object.simulationSpeed != null)
-            message.simulationSpeed = Number(object.simulationSpeed);
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a SimulatorControl message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof SimulatorControl
-     * @static
-     * @param {SimulatorControl} message SimulatorControl
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    SimulatorControl.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.arrays || options.defaults)
-            object.teleportRobot = [];
-        if (options.defaults) {
-            object.teleportBall = null;
-            object.simulationSpeed = 0;
-        }
-        if (message.teleportBall != null && message.hasOwnProperty("teleportBall"))
-            object.teleportBall = $root.TeleportBall.toObject(message.teleportBall, options);
-        if (message.teleportRobot && message.teleportRobot.length) {
-            object.teleportRobot = [];
-            for (let j = 0; j < message.teleportRobot.length; ++j)
-                object.teleportRobot[j] = $root.TeleportRobot.toObject(message.teleportRobot[j], options);
-        }
-        if (message.simulationSpeed != null && message.hasOwnProperty("simulationSpeed"))
-            object.simulationSpeed = options.json && !isFinite(message.simulationSpeed) ? String(message.simulationSpeed) : message.simulationSpeed;
-        return object;
-    };
-
-    /**
-     * Converts this SimulatorControl to JSON.
-     * @function toJSON
-     * @memberof SimulatorControl
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    SimulatorControl.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for SimulatorControl
-     * @function getTypeUrl
-     * @memberof SimulatorControl
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    SimulatorControl.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/SimulatorControl";
-    };
-
-    return SimulatorControl;
-})();
-
-export const SimulatorCommand = $root.SimulatorCommand = (() => {
-
-    /**
-     * Properties of a SimulatorCommand.
-     * @exports ISimulatorCommand
-     * @interface ISimulatorCommand
-     * @property {ISimulatorControl|null} [control] SimulatorCommand control
-     * @property {ISimulatorConfig|null} [config] SimulatorCommand config
-     */
-
-    /**
-     * Constructs a new SimulatorCommand.
-     * @exports SimulatorCommand
-     * @classdesc Represents a SimulatorCommand.
-     * @implements ISimulatorCommand
-     * @constructor
-     * @param {ISimulatorCommand=} [properties] Properties to set
-     */
-    function SimulatorCommand(properties) {
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * SimulatorCommand control.
-     * @member {ISimulatorControl|null|undefined} control
-     * @memberof SimulatorCommand
-     * @instance
-     */
-    SimulatorCommand.prototype.control = null;
-
-    /**
-     * SimulatorCommand config.
-     * @member {ISimulatorConfig|null|undefined} config
-     * @memberof SimulatorCommand
-     * @instance
-     */
-    SimulatorCommand.prototype.config = null;
-
-    /**
-     * Creates a new SimulatorCommand instance using the specified properties.
-     * @function create
-     * @memberof SimulatorCommand
-     * @static
-     * @param {ISimulatorCommand=} [properties] Properties to set
-     * @returns {SimulatorCommand} SimulatorCommand instance
-     */
-    SimulatorCommand.create = function create(properties) {
-        return new SimulatorCommand(properties);
-    };
-
-    /**
-     * Encodes the specified SimulatorCommand message. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
-     * @function encode
-     * @memberof SimulatorCommand
-     * @static
-     * @param {ISimulatorCommand} message SimulatorCommand message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorCommand.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.control != null && Object.hasOwnProperty.call(message, "control"))
-            $root.SimulatorControl.encode(message.control, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-        if (message.config != null && Object.hasOwnProperty.call(message, "config"))
-            $root.SimulatorConfig.encode(message.config, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-        return writer;
-    };
-
-    /**
-     * Encodes the specified SimulatorCommand message, length delimited. Does not implicitly {@link SimulatorCommand.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof SimulatorCommand
-     * @static
-     * @param {ISimulatorCommand} message SimulatorCommand message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorCommand.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a SimulatorCommand message from the specified reader or buffer.
-     * @function decode
-     * @memberof SimulatorCommand
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {SimulatorCommand} SimulatorCommand
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorCommand.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorCommand();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1: {
-                    message.control = $root.SimulatorControl.decode(reader, reader.uint32());
-                    break;
-                }
-            case 2: {
-                    message.config = $root.SimulatorConfig.decode(reader, reader.uint32());
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a SimulatorCommand message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof SimulatorCommand
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {SimulatorCommand} SimulatorCommand
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorCommand.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a SimulatorCommand message.
-     * @function verify
-     * @memberof SimulatorCommand
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    SimulatorCommand.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.control != null && message.hasOwnProperty("control")) {
-            let error = $root.SimulatorControl.verify(message.control);
-            if (error)
-                return "control." + error;
-        }
-        if (message.config != null && message.hasOwnProperty("config")) {
-            let error = $root.SimulatorConfig.verify(message.config);
-            if (error)
-                return "config." + error;
-        }
-        return null;
-    };
-
-    /**
-     * Creates a SimulatorCommand message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof SimulatorCommand
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {SimulatorCommand} SimulatorCommand
-     */
-    SimulatorCommand.fromObject = function fromObject(object) {
-        if (object instanceof $root.SimulatorCommand)
-            return object;
-        let message = new $root.SimulatorCommand();
-        if (object.control != null) {
-            if (typeof object.control !== "object")
-                throw TypeError(".SimulatorCommand.control: object expected");
-            message.control = $root.SimulatorControl.fromObject(object.control);
-        }
-        if (object.config != null) {
-            if (typeof object.config !== "object")
-                throw TypeError(".SimulatorCommand.config: object expected");
-            message.config = $root.SimulatorConfig.fromObject(object.config);
-        }
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a SimulatorCommand message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof SimulatorCommand
-     * @static
-     * @param {SimulatorCommand} message SimulatorCommand
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    SimulatorCommand.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.defaults) {
-            object.control = null;
-            object.config = null;
-        }
-        if (message.control != null && message.hasOwnProperty("control"))
-            object.control = $root.SimulatorControl.toObject(message.control, options);
-        if (message.config != null && message.hasOwnProperty("config"))
-            object.config = $root.SimulatorConfig.toObject(message.config, options);
-        return object;
-    };
-
-    /**
-     * Converts this SimulatorCommand to JSON.
-     * @function toJSON
-     * @memberof SimulatorCommand
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    SimulatorCommand.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for SimulatorCommand
-     * @function getTypeUrl
-     * @memberof SimulatorCommand
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    SimulatorCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/SimulatorCommand";
-    };
-
-    return SimulatorCommand;
-})();
-
-export const SimulatorResponse = $root.SimulatorResponse = (() => {
-
-    /**
-     * Properties of a SimulatorResponse.
-     * @exports ISimulatorResponse
-     * @interface ISimulatorResponse
-     * @property {Array.<ISimulatorError>|null} [errors] SimulatorResponse errors
-     */
-
-    /**
-     * Constructs a new SimulatorResponse.
-     * @exports SimulatorResponse
-     * @classdesc Represents a SimulatorResponse.
-     * @implements ISimulatorResponse
-     * @constructor
-     * @param {ISimulatorResponse=} [properties] Properties to set
-     */
-    function SimulatorResponse(properties) {
-        this.errors = [];
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * SimulatorResponse errors.
-     * @member {Array.<ISimulatorError>} errors
-     * @memberof SimulatorResponse
-     * @instance
-     */
-    SimulatorResponse.prototype.errors = $util.emptyArray;
-
-    /**
-     * Creates a new SimulatorResponse instance using the specified properties.
-     * @function create
-     * @memberof SimulatorResponse
-     * @static
-     * @param {ISimulatorResponse=} [properties] Properties to set
-     * @returns {SimulatorResponse} SimulatorResponse instance
-     */
-    SimulatorResponse.create = function create(properties) {
-        return new SimulatorResponse(properties);
-    };
-
-    /**
-     * Encodes the specified SimulatorResponse message. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
-     * @function encode
-     * @memberof SimulatorResponse
-     * @static
-     * @param {ISimulatorResponse} message SimulatorResponse message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorResponse.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.errors != null && message.errors.length)
-            for (let i = 0; i < message.errors.length; ++i)
-                $root.SimulatorError.encode(message.errors[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-        return writer;
-    };
-
-    /**
-     * Encodes the specified SimulatorResponse message, length delimited. Does not implicitly {@link SimulatorResponse.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof SimulatorResponse
-     * @static
-     * @param {ISimulatorResponse} message SimulatorResponse message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    SimulatorResponse.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a SimulatorResponse message from the specified reader or buffer.
-     * @function decode
-     * @memberof SimulatorResponse
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {SimulatorResponse} SimulatorResponse
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorResponse.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.SimulatorResponse();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1: {
-                    if (!(message.errors && message.errors.length))
-                        message.errors = [];
-                    message.errors.push($root.SimulatorError.decode(reader, reader.uint32()));
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a SimulatorResponse message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof SimulatorResponse
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {SimulatorResponse} SimulatorResponse
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    SimulatorResponse.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a SimulatorResponse message.
-     * @function verify
-     * @memberof SimulatorResponse
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    SimulatorResponse.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.errors != null && message.hasOwnProperty("errors")) {
-            if (!Array.isArray(message.errors))
-                return "errors: array expected";
-            for (let i = 0; i < message.errors.length; ++i) {
-                let error = $root.SimulatorError.verify(message.errors[i]);
-                if (error)
-                    return "errors." + error;
-            }
-        }
-        return null;
-    };
-
-    /**
-     * Creates a SimulatorResponse message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof SimulatorResponse
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {SimulatorResponse} SimulatorResponse
-     */
-    SimulatorResponse.fromObject = function fromObject(object) {
-        if (object instanceof $root.SimulatorResponse)
-            return object;
-        let message = new $root.SimulatorResponse();
-        if (object.errors) {
-            if (!Array.isArray(object.errors))
-                throw TypeError(".SimulatorResponse.errors: array expected");
-            message.errors = [];
-            for (let i = 0; i < object.errors.length; ++i) {
-                if (typeof object.errors[i] !== "object")
-                    throw TypeError(".SimulatorResponse.errors: object expected");
-                message.errors[i] = $root.SimulatorError.fromObject(object.errors[i]);
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a SimulatorResponse message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof SimulatorResponse
-     * @static
-     * @param {SimulatorResponse} message SimulatorResponse
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    SimulatorResponse.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.arrays || options.defaults)
-            object.errors = [];
-        if (message.errors && message.errors.length) {
-            object.errors = [];
-            for (let j = 0; j < message.errors.length; ++j)
-                object.errors[j] = $root.SimulatorError.toObject(message.errors[j], options);
-        }
-        return object;
-    };
-
-    /**
-     * Converts this SimulatorResponse to JSON.
-     * @function toJSON
-     * @memberof SimulatorResponse
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    SimulatorResponse.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for SimulatorResponse
-     * @function getTypeUrl
-     * @memberof SimulatorResponse
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    SimulatorResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/SimulatorResponse";
-    };
-
-    return SimulatorResponse;
 })();
 
 export const SimulatorError = $root.SimulatorError = (() => {

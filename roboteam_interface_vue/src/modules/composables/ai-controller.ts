@@ -6,6 +6,7 @@ import { useSTPDataStore } from '../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
 import { useVisualizationStore } from '../stores/data-stores/visualization-store'
 import { useProtoWebSocket } from './proto-websocket'
+import { rand } from '@vueuse/core'
 
 export const useAiController = defineStore('aiController', () => {
   // Dependencies
@@ -28,6 +29,37 @@ export const useAiController = defineStore('aiController', () => {
 
   // Actions
   const setBallPos = (x: number, y: number) => send('setBallPos', { x, y })
+
+  const robotsToSide = ( () => {
+    let teleportRobot = []
+    for(const team of [proto.Team.BLUE, proto.Team.YELLOW]){
+      for (let i = 0; i < 16; i++) {
+        const x = -6 + i * 0.3
+        teleportRobot.push({
+          'id': { 'id': i, 'team': team },
+          'x' : (team === proto.Team.YELLOW ? x : -x),
+          'y' : -4.6,
+          'orientation' : 0
+        })
+      }
+    }
+    return teleportRobot
+  })()
+
+  const ballToCenter = {
+    'teleportBall' : {
+      'x' : 0, 'y' : 0, 'z' : 0, 'vx' : 0, 'vy' : 0, 'vz' : 0
+    }
+  }
+
+  const commandMap = new Map<string, Object>([
+    ['robotsToSide', robotsToSide],
+    ['ballToCenter', ballToCenter],
+  ])
+
+  const sendSimulatorCommand = (command: string) => {
+    send('simulatorCommand', commandMap.get(command))
+  }
 
   // Writable computed properties
   const useReferee = computed({
@@ -104,6 +136,7 @@ export const useAiController = defineStore('aiController', () => {
     robotHubMode,
     isPaused,
     currentPlayName,
-    currentRuleset
+    currentRuleset,
+    sendSimulatorCommand
   }
 })

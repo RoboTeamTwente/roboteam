@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,4,3,3,10],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ac31dde1a488c065bbde80e49e4319ef6":[3,0,1,0,4,3,3,1],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ac7023239c6f9c4fdcd7b863e8b87b01d":[3,0,1,0,4,3,3,9],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,4,3,3,15],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "dd/d01/BallClosestToUsGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,0],
 "dd/d0a/PenaltyTaker_8h.html":[4,0,0,0,0,3,4,0,8],
 "dd/d0a/PenaltyTaker_8h_source.html":[4,0,0,0,0,3,4,0,8],
-"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2]
+"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2],
+"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html":[3,0,1,0,4,4,5]
 };

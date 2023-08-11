@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,39,0],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html":[3,0,1,0,4,17],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a010b914f84632c97e54730a7b84b23b0":[3,0,1,0,4,17,44],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a038cc31112b0e9e659b3c51b34fb1930":[3,0,1,0,4,17,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX3 =
 "d4/dcc/namespacertt_1_1ai.html#acc65523a472ce38a6f294d661c234725":[2,0,10,0,15],
 "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67":[2,0,10,0,17],
 "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a0ed045ed8cb14e824a1e372dd5398682":[2,0,10,0,17,8],
-"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a133dc98cd132e86d4117b396c8b4eee9":[2,0,10,0,17,6]
+"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a133dc98cd132e86d4117b396c8b4eee9":[2,0,10,0,17,6],
+"d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a2b4671aba77bf173ab74c6d65817a114":[2,0,10,0,17,5]
 };

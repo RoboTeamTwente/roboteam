@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#a5a9fcbb545286cf5b19fec3db8c45810":[3,0,1,0,0,5,2],
 "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#ad542a2f571818905fcc6935c241448e2":[3,0,1,0,0,5,5],
 "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#af713171fd39791c8be81b904e364ff22":[3,0,1,0,0,5,4],
 "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#afada13c03a31c960cdf202a5630588d2":[3,0,1,0,0,5,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#af511f029baa8fb9f4ff62a0cbc46b16a":[3,0,1,0,1,2,17],
 "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#af89acb29ce4f11e2a11fea9fabed7bf6":[3,0,1,0,1,2,4],
 "d7/da6/Robot_8hpp.html":[4,0,0,0,0,5,4],
-"d7/da6/Robot_8hpp_source.html":[4,0,0,0,0,5,4]
+"d7/da6/Robot_8hpp_source.html":[4,0,0,0,0,5,4],
+"d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html":[3,0,1,0,4,1,21]
 };

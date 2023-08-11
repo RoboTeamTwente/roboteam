@@ -58,10 +58,11 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
 Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag ballPlacementPriority(DealerFlagTitle::CAN_DETECT_BALL, DealerFlagPriority::REQUIRED);
+    Dealer::DealerFlag dribblerPriority(DealerFlagTitle::WITH_WORKING_DRIBBLER, DealerFlagPriority::REQUIRED);
     Dealer::DealerFlag ballPlacementPreference(DealerFlagTitle::CLOSEST_TO_BALL, DealerFlagPriority::HIGH_PRIORITY);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
-    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {ballPlacementPriority, ballPlacementPreference}}});
+    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerPriority, ballPlacementPriority, ballPlacementPreference}}});
     flagMap.insert({"ball_avoider_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"ball_avoider_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"ball_avoider_2", {DealerFlagPriority::LOW_PRIORITY, {}}});

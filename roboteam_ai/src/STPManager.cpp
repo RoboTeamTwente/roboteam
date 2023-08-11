@@ -27,6 +27,7 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 #include "stp/plays/referee_specific/BallPlacementUs.h"
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
+#include "stp/plays/referee_specific/FormationPreHalf.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 #include "stp/plays/referee_specific/FreeKickUsPass.h"
@@ -51,7 +52,7 @@ std::vector<std::unique_ptr<rtt::ai::stp::Play>> STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
+//    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::Attack>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::Halt>());
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendShot>());

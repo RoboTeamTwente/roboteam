@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html":[3,0,1,0,4,4,5],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,4,5,10],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,4,4,5,2],
@@ -66,8 +67,8 @@ var NAVTREEINDEX13 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a3716f303528e6c66fc6d4f5c97db5f93":[3,0,1,0,4,13,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a4c981f92e8bca5864cf26f0cee2886ab":[3,0,1,0,4,13,6],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a51bce1d5d8502db006cdced1300f36da":[3,0,1,0,4,13,5],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[4,0,0,0,0,3,9,1,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[3,0,1,0,4,13,0,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[4,0,0,0,0,3,9,1,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a60674abf0185e5577b287300f3a20d49":[3,0,1,0,4,13,3],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[4,0,0,0,0,3,9,1,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,4,13,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a58560de6d2d6ca91e467deb1071aadbd":[3,0,1,0,4,3,7,9],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6":[3,0,1,0,4,3,7,8],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7164f241b13b1aa59b6e6b5c30a3094b":[3,0,1,0,4,3,7,20],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,4,3,7,4],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7f018f5b5248711a658fa076eb6e480a":[3,0,1,0,4,3,7,5]
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,4,3,7,4]
 };

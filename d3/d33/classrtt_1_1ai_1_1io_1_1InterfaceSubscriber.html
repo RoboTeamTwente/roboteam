@@ -99,18 +99,20 @@ $(document).ready(function(){initNavTree('d3/d33/classrtt_1_1ai_1_1io_1_1Interfa
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5b378013af7bc49b1c4f797fb609325"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#aa5b378013af7bc49b1c4f797fb609325">onMessage</a> (const proto::MsgFromInterface &amp;&amp;message)</td></tr>
-<tr class="memdesc:aa5b378013af7bc49b1c4f797fb609325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only the <a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html" title="Singleton class that handles the communication between the Interface and the rest of the AI.">InterfaceGateway</a> can create an <a class="el" href="../../d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html">InterfacePublisher</a>.  <a href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#aa5b378013af7bc49b1c4f797fb609325">More...</a><br /></td></tr>
+<tr class="memdesc:aa5b378013af7bc49b1c4f797fb609325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function invoked when a message is received from a client. Processes the received message and performs corresponding actions.  <a href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#aa5b378013af7bc49b1c4f797fb609325">More...</a><br /></td></tr>
 <tr class="separator:aa5b378013af7bc49b1c4f797fb609325"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
 <tr class="memitem:a9935b03566a2f85fd6c8c82c726987b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#a9935b03566a2f85fd6c8c82c726987b7">InterfaceSubscriber</a> ()=default</td></tr>
 <tr class="separator:a9935b03566a2f85fd6c8c82c726987b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:abb32ebdb3665f205efe38b13b4e64985"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#abb32ebdb3665f205efe38b13b4e64985">sendPacketToSimulator</a> (const SimulatorCommand &amp;packet)</td></tr>
+<tr class="separator:abb32ebdb3665f205efe38b13b4e64985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a09315d57fa9cc946ce3953835fae9d69"><td class="memItemLeft" align="right" valign="top">friend&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#a09315d57fa9cc946ce3953835fae9d69">InterfaceGateway</a></td></tr>
-<tr class="separator:a09315d57fa9cc946ce3953835fae9d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ea8c0a7e2953ca36c54939b1153e44"><td class="memItemLeft" align="right" valign="top">QUdpSocket&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#a03ea8c0a7e2953ca36c54939b1153e44">simulator_socket</a></td></tr>
+<tr class="separator:a03ea8c0a7e2953ca36c54939b1153e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9935b03566a2f85fd6c8c82c726987b7"></a>
@@ -131,7 +133,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -155,8 +157,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Only the <a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html" title="Singleton class that handles the communication between the Interface and the rest of the AI.">InterfaceGateway</a> can create an <a class="el" href="../../d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html">InterfacePublisher</a>. </p>
-<p>Callback function invoked when a message is received from a client. Processes the received message and performs corresponding actions.</p>
+<p>Callback function invoked when a message is received from a client. Processes the received message and performs corresponding actions. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">message</td><td>The received message from the client. </td></tr>
@@ -166,9 +167,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a09315d57fa9cc946ce3953835fae9d69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09315d57fa9cc946ce3953835fae9d69">&#9670;&nbsp;</a></span>InterfaceGateway</h2>
+<a id="abb32ebdb3665f205efe38b13b4e64985"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb32ebdb3665f205efe38b13b4e64985">&#9670;&nbsp;</a></span>sendPacketToSimulator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -177,7 +177,34 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">friend rtt::ai::io::InterfaceSubscriber::InterfaceGateway</td>
+          <td class="memname">void rtt::ai::io::InterfaceSubscriber::sendPacketToSimulator </td>
+          <td>(</td>
+          <td class="paramtype">const SimulatorCommand &amp;&#160;</td>
+          <td class="paramname"><em>packet</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a03ea8c0a7e2953ca36c54939b1153e44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ea8c0a7e2953ca36c54939b1153e44">&#9670;&nbsp;</a></span>simulator_socket</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QUdpSocket rtt::ai::io::InterfaceSubscriber::simulator_socket</td>
         </tr>
       </table>
   </td>

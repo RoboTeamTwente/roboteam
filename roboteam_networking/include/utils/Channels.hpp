@@ -20,7 +20,6 @@ enum ChannelType {
     // AI to Robothub
     ROBOT_COMMANDS_BLUE_CHANNEL,
     ROBOT_COMMANDS_YELLOW_CHANNEL,
-    SIMULATION_CONFIGURATION_CHANNEL,
 
     // Robothub to World
     ROBOT_FEEDBACK_CHANNEL,

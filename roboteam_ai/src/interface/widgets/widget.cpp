@@ -4,8 +4,6 @@
 
 #include "interface/widgets/widget.h"
 
-#include <proto/SimulationConfiguration.pb.h>
-
 #include <QPainterPath>
 
 #include "utilities/GameStateManager.hpp"
@@ -127,14 +125,6 @@ void Visualizer::paintEvent(QPaintEvent *event) {
         Vector2 field_position = toFieldPosition(mouse_position);              // Convert position on widget to position on field
         if (!GameSettings::isLeft()) field_position *= -1;                          // Invert ball position if we play on the other side of the field
 
-        proto::SimulationConfiguration configuration;                    // Create packet
-        configuration.mutable_ball_location()->set_x(field_position.x);  // Set x
-        configuration.mutable_ball_location()->set_y(field_position.y);  // Set y
-
-        bool sentConfig = io::io.sendSimulationConfiguration(configuration);  // Send packet
-        if (!sentConfig) {
-            RTT_WARNING("Failed to send Simulation Configuration command. Is this the primary AI?")
-        }
     }
 
     if (showWorldDetections) {

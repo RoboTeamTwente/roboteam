@@ -31,12 +31,6 @@ bool IOManager::init(bool isPrimaryAI) {
             success = false;
             RTT_ERROR("Failed to open settings publisher channel. Is it already taken?")
         }
-        try {
-            this->simulationConfigurationPublisher = std::make_unique<rtt::net::SimulationConfigurationPublisher>();
-        } catch (const zmqpp::zmq_internal_exception& e) {
-            success = false;
-            RTT_ERROR("Failed to open simulation configuration publisher channel. Is it already taken?")
-        }
     } else {
         try {
             this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings& settings) { GameSettings::handleSettingsFromPrimaryAI(settings);
@@ -177,10 +171,4 @@ bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {
     return obtainedChannel;
 }
 
-bool IOManager::sendSimulationConfiguration(const proto::SimulationConfiguration& configuration) {
-    if (this->simulationConfigurationPublisher != nullptr) {
-        return this->simulationConfigurationPublisher->publish(configuration) > 0;
-    }
-    return false;
-}
 }  // namespace rtt::ai::io

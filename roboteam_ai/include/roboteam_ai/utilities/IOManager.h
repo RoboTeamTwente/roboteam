@@ -1,13 +1,11 @@
 #ifndef ROBOTEAM_AI_IO_MANAGER_H
 #define ROBOTEAM_AI_IO_MANAGER_H
 
-#include <proto/SimulationConfiguration.pb.h>
 #include <utilities/Constants.h>
 #include <utilities/GameSettings.h>
 
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
-#include <SimulationConfigurationNetworker.hpp>
 #include <WorldNetworker.hpp>
 #include <iostream>
 #include <mutex>
@@ -35,7 +33,6 @@ class IOManager {
     uint64_t stateWorldLastTimestamp; /** Timestamp of the last world update in the state */
 
     std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber; /**< The socket that receives the world information */
-    std::unique_ptr<rtt::net::SimulationConfigurationPublisher> simulationConfigurationPublisher; /**< The socket that publishes the configuration for the simulator */
 
     /**
      * @brief Unpacks the state so it is usable by AI
@@ -77,13 +74,6 @@ class IOManager {
      * @param settings The settings that need to be published
      */
     void publishSettings();
-
-    /**
-     * @brief Publishes the simulation configuration on the simulationConfiguration channel. Only the primary AI is allowed to send this.
-     * @param configuration The simulation configuration that needs to be published
-     * @return Boolean that tells whether the simulation configuration has been sent successfully
-     */
-    bool sendSimulationConfiguration(const proto::SimulationConfiguration& configuration);
 
     /**
      * @brief Initializes the IOManager

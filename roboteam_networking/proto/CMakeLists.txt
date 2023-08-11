@@ -29,7 +29,6 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "WorldRobot.proto"
     "GameSettings.proto"
     "RobotParameters.proto"
-    "SimulationConfiguration.proto"
     "UiOptions.proto"
     "Handshake.proto"
     "AIData.proto"

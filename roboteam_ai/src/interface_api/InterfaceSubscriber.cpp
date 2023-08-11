@@ -52,15 +52,7 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
         } break;
         
         case proto::MsgFromInterface::kSetBallPos: {
-            const auto& ballPos = message.set_ball_pos();
-            proto::SimulationConfiguration configuration;               // Create packet
-            configuration.mutable_ball_location()->set_x(ballPos.x());  // Set x
-            configuration.mutable_ball_location()->set_y(ballPos.y());  // Set y
-
-            bool sentConfig = io::io.sendSimulationConfiguration(configuration);  // Send packet
-            if (!sentConfig) {
-                RTT_WARNING("Failed to send Simulation Configuration command. Is this the primary AI?")
-            }
+            RTT_WARNING("TODO: Remove kSetBallPos from MsgFromInterface")
         } break;
 
         case proto::MsgFromInterface::kSimulatorCommand: {

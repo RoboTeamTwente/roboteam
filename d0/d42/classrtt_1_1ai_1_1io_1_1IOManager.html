@@ -123,11 +123,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c">obtainTeamColorChannel</a> (bool yellowChannel)</td></tr>
 <tr class="memdesc:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to set up a socket on the given channel.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c">More...</a><br /></td></tr>
 <tr class="separator:a45d126977bc28dc4321d78c6a3e4fc8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc76eed70ddeb37a3f42b37cedf85f48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#abc76eed70ddeb37a3f42b37cedf85f48">sendPacketToSimulator</a> (const SimulatorCommand &amp;packet)</td></tr>
+<tr class="memdesc:abc76eed70ddeb37a3f42b37cedf85f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a packet to the simulator on port 10300.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#abc76eed70ddeb37a3f42b37cedf85f48">More...</a><br /></td></tr>
+<tr class="separator:abc76eed70ddeb37a3f42b37cedf85f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a77b84bfe0fe4e6879be25d0066b90fd6"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a77b84bfe0fe4e6879be25d0066b90fd6">stateMutex</a></td></tr>
 <tr class="separator:a77b84bfe0fe4e6879be25d0066b90fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e4a00ae734e818982f015f887a76a6"><td class="memItemLeft" align="right" valign="top">QUdpSocket&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#af1e4a00ae734e818982f015f887a76a6">simulator_socket</a></td></tr>
+<tr class="separator:af1e4a00ae734e818982f015f887a76a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9375dcef257e6213fa9b63d291050fe4"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a9375dcef257e6213fa9b63d291050fe4">simulator_socket_mutex</a></td></tr>
+<tr class="separator:a9375dcef257e6213fa9b63d291050fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -445,6 +452,32 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="abc76eed70ddeb37a3f42b37cedf85f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc76eed70ddeb37a3f42b37cedf85f48">&#9670;&nbsp;</a></span>sendPacketToSimulator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::io::IOManager::sendPacketToSimulator </td>
+          <td>(</td>
+          <td class="paramtype">const SimulatorCommand &amp;&#160;</td>
+          <td class="paramname"><em>packet</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends a packet to the simulator on port 10300. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">packet</td><td>The packet that needs to be sent of type SimulatorCommand </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a4e6ec2ee7675a119c7db912b1452a15b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e6ec2ee7675a119c7db912b1452a15b">&#9670;&nbsp;</a></span>pause</h2>
@@ -558,6 +591,35 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>The socket that receives the settings for interface </p>
+
+</div>
+</div>
+<a id="af1e4a00ae734e818982f015f887a76a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1e4a00ae734e818982f015f887a76a6">&#9670;&nbsp;</a></span>simulator_socket</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QUdpSocket rtt::ai::io::IOManager::simulator_socket</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9375dcef257e6213fa9b63d291050fe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9375dcef257e6213fa9b63d291050fe4">&#9670;&nbsp;</a></span>simulator_socket_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex rtt::ai::io::IOManager::simulator_socket_mutex</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Synchronizer for the simulator socket </p>
 
 </div>
 </div>

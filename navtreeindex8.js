@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a01a8be2adc343bae17fee2b62eac57ba":[3,0,1,0,4,1,21,4],
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a26418e2555104ba88b8fe0686a3a1134":[3,0,1,0,4,1,21,3],
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#a755ac5c77306354a2f460dfe6b7514a7":[3,0,1,0,4,1,21,1],
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToUsGlobalEvaluation.html#aad51bcb21b03ce3fd0416f705af962e2":[3,0,1,0,4,1,21,0],
@@ -35,15 +36,15 @@ var NAVTREEINDEX8 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a1ba03074fbebf79d492694b6d304fb0c":[3,0,1,0,6,7],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a239709eb792970c058e595f1340b397d":[3,0,1,0,6,4],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a38e5570d819dc8de80c478c5deba6703":[3,0,1,0,6,5],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a3bbf524d6fc7b7f8ac7516bed9219d2d":[4,0,0,0,0,4,1,4,0],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a3bbf524d6fc7b7f8ac7516bed9219d2d":[3,0,1,0,6,2,0],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a3bbf524d6fc7b7f8ac7516bed9219d2d":[4,0,0,0,0,4,1,4,0],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a444db4b2230cdcee01993e4146716777":[3,0,1,0,6,9],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a48f8a83a81876b4ce07afeaa65cb2e3b":[3,0,1,0,6,16],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a762b4d101aad1fb00a37c33990dc6fe9":[3,0,1,0,6,18],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a7e2e15fabf6224fcf62d55d3761ec7da":[3,0,1,0,6,3,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a7e2e15fabf6224fcf62d55d3761ec7da":[4,0,0,0,0,4,1,2,2],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a89e3f7131deb54621ec7fb8261ca543a":[4,0,0,0,0,4,1,3,0],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a7e2e15fabf6224fcf62d55d3761ec7da":[3,0,1,0,6,3,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a89e3f7131deb54621ec7fb8261ca543a":[3,0,1,0,6,1,0],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a89e3f7131deb54621ec7fb8261ca543a":[4,0,0,0,0,4,1,3,0],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a90805940266cd515d46522ac6a12884d":[3,0,1,0,6,12],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[3,0,1,0,6,1,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[4,0,0,0,0,4,1,3,1],
@@ -59,10 +60,10 @@ var NAVTREEINDEX8 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac65212d347ada31e2c26b74f60a0a651":[3,0,1,0,6,11],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#accad1a84e4899ec6a0d78b3607db4d64":[3,0,1,0,6,13],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#adc68070e0e6a74bdda7bc8fc5d31fcaf":[3,0,1,0,6,15],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore":[3,0,1,0,6,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore":[4,0,0,0,0,4,1,3],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo":[4,0,0,0,0,4,1,2],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore":[3,0,1,0,6,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo":[3,0,1,0,6,3],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo":[4,0,0,0,0,4,1,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore":[4,0,0,0,0,4,1,4],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore":[3,0,1,0,6,2],
 "d7/de0/BallOnOurSideGlobalEvaluation_8h.html":[4,0,0,0,0,3,2,1,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111":[4,0,0,0,0,4,8,0,1],
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52":[4,0,0,0,0,4,8,0,24],
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977":[4,0,0,0,0,4,8,0,20],
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d":[4,0,0,0,0,4,8,0,8],
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a":[4,0,0,0,0,4,8,0,7]
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d":[4,0,0,0,0,4,8,0,8]
 };

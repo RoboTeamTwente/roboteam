@@ -1,5 +1,8 @@
 var NAVTREEINDEX2 =
 {
+"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3acab3f75a6189a2267689415f97e8b0f14d":[3,0,1,0,1,0,0,3],
+"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af4fca11307f4320fcdb46581752c6005":[3,0,1,0,1,0,4],
+"d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af7704c3508056da674b7fe5bc8f9d583":[3,0,1,0,1,0,6],
 "d2/d60/WorldData_8hpp.html":[4,0,0,0,0,5,7],
 "d2/d60/WorldData_8hpp_source.html":[4,0,0,0,0,5,7],
 "d2/d6d/PassReceiver_8h.html":[4,0,0,0,0,3,4,0,7],
@@ -114,10 +117,8 @@ var NAVTREEINDEX2 =
 "d3/d2b/FieldHelper_8h_source.html":[4,0,0,2,1,1],
 "d3/d33/VisualizationSettingsWidget_8cpp.html":[4,0,0,1,1,1,10],
 "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html":[3,0,1,0,2,2],
-"d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#a03ea8c0a7e2953ca36c54939b1153e44":[3,0,1,0,2,2,3],
 "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#a9935b03566a2f85fd6c8c82c726987b7":[3,0,1,0,2,2,0],
 "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#aa5b378013af7bc49b1c4f797fb609325":[3,0,1,0,2,2,1],
-"d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html#abb32ebdb3665f205efe38b13b4e64985":[3,0,1,0,2,2,2],
 "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html":[3,0,1,0,4,4,10],
 "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,4,10,10],
 "d3/d3c/classrtt_1_1ai_1_1stp_1_1role_1_1BallAvoider.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,4,4,10,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "d3/dec/NumTreesPlanning_8h.html":[4,0,0,0,0,0,0,1,0],
 "d3/dec/NumTreesPlanning_8h_source.html":[4,0,0,0,0,0,0,1,0],
 "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html":[3,0,1,0,4,1,39],
-"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,39,0],
-"d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html":[3,0,1,0,4,17]
+"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,39,0]
 };

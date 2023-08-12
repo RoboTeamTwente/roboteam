@@ -17,7 +17,7 @@ class STPManager {
      * @param interfaceGateway The interface that belongs to this AI
      * @param mainWindow The interface that belongs to this AI
      */
-    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow* mainWindow);
+    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway);
 
    private:
     /**
@@ -29,7 +29,6 @@ class STPManager {
     int tickCounter = 0; /**< Counter that keeps track of the ticks */
     bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
-    ai::interface::MainWindow* mainWindow; /**< Interface window of the AI */
     std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
 
     static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
@@ -46,7 +45,7 @@ class STPManager {
      * @brief Starts the AI with a synchronized boolean to ensure that AI exits correctly
      * @param exitApplication Indicates whether the AI should exit
      */
-    void start(std::atomic_bool& exitApplication);
+    void start(std::atomic_flag& exitApplication);
 
     static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
 

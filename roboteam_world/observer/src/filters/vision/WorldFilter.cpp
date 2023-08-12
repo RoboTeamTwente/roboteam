@@ -28,7 +28,7 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
 
   std::vector<DetectionFrame> detectionFrames;
   for (const auto &protoFrame: frames) {
-    detectionFrames.emplace_back(DetectionFrame(protoFrame));
+    detectionFrames.emplace_back(protoFrame);
   }
   //Sort by time
   std::sort(detectionFrames.begin(), detectionFrames.end(),
@@ -45,11 +45,11 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
   //This can also be caused by other teams running e.g. their simulators internally and accidentally broadcasting onto the network
   detectionFrames.erase(std::remove_if(detectionFrames.begin(), detectionFrames.end(),
                                        [](const DetectionFrame &frame) { return frame.dt < 0.0; }),detectionFrames.end());
-  for(const auto& frame : detectionFrames){
-      lastCaptureTimes[frame.cameraID] = frame.timeCaptured;
-  }
   for (const auto &frame : detectionFrames) {
     processFrame(frame);
+  }
+  for(const auto& frame : detectionFrames){
+    lastCaptureTimes[frame.cameraID] = frame.timeCaptured;
   }
 }
 
@@ -201,6 +201,9 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
   }
 }
 void WorldFilter::processBalls(const DetectionFrame &frame) {
+  //First, we get the robots trajectories
+  getRobotTrajectories(frame.cameraID);
+
   std::vector<CameraGroundBallPrediction> predictions(balls.size());
   //get predictions from cameras
   for (std::size_t i = 0; i < balls.size(); ++i) {
@@ -234,6 +237,24 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) co
     world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
   }
 }
-
-
-
+void WorldFilter::getRobotTrajectories(int cameraID) {
+  //We do not return a value here because from performance benchmarks
+  //we observed that making it a member prevents a lot of allocations in observer.
+  //Thus, we prefer to use a member whose capacity is re-used the next frame instead
+  robotTrajectories.clear();
+  getTeamRobotTrajectories(false,cameraID);
+  getTeamRobotTrajectories(true,cameraID);
+}
+void WorldFilter::getTeamRobotTrajectories(bool isBlue, int cameraID) {
+  const robotMap & robots = isBlue ? blue : yellow;
+  const RobotParameters& params = isBlue ?  blueParams : yellowParams;
+  for(const auto& oneIDFilters : robots){
+    //TODO: now we consider all robots with one ID to be valid. In case there is multiple, we may want to only take the 'best' robot here
+    for(const auto& bot : oneIDFilters.second){
+      auto trajectory = bot.getTrajectory(cameraID,params);
+      if(trajectory.has_value()){
+        robotTrajectories.push_back(trajectory.value());
+      }
+    }
+  }
+}

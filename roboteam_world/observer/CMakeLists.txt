@@ -27,6 +27,7 @@ add_library(observer STATIC
         src/filters/vision/Camera.cpp
         src/filters/vision/CameraMap.cpp
         src/filters/vision/RobotFeedbackFilter.cpp
+        src/filters/vision/RobotTrajectorySegment.cpp
         )
 
 target_link_libraries(observer

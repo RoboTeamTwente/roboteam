@@ -4,6 +4,7 @@
 
 
 #include "../../include/observer/data/RobotParameters.h"
+#include <cmath>
 
 RobotParameters RobotParameters::from_default() {
     RobotParameters parameters; //default constructor should be roughly correct
@@ -43,4 +44,17 @@ RobotParameters::RobotParameters(double radius, double height, double frontWidth
                                  double angleOffset) : radius{radius}, height{height}, frontWidth{frontWidth},
                                                        dribblerWidth{dribblerWidth}, angleOffset{angleOffset} {
 
+}
+double RobotParameters::getRadius() const {
+    return radius;
+}
+double RobotParameters::getHeight() const {
+    return height;
+}
+double RobotParameters::getFrontWidth() const {
+    return frontWidth;
+}
+double RobotParameters::centerToFrontDistance() const {
+    //Pythagoras
+    return sqrt(radius*radius - 0.25*frontWidth*frontWidth);
 }

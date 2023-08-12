@@ -125,5 +125,14 @@ std::optional<FilteredRobot> RobotFilter::getRobot(int cameraID, Time time) cons
   }
 }
 
+std::optional<rtt::RobotTrajectorySegment> RobotFilter::getTrajectory(int cameraID, const RobotParameters& parameters) const{
+  //TODO: check robot health here
+  auto cameraFilter = cameraFilters.find(cameraID);
+  if(cameraFilter != cameraFilters.end()){
+    return cameraFilter->second.getTrajectory(parameters);
+  }
+  return std::nullopt;
+}
+
 
 

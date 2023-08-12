@@ -5,6 +5,8 @@
 #ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAROBOTFILTER_H_
 #define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_CAMERAROBOTFILTER_H_
 
+#include "observer/data/RobotParameters.h"
+#include "observer/filters/vision/RobotTrajectorySegment.h"
 #include "observer/filters/vision/CameraObjectFilter.h"
 #include "observer/filters/vision/PosVelFilter2D.h"
 #include "RobotOrientationFilter.h"
@@ -31,7 +33,7 @@ class CameraRobotFilter : public CameraObjectFilter{
 
   [[nodiscard]] bool justUpdated() const;
 
-  //RobotTrajectory getLastFrameTrajectory() const; //TODO fix
+  [[nodiscard]] rtt::RobotTrajectorySegment getTrajectory(const RobotParameters& params) const;
 
  private:
 

@@ -106,3 +106,26 @@ void CameraRobotFilter::updatePreviousInfo() {
 
   previousTime = positionFilter.lastUpdated();
 }
+rtt::RobotTrajectorySegment CameraRobotFilter::getTrajectory(const RobotParameters &params) const {
+  auto pos = positionFilter.getPosition();
+
+  Time currentTime = positionFilter.lastUpdated();
+  double dt = (currentTime-previousTime).asSeconds();
+
+  Eigen::Vector2d deltaPosition = pos-previousPosition.position;
+  rtt::Vector2 deltaPos(deltaPosition.x(),deltaPosition.y());
+  rtt::Vector2 vel = deltaPos / dt;
+
+  rtt::Angle currentAngle = angleFilter.getPosition();
+  double w = (currentAngle - previousPosition.angle).getValue() / dt;
+
+  if(dt == 0.0){ //Protect against division by zero; can happen if robots are initialized
+      w = 0.0;
+      vel = rtt::Vector2(0.0,0.0);
+  }
+
+  rtt::Vector2 previousPos(previousPosition.position.x(),previousPosition.position.y());
+  rtt::RobotShape startPos(previousPos,params.centerToFrontDistance(),params.getRadius(),previousPosition.angle);
+
+  return {startPos,vel,w,dt,robot.team == TeamColor::BLUE,static_cast<int>(robot.robot_id.robotID)};
+}

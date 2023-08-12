@@ -5,9 +5,12 @@
 #ifndef RTT_ROBOTFILTER_H
 #define RTT_ROBOTFILTER_H
 
-#include "CameraRobotFilter.h"
-#include "observer/filters/vision/robot/RobotObservation.h"
 #include <optional>
+#include "CameraRobotFilter.h"
+#include "observer/filters/vision/RobotTrajectorySegment.h"
+#include "observer/filters/vision/robot/RobotObservation.h"
+#include "observer/data/RobotParameters.h"
+
 class RobotFilter  {
  public:
   explicit RobotFilter(const RobotObservation &observation);
@@ -45,7 +48,7 @@ class RobotFilter  {
    * @return the estimate of the robot on the given camera at time t, if a filter which tracks the robot on that camera exists
    */
   [[nodiscard]] std::optional<FilteredRobot> getRobot(int cameraID, Time time) const;
-  //std::optional<RobotTrajectorySegment> getLastFrameTrajectory(int cameraID, const RobotParameters& parameters) const;
+  std::optional<rtt::RobotTrajectorySegment> getTrajectory(int cameraID, const RobotParameters& parameters) const;
  private:
   TeamRobotID id;
   std::map<int,CameraRobotFilter> cameraFilters;

@@ -9,9 +9,9 @@ proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket> &
   processDetections(packets,geometry_updated,robotData);
 
   //TODO for now not extrapolating because grsim sends packets from 1970...
-  Time extroplatedToTime = getExtrapolationTimeForPolicy();
+  Time extropalatedToTime = getExtrapolationTimeForPolicy();
 
-  return worldFilter.getWorldPrediction(extroplatedToTime);
+  return worldFilter.getWorldPrediction(extropalatedToTime);
 }
 bool VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets) {
   bool newGeometry = false;

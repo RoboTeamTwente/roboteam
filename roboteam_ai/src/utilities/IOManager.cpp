@@ -1,3 +1,4 @@
+#include <QtNetwork>
 #include "utilities/IOManager.h"
 
 #include <algorithm>
@@ -7,6 +8,7 @@
 #include "RobotHubMode.h"
 #include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
+#include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
@@ -169,6 +171,14 @@ bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {
     }
 
     return obtainedChannel;
+}
+
+void IOManager::sendPacketToSimulator(const SimulatorCommand& packet) {
+    std::unique_lock<std::mutex> lock(simulator_socket_mutex);
+    QByteArray datagram;
+    datagram.resize(packet.ByteSizeLong());
+    packet.SerializeToArray(datagram.data(), datagram.size());
+    simulator_socket.writeDatagram(datagram, QHostAddress::LocalHost, 10300);
 }
 
 }  // namespace rtt::ai::io

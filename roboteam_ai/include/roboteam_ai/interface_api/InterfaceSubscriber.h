@@ -6,7 +6,6 @@
 #define RTT_INTERFACESUBSCRIBER_H
 #include <atomic>
 #include "proto/NewInterface.pb.h"
-#include <QtNetwork>
 
 namespace rtt::ai::io {
 class InterfaceGateway;
@@ -22,10 +21,6 @@ class InterfaceSubscriber {
     void onMessage(const proto::MsgFromInterface&& message);
     InterfaceSubscriber() = default;
 
-   private:
-    void sendPacketToSimulator(const SimulatorCommand& packet);
-
-    QUdpSocket simulator_socket;
 };
 }  // namespace rtt::ai::io
 #endif  // RTT_INTERFACESUBSCRIBER_H

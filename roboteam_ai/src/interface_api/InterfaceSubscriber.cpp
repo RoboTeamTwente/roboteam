@@ -3,7 +3,7 @@
 //
 
 #include "interface_api/InterfaceSubscriber.h"
-
+#include <QtNetwork>
 #include "RobotHubMode.h"
 #include "interface/api/Output.h"
 #include "interface_api/RuntimeConfig.h"
@@ -57,20 +57,13 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
 
         case proto::MsgFromInterface::kSimulatorCommand: {
             const SimulatorCommand& command = message.simulator_command();
-            sendPacketToSimulator(command);
+            rtt::ai::io::io.sendPacketToSimulator(command);
         } break;
 
         case proto::MsgFromInterface::KIND_NOT_SET:
             RTT_ERROR("Received message with no kind set");
             break;
     }
-}
-
-void InterfaceSubscriber::sendPacketToSimulator(const SimulatorCommand& packet) {
-    QByteArray datagram;
-    datagram.resize(packet.ByteSizeLong());
-    packet.SerializeToArray(datagram.data(), datagram.size());
-    auto bytesSent = simulator_socket.writeDatagram(datagram, QHostAddress::LocalHost, 10300);
 }
 
 }  // namespace rtt::ai::io

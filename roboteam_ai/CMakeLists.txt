@@ -17,9 +17,10 @@ add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/normalize.cpp
 )
 target_link_libraries(roboteam_ai_utils
+        PUBLIC Qt5::Network
+        PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
@@ -316,7 +317,7 @@ target_include_directories(roboteam_ai_interface
 )
 target_link_libraries(roboteam_ai_interface
         PRIVATE Qt5::Widgets
-        PRIVATE Qt5::Network
+        PUBLIC Qt5::Network
         PRIVATE ixwebsocket
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils

@@ -11,6 +11,8 @@
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
 #include <string_view>
+#include <QtNetwork>
+#include "proto/NewInterface.pb.h"
 
 namespace rtt::world {
 class World;
@@ -108,6 +110,17 @@ class IOManager {
     bool obtainTeamColorChannel(bool yellowChannel);
 
     std::mutex stateMutex; /**< Synchronizer for the state */
+    
+
+    QUdpSocket simulator_socket;
+    std::mutex simulator_socket_mutex; /**< Synchronizer for the simulator socket */
+    /**
+     * @brief Sends a packet to the simulator on port 10300
+     * 
+     * @param packet The packet that needs to be sent of type SimulatorCommand
+     */
+    void sendPacketToSimulator(const SimulatorCommand& packet);
+
 };
 
 extern IOManager io;

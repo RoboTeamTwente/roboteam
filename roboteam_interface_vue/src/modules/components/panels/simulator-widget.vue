@@ -11,10 +11,10 @@ const sendSimulatorCommand = aiController.sendSimulatorCommand
 </script>
 
 <template>
-  <div class="btn-group">
+  <div class="mt-4 flex flex-col gap-4 max-w-md">
     <button
-        :disabled='disabled'
-        class="btn btn-sm btn-secondary gap-2"
+    :disabled='disabled'
+    class="btn btn-sm btn-secondary gap-2"
         @click="sendSimulatorCommand('robotsToSide')"
     >
         <font-awesome-icon icon="fa-arrows" />
@@ -26,7 +26,7 @@ const sendSimulatorCommand = aiController.sendSimulatorCommand
         class="btn btn-sm btn-secondary gap-2"
         @click="sendSimulatorCommand('ballToCenter')"
     >
-        <font-awesome-icon icon="fa-arrows" />
+        <font-awesome-icon icon="fa-crosshairs" />
         Move ball to center
     </button>
     

@@ -30,8 +30,8 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
 
   const ourRobots = computed(() => {
     return aiData.state?.gameSettings?.isYellow
-      ? latestWorld.value?.blue
-      : latestWorld.value?.yellow
+      ? latestWorld.value?.yellow
+      : latestWorld.value?.blue
   })
 
   return {

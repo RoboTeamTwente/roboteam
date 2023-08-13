@@ -80,7 +80,7 @@ onUnmounted(() => {
     ref="canvas"
   />
   <template v-if="appRef !== null">
-    <pointer-location :app="appRef" />
+    <!-- <pointer-location :app="appRef" /> -->
     <field
       :app="appRef"
       :field-geometry="visionData.latestField"

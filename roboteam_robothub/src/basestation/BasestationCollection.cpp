@@ -36,6 +36,7 @@ void BasestationCollection::removeOldBasestations(const std::vector<libusb_devic
 
         if (!basestationIsInDeviceList(basestation, pluggedBasestationDevices)) {
             // This basestation is not plugged in anymore -> remove it
+            RTT_DEBUG("Removing unplugged basestation")
 
             // Remove basestation from the selection if it was in there
             auto selectedYellow = this->getSelectedBasestation(rtt::Team::YELLOW);
@@ -64,6 +65,8 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
     for (const auto& pluggedBasestationDevice : pluggedBasestationDevices) {
         if (!deviceIsInBasestationList(pluggedBasestationDevice, this->basestations)) {
             // This basestation device is plugged in but not in our list -> add it
+            RTT_DEBUG("Adding plugged-in basestation")
+            
             try {
                 auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevice);
                 newBasestation->setIncomingMessageCallback(callbackForNewBasestations);
@@ -443,7 +446,10 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
-    RTT_DEBUG("onMessageFromBasestation() REM = ",  (uint64_t) message.payloadBuffer[0]);
+    uint64_t type = (uint64_t) message.payloadBuffer[0];
+    if(type != 36 && type != 39 && type != 43){
+        RTT_INFO("onMessageFromBasestation() REM = ",  (uint64_t) message.payloadBuffer[0])
+    }
     
     // If this message contains what channel the basestation has, parse it and update our map
     REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
@@ -471,10 +477,10 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
         const auto selectedBlueCopy = this->getSelectedBasestation(rtt::Team::BLUE);
 
         if (selectedYellowCopy != nullptr && selectedYellowCopy->operator==(basestationId)) {
-            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(YELLOW)");
+            // RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(YELLOW)");
             this->messageFromBasestationCallback(message, rtt::Team::YELLOW);
         } else if (selectedBlueCopy != nullptr && selectedBlueCopy->operator==(basestationId)) {
-            RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(BLUE)");
+            // RTT_DEBUG("onMessageFromBasestation() -> messageFromBasestationCallback(BLUE)");
             this->messageFromBasestationCallback(message, rtt::Team::BLUE);
         }
     }

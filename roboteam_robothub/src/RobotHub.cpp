@@ -148,6 +148,11 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 
         command.feedback = robotCommand.ignorePacket;
 
+        // command.rho = 0;
+        // command.theta = 0;
+        // command.angularVelocity = 1;
+        // command.useAbsoluteAngle = 0;
+
         int bytesSent = this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
@@ -272,7 +277,7 @@ void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team te
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
     // if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
-    RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
+    // RTT_INFO("Basestation ", teamToString(team), ": ", basestationLogMessage)
 }
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {

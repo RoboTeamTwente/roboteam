@@ -20,7 +20,7 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     Vector2 targetPos;
     if (standStillCounter > 60) {
         auto moveVector = info.getRobot()->get()->getPos() - info.getBall()->get()->position;
-        targetPos = info.getBall()->get()->position + moveVector.stretchToLength(0.30);
+        targetPos = info.getBall()->get()->position + moveVector.stretchToLength(0.80);
     } else {
         standStillCounter++;
         targetPos = info.getRobot()->get()->getPos();

@@ -33,6 +33,10 @@ def handleREM_LOG(rem_log):
     nwhitespace = os.get_terminal_size().columns - len(message) - 2
     print(f"\r{message}{' ' * nwhitespace}")
 
+print("Warning! DO NOT USE THIS unless you really don't have a choice!")
+print("This was hacked together in under an hour at the BUGA 23 because of robothub issues.")
+print("It has never been tested outside of that environment and is not guaranteed to work.")
+time.sleep(2)
 
 cmd_blue = REM_RobotCommand()
 cmd_blue.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
@@ -82,17 +86,14 @@ def thread_send_to_robot():
         if not command_queue.empty():
             cmd = command_queue.get()
             basestation.write(cmd)
-            # print("Sent", REM_RobotCommand.get_toRobotId(cmd))
 
 def thread_write_feedback():
-    print(f"Opening ZMQ for feedback..")
-    context = zmq.Context()
-    sock = context.socket(zmq.PUB)
-    # sock.setsockopt_string(zmq.SUBSCRIBE, "")
-    sock.connect(f"tcp://127.0.0.1:5561")
-
-    
-
+    # TODO fix this
+    # print(f"Opening ZMQ for feedback..")
+    # context = zmq.Context()
+    # sock = context.socket(zmq.PUB)
+    # sock.connect(f"tcp://127.0.0.1:5561")
+    pass
 
 def thread_listen_to_commands(arg):
     print(f"Opening ZMQ for {arg['name']}..")
@@ -112,7 +113,7 @@ def thread_listen_to_commands(arg):
             theta = math.atan2(vy, vx)
 
             cmd.toRobotId = proto_command.id
-            cmd.toColor = 1
+            cmd.toColor = 0 if arg['name'] == 'Yellow' else 1
             cmd.rho = min(rho, 4)
             cmd.theta = -theta
             cmd.angle = proto_command.angle
@@ -130,8 +131,6 @@ def thread_listen_to_commands(arg):
             
             command_queue.put(cmd.encode())
 
-        # print(command_queue.qsize())
-
 basestation = mp.Process(target=thread_send_to_robot)
 feedback_thread = mp.Process(target=thread_write_feedback)
 blue = mp.Process(target=thread_listen_to_commands, args=(config_blue,))
@@ -147,51 +146,3 @@ yellow.start()
 basestation.join()
 blue.join()
 yellow.join()
-    
-exit()
-
-# while True:
-#     message = socket_world.recv()
-
-
-reset = SimulatorCommand()
-# reset.control.simulation_speed = 1.
-teleport = reset.control.teleport_robot.add()
-# exit()
-teleport.id.id = 0
-teleport.id.team = Team.YELLOW
-teleport.x = 2
-teleport.y = 0
-teleport.orientation = math.pi
-teleport.v_x = 0
-teleport.v_y = 0
-teleport.v_angular = 0
-
-
-
-
-def set_number_of_robots(number_of_robots:int):
-    command = SimulatorCommand()
-    
-    for team in [Team.YELLOW, Team.BLUE]:
-        for robot_id in range(16):
-            teleport = command.control.teleport_robot.add()
-            teleport.id.id = robot_id
-            teleport.id.team = team
-            teleport.present = robot_id < number_of_robots
-
-    sock.sendto(command.SerializeToString(), ("localhost", SIMULATION_CONTROL_PORT))
-
-def teleport_ball():
-    teleport = TeleportBall()
-    teleport.x = np.random.rand() * 10 - 5
-    teleport.y = np.random.rand() * 8 - 4
-    control = SimulatorControl()
-    control.teleport_ball.CopyFrom(teleport)
-    command = SimulatorCommand()
-    command.control.CopyFrom(control)
-    sock.sendto(command.SerializeToString(), ("localhost", SIMULATION_CONTROL_PORT))
-
-teleport_ball()
-#set_number_of_robots(3)
-exit()

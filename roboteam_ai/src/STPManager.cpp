@@ -47,7 +47,7 @@ namespace plays = rtt::ai::stp::play;
 namespace rtt {
 
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
-std::vector<std::unique_ptr<rtt::ai::stp::Play>> STPManager::plays = ([] {
+const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());

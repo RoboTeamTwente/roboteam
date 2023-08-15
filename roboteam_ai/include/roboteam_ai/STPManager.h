@@ -12,6 +12,8 @@ namespace rtt {
  */
 class STPManager {
    public:
+    using PlaysVec = std::vector<std::unique_ptr<rtt::ai::stp::Play>>;
+
     /**
      * @brief Constructs the STPManager with an interface
      * @param interfaceGateway The interface that belongs to this AI
@@ -47,7 +49,7 @@ class STPManager {
      */
     void start(std::atomic_flag& exitApplication);
 
-    static std::vector<std::unique_ptr<rtt::ai::stp::Play>> plays; /**< The vector that contains all plays */
+    static const PlaysVec plays; /**< The vector that contains all plays */
 
     /**
      * @brief Delete copy constructor of the STPManager class

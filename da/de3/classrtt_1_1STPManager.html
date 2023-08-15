@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('da/de3/classrtt_1_1STPManager.html','.
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
@@ -101,6 +102,11 @@ $(document).ready(function(){initNavTree('da/de3/classrtt_1_1STPManager.html','.
 
 <p><code>#include &lt;<a class="el" href="../../dd/d23/STPManager_8h_source.html">STPManager.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a4d1199e1a84b2ce7022aef6cf6c2768b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a4d1199e1a84b2ce7022aef6cf6c2768b">PlaysVec</a> = std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">rtt::ai::stp::Play</a> &gt; &gt;</td></tr>
+<tr class="separator:a4d1199e1a84b2ce7022aef6cf6c2768b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6cd76683a284f5ee0b6de3bc02c237b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a6cd76683a284f5ee0b6de3bc02c237b0">STPManager</a> (std::shared_ptr&lt; <a class="el" href="../../de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html">rtt::ai::io::InterfaceGateway</a> &gt; <a class="el" href="../../da/de3/classrtt_1_1STPManager.html#ad21ff4f9fdbcaf4679e07075409b4191">interfaceGateway</a>)</td></tr>
@@ -118,9 +124,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ac8807b5b4a176c47e743585ebf33f4f5"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">rtt::ai::stp::Play</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#ac8807b5b4a176c47e743585ebf33f4f5">plays</a></td></tr>
-<tr class="memdesc:ac8807b5b4a176c47e743585ebf33f4f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)  <a href="../../da/de3/classrtt_1_1STPManager.html#ac8807b5b4a176c47e743585ebf33f4f5">More...</a><br /></td></tr>
-<tr class="separator:ac8807b5b4a176c47e743585ebf33f4f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab4870dcc35daae7666fd1128173ba07"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a4d1199e1a84b2ce7022aef6cf6c2768b">PlaysVec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de3/classrtt_1_1STPManager.html#aab4870dcc35daae7666fd1128173ba07">plays</a></td></tr>
+<tr class="memdesc:aab4870dcc35daae7666fd1128173ba07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)  <a href="../../da/de3/classrtt_1_1STPManager.html#aab4870dcc35daae7666fd1128173ba07">More...</a><br /></td></tr>
+<tr class="separator:aab4870dcc35daae7666fd1128173ba07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -149,7 +155,22 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that describes the <a class="el" href="../../da/de3/classrtt_1_1STPManager.html" title="Class that describes the STPManager. The STPManager manages the overall strategy of the robots: the p...">STPManager</a>. The <a class="el" href="../../da/de3/classrtt_1_1STPManager.html" title="Class that describes the STPManager. The STPManager manages the overall strategy of the robots: the p...">STPManager</a> manages the overall strategy of the robots: the plays. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a4d1199e1a84b2ce7022aef6cf6c2768b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d1199e1a84b2ce7022aef6cf6c2768b">&#9670;&nbsp;</a></span>PlaysVec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a4d1199e1a84b2ce7022aef6cf6c2768b">rtt::STPManager::PlaysVec</a> =  std::vector&lt;std::unique_ptr&lt;<a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">rtt::ai::stp::Play</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6cd76683a284f5ee0b6de3bc02c237b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6cd76683a284f5ee0b6de3bc02c237b0">&#9670;&nbsp;</a></span>STPManager() <span class="overload">[1/2]</span></h2>
 
@@ -412,8 +433,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac8807b5b4a176c47e743585ebf33f4f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8807b5b4a176c47e743585ebf33f4f5">&#9670;&nbsp;</a></span>plays</h2>
+<a id="aab4870dcc35daae7666fd1128173ba07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab4870dcc35daae7666fd1128173ba07">&#9670;&nbsp;</a></span>plays</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -422,7 +443,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">rtt::ai::stp::Play</a> &gt; &gt; rtt::STPManager::plays</td>
+          <td class="memname">const <a class="el" href="../../da/de3/classrtt_1_1STPManager.html#a4d1199e1a84b2ce7022aef6cf6c2768b">STPManager::PlaysVec</a> rtt::STPManager::plays</td>
         </tr>
       </table>
   </td>

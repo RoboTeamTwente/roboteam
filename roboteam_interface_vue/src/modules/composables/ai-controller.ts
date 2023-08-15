@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { proto } from '../../generated/proto'
+import { ISimulatorCommand, proto } from '../../generated/proto'
 import { useAIDataStore } from '../stores/data-stores/ai-data-store'
 import { defineStore } from 'pinia'
 import { useSTPDataStore } from '../stores/data-stores/stp-data-store'
@@ -30,42 +30,7 @@ export const useAiController = defineStore('aiController', () => {
   // Actions
   const setBallPos = (x: number, y: number) => send('setBallPos', { x, y })
 
-  const robotsToSide = ( () => {
-    let teleportRobot = []
-    for(const team of [proto.Team.BLUE, proto.Team.YELLOW]){
-      for (let i = 0; i < 16; i++) {
-        const x = -6 + i * 0.3
-        teleportRobot.push({
-          'id': { 'id': i, 'team': team },
-          'x' : (team === proto.Team.YELLOW ? x : -x),
-          'y' : -4.6,
-          'orientation' : 0
-        })
-      }
-    }
-    return {
-      'control' : {
-        'teleportRobot' : teleportRobot,
-      }
-    }
-  })()
-
-  const ballToCenter = {
-    'control' : {
-      'teleportBall' : {
-        'x' : 0, 'y' : 0, 'z' : 0, 'vx' : 0, 'vy' : 0, 'vz' : 0
-      }
-    }
-  }
-
-  const commandMap = new Map<string, Object>([
-    ['robotsToSide', robotsToSide],
-    ['ballToCenter', ballToCenter],
-  ])
-
-  const sendSimulatorCommand = (command: string) => {
-    send('simulatorCommand', commandMap.get(command))
-  }
+  const sendSimulatorCommand = (command: Object) => send('simulatorCommand', command);
 
   // Writable computed properties
   const useReferee = computed({

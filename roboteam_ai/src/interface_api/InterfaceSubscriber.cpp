@@ -17,7 +17,6 @@
 namespace rtt::ai::io {
 
 void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
-    RTT_INFO(message.DebugString());
 
     switch (message.kind_case()) {
         case proto::MsgFromInterface::kSetPlay: {

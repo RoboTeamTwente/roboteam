@@ -101,6 +101,7 @@ find_package(Qt5Network REQUIRED)
 # internal projects
 add_subdirectory(roboteam_networking)
 add_subdirectory(roboteam_utils)
+add_subdirectory(roboteam_logging)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
 add_subdirectory(roboteam_world)

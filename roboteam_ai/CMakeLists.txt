@@ -150,7 +150,6 @@ target_include_directories(roboteam_ai_plays
         PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai_plays
-        PUBLIC roboteam_interface_utils_lib
         PRIVATE ixwebsocket #TODO: Why do we need this dependency here?
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
@@ -321,7 +320,6 @@ target_link_libraries(roboteam_ai_interface
         PRIVATE ixwebsocket
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE roboteam_interface_utils_lib
 )
 target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
 

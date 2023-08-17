@@ -52,9 +52,7 @@ var annotated_dup =
           [ "IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager" ]
         ] ],
         [ "new_interface", "dc/da2/namespacertt_1_1ai_1_1new__interface.html", [
-          [ "Out", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out" ],
-          [ "InterfacePlay", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay.html", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay" ],
-          [ "RuntimeConfig", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig" ]
+          [ "Out", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out" ]
         ] ],
         [ "stp", "d5/d14/namespacertt_1_1ai_1_1stp.html", [
           [ "computations", "d8/d97/namespacertt_1_1ai_1_1stp_1_1computations.html", [
@@ -185,6 +183,7 @@ var annotated_dup =
           [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ],
           [ "PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring" ],
           [ "Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play" ],
+          [ "PlayLock", "d5/d14/namespacertt_1_1ai_1_1stp.html#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock", "d5/d14/namespacertt_1_1ai_1_1stp_df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock_dup" ],
           [ "PlayDecider", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider" ],
           [ "PlayEvaluator", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator" ],
           [ "Role", "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html", "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role" ],
@@ -202,6 +201,7 @@ var annotated_dup =
         [ "Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", "d2/d05/classrtt_1_1ai_1_1Pause" ],
         [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ],
         [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ],
+        [ "RuntimeConfig", "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html", "da/da8/classrtt_1_1ai_1_1RuntimeConfig" ],
         [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
         [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
         [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ]

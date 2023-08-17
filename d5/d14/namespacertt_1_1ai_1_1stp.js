@@ -55,6 +55,7 @@ var namespacertt_1_1ai_1_1stp =
     [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ],
     [ "PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring" ],
     [ "Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play" ],
+    [ "PlayLock", "d5/d14/namespacertt_1_1ai_1_1stp.html#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock", "d5/d14/namespacertt_1_1ai_1_1stp_df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock_dup" ],
     [ "PlayDecider", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider" ],
     [ "PlayEvaluator", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator" ],
     [ "Role", "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html", "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role" ],

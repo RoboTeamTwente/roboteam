@@ -78,7 +78,6 @@ var hierarchy =
       [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
     ] ],
     [ "rtt::ai::io::InterfaceGateway", "de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html", null ],
-    [ "rtt::ai::new_interface::InterfacePlay", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay.html", null ],
     [ "rtt::ai::io::InterfacePublisher", "d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html", null ],
     [ "rtt::ai::io::InterfaceSubscriber", "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html", null ],
     [ "rtt::ai::io::IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", null ],
@@ -133,6 +132,7 @@ var hierarchy =
     ] ],
     [ "rtt::ai::stp::PlayDecider", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html", null ],
     [ "rtt::ai::stp::PlayEvaluator", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html", null ],
+    [ "rtt::ai::stp::PlayLock", "d5/d14/namespacertt_1_1ai_1_1stp.html#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock", null ],
     [ "rtt::ai::stp::PlayEvaluator::PlayScoring", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring", null ],
     [ "rtt::ai::stp::PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", null ],
     [ "rtt::ai::control::PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", null ],
@@ -184,7 +184,7 @@ var hierarchy =
     ] ],
     [ "rtt::ai::Dealer::RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", null ],
     [ "rtt::ai::RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", null ],
-    [ "rtt::ai::new_interface::RuntimeConfig", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html", null ],
+    [ "rtt::ai::RuntimeConfig", "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html", null ],
     [ "rtt::ai::stp::gen::ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition", null ],
     [ "rtt::ai::stp::gen::ScoreProfile", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile", null ],
     [ "rtt::ai::stp::Skill", "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html", [

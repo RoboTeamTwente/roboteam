@@ -27,12 +27,13 @@ var searchData=
   ['play_1888',['Play',['../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html',1,'rtt::ai::stp']]],
   ['playdecider_1889',['PlayDecider',['../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html',1,'rtt::ai::stp']]],
   ['playevaluator_1890',['PlayEvaluator',['../dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html',1,'rtt::ai::stp']]],
-  ['playscoring_1891',['PlayScoring',['../dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring',1,'rtt::ai::stp::PlayEvaluator']]],
-  ['playswidget_1892',['PlaysWidget',['../df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html',1,'rtt::ai::interface']]],
-  ['playtemplate_1893',['PlayTemplate',['../d4/d8b/classrtt_1_1ai_1_1stp_1_1play_1_1PlayTemplate.html',1,'rtt::ai::stp::play']]],
-  ['positioncomputations_1894',['PositionComputations',['../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html',1,'rtt::ai::stp']]],
-  ['positioncontrol_1895',['PositionControl',['../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html',1,'rtt::ai::control']]],
-  ['positioncontrolutils_1896',['PositionControlUtils',['../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html',1,'rtt::ai::control']]],
-  ['positionscores_1897',['PositionScores',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores',1,'rtt::ai::stp::gen']]],
-  ['positionscoring_1898',['PositionScoring',['../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html',1,'rtt::ai::stp']]]
+  ['playlock_1891',['PlayLock',['../d5/d14/namespacertt_1_1ai_1_1stp.html#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock',1,'rtt::ai::stp']]],
+  ['playscoring_1892',['PlayScoring',['../dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring',1,'rtt::ai::stp::PlayEvaluator']]],
+  ['playswidget_1893',['PlaysWidget',['../df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html',1,'rtt::ai::interface']]],
+  ['playtemplate_1894',['PlayTemplate',['../d4/d8b/classrtt_1_1ai_1_1stp_1_1play_1_1PlayTemplate.html',1,'rtt::ai::stp::play']]],
+  ['positioncomputations_1895',['PositionComputations',['../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html',1,'rtt::ai::stp']]],
+  ['positioncontrol_1896',['PositionControl',['../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html',1,'rtt::ai::control']]],
+  ['positioncontrolutils_1897',['PositionControlUtils',['../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html',1,'rtt::ai::control']]],
+  ['positionscores_1898',['PositionScores',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores',1,'rtt::ai::stp::gen']]],
+  ['positionscoring_1899',['PositionScoring',['../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html',1,'rtt::ai::stp']]]
 ];

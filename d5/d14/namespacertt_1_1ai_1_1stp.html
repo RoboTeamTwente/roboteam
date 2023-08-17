@@ -135,6 +135,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a> class that's used in the STP model on update traverses every <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html" title="Role class used in STP Every robot needs to have a role A role is essentially a state machine of Tact...">Role</a>, and updates it.  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock">PlayLock</a></td></tr>
+<tr class="separator:df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html">PlayDecider</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the play decider. It decides the best play from a vector of plays. If there is a play set in the interface, this play will be picked.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -312,6 +314,51 @@ passScore</td>
 <td class="fieldname">
 receiverId</td>
 <td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock" id="df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#df/dab/structrtt_1_1ai_1_1stp_1_1PlayLock">&#9670;&nbsp;</a></span>rtt::ai::stp::PlayLock</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct rtt::ai::stp::PlayLock</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a1e40f78250f1f8546d334602aa895746"></a>atomic&lt; bool &gt;</td>
+<td class="fieldname">
+didChange</td>
+<td class="fielddoc">
+<p>Bool indicating if the current play was changed using lockPlay method </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a840889e02a2ec4463fd5245493736c4b"></a>atomic&lt; bool &gt;</td>
+<td class="fieldname">
+isSet</td>
+<td class="fielddoc">
+<p>Bool indicating if the current play was set using lockPlay method </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aaef04bb7614fbeb6a11ab38dae811944"></a>mutex</td>
+<td class="fieldname">
+lock</td>
+<td class="fielddoc">
+<p>Mutex to lock the interfacePlayStr </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac1022c629183d4661ea68235d22a651e"></a>optional&lt; string &gt;</td>
+<td class="fieldname">
+playName</td>
+<td class="fielddoc">
+<p>The play name that is set in the interface </p>
 </td></tr>
 </table>
 

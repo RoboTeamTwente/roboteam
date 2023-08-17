@@ -29,7 +29,7 @@ var searchData=
   ['updatetimes_1634',['updateTimes',['../da/d80/classnativeformat_1_1param_1_1ParamImplementation.html#ae28b9313e46f58d485d22ce40bd4945b',1,'nativeformat::param::ParamImplementation']]],
   ['updateworld_1635',['updateWorld',['../da/d39/classrtt_1_1world_1_1World.html#a7a081491cf90e5710bb464d553ff9790',1,'rtt::world::World']]],
   ['us_1636',['us',['../d5/db9/classrtt_1_1world_1_1WorldData.html#a6e138c7b59e25c29b63d96653999470f',1,'rtt::world::WorldData::us()'],['../db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727acf22de144f22db9f78a42e1cea77e026',1,'rtt::world::us()']]],
-  ['usereferee_1637',['useReferee',['../dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html#a92a8f85da6e29243d8b082dffb49e957',1,'rtt::ai::new_interface::RuntimeConfig']]],
+  ['usereferee_1637',['useReferee',['../da/da8/classrtt_1_1ai_1_1RuntimeConfig.html#ae238cca0336c2d8cb37d77cb9ac2393d',1,'rtt::ai::RuntimeConfig']]],
   ['userefereecommands_1638',['useRefereeCommands',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a2abddf5f2651bb8a8c7b43c79be831d0',1,'rtt::ai::interface::Output']]],
   ['usesrefereecommands_1639',['usesRefereeCommands',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a1b8fdf8699a01c08a2e9c237f8d9b5d9',1,'rtt::ai::interface::Output']]]
 ];

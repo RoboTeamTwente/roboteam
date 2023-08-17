@@ -12,6 +12,7 @@ var namespacertt_1_1ai =
     [ "Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", "d2/d05/classrtt_1_1ai_1_1Pause" ],
     [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ],
     [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ],
+    [ "RuntimeConfig", "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html", "da/da8/classrtt_1_1ai_1_1RuntimeConfig" ],
     [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
     [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
     [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ],

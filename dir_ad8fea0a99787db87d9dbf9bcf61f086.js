@@ -21,9 +21,5 @@ var dir_ad8fea0a99787db87d9dbf9bcf61f086 =
         [ "size", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#a15b60514ad6e1c84f7b439ccaaff56fe", null ],
         [ "thickness", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#aeef7e00494fc2430b6139eb3361260c1", null ]
       ] ]
-    ] ],
-    [ "RuntimeConfig.h", "d7/dea/RuntimeConfig_8h.html", [
-      [ "InterfacePlay", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay.html", "d3/d71/classrtt_1_1ai_1_1new__interface_1_1InterfacePlay" ],
-      [ "RuntimeConfig", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig.html", "dd/d7e/classrtt_1_1ai_1_1new__interface_1_1RuntimeConfig" ]
     ] ]
 ];

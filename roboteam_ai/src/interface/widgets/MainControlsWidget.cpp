@@ -12,7 +12,6 @@
 #include "RobotHubMode.h"
 #include "interface/api/Output.h"
 #include "utilities/GameSettings.h"
-#include "interface_api/RuntimeConfig.h"
 
 namespace rtt::ai::interface {
 
@@ -109,7 +108,7 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
         if (index == -1) { return; }
 
         const auto playName = select_play->currentText().toStdString();
-        new_interface::RuntimeConfig::interfacePlay.push(playName);
+//        new_interface::RuntimeConfig::interfacePlay.push(playName);
         GameStateManager::updateInterfaceGameState(playName.c_str());
 
         //TODO: Fix for the new interface
@@ -135,7 +134,7 @@ MainControlsWidget::MainControlsWidget(QWidget *parent, STPManager *appManager) 
 }
 
 void MainControlsWidget::setUseReferee(bool useRef) {
-    new_interface::RuntimeConfig::useReferee = useRef;
+//    new_interface::RuntimeConfig::useReferee = useRef;
 
     select_play->setDisabled(useRef);
     select_ruleset->setDisabled(useRef);
@@ -259,6 +258,8 @@ void MainControlsWidget::updatePlays() {
     }
 }
 
-void MainControlsWidget::setIgnoreInvariants(bool ignore) { new_interface::RuntimeConfig::ignoreInvariants = ignore; }
+void MainControlsWidget::setIgnoreInvariants(bool ignore) {
+//    new_interface::RuntimeConfig::ignoreInvariants = ignore;
+}
 
 }  // namespace rtt::ai::interface

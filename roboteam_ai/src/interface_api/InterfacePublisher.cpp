@@ -6,10 +6,10 @@
 
 #include "STPManager.h"
 #include "interface_api/Out.h"
-#include "interface_api/RuntimeConfig.h"
 #include "stp/Play.hpp"
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::io {
 
@@ -104,8 +104,8 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
     game_settings->set_is_yellow(GameSettings::isYellow());
 
     const auto ai_settings = aiState->mutable_runtime_config();
-    ai_settings->set_use_referee(new_interface::RuntimeConfig::useReferee);
-    ai_settings->set_ignore_invariants(new_interface::RuntimeConfig::ignoreInvariants);
+    ai_settings->set_use_referee(RuntimeConfig::useReferee);
+    ai_settings->set_ignore_invariants(RuntimeConfig::ignoreInvariants);
 
     publishProtoMessage(envelope);
     return *this;

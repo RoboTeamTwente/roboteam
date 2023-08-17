@@ -306,7 +306,6 @@ add_library(roboteam_ai_interface
         # After removing the interface, only this file should remain
         ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceGateway.cpp
         ${PROJECT_SOURCE_DIR}/src/interface_api/Out.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface_api/RuntimeConfig.cpp
 
         ${PROJECT_SOURCE_DIR}/src/interface_api/InterfacePublisher.cpp
         ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceSubscriber.cpp
@@ -358,13 +357,13 @@ target_link_libraries(roboteam_ai
         PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         # Watch out! The order of these libraries apparently matters!
+        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_interface
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation

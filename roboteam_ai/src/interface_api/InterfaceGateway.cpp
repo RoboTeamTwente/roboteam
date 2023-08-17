@@ -9,7 +9,6 @@
 #include "RobotHubMode.h"
 #include "STPManager.h"
 #include "interface_api/InterfaceSubscriber.h"
-#include "interface_api/RuntimeConfig.h"
 #include "utilities/GameSettings.h"
 #include "utilities/Pause.h"
 

@@ -3,15 +3,18 @@
 //
 
 #include "interface_api/InterfaceSubscriber.h"
+
 #include <QtNetwork>
+
 #include "RobotHubMode.h"
 #include "interface/api/Output.h"
-#include "interface_api/RuntimeConfig.h"
 #include "proto/ssl_simulation_config.pb.h"
+#include "stp/PlayDecider.hpp"
 #include "utilities/GameSettings.h"
-#include "utilities/IOManager.h"
 #include "utilities/GameStateManager.hpp"
+#include "utilities/IOManager.h"
 #include "utilities/Pause.h"
+#include "utilities/RuntimeConfig.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::io {
@@ -26,12 +29,12 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
 
             interface::Output::setKeeperId(data.keeper_id());
             interface::Output::setRuleSetName(data.ruleset_name());
-            new_interface::RuntimeConfig::interfacePlay.push(data.play_name());
+            stp::PlayDecider::lockPlay(data.play_name());
         } break;
         
         case proto::MsgFromInterface::kSetRuntimeConfig: {
-            new_interface::RuntimeConfig::useReferee = message.set_runtime_config().use_referee();
-            new_interface::RuntimeConfig::ignoreInvariants = message.set_runtime_config().ignore_invariants();
+            RuntimeConfig::useReferee = message.set_runtime_config().use_referee();
+            RuntimeConfig::ignoreInvariants = message.set_runtime_config().ignore_invariants();
         } break;
         
         case proto::MsgFromInterface::kSetGameSettings: {

@@ -7,12 +7,12 @@
 
 #include "control/ControlModule.h"
 #include "interface_api/InterfaceGateway.h"
-#include "interface_api/RuntimeConfig.h"
 #include "stp/PlayDecider.hpp"
 #include "stp/PlayEvaluator.h"
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
+#include "utilities/RuntimeConfig.h"
 
 /**
  * Plays are included here
@@ -204,17 +204,9 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
-    if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::new_interface::RuntimeConfig::ignoreInvariants || ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) {
+    if (!currentPlay || !currentPlay->isValidPlayToKeep() || rtt::ai::RuntimeConfig::ignoreInvariants || ai::stp::PlayDecider::didLockPlay()) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
-
-        // If play was set from the interface override the play selected by PlayDecider
-        if (rtt::ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) [[unlikely]] {
-            currentPlay = ai::stp::PlayDecider::getPlayForName(
-                rtt::ai::new_interface::RuntimeConfig::interfacePlay.pop(), plays
-            );
-        }
-
         currentPlay->updateField(_world->getField().value());
         currentPlay->initialize();
     } else {

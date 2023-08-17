@@ -26,5 +26,5 @@
 
 /* Handle on hover */
 .subtile-scroll-bar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--bc));;
+  background: hsl(var(--bc));
 }

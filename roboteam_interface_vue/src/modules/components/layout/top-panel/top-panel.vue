@@ -85,18 +85,10 @@ const togglePause = () => {
       </select>
     </div>
     <div class="btn-group">
-      <button
-        :disabled='disabled'
-        class="btn btn-sm btn-primary gap-2"
-        @click="resetPlay"
-      >
+      <button :disabled="disabled" class="btn btn-sm btn-primary gap-2" @click="resetPlay">
         <font-awesome-icon icon="fa-rotate-right" /> Reset Play
       </button>
-      <button
-        :disabled='disabled'
-        class="btn btn-sm btn-secondary gap-2"
-        @click="haltPlay"
-      >
+      <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="haltPlay">
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>

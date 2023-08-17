@@ -1,18 +1,18 @@
 #ifndef ROBOTEAM_AI_IO_MANAGER_H
 #define ROBOTEAM_AI_IO_MANAGER_H
 
-#include <proto/SimulationConfiguration.pb.h>
 #include <utilities/Constants.h>
 #include <utilities/GameSettings.h>
 
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
-#include <SimulationConfigurationNetworker.hpp>
 #include <WorldNetworker.hpp>
 #include <iostream>
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
 #include <string_view>
+#include <QtNetwork>
+#include "proto/NewInterface.pb.h"
 
 namespace rtt::world {
 class World;
@@ -35,7 +35,6 @@ class IOManager {
     uint64_t stateWorldLastTimestamp; /** Timestamp of the last world update in the state */
 
     std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber; /**< The socket that receives the world information */
-    std::unique_ptr<rtt::net::SimulationConfigurationPublisher> simulationConfigurationPublisher; /**< The socket that publishes the configuration for the simulator */
 
     /**
      * @brief Unpacks the state so it is usable by AI
@@ -79,13 +78,6 @@ class IOManager {
     void publishSettings();
 
     /**
-     * @brief Publishes the simulation configuration on the simulationConfiguration channel. Only the primary AI is allowed to send this.
-     * @param configuration The simulation configuration that needs to be published
-     * @return Boolean that tells whether the simulation configuration has been sent successfully
-     */
-    bool sendSimulationConfiguration(const proto::SimulationConfiguration& configuration);
-
-    /**
      * @brief Initializes the IOManager
      * @param isPrimaryAI Indicates whether this is the primary AI
      * @return Boolean that tells whether the IOManager is initialized successfully
@@ -118,6 +110,17 @@ class IOManager {
     bool obtainTeamColorChannel(bool yellowChannel);
 
     std::mutex stateMutex; /**< Synchronizer for the state */
+    
+
+    QUdpSocket simulator_socket;
+    std::mutex simulator_socket_mutex; /**< Synchronizer for the simulator socket */
+    /**
+     * @brief Sends a packet to the simulator on port 10300
+     * 
+     * @param packet The packet that needs to be sent of type SimulatorCommand
+     */
+    void sendPacketToSimulator(const SimulatorCommand& packet);
+
 };
 
 extern IOManager io;

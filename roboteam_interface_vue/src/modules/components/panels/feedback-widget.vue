@@ -27,16 +27,17 @@ const formatFloat = (pos?: number | null): string => {
       No data
     </div>
 
-    <template v-for="[id, robot] in visionData.ourRobots?.entries()!" :key="id">
+    <template v-for="robot in visionData.ourRobots!" :key="robot.id">
       <div
-        class="bg-base-200 p-2 rounded-xl border border-base-300"
+        class="bg-base-200 p-2 rounded-xl border border-base-300 cursor-pointer"
         :class="{
         'border-base-300 outline outline-2 outline-accent shadow-md': uiStore.isaRobotSelected(robot.id!)
       }"
+        v-on:click="uiStore.toggleRobotSelection(robot.id!)"
       >
         <div class="flex flex-wrap gap-1 mb-2">
-          <div class="badge badge-sm tooltip tooltip-bottom" :data-tip="uiStore.robotName(id)">
-            <font-awesome-icon icon="robot" class="w-3 h-3 mr-1" />{{ id }}
+          <div class="badge badge-sm tooltip tooltip-bottom" :data-tip="uiStore.robotName(robot.id!)">
+            <font-awesome-icon icon="robot" class="w-3 h-3 mr-1" />{{ robot.id }}
           </div>
           <div
             class="badge badge-sm badge-secondary tooltip tooltip-bottom"

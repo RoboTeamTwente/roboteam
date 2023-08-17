@@ -10,7 +10,6 @@
 namespace rtt::ai::io {
 class InterfaceGateway;
 class InterfaceSubscriber {
-    friend InterfaceGateway;  /// Only the InterfaceGateway can create an InterfacePublisher
 
    public:
     /**
@@ -20,9 +19,8 @@ class InterfaceSubscriber {
      * @param message The received message from the client.
      */
     void onMessage(const proto::MsgFromInterface&& message);
-
-   private:
     InterfaceSubscriber() = default;
+
 };
 }  // namespace rtt::ai::io
 #endif  // RTT_INTERFACESUBSCRIBER_H

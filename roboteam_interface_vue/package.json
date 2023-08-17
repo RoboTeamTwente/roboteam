@@ -30,7 +30,8 @@
     "protobufjs": "^7.2.3",
     "roboto-fontface": "0.10.0",
     "unified-network": "0.6.4",
-    "vue": "3.3.0"
+    "vue": "3.3.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

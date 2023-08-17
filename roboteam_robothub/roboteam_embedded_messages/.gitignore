@@ -1,0 +1,4 @@
+generator/generated/*
+generator/__pycache__
+python/__pycache__
+.idea

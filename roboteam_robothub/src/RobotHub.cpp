@@ -33,7 +33,6 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
 
     this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
     this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
-    this->simulatorManager->setConfigurationFeedbackCallback([&](const simulation::ConfigurationFeedback &feedback) { this->handleSimulationConfigurationFeedback(feedback); });
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
@@ -61,9 +60,6 @@ bool RobotHub::initializeNetworkers() {
             std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
         this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings &_settings) { this->onSettings(_settings); });
-
-        this->simulationConfigurationSubscriber =
-            std::make_unique<rtt::net::SimulationConfigurationSubscriber>([&](const proto::SimulationConfiguration &config) { this->onSimulationConfiguration(config); });
 
         this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
 
@@ -152,6 +148,11 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 
         command.feedback = robotCommand.ignorePacket;
 
+        // command.rho = 0;
+        // command.theta = 0;
+        // command.angularVelocity = 1;
+        // command.useAbsoluteAngle = 0;
+
         int bytesSent = this->basestationManager->sendRobotCommand(command, color);
 
         // Update statistics
@@ -199,48 +200,6 @@ void RobotHub::onSettings(const proto::GameSettings &_settings) {
     rtt::net::RobotHubMode newMode = rtt::net::robotHubModeFromProto(_settings.robot_hub_mode());
     this->mode = newMode;
     this->statistics.robotHubMode = newMode;
-}
-
-void RobotHub::onSimulationConfiguration(const proto::SimulationConfiguration &configuration) {
-    simulation::ConfigurationCommand configCommand;
-
-    if (configuration.has_ball_location()) {
-        const auto &ballLocation = configuration.ball_location();
-        configCommand.setBallLocation(ballLocation.x(), ballLocation.y(), ballLocation.z(), ballLocation.x_velocity(), ballLocation.y_velocity(), ballLocation.z_velocity(),
-                                      ballLocation.velocity_in_rolling(), ballLocation.teleport_safely(), ballLocation.by_force());
-    }
-
-    for (const auto &robotLocation : configuration.robot_locations()) {
-        configCommand.addRobotLocation(robotLocation.id(), robotLocation.is_team_yellow() ? rtt::Team::YELLOW : rtt::Team::BLUE, robotLocation.x(), robotLocation.y(),
-                                       robotLocation.x_velocity(), robotLocation.y_velocity(), robotLocation.angular_velocity(), robotLocation.orientation(),
-                                       robotLocation.present_on_field(), robotLocation.by_force());
-    }
-
-    for (const auto &robotProperties : configuration.robot_properties()) {
-        simulation::RobotProperties propertyValues = {.radius = robotProperties.radius(),
-                                                      .height = robotProperties.height(),
-                                                      .mass = robotProperties.mass(),
-                                                      .maxKickSpeed = robotProperties.max_kick_speed(),
-                                                      .maxChipSpeed = robotProperties.max_chip_speed(),
-                                                      .centerToDribblerDistance = robotProperties.center_to_dribbler_distance(),
-                                                      // Movement limits
-                                                      .maxAcceleration = robotProperties.max_acceleration(),
-                                                      .maxAngularAcceleration = robotProperties.max_angular_acceleration(),
-                                                      .maxDeceleration = robotProperties.max_deceleration(),
-                                                      .maxAngularDeceleration = robotProperties.max_angular_deceleration(),
-                                                      .maxVelocity = robotProperties.max_velocity(),
-                                                      .maxAngularVelocity = robotProperties.max_angular_velocity(),
-                                                      // Wheel angles
-                                                      .frontRightWheelAngle = robotProperties.front_right_wheel_angle(),
-                                                      .backRightWheelAngle = robotProperties.back_right_wheel_angle(),
-                                                      .backLeftWheelAngle = robotProperties.back_left_wheel_angle(),
-                                                      .frontLeftWheelAngle = robotProperties.front_left_wheel_angle()};
-
-        configCommand.addRobotSpecs(robotProperties.id(), robotProperties.is_team_yellow() ? rtt::Team::YELLOW : rtt::Team::BLUE, propertyValues);
-    }
-
-    // TODO: Put these bytes sent into nice statistics output (low priority)
-    this->simulatorManager->sendConfigurationCommand(configCommand);
 }
 
 void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback) {
@@ -312,17 +271,13 @@ bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     return bytesSent > 0;
 }
 
-void RobotHub::handleSimulationConfigurationFeedback(const simulation::ConfigurationFeedback &configFeedback) {
-    this->handleSimulationErrors(configFeedback.simulationErrors);
-}
-
 void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
     // if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
 }
 
 void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
     // if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
-    RTT_DEBUG("Basestation ", teamToString(team), ": ", basestationLogMessage)
+    // RTT_INFO("Basestation ", teamToString(team), ": ", basestationLogMessage)
 }
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {

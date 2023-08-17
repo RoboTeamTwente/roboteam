@@ -82,6 +82,22 @@ if (APPLE)
     include_directories("/opt/homebrew/include")  # Apple silicon bottles
 endif()
 
+
+
+# for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
+if(APPLE)
+    set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
+endif()
+
+# for Linux, BSD, Solaris, Minix
+if(UNIX AND NOT APPLE)
+    SET(Qt5Network_DIR "/usr/include/x86_64-linux-gnu/qt5/Qt5Network")
+endif()
+
+find_package(Qt5Network REQUIRED)
+
+
+
 # internal projects
 add_subdirectory(roboteam_networking)
 add_subdirectory(roboteam_utils)

@@ -73,6 +73,9 @@ constexpr double mmToM(double mm) {
 
 void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
 
+    // TODO Check if the new field actually differs? Maybe with google::protobuf::util::MessageDifferencer
+    // https://stackoverflow.com/questions/3228107/google-protocol-buffers-compare
+
     // TODO: Move this conversion from the scary proto to the safe c++ rtt::Field type in observer or something.
     // Observers' whole function is to filter and parse anyways, might as well check which proto fields are set and which arent...
     // Also, the proto does not require penalty_area_depth to be set *UNLIKE GOAL DEPTH AND WIDTH*,

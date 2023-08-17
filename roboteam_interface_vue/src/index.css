@@ -7,3 +7,24 @@
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
 }
+
+.subtile-scroll-bar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+.subtile-scroll-bar::-webkit-scrollbar-track {
+  background: hsl(var(--b1));
+}
+
+/* Handle */
+.subtile-scroll-bar::-webkit-scrollbar-thumb {
+  background: hsl(var(--b3));
+  border-radius: 99999px;
+}
+
+/* Handle on hover */
+.subtile-scroll-bar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--bc));;
+}

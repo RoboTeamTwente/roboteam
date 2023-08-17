@@ -27,8 +27,12 @@ const init = () => {
     cursorRef.value!.text = ''
   },
   onPointerMove = (e: FederatedPointerEvent) => {
+    // TODO make [0,0] the center of the field
     const pos = e.getLocalPosition(props.app.stage)
-    cursorRef.value!.text = `[${(pos.x / 100).toFixed(2)}x, ${(pos.y / 100).toFixed(2)}y]`
+    const pos_x = (pos.x - props.app.stage.width / 2) / 100
+    const pos_y = (pos.y - props.app.stage.height / 2) / 100
+    console.log(props.app.stage.width)
+    cursorRef.value!.text = `(TODO fix) [${pos_x.toFixed(2)}x, ${(pos_y).toFixed(2)}y]`
   },
   cleanUp = () => {
     console.log('Cleaning up pointer location')

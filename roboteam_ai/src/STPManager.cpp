@@ -48,7 +48,7 @@ namespace plays = rtt::ai::stp::play;
 namespace rtt {
 
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
-std::vector<std::unique_ptr<rtt::ai::stp::Play>> STPManager::plays = ([] {
+const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
@@ -82,7 +82,7 @@ std::vector<std::unique_ptr<rtt::ai::stp::Play>> STPManager::plays = ([] {
 })();
 
 /// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
-void STPManager::start(std::atomic_bool &exitApplication) {
+void STPManager::start(std::atomic_flag &exitApplication) {
     // make sure we start in halt state for safety
     ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
     RTT_INFO("Start looping")
@@ -133,7 +133,7 @@ void STPManager::start(std::atomic_bool &exitApplication) {
                 stpTimer.limit([&]() { io::io.publishSettings(); }, ai::Constants::SETTINGS_BROADCAST_RATE());
             }
 
-            if (exitApplication) {
+            if (exitApplication.test()) {
                 stpTimer.stop();
             }
         },
@@ -158,7 +158,7 @@ void STPManager::runOneLoopCycle() {
                 roboteam_utils::rotate(&packet);
             }
         }
-        mainWindow->updateProcessedVisionPackets(vision_packets);
+        // mainWindow->updateProcessedVisionPackets(vision_packets);
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);
@@ -221,8 +221,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         currentPlay->updateField(_world->getField().value());
     }
     currentPlay->update();
-    mainWindow->updatePlay(currentPlay);
 }
 
-STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, ai::interface::MainWindow *mainWindow): interfaceGateway(std::move(interfaceGateway)) { this->mainWindow = mainWindow; }
+STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway): interfaceGateway(std::move(interfaceGateway)) { }
 }  // namespace rtt

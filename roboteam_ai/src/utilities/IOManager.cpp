@@ -1,3 +1,4 @@
+#include <QtNetwork>
 #include "utilities/IOManager.h"
 
 #include <algorithm>
@@ -7,6 +8,7 @@
 #include "RobotHubMode.h"
 #include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
+#include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/Pause.h"
@@ -30,12 +32,6 @@ bool IOManager::init(bool isPrimaryAI) {
         } catch (const zmqpp::zmq_internal_exception& e) {
             success = false;
             RTT_ERROR("Failed to open settings publisher channel. Is it already taken?")
-        }
-        try {
-            this->simulationConfigurationPublisher = std::make_unique<rtt::net::SimulationConfigurationPublisher>();
-        } catch (const zmqpp::zmq_internal_exception& e) {
-            success = false;
-            RTT_ERROR("Failed to open simulation configuration publisher channel. Is it already taken?")
         }
     } else {
         try {
@@ -177,10 +173,12 @@ bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {
     return obtainedChannel;
 }
 
-bool IOManager::sendSimulationConfiguration(const proto::SimulationConfiguration& configuration) {
-    if (this->simulationConfigurationPublisher != nullptr) {
-        return this->simulationConfigurationPublisher->publish(configuration) > 0;
-    }
-    return false;
+void IOManager::sendPacketToSimulator(const SimulatorCommand& packet) {
+    std::unique_lock<std::mutex> lock(simulator_socket_mutex);
+    QByteArray datagram;
+    datagram.resize(packet.ByteSizeLong());
+    packet.SerializeToArray(datagram.data(), datagram.size());
+    simulator_socket.writeDatagram(datagram, QHostAddress::LocalHost, 10300);
 }
+
 }  // namespace rtt::ai::io

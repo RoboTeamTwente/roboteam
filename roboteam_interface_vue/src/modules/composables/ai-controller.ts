@@ -1,11 +1,12 @@
 import { computed } from 'vue'
-import { proto } from '../../generated/proto'
+import { ISimulatorCommand, proto } from '../../generated/proto'
 import { useAIDataStore } from '../stores/data-stores/ai-data-store'
 import { defineStore } from 'pinia'
 import { useSTPDataStore } from '../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
 import { useVisualizationStore } from '../stores/data-stores/visualization-store'
 import { useProtoWebSocket } from './proto-websocket'
+import { rand } from '@vueuse/core'
 
 export const useAiController = defineStore('aiController', () => {
   // Dependencies
@@ -28,6 +29,8 @@ export const useAiController = defineStore('aiController', () => {
 
   // Actions
   const setBallPos = (x: number, y: number) => send('setBallPos', { x, y })
+
+  const sendSimulatorCommand = (command: Object) => send('simulatorCommand', command);
 
   // Writable computed properties
   const useReferee = computed({
@@ -104,6 +107,7 @@ export const useAiController = defineStore('aiController', () => {
     robotHubMode,
     isPaused,
     currentPlayName,
-    currentRuleset
+    currentRuleset,
+    sendSimulatorCommand
   }
 })

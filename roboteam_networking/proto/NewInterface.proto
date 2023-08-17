@@ -3,6 +3,7 @@ import "GameSettings.proto";
 import "World.proto";
 import "State.proto";
 import "Vector2f.proto";
+import "ssl_simulation_control.proto";
 
 package proto;
 
@@ -157,5 +158,7 @@ message MsgFromInterface {
 
         bool pause_ai = 4; // true == stop, false == resume
         Vector2f set_ball_pos = 5;
+
+        SimulatorCommand simulator_command = 6;
     }
 }

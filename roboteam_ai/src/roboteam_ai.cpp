@@ -1,5 +1,7 @@
 #include <roboteam_utils/Print.h>
 #include <memory>
+#include <utility>
+#include <csignal>
 
 #include "RobotHubMode.h"
 #include "STPManager.h"
@@ -11,31 +13,21 @@
 
 namespace ui = rtt::ai::interface;
 
-ui::MainWindow* window;
+// Create a flag which signals to stpThread to stop
+std::atomic_flag stopFlag = ATOMIC_FLAG_INIT;
 
-void runStp(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway, std::atomic_bool& exitApplication) {
-    rtt::STPManager app{interfaceGateway, window};
-    app.start(exitApplication);
+void initializeExitHandler() {
+    struct sigaction sa {};
+    sa.sa_handler = [](int) {
+        RTT_INFO("SIGINT received, stopping...")
+        stopFlag.test_and_set();
+    };
+    sigaction(SIGINT, &sa, nullptr);
 }
 
-void setDarkTheme() {
-    qApp->setStyle(QStyleFactory::create("Fusion"));
-    QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::WindowText, Qt::white);
-    darkPalette.setColor(QPalette::Base, QColor(25, 25, 25));
-    darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
-    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
-    darkPalette.setColor(QPalette::Text, Qt::white);
-    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ButtonText, Qt::white);
-    darkPalette.setColor(QPalette::BrightText, Qt::red);
-    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
-    qApp->setPalette(darkPalette);
-    qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+void runStp(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway) {
+    rtt::STPManager app{std::move(interfaceGateway)};
+    app.start(stopFlag);
 }
 
 int main(int argc, char** argv) {
@@ -91,23 +83,8 @@ int main(int argc, char** argv) {
     RTT_DEBUG("Initialize Interface Server");
     auto interfaceGateway = std::make_shared<rtt::ai::io::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677); /// Shared-prt because the variable is shared accross threads
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    // initialize the interface
-    QApplication application(argc, argv);
-    setDarkTheme();
 
-    // Todo make this a not-global-static thingy
-    window = new ui::MainWindow{};
-    window->setWindowState(Qt::WindowMaximized);
-
-    //Create a flag which signals to the STP thread to stop if the interface is stopped
-    std::atomic_bool exitApplication = false;
-
-    std::thread stpThread(runStp, interfaceGateway, std::ref(exitApplication));
-
-    window->show();
-    bool runQT = application.exec();
-    exitApplication = true;
+    initializeExitHandler();
+    std::thread stpThread(runStp, interfaceGateway);
     stpThread.join();
-    return runQT;
 }

@@ -8,11 +8,11 @@ export default defineConfig({
     port: 8080,
     strictPort: true,
   },
-  envPrefix: ['VITE_', 'TAURI_'],
+  envPrefix: ['VITE_'],
   build: {
     target: ['es2021', 'chrome97', 'safari13'],
-    minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
-    sourcemap: !!process.env.TAURI_DEBUG,
+    minify: !process.env.VITE_DEBUG ? 'esbuild' : false,
+    sourcemap: !!process.env.VITE_DEBUG,
   },
   resolve: {
     alias: {

@@ -36,7 +36,10 @@ const formatFloat = (pos?: number | null): string => {
         v-on:click="uiStore.toggleRobotSelection(robot.id!)"
       >
         <div class="flex flex-wrap gap-1 mb-2">
-          <div class="badge badge-sm tooltip tooltip-bottom" :data-tip="uiStore.robotName(robot.id!)">
+          <div
+            class="badge badge-sm tooltip tooltip-bottom"
+            :data-tip="uiStore.robotName(robot.id!)"
+          >
             <font-awesome-icon icon="robot" class="w-3 h-3 mr-1" />{{ robot.id }}
           </div>
           <div

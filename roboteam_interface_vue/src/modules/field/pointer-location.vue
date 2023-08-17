@@ -32,7 +32,7 @@ const init = () => {
     const pos_x = (pos.x - props.app.stage.width / 2) / 100
     const pos_y = (pos.y - props.app.stage.height / 2) / 100
     console.log(props.app.stage.width)
-    cursorRef.value!.text = `(TODO fix) [${pos_x.toFixed(2)}x, ${(pos_y).toFixed(2)}y]`
+    cursorRef.value!.text = `(TODO fix) [${pos_x.toFixed(2)}x, ${pos_y.toFixed(2)}y]`
   },
   cleanUp = () => {
     console.log('Cleaning up pointer location')

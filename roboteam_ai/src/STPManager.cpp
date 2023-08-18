@@ -50,31 +50,31 @@ namespace rtt {
 
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
 const STPManager::PlaysVec STPManager::plays = ([] {
-    auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
+    auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
+    plays.emplace_back(std::make_unique<plays::AttackingPass>());
 //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::Attack>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::Halt>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendShot>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KeeperKickBall>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefensiveStopFormation>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::AggressiveStopFormation>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementThem>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::TimeOut>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThemPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUsPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThem>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUsPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThemPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickThem>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsAtGoal>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
+    plays.emplace_back(std::make_unique<plays::Attack>());
+    plays.emplace_back(std::make_unique<plays::Halt>());
+    plays.emplace_back(std::make_unique<plays::DefendShot>());
+    plays.emplace_back(std::make_unique<plays::DefendPass>());
+    plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
+    plays.emplace_back(std::make_unique<plays::DefensiveStopFormation>());
+    plays.emplace_back(std::make_unique<plays::AggressiveStopFormation>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementUs>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementThem>());
+    // plays.emplace_back(std::make_unique<play::TimeOut>());
+    plays.emplace_back(std::make_unique<plays::PenaltyThemPrepare>());
+    plays.emplace_back(std::make_unique<plays::PenaltyUsPrepare>());
+    plays.emplace_back(std::make_unique<plays::PenaltyThem>());
+    plays.emplace_back(std::make_unique<plays::PenaltyUs>());
+    plays.emplace_back(std::make_unique<plays::KickOffUsPrepare>());
+    plays.emplace_back(std::make_unique<plays::KickOffThemPrepare>());
+    plays.emplace_back(std::make_unique<plays::FreeKickThem>());
+    plays.emplace_back(std::make_unique<plays::FreeKickUsAtGoal>());
+    plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
+    plays.emplace_back(std::make_unique<plays::KickOffUs>());
+    plays.emplace_back(std::make_unique<plays::KickOffThem>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());

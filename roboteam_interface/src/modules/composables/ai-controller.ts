@@ -30,7 +30,7 @@ export const useAiController = defineStore('aiController', () => {
   // Actions
   const setBallPos = (x: number, y: number) => send('setBallPos', { x, y })
 
-  const sendSimulatorCommand = (command: Object) => send('simulatorCommand', command);
+  const sendSimulatorCommand = (command: ISimulatorCommand) => send('simulatorCommand', command);
 
   // Writable computed properties
   const useReferee = computed({

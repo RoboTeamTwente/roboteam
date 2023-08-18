@@ -37,6 +37,12 @@ const props = defineProps<{
             +
             <div class="kbd kbd-sm font-mono">right click</div>
           </li>
+          <li>
+            Place selected robots:
+            <div class="kbd kbd-sm font-mono">alt</div>
+            +
+            <div class="kbd kbd-sm font-mono">right click</div>
+          </li>
         </ul>
       </div>
     </div>

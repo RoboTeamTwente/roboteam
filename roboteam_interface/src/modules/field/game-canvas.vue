@@ -11,12 +11,15 @@ import Field from './field-graphics.vue'
 import Visualizations from './pointer-location.vue'
 import PointerLocation from './visualizations-graphics.vue'
 import { useAiController } from '../composables/ai-controller'
+import { useUIStore } from '../stores/ui-store'
+import { proto } from '../../generated/proto'
 
 const canvas = ref<HTMLCanvasElement | null>(null),
   appRef: ShallowRef<null | CustomPixiApplication> = shallowRef(null),
   visionData = useVisionDataStore(),
   aiData = useAIDataStore(),
-  aiController = useAiController()
+  aiController = useAiController(),
+  uiStore = useUIStore();
 
 const init = (length: number, width: number) => {
     const app = new CustomPixiApplication({
@@ -34,12 +37,34 @@ const init = (length: number, width: number) => {
     appRef.value = app
   },
   onStageClick = (e: FederatedPointerEvent) => {
-    if (e.button != 0 || !e.shiftKey) {
-      return
-    } // Only allow left click + shift
-    const pos = e.getLocalPosition(appRef.value!.drawingsContainer)
-    aiController.setBallPos(pos.x / 100, -pos.y / 100)
-    e.preventDefault()
+    if (e.button != 0) { return; }
+
+    // shift + left click
+    const pos = (() => {
+      const pixiPos = e.getLocalPosition(appRef.value!.drawingsContainer);
+      return {x: pixiPos.x / 100, y: -pixiPos.y / 100}
+    })();
+
+    if (e.shiftKey) {
+      aiController.sendSimulatorCommand({
+        control: { teleportBall: { ...pos } }
+      });
+    } else if (e.altKey) {
+      const robots = [...uiStore.selectedRobots].map(id => ({
+        id: { id: id, 'team': aiData.state!.gameSettings!.isYellow ? proto.Team.YELLOW : proto.Team.BLUE },
+        orientation: 0,
+        ...pos,
+      }));
+
+      aiController.sendSimulatorCommand({
+        control: {
+          teleportRobot: robots
+        }
+      });
+    }
+
+    e.preventDefault();
+    return
   },
   cleanUp = () => {
     console.log('cleaning up game canvas')

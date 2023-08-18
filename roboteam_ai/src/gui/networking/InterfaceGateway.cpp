@@ -53,6 +53,7 @@ InterfaceGateway::InterfaceGateway(int port) : webSocketServer(port), _publisher
         return;
     }
 
+    RTT_SUCCESS("WebSocketServer started on port ", port);
     webSocketServer.start();
 }
 

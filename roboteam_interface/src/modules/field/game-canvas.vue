@@ -19,7 +19,7 @@ const canvas = ref<HTMLCanvasElement | null>(null),
   visionData = useVisionDataStore(),
   aiData = useAIDataStore(),
   aiController = useAiController(),
-  uiStore = useUIStore()
+  uiStore = useUIStore();
 
 const init = (length: number, width: number) => {
     const app = new CustomPixiApplication({
@@ -33,17 +33,11 @@ const init = (length: number, width: number) => {
     app.stage.eventMode = 'static'
     app.stage.hitArea = app.screen
 
-    app.stage.addEventListener('pointerdown', onStageClick)
-    app.stage.addEventListener('pointermove', onStageClick)
+    app.stage.addEventListener('pointerdown', onPointerMove)
+    app.stage.addEventListener('pointermove', onPointerMove)
     appRef.value = app
   },
-  onStageClick = (e: FederatedPointerEvent) => {
-    console.log('asd')
-    console.log(e)
-    if (e.button != 0) {
-      return
-    }
-
+  onPointerMove = (e: FederatedPointerEvent) => {
     // shift + left click
     const pos = (() => {
       const pixiPos = e.getLocalPosition(appRef.value!.drawingsContainer)
@@ -53,8 +47,10 @@ const init = (length: number, width: number) => {
     if (e.shiftKey) {
       aiController.sendSimulatorCommand({
         control: { teleportBall: { ...pos } }
-      })
-    } else if (e.altKey) {
+      });
+    };
+
+    if (e.altKey) {
       const robots = [...uiStore.selectedRobots].map(id => ({
         id: { id: id, 'team': aiData.state!.gameSettings!.isYellow ? proto.Team.YELLOW : proto.Team.BLUE },
         orientation: 0,
@@ -66,18 +62,18 @@ const init = (length: number, width: number) => {
           teleportRobot: robots
         }
       })
-    }
+    };
 
     e.preventDefault()
     return
   },
   cleanUp = () => {
-    console.log('cleaning up game canvas')
-    appRef.value?.stage.removeEventListener('pointerdown', onStageClick)
-    appRef.value?.stage.removeEventListener('pointermove', onStageClick)
-    appRef.value?.destroy(false)
+    console.log('cleaning up game canvas');
+    appRef.value?.stage.removeEventListener('pointerdown', onPointerMove);
+    appRef.value?.stage.removeEventListener('pointermove', onPointerMove);
+    appRef.value?.destroy(false);
 
-    appRef.value = null
+    appRef.value = null;
   }
 
 watch(

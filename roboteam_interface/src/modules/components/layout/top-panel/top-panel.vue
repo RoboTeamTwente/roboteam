@@ -102,7 +102,12 @@ const togglePause = () => {
     </div>
     <div class="flex grow" />
     <div class="flex w-20 justify-end">
-      <info-dropdown :current-tick="stpData.currentTick" @disconnect-from-ai="aiController.close" />
+      <info-dropdown
+        :current-tick="stpData.latest?.currentTick ?? -1"
+        :tick-duration="stpData.latest?.tickDuration ?? -1"
+        :avg-tick-duration="stpData.latest?.averageTickDuration ?? -1"
+        @disconnect-from-ai="aiController.close"
+      />
     </div>
   </header>
 </template>

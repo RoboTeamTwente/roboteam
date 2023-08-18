@@ -10,7 +10,7 @@
 
 #include "InterfacePublisher.h"
 #include "ixwebsocket/IXWebSocketServer.h"
-#include "proto/NewInterface.pb.h"
+#include "proto/GUI.pb.h"
 #include "stp/Play.hpp"
 
 namespace rtt::ai::gui::net {

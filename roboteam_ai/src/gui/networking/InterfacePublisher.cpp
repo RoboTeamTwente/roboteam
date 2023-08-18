@@ -15,10 +15,12 @@ namespace rtt::ai::gui::net {
 
 InterfacePublisher::InterfacePublisher(ix::WebSocketServer& _wss) : wss(_wss) {}
 
-InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay, InterfacePublisher::PlayView plays, int currentTick) {
+InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay, InterfacePublisher::PlayView plays, int currentTick, double tickDuration, double averageTickDuration) {
     auto envelope = proto::MsgToInterface();
     const auto stpStatus = envelope.mutable_stp_status();
     stpStatus->set_current_tick(currentTick);
+    stpStatus->set_tick_duration(tickDuration);
+    stpStatus->set_average_tick_duration(averageTickDuration);
 
     stpStatus->set_score(selectedPlay->lastScore.value_or(-1));
 

@@ -7,7 +7,7 @@
 
 #include "stp/Play.hpp"
 
-#include <proto/NewInterface.pb.h>
+#include <proto/GUI.pb.h>
 #include <ixwebsocket/IXWebSocketServer.h>
 
 #include <functional>
@@ -26,7 +26,7 @@ class InterfacePublisher {
      * @param plays Vector of unique pointers to Play objects.
      * @param currentTick Current game tick.
      */
-    InterfacePublisher& publishStpStatus(stp::Play* selectedPlay, PlayView plays, int currentTick);
+    InterfacePublisher& publishStpStatus(stp::Play* selectedPlay, PlayView plays, int currentTick, double tickDuration, double averageTickDuration);
 
     /**
      * @brief Broadcasts the current game state to connected clients.

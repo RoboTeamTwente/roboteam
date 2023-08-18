@@ -7,7 +7,7 @@
 
 #include <span>
 
-#include "proto/NewInterface.pb.h"
+#include "proto/GUI.pb.h"
 #include "roboteam_utils/Vector2.h"
 
 namespace rtt::ai::gui {

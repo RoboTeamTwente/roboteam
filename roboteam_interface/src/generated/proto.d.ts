@@ -3,208 +3,519 @@ import Long = require("long");
 /** Namespace proto. */
 export namespace proto {
 
-    /** Properties of a RobotPath. */
-    interface IRobotPath {
+    /** Properties of a Drawing. */
+    interface IDrawing {
 
-        /** RobotPath robotId */
-        robotId?: (number|null);
+        /** Drawing retainForTicks */
+        retainForTicks?: (number|null);
 
-        /** RobotPath points */
-        points?: (proto.RobotPath.IPoint[]|null);
+        /** Drawing label */
+        label?: (string|null);
+
+        /** Drawing color */
+        color?: (proto.Drawing.Color|null);
+
+        /** Drawing method */
+        method?: (proto.Drawing.Method|null);
+
+        /** Drawing points */
+        points?: (proto.IVector2f[]|null);
+
+        /** Drawing category */
+        category?: (proto.Drawing.Category|null);
+
+        /** Drawing forRobotId */
+        forRobotId?: (number|null);
+
+        /** Drawing size */
+        size?: (number|null);
+
+        /** Drawing thickness */
+        thickness?: (number|null);
     }
 
-    /** Represents a RobotPath. */
-    class RobotPath implements IRobotPath {
+    /** Represents a Drawing. */
+    class Drawing implements IDrawing {
 
         /**
-         * Constructs a new RobotPath.
+         * Constructs a new Drawing.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IRobotPath);
+        constructor(properties?: proto.IDrawing);
 
-        /** RobotPath robotId. */
-        public robotId: number;
+        /** Drawing retainForTicks. */
+        public retainForTicks: number;
 
-        /** RobotPath points. */
-        public points: proto.RobotPath.IPoint[];
+        /** Drawing label. */
+        public label: string;
+
+        /** Drawing color. */
+        public color: proto.Drawing.Color;
+
+        /** Drawing method. */
+        public method: proto.Drawing.Method;
+
+        /** Drawing points. */
+        public points: proto.IVector2f[];
+
+        /** Drawing category. */
+        public category: proto.Drawing.Category;
+
+        /** Drawing forRobotId. */
+        public forRobotId: number;
+
+        /** Drawing size. */
+        public size: number;
+
+        /** Drawing thickness. */
+        public thickness: number;
 
         /**
-         * Creates a new RobotPath instance using the specified properties.
+         * Creates a new Drawing instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns RobotPath instance
+         * @returns Drawing instance
          */
-        public static create(properties?: proto.IRobotPath): proto.RobotPath;
+        public static create(properties?: proto.IDrawing): proto.Drawing;
 
         /**
-         * Encodes the specified RobotPath message. Does not implicitly {@link proto.RobotPath.verify|verify} messages.
-         * @param message RobotPath message or plain object to encode
+         * Encodes the specified Drawing message. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @param message Drawing message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IRobotPath, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified RobotPath message, length delimited. Does not implicitly {@link proto.RobotPath.verify|verify} messages.
-         * @param message RobotPath message or plain object to encode
+         * Encodes the specified Drawing message, length delimited. Does not implicitly {@link proto.Drawing.verify|verify} messages.
+         * @param message Drawing message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IRobotPath, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a RobotPath message from the specified reader or buffer.
+         * Decodes a Drawing message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns RobotPath
+         * @returns Drawing
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotPath;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Drawing;
 
         /**
-         * Decodes a RobotPath message from the specified reader or buffer, length delimited.
+         * Decodes a Drawing message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns RobotPath
+         * @returns Drawing
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotPath;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Drawing;
 
         /**
-         * Verifies a RobotPath message.
+         * Verifies a Drawing message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a RobotPath message from a plain object. Also converts values to their respective internal types.
+         * Creates a Drawing message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns RobotPath
+         * @returns Drawing
          */
-        public static fromObject(object: { [k: string]: any }): proto.RobotPath;
+        public static fromObject(object: { [k: string]: any }): proto.Drawing;
 
         /**
-         * Creates a plain object from a RobotPath message. Also converts values to other types if specified.
-         * @param message RobotPath
+         * Creates a plain object from a Drawing message. Also converts values to other types if specified.
+         * @param message Drawing
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.RobotPath, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.Drawing, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this RobotPath to JSON.
+         * Converts this Drawing to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for RobotPath
+         * Gets the default type url for Drawing
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    namespace RobotPath {
+    namespace Drawing {
 
-        /** Properties of a Point. */
-        interface IPoint {
-
-            /** Point x */
-            x?: (number|null);
-
-            /** Point y */
-            y?: (number|null);
+        /** Method enum. */
+        enum Method {
+            LINES_CONNECTED = 0,
+            DOTS = 1,
+            CROSSES = 2,
+            PLUSES = 3,
+            CIRCLES = 4
         }
 
-        /** Represents a Point. */
-        class Point implements IPoint {
+        /** Color enum. */
+        enum Color {
+            RED = 0,
+            GREEN = 1,
+            BLUE = 2,
+            YELLOW = 3,
+            CYAN = 4,
+            MAGENTA = 5,
+            WHITE = 6,
+            BLACK = 7
+        }
+
+        /** Category enum. */
+        enum Category {
+            PATH_PLANNING = 0,
+            DEBUG = 1
+        }
+    }
+
+    /** Properties of a Metric. */
+    interface IMetric {
+
+        /** Metric label */
+        label?: (string|null);
+
+        /** Metric boundedValue */
+        boundedValue?: (proto.Metric.IBoundedValue|null);
+
+        /** Metric decimal */
+        decimal?: (proto.Metric.IDecimal|null);
+    }
+
+    /** Represents a Metric. */
+    class Metric implements IMetric {
+
+        /**
+         * Constructs a new Metric.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IMetric);
+
+        /** Metric label. */
+        public label: string;
+
+        /** Metric boundedValue. */
+        public boundedValue?: (proto.Metric.IBoundedValue|null);
+
+        /** Metric decimal. */
+        public decimal?: (proto.Metric.IDecimal|null);
+
+        /** Metric value. */
+        public value?: ("boundedValue"|"decimal");
+
+        /**
+         * Creates a new Metric instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Metric instance
+         */
+        public static create(properties?: proto.IMetric): proto.Metric;
+
+        /**
+         * Encodes the specified Metric message. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @param message Metric message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Metric message, length delimited. Does not implicitly {@link proto.Metric.verify|verify} messages.
+         * @param message Metric message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric;
+
+        /**
+         * Decodes a Metric message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Metric
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric;
+
+        /**
+         * Verifies a Metric message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Metric message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Metric
+         */
+        public static fromObject(object: { [k: string]: any }): proto.Metric;
+
+        /**
+         * Creates a plain object from a Metric message. Also converts values to other types if specified.
+         * @param message Metric
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.Metric, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Metric to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for Metric
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace Metric {
+
+        /** Properties of a BoundedValue. */
+        interface IBoundedValue {
+
+            /** BoundedValue value */
+            value?: (number|null);
+
+            /** BoundedValue min */
+            min?: (number|null);
+
+            /** BoundedValue max */
+            max?: (number|null);
+
+            /** BoundedValue unit */
+            unit?: (string|null);
+        }
+
+        /** Represents a BoundedValue. */
+        class BoundedValue implements IBoundedValue {
 
             /**
-             * Constructs a new Point.
+             * Constructs a new BoundedValue.
              * @param [properties] Properties to set
              */
-            constructor(properties?: proto.RobotPath.IPoint);
+            constructor(properties?: proto.Metric.IBoundedValue);
 
-            /** Point x. */
-            public x: number;
+            /** BoundedValue value. */
+            public value: number;
 
-            /** Point y. */
-            public y: number;
+            /** BoundedValue min. */
+            public min: number;
+
+            /** BoundedValue max. */
+            public max: number;
+
+            /** BoundedValue unit. */
+            public unit: string;
 
             /**
-             * Creates a new Point instance using the specified properties.
+             * Creates a new BoundedValue instance using the specified properties.
              * @param [properties] Properties to set
-             * @returns Point instance
+             * @returns BoundedValue instance
              */
-            public static create(properties?: proto.RobotPath.IPoint): proto.RobotPath.Point;
+            public static create(properties?: proto.Metric.IBoundedValue): proto.Metric.BoundedValue;
 
             /**
-             * Encodes the specified Point message. Does not implicitly {@link proto.RobotPath.Point.verify|verify} messages.
-             * @param message Point message or plain object to encode
+             * Encodes the specified BoundedValue message. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @param message BoundedValue message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: proto.RobotPath.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified Point message, length delimited. Does not implicitly {@link proto.RobotPath.Point.verify|verify} messages.
-             * @param message Point message or plain object to encode
+             * Encodes the specified BoundedValue message, length delimited. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
+             * @param message BoundedValue message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: proto.RobotPath.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Decodes a Point message from the specified reader or buffer.
+             * Decodes a BoundedValue message from the specified reader or buffer.
              * @param reader Reader or buffer to decode from
              * @param [length] Message length if known beforehand
-             * @returns Point
+             * @returns BoundedValue
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotPath.Point;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.BoundedValue;
 
             /**
-             * Decodes a Point message from the specified reader or buffer, length delimited.
+             * Decodes a BoundedValue message from the specified reader or buffer, length delimited.
              * @param reader Reader or buffer to decode from
-             * @returns Point
+             * @returns BoundedValue
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotPath.Point;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.BoundedValue;
 
             /**
-             * Verifies a Point message.
+             * Verifies a BoundedValue message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
             public static verify(message: { [k: string]: any }): (string|null);
 
             /**
-             * Creates a Point message from a plain object. Also converts values to their respective internal types.
+             * Creates a BoundedValue message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
-             * @returns Point
+             * @returns BoundedValue
              */
-            public static fromObject(object: { [k: string]: any }): proto.RobotPath.Point;
+            public static fromObject(object: { [k: string]: any }): proto.Metric.BoundedValue;
 
             /**
-             * Creates a plain object from a Point message. Also converts values to other types if specified.
-             * @param message Point
+             * Creates a plain object from a BoundedValue message. Also converts values to other types if specified.
+             * @param message BoundedValue
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: proto.RobotPath.Point, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: proto.Metric.BoundedValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
-             * Converts this Point to JSON.
+             * Converts this BoundedValue to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };
 
             /**
-             * Gets the default type url for Point
+             * Gets the default type url for BoundedValue
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        /** Properties of a Decimal. */
+        interface IDecimal {
+
+            /** Decimal value */
+            value?: (number|null);
+
+            /** Decimal minRecorded */
+            minRecorded?: (number|null);
+
+            /** Decimal maxRecorded */
+            maxRecorded?: (number|null);
+
+            /** Decimal unit */
+            unit?: (string|null);
+        }
+
+        /** Represents a Decimal. */
+        class Decimal implements IDecimal {
+
+            /**
+             * Constructs a new Decimal.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.Metric.IDecimal);
+
+            /** Decimal value. */
+            public value: number;
+
+            /** Decimal minRecorded. */
+            public minRecorded: number;
+
+            /** Decimal maxRecorded. */
+            public maxRecorded: number;
+
+            /** Decimal unit. */
+            public unit: string;
+
+            /**
+             * Creates a new Decimal instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Decimal instance
+             */
+            public static create(properties?: proto.Metric.IDecimal): proto.Metric.Decimal;
+
+            /**
+             * Encodes the specified Decimal message. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @param message Decimal message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Decimal message, length delimited. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
+             * @param message Decimal message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.Decimal;
+
+            /**
+             * Decodes a Decimal message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Decimal
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.Decimal;
+
+            /**
+             * Verifies a Decimal message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Decimal message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Decimal
+             */
+            public static fromObject(object: { [k: string]: any }): proto.Metric.Decimal;
+
+            /**
+             * Creates a plain object from a Decimal message. Also converts values to other types if specified.
+             * @param message Decimal
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.Metric.Decimal, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Decimal to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for Decimal
              * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns The default type url
              */
@@ -212,236 +523,1361 @@ export namespace proto {
         }
     }
 
-    /** Properties of a RobotSTP. */
-    interface IRobotSTP {
+    /** Properties of a STPStatus. */
+    interface ISTPStatus {
 
-        /** RobotSTP robotId */
-        robotId?: (number|null);
+        /** STPStatus currentPlay */
+        currentPlay?: (proto.IPlayInfo|null);
 
-        /** RobotSTP role */
-        role?: (string|null);
+        /** STPStatus score */
+        score?: (number|null);
 
-        /** RobotSTP roleStatus */
-        roleStatus?: (string|null);
+        /** STPStatus robots */
+        robots?: ({ [k: string]: proto.STPStatus.ISTPRobot }|null);
 
-        /** RobotSTP tactic */
-        tactic?: (string|null);
+        /** STPStatus scoredPlays */
+        scoredPlays?: (proto.STPStatus.IScoredPlay[]|null);
 
-        /** RobotSTP tacticStatus */
-        tacticStatus?: (string|null);
+        /** STPStatus currentTick */
+        currentTick?: (number|null);
 
-        /** RobotSTP skill */
-        skill?: (string|null);
+        /** STPStatus tickDuration */
+        tickDuration?: (number|null);
 
-        /** RobotSTP skillStatus */
-        skillStatus?: (string|null);
+        /** STPStatus averageTickDuration */
+        averageTickDuration?: (number|null);
     }
 
-    /** Represents a RobotSTP. */
-    class RobotSTP implements IRobotSTP {
+    /** Represents a STPStatus. */
+    class STPStatus implements ISTPStatus {
 
         /**
-         * Constructs a new RobotSTP.
+         * Constructs a new STPStatus.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IRobotSTP);
+        constructor(properties?: proto.ISTPStatus);
 
-        /** RobotSTP robotId. */
-        public robotId: number;
+        /** STPStatus currentPlay. */
+        public currentPlay?: (proto.IPlayInfo|null);
 
-        /** RobotSTP role. */
-        public role: string;
+        /** STPStatus score. */
+        public score: number;
 
-        /** RobotSTP roleStatus. */
-        public roleStatus: string;
+        /** STPStatus robots. */
+        public robots: { [k: string]: proto.STPStatus.ISTPRobot };
 
-        /** RobotSTP tactic. */
-        public tactic: string;
+        /** STPStatus scoredPlays. */
+        public scoredPlays: proto.STPStatus.IScoredPlay[];
 
-        /** RobotSTP tacticStatus. */
-        public tacticStatus: string;
+        /** STPStatus currentTick. */
+        public currentTick: number;
 
-        /** RobotSTP skill. */
-        public skill: string;
+        /** STPStatus tickDuration. */
+        public tickDuration: number;
 
-        /** RobotSTP skillStatus. */
-        public skillStatus: string;
+        /** STPStatus averageTickDuration. */
+        public averageTickDuration: number;
 
         /**
-         * Creates a new RobotSTP instance using the specified properties.
+         * Creates a new STPStatus instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns RobotSTP instance
+         * @returns STPStatus instance
          */
-        public static create(properties?: proto.IRobotSTP): proto.RobotSTP;
+        public static create(properties?: proto.ISTPStatus): proto.STPStatus;
 
         /**
-         * Encodes the specified RobotSTP message. Does not implicitly {@link proto.RobotSTP.verify|verify} messages.
-         * @param message RobotSTP message or plain object to encode
+         * Encodes the specified STPStatus message. Does not implicitly {@link proto.STPStatus.verify|verify} messages.
+         * @param message STPStatus message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IRobotSTP, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.ISTPStatus, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified RobotSTP message, length delimited. Does not implicitly {@link proto.RobotSTP.verify|verify} messages.
-         * @param message RobotSTP message or plain object to encode
+         * Encodes the specified STPStatus message, length delimited. Does not implicitly {@link proto.STPStatus.verify|verify} messages.
+         * @param message STPStatus message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IRobotSTP, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.ISTPStatus, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a RobotSTP message from the specified reader or buffer.
+         * Decodes a STPStatus message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns RobotSTP
+         * @returns STPStatus
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotSTP;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus;
 
         /**
-         * Decodes a RobotSTP message from the specified reader or buffer, length delimited.
+         * Decodes a STPStatus message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns RobotSTP
+         * @returns STPStatus
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotSTP;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus;
 
         /**
-         * Verifies a RobotSTP message.
+         * Verifies a STPStatus message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a RobotSTP message from a plain object. Also converts values to their respective internal types.
+         * Creates a STPStatus message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns RobotSTP
+         * @returns STPStatus
          */
-        public static fromObject(object: { [k: string]: any }): proto.RobotSTP;
+        public static fromObject(object: { [k: string]: any }): proto.STPStatus;
 
         /**
-         * Creates a plain object from a RobotSTP message. Also converts values to other types if specified.
-         * @param message RobotSTP
+         * Creates a plain object from a STPStatus message. Also converts values to other types if specified.
+         * @param message STPStatus
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.RobotSTP, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.STPStatus, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this RobotSTP to JSON.
+         * Converts this STPStatus to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for RobotSTP
+         * Gets the default type url for STPStatus
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a AIData. */
-    interface IAIData {
+    namespace STPStatus {
 
-        /** AIData robotStps */
-        robotStps?: (proto.IRobotSTP[]|null);
+        /** Properties of a STPRobot. */
+        interface ISTPRobot {
 
-        /** AIData robotPaths */
-        robotPaths?: (proto.IRobotPath[]|null);
+            /** STPRobot id */
+            id?: (number|null);
+
+            /** STPRobot role */
+            role?: (proto.STPStatus.STPRobot.IRole|null);
+
+            /** STPRobot tactic */
+            tactic?: (proto.STPStatus.STPRobot.ITactic|null);
+
+            /** STPRobot skill */
+            skill?: (proto.STPStatus.STPRobot.ISkill|null);
+        }
+
+        /** Represents a STPRobot. */
+        class STPRobot implements ISTPRobot {
+
+            /**
+             * Constructs a new STPRobot.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.STPStatus.ISTPRobot);
+
+            /** STPRobot id. */
+            public id: number;
+
+            /** STPRobot role. */
+            public role?: (proto.STPStatus.STPRobot.IRole|null);
+
+            /** STPRobot tactic. */
+            public tactic?: (proto.STPStatus.STPRobot.ITactic|null);
+
+            /** STPRobot skill. */
+            public skill?: (proto.STPStatus.STPRobot.ISkill|null);
+
+            /**
+             * Creates a new STPRobot instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns STPRobot instance
+             */
+            public static create(properties?: proto.STPStatus.ISTPRobot): proto.STPStatus.STPRobot;
+
+            /**
+             * Encodes the specified STPRobot message. Does not implicitly {@link proto.STPStatus.STPRobot.verify|verify} messages.
+             * @param message STPRobot message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.STPStatus.ISTPRobot, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified STPRobot message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.verify|verify} messages.
+             * @param message STPRobot message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.STPStatus.ISTPRobot, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a STPRobot message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns STPRobot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot;
+
+            /**
+             * Decodes a STPRobot message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns STPRobot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot;
+
+            /**
+             * Verifies a STPRobot message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a STPRobot message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns STPRobot
+             */
+            public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot;
+
+            /**
+             * Creates a plain object from a STPRobot message. Also converts values to other types if specified.
+             * @param message STPRobot
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.STPStatus.STPRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this STPRobot to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for STPRobot
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        namespace STPRobot {
+
+            /** Status enum. */
+            enum Status {
+                WAITING = 0,
+                SUCCESSFUL = 1,
+                FAILURE = 2,
+                RUNNING = 3
+            }
+
+            /** Properties of a Role. */
+            interface IRole {
+
+                /** Role name */
+                name?: (string|null);
+
+                /** Role status */
+                status?: (proto.STPStatus.STPRobot.Status|null);
+            }
+
+            /** Represents a Role. */
+            class Role implements IRole {
+
+                /**
+                 * Constructs a new Role.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.STPStatus.STPRobot.IRole);
+
+                /** Role name. */
+                public name: string;
+
+                /** Role status. */
+                public status: proto.STPStatus.STPRobot.Status;
+
+                /**
+                 * Creates a new Role instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Role instance
+                 */
+                public static create(properties?: proto.STPStatus.STPRobot.IRole): proto.STPStatus.STPRobot.Role;
+
+                /**
+                 * Encodes the specified Role message. Does not implicitly {@link proto.STPStatus.STPRobot.Role.verify|verify} messages.
+                 * @param message Role message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.STPStatus.STPRobot.IRole, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified Role message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Role.verify|verify} messages.
+                 * @param message Role message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.STPStatus.STPRobot.IRole, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Role message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Role
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Role;
+
+                /**
+                 * Decodes a Role message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns Role
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Role;
+
+                /**
+                 * Verifies a Role message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a Role message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns Role
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Role;
+
+                /**
+                 * Creates a plain object from a Role message. Also converts values to other types if specified.
+                 * @param message Role
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.STPStatus.STPRobot.Role, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this Role to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for Role
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Tactic. */
+            interface ITactic {
+
+                /** Tactic name */
+                name?: (string|null);
+
+                /** Tactic status */
+                status?: (proto.STPStatus.STPRobot.Status|null);
+            }
+
+            /** Represents a Tactic. */
+            class Tactic implements ITactic {
+
+                /**
+                 * Constructs a new Tactic.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.STPStatus.STPRobot.ITactic);
+
+                /** Tactic name. */
+                public name: string;
+
+                /** Tactic status. */
+                public status: proto.STPStatus.STPRobot.Status;
+
+                /**
+                 * Creates a new Tactic instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Tactic instance
+                 */
+                public static create(properties?: proto.STPStatus.STPRobot.ITactic): proto.STPStatus.STPRobot.Tactic;
+
+                /**
+                 * Encodes the specified Tactic message. Does not implicitly {@link proto.STPStatus.STPRobot.Tactic.verify|verify} messages.
+                 * @param message Tactic message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.STPStatus.STPRobot.ITactic, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified Tactic message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Tactic.verify|verify} messages.
+                 * @param message Tactic message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.STPStatus.STPRobot.ITactic, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Tactic message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Tactic
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Tactic;
+
+                /**
+                 * Decodes a Tactic message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns Tactic
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Tactic;
+
+                /**
+                 * Verifies a Tactic message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a Tactic message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns Tactic
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Tactic;
+
+                /**
+                 * Creates a plain object from a Tactic message. Also converts values to other types if specified.
+                 * @param message Tactic
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.STPStatus.STPRobot.Tactic, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this Tactic to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for Tactic
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Skill. */
+            interface ISkill {
+
+                /** Skill name */
+                name?: (string|null);
+
+                /** Skill status */
+                status?: (proto.STPStatus.STPRobot.Status|null);
+            }
+
+            /** Represents a Skill. */
+            class Skill implements ISkill {
+
+                /**
+                 * Constructs a new Skill.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.STPStatus.STPRobot.ISkill);
+
+                /** Skill name. */
+                public name: string;
+
+                /** Skill status. */
+                public status: proto.STPStatus.STPRobot.Status;
+
+                /**
+                 * Creates a new Skill instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Skill instance
+                 */
+                public static create(properties?: proto.STPStatus.STPRobot.ISkill): proto.STPStatus.STPRobot.Skill;
+
+                /**
+                 * Encodes the specified Skill message. Does not implicitly {@link proto.STPStatus.STPRobot.Skill.verify|verify} messages.
+                 * @param message Skill message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.STPStatus.STPRobot.ISkill, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified Skill message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Skill.verify|verify} messages.
+                 * @param message Skill message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.STPStatus.STPRobot.ISkill, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Skill message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Skill
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Skill;
+
+                /**
+                 * Decodes a Skill message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns Skill
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Skill;
+
+                /**
+                 * Verifies a Skill message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a Skill message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns Skill
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Skill;
+
+                /**
+                 * Creates a plain object from a Skill message. Also converts values to other types if specified.
+                 * @param message Skill
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.STPStatus.STPRobot.Skill, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this Skill to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for Skill
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+
+        /** Properties of a ScoredPlay. */
+        interface IScoredPlay {
+
+            /** ScoredPlay playName */
+            playName?: (string|null);
+
+            /** ScoredPlay playScore */
+            playScore?: (number|null);
+        }
+
+        /** Represents a ScoredPlay. */
+        class ScoredPlay implements IScoredPlay {
+
+            /**
+             * Constructs a new ScoredPlay.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.STPStatus.IScoredPlay);
+
+            /** ScoredPlay playName. */
+            public playName: string;
+
+            /** ScoredPlay playScore. */
+            public playScore: number;
+
+            /**
+             * Creates a new ScoredPlay instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ScoredPlay instance
+             */
+            public static create(properties?: proto.STPStatus.IScoredPlay): proto.STPStatus.ScoredPlay;
+
+            /**
+             * Encodes the specified ScoredPlay message. Does not implicitly {@link proto.STPStatus.ScoredPlay.verify|verify} messages.
+             * @param message ScoredPlay message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.STPStatus.IScoredPlay, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ScoredPlay message, length delimited. Does not implicitly {@link proto.STPStatus.ScoredPlay.verify|verify} messages.
+             * @param message ScoredPlay message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.STPStatus.IScoredPlay, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ScoredPlay message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns ScoredPlay
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.ScoredPlay;
+
+            /**
+             * Decodes a ScoredPlay message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns ScoredPlay
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.ScoredPlay;
+
+            /**
+             * Verifies a ScoredPlay message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a ScoredPlay message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns ScoredPlay
+             */
+            public static fromObject(object: { [k: string]: any }): proto.STPStatus.ScoredPlay;
+
+            /**
+             * Creates a plain object from a ScoredPlay message. Also converts values to other types if specified.
+             * @param message ScoredPlay
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.STPStatus.ScoredPlay, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this ScoredPlay to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for ScoredPlay
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
     }
 
-    /** Represents a AIData. */
-    class AIData implements IAIData {
+    /** Properties of a RuntimeConfig. */
+    interface IRuntimeConfig {
+
+        /** RuntimeConfig useReferee */
+        useReferee?: (boolean|null);
+
+        /** RuntimeConfig ignoreInvariants */
+        ignoreInvariants?: (boolean|null);
+    }
+
+    /** Represents a RuntimeConfig. */
+    class RuntimeConfig implements IRuntimeConfig {
 
         /**
-         * Constructs a new AIData.
+         * Constructs a new RuntimeConfig.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IAIData);
+        constructor(properties?: proto.IRuntimeConfig);
 
-        /** AIData robotStps. */
-        public robotStps: proto.IRobotSTP[];
+        /** RuntimeConfig useReferee. */
+        public useReferee: boolean;
 
-        /** AIData robotPaths. */
-        public robotPaths: proto.IRobotPath[];
+        /** RuntimeConfig ignoreInvariants. */
+        public ignoreInvariants: boolean;
 
         /**
-         * Creates a new AIData instance using the specified properties.
+         * Creates a new RuntimeConfig instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns AIData instance
+         * @returns RuntimeConfig instance
          */
-        public static create(properties?: proto.IAIData): proto.AIData;
+        public static create(properties?: proto.IRuntimeConfig): proto.RuntimeConfig;
 
         /**
-         * Encodes the specified AIData message. Does not implicitly {@link proto.AIData.verify|verify} messages.
-         * @param message AIData message or plain object to encode
+         * Encodes the specified RuntimeConfig message. Does not implicitly {@link proto.RuntimeConfig.verify|verify} messages.
+         * @param message RuntimeConfig message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IAIData, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRuntimeConfig, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified AIData message, length delimited. Does not implicitly {@link proto.AIData.verify|verify} messages.
-         * @param message AIData message or plain object to encode
+         * Encodes the specified RuntimeConfig message, length delimited. Does not implicitly {@link proto.RuntimeConfig.verify|verify} messages.
+         * @param message RuntimeConfig message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IAIData, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRuntimeConfig, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a AIData message from the specified reader or buffer.
+         * Decodes a RuntimeConfig message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns AIData
+         * @returns RuntimeConfig
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.AIData;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RuntimeConfig;
 
         /**
-         * Decodes a AIData message from the specified reader or buffer, length delimited.
+         * Decodes a RuntimeConfig message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns AIData
+         * @returns RuntimeConfig
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.AIData;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RuntimeConfig;
 
         /**
-         * Verifies a AIData message.
+         * Verifies a RuntimeConfig message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a AIData message from a plain object. Also converts values to their respective internal types.
+         * Creates a RuntimeConfig message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns AIData
+         * @returns RuntimeConfig
          */
-        public static fromObject(object: { [k: string]: any }): proto.AIData;
+        public static fromObject(object: { [k: string]: any }): proto.RuntimeConfig;
 
         /**
-         * Creates a plain object from a AIData message. Also converts values to other types if specified.
-         * @param message AIData
+         * Creates a plain object from a RuntimeConfig message. Also converts values to other types if specified.
+         * @param message RuntimeConfig
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.AIData, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RuntimeConfig, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this AIData to JSON.
+         * Converts this RuntimeConfig to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for AIData
+         * Gets the default type url for RuntimeConfig
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a AIState. */
+    interface IAIState {
+
+        /** AIState isPaused */
+        isPaused?: (boolean|null);
+
+        /** AIState plays */
+        plays?: (string[]|null);
+
+        /** AIState ruleSets */
+        ruleSets?: (string[]|null);
+
+        /** AIState gameSettings */
+        gameSettings?: (proto.IGameSettings|null);
+
+        /** AIState runtimeConfig */
+        runtimeConfig?: (proto.IRuntimeConfig|null);
+    }
+
+    /** Represents a AIState. */
+    class AIState implements IAIState {
+
+        /**
+         * Constructs a new AIState.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IAIState);
+
+        /** AIState isPaused. */
+        public isPaused: boolean;
+
+        /** AIState plays. */
+        public plays: string[];
+
+        /** AIState ruleSets. */
+        public ruleSets: string[];
+
+        /** AIState gameSettings. */
+        public gameSettings?: (proto.IGameSettings|null);
+
+        /** AIState runtimeConfig. */
+        public runtimeConfig?: (proto.IRuntimeConfig|null);
+
+        /**
+         * Creates a new AIState instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns AIState instance
+         */
+        public static create(properties?: proto.IAIState): proto.AIState;
+
+        /**
+         * Encodes the specified AIState message. Does not implicitly {@link proto.AIState.verify|verify} messages.
+         * @param message AIState message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IAIState, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified AIState message, length delimited. Does not implicitly {@link proto.AIState.verify|verify} messages.
+         * @param message AIState message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IAIState, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a AIState message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns AIState
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.AIState;
+
+        /**
+         * Decodes a AIState message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns AIState
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.AIState;
+
+        /**
+         * Verifies a AIState message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a AIState message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns AIState
+         */
+        public static fromObject(object: { [k: string]: any }): proto.AIState;
+
+        /**
+         * Creates a plain object from a AIState message. Also converts values to other types if specified.
+         * @param message AIState
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.AIState, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this AIState to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for AIState
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a PlayInfo. */
+    interface IPlayInfo {
+
+        /** PlayInfo playName */
+        playName?: (string|null);
+
+        /** PlayInfo rulesetName */
+        rulesetName?: (string|null);
+
+        /** PlayInfo keeperId */
+        keeperId?: (number|null);
+    }
+
+    /** Represents a PlayInfo. */
+    class PlayInfo implements IPlayInfo {
+
+        /**
+         * Constructs a new PlayInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IPlayInfo);
+
+        /** PlayInfo playName. */
+        public playName: string;
+
+        /** PlayInfo rulesetName. */
+        public rulesetName: string;
+
+        /** PlayInfo keeperId. */
+        public keeperId: number;
+
+        /**
+         * Creates a new PlayInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns PlayInfo instance
+         */
+        public static create(properties?: proto.IPlayInfo): proto.PlayInfo;
+
+        /**
+         * Encodes the specified PlayInfo message. Does not implicitly {@link proto.PlayInfo.verify|verify} messages.
+         * @param message PlayInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IPlayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified PlayInfo message, length delimited. Does not implicitly {@link proto.PlayInfo.verify|verify} messages.
+         * @param message PlayInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IPlayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a PlayInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns PlayInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.PlayInfo;
+
+        /**
+         * Decodes a PlayInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns PlayInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.PlayInfo;
+
+        /**
+         * Verifies a PlayInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a PlayInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns PlayInfo
+         */
+        public static fromObject(object: { [k: string]: any }): proto.PlayInfo;
+
+        /**
+         * Creates a plain object from a PlayInfo message. Also converts values to other types if specified.
+         * @param message PlayInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.PlayInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this PlayInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PlayInfo
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a MsgToInterface. */
+    interface IMsgToInterface {
+
+        /** MsgToInterface stpStatus */
+        stpStatus?: (proto.ISTPStatus|null);
+
+        /** MsgToInterface aiState */
+        aiState?: (proto.IAIState|null);
+
+        /** MsgToInterface state */
+        state?: (proto.IState|null);
+
+        /** MsgToInterface visualizations */
+        visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
+    }
+
+    /** Represents a MsgToInterface. */
+    class MsgToInterface implements IMsgToInterface {
+
+        /**
+         * Constructs a new MsgToInterface.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IMsgToInterface);
+
+        /** MsgToInterface stpStatus. */
+        public stpStatus?: (proto.ISTPStatus|null);
+
+        /** MsgToInterface aiState. */
+        public aiState?: (proto.IAIState|null);
+
+        /** MsgToInterface state. */
+        public state?: (proto.IState|null);
+
+        /** MsgToInterface visualizations. */
+        public visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
+
+        /** MsgToInterface kind. */
+        public kind?: ("stpStatus"|"aiState"|"state"|"visualizations");
+
+        /**
+         * Creates a new MsgToInterface instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns MsgToInterface instance
+         */
+        public static create(properties?: proto.IMsgToInterface): proto.MsgToInterface;
+
+        /**
+         * Encodes the specified MsgToInterface message. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
+         * @param message MsgToInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified MsgToInterface message, length delimited. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
+         * @param message MsgToInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a MsgToInterface message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns MsgToInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface;
+
+        /**
+         * Decodes a MsgToInterface message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns MsgToInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface;
+
+        /**
+         * Verifies a MsgToInterface message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a MsgToInterface message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns MsgToInterface
+         */
+        public static fromObject(object: { [k: string]: any }): proto.MsgToInterface;
+
+        /**
+         * Creates a plain object from a MsgToInterface message. Also converts values to other types if specified.
+         * @param message MsgToInterface
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.MsgToInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this MsgToInterface to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for MsgToInterface
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace MsgToInterface {
+
+        /** Properties of a VisualizationBuffer. */
+        interface IVisualizationBuffer {
+
+            /** VisualizationBuffer drawings */
+            drawings?: (proto.IDrawing[]|null);
+
+            /** VisualizationBuffer metrics */
+            metrics?: (proto.IMetric[]|null);
+        }
+
+        /** Represents a VisualizationBuffer. */
+        class VisualizationBuffer implements IVisualizationBuffer {
+
+            /**
+             * Constructs a new VisualizationBuffer.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.MsgToInterface.IVisualizationBuffer);
+
+            /** VisualizationBuffer drawings. */
+            public drawings: proto.IDrawing[];
+
+            /** VisualizationBuffer metrics. */
+            public metrics: proto.IMetric[];
+
+            /**
+             * Creates a new VisualizationBuffer instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns VisualizationBuffer instance
+             */
+            public static create(properties?: proto.MsgToInterface.IVisualizationBuffer): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @param message VisualizationBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * @param message VisualizationBuffer message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns VisualizationBuffer
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Verifies a VisualizationBuffer message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns VisualizationBuffer
+             */
+            public static fromObject(object: { [k: string]: any }): proto.MsgToInterface.VisualizationBuffer;
+
+            /**
+             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
+             * @param message VisualizationBuffer
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.MsgToInterface.VisualizationBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this VisualizationBuffer to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for VisualizationBuffer
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+    }
+
+    /** Properties of a MsgFromInterface. */
+    interface IMsgFromInterface {
+
+        /** MsgFromInterface setPlay */
+        setPlay?: (proto.IPlayInfo|null);
+
+        /** MsgFromInterface setGameSettings */
+        setGameSettings?: (proto.IGameSettings|null);
+
+        /** MsgFromInterface setRuntimeConfig */
+        setRuntimeConfig?: (proto.IRuntimeConfig|null);
+
+        /** MsgFromInterface pauseAi */
+        pauseAi?: (boolean|null);
+
+        /** MsgFromInterface setBallPos */
+        setBallPos?: (proto.IVector2f|null);
+
+        /** MsgFromInterface simulatorCommand */
+        simulatorCommand?: (ISimulatorCommand|null);
+    }
+
+    /** Represents a MsgFromInterface. */
+    class MsgFromInterface implements IMsgFromInterface {
+
+        /**
+         * Constructs a new MsgFromInterface.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IMsgFromInterface);
+
+        /** MsgFromInterface setPlay. */
+        public setPlay?: (proto.IPlayInfo|null);
+
+        /** MsgFromInterface setGameSettings. */
+        public setGameSettings?: (proto.IGameSettings|null);
+
+        /** MsgFromInterface setRuntimeConfig. */
+        public setRuntimeConfig?: (proto.IRuntimeConfig|null);
+
+        /** MsgFromInterface pauseAi. */
+        public pauseAi?: (boolean|null);
+
+        /** MsgFromInterface setBallPos. */
+        public setBallPos?: (proto.IVector2f|null);
+
+        /** MsgFromInterface simulatorCommand. */
+        public simulatorCommand?: (ISimulatorCommand|null);
+
+        /** MsgFromInterface kind. */
+        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|"simulatorCommand");
+
+        /**
+         * Creates a new MsgFromInterface instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns MsgFromInterface instance
+         */
+        public static create(properties?: proto.IMsgFromInterface): proto.MsgFromInterface;
+
+        /**
+         * Encodes the specified MsgFromInterface message. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @param message MsgFromInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified MsgFromInterface message, length delimited. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
+         * @param message MsgFromInterface message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgFromInterface;
+
+        /**
+         * Decodes a MsgFromInterface message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns MsgFromInterface
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgFromInterface;
+
+        /**
+         * Verifies a MsgFromInterface message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a MsgFromInterface message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns MsgFromInterface
+         */
+        public static fromObject(object: { [k: string]: any }): proto.MsgFromInterface;
+
+        /**
+         * Creates a plain object from a MsgFromInterface message. Also converts values to other types if specified.
+         * @param message MsgFromInterface
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.MsgFromInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this MsgFromInterface to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for MsgFromInterface
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
@@ -573,1090 +2009,1434 @@ export namespace proto {
         }
     }
 
-    /** Properties of a Handshake. */
-    interface IHandshake {
+    /** Properties of a State. */
+    interface IState {
 
-        /** Handshake moduleName */
-        moduleName?: (string|null);
+        /** State lastSeenWorld */
+        lastSeenWorld?: (proto.IWorld|null);
 
-        /** Handshake declarations */
-        declarations?: (proto.IUiOptionDeclarations|null);
+        /** State commandExtrapolatedWorld */
+        commandExtrapolatedWorld?: (proto.IWorld|null);
 
-        /** Handshake values */
-        values?: (proto.IUiValues|null);
+        /** State ballCameraWorld */
+        ballCameraWorld?: (proto.IWorld|null);
+
+        /** State blueRobotParameters */
+        blueRobotParameters?: (proto.ITeamParameters|null);
+
+        /** State yellowRobotParameters */
+        yellowRobotParameters?: (proto.ITeamParameters|null);
+
+        /** State field */
+        field?: (proto.ISSL_GeometryData|null);
+
+        /** State referee */
+        referee?: (proto.ISSL_Referee|null);
+
+        /** State processedVisionPackets */
+        processedVisionPackets?: (proto.ISSL_WrapperPacket[]|null);
+
+        /** State processedRefereePackets */
+        processedRefereePackets?: (proto.ISSL_Referee[]|null);
+
+        /** State processedFeedbackPackets */
+        processedFeedbackPackets?: (proto.IRobotsFeedback[]|null);
     }
 
-    /** Represents a Handshake. */
-    class Handshake implements IHandshake {
+    /** Represents a State. */
+    class State implements IState {
 
         /**
-         * Constructs a new Handshake.
+         * Constructs a new State.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IHandshake);
+        constructor(properties?: proto.IState);
 
-        /** Handshake moduleName. */
-        public moduleName: string;
+        /** State lastSeenWorld. */
+        public lastSeenWorld?: (proto.IWorld|null);
 
-        /** Handshake declarations. */
-        public declarations?: (proto.IUiOptionDeclarations|null);
+        /** State commandExtrapolatedWorld. */
+        public commandExtrapolatedWorld?: (proto.IWorld|null);
 
-        /** Handshake values. */
-        public values?: (proto.IUiValues|null);
+        /** State ballCameraWorld. */
+        public ballCameraWorld?: (proto.IWorld|null);
+
+        /** State blueRobotParameters. */
+        public blueRobotParameters?: (proto.ITeamParameters|null);
+
+        /** State yellowRobotParameters. */
+        public yellowRobotParameters?: (proto.ITeamParameters|null);
+
+        /** State field. */
+        public field?: (proto.ISSL_GeometryData|null);
+
+        /** State referee. */
+        public referee?: (proto.ISSL_Referee|null);
+
+        /** State processedVisionPackets. */
+        public processedVisionPackets: proto.ISSL_WrapperPacket[];
+
+        /** State processedRefereePackets. */
+        public processedRefereePackets: proto.ISSL_Referee[];
+
+        /** State processedFeedbackPackets. */
+        public processedFeedbackPackets: proto.IRobotsFeedback[];
 
         /**
-         * Creates a new Handshake instance using the specified properties.
+         * Creates a new State instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Handshake instance
+         * @returns State instance
          */
-        public static create(properties?: proto.IHandshake): proto.Handshake;
+        public static create(properties?: proto.IState): proto.State;
 
         /**
-         * Encodes the specified Handshake message. Does not implicitly {@link proto.Handshake.verify|verify} messages.
-         * @param message Handshake message or plain object to encode
+         * Encodes the specified State message. Does not implicitly {@link proto.State.verify|verify} messages.
+         * @param message State message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IHandshake, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IState, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Handshake message, length delimited. Does not implicitly {@link proto.Handshake.verify|verify} messages.
-         * @param message Handshake message or plain object to encode
+         * Encodes the specified State message, length delimited. Does not implicitly {@link proto.State.verify|verify} messages.
+         * @param message State message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IHandshake, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IState, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Handshake message from the specified reader or buffer.
+         * Decodes a State message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Handshake
+         * @returns State
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Handshake;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.State;
 
         /**
-         * Decodes a Handshake message from the specified reader or buffer, length delimited.
+         * Decodes a State message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Handshake
+         * @returns State
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Handshake;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.State;
 
         /**
-         * Verifies a Handshake message.
+         * Verifies a State message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Handshake message from a plain object. Also converts values to their respective internal types.
+         * Creates a State message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Handshake
+         * @returns State
          */
-        public static fromObject(object: { [k: string]: any }): proto.Handshake;
+        public static fromObject(object: { [k: string]: any }): proto.State;
 
         /**
-         * Creates a plain object from a Handshake message. Also converts values to other types if specified.
-         * @param message Handshake
+         * Creates a plain object from a State message. Also converts values to other types if specified.
+         * @param message State
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Handshake, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.State, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Handshake to JSON.
+         * Converts this State to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Handshake
+         * Gets the default type url for State
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a Slider. */
-    interface ISlider {
+    /** Properties of a World. */
+    interface IWorld {
 
-        /** Slider text */
-        text?: (string|null);
+        /** World time */
+        time?: (number|Long|null);
 
-        /** Slider min */
-        min?: (number|null);
+        /** World id */
+        id?: (number|null);
 
-        /** Slider max */
-        max?: (number|null);
+        /** World ball */
+        ball?: (proto.IWorldBall|null);
 
-        /** Slider interval */
-        interval?: (number|null);
+        /** World yellow */
+        yellow?: (proto.IWorldRobot[]|null);
 
-        /** Slider default */
-        "default"?: (number|null);
+        /** World blue */
+        blue?: (proto.IWorldRobot[]|null);
 
-        /** Slider dpi */
-        dpi?: (number|null);
+        /** World yellowUnseenRobots */
+        yellowUnseenRobots?: (proto.IFeedbackOnlyRobot[]|null);
+
+        /** World blueUnseenRobots */
+        blueUnseenRobots?: (proto.IFeedbackOnlyRobot[]|null);
     }
 
-    /** Represents a Slider. */
-    class Slider implements ISlider {
+    /** Represents a World. */
+    class World implements IWorld {
 
         /**
-         * Constructs a new Slider.
+         * Constructs a new World.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISlider);
+        constructor(properties?: proto.IWorld);
 
-        /** Slider text. */
-        public text: string;
+        /** World time. */
+        public time: (number|Long);
 
-        /** Slider min. */
-        public min: number;
+        /** World id. */
+        public id: number;
 
-        /** Slider max. */
-        public max: number;
+        /** World ball. */
+        public ball?: (proto.IWorldBall|null);
 
-        /** Slider interval. */
-        public interval: number;
+        /** World yellow. */
+        public yellow: proto.IWorldRobot[];
 
-        /** Slider default. */
-        public default: number;
+        /** World blue. */
+        public blue: proto.IWorldRobot[];
 
-        /** Slider dpi. */
-        public dpi: number;
+        /** World yellowUnseenRobots. */
+        public yellowUnseenRobots: proto.IFeedbackOnlyRobot[];
+
+        /** World blueUnseenRobots. */
+        public blueUnseenRobots: proto.IFeedbackOnlyRobot[];
 
         /**
-         * Creates a new Slider instance using the specified properties.
+         * Creates a new World instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Slider instance
+         * @returns World instance
          */
-        public static create(properties?: proto.ISlider): proto.Slider;
+        public static create(properties?: proto.IWorld): proto.World;
 
         /**
-         * Encodes the specified Slider message. Does not implicitly {@link proto.Slider.verify|verify} messages.
-         * @param message Slider message or plain object to encode
+         * Encodes the specified World message. Does not implicitly {@link proto.World.verify|verify} messages.
+         * @param message World message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ISlider, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IWorld, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Slider message, length delimited. Does not implicitly {@link proto.Slider.verify|verify} messages.
-         * @param message Slider message or plain object to encode
+         * Encodes the specified World message, length delimited. Does not implicitly {@link proto.World.verify|verify} messages.
+         * @param message World message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ISlider, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IWorld, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Slider message from the specified reader or buffer.
+         * Decodes a World message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Slider
+         * @returns World
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Slider;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.World;
 
         /**
-         * Decodes a Slider message from the specified reader or buffer, length delimited.
+         * Decodes a World message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Slider
+         * @returns World
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Slider;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.World;
 
         /**
-         * Verifies a Slider message.
+         * Verifies a World message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Slider message from a plain object. Also converts values to their respective internal types.
+         * Creates a World message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Slider
+         * @returns World
          */
-        public static fromObject(object: { [k: string]: any }): proto.Slider;
+        public static fromObject(object: { [k: string]: any }): proto.World;
 
         /**
-         * Creates a plain object from a Slider message. Also converts values to other types if specified.
-         * @param message Slider
+         * Creates a plain object from a World message. Also converts values to other types if specified.
+         * @param message World
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Slider, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.World, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Slider to JSON.
+         * Converts this World to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Slider
+         * Gets the default type url for World
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a Checkbox. */
-    interface ICheckbox {
+    /** Properties of a WorldBall. */
+    interface IWorldBall {
 
-        /** Checkbox text */
-        text?: (string|null);
+        /** WorldBall area */
+        area?: (number|null);
+
+        /** WorldBall pos */
+        pos?: (proto.IVector2f|null);
+
+        /** WorldBall z */
+        z?: (number|null);
+
+        /** WorldBall vel */
+        vel?: (proto.IVector2f|null);
+
+        /** WorldBall zVel */
+        zVel?: (number|null);
+
+        /** WorldBall visible */
+        visible?: (boolean|null);
     }
 
-    /** Represents a Checkbox. */
-    class Checkbox implements ICheckbox {
+    /** Represents a WorldBall. */
+    class WorldBall implements IWorldBall {
 
         /**
-         * Constructs a new Checkbox.
+         * Constructs a new WorldBall.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ICheckbox);
+        constructor(properties?: proto.IWorldBall);
 
-        /** Checkbox text. */
-        public text: string;
+        /** WorldBall area. */
+        public area: number;
+
+        /** WorldBall pos. */
+        public pos?: (proto.IVector2f|null);
+
+        /** WorldBall z. */
+        public z: number;
+
+        /** WorldBall vel. */
+        public vel?: (proto.IVector2f|null);
+
+        /** WorldBall zVel. */
+        public zVel: number;
+
+        /** WorldBall visible. */
+        public visible: boolean;
 
         /**
-         * Creates a new Checkbox instance using the specified properties.
+         * Creates a new WorldBall instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Checkbox instance
+         * @returns WorldBall instance
          */
-        public static create(properties?: proto.ICheckbox): proto.Checkbox;
+        public static create(properties?: proto.IWorldBall): proto.WorldBall;
 
         /**
-         * Encodes the specified Checkbox message. Does not implicitly {@link proto.Checkbox.verify|verify} messages.
-         * @param message Checkbox message or plain object to encode
+         * Encodes the specified WorldBall message. Does not implicitly {@link proto.WorldBall.verify|verify} messages.
+         * @param message WorldBall message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ICheckbox, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IWorldBall, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Checkbox message, length delimited. Does not implicitly {@link proto.Checkbox.verify|verify} messages.
-         * @param message Checkbox message or plain object to encode
+         * Encodes the specified WorldBall message, length delimited. Does not implicitly {@link proto.WorldBall.verify|verify} messages.
+         * @param message WorldBall message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ICheckbox, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IWorldBall, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Checkbox message from the specified reader or buffer.
+         * Decodes a WorldBall message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Checkbox
+         * @returns WorldBall
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Checkbox;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.WorldBall;
 
         /**
-         * Decodes a Checkbox message from the specified reader or buffer, length delimited.
+         * Decodes a WorldBall message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Checkbox
+         * @returns WorldBall
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Checkbox;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.WorldBall;
 
         /**
-         * Verifies a Checkbox message.
+         * Verifies a WorldBall message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Checkbox message from a plain object. Also converts values to their respective internal types.
+         * Creates a WorldBall message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Checkbox
+         * @returns WorldBall
          */
-        public static fromObject(object: { [k: string]: any }): proto.Checkbox;
+        public static fromObject(object: { [k: string]: any }): proto.WorldBall;
 
         /**
-         * Creates a plain object from a Checkbox message. Also converts values to other types if specified.
-         * @param message Checkbox
+         * Creates a plain object from a WorldBall message. Also converts values to other types if specified.
+         * @param message WorldBall
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Checkbox, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.WorldBall, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Checkbox to JSON.
+         * Converts this WorldBall to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Checkbox
+         * Gets the default type url for WorldBall
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a Dropdown. */
-    interface IDropdown {
+    /** Properties of a Vector2f. */
+    interface IVector2f {
 
-        /** Dropdown text */
-        text?: (string|null);
+        /** Vector2f x */
+        x?: (number|null);
 
-        /** Dropdown options */
-        options?: (string[]|null);
+        /** Vector2f y */
+        y?: (number|null);
     }
 
-    /** Represents a Dropdown. */
-    class Dropdown implements IDropdown {
+    /** Represents a Vector2f. */
+    class Vector2f implements IVector2f {
 
         /**
-         * Constructs a new Dropdown.
+         * Constructs a new Vector2f.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IDropdown);
+        constructor(properties?: proto.IVector2f);
 
-        /** Dropdown text. */
-        public text: string;
+        /** Vector2f x. */
+        public x: number;
 
-        /** Dropdown options. */
-        public options: string[];
+        /** Vector2f y. */
+        public y: number;
 
         /**
-         * Creates a new Dropdown instance using the specified properties.
+         * Creates a new Vector2f instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Dropdown instance
+         * @returns Vector2f instance
          */
-        public static create(properties?: proto.IDropdown): proto.Dropdown;
+        public static create(properties?: proto.IVector2f): proto.Vector2f;
 
         /**
-         * Encodes the specified Dropdown message. Does not implicitly {@link proto.Dropdown.verify|verify} messages.
-         * @param message Dropdown message or plain object to encode
+         * Encodes the specified Vector2f message. Does not implicitly {@link proto.Vector2f.verify|verify} messages.
+         * @param message Vector2f message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IDropdown, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IVector2f, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Dropdown message, length delimited. Does not implicitly {@link proto.Dropdown.verify|verify} messages.
-         * @param message Dropdown message or plain object to encode
+         * Encodes the specified Vector2f message, length delimited. Does not implicitly {@link proto.Vector2f.verify|verify} messages.
+         * @param message Vector2f message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IDropdown, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IVector2f, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Dropdown message from the specified reader or buffer.
+         * Decodes a Vector2f message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Dropdown
+         * @returns Vector2f
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Dropdown;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector2f;
 
         /**
-         * Decodes a Dropdown message from the specified reader or buffer, length delimited.
+         * Decodes a Vector2f message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Dropdown
+         * @returns Vector2f
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Dropdown;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector2f;
 
         /**
-         * Verifies a Dropdown message.
+         * Verifies a Vector2f message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Dropdown message from a plain object. Also converts values to their respective internal types.
+         * Creates a Vector2f message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Dropdown
+         * @returns Vector2f
          */
-        public static fromObject(object: { [k: string]: any }): proto.Dropdown;
+        public static fromObject(object: { [k: string]: any }): proto.Vector2f;
 
         /**
-         * Creates a plain object from a Dropdown message. Also converts values to other types if specified.
-         * @param message Dropdown
+         * Creates a plain object from a Vector2f message. Also converts values to other types if specified.
+         * @param message Vector2f
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Dropdown, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.Vector2f, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Dropdown to JSON.
+         * Converts this Vector2f to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Dropdown
+         * Gets the default type url for Vector2f
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a RadioButton. */
-    interface IRadioButton {
+    /** Properties of a WorldRobot. */
+    interface IWorldRobot {
 
-        /** RadioButton options */
-        options?: (string[]|null);
+        /** WorldRobot id */
+        id?: (number|null);
+
+        /** WorldRobot pos */
+        pos?: (proto.IVector2f|null);
+
+        /** WorldRobot angle */
+        angle?: (number|null);
+
+        /** WorldRobot vel */
+        vel?: (proto.IVector2f|null);
+
+        /** WorldRobot w */
+        w?: (number|null);
+
+        /** WorldRobot feedbackInfo */
+        feedbackInfo?: (proto.IRobotProcessedFeedback|null);
     }
 
-    /** Represents a RadioButton. */
-    class RadioButton implements IRadioButton {
+    /** Represents a WorldRobot. */
+    class WorldRobot implements IWorldRobot {
 
         /**
-         * Constructs a new RadioButton.
+         * Constructs a new WorldRobot.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IRadioButton);
+        constructor(properties?: proto.IWorldRobot);
 
-        /** RadioButton options. */
-        public options: string[];
+        /** WorldRobot id. */
+        public id: number;
+
+        /** WorldRobot pos. */
+        public pos?: (proto.IVector2f|null);
+
+        /** WorldRobot angle. */
+        public angle: number;
+
+        /** WorldRobot vel. */
+        public vel?: (proto.IVector2f|null);
+
+        /** WorldRobot w. */
+        public w: number;
+
+        /** WorldRobot feedbackInfo. */
+        public feedbackInfo?: (proto.IRobotProcessedFeedback|null);
 
         /**
-         * Creates a new RadioButton instance using the specified properties.
+         * Creates a new WorldRobot instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns RadioButton instance
+         * @returns WorldRobot instance
          */
-        public static create(properties?: proto.IRadioButton): proto.RadioButton;
+        public static create(properties?: proto.IWorldRobot): proto.WorldRobot;
 
         /**
-         * Encodes the specified RadioButton message. Does not implicitly {@link proto.RadioButton.verify|verify} messages.
-         * @param message RadioButton message or plain object to encode
+         * Encodes the specified WorldRobot message. Does not implicitly {@link proto.WorldRobot.verify|verify} messages.
+         * @param message WorldRobot message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IRadioButton, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IWorldRobot, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified RadioButton message, length delimited. Does not implicitly {@link proto.RadioButton.verify|verify} messages.
-         * @param message RadioButton message or plain object to encode
+         * Encodes the specified WorldRobot message, length delimited. Does not implicitly {@link proto.WorldRobot.verify|verify} messages.
+         * @param message WorldRobot message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IRadioButton, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IWorldRobot, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a RadioButton message from the specified reader or buffer.
+         * Decodes a WorldRobot message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns RadioButton
+         * @returns WorldRobot
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RadioButton;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.WorldRobot;
 
         /**
-         * Decodes a RadioButton message from the specified reader or buffer, length delimited.
+         * Decodes a WorldRobot message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns RadioButton
+         * @returns WorldRobot
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RadioButton;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.WorldRobot;
 
         /**
-         * Verifies a RadioButton message.
+         * Verifies a WorldRobot message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a RadioButton message from a plain object. Also converts values to their respective internal types.
+         * Creates a WorldRobot message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns RadioButton
+         * @returns WorldRobot
          */
-        public static fromObject(object: { [k: string]: any }): proto.RadioButton;
+        public static fromObject(object: { [k: string]: any }): proto.WorldRobot;
 
         /**
-         * Creates a plain object from a RadioButton message. Also converts values to other types if specified.
-         * @param message RadioButton
+         * Creates a plain object from a WorldRobot message. Also converts values to other types if specified.
+         * @param message WorldRobot
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.RadioButton, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.WorldRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this RadioButton to JSON.
+         * Converts this WorldRobot to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for RadioButton
+         * Gets the default type url for WorldRobot
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a TextField. */
-    interface ITextField {
+    /** Properties of a RobotWheel. */
+    interface IRobotWheel {
 
-        /** TextField text */
-        text?: (string|null);
+        /** RobotWheel locked */
+        locked?: (boolean|null);
+
+        /** RobotWheel braking */
+        braking?: (boolean|null);
     }
 
-    /** Represents a TextField. */
-    class TextField implements ITextField {
+    /** Represents a RobotWheel. */
+    class RobotWheel implements IRobotWheel {
 
         /**
-         * Constructs a new TextField.
+         * Constructs a new RobotWheel.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ITextField);
+        constructor(properties?: proto.IRobotWheel);
 
-        /** TextField text. */
-        public text: string;
+        /** RobotWheel locked. */
+        public locked: boolean;
+
+        /** RobotWheel braking. */
+        public braking: boolean;
 
         /**
-         * Creates a new TextField instance using the specified properties.
+         * Creates a new RobotWheel instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns TextField instance
+         * @returns RobotWheel instance
          */
-        public static create(properties?: proto.ITextField): proto.TextField;
+        public static create(properties?: proto.IRobotWheel): proto.RobotWheel;
 
         /**
-         * Encodes the specified TextField message. Does not implicitly {@link proto.TextField.verify|verify} messages.
-         * @param message TextField message or plain object to encode
+         * Encodes the specified RobotWheel message. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
+         * @param message RobotWheel message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ITextField, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRobotWheel, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified TextField message, length delimited. Does not implicitly {@link proto.TextField.verify|verify} messages.
-         * @param message TextField message or plain object to encode
+         * Encodes the specified RobotWheel message, length delimited. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
+         * @param message RobotWheel message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ITextField, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRobotWheel, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a TextField message from the specified reader or buffer.
+         * Decodes a RobotWheel message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns TextField
+         * @returns RobotWheel
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.TextField;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotWheel;
 
         /**
-         * Decodes a TextField message from the specified reader or buffer, length delimited.
+         * Decodes a RobotWheel message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns TextField
+         * @returns RobotWheel
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.TextField;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotWheel;
 
         /**
-         * Verifies a TextField message.
+         * Verifies a RobotWheel message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a TextField message from a plain object. Also converts values to their respective internal types.
+         * Creates a RobotWheel message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns TextField
+         * @returns RobotWheel
          */
-        public static fromObject(object: { [k: string]: any }): proto.TextField;
+        public static fromObject(object: { [k: string]: any }): proto.RobotWheel;
 
         /**
-         * Creates a plain object from a TextField message. Also converts values to other types if specified.
-         * @param message TextField
+         * Creates a plain object from a RobotWheel message. Also converts values to other types if specified.
+         * @param message RobotWheel
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.TextField, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RobotWheel, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this TextField to JSON.
+         * Converts this RobotWheel to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for TextField
+         * Gets the default type url for RobotWheel
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of an UiOptionDeclaration. */
-    interface IUiOptionDeclaration {
+    /** Properties of a RobotWheels. */
+    interface IRobotWheels {
 
-        /** UiOptionDeclaration path */
-        path?: (string|null);
+        /** RobotWheels rightFront */
+        rightFront?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration isMutable */
-        isMutable?: (boolean|null);
+        /** RobotWheels rightBack */
+        rightBack?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration description */
-        description?: (string|null);
+        /** RobotWheels leftBack */
+        leftBack?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration slider */
-        slider?: (proto.ISlider|null);
-
-        /** UiOptionDeclaration checkbox */
-        checkbox?: (proto.ICheckbox|null);
-
-        /** UiOptionDeclaration dropdown */
-        dropdown?: (proto.IDropdown|null);
-
-        /** UiOptionDeclaration radiobutton */
-        radiobutton?: (proto.IRadioButton|null);
-
-        /** UiOptionDeclaration textfield */
-        textfield?: (proto.ITextField|null);
-
-        /** UiOptionDeclaration default */
-        "default"?: (proto.IUiValue|null);
+        /** RobotWheels leftFront */
+        leftFront?: (proto.IRobotWheel|null);
     }
 
-    /** Represents an UiOptionDeclaration. */
-    class UiOptionDeclaration implements IUiOptionDeclaration {
+    /** Represents a RobotWheels. */
+    class RobotWheels implements IRobotWheels {
 
         /**
-         * Constructs a new UiOptionDeclaration.
+         * Constructs a new RobotWheels.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IUiOptionDeclaration);
+        constructor(properties?: proto.IRobotWheels);
 
-        /** UiOptionDeclaration path. */
-        public path: string;
+        /** RobotWheels rightFront. */
+        public rightFront?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration isMutable. */
-        public isMutable: boolean;
+        /** RobotWheels rightBack. */
+        public rightBack?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration description. */
-        public description: string;
+        /** RobotWheels leftBack. */
+        public leftBack?: (proto.IRobotWheel|null);
 
-        /** UiOptionDeclaration slider. */
-        public slider?: (proto.ISlider|null);
-
-        /** UiOptionDeclaration checkbox. */
-        public checkbox?: (proto.ICheckbox|null);
-
-        /** UiOptionDeclaration dropdown. */
-        public dropdown?: (proto.IDropdown|null);
-
-        /** UiOptionDeclaration radiobutton. */
-        public radiobutton?: (proto.IRadioButton|null);
-
-        /** UiOptionDeclaration textfield. */
-        public textfield?: (proto.ITextField|null);
-
-        /** UiOptionDeclaration default. */
-        public default?: (proto.IUiValue|null);
-
-        /** UiOptionDeclaration uiElements. */
-        public uiElements?: ("slider"|"checkbox"|"dropdown"|"radiobutton"|"textfield");
+        /** RobotWheels leftFront. */
+        public leftFront?: (proto.IRobotWheel|null);
 
         /**
-         * Creates a new UiOptionDeclaration instance using the specified properties.
+         * Creates a new RobotWheels instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns UiOptionDeclaration instance
+         * @returns RobotWheels instance
          */
-        public static create(properties?: proto.IUiOptionDeclaration): proto.UiOptionDeclaration;
+        public static create(properties?: proto.IRobotWheels): proto.RobotWheels;
 
         /**
-         * Encodes the specified UiOptionDeclaration message. Does not implicitly {@link proto.UiOptionDeclaration.verify|verify} messages.
-         * @param message UiOptionDeclaration message or plain object to encode
+         * Encodes the specified RobotWheels message. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
+         * @param message RobotWheels message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IUiOptionDeclaration, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRobotWheels, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified UiOptionDeclaration message, length delimited. Does not implicitly {@link proto.UiOptionDeclaration.verify|verify} messages.
-         * @param message UiOptionDeclaration message or plain object to encode
+         * Encodes the specified RobotWheels message, length delimited. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
+         * @param message RobotWheels message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IUiOptionDeclaration, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRobotWheels, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an UiOptionDeclaration message from the specified reader or buffer.
+         * Decodes a RobotWheels message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns UiOptionDeclaration
+         * @returns RobotWheels
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.UiOptionDeclaration;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotWheels;
 
         /**
-         * Decodes an UiOptionDeclaration message from the specified reader or buffer, length delimited.
+         * Decodes a RobotWheels message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns UiOptionDeclaration
+         * @returns RobotWheels
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.UiOptionDeclaration;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotWheels;
 
         /**
-         * Verifies an UiOptionDeclaration message.
+         * Verifies a RobotWheels message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an UiOptionDeclaration message from a plain object. Also converts values to their respective internal types.
+         * Creates a RobotWheels message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns UiOptionDeclaration
+         * @returns RobotWheels
          */
-        public static fromObject(object: { [k: string]: any }): proto.UiOptionDeclaration;
+        public static fromObject(object: { [k: string]: any }): proto.RobotWheels;
 
         /**
-         * Creates a plain object from an UiOptionDeclaration message. Also converts values to other types if specified.
-         * @param message UiOptionDeclaration
+         * Creates a plain object from a RobotWheels message. Also converts values to other types if specified.
+         * @param message RobotWheels
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.UiOptionDeclaration, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RobotWheels, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this UiOptionDeclaration to JSON.
+         * Converts this RobotWheels to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for UiOptionDeclaration
+         * Gets the default type url for RobotWheels
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of an UiOptionDeclarations. */
-    interface IUiOptionDeclarations {
+    /** Properties of a RobotProcessedFeedback. */
+    interface IRobotProcessedFeedback {
 
-        /** UiOptionDeclarations options */
-        options?: (proto.IUiOptionDeclaration[]|null);
+        /** RobotProcessedFeedback ballSensorSeesBall */
+        ballSensorSeesBall?: (boolean|null);
+
+        /** RobotProcessedFeedback ballPosition */
+        ballPosition?: (number|null);
+
+        /** RobotProcessedFeedback ballSensorIsWorking */
+        ballSensorIsWorking?: (boolean|null);
+
+        /** RobotProcessedFeedback dribblerSeesBall */
+        dribblerSeesBall?: (boolean|null);
+
+        /** RobotProcessedFeedback xsensIsCalibrated */
+        xsensIsCalibrated?: (boolean|null);
+
+        /** RobotProcessedFeedback capacitorIsCharged */
+        capacitorIsCharged?: (boolean|null);
+
+        /** RobotProcessedFeedback wheelInformation */
+        wheelInformation?: (proto.IRobotWheels|null);
+
+        /** RobotProcessedFeedback batteryLevel */
+        batteryLevel?: (number|null);
+
+        /** RobotProcessedFeedback signalStrength */
+        signalStrength?: (number|null);
     }
 
-    /** Represents an UiOptionDeclarations. */
-    class UiOptionDeclarations implements IUiOptionDeclarations {
+    /** Represents a RobotProcessedFeedback. */
+    class RobotProcessedFeedback implements IRobotProcessedFeedback {
 
         /**
-         * Constructs a new UiOptionDeclarations.
+         * Constructs a new RobotProcessedFeedback.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IUiOptionDeclarations);
+        constructor(properties?: proto.IRobotProcessedFeedback);
 
-        /** UiOptionDeclarations options. */
-        public options: proto.IUiOptionDeclaration[];
+        /** RobotProcessedFeedback ballSensorSeesBall. */
+        public ballSensorSeesBall: boolean;
+
+        /** RobotProcessedFeedback ballPosition. */
+        public ballPosition: number;
+
+        /** RobotProcessedFeedback ballSensorIsWorking. */
+        public ballSensorIsWorking: boolean;
+
+        /** RobotProcessedFeedback dribblerSeesBall. */
+        public dribblerSeesBall: boolean;
+
+        /** RobotProcessedFeedback xsensIsCalibrated. */
+        public xsensIsCalibrated: boolean;
+
+        /** RobotProcessedFeedback capacitorIsCharged. */
+        public capacitorIsCharged: boolean;
+
+        /** RobotProcessedFeedback wheelInformation. */
+        public wheelInformation?: (proto.IRobotWheels|null);
+
+        /** RobotProcessedFeedback batteryLevel. */
+        public batteryLevel: number;
+
+        /** RobotProcessedFeedback signalStrength. */
+        public signalStrength: number;
 
         /**
-         * Creates a new UiOptionDeclarations instance using the specified properties.
+         * Creates a new RobotProcessedFeedback instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns UiOptionDeclarations instance
+         * @returns RobotProcessedFeedback instance
          */
-        public static create(properties?: proto.IUiOptionDeclarations): proto.UiOptionDeclarations;
+        public static create(properties?: proto.IRobotProcessedFeedback): proto.RobotProcessedFeedback;
 
         /**
-         * Encodes the specified UiOptionDeclarations message. Does not implicitly {@link proto.UiOptionDeclarations.verify|verify} messages.
-         * @param message UiOptionDeclarations message or plain object to encode
+         * Encodes the specified RobotProcessedFeedback message. Does not implicitly {@link proto.RobotProcessedFeedback.verify|verify} messages.
+         * @param message RobotProcessedFeedback message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IUiOptionDeclarations, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRobotProcessedFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified UiOptionDeclarations message, length delimited. Does not implicitly {@link proto.UiOptionDeclarations.verify|verify} messages.
-         * @param message UiOptionDeclarations message or plain object to encode
+         * Encodes the specified RobotProcessedFeedback message, length delimited. Does not implicitly {@link proto.RobotProcessedFeedback.verify|verify} messages.
+         * @param message RobotProcessedFeedback message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IUiOptionDeclarations, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRobotProcessedFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an UiOptionDeclarations message from the specified reader or buffer.
+         * Decodes a RobotProcessedFeedback message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns UiOptionDeclarations
+         * @returns RobotProcessedFeedback
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.UiOptionDeclarations;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotProcessedFeedback;
 
         /**
-         * Decodes an UiOptionDeclarations message from the specified reader or buffer, length delimited.
+         * Decodes a RobotProcessedFeedback message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns UiOptionDeclarations
+         * @returns RobotProcessedFeedback
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.UiOptionDeclarations;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotProcessedFeedback;
 
         /**
-         * Verifies an UiOptionDeclarations message.
+         * Verifies a RobotProcessedFeedback message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an UiOptionDeclarations message from a plain object. Also converts values to their respective internal types.
+         * Creates a RobotProcessedFeedback message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns UiOptionDeclarations
+         * @returns RobotProcessedFeedback
          */
-        public static fromObject(object: { [k: string]: any }): proto.UiOptionDeclarations;
+        public static fromObject(object: { [k: string]: any }): proto.RobotProcessedFeedback;
 
         /**
-         * Creates a plain object from an UiOptionDeclarations message. Also converts values to other types if specified.
-         * @param message UiOptionDeclarations
+         * Creates a plain object from a RobotProcessedFeedback message. Also converts values to other types if specified.
+         * @param message RobotProcessedFeedback
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.UiOptionDeclarations, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RobotProcessedFeedback, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this UiOptionDeclarations to JSON.
+         * Converts this RobotProcessedFeedback to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for UiOptionDeclarations
+         * Gets the default type url for RobotProcessedFeedback
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of an UiValue. */
-    interface IUiValue {
+    /** Properties of a FeedbackOnlyRobot. */
+    interface IFeedbackOnlyRobot {
 
-        /** UiValue floatValue */
-        floatValue?: (number|null);
+        /** FeedbackOnlyRobot id */
+        id?: (number|null);
 
-        /** UiValue boolValue */
-        boolValue?: (boolean|null);
-
-        /** UiValue integerValue */
-        integerValue?: (number|Long|null);
-
-        /** UiValue textValue */
-        textValue?: (string|null);
+        /** FeedbackOnlyRobot feedback */
+        feedback?: (proto.IRobotProcessedFeedback|null);
     }
 
-    /** Represents an UiValue. */
-    class UiValue implements IUiValue {
+    /** Represents a FeedbackOnlyRobot. */
+    class FeedbackOnlyRobot implements IFeedbackOnlyRobot {
 
         /**
-         * Constructs a new UiValue.
+         * Constructs a new FeedbackOnlyRobot.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IUiValue);
+        constructor(properties?: proto.IFeedbackOnlyRobot);
 
-        /** UiValue floatValue. */
-        public floatValue?: (number|null);
+        /** FeedbackOnlyRobot id. */
+        public id: number;
 
-        /** UiValue boolValue. */
-        public boolValue?: (boolean|null);
-
-        /** UiValue integerValue. */
-        public integerValue?: (number|Long|null);
-
-        /** UiValue textValue. */
-        public textValue?: (string|null);
-
-        /** UiValue value. */
-        public value?: ("floatValue"|"boolValue"|"integerValue"|"textValue");
+        /** FeedbackOnlyRobot feedback. */
+        public feedback?: (proto.IRobotProcessedFeedback|null);
 
         /**
-         * Creates a new UiValue instance using the specified properties.
+         * Creates a new FeedbackOnlyRobot instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns UiValue instance
+         * @returns FeedbackOnlyRobot instance
          */
-        public static create(properties?: proto.IUiValue): proto.UiValue;
+        public static create(properties?: proto.IFeedbackOnlyRobot): proto.FeedbackOnlyRobot;
 
         /**
-         * Encodes the specified UiValue message. Does not implicitly {@link proto.UiValue.verify|verify} messages.
-         * @param message UiValue message or plain object to encode
+         * Encodes the specified FeedbackOnlyRobot message. Does not implicitly {@link proto.FeedbackOnlyRobot.verify|verify} messages.
+         * @param message FeedbackOnlyRobot message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IUiValue, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IFeedbackOnlyRobot, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified UiValue message, length delimited. Does not implicitly {@link proto.UiValue.verify|verify} messages.
-         * @param message UiValue message or plain object to encode
+         * Encodes the specified FeedbackOnlyRobot message, length delimited. Does not implicitly {@link proto.FeedbackOnlyRobot.verify|verify} messages.
+         * @param message FeedbackOnlyRobot message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IUiValue, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IFeedbackOnlyRobot, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an UiValue message from the specified reader or buffer.
+         * Decodes a FeedbackOnlyRobot message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns UiValue
+         * @returns FeedbackOnlyRobot
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.UiValue;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.FeedbackOnlyRobot;
 
         /**
-         * Decodes an UiValue message from the specified reader or buffer, length delimited.
+         * Decodes a FeedbackOnlyRobot message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns UiValue
+         * @returns FeedbackOnlyRobot
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.UiValue;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.FeedbackOnlyRobot;
 
         /**
-         * Verifies an UiValue message.
+         * Verifies a FeedbackOnlyRobot message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an UiValue message from a plain object. Also converts values to their respective internal types.
+         * Creates a FeedbackOnlyRobot message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns UiValue
+         * @returns FeedbackOnlyRobot
          */
-        public static fromObject(object: { [k: string]: any }): proto.UiValue;
+        public static fromObject(object: { [k: string]: any }): proto.FeedbackOnlyRobot;
 
         /**
-         * Creates a plain object from an UiValue message. Also converts values to other types if specified.
-         * @param message UiValue
+         * Creates a plain object from a FeedbackOnlyRobot message. Also converts values to other types if specified.
+         * @param message FeedbackOnlyRobot
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.UiValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.FeedbackOnlyRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this UiValue to JSON.
+         * Converts this FeedbackOnlyRobot to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for UiValue
+         * Gets the default type url for FeedbackOnlyRobot
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of an UiValues. */
-    interface IUiValues {
+    /** Properties of a RobotParameters. */
+    interface IRobotParameters {
 
-        /** UiValues uiValues */
-        uiValues?: ({ [k: string]: proto.IUiValue }|null);
+        /** RobotParameters radius */
+        radius?: (number|null);
+
+        /** RobotParameters height */
+        height?: (number|null);
+
+        /** RobotParameters frontWidth */
+        frontWidth?: (number|null);
+
+        /** RobotParameters dribblerWidth */
+        dribblerWidth?: (number|null);
+
+        /** RobotParameters angleOffset */
+        angleOffset?: (number|null);
     }
 
-    /** Represents an UiValues. */
-    class UiValues implements IUiValues {
+    /** Represents a RobotParameters. */
+    class RobotParameters implements IRobotParameters {
 
         /**
-         * Constructs a new UiValues.
+         * Constructs a new RobotParameters.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IUiValues);
+        constructor(properties?: proto.IRobotParameters);
 
-        /** UiValues uiValues. */
-        public uiValues: { [k: string]: proto.IUiValue };
+        /** RobotParameters radius. */
+        public radius: number;
+
+        /** RobotParameters height. */
+        public height: number;
+
+        /** RobotParameters frontWidth. */
+        public frontWidth: number;
+
+        /** RobotParameters dribblerWidth. */
+        public dribblerWidth: number;
+
+        /** RobotParameters angleOffset. */
+        public angleOffset: number;
 
         /**
-         * Creates a new UiValues instance using the specified properties.
+         * Creates a new RobotParameters instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns UiValues instance
+         * @returns RobotParameters instance
          */
-        public static create(properties?: proto.IUiValues): proto.UiValues;
+        public static create(properties?: proto.IRobotParameters): proto.RobotParameters;
 
         /**
-         * Encodes the specified UiValues message. Does not implicitly {@link proto.UiValues.verify|verify} messages.
-         * @param message UiValues message or plain object to encode
+         * Encodes the specified RobotParameters message. Does not implicitly {@link proto.RobotParameters.verify|verify} messages.
+         * @param message RobotParameters message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IUiValues, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRobotParameters, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified UiValues message, length delimited. Does not implicitly {@link proto.UiValues.verify|verify} messages.
-         * @param message UiValues message or plain object to encode
+         * Encodes the specified RobotParameters message, length delimited. Does not implicitly {@link proto.RobotParameters.verify|verify} messages.
+         * @param message RobotParameters message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IUiValues, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRobotParameters, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an UiValues message from the specified reader or buffer.
+         * Decodes a RobotParameters message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns UiValues
+         * @returns RobotParameters
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.UiValues;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotParameters;
 
         /**
-         * Decodes an UiValues message from the specified reader or buffer, length delimited.
+         * Decodes a RobotParameters message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns UiValues
+         * @returns RobotParameters
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.UiValues;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotParameters;
 
         /**
-         * Verifies an UiValues message.
+         * Verifies a RobotParameters message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an UiValues message from a plain object. Also converts values to their respective internal types.
+         * Creates a RobotParameters message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns UiValues
+         * @returns RobotParameters
          */
-        public static fromObject(object: { [k: string]: any }): proto.UiValues;
+        public static fromObject(object: { [k: string]: any }): proto.RobotParameters;
 
         /**
-         * Creates a plain object from an UiValues message. Also converts values to other types if specified.
-         * @param message UiValues
+         * Creates a plain object from a RobotParameters message. Also converts values to other types if specified.
+         * @param message RobotParameters
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.UiValues, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RobotParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this UiValues to JSON.
+         * Converts this RobotParameters to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for UiValues
+         * Gets the default type url for RobotParameters
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a TeamParameters. */
+    interface ITeamParameters {
+
+        /** TeamParameters didChange */
+        didChange?: (boolean|null);
+
+        /** TeamParameters parameters */
+        parameters?: (proto.IRobotParameters|null);
+    }
+
+    /** Represents a TeamParameters. */
+    class TeamParameters implements ITeamParameters {
+
+        /**
+         * Constructs a new TeamParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.ITeamParameters);
+
+        /** TeamParameters didChange. */
+        public didChange: boolean;
+
+        /** TeamParameters parameters. */
+        public parameters?: (proto.IRobotParameters|null);
+
+        /**
+         * Creates a new TeamParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns TeamParameters instance
+         */
+        public static create(properties?: proto.ITeamParameters): proto.TeamParameters;
+
+        /**
+         * Encodes the specified TeamParameters message. Does not implicitly {@link proto.TeamParameters.verify|verify} messages.
+         * @param message TeamParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.ITeamParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified TeamParameters message, length delimited. Does not implicitly {@link proto.TeamParameters.verify|verify} messages.
+         * @param message TeamParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.ITeamParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a TeamParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns TeamParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.TeamParameters;
+
+        /**
+         * Decodes a TeamParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns TeamParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.TeamParameters;
+
+        /**
+         * Verifies a TeamParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a TeamParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns TeamParameters
+         */
+        public static fromObject(object: { [k: string]: any }): proto.TeamParameters;
+
+        /**
+         * Creates a plain object from a TeamParameters message. Also converts values to other types if specified.
+         * @param message TeamParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.TeamParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this TeamParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for TeamParameters
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a SSL_WrapperPacket. */
+    interface ISSL_WrapperPacket {
+
+        /** SSL_WrapperPacket detection */
+        detection?: (proto.ISSL_DetectionFrame|null);
+
+        /** SSL_WrapperPacket geometry */
+        geometry?: (proto.ISSL_GeometryData|null);
+    }
+
+    /** Represents a SSL_WrapperPacket. */
+    class SSL_WrapperPacket implements ISSL_WrapperPacket {
+
+        /**
+         * Constructs a new SSL_WrapperPacket.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.ISSL_WrapperPacket);
+
+        /** SSL_WrapperPacket detection. */
+        public detection?: (proto.ISSL_DetectionFrame|null);
+
+        /** SSL_WrapperPacket geometry. */
+        public geometry?: (proto.ISSL_GeometryData|null);
+
+        /**
+         * Creates a new SSL_WrapperPacket instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SSL_WrapperPacket instance
+         */
+        public static create(properties?: proto.ISSL_WrapperPacket): proto.SSL_WrapperPacket;
+
+        /**
+         * Encodes the specified SSL_WrapperPacket message. Does not implicitly {@link proto.SSL_WrapperPacket.verify|verify} messages.
+         * @param message SSL_WrapperPacket message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SSL_WrapperPacket message, length delimited. Does not implicitly {@link proto.SSL_WrapperPacket.verify|verify} messages.
+         * @param message SSL_WrapperPacket message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SSL_WrapperPacket message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SSL_WrapperPacket
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_WrapperPacket;
+
+        /**
+         * Decodes a SSL_WrapperPacket message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SSL_WrapperPacket
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_WrapperPacket;
+
+        /**
+         * Verifies a SSL_WrapperPacket message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SSL_WrapperPacket message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SSL_WrapperPacket
+         */
+        public static fromObject(object: { [k: string]: any }): proto.SSL_WrapperPacket;
+
+        /**
+         * Creates a plain object from a SSL_WrapperPacket message. Also converts values to other types if specified.
+         * @param message SSL_WrapperPacket
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.SSL_WrapperPacket, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SSL_WrapperPacket to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SSL_WrapperPacket
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
@@ -2068,329 +3848,1310 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Team enum. */
-    enum Team {
-        UNKNOWN = 0,
-        YELLOW = 1,
-        BLUE = 2
+    /** Properties of a SSL_FieldLineSegment. */
+    interface ISSL_FieldLineSegment {
+
+        /** SSL_FieldLineSegment name */
+        name: string;
+
+        /** SSL_FieldLineSegment p1 */
+        p1: proto.IVector2f;
+
+        /** SSL_FieldLineSegment p2 */
+        p2: proto.IVector2f;
+
+        /** SSL_FieldLineSegment thickness */
+        thickness: number;
+
+        /** SSL_FieldLineSegment type */
+        type?: (proto.SSL_FieldShapeType|null);
     }
 
-    /** Properties of a RobotId. */
-    interface IRobotId {
-
-        /** RobotId id */
-        id?: (number|null);
-
-        /** RobotId team */
-        team?: (proto.Team|null);
-    }
-
-    /** Represents a RobotId. */
-    class RobotId implements IRobotId {
+    /** Represents a SSL_FieldLineSegment. */
+    class SSL_FieldLineSegment implements ISSL_FieldLineSegment {
 
         /**
-         * Constructs a new RobotId.
+         * Constructs a new SSL_FieldLineSegment.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IRobotId);
+        constructor(properties?: proto.ISSL_FieldLineSegment);
 
-        /** RobotId id. */
-        public id: number;
+        /** SSL_FieldLineSegment name. */
+        public name: string;
 
-        /** RobotId team. */
-        public team: proto.Team;
+        /** SSL_FieldLineSegment p1. */
+        public p1: proto.IVector2f;
+
+        /** SSL_FieldLineSegment p2. */
+        public p2: proto.IVector2f;
+
+        /** SSL_FieldLineSegment thickness. */
+        public thickness: number;
+
+        /** SSL_FieldLineSegment type. */
+        public type: proto.SSL_FieldShapeType;
 
         /**
-         * Creates a new RobotId instance using the specified properties.
+         * Creates a new SSL_FieldLineSegment instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns RobotId instance
+         * @returns SSL_FieldLineSegment instance
          */
-        public static create(properties?: proto.IRobotId): proto.RobotId;
+        public static create(properties?: proto.ISSL_FieldLineSegment): proto.SSL_FieldLineSegment;
 
         /**
-         * Encodes the specified RobotId message. Does not implicitly {@link proto.RobotId.verify|verify} messages.
-         * @param message RobotId message or plain object to encode
+         * Encodes the specified SSL_FieldLineSegment message. Does not implicitly {@link proto.SSL_FieldLineSegment.verify|verify} messages.
+         * @param message SSL_FieldLineSegment message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IRobotId, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.ISSL_FieldLineSegment, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified RobotId message, length delimited. Does not implicitly {@link proto.RobotId.verify|verify} messages.
-         * @param message RobotId message or plain object to encode
+         * Encodes the specified SSL_FieldLineSegment message, length delimited. Does not implicitly {@link proto.SSL_FieldLineSegment.verify|verify} messages.
+         * @param message SSL_FieldLineSegment message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IRobotId, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.ISSL_FieldLineSegment, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a RobotId message from the specified reader or buffer.
+         * Decodes a SSL_FieldLineSegment message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns RobotId
+         * @returns SSL_FieldLineSegment
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotId;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_FieldLineSegment;
 
         /**
-         * Decodes a RobotId message from the specified reader or buffer, length delimited.
+         * Decodes a SSL_FieldLineSegment message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns RobotId
+         * @returns SSL_FieldLineSegment
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotId;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_FieldLineSegment;
 
         /**
-         * Verifies a RobotId message.
+         * Verifies a SSL_FieldLineSegment message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a RobotId message from a plain object. Also converts values to their respective internal types.
+         * Creates a SSL_FieldLineSegment message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns RobotId
+         * @returns SSL_FieldLineSegment
          */
-        public static fromObject(object: { [k: string]: any }): proto.RobotId;
+        public static fromObject(object: { [k: string]: any }): proto.SSL_FieldLineSegment;
 
         /**
-         * Creates a plain object from a RobotId message. Also converts values to other types if specified.
-         * @param message RobotId
+         * Creates a plain object from a SSL_FieldLineSegment message. Also converts values to other types if specified.
+         * @param message SSL_FieldLineSegment
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.RobotId, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.SSL_FieldLineSegment, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this RobotId to JSON.
+         * Converts this SSL_FieldLineSegment to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for RobotId
+         * Gets the default type url for SSL_FieldLineSegment
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Division enum. */
-    enum Division {
-        DIV_UNKNOWN = 0,
-        DIV_A = 1,
-        DIV_B = 2
+    /** Properties of a SSL_FieldCircularArc. */
+    interface ISSL_FieldCircularArc {
+
+        /** SSL_FieldCircularArc name */
+        name: string;
+
+        /** SSL_FieldCircularArc center */
+        center: proto.IVector2f;
+
+        /** SSL_FieldCircularArc radius */
+        radius: number;
+
+        /** SSL_FieldCircularArc a1 */
+        a1: number;
+
+        /** SSL_FieldCircularArc a2 */
+        a2: number;
+
+        /** SSL_FieldCircularArc thickness */
+        thickness: number;
+
+        /** SSL_FieldCircularArc type */
+        type?: (proto.SSL_FieldShapeType|null);
     }
 
-    /** Properties of a Vector2. */
-    interface IVector2 {
-
-        /** Vector2 x */
-        x: number;
-
-        /** Vector2 y */
-        y: number;
-    }
-
-    /** Represents a Vector2. */
-    class Vector2 implements IVector2 {
+    /** Represents a SSL_FieldCircularArc. */
+    class SSL_FieldCircularArc implements ISSL_FieldCircularArc {
 
         /**
-         * Constructs a new Vector2.
+         * Constructs a new SSL_FieldCircularArc.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IVector2);
+        constructor(properties?: proto.ISSL_FieldCircularArc);
 
-        /** Vector2 x. */
-        public x: number;
+        /** SSL_FieldCircularArc name. */
+        public name: string;
 
-        /** Vector2 y. */
-        public y: number;
+        /** SSL_FieldCircularArc center. */
+        public center: proto.IVector2f;
+
+        /** SSL_FieldCircularArc radius. */
+        public radius: number;
+
+        /** SSL_FieldCircularArc a1. */
+        public a1: number;
+
+        /** SSL_FieldCircularArc a2. */
+        public a2: number;
+
+        /** SSL_FieldCircularArc thickness. */
+        public thickness: number;
+
+        /** SSL_FieldCircularArc type. */
+        public type: proto.SSL_FieldShapeType;
 
         /**
-         * Creates a new Vector2 instance using the specified properties.
+         * Creates a new SSL_FieldCircularArc instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Vector2 instance
+         * @returns SSL_FieldCircularArc instance
          */
-        public static create(properties?: proto.IVector2): proto.Vector2;
+        public static create(properties?: proto.ISSL_FieldCircularArc): proto.SSL_FieldCircularArc;
 
         /**
-         * Encodes the specified Vector2 message. Does not implicitly {@link proto.Vector2.verify|verify} messages.
-         * @param message Vector2 message or plain object to encode
+         * Encodes the specified SSL_FieldCircularArc message. Does not implicitly {@link proto.SSL_FieldCircularArc.verify|verify} messages.
+         * @param message SSL_FieldCircularArc message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IVector2, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.ISSL_FieldCircularArc, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Vector2 message, length delimited. Does not implicitly {@link proto.Vector2.verify|verify} messages.
-         * @param message Vector2 message or plain object to encode
+         * Encodes the specified SSL_FieldCircularArc message, length delimited. Does not implicitly {@link proto.SSL_FieldCircularArc.verify|verify} messages.
+         * @param message SSL_FieldCircularArc message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IVector2, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.ISSL_FieldCircularArc, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Vector2 message from the specified reader or buffer.
+         * Decodes a SSL_FieldCircularArc message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Vector2
+         * @returns SSL_FieldCircularArc
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector2;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_FieldCircularArc;
 
         /**
-         * Decodes a Vector2 message from the specified reader or buffer, length delimited.
+         * Decodes a SSL_FieldCircularArc message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Vector2
+         * @returns SSL_FieldCircularArc
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector2;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_FieldCircularArc;
 
         /**
-         * Verifies a Vector2 message.
+         * Verifies a SSL_FieldCircularArc message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Vector2 message from a plain object. Also converts values to their respective internal types.
+         * Creates a SSL_FieldCircularArc message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Vector2
+         * @returns SSL_FieldCircularArc
          */
-        public static fromObject(object: { [k: string]: any }): proto.Vector2;
+        public static fromObject(object: { [k: string]: any }): proto.SSL_FieldCircularArc;
 
         /**
-         * Creates a plain object from a Vector2 message. Also converts values to other types if specified.
-         * @param message Vector2
+         * Creates a plain object from a SSL_FieldCircularArc message. Also converts values to other types if specified.
+         * @param message SSL_FieldCircularArc
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Vector2, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.SSL_FieldCircularArc, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Vector2 to JSON.
+         * Converts this SSL_FieldCircularArc to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Vector2
+         * Gets the default type url for SSL_FieldCircularArc
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a Vector3. */
-    interface IVector3 {
+    /** Properties of a SSL_GeometryFieldSize. */
+    interface ISSL_GeometryFieldSize {
 
-        /** Vector3 x */
-        x: number;
+        /** SSL_GeometryFieldSize fieldLength */
+        fieldLength: number;
 
-        /** Vector3 y */
-        y: number;
+        /** SSL_GeometryFieldSize fieldWidth */
+        fieldWidth: number;
 
-        /** Vector3 z */
-        z: number;
+        /** SSL_GeometryFieldSize goalWidth */
+        goalWidth: number;
+
+        /** SSL_GeometryFieldSize goalDepth */
+        goalDepth: number;
+
+        /** SSL_GeometryFieldSize boundaryWidth */
+        boundaryWidth: number;
+
+        /** SSL_GeometryFieldSize fieldLines */
+        fieldLines?: (proto.ISSL_FieldLineSegment[]|null);
+
+        /** SSL_GeometryFieldSize fieldArcs */
+        fieldArcs?: (proto.ISSL_FieldCircularArc[]|null);
+
+        /** SSL_GeometryFieldSize penaltyAreaDepth */
+        penaltyAreaDepth?: (number|null);
+
+        /** SSL_GeometryFieldSize penaltyAreaWidth */
+        penaltyAreaWidth?: (number|null);
     }
 
-    /** Represents a Vector3. */
-    class Vector3 implements IVector3 {
+    /** Represents a SSL_GeometryFieldSize. */
+    class SSL_GeometryFieldSize implements ISSL_GeometryFieldSize {
 
         /**
-         * Constructs a new Vector3.
+         * Constructs a new SSL_GeometryFieldSize.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.IVector3);
+        constructor(properties?: proto.ISSL_GeometryFieldSize);
 
-        /** Vector3 x. */
-        public x: number;
+        /** SSL_GeometryFieldSize fieldLength. */
+        public fieldLength: number;
 
-        /** Vector3 y. */
-        public y: number;
+        /** SSL_GeometryFieldSize fieldWidth. */
+        public fieldWidth: number;
 
-        /** Vector3 z. */
-        public z: number;
+        /** SSL_GeometryFieldSize goalWidth. */
+        public goalWidth: number;
+
+        /** SSL_GeometryFieldSize goalDepth. */
+        public goalDepth: number;
+
+        /** SSL_GeometryFieldSize boundaryWidth. */
+        public boundaryWidth: number;
+
+        /** SSL_GeometryFieldSize fieldLines. */
+        public fieldLines: proto.ISSL_FieldLineSegment[];
+
+        /** SSL_GeometryFieldSize fieldArcs. */
+        public fieldArcs: proto.ISSL_FieldCircularArc[];
+
+        /** SSL_GeometryFieldSize penaltyAreaDepth. */
+        public penaltyAreaDepth: number;
+
+        /** SSL_GeometryFieldSize penaltyAreaWidth. */
+        public penaltyAreaWidth: number;
 
         /**
-         * Creates a new Vector3 instance using the specified properties.
+         * Creates a new SSL_GeometryFieldSize instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Vector3 instance
+         * @returns SSL_GeometryFieldSize instance
          */
-        public static create(properties?: proto.IVector3): proto.Vector3;
+        public static create(properties?: proto.ISSL_GeometryFieldSize): proto.SSL_GeometryFieldSize;
 
         /**
-         * Encodes the specified Vector3 message. Does not implicitly {@link proto.Vector3.verify|verify} messages.
-         * @param message Vector3 message or plain object to encode
+         * Encodes the specified SSL_GeometryFieldSize message. Does not implicitly {@link proto.SSL_GeometryFieldSize.verify|verify} messages.
+         * @param message SSL_GeometryFieldSize message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IVector3, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Vector3 message, length delimited. Does not implicitly {@link proto.Vector3.verify|verify} messages.
-         * @param message Vector3 message or plain object to encode
+         * Encodes the specified SSL_GeometryFieldSize message, length delimited. Does not implicitly {@link proto.SSL_GeometryFieldSize.verify|verify} messages.
+         * @param message SSL_GeometryFieldSize message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IVector3, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Vector3 message from the specified reader or buffer.
+         * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Vector3
+         * @returns SSL_GeometryFieldSize
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector3;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryFieldSize;
 
         /**
-         * Decodes a Vector3 message from the specified reader or buffer, length delimited.
+         * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Vector3
+         * @returns SSL_GeometryFieldSize
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector3;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryFieldSize;
 
         /**
-         * Verifies a Vector3 message.
+         * Verifies a SSL_GeometryFieldSize message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Vector3 message from a plain object. Also converts values to their respective internal types.
+         * Creates a SSL_GeometryFieldSize message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Vector3
+         * @returns SSL_GeometryFieldSize
          */
-        public static fromObject(object: { [k: string]: any }): proto.Vector3;
+        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryFieldSize;
 
         /**
-         * Creates a plain object from a Vector3 message. Also converts values to other types if specified.
-         * @param message Vector3
+         * Creates a plain object from a SSL_GeometryFieldSize message. Also converts values to other types if specified.
+         * @param message SSL_GeometryFieldSize
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Vector3, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.SSL_GeometryFieldSize, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Vector3 to JSON.
+         * Converts this SSL_GeometryFieldSize to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Vector3
+         * Gets the default type url for SSL_GeometryFieldSize
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a SSL_GeometryCameraCalibration. */
+    interface ISSL_GeometryCameraCalibration {
+
+        /** SSL_GeometryCameraCalibration cameraId */
+        cameraId: number;
+
+        /** SSL_GeometryCameraCalibration focalLength */
+        focalLength: number;
+
+        /** SSL_GeometryCameraCalibration principalPointX */
+        principalPointX: number;
+
+        /** SSL_GeometryCameraCalibration principalPointY */
+        principalPointY: number;
+
+        /** SSL_GeometryCameraCalibration distortion */
+        distortion: number;
+
+        /** SSL_GeometryCameraCalibration q0 */
+        q0: number;
+
+        /** SSL_GeometryCameraCalibration q1 */
+        q1: number;
+
+        /** SSL_GeometryCameraCalibration q2 */
+        q2: number;
+
+        /** SSL_GeometryCameraCalibration q3 */
+        q3: number;
+
+        /** SSL_GeometryCameraCalibration tx */
+        tx: number;
+
+        /** SSL_GeometryCameraCalibration ty */
+        ty: number;
+
+        /** SSL_GeometryCameraCalibration tz */
+        tz: number;
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTx */
+        derivedCameraWorldTx?: (number|null);
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTy */
+        derivedCameraWorldTy?: (number|null);
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTz */
+        derivedCameraWorldTz?: (number|null);
+
+        /** SSL_GeometryCameraCalibration pixelImageWidth */
+        pixelImageWidth?: (number|null);
+
+        /** SSL_GeometryCameraCalibration pixelImageHeight */
+        pixelImageHeight?: (number|null);
+    }
+
+    /** Represents a SSL_GeometryCameraCalibration. */
+    class SSL_GeometryCameraCalibration implements ISSL_GeometryCameraCalibration {
+
+        /**
+         * Constructs a new SSL_GeometryCameraCalibration.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.ISSL_GeometryCameraCalibration);
+
+        /** SSL_GeometryCameraCalibration cameraId. */
+        public cameraId: number;
+
+        /** SSL_GeometryCameraCalibration focalLength. */
+        public focalLength: number;
+
+        /** SSL_GeometryCameraCalibration principalPointX. */
+        public principalPointX: number;
+
+        /** SSL_GeometryCameraCalibration principalPointY. */
+        public principalPointY: number;
+
+        /** SSL_GeometryCameraCalibration distortion. */
+        public distortion: number;
+
+        /** SSL_GeometryCameraCalibration q0. */
+        public q0: number;
+
+        /** SSL_GeometryCameraCalibration q1. */
+        public q1: number;
+
+        /** SSL_GeometryCameraCalibration q2. */
+        public q2: number;
+
+        /** SSL_GeometryCameraCalibration q3. */
+        public q3: number;
+
+        /** SSL_GeometryCameraCalibration tx. */
+        public tx: number;
+
+        /** SSL_GeometryCameraCalibration ty. */
+        public ty: number;
+
+        /** SSL_GeometryCameraCalibration tz. */
+        public tz: number;
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTx. */
+        public derivedCameraWorldTx: number;
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTy. */
+        public derivedCameraWorldTy: number;
+
+        /** SSL_GeometryCameraCalibration derivedCameraWorldTz. */
+        public derivedCameraWorldTz: number;
+
+        /** SSL_GeometryCameraCalibration pixelImageWidth. */
+        public pixelImageWidth: number;
+
+        /** SSL_GeometryCameraCalibration pixelImageHeight. */
+        public pixelImageHeight: number;
+
+        /**
+         * Creates a new SSL_GeometryCameraCalibration instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SSL_GeometryCameraCalibration instance
+         */
+        public static create(properties?: proto.ISSL_GeometryCameraCalibration): proto.SSL_GeometryCameraCalibration;
+
+        /**
+         * Encodes the specified SSL_GeometryCameraCalibration message. Does not implicitly {@link proto.SSL_GeometryCameraCalibration.verify|verify} messages.
+         * @param message SSL_GeometryCameraCalibration message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.ISSL_GeometryCameraCalibration, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SSL_GeometryCameraCalibration message, length delimited. Does not implicitly {@link proto.SSL_GeometryCameraCalibration.verify|verify} messages.
+         * @param message SSL_GeometryCameraCalibration message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.ISSL_GeometryCameraCalibration, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SSL_GeometryCameraCalibration message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SSL_GeometryCameraCalibration
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryCameraCalibration;
+
+        /**
+         * Decodes a SSL_GeometryCameraCalibration message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SSL_GeometryCameraCalibration
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryCameraCalibration;
+
+        /**
+         * Verifies a SSL_GeometryCameraCalibration message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SSL_GeometryCameraCalibration message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SSL_GeometryCameraCalibration
+         */
+        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryCameraCalibration;
+
+        /**
+         * Creates a plain object from a SSL_GeometryCameraCalibration message. Also converts values to other types if specified.
+         * @param message SSL_GeometryCameraCalibration
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.SSL_GeometryCameraCalibration, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SSL_GeometryCameraCalibration to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SSL_GeometryCameraCalibration
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a SSL_GeometryData. */
+    interface ISSL_GeometryData {
+
+        /** SSL_GeometryData field */
+        field: proto.ISSL_GeometryFieldSize;
+
+        /** SSL_GeometryData calib */
+        calib?: (proto.ISSL_GeometryCameraCalibration[]|null);
+    }
+
+    /** Represents a SSL_GeometryData. */
+    class SSL_GeometryData implements ISSL_GeometryData {
+
+        /**
+         * Constructs a new SSL_GeometryData.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.ISSL_GeometryData);
+
+        /** SSL_GeometryData field. */
+        public field: proto.ISSL_GeometryFieldSize;
+
+        /** SSL_GeometryData calib. */
+        public calib: proto.ISSL_GeometryCameraCalibration[];
+
+        /**
+         * Creates a new SSL_GeometryData instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SSL_GeometryData instance
+         */
+        public static create(properties?: proto.ISSL_GeometryData): proto.SSL_GeometryData;
+
+        /**
+         * Encodes the specified SSL_GeometryData message. Does not implicitly {@link proto.SSL_GeometryData.verify|verify} messages.
+         * @param message SSL_GeometryData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SSL_GeometryData message, length delimited. Does not implicitly {@link proto.SSL_GeometryData.verify|verify} messages.
+         * @param message SSL_GeometryData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SSL_GeometryData message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SSL_GeometryData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryData;
+
+        /**
+         * Decodes a SSL_GeometryData message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SSL_GeometryData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryData;
+
+        /**
+         * Verifies a SSL_GeometryData message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SSL_GeometryData message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SSL_GeometryData
+         */
+        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryData;
+
+        /**
+         * Creates a plain object from a SSL_GeometryData message. Also converts values to other types if specified.
+         * @param message SSL_GeometryData
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.SSL_GeometryData, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SSL_GeometryData to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SSL_GeometryData
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** SSL_FieldShapeType enum. */
+    enum SSL_FieldShapeType {
+        Undefined = 0,
+        CenterCircle = 1,
+        TopTouchLine = 2,
+        BottomTouchLine = 3,
+        LeftGoalLine = 4,
+        RightGoalLine = 5,
+        HalfwayLine = 6,
+        CenterLine = 7,
+        LeftPenaltyStretch = 8,
+        RightPenaltyStretch = 9,
+        LeftFieldLeftPenaltyStretch = 10,
+        LeftFieldRightPenaltyStretch = 11,
+        RightFieldLeftPenaltyStretch = 12,
+        RightFieldRightPenaltyStretch = 13
+    }
+
+    /** Properties of a SSL_Referee. */
+    interface ISSL_Referee {
+
+        /** SSL_Referee packetTimestamp */
+        packetTimestamp: (number|Long);
+
+        /** SSL_Referee stage */
+        stage: proto.SSL_Referee.Stage;
+
+        /** SSL_Referee stageTimeLeft */
+        stageTimeLeft?: (number|null);
+
+        /** SSL_Referee command */
+        command: proto.SSL_Referee.Command;
+
+        /** SSL_Referee commandCounter */
+        commandCounter: number;
+
+        /** SSL_Referee commandTimestamp */
+        commandTimestamp: (number|Long);
+
+        /** SSL_Referee yellow */
+        yellow: proto.SSL_Referee.ITeamInfo;
+
+        /** SSL_Referee blue */
+        blue: proto.SSL_Referee.ITeamInfo;
+
+        /** SSL_Referee designatedPosition */
+        designatedPosition?: (proto.SSL_Referee.IPoint|null);
+
+        /** SSL_Referee blueTeamOnPositiveHalf */
+        blueTeamOnPositiveHalf?: (boolean|null);
+
+        /** SSL_Referee nextCommand */
+        nextCommand?: (proto.SSL_Referee.Command|null);
+
+        /** SSL_Referee gameEvents */
+        gameEvents?: (proto.IGameEvent[]|null);
+
+        /** SSL_Referee gameEventProposals */
+        gameEventProposals?: (proto.IGameEventProposalGroup[]|null);
+
+        /** SSL_Referee currentActionTimeRemaining */
+        currentActionTimeRemaining?: (number|null);
+    }
+
+    /** Represents a SSL_Referee. */
+    class SSL_Referee implements ISSL_Referee {
+
+        /**
+         * Constructs a new SSL_Referee.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.ISSL_Referee);
+
+        /** SSL_Referee packetTimestamp. */
+        public packetTimestamp: (number|Long);
+
+        /** SSL_Referee stage. */
+        public stage: proto.SSL_Referee.Stage;
+
+        /** SSL_Referee stageTimeLeft. */
+        public stageTimeLeft: number;
+
+        /** SSL_Referee command. */
+        public command: proto.SSL_Referee.Command;
+
+        /** SSL_Referee commandCounter. */
+        public commandCounter: number;
+
+        /** SSL_Referee commandTimestamp. */
+        public commandTimestamp: (number|Long);
+
+        /** SSL_Referee yellow. */
+        public yellow: proto.SSL_Referee.ITeamInfo;
+
+        /** SSL_Referee blue. */
+        public blue: proto.SSL_Referee.ITeamInfo;
+
+        /** SSL_Referee designatedPosition. */
+        public designatedPosition?: (proto.SSL_Referee.IPoint|null);
+
+        /** SSL_Referee blueTeamOnPositiveHalf. */
+        public blueTeamOnPositiveHalf: boolean;
+
+        /** SSL_Referee nextCommand. */
+        public nextCommand: proto.SSL_Referee.Command;
+
+        /** SSL_Referee gameEvents. */
+        public gameEvents: proto.IGameEvent[];
+
+        /** SSL_Referee gameEventProposals. */
+        public gameEventProposals: proto.IGameEventProposalGroup[];
+
+        /** SSL_Referee currentActionTimeRemaining. */
+        public currentActionTimeRemaining: number;
+
+        /**
+         * Creates a new SSL_Referee instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SSL_Referee instance
+         */
+        public static create(properties?: proto.ISSL_Referee): proto.SSL_Referee;
+
+        /**
+         * Encodes the specified SSL_Referee message. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
+         * @param message SSL_Referee message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.ISSL_Referee, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SSL_Referee message, length delimited. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
+         * @param message SSL_Referee message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.ISSL_Referee, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SSL_Referee message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SSL_Referee
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee;
+
+        /**
+         * Decodes a SSL_Referee message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SSL_Referee
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee;
+
+        /**
+         * Verifies a SSL_Referee message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SSL_Referee message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SSL_Referee
+         */
+        public static fromObject(object: { [k: string]: any }): proto.SSL_Referee;
+
+        /**
+         * Creates a plain object from a SSL_Referee message. Also converts values to other types if specified.
+         * @param message SSL_Referee
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.SSL_Referee, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SSL_Referee to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SSL_Referee
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace SSL_Referee {
+
+        /** Stage enum. */
+        enum Stage {
+            NORMAL_FIRST_HALF_PRE = 0,
+            NORMAL_FIRST_HALF = 1,
+            NORMAL_HALF_TIME = 2,
+            NORMAL_SECOND_HALF_PRE = 3,
+            NORMAL_SECOND_HALF = 4,
+            EXTRA_TIME_BREAK = 5,
+            EXTRA_FIRST_HALF_PRE = 6,
+            EXTRA_FIRST_HALF = 7,
+            EXTRA_HALF_TIME = 8,
+            EXTRA_SECOND_HALF_PRE = 9,
+            EXTRA_SECOND_HALF = 10,
+            PENALTY_SHOOTOUT_BREAK = 11,
+            PENALTY_SHOOTOUT = 12,
+            POST_GAME = 13
+        }
+
+        /** Command enum. */
+        enum Command {
+            HALT = 0,
+            STOP = 1,
+            NORMAL_START = 2,
+            FORCE_START = 3,
+            PREPARE_KICKOFF_YELLOW = 4,
+            PREPARE_KICKOFF_BLUE = 5,
+            PREPARE_PENALTY_YELLOW = 6,
+            PREPARE_PENALTY_BLUE = 7,
+            DIRECT_FREE_YELLOW = 8,
+            DIRECT_FREE_BLUE = 9,
+            INDIRECT_FREE_YELLOW = 10,
+            INDIRECT_FREE_BLUE = 11,
+            TIMEOUT_YELLOW = 12,
+            TIMEOUT_BLUE = 13,
+            BALL_PLACEMENT_YELLOW = 16,
+            BALL_PLACEMENT_BLUE = 17
+        }
+
+        /** Properties of a TeamInfo. */
+        interface ITeamInfo {
+
+            /** TeamInfo name */
+            name: string;
+
+            /** TeamInfo score */
+            score: number;
+
+            /** TeamInfo redCards */
+            redCards: number;
+
+            /** TeamInfo yellowCardTimes */
+            yellowCardTimes?: (number[]|null);
+
+            /** TeamInfo yellowCards */
+            yellowCards: number;
+
+            /** TeamInfo timeouts */
+            timeouts: number;
+
+            /** TeamInfo timeoutTime */
+            timeoutTime: number;
+
+            /** TeamInfo goalkeeper */
+            goalkeeper: number;
+
+            /** TeamInfo foulCounter */
+            foulCounter?: (number|null);
+
+            /** TeamInfo ballPlacementFailures */
+            ballPlacementFailures?: (number|null);
+
+            /** TeamInfo canPlaceBall */
+            canPlaceBall?: (boolean|null);
+
+            /** TeamInfo maxAllowedBots */
+            maxAllowedBots?: (number|null);
+
+            /** TeamInfo botSubstitutionIntent */
+            botSubstitutionIntent?: (boolean|null);
+
+            /** TeamInfo ballPlacementFailuresReached */
+            ballPlacementFailuresReached?: (boolean|null);
+        }
+
+        /** Represents a TeamInfo. */
+        class TeamInfo implements ITeamInfo {
+
+            /**
+             * Constructs a new TeamInfo.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.SSL_Referee.ITeamInfo);
+
+            /** TeamInfo name. */
+            public name: string;
+
+            /** TeamInfo score. */
+            public score: number;
+
+            /** TeamInfo redCards. */
+            public redCards: number;
+
+            /** TeamInfo yellowCardTimes. */
+            public yellowCardTimes: number[];
+
+            /** TeamInfo yellowCards. */
+            public yellowCards: number;
+
+            /** TeamInfo timeouts. */
+            public timeouts: number;
+
+            /** TeamInfo timeoutTime. */
+            public timeoutTime: number;
+
+            /** TeamInfo goalkeeper. */
+            public goalkeeper: number;
+
+            /** TeamInfo foulCounter. */
+            public foulCounter: number;
+
+            /** TeamInfo ballPlacementFailures. */
+            public ballPlacementFailures: number;
+
+            /** TeamInfo canPlaceBall. */
+            public canPlaceBall: boolean;
+
+            /** TeamInfo maxAllowedBots. */
+            public maxAllowedBots: number;
+
+            /** TeamInfo botSubstitutionIntent. */
+            public botSubstitutionIntent: boolean;
+
+            /** TeamInfo ballPlacementFailuresReached. */
+            public ballPlacementFailuresReached: boolean;
+
+            /**
+             * Creates a new TeamInfo instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TeamInfo instance
+             */
+            public static create(properties?: proto.SSL_Referee.ITeamInfo): proto.SSL_Referee.TeamInfo;
+
+            /**
+             * Encodes the specified TeamInfo message. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
+             * @param message TeamInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.SSL_Referee.ITeamInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TeamInfo message, length delimited. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
+             * @param message TeamInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.SSL_Referee.ITeamInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TeamInfo message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns TeamInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee.TeamInfo;
+
+            /**
+             * Decodes a TeamInfo message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns TeamInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee.TeamInfo;
+
+            /**
+             * Verifies a TeamInfo message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a TeamInfo message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns TeamInfo
+             */
+            public static fromObject(object: { [k: string]: any }): proto.SSL_Referee.TeamInfo;
+
+            /**
+             * Creates a plain object from a TeamInfo message. Also converts values to other types if specified.
+             * @param message TeamInfo
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.SSL_Referee.TeamInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this TeamInfo to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for TeamInfo
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+
+        /** Properties of a Point. */
+        interface IPoint {
+
+            /** Point x */
+            x: number;
+
+            /** Point y */
+            y: number;
+        }
+
+        /** Represents a Point. */
+        class Point implements IPoint {
+
+            /**
+             * Constructs a new Point.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: proto.SSL_Referee.IPoint);
+
+            /** Point x. */
+            public x: number;
+
+            /** Point y. */
+            public y: number;
+
+            /**
+             * Creates a new Point instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Point instance
+             */
+            public static create(properties?: proto.SSL_Referee.IPoint): proto.SSL_Referee.Point;
+
+            /**
+             * Encodes the specified Point message. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
+             * @param message Point message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: proto.SSL_Referee.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Point message, length delimited. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
+             * @param message Point message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: proto.SSL_Referee.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Point message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Point
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee.Point;
+
+            /**
+             * Decodes a Point message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Point
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee.Point;
+
+            /**
+             * Verifies a Point message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Point message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Point
+             */
+            public static fromObject(object: { [k: string]: any }): proto.SSL_Referee.Point;
+
+            /**
+             * Creates a plain object from a Point message. Also converts values to other types if specified.
+             * @param message Point
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: proto.SSL_Referee.Point, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Point to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+
+            /**
+             * Gets the default type url for Point
+             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns The default type url
+             */
+            public static getTypeUrl(typeUrlPrefix?: string): string;
+        }
+    }
+
+    /** Properties of a GameEventProposalGroup. */
+    interface IGameEventProposalGroup {
+
+        /** GameEventProposalGroup gameEvent */
+        gameEvent?: (proto.IGameEvent[]|null);
+
+        /** GameEventProposalGroup accepted */
+        accepted?: (boolean|null);
+    }
+
+    /** Represents a GameEventProposalGroup. */
+    class GameEventProposalGroup implements IGameEventProposalGroup {
+
+        /**
+         * Constructs a new GameEventProposalGroup.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: proto.IGameEventProposalGroup);
+
+        /** GameEventProposalGroup gameEvent. */
+        public gameEvent: proto.IGameEvent[];
+
+        /** GameEventProposalGroup accepted. */
+        public accepted: boolean;
+
+        /**
+         * Creates a new GameEventProposalGroup instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GameEventProposalGroup instance
+         */
+        public static create(properties?: proto.IGameEventProposalGroup): proto.GameEventProposalGroup;
+
+        /**
+         * Encodes the specified GameEventProposalGroup message. Does not implicitly {@link proto.GameEventProposalGroup.verify|verify} messages.
+         * @param message GameEventProposalGroup message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: proto.IGameEventProposalGroup, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GameEventProposalGroup message, length delimited. Does not implicitly {@link proto.GameEventProposalGroup.verify|verify} messages.
+         * @param message GameEventProposalGroup message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: proto.IGameEventProposalGroup, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GameEventProposalGroup message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GameEventProposalGroup
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameEventProposalGroup;
+
+        /**
+         * Decodes a GameEventProposalGroup message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GameEventProposalGroup
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameEventProposalGroup;
+
+        /**
+         * Verifies a GameEventProposalGroup message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GameEventProposalGroup message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GameEventProposalGroup
+         */
+        public static fromObject(object: { [k: string]: any }): proto.GameEventProposalGroup;
+
+        /**
+         * Creates a plain object from a GameEventProposalGroup message. Also converts values to other types if specified.
+         * @param message GameEventProposalGroup
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: proto.GameEventProposalGroup, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GameEventProposalGroup to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for GameEventProposalGroup
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
@@ -6981,5109 +9742,329 @@ export namespace proto {
         }
     }
 
-    /** Namespace RoboCup2014Legacy. */
-    namespace RoboCup2014Legacy {
-
-        /** Namespace Geometry. */
-        namespace Geometry {
-
-            /** Properties of a SSL_GeometryFieldSize. */
-            interface ISSL_GeometryFieldSize {
-
-                /** SSL_GeometryFieldSize lineWidth */
-                lineWidth: number;
-
-                /** SSL_GeometryFieldSize fieldLength */
-                fieldLength: number;
-
-                /** SSL_GeometryFieldSize fieldWidth */
-                fieldWidth: number;
-
-                /** SSL_GeometryFieldSize boundaryWidth */
-                boundaryWidth: number;
-
-                /** SSL_GeometryFieldSize refereeWidth */
-                refereeWidth: number;
-
-                /** SSL_GeometryFieldSize goalWidth */
-                goalWidth: number;
-
-                /** SSL_GeometryFieldSize goalDepth */
-                goalDepth: number;
-
-                /** SSL_GeometryFieldSize goalWallWidth */
-                goalWallWidth: number;
-
-                /** SSL_GeometryFieldSize centerCircleRadius */
-                centerCircleRadius: number;
-
-                /** SSL_GeometryFieldSize defenseRadius */
-                defenseRadius: number;
-
-                /** SSL_GeometryFieldSize defenseStretch */
-                defenseStretch: number;
-
-                /** SSL_GeometryFieldSize freeKickFromDefenseDist */
-                freeKickFromDefenseDist: number;
-
-                /** SSL_GeometryFieldSize penaltySpotFromFieldLineDist */
-                penaltySpotFromFieldLineDist: number;
-
-                /** SSL_GeometryFieldSize penaltyLineFromSpotDist */
-                penaltyLineFromSpotDist: number;
-            }
-
-            /** Represents a SSL_GeometryFieldSize. */
-            class SSL_GeometryFieldSize implements ISSL_GeometryFieldSize {
-
-                /**
-                 * Constructs a new SSL_GeometryFieldSize.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize);
-
-                /** SSL_GeometryFieldSize lineWidth. */
-                public lineWidth: number;
-
-                /** SSL_GeometryFieldSize fieldLength. */
-                public fieldLength: number;
-
-                /** SSL_GeometryFieldSize fieldWidth. */
-                public fieldWidth: number;
-
-                /** SSL_GeometryFieldSize boundaryWidth. */
-                public boundaryWidth: number;
-
-                /** SSL_GeometryFieldSize refereeWidth. */
-                public refereeWidth: number;
-
-                /** SSL_GeometryFieldSize goalWidth. */
-                public goalWidth: number;
-
-                /** SSL_GeometryFieldSize goalDepth. */
-                public goalDepth: number;
-
-                /** SSL_GeometryFieldSize goalWallWidth. */
-                public goalWallWidth: number;
-
-                /** SSL_GeometryFieldSize centerCircleRadius. */
-                public centerCircleRadius: number;
-
-                /** SSL_GeometryFieldSize defenseRadius. */
-                public defenseRadius: number;
-
-                /** SSL_GeometryFieldSize defenseStretch. */
-                public defenseStretch: number;
-
-                /** SSL_GeometryFieldSize freeKickFromDefenseDist. */
-                public freeKickFromDefenseDist: number;
-
-                /** SSL_GeometryFieldSize penaltySpotFromFieldLineDist. */
-                public penaltySpotFromFieldLineDist: number;
-
-                /** SSL_GeometryFieldSize penaltyLineFromSpotDist. */
-                public penaltyLineFromSpotDist: number;
-
-                /**
-                 * Creates a new SSL_GeometryFieldSize instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns SSL_GeometryFieldSize instance
-                 */
-                public static create(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
-
-                /**
-                 * Encodes the specified SSL_GeometryFieldSize message. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize.verify|verify} messages.
-                 * @param message SSL_GeometryFieldSize message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified SSL_GeometryFieldSize message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize.verify|verify} messages.
-                 * @param message SSL_GeometryFieldSize message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns SSL_GeometryFieldSize
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
-
-                /**
-                 * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns SSL_GeometryFieldSize
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
-
-                /**
-                 * Verifies a SSL_GeometryFieldSize message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a SSL_GeometryFieldSize message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns SSL_GeometryFieldSize
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
-
-                /**
-                 * Creates a plain object from a SSL_GeometryFieldSize message. Also converts values to other types if specified.
-                 * @param message SSL_GeometryFieldSize
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this SSL_GeometryFieldSize to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for SSL_GeometryFieldSize
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-
-            /** Properties of a SSL_GeometryData. */
-            interface ISSL_GeometryData {
-
-                /** SSL_GeometryData field */
-                field: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize;
-
-                /** SSL_GeometryData calib */
-                calib?: (proto.ISSL_GeometryCameraCalibration[]|null);
-            }
-
-            /** Represents a SSL_GeometryData. */
-            class SSL_GeometryData implements ISSL_GeometryData {
-
-                /**
-                 * Constructs a new SSL_GeometryData.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData);
-
-                /** SSL_GeometryData field. */
-                public field: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize;
-
-                /** SSL_GeometryData calib. */
-                public calib: proto.ISSL_GeometryCameraCalibration[];
-
-                /**
-                 * Creates a new SSL_GeometryData instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns SSL_GeometryData instance
-                 */
-                public static create(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
-
-                /**
-                 * Encodes the specified SSL_GeometryData message. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryData.verify|verify} messages.
-                 * @param message SSL_GeometryData message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified SSL_GeometryData message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryData.verify|verify} messages.
-                 * @param message SSL_GeometryData message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a SSL_GeometryData message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns SSL_GeometryData
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
-
-                /**
-                 * Decodes a SSL_GeometryData message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns SSL_GeometryData
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
-
-                /**
-                 * Verifies a SSL_GeometryData message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a SSL_GeometryData message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns SSL_GeometryData
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
-
-                /**
-                 * Creates a plain object from a SSL_GeometryData message. Also converts values to other types if specified.
-                 * @param message SSL_GeometryData
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.RoboCup2014Legacy.Geometry.SSL_GeometryData, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this SSL_GeometryData to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for SSL_GeometryData
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-        }
-
-        /** Namespace Wrapper. */
-        namespace Wrapper {
-
-            /** Properties of a SSL_WrapperPacket. */
-            interface ISSL_WrapperPacket {
-
-                /** SSL_WrapperPacket detection */
-                detection?: (proto.ISSL_DetectionFrame|null);
-
-                /** SSL_WrapperPacket geometry */
-                geometry?: (proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData|null);
-            }
-
-            /** Represents a SSL_WrapperPacket. */
-            class SSL_WrapperPacket implements ISSL_WrapperPacket {
-
-                /**
-                 * Constructs a new SSL_WrapperPacket.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket);
-
-                /** SSL_WrapperPacket detection. */
-                public detection?: (proto.ISSL_DetectionFrame|null);
-
-                /** SSL_WrapperPacket geometry. */
-                public geometry?: (proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData|null);
-
-                /**
-                 * Creates a new SSL_WrapperPacket instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns SSL_WrapperPacket instance
-                 */
-                public static create(properties?: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
-
-                /**
-                 * Encodes the specified SSL_WrapperPacket message. Does not implicitly {@link proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket.verify|verify} messages.
-                 * @param message SSL_WrapperPacket message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified SSL_WrapperPacket message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket.verify|verify} messages.
-                 * @param message SSL_WrapperPacket message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a SSL_WrapperPacket message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns SSL_WrapperPacket
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
-
-                /**
-                 * Decodes a SSL_WrapperPacket message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns SSL_WrapperPacket
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
-
-                /**
-                 * Verifies a SSL_WrapperPacket message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a SSL_WrapperPacket message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns SSL_WrapperPacket
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
-
-                /**
-                 * Creates a plain object from a SSL_WrapperPacket message. Also converts values to other types if specified.
-                 * @param message SSL_WrapperPacket
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this SSL_WrapperPacket to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for SSL_WrapperPacket
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-        }
+    /** Team enum. */
+    enum Team {
+        UNKNOWN = 0,
+        YELLOW = 1,
+        BLUE = 2
     }
 
-    /** Properties of a SSL_FieldLineSegment. */
-    interface ISSL_FieldLineSegment {
+    /** Properties of a RobotId. */
+    interface IRobotId {
 
-        /** SSL_FieldLineSegment name */
-        name: string;
+        /** RobotId id */
+        id?: (number|null);
 
-        /** SSL_FieldLineSegment p1 */
-        p1: proto.IVector2f;
-
-        /** SSL_FieldLineSegment p2 */
-        p2: proto.IVector2f;
-
-        /** SSL_FieldLineSegment thickness */
-        thickness: number;
-
-        /** SSL_FieldLineSegment type */
-        type?: (proto.SSL_FieldShapeType|null);
+        /** RobotId team */
+        team?: (proto.Team|null);
     }
 
-    /** Represents a SSL_FieldLineSegment. */
-    class SSL_FieldLineSegment implements ISSL_FieldLineSegment {
+    /** Represents a RobotId. */
+    class RobotId implements IRobotId {
 
         /**
-         * Constructs a new SSL_FieldLineSegment.
+         * Constructs a new RobotId.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISSL_FieldLineSegment);
+        constructor(properties?: proto.IRobotId);
 
-        /** SSL_FieldLineSegment name. */
-        public name: string;
+        /** RobotId id. */
+        public id: number;
 
-        /** SSL_FieldLineSegment p1. */
-        public p1: proto.IVector2f;
-
-        /** SSL_FieldLineSegment p2. */
-        public p2: proto.IVector2f;
-
-        /** SSL_FieldLineSegment thickness. */
-        public thickness: number;
-
-        /** SSL_FieldLineSegment type. */
-        public type: proto.SSL_FieldShapeType;
+        /** RobotId team. */
+        public team: proto.Team;
 
         /**
-         * Creates a new SSL_FieldLineSegment instance using the specified properties.
+         * Creates a new RobotId instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns SSL_FieldLineSegment instance
+         * @returns RobotId instance
          */
-        public static create(properties?: proto.ISSL_FieldLineSegment): proto.SSL_FieldLineSegment;
+        public static create(properties?: proto.IRobotId): proto.RobotId;
 
         /**
-         * Encodes the specified SSL_FieldLineSegment message. Does not implicitly {@link proto.SSL_FieldLineSegment.verify|verify} messages.
-         * @param message SSL_FieldLineSegment message or plain object to encode
+         * Encodes the specified RobotId message. Does not implicitly {@link proto.RobotId.verify|verify} messages.
+         * @param message RobotId message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.ISSL_FieldLineSegment, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IRobotId, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified SSL_FieldLineSegment message, length delimited. Does not implicitly {@link proto.SSL_FieldLineSegment.verify|verify} messages.
-         * @param message SSL_FieldLineSegment message or plain object to encode
+         * Encodes the specified RobotId message, length delimited. Does not implicitly {@link proto.RobotId.verify|verify} messages.
+         * @param message RobotId message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.ISSL_FieldLineSegment, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IRobotId, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a SSL_FieldLineSegment message from the specified reader or buffer.
+         * Decodes a RobotId message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns SSL_FieldLineSegment
+         * @returns RobotId
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_FieldLineSegment;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotId;
 
         /**
-         * Decodes a SSL_FieldLineSegment message from the specified reader or buffer, length delimited.
+         * Decodes a RobotId message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns SSL_FieldLineSegment
+         * @returns RobotId
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_FieldLineSegment;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotId;
 
         /**
-         * Verifies a SSL_FieldLineSegment message.
+         * Verifies a RobotId message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a SSL_FieldLineSegment message from a plain object. Also converts values to their respective internal types.
+         * Creates a RobotId message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns SSL_FieldLineSegment
+         * @returns RobotId
          */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_FieldLineSegment;
+        public static fromObject(object: { [k: string]: any }): proto.RobotId;
 
         /**
-         * Creates a plain object from a SSL_FieldLineSegment message. Also converts values to other types if specified.
-         * @param message SSL_FieldLineSegment
+         * Creates a plain object from a RobotId message. Also converts values to other types if specified.
+         * @param message RobotId
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.SSL_FieldLineSegment, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.RobotId, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this SSL_FieldLineSegment to JSON.
+         * Converts this RobotId to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for SSL_FieldLineSegment
+         * Gets the default type url for RobotId
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a SSL_FieldCircularArc. */
-    interface ISSL_FieldCircularArc {
-
-        /** SSL_FieldCircularArc name */
-        name: string;
-
-        /** SSL_FieldCircularArc center */
-        center: proto.IVector2f;
-
-        /** SSL_FieldCircularArc radius */
-        radius: number;
-
-        /** SSL_FieldCircularArc a1 */
-        a1: number;
-
-        /** SSL_FieldCircularArc a2 */
-        a2: number;
-
-        /** SSL_FieldCircularArc thickness */
-        thickness: number;
-
-        /** SSL_FieldCircularArc type */
-        type?: (proto.SSL_FieldShapeType|null);
+    /** Division enum. */
+    enum Division {
+        DIV_UNKNOWN = 0,
+        DIV_A = 1,
+        DIV_B = 2
     }
 
-    /** Represents a SSL_FieldCircularArc. */
-    class SSL_FieldCircularArc implements ISSL_FieldCircularArc {
+    /** Properties of a Vector2. */
+    interface IVector2 {
+
+        /** Vector2 x */
+        x: number;
+
+        /** Vector2 y */
+        y: number;
+    }
+
+    /** Represents a Vector2. */
+    class Vector2 implements IVector2 {
 
         /**
-         * Constructs a new SSL_FieldCircularArc.
+         * Constructs a new Vector2.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISSL_FieldCircularArc);
+        constructor(properties?: proto.IVector2);
 
-        /** SSL_FieldCircularArc name. */
-        public name: string;
-
-        /** SSL_FieldCircularArc center. */
-        public center: proto.IVector2f;
-
-        /** SSL_FieldCircularArc radius. */
-        public radius: number;
-
-        /** SSL_FieldCircularArc a1. */
-        public a1: number;
-
-        /** SSL_FieldCircularArc a2. */
-        public a2: number;
-
-        /** SSL_FieldCircularArc thickness. */
-        public thickness: number;
-
-        /** SSL_FieldCircularArc type. */
-        public type: proto.SSL_FieldShapeType;
-
-        /**
-         * Creates a new SSL_FieldCircularArc instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_FieldCircularArc instance
-         */
-        public static create(properties?: proto.ISSL_FieldCircularArc): proto.SSL_FieldCircularArc;
-
-        /**
-         * Encodes the specified SSL_FieldCircularArc message. Does not implicitly {@link proto.SSL_FieldCircularArc.verify|verify} messages.
-         * @param message SSL_FieldCircularArc message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_FieldCircularArc, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_FieldCircularArc message, length delimited. Does not implicitly {@link proto.SSL_FieldCircularArc.verify|verify} messages.
-         * @param message SSL_FieldCircularArc message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_FieldCircularArc, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_FieldCircularArc message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_FieldCircularArc
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_FieldCircularArc;
-
-        /**
-         * Decodes a SSL_FieldCircularArc message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_FieldCircularArc
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_FieldCircularArc;
-
-        /**
-         * Verifies a SSL_FieldCircularArc message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_FieldCircularArc message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_FieldCircularArc
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_FieldCircularArc;
-
-        /**
-         * Creates a plain object from a SSL_FieldCircularArc message. Also converts values to other types if specified.
-         * @param message SSL_FieldCircularArc
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_FieldCircularArc, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_FieldCircularArc to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_FieldCircularArc
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SSL_GeometryFieldSize. */
-    interface ISSL_GeometryFieldSize {
-
-        /** SSL_GeometryFieldSize fieldLength */
-        fieldLength: number;
-
-        /** SSL_GeometryFieldSize fieldWidth */
-        fieldWidth: number;
-
-        /** SSL_GeometryFieldSize goalWidth */
-        goalWidth: number;
-
-        /** SSL_GeometryFieldSize goalDepth */
-        goalDepth: number;
-
-        /** SSL_GeometryFieldSize boundaryWidth */
-        boundaryWidth: number;
-
-        /** SSL_GeometryFieldSize fieldLines */
-        fieldLines?: (proto.ISSL_FieldLineSegment[]|null);
-
-        /** SSL_GeometryFieldSize fieldArcs */
-        fieldArcs?: (proto.ISSL_FieldCircularArc[]|null);
-
-        /** SSL_GeometryFieldSize penaltyAreaDepth */
-        penaltyAreaDepth?: (number|null);
-
-        /** SSL_GeometryFieldSize penaltyAreaWidth */
-        penaltyAreaWidth?: (number|null);
-    }
-
-    /** Represents a SSL_GeometryFieldSize. */
-    class SSL_GeometryFieldSize implements ISSL_GeometryFieldSize {
-
-        /**
-         * Constructs a new SSL_GeometryFieldSize.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISSL_GeometryFieldSize);
-
-        /** SSL_GeometryFieldSize fieldLength. */
-        public fieldLength: number;
-
-        /** SSL_GeometryFieldSize fieldWidth. */
-        public fieldWidth: number;
-
-        /** SSL_GeometryFieldSize goalWidth. */
-        public goalWidth: number;
-
-        /** SSL_GeometryFieldSize goalDepth. */
-        public goalDepth: number;
-
-        /** SSL_GeometryFieldSize boundaryWidth. */
-        public boundaryWidth: number;
-
-        /** SSL_GeometryFieldSize fieldLines. */
-        public fieldLines: proto.ISSL_FieldLineSegment[];
-
-        /** SSL_GeometryFieldSize fieldArcs. */
-        public fieldArcs: proto.ISSL_FieldCircularArc[];
-
-        /** SSL_GeometryFieldSize penaltyAreaDepth. */
-        public penaltyAreaDepth: number;
-
-        /** SSL_GeometryFieldSize penaltyAreaWidth. */
-        public penaltyAreaWidth: number;
-
-        /**
-         * Creates a new SSL_GeometryFieldSize instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_GeometryFieldSize instance
-         */
-        public static create(properties?: proto.ISSL_GeometryFieldSize): proto.SSL_GeometryFieldSize;
-
-        /**
-         * Encodes the specified SSL_GeometryFieldSize message. Does not implicitly {@link proto.SSL_GeometryFieldSize.verify|verify} messages.
-         * @param message SSL_GeometryFieldSize message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_GeometryFieldSize message, length delimited. Does not implicitly {@link proto.SSL_GeometryFieldSize.verify|verify} messages.
-         * @param message SSL_GeometryFieldSize message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_GeometryFieldSize
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryFieldSize;
-
-        /**
-         * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_GeometryFieldSize
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryFieldSize;
-
-        /**
-         * Verifies a SSL_GeometryFieldSize message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_GeometryFieldSize message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_GeometryFieldSize
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryFieldSize;
-
-        /**
-         * Creates a plain object from a SSL_GeometryFieldSize message. Also converts values to other types if specified.
-         * @param message SSL_GeometryFieldSize
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_GeometryFieldSize, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_GeometryFieldSize to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_GeometryFieldSize
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SSL_GeometryCameraCalibration. */
-    interface ISSL_GeometryCameraCalibration {
-
-        /** SSL_GeometryCameraCalibration cameraId */
-        cameraId: number;
-
-        /** SSL_GeometryCameraCalibration focalLength */
-        focalLength: number;
-
-        /** SSL_GeometryCameraCalibration principalPointX */
-        principalPointX: number;
-
-        /** SSL_GeometryCameraCalibration principalPointY */
-        principalPointY: number;
-
-        /** SSL_GeometryCameraCalibration distortion */
-        distortion: number;
-
-        /** SSL_GeometryCameraCalibration q0 */
-        q0: number;
-
-        /** SSL_GeometryCameraCalibration q1 */
-        q1: number;
-
-        /** SSL_GeometryCameraCalibration q2 */
-        q2: number;
-
-        /** SSL_GeometryCameraCalibration q3 */
-        q3: number;
-
-        /** SSL_GeometryCameraCalibration tx */
-        tx: number;
-
-        /** SSL_GeometryCameraCalibration ty */
-        ty: number;
-
-        /** SSL_GeometryCameraCalibration tz */
-        tz: number;
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTx */
-        derivedCameraWorldTx?: (number|null);
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTy */
-        derivedCameraWorldTy?: (number|null);
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTz */
-        derivedCameraWorldTz?: (number|null);
-
-        /** SSL_GeometryCameraCalibration pixelImageWidth */
-        pixelImageWidth?: (number|null);
-
-        /** SSL_GeometryCameraCalibration pixelImageHeight */
-        pixelImageHeight?: (number|null);
-    }
-
-    /** Represents a SSL_GeometryCameraCalibration. */
-    class SSL_GeometryCameraCalibration implements ISSL_GeometryCameraCalibration {
-
-        /**
-         * Constructs a new SSL_GeometryCameraCalibration.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISSL_GeometryCameraCalibration);
-
-        /** SSL_GeometryCameraCalibration cameraId. */
-        public cameraId: number;
-
-        /** SSL_GeometryCameraCalibration focalLength. */
-        public focalLength: number;
-
-        /** SSL_GeometryCameraCalibration principalPointX. */
-        public principalPointX: number;
-
-        /** SSL_GeometryCameraCalibration principalPointY. */
-        public principalPointY: number;
-
-        /** SSL_GeometryCameraCalibration distortion. */
-        public distortion: number;
-
-        /** SSL_GeometryCameraCalibration q0. */
-        public q0: number;
-
-        /** SSL_GeometryCameraCalibration q1. */
-        public q1: number;
-
-        /** SSL_GeometryCameraCalibration q2. */
-        public q2: number;
-
-        /** SSL_GeometryCameraCalibration q3. */
-        public q3: number;
-
-        /** SSL_GeometryCameraCalibration tx. */
-        public tx: number;
-
-        /** SSL_GeometryCameraCalibration ty. */
-        public ty: number;
-
-        /** SSL_GeometryCameraCalibration tz. */
-        public tz: number;
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTx. */
-        public derivedCameraWorldTx: number;
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTy. */
-        public derivedCameraWorldTy: number;
-
-        /** SSL_GeometryCameraCalibration derivedCameraWorldTz. */
-        public derivedCameraWorldTz: number;
-
-        /** SSL_GeometryCameraCalibration pixelImageWidth. */
-        public pixelImageWidth: number;
-
-        /** SSL_GeometryCameraCalibration pixelImageHeight. */
-        public pixelImageHeight: number;
-
-        /**
-         * Creates a new SSL_GeometryCameraCalibration instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_GeometryCameraCalibration instance
-         */
-        public static create(properties?: proto.ISSL_GeometryCameraCalibration): proto.SSL_GeometryCameraCalibration;
-
-        /**
-         * Encodes the specified SSL_GeometryCameraCalibration message. Does not implicitly {@link proto.SSL_GeometryCameraCalibration.verify|verify} messages.
-         * @param message SSL_GeometryCameraCalibration message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_GeometryCameraCalibration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_GeometryCameraCalibration message, length delimited. Does not implicitly {@link proto.SSL_GeometryCameraCalibration.verify|verify} messages.
-         * @param message SSL_GeometryCameraCalibration message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_GeometryCameraCalibration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_GeometryCameraCalibration message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_GeometryCameraCalibration
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryCameraCalibration;
-
-        /**
-         * Decodes a SSL_GeometryCameraCalibration message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_GeometryCameraCalibration
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryCameraCalibration;
-
-        /**
-         * Verifies a SSL_GeometryCameraCalibration message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_GeometryCameraCalibration message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_GeometryCameraCalibration
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryCameraCalibration;
-
-        /**
-         * Creates a plain object from a SSL_GeometryCameraCalibration message. Also converts values to other types if specified.
-         * @param message SSL_GeometryCameraCalibration
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_GeometryCameraCalibration, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_GeometryCameraCalibration to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_GeometryCameraCalibration
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SSL_GeometryData. */
-    interface ISSL_GeometryData {
-
-        /** SSL_GeometryData field */
-        field: proto.ISSL_GeometryFieldSize;
-
-        /** SSL_GeometryData calib */
-        calib?: (proto.ISSL_GeometryCameraCalibration[]|null);
-    }
-
-    /** Represents a SSL_GeometryData. */
-    class SSL_GeometryData implements ISSL_GeometryData {
-
-        /**
-         * Constructs a new SSL_GeometryData.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISSL_GeometryData);
-
-        /** SSL_GeometryData field. */
-        public field: proto.ISSL_GeometryFieldSize;
-
-        /** SSL_GeometryData calib. */
-        public calib: proto.ISSL_GeometryCameraCalibration[];
-
-        /**
-         * Creates a new SSL_GeometryData instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_GeometryData instance
-         */
-        public static create(properties?: proto.ISSL_GeometryData): proto.SSL_GeometryData;
-
-        /**
-         * Encodes the specified SSL_GeometryData message. Does not implicitly {@link proto.SSL_GeometryData.verify|verify} messages.
-         * @param message SSL_GeometryData message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_GeometryData message, length delimited. Does not implicitly {@link proto.SSL_GeometryData.verify|verify} messages.
-         * @param message SSL_GeometryData message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_GeometryData message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_GeometryData
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_GeometryData;
-
-        /**
-         * Decodes a SSL_GeometryData message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_GeometryData
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_GeometryData;
-
-        /**
-         * Verifies a SSL_GeometryData message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_GeometryData message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_GeometryData
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_GeometryData;
-
-        /**
-         * Creates a plain object from a SSL_GeometryData message. Also converts values to other types if specified.
-         * @param message SSL_GeometryData
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_GeometryData, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_GeometryData to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_GeometryData
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** SSL_FieldShapeType enum. */
-    enum SSL_FieldShapeType {
-        Undefined = 0,
-        CenterCircle = 1,
-        TopTouchLine = 2,
-        BottomTouchLine = 3,
-        LeftGoalLine = 4,
-        RightGoalLine = 5,
-        HalfwayLine = 6,
-        CenterLine = 7,
-        LeftPenaltyStretch = 8,
-        RightPenaltyStretch = 9,
-        LeftFieldLeftPenaltyStretch = 10,
-        LeftFieldRightPenaltyStretch = 11,
-        RightFieldLeftPenaltyStretch = 12,
-        RightFieldRightPenaltyStretch = 13
-    }
-
-    /** Properties of a Vector2f. */
-    interface IVector2f {
-
-        /** Vector2f x */
-        x?: (number|null);
-
-        /** Vector2f y */
-        y?: (number|null);
-    }
-
-    /** Represents a Vector2f. */
-    class Vector2f implements IVector2f {
-
-        /**
-         * Constructs a new Vector2f.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IVector2f);
-
-        /** Vector2f x. */
+        /** Vector2 x. */
         public x: number;
 
-        /** Vector2f y. */
+        /** Vector2 y. */
         public y: number;
 
         /**
-         * Creates a new Vector2f instance using the specified properties.
+         * Creates a new Vector2 instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Vector2f instance
+         * @returns Vector2 instance
          */
-        public static create(properties?: proto.IVector2f): proto.Vector2f;
+        public static create(properties?: proto.IVector2): proto.Vector2;
 
         /**
-         * Encodes the specified Vector2f message. Does not implicitly {@link proto.Vector2f.verify|verify} messages.
-         * @param message Vector2f message or plain object to encode
+         * Encodes the specified Vector2 message. Does not implicitly {@link proto.Vector2.verify|verify} messages.
+         * @param message Vector2 message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IVector2f, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IVector2, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Vector2f message, length delimited. Does not implicitly {@link proto.Vector2f.verify|verify} messages.
-         * @param message Vector2f message or plain object to encode
+         * Encodes the specified Vector2 message, length delimited. Does not implicitly {@link proto.Vector2.verify|verify} messages.
+         * @param message Vector2 message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IVector2f, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IVector2, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a Vector2f message from the specified reader or buffer.
+         * Decodes a Vector2 message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Vector2f
+         * @returns Vector2
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector2f;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector2;
 
         /**
-         * Decodes a Vector2f message from the specified reader or buffer, length delimited.
+         * Decodes a Vector2 message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Vector2f
+         * @returns Vector2
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector2f;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector2;
 
         /**
-         * Verifies a Vector2f message.
+         * Verifies a Vector2 message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a Vector2f message from a plain object. Also converts values to their respective internal types.
+         * Creates a Vector2 message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Vector2f
+         * @returns Vector2
          */
-        public static fromObject(object: { [k: string]: any }): proto.Vector2f;
+        public static fromObject(object: { [k: string]: any }): proto.Vector2;
 
         /**
-         * Creates a plain object from a Vector2f message. Also converts values to other types if specified.
-         * @param message Vector2f
+         * Creates a plain object from a Vector2 message. Also converts values to other types if specified.
+         * @param message Vector2
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.Vector2f, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.Vector2, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Vector2f to JSON.
+         * Converts this Vector2 to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for Vector2f
+         * Gets the default type url for Vector2
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a SSL_Referee. */
-    interface ISSL_Referee {
+    /** Properties of a Vector3. */
+    interface IVector3 {
 
-        /** SSL_Referee packetTimestamp */
-        packetTimestamp: (number|Long);
+        /** Vector3 x */
+        x: number;
 
-        /** SSL_Referee stage */
-        stage: proto.SSL_Referee.Stage;
+        /** Vector3 y */
+        y: number;
 
-        /** SSL_Referee stageTimeLeft */
-        stageTimeLeft?: (number|null);
-
-        /** SSL_Referee command */
-        command: proto.SSL_Referee.Command;
-
-        /** SSL_Referee commandCounter */
-        commandCounter: number;
-
-        /** SSL_Referee commandTimestamp */
-        commandTimestamp: (number|Long);
-
-        /** SSL_Referee yellow */
-        yellow: proto.SSL_Referee.ITeamInfo;
-
-        /** SSL_Referee blue */
-        blue: proto.SSL_Referee.ITeamInfo;
-
-        /** SSL_Referee designatedPosition */
-        designatedPosition?: (proto.SSL_Referee.IPoint|null);
-
-        /** SSL_Referee blueTeamOnPositiveHalf */
-        blueTeamOnPositiveHalf?: (boolean|null);
-
-        /** SSL_Referee nextCommand */
-        nextCommand?: (proto.SSL_Referee.Command|null);
-
-        /** SSL_Referee gameEvents */
-        gameEvents?: (proto.IGameEvent[]|null);
-
-        /** SSL_Referee gameEventProposals */
-        gameEventProposals?: (proto.IGameEventProposalGroup[]|null);
-
-        /** SSL_Referee currentActionTimeRemaining */
-        currentActionTimeRemaining?: (number|null);
+        /** Vector3 z */
+        z: number;
     }
 
-    /** Represents a SSL_Referee. */
-    class SSL_Referee implements ISSL_Referee {
+    /** Represents a Vector3. */
+    class Vector3 implements IVector3 {
 
         /**
-         * Constructs a new SSL_Referee.
+         * Constructs a new Vector3.
          * @param [properties] Properties to set
          */
-        constructor(properties?: proto.ISSL_Referee);
+        constructor(properties?: proto.IVector3);
 
-        /** SSL_Referee packetTimestamp. */
-        public packetTimestamp: (number|Long);
+        /** Vector3 x. */
+        public x: number;
 
-        /** SSL_Referee stage. */
-        public stage: proto.SSL_Referee.Stage;
+        /** Vector3 y. */
+        public y: number;
 
-        /** SSL_Referee stageTimeLeft. */
-        public stageTimeLeft: number;
-
-        /** SSL_Referee command. */
-        public command: proto.SSL_Referee.Command;
-
-        /** SSL_Referee commandCounter. */
-        public commandCounter: number;
-
-        /** SSL_Referee commandTimestamp. */
-        public commandTimestamp: (number|Long);
-
-        /** SSL_Referee yellow. */
-        public yellow: proto.SSL_Referee.ITeamInfo;
-
-        /** SSL_Referee blue. */
-        public blue: proto.SSL_Referee.ITeamInfo;
-
-        /** SSL_Referee designatedPosition. */
-        public designatedPosition?: (proto.SSL_Referee.IPoint|null);
-
-        /** SSL_Referee blueTeamOnPositiveHalf. */
-        public blueTeamOnPositiveHalf: boolean;
-
-        /** SSL_Referee nextCommand. */
-        public nextCommand: proto.SSL_Referee.Command;
-
-        /** SSL_Referee gameEvents. */
-        public gameEvents: proto.IGameEvent[];
-
-        /** SSL_Referee gameEventProposals. */
-        public gameEventProposals: proto.IGameEventProposalGroup[];
-
-        /** SSL_Referee currentActionTimeRemaining. */
-        public currentActionTimeRemaining: number;
-
-        /**
-         * Creates a new SSL_Referee instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_Referee instance
-         */
-        public static create(properties?: proto.ISSL_Referee): proto.SSL_Referee;
-
-        /**
-         * Encodes the specified SSL_Referee message. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
-         * @param message SSL_Referee message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_Referee, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_Referee message, length delimited. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
-         * @param message SSL_Referee message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_Referee, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_Referee message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_Referee
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee;
-
-        /**
-         * Decodes a SSL_Referee message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_Referee
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee;
-
-        /**
-         * Verifies a SSL_Referee message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_Referee message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_Referee
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_Referee;
-
-        /**
-         * Creates a plain object from a SSL_Referee message. Also converts values to other types if specified.
-         * @param message SSL_Referee
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_Referee, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_Referee to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_Referee
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace SSL_Referee {
-
-        /** Stage enum. */
-        enum Stage {
-            NORMAL_FIRST_HALF_PRE = 0,
-            NORMAL_FIRST_HALF = 1,
-            NORMAL_HALF_TIME = 2,
-            NORMAL_SECOND_HALF_PRE = 3,
-            NORMAL_SECOND_HALF = 4,
-            EXTRA_TIME_BREAK = 5,
-            EXTRA_FIRST_HALF_PRE = 6,
-            EXTRA_FIRST_HALF = 7,
-            EXTRA_HALF_TIME = 8,
-            EXTRA_SECOND_HALF_PRE = 9,
-            EXTRA_SECOND_HALF = 10,
-            PENALTY_SHOOTOUT_BREAK = 11,
-            PENALTY_SHOOTOUT = 12,
-            POST_GAME = 13
-        }
-
-        /** Command enum. */
-        enum Command {
-            HALT = 0,
-            STOP = 1,
-            NORMAL_START = 2,
-            FORCE_START = 3,
-            PREPARE_KICKOFF_YELLOW = 4,
-            PREPARE_KICKOFF_BLUE = 5,
-            PREPARE_PENALTY_YELLOW = 6,
-            PREPARE_PENALTY_BLUE = 7,
-            DIRECT_FREE_YELLOW = 8,
-            DIRECT_FREE_BLUE = 9,
-            INDIRECT_FREE_YELLOW = 10,
-            INDIRECT_FREE_BLUE = 11,
-            TIMEOUT_YELLOW = 12,
-            TIMEOUT_BLUE = 13,
-            BALL_PLACEMENT_YELLOW = 16,
-            BALL_PLACEMENT_BLUE = 17
-        }
-
-        /** Properties of a TeamInfo. */
-        interface ITeamInfo {
-
-            /** TeamInfo name */
-            name: string;
-
-            /** TeamInfo score */
-            score: number;
-
-            /** TeamInfo redCards */
-            redCards: number;
-
-            /** TeamInfo yellowCardTimes */
-            yellowCardTimes?: (number[]|null);
-
-            /** TeamInfo yellowCards */
-            yellowCards: number;
-
-            /** TeamInfo timeouts */
-            timeouts: number;
-
-            /** TeamInfo timeoutTime */
-            timeoutTime: number;
-
-            /** TeamInfo goalkeeper */
-            goalkeeper: number;
-
-            /** TeamInfo foulCounter */
-            foulCounter?: (number|null);
-
-            /** TeamInfo ballPlacementFailures */
-            ballPlacementFailures?: (number|null);
-
-            /** TeamInfo canPlaceBall */
-            canPlaceBall?: (boolean|null);
-
-            /** TeamInfo maxAllowedBots */
-            maxAllowedBots?: (number|null);
-
-            /** TeamInfo botSubstitutionIntent */
-            botSubstitutionIntent?: (boolean|null);
-
-            /** TeamInfo ballPlacementFailuresReached */
-            ballPlacementFailuresReached?: (boolean|null);
-        }
-
-        /** Represents a TeamInfo. */
-        class TeamInfo implements ITeamInfo {
-
-            /**
-             * Constructs a new TeamInfo.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.SSL_Referee.ITeamInfo);
-
-            /** TeamInfo name. */
-            public name: string;
-
-            /** TeamInfo score. */
-            public score: number;
-
-            /** TeamInfo redCards. */
-            public redCards: number;
-
-            /** TeamInfo yellowCardTimes. */
-            public yellowCardTimes: number[];
-
-            /** TeamInfo yellowCards. */
-            public yellowCards: number;
-
-            /** TeamInfo timeouts. */
-            public timeouts: number;
-
-            /** TeamInfo timeoutTime. */
-            public timeoutTime: number;
-
-            /** TeamInfo goalkeeper. */
-            public goalkeeper: number;
-
-            /** TeamInfo foulCounter. */
-            public foulCounter: number;
-
-            /** TeamInfo ballPlacementFailures. */
-            public ballPlacementFailures: number;
-
-            /** TeamInfo canPlaceBall. */
-            public canPlaceBall: boolean;
-
-            /** TeamInfo maxAllowedBots. */
-            public maxAllowedBots: number;
-
-            /** TeamInfo botSubstitutionIntent. */
-            public botSubstitutionIntent: boolean;
-
-            /** TeamInfo ballPlacementFailuresReached. */
-            public ballPlacementFailuresReached: boolean;
-
-            /**
-             * Creates a new TeamInfo instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns TeamInfo instance
-             */
-            public static create(properties?: proto.SSL_Referee.ITeamInfo): proto.SSL_Referee.TeamInfo;
-
-            /**
-             * Encodes the specified TeamInfo message. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
-             * @param message TeamInfo message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.SSL_Referee.ITeamInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified TeamInfo message, length delimited. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
-             * @param message TeamInfo message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.SSL_Referee.ITeamInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a TeamInfo message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns TeamInfo
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee.TeamInfo;
-
-            /**
-             * Decodes a TeamInfo message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns TeamInfo
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee.TeamInfo;
-
-            /**
-             * Verifies a TeamInfo message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a TeamInfo message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns TeamInfo
-             */
-            public static fromObject(object: { [k: string]: any }): proto.SSL_Referee.TeamInfo;
-
-            /**
-             * Creates a plain object from a TeamInfo message. Also converts values to other types if specified.
-             * @param message TeamInfo
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.SSL_Referee.TeamInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this TeamInfo to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for TeamInfo
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-
-        /** Properties of a Point. */
-        interface IPoint {
-
-            /** Point x */
-            x: number;
-
-            /** Point y */
-            y: number;
-        }
-
-        /** Represents a Point. */
-        class Point implements IPoint {
-
-            /**
-             * Constructs a new Point.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.SSL_Referee.IPoint);
-
-            /** Point x. */
-            public x: number;
-
-            /** Point y. */
-            public y: number;
-
-            /**
-             * Creates a new Point instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns Point instance
-             */
-            public static create(properties?: proto.SSL_Referee.IPoint): proto.SSL_Referee.Point;
-
-            /**
-             * Encodes the specified Point message. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
-             * @param message Point message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.SSL_Referee.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified Point message, length delimited. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
-             * @param message Point message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.SSL_Referee.IPoint, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a Point message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns Point
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_Referee.Point;
-
-            /**
-             * Decodes a Point message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns Point
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_Referee.Point;
-
-            /**
-             * Verifies a Point message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a Point message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns Point
-             */
-            public static fromObject(object: { [k: string]: any }): proto.SSL_Referee.Point;
-
-            /**
-             * Creates a plain object from a Point message. Also converts values to other types if specified.
-             * @param message Point
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.SSL_Referee.Point, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this Point to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for Point
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-    }
-
-    /** Properties of a GameEventProposalGroup. */
-    interface IGameEventProposalGroup {
-
-        /** GameEventProposalGroup gameEvent */
-        gameEvent?: (proto.IGameEvent[]|null);
-
-        /** GameEventProposalGroup accepted */
-        accepted?: (boolean|null);
-    }
-
-    /** Represents a GameEventProposalGroup. */
-    class GameEventProposalGroup implements IGameEventProposalGroup {
-
-        /**
-         * Constructs a new GameEventProposalGroup.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IGameEventProposalGroup);
-
-        /** GameEventProposalGroup gameEvent. */
-        public gameEvent: proto.IGameEvent[];
-
-        /** GameEventProposalGroup accepted. */
-        public accepted: boolean;
-
-        /**
-         * Creates a new GameEventProposalGroup instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns GameEventProposalGroup instance
-         */
-        public static create(properties?: proto.IGameEventProposalGroup): proto.GameEventProposalGroup;
-
-        /**
-         * Encodes the specified GameEventProposalGroup message. Does not implicitly {@link proto.GameEventProposalGroup.verify|verify} messages.
-         * @param message GameEventProposalGroup message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IGameEventProposalGroup, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified GameEventProposalGroup message, length delimited. Does not implicitly {@link proto.GameEventProposalGroup.verify|verify} messages.
-         * @param message GameEventProposalGroup message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IGameEventProposalGroup, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a GameEventProposalGroup message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns GameEventProposalGroup
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.GameEventProposalGroup;
-
-        /**
-         * Decodes a GameEventProposalGroup message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns GameEventProposalGroup
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.GameEventProposalGroup;
-
-        /**
-         * Verifies a GameEventProposalGroup message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a GameEventProposalGroup message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns GameEventProposalGroup
-         */
-        public static fromObject(object: { [k: string]: any }): proto.GameEventProposalGroup;
-
-        /**
-         * Creates a plain object from a GameEventProposalGroup message. Also converts values to other types if specified.
-         * @param message GameEventProposalGroup
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.GameEventProposalGroup, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this GameEventProposalGroup to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for GameEventProposalGroup
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SSL_WrapperPacket. */
-    interface ISSL_WrapperPacket {
-
-        /** SSL_WrapperPacket detection */
-        detection?: (proto.ISSL_DetectionFrame|null);
-
-        /** SSL_WrapperPacket geometry */
-        geometry?: (proto.ISSL_GeometryData|null);
-    }
-
-    /** Represents a SSL_WrapperPacket. */
-    class SSL_WrapperPacket implements ISSL_WrapperPacket {
-
-        /**
-         * Constructs a new SSL_WrapperPacket.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISSL_WrapperPacket);
-
-        /** SSL_WrapperPacket detection. */
-        public detection?: (proto.ISSL_DetectionFrame|null);
-
-        /** SSL_WrapperPacket geometry. */
-        public geometry?: (proto.ISSL_GeometryData|null);
-
-        /**
-         * Creates a new SSL_WrapperPacket instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SSL_WrapperPacket instance
-         */
-        public static create(properties?: proto.ISSL_WrapperPacket): proto.SSL_WrapperPacket;
-
-        /**
-         * Encodes the specified SSL_WrapperPacket message. Does not implicitly {@link proto.SSL_WrapperPacket.verify|verify} messages.
-         * @param message SSL_WrapperPacket message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SSL_WrapperPacket message, length delimited. Does not implicitly {@link proto.SSL_WrapperPacket.verify|verify} messages.
-         * @param message SSL_WrapperPacket message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SSL_WrapperPacket message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SSL_WrapperPacket
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SSL_WrapperPacket;
-
-        /**
-         * Decodes a SSL_WrapperPacket message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SSL_WrapperPacket
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SSL_WrapperPacket;
-
-        /**
-         * Verifies a SSL_WrapperPacket message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SSL_WrapperPacket message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SSL_WrapperPacket
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SSL_WrapperPacket;
-
-        /**
-         * Creates a plain object from a SSL_WrapperPacket message. Also converts values to other types if specified.
-         * @param message SSL_WrapperPacket
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SSL_WrapperPacket, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SSL_WrapperPacket to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SSL_WrapperPacket
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a Drawing. */
-    interface IDrawing {
-
-        /** Drawing retainForTicks */
-        retainForTicks?: (number|null);
-
-        /** Drawing label */
-        label?: (string|null);
-
-        /** Drawing color */
-        color?: (proto.Drawing.Color|null);
-
-        /** Drawing method */
-        method?: (proto.Drawing.Method|null);
-
-        /** Drawing points */
-        points?: (proto.IVector2f[]|null);
-
-        /** Drawing category */
-        category?: (proto.Drawing.Category|null);
-
-        /** Drawing forRobotId */
-        forRobotId?: (number|null);
-
-        /** Drawing size */
-        size?: (number|null);
-
-        /** Drawing thickness */
-        thickness?: (number|null);
-    }
-
-    /** Represents a Drawing. */
-    class Drawing implements IDrawing {
-
-        /**
-         * Constructs a new Drawing.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IDrawing);
-
-        /** Drawing retainForTicks. */
-        public retainForTicks: number;
-
-        /** Drawing label. */
-        public label: string;
-
-        /** Drawing color. */
-        public color: proto.Drawing.Color;
-
-        /** Drawing method. */
-        public method: proto.Drawing.Method;
-
-        /** Drawing points. */
-        public points: proto.IVector2f[];
-
-        /** Drawing category. */
-        public category: proto.Drawing.Category;
-
-        /** Drawing forRobotId. */
-        public forRobotId: number;
-
-        /** Drawing size. */
-        public size: number;
-
-        /** Drawing thickness. */
-        public thickness: number;
-
-        /**
-         * Creates a new Drawing instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns Drawing instance
-         */
-        public static create(properties?: proto.IDrawing): proto.Drawing;
-
-        /**
-         * Encodes the specified Drawing message. Does not implicitly {@link proto.Drawing.verify|verify} messages.
-         * @param message Drawing message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified Drawing message, length delimited. Does not implicitly {@link proto.Drawing.verify|verify} messages.
-         * @param message Drawing message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IDrawing, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a Drawing message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns Drawing
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Drawing;
-
-        /**
-         * Decodes a Drawing message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns Drawing
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Drawing;
-
-        /**
-         * Verifies a Drawing message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a Drawing message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns Drawing
-         */
-        public static fromObject(object: { [k: string]: any }): proto.Drawing;
-
-        /**
-         * Creates a plain object from a Drawing message. Also converts values to other types if specified.
-         * @param message Drawing
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.Drawing, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this Drawing to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for Drawing
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace Drawing {
-
-        /** Method enum. */
-        enum Method {
-            LINES_CONNECTED = 0,
-            DOTS = 1,
-            CROSSES = 2,
-            PLUSES = 3,
-            CIRCLES = 4
-        }
-
-        /** Color enum. */
-        enum Color {
-            RED = 0,
-            GREEN = 1,
-            BLUE = 2,
-            YELLOW = 3,
-            CYAN = 4,
-            MAGENTA = 5,
-            WHITE = 6,
-            BLACK = 7
-        }
-
-        /** Category enum. */
-        enum Category {
-            PATH_PLANNING = 0,
-            DEBUG = 1
-        }
-    }
-
-    /** Properties of a Metric. */
-    interface IMetric {
-
-        /** Metric label */
-        label?: (string|null);
-
-        /** Metric boundedValue */
-        boundedValue?: (proto.Metric.IBoundedValue|null);
-
-        /** Metric decimal */
-        decimal?: (proto.Metric.IDecimal|null);
-    }
-
-    /** Represents a Metric. */
-    class Metric implements IMetric {
-
-        /**
-         * Constructs a new Metric.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IMetric);
-
-        /** Metric label. */
-        public label: string;
-
-        /** Metric boundedValue. */
-        public boundedValue?: (proto.Metric.IBoundedValue|null);
-
-        /** Metric decimal. */
-        public decimal?: (proto.Metric.IDecimal|null);
-
-        /** Metric value. */
-        public value?: ("boundedValue"|"decimal");
-
-        /**
-         * Creates a new Metric instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns Metric instance
-         */
-        public static create(properties?: proto.IMetric): proto.Metric;
-
-        /**
-         * Encodes the specified Metric message. Does not implicitly {@link proto.Metric.verify|verify} messages.
-         * @param message Metric message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified Metric message, length delimited. Does not implicitly {@link proto.Metric.verify|verify} messages.
-         * @param message Metric message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IMetric, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a Metric message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns Metric
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric;
-
-        /**
-         * Decodes a Metric message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns Metric
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric;
-
-        /**
-         * Verifies a Metric message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a Metric message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns Metric
-         */
-        public static fromObject(object: { [k: string]: any }): proto.Metric;
-
-        /**
-         * Creates a plain object from a Metric message. Also converts values to other types if specified.
-         * @param message Metric
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.Metric, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this Metric to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for Metric
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace Metric {
-
-        /** Properties of a BoundedValue. */
-        interface IBoundedValue {
-
-            /** BoundedValue value */
-            value?: (number|null);
-
-            /** BoundedValue min */
-            min?: (number|null);
-
-            /** BoundedValue max */
-            max?: (number|null);
-
-            /** BoundedValue unit */
-            unit?: (string|null);
-        }
-
-        /** Represents a BoundedValue. */
-        class BoundedValue implements IBoundedValue {
-
-            /**
-             * Constructs a new BoundedValue.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.Metric.IBoundedValue);
-
-            /** BoundedValue value. */
-            public value: number;
-
-            /** BoundedValue min. */
-            public min: number;
-
-            /** BoundedValue max. */
-            public max: number;
-
-            /** BoundedValue unit. */
-            public unit: string;
-
-            /**
-             * Creates a new BoundedValue instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns BoundedValue instance
-             */
-            public static create(properties?: proto.Metric.IBoundedValue): proto.Metric.BoundedValue;
-
-            /**
-             * Encodes the specified BoundedValue message. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
-             * @param message BoundedValue message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified BoundedValue message, length delimited. Does not implicitly {@link proto.Metric.BoundedValue.verify|verify} messages.
-             * @param message BoundedValue message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.Metric.IBoundedValue, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a BoundedValue message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns BoundedValue
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.BoundedValue;
-
-            /**
-             * Decodes a BoundedValue message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns BoundedValue
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.BoundedValue;
-
-            /**
-             * Verifies a BoundedValue message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a BoundedValue message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns BoundedValue
-             */
-            public static fromObject(object: { [k: string]: any }): proto.Metric.BoundedValue;
-
-            /**
-             * Creates a plain object from a BoundedValue message. Also converts values to other types if specified.
-             * @param message BoundedValue
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.Metric.BoundedValue, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this BoundedValue to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for BoundedValue
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-
-        /** Properties of a Decimal. */
-        interface IDecimal {
-
-            /** Decimal value */
-            value?: (number|null);
-
-            /** Decimal minRecorded */
-            minRecorded?: (number|null);
-
-            /** Decimal maxRecorded */
-            maxRecorded?: (number|null);
-
-            /** Decimal unit */
-            unit?: (string|null);
-        }
-
-        /** Represents a Decimal. */
-        class Decimal implements IDecimal {
-
-            /**
-             * Constructs a new Decimal.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.Metric.IDecimal);
-
-            /** Decimal value. */
-            public value: number;
-
-            /** Decimal minRecorded. */
-            public minRecorded: number;
-
-            /** Decimal maxRecorded. */
-            public maxRecorded: number;
-
-            /** Decimal unit. */
-            public unit: string;
-
-            /**
-             * Creates a new Decimal instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns Decimal instance
-             */
-            public static create(properties?: proto.Metric.IDecimal): proto.Metric.Decimal;
-
-            /**
-             * Encodes the specified Decimal message. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
-             * @param message Decimal message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified Decimal message, length delimited. Does not implicitly {@link proto.Metric.Decimal.verify|verify} messages.
-             * @param message Decimal message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.Metric.IDecimal, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a Decimal message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns Decimal
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Metric.Decimal;
-
-            /**
-             * Decodes a Decimal message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns Decimal
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Metric.Decimal;
-
-            /**
-             * Verifies a Decimal message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a Decimal message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns Decimal
-             */
-            public static fromObject(object: { [k: string]: any }): proto.Metric.Decimal;
-
-            /**
-             * Creates a plain object from a Decimal message. Also converts values to other types if specified.
-             * @param message Decimal
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.Metric.Decimal, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this Decimal to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for Decimal
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-    }
-
-    /** Properties of a STPStatus. */
-    interface ISTPStatus {
-
-        /** STPStatus currentPlay */
-        currentPlay?: (proto.IPlayInfo|null);
-
-        /** STPStatus score */
-        score?: (number|null);
-
-        /** STPStatus robots */
-        robots?: ({ [k: string]: proto.STPStatus.ISTPRobot }|null);
-
-        /** STPStatus scoredPlays */
-        scoredPlays?: (proto.STPStatus.IScoredPlay[]|null);
-
-        /** STPStatus currentTick */
-        currentTick?: (number|null);
-    }
-
-    /** Represents a STPStatus. */
-    class STPStatus implements ISTPStatus {
-
-        /**
-         * Constructs a new STPStatus.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISTPStatus);
-
-        /** STPStatus currentPlay. */
-        public currentPlay?: (proto.IPlayInfo|null);
-
-        /** STPStatus score. */
-        public score: number;
-
-        /** STPStatus robots. */
-        public robots: { [k: string]: proto.STPStatus.ISTPRobot };
-
-        /** STPStatus scoredPlays. */
-        public scoredPlays: proto.STPStatus.IScoredPlay[];
-
-        /** STPStatus currentTick. */
-        public currentTick: number;
-
-        /**
-         * Creates a new STPStatus instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns STPStatus instance
-         */
-        public static create(properties?: proto.ISTPStatus): proto.STPStatus;
-
-        /**
-         * Encodes the specified STPStatus message. Does not implicitly {@link proto.STPStatus.verify|verify} messages.
-         * @param message STPStatus message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISTPStatus, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified STPStatus message, length delimited. Does not implicitly {@link proto.STPStatus.verify|verify} messages.
-         * @param message STPStatus message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISTPStatus, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a STPStatus message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns STPStatus
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus;
-
-        /**
-         * Decodes a STPStatus message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns STPStatus
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus;
-
-        /**
-         * Verifies a STPStatus message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a STPStatus message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns STPStatus
-         */
-        public static fromObject(object: { [k: string]: any }): proto.STPStatus;
-
-        /**
-         * Creates a plain object from a STPStatus message. Also converts values to other types if specified.
-         * @param message STPStatus
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.STPStatus, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this STPStatus to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for STPStatus
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace STPStatus {
-
-        /** Properties of a STPRobot. */
-        interface ISTPRobot {
-
-            /** STPRobot id */
-            id?: (number|null);
-
-            /** STPRobot role */
-            role?: (proto.STPStatus.STPRobot.IRole|null);
-
-            /** STPRobot tactic */
-            tactic?: (proto.STPStatus.STPRobot.ITactic|null);
-
-            /** STPRobot skill */
-            skill?: (proto.STPStatus.STPRobot.ISkill|null);
-        }
-
-        /** Represents a STPRobot. */
-        class STPRobot implements ISTPRobot {
-
-            /**
-             * Constructs a new STPRobot.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.STPStatus.ISTPRobot);
-
-            /** STPRobot id. */
-            public id: number;
-
-            /** STPRobot role. */
-            public role?: (proto.STPStatus.STPRobot.IRole|null);
-
-            /** STPRobot tactic. */
-            public tactic?: (proto.STPStatus.STPRobot.ITactic|null);
-
-            /** STPRobot skill. */
-            public skill?: (proto.STPStatus.STPRobot.ISkill|null);
-
-            /**
-             * Creates a new STPRobot instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns STPRobot instance
-             */
-            public static create(properties?: proto.STPStatus.ISTPRobot): proto.STPStatus.STPRobot;
-
-            /**
-             * Encodes the specified STPRobot message. Does not implicitly {@link proto.STPStatus.STPRobot.verify|verify} messages.
-             * @param message STPRobot message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.STPStatus.ISTPRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified STPRobot message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.verify|verify} messages.
-             * @param message STPRobot message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.STPStatus.ISTPRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a STPRobot message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns STPRobot
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot;
-
-            /**
-             * Decodes a STPRobot message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns STPRobot
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot;
-
-            /**
-             * Verifies a STPRobot message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a STPRobot message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns STPRobot
-             */
-            public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot;
-
-            /**
-             * Creates a plain object from a STPRobot message. Also converts values to other types if specified.
-             * @param message STPRobot
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.STPStatus.STPRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this STPRobot to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for STPRobot
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-
-        namespace STPRobot {
-
-            /** Status enum. */
-            enum Status {
-                WAITING = 0,
-                SUCCESSFUL = 1,
-                FAILURE = 2,
-                RUNNING = 3
-            }
-
-            /** Properties of a Role. */
-            interface IRole {
-
-                /** Role name */
-                name?: (string|null);
-
-                /** Role status */
-                status?: (proto.STPStatus.STPRobot.Status|null);
-            }
-
-            /** Represents a Role. */
-            class Role implements IRole {
-
-                /**
-                 * Constructs a new Role.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.STPStatus.STPRobot.IRole);
-
-                /** Role name. */
-                public name: string;
-
-                /** Role status. */
-                public status: proto.STPStatus.STPRobot.Status;
-
-                /**
-                 * Creates a new Role instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns Role instance
-                 */
-                public static create(properties?: proto.STPStatus.STPRobot.IRole): proto.STPStatus.STPRobot.Role;
-
-                /**
-                 * Encodes the specified Role message. Does not implicitly {@link proto.STPStatus.STPRobot.Role.verify|verify} messages.
-                 * @param message Role message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.STPStatus.STPRobot.IRole, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified Role message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Role.verify|verify} messages.
-                 * @param message Role message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.STPStatus.STPRobot.IRole, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a Role message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns Role
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Role;
-
-                /**
-                 * Decodes a Role message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns Role
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Role;
-
-                /**
-                 * Verifies a Role message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a Role message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns Role
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Role;
-
-                /**
-                 * Creates a plain object from a Role message. Also converts values to other types if specified.
-                 * @param message Role
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.STPStatus.STPRobot.Role, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this Role to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for Role
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-
-            /** Properties of a Tactic. */
-            interface ITactic {
-
-                /** Tactic name */
-                name?: (string|null);
-
-                /** Tactic status */
-                status?: (proto.STPStatus.STPRobot.Status|null);
-            }
-
-            /** Represents a Tactic. */
-            class Tactic implements ITactic {
-
-                /**
-                 * Constructs a new Tactic.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.STPStatus.STPRobot.ITactic);
-
-                /** Tactic name. */
-                public name: string;
-
-                /** Tactic status. */
-                public status: proto.STPStatus.STPRobot.Status;
-
-                /**
-                 * Creates a new Tactic instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns Tactic instance
-                 */
-                public static create(properties?: proto.STPStatus.STPRobot.ITactic): proto.STPStatus.STPRobot.Tactic;
-
-                /**
-                 * Encodes the specified Tactic message. Does not implicitly {@link proto.STPStatus.STPRobot.Tactic.verify|verify} messages.
-                 * @param message Tactic message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.STPStatus.STPRobot.ITactic, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified Tactic message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Tactic.verify|verify} messages.
-                 * @param message Tactic message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.STPStatus.STPRobot.ITactic, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a Tactic message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns Tactic
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Tactic;
-
-                /**
-                 * Decodes a Tactic message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns Tactic
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Tactic;
-
-                /**
-                 * Verifies a Tactic message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a Tactic message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns Tactic
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Tactic;
-
-                /**
-                 * Creates a plain object from a Tactic message. Also converts values to other types if specified.
-                 * @param message Tactic
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.STPStatus.STPRobot.Tactic, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this Tactic to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for Tactic
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-
-            /** Properties of a Skill. */
-            interface ISkill {
-
-                /** Skill name */
-                name?: (string|null);
-
-                /** Skill status */
-                status?: (proto.STPStatus.STPRobot.Status|null);
-            }
-
-            /** Represents a Skill. */
-            class Skill implements ISkill {
-
-                /**
-                 * Constructs a new Skill.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: proto.STPStatus.STPRobot.ISkill);
-
-                /** Skill name. */
-                public name: string;
-
-                /** Skill status. */
-                public status: proto.STPStatus.STPRobot.Status;
-
-                /**
-                 * Creates a new Skill instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns Skill instance
-                 */
-                public static create(properties?: proto.STPStatus.STPRobot.ISkill): proto.STPStatus.STPRobot.Skill;
-
-                /**
-                 * Encodes the specified Skill message. Does not implicitly {@link proto.STPStatus.STPRobot.Skill.verify|verify} messages.
-                 * @param message Skill message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: proto.STPStatus.STPRobot.ISkill, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified Skill message, length delimited. Does not implicitly {@link proto.STPStatus.STPRobot.Skill.verify|verify} messages.
-                 * @param message Skill message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: proto.STPStatus.STPRobot.ISkill, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a Skill message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns Skill
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.STPRobot.Skill;
-
-                /**
-                 * Decodes a Skill message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns Skill
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.STPRobot.Skill;
-
-                /**
-                 * Verifies a Skill message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a Skill message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns Skill
-                 */
-                public static fromObject(object: { [k: string]: any }): proto.STPStatus.STPRobot.Skill;
-
-                /**
-                 * Creates a plain object from a Skill message. Also converts values to other types if specified.
-                 * @param message Skill
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: proto.STPStatus.STPRobot.Skill, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this Skill to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-
-                /**
-                 * Gets the default type url for Skill
-                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                 * @returns The default type url
-                 */
-                public static getTypeUrl(typeUrlPrefix?: string): string;
-            }
-        }
-
-        /** Properties of a ScoredPlay. */
-        interface IScoredPlay {
-
-            /** ScoredPlay playName */
-            playName?: (string|null);
-
-            /** ScoredPlay playScore */
-            playScore?: (number|null);
-        }
-
-        /** Represents a ScoredPlay. */
-        class ScoredPlay implements IScoredPlay {
-
-            /**
-             * Constructs a new ScoredPlay.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.STPStatus.IScoredPlay);
-
-            /** ScoredPlay playName. */
-            public playName: string;
-
-            /** ScoredPlay playScore. */
-            public playScore: number;
-
-            /**
-             * Creates a new ScoredPlay instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns ScoredPlay instance
-             */
-            public static create(properties?: proto.STPStatus.IScoredPlay): proto.STPStatus.ScoredPlay;
-
-            /**
-             * Encodes the specified ScoredPlay message. Does not implicitly {@link proto.STPStatus.ScoredPlay.verify|verify} messages.
-             * @param message ScoredPlay message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.STPStatus.IScoredPlay, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified ScoredPlay message, length delimited. Does not implicitly {@link proto.STPStatus.ScoredPlay.verify|verify} messages.
-             * @param message ScoredPlay message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.STPStatus.IScoredPlay, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a ScoredPlay message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns ScoredPlay
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.STPStatus.ScoredPlay;
-
-            /**
-             * Decodes a ScoredPlay message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns ScoredPlay
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.STPStatus.ScoredPlay;
-
-            /**
-             * Verifies a ScoredPlay message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a ScoredPlay message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns ScoredPlay
-             */
-            public static fromObject(object: { [k: string]: any }): proto.STPStatus.ScoredPlay;
-
-            /**
-             * Creates a plain object from a ScoredPlay message. Also converts values to other types if specified.
-             * @param message ScoredPlay
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.STPStatus.ScoredPlay, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this ScoredPlay to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for ScoredPlay
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-    }
-
-    /** Properties of a RuntimeConfig. */
-    interface IRuntimeConfig {
-
-        /** RuntimeConfig useReferee */
-        useReferee?: (boolean|null);
-
-        /** RuntimeConfig ignoreInvariants */
-        ignoreInvariants?: (boolean|null);
-    }
-
-    /** Represents a RuntimeConfig. */
-    class RuntimeConfig implements IRuntimeConfig {
-
-        /**
-         * Constructs a new RuntimeConfig.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRuntimeConfig);
-
-        /** RuntimeConfig useReferee. */
-        public useReferee: boolean;
-
-        /** RuntimeConfig ignoreInvariants. */
-        public ignoreInvariants: boolean;
-
-        /**
-         * Creates a new RuntimeConfig instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RuntimeConfig instance
-         */
-        public static create(properties?: proto.IRuntimeConfig): proto.RuntimeConfig;
-
-        /**
-         * Encodes the specified RuntimeConfig message. Does not implicitly {@link proto.RuntimeConfig.verify|verify} messages.
-         * @param message RuntimeConfig message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRuntimeConfig, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RuntimeConfig message, length delimited. Does not implicitly {@link proto.RuntimeConfig.verify|verify} messages.
-         * @param message RuntimeConfig message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRuntimeConfig, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RuntimeConfig message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RuntimeConfig
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RuntimeConfig;
-
-        /**
-         * Decodes a RuntimeConfig message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RuntimeConfig
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RuntimeConfig;
-
-        /**
-         * Verifies a RuntimeConfig message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RuntimeConfig message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RuntimeConfig
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RuntimeConfig;
-
-        /**
-         * Creates a plain object from a RuntimeConfig message. Also converts values to other types if specified.
-         * @param message RuntimeConfig
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RuntimeConfig, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RuntimeConfig to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RuntimeConfig
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a AIState. */
-    interface IAIState {
-
-        /** AIState isPaused */
-        isPaused?: (boolean|null);
-
-        /** AIState plays */
-        plays?: (string[]|null);
-
-        /** AIState ruleSets */
-        ruleSets?: (string[]|null);
-
-        /** AIState gameSettings */
-        gameSettings?: (proto.IGameSettings|null);
-
-        /** AIState runtimeConfig */
-        runtimeConfig?: (proto.IRuntimeConfig|null);
-    }
-
-    /** Represents a AIState. */
-    class AIState implements IAIState {
-
-        /**
-         * Constructs a new AIState.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IAIState);
-
-        /** AIState isPaused. */
-        public isPaused: boolean;
-
-        /** AIState plays. */
-        public plays: string[];
-
-        /** AIState ruleSets. */
-        public ruleSets: string[];
-
-        /** AIState gameSettings. */
-        public gameSettings?: (proto.IGameSettings|null);
-
-        /** AIState runtimeConfig. */
-        public runtimeConfig?: (proto.IRuntimeConfig|null);
-
-        /**
-         * Creates a new AIState instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns AIState instance
-         */
-        public static create(properties?: proto.IAIState): proto.AIState;
-
-        /**
-         * Encodes the specified AIState message. Does not implicitly {@link proto.AIState.verify|verify} messages.
-         * @param message AIState message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IAIState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified AIState message, length delimited. Does not implicitly {@link proto.AIState.verify|verify} messages.
-         * @param message AIState message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IAIState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a AIState message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns AIState
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.AIState;
-
-        /**
-         * Decodes a AIState message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns AIState
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.AIState;
-
-        /**
-         * Verifies a AIState message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a AIState message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns AIState
-         */
-        public static fromObject(object: { [k: string]: any }): proto.AIState;
-
-        /**
-         * Creates a plain object from a AIState message. Also converts values to other types if specified.
-         * @param message AIState
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.AIState, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this AIState to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for AIState
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a PlayInfo. */
-    interface IPlayInfo {
-
-        /** PlayInfo playName */
-        playName?: (string|null);
-
-        /** PlayInfo rulesetName */
-        rulesetName?: (string|null);
-
-        /** PlayInfo keeperId */
-        keeperId?: (number|null);
-    }
-
-    /** Represents a PlayInfo. */
-    class PlayInfo implements IPlayInfo {
-
-        /**
-         * Constructs a new PlayInfo.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IPlayInfo);
-
-        /** PlayInfo playName. */
-        public playName: string;
-
-        /** PlayInfo rulesetName. */
-        public rulesetName: string;
-
-        /** PlayInfo keeperId. */
-        public keeperId: number;
-
-        /**
-         * Creates a new PlayInfo instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns PlayInfo instance
-         */
-        public static create(properties?: proto.IPlayInfo): proto.PlayInfo;
-
-        /**
-         * Encodes the specified PlayInfo message. Does not implicitly {@link proto.PlayInfo.verify|verify} messages.
-         * @param message PlayInfo message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IPlayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified PlayInfo message, length delimited. Does not implicitly {@link proto.PlayInfo.verify|verify} messages.
-         * @param message PlayInfo message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IPlayInfo, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a PlayInfo message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns PlayInfo
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.PlayInfo;
-
-        /**
-         * Decodes a PlayInfo message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns PlayInfo
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.PlayInfo;
-
-        /**
-         * Verifies a PlayInfo message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a PlayInfo message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns PlayInfo
-         */
-        public static fromObject(object: { [k: string]: any }): proto.PlayInfo;
-
-        /**
-         * Creates a plain object from a PlayInfo message. Also converts values to other types if specified.
-         * @param message PlayInfo
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.PlayInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this PlayInfo to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for PlayInfo
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a MsgToInterface. */
-    interface IMsgToInterface {
-
-        /** MsgToInterface stpStatus */
-        stpStatus?: (proto.ISTPStatus|null);
-
-        /** MsgToInterface aiState */
-        aiState?: (proto.IAIState|null);
-
-        /** MsgToInterface state */
-        state?: (proto.IState|null);
-
-        /** MsgToInterface visualizations */
-        visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
-    }
-
-    /** Represents a MsgToInterface. */
-    class MsgToInterface implements IMsgToInterface {
-
-        /**
-         * Constructs a new MsgToInterface.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IMsgToInterface);
-
-        /** MsgToInterface stpStatus. */
-        public stpStatus?: (proto.ISTPStatus|null);
-
-        /** MsgToInterface aiState. */
-        public aiState?: (proto.IAIState|null);
-
-        /** MsgToInterface state. */
-        public state?: (proto.IState|null);
-
-        /** MsgToInterface visualizations. */
-        public visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
-
-        /** MsgToInterface kind. */
-        public kind?: ("stpStatus"|"aiState"|"state"|"visualizations");
-
-        /**
-         * Creates a new MsgToInterface instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns MsgToInterface instance
-         */
-        public static create(properties?: proto.IMsgToInterface): proto.MsgToInterface;
-
-        /**
-         * Encodes the specified MsgToInterface message. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
-         * @param message MsgToInterface message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified MsgToInterface message, length delimited. Does not implicitly {@link proto.MsgToInterface.verify|verify} messages.
-         * @param message MsgToInterface message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IMsgToInterface, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a MsgToInterface message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns MsgToInterface
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface;
-
-        /**
-         * Decodes a MsgToInterface message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns MsgToInterface
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface;
-
-        /**
-         * Verifies a MsgToInterface message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a MsgToInterface message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns MsgToInterface
-         */
-        public static fromObject(object: { [k: string]: any }): proto.MsgToInterface;
-
-        /**
-         * Creates a plain object from a MsgToInterface message. Also converts values to other types if specified.
-         * @param message MsgToInterface
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.MsgToInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this MsgToInterface to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for MsgToInterface
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    namespace MsgToInterface {
-
-        /** Properties of a VisualizationBuffer. */
-        interface IVisualizationBuffer {
-
-            /** VisualizationBuffer drawings */
-            drawings?: (proto.IDrawing[]|null);
-
-            /** VisualizationBuffer metrics */
-            metrics?: (proto.IMetric[]|null);
-        }
-
-        /** Represents a VisualizationBuffer. */
-        class VisualizationBuffer implements IVisualizationBuffer {
-
-            /**
-             * Constructs a new VisualizationBuffer.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: proto.MsgToInterface.IVisualizationBuffer);
-
-            /** VisualizationBuffer drawings. */
-            public drawings: proto.IDrawing[];
-
-            /** VisualizationBuffer metrics. */
-            public metrics: proto.IMetric[];
-
-            /**
-             * Creates a new VisualizationBuffer instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns VisualizationBuffer instance
-             */
-            public static create(properties?: proto.MsgToInterface.IVisualizationBuffer): proto.MsgToInterface.VisualizationBuffer;
-
-            /**
-             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
-             * @param message VisualizationBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
-             * @param message VisualizationBuffer message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns VisualizationBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface.VisualizationBuffer;
-
-            /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns VisualizationBuffer
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface.VisualizationBuffer;
-
-            /**
-             * Verifies a VisualizationBuffer message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns VisualizationBuffer
-             */
-            public static fromObject(object: { [k: string]: any }): proto.MsgToInterface.VisualizationBuffer;
-
-            /**
-             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
-             * @param message VisualizationBuffer
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: proto.MsgToInterface.VisualizationBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this VisualizationBuffer to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-
-            /**
-             * Gets the default type url for VisualizationBuffer
-             * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-             * @returns The default type url
-             */
-            public static getTypeUrl(typeUrlPrefix?: string): string;
-        }
-    }
-
-    /** Properties of a MsgFromInterface. */
-    interface IMsgFromInterface {
-
-        /** MsgFromInterface setPlay */
-        setPlay?: (proto.IPlayInfo|null);
-
-        /** MsgFromInterface setGameSettings */
-        setGameSettings?: (proto.IGameSettings|null);
-
-        /** MsgFromInterface setRuntimeConfig */
-        setRuntimeConfig?: (proto.IRuntimeConfig|null);
-
-        /** MsgFromInterface pauseAi */
-        pauseAi?: (boolean|null);
-
-        /** MsgFromInterface setBallPos */
-        setBallPos?: (proto.IVector2f|null);
-
-        /** MsgFromInterface simulatorCommand */
-        simulatorCommand?: (ISimulatorCommand|null);
-    }
-
-    /** Represents a MsgFromInterface. */
-    class MsgFromInterface implements IMsgFromInterface {
-
-        /**
-         * Constructs a new MsgFromInterface.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IMsgFromInterface);
-
-        /** MsgFromInterface setPlay. */
-        public setPlay?: (proto.IPlayInfo|null);
-
-        /** MsgFromInterface setGameSettings. */
-        public setGameSettings?: (proto.IGameSettings|null);
-
-        /** MsgFromInterface setRuntimeConfig. */
-        public setRuntimeConfig?: (proto.IRuntimeConfig|null);
-
-        /** MsgFromInterface pauseAi. */
-        public pauseAi?: (boolean|null);
-
-        /** MsgFromInterface setBallPos. */
-        public setBallPos?: (proto.IVector2f|null);
-
-        /** MsgFromInterface simulatorCommand. */
-        public simulatorCommand?: (ISimulatorCommand|null);
-
-        /** MsgFromInterface kind. */
-        public kind?: ("setPlay"|"setGameSettings"|"setRuntimeConfig"|"pauseAi"|"setBallPos"|"simulatorCommand");
-
-        /**
-         * Creates a new MsgFromInterface instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns MsgFromInterface instance
-         */
-        public static create(properties?: proto.IMsgFromInterface): proto.MsgFromInterface;
-
-        /**
-         * Encodes the specified MsgFromInterface message. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
-         * @param message MsgFromInterface message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified MsgFromInterface message, length delimited. Does not implicitly {@link proto.MsgFromInterface.verify|verify} messages.
-         * @param message MsgFromInterface message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IMsgFromInterface, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a MsgFromInterface message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns MsgFromInterface
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgFromInterface;
-
-        /**
-         * Decodes a MsgFromInterface message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns MsgFromInterface
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgFromInterface;
-
-        /**
-         * Verifies a MsgFromInterface message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a MsgFromInterface message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns MsgFromInterface
-         */
-        public static fromObject(object: { [k: string]: any }): proto.MsgFromInterface;
-
-        /**
-         * Creates a plain object from a MsgFromInterface message. Also converts values to other types if specified.
-         * @param message MsgFromInterface
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.MsgFromInterface, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this MsgFromInterface to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for MsgFromInterface
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a World. */
-    interface IWorld {
-
-        /** World time */
-        time?: (number|Long|null);
-
-        /** World id */
-        id?: (number|null);
-
-        /** World ball */
-        ball?: (proto.IWorldBall|null);
-
-        /** World yellow */
-        yellow?: (proto.IWorldRobot[]|null);
-
-        /** World blue */
-        blue?: (proto.IWorldRobot[]|null);
-
-        /** World yellowUnseenRobots */
-        yellowUnseenRobots?: (proto.IFeedbackOnlyRobot[]|null);
-
-        /** World blueUnseenRobots */
-        blueUnseenRobots?: (proto.IFeedbackOnlyRobot[]|null);
-    }
-
-    /** Represents a World. */
-    class World implements IWorld {
-
-        /**
-         * Constructs a new World.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IWorld);
-
-        /** World time. */
-        public time: (number|Long);
-
-        /** World id. */
-        public id: number;
-
-        /** World ball. */
-        public ball?: (proto.IWorldBall|null);
-
-        /** World yellow. */
-        public yellow: proto.IWorldRobot[];
-
-        /** World blue. */
-        public blue: proto.IWorldRobot[];
-
-        /** World yellowUnseenRobots. */
-        public yellowUnseenRobots: proto.IFeedbackOnlyRobot[];
-
-        /** World blueUnseenRobots. */
-        public blueUnseenRobots: proto.IFeedbackOnlyRobot[];
-
-        /**
-         * Creates a new World instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns World instance
-         */
-        public static create(properties?: proto.IWorld): proto.World;
-
-        /**
-         * Encodes the specified World message. Does not implicitly {@link proto.World.verify|verify} messages.
-         * @param message World message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IWorld, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified World message, length delimited. Does not implicitly {@link proto.World.verify|verify} messages.
-         * @param message World message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IWorld, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a World message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns World
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.World;
-
-        /**
-         * Decodes a World message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns World
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.World;
-
-        /**
-         * Verifies a World message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a World message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns World
-         */
-        public static fromObject(object: { [k: string]: any }): proto.World;
-
-        /**
-         * Creates a plain object from a World message. Also converts values to other types if specified.
-         * @param message World
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.World, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this World to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for World
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a WorldBall. */
-    interface IWorldBall {
-
-        /** WorldBall area */
-        area?: (number|null);
-
-        /** WorldBall pos */
-        pos?: (proto.IVector2f|null);
-
-        /** WorldBall z */
-        z?: (number|null);
-
-        /** WorldBall vel */
-        vel?: (proto.IVector2f|null);
-
-        /** WorldBall zVel */
-        zVel?: (number|null);
-
-        /** WorldBall visible */
-        visible?: (boolean|null);
-    }
-
-    /** Represents a WorldBall. */
-    class WorldBall implements IWorldBall {
-
-        /**
-         * Constructs a new WorldBall.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IWorldBall);
-
-        /** WorldBall area. */
-        public area: number;
-
-        /** WorldBall pos. */
-        public pos?: (proto.IVector2f|null);
-
-        /** WorldBall z. */
+        /** Vector3 z. */
         public z: number;
 
-        /** WorldBall vel. */
-        public vel?: (proto.IVector2f|null);
-
-        /** WorldBall zVel. */
-        public zVel: number;
-
-        /** WorldBall visible. */
-        public visible: boolean;
-
         /**
-         * Creates a new WorldBall instance using the specified properties.
+         * Creates a new Vector3 instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns WorldBall instance
+         * @returns Vector3 instance
          */
-        public static create(properties?: proto.IWorldBall): proto.WorldBall;
+        public static create(properties?: proto.IVector3): proto.Vector3;
 
         /**
-         * Encodes the specified WorldBall message. Does not implicitly {@link proto.WorldBall.verify|verify} messages.
-         * @param message WorldBall message or plain object to encode
+         * Encodes the specified Vector3 message. Does not implicitly {@link proto.Vector3.verify|verify} messages.
+         * @param message Vector3 message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: proto.IWorldBall, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: proto.IVector3, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified WorldBall message, length delimited. Does not implicitly {@link proto.WorldBall.verify|verify} messages.
-         * @param message WorldBall message or plain object to encode
+         * Encodes the specified Vector3 message, length delimited. Does not implicitly {@link proto.Vector3.verify|verify} messages.
+         * @param message Vector3 message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: proto.IWorldBall, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: proto.IVector3, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a WorldBall message from the specified reader or buffer.
+         * Decodes a Vector3 message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns WorldBall
+         * @returns Vector3
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.WorldBall;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.Vector3;
 
         /**
-         * Decodes a WorldBall message from the specified reader or buffer, length delimited.
+         * Decodes a Vector3 message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns WorldBall
+         * @returns Vector3
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.WorldBall;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.Vector3;
 
         /**
-         * Verifies a WorldBall message.
+         * Verifies a Vector3 message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a WorldBall message from a plain object. Also converts values to their respective internal types.
+         * Creates a Vector3 message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns WorldBall
+         * @returns Vector3
          */
-        public static fromObject(object: { [k: string]: any }): proto.WorldBall;
+        public static fromObject(object: { [k: string]: any }): proto.Vector3;
 
         /**
-         * Creates a plain object from a WorldBall message. Also converts values to other types if specified.
-         * @param message WorldBall
+         * Creates a plain object from a Vector3 message. Also converts values to other types if specified.
+         * @param message Vector3
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: proto.WorldBall, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: proto.Vector3, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this WorldBall to JSON.
+         * Converts this Vector3 to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for WorldBall
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a WorldRobot. */
-    interface IWorldRobot {
-
-        /** WorldRobot id */
-        id?: (number|null);
-
-        /** WorldRobot pos */
-        pos?: (proto.IVector2f|null);
-
-        /** WorldRobot angle */
-        angle?: (number|null);
-
-        /** WorldRobot vel */
-        vel?: (proto.IVector2f|null);
-
-        /** WorldRobot w */
-        w?: (number|null);
-
-        /** WorldRobot feedbackInfo */
-        feedbackInfo?: (proto.IRobotProcessedFeedback|null);
-    }
-
-    /** Represents a WorldRobot. */
-    class WorldRobot implements IWorldRobot {
-
-        /**
-         * Constructs a new WorldRobot.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IWorldRobot);
-
-        /** WorldRobot id. */
-        public id: number;
-
-        /** WorldRobot pos. */
-        public pos?: (proto.IVector2f|null);
-
-        /** WorldRobot angle. */
-        public angle: number;
-
-        /** WorldRobot vel. */
-        public vel?: (proto.IVector2f|null);
-
-        /** WorldRobot w. */
-        public w: number;
-
-        /** WorldRobot feedbackInfo. */
-        public feedbackInfo?: (proto.IRobotProcessedFeedback|null);
-
-        /**
-         * Creates a new WorldRobot instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns WorldRobot instance
-         */
-        public static create(properties?: proto.IWorldRobot): proto.WorldRobot;
-
-        /**
-         * Encodes the specified WorldRobot message. Does not implicitly {@link proto.WorldRobot.verify|verify} messages.
-         * @param message WorldRobot message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IWorldRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified WorldRobot message, length delimited. Does not implicitly {@link proto.WorldRobot.verify|verify} messages.
-         * @param message WorldRobot message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IWorldRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a WorldRobot message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns WorldRobot
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.WorldRobot;
-
-        /**
-         * Decodes a WorldRobot message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns WorldRobot
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.WorldRobot;
-
-        /**
-         * Verifies a WorldRobot message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a WorldRobot message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns WorldRobot
-         */
-        public static fromObject(object: { [k: string]: any }): proto.WorldRobot;
-
-        /**
-         * Creates a plain object from a WorldRobot message. Also converts values to other types if specified.
-         * @param message WorldRobot
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.WorldRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this WorldRobot to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for WorldRobot
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a RobotWheel. */
-    interface IRobotWheel {
-
-        /** RobotWheel locked */
-        locked?: (boolean|null);
-
-        /** RobotWheel braking */
-        braking?: (boolean|null);
-    }
-
-    /** Represents a RobotWheel. */
-    class RobotWheel implements IRobotWheel {
-
-        /**
-         * Constructs a new RobotWheel.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotWheel);
-
-        /** RobotWheel locked. */
-        public locked: boolean;
-
-        /** RobotWheel braking. */
-        public braking: boolean;
-
-        /**
-         * Creates a new RobotWheel instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotWheel instance
-         */
-        public static create(properties?: proto.IRobotWheel): proto.RobotWheel;
-
-        /**
-         * Encodes the specified RobotWheel message. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
-         * @param message RobotWheel message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotWheel, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotWheel message, length delimited. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
-         * @param message RobotWheel message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotWheel, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotWheel message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotWheel
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotWheel;
-
-        /**
-         * Decodes a RobotWheel message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotWheel
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotWheel;
-
-        /**
-         * Verifies a RobotWheel message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotWheel message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotWheel
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotWheel;
-
-        /**
-         * Creates a plain object from a RobotWheel message. Also converts values to other types if specified.
-         * @param message RobotWheel
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotWheel, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotWheel to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotWheel
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a RobotWheels. */
-    interface IRobotWheels {
-
-        /** RobotWheels rightFront */
-        rightFront?: (proto.IRobotWheel|null);
-
-        /** RobotWheels rightBack */
-        rightBack?: (proto.IRobotWheel|null);
-
-        /** RobotWheels leftBack */
-        leftBack?: (proto.IRobotWheel|null);
-
-        /** RobotWheels leftFront */
-        leftFront?: (proto.IRobotWheel|null);
-    }
-
-    /** Represents a RobotWheels. */
-    class RobotWheels implements IRobotWheels {
-
-        /**
-         * Constructs a new RobotWheels.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotWheels);
-
-        /** RobotWheels rightFront. */
-        public rightFront?: (proto.IRobotWheel|null);
-
-        /** RobotWheels rightBack. */
-        public rightBack?: (proto.IRobotWheel|null);
-
-        /** RobotWheels leftBack. */
-        public leftBack?: (proto.IRobotWheel|null);
-
-        /** RobotWheels leftFront. */
-        public leftFront?: (proto.IRobotWheel|null);
-
-        /**
-         * Creates a new RobotWheels instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotWheels instance
-         */
-        public static create(properties?: proto.IRobotWheels): proto.RobotWheels;
-
-        /**
-         * Encodes the specified RobotWheels message. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
-         * @param message RobotWheels message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotWheels, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotWheels message, length delimited. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
-         * @param message RobotWheels message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotWheels, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotWheels message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotWheels
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotWheels;
-
-        /**
-         * Decodes a RobotWheels message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotWheels
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotWheels;
-
-        /**
-         * Verifies a RobotWheels message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotWheels message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotWheels
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotWheels;
-
-        /**
-         * Creates a plain object from a RobotWheels message. Also converts values to other types if specified.
-         * @param message RobotWheels
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotWheels, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotWheels to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotWheels
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a RobotProcessedFeedback. */
-    interface IRobotProcessedFeedback {
-
-        /** RobotProcessedFeedback ballSensorSeesBall */
-        ballSensorSeesBall?: (boolean|null);
-
-        /** RobotProcessedFeedback ballPosition */
-        ballPosition?: (number|null);
-
-        /** RobotProcessedFeedback ballSensorIsWorking */
-        ballSensorIsWorking?: (boolean|null);
-
-        /** RobotProcessedFeedback dribblerSeesBall */
-        dribblerSeesBall?: (boolean|null);
-
-        /** RobotProcessedFeedback xsensIsCalibrated */
-        xsensIsCalibrated?: (boolean|null);
-
-        /** RobotProcessedFeedback capacitorIsCharged */
-        capacitorIsCharged?: (boolean|null);
-
-        /** RobotProcessedFeedback wheelInformation */
-        wheelInformation?: (proto.IRobotWheels|null);
-
-        /** RobotProcessedFeedback batteryLevel */
-        batteryLevel?: (number|null);
-
-        /** RobotProcessedFeedback signalStrength */
-        signalStrength?: (number|null);
-    }
-
-    /** Represents a RobotProcessedFeedback. */
-    class RobotProcessedFeedback implements IRobotProcessedFeedback {
-
-        /**
-         * Constructs a new RobotProcessedFeedback.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotProcessedFeedback);
-
-        /** RobotProcessedFeedback ballSensorSeesBall. */
-        public ballSensorSeesBall: boolean;
-
-        /** RobotProcessedFeedback ballPosition. */
-        public ballPosition: number;
-
-        /** RobotProcessedFeedback ballSensorIsWorking. */
-        public ballSensorIsWorking: boolean;
-
-        /** RobotProcessedFeedback dribblerSeesBall. */
-        public dribblerSeesBall: boolean;
-
-        /** RobotProcessedFeedback xsensIsCalibrated. */
-        public xsensIsCalibrated: boolean;
-
-        /** RobotProcessedFeedback capacitorIsCharged. */
-        public capacitorIsCharged: boolean;
-
-        /** RobotProcessedFeedback wheelInformation. */
-        public wheelInformation?: (proto.IRobotWheels|null);
-
-        /** RobotProcessedFeedback batteryLevel. */
-        public batteryLevel: number;
-
-        /** RobotProcessedFeedback signalStrength. */
-        public signalStrength: number;
-
-        /**
-         * Creates a new RobotProcessedFeedback instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotProcessedFeedback instance
-         */
-        public static create(properties?: proto.IRobotProcessedFeedback): proto.RobotProcessedFeedback;
-
-        /**
-         * Encodes the specified RobotProcessedFeedback message. Does not implicitly {@link proto.RobotProcessedFeedback.verify|verify} messages.
-         * @param message RobotProcessedFeedback message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotProcessedFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotProcessedFeedback message, length delimited. Does not implicitly {@link proto.RobotProcessedFeedback.verify|verify} messages.
-         * @param message RobotProcessedFeedback message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotProcessedFeedback, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotProcessedFeedback message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotProcessedFeedback
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotProcessedFeedback;
-
-        /**
-         * Decodes a RobotProcessedFeedback message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotProcessedFeedback
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotProcessedFeedback;
-
-        /**
-         * Verifies a RobotProcessedFeedback message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotProcessedFeedback message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotProcessedFeedback
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotProcessedFeedback;
-
-        /**
-         * Creates a plain object from a RobotProcessedFeedback message. Also converts values to other types if specified.
-         * @param message RobotProcessedFeedback
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotProcessedFeedback, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotProcessedFeedback to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotProcessedFeedback
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a FeedbackOnlyRobot. */
-    interface IFeedbackOnlyRobot {
-
-        /** FeedbackOnlyRobot id */
-        id?: (number|null);
-
-        /** FeedbackOnlyRobot feedback */
-        feedback?: (proto.IRobotProcessedFeedback|null);
-    }
-
-    /** Represents a FeedbackOnlyRobot. */
-    class FeedbackOnlyRobot implements IFeedbackOnlyRobot {
-
-        /**
-         * Constructs a new FeedbackOnlyRobot.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IFeedbackOnlyRobot);
-
-        /** FeedbackOnlyRobot id. */
-        public id: number;
-
-        /** FeedbackOnlyRobot feedback. */
-        public feedback?: (proto.IRobotProcessedFeedback|null);
-
-        /**
-         * Creates a new FeedbackOnlyRobot instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns FeedbackOnlyRobot instance
-         */
-        public static create(properties?: proto.IFeedbackOnlyRobot): proto.FeedbackOnlyRobot;
-
-        /**
-         * Encodes the specified FeedbackOnlyRobot message. Does not implicitly {@link proto.FeedbackOnlyRobot.verify|verify} messages.
-         * @param message FeedbackOnlyRobot message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IFeedbackOnlyRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified FeedbackOnlyRobot message, length delimited. Does not implicitly {@link proto.FeedbackOnlyRobot.verify|verify} messages.
-         * @param message FeedbackOnlyRobot message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IFeedbackOnlyRobot, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a FeedbackOnlyRobot message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns FeedbackOnlyRobot
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.FeedbackOnlyRobot;
-
-        /**
-         * Decodes a FeedbackOnlyRobot message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns FeedbackOnlyRobot
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.FeedbackOnlyRobot;
-
-        /**
-         * Verifies a FeedbackOnlyRobot message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a FeedbackOnlyRobot message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns FeedbackOnlyRobot
-         */
-        public static fromObject(object: { [k: string]: any }): proto.FeedbackOnlyRobot;
-
-        /**
-         * Creates a plain object from a FeedbackOnlyRobot message. Also converts values to other types if specified.
-         * @param message FeedbackOnlyRobot
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.FeedbackOnlyRobot, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this FeedbackOnlyRobot to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for FeedbackOnlyRobot
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a State. */
-    interface IState {
-
-        /** State lastSeenWorld */
-        lastSeenWorld?: (proto.IWorld|null);
-
-        /** State commandExtrapolatedWorld */
-        commandExtrapolatedWorld?: (proto.IWorld|null);
-
-        /** State ballCameraWorld */
-        ballCameraWorld?: (proto.IWorld|null);
-
-        /** State blueRobotParameters */
-        blueRobotParameters?: (proto.ITeamParameters|null);
-
-        /** State yellowRobotParameters */
-        yellowRobotParameters?: (proto.ITeamParameters|null);
-
-        /** State field */
-        field?: (proto.ISSL_GeometryData|null);
-
-        /** State referee */
-        referee?: (proto.ISSL_Referee|null);
-
-        /** State processedVisionPackets */
-        processedVisionPackets?: (proto.ISSL_WrapperPacket[]|null);
-
-        /** State processedRefereePackets */
-        processedRefereePackets?: (proto.ISSL_Referee[]|null);
-
-        /** State processedFeedbackPackets */
-        processedFeedbackPackets?: (proto.IRobotsFeedback[]|null);
-    }
-
-    /** Represents a State. */
-    class State implements IState {
-
-        /**
-         * Constructs a new State.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IState);
-
-        /** State lastSeenWorld. */
-        public lastSeenWorld?: (proto.IWorld|null);
-
-        /** State commandExtrapolatedWorld. */
-        public commandExtrapolatedWorld?: (proto.IWorld|null);
-
-        /** State ballCameraWorld. */
-        public ballCameraWorld?: (proto.IWorld|null);
-
-        /** State blueRobotParameters. */
-        public blueRobotParameters?: (proto.ITeamParameters|null);
-
-        /** State yellowRobotParameters. */
-        public yellowRobotParameters?: (proto.ITeamParameters|null);
-
-        /** State field. */
-        public field?: (proto.ISSL_GeometryData|null);
-
-        /** State referee. */
-        public referee?: (proto.ISSL_Referee|null);
-
-        /** State processedVisionPackets. */
-        public processedVisionPackets: proto.ISSL_WrapperPacket[];
-
-        /** State processedRefereePackets. */
-        public processedRefereePackets: proto.ISSL_Referee[];
-
-        /** State processedFeedbackPackets. */
-        public processedFeedbackPackets: proto.IRobotsFeedback[];
-
-        /**
-         * Creates a new State instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns State instance
-         */
-        public static create(properties?: proto.IState): proto.State;
-
-        /**
-         * Encodes the specified State message. Does not implicitly {@link proto.State.verify|verify} messages.
-         * @param message State message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified State message, length delimited. Does not implicitly {@link proto.State.verify|verify} messages.
-         * @param message State message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a State message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns State
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.State;
-
-        /**
-         * Decodes a State message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns State
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.State;
-
-        /**
-         * Verifies a State message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a State message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns State
-         */
-        public static fromObject(object: { [k: string]: any }): proto.State;
-
-        /**
-         * Creates a plain object from a State message. Also converts values to other types if specified.
-         * @param message State
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.State, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this State to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for State
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a ModuleState. */
-    interface IModuleState {
-
-        /** ModuleState systemState */
-        systemState?: (proto.IState|null);
-
-        /** ModuleState handshakes */
-        handshakes?: (proto.IHandshake[]|null);
-    }
-
-    /** Represents a ModuleState. */
-    class ModuleState implements IModuleState {
-
-        /**
-         * Constructs a new ModuleState.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IModuleState);
-
-        /** ModuleState systemState. */
-        public systemState?: (proto.IState|null);
-
-        /** ModuleState handshakes. */
-        public handshakes: proto.IHandshake[];
-
-        /**
-         * Creates a new ModuleState instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns ModuleState instance
-         */
-        public static create(properties?: proto.IModuleState): proto.ModuleState;
-
-        /**
-         * Encodes the specified ModuleState message. Does not implicitly {@link proto.ModuleState.verify|verify} messages.
-         * @param message ModuleState message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IModuleState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified ModuleState message, length delimited. Does not implicitly {@link proto.ModuleState.verify|verify} messages.
-         * @param message ModuleState message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IModuleState, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a ModuleState message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns ModuleState
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.ModuleState;
-
-        /**
-         * Decodes a ModuleState message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns ModuleState
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.ModuleState;
-
-        /**
-         * Verifies a ModuleState message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a ModuleState message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns ModuleState
-         */
-        public static fromObject(object: { [k: string]: any }): proto.ModuleState;
-
-        /**
-         * Creates a plain object from a ModuleState message. Also converts values to other types if specified.
-         * @param message ModuleState
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.ModuleState, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this ModuleState to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for ModuleState
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a RobotParameters. */
-    interface IRobotParameters {
-
-        /** RobotParameters radius */
-        radius?: (number|null);
-
-        /** RobotParameters height */
-        height?: (number|null);
-
-        /** RobotParameters frontWidth */
-        frontWidth?: (number|null);
-
-        /** RobotParameters dribblerWidth */
-        dribblerWidth?: (number|null);
-
-        /** RobotParameters angleOffset */
-        angleOffset?: (number|null);
-    }
-
-    /** Represents a RobotParameters. */
-    class RobotParameters implements IRobotParameters {
-
-        /**
-         * Constructs a new RobotParameters.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.IRobotParameters);
-
-        /** RobotParameters radius. */
-        public radius: number;
-
-        /** RobotParameters height. */
-        public height: number;
-
-        /** RobotParameters frontWidth. */
-        public frontWidth: number;
-
-        /** RobotParameters dribblerWidth. */
-        public dribblerWidth: number;
-
-        /** RobotParameters angleOffset. */
-        public angleOffset: number;
-
-        /**
-         * Creates a new RobotParameters instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns RobotParameters instance
-         */
-        public static create(properties?: proto.IRobotParameters): proto.RobotParameters;
-
-        /**
-         * Encodes the specified RobotParameters message. Does not implicitly {@link proto.RobotParameters.verify|verify} messages.
-         * @param message RobotParameters message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.IRobotParameters, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified RobotParameters message, length delimited. Does not implicitly {@link proto.RobotParameters.verify|verify} messages.
-         * @param message RobotParameters message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.IRobotParameters, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a RobotParameters message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns RobotParameters
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RobotParameters;
-
-        /**
-         * Decodes a RobotParameters message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns RobotParameters
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RobotParameters;
-
-        /**
-         * Verifies a RobotParameters message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a RobotParameters message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns RobotParameters
-         */
-        public static fromObject(object: { [k: string]: any }): proto.RobotParameters;
-
-        /**
-         * Creates a plain object from a RobotParameters message. Also converts values to other types if specified.
-         * @param message RobotParameters
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.RobotParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this RobotParameters to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for RobotParameters
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a TeamParameters. */
-    interface ITeamParameters {
-
-        /** TeamParameters didChange */
-        didChange?: (boolean|null);
-
-        /** TeamParameters parameters */
-        parameters?: (proto.IRobotParameters|null);
-    }
-
-    /** Represents a TeamParameters. */
-    class TeamParameters implements ITeamParameters {
-
-        /**
-         * Constructs a new TeamParameters.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ITeamParameters);
-
-        /** TeamParameters didChange. */
-        public didChange: boolean;
-
-        /** TeamParameters parameters. */
-        public parameters?: (proto.IRobotParameters|null);
-
-        /**
-         * Creates a new TeamParameters instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns TeamParameters instance
-         */
-        public static create(properties?: proto.ITeamParameters): proto.TeamParameters;
-
-        /**
-         * Encodes the specified TeamParameters message. Does not implicitly {@link proto.TeamParameters.verify|verify} messages.
-         * @param message TeamParameters message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ITeamParameters, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified TeamParameters message, length delimited. Does not implicitly {@link proto.TeamParameters.verify|verify} messages.
-         * @param message TeamParameters message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ITeamParameters, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a TeamParameters message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns TeamParameters
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.TeamParameters;
-
-        /**
-         * Decodes a TeamParameters message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns TeamParameters
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.TeamParameters;
-
-        /**
-         * Verifies a TeamParameters message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a TeamParameters message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns TeamParameters
-         */
-        public static fromObject(object: { [k: string]: any }): proto.TeamParameters;
-
-        /**
-         * Creates a plain object from a TeamParameters message. Also converts values to other types if specified.
-         * @param message TeamParameters
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.TeamParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this TeamParameters to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for TeamParameters
+         * Gets the default type url for Vector3
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
@@ -12668,620 +10649,397 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a SimulationBallLocation. */
-    interface ISimulationBallLocation {
-
-        /** SimulationBallLocation x */
-        x?: (number|null);
-
-        /** SimulationBallLocation y */
-        y?: (number|null);
-
-        /** SimulationBallLocation z */
-        z?: (number|null);
-
-        /** SimulationBallLocation xVelocity */
-        xVelocity?: (number|null);
-
-        /** SimulationBallLocation yVelocity */
-        yVelocity?: (number|null);
-
-        /** SimulationBallLocation zVelocity */
-        zVelocity?: (number|null);
-
-        /** SimulationBallLocation velocityInRolling */
-        velocityInRolling?: (boolean|null);
-
-        /** SimulationBallLocation teleportSafely */
-        teleportSafely?: (boolean|null);
-
-        /** SimulationBallLocation byForce */
-        byForce?: (boolean|null);
-    }
-
-    /** Represents a SimulationBallLocation. */
-    class SimulationBallLocation implements ISimulationBallLocation {
-
-        /**
-         * Constructs a new SimulationBallLocation.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISimulationBallLocation);
-
-        /** SimulationBallLocation x. */
-        public x: number;
-
-        /** SimulationBallLocation y. */
-        public y: number;
-
-        /** SimulationBallLocation z. */
-        public z: number;
-
-        /** SimulationBallLocation xVelocity. */
-        public xVelocity: number;
-
-        /** SimulationBallLocation yVelocity. */
-        public yVelocity: number;
-
-        /** SimulationBallLocation zVelocity. */
-        public zVelocity: number;
-
-        /** SimulationBallLocation velocityInRolling. */
-        public velocityInRolling: boolean;
-
-        /** SimulationBallLocation teleportSafely. */
-        public teleportSafely: boolean;
-
-        /** SimulationBallLocation byForce. */
-        public byForce: boolean;
-
-        /**
-         * Creates a new SimulationBallLocation instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SimulationBallLocation instance
-         */
-        public static create(properties?: proto.ISimulationBallLocation): proto.SimulationBallLocation;
-
-        /**
-         * Encodes the specified SimulationBallLocation message. Does not implicitly {@link proto.SimulationBallLocation.verify|verify} messages.
-         * @param message SimulationBallLocation message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISimulationBallLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SimulationBallLocation message, length delimited. Does not implicitly {@link proto.SimulationBallLocation.verify|verify} messages.
-         * @param message SimulationBallLocation message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISimulationBallLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SimulationBallLocation message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SimulationBallLocation
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SimulationBallLocation;
-
-        /**
-         * Decodes a SimulationBallLocation message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SimulationBallLocation
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SimulationBallLocation;
-
-        /**
-         * Verifies a SimulationBallLocation message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SimulationBallLocation message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SimulationBallLocation
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SimulationBallLocation;
-
-        /**
-         * Creates a plain object from a SimulationBallLocation message. Also converts values to other types if specified.
-         * @param message SimulationBallLocation
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SimulationBallLocation, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SimulationBallLocation to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SimulationBallLocation
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SimulationRobotLocation. */
-    interface ISimulationRobotLocation {
-
-        /** SimulationRobotLocation id */
-        id?: (number|null);
-
-        /** SimulationRobotLocation isTeamYellow */
-        isTeamYellow?: (boolean|null);
-
-        /** SimulationRobotLocation x */
-        x?: (number|null);
-
-        /** SimulationRobotLocation y */
-        y?: (number|null);
-
-        /** SimulationRobotLocation xVelocity */
-        xVelocity?: (number|null);
-
-        /** SimulationRobotLocation yVelocity */
-        yVelocity?: (number|null);
-
-        /** SimulationRobotLocation angularVelocity */
-        angularVelocity?: (number|null);
-
-        /** SimulationRobotLocation orientation */
-        orientation?: (number|null);
-
-        /** SimulationRobotLocation presentOnField */
-        presentOnField?: (boolean|null);
-
-        /** SimulationRobotLocation byForce */
-        byForce?: (boolean|null);
-    }
-
-    /** Represents a SimulationRobotLocation. */
-    class SimulationRobotLocation implements ISimulationRobotLocation {
-
-        /**
-         * Constructs a new SimulationRobotLocation.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISimulationRobotLocation);
-
-        /** SimulationRobotLocation id. */
-        public id: number;
-
-        /** SimulationRobotLocation isTeamYellow. */
-        public isTeamYellow: boolean;
-
-        /** SimulationRobotLocation x. */
-        public x: number;
-
-        /** SimulationRobotLocation y. */
-        public y: number;
-
-        /** SimulationRobotLocation xVelocity. */
-        public xVelocity: number;
-
-        /** SimulationRobotLocation yVelocity. */
-        public yVelocity: number;
-
-        /** SimulationRobotLocation angularVelocity. */
-        public angularVelocity: number;
-
-        /** SimulationRobotLocation orientation. */
-        public orientation: number;
-
-        /** SimulationRobotLocation presentOnField. */
-        public presentOnField: boolean;
-
-        /** SimulationRobotLocation byForce. */
-        public byForce: boolean;
-
-        /**
-         * Creates a new SimulationRobotLocation instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SimulationRobotLocation instance
-         */
-        public static create(properties?: proto.ISimulationRobotLocation): proto.SimulationRobotLocation;
-
-        /**
-         * Encodes the specified SimulationRobotLocation message. Does not implicitly {@link proto.SimulationRobotLocation.verify|verify} messages.
-         * @param message SimulationRobotLocation message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISimulationRobotLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SimulationRobotLocation message, length delimited. Does not implicitly {@link proto.SimulationRobotLocation.verify|verify} messages.
-         * @param message SimulationRobotLocation message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISimulationRobotLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SimulationRobotLocation message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SimulationRobotLocation
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SimulationRobotLocation;
-
-        /**
-         * Decodes a SimulationRobotLocation message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SimulationRobotLocation
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SimulationRobotLocation;
-
-        /**
-         * Verifies a SimulationRobotLocation message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SimulationRobotLocation message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SimulationRobotLocation
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SimulationRobotLocation;
-
-        /**
-         * Creates a plain object from a SimulationRobotLocation message. Also converts values to other types if specified.
-         * @param message SimulationRobotLocation
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SimulationRobotLocation, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SimulationRobotLocation to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SimulationRobotLocation
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SimulationRobotProperties. */
-    interface ISimulationRobotProperties {
-
-        /** SimulationRobotProperties id */
-        id?: (number|null);
-
-        /** SimulationRobotProperties isTeamYellow */
-        isTeamYellow?: (boolean|null);
-
-        /** SimulationRobotProperties radius */
-        radius?: (number|null);
-
-        /** SimulationRobotProperties height */
-        height?: (number|null);
-
-        /** SimulationRobotProperties mass */
-        mass?: (number|null);
-
-        /** SimulationRobotProperties maxKickSpeed */
-        maxKickSpeed?: (number|null);
-
-        /** SimulationRobotProperties maxChipSpeed */
-        maxChipSpeed?: (number|null);
-
-        /** SimulationRobotProperties centerToDribblerDistance */
-        centerToDribblerDistance?: (number|null);
-
-        /** SimulationRobotProperties maxAcceleration */
-        maxAcceleration?: (number|null);
-
-        /** SimulationRobotProperties maxAngularAcceleration */
-        maxAngularAcceleration?: (number|null);
-
-        /** SimulationRobotProperties maxDeceleration */
-        maxDeceleration?: (number|null);
-
-        /** SimulationRobotProperties maxAngularDeceleration */
-        maxAngularDeceleration?: (number|null);
-
-        /** SimulationRobotProperties maxVelocity */
-        maxVelocity?: (number|null);
-
-        /** SimulationRobotProperties maxAngularVelocity */
-        maxAngularVelocity?: (number|null);
-
-        /** SimulationRobotProperties frontRightWheelAngle */
-        frontRightWheelAngle?: (number|null);
-
-        /** SimulationRobotProperties backRightWheelAngle */
-        backRightWheelAngle?: (number|null);
-
-        /** SimulationRobotProperties backLeftWheelAngle */
-        backLeftWheelAngle?: (number|null);
-
-        /** SimulationRobotProperties frontLeftWheelAngle */
-        frontLeftWheelAngle?: (number|null);
-    }
-
-    /** Represents a SimulationRobotProperties. */
-    class SimulationRobotProperties implements ISimulationRobotProperties {
-
-        /**
-         * Constructs a new SimulationRobotProperties.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISimulationRobotProperties);
-
-        /** SimulationRobotProperties id. */
-        public id: number;
-
-        /** SimulationRobotProperties isTeamYellow. */
-        public isTeamYellow: boolean;
-
-        /** SimulationRobotProperties radius. */
-        public radius: number;
-
-        /** SimulationRobotProperties height. */
-        public height: number;
-
-        /** SimulationRobotProperties mass. */
-        public mass: number;
-
-        /** SimulationRobotProperties maxKickSpeed. */
-        public maxKickSpeed: number;
-
-        /** SimulationRobotProperties maxChipSpeed. */
-        public maxChipSpeed: number;
-
-        /** SimulationRobotProperties centerToDribblerDistance. */
-        public centerToDribblerDistance: number;
-
-        /** SimulationRobotProperties maxAcceleration. */
-        public maxAcceleration: number;
-
-        /** SimulationRobotProperties maxAngularAcceleration. */
-        public maxAngularAcceleration: number;
-
-        /** SimulationRobotProperties maxDeceleration. */
-        public maxDeceleration: number;
-
-        /** SimulationRobotProperties maxAngularDeceleration. */
-        public maxAngularDeceleration: number;
-
-        /** SimulationRobotProperties maxVelocity. */
-        public maxVelocity: number;
-
-        /** SimulationRobotProperties maxAngularVelocity. */
-        public maxAngularVelocity: number;
-
-        /** SimulationRobotProperties frontRightWheelAngle. */
-        public frontRightWheelAngle: number;
-
-        /** SimulationRobotProperties backRightWheelAngle. */
-        public backRightWheelAngle: number;
-
-        /** SimulationRobotProperties backLeftWheelAngle. */
-        public backLeftWheelAngle: number;
-
-        /** SimulationRobotProperties frontLeftWheelAngle. */
-        public frontLeftWheelAngle: number;
-
-        /**
-         * Creates a new SimulationRobotProperties instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SimulationRobotProperties instance
-         */
-        public static create(properties?: proto.ISimulationRobotProperties): proto.SimulationRobotProperties;
-
-        /**
-         * Encodes the specified SimulationRobotProperties message. Does not implicitly {@link proto.SimulationRobotProperties.verify|verify} messages.
-         * @param message SimulationRobotProperties message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISimulationRobotProperties, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SimulationRobotProperties message, length delimited. Does not implicitly {@link proto.SimulationRobotProperties.verify|verify} messages.
-         * @param message SimulationRobotProperties message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISimulationRobotProperties, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SimulationRobotProperties message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SimulationRobotProperties
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SimulationRobotProperties;
-
-        /**
-         * Decodes a SimulationRobotProperties message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SimulationRobotProperties
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SimulationRobotProperties;
-
-        /**
-         * Verifies a SimulationRobotProperties message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SimulationRobotProperties message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SimulationRobotProperties
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SimulationRobotProperties;
-
-        /**
-         * Creates a plain object from a SimulationRobotProperties message. Also converts values to other types if specified.
-         * @param message SimulationRobotProperties
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SimulationRobotProperties, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SimulationRobotProperties to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SimulationRobotProperties
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
-    }
-
-    /** Properties of a SimulationConfiguration. */
-    interface ISimulationConfiguration {
-
-        /** SimulationConfiguration ballLocation */
-        ballLocation?: (proto.ISimulationBallLocation|null);
-
-        /** SimulationConfiguration robotLocations */
-        robotLocations?: (proto.ISimulationRobotLocation[]|null);
-
-        /** SimulationConfiguration robotProperties */
-        robotProperties?: (proto.ISimulationRobotProperties[]|null);
-
-        /** SimulationConfiguration simulationSpeed */
-        simulationSpeed?: (number|null);
-
-        /** SimulationConfiguration visionPort */
-        visionPort?: (number|null);
-    }
-
-    /** Represents a SimulationConfiguration. */
-    class SimulationConfiguration implements ISimulationConfiguration {
-
-        /**
-         * Constructs a new SimulationConfiguration.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: proto.ISimulationConfiguration);
-
-        /** SimulationConfiguration ballLocation. */
-        public ballLocation?: (proto.ISimulationBallLocation|null);
-
-        /** SimulationConfiguration robotLocations. */
-        public robotLocations: proto.ISimulationRobotLocation[];
-
-        /** SimulationConfiguration robotProperties. */
-        public robotProperties: proto.ISimulationRobotProperties[];
-
-        /** SimulationConfiguration simulationSpeed. */
-        public simulationSpeed: number;
-
-        /** SimulationConfiguration visionPort. */
-        public visionPort: number;
-
-        /**
-         * Creates a new SimulationConfiguration instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SimulationConfiguration instance
-         */
-        public static create(properties?: proto.ISimulationConfiguration): proto.SimulationConfiguration;
-
-        /**
-         * Encodes the specified SimulationConfiguration message. Does not implicitly {@link proto.SimulationConfiguration.verify|verify} messages.
-         * @param message SimulationConfiguration message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: proto.ISimulationConfiguration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SimulationConfiguration message, length delimited. Does not implicitly {@link proto.SimulationConfiguration.verify|verify} messages.
-         * @param message SimulationConfiguration message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: proto.ISimulationConfiguration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SimulationConfiguration message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SimulationConfiguration
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.SimulationConfiguration;
-
-        /**
-         * Decodes a SimulationConfiguration message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SimulationConfiguration
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.SimulationConfiguration;
-
-        /**
-         * Verifies a SimulationConfiguration message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SimulationConfiguration message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SimulationConfiguration
-         */
-        public static fromObject(object: { [k: string]: any }): proto.SimulationConfiguration;
-
-        /**
-         * Creates a plain object from a SimulationConfiguration message. Also converts values to other types if specified.
-         * @param message SimulationConfiguration
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: proto.SimulationConfiguration, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SimulationConfiguration to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-
-        /**
-         * Gets the default type url for SimulationConfiguration
-         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns The default type url
-         */
-        public static getTypeUrl(typeUrlPrefix?: string): string;
+    /** Namespace RoboCup2014Legacy. */
+    namespace RoboCup2014Legacy {
+
+        /** Namespace Geometry. */
+        namespace Geometry {
+
+            /** Properties of a SSL_GeometryFieldSize. */
+            interface ISSL_GeometryFieldSize {
+
+                /** SSL_GeometryFieldSize lineWidth */
+                lineWidth: number;
+
+                /** SSL_GeometryFieldSize fieldLength */
+                fieldLength: number;
+
+                /** SSL_GeometryFieldSize fieldWidth */
+                fieldWidth: number;
+
+                /** SSL_GeometryFieldSize boundaryWidth */
+                boundaryWidth: number;
+
+                /** SSL_GeometryFieldSize refereeWidth */
+                refereeWidth: number;
+
+                /** SSL_GeometryFieldSize goalWidth */
+                goalWidth: number;
+
+                /** SSL_GeometryFieldSize goalDepth */
+                goalDepth: number;
+
+                /** SSL_GeometryFieldSize goalWallWidth */
+                goalWallWidth: number;
+
+                /** SSL_GeometryFieldSize centerCircleRadius */
+                centerCircleRadius: number;
+
+                /** SSL_GeometryFieldSize defenseRadius */
+                defenseRadius: number;
+
+                /** SSL_GeometryFieldSize defenseStretch */
+                defenseStretch: number;
+
+                /** SSL_GeometryFieldSize freeKickFromDefenseDist */
+                freeKickFromDefenseDist: number;
+
+                /** SSL_GeometryFieldSize penaltySpotFromFieldLineDist */
+                penaltySpotFromFieldLineDist: number;
+
+                /** SSL_GeometryFieldSize penaltyLineFromSpotDist */
+                penaltyLineFromSpotDist: number;
+            }
+
+            /** Represents a SSL_GeometryFieldSize. */
+            class SSL_GeometryFieldSize implements ISSL_GeometryFieldSize {
+
+                /**
+                 * Constructs a new SSL_GeometryFieldSize.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize);
+
+                /** SSL_GeometryFieldSize lineWidth. */
+                public lineWidth: number;
+
+                /** SSL_GeometryFieldSize fieldLength. */
+                public fieldLength: number;
+
+                /** SSL_GeometryFieldSize fieldWidth. */
+                public fieldWidth: number;
+
+                /** SSL_GeometryFieldSize boundaryWidth. */
+                public boundaryWidth: number;
+
+                /** SSL_GeometryFieldSize refereeWidth. */
+                public refereeWidth: number;
+
+                /** SSL_GeometryFieldSize goalWidth. */
+                public goalWidth: number;
+
+                /** SSL_GeometryFieldSize goalDepth. */
+                public goalDepth: number;
+
+                /** SSL_GeometryFieldSize goalWallWidth. */
+                public goalWallWidth: number;
+
+                /** SSL_GeometryFieldSize centerCircleRadius. */
+                public centerCircleRadius: number;
+
+                /** SSL_GeometryFieldSize defenseRadius. */
+                public defenseRadius: number;
+
+                /** SSL_GeometryFieldSize defenseStretch. */
+                public defenseStretch: number;
+
+                /** SSL_GeometryFieldSize freeKickFromDefenseDist. */
+                public freeKickFromDefenseDist: number;
+
+                /** SSL_GeometryFieldSize penaltySpotFromFieldLineDist. */
+                public penaltySpotFromFieldLineDist: number;
+
+                /** SSL_GeometryFieldSize penaltyLineFromSpotDist. */
+                public penaltyLineFromSpotDist: number;
+
+                /**
+                 * Creates a new SSL_GeometryFieldSize instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SSL_GeometryFieldSize instance
+                 */
+                public static create(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
+
+                /**
+                 * Encodes the specified SSL_GeometryFieldSize message. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize.verify|verify} messages.
+                 * @param message SSL_GeometryFieldSize message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified SSL_GeometryFieldSize message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize.verify|verify} messages.
+                 * @param message SSL_GeometryFieldSize message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SSL_GeometryFieldSize
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
+
+                /**
+                 * Decodes a SSL_GeometryFieldSize message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns SSL_GeometryFieldSize
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
+
+                /**
+                 * Verifies a SSL_GeometryFieldSize message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a SSL_GeometryFieldSize message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns SSL_GeometryFieldSize
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize;
+
+                /**
+                 * Creates a plain object from a SSL_GeometryFieldSize message. Also converts values to other types if specified.
+                 * @param message SSL_GeometryFieldSize
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.RoboCup2014Legacy.Geometry.SSL_GeometryFieldSize, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this SSL_GeometryFieldSize to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for SSL_GeometryFieldSize
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SSL_GeometryData. */
+            interface ISSL_GeometryData {
+
+                /** SSL_GeometryData field */
+                field: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize;
+
+                /** SSL_GeometryData calib */
+                calib?: (proto.ISSL_GeometryCameraCalibration[]|null);
+            }
+
+            /** Represents a SSL_GeometryData. */
+            class SSL_GeometryData implements ISSL_GeometryData {
+
+                /**
+                 * Constructs a new SSL_GeometryData.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData);
+
+                /** SSL_GeometryData field. */
+                public field: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryFieldSize;
+
+                /** SSL_GeometryData calib. */
+                public calib: proto.ISSL_GeometryCameraCalibration[];
+
+                /**
+                 * Creates a new SSL_GeometryData instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SSL_GeometryData instance
+                 */
+                public static create(properties?: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
+
+                /**
+                 * Encodes the specified SSL_GeometryData message. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryData.verify|verify} messages.
+                 * @param message SSL_GeometryData message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified SSL_GeometryData message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Geometry.SSL_GeometryData.verify|verify} messages.
+                 * @param message SSL_GeometryData message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SSL_GeometryData message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SSL_GeometryData
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
+
+                /**
+                 * Decodes a SSL_GeometryData message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns SSL_GeometryData
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
+
+                /**
+                 * Verifies a SSL_GeometryData message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a SSL_GeometryData message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns SSL_GeometryData
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Geometry.SSL_GeometryData;
+
+                /**
+                 * Creates a plain object from a SSL_GeometryData message. Also converts values to other types if specified.
+                 * @param message SSL_GeometryData
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.RoboCup2014Legacy.Geometry.SSL_GeometryData, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this SSL_GeometryData to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for SSL_GeometryData
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+
+        /** Namespace Wrapper. */
+        namespace Wrapper {
+
+            /** Properties of a SSL_WrapperPacket. */
+            interface ISSL_WrapperPacket {
+
+                /** SSL_WrapperPacket detection */
+                detection?: (proto.ISSL_DetectionFrame|null);
+
+                /** SSL_WrapperPacket geometry */
+                geometry?: (proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData|null);
+            }
+
+            /** Represents a SSL_WrapperPacket. */
+            class SSL_WrapperPacket implements ISSL_WrapperPacket {
+
+                /**
+                 * Constructs a new SSL_WrapperPacket.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket);
+
+                /** SSL_WrapperPacket detection. */
+                public detection?: (proto.ISSL_DetectionFrame|null);
+
+                /** SSL_WrapperPacket geometry. */
+                public geometry?: (proto.RoboCup2014Legacy.Geometry.ISSL_GeometryData|null);
+
+                /**
+                 * Creates a new SSL_WrapperPacket instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SSL_WrapperPacket instance
+                 */
+                public static create(properties?: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
+
+                /**
+                 * Encodes the specified SSL_WrapperPacket message. Does not implicitly {@link proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket.verify|verify} messages.
+                 * @param message SSL_WrapperPacket message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified SSL_WrapperPacket message, length delimited. Does not implicitly {@link proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket.verify|verify} messages.
+                 * @param message SSL_WrapperPacket message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: proto.RoboCup2014Legacy.Wrapper.ISSL_WrapperPacket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SSL_WrapperPacket message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SSL_WrapperPacket
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
+
+                /**
+                 * Decodes a SSL_WrapperPacket message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns SSL_WrapperPacket
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
+
+                /**
+                 * Verifies a SSL_WrapperPacket message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a SSL_WrapperPacket message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns SSL_WrapperPacket
+                 */
+                public static fromObject(object: { [k: string]: any }): proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket;
+
+                /**
+                 * Creates a plain object from a SSL_WrapperPacket message. Also converts values to other types if specified.
+                 * @param message SSL_WrapperPacket
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: proto.RoboCup2014Legacy.Wrapper.SSL_WrapperPacket, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this SSL_WrapperPacket to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for SSL_WrapperPacket
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
     }
 }
 

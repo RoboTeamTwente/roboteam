@@ -12,7 +12,7 @@
 #include <roboteam_utils/Field.hpp>
 #include <string_view>
 #include <QtNetwork>
-#include "proto/NewInterface.pb.h"
+#include "proto/GUI.pb.h"
 
 namespace rtt::world {
 class World;

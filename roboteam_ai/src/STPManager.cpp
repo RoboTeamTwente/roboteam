@@ -97,37 +97,30 @@ void STPManager::start(std::atomic_flag &exitApplication) {
         }
     }
 
-    double accumulator = 0;
+    double avgTickDuration = 0;
     double alpha = 1.0/100.0; // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
-    int lastTickCount = 0;
-    int statsUpdateRate = 5;
 
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
-            const auto tickDuration = roboteam_utils::Timer::measure([&]() {
+            double tickDuration = static_cast<double>(roboteam_utils::Timer::measure([&]() {
                 // Tick AI
                 runOneLoopCycle();
                 tickCounter++;
-            }).count();
+            }).count());
+            avgTickDuration = alpha * tickDuration + (1 - alpha) * avgTickDuration; // Exponential moving average
+
 
             stpTimer.limit([&]() {
-                if (currentPlay == nullptr) { return; }
-                interfaceGateway->publisher()
-                    .publishStpStatus(currentPlay, plays, tickCounter)
+                auto &publisher = interfaceGateway->publisher();
+                if (currentPlay != nullptr) {
+                    publisher.publishStpStatus(currentPlay, plays, tickCounter, tickDuration, avgTickDuration);
+                }
+
+                publisher
                     .publishWorld()
                     .publishVisuals();
-
             }, 45);
-
-            accumulator = alpha * tickDuration + (1 - alpha) * accumulator; // Exponential moving average
-            stpTimer.limit(
-                [&]() {
-                    ai::gui::Out::decimal("Average tick", accumulator, "ms");
-                    ai::gui::Out::bounded("FPS", (tickCounter - lastTickCount) * statsUpdateRate, 0, 60, "fps");
-                    lastTickCount = tickCounter;
-                },
-                statsUpdateRate);
 
             // If this is primary AI, broadcast settings every second
             if (GameSettings::isPrimaryAI()) {

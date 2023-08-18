@@ -33,12 +33,12 @@ class InterfaceGateway {
     ix::WebSocketServer webSocketServer;
 
     /// Publisher is not forward declared, because it is accessed from outside the InterfaceGateway, so we need to know the available methods;
-    InterfacePublisher publisher_;
+    InterfacePublisher _publisher;
 
     /// Subscriber is forward declared, so that changes to the subscriber do not require recompilation of the InterfaceGateway
     /// !This is purely for convenience!
     /// On that account it has to be a unique_ptr, because the compiler does not know the size of the object
-    std::unique_ptr<InterfaceSubscriber> subscriber_;
+    std::unique_ptr<InterfaceSubscriber> _subscriber;
 
    public:
     explicit InterfaceGateway(int port);
@@ -50,7 +50,7 @@ class InterfaceGateway {
      * @brief Reference to the InterfaceGateway instance.
      * @return InterfaceGateway instance.
      */
-    inline InterfacePublisher& publisher() { return publisher_; }
+    InterfacePublisher& publisher();
 };
 
 }  // namespace rtt::ai::io

@@ -7,7 +7,7 @@ var searchData=
   ['defensivestopformation_1794',['DefensiveStopFormation',['../df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html',1,'rtt::ai::stp::play']]],
   ['densepathtracking_1795',['DensePathTracking',['../d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html',1,'rtt::ai::control']]],
   ['distancefromballglobalevaluation_1796',['DistanceFromBallGlobalEvaluation',['../d0/dba/classrtt_1_1ai_1_1stp_1_1evaluation_1_1DistanceFromBallGlobalEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['drawargs_1797',['DrawArgs',['../d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#d2/dfd/structrtt_1_1ai_1_1new__interface_1_1Out_1_1DrawArgs',1,'rtt::ai::new_interface::Out']]],
+  ['drawargs_1797',['DrawArgs',['../d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#d5/d18/structrtt_1_1ai_1_1gui_1_1Out_1_1DrawArgs',1,'rtt::ai::gui::Out']]],
   ['drawing_1798',['Drawing',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html',1,'rtt::ai::interface']]],
   ['drivewithball_1799',['DriveWithBall',['../d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html',1,'rtt::ai::stp::tactic']]],
   ['dummyevent_1800',['DummyEvent',['../dc/d16/structnativeformat_1_1param_1_1DummyEvent.html',1,'nativeformat::param']]]

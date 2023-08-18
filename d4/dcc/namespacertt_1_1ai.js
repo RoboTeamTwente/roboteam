@@ -1,9 +1,9 @@
 var namespacertt_1_1ai =
 [
     [ "control", "d0/d4f/namespacertt_1_1ai_1_1control.html", "d0/d4f/namespacertt_1_1ai_1_1control" ],
+    [ "gui", "db/d19/namespacertt_1_1ai_1_1gui.html", "db/d19/namespacertt_1_1ai_1_1gui" ],
     [ "interface", "d8/d44/namespacertt_1_1ai_1_1interface.html", "d8/d44/namespacertt_1_1ai_1_1interface" ],
     [ "io", "dd/d1e/namespacertt_1_1ai_1_1io.html", "dd/d1e/namespacertt_1_1ai_1_1io" ],
-    [ "new_interface", "dc/da2/namespacertt_1_1ai_1_1new__interface.html", "dc/da2/namespacertt_1_1ai_1_1new__interface" ],
     [ "stp", "d5/d14/namespacertt_1_1ai_1_1stp.html", "d5/d14/namespacertt_1_1ai_1_1stp" ],
     [ "Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", "d9/dc5/classrtt_1_1ai_1_1Constants" ],
     [ "Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", "d7/ddc/classrtt_1_1ai_1_1Dealer" ],

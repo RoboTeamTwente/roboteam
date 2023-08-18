@@ -60,7 +60,7 @@ var hierarchy =
     [ "rtt::ai::control::ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", null ],
     [ "rtt::ai::Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", null ],
     [ "rtt::ai::Dealer::DealerFlag", "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html", null ],
-    [ "rtt::ai::new_interface::Out::DrawArgs", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html#d2/dfd/structrtt_1_1ai_1_1new__interface_1_1Out_1_1DrawArgs", null ],
+    [ "rtt::ai::gui::Out::DrawArgs", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#d5/d18/structrtt_1_1ai_1_1gui_1_1Out_1_1DrawArgs", null ],
     [ "rtt::ai::interface::Drawing", "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html", null ],
     [ "rtt::ai::FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", null ],
     [ "testhelpers::FieldHelper", "de/da9/classtesthelpers_1_1FieldHelper.html", null ],
@@ -77,13 +77,13 @@ var hierarchy =
     [ "InterfaceController", null, [
       [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
     ] ],
-    [ "rtt::ai::io::InterfaceGateway", "de/d7d/classrtt_1_1ai_1_1io_1_1InterfaceGateway.html", null ],
-    [ "rtt::ai::io::InterfacePublisher", "d0/d5d/classrtt_1_1ai_1_1io_1_1InterfacePublisher.html", null ],
-    [ "rtt::ai::io::InterfaceSubscriber", "d3/d33/classrtt_1_1ai_1_1io_1_1InterfaceSubscriber.html", null ],
+    [ "rtt::ai::gui::net::InterfaceGateway", "d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html", null ],
+    [ "rtt::ai::gui::net::InterfacePublisher", "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html", null ],
+    [ "rtt::ai::gui::net::InterfaceSubscriber", "d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html", null ],
     [ "rtt::ai::io::IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", null ],
     [ "rtt::ai::stp::evaluation::LineOfSightEvaluation", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation.html", null ],
     [ "rtt::ai::stp::evaluation::OpennessEvaluation", "d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html", null ],
-    [ "rtt::ai::new_interface::Out", "d0/d78/classrtt_1_1ai_1_1new__interface_1_1Out.html", null ],
+    [ "rtt::ai::gui::Out", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html", null ],
     [ "rtt::ai::interface::Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", null ],
     [ "nativeformat::param::Param", "d2/d80/classnativeformat_1_1param_1_1Param.html", [
       [ "nativeformat::param::ParamImplementation", "da/d80/classnativeformat_1_1param_1_1ParamImplementation.html", null ]

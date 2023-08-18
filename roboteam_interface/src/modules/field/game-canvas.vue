@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang='ts'>
 import { FederatedPointerEvent } from 'pixi.js'
 import { onMounted, onUnmounted, ref, shallowRef, ShallowRef, watch } from 'vue'
 import { Colors, CustomPixiApplication } from './field-objects'
@@ -8,8 +8,8 @@ import { useAIDataStore } from '../stores/data-stores/ai-data-store'
 import Robots from './robots-graphics.vue'
 import Ball from './ball-graphics.vue'
 import Field from './field-graphics.vue'
-import Visualizations from './pointer-location.vue'
-import PointerLocation from './visualizations-graphics.vue'
+import PointerLocation from './pointer-location.vue'
+import Visualizations from './visualizations-graphics.vue'
 import { useAiController } from '../composables/ai-controller'
 import { useUIStore } from '../stores/ui-store'
 import { proto } from '../../generated/proto'
@@ -19,7 +19,7 @@ const canvas = ref<HTMLCanvasElement | null>(null),
   visionData = useVisionDataStore(),
   aiData = useAIDataStore(),
   aiController = useAiController(),
-  uiStore = useUIStore();
+  uiStore = useUIStore()
 
 const init = (length: number, width: number) => {
     const app = new CustomPixiApplication({
@@ -34,41 +34,47 @@ const init = (length: number, width: number) => {
     app.stage.hitArea = app.screen
 
     app.stage.addEventListener('pointerdown', onStageClick)
+    app.stage.addEventListener('pointermove', onStageClick)
     appRef.value = app
   },
   onStageClick = (e: FederatedPointerEvent) => {
-    if (e.button != 0) { return; }
+    console.log('asd')
+    console.log(e)
+    if (e.button != 0) {
+      return
+    }
 
     // shift + left click
     const pos = (() => {
-      const pixiPos = e.getLocalPosition(appRef.value!.drawingsContainer);
-      return {x: pixiPos.x / 100, y: -pixiPos.y / 100}
-    })();
+      const pixiPos = e.getLocalPosition(appRef.value!.drawingsContainer)
+      return { x: pixiPos.x / 100, y: -pixiPos.y / 100 }
+    })()
 
     if (e.shiftKey) {
       aiController.sendSimulatorCommand({
         control: { teleportBall: { ...pos } }
-      });
+      })
     } else if (e.altKey) {
       const robots = [...uiStore.selectedRobots].map(id => ({
         id: { id: id, 'team': aiData.state!.gameSettings!.isYellow ? proto.Team.YELLOW : proto.Team.BLUE },
         orientation: 0,
-        ...pos,
-      }));
+        ...pos
+      }))
 
       aiController.sendSimulatorCommand({
         control: {
           teleportRobot: robots
         }
-      });
+      })
     }
 
-    e.preventDefault();
+    e.preventDefault()
     return
   },
   cleanUp = () => {
     console.log('cleaning up game canvas')
     appRef.value?.stage.removeEventListener('pointerdown', onStageClick)
+    appRef.value?.stage.removeEventListener('pointermove', onStageClick)
     appRef.value?.destroy(false)
 
     appRef.value = null
@@ -101,20 +107,20 @@ onUnmounted(() => {
 </script>
 <template>
   <canvas
-    class="min-m-6 m-auto min-h-0 min-w-0 max-h-full max-w-full w-auto h-auto rounded-xl"
-    ref="canvas"
+    class='min-m-6 m-auto min-h-0 min-w-0 max-h-full max-w-full w-auto h-auto rounded-xl'
+    ref='canvas'
   />
-  <template v-if="appRef !== null">
-    <!-- <pointer-location :app="appRef" /> -->
+  <template v-if='appRef !== null'>
     <field
-      :app="appRef"
-      :field-geometry="visionData.latestField"
-      :is-yellow="aiData.state?.gameSettings?.isYellow!"
+      :app='appRef'
+      :field-geometry='visionData.latestField'
+      :is-yellow='aiData.state?.gameSettings?.isYellow!'
     >
       <!-- Order matters, since the order is equivalent to the order in which layers are added -->
-      <robots :app="appRef" />
-      <ball :app="appRef" />
-      <visualizations :app="appRef" />
+      <robots :app='appRef' />
+      <ball :app='appRef' />
+      <visualizations :app='appRef' />
+      <pointer-location :app='appRef' />
     </field>
   </template>
 </template>

@@ -105,9 +105,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad079f380382e06d6711be18d1bcd53a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html">InterfacePublisher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#ad079f380382e06d6711be18d1bcd53a6">publishStpStatus</a> (<a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">stp::Play</a> *selectedPlay, <a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a05a060288761eba3f61a7e72b0b7c772">PlayView</a> plays, int currentTick)</td></tr>
-<tr class="memdesc:ad079f380382e06d6711be18d1bcd53a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcasts the STP status information to connected clients.  <a href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#ad079f380382e06d6711be18d1bcd53a6">More...</a><br /></td></tr>
-<tr class="separator:ad079f380382e06d6711be18d1bcd53a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a218b3a5ccb8b556b552d4089d0ffdff8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html">InterfacePublisher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a218b3a5ccb8b556b552d4089d0ffdff8">publishStpStatus</a> (<a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">stp::Play</a> *selectedPlay, <a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a05a060288761eba3f61a7e72b0b7c772">PlayView</a> plays, int currentTick, double tickDuration, double averageTickDuration)</td></tr>
+<tr class="memdesc:a218b3a5ccb8b556b552d4089d0ffdff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcasts the STP status information to connected clients.  <a href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a218b3a5ccb8b556b552d4089d0ffdff8">More...</a><br /></td></tr>
+<tr class="separator:a218b3a5ccb8b556b552d4089d0ffdff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9201867b803f93844f4d2700f7736819"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html">InterfacePublisher</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a9201867b803f93844f4d2700f7736819">publishWorld</a> ()</td></tr>
 <tr class="memdesc:a9201867b803f93844f4d2700f7736819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcasts the current game state to connected clients.  <a href="../../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a9201867b803f93844f4d2700f7736819">More...</a><br /></td></tr>
 <tr class="separator:a9201867b803f93844f4d2700f7736819"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,8 +228,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad079f380382e06d6711be18d1bcd53a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad079f380382e06d6711be18d1bcd53a6">&#9670;&nbsp;</a></span>publishStpStatus()</h2>
+<a id="a218b3a5ccb8b556b552d4089d0ffdff8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a218b3a5ccb8b556b552d4089d0ffdff8">&#9670;&nbsp;</a></span>publishStpStatus()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +250,19 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>currentTick</em>&#160;</td>
+          <td class="paramname"><em>currentTick</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tickDuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>averageTickDuration</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

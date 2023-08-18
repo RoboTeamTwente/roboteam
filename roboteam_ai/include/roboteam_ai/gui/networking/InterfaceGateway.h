@@ -9,12 +9,11 @@
 #include <span>
 
 #include "InterfacePublisher.h"
-#include "Out.h"
 #include "ixwebsocket/IXWebSocketServer.h"
 #include "proto/NewInterface.pb.h"
 #include "stp/Play.hpp"
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 class InterfaceSubscriber;
 
 /**

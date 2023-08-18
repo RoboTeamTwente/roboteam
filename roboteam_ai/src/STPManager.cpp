@@ -6,7 +6,7 @@
 #include <chrono>
 
 #include "control/ControlModule.h"
-#include "interface_api/InterfaceGateway.h"
+#include "gui/networking/InterfaceGateway.h"
 #include "stp/PlayDecider.hpp"
 #include "stp/PlayEvaluator.h"
 #include "stp/computations/ComputationManager.h"
@@ -17,6 +17,7 @@
 /**
  * Plays are included here
  */
+#include "gui/Out.h"
 #include "stp/plays/defensive/DefendPass.h"
 #include "stp/plays/defensive/DefendShot.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
@@ -122,8 +123,8 @@ void STPManager::start(std::atomic_flag &exitApplication) {
             accumulator = alpha * tickDuration + (1 - alpha) * accumulator; // Exponential moving average
             stpTimer.limit(
                 [&]() {
-                    rtt::ai::new_interface::Out::decimal("Average tick", accumulator, "ms");
-                    rtt::ai::new_interface::Out::bounded("FPS", (tickCounter - lastTickCount) * statsUpdateRate, 0, 60, "fps");
+                    ai::gui::Out::decimal("Average tick", accumulator, "ms");
+                    ai::gui::Out::bounded("FPS", (tickCounter - lastTickCount) * statsUpdateRate, 0, 60, "fps");
                     lastTickCount = tickCounter;
                 },
                 statsUpdateRate);
@@ -215,5 +216,5 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     currentPlay->update();
 }
 
-STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway): interfaceGateway(std::move(interfaceGateway)) { }
+STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway): interfaceGateway(std::move(interfaceGateway)) { }
 }  // namespace rtt

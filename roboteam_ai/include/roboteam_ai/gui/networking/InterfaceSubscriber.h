@@ -7,7 +7,7 @@
 #include <atomic>
 #include "proto/NewInterface.pb.h"
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 class InterfaceGateway;
 class InterfaceSubscriber {
 

@@ -3,7 +3,7 @@
 #include <stp/Play.hpp>
 
 #include "interface/widgets/mainWindow.h"
-#include "interface_api/InterfaceGateway.h"
+#include "gui/networking/InterfaceGateway.h"
 
 namespace rtt {
 
@@ -19,7 +19,7 @@ class STPManager {
      * @param interfaceGateway The interface that belongs to this AI
      * @param mainWindow The interface that belongs to this AI
      */
-    explicit STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway);
+    explicit STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway);
 
    private:
     /**
@@ -31,7 +31,7 @@ class STPManager {
     int tickCounter = 0; /**< Counter that keeps track of the ticks */
     bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
-    std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
+    std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
 
     static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 

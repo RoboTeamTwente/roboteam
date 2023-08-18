@@ -12,7 +12,7 @@
 
 #include <functional>
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 class InterfaceGateway;
 
 class InterfacePublisher {

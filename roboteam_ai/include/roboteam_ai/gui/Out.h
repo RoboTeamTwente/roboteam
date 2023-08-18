@@ -10,7 +10,7 @@
 #include "proto/NewInterface.pb.h"
 #include "roboteam_utils/Vector2.h"
 
-namespace rtt::ai::new_interface {
+namespace rtt::ai::gui {
 
 /**
  * @brief Class for sending data to the interface.

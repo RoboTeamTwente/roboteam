@@ -5,7 +5,7 @@
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
-#include "interface_api/Out.h"
+#include "gui/Out.h"
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
@@ -80,7 +80,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         }
     }
 
-    rtt::ai::new_interface::Out::draw(
+    rtt::ai::gui::Out::draw(
         {
             .label = "path_lines" + std::to_string(robotId),
             .color = proto::Drawing::MAGENTA,
@@ -91,7 +91,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         },
         computedPaths[robotId]);
 
-    rtt::ai::new_interface::Out::draw(
+    rtt::ai::gui::Out::draw(
         {
             .label = "path_dots" + std::to_string(robotId),
             .color = proto::Drawing::GREEN,

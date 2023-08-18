@@ -2,13 +2,11 @@
 // Created by Martin Miksik on 24/05/2023.
 //
 
-#include "interface_api/InterfaceSubscriber.h"
+#include "gui/networking/InterfaceSubscriber.h"
 
-#include <QtNetwork>
 
 #include "RobotHubMode.h"
 #include "interface/api/Output.h"
-#include "proto/ssl_simulation_config.pb.h"
 #include "stp/PlayDecider.hpp"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
@@ -17,7 +15,7 @@
 #include "utilities/RuntimeConfig.h"
 #include "world/World.hpp"
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 
 void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
 
@@ -41,7 +39,7 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
             const auto& gameSettings = message.set_game_settings();
             GameSettings::setLeft(gameSettings.is_left());
             GameSettings::setYellow(gameSettings.is_yellow());
-            GameSettings::setRobotHubMode(net::robotHubModeFromProto(gameSettings.robot_hub_mode()));
+            GameSettings::setRobotHubMode(rtt::net::robotHubModeFromProto(gameSettings.robot_hub_mode()));
         } break;
         
         case proto::MsgFromInterface::kPauseAi: {

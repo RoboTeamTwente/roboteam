@@ -2,11 +2,10 @@
 // Created by Martin Miksik on 25/04/2023.
 //
 
-#include "interface_api/Out.h"
-#include "proto/NewInterface.pb.h"
+#include "gui/Out.h"
 #include "utilities/GameSettings.h"
 
-namespace rtt::ai::new_interface {
+namespace rtt::ai::gui {
 
 google::protobuf::Arena Out::arena;
 proto::MsgToInterface::VisualizationBuffer* Out::visualizations = google::protobuf::Arena::CreateMessage<proto::MsgToInterface::VisualizationBuffer>(&arena);

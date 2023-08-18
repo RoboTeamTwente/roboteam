@@ -2,14 +2,14 @@
 // Created by Martin Miksik on 25/04/2023.
 //
 
-#include "interface_api/InterfaceGateway.h"
+#include "gui/networking/InterfaceGateway.h"
 
 #include <memory>
 
 #include "STPManager.h"
-#include "interface_api/InterfaceSubscriber.h"
+#include "gui/networking/InterfaceSubscriber.h"
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 
 InterfaceGateway::~InterfaceGateway() = default;
 

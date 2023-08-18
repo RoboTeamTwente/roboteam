@@ -2,16 +2,16 @@
 // Created by Martin Miksik on 24/05/2023.
 //
 
-#include "interface_api/InterfacePublisher.h"
+#include "gui/networking/InterfacePublisher.h"
 
 #include "STPManager.h"
-#include "interface_api/Out.h"
+#include "gui/Out.h"
 #include "stp/Play.hpp"
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 #include "utilities/RuntimeConfig.h"
 
-namespace rtt::ai::io {
+namespace rtt::ai::gui::net {
 
 InterfacePublisher::InterfacePublisher(ix::WebSocketServer& _wss) : wss(_wss) {}
 
@@ -77,7 +77,7 @@ InterfacePublisher& InterfacePublisher::publishWorld() {
 }
 
 InterfacePublisher& InterfacePublisher::publishVisuals() {
-    rtt::ai::new_interface::Out::consumeVisualizations([&](const proto::MsgToInterface::VisualizationBuffer& visuals) {
+    rtt::ai::gui::Out::consumeVisualizations([&](const proto::MsgToInterface::VisualizationBuffer& visuals) {
         auto envelope = proto::MsgToInterface();
         envelope.mutable_visualizations()->CopyFrom(visuals);
         publishProtoMessage(envelope);
@@ -99,7 +99,7 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
     aiState->set_is_paused(Pause::isPaused());
 
     const auto game_settings = aiState->mutable_game_settings();
-    game_settings->set_robot_hub_mode(net::robotHubModeToProto(GameSettings::getRobotHubMode()));
+    game_settings->set_robot_hub_mode(robotHubModeToProto(GameSettings::getRobotHubMode()));
     game_settings->set_is_left(GameSettings::isLeft());
     game_settings->set_is_yellow(GameSettings::isYellow());
 

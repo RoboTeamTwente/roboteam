@@ -16,7 +16,7 @@ const props = defineProps<{
     </label>
     <div
       tabindex="0"
-      class="card compact dropdown-content shadow-lg bg-base-100 rounded-box w-96 border"
+      class="card compact dropdown-content shadow-lg bg-base-100 rounded-box w-96 border dark:border-base-300"
     >
       <div class="card-body">
         <button class="btn btn-error btn-sm" @click="() => emit('disconnect-from-ai')">

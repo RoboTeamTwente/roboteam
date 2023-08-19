@@ -45,19 +45,18 @@ module.exports = {
                     "warning": "#facc17",
                     "error": "#dc2626",
                 },
-                // dark: {
-                //     ...require("daisyui/src/theming/themes")["[data-theme=dark]"],
-                //     '--padding-card': '1rem',
-                //     "primary": "#2563eb",
-                //     "secondary": "#6b7280",
-                //     "accent": "#5a1c74",
-                //     "neutral": "#3D4451",
-                //     // "base-100": "#FFFFFF",
-                //     "info": "#37bdf8",
-                //     "success": "#22c55e",
-                //     "warning": "#facc17",
-                //     "error": "#dc2626",
-                // }
+                dark: {
+                    ...require("daisyui/src/theming/themes")["[data-theme=dark]"],
+                    '--padding-card': '1rem',
+                    "primary": "#2563eb",
+                    "secondary": "#6b7280",
+                    "accent": "#5a1c74",
+                    "neutral": "#3D4451",
+                    "info": "#37bdf8",
+                    "success": "#22c55e",
+                    "warning": "#facc17",
+                    "error": "#dc2626",
+                }
             }
         ]
     },

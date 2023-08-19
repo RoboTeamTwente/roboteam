@@ -17,7 +17,7 @@ const uiStore = useUIStore()
 
     <template v-for="robot in stpData.latest?.robots" :key="robot.id">
       <div
-        class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border cursor-pointer"
+        class="flex flex-col gap-1 justify-center text-center bg-base-200 rounded-xl p-2 self-start border dark:border-base-300 cursor-pointer"
         :class="{
         'border-base-300 outline outline-2 outline-accent shadow-md': uiStore.isaRobotSelected(robot.id!)
       }"

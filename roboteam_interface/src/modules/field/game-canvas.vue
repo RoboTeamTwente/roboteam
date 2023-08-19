@@ -13,13 +13,16 @@ import Visualizations from './visualizations-graphics.vue'
 import { useAiController } from '../composables/ai-controller'
 import { useUIStore } from '../stores/ui-store'
 import { proto } from '../../generated/proto'
+import { useThrottleFn } from '@vueuse/core'
 
 const canvas = ref<HTMLCanvasElement | null>(null),
   appRef: ShallowRef<null | CustomPixiApplication> = shallowRef(null),
   visionData = useVisionDataStore(),
   aiData = useAIDataStore(),
   aiController = useAiController(),
-  uiStore = useUIStore();
+  uiStore = useUIStore()
+
+const isLeftButtonPressed = ref(false)
 
 const init = (length: number, width: number) => {
     const app = new CustomPixiApplication({
@@ -33,11 +36,19 @@ const init = (length: number, width: number) => {
     app.stage.eventMode = 'static'
     app.stage.hitArea = app.screen
 
-    app.stage.addEventListener('pointerdown', onPointerMove)
+    app.stage.addEventListener('pointerup', onPointerUp)
+    app.stage.addEventListener('pointerdown', onPointerDown)
     app.stage.addEventListener('pointermove', onPointerMove)
     appRef.value = app
   },
-  onPointerMove = (e: FederatedPointerEvent) => {
+  onPointerDown = (e: FederatedPointerEvent) => {
+    isLeftButtonPressed.value = e.button === 0
+    onPointerMove(e)
+  },
+  onPointerUp = () => isLeftButtonPressed.value = false,
+  onPointerMove = useThrottleFn((e: FederatedPointerEvent) => {
+    if (!isLeftButtonPressed.value) return
+
     // shift + left click
     const pos = (() => {
       const pixiPos = e.getLocalPosition(appRef.value!.drawingsContainer)
@@ -47,8 +58,9 @@ const init = (length: number, width: number) => {
     if (e.shiftKey) {
       aiController.sendSimulatorCommand({
         control: { teleportBall: { ...pos } }
-      });
-    };
+      })
+    }
+
 
     if (e.altKey) {
       const robots = [...uiStore.selectedRobots].map(id => ({
@@ -62,18 +74,21 @@ const init = (length: number, width: number) => {
           teleportRobot: robots
         }
       })
-    };
+    }
+
 
     e.preventDefault()
     return
-  },
+  }, 50),
   cleanUp = () => {
-    console.log('cleaning up game canvas');
-    appRef.value?.stage.removeEventListener('pointerdown', onPointerMove);
-    appRef.value?.stage.removeEventListener('pointermove', onPointerMove);
-    appRef.value?.destroy(false);
+    console.log('cleaning up game canvas')
+    appRef.value?.stage.removeEventListener('pointerup', onPointerUp)
+    appRef.value?.stage.removeEventListener('pointerdown', onPointerMove)
+    appRef.value?.stage.removeEventListener('pointermove', onPointerMove)
+    appRef.value?.destroy(false)
 
-    appRef.value = null;
+    appRef.value = null
+    isLeftButtonPressed.value = false
   }
 
 watch(

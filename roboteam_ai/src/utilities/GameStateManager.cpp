@@ -7,6 +7,8 @@
 #include "utilities/StrategyManager.h"
 #include "world/World.hpp"
 
+#include "interface/api/Output.h"
+
 namespace rtt::ai {
 
 proto::SSL_Referee GameStateManager::refMsg;

@@ -12,6 +12,7 @@
 #include "utilities/GameStateManager.hpp"
 #include "utilities/normalize.h"
 #include "world/World.hpp"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::io {
 

@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html":[3,0,1,0,4,4,5],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,4,5,10],
 "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,4,4,5,2],
@@ -66,11 +67,11 @@ var NAVTREEINDEX13 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a3716f303528e6c66fc6d4f5c97db5f93":[3,0,1,0,4,14,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a4c981f92e8bca5864cf26f0cee2886ab":[3,0,1,0,4,14,6],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a51bce1d5d8502db006cdced1300f36da":[3,0,1,0,4,14,5],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[3,0,1,0,4,14,0,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[4,0,0,0,0,3,9,1,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[3,0,1,0,4,14,0,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a60674abf0185e5577b287300f3a20d49":[3,0,1,0,4,14,3],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,4,14,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[4,0,0,0,0,3,9,1,0],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,4,14,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#afdcb1e9041507c8a71b63521041203b2":[3,0,1,0,4,14,4],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,4,14,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[4,0,0,0,0,3,9,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7f018f5b5248711a658fa076eb6e480a":[3,0,1,0,4,3,7,5],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,4,3,7,16],
 "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,4,3,7,19],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,4,3,7,26],
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a8726a464fdb9e614c5cca8c7cd183155":[3,0,1,0,4,3,7,14]
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,4,3,7,26]
 };

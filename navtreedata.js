@@ -85,12 +85,12 @@ var NAVTREEINDEX =
 "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#ac39a5ef30b0027a5cf1ed07d2084aad6",
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d",
 "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#aa20291b5cee34414dfb81aa0fd33713f",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a17fc7a716064d918aa29c072832c2ef8",
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aae1ea8ecf869a67e12f40f0a83954043",
-"dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html",
-"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a8750ea230c633dcf6a0f09e28e4f47b1",
-"df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md14",
-"functions_func_y.html"
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0c13cbd482099fa139f3a5f08d964efe",
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aa20291b5cee34414dfb81aa0fd33713f",
+"dd/d0f/GetBall_8cpp.html",
+"dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a8726a464fdb9e614c5cca8c7cd183155",
+"df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md13",
+"functions_func_w.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

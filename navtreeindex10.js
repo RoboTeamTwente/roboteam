@@ -146,7 +146,8 @@ var NAVTREEINDEX10 =
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#afa6b5f998d8ba252485177937d3724c7":[3,0,1,0,4,17,6],
 "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html":[3,0,1,0,12],
 "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html#a5c20bdb5adc6aa6071a8ee7b2a4cbef9":[3,0,1,0,12,0],
-"da/da8/classrtt_1_1ai_1_1RuntimeConfig.html#ae238cca0336c2d8cb37d77cb9ac2393d":[3,0,1,0,12,1],
+"da/da8/classrtt_1_1ai_1_1RuntimeConfig.html#aba64d5260834c927ec38a48498a6f13d":[3,0,1,0,12,1],
+"da/da8/classrtt_1_1ai_1_1RuntimeConfig.html#ae238cca0336c2d8cb37d77cb9ac2393d":[3,0,1,0,12,2],
 "da/dab/BallPlacementUs_8cpp.html":[4,0,0,1,4,3,2,2],
 "da/db3/AggressiveStopFormation_8h.html":[4,0,0,0,0,3,3,2,0],
 "da/db3/AggressiveStopFormation_8h_source.html":[4,0,0,0,0,3,3,2,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html":[3,0,1,0,4,3,22],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,4,3,22,23],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0695d80e803e8665deba37e83ded3da1":[3,0,1,0,4,3,22,1],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,22,27],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,4,3,22,28]
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,22,27]
 };

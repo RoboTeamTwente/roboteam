@@ -152,7 +152,6 @@ void STPManager::runOneLoopCycle() {
                 roboteam_utils::rotate(&packet);
             }
         }
-        // mainWindow->updateProcessedVisionPackets(vision_packets);
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);

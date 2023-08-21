@@ -2,7 +2,6 @@
 
 #include <stp/Play.hpp>
 
-#include "interface/widgets/mainWindow.h"
 #include "gui/networking/InterfaceGateway.h"
 
 namespace rtt {
@@ -17,7 +16,6 @@ class STPManager {
     /**
      * @brief Constructs the STPManager with an interface
      * @param interfaceGateway The interface that belongs to this AI
-     * @param mainWindow The interface that belongs to this AI
      */
     explicit STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway);
 

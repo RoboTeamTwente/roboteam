@@ -2,7 +2,6 @@
 #ifndef ROBOTEAM_AI_CONSTANTS_H
 #define ROBOTEAM_AI_CONSTANTS_H
 
-#include <QColor>
 #include <map>
 #include <vector>
 
@@ -67,20 +66,6 @@ class Constants {
     static constexpr double MAX_VEL() { return 1.5; }; /**< Maximum allowed velocity */
     static int DEFAULT_KEEPER_ID(); /**< Default ID of the keeper */
     static double PENALTY_DISTANCE_BEHIND_BALL(); /**< The minimum distance the robots have to be behind the ball during a penalty */
-
-    /// INTERFACE ///
-    static int ROBOT_DRAWING_SIZE(); /**< Size the robots should drawn with */
-    static int BALL_DRAWING_SIZE(); /**< Size the ball should be drawn with */
-    static int TACTIC_COLOR_DRAWING_SIZE(); /**< Size the tactic color should be drawn with */
-    static int WINDOW_FIELD_MARGIN(); /**< The margin between the field and the window borders */
-    static QColor FIELD_COLOR(); /**< The color of the field */
-    static QColor FIELD_LINE_COLOR(); /**< The color of the field lines */
-    static QColor ROBOT_COLOR_BLUE(); /**< The color for the blue robots */
-    static QColor ROBOT_COLOR_YELLOW(); /**< The color for the yellow robots */
-    static QColor BALL_COLOR(); /**< The color of the ball */
-    static QColor TEXT_COLOR(); /**< The color of text */
-    static QColor SELECTED_ROBOT_COLOR(); /**< The color of the currently selected robot */
-    static std::vector<QColor> TACTIC_COLORS(); /**< The color of the tactics */
 
     /// SETTINGS ///
     static bool STD_SHOW_ROLES(); /**< Checks whether the roles should be shown */

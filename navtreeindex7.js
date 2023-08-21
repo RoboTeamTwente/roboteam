@@ -1,11 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,4,3,14,14],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aa31000f09d20031b1b2f24d509527208":[3,0,1,0,4,3,14,5],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ab23ad33458ed975661cdc593bdf40968":[3,0,1,0,4,3,14,17],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,4,3,14,10],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ab7f52ea6776a54c170f4abd8bcf1be99":[3,0,1,0,4,3,14,3],
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ac746bfb27b36bfd6e05fccd0ff040027":[3,0,1,0,4,3,14,2],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,4,3,14,15],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,4,3,14,26],
 "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ae713bbd8072641ccd24ad755f62a9713":[3,0,1,0,4,3,14,16],
@@ -116,8 +110,8 @@ var NAVTREEINDEX7 =
 "d7/de0/BallOnOurSideGlobalEvaluation_8h_source.html":[4,0,0,0,0,3,2,1,8],
 "d7/de6/KickOffThemPrepareGameStateEvaluation_8h.html":[4,0,0,0,0,3,2,0,6],
 "d7/de6/KickOffThemPrepareGameStateEvaluation_8h_source.html":[4,0,0,0,0,3,2,0,6],
-"d7/dea/RuntimeConfig_8h.html":[4,0,0,0,0,4,11],
-"d7/dea/RuntimeConfig_8h_source.html":[4,0,0,0,0,4,11],
+"d7/dea/RuntimeConfig_8h.html":[4,0,0,0,0,4,10],
+"d7/dea/RuntimeConfig_8h_source.html":[4,0,0,0,0,4,10],
 "d7/df1/WorldObjects_8h.html":[4,0,0,0,0,0,0,0,4],
 "d7/df1/WorldObjects_8h_source.html":[4,0,0,0,0,0,0,0,4],
 "d7/df5/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallCloseToThemGlobalEvaluation.html":[3,0,1,0,4,1,20],
@@ -249,5 +243,11 @@ var NAVTREEINDEX7 =
 "d8/dc9/Attack_8h.html":[4,0,0,0,0,3,3,1,0],
 "d8/dc9/Attack_8h_source.html":[4,0,0,0,0,3,3,1,0],
 "d8/dcc/BallTests_8cpp.html":[4,0,0,2,8,0],
-"d8/dcc/BallTests_8cpp.html#aadcb1b20b47acaf7d64636be0212b9bd":[4,0,0,2,8,0,0]
+"d8/dcc/BallTests_8cpp.html#aadcb1b20b47acaf7d64636be0212b9bd":[4,0,0,2,8,0,0],
+"d8/dcc/BallTests_8cpp.html#adecfc7e019ba06f5f3402703977930b6":[4,0,0,2,8,0,1],
+"d8/dd4/RefCommand_8h.html":[4,0,0,0,0,4,7],
+"d8/dd4/RefCommand_8h.html#a3c11569b8eb84d7b10a7c3a11dad11e6":[4,0,0,0,0,4,7,4],
+"d8/dd4/RefCommand_8h.html#a67b8dcc3285025260f8505a53d8a1ffc":[4,0,0,0,0,4,7,3],
+"d8/dd4/RefCommand_8h.html#a7e8f65a38263e01e77c81f756469438d":[4,0,0,0,0,4,7,1],
+"d8/dd4/RefCommand_8h.html#abdc2a487fd9f466c21c58910160c4e4e":[4,0,0,0,0,4,7,2]
 };

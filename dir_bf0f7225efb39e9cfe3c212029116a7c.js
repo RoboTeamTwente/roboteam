@@ -11,9 +11,6 @@ var dir_bf0f7225efb39e9cfe3c212029116a7c =
     ] ],
     [ "IOManager.h", "d8/d6e/IOManager_8h.html", "d8/d6e/IOManager_8h" ],
     [ "normalize.h", "da/db3/normalize_8h.html", "da/db3/normalize_8h" ],
-    [ "Pause.h", "da/d48/Pause_8h.html", [
-      [ "Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", "d2/d05/classrtt_1_1ai_1_1Pause" ]
-    ] ],
     [ "RefCommand.h", "d8/dd4/RefCommand_8h.html", "d8/dd4/RefCommand_8h" ],
     [ "RefGameState.h", "d9/d48/RefGameState_8h.html", [
       [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ]

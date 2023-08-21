@@ -98,7 +98,6 @@ var hierarchy =
       [ "rtt::ai::control::DensePathTracking", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html", null ],
       [ "rtt::ai::control::PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", null ]
     ] ],
-    [ "rtt::ai::Pause", "d2/d05/classrtt_1_1ai_1_1Pause.html", null ],
     [ "rtt::ai::stp::Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", [
       [ "rtt::ai::stp::play::AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", null ],
       [ "rtt::ai::stp::play::Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", null ],

@@ -1,14 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a7164f241b13b1aa59b6e6b5c30a3094b":[3,0,1,0,4,3,22,20],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,4,3,22,4],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,4,3,22,16],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a807cfbf7efa495679d6f2d64e16703ee":[3,0,1,0,4,3,22,12],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,4,3,22,19],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a83a5e46e76cca35acfc4fb1547673ff9":[3,0,1,0,4,3,22,0],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,4,3,22,26],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a8726a464fdb9e614c5cca8c7cd183155":[3,0,1,0,4,3,22,14],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a8750ea230c633dcf6a0f09e28e4f47b1":[3,0,1,0,4,3,22,24],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a977b3063d4d26bee4be08d71c2ab7ccc":[3,0,1,0,4,3,22,3],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#aa0405b45c69fc25464bec621fbcbe0cc":[3,0,1,0,4,3,22,7],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,4,3,22,10],
@@ -179,7 +170,7 @@ var NAVTREEINDEX10 =
 "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,4,6,0,10],
 "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,4,6,0,8],
 "db/dd5/BallPlacementUsGameStateEvaluation_8cpp.html":[4,0,0,1,4,2,0,1],
-"db/dd8/Settings_8cpp.html":[4,0,0,1,5,8],
+"db/dd8/Settings_8cpp.html":[4,0,0,1,5,7],
 "db/ddd/BaseEvaluation_8h.html":[4,0,0,0,0,3,2,3],
 "db/ddd/BaseEvaluation_8h_source.html":[4,0,0,0,0,3,2,3],
 "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html":[3,0,1,0,4,5,0],
@@ -249,5 +240,14 @@ var NAVTREEINDEX10 =
 "dc/d00/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallInOurDefenseAreaAndStillGlobalEvaluation.html#aa09463c764e6ff9ffbb9680c953712ea":[3,0,1,0,4,1,23,0],
 "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html":[3,0,1,0,4,1,1],
 "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html#a08767442b38e7042ae906a50ecd1b664":[3,0,1,0,4,1,1,1],
-"dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html#a75f39886f6a2b9f892ae2fa11eacd06e":[3,0,1,0,4,1,1,0]
+"dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html#a75f39886f6a2b9f892ae2fa11eacd06e":[3,0,1,0,4,1,1,0],
+"dc/d0b/BBTrajectory1DTest_8cpp.html":[4,0,0,2,0,0,0],
+"dc/d0b/BBTrajectory1DTest_8cpp.html#a6ff890ea6b3075d4680b02ba4528042b":[4,0,0,2,0,0,0,0],
+"dc/d0b/BBTrajectory1DTest_8cpp.html#ada5a143b1be01ef3a8437fbb65171cfe":[4,0,0,2,0,0,0,1],
+"dc/d0b/classrtt_1_1AnglePID.html":[3,0,1,3],
+"dc/d0b/classrtt_1_1AnglePID.html#a0b5836c99b3f4f7517d59837d65625d8":[3,0,1,3,1],
+"dc/d0b/classrtt_1_1AnglePID.html#a28526d0d9253e545ffcd2f1e8a2f2ccb":[3,0,1,3,8],
+"dc/d0b/classrtt_1_1AnglePID.html#a58ea0be8649bc57ea4056795d30a0558":[3,0,1,3,9],
+"dc/d0b/classrtt_1_1AnglePID.html#a5a0b7b826a3cdf0345b434a014445d87":[3,0,1,3,6],
+"dc/d0b/classrtt_1_1AnglePID.html#a7f5782281c70803c20588c15de5206fe":[3,0,1,3,5]
 };

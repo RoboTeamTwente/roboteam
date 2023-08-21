@@ -1,15 +1,9 @@
 var NAVTREEINDEX5 =
 {
-"d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ace7c7e972aab2f73b72e79db66d30a23":[3,0,1,0,4,3,17,2],
-"d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ad1f3135ac24c15579af66127071806fb":[3,0,1,0,4,3,17,5],
-"d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,4,3,17,11],
-"d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#ae0c6ce7335a11d00664df9351a446551":[3,0,1,0,4,3,17,21],
-"d5/d85/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThemPrepare.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,4,3,17,22],
-"d5/d8d/Chipper_8h.html":[4,0,0,0,0,3,4,0,2],
 "d5/d8d/Chipper_8h_source.html":[4,0,0,0,0,3,4,0,2],
 "d5/d8d/FreeKickUsAtGoal_8cpp.html":[4,0,0,1,4,3,2,6],
-"d5/d8d/RuleSet_8h.html":[4,0,0,0,0,4,10],
-"d5/d8d/RuleSet_8h_source.html":[4,0,0,0,0,4,10],
+"d5/d8d/RuleSet_8h.html":[4,0,0,0,0,4,9],
+"d5/d8d/RuleSet_8h_source.html":[4,0,0,0,0,4,9],
 "d5/d96/BallIsFreeGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,5],
 "d5/da0/BBTPathTracking_8cpp.html":[4,0,0,1,0,0,2,0],
 "d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html":[3,0,1,0,1,0,0],
@@ -249,5 +243,11 @@ var NAVTREEINDEX5 =
 "d6/d74/classtesthelpers_1_1WorldHelper.html#a62246662bddfba53f3fa2d710e5ff5e2":[3,0,2,1,9],
 "d6/d74/classtesthelpers_1_1WorldHelper.html#a71264c6c02cc6f4b1ee597e3a2320686":[3,0,2,1,3],
 "d6/d74/classtesthelpers_1_1WorldHelper.html#a7345cb932c2dfbe340051d04969d2b7b":[3,0,2,1,6],
-"d6/d74/classtesthelpers_1_1WorldHelper.html#a923101faaff976777ba290d051bdbaf4":[3,0,2,1,7]
+"d6/d74/classtesthelpers_1_1WorldHelper.html#a923101faaff976777ba290d051bdbaf4":[3,0,2,1,7],
+"d6/d74/classtesthelpers_1_1WorldHelper.html#a9b4c89c1867e9814e20b515ea848511d":[3,0,2,1,8],
+"d6/d74/classtesthelpers_1_1WorldHelper.html#ab0fe933bb083e04a9ce4ee772a6ac5b6":[3,0,2,1,4],
+"d6/d74/classtesthelpers_1_1WorldHelper.html#ac8a3a86e75d7ef2f0b9ff6fa70ad48c4":[3,0,2,1,1],
+"d6/da9/StopGameStateEvaluation_8h.html":[4,0,0,0,0,3,2,0,16],
+"d6/da9/StopGameStateEvaluation_8h_source.html":[4,0,0,0,0,3,2,0,16],
+"d6/dac/BallMovesSlowGlobalEvaluation_8h.html":[4,0,0,0,0,3,2,1,6]
 };

@@ -6,12 +6,10 @@
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "RobotHubMode.h"
-#include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
 #include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
-#include "utilities/Pause.h"
 #include "utilities/normalize.h"
 #include "world/World.hpp"
 
@@ -106,7 +104,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 }
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
-    if (!Pause::isPaused() && !robotCommands.empty()) {
+    if (RuntimeConfig::isPaused && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, GameSettings::isYellow());

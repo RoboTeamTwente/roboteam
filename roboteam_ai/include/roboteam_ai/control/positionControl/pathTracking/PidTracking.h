@@ -12,6 +12,8 @@
 #include "roboteam_utils/pid.h"
 #include "utilities/Constants.h"
 
+#include <unordered_map>
+
 namespace rtt::ai::control {
 
 /**

@@ -6,6 +6,8 @@
 
 #include "stp/evaluations/global/FreedomOfRobotsGlobalEvaluation.h"
 
+#include <numeric>
+
 namespace rtt::ai::stp::evaluation {
 
 FreedomOfRobotsGlobalEvaluation::FreedomOfRobotsGlobalEvaluation() noexcept {

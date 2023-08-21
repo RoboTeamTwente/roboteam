@@ -11,8 +11,6 @@
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 
-namespace ui = rtt::ai::interface;
-
 // Create a flag which signals to stpThread to stop
 std::atomic_flag stopFlag = ATOMIC_FLAG_INIT;
 

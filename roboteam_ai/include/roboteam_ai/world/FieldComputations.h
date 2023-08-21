@@ -8,7 +8,6 @@
 #include <mutex>
 
 #include "control/ControlUtils.h"
-#include "interface/api/Input.h"
 #include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"

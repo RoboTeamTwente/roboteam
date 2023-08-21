@@ -1,12 +1,8 @@
 var classrtt_1_1ai_1_1Constants =
 [
-    [ "BALL_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a8884e626b305383a93bf7e61dade8349", null ],
-    [ "BALL_DRAWING_SIZE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a4d41eba871de1de67b2f0bc028e555ba", null ],
     [ "BALL_RADIUS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ad56b652c75763107576ae1e23d94bb0c", null ],
     [ "DEFAULT_KEEPER_ID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab2ca99fb72c5a2b76b225f6359e6a655", null ],
     [ "FEEDBACK_ENABLED", "d9/dc5/classrtt_1_1ai_1_1Constants.html#afb3cef21c26279b0bf54d9f7c8072925", null ],
-    [ "FIELD_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#acbd850b3f7887da3a15c6ebb8f1bd852", null ],
-    [ "FIELD_LINE_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ae09a3ccf9681d3083b77e6ef4829ffb9", null ],
     [ "HAS_BALL_ANGLE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a62eb895e0cb7ae60e03ef271815eca64", null ],
     [ "HAS_BALL_DISTANCE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a13d969c321fbb1165df2a63d7626665c", null ],
     [ "init", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a6527962ff711e76d753052369b635ed0", null ],
@@ -20,10 +16,7 @@ var classrtt_1_1ai_1_1Constants =
     [ "MAX_VEL_CMD", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a03ff0877dfc096d474b6a1f4ec937bda", null ],
     [ "MIN_ANGLE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a588134b99830c3193cfbff96db37398e", null ],
     [ "PENALTY_DISTANCE_BEHIND_BALL", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ac5e0c60866fa6ed2e17136568036625d", null ],
-    [ "ROBOT_COLOR_BLUE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a50a3b56143dde15a3b4f354ee8ab518f", null ],
-    [ "ROBOT_COLOR_YELLOW", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a91f068dfe2c2077d9d161dd43a710153", null ],
     [ "ROBOT_COUNT", "d9/dc5/classrtt_1_1ai_1_1Constants.html#adc7ae2389351fedb59863e4d75397a9c", null ],
-    [ "ROBOT_DRAWING_SIZE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#acafc5c6bf90dce60928105d73aa87f36", null ],
     [ "ROBOT_HAS_KICKER", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3e69e17787d4b22c270a090231fb5b89", null ],
     [ "ROBOT_HAS_WORKING_BALL_SENSOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a552c1e343bec24fb5db046a234c4a40f", null ],
     [ "ROBOT_HAS_WORKING_DRIBBLER", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ac5f0e241ceda0523df4eaa3be6e52592", null ],
@@ -43,7 +36,6 @@ var classrtt_1_1ai_1_1Constants =
     [ "RULESET_KICKOFF", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a2cb3e0e892aecc3cac7c0d6f6260dd94", null ],
     [ "RULESET_STOP", "d9/dc5/classrtt_1_1ai_1_1Constants.html#aa76e5f1ec7a37f711249285abfc1c089", null ],
     [ "ruleSets", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a24211533be75b94c356427fd5dde7c60", null ],
-    [ "SELECTED_ROBOT_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3c221f938716ed974921ce620b04296f", null ],
     [ "SETTINGS_BROADCAST_RATE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a577c31727302485df16b5182cae250cf", null ],
     [ "standardInterceptPID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a05ca3625ba236c460575e7c891c9a29e", null ],
     [ "standardKeeperInterceptPID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a0c730883e403f58c5b6f8b4a2038d0cc", null ],
@@ -60,9 +52,5 @@ var classrtt_1_1ai_1_1Constants =
     [ "STD_TIMEOUT_TO_TOP", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a0fda547b4223267aa62580ffb35cc452", null ],
     [ "STD_USE_REFEREE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3b3f9bd0fb3df39549cd187bc3004ca4", null ],
     [ "STP_TICK_RATE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a2eb213b4623956180539817cf4252cba", null ],
-    [ "TACTIC_COLOR_DRAWING_SIZE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a72de8e23a69e8b49d342f2d63ac2ea60", null ],
-    [ "TACTIC_COLORS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3f4c33feb16c84096514cf4d6ce7e01c", null ],
-    [ "TEXT_COLOR", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a6701f6203658174e24b9b26556daed1b", null ],
-    [ "WINDOW_FIELD_MARGIN", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ad82145a7f85d26c510af3411c3ccf4cc", null ],
     [ "WORLD_MAX_AGE_MILLISECONDS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab5890b8d3712aa04ba868658d49597da", null ]
 ];

@@ -1,17 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a649407297dee6638920185ca497148cb":[3,0,1,0,4,3,3,18],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a7164f241b13b1aa59b6e6b5c30a3094b":[3,0,1,0,4,3,3,24],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a727b25db22e291fc07fda823cc469f90":[3,0,1,0,4,3,3,3],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,4,3,3,8],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,4,3,3,20],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,4,3,3,23],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,4,3,3,30],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a8750ea230c633dcf6a0f09e28e4f47b1":[3,0,1,0,4,3,3,28],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a89f90b210807d2d69e62a5244b3d6881":[3,0,1,0,4,3,3,6],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a977b3063d4d26bee4be08d71c2ab7ccc":[3,0,1,0,4,3,3,7],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aa0405b45c69fc25464bec621fbcbe0cc":[3,0,1,0,4,3,3,11],
-"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,4,3,3,14],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aae1ea8ecf869a67e12f40f0a83954043":[3,0,1,0,4,3,3,4],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ab23ad33458ed975661cdc593bdf40968":[3,0,1,0,4,3,3,17],
 "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,4,3,3,10],
@@ -249,5 +237,17 @@ var NAVTREEINDEX12 =
 "dc/db4/GameState_8h.html":[4,0,0,0,0,4,3],
 "dc/db4/GameState_8h.html#ac25dd24ee79c671234cf430f216f437f":[4,0,0,0,0,4,3,1],
 "dc/db4/GameState_8h_source.html":[4,0,0,0,0,4,3],
-"dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html":[3,0,1,0,4,1,16]
+"dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html":[3,0,1,0,4,1,16],
+"dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html#a42c02781605007a305d4cbb3cc4f707e":[3,0,1,0,4,1,16,1],
+"dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html#a4547f939a61238e83f3e5f6f4261dd5d":[3,0,1,0,4,1,16,0],
+"dc/dd8/BallOnTheirSideGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,9],
+"dc/ddd/FreeKickUsPass_8h.html":[4,0,0,0,0,3,3,2,7],
+"dc/ddd/FreeKickUsPass_8h_source.html":[4,0,0,0,0,3,3,2,7],
+"dc/ddd/PassReceiver_8cpp.html":[4,0,0,1,4,4,0,7],
+"dc/dfb/Ball_8hpp.html":[4,0,0,0,0,5,1],
+"dc/dfb/Ball_8hpp_source.html":[4,0,0,0,0,5,1],
+"dd/d01/BallClosestToUsGlobalEvaluation_8cpp.html":[4,0,0,1,4,2,1,0],
+"dd/d0a/PenaltyTaker_8h.html":[4,0,0,0,0,3,4,0,8],
+"dd/d0a/PenaltyTaker_8h_source.html":[4,0,0,0,0,3,4,0,8],
+"dd/d0f/GetBall_8cpp.html":[4,0,0,1,4,6,0,2]
 };

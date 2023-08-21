@@ -98,7 +98,7 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
         aiState->add_rule_sets(ruleSet.title);
     }
 
-    aiState->set_is_paused(Pause::isPaused());
+    aiState->set_is_paused(RuntimeConfig::isPaused);
 
     const auto game_settings = aiState->mutable_game_settings();
     game_settings->set_robot_hub_mode(robotHubModeToProto(GameSettings::getRobotHubMode()));

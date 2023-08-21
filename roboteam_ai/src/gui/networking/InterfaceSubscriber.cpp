@@ -11,7 +11,6 @@
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
-#include "utilities/Pause.h"
 #include "utilities/RuntimeConfig.h"
 #include "world/World.hpp"
 
@@ -43,12 +42,7 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
         } break;
         
         case proto::MsgFromInterface::kPauseAi: {
-            if (message.pause_ai()) {
-                auto const& [_, world] = rtt::world::World::instance();
-                Pause::pause(world->getWorld());
-            } else {
-                Pause::resume();
-            }
+            RuntimeConfig::isPaused = message.pause_ai();
         } break;
         
         case proto::MsgFromInterface::kSetBallPos: {

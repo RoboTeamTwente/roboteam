@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 24-01-20.
-//
-
 #include "control/positionControl/pathTracking/PidTracking.h"
 
 namespace rtt::ai::control {
@@ -28,19 +24,23 @@ void PidTracking::updatePIDValues(stp::PIDType pidType, int robotID) {
 
     switch (pidType) {
         case stp::PIDType::DEFAULT: {
-            newPID = interface::Output::getNumTreePid();
+            newPID = Constants::standardNumTreePID();
             break;
         }
         case stp::PIDType::RECEIVE: {
-            newPID = interface::Output::getReceivePid();
+            newPID = Constants::standardReceivePID();
+            break;
+        }
+        case stp::PIDType::INTERCEPT: {
+            newPID = Constants::standardInterceptPID();
             break;
         }
         case stp::PIDType::KEEPER: {
-            newPID = interface::Output::getKeeperPid();
+            newPID = Constants::standardKeeperPID();
             break;
         }
         case stp::PIDType::KEEPER_INTERCEPT: {
-            newPID = interface::Output::getKeeperInterceptPid();
+            newPID = Constants::standardKeeperInterceptPID();
             break;
         }
     }

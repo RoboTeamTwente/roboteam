@@ -7,7 +7,6 @@
 
 #include "PathTrackingAlgorithm.h"
 #include "control/positionControl/PositionControlUtils.h"
-#include "interface/api/Output.h"
 #include "roboteam_utils/Position.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/pid.h"

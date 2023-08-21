@@ -26,7 +26,7 @@ var searchData=
   ['selected_5frobots_1346',['SELECTED_ROBOTS',['../d8/d44/namespacertt_1_1ai_1_1interface.html#a76bcf0e45432f575389388fa52ad4b7eab4f5787ac1f67720ba4e6a886ab3fdcd',1,'rtt::ai::interface']]],
   ['selectedrobots_1347',['selectedRobots',['../d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html#ac6cae5467348479ff6008d7ffb565f18',1,'rtt::ai::interface::Visualizer']]],
   ['sendallcommands_1348',['sendAllCommands',['../dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a0fadb136765f78b16de7198756c104bc',1,'rtt::ai::control::ControlModule']]],
-  ['sendhaltcommand_1349',['sendHaltCommand',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a1ac969e062f9b1da8838bddb6681209a',1,'rtt::ai::interface::Output']]],
+  ['sendhaltcommand_1349',['sendHaltCommand',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a9d11560db7a683a42df7656f2796ca46',1,'rtt::ai::interface::Output']]],
   ['sendpackettosimulator_1350',['sendPacketToSimulator',['../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#abc76eed70ddeb37a3f42b37cedf85f48',1,'rtt::ai::io::IOManager']]],
   ['sendpausesignal_1351',['sendPauseSignal',['../d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#ad8fea2d8ff2b64ca6439f1c4e98777e6',1,'rtt::ai::interface::MainControlsWidget']]],
   ['seriesindex_1352',['seriesIndex',['../df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html#a49b7892658e95afe0bf2529fd7081298',1,'rtt::ai::interface::GraphWidget']]],

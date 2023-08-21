@@ -8,7 +8,7 @@ var searchData=
   ['scorepass_2821',['scorePass',['../d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a36f4d18509e44249a3a26c7caea8977a',1,'rtt::ai::stp::computations::PassComputations']]],
   ['scoreposition_2822',['scorePosition',['../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#ae9065c871a8ccc1c99af5dc32dbebd27',1,'rtt::ai::stp::PositionScoring']]],
   ['sendallcommands_2823',['sendAllCommands',['../dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a0fadb136765f78b16de7198756c104bc',1,'rtt::ai::control::ControlModule']]],
-  ['sendhaltcommand_2824',['sendHaltCommand',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a1ac969e062f9b1da8838bddb6681209a',1,'rtt::ai::interface::Output']]],
+  ['sendhaltcommand_2824',['sendHaltCommand',['../d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a9d11560db7a683a42df7656f2796ca46',1,'rtt::ai::interface::Output']]],
   ['sendpackettosimulator_2825',['sendPacketToSimulator',['../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#abc76eed70ddeb37a3f42b37cedf85f48',1,'rtt::ai::io::IOManager']]],
   ['sendpausesignal_2826',['sendPauseSignal',['../d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html#ad8fea2d8ff2b64ca6439f1c4e98777e6',1,'rtt::ai::interface::MainControlsWidget']]],
   ['setangle_2827',['setAngle',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ab6f10263acdebd346d34ee624414ea7a',1,'rtt::ai::stp::StpInfo::setAngle()'],['../d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a75efce3af5ce9a89e5ae6648477ee473',1,'rtt::world::robot::Robot::setAngle(const Angle &amp;angle) noexcept']]],

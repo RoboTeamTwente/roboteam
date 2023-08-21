@@ -8,7 +8,7 @@ var classrtt_1_1ai_1_1interface_1_1Output =
     [ "getNumTreePid", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a49598c923c197386ac4e5f2c60ff9bfc", null ],
     [ "getReceivePid", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#aae54fdba73f6389e8a0aaaddb4a5a9ef", null ],
     [ "isTimeOutAtTop", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a41085c75bcf1ad60e72ebdd0c27ba32f", null ],
-    [ "sendHaltCommand", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a1ac969e062f9b1da8838bddb6681209a", null ],
+    [ "sendHaltCommand", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a9d11560db7a683a42df7656f2796ca46", null ],
     [ "setBallPlacerId", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a3c34336bb7ca06eb7b03af2b6d6551a7", null ],
     [ "setInterceptPid", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a20e9d1322073257f5ffec60f00cb0f93", null ],
     [ "setInterfaceGameState", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#adf24f5bbd3ee154090d093bf7cf90c0a", null ],

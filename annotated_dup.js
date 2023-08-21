@@ -35,23 +35,7 @@ var annotated_dup =
           [ "Out", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out" ]
         ] ],
         [ "interface", "d8/d44/namespacertt_1_1ai_1_1interface.html", [
-          [ "Drawing", "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html", "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing" ],
-          [ "Input", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html", "db/db6/classrtt_1_1ai_1_1interface_1_1Input" ],
-          [ "Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output" ],
-          [ "Toggle", "de/db2/classrtt_1_1ai_1_1interface_1_1Toggle.html", "de/db2/classrtt_1_1ai_1_1interface_1_1Toggle" ],
-          [ "Toggles", "da/d33/classrtt_1_1ai_1_1interface_1_1Toggles.html", "da/d33/classrtt_1_1ai_1_1interface_1_1Toggles" ],
-          [ "GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget" ],
-          [ "MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget" ],
-          [ "MainWindow", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow" ],
-          [ "PidBox", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox" ],
-          [ "PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget" ],
-          [ "PlaysWidget", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget" ],
-          [ "RobotsWidget", "da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget.html", "da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget" ],
-          [ "RuleSetWidget", "d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget.html", "d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget" ],
-          [ "SettingsWidget", "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html", "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget" ],
-          [ "STPVisualizerWidget", "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html", "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget" ],
-          [ "VisualizationSettingsWidget", "d2/d35/classrtt_1_1ai_1_1interface_1_1VisualizationSettingsWidget.html", "d2/d35/classrtt_1_1ai_1_1interface_1_1VisualizationSettingsWidget" ],
-          [ "Visualizer", "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html", "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer" ]
+          [ "Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output" ]
         ] ],
         [ "io", "dd/d1e/namespacertt_1_1ai_1_1io.html", [
           [ "IOManager", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager" ]
@@ -216,9 +200,6 @@ var annotated_dup =
         [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],
         [ "CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", "d0/dde/namespacertt_1_1BB_d0/d57/structrtt_1_1BB_1_1CommandCollision_dup" ],
         [ "WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", "de/d06/classrtt_1_1BB_1_1WorldObjects" ]
-      ] ],
-      [ "Interface", "db/ded/namespacertt_1_1Interface.html", [
-        [ "InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer" ]
       ] ],
       [ "world", "db/d1b/namespacertt_1_1world.html", [
         [ "ball", "d6/d6f/namespacertt_1_1world_1_1ball.html", [

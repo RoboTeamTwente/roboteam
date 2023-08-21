@@ -1,21 +1,13 @@
 var searchData=
 [
-  ['ball_5fdata_3440',['BALL_DATA',['../d8/d44/namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850bae51ddccd1cd898c281bc4cf1a67a77c1',1,'rtt::ai::interface']]],
-  ['ball_5fhandling_3441',['BALL_HANDLING',['../d8/d44/namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850ba1fb66483901be50671916d48ae8e917c',1,'rtt::ai::interface']]],
-  ['ball_5fplacement_5fthem_3442',['BALL_PLACEMENT_THEM',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e',1,'rtt']]],
-  ['ball_5fplacement_5fus_3443',['BALL_PLACEMENT_US',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0',1,'rtt']]],
-  ['ballclosesttous_3444',['BallClosestToUs',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ae986a8686e48610eac00ec3ce6c64eb3',1,'rtt::ai::stp']]],
-  ['ballclosetothem_3445',['BallCloseToThem',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2acd8caf0460e547b781ced6f8f4e63b0e',1,'rtt::ai::stp']]],
-  ['ballclosetous_3446',['BallCloseToUs',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad5306fa7938c37c34288cf7b62a2a2e3',1,'rtt::ai::stp']]],
-  ['ballgotshot_3447',['BallGotShot',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2afca55423bb8eb46fe0fee5ca4372c3ae',1,'rtt::ai::stp']]],
-  ['ballinourdefenseareaandstill_3448',['BallInOurDefenseAreaAndStill',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a310169b790806221862dfaac167191b8',1,'rtt::ai::stp']]],
-  ['ballisfree_3449',['BallIsFree',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3',1,'rtt::ai::stp']]],
-  ['ballmovesslow_3450',['BallMovesSlow',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a92a649dbcfbf97f49c3700ef0c3deb44',1,'rtt::ai::stp']]],
-  ['ballnotinourdefenseareaandstill_3451',['BallNotInOurDefenseAreaAndStill',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a5fb2385fbd0166e0c9d58c7921526f34',1,'rtt::ai::stp']]],
-  ['ballonourside_3452',['BallOnOurSide',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a0da9db34d6df52ddc7b31add5894a621',1,'rtt::ai::stp']]],
-  ['ballontheirside_3453',['BallOnTheirSide',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a52e638a2d35b495523933ae29854444b',1,'rtt::ai::stp']]],
-  ['ballplacement_3454',['BALLPLACEMENT',['../d8/d44/namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850ba6b7e10d8cceb1039d15ebea7d401142a',1,'rtt::ai::interface']]],
-  ['ballplacementthemgamestate_3455',['BallPlacementThemGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a775d0ce7887fa4de0aadf511dcd6fd71',1,'rtt::ai::stp']]],
-  ['ballplacementusgamestate_3456',['BallPlacementUsGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a195616208981cef4a486610feadfb6f6',1,'rtt::ai::stp']]],
-  ['both_3457',['both',['../db/d1b/namespacertt_1_1world.html#a2693830c458f8c00b121957069de6727a6e5f2747daba8cda60dca36edf058525',1,'rtt::world']]]
+  ['can_5fdetect_5fball_3001',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
+  ['can_5fkick_5fball_3002',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
+  ['chip_3003',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
+  ['close_3004',['CLOSE',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d',1,'rtt::ai::stp']]],
+  ['close_5fto_5fball_3005',['CLOSE_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29',1,'rtt::ai']]],
+  ['close_5fto_5four_5fgoal_3006',['CLOSE_TO_OUR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abc15041bb7ad24c5d5ce6c55a9d50f8e',1,'rtt::ai']]],
+  ['close_5fto_5fpositioning_3007',['CLOSE_TO_POSITIONING',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b371a4c0494163839361432478cc11b',1,'rtt::ai']]],
+  ['close_5fto_5ftheir_5fgoal_3008',['CLOSE_TO_THEIR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a9d6d6e074c36a06bc5e2b1aa9c2776b8',1,'rtt::ai']]],
+  ['closest_5fto_5fball_3009',['CLOSEST_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67ad703e95162a94e739a09ef2040db5d9d',1,'rtt::ai']]],
+  ['contendedball_3010',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]]
 ];

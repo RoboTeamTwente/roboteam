@@ -1,11 +1,5 @@
 var searchData=
 [
-  ['keeper_3503',['KEEPER',['../d8/d44/namespacertt_1_1ai_1_1interface.html#a8d90a29300cff704e14867fce51b850baebd4eea0d7b7605bff55563f68be1a12',1,'rtt::ai::interface::KEEPER()'],['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a0ed045ed8cb14e824a1e372dd5398682',1,'rtt::ai::KEEPER()'],['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a0ed045ed8cb14e824a1e372dd5398682',1,'rtt::ai::KEEPER()'],['../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eba0ed045ed8cb14e824a1e372dd5398682',1,'rtt::ai::stp::KEEPER()']]],
-  ['keeper_5fintercept_3504',['KEEPER_INTERCEPT',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eba373dad0f8204a1d3099832bfd1baa018',1,'rtt::ai::stp']]],
-  ['kick_3505',['KICK',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113a959a795d5524bd9054026703a33afb87',1,'rtt::ai::stp']]],
-  ['kickoffthemgamestate_3506',['KickOffThemGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad0eccb3bf8b9bccf5974bf05174c07ea',1,'rtt::ai::stp']]],
-  ['kickoffthempreparegamestate_3507',['KickOffThemPrepareGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a0e2b8981ed7407b5ca5c113a119894c1',1,'rtt::ai::stp']]],
-  ['kickoffusgamestate_3508',['KickOffUsGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6ba59a078887ab3a8e64d33eb9df2c44',1,'rtt::ai::stp']]],
-  ['kickoffusornormalgamestate_3509',['KickOffUsOrNormalGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a8775b2cb4565888e8ebbd38b82b9a34b',1,'rtt::ai::stp']]],
-  ['kickoffuspreparegamestate_3510',['KickOffUsPrepareGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a8b2e0ec0ee9abd81565de89b1cccb822',1,'rtt::ai::stp']]]
+  ['looseball_3048',['LOOSEBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9a239b06392e88c64a790d771786df469c',1,'rtt::ai::BallPossession']]],
+  ['low_5fpriority_3049',['LOW_PRIORITY',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a22fdb5e22079d83faa87d80ea2165e0e',1,'rtt::ai']]]
 ];

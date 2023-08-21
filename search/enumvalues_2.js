@@ -1,15 +1,13 @@
 var searchData=
 [
-  ['can_5fdetect_5fball_3458',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
-  ['can_5fkick_5fball_3459',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
-  ['chip_3460',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
-  ['circles_3461',['CIRCLES',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3acab3f75a6189a2267689415f97e8b0f14d',1,'rtt::ai::interface::Drawing']]],
-  ['close_3462',['CLOSE',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d',1,'rtt::ai::stp']]],
-  ['close_5fto_5fball_3463',['CLOSE_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29',1,'rtt::ai']]],
-  ['close_5fto_5four_5fgoal_3464',['CLOSE_TO_OUR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abc15041bb7ad24c5d5ce6c55a9d50f8e',1,'rtt::ai']]],
-  ['close_5fto_5fpositioning_3465',['CLOSE_TO_POSITIONING',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b371a4c0494163839361432478cc11b',1,'rtt::ai']]],
-  ['close_5fto_5ftheir_5fgoal_3466',['CLOSE_TO_THEIR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a9d6d6e074c36a06bc5e2b1aa9c2776b8',1,'rtt::ai']]],
-  ['closest_5fto_5fball_3467',['CLOSEST_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67ad703e95162a94e739a09ef2040db5d9d',1,'rtt::ai']]],
-  ['contendedball_3468',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]],
-  ['crosses_3469',['CROSSES',['../d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html#af19bf534f3bd5384ae71df536b01f3aca5f321fca5269e03b4a9da7d3a57af682',1,'rtt::ai::interface::Drawing']]]
+  ['default_3011',['DEFAULT',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eba5b39c8b553c821e7cddc6da64b5bd2ee',1,'rtt::ai::stp']]],
+  ['defend_5fkickoff_3012',['DEFEND_KICKOFF',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977',1,'rtt']]],
+  ['defend_5fpenalty_3013',['DEFEND_PENALTY',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752',1,'rtt']]],
+  ['defend_5fshootout_3014',['DEFEND_SHOOTOUT',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5',1,'rtt']]],
+  ['direct_5ffree_5fthem_3015',['DIRECT_FREE_THEM',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31',1,'rtt']]],
+  ['direct_5ffree_5fus_3016',['DIRECT_FREE_US',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d',1,'rtt']]],
+  ['distancefromball_3017',['DistanceFromBall',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad51ff90a12d29afbe00c85d2af387945',1,'rtt::ai::stp']]],
+  ['do_5fkickoff_3018',['DO_KICKOFF',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80',1,'rtt']]],
+  ['do_5fpenalty_3019',['DO_PENALTY',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029',1,'rtt']]],
+  ['do_5fshootout_3020',['DO_SHOOTOUT',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0',1,'rtt']]]
 ];

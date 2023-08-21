@@ -61,7 +61,6 @@ var hierarchy =
     [ "rtt::ai::Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", null ],
     [ "rtt::ai::Dealer::DealerFlag", "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html", null ],
     [ "rtt::ai::gui::Out::DrawArgs", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#d5/d18/structrtt_1_1ai_1_1gui_1_1Out_1_1DrawArgs", null ],
-    [ "rtt::ai::interface::Drawing", "d2/d50/structrtt_1_1ai_1_1interface_1_1Drawing.html", null ],
     [ "rtt::ai::FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", null ],
     [ "testhelpers::FieldHelper", "de/da9/classtesthelpers_1_1FieldHelper.html", null ],
     [ "rtt::ai::Dealer::FlagScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore", null ],
@@ -73,10 +72,6 @@ var hierarchy =
     [ "rtt::ai::stp::computations::GoalComputations", "de/dd2/classrtt_1_1ai_1_1stp_1_1computations_1_1GoalComputations.html", null ],
     [ "rtt::ai::stp::evaluation::GoalShotEvaluation", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html", null ],
     [ "rtt::world::robot::hasBallInfo", "de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo", null ],
-    [ "rtt::ai::interface::Input", "db/db6/classrtt_1_1ai_1_1interface_1_1Input.html", null ],
-    [ "InterfaceController", null, [
-      [ "rtt::Interface::InterfaceControllerServer", "d1/d70/classrtt_1_1Interface_1_1InterfaceControllerServer.html", null ]
-    ] ],
     [ "rtt::ai::gui::net::InterfaceGateway", "d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html", null ],
     [ "rtt::ai::gui::net::InterfacePublisher", "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html", null ],
     [ "rtt::ai::gui::net::InterfaceSubscriber", "d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html", null ],
@@ -139,26 +134,6 @@ var hierarchy =
     [ "rtt::ai::control::PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", null ],
     [ "rtt::ai::stp::gen::PositionScores", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores", null ],
     [ "rtt::ai::stp::PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", null ],
-    [ "QGroupBox", null, [
-      [ "rtt::ai::interface::PidBox", "d1/d45/classrtt_1_1ai_1_1interface_1_1PidBox.html", null ]
-    ] ],
-    [ "QMainWindow", null, [
-      [ "rtt::ai::interface::MainWindow", "d0/d94/classrtt_1_1ai_1_1interface_1_1MainWindow.html", null ]
-    ] ],
-    [ "QTextEdit", null, [
-      [ "rtt::ai::interface::PlaysWidget", "df/d41/classrtt_1_1ai_1_1interface_1_1PlaysWidget.html", null ],
-      [ "rtt::ai::interface::STPVisualizerWidget", "d6/d87/classrtt_1_1ai_1_1interface_1_1STPVisualizerWidget.html", null ]
-    ] ],
-    [ "QWidget", null, [
-      [ "rtt::ai::interface::GraphWidget", "df/d90/classrtt_1_1ai_1_1interface_1_1GraphWidget.html", null ],
-      [ "rtt::ai::interface::MainControlsWidget", "d5/d38/classrtt_1_1ai_1_1interface_1_1MainControlsWidget.html", null ],
-      [ "rtt::ai::interface::PidsWidget", "d3/d42/classrtt_1_1ai_1_1interface_1_1PidsWidget.html", null ],
-      [ "rtt::ai::interface::RobotsWidget", "da/d49/classrtt_1_1ai_1_1interface_1_1RobotsWidget.html", null ],
-      [ "rtt::ai::interface::RuleSetWidget", "d0/dc4/classrtt_1_1ai_1_1interface_1_1RuleSetWidget.html", null ],
-      [ "rtt::ai::interface::SettingsWidget", "df/d39/classrtt_1_1ai_1_1interface_1_1SettingsWidget.html", null ],
-      [ "rtt::ai::interface::VisualizationSettingsWidget", "d2/d35/classrtt_1_1ai_1_1interface_1_1VisualizationSettingsWidget.html", null ],
-      [ "rtt::ai::interface::Visualizer", "d5/db4/classrtt_1_1ai_1_1interface_1_1Visualizer.html", null ]
-    ] ],
     [ "rtt::world::robot::Robot", "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html", null ],
     [ "rtt::ai::Dealer::RobotRoleScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore", null ],
     [ "rtt::world::view::RobotView", "d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html", null ],
@@ -222,8 +197,6 @@ var hierarchy =
     [ "testing::Test", null, [
       [ "RTT_AI_Tests", "d6/d69/classRTT__AI__Tests.html", null ]
     ] ],
-    [ "rtt::ai::interface::Toggle", "de/db2/classrtt_1_1ai_1_1interface_1_1Toggle.html", null ],
-    [ "rtt::ai::interface::Toggles", "da/d33/classrtt_1_1ai_1_1interface_1_1Toggles.html", null ],
     [ "rtt::Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", null ],
     [ "rtt::Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", null ],
     [ "rtt::world::World", "da/d39/classrtt_1_1world_1_1World.html", null ],

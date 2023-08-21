@@ -122,9 +122,6 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     commandCollision.robotCommand.velocity = trackingVelocityVector;
     commandCollision.robotCommand.targetAngle = trackingVelocity.rot;
 
-    interface::Input::addDrawing(interface::Drawing(interface::Visual::PATHFINDING, computedPaths[robotId], QColorConstants::Magenta, robotId,
-                                                    interface::Drawing::LINES_CONNECTED, 10, 10, 10));
-
     return commandCollision;
 }
 
@@ -142,13 +139,6 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
         auto trajectoryAroundCollision = calculateTrajectoryAroundCollision(world, field, intermediatePathCollision, trajectoryToIntermediatePoint, targetPosition, robotId,
                                                                             maxRobotVelocity, timeStep, avoidObjects);
         if (trajectoryAroundCollision.has_value()) {
-            // interface::Input::drawData(interface::Visual::PATHFINDING, intermediatePoints, Qt::green, robotId, interface::Drawing::CROSSES);
-            // interface::Input::drawData(interface::Visual::PATHFINDING, {firstCollision->collisionPosition}, Qt::red, robotId, interface::Drawing::CROSSES);
-
-            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryToIntermediatePoint.getPathApproach(timeStep), Qt::white, robotId,
-            //                            interface::Drawing::LINES_CONNECTED);
-            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryAroundCollision.value().getPathApproach(timeStep), Qt::yellow, robotId,
-            //                            interface::Drawing::LINES_CONNECTED);
             return trajectoryAroundCollision.value();
         }
         intermediatePointsSorted.pop();

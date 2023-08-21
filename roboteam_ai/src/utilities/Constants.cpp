@@ -38,14 +38,6 @@ double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic nu
 
 // was 0.03 before STP
 
-int Constants::ROBOT_DRAWING_SIZE() { return 6; }
-
-int Constants::BALL_DRAWING_SIZE() { return 4; }
-
-int Constants::TACTIC_COLOR_DRAWING_SIZE() { return 15; }
-
-int Constants::WINDOW_FIELD_MARGIN() { return 5; }
-
 bool Constants::STD_SHOW_ROLES() { return true; }
 
 bool Constants::STD_SHOW_TACTICS() { return false; }
@@ -191,20 +183,6 @@ bool Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id) { return ROBOTS_WITH_
 bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
-
-QColor Constants::FIELD_LINE_COLOR() { return Qt::white; }
-
-QColor Constants::ROBOT_COLOR_BLUE() { return {150, 150, 255, 255}; }
-
-QColor Constants::ROBOT_COLOR_YELLOW() { return {255, 255, 0, 255}; }
-
-QColor Constants::BALL_COLOR() { return {255, 120, 50, 255}; }
-
-QColor Constants::TEXT_COLOR() { return Qt::white; }
-
-QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
-
-std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
 
 pidVals Constants::standardNumTreePID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 

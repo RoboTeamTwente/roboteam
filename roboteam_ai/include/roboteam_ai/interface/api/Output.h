@@ -9,7 +9,6 @@
 
 #include "roboteam_utils/Vector2.h"
 #include "utilities/GameState.h"
-#include "utilities/Pause.h"
 
 namespace rtt::ai::interface {
 

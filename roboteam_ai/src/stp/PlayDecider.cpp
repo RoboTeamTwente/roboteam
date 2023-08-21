@@ -6,7 +6,6 @@
 
 #include <roboteam_utils/Print.h>
 
-#include "interface/widgets/MainControlsWidget.h"
 #include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::stp {

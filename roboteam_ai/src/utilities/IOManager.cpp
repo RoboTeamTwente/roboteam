@@ -105,7 +105,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 }
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
-    if (RuntimeConfig::isPaused && !robotCommands.empty()) {
+    if (!RuntimeConfig::isPaused && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, GameSettings::isYellow());

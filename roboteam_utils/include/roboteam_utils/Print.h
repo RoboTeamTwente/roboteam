@@ -88,7 +88,7 @@
 #endif
 
 class Printer {
-public:
+   public:
     template <typename... Args>
     static void fancy_print(const char* color, const char* type, const std::string& file, [[maybe_unused]] const char* func, int line, Args&&... args) noexcept {
         auto fileTxt = file + ":" + std::to_string(line);

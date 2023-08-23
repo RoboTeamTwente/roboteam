@@ -45,10 +45,7 @@ bool rtt::LogFileWriter::addMessage(const rtt::logged_proto_type &message, logge
     }
 
     last_written_timestamp = timestamp;
-    LogDataHeader dataHeader{
-        .timestamp = timestamp,
-        .message_size = message_size
-    };
+    LogDataHeader dataHeader{.timestamp = timestamp, .message_size = message_size};
     file->write(reinterpret_cast<char *>(&dataHeader), sizeof(dataHeader));
     file->write(serialization_buffer.data(), message_size);
     bool good = file->good();

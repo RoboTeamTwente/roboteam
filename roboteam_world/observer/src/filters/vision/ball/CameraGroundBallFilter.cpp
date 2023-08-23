@@ -28,13 +28,10 @@ void CameraGroundBallFilter::predictFilter(const CameraGroundBallPrediction &pre
     // simple function for now but may become complicated with collisions
     ekf.predict(prediction.time);
 }
-Eigen::Vector2d CameraGroundBallFilter::getVelocityEstimate(Time time) const {
-    return ekf.getVelocityEstimate(time);
-}
-CameraGroundBallFilter::CameraGroundBallFilter(const BallObservation &observation,
-                                               const Eigen::Vector2d &velocity_estimate)
+Eigen::Vector2d CameraGroundBallFilter::getVelocityEstimate(Time time) const { return ekf.getVelocityEstimate(time); }
+CameraGroundBallFilter::CameraGroundBallFilter(const BallObservation &observation, const Eigen::Vector2d &velocity_estimate)
     : CameraObjectFilter(0.2, 1 / 60.0, 15, 3, observation.timeCaptured) {
-    Eigen::Vector4d startState = { observation.position.x(), observation.position.y(), velocity_estimate.x(), velocity_estimate.y() };
+    Eigen::Vector4d startState = {observation.position.x(), observation.position.y(), velocity_estimate.x(), velocity_estimate.y()};
     Eigen::Matrix4d startCovariance = Eigen::Matrix4d::Zero();
     constexpr double BALL_POSITION_INITIAL_COV = 0.05;  //[m] uncertainty in initial ball position
     constexpr double BALL_VELOCITY_INITIAL_COV = 4.0;   //[m/s]
@@ -54,14 +51,8 @@ CameraGroundBallPrediction CameraGroundBallFilter::predict(Time time) const {
     return prediction;
 }
 FilteredBall CameraGroundBallFilter::getEstimate(Time time) const {
-    FilteredBall ball(ekf.getPositionEstimate(time),
-                      ekf.getVelocityEstimate(time),
-                      getHealth(),
-                      ekf.getPositionUncertainty().norm(),
-                      ekf.getVelocityUncertainty().norm());
+    FilteredBall ball(ekf.getPositionEstimate(time), ekf.getVelocityEstimate(time), getHealth(), ekf.getPositionUncertainty().norm(), ekf.getVelocityUncertainty().norm());
     return ball;
 }
 
-CameraGroundBallPrediction::CameraGroundBallPrediction(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time)
-    : position{ std::move(pos) }, velocity{ std::move(vel) }, time{ time } {
-}
+CameraGroundBallPrediction::CameraGroundBallPrediction(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time) : position{std::move(pos)}, velocity{std::move(vel)}, time{time} {}

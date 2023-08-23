@@ -8,21 +8,11 @@
 #include <cassert>
 #include <cmath>
 
-Time CameraObjectFilter::lastSeen() const {
-    return lastSeenTime;
-}
-std::size_t CameraObjectFilter::numObservations() const {
-    return framesTotal;
-}
-double CameraObjectFilter::getHealth() const {
-    return health;
-}
-bool CameraObjectFilter::isHealthy() const {
-    return health >= HEALTHY_LIMIT;
-}
-std::size_t CameraObjectFilter::consecutiveFramesNotSeen() const {
-    return framesNotSeenFor;
-}
+Time CameraObjectFilter::lastSeen() const { return lastSeenTime; }
+std::size_t CameraObjectFilter::numObservations() const { return framesTotal; }
+double CameraObjectFilter::getHealth() const { return health; }
+bool CameraObjectFilter::isHealthy() const { return health >= HEALTHY_LIMIT; }
+std::size_t CameraObjectFilter::consecutiveFramesNotSeen() const { return framesNotSeenFor; }
 void CameraObjectFilter::objectSeen(const Time &time) {
     assert(time >= lastUpdateTime);  // we can only update objects into the future
     double newHealth = health + INCREMENT - (time - lastUpdateTime).asSeconds() * DECREMENT_SLOPE;
@@ -39,12 +29,8 @@ void CameraObjectFilter::objectInvisible(const Time &time) {
     lastUpdateTime = time;
     framesNotSeenFor++;
 }
-CameraObjectFilter::CameraObjectFilter(double fullHealthToUnhealthyTime, double tickRate, double fullHealthTicks, double isHealthyAfter,
-                                       Time time)
-    : framesTotal{ 1 },
-      framesNotSeenFor{ 0 },
-      lastSeenTime{ time },
-      lastUpdateTime{ time } {
+CameraObjectFilter::CameraObjectFilter(double fullHealthToUnhealthyTime, double tickRate, double fullHealthTicks, double isHealthyAfter, Time time)
+    : framesTotal{1}, framesNotSeenFor{0}, lastSeenTime{time}, lastUpdateTime{time} {
     MAXIMUM = 100.0;
     HEALTHY_LIMIT = MAXIMUM * isHealthyAfter / fullHealthTicks;
     DECREMENT_SLOPE = MAXIMUM * (1 - isHealthyAfter / fullHealthTicks) / fullHealthToUnhealthyTime;

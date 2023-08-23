@@ -12,7 +12,7 @@
  */
 template <int STATEDIM, int OBSDIM>
 class KalmanFilter {
-public:
+   public:
     typedef Eigen::Matrix<double, STATEDIM, STATEDIM> Matrix;
     typedef Eigen::Matrix<double, OBSDIM, STATEDIM> MatrixO;
     typedef Eigen::Matrix<double, OBSDIM, OBSDIM> MatrixOO;
@@ -20,11 +20,11 @@ public:
     typedef Eigen::Matrix<double, STATEDIM, 1> Vector;
     typedef Eigen::Matrix<double, OBSDIM, 1> VectorO;
 
-private:
+   private:
     Vector X;  // State of the system
     Matrix P;  // covariance matrix of the system (how sure are we of the state?)
 
-public:
+   public:
     Matrix F;    // Forward model/state update matrix. Essentially a linear model of what we predict the next state will be
     MatrixO H;   // Observation model/ states how we can interpret observation as our state
     Matrix Q;    // Covariance of the process noise. (Amount of "Random Forces" we can expect in the process)
@@ -50,8 +50,7 @@ public:
      * @param x initial state vector
      * @param p initial covariance vector
      */
-    explicit KalmanFilter(const Vector& x, const Matrix& p)
-        : X(x), P(p) {
+    explicit KalmanFilter(const Vector& x, const Matrix& p) : X(x), P(p) {
         F = Matrix::Identity();
         H = MatrixO::Identity();
         Q = Matrix::Zero();
@@ -101,16 +100,12 @@ public:
      * Returns the state of the system.
      * @return  estimated state of the system
      */
-    const Vector& state() const {
-        return X;
-    }
+    const Vector& state() const { return X; }
     /**
      * Returns the covariance matrix of the system..
      * @return  estimated covariance matrix of the system
      */
-    const Matrix& covariance() const {
-        return P;
-    }
+    const Matrix& covariance() const { return P; }
 
     /**
      * Manually set state[index]=value, modifying the state of the filter. Should only be used sparsely.
@@ -119,25 +114,19 @@ public:
      * @param index. Index of the state to be modified
      * @param value. Value to set state[index] to
      */
-    void modifyState(int index, double value) {
-        X(index) = value;
-    }
+    void modifyState(int index, double value) { X(index) = value; }
 
     /**
      * Completely resets the state. Note this does NOT reset the covariance!! Use with care
      * @param state
      */
-    void setState(const Vector& state) {
-        X = state;
-    }
+    void setState(const Vector& state) { X = state; }
 
     /**
      * Completely resets the covariance. Use with care!
      * @param covariance
      */
-    void setCovariance(const Matrix& covariance) {
-        P = covariance;
-    }
+    void setCovariance(const Matrix& covariance) { P = covariance; }
 };
 
 #endif  // RTT_KALMANFILTER_H

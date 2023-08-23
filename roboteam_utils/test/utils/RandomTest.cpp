@@ -154,7 +154,7 @@ TEST(Random, simpleRandElementEmpty) {
 }
 
 TEST(Random, simpleRandElementSelection) {
-    std::vector<int> vec = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    std::vector<int> vec = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     for (int i = 0; i < 100; i++) {
         auto randomIt = SimpleRandom::getRandomElement(vec.begin(), vec.end());

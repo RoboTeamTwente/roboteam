@@ -42,10 +42,8 @@ std::ostream& operator<<(std::ostream& os, const std::pair<rtt::RobotFeedback, s
         os << (data.first.dribblerSeesBall ? HAS_BAL_CHAR : HAS_NOT_BAL_CHAR);
     }
 
-
     return os;
 }
-
 
 void printStatus() {
     const auto& y = yellowBots;

@@ -3,13 +3,9 @@
 //
 
 #include "filters/vision/robot/RobotOrientationFilter.h"
-RobotOrientationFilter::RobotOrientationFilter(const Eigen::Vector2d &initialState,
-                                               const Eigen::Matrix2d &initialCovariance,
-                                               double modelError,
-                                               double measurementError,
+RobotOrientationFilter::RobotOrientationFilter(const Eigen::Vector2d &initialState, const Eigen::Matrix2d &initialCovariance, double modelError, double measurementError,
                                                const Time &timeStamp)
-    : PosVelFilter1D(initialState, initialCovariance, modelError, measurementError, timeStamp) {
-}
+    : PosVelFilter1D(initialState, initialCovariance, modelError, measurementError, timeStamp) {}
 
 double RobotOrientationFilter::limitAngle(double angle) {
     angle += M_PI;
@@ -33,9 +29,5 @@ void RobotOrientationFilter::update(const double &position) {
     PosVelFilter1D::update(correctedObservation);
 }
 
-double RobotOrientationFilter::getPosition() const {
-    return limitAngle(PosVelFilter1D::getPosition());
-}
-double RobotOrientationFilter::getPositionEstimate(const Time &time) const {
-    return limitAngle(PosVelFilter1D::getPositionEstimate(time));
-}
+double RobotOrientationFilter::getPosition() const { return limitAngle(PosVelFilter1D::getPosition()); }
+double RobotOrientationFilter::getPositionEstimate(const Time &time) const { return limitAngle(PosVelFilter1D::getPositionEstimate(time)); }

@@ -31,10 +31,6 @@ bool GeometryFilter::process(const proto::SSL_GeometryData& geometryData) {
     return true;
 }
 
-bool GeometryFilter::receivedFirstGeometry() const {
-    return !lastGeometryString.empty();
-}
+bool GeometryFilter::receivedFirstGeometry() const { return !lastGeometryString.empty(); }
 
-proto::SSL_GeometryData GeometryFilter::getGeometry() const {
-    return combinedGeometry;
-}
+proto::SSL_GeometryData GeometryFilter::getGeometry() const { return combinedGeometry; }

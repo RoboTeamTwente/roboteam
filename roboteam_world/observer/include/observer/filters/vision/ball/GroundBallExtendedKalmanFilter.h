@@ -18,10 +18,9 @@
  * This class is only responsible for the kalman filter, not for observation management.
  */
 class GroundBallExtendedKalmanFilter {
-public:
+   public:
     GroundBallExtendedKalmanFilter() = default;  // only used for convenience, should probably not exist
-    GroundBallExtendedKalmanFilter(Eigen::Vector4d initialState, Eigen::Matrix4d initialCovariance,
-                                   double modelError, double measurementError, Time timeStamp);
+    GroundBallExtendedKalmanFilter(Eigen::Vector4d initialState, Eigen::Matrix4d initialCovariance, double modelError, double measurementError, Time timeStamp);
     void predict(Time predictionTime);
     void update(const Eigen::Vector2d& observation);
     [[nodiscard]] Eigen::Vector2d getPosition() const;
@@ -45,7 +44,7 @@ public:
     [[nodiscard]] Eigen::Vector4d state() const;
     [[nodiscard]] Eigen::Matrix4d covariance() const;
 
-private:
+   private:
     void setProccessNoise(double dt);
     [[nodiscard]] Eigen::Vector4d getStateEstimate(double dt) const;
 

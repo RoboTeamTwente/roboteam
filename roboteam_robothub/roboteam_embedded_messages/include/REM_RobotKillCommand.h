@@ -49,70 +49,40 @@ typedef struct _REM_RobotKillCommand {
 } REM_RobotKillCommand;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotKillCommand_get_header(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[0]));
-}
+static inline uint32_t REM_RobotKillCommand_get_header(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[0])); }
 
-static inline uint32_t REM_RobotKillCommand_get_toRobotId(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotKillCommand_get_toRobotId(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotKillCommand_get_toColor(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotKillCommand_get_toColor(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotKillCommand_get_toBC(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotKillCommand_get_toBC(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotKillCommand_get_toBS(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotKillCommand_get_toBS(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotKillCommand_get_toPC(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotKillCommand_get_toPC(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotKillCommand_get_fromRobotId(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotKillCommand_get_fromRobotId(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotKillCommand_get_fromColor(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotKillCommand_get_fromColor(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotKillCommand_get_reserved(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotKillCommand_get_reserved(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotKillCommand_get_fromBS(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotKillCommand_get_fromBS(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotKillCommand_get_fromPC(REM_RobotKillCommandPayload *remrkcp) {
-    return (remrkcp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotKillCommand_get_fromPC(REM_RobotKillCommandPayload *remrkcp) { return (remrkcp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotKillCommand_get_remVersion(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotKillCommand_get_remVersion(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotKillCommand_get_messageId(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotKillCommand_get_messageId(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotKillCommand_get_timestamp(REM_RobotKillCommandPayload *remrkcp) {
     return ((remrkcp->payload[4]) << 16) | ((remrkcp->payload[5]) << 8) | ((remrkcp->payload[6]));
 }
 
-static inline uint32_t REM_RobotKillCommand_get_payloadSize(REM_RobotKillCommandPayload *remrkcp) {
-    return ((remrkcp->payload[7]));
-}
+static inline uint32_t REM_RobotKillCommand_get_payloadSize(REM_RobotKillCommandPayload *remrkcp) { return ((remrkcp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotKillCommand_set_header(REM_RobotKillCommandPayload *remrkcp, uint32_t header) {
-    remrkcp->payload[0] = header;
-}
+static inline void REM_RobotKillCommand_set_header(REM_RobotKillCommandPayload *remrkcp, uint32_t header) { remrkcp->payload[0] = header; }
 
 static inline void REM_RobotKillCommand_set_toRobotId(REM_RobotKillCommandPayload *remrkcp, uint32_t toRobotId) {
     remrkcp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrkcp->payload[1] & 0b00001111);
@@ -168,9 +138,7 @@ static inline void REM_RobotKillCommand_set_timestamp(REM_RobotKillCommandPayloa
     remrkcp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotKillCommand_set_payloadSize(REM_RobotKillCommandPayload *remrkcp, uint32_t payloadSize) {
-    remrkcp->payload[7] = payloadSize;
-}
+static inline void REM_RobotKillCommand_set_payloadSize(REM_RobotKillCommandPayload *remrkcp, uint32_t payloadSize) { remrkcp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotKillCommand(REM_RobotKillCommandPayload *remrkcp, REM_RobotKillCommand *remrkc) {

@@ -20,88 +20,88 @@
 #include <vector>
 
 namespace rtt::robothub::simulation {
-    constexpr int DEFAULT_CONFIGURATION_PORT = 10300;
-    constexpr int DEFAULT_BLUE_CONTROL_PORT = 10301;
-    constexpr int DEFAULT_YELLOW_CONTROL_PORT = 10302;
+constexpr int DEFAULT_CONFIGURATION_PORT = 10300;
+constexpr int DEFAULT_BLUE_CONTROL_PORT = 10301;
+constexpr int DEFAULT_YELLOW_CONTROL_PORT = 10302;
 
-    typedef struct SimulatorNetworkConfiguration {
-        QHostAddress simIpAddress = QHostAddress::LocalHost;
+typedef struct SimulatorNetworkConfiguration {
+    QHostAddress simIpAddress = QHostAddress::LocalHost;
 
-        // Ports the simulator listens to
-        int blueControlPort = DEFAULT_BLUE_CONTROL_PORT;
-        int yellowControlPort = DEFAULT_YELLOW_CONTROL_PORT;
-        int configurationPort = DEFAULT_CONFIGURATION_PORT;
+    // Ports the simulator listens to
+    int blueControlPort = DEFAULT_BLUE_CONTROL_PORT;
+    int yellowControlPort = DEFAULT_YELLOW_CONTROL_PORT;
+    int configurationPort = DEFAULT_CONFIGURATION_PORT;
 
-        // Ports we listen to for feedback (same as control according to ssl protocol)
-        int blueFeedbackPort = DEFAULT_BLUE_CONTROL_PORT;
-        int yellowFeedbackPort = DEFAULT_YELLOW_CONTROL_PORT;
-        int configurationFeedbackPort = DEFAULT_CONFIGURATION_PORT;
-    } SimulatorNetworkConfiguration;
+    // Ports we listen to for feedback (same as control according to ssl protocol)
+    int blueFeedbackPort = DEFAULT_BLUE_CONTROL_PORT;
+    int yellowFeedbackPort = DEFAULT_YELLOW_CONTROL_PORT;
+    int configurationFeedbackPort = DEFAULT_CONFIGURATION_PORT;
+} SimulatorNetworkConfiguration;
 
-    /*  This class can manage a connection with any simulator that follows the official SSL protocol.
-        It can send robot control messages that control the robots, and it can send configuration
-        messages that can configure the simulator, for example the size of the robots or physical
-        properties of the field.
-        To prevent waiting for a response, 3 listen threads are used to listen for feedback for
-        the blue team, the yellow team and feedback for configuring the simulator. These threads will
-        use a callback if it has been set. */
-    class SimulatorManager {
-    public:
-        // Can throw FailedToBindPortException
-        SimulatorManager(SimulatorNetworkConfiguration configuration);
-        ~SimulatorManager();
+/*  This class can manage a connection with any simulator that follows the official SSL protocol.
+    It can send robot control messages that control the robots, and it can send configuration
+    messages that can configure the simulator, for example the size of the robots or physical
+    properties of the field.
+    To prevent waiting for a response, 3 listen threads are used to listen for feedback for
+    the blue team, the yellow team and feedback for configuring the simulator. These threads will
+    use a callback if it has been set. */
+class SimulatorManager {
+   public:
+    // Can throw FailedToBindPortException
+    SimulatorManager(SimulatorNetworkConfiguration configuration);
+    ~SimulatorManager();
 
-        // Both of the send functions return amount of bytes sent, return 0 if error occurred
-        std::size_t sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
-        std::size_t sendConfigurationCommand(ConfigurationCommand& configurationCommand);
+    // Both of the send functions return amount of bytes sent, return 0 if error occurred
+    std::size_t sendRobotControlCommand(RobotControlCommand& robotControlCommand, rtt::Team color);
+    std::size_t sendConfigurationCommand(ConfigurationCommand& configurationCommand);
 
-        // These will set the callback function, which will be called when feedback is received
-        void setRobotControlFeedbackCallback(std::function<void(RobotControlFeedback&)> callback);
-        void setConfigurationFeedbackCallback(std::function<void(ConfigurationFeedback&)> callback);
+    // These will set the callback function, which will be called when feedback is received
+    void setRobotControlFeedbackCallback(std::function<void(RobotControlFeedback&)> callback);
+    void setConfigurationFeedbackCallback(std::function<void(ConfigurationFeedback&)> callback);
 
-    private:
-        SimulatorNetworkConfiguration networkConfiguration;
+   private:
+    SimulatorNetworkConfiguration networkConfiguration;
 
-        QUdpSocket blueControlSocket;
-        QUdpSocket yellowControlSocket;
-        QUdpSocket configurationSocket;
+    QUdpSocket blueControlSocket;
+    QUdpSocket yellowControlSocket;
+    QUdpSocket configurationSocket;
 
-        bool shouldStopListeningToFeedback;
-        std::thread blueFeedbackListenThread;
-        std::thread yellowFeedbackListenThread;
-        std::thread configurationFeedbackListenThread;
+    bool shouldStopListeningToFeedback;
+    std::thread blueFeedbackListenThread;
+    std::thread yellowFeedbackListenThread;
+    std::thread configurationFeedbackListenThread;
 
-        // Both blue and yellow feedback thread use same callback function, so mutex protects it
-        std::mutex robotControlFeedbackMutex;
-        std::function<void(RobotControlFeedback&)> robotControlFeedbackCallback;
-        std::function<void(ConfigurationFeedback&)> configurationFeedbackCallback;
+    // Both blue and yellow feedback thread use same callback function, so mutex protects it
+    std::mutex robotControlFeedbackMutex;
+    std::function<void(RobotControlFeedback&)> robotControlFeedbackCallback;
+    std::function<void(ConfigurationFeedback&)> configurationFeedbackCallback;
 
-        // Returns the amount of bytes sent, returns 0 if error occurred
-        std::size_t sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port);
+    // Returns the amount of bytes sent, returns 0 if error occurred
+    std::size_t sendPacket(google::protobuf::Message& packet, QUdpSocket& socket, int port);
 
-        // These will call the callback functions, if set, whenever feedback is received
-        void callRobotControlFeedbackCallback(RobotControlFeedback& feedback);
-        void callConfigurationFeedbackCallback(ConfigurationFeedback& feedback);
+    // These will call the callback functions, if set, whenever feedback is received
+    void callRobotControlFeedbackCallback(RobotControlFeedback& feedback);
+    void callConfigurationFeedbackCallback(ConfigurationFeedback& feedback);
 
-        // These functions will keep listening for feedback until the Manager object gets destroyed
-        void listenForRobotControlFeedback(rtt::Team color);
-        void listenForConfigurationFeedback();
+    // These functions will keep listening for feedback until the Manager object gets destroyed
+    void listenForRobotControlFeedback(rtt::Team color);
+    void listenForConfigurationFeedback();
 
-        // Will prevent threads from continuing and waits for them to finish
-        void stopFeedbackListeningThreads();
+    // Will prevent threads from continuing and waits for them to finish
+    void stopFeedbackListeningThreads();
 
-        // These functions will convert a datagram of bytes into accessible data
-        RobotControlFeedback getControlFeedbackFromDatagram(QNetworkDatagram& datagram, rtt::Team color);
-        ConfigurationFeedback getConfigurationFeedbackFromDatagram(QNetworkDatagram& datagram);
-    };
+    // These functions will convert a datagram of bytes into accessible data
+    RobotControlFeedback getControlFeedbackFromDatagram(QNetworkDatagram& datagram, rtt::Team color);
+    ConfigurationFeedback getConfigurationFeedbackFromDatagram(QNetworkDatagram& datagram);
+};
 
-    class FailedToBindPortException : public std::exception {
-    public:
-        FailedToBindPortException(const std::string message);
+class FailedToBindPortException : public std::exception {
+   public:
+    FailedToBindPortException(const std::string message);
 
-        const char* what() const noexcept override;
+    const char* what() const noexcept override;
 
-    private:
-        std::string message;
-    };
+   private:
+    std::string message;
+};
 }  // namespace rtt::robothub::simulation

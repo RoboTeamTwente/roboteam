@@ -106,6 +106,4 @@ std::size_t rtt::LogFileReader::fileMessageCount() const {
     return index.size() - 1;  // The end pos is also indexed
 }
 
-std::pair<rtt::logged_time_type, rtt::logged_proto_type> rtt::LogFileReader::readFrame(std::size_t frame_number) {
-    return readPacket(index[frame_number]);
-}
+std::pair<rtt::logged_time_type, rtt::logged_proto_type> rtt::LogFileReader::readFrame(std::size_t frame_number) { return readPacket(index[frame_number]); }

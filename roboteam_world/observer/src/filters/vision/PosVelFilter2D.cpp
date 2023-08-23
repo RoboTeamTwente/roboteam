@@ -16,20 +16,12 @@ bool PosVelFilter2D::predict(const Time &timeStamp) {
 
     return true;
 }
-PosVelFilter2D::PosVelFilter2D(const Eigen::Vector4d &initialState,
-                               const Eigen::Matrix4d &initialCovariance,
-                               double modelError,
-                               double measurementError,
-                               const Time &timeStamp)
-    : filter{ initialState, initialCovariance },
-      lastUpdateTime{ timeStamp },
-      modelError{ modelError } {
+PosVelFilter2D::PosVelFilter2D(const Eigen::Vector4d &initialState, const Eigen::Matrix4d &initialCovariance, double modelError, double measurementError, const Time &timeStamp)
+    : filter{initialState, initialCovariance}, lastUpdateTime{timeStamp}, modelError{modelError} {
     filter.R(0, 0) = measurementError;
     filter.R(1, 1) = measurementError;
 }
-void PosVelFilter2D::update(const Eigen::Vector2d &position) {
-    filter.update(position);
-}
+void PosVelFilter2D::update(const Eigen::Vector2d &position) { filter.update(position); }
 Eigen::Vector2d PosVelFilter2D::getPositionUncertainty() const {
     return filter.covariance().diagonal().head<2>().array().sqrt();  // Indices 0,0 and 1,1. This is optimzied by Eigen better (everything is templated/inlined)
 }
@@ -66,18 +58,10 @@ void PosVelFilter2D::setProcessNoiseFromRandomAcceleration(double dt) {
     filter.Q(3, 1) = dt2;
     filter.Q(3, 3) = dt1;
 }
-const Eigen::Vector4d &PosVelFilter2D::getState() const {
-    return filter.state();
-}
-Eigen::Vector2d PosVelFilter2D::getPosition() const {
-    return filter.state().topLeftCorner<2, 1>();
-}
-Eigen::Vector2d PosVelFilter2D::getVelocity() const {
-    return filter.state().bottomRightCorner<2, 1>();
-}
-void PosVelFilter2D::setState(const Eigen::Vector4d &state) {
-    filter.setState(state);
-}
+const Eigen::Vector4d &PosVelFilter2D::getState() const { return filter.state(); }
+Eigen::Vector2d PosVelFilter2D::getPosition() const { return filter.state().topLeftCorner<2, 1>(); }
+Eigen::Vector2d PosVelFilter2D::getVelocity() const { return filter.state().bottomRightCorner<2, 1>(); }
+void PosVelFilter2D::setState(const Eigen::Vector4d &state) { filter.setState(state); }
 void PosVelFilter2D::setPosition(const Eigen::Vector2d &position) {
     filter.modifyState(0, position.x());
     filter.modifyState(1, position.y());
@@ -94,18 +78,10 @@ Eigen::Vector2d PosVelFilter2D::getPositionEstimate(const Time &time) const {
     // return linear extrapolation of current state.
     return getPosition() + (time - lastUpdateTime).asSeconds() * getVelocity();
 }
-void PosVelFilter2D::setCovariance(const Eigen::Matrix4d &covariance) {
-    filter.setCovariance(covariance);
-}
-Time PosVelFilter2D::lastUpdated() const {
-    return lastUpdateTime;
-}
-Eigen::Matrix4d PosVelFilter2D::getCovariance() const {
-    return filter.covariance();
-}
-Eigen::Vector2d PosVelFilter2D::getInnovation() const {
-    return filter.y;
-}
+void PosVelFilter2D::setCovariance(const Eigen::Matrix4d &covariance) { filter.setCovariance(covariance); }
+Time PosVelFilter2D::lastUpdated() const { return lastUpdateTime; }
+Eigen::Matrix4d PosVelFilter2D::getCovariance() const { return filter.covariance(); }
+Eigen::Vector2d PosVelFilter2D::getInnovation() const { return filter.y; }
 void PosVelFilter2D::addUncertainty(double posUncertainty, double velUncertainty) {
     Eigen::Matrix4d covariance = filter.covariance();
     covariance(0, 0) += posUncertainty;

@@ -25,22 +25,16 @@ typedef struct _REM_SX1280Filler {
 } REM_SX1280Filler;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_SX1280Filler_get_header(REM_SX1280FillerPayload *remsxfp) {
-    return ((remsxfp->payload[0]));
-}
+static inline uint32_t REM_SX1280Filler_get_header(REM_SX1280FillerPayload *remsxfp) { return ((remsxfp->payload[0])); }
 
-static inline uint32_t REM_SX1280Filler_get_remVersion(REM_SX1280FillerPayload *remsxfp) {
-    return ((remsxfp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_SX1280Filler_get_remVersion(REM_SX1280FillerPayload *remsxfp) { return ((remsxfp->payload[1] & 0b11110000) >> 4); }
 
 static inline uint64_t REM_SX1280Filler_get_fillerBits(REM_SX1280FillerPayload *remsxfp) {
     return ((remsxfp->payload[1] & 0b00001111) << 32) | ((remsxfp->payload[2]) << 24) | ((remsxfp->payload[3]) << 16) | ((remsxfp->payload[4]) << 8) | ((remsxfp->payload[5]));
 }
 
 // ================================ SETTERS ================================
-static inline void REM_SX1280Filler_set_header(REM_SX1280FillerPayload *remsxfp, uint32_t header) {
-    remsxfp->payload[0] = header;
-}
+static inline void REM_SX1280Filler_set_header(REM_SX1280FillerPayload *remsxfp, uint32_t header) { remsxfp->payload[0] = header; }
 
 static inline void REM_SX1280Filler_set_remVersion(REM_SX1280FillerPayload *remsxfp, uint32_t remVersion) {
     remsxfp->payload[1] = ((remVersion << 4) & 0b11110000) | (remsxfp->payload[1] & 0b00001111);

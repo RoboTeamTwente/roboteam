@@ -20,7 +20,6 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
 
     roboteam_utils::Timer t;
 
-
     if (shouldLog) {
         auto now = Time::now();
         long total_seconds = now.asIntegerSeconds();
@@ -30,7 +29,8 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
         long minutes = (day_seconds - hours * 3600) / 60;
         long seconds = day_seconds % 60;
         long mili = now.asIntegerMilliSeconds() % 1000;
-        std::string file_name = "world_log_" + std::to_string(days) + "_" + std::to_string(hours) + "_" + std::to_string(minutes) + "_" + std::to_string(seconds) + "_" + std::to_string(mili) + ".log";
+        std::string file_name =
+            "world_log_" + std::to_string(days) + "_" + std::to_string(hours) + "_" + std::to_string(minutes) + "_" + std::to_string(seconds) + "_" + std::to_string(mili) + ".log";
         fileWriter = rtt::LogFileWriter();
         fileWriter.value().open(file_name);
         // Create a signal handler so that when we crash data is still saved,
@@ -55,8 +55,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
     // Feedback for user
     int no_vision_received = 0;
     bool receiving_vision = true;
-    std::cout << std::endl
-              << "\rReceiving vision packets" << std::flush;
+    std::cout << std::endl << "\rReceiving vision packets" << std::flush;
 
     t.loop(
         [&]() {
@@ -122,9 +121,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
 bool Handler::initializeNetworkers() {
     this->worldPublisher = std::make_unique<rtt::net::WorldPublisher>();
 
-    this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>([&](const rtt::RobotsFeedback& feedback) {
-        onRobotFeedback(feedback);
-    });
+    this->feedbackSubscriber = std::make_unique<rtt::net::RobotFeedbackSubscriber>([&](const rtt::RobotsFeedback& feedback) { onRobotFeedback(feedback); });
 
     return this->worldPublisher != nullptr && this->feedbackSubscriber != nullptr;
 }
@@ -204,9 +201,5 @@ void Handler::startReplay(rtt::LogFileReader& reader) {
     }
 }
 
-const char* FailedToInitializeNetworkersException::what() const noexcept(true) {
-    return "Failed to initialize networker(s). Is another observer running?";
-}
-const char* FailedToSetupSSLClients::what() const noexcept(true) {
-    return "Failed to setup SSL client(s). Is another observer running?";
-}
+const char* FailedToInitializeNetworkersException::what() const noexcept(true) { return "Failed to initialize networker(s). Is another observer running?"; }
+const char* FailedToSetupSSLClients::what() const noexcept(true) { return "Failed to setup SSL client(s). Is another observer running?"; }

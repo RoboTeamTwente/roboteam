@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-
 #define REM_LOCAL_VERSION 4
 #define REM_LARGEST_PACKET_IN_BYTES 48
 /*

@@ -49,118 +49,64 @@ typedef struct _REM_Log {
 } REM_Log;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_Log_get_header(REM_LogPayload *remlp) {
-    return ((remlp->payload[0]));
-}
+static inline uint32_t REM_Log_get_header(REM_LogPayload *remlp) { return ((remlp->payload[0])); }
 
-static inline uint32_t REM_Log_get_toRobotId(REM_LogPayload *remlp) {
-    return ((remlp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_toRobotId(REM_LogPayload *remlp) { return ((remlp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_Log_get_toColor(REM_LogPayload *remlp) {
-    return (remlp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_Log_get_toColor(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_Log_get_toBC(REM_LogPayload *remlp) {
-    return (remlp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_Log_get_toBC(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_Log_get_toBS(REM_LogPayload *remlp) {
-    return (remlp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_Log_get_toBS(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_Log_get_toPC(REM_LogPayload *remlp) {
-    return (remlp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_Log_get_toPC(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Log_get_fromRobotId(REM_LogPayload *remlp) {
-    return ((remlp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_fromRobotId(REM_LogPayload *remlp) { return ((remlp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_Log_get_fromColor(REM_LogPayload *remlp) {
-    return (remlp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_Log_get_fromColor(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_Log_get_reserved(REM_LogPayload *remlp) {
-    return (remlp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_Log_get_reserved(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_Log_get_fromBS(REM_LogPayload *remlp) {
-    return (remlp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_Log_get_fromBS(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_Log_get_fromPC(REM_LogPayload *remlp) {
-    return (remlp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_Log_get_fromPC(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Log_get_remVersion(REM_LogPayload *remlp) {
-    return ((remlp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_remVersion(REM_LogPayload *remlp) { return ((remlp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_Log_get_messageId(REM_LogPayload *remlp) {
-    return ((remlp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_Log_get_messageId(REM_LogPayload *remlp) { return ((remlp->payload[3] & 0b00001111)); }
 
-static inline uint32_t REM_Log_get_timestamp(REM_LogPayload *remlp) {
-    return ((remlp->payload[4]) << 16) | ((remlp->payload[5]) << 8) | ((remlp->payload[6]));
-}
+static inline uint32_t REM_Log_get_timestamp(REM_LogPayload *remlp) { return ((remlp->payload[4]) << 16) | ((remlp->payload[5]) << 8) | ((remlp->payload[6])); }
 
-static inline uint32_t REM_Log_get_payloadSize(REM_LogPayload *remlp) {
-    return ((remlp->payload[7]));
-}
+static inline uint32_t REM_Log_get_payloadSize(REM_LogPayload *remlp) { return ((remlp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_Log_set_header(REM_LogPayload *remlp, uint32_t header) {
-    remlp->payload[0] = header;
-}
+static inline void REM_Log_set_header(REM_LogPayload *remlp, uint32_t header) { remlp->payload[0] = header; }
 
-static inline void REM_Log_set_toRobotId(REM_LogPayload *remlp, uint32_t toRobotId) {
-    remlp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remlp->payload[1] & 0b00001111);
-}
+static inline void REM_Log_set_toRobotId(REM_LogPayload *remlp, uint32_t toRobotId) { remlp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remlp->payload[1] & 0b00001111); }
 
-static inline void REM_Log_set_toColor(REM_LogPayload *remlp, bool toColor) {
-    remlp->payload[1] = ((toColor << 3) & 0b00001000) | (remlp->payload[1] & 0b11110111);
-}
+static inline void REM_Log_set_toColor(REM_LogPayload *remlp, bool toColor) { remlp->payload[1] = ((toColor << 3) & 0b00001000) | (remlp->payload[1] & 0b11110111); }
 
-static inline void REM_Log_set_toBC(REM_LogPayload *remlp, bool toBC) {
-    remlp->payload[1] = ((toBC << 2) & 0b00000100) | (remlp->payload[1] & 0b11111011);
-}
+static inline void REM_Log_set_toBC(REM_LogPayload *remlp, bool toBC) { remlp->payload[1] = ((toBC << 2) & 0b00000100) | (remlp->payload[1] & 0b11111011); }
 
-static inline void REM_Log_set_toBS(REM_LogPayload *remlp, bool toBS) {
-    remlp->payload[1] = ((toBS << 1) & 0b00000010) | (remlp->payload[1] & 0b11111101);
-}
+static inline void REM_Log_set_toBS(REM_LogPayload *remlp, bool toBS) { remlp->payload[1] = ((toBS << 1) & 0b00000010) | (remlp->payload[1] & 0b11111101); }
 
-static inline void REM_Log_set_toPC(REM_LogPayload *remlp, bool toPC) {
-    remlp->payload[1] = (toPC & 0b00000001) | (remlp->payload[1] & 0b11111110);
-}
+static inline void REM_Log_set_toPC(REM_LogPayload *remlp, bool toPC) { remlp->payload[1] = (toPC & 0b00000001) | (remlp->payload[1] & 0b11111110); }
 
 static inline void REM_Log_set_fromRobotId(REM_LogPayload *remlp, uint32_t fromRobotId) {
     remlp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remlp->payload[2] & 0b00001111);
 }
 
-static inline void REM_Log_set_fromColor(REM_LogPayload *remlp, bool fromColor) {
-    remlp->payload[2] = ((fromColor << 3) & 0b00001000) | (remlp->payload[2] & 0b11110111);
-}
+static inline void REM_Log_set_fromColor(REM_LogPayload *remlp, bool fromColor) { remlp->payload[2] = ((fromColor << 3) & 0b00001000) | (remlp->payload[2] & 0b11110111); }
 
-static inline void REM_Log_set_reserved(REM_LogPayload *remlp, bool reserved) {
-    remlp->payload[2] = ((reserved << 2) & 0b00000100) | (remlp->payload[2] & 0b11111011);
-}
+static inline void REM_Log_set_reserved(REM_LogPayload *remlp, bool reserved) { remlp->payload[2] = ((reserved << 2) & 0b00000100) | (remlp->payload[2] & 0b11111011); }
 
-static inline void REM_Log_set_fromBS(REM_LogPayload *remlp, bool fromBS) {
-    remlp->payload[2] = ((fromBS << 1) & 0b00000010) | (remlp->payload[2] & 0b11111101);
-}
+static inline void REM_Log_set_fromBS(REM_LogPayload *remlp, bool fromBS) { remlp->payload[2] = ((fromBS << 1) & 0b00000010) | (remlp->payload[2] & 0b11111101); }
 
-static inline void REM_Log_set_fromPC(REM_LogPayload *remlp, bool fromPC) {
-    remlp->payload[2] = (fromPC & 0b00000001) | (remlp->payload[2] & 0b11111110);
-}
+static inline void REM_Log_set_fromPC(REM_LogPayload *remlp, bool fromPC) { remlp->payload[2] = (fromPC & 0b00000001) | (remlp->payload[2] & 0b11111110); }
 
-static inline void REM_Log_set_remVersion(REM_LogPayload *remlp, uint32_t remVersion) {
-    remlp->payload[3] = ((remVersion << 4) & 0b11110000) | (remlp->payload[3] & 0b00001111);
-}
+static inline void REM_Log_set_remVersion(REM_LogPayload *remlp, uint32_t remVersion) { remlp->payload[3] = ((remVersion << 4) & 0b11110000) | (remlp->payload[3] & 0b00001111); }
 
-static inline void REM_Log_set_messageId(REM_LogPayload *remlp, uint32_t messageId) {
-    remlp->payload[3] = (messageId & 0b00001111) | (remlp->payload[3] & 0b11110000);
-}
+static inline void REM_Log_set_messageId(REM_LogPayload *remlp, uint32_t messageId) { remlp->payload[3] = (messageId & 0b00001111) | (remlp->payload[3] & 0b11110000); }
 
 static inline void REM_Log_set_timestamp(REM_LogPayload *remlp, uint32_t timestamp) {
     remlp->payload[4] = (timestamp >> 16);
@@ -168,9 +114,7 @@ static inline void REM_Log_set_timestamp(REM_LogPayload *remlp, uint32_t timesta
     remlp->payload[6] = timestamp;
 }
 
-static inline void REM_Log_set_payloadSize(REM_LogPayload *remlp, uint32_t payloadSize) {
-    remlp->payload[7] = payloadSize;
-}
+static inline void REM_Log_set_payloadSize(REM_LogPayload *remlp, uint32_t payloadSize) { remlp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_Log(REM_LogPayload *remlp, REM_Log *reml) {

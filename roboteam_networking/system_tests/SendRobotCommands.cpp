@@ -14,7 +14,7 @@ constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 rtt::RobotCommands getEmptyRobotCommandToAllRobots() {
     rtt::RobotCommands commands;
     for (int i = 0; i < 16; ++i) {
-        commands.push_back({ .id = i });
+        commands.push_back({.id = i});
     }
     return commands;
 }
@@ -68,8 +68,7 @@ int main() {
     settingsPub->publish(getRobotHubBasestationModePacket());
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
-    std::cout << "Starting to send commands: " << std::endl
-              << std::endl;
+    std::cout << "Starting to send commands: " << std::endl << std::endl;
     auto command = getEmptyRobotCommandToAllRobots();
     while (true) {
         commandsYellowPub->publish(command);

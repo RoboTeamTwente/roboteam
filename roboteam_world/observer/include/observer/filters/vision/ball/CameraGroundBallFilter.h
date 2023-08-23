@@ -23,7 +23,7 @@ struct CameraGroundBallPredictionObservationPair {
     std::optional<BallObservation> observation;
 };
 class CameraGroundBallFilter : public CameraObjectFilter {
-public:
+   public:
     explicit CameraGroundBallFilter(const BallObservation& observation, const Eigen::Vector2d& velocity_estimate = Eigen::Vector2d::Zero());
     [[nodiscard]] FilteredBall getEstimate(Time time) const;
     [[nodiscard]] Eigen::Vector2d getVelocityEstimate(Time time) const;
@@ -32,7 +32,7 @@ public:
 
     bool processDetections(const CameraGroundBallPredictionObservationPair& prediction_observation_pair);
 
-private:
+   private:
     void predictFilter(const CameraGroundBallPrediction& prediction);
     void update(const BallObservation& observation);
     bool updateNotSeen(Time time);

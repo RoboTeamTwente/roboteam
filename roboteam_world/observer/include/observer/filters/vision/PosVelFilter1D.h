@@ -9,11 +9,10 @@
 #include "roboteam_utils/Time.h"
 
 class PosVelFilter1D {
-public:
+   public:
     PosVelFilter1D() = default;
     virtual ~PosVelFilter1D() = default;
-    PosVelFilter1D(const Eigen::Vector2d &initialState, const Eigen::Matrix2d &initialCovariance,
-                   double modelError, double measurementError, const Time &timeStamp);
+    PosVelFilter1D(const Eigen::Vector2d &initialState, const Eigen::Matrix2d &initialCovariance, double modelError, double measurementError, const Time &timeStamp);
     /**
      * @brief Predict the filter estimate to a new timestamp when there is no new measurement.
      * Note this permanently alters the state of the filter, so there is no way to go back if you receive vision frames still.
@@ -102,10 +101,10 @@ public:
      */
     [[nodiscard]] double getInnovation() const;
 
-protected:
+   protected:
     KalmanFilter<2, 1> filter;
 
-private:
+   private:
     // Before every tick we need to set the matrices we use using the dt of the tick
     void setTransitionMatrix(double dt);
     void setProcessNoiseFromRandomAcceleration(double dt);

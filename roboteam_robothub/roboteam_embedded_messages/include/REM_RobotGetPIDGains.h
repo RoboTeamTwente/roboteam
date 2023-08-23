@@ -49,70 +49,40 @@ typedef struct _REM_RobotGetPIDGains {
 } REM_RobotGetPIDGains;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotGetPIDGains_get_header(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[0]));
-}
+static inline uint32_t REM_RobotGetPIDGains_get_header(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[0])); }
 
-static inline uint32_t REM_RobotGetPIDGains_get_toRobotId(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotGetPIDGains_get_toRobotId(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotGetPIDGains_get_toColor(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_toColor(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_toBC(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_toBC(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_toBS(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_toBS(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_toPC(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_toPC(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotGetPIDGains_get_fromRobotId(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotGetPIDGains_get_fromRobotId(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotGetPIDGains_get_fromColor(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_fromColor(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_reserved(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_reserved(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_fromBS(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_fromBS(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotGetPIDGains_get_fromPC(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return (remrgpidgp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotGetPIDGains_get_fromPC(REM_RobotGetPIDGainsPayload *remrgpidgp) { return (remrgpidgp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotGetPIDGains_get_remVersion(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotGetPIDGains_get_remVersion(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotGetPIDGains_get_messageId(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotGetPIDGains_get_messageId(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotGetPIDGains_get_timestamp(REM_RobotGetPIDGainsPayload *remrgpidgp) {
     return ((remrgpidgp->payload[4]) << 16) | ((remrgpidgp->payload[5]) << 8) | ((remrgpidgp->payload[6]));
 }
 
-static inline uint32_t REM_RobotGetPIDGains_get_payloadSize(REM_RobotGetPIDGainsPayload *remrgpidgp) {
-    return ((remrgpidgp->payload[7]));
-}
+static inline uint32_t REM_RobotGetPIDGains_get_payloadSize(REM_RobotGetPIDGainsPayload *remrgpidgp) { return ((remrgpidgp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotGetPIDGains_set_header(REM_RobotGetPIDGainsPayload *remrgpidgp, uint32_t header) {
-    remrgpidgp->payload[0] = header;
-}
+static inline void REM_RobotGetPIDGains_set_header(REM_RobotGetPIDGainsPayload *remrgpidgp, uint32_t header) { remrgpidgp->payload[0] = header; }
 
 static inline void REM_RobotGetPIDGains_set_toRobotId(REM_RobotGetPIDGainsPayload *remrgpidgp, uint32_t toRobotId) {
     remrgpidgp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrgpidgp->payload[1] & 0b00001111);
@@ -168,9 +138,7 @@ static inline void REM_RobotGetPIDGains_set_timestamp(REM_RobotGetPIDGainsPayloa
     remrgpidgp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotGetPIDGains_set_payloadSize(REM_RobotGetPIDGainsPayload *remrgpidgp, uint32_t payloadSize) {
-    remrgpidgp->payload[7] = payloadSize;
-}
+static inline void REM_RobotGetPIDGains_set_payloadSize(REM_RobotGetPIDGainsPayload *remrgpidgp, uint32_t payloadSize) { remrgpidgp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotGetPIDGains(REM_RobotGetPIDGainsPayload *remrgpidgp, REM_RobotGetPIDGains *remrgpidg) {

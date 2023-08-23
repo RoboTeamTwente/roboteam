@@ -8,15 +8,14 @@
 #include "Camera.h"
 
 class CameraMap {
-public:
+   public:
     void addCamera(const Camera& camera);
     const Camera& operator[](unsigned int id) const;
     void clear();
     [[nodiscard]] bool hasCamera(unsigned int id) const;
 
-private:
+   private:
     std::map<unsigned int, Camera> map;
 };
-
 
 #endif  // RTT_CAMERAMAP_H

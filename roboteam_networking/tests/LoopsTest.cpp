@@ -24,12 +24,8 @@ constexpr int PAUSE_MS = 50;
 // Robot commands loop test
 bool robotCommandsBlueLoopTestPassed = false;
 bool robotCommandsYellowLoopTestPassed = false;
-void onRobotCommandsBlue(const rtt::RobotCommands& commands) {
-    robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE;
-}
-void onRobotCommandsYellow(const rtt::RobotCommands& commands) {
-    robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE;
-}
+void onRobotCommandsBlue(const rtt::RobotCommands& commands) { robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE; }
+void onRobotCommandsYellow(const rtt::RobotCommands& commands) { robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE; }
 
 TEST(RTTChannels, testRobotCommandsLoop) {
     RobotCommandsBluePublisher pubBlue;
@@ -42,13 +38,12 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
     rtt::RobotCommands commands;
 
-    commands.push_back({ .id = TEST_VALUE });
+    commands.push_back({.id = TEST_VALUE});
 
     pubBlue.publish(commands);
     pubYellow.publish(commands);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
-
 
     EXPECT_TRUE(robotCommandsBlueLoopTestPassed);
     EXPECT_TRUE(robotCommandsYellowLoopTestPassed);
@@ -56,16 +51,14 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) {
-    robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE;
-}
+void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) { robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE; }
 TEST(RTTChannels, testRobotFeedbackLoop) {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     rtt::RobotsFeedback feedbacks;
-    feedbacks.feedback.push_back({ .id = TEST_VALUE });
+    feedbacks.feedback.push_back({.id = TEST_VALUE});
 
     pub.publish(feedbacks);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -75,9 +68,7 @@ TEST(RTTChannels, testRobotFeedbackLoop) {
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::GameSettings& settings) {
-    settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL;
-}
+void onSettings(const proto::GameSettings& settings) { settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL; }
 TEST(RTTChannels, testSettingsLoop) {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
@@ -94,9 +85,7 @@ TEST(RTTChannels, testSettingsLoop) {
 
 // World loop test
 bool worldLoopTestPassed = false;
-void onWorld(const proto::State& world) {
-    worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE;
-}
+void onWorld(const proto::State& world) { worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE; }
 TEST(RTTChannels, testWorldLoop) {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);

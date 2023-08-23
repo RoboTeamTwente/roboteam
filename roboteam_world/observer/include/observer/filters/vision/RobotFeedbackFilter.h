@@ -12,26 +12,25 @@
 #include "roboteam_utils/RobotFeedback.hpp"
 
 class SingleRobotFeedbackFilter {
-public:
+   public:
     explicit SingleRobotFeedbackFilter(const rtt::RobotFeedback& feedback);
     void process(const rtt::RobotFeedback& feedback);
     [[nodiscard]] proto::RobotProcessedFeedback getFilteredFeedback() const;
 
-private:
+   private:
     rtt::RobotFeedback storedFeedback;
 };
 
 class RobotFeedbackFilter {
-public:
+   public:
     void process(const std::vector<rtt::RobotsFeedback>& feedback);
 
     [[nodiscard]] std::vector<std::pair<TeamRobotID, proto::RobotProcessedFeedback>> getRecentFeedback() const;
 
-private:
+   private:
     using FeedbackMap = std::map<RobotID, SingleRobotFeedbackFilter>;
     FeedbackMap blueMap;
     FeedbackMap yellowMap;
 };
-
 
 #endif  // RTT_ROBOTFEEDBACKFILTER_H

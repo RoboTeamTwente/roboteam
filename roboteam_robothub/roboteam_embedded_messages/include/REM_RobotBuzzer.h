@@ -53,69 +53,37 @@ typedef struct _REM_RobotBuzzer {
 } REM_RobotBuzzer;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotBuzzer_get_header(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[0]));
-}
+static inline uint32_t REM_RobotBuzzer_get_header(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[0])); }
 
-static inline uint32_t REM_RobotBuzzer_get_toRobotId(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotBuzzer_get_toRobotId(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotBuzzer_get_toColor(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotBuzzer_get_toColor(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotBuzzer_get_toBC(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotBuzzer_get_toBC(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotBuzzer_get_toBS(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotBuzzer_get_toBS(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotBuzzer_get_toPC(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotBuzzer_get_toPC(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotBuzzer_get_fromRobotId(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotBuzzer_get_fromRobotId(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotBuzzer_get_fromColor(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotBuzzer_get_fromColor(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotBuzzer_get_reserved(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotBuzzer_get_reserved(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotBuzzer_get_fromBS(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotBuzzer_get_fromBS(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotBuzzer_get_fromPC(REM_RobotBuzzerPayload *remrbp) {
-    return (remrbp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotBuzzer_get_fromPC(REM_RobotBuzzerPayload *remrbp) { return (remrbp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotBuzzer_get_remVersion(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotBuzzer_get_remVersion(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotBuzzer_get_messageId(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotBuzzer_get_messageId(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[3] & 0b00001111)); }
 
-static inline uint32_t REM_RobotBuzzer_get_timestamp(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[4]) << 16) | ((remrbp->payload[5]) << 8) | ((remrbp->payload[6]));
-}
+static inline uint32_t REM_RobotBuzzer_get_timestamp(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[4]) << 16) | ((remrbp->payload[5]) << 8) | ((remrbp->payload[6])); }
 
-static inline uint32_t REM_RobotBuzzer_get_payloadSize(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[7]));
-}
+static inline uint32_t REM_RobotBuzzer_get_payloadSize(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[7])); }
 
-static inline uint32_t REM_RobotBuzzer_get_period(REM_RobotBuzzerPayload *remrbp) {
-    return ((remrbp->payload[8]) << 4) | ((remrbp->payload[9] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotBuzzer_get_period(REM_RobotBuzzerPayload *remrbp) { return ((remrbp->payload[8]) << 4) | ((remrbp->payload[9] & 0b11110000) >> 4); }
 
 static inline float REM_RobotBuzzer_get_duration(REM_RobotBuzzerPayload *remrbp) {
     uint32_t _duration = ((remrbp->payload[9] & 0b00001111) << 12) | ((remrbp->payload[10]) << 4) | ((remrbp->payload[11] & 0b11110000) >> 4);
@@ -123,9 +91,7 @@ static inline float REM_RobotBuzzer_get_duration(REM_RobotBuzzerPayload *remrbp)
 }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotBuzzer_set_header(REM_RobotBuzzerPayload *remrbp, uint32_t header) {
-    remrbp->payload[0] = header;
-}
+static inline void REM_RobotBuzzer_set_header(REM_RobotBuzzerPayload *remrbp, uint32_t header) { remrbp->payload[0] = header; }
 
 static inline void REM_RobotBuzzer_set_toRobotId(REM_RobotBuzzerPayload *remrbp, uint32_t toRobotId) {
     remrbp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrbp->payload[1] & 0b00001111);
@@ -135,17 +101,11 @@ static inline void REM_RobotBuzzer_set_toColor(REM_RobotBuzzerPayload *remrbp, b
     remrbp->payload[1] = ((toColor << 3) & 0b00001000) | (remrbp->payload[1] & 0b11110111);
 }
 
-static inline void REM_RobotBuzzer_set_toBC(REM_RobotBuzzerPayload *remrbp, bool toBC) {
-    remrbp->payload[1] = ((toBC << 2) & 0b00000100) | (remrbp->payload[1] & 0b11111011);
-}
+static inline void REM_RobotBuzzer_set_toBC(REM_RobotBuzzerPayload *remrbp, bool toBC) { remrbp->payload[1] = ((toBC << 2) & 0b00000100) | (remrbp->payload[1] & 0b11111011); }
 
-static inline void REM_RobotBuzzer_set_toBS(REM_RobotBuzzerPayload *remrbp, bool toBS) {
-    remrbp->payload[1] = ((toBS << 1) & 0b00000010) | (remrbp->payload[1] & 0b11111101);
-}
+static inline void REM_RobotBuzzer_set_toBS(REM_RobotBuzzerPayload *remrbp, bool toBS) { remrbp->payload[1] = ((toBS << 1) & 0b00000010) | (remrbp->payload[1] & 0b11111101); }
 
-static inline void REM_RobotBuzzer_set_toPC(REM_RobotBuzzerPayload *remrbp, bool toPC) {
-    remrbp->payload[1] = (toPC & 0b00000001) | (remrbp->payload[1] & 0b11111110);
-}
+static inline void REM_RobotBuzzer_set_toPC(REM_RobotBuzzerPayload *remrbp, bool toPC) { remrbp->payload[1] = (toPC & 0b00000001) | (remrbp->payload[1] & 0b11111110); }
 
 static inline void REM_RobotBuzzer_set_fromRobotId(REM_RobotBuzzerPayload *remrbp, uint32_t fromRobotId) {
     remrbp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remrbp->payload[2] & 0b00001111);
@@ -163,9 +123,7 @@ static inline void REM_RobotBuzzer_set_fromBS(REM_RobotBuzzerPayload *remrbp, bo
     remrbp->payload[2] = ((fromBS << 1) & 0b00000010) | (remrbp->payload[2] & 0b11111101);
 }
 
-static inline void REM_RobotBuzzer_set_fromPC(REM_RobotBuzzerPayload *remrbp, bool fromPC) {
-    remrbp->payload[2] = (fromPC & 0b00000001) | (remrbp->payload[2] & 0b11111110);
-}
+static inline void REM_RobotBuzzer_set_fromPC(REM_RobotBuzzerPayload *remrbp, bool fromPC) { remrbp->payload[2] = (fromPC & 0b00000001) | (remrbp->payload[2] & 0b11111110); }
 
 static inline void REM_RobotBuzzer_set_remVersion(REM_RobotBuzzerPayload *remrbp, uint32_t remVersion) {
     remrbp->payload[3] = ((remVersion << 4) & 0b11110000) | (remrbp->payload[3] & 0b00001111);
@@ -181,9 +139,7 @@ static inline void REM_RobotBuzzer_set_timestamp(REM_RobotBuzzerPayload *remrbp,
     remrbp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotBuzzer_set_payloadSize(REM_RobotBuzzerPayload *remrbp, uint32_t payloadSize) {
-    remrbp->payload[7] = payloadSize;
-}
+static inline void REM_RobotBuzzer_set_payloadSize(REM_RobotBuzzerPayload *remrbp, uint32_t payloadSize) { remrbp->payload[7] = payloadSize; }
 
 static inline void REM_RobotBuzzer_set_period(REM_RobotBuzzerPayload *remrbp, uint32_t period) {
     remrbp->payload[8] = (period >> 4);

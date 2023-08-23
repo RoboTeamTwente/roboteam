@@ -14,18 +14,17 @@
  */
 
 namespace rtt {
-    class BackLogger {
-    public:
-        explicit BackLogger(logged_time_type interval_nanoseconds);
-        void addMessage(const logged_proto_type& message, logged_time_type timestamp);
-        bool saveToFile(const std::string& file_name);
+class BackLogger {
+   public:
+    explicit BackLogger(logged_time_type interval_nanoseconds);
+    void addMessage(const logged_proto_type& message, logged_time_type timestamp);
+    bool saveToFile(const std::string& file_name);
 
-    private:
-        std::deque<std::pair<logged_proto_type, logged_time_type>> queue;
+   private:
+    std::deque<std::pair<logged_proto_type, logged_time_type>> queue;
 
-        logged_time_type interval_duration;
-    };
+    logged_time_type interval_duration;
+};
 }  // namespace rtt
-
 
 #endif  // RTT_BACKLOGGER_H

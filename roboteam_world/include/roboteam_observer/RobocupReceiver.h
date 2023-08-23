@@ -10,19 +10,13 @@
 
 template <typename ProtoMessageType>
 class RobocupReceiver {
-public:
-    RobocupReceiver(const QHostAddress& groupAddress, quint16 port)
-        : group_address{ groupAddress },
-          port{ port },
-          socket{ nullptr } {
-    }
+   public:
+    RobocupReceiver(const QHostAddress& groupAddress, quint16 port) : group_address{groupAddress}, port{port}, socket{nullptr} {}
     void disconnect() {
         delete socket;
         socket = nullptr;
     }
-    ~RobocupReceiver() {
-        disconnect();
-    }
+    ~RobocupReceiver() { disconnect(); }
     // we cannot copy because this class has unique control over the connection (moving is legal, however)
     RobocupReceiver(const RobocupReceiver&) = delete;
     RobocupReceiver operator=(const RobocupReceiver&) = delete;
@@ -69,7 +63,7 @@ public:
         return no_error;
     }
 
-private:
+   private:
     QHostAddress group_address;
     quint16 port;
     QUdpSocket* socket;

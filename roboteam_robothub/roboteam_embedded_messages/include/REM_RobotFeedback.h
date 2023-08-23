@@ -77,65 +77,37 @@ typedef struct _REM_RobotFeedback {
 } REM_RobotFeedback;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotFeedback_get_header(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[0]));
-}
+static inline uint32_t REM_RobotFeedback_get_header(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[0])); }
 
-static inline uint32_t REM_RobotFeedback_get_toRobotId(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotFeedback_get_toRobotId(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotFeedback_get_toColor(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotFeedback_get_toColor(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotFeedback_get_toBC(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotFeedback_get_toBC(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotFeedback_get_toBS(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotFeedback_get_toBS(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotFeedback_get_toPC(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotFeedback_get_toPC(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotFeedback_get_fromRobotId(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotFeedback_get_fromRobotId(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotFeedback_get_fromColor(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotFeedback_get_fromColor(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotFeedback_get_reserved(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotFeedback_get_reserved(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotFeedback_get_fromBS(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotFeedback_get_fromBS(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotFeedback_get_fromPC(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotFeedback_get_fromPC(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotFeedback_get_remVersion(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotFeedback_get_remVersion(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotFeedback_get_messageId(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotFeedback_get_messageId(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotFeedback_get_timestamp(REM_RobotFeedbackPayload *remrfp) {
     return ((remrfp->payload[4]) << 16) | ((remrfp->payload[5]) << 8) | ((remrfp->payload[6]));
 }
 
-static inline uint32_t REM_RobotFeedback_get_payloadSize(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[7]));
-}
+static inline uint32_t REM_RobotFeedback_get_payloadSize(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[7])); }
 
 static inline float REM_RobotFeedback_get_rho(REM_RobotFeedbackPayload *remrfp) {
     uint32_t _rho = ((remrfp->payload[8]) << 8) | ((remrfp->payload[9]));
@@ -152,55 +124,33 @@ static inline float REM_RobotFeedback_get_angle(REM_RobotFeedbackPayload *remrfp
     return (_angle * 0.0000958752621833F) + -3.1415926535897931F;
 }
 
-static inline uint32_t REM_RobotFeedback_get_batteryLevel(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[14] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotFeedback_get_batteryLevel(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[14] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotFeedback_get_XsensCalibrated(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[14] & 0b00001000) > 0;
-}
+static inline bool REM_RobotFeedback_get_XsensCalibrated(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[14] & 0b00001000) > 0; }
 
-static inline bool REM_RobotFeedback_get_capacitorCharged(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[14] & 0b00000100) > 0;
-}
+static inline bool REM_RobotFeedback_get_capacitorCharged(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[14] & 0b00000100) > 0; }
 
-static inline bool REM_RobotFeedback_get_ballSensorWorking(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[14] & 0b00000010) > 0;
-}
+static inline bool REM_RobotFeedback_get_ballSensorWorking(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[14] & 0b00000010) > 0; }
 
-static inline bool REM_RobotFeedback_get_ballSensorSeesBall(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[14] & 0b00000001) > 0;
-}
+static inline bool REM_RobotFeedback_get_ballSensorSeesBall(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[14] & 0b00000001) > 0; }
 
 static inline float REM_RobotFeedback_get_ballPos(REM_RobotFeedbackPayload *remrfp) {
     uint32_t _ballPos = ((remrfp->payload[15] & 0b11110000) >> 4);
     return (_ballPos * 0.0666666666666667F) + -0.5000000000000000F;
 }
 
-static inline bool REM_RobotFeedback_get_dribblerSeesBall(REM_RobotFeedbackPayload *remrfp) {
-    return (remrfp->payload[15] & 0b00001000) > 0;
-}
+static inline bool REM_RobotFeedback_get_dribblerSeesBall(REM_RobotFeedbackPayload *remrfp) { return (remrfp->payload[15] & 0b00001000) > 0; }
 
-static inline uint32_t REM_RobotFeedback_get_reserved1(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[15] & 0b00000111));
-}
+static inline uint32_t REM_RobotFeedback_get_reserved1(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[15] & 0b00000111)); }
 
-static inline uint32_t REM_RobotFeedback_get_wheelLocked(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[16] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotFeedback_get_wheelLocked(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[16] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotFeedback_get_wheelBraking(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[16] & 0b00001111));
-}
+static inline uint32_t REM_RobotFeedback_get_wheelBraking(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[16] & 0b00001111)); }
 
-static inline uint32_t REM_RobotFeedback_get_rssi(REM_RobotFeedbackPayload *remrfp) {
-    return ((remrfp->payload[17]));
-}
+static inline uint32_t REM_RobotFeedback_get_rssi(REM_RobotFeedbackPayload *remrfp) { return ((remrfp->payload[17])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotFeedback_set_header(REM_RobotFeedbackPayload *remrfp, uint32_t header) {
-    remrfp->payload[0] = header;
-}
+static inline void REM_RobotFeedback_set_header(REM_RobotFeedbackPayload *remrfp, uint32_t header) { remrfp->payload[0] = header; }
 
 static inline void REM_RobotFeedback_set_toRobotId(REM_RobotFeedbackPayload *remrfp, uint32_t toRobotId) {
     remrfp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrfp->payload[1] & 0b00001111);
@@ -210,17 +160,11 @@ static inline void REM_RobotFeedback_set_toColor(REM_RobotFeedbackPayload *remrf
     remrfp->payload[1] = ((toColor << 3) & 0b00001000) | (remrfp->payload[1] & 0b11110111);
 }
 
-static inline void REM_RobotFeedback_set_toBC(REM_RobotFeedbackPayload *remrfp, bool toBC) {
-    remrfp->payload[1] = ((toBC << 2) & 0b00000100) | (remrfp->payload[1] & 0b11111011);
-}
+static inline void REM_RobotFeedback_set_toBC(REM_RobotFeedbackPayload *remrfp, bool toBC) { remrfp->payload[1] = ((toBC << 2) & 0b00000100) | (remrfp->payload[1] & 0b11111011); }
 
-static inline void REM_RobotFeedback_set_toBS(REM_RobotFeedbackPayload *remrfp, bool toBS) {
-    remrfp->payload[1] = ((toBS << 1) & 0b00000010) | (remrfp->payload[1] & 0b11111101);
-}
+static inline void REM_RobotFeedback_set_toBS(REM_RobotFeedbackPayload *remrfp, bool toBS) { remrfp->payload[1] = ((toBS << 1) & 0b00000010) | (remrfp->payload[1] & 0b11111101); }
 
-static inline void REM_RobotFeedback_set_toPC(REM_RobotFeedbackPayload *remrfp, bool toPC) {
-    remrfp->payload[1] = (toPC & 0b00000001) | (remrfp->payload[1] & 0b11111110);
-}
+static inline void REM_RobotFeedback_set_toPC(REM_RobotFeedbackPayload *remrfp, bool toPC) { remrfp->payload[1] = (toPC & 0b00000001) | (remrfp->payload[1] & 0b11111110); }
 
 static inline void REM_RobotFeedback_set_fromRobotId(REM_RobotFeedbackPayload *remrfp, uint32_t fromRobotId) {
     remrfp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remrfp->payload[2] & 0b00001111);
@@ -238,9 +182,7 @@ static inline void REM_RobotFeedback_set_fromBS(REM_RobotFeedbackPayload *remrfp
     remrfp->payload[2] = ((fromBS << 1) & 0b00000010) | (remrfp->payload[2] & 0b11111101);
 }
 
-static inline void REM_RobotFeedback_set_fromPC(REM_RobotFeedbackPayload *remrfp, bool fromPC) {
-    remrfp->payload[2] = (fromPC & 0b00000001) | (remrfp->payload[2] & 0b11111110);
-}
+static inline void REM_RobotFeedback_set_fromPC(REM_RobotFeedbackPayload *remrfp, bool fromPC) { remrfp->payload[2] = (fromPC & 0b00000001) | (remrfp->payload[2] & 0b11111110); }
 
 static inline void REM_RobotFeedback_set_remVersion(REM_RobotFeedbackPayload *remrfp, uint32_t remVersion) {
     remrfp->payload[3] = ((remVersion << 4) & 0b11110000) | (remrfp->payload[3] & 0b00001111);
@@ -256,9 +198,7 @@ static inline void REM_RobotFeedback_set_timestamp(REM_RobotFeedbackPayload *rem
     remrfp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotFeedback_set_payloadSize(REM_RobotFeedbackPayload *remrfp, uint32_t payloadSize) {
-    remrfp->payload[7] = payloadSize;
-}
+static inline void REM_RobotFeedback_set_payloadSize(REM_RobotFeedbackPayload *remrfp, uint32_t payloadSize) { remrfp->payload[7] = payloadSize; }
 
 static inline void REM_RobotFeedback_set_rho(REM_RobotFeedbackPayload *remrfp, float rho) {
     uint32_t _rho = (uint32_t)(rho / 0.0001220721751736F);
@@ -319,9 +259,7 @@ static inline void REM_RobotFeedback_set_wheelBraking(REM_RobotFeedbackPayload *
     remrfp->payload[16] = (wheelBraking & 0b00001111) | (remrfp->payload[16] & 0b11110000);
 }
 
-static inline void REM_RobotFeedback_set_rssi(REM_RobotFeedbackPayload *remrfp, uint32_t rssi) {
-    remrfp->payload[17] = rssi;
-}
+static inline void REM_RobotFeedback_set_rssi(REM_RobotFeedbackPayload *remrfp, uint32_t rssi) { remrfp->payload[17] = rssi; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotFeedback(REM_RobotFeedbackPayload *remrfp, REM_RobotFeedback *remrf) {

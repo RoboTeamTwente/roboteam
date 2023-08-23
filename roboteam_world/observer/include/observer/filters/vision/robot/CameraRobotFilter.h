@@ -13,9 +13,8 @@
 #include "observer/filters/vision/PosVelFilter2D.h"
 
 class CameraRobotFilter : public CameraObjectFilter {
-public:
+   public:
     CameraRobotFilter(const RobotObservation& observation, RobotVel velocityEstimate = RobotVel());
-
 
     void predict(Time time);
 
@@ -33,7 +32,7 @@ public:
 
     // RobotTrajectory getLastFrameTrajectory() const; //TODO fix
 
-private:
+   private:
     void updatePreviousInfo();
     PosVelFilter2D positionFilter;
     RobotOrientationFilter angleFilter;

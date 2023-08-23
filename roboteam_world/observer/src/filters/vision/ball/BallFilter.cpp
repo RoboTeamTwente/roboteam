@@ -6,10 +6,7 @@
 
 #include <utility>
 
-
-BallFilter::BallFilter(const BallObservation &observation)
-    : groundFilters{ std::make_pair(observation.cameraID, CameraGroundBallFilter(observation)) } {
-}
+BallFilter::BallFilter(const BallObservation &observation) : groundFilters{std::make_pair(observation.cameraID, CameraGroundBallFilter(observation))} {}
 GroundBallPrediction BallFilter::predictCam(int cameraID, Time until) const {
     auto camera_filter = groundFilters.find(cameraID);
     if (camera_filter != groundFilters.end()) {
@@ -26,8 +23,7 @@ bool BallFilter::processDetections(const CameraGroundBallPredictionObservationPa
     if (cameraFilter == groundFilters.end()) {
         // create a new filter based on the given observation
         if (detections.observation.has_value()) {
-            groundFilters.insert(std::make_pair(cameraID,
-                                                CameraGroundBallFilter(detections.observation.value(), detections.prediction.velocity)));
+            groundFilters.insert(std::make_pair(cameraID, CameraGroundBallFilter(detections.observation.value(), detections.prediction.velocity)));
         }
         return false;  // we cannot remove a filter based on a new camera image
     }
@@ -72,5 +68,4 @@ double BallFilter::getHealth() const {
     return maxHealth;
 }
 GroundBallPrediction::GroundBallPrediction(CameraGroundBallPrediction prediction, bool hadRequestedCamera)
-    : prediction{ std::move(prediction) }, hadRequestedCamera{ hadRequestedCamera } {
-}
+    : prediction{std::move(prediction)}, hadRequestedCamera{hadRequestedCamera} {}

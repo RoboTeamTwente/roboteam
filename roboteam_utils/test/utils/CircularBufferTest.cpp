@@ -45,7 +45,7 @@ TEST(CircularBufferTest, emplace_back) {
     EXPECT_EQ(vecs.size(), 0);
     EXPECT_EQ(vecs.emplace_back(3.0, 4.0).y, 4.0);
     EXPECT_EQ(vecs.size(), 1);
-    vec2d elem = { 3.0, 4.0 };
+    vec2d elem = {3.0, 4.0};
     EXPECT_EQ(vecs[0].x, elem.x);
     EXPECT_EQ(vecs[0].y, elem.y);
 }

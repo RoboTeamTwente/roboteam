@@ -4,11 +4,8 @@
 
 #include "filters/vision/robot/CameraRobotFilter.h"
 
-
 CameraRobotFilter::CameraRobotFilter(const RobotObservation &observation, RobotVel velocityEstimate)
-    : CameraObjectFilter(0.2, 1 / 60.0, 10, 3, observation.timeCaptured),
-      robot{ observation.robot },
-      cameraID{ observation.cameraID } {
+    : CameraObjectFilter(0.2, 1 / 60.0, 10, 3, observation.timeCaptured), robot{observation.robot}, cameraID{observation.cameraID} {
     // Initialize position filter
     // TODO: initialize from other camera
 
@@ -28,10 +25,10 @@ CameraRobotFilter::CameraRobotFilter(const RobotObservation &observation, RobotV
     initialPosCov(2, 2) = ROBOT_VELOCITY_INITIAL_COV;
     initialPosCov(3, 3) = ROBOT_VELOCITY_INITIAL_COV;
 
-    Eigen::Vector4d initialPos = { observation.position.x(), observation.position.y(), velocityEstimate.velocity.x(), velocityEstimate.velocity.y() };
+    Eigen::Vector4d initialPos = {observation.position.x(), observation.position.y(), velocityEstimate.velocity.x(), velocityEstimate.velocity.y()};
     positionFilter = PosVelFilter2D(initialPos, initialPosCov, ROBOT_POSITION_MODEL_ERROR, ROBOT_POSITION_MEASUREMENT_ERROR, observation.timeCaptured);
 
-    Eigen::Vector2d initialAngle = { observation.orientation, velocityEstimate.angularVelocity };
+    Eigen::Vector2d initialAngle = {observation.orientation, velocityEstimate.angularVelocity};
     Eigen::Matrix2d initialAngleCov = Eigen::Matrix2d::Zero();
     initialAngleCov(0, 0) = ROBOT_ANGLE_INITIAL_COV;
     initialAngleCov(1, 1) = ROBOT_ANGULAR_VEL_INITIAL_COV;
@@ -68,24 +65,14 @@ bool CameraRobotFilter::updateRobotNotSeen(const Time &time) {
     return getHealth() <= 0.0 && consecutiveFramesNotSeen() > 3;  // We remove a robot if it's health is zero and it has not been seen for 3 frames
 }
 
-
-bool CameraRobotFilter::justUpdated() const {
-    return just_updated;
-}
+bool CameraRobotFilter::justUpdated() const { return just_updated; }
 
 FilteredRobot CameraRobotFilter::estimate(const Time &time) const {
-    FilteredRobot bot(
-        robot,
-        RobotPos(positionFilter.getPositionEstimate(time), angleFilter.getPositionEstimate(time)),
-        RobotVel(positionFilter.getVelocity(), angleFilter.getVelocity()),
-        getHealth(),
-        positionFilter.getPositionUncertainty().norm(),
-        positionFilter.getVelocityUncertainty().norm(),
-        angleFilter.getPositionUncertainty(),
-        angleFilter.getVelocityUncertainty());
+    FilteredRobot bot(robot, RobotPos(positionFilter.getPositionEstimate(time), angleFilter.getPositionEstimate(time)),
+                      RobotVel(positionFilter.getVelocity(), angleFilter.getVelocity()), getHealth(), positionFilter.getPositionUncertainty().norm(),
+                      positionFilter.getVelocityUncertainty().norm(), angleFilter.getPositionUncertainty(), angleFilter.getVelocityUncertainty());
     return bot;
 }
-
 
 bool CameraRobotFilter::acceptObservation(const RobotObservation &observation) const {
     double angleDif = abs(rtt::Angle(angleFilter.getPosition() - observation.orientation));

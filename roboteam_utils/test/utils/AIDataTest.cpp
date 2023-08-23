@@ -34,8 +34,7 @@ RobotPath getRandomPath() {
     randomPath.robotId = SimpleRandom::getInt(0, 15);
 
     for (int i = 0; i < SimpleRandom::getInt(1, 10); i++) {
-        randomPath.points.push_back({ SimpleRandom::getDouble(-10, 10),
-                                      SimpleRandom::getDouble(-10, 10) });
+        randomPath.points.push_back({SimpleRandom::getDouble(-10, 10), SimpleRandom::getDouble(-10, 10)});
     }
     return randomPath;
 }
@@ -50,7 +49,6 @@ AIData getRandomAIData() {
     }
     return data;
 }
-
 
 TEST(AIDataTest, robotPathInstantiation) {
     RobotPath path;

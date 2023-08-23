@@ -14,10 +14,9 @@
  * the 3rd and fourth represent the x and y velocity respectively.
  */
 class PosVelFilter2D {
-public:
+   public:
     PosVelFilter2D() = default;
-    PosVelFilter2D(const Eigen::Vector4d &initialState, const Eigen::Matrix4d &initialCovariance,
-                   double modelError, double measurementError, const Time &timeStamp);
+    PosVelFilter2D(const Eigen::Vector4d &initialState, const Eigen::Matrix4d &initialCovariance, double modelError, double measurementError, const Time &timeStamp);
     /**
      * @brief Predict the filter estimate to a new timestamp when there is no new measurement.
      * Note this permanently alters the state of the filter, so there is no way to go back if you receive vision frames still.
@@ -113,7 +112,7 @@ public:
      */
     void addUncertainty(double posUncertainty, double velUncertainty);
 
-private:
+   private:
     // Before every tick we need to set the matrices we use using the dt of the tick
     void setTransitionMatrix(double dt);
     void setProcessNoiseFromRandomAcceleration(double dt);

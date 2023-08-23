@@ -14,9 +14,7 @@ void testCoherence(const FastRectangle& fr) {
     ASSERT_EQ(fr.topRight(), Vector2(fr.right(), fr.top()));
 
     // Test if center is correct
-    Vector2 calculatedCenter(
-        (fr.right() + fr.left()) / 2,
-        (fr.bottom() + fr.top()) / 2);
+    Vector2 calculatedCenter((fr.right() + fr.left()) / 2, (fr.bottom() + fr.top()) / 2);
     ASSERT_EQ(fr.center(), calculatedCenter);
 
     // Test if line segments are correct
@@ -64,10 +62,10 @@ TEST(FastRectangleTest, contains) {
 
     const double almostOne = 0.99999999;
     ASSERT_TRUE(fr.contains(fr.center()));
-    ASSERT_TRUE(fr.contains({ almostOne, almostOne }));
-    ASSERT_TRUE(fr.contains({ almostOne, -almostOne }));
-    ASSERT_TRUE(fr.contains({ -almostOne, almostOne }));
-    ASSERT_TRUE(fr.contains({ -almostOne, -almostOne }));
+    ASSERT_TRUE(fr.contains({almostOne, almostOne}));
+    ASSERT_TRUE(fr.contains({almostOne, -almostOne}));
+    ASSERT_TRUE(fr.contains({-almostOne, almostOne}));
+    ASSERT_TRUE(fr.contains({-almostOne, -almostOne}));
 }
 
 TEST(FastRectangleTest, containsMargin) {

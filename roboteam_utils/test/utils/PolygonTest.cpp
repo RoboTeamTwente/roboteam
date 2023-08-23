@@ -12,7 +12,7 @@ using namespace rtt;
 TEST(constructors, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
     Polygon rect(leftCorner, 2.0, 3.0);
-    Polygon rect2({ leftCorner, rightBottom, rightTop, leftTop });
+    Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
     ASSERT_EQ(rect[0], leftCorner);
     ASSERT_EQ(rect[1], rightBottom);
     ASSERT_EQ(rect[2], rightTop);
@@ -27,10 +27,10 @@ TEST(constructors, PolygonTest) {
 TEST(basicFunctions, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
     Polygon rect(leftCorner, 2.0, 3.0);
-    Polygon rect2({ leftCorner, rightBottom, rightTop, leftTop });
-    Polygon triangle({ leftCorner, rightBottom, leftTop });
+    Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
+    Polygon triangle({leftCorner, rightBottom, leftTop});
 
-    std::vector<Polygon> objects = { rect, rect2, triangle };
+    std::vector<Polygon> objects = {rect, rect2, triangle};
     ASSERT_EQ(rect.amountOfVertices(), 4);
     ASSERT_EQ(rect2.amountOfVertices(), 4);
     ASSERT_EQ(triangle.amountOfVertices(), 3);
@@ -80,21 +80,21 @@ TEST(isSimple, PolygonTest) {
 
 TEST(isConvex, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0), convexPoint(4.0, 2.0), nonConvexPoint(2.0, 2.0);
-    Polygon convexPentagon({ leftCorner, rightBottom, convexPoint, rightTop, leftTop });
-    Polygon convexPentagonCCW({ leftCorner, leftTop, rightTop, convexPoint, rightBottom });
-    Polygon nonConvexPentagon({ leftCorner, rightBottom, nonConvexPoint, rightTop, leftTop });
-    Polygon nonConvexPentagonCCW({ leftCorner, leftTop, rightTop, nonConvexPoint, rightBottom });
+    Polygon convexPentagon({leftCorner, rightBottom, convexPoint, rightTop, leftTop});
+    Polygon convexPentagonCCW({leftCorner, leftTop, rightTop, convexPoint, rightBottom});
+    Polygon nonConvexPentagon({leftCorner, rightBottom, nonConvexPoint, rightTop, leftTop});
+    Polygon nonConvexPentagonCCW({leftCorner, leftTop, rightTop, nonConvexPoint, rightBottom});
     // edge cases
     Vector2 convexPointLast(0.0, 2.0), nonConvexPointLast(0.0, 0.0), nonConvexPointLast2(2.0, 2.0);
-    Polygon P1Last({ leftCorner, rightBottom, rightTop, leftTop, convexPointLast });
-    Polygon P1First({ convexPointLast, leftCorner, rightBottom, rightTop, leftTop });
-    Polygon P2Last({ leftCorner, rightBottom, rightTop, leftTop, nonConvexPointLast });
-    Polygon P2First({ nonConvexPointLast, leftCorner, rightBottom, rightTop, leftTop });
-    Polygon P3Last({ leftCorner, rightBottom, rightTop, leftTop, nonConvexPointLast2 });
-    Polygon P3First({ nonConvexPointLast2, leftCorner, rightBottom, rightTop, leftTop });
-    Polygon P4({ leftCorner, Vector2(2.0, 1.0), rightBottom, Vector2(3.0, 2.0), rightTop, Vector2(2.0, 4.0), leftTop, Vector2(1.0, 2.0) });
+    Polygon P1Last({leftCorner, rightBottom, rightTop, leftTop, convexPointLast});
+    Polygon P1First({convexPointLast, leftCorner, rightBottom, rightTop, leftTop});
+    Polygon P2Last({leftCorner, rightBottom, rightTop, leftTop, nonConvexPointLast});
+    Polygon P2First({nonConvexPointLast, leftCorner, rightBottom, rightTop, leftTop});
+    Polygon P3Last({leftCorner, rightBottom, rightTop, leftTop, nonConvexPointLast2});
+    Polygon P3First({nonConvexPointLast2, leftCorner, rightBottom, rightTop, leftTop});
+    Polygon P4({leftCorner, Vector2(2.0, 1.0), rightBottom, Vector2(3.0, 2.0), rightTop, Vector2(2.0, 4.0), leftTop, Vector2(1.0, 2.0)});
 
-    std::vector<Polygon> allExamples = { convexPentagon, convexPentagonCCW, nonConvexPentagon, nonConvexPentagonCCW, P1Last, P1First, P2First, P2Last, P3First, P3Last, P4 };
+    std::vector<Polygon> allExamples = {convexPentagon, convexPentagonCCW, nonConvexPentagon, nonConvexPentagonCCW, P1Last, P1First, P2First, P2Last, P3First, P3Last, P4};
     // P1Last,P1First,;
     //  convex calculation only makes sense if the examples we use are actually valid
     for (const Polygon &example : allExamples) {
@@ -118,8 +118,8 @@ TEST(boundaryTests, PolygonTest) {
     double width = 2.0;
     double height = 3.0;
     Polygon rect(leftCorner, width, height);
-    Polygon rect2({ leftCorner, rightBottom, rightTop, leftTop });
-    Polygon triangle({ leftCorner, rightBottom, leftTop });
+    Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
+    Polygon triangle({leftCorner, rightBottom, leftTop});
     std::vector<Polygon> objects;
     for (const Polygon &obj : objects) {
         std::vector<LineSegment> lines = obj.getBoundary();
@@ -147,9 +147,9 @@ TEST(areas, PolygonTest) {
     double height = 4.0;
     double sideOffset = 1.0;
     Vector2 A(0.0, 0.0), B(width, 0.0), C(width + sideOffset, height), D(sideOffset, height), E(width, height), F(0.0, height);
-    Polygon parallelogram({ A, B, C, D });
-    Polygon rectangle({ A, B, E, F });
-    Polygon triangleA({ A, B, C }), triangleB({ A, B, D }), triangleC({ A, B, E }), triangleD({ A, B, F });
+    Polygon parallelogram({A, B, C, D});
+    Polygon rectangle({A, B, E, F});
+    Polygon triangleA({A, B, C}), triangleB({A, B, D}), triangleC({A, B, E}), triangleD({A, B, F});
     ASSERT_TRUE(parallelogram.isSimple());
     ASSERT_TRUE(rectangle.isSimple());
     EXPECT_EQ(parallelogram.area(), width * height);
@@ -160,7 +160,7 @@ TEST(areas, PolygonTest) {
     EXPECT_EQ(triangleD.area(), width * height * 0.5);
     // below should hold for any random 3 points (could randomly generate some later perhaps)
     Vector2 G(-3.57, 0.4);
-    Polygon triangleE({ A, D, G });
+    Polygon triangleE({A, D, G});
     LineSegment l(A, D);
     EXPECT_EQ(triangleE.area(), 0.5 * l.length() * Line(l).distanceToLine(G));
 }
@@ -168,7 +168,7 @@ TEST(intersections, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 3.0), leftTop(1.0, 3.0);
     Vector2 OP1(0.5, 2.0), OP2(2.0, 0.5), OP3(3.5, 2.0), OP4(2.0, 3.5);
     LineSegment L1(OP1, OP2), L2(OP2, OP3), L3(OP3, OP4), L4(OP4, OP1);
-    Polygon rect({ leftCorner, rightBottom, rightTop, leftTop });
+    Polygon rect({leftCorner, rightBottom, rightTop, leftTop});
     (void)rect.intersections(L1);
     (void)rect.intersections(L2);
     (void)rect.intersections(L3);
@@ -204,8 +204,8 @@ TEST(intersections, PolygonTest) {
 }
 TEST(contains, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
-    Polygon rect({ leftCorner, rightBottom, rightTop, leftTop });
-    Polygon triangle({ leftCorner, rightBottom, leftTop });
+    Polygon rect({leftCorner, rightBottom, rightTop, leftTop});
+    Polygon triangle({leftCorner, rightBottom, leftTop});
 
     Vector2 P1(2.0, 2.0), P2(2.5, 2.5), P3(0.0, 2.0), P4(0.1, 0.1), P5(4.0, 2.0), P6(2.0, 6.0), P7(2.0, 0.0);
     ASSERT_TRUE(rect.contains(P1));
@@ -226,7 +226,7 @@ TEST(contains, PolygonTest) {
 }
 TEST(centroid, PolygonTest) {
     Vector2 A(5.0, 3.0), B(6.0, 1.0), C(7.0, 8.0), D(1.0, 2.0);
-    Polygon triangle({ A, B, C }), triangle2({ A, B, D }), quadrilateral({ A, B, C, D });
+    Polygon triangle({A, B, C}), triangle2({A, B, D}), quadrilateral({A, B, C, D});
     Vector2 centroid1(6, 4), centroid2(4.0, 2.0), centroid3(4 + 8.0 / 9.0, 4 + 2.0 / 9.0);
     ASSERT_EQ(triangle.centroid(), centroid1);
     ASSERT_EQ(triangle2.centroid(), centroid2);

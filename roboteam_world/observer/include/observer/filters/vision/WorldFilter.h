@@ -21,11 +21,10 @@
  * and to divide the incoming information over the relevant filters
  */
 class WorldFilter {
-public:
+   public:
     WorldFilter();
 
-    void process(const std::vector<proto::SSL_DetectionFrame>& frames,
-                 const std::vector<rtt::RobotsFeedback>& feedback);
+    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback);
 
     [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
 
@@ -38,7 +37,7 @@ public:
 
     void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
-private:
+   private:
     typedef std::map<RobotID, std::vector<RobotFilter>> robotMap;
     robotMap blue;
     robotMap yellow;

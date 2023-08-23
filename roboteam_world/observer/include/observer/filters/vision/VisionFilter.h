@@ -18,7 +18,7 @@
  *  At some point in the future, it is also intended that sent robots commands are processed.
  */
 class VisionFilter {
-public:
+   public:
     /**
      *  This function updates the vision filter with vision packets and returns the world state as estimated at time.
      *  Note time needs to be at some point in the future!
@@ -27,8 +27,7 @@ public:
      * @param feedback the feedback packets received for all robots
      * @return a world state, extrapolated to the given time
      */
-    proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets,
-                         const std::vector<rtt::RobotsFeedback>& feedback);
+    proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& feedback);
 
     /*
      * Updates the robot definitions the vision filter uses in world prediction
@@ -37,15 +36,11 @@ public:
 
     std::optional<proto::SSL_GeometryData> getGeometry() const;
 
-
-    enum class TimeExtrapolationPolicy {
-        REALTIME,
-        LAST_RECEIVED_PACKET_TIME
-    };
+    enum class TimeExtrapolationPolicy { REALTIME, LAST_RECEIVED_PACKET_TIME };
 
     void setExtrapolationPolicy(TimeExtrapolationPolicy policy);
 
-private:
+   private:
     Time getExtrapolationTimeForPolicy() const;
     /**
      * processes any geometry data and passes it to the
@@ -57,8 +52,7 @@ private:
      * @param packets the relevant detection frames from SSL-vision
      * @param update_geometry Set this to true to update the Geometry used by the world filter
      */
-    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry,
-                           const std::vector<rtt::RobotsFeedback>& robotData);
+    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry, const std::vector<rtt::RobotsFeedback>& robotData);
 
     GeometryFilter geomFilter;
     WorldFilter worldFilter;

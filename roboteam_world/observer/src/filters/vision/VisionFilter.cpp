@@ -3,8 +3,7 @@
 //
 
 #include "filters/vision/VisionFilter.h"
-proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& packets,
-                                   const std::vector<rtt::RobotsFeedback>& robotData) {
+proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData) {
     bool geometry_updated = processGeometry(packets);
     processDetections(packets, geometry_updated, robotData);
 
@@ -24,8 +23,7 @@ bool VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& 
     }
     return newGeometry;
 }
-void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry,
-                                     const std::vector<rtt::RobotsFeedback>& robotData) {
+void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry, const std::vector<rtt::RobotsFeedback>& robotData) {
     if (update_geometry) {
         worldFilter.updateGeometry(geomFilter.getGeometry());
     }
@@ -41,9 +39,7 @@ void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>
     }
     worldFilter.process(detectionFrames, robotData);
 }
-void VisionFilter::updateRobotParameters(const TwoTeamRobotParameters& parameters) {
-    worldFilter.updateRobotParameters(parameters);
-}
+void VisionFilter::updateRobotParameters(const TwoTeamRobotParameters& parameters) { worldFilter.updateRobotParameters(parameters); }
 std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {
     if (geomFilter.receivedFirstGeometry()) {
         return geomFilter.getGeometry();
@@ -61,6 +57,4 @@ Time VisionFilter::getExtrapolationTimeForPolicy() const {
     return lastPacketTime;  // Fallback option
 }
 
-void VisionFilter::setExtrapolationPolicy(VisionFilter::TimeExtrapolationPolicy policy) {
-    extrapolationPolicy = policy;
-}
+void VisionFilter::setExtrapolationPolicy(VisionFilter::TimeExtrapolationPolicy policy) { extrapolationPolicy = policy; }

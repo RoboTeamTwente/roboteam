@@ -18,7 +18,7 @@ struct GroundBallPrediction {
     bool hadRequestedCamera;
 };
 class BallFilter {
-public:
+   public:
     /**
      * Constructs a ball filter with the given observation.
      * @param observation
@@ -53,7 +53,7 @@ public:
      */
     [[nodiscard]] double getHealth() const;
 
-private:
+   private:
     std::map<int, CameraGroundBallFilter> groundFilters;
 };
 

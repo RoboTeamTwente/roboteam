@@ -12,10 +12,8 @@
 
 struct BallObservation {
     explicit BallObservation(int cameraID, Time timeCaptured, Time timeSent, const proto::SSL_DetectionBall& detectionBall);
-    explicit BallObservation(int cameraID, Time timeCaptured,
-                             Time timeSent, Eigen::Vector2d position,
-                             Eigen::Vector2d pixelPosition,
-                             double confidence, uint32_t totalArea, double height);
+    explicit BallObservation(int cameraID, Time timeCaptured, Time timeSent, Eigen::Vector2d position, Eigen::Vector2d pixelPosition, double confidence, uint32_t totalArea,
+                             double height);
 
     int cameraID;
     Time timeCaptured;

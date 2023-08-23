@@ -8,12 +8,9 @@
 
 Camera::Camera(const proto::SSL_GeometryCameraCalibration& calibrationData)
     : id(calibrationData.camera_id()),
-      pos(Eigen::Vector3d(calibrationData.derived_camera_world_tx(), calibrationData.derived_camera_world_ty(),
-                          calibrationData.derived_camera_world_tz())),
+      pos(Eigen::Vector3d(calibrationData.derived_camera_world_tx(), calibrationData.derived_camera_world_ty(), calibrationData.derived_camera_world_tz())),
       translation(Eigen::Vector3d(calibrationData.tx(), calibrationData.ty(), calibrationData.tz())),
-      rotation(Eigen::Quaterniond(calibrationData.q3(), calibrationData.q0(), calibrationData.q1(),
-                                  calibrationData.q2())
-                   .normalized()),
+      rotation(Eigen::Quaterniond(calibrationData.q3(), calibrationData.q0(), calibrationData.q1(), calibrationData.q2()).normalized()),
       principalPoint(Eigen::Vector2d(calibrationData.principal_point_x(), calibrationData.principal_point_y())),
       focalLength(calibrationData.focal_length()),
       distortion(calibrationData.distortion()) {
@@ -30,17 +27,11 @@ Camera::Camera(const proto::SSL_GeometryCameraCalibration& calibrationData)
     }
 }
 
-Eigen::Vector3d Camera::position() const {
-    return pos / 1000.0;
-}
+Eigen::Vector3d Camera::position() const { return pos / 1000.0; }
 
-Eigen::Quaterniond Camera::orientation() const {
-    return rotation;
-}
+Eigen::Quaterniond Camera::orientation() const { return rotation; }
 
-unsigned int Camera::getID() const {
-    return id;
-}
+unsigned int Camera::getID() const { return id; }
 
 double Camera::radialDistortion(double radius) const {
     if (distortion <= DBL_MIN) {
@@ -54,9 +45,7 @@ double Camera::radialDistortion(double radius) const {
     return rd;
 }
 
-double Camera::radialDistortionInv(double radius) const {
-    return radius * (1.0 + radius * radius * distortion);
-}
+double Camera::radialDistortionInv(double radius) const { return radius * (1.0 + radius * radius * distortion); }
 Eigen::Vector2d Camera::radialDistortion(Eigen::Vector2d& imagePoint) const {
     double rd = radialDistortion(imagePoint.norm());
     imagePoint.normalize();  // We do in place normalization for speed

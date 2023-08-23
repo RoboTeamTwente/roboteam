@@ -8,41 +8,28 @@
 
 #include "roboteam_utils/containers/state_machine.hpp"
 
-enum class TestEnum { Waiting,
-                      Success,
-                      Failure,
-                      Running };
+enum class TestEnum { Waiting, Success, Failure, Running };
 
 struct SkillInfo {};
 
 class Base {
-public:
-    virtual TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept {
-        return TestEnum::Success;
-    }
+   public:
+    virtual TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept { return TestEnum::Success; }
 
-    virtual void initialize() noexcept {
-    }
+    virtual void initialize() noexcept {}
 
-    virtual void terminate() noexcept {
-    }
+    virtual void terminate() noexcept {}
 
-    virtual uint8_t type_num() noexcept {
-        return 0;
-    }
+    virtual uint8_t type_num() noexcept { return 0; }
 
     virtual ~Base() = default;
 };
 
 class Derived : public Base {
-public:
-    TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept override {
-        return TestEnum::Failure;
-    }
+   public:
+    TestEnum update([[maybe_unused]] SkillInfo const& data) noexcept override { return TestEnum::Failure; }
 
-    uint8_t type_num() noexcept override {
-        return 1;
-    }
+    uint8_t type_num() noexcept override { return 1; }
 };
 
 TEST(StateMachineTest, test_construction) {

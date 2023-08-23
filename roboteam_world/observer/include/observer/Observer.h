@@ -24,7 +24,7 @@
  * @author Rolf
  */
 class Observer {
-public:
+   public:
     /**
      * Calls all of the feedbacks for processing relevant data given the given input data.
      * @param time time to extrapolate the world to
@@ -32,11 +32,10 @@ public:
      * @param refereePackets All of the packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
-    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets,
-                         const std::vector<proto::SSL_Referee>& refereePackets,
+    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
                          const std::vector<rtt::RobotsFeedback>& robotData);
 
-private:
+   private:
     RobotParameterDatabase parameterDatabase;
     VisionFilter visionFilter;
     RefereeFilter refereeFilter;
@@ -45,6 +44,5 @@ private:
 
     void updateReferee(const std::vector<proto::SSL_Referee>& refereePackets);
 };
-
 
 #endif  // RTT_OBSERVER_H

@@ -15,7 +15,7 @@
  * this information appropriately.
  */
 class CameraObjectFilter {
-public:
+   public:
     /**
      * Initializes the camera This can only be done if an object is actually seen
      * This automatically calculates the slope so that the object goes from full health to unhealthy in fullHealthyToUnhealthyTime,
@@ -45,7 +45,7 @@ public:
      */
     [[nodiscard]] std::size_t consecutiveFramesNotSeen() const;
 
-protected:
+   protected:
     /**
      * Updates the object implying that we have seen it at the given time
      * @param time time at which the object was seen
@@ -57,7 +57,7 @@ protected:
      */
     void objectInvisible(const Time& time);
 
-private:
+   private:
     std::size_t framesTotal;
     std::size_t framesNotSeenFor;
     Time lastSeenTime;

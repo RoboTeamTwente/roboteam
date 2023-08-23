@@ -6,9 +6,8 @@
 
 #include <RobotFeedbackNetworker.hpp>
 
-proto::State
-Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
-                  const std::vector<rtt::RobotsFeedback>& robotData) {
+proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+                               const std::vector<rtt::RobotsFeedback>& robotData) {
     updateRobotParams(refereePackets);
     proto::State state;
     proto::World world = visionFilter.process(visionPackets, robotData);
@@ -51,17 +50,11 @@ Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, co
 
 void Observer::updateRobotParams(std::vector<proto::SSL_Referee> refereePackets) {
     // sort the referee packets; we only use the last one as there is no additional information in between packets
-    std::sort(refereePackets.begin(), refereePackets.end(),
-              [](const proto::SSL_Referee& a, const proto::SSL_Referee& b) {
-                  return a.packet_timestamp() < b.packet_timestamp();
-              });
-    TwoTeamRobotParameters parameters = !refereePackets.empty() ? parameterDatabase.update(refereePackets.back())
-                                                                : parameterDatabase.getParams();
+    std::sort(refereePackets.begin(), refereePackets.end(), [](const proto::SSL_Referee& a, const proto::SSL_Referee& b) { return a.packet_timestamp() < b.packet_timestamp(); });
+    TwoTeamRobotParameters parameters = !refereePackets.empty() ? parameterDatabase.update(refereePackets.back()) : parameterDatabase.getParams();
     if (parameters.blueChanged || parameters.yellowChanged) {
         visionFilter.updateRobotParameters(parameters);
     }
 }
 
-void Observer::updateReferee(const std::vector<proto::SSL_Referee>& refereePackets) {
-    refereeFilter.process(refereePackets);
-}
+void Observer::updateReferee(const std::vector<proto::SSL_Referee>& refereePackets) { refereeFilter.process(refereePackets); }

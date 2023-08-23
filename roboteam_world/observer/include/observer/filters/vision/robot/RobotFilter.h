@@ -10,7 +10,7 @@
 #include "CameraRobotFilter.h"
 #include "observer/filters/vision/robot/RobotObservation.h"
 class RobotFilter {
-public:
+   public:
     explicit RobotFilter(const RobotObservation& observation);
     /**
      * Optionally processes the given detection, returns true if the detection is accepted by one of the camera filters
@@ -47,7 +47,7 @@ public:
      */
     [[nodiscard]] std::optional<FilteredRobot> getRobot(int cameraID, Time time) const;
     // std::optional<RobotTrajectorySegment> getLastFrameTrajectory(int cameraID, const RobotParameters& parameters) const;
-private:
+   private:
     TeamRobotID id;
     std::map<int, CameraRobotFilter> cameraFilters;
 };

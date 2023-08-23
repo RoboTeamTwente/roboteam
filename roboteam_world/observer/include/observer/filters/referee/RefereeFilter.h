@@ -15,7 +15,7 @@
  * For now it just returns the latest referee message
  */
 class RefereeFilter {
-public:
+   public:
     /**
      * @param refereePackets packets to update the filter with
      */
@@ -25,10 +25,9 @@ public:
      */
     std::optional<proto::SSL_Referee> getLastRefereeMessage() const;
 
-private:
+   private:
     bool firstMessageReceived = false;
     proto::SSL_Referee latestMessage;
 };
-
 
 #endif  // RTT_REFEREEFILTER_H

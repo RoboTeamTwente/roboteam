@@ -52,16 +52,7 @@ TEST(FieldTest, instantiation) {
     Vector2 leftPenaltyPoint(-2, 0);
     Vector2 rightPenaltyPoint(2, 0);
 
-    auto f = Field::createField(fieldWidth,
-                                fieldHeight,
-                                defenseWidth,
-                                defenseHeight,
-                                goalWidth,
-                                goalHeight,
-                                boundary,
-                                centerRadius,
-                                leftPenaltyPoint,
-                                rightPenaltyPoint);
+    auto f = Field::createField(fieldWidth, fieldHeight, defenseWidth, defenseHeight, goalWidth, goalHeight, boundary, centerRadius, leftPenaltyPoint, rightPenaltyPoint);
 
     const double DELTA = 1e-12;
     testCoherence(f);
@@ -91,16 +82,7 @@ TEST(FieldTest, equals) {
         Vector2 leftPenaltyPoint(-penaltyPointDistanceFromCenter, 0);
         Vector2 rightPenaltyPoint(penaltyPointDistanceFromCenter, 0);
 
-        auto f = Field::createField(fieldWidth,
-                                    fieldHeight,
-                                    defenseWidth,
-                                    defenseHeight,
-                                    goalWidth,
-                                    goalHeight,
-                                    boundary,
-                                    centerRadius,
-                                    leftPenaltyPoint,
-                                    rightPenaltyPoint);
+        auto f = Field::createField(fieldWidth, fieldHeight, defenseWidth, defenseHeight, goalWidth, goalHeight, boundary, centerRadius, leftPenaltyPoint, rightPenaltyPoint);
 
         testCoherence(f);
 

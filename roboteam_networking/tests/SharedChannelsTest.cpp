@@ -15,35 +15,21 @@
 
 using namespace rtt::net;
 
-void sharedOnRobotCommands(const rtt::RobotCommands& command) {
-}
-void sharedOnRobotsFeedback(const rtt::RobotsFeedback& robotFeedback) {
-}
-void sharedOnSettings(const proto::GameSettings& settings) {
-}
-void sharedOnWorld(const proto::State& world) {
-}
+void sharedOnRobotCommands(const rtt::RobotCommands& command) {}
+void sharedOnRobotsFeedback(const rtt::RobotsFeedback& robotFeedback) {}
+void sharedOnSettings(const proto::GameSettings& settings) {}
+void sharedOnWorld(const proto::State& world) {}
 
 TEST(RTTCMDPub, nullptrDontCrash) {
-    EXPECT_NO_THROW(
-        RobotCommandsBluePublisher blueCommandsPub;
-        RobotCommandsBlueSubscriber blueCommandsSub1(sharedOnRobotCommands);
-        RobotCommandsBlueSubscriber blueCommandsSub2(sharedOnRobotCommands);
+    EXPECT_NO_THROW(RobotCommandsBluePublisher blueCommandsPub; RobotCommandsBlueSubscriber blueCommandsSub1(sharedOnRobotCommands);
+                    RobotCommandsBlueSubscriber blueCommandsSub2(sharedOnRobotCommands);
 
-        RobotCommandsYellowPublisher yellowCommandsPub;
-        RobotCommandsYellowSubscriber yellowCommandsSub1(sharedOnRobotCommands);
-        RobotCommandsYellowSubscriber yellowCommandsSub2(sharedOnRobotCommands);
+                    RobotCommandsYellowPublisher yellowCommandsPub; RobotCommandsYellowSubscriber yellowCommandsSub1(sharedOnRobotCommands);
+                    RobotCommandsYellowSubscriber yellowCommandsSub2(sharedOnRobotCommands);
 
-        RobotFeedbackPublisher feedbackPub;
-        RobotFeedbackSubscriber feedbackSub1(sharedOnRobotsFeedback);
-        RobotFeedbackSubscriber feedbackSub2(sharedOnRobotsFeedback);
+                    RobotFeedbackPublisher feedbackPub; RobotFeedbackSubscriber feedbackSub1(sharedOnRobotsFeedback); RobotFeedbackSubscriber feedbackSub2(sharedOnRobotsFeedback);
 
-        SettingsPublisher settingsPub;
-        SettingsSubscriber settingsSub1(sharedOnSettings);
-        SettingsSubscriber settingsSub2(sharedOnSettings);
+                    SettingsPublisher settingsPub; SettingsSubscriber settingsSub1(sharedOnSettings); SettingsSubscriber settingsSub2(sharedOnSettings);
 
-        WorldPublisher worldPub;
-        WorldSubscriber worldSub1(sharedOnWorld);
-        WorldSubscriber worldSub2(sharedOnWorld);
-    );
+                    WorldPublisher worldPub; WorldSubscriber worldSub1(sharedOnWorld); WorldSubscriber worldSub2(sharedOnWorld););
 }

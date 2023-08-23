@@ -127,7 +127,6 @@ TEST(logging, write_read) {
         auto [time1_skip_back, read_message_3] = reader.readFrame(0);
         EXPECT_TRUE(time1_skip_back == 1);
 
-
         reader.close();
     }
     ASSERT_TRUE(removeFile(file_name));

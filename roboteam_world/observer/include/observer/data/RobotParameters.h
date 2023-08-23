@@ -8,7 +8,7 @@
 #include <proto/RobotParameters.pb.h>
 
 class RobotParameters {
-public:
+   public:
     RobotParameters();
     RobotParameters(double radius, double height, double frontWidth, double dribblerWidth, double angleOffset);
     explicit RobotParameters(const proto::RobotParameters& protoParams);
@@ -16,13 +16,12 @@ public:
     static RobotParameters from_default();
     static RobotParameters from_rtt2020();
 
-private:
+   private:
     double radius;
     double height;
     double frontWidth;
     double dribblerWidth;
     double angleOffset;
 };
-
 
 #endif  // RTT_ROBOTPARAMETERS_H

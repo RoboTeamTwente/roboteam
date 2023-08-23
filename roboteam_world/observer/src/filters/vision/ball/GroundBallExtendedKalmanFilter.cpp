@@ -18,47 +18,34 @@ void GroundBallExtendedKalmanFilter::update(const Eigen::Vector2d &observation) 
     P -= K * H * P;
 }
 
-GroundBallExtendedKalmanFilter::GroundBallExtendedKalmanFilter(Eigen::Vector4d initialState, Eigen::Matrix4d initialCovariance,
-                                                               double modelError, double measurementError, Time timeStamp)
-    : modelError{ modelError },
-      lastUpdateTime{ timeStamp },
-      X{ std::move(initialState) },
-      P{ std::move(initialCovariance) },
-      F{ Eigen::Matrix4d::Identity() },
-      H{ Eigen::Matrix<double, 2, 4>::Identity() },
-      Q{ Eigen::Matrix4d::Zero() },
-      R{ Eigen::Matrix2d::Identity() * measurementError },
-      y{ Eigen::Vector2d::Zero() } {
-}
+GroundBallExtendedKalmanFilter::GroundBallExtendedKalmanFilter(Eigen::Vector4d initialState, Eigen::Matrix4d initialCovariance, double modelError, double measurementError,
+                                                               Time timeStamp)
+    : modelError{modelError},
+      lastUpdateTime{timeStamp},
+      X{std::move(initialState)},
+      P{std::move(initialCovariance)},
+      F{Eigen::Matrix4d::Identity()},
+      H{Eigen::Matrix<double, 2, 4>::Identity()},
+      Q{Eigen::Matrix4d::Zero()},
+      R{Eigen::Matrix2d::Identity() * measurementError},
+      y{Eigen::Vector2d::Zero()} {}
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getPosition() const {
-    return X.head<2>();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getPosition() const { return X.head<2>(); }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocityUncertainty() const {
-    return P.diagonal().tail<2>().array().sqrt();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocityUncertainty() const { return P.diagonal().tail<2>().array().sqrt(); }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocity() const {
-    return X.tail<2>();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocity() const { return X.tail<2>(); }
 
-void GroundBallExtendedKalmanFilter::setVelocity(const Eigen::Vector2d &velocity) {
-    X.tail<2>() = velocity;
-}
+void GroundBallExtendedKalmanFilter::setVelocity(const Eigen::Vector2d &velocity) { X.tail<2>() = velocity; }
 
 void GroundBallExtendedKalmanFilter::addUncertainty(double posUncertainty, double velUncertainty) {
     P.diagonal().head<2>().array() += posUncertainty;
     P.diagonal().tail<2>().array() += velUncertainty;
 }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getPositionUncertainty() const {
-    return P.diagonal().head<2>().array().sqrt();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getPositionUncertainty() const { return P.diagonal().head<2>().array().sqrt(); }
 
-double GroundBallExtendedKalmanFilter::getAcceleration() const {
-    return acceleration;
-}
+double GroundBallExtendedKalmanFilter::getAcceleration() const { return acceleration; }
 
 void GroundBallExtendedKalmanFilter::setAcceleration(double accel) {
     acceleration = accel;
@@ -114,30 +101,17 @@ Eigen::Vector4d GroundBallExtendedKalmanFilter::getStateEstimate(const Time &tim
     return getStateEstimate(dt);
 }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocityEstimate(const Time &time) const {
-    return getStateEstimate(time).tail<2>();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getVelocityEstimate(const Time &time) const { return getStateEstimate(time).tail<2>(); }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::getPositionEstimate(const Time &time) const {
-    return getStateEstimate(time).head<2>();
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::getPositionEstimate(const Time &time) const { return getStateEstimate(time).head<2>(); }
 
-Eigen::Vector2d GroundBallExtendedKalmanFilter::innovation() const {
-    return y;
-}
+Eigen::Vector2d GroundBallExtendedKalmanFilter::innovation() const { return y; }
 
-Time GroundBallExtendedKalmanFilter::lastUpdated() const {
-    return lastUpdateTime;
-}
+Time GroundBallExtendedKalmanFilter::lastUpdated() const { return lastUpdateTime; }
 
-Eigen::Vector4d GroundBallExtendedKalmanFilter::state() const {
-    return X;
-}
+Eigen::Vector4d GroundBallExtendedKalmanFilter::state() const { return X; }
 
-Eigen::Matrix4d GroundBallExtendedKalmanFilter::covariance() const {
-    return P;
-}
-
+Eigen::Matrix4d GroundBallExtendedKalmanFilter::covariance() const { return P; }
 
 void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
     assert(timeStamp >= lastUpdateTime);

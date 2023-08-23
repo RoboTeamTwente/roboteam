@@ -6,12 +6,10 @@
 using namespace rtt;
 
 World randomWorld() {
-    return World{
-        .timePoint = static_cast<unsigned long>(SimpleRandom::getInt(0, 1000)),
-        .id = static_cast<unsigned int>(SimpleRandom::getInt(0, 1000)),
-        .ball = Ball{ .position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)) },
-        .yellowRobots = { Robot{ .id = SimpleRandom::getInt(0, 15) } }
-    };
+    return World{.timePoint = static_cast<unsigned long>(SimpleRandom::getInt(0, 1000)),
+                 .id = static_cast<unsigned int>(SimpleRandom::getInt(0, 1000)),
+                 .ball = Ball{.position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5))},
+                 .yellowRobots = {Robot{.id = SimpleRandom::getInt(0, 15)}}};
 }
 
 Field randomField() {
@@ -28,16 +26,7 @@ Field randomField() {
     Vector2 leftPenaltyPoint(-penaltyPointDistanceFromCenter, 0);
     Vector2 rightPenaltyPoint(penaltyPointDistanceFromCenter, 0);
 
-    return Field::createField(fieldWidth,
-                              fieldHeight,
-                              defenseWidth,
-                              defenseHeight,
-                              goalWidth,
-                              goalHeight,
-                              boundary,
-                              centerRadius,
-                              leftPenaltyPoint,
-                              rightPenaltyPoint);
+    return Field::createField(fieldWidth, fieldHeight, defenseWidth, defenseHeight, goalWidth, goalHeight, boundary, centerRadius, leftPenaltyPoint, rightPenaltyPoint);
 }
 
 TEST(WorldTest, instantiation) {
@@ -57,10 +46,7 @@ TEST(WorldTest, equals) {
 }
 
 TEST(WorldStatesTest, equals) {
-    WorldStates ws{
-        .currentWorld = randomWorld(),
-        .field = randomField()
-    };
+    WorldStates ws{.currentWorld = randomWorld(), .field = randomField()};
 
     auto copy = ws;
     ASSERT_EQ(copy, ws);

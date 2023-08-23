@@ -23,52 +23,52 @@
 
 namespace rtt::robothub {
 
-    class RobotHub {
-    public:
-        explicit RobotHub(bool shouldLog, bool logInMarpleFormat = false);
+class RobotHub {
+   public:
+    explicit RobotHub(bool shouldLog, bool logInMarpleFormat = false);
 
-        const RobotHubStatistics &getStatistics();
-        void resetStatistics();
+    const RobotHubStatistics &getStatistics();
+    void resetStatistics();
 
-    private:
-        // std::optional<RobotHubLogger> logger;
+   private:
+    // std::optional<RobotHubLogger> logger;
 
-        std::unique_ptr<simulation::SimulatorManager> simulatorManager;
-        std::unique_ptr<basestation::BasestationManager> basestationManager;
+    std::unique_ptr<simulation::SimulatorManager> simulatorManager;
+    std::unique_ptr<basestation::BasestationManager> basestationManager;
 
-        proto::GameSettings settings;
-        rtt::net::RobotHubMode mode = rtt::net::RobotHubMode::UNKNOWN;
+    proto::GameSettings settings;
+    rtt::net::RobotHubMode mode = rtt::net::RobotHubMode::UNKNOWN;
 
-        RobotHubStatistics statistics;
+    RobotHubStatistics statistics;
 
-        std::unique_ptr<rtt::net::RobotCommandsBlueSubscriber> robotCommandsBlueSubscriber;
-        std::unique_ptr<rtt::net::RobotCommandsYellowSubscriber> robotCommandsYellowSubscriber;
-        std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
-        std::unique_ptr<rtt::net::RobotFeedbackPublisher> robotFeedbackPublisher;
+    std::unique_ptr<rtt::net::RobotCommandsBlueSubscriber> robotCommandsBlueSubscriber;
+    std::unique_ptr<rtt::net::RobotCommandsYellowSubscriber> robotCommandsYellowSubscriber;
+    std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber;
+    std::unique_ptr<rtt::net::RobotFeedbackPublisher> robotFeedbackPublisher;
 
-        bool initializeNetworkers();
+    bool initializeNetworkers();
 
-        void sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color);
-        void sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt::Team color);
+    void sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color);
+    void sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt::Team color);
 
-        std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
-        void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
+    std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
+    void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
 
-        void onSettings(const proto::GameSettings &setting);
+    void onSettings(const proto::GameSettings &setting);
 
-        void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
-        void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
-        bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
+    void handleRobotFeedbackFromSimulator(const simulation::RobotControlFeedback &feedback);
+    void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
+    bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
 
-        void handleRobotStateInfo(const REM_RobotStateInfo &robotStateInfo, rtt::Team team);
+    void handleRobotStateInfo(const REM_RobotStateInfo &robotStateInfo, rtt::Team team);
 
-        void handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team);
+    void handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team);
 
-        void handleSimulationErrors(const std::vector<simulation::SimulationError> &);
-    };
+    void handleSimulationErrors(const std::vector<simulation::SimulationError> &);
+};
 
-    class FailedToInitializeNetworkersException : public std::exception {
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+class FailedToInitializeNetworkersException : public std::exception {
+    [[nodiscard]] const char *what() const noexcept override;
+};
 
 }  // namespace rtt::robothub

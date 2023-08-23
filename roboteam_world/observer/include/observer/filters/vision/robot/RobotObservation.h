@@ -13,16 +13,15 @@
 #include "RobotPos.h"
 struct RobotObservation {
     RobotObservation(int cameraID, Time timeCaptured, Time timeSent, TeamColor color, const proto::SSL_DetectionRobot& detection)
-        : cameraID{ cameraID },
-          timeCaptured{ timeCaptured },
-          timeSent{ timeSent },
-          robot{ TeamRobotID(detection.robot_id(), color) },
+        : cameraID{cameraID},
+          timeCaptured{timeCaptured},
+          timeSent{timeSent},
+          robot{TeamRobotID(detection.robot_id(), color)},
           position(detection.x() / 1000.0, detection.y() / 1000.0),
           pixelPosition(detection.pixel_x(), detection.pixel_y()),
-          orientation{ detection.orientation() },
-          confidence{ detection.confidence() },
-          height{ detection.height() } {
-    }
+          orientation{detection.orientation()},
+          confidence{detection.confidence()},
+          height{detection.height()} {}
     int cameraID;
     Time timeCaptured;
     Time timeSent;

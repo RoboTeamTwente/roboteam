@@ -49,70 +49,40 @@ typedef struct _REM_BasestationGetConfiguration {
 } REM_BasestationGetConfiguration;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_BasestationGetConfiguration_get_header(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[0]));
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_header(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[0])); }
 
-static inline uint32_t REM_BasestationGetConfiguration_get_toRobotId(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_toRobotId(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_BasestationGetConfiguration_get_toColor(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_toColor(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_toBC(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_toBC(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_toBS(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_toBS(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_toPC(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_toPC(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_BasestationGetConfiguration_get_fromRobotId(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_fromRobotId(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_BasestationGetConfiguration_get_fromColor(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_fromColor(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_reserved(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_reserved(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_fromBS(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_fromBS(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_BasestationGetConfiguration_get_fromPC(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return (rembgcp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_BasestationGetConfiguration_get_fromPC(REM_BasestationGetConfigurationPayload *rembgcp) { return (rembgcp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_BasestationGetConfiguration_get_remVersion(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_remVersion(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_BasestationGetConfiguration_get_messageId(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_messageId(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_BasestationGetConfiguration_get_timestamp(REM_BasestationGetConfigurationPayload *rembgcp) {
     return ((rembgcp->payload[4]) << 16) | ((rembgcp->payload[5]) << 8) | ((rembgcp->payload[6]));
 }
 
-static inline uint32_t REM_BasestationGetConfiguration_get_payloadSize(REM_BasestationGetConfigurationPayload *rembgcp) {
-    return ((rembgcp->payload[7]));
-}
+static inline uint32_t REM_BasestationGetConfiguration_get_payloadSize(REM_BasestationGetConfigurationPayload *rembgcp) { return ((rembgcp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_BasestationGetConfiguration_set_header(REM_BasestationGetConfigurationPayload *rembgcp, uint32_t header) {
-    rembgcp->payload[0] = header;
-}
+static inline void REM_BasestationGetConfiguration_set_header(REM_BasestationGetConfigurationPayload *rembgcp, uint32_t header) { rembgcp->payload[0] = header; }
 
 static inline void REM_BasestationGetConfiguration_set_toRobotId(REM_BasestationGetConfigurationPayload *rembgcp, uint32_t toRobotId) {
     rembgcp->payload[1] = ((toRobotId << 4) & 0b11110000) | (rembgcp->payload[1] & 0b00001111);
@@ -168,9 +138,7 @@ static inline void REM_BasestationGetConfiguration_set_timestamp(REM_Basestation
     rembgcp->payload[6] = timestamp;
 }
 
-static inline void REM_BasestationGetConfiguration_set_payloadSize(REM_BasestationGetConfigurationPayload *rembgcp, uint32_t payloadSize) {
-    rembgcp->payload[7] = payloadSize;
-}
+static inline void REM_BasestationGetConfiguration_set_payloadSize(REM_BasestationGetConfigurationPayload *rembgcp, uint32_t payloadSize) { rembgcp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_BasestationGetConfiguration(REM_BasestationGetConfigurationPayload *rembgcp, REM_BasestationGetConfiguration *rembgc) {

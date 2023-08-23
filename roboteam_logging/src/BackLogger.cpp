@@ -5,9 +5,7 @@
 #include "BackLogger.h"
 
 #include "LogFileWriter.h"
-rtt::BackLogger::BackLogger(rtt::logged_time_type interval_nanoseconds)
-    : interval_duration{ interval_nanoseconds } {
-}
+rtt::BackLogger::BackLogger(rtt::logged_time_type interval_nanoseconds) : interval_duration{interval_nanoseconds} {}
 
 void rtt::BackLogger::addMessage(const rtt::logged_proto_type& message, rtt::logged_time_type timestamp) {
     if (timestamp < queue.back().second) {

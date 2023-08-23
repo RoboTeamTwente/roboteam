@@ -19,11 +19,7 @@ constexpr int SETTINGS_TRANSMISSION_INTERVAL_MS = 1000;
 ///////////////////////////////////////////////////////////
 /// All things related to the sending of robot commands ///
 ///////////////////////////////////////////////////////////
-enum class Rotation {
-    NO_ROTATION,
-    LEFT_ROTATION,
-    RIGHT_ROTATION
-};
+enum class Rotation { NO_ROTATION, LEFT_ROTATION, RIGHT_ROTATION };
 enum class Movement {
     FORWARD,
     BACKWARD,
@@ -34,12 +30,7 @@ enum class Movement {
     SINE_CIRCLE,
     STILL,
 };
-enum class Team {
-    NEITHER,
-    YELLOW,
-    BLUE,
-    BOTH
-};
+enum class Team { NEITHER, YELLOW, BLUE, BOTH };
 
 bool shouldSendRobotCommands = false;
 bool shouldAskCLICommands = false;
@@ -95,24 +86,22 @@ void updateCommandValues() {
 }
 
 rtt::RobotCommand createCommandForRobot(int id) {
-    rtt::RobotCommand cmd = {
-        .id = id,
-        .velocity = targetVelocity,
-        .targetAngle = targetAngle,
-        .targetAngularVelocity = targetAngularVelocity,
-        .useAngularVelocity = useAngularVelocity,
+    rtt::RobotCommand cmd = {.id = id,
+                             .velocity = targetVelocity,
+                             .targetAngle = targetAngle,
+                             .targetAngularVelocity = targetAngularVelocity,
+                             .useAngularVelocity = useAngularVelocity,
 
-        .cameraAngleOfRobot = 0.0,
-        .cameraAngleOfRobotIsSet = false,
+                             .cameraAngleOfRobot = 0.0,
+                             .cameraAngleOfRobotIsSet = false,
 
-        .kickSpeed = 0.0,
-        .waitForBall = false,
-        .kickType = rtt::KickType::NO_KICK,
+                             .kickSpeed = 0.0,
+                             .waitForBall = false,
+                             .kickType = rtt::KickType::NO_KICK,
 
-        .dribblerSpeed = useDribbler ? MAX_DRIBBLER_SPEED : 0.0f,
+                             .dribblerSpeed = useDribbler ? MAX_DRIBBLER_SPEED : 0.0f,
 
-        .ignorePacket = false
-    };
+                             .ignorePacket = false};
     return cmd;
 }
 
@@ -241,8 +230,7 @@ int stringToRobotId(std::string s) {
 
 bool handleCommand(std::string cmd) {
     // Convert command to upper case
-    for (auto& c : cmd)
-        c = static_cast<char>(toupper(c));
+    for (auto& c : cmd) c = static_cast<char>(toupper(c));
 
     // Now handle command
     if (cmd.empty()) {  // Abort, freeze, stop all robots aaaaah
@@ -371,17 +359,8 @@ std::string targetTeamToString() {
 }
 
 void printStatus() {
-    std::cout << "Sending "
-              << currentMovementToString()
-              << " command "
-              << currentRotationToString()
-              << " to "
-              << targetIDsToString()
-              << " of "
-              << targetTeamToString()
-              << " from "
-              << rtt::net::robotHubModeToString(currentMode)
-              << std::endl;
+    std::cout << "Sending " << currentMovementToString() << " command " << currentRotationToString() << " to " << targetIDsToString() << " of " << targetTeamToString() << " from "
+              << rtt::net::robotHubModeToString(currentMode) << std::endl;
 }
 
 void runCommandLineInterface() {

@@ -12,7 +12,6 @@ proto::WorldBall FilteredBall::asWorldBall() const {
     proto_ball.mutable_pos()->set_x(position.x());
     proto_ball.mutable_pos()->set_y(position.y());
 
-
     // TODO: fix the below fields
     static constexpr double BALL_RADIUS = 0.021333;
     proto_ball.set_z(BALL_RADIUS);
@@ -22,10 +21,5 @@ proto::WorldBall FilteredBall::asWorldBall() const {
 
     return proto_ball;
 }
-FilteredBall::FilteredBall(Eigen::Vector2d pos,
-                           Eigen::Vector2d vel,
-                           double health,
-                           double posUncertainty,
-                           double velocityUncertainty)
-    : position{ std::move(pos) }, velocity{ std::move(vel) }, health{ health }, posUncertainty{ posUncertainty }, velocityUncertainty{ velocityUncertainty } {
-}
+FilteredBall::FilteredBall(Eigen::Vector2d pos, Eigen::Vector2d vel, double health, double posUncertainty, double velocityUncertainty)
+    : position{std::move(pos)}, velocity{std::move(vel)}, health{health}, posUncertainty{posUncertainty}, velocityUncertainty{velocityUncertainty} {}

@@ -51,74 +51,42 @@ typedef struct _REM_RobotAssuredAck {
 } REM_RobotAssuredAck;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotAssuredAck_get_header(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[0]));
-}
+static inline uint32_t REM_RobotAssuredAck_get_header(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[0])); }
 
-static inline uint32_t REM_RobotAssuredAck_get_toRobotId(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredAck_get_toRobotId(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotAssuredAck_get_toColor(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_toColor(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_toBC(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_toBC(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_toBS(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_toBS(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_toPC(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_toPC(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotAssuredAck_get_fromRobotId(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredAck_get_fromRobotId(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotAssuredAck_get_fromColor(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_fromColor(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_reserved(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_reserved(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_fromBS(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_fromBS(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotAssuredAck_get_fromPC(REM_RobotAssuredAckPayload *remraap) {
-    return (remraap->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotAssuredAck_get_fromPC(REM_RobotAssuredAckPayload *remraap) { return (remraap->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotAssuredAck_get_remVersion(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredAck_get_remVersion(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotAssuredAck_get_messageId(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotAssuredAck_get_messageId(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotAssuredAck_get_timestamp(REM_RobotAssuredAckPayload *remraap) {
     return ((remraap->payload[4]) << 16) | ((remraap->payload[5]) << 8) | ((remraap->payload[6]));
 }
 
-static inline uint32_t REM_RobotAssuredAck_get_payloadSize(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[7]));
-}
+static inline uint32_t REM_RobotAssuredAck_get_payloadSize(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[7])); }
 
-static inline uint32_t REM_RobotAssuredAck_get_sequenceNumber(REM_RobotAssuredAckPayload *remraap) {
-    return ((remraap->payload[8]));
-}
+static inline uint32_t REM_RobotAssuredAck_get_sequenceNumber(REM_RobotAssuredAckPayload *remraap) { return ((remraap->payload[8])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotAssuredAck_set_header(REM_RobotAssuredAckPayload *remraap, uint32_t header) {
-    remraap->payload[0] = header;
-}
+static inline void REM_RobotAssuredAck_set_header(REM_RobotAssuredAckPayload *remraap, uint32_t header) { remraap->payload[0] = header; }
 
 static inline void REM_RobotAssuredAck_set_toRobotId(REM_RobotAssuredAckPayload *remraap, uint32_t toRobotId) {
     remraap->payload[1] = ((toRobotId << 4) & 0b11110000) | (remraap->payload[1] & 0b00001111);
@@ -136,9 +104,7 @@ static inline void REM_RobotAssuredAck_set_toBS(REM_RobotAssuredAckPayload *remr
     remraap->payload[1] = ((toBS << 1) & 0b00000010) | (remraap->payload[1] & 0b11111101);
 }
 
-static inline void REM_RobotAssuredAck_set_toPC(REM_RobotAssuredAckPayload *remraap, bool toPC) {
-    remraap->payload[1] = (toPC & 0b00000001) | (remraap->payload[1] & 0b11111110);
-}
+static inline void REM_RobotAssuredAck_set_toPC(REM_RobotAssuredAckPayload *remraap, bool toPC) { remraap->payload[1] = (toPC & 0b00000001) | (remraap->payload[1] & 0b11111110); }
 
 static inline void REM_RobotAssuredAck_set_fromRobotId(REM_RobotAssuredAckPayload *remraap, uint32_t fromRobotId) {
     remraap->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remraap->payload[2] & 0b00001111);
@@ -174,13 +140,9 @@ static inline void REM_RobotAssuredAck_set_timestamp(REM_RobotAssuredAckPayload 
     remraap->payload[6] = timestamp;
 }
 
-static inline void REM_RobotAssuredAck_set_payloadSize(REM_RobotAssuredAckPayload *remraap, uint32_t payloadSize) {
-    remraap->payload[7] = payloadSize;
-}
+static inline void REM_RobotAssuredAck_set_payloadSize(REM_RobotAssuredAckPayload *remraap, uint32_t payloadSize) { remraap->payload[7] = payloadSize; }
 
-static inline void REM_RobotAssuredAck_set_sequenceNumber(REM_RobotAssuredAckPayload *remraap, uint32_t sequenceNumber) {
-    remraap->payload[8] = sequenceNumber;
-}
+static inline void REM_RobotAssuredAck_set_sequenceNumber(REM_RobotAssuredAckPayload *remraap, uint32_t sequenceNumber) { remraap->payload[8] = sequenceNumber; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotAssuredAck(REM_RobotAssuredAckPayload *remraap, REM_RobotAssuredAck *remraa) {

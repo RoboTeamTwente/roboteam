@@ -17,13 +17,11 @@
  * \date August 19 2020
  */
 class Time {
-public:
-    constexpr Time()
-        : timePoint{ std::chrono::nanoseconds(0) } {};
+   public:
+    constexpr Time() : timePoint{std::chrono::nanoseconds(0)} {};
     explicit Time(std::chrono::high_resolution_clock::duration duration);
     explicit Time(double seconds);
-    explicit Time(long nanoseconds)
-        : timePoint{ std::chrono::nanoseconds(nanoseconds) } {};
+    explicit Time(long nanoseconds) : timePoint{std::chrono::nanoseconds(nanoseconds)} {};
     static Time now();
 
     [[nodiscard]] Time timeSince() const;
@@ -52,7 +50,7 @@ public:
     // Returns the current time, separated by the given char, with milliseconds, (HH:MM:SS.mmm). Eg 23:59:06.034
     static std::string getTimeWithMilliseconds(char separator);
 
-private:
+   private:
     std::chrono::high_resolution_clock::duration timePoint;
 };
 

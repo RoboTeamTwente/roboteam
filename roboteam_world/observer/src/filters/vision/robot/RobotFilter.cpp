@@ -8,7 +8,6 @@
 
 #include "filters/vision/robot/RobotFilter.h"
 
-
 bool RobotFilter::processDetection(const RobotObservation &observation) {
     auto cameraFilter = cameraFilters.find(observation.cameraID);
     if (cameraFilter != cameraFilters.end()) {
@@ -38,10 +37,7 @@ bool RobotFilter::processDetection(const RobotObservation &observation) {
     }
 }
 
-RobotFilter::RobotFilter(const RobotObservation &observation)
-    : id{ observation.robot },
-      cameraFilters{ std::make_pair(observation.cameraID, CameraRobotFilter(observation)) } {
-}
+RobotFilter::RobotFilter(const RobotObservation &observation) : id{observation.robot}, cameraFilters{std::make_pair(observation.cameraID, CameraRobotFilter(observation))} {}
 
 bool RobotFilter::processNotSeen(int cameraID, const Time &time) {
     auto cameraFilter = cameraFilters.find(cameraID);
@@ -109,8 +105,7 @@ FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
     angle /= totalAngleUncertainty;
     angularVel /= totalAngleVelUncertainty;
     angle += angleOffset;
-    FilteredRobot result(id, RobotPos(pos, angle), RobotVel(vel, angularVel),
-                         -1, -1, -1, -1, -1);  // TODO define health and merged uncertainties?
+    FilteredRobot result(id, RobotPos(pos, angle), RobotVel(vel, angularVel), -1, -1, -1, -1, -1);  // TODO define health and merged uncertainties?
 
     return result;
 }

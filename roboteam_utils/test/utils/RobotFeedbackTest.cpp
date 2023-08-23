@@ -6,30 +6,28 @@
 using namespace rtt;
 
 RobotFeedbackSource randomFeedbackSource() {
-    std::vector<RobotFeedbackSource> allSources = { RobotFeedbackSource::SIMULATOR, RobotFeedbackSource::BASESTATION };
+    std::vector<RobotFeedbackSource> allSources = {RobotFeedbackSource::SIMULATOR, RobotFeedbackSource::BASESTATION};
     return *SimpleRandom::getRandomElement(allSources.begin(), allSources.end());
 }
 Team randomTeam() {
-    std::vector<Team> allTeams = { Team::YELLOW, Team::BLUE };
+    std::vector<Team> allTeams = {Team::YELLOW, Team::BLUE};
     return *SimpleRandom::getRandomElement(allTeams.begin(), allTeams.end());
 }
 
 RobotFeedback randomFeedback() {
-    RobotFeedback feedback = {
-        .id = SimpleRandom::getInt(0, 15),
-        .ballSensorSeesBall = SimpleRandom::getBool(),
-        .ballPosition = static_cast<float>(SimpleRandom::getDouble(-0.5, 0.5)),
-        .ballSensorIsWorking = SimpleRandom::getBool(),
-        .dribblerSeesBall = SimpleRandom::getBool(),
-        .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
-        .angle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
-        .xSensIsCalibrated = SimpleRandom::getBool(),
-        .capacitorIsCharged = SimpleRandom::getBool(),
-        .wheelLocked = SimpleRandom::getInt(0, 15),
-        .wheelBraking = SimpleRandom::getInt(0, 15),
-        .batteryLevel = static_cast<float>(SimpleRandom::getDouble(18.0f, 26.0f)),
-        .signalStrength = SimpleRandom::getInt(0, 255)
-    };
+    RobotFeedback feedback = {.id = SimpleRandom::getInt(0, 15),
+                              .ballSensorSeesBall = SimpleRandom::getBool(),
+                              .ballPosition = static_cast<float>(SimpleRandom::getDouble(-0.5, 0.5)),
+                              .ballSensorIsWorking = SimpleRandom::getBool(),
+                              .dribblerSeesBall = SimpleRandom::getBool(),
+                              .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+                              .angle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
+                              .xSensIsCalibrated = SimpleRandom::getBool(),
+                              .capacitorIsCharged = SimpleRandom::getBool(),
+                              .wheelLocked = SimpleRandom::getInt(0, 15),
+                              .wheelBraking = SimpleRandom::getInt(0, 15),
+                              .batteryLevel = static_cast<float>(SimpleRandom::getDouble(18.0f, 26.0f)),
+                              .signalStrength = SimpleRandom::getInt(0, 255)};
     return feedback;
 }
 
@@ -65,11 +63,7 @@ TEST(RobotsFeedbackTest, instantiate) {
 }
 
 TEST(RobotsFeedbackTest, equals) {
-    RobotsFeedback feedbacks = {
-        .team = randomTeam(),
-        .source = randomFeedbackSource(),
-        .feedback = { randomFeedback(), randomFeedback(), randomFeedback() }
-    };
+    RobotsFeedback feedbacks = {.team = randomTeam(), .source = randomFeedbackSource(), .feedback = {randomFeedback(), randomFeedback(), randomFeedback()}};
 
     RobotsFeedback copy = feedbacks;
     ASSERT_EQ(feedbacks, copy);

@@ -9,21 +9,21 @@
 
 namespace rtt::net {
 
-    class SettingsPublisher : private utils::Publisher {
-    public:
-        SettingsPublisher();
+class SettingsPublisher : private utils::Publisher {
+   public:
+    SettingsPublisher();
 
-        // Publishes the given settings. Returns bytes sent, 0 on failure
-        std::size_t publish(const proto::GameSettings& settings);
-    };
+    // Publishes the given settings. Returns bytes sent, 0 on failure
+    std::size_t publish(const proto::GameSettings& settings);
+};
 
-    class SettingsSubscriber : private utils::Subscriber {
-    public:
-        SettingsSubscriber(const std::function<void(const proto::GameSettings&)>& callback);
+class SettingsSubscriber : private utils::Subscriber {
+   public:
+    SettingsSubscriber(const std::function<void(const proto::GameSettings&)>& callback);
 
-    private:
-        void onPublishedMessage(const std::string& message);
-        const std::function<void(const proto::GameSettings&)> callback;
-    };
+   private:
+    void onPublishedMessage(const std::string& message);
+    const std::function<void(const proto::GameSettings&)> callback;
+};
 
 }  // namespace rtt::net

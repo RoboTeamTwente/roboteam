@@ -69,110 +69,62 @@ typedef struct _REM_RobotMusicCommand {
 } REM_RobotMusicCommand;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotMusicCommand_get_header(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[0]));
-}
+static inline uint32_t REM_RobotMusicCommand_get_header(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[0])); }
 
-static inline uint32_t REM_RobotMusicCommand_get_toRobotId(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotMusicCommand_get_toRobotId(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotMusicCommand_get_toColor(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_toColor(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_toBC(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_toBC(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_toBS(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_toBS(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_toPC(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_toPC(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotMusicCommand_get_fromRobotId(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotMusicCommand_get_fromRobotId(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotMusicCommand_get_fromColor(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_fromColor(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_reserved(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_reserved(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_fromBS(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_fromBS(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_fromPC(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_fromPC(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotMusicCommand_get_remVersion(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotMusicCommand_get_remVersion(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotMusicCommand_get_messageId(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotMusicCommand_get_messageId(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotMusicCommand_get_timestamp(REM_RobotMusicCommandPayload *remrmcp) {
     return ((remrmcp->payload[4]) << 16) | ((remrmcp->payload[5]) << 8) | ((remrmcp->payload[6]));
 }
 
-static inline uint32_t REM_RobotMusicCommand_get_payloadSize(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[7]));
-}
+static inline uint32_t REM_RobotMusicCommand_get_payloadSize(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[7])); }
 
-static inline bool REM_RobotMusicCommand_get_play(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[8] & 0b10000000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_play(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[8] & 0b10000000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_pause(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[8] & 0b01000000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_pause(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[8] & 0b01000000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_stop(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[8] & 0b00100000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_stop(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[8] & 0b00100000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_previousSong(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[8] & 0b00010000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_previousSong(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[8] & 0b00010000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_nextSong(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[8] & 0b00001000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_nextSong(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[8] & 0b00001000) > 0; }
 
 static inline uint32_t REM_RobotMusicCommand_get_volume(REM_RobotMusicCommandPayload *remrmcp) {
     return ((remrmcp->payload[8] & 0b00000111) << 2) | ((remrmcp->payload[9] & 0b11000000) >> 6);
 }
 
-static inline bool REM_RobotMusicCommand_get_volumeUp(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[9] & 0b00100000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_volumeUp(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[9] & 0b00100000) > 0; }
 
-static inline bool REM_RobotMusicCommand_get_volumeDown(REM_RobotMusicCommandPayload *remrmcp) {
-    return (remrmcp->payload[9] & 0b00010000) > 0;
-}
+static inline bool REM_RobotMusicCommand_get_volumeDown(REM_RobotMusicCommandPayload *remrmcp) { return (remrmcp->payload[9] & 0b00010000) > 0; }
 
-static inline uint32_t REM_RobotMusicCommand_get_folderId(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[9] & 0b00001111));
-}
+static inline uint32_t REM_RobotMusicCommand_get_folderId(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[9] & 0b00001111)); }
 
-static inline uint32_t REM_RobotMusicCommand_get_songId(REM_RobotMusicCommandPayload *remrmcp) {
-    return ((remrmcp->payload[10]));
-}
+static inline uint32_t REM_RobotMusicCommand_get_songId(REM_RobotMusicCommandPayload *remrmcp) { return ((remrmcp->payload[10])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotMusicCommand_set_header(REM_RobotMusicCommandPayload *remrmcp, uint32_t header) {
-    remrmcp->payload[0] = header;
-}
+static inline void REM_RobotMusicCommand_set_header(REM_RobotMusicCommandPayload *remrmcp, uint32_t header) { remrmcp->payload[0] = header; }
 
 static inline void REM_RobotMusicCommand_set_toRobotId(REM_RobotMusicCommandPayload *remrmcp, uint32_t toRobotId) {
     remrmcp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrmcp->payload[1] & 0b00001111);
@@ -228,9 +180,7 @@ static inline void REM_RobotMusicCommand_set_timestamp(REM_RobotMusicCommandPayl
     remrmcp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotMusicCommand_set_payloadSize(REM_RobotMusicCommandPayload *remrmcp, uint32_t payloadSize) {
-    remrmcp->payload[7] = payloadSize;
-}
+static inline void REM_RobotMusicCommand_set_payloadSize(REM_RobotMusicCommandPayload *remrmcp, uint32_t payloadSize) { remrmcp->payload[7] = payloadSize; }
 
 static inline void REM_RobotMusicCommand_set_play(REM_RobotMusicCommandPayload *remrmcp, bool play) {
     remrmcp->payload[8] = ((play << 7) & 0b10000000) | (remrmcp->payload[8] & 0b01111111);
@@ -269,9 +219,7 @@ static inline void REM_RobotMusicCommand_set_folderId(REM_RobotMusicCommandPaylo
     remrmcp->payload[9] = (folderId & 0b00001111) | (remrmcp->payload[9] & 0b11110000);
 }
 
-static inline void REM_RobotMusicCommand_set_songId(REM_RobotMusicCommandPayload *remrmcp, uint32_t songId) {
-    remrmcp->payload[10] = songId;
-}
+static inline void REM_RobotMusicCommand_set_songId(REM_RobotMusicCommandPayload *remrmcp, uint32_t songId) { remrmcp->payload[10] = songId; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotMusicCommand(REM_RobotMusicCommandPayload *remrmcp, REM_RobotMusicCommand *remrmc) {

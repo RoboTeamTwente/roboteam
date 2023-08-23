@@ -16,7 +16,7 @@
 #include "RobocupReceiver.h"
 
 class Handler {
-private:
+   private:
     std::unique_ptr<rtt::net::RobotFeedbackSubscriber> feedbackSubscriber;
     std::unique_ptr<rtt::net::WorldPublisher> worldPublisher;
 
@@ -29,7 +29,7 @@ private:
 
     static std::optional<rtt::LogFileWriter> fileWriter;
 
-public:
+   public:
     Handler() = default;
 
     /*
@@ -51,6 +51,5 @@ class FailedToInitializeNetworkersException : public std::exception {
 class FailedToSetupSSLClients : public std::exception {
     const char* what() const throw();
 };
-
 
 #endif

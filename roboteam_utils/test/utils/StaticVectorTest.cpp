@@ -8,7 +8,7 @@
 using namespace rtt::collections;
 TEST(static_vector, initialisation) {
     static_vector<double, 3> x;
-    static_vector<int, 2> y = { 3, 4 };
+    static_vector<int, 2> y = {3, 4};
     EXPECT_EQ(y[0], 3);
     EXPECT_EQ(y[1], 4);
 }
@@ -76,9 +76,7 @@ TEST(static_vector, range_based_for_loop) {
 }
 struct MockClass {
     MockClass() = default;
-    explicit MockClass(double x)
-        : value{ x } {
-    }
+    explicit MockClass(double x) : value{x} {}
     MockClass& operator=(const MockClass&) = default;
     MockClass(const MockClass&) = default;
     MockClass(MockClass&&) = delete;
@@ -88,10 +86,10 @@ static_assert(std::is_default_constructible_v<MockClass>, "Is type default const
 static_assert(!std::is_nothrow_move_constructible_v<MockClass>, "Mock class should test nothrow move constructability");
 
 TEST(static_vector, none_movable) {
-    MockClass data{ 3.0 };
-    MockClass data2{ 2.0 };
-    MockClass data3{ 1.0 };
-    static_vector<MockClass, 3> dataList = { data, data2, data3 };
+    MockClass data{3.0};
+    MockClass data2{2.0};
+    MockClass data3{1.0};
+    static_vector<MockClass, 3> dataList = {data, data2, data3};
     const static_vector<MockClass, 3> copy = dataList;
     double sum = 0;
     for (const auto& elem : copy) {

@@ -9,49 +9,49 @@
 
 namespace rtt::robothub {
 
-    constexpr int MAX_ROBOT_STATISTICS = 16;
+constexpr int MAX_ROBOT_STATISTICS = 16;
 
-    class RobotHubStatistics {
-    public:
-        RobotHubStatistics();
+class RobotHubStatistics {
+   public:
+    RobotHubStatistics();
 
-        void resetValues();
+    void resetValues();
 
-        basestation::BasestationManagerStatus basestationManagerStatus{};
+    basestation::BasestationManagerStatus basestationManagerStatus{};
 
-        rtt::net::RobotHubMode robotHubMode;
+    rtt::net::RobotHubMode robotHubMode;
 
-        std::size_t yellowTeamBytesSent;
-        std::size_t blueTeamBytesSent;
-        std::size_t feedbackBytesSent;
-        int yellowTeamPacketsDropped;
-        int blueTeamPacketsDropped;
-        int feedbackPacketsDropped;
+    std::size_t yellowTeamBytesSent;
+    std::size_t blueTeamBytesSent;
+    std::size_t feedbackBytesSent;
+    int yellowTeamPacketsDropped;
+    int blueTeamPacketsDropped;
+    int feedbackPacketsDropped;
 
-        void incrementCommandsReceivedCounter(int id, rtt::Team color);
-        void incrementFeedbackReceivedCounter(int id, rtt::Team color);
+    void incrementCommandsReceivedCounter(int id, rtt::Team color);
+    void incrementFeedbackReceivedCounter(int id, rtt::Team color);
 
-        void print() const;
+    void print() const;
 
-    private:
-        std::chrono::time_point<std::chrono::steady_clock> startTime;
+   private:
+    std::chrono::time_point<std::chrono::steady_clock> startTime;
 
-        std::array<int, MAX_ROBOT_STATISTICS> yellowCommandsSent{};
-        std::array<int, MAX_ROBOT_STATISTICS> yellowFeedbackReceived{};
+    std::array<int, MAX_ROBOT_STATISTICS> yellowCommandsSent{};
+    std::array<int, MAX_ROBOT_STATISTICS> yellowFeedbackReceived{};
 
-        std::array<int, MAX_ROBOT_STATISTICS> blueCommandsSent{};
-        std::array<int, MAX_ROBOT_STATISTICS> blueFeedbackReceived{};
+    std::array<int, MAX_ROBOT_STATISTICS> blueCommandsSent{};
+    std::array<int, MAX_ROBOT_STATISTICS> blueFeedbackReceived{};
 
-        [[nodiscard]] std::string getRobotStats(int id, rtt::Team team) const;
-        [[nodiscard]] std::string getRunTime() const;
-        [[nodiscard]] std::string getRobotHubMode() const;
-        [[nodiscard]] std::string getAmountOfBasestations() const;
-        [[nodiscard]] std::string getWantedBasestations() const;
-        [[nodiscard]] std::string getSelectedBasestations() const;
+    [[nodiscard]] std::string getRobotStats(int id, rtt::Team team) const;
+    [[nodiscard]] std::string getRunTime() const;
+    [[nodiscard]] std::string getRobotHubMode() const;
+    [[nodiscard]] std::string getAmountOfBasestations() const;
+    [[nodiscard]] std::string getWantedBasestations() const;
+    [[nodiscard]] std::string getSelectedBasestations() const;
 
-        [[nodiscard]] std::string numberToSideBox(int n) const;
+    [[nodiscard]] std::string numberToSideBox(int n) const;
 
-        static std::string wantedBasestationsToString(basestation::WantedBasestations wantedBasestations);
-    };
+    static std::string wantedBasestationsToString(basestation::WantedBasestations wantedBasestations);
+};
 
 }  // namespace rtt::robothub

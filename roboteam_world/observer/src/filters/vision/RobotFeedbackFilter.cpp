@@ -32,14 +32,9 @@ std::vector<std::pair<TeamRobotID, proto::RobotProcessedFeedback>> RobotFeedback
 }
 
 // For now very simple, simply stores feedback
-SingleRobotFeedbackFilter::SingleRobotFeedbackFilter(const rtt::RobotFeedback& feedback)
-    : storedFeedback{ feedback } {
-}
+SingleRobotFeedbackFilter::SingleRobotFeedbackFilter(const rtt::RobotFeedback& feedback) : storedFeedback{feedback} {}
 
-void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback& feedback) {
-    storedFeedback = feedback;
-}
-
+void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback& feedback) { storedFeedback = feedback; }
 
 // TODO: now just returns last received feedback: use timestamps and some cutoff limit to prevent sending old feedback
 proto::RobotProcessedFeedback SingleRobotFeedbackFilter::getFilteredFeedback() const {

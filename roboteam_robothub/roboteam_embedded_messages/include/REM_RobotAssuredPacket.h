@@ -53,78 +53,44 @@ typedef struct _REM_RobotAssuredPacket {
 } REM_RobotAssuredPacket;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotAssuredPacket_get_header(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[0]));
-}
+static inline uint32_t REM_RobotAssuredPacket_get_header(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[0])); }
 
-static inline uint32_t REM_RobotAssuredPacket_get_toRobotId(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredPacket_get_toRobotId(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotAssuredPacket_get_toColor(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_toColor(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_toBC(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_toBC(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_toBS(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_toBS(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_toPC(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_toPC(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotAssuredPacket_get_fromRobotId(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredPacket_get_fromRobotId(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_RobotAssuredPacket_get_fromColor(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_fromColor(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_reserved(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_reserved(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_fromBS(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_fromBS(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_RobotAssuredPacket_get_fromPC(REM_RobotAssuredPacketPayload *remrapp) {
-    return (remrapp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_RobotAssuredPacket_get_fromPC(REM_RobotAssuredPacketPayload *remrapp) { return (remrapp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_RobotAssuredPacket_get_remVersion(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_RobotAssuredPacket_get_remVersion(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_RobotAssuredPacket_get_messageId(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_RobotAssuredPacket_get_messageId(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[3] & 0b00001111)); }
 
 static inline uint32_t REM_RobotAssuredPacket_get_timestamp(REM_RobotAssuredPacketPayload *remrapp) {
     return ((remrapp->payload[4]) << 16) | ((remrapp->payload[5]) << 8) | ((remrapp->payload[6]));
 }
 
-static inline uint32_t REM_RobotAssuredPacket_get_payloadSize(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[7]));
-}
+static inline uint32_t REM_RobotAssuredPacket_get_payloadSize(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[7])); }
 
-static inline uint32_t REM_RobotAssuredPacket_get_sequenceNumber(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[8]));
-}
+static inline uint32_t REM_RobotAssuredPacket_get_sequenceNumber(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[8])); }
 
-static inline uint32_t REM_RobotAssuredPacket_get_messageLength(REM_RobotAssuredPacketPayload *remrapp) {
-    return ((remrapp->payload[9]));
-}
+static inline uint32_t REM_RobotAssuredPacket_get_messageLength(REM_RobotAssuredPacketPayload *remrapp) { return ((remrapp->payload[9])); }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotAssuredPacket_set_header(REM_RobotAssuredPacketPayload *remrapp, uint32_t header) {
-    remrapp->payload[0] = header;
-}
+static inline void REM_RobotAssuredPacket_set_header(REM_RobotAssuredPacketPayload *remrapp, uint32_t header) { remrapp->payload[0] = header; }
 
 static inline void REM_RobotAssuredPacket_set_toRobotId(REM_RobotAssuredPacketPayload *remrapp, uint32_t toRobotId) {
     remrapp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrapp->payload[1] & 0b00001111);
@@ -180,17 +146,11 @@ static inline void REM_RobotAssuredPacket_set_timestamp(REM_RobotAssuredPacketPa
     remrapp->payload[6] = timestamp;
 }
 
-static inline void REM_RobotAssuredPacket_set_payloadSize(REM_RobotAssuredPacketPayload *remrapp, uint32_t payloadSize) {
-    remrapp->payload[7] = payloadSize;
-}
+static inline void REM_RobotAssuredPacket_set_payloadSize(REM_RobotAssuredPacketPayload *remrapp, uint32_t payloadSize) { remrapp->payload[7] = payloadSize; }
 
-static inline void REM_RobotAssuredPacket_set_sequenceNumber(REM_RobotAssuredPacketPayload *remrapp, uint32_t sequenceNumber) {
-    remrapp->payload[8] = sequenceNumber;
-}
+static inline void REM_RobotAssuredPacket_set_sequenceNumber(REM_RobotAssuredPacketPayload *remrapp, uint32_t sequenceNumber) { remrapp->payload[8] = sequenceNumber; }
 
-static inline void REM_RobotAssuredPacket_set_messageLength(REM_RobotAssuredPacketPayload *remrapp, uint32_t messageLength) {
-    remrapp->payload[9] = messageLength;
-}
+static inline void REM_RobotAssuredPacket_set_messageLength(REM_RobotAssuredPacketPayload *remrapp, uint32_t messageLength) { remrapp->payload[9] = messageLength; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_RobotAssuredPacket(REM_RobotAssuredPacketPayload *remrapp, REM_RobotAssuredPacket *remrap) {

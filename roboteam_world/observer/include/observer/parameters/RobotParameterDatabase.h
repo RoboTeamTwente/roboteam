@@ -16,18 +16,17 @@ struct TwoTeamRobotParameters {
     [[nodiscard]] proto::TeamParameters blueTeamProto() const;
 };
 class RobotParameterDatabase {
-public:
+   public:
     TwoTeamRobotParameters update(const proto::SSL_Referee& refMessage);
     [[nodiscard]] TwoTeamRobotParameters getParams() const;
 
     static RobotParameters getTeamParameters(const std::string& teamName);
 
-private:
+   private:
     std::string blueName;
     RobotParameters blueParameters;
     std::string yellowName;
     RobotParameters yellowParameters;
 };
-
 
 #endif  // RTT_ROBOTPARAMETERDATABASE_H

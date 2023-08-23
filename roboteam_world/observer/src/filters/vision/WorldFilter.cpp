@@ -5,8 +5,7 @@
 #include "filters/vision/WorldFilter.h"
 
 #include "filters/vision/ball/BallAssigner.h"
-WorldFilter::WorldFilter() {
-}
+WorldFilter::WorldFilter() {}
 
 void WorldFilter::updateGeometry(const proto::SSL_GeometryData &geometry) {
     // TODO: fix
@@ -21,8 +20,7 @@ proto::World WorldFilter::getWorldPrediction(const Time &time) const {
     return world;
 }
 
-void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
-                          const std::vector<rtt::RobotsFeedback> &feedback) {
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback) {
     // Feedback is processed first, as it is not really dependent on vision packets,
     // but the vision processing may be helped by the feedback information
     feedbackFilter.process(feedback);
@@ -32,8 +30,7 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
         detectionFrames.emplace_back(DetectionFrame(protoFrame));
     }
     // Sort by time
-    std::sort(detectionFrames.begin(), detectionFrames.end(),
-              [](const DetectionFrame &lhs, const DetectionFrame &rhs) { return lhs.timeCaptured < rhs.timeCaptured; });
+    std::sort(detectionFrames.begin(), detectionFrames.end(), [](const DetectionFrame &lhs, const DetectionFrame &rhs) { return lhs.timeCaptured < rhs.timeCaptured; });
     for (auto &frame : detectionFrames) {
         auto cameraTime = lastCaptureTimes.find(frame.cameraID);
         frame.dt = cameraTime == lastCaptureTimes.end() ? 0.0 : (frame.timeCaptured - cameraTime->second).asSeconds();
@@ -44,9 +41,7 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
     // Remove frames which are too late. For now we do this, because it's quite hard to go back in time and reconstruct the state of the entire visionFilter
 
     // This can also be caused by other teams running e.g. their simulators internally and accidentally broadcasting onto the network
-    detectionFrames.erase(std::remove_if(detectionFrames.begin(), detectionFrames.end(),
-                                         [](const DetectionFrame &frame) { return frame.dt < 0.0; }),
-                          detectionFrames.end());
+    detectionFrames.erase(std::remove_if(detectionFrames.begin(), detectionFrames.end(), [](const DetectionFrame &frame) { return frame.dt < 0.0; }), detectionFrames.end());
     for (const auto &frame : detectionFrames) {
         lastCaptureTimes[frame.cameraID] = frame.timeCaptured;
     }
@@ -54,7 +49,6 @@ void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames,
         processFrame(frame);
     }
 }
-
 
 void WorldFilter::processRobots(const DetectionFrame &frame, bool blueBots) {
     robotMap &robots = blueBots ? blue : yellow;
@@ -79,8 +73,7 @@ void WorldFilter::updateRobotsNotSeen(const DetectionFrame &frame, robotMap &rob
     }
 }
 
-void WorldFilter::updateRobots(robotMap &robots,
-                               const std::vector<RobotObservation> &detectedRobots) {
+void WorldFilter::updateRobots(robotMap &robots, const std::vector<RobotObservation> &detectedRobots) {
     // add detected robots to existing filter(s) or create a new filter if no filter accepts the robot
     for (const auto &detectedRobot : detectedRobots) {
         if (!detectedRobot.robot.robot_id.isValid()) {
@@ -112,12 +105,10 @@ void WorldFilter::processFrame(const DetectionFrame &frame) {
     processBalls(frame);
 }
 
-
 void WorldFilter::updateRobotParameters(const TwoTeamRobotParameters &parameters) {
     blueParams = parameters.blueParameters;
     yellowParams = parameters.yellowParameters;
 }
-
 
 std::vector<FilteredRobot> WorldFilter::getHealthiestRobotsMerged(bool blueBots, Time time) const {
     std::vector<FilteredRobot> robots;
@@ -129,8 +120,7 @@ std::vector<FilteredRobot> WorldFilter::getHealthiestRobotsMerged(bool blueBots,
         }
         double maxHealth = -std::numeric_limits<double>::infinity();
         auto bestFilter = oneIDFilters.second.begin();
-        for (auto robotFilter = oneIDFilters.second.begin();
-             robotFilter != oneIDFilters.second.end(); ++robotFilter) {
+        for (auto robotFilter = oneIDFilters.second.begin(); robotFilter != oneIDFilters.second.end(); ++robotFilter) {
             double health = robotFilter->getHealth();
             if (health > maxHealth) {
                 maxHealth = health;
@@ -152,8 +142,7 @@ std::vector<FilteredRobot> WorldFilter::oneCameraHealthyRobots(bool blueBots, in
         }
         double maxHealth = -std::numeric_limits<double>::infinity();
         auto bestFilter = oneIDFilters.second.begin();
-        for (auto robotFilter = oneIDFilters.second.begin();
-             robotFilter != oneIDFilters.second.end(); ++robotFilter) {
+        for (auto robotFilter = oneIDFilters.second.begin(); robotFilter != oneIDFilters.second.end(); ++robotFilter) {
             double health = robotFilter->getHealth();
             if (health > maxHealth) {
                 maxHealth = health;
@@ -227,9 +216,7 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
 }
 void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
     if (!balls.empty()) {
-        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) {
-            return best.getHealth() < filter.getHealth();
-        });
+        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
 
         FilteredBall bestBall = bestFilter->mergeBalls(time);
 

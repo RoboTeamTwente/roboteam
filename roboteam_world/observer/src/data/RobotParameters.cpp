@@ -2,7 +2,6 @@
 // Created by rolf on 26-10-20.
 //
 
-
 #include "../../include/observer/data/RobotParameters.h"
 
 RobotParameters RobotParameters::from_default() {
@@ -27,20 +26,14 @@ proto::RobotParameters RobotParameters::toProto() const {
 }
 
 RobotParameters::RobotParameters(const proto::RobotParameters &protoParams)
-    : radius{ protoParams.radius() },
-      height{ protoParams.height() },
-      frontWidth{ protoParams.front_width() },
-      dribblerWidth{ protoParams.dribbler_width() },
-      angleOffset{ protoParams.angle_offset() } {
-}
+    : radius{protoParams.radius()},
+      height{protoParams.height()},
+      frontWidth{protoParams.front_width()},
+      dribblerWidth{protoParams.dribbler_width()},
+      angleOffset{protoParams.angle_offset()} {}
 
 // TODO fix correct values
-RobotParameters::RobotParameters()
-    : radius{ 0.09 }, height{ 0.15 }, frontWidth{ 0.1 }, dribblerWidth{ 0.1 }, angleOffset{ 0.0 } {
-}
+RobotParameters::RobotParameters() : radius{0.09}, height{0.15}, frontWidth{0.1}, dribblerWidth{0.1}, angleOffset{0.0} {}
 
-RobotParameters::RobotParameters(double radius, double height, double frontWidth, double dribblerWidth,
-                                 double angleOffset)
-    : radius{ radius }, height{ height }, frontWidth{ frontWidth },
-      dribblerWidth{ dribblerWidth }, angleOffset{ angleOffset } {
-}
+RobotParameters::RobotParameters(double radius, double height, double frontWidth, double dribblerWidth, double angleOffset)
+    : radius{radius}, height{height}, frontWidth{frontWidth}, dribblerWidth{dribblerWidth}, angleOffset{angleOffset} {}

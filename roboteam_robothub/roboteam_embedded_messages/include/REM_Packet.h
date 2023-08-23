@@ -49,118 +49,68 @@ typedef struct _REM_Packet {
 } REM_Packet;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_Packet_get_header(REM_PacketPayload *rempp) {
-    return ((rempp->payload[0]));
-}
+static inline uint32_t REM_Packet_get_header(REM_PacketPayload *rempp) { return ((rempp->payload[0])); }
 
-static inline uint32_t REM_Packet_get_toRobotId(REM_PacketPayload *rempp) {
-    return ((rempp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Packet_get_toRobotId(REM_PacketPayload *rempp) { return ((rempp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_Packet_get_toColor(REM_PacketPayload *rempp) {
-    return (rempp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_Packet_get_toColor(REM_PacketPayload *rempp) { return (rempp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_Packet_get_toBC(REM_PacketPayload *rempp) {
-    return (rempp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_Packet_get_toBC(REM_PacketPayload *rempp) { return (rempp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_Packet_get_toBS(REM_PacketPayload *rempp) {
-    return (rempp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_Packet_get_toBS(REM_PacketPayload *rempp) { return (rempp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_Packet_get_toPC(REM_PacketPayload *rempp) {
-    return (rempp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_Packet_get_toPC(REM_PacketPayload *rempp) { return (rempp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Packet_get_fromRobotId(REM_PacketPayload *rempp) {
-    return ((rempp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Packet_get_fromRobotId(REM_PacketPayload *rempp) { return ((rempp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_Packet_get_fromColor(REM_PacketPayload *rempp) {
-    return (rempp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_Packet_get_fromColor(REM_PacketPayload *rempp) { return (rempp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_Packet_get_reserved(REM_PacketPayload *rempp) {
-    return (rempp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_Packet_get_reserved(REM_PacketPayload *rempp) { return (rempp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_Packet_get_fromBS(REM_PacketPayload *rempp) {
-    return (rempp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_Packet_get_fromBS(REM_PacketPayload *rempp) { return (rempp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_Packet_get_fromPC(REM_PacketPayload *rempp) {
-    return (rempp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_Packet_get_fromPC(REM_PacketPayload *rempp) { return (rempp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Packet_get_remVersion(REM_PacketPayload *rempp) {
-    return ((rempp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Packet_get_remVersion(REM_PacketPayload *rempp) { return ((rempp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_Packet_get_messageId(REM_PacketPayload *rempp) {
-    return ((rempp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_Packet_get_messageId(REM_PacketPayload *rempp) { return ((rempp->payload[3] & 0b00001111)); }
 
-static inline uint32_t REM_Packet_get_timestamp(REM_PacketPayload *rempp) {
-    return ((rempp->payload[4]) << 16) | ((rempp->payload[5]) << 8) | ((rempp->payload[6]));
-}
+static inline uint32_t REM_Packet_get_timestamp(REM_PacketPayload *rempp) { return ((rempp->payload[4]) << 16) | ((rempp->payload[5]) << 8) | ((rempp->payload[6])); }
 
-static inline uint32_t REM_Packet_get_payloadSize(REM_PacketPayload *rempp) {
-    return ((rempp->payload[7]));
-}
+static inline uint32_t REM_Packet_get_payloadSize(REM_PacketPayload *rempp) { return ((rempp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_Packet_set_header(REM_PacketPayload *rempp, uint32_t header) {
-    rempp->payload[0] = header;
-}
+static inline void REM_Packet_set_header(REM_PacketPayload *rempp, uint32_t header) { rempp->payload[0] = header; }
 
 static inline void REM_Packet_set_toRobotId(REM_PacketPayload *rempp, uint32_t toRobotId) {
     rempp->payload[1] = ((toRobotId << 4) & 0b11110000) | (rempp->payload[1] & 0b00001111);
 }
 
-static inline void REM_Packet_set_toColor(REM_PacketPayload *rempp, bool toColor) {
-    rempp->payload[1] = ((toColor << 3) & 0b00001000) | (rempp->payload[1] & 0b11110111);
-}
+static inline void REM_Packet_set_toColor(REM_PacketPayload *rempp, bool toColor) { rempp->payload[1] = ((toColor << 3) & 0b00001000) | (rempp->payload[1] & 0b11110111); }
 
-static inline void REM_Packet_set_toBC(REM_PacketPayload *rempp, bool toBC) {
-    rempp->payload[1] = ((toBC << 2) & 0b00000100) | (rempp->payload[1] & 0b11111011);
-}
+static inline void REM_Packet_set_toBC(REM_PacketPayload *rempp, bool toBC) { rempp->payload[1] = ((toBC << 2) & 0b00000100) | (rempp->payload[1] & 0b11111011); }
 
-static inline void REM_Packet_set_toBS(REM_PacketPayload *rempp, bool toBS) {
-    rempp->payload[1] = ((toBS << 1) & 0b00000010) | (rempp->payload[1] & 0b11111101);
-}
+static inline void REM_Packet_set_toBS(REM_PacketPayload *rempp, bool toBS) { rempp->payload[1] = ((toBS << 1) & 0b00000010) | (rempp->payload[1] & 0b11111101); }
 
-static inline void REM_Packet_set_toPC(REM_PacketPayload *rempp, bool toPC) {
-    rempp->payload[1] = (toPC & 0b00000001) | (rempp->payload[1] & 0b11111110);
-}
+static inline void REM_Packet_set_toPC(REM_PacketPayload *rempp, bool toPC) { rempp->payload[1] = (toPC & 0b00000001) | (rempp->payload[1] & 0b11111110); }
 
 static inline void REM_Packet_set_fromRobotId(REM_PacketPayload *rempp, uint32_t fromRobotId) {
     rempp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (rempp->payload[2] & 0b00001111);
 }
 
-static inline void REM_Packet_set_fromColor(REM_PacketPayload *rempp, bool fromColor) {
-    rempp->payload[2] = ((fromColor << 3) & 0b00001000) | (rempp->payload[2] & 0b11110111);
-}
+static inline void REM_Packet_set_fromColor(REM_PacketPayload *rempp, bool fromColor) { rempp->payload[2] = ((fromColor << 3) & 0b00001000) | (rempp->payload[2] & 0b11110111); }
 
-static inline void REM_Packet_set_reserved(REM_PacketPayload *rempp, bool reserved) {
-    rempp->payload[2] = ((reserved << 2) & 0b00000100) | (rempp->payload[2] & 0b11111011);
-}
+static inline void REM_Packet_set_reserved(REM_PacketPayload *rempp, bool reserved) { rempp->payload[2] = ((reserved << 2) & 0b00000100) | (rempp->payload[2] & 0b11111011); }
 
-static inline void REM_Packet_set_fromBS(REM_PacketPayload *rempp, bool fromBS) {
-    rempp->payload[2] = ((fromBS << 1) & 0b00000010) | (rempp->payload[2] & 0b11111101);
-}
+static inline void REM_Packet_set_fromBS(REM_PacketPayload *rempp, bool fromBS) { rempp->payload[2] = ((fromBS << 1) & 0b00000010) | (rempp->payload[2] & 0b11111101); }
 
-static inline void REM_Packet_set_fromPC(REM_PacketPayload *rempp, bool fromPC) {
-    rempp->payload[2] = (fromPC & 0b00000001) | (rempp->payload[2] & 0b11111110);
-}
+static inline void REM_Packet_set_fromPC(REM_PacketPayload *rempp, bool fromPC) { rempp->payload[2] = (fromPC & 0b00000001) | (rempp->payload[2] & 0b11111110); }
 
 static inline void REM_Packet_set_remVersion(REM_PacketPayload *rempp, uint32_t remVersion) {
     rempp->payload[3] = ((remVersion << 4) & 0b11110000) | (rempp->payload[3] & 0b00001111);
 }
 
-static inline void REM_Packet_set_messageId(REM_PacketPayload *rempp, uint32_t messageId) {
-    rempp->payload[3] = (messageId & 0b00001111) | (rempp->payload[3] & 0b11110000);
-}
+static inline void REM_Packet_set_messageId(REM_PacketPayload *rempp, uint32_t messageId) { rempp->payload[3] = (messageId & 0b00001111) | (rempp->payload[3] & 0b11110000); }
 
 static inline void REM_Packet_set_timestamp(REM_PacketPayload *rempp, uint32_t timestamp) {
     rempp->payload[4] = (timestamp >> 16);
@@ -168,9 +118,7 @@ static inline void REM_Packet_set_timestamp(REM_PacketPayload *rempp, uint32_t t
     rempp->payload[6] = timestamp;
 }
 
-static inline void REM_Packet_set_payloadSize(REM_PacketPayload *rempp, uint32_t payloadSize) {
-    rempp->payload[7] = payloadSize;
-}
+static inline void REM_Packet_set_payloadSize(REM_PacketPayload *rempp, uint32_t payloadSize) { rempp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
 static inline void encodeREM_Packet(REM_PacketPayload *rempp, REM_Packet *remp) {

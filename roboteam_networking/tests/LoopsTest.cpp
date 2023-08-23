@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <roboteam_utils/Random.h>
 
-#include <AIDataNetworker.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
@@ -110,35 +109,4 @@ TEST(RTTChannels, testWorldLoop) {
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     EXPECT_TRUE(worldLoopTestPassed);
-}
-
-// Settings loop test
-bool aiYellowDataLoopTestPassed = false;
-bool aiBlueDataLoopTestPassed = false;
-void onYellowAIData(const rtt::AIData& data) {
-    aiYellowDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE;
-}
-void onBlueAIData(const rtt::AIData& data) {
-    aiBlueDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE;
-}
-TEST(RTTChannels, testAIDataLoop) {
-    AIBlueDataPublisher bluePub;
-    AIYellowDataPublisher yellowPub;
-
-    AIYellowDataSubscriber yellowSub(onYellowAIData);
-    AIBlueDataSubscriber blueSub(onBlueAIData);
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
-
-    rtt::AIData data;
-    for (int i = 0; i < TEST_VALUE; i++) {
-        data.robotPaths.push_back(rtt::RobotPath{ .robotId = TEST_VALUE });
-    }
-
-    bluePub.publish(data);
-    yellowPub.publish(data);
-    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
-
-    EXPECT_TRUE(aiYellowDataLoopTestPassed);
-    EXPECT_TRUE(aiBlueDataLoopTestPassed);
 }

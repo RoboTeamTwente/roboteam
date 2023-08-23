@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <AIDataNetworker.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
@@ -24,8 +23,6 @@ void sharedOnSettings(const proto::GameSettings& settings) {
 }
 void sharedOnWorld(const proto::State& world) {
 }
-void sharedOnAIData(const rtt::AIData& data) {
-}
 
 TEST(RTTCMDPub, nullptrDontCrash) {
     EXPECT_NO_THROW(
@@ -48,12 +45,5 @@ TEST(RTTCMDPub, nullptrDontCrash) {
         WorldPublisher worldPub;
         WorldSubscriber worldSub1(sharedOnWorld);
         WorldSubscriber worldSub2(sharedOnWorld);
-
-        AIYellowDataPublisher yellowAIPub;
-        AIYellowDataSubscriber yellowAISub1(sharedOnAIData);
-        AIYellowDataSubscriber yellowAISub2(sharedOnAIData);
-
-        AIBlueDataPublisher blueAIPub;
-        AIBlueDataSubscriber blueAISub1(sharedOnAIData);
-        AIBlueDataSubscriber blueAISub2(sharedOnAIData););
+    );
 }

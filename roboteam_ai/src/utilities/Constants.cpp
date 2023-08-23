@@ -1,12 +1,10 @@
-//
-// Created by mrlukasbos on 8-2-19.
-//
-
 #include "utilities/Constants.h"
 
 #include <roboteam_utils/Print.h>
 
 #include "utilities/GameSettings.h"
+
+// Emiel Steerneman Aug 24 2023 TODO : Combine this file with include/roboteam_ai/stp/constants/ControlConstants.h
 
 namespace rtt::ai {
 
@@ -35,26 +33,6 @@ double Constants::MAX_ACC_LOWER() { return 10.0; }
 double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER() * 1.2; }  // magic number
 
 double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic number
-
-// was 0.03 before STP
-
-bool Constants::STD_SHOW_ROLES() { return true; }
-
-bool Constants::STD_SHOW_TACTICS() { return false; }
-
-bool Constants::STD_SHOW_TACTICS_COLORS() { return true; }
-
-bool Constants::STD_SHOW_VELOCITIES() { return true; }
-
-bool Constants::STD_SHOW_ANGLES() { return true; }
-
-bool Constants::STD_SHOW_ROBOT_INVALIDS() { return true; }
-
-bool Constants::STD_SHOW_BALL_PLACEMENT_MARKER() { return true; }
-
-bool Constants::STD_USE_REFEREE() { return true; }
-
-bool Constants::STD_TIMEOUT_TO_TOP() { return false; }
 
 // The max distance the ball can be from the robot for the robot to have the ball
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }

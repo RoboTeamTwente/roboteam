@@ -67,17 +67,6 @@ class Constants {
     static int DEFAULT_KEEPER_ID();                    /**< Default ID of the keeper */
     static double PENALTY_DISTANCE_BEHIND_BALL();      /**< The minimum distance the robots have to be behind the ball during a penalty */
 
-    /// SETTINGS ///
-    static bool STD_SHOW_ROLES();                 /**< Checks whether the roles should be shown */
-    static bool STD_SHOW_TACTICS();               /**< Checks whether the tactics should be shown */
-    static bool STD_SHOW_TACTICS_COLORS();        /**< Checks whether the tactic colors should be shown */
-    static bool STD_SHOW_VELOCITIES();            /**< Checks whether the velocities should be shown */
-    static bool STD_SHOW_ANGLES();                /**< Checks whether the angles should be shown */
-    static bool STD_SHOW_ROBOT_INVALIDS();        /**< Checks whether the robot invalids should be shown */
-    static bool STD_SHOW_BALL_PLACEMENT_MARKER(); /**< Checks whether the ball placement marker should be shown */
-    static bool STD_USE_REFEREE();                /**< Checks whether the referee should be use */
-    static bool STD_TIMEOUT_TO_TOP();             /**< Checks whether the robots should move to the top during timeout */
-
     static std::map<int, bool> ROBOTS_WITH_WORKING_DRIBBLER();         /**< Mapping of robots with working dribblers */
     static std::map<int, bool> ROBOTS_WITH_WORKING_BALL_SENSOR();      /**< Mapping of robots with working ball sensors */
     static std::map<int, bool> ROBOTS_WITH_WORKING_DRIBBLER_ENCODER(); /**< Mapping of robots with working dribbler encoders */

@@ -27,7 +27,6 @@ class Output {
 
     static rtt::Vector2 markerPosition;
     static bool useRefereeCommands;
-    static bool timeOutAtTop;
 
     static GameState interfaceGameState;
 
@@ -36,8 +35,6 @@ class Output {
 
     static void setInterfaceGameState(GameState interfaceGameState);
     static const GameState &getInterfaceGameState();
-
-    static bool isTimeOutAtTop();
 
     static bool usesRefereeCommands();
     static void setUseRefereeCommands(bool useRefereeCommands);

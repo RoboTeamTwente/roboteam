@@ -96,29 +96,30 @@ $(document).ready(function(){initNavTree('df/d86/PenaltyKeeper_8h_source.html','
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef RTT_PENALTYKEEPER_H</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define RTT_PENALTYKEEPER_H</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/dbd/Keeper_8h.html">Keeper.h</a>&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/de7/Role_8hpp.html">stp/Role.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;roboteam_utils/Field.hpp&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../d6/dca/namespacertt_1_1ai_1_1stp_1_1role.html">rtt::ai::stp::role</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">// Role inherited from the Keeper</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">PenaltyKeeper</a> : <span class="keyword">public</span> <a class="code" href="../../db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html">Keeper</a> {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#a2b4a60efcba9c8829f5e16a44b629518">PenaltyKeeper</a>(std::string name);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    [[nodiscard]] <a class="code" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a> <a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#acfe4a8fb4bf252239e4951d1627d0db1">update</a>(<a class="code" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> <span class="keyword">const</span>&amp; info) noexcept <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::role</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_PENALTYKEEPER_H</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;roboteam_utils/Field.hpp&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/dbd/Keeper_8h.html">Keeper.h</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/de7/Role_8hpp.html">stp/Role.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../d6/dca/namespacertt_1_1ai_1_1stp_1_1role.html">rtt::ai::stp::role</a> {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">// Role inherited from the Keeper</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">PenaltyKeeper</a> : <span class="keyword">public</span> <a class="code" href="../../db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html">Keeper</a> {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#a2b4a60efcba9c8829f5e16a44b629518">PenaltyKeeper</a>(std::string name);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    [[nodiscard]] <a class="code" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a> <a class="code" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#acfe4a8fb4bf252239e4951d1627d0db1">update</a>(<a class="code" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> <span class="keyword">const</span>&amp; info) noexcept <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;};</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::role</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_PENALTYKEEPER_H</span></div>
 <div class="ttc" id="aKeeper_8h_html"><div class="ttname"><a href="../../d6/dbd/Keeper_8h.html">Keeper.h</a></div></div>
 <div class="ttc" id="aRole_8hpp_html"><div class="ttname"><a href="../../d6/de7/Role_8hpp.html">Role.hpp</a></div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1Keeper_html"><div class="ttname"><a href="../../db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html">rtt::ai::stp::role::Keeper</a></div><div class="ttdoc">Class that defines the keeper role. The keeper will block the ball from going into the goal.</div><div class="ttdef"><b>Definition:</b> Keeper.h:15</div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper_html"><div class="ttname"><a href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">rtt::ai::stp::role::PenaltyKeeper</a></div><div class="ttdef"><b>Definition:</b> PenaltyKeeper.h:19</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1Keeper_html"><div class="ttname"><a href="../../db/d73/classrtt_1_1ai_1_1stp_1_1role_1_1Keeper.html">rtt::ai::stp::role::Keeper</a></div><div class="ttdoc">Class that defines the keeper role. The keeper will block the ball from going into the goal.</div><div class="ttdef"><b>Definition:</b> Keeper.h:16</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper_html"><div class="ttname"><a href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html">rtt::ai::stp::role::PenaltyKeeper</a></div><div class="ttdef"><b>Definition:</b> PenaltyKeeper.h:20</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper_html_a2b4a60efcba9c8829f5e16a44b629518"><div class="ttname"><a href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#a2b4a60efcba9c8829f5e16a44b629518">rtt::ai::stp::role::PenaltyKeeper::PenaltyKeeper</a></div><div class="ttdeci">PenaltyKeeper(std::string name)</div><div class="ttdoc">Class that defines the penalty keeper. The penalty keeper will keep the ball out of the goal during a...</div><div class="ttdef"><b>Definition:</b> PenaltyKeeper.cpp:28</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper_html_acfe4a8fb4bf252239e4951d1627d0db1"><div class="ttname"><a href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#acfe4a8fb4bf252239e4951d1627d0db1">rtt::ai::stp::role::PenaltyKeeper::update</a></div><div class="ttdeci">Status update(StpInfo const &amp;info) noexcept override</div><div class="ttdoc">Besides the default update from base class Role, it also switches between tactics depending on the ba...</div><div class="ttdef"><b>Definition:</b> PenaltyKeeper.cpp:33</div></div>
 <div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1role_html"><div class="ttname"><a href="../../d6/dca/namespacertt_1_1ai_1_1stp_1_1role.html">rtt::ai::stp::role</a></div><div class="ttdoc">TODO-Max change to ShooterGoal.</div><div class="ttdef"><b>Definition:</b> Attacker.h:10</div></div>

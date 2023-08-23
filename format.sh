@@ -1,0 +1,1 @@
+find -L | grep -E "^./roboteam.*?\.(c|cpp|h|hpp)$" --color=never | xargs clang-format -i -style="{BasedOnStyle : Google, IndentWidth : 4, ColumnLimit : 180}"

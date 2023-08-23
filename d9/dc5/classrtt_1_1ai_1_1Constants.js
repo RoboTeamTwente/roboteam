@@ -42,15 +42,6 @@ var classrtt_1_1ai_1_1Constants =
     [ "standardKeeperPID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#aedb61d16d8f6d462b2ff2521b35ed5b6", null ],
     [ "standardNumTreePID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a0f32c38b64e751b19021b197a685ac3c", null ],
     [ "standardReceivePID", "d9/dc5/classrtt_1_1ai_1_1Constants.html#aee77e822c4ef9e4a9a61b047bb7ac7e7", null ],
-    [ "STD_SHOW_ANGLES", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a8d12b9d8c4e6f37ffda90e8767b74f9a", null ],
-    [ "STD_SHOW_BALL_PLACEMENT_MARKER", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a2297d6b5e386cef7b1cfb426123045c7", null ],
-    [ "STD_SHOW_ROBOT_INVALIDS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#af77e9e881cbc3ba530bfe74d5e7d1d82", null ],
-    [ "STD_SHOW_ROLES", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab890557622704ef1f1a7a2af29b30155", null ],
-    [ "STD_SHOW_TACTICS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a68ba8225740e007b8b21bbd45dc0d9cc", null ],
-    [ "STD_SHOW_TACTICS_COLORS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a82b28dd9fd4a7f489309e6719b16c4e6", null ],
-    [ "STD_SHOW_VELOCITIES", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a1a34f8108072d691f27b8dd8e1433e9d", null ],
-    [ "STD_TIMEOUT_TO_TOP", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a0fda547b4223267aa62580ffb35cc452", null ],
-    [ "STD_USE_REFEREE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a3b3f9bd0fb3df39549cd187bc3004ca4", null ],
     [ "STP_TICK_RATE", "d9/dc5/classrtt_1_1ai_1_1Constants.html#a2eb213b4623956180539817cf4252cba", null ],
     [ "WORLD_MAX_AGE_MILLISECONDS", "d9/dc5/classrtt_1_1ai_1_1Constants.html#ab5890b8d3712aa04ba868658d49597da", null ]
 ];

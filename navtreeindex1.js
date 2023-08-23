@@ -6,9 +6,9 @@ var NAVTREEINDEX1 =
 "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8":[3,0,1,0,4,13,0],
 "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a6d28a5b12779cbcdc9d2db731a79e8b3":[3,0,1,0,4,13,4],
 "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#aadf00661b17f0e24d722a21448ce578d":[3,0,1,0,4,13,3],
-"d1/d5e/KickOffThemPrepare_8cpp.html":[4,0,0,1,4,3,2,10],
-"d1/d64/DefendShot_8cpp.html":[4,0,0,1,4,3,0,1],
-"d1/d65/Receive_8cpp.html":[4,0,0,1,4,6,0,6],
+"d1/d5e/KickOffThemPrepare_8cpp.html":[4,0,0,1,4,2,2,10],
+"d1/d64/DefendShot_8cpp.html":[4,0,0,1,4,2,0,1],
+"d1/d65/Receive_8cpp.html":[4,0,0,1,4,5,0,6],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html":[3,0,1,0,1,0,1],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a0332dcf12eb4488040851565de1572c1":[3,0,1,0,1,0,1,8],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a05a060288761eba3f61a7e72b0b7c772":[3,0,1,0,1,0,1,0],
@@ -24,7 +24,6 @@ var NAVTREEINDEX1 =
 "d1/d9a/GoalShotEvaluation_8h_source.html":[4,0,0,0,0,3,2,2,1],
 "d1/da0/Out_8h.html":[4,0,0,0,0,1,1],
 "d1/da0/Out_8h_source.html":[4,0,0,0,0,1,1],
-"d1/da4/ControlConstants_8cpp.html":[4,0,0,1,4,1,0],
 "d1/db0/WorldHelper_8h.html":[4,0,0,2,1,3],
 "d1/db0/WorldHelper_8h_source.html":[4,0,0,2,1,3],
 "d1/dd5/WhichRobotHasBallTest_8cpp.html":[4,0,0,2,8,4],
@@ -170,7 +169,7 @@ var NAVTREEINDEX1 =
 "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#a0a2ef5a54b7fdb3604d84dde1c429ce0":[3,0,1,0,0,8,1],
 "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#a5253eaad27f3549b30f9483bf9d96813":[3,0,1,0,0,8,0],
 "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#ab116ff0f4b17e84ec0c34b13b8168091":[3,0,1,0,0,8,2],
-"d2/d8c/OrbitAngular_8cpp.html":[4,0,0,1,4,5,4],
+"d2/d8c/OrbitAngular_8cpp.html":[4,0,0,1,4,4,4],
 "d2/d93/StrategyManager_8cpp.html":[4,0,0,1,5,8],
 "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html":[3,0,1,0,4,15],
 "d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,15,13],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a7e42bf46abefd1251f30b8ff6ab71d30":[3,0,1,0,1,1,2],
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a9554ea6e37c32eb18ff7880454c14130":[3,0,1,0,1,1,1],
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a988473c762bcec46998bf48a80507165":[3,0,1,0,1,1,3],
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#aaa6d7a2544d399ed45c39c43d32906f5":[4,0,0,0,0,1,1,1,1]
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#aaa6d7a2544d399ed45c39c43d32906f5":[4,0,0,0,0,1,1,1,1],
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#aaa6d7a2544d399ed45c39c43d32906f5":[3,0,1,0,1,1,0,1]
 };

@@ -76,19 +76,19 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html",
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#aaa6d7a2544d399ed45c39c43d32906f5",
-"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a3c6b8a613e6363f2d28b8e7b4a691802",
-"d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a86fac3a79d9411c2d4867e9cef69050c",
-"d5/d8d/Chipper_8h_source.html",
-"d6/dac/BallMovesSlowGlobalEvaluation_8h_source.html",
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ad7b71d56f8b8d8d62b7ec945847a2bec",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#aa20291b5cee34414dfb81aa0fd33713f",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a977b3063d4d26bee4be08d71c2ab7ccc",
-"dc/d0b/classrtt_1_1AnglePID.html#a9ab280e3788378b3fd3d5c9a9ed2d64f",
-"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a47fb9fd055b921dd3b6eb5b3636f3391",
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a0dd3439d999970125264ce7fccadff49",
-"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ac9969c2b4849e60788aa414ebe745ee0"
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#abd602bb368b7f3e1cff43a5be7381ea9",
+"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a4598ba530d29d7f4f53bcec0c9845100",
+"d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a96d8bb2b51915d8e495f358c10ef26f4",
+"d5/d8d/RuleSet_8h_source.html",
+"d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a0dd3439d999970125264ce7fccadff49",
+"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aec45346e5c63f48e60fa5fa523f3570f",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31",
+"d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#a35be8571412d041bfe1e54ac337ebea8",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a2065e692775cf964b93006329a1b0b15",
+"dc/d16/structnativeformat_1_1param_1_1DummyEvent.html#a92c2c99faa56f75a0278925e5b62cbb1",
+"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html",
+"de/d16/Param_8h_source.html",
+"df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

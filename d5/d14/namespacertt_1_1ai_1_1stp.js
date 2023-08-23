@@ -24,8 +24,6 @@ var namespacertt_1_1ai_1_1stp =
       [ "FUZZY_TRUE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#abd94b835220f65a1d26e2e5834cacef3", null ],
       [ "GO_TO_POS_ANGLE_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a39f7f3e46cab97f2db6fbd41f448d9c3", null ],
       [ "GO_TO_POS_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab901068e85cad865ba809d79bb9b6c9b", null ],
-      [ "HAS_BALL_ANGLE_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a1eca88ea5ea7b2e0d62bc00018c01afa", null ],
-      [ "HAS_BALL_DISTANCE_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a41892528e3de820626416377e654989c", null ],
       [ "HAS_CHIPPED_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a05e7b22aaead80c05e581b7e8976ada2", null ],
       [ "HAS_KICKED_ERROR_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a04e24cd2d84ffdc44bff5e601c684c99", null ],
       [ "MAX_CHIP_ATTEMPTS", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a2d74c258a6019a2f4064c661f4ea9258", null ],

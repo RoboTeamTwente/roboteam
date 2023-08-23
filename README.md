@@ -1,7 +1,5 @@
 # RoboTeam
 
-[TOC]
-
 ## Overview
 This software is tested on Ubuntu 22.04 LTS, and the installation instructions are written with that distro/OS in mind. However, other distro's of Linux are also likely to be able to run this software, albeit with some modifications.
 
@@ -32,14 +30,13 @@ Make sure you have the dependencies installed. Within CLion, go to the CMakeList
 ## Running a game
 ![alt text](readme_images/rtt_software_stack.png)
 
-To run a game, you will need to boot up `RoboTeam AI`, `RoboTeam World`, and `RoboTeam Robothub`. The executables are named `roboteam_ai`, `roboteam_observer`, and `roboteam_robothub` respectively. Next to that, either boot up a simulator or SSL-Vision.
+To run a game, you will need to boot up `RoboTeam AI`, `RoboTeam World`, and `RoboTeam Robothub`. The executables are named `roboteam_ai`, `roboteam_observer`, and `roboteam_robothub` respectively. Next to that, either boot up a simulator or SSL-Vision. Want to run an entire match with autorefs and everything? Please have a look at this official (docker-compose)[https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/docker-compose.yaml] file. It contains everything you need outside of our own software.
  
 ## SSL Software / Simulators
 * (`SSL Vision`)[https://github.com/RoboCup-SSL/ssl-vision]
 * (`SSL Game Controller`)[https://github.com/RoboCup-SSL/ssl-game-controller]
 * (`GrSim simulator`)[https://github.com/RoboCup-SSL/grSim]
 * (`ER-Force simulator`)[https://github.com/robotics-erlangen/framework#simulator-cli]
-* RTT simulator
 * (`Other SSL software`)[https://github.com/RoboCup-SSL]
 
 It is recommended to use the game controller to control the gamestates. You can do so by downloading the latest binary release of the [SSL-Game-Controller](https://github.com/RoboCup-SSL/ssl-game-controller) repo, and executing it. For example, when downloaded to the Downloads folder:

@@ -19,6 +19,7 @@ target_link_libraries(roboteam_ai_utils
         PUBLIC Qt5::Network
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
+        PRIVATE roboteam_ai_gui
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
@@ -48,7 +49,6 @@ target_compile_options(roboteam_ai_skills PRIVATE "${COMPILER_FLAGS}")
 ###### TACTICS #######
 add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/Tactic.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/constants/ControlConstants.cpp
         # /
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/KeeperBlockBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/TestTactic.cpp

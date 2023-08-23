@@ -66,7 +66,8 @@ class Tactic {
     void initialize() noexcept;
 
     /**
-     * @brief Check if state machine is done, calls calculateInfoForSkill, calls update on the state machine with SkillInfo and calls onUpdate of this tactic for extra customization
+     * @brief Check if state machine is done, calls calculateInfoForSkill, calls update on the state machine with SkillInfo and calls onUpdate of this tactic for extra
+     * customization
      * @param info info passed by the Role
      * @return Status of the skill that is currently being ticked
      */

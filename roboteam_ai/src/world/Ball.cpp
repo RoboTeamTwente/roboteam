@@ -23,9 +23,8 @@ constexpr static float SIMULATION_FRICTION = 1.22;
  */
 constexpr static float REAL_FRICTION = 0.5;
 
-
 Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos().x(), copy.pos().y()}, velocity{copy.vel().x(), copy.vel().y()}, visible{copy.visible()} {
-    if (!visible || position == Vector2()){
+    if (!visible || position == Vector2()) {
         initBallAtExpectedPosition(data);
         updateBallAtRobotPosition(data);
     }
@@ -54,7 +53,6 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
     ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
-
 }
 
 void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {

@@ -4,9 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <math.h>
+
 #include "roboteam_utils/Angle.h"
-
-
 #include "roboteam_utils/HalfLine.h"
 #include "roboteam_utils/Line.h"
 #include "roboteam_utils/LineSegment.h"
@@ -26,21 +25,21 @@ TEST(LineTests, relativePosition) {
     float expected = -1e6 / EPSILON;
     float actual = Line::relativePosition(start, end, linePoint);
     EXPECT_EQ(expected, actual);
-    start = {0.0, 0.0}, end = {-1e9, 0.0}, linePoint = {0.0, 0.0};
+    start = { 0.0, 0.0 }, end = { -1e9, 0.0 }, linePoint = { 0.0, 0.0 };
     expected = 0.0;
     actual = Line::relativePosition(start, end, linePoint);
     EXPECT_EQ(expected, actual);
-    start = {-2.0, 8.0}, end = {3.0, -12.0}, linePoint = {0.0, 0.0};
+    start = { -2.0, 8.0 }, end = { 3.0, -12.0 }, linePoint = { 0.0, 0.0 };
     expected = 0.4;
     actual = Line::relativePosition(start, end, linePoint);
     EXPECT_EQ(expected, actual);
 }
 
-TEST(LineTests, lineSegmentRotate){
-    LineSegment lineSegment({-1, 0}, {1, 0});
-    LineSegment segment1({0, -1}, {0, 1});
-    LineSegment segment2({0, 1}, {0, -1});
-    Angle angle = Angle(M_PI/2);
-    lineSegment.rotate(angle, Vector2{0, 0});
+TEST(LineTests, lineSegmentRotate) {
+    LineSegment lineSegment({ -1, 0 }, { 1, 0 });
+    LineSegment segment1({ 0, -1 }, { 0, 1 });
+    LineSegment segment2({ 0, 1 }, { 0, -1 });
+    Angle angle = Angle(M_PI / 2);
+    lineSegment.rotate(angle, Vector2{ 0, 0 });
     EXPECT_TRUE(lineSegment == segment1 || lineSegment == segment2);
 }

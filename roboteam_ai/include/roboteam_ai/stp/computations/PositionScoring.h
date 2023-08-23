@@ -5,8 +5,9 @@
 #ifndef RTT_POSITIONSCORING_H
 #define RTT_POSITIONSCORING_H
 
-#include "stp/constants/GeneralizationConstants.h"
 #include <roboteam_utils/Field.hpp>
+
+#include "stp/constants/GeneralizationConstants.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

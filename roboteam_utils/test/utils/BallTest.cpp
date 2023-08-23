@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/Ball.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/Ball.hpp>
 
 using namespace rtt;
 

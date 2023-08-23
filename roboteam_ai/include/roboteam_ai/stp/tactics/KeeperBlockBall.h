@@ -5,9 +5,9 @@
 #ifndef RTT_KEEPERBLOCKBALL_H
 #define RTT_KEEPERBLOCKBALL_H
 
-#include "stp/Tactic.h"
-
 #include <roboteam_utils/HalfLine.h>
+
+#include "stp/Tactic.h"
 
 namespace rtt::ai::stp::tactic {
 /**
@@ -61,7 +61,7 @@ class KeeperBlockBall : public Tactic {
      * Start is left of goal, end is right of goal
      * @return the keepers lineSegment
      */
-    static LineSegment getKeepersLineSegment(const Field&);
+    static LineSegment getKeepersLineSegment(const Field &);
 
     /**
      * @brief Estimates the trajectory of the ball, either from current velocity or from enemies that might kick it
@@ -77,7 +77,7 @@ class KeeperBlockBall : public Tactic {
      * @param field which contains our goal
      * @return true if the trajectory goes near our goal, false otherwise
      */
-    static bool isBallHeadingTowardsOurGoal(const HalfLine& ballTrajectory, const Field &field);
+    static bool isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const Field &field);
 
     /**
      * @brief Calculates the position for the keeper and the PID type with which that position should be achieved
@@ -87,8 +87,8 @@ class KeeperBlockBall : public Tactic {
      * @param enemyRobot Enemy robot closest to ball
      * @return Target position for the keeper and the corresponding PID type
      */
-    static std::pair<Vector2,PIDType> calculateTargetPosition(const world::view::BallView &ball, const Field &field,
-                                                                    const std::optional<world::view::RobotView> &enemyRobot) noexcept;
+    static std::pair<Vector2, PIDType> calculateTargetPosition(const world::view::BallView &ball, const Field &field,
+                                                               const std::optional<world::view::RobotView> &enemyRobot) noexcept;
 
     /**
      * @brief Calculates the angle the robot should have

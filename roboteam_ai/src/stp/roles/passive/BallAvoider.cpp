@@ -7,8 +7,6 @@
 #include "stp/tactics/passive/AvoidBall.h"
 #include "stp/tactics/passive/Formation.h"
 
-
-
 namespace rtt::ai::stp::role {
 
 BallAvoider::BallAvoider(std::string name) : Role(std::move(name)) {

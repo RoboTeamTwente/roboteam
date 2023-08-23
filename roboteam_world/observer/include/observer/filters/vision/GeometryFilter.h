@@ -26,12 +26,12 @@ public:
      * @return The most recent filtered geometry
      */
     proto::SSL_GeometryData getGeometry() const;
+
 private:
     std::string lastGeometryString;
     proto::SSL_GeometryData combinedGeometry;
-    std::map<unsigned int,proto::SSL_GeometryCameraCalibration> cameras;
-
+    std::map<unsigned int, proto::SSL_GeometryCameraCalibration> cameras;
 };
 
 
-#endif //RTT_GEOMETRYFILTER_H
+#endif  // RTT_GEOMETRYFILTER_H

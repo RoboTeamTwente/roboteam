@@ -2,15 +2,14 @@
 // Created by tijmen on 13-01-22.
 //
 
-#include <simulation/SimulatorManager.hpp>
-
 #include <roboteam_utils/Teams.hpp>
+#include <simulation/SimulatorManager.hpp>
 
 int main() {
     using namespace rtt::robothub::simulation;
 
     // GrSim does not allow a bidirectional udp connection, so it uses different ports for the feedback
-    SimulatorNetworkConfiguration config = {.blueFeedbackPort = 30011, .yellowFeedbackPort = 30012, .configurationFeedbackPort = 30013};
+    SimulatorNetworkConfiguration config = { .blueFeedbackPort = 30011, .yellowFeedbackPort = 30012, .configurationFeedbackPort = 30013 };
 
     std::unique_ptr<SimulatorManager> manager;
 

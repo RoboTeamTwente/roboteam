@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/FastRectangle.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/FastRectangle.hpp>
 
 using namespace rtt;
 
@@ -15,8 +16,7 @@ void testCoherence(const FastRectangle& fr) {
     // Test if center is correct
     Vector2 calculatedCenter(
         (fr.right() + fr.left()) / 2,
-        (fr.bottom() + fr.top()) / 2
-        );
+        (fr.bottom() + fr.top()) / 2);
     ASSERT_EQ(fr.center(), calculatedCenter);
 
     // Test if line segments are correct
@@ -53,7 +53,6 @@ TEST(FastRectangleTest, instantiation) {
 }
 
 TEST(FastRectangleTest, contains) {
-
     FastRectangle fr(1, 1, -1, -1);
 
     // 'contains' tests for points within the rectangle, not on the edge
@@ -65,10 +64,10 @@ TEST(FastRectangleTest, contains) {
 
     const double almostOne = 0.99999999;
     ASSERT_TRUE(fr.contains(fr.center()));
-    ASSERT_TRUE(fr.contains({almostOne, almostOne}));
-    ASSERT_TRUE(fr.contains({almostOne, -almostOne}));
-    ASSERT_TRUE(fr.contains({-almostOne, almostOne}));
-    ASSERT_TRUE(fr.contains({-almostOne, -almostOne}));
+    ASSERT_TRUE(fr.contains({ almostOne, almostOne }));
+    ASSERT_TRUE(fr.contains({ almostOne, -almostOne }));
+    ASSERT_TRUE(fr.contains({ -almostOne, almostOne }));
+    ASSERT_TRUE(fr.contains({ -almostOne, -almostOne }));
 }
 
 TEST(FastRectangleTest, containsMargin) {

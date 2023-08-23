@@ -46,9 +46,9 @@ class GameStateManager {
     static void updateInterfaceGameState(const char* name);
 
    private:
-    static proto::SSL_Referee refMsg; /**< Data from the referee */
+    static proto::SSL_Referee refMsg;       /**< Data from the referee */
     static StrategyManager strategymanager; /**< Manager that updates the play according to the game state */
-    static std::mutex refMsgLock; /**< Synchronizer for referee data */
+    static std::mutex refMsgLock;           /**< Synchronizer for referee data */
 };
 
 }  // namespace rtt::ai

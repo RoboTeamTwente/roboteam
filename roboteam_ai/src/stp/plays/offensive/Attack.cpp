@@ -51,7 +51,6 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
     Dealer::DealerFlag kickerThirdPriority(DealerFlagTitle::CLOSE_TO_BALL, DealerFlagPriority::MEDIUM_PRIORITY);
     Dealer::DealerFlag closeToOurGoalFlag(DealerFlagTitle::CLOSE_TO_OUR_GOAL, DealerFlagPriority::HIGH_PRIORITY);
 
-
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});                                                         //
     flagMap.insert({"striker", {DealerFlagPriority::REQUIRED, {kickerFirstPriority, kickerSecondPriority, kickerThirdPriority}}});  //
     flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {kickerFirstPriority, kickerSecondPriority}}});
@@ -62,8 +61,7 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
     flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {closeToOurGoalFlag}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::HIGH_PRIORITY, {closeToOurGoalFlag}}});
     flagMap.insert({"ball_blocker", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::MEDIUM_PRIORITY, {kickerFirstPriority, kickerSecondPriority}}});             //
-
+    flagMap.insert({"attacker_1", {DealerFlagPriority::MEDIUM_PRIORITY, {kickerFirstPriority, kickerSecondPriority}}});  //
 
     return flagMap;
 }
@@ -85,7 +83,6 @@ void Attack::calculateInfoForRoles() noexcept {
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);
 
-
     auto enemyRobots = world->getWorld()->getThem();
 
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
@@ -101,11 +98,13 @@ void Attack::calculateInfoForRoles() noexcept {
     }
 
     if (enemyMap.size() < 3) {
-        stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
-    }
-    else {
+        stpInfos["pass_defender_1"].setPositionToDefend(
+            Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(
+            Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
+                                                                field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
+    } else {
         stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
         enemyMap.erase(enemyMap.begin());
         stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
@@ -117,7 +116,7 @@ void Attack::calculateInfoForRoles() noexcept {
     stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
-void Attack::calculateInfoForBlocker() noexcept{
+void Attack::calculateInfoForBlocker() noexcept {
     stpInfos["ball_blocker"].setPositionToMoveTo(PositionComputations::getBallBlockPosition(field, world));
     if (stpInfos["ball_blocker"].getRobot())
         stpInfos["ball_blocker"].setAngle((world->getWorld()->getBall()->get()->position - stpInfos["ball_blocker"].getRobot()->get()->getPos()).toAngle());
@@ -149,7 +148,6 @@ void Attack::calculateInfoForDefenders() noexcept {
 }
 
 void Attack::calculateInfoForMidfielders() noexcept {
-
     // If the ball (and therefore striker) are in the front of the field, let the attacking midfielder go to the midfield
     // If the striker is not in the front field already, let the attacking midfielder go to the free section in the front field
     if (world->getWorld()->getBall()->get()->position.x > field.middleRightGrid.getOffSetX()) {

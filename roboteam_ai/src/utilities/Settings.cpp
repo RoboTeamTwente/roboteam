@@ -21,7 +21,7 @@ void GameSettings::handleSettingsFromPrimaryAI(const proto::GameSettings& settin
 
 bool GameSettings::isPrimaryAI() { return primaryAI; }
 
-void GameSettings::setPrimaryAI(bool value) {  primaryAI = value; }
+void GameSettings::setPrimaryAI(bool value) { primaryAI = value; }
 
 bool GameSettings::isYellow() { return yellow; }
 

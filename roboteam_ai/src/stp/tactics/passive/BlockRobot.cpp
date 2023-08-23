@@ -3,6 +3,7 @@
 /// PASSIVE
 
 #include "stp/tactics/passive/BlockRobot.h"
+
 #include "stp/computations/PositionComputations.h"
 #include "stp/skills/GoToPos.h"
 
@@ -38,25 +39,25 @@ double BlockRobot::calculateAngle(const world::view::RobotView enemy, const Vect
 
 /// TODO: fine tune distance
 Vector2 BlockRobot::calculateDesiredRobotPosition(BlockDistance blockDistance, const world::view::RobotView enemy, const Vector2 &targetLocation, double enemyDistance) {
-    auto lineEnemyToTarget = targetLocation - enemy->getPos(); // predicted trajectory of enemy robot to target
-    double distance; // distance from the enemy robot to blocking position
+    auto lineEnemyToTarget = targetLocation - enemy->getPos();  // predicted trajectory of enemy robot to target
+    double distance;                                            // distance from the enemy robot to blocking position
 
     switch (blockDistance) {
         case BlockDistance::CLOSE:
-            distance = 3 * control_constants::ROBOT_RADIUS + enemy->getVel().length(); // get as close to the enemy robot as possible without colliding
+            distance = 3 * control_constants::ROBOT_RADIUS + enemy->getVel().length();  // get as close to the enemy robot as possible without colliding
             break;
         case BlockDistance::HALFWAY:
-            distance = lineEnemyToTarget.length() / 2 + 0.5 * enemy->getVel().length(); // get in the middle of enemy robot and target location
+            distance = lineEnemyToTarget.length() / 2 + 0.5 * enemy->getVel().length();  // get in the middle of enemy robot and target location
             break;
         case BlockDistance::FAR:
-            distance = lineEnemyToTarget.length() - 4 * control_constants::ROBOT_RADIUS; // get close to the target location
+            distance = lineEnemyToTarget.length() - 4 * control_constants::ROBOT_RADIUS;  // get close to the target location
             break;
         default:
-            distance = lineEnemyToTarget.length() / 2 + 0.5 * enemy->getVel().length(); // default BlockDistance is HALFWAY
+            distance = lineEnemyToTarget.length() / 2 + 0.5 * enemy->getVel().length();  // default BlockDistance is HALFWAY
             break;
     }
 
-    if (distance < 4 * control_constants::ROBOT_RADIUS || enemyDistance < distance) { // if enemy is closer to target position
+    if (distance < 4 * control_constants::ROBOT_RADIUS || enemyDistance < distance) {  // if enemy is closer to target position
         distance = lineEnemyToTarget.length() / 2;
     }
 

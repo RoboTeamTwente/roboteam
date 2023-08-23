@@ -1,12 +1,13 @@
+#include <gtest/gtest.h>
+#include <roboteam_utils/Random.h>
+
+#include <AIDataNetworker.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-#include <AIDataNetworker.hpp>
 #include <chrono>
 #include <memory>
-#include <gtest/gtest.h>
-#include <roboteam_utils/Random.h>
 
 /* These tests will check if you send something with a publisher of type X,
  * you will receive the same data with the subscriber of X.
@@ -18,14 +19,18 @@
 using namespace rtt::net;
 
 constexpr int TEST_BOOL = true;
-constexpr int TEST_VALUE = 69; // Nice
+constexpr int TEST_VALUE = 69;  // Nice
 constexpr int PAUSE_MS = 50;
 
 // Robot commands loop test
 bool robotCommandsBlueLoopTestPassed = false;
 bool robotCommandsYellowLoopTestPassed = false;
-void onRobotCommandsBlue(const rtt::RobotCommands& commands) { robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE; }
-void onRobotCommandsYellow(const rtt::RobotCommands& commands) { robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE; }
+void onRobotCommandsBlue(const rtt::RobotCommands& commands) {
+    robotCommandsBlueLoopTestPassed = commands[0].id == TEST_VALUE;
+}
+void onRobotCommandsYellow(const rtt::RobotCommands& commands) {
+    robotCommandsYellowLoopTestPassed = commands[0].id == TEST_VALUE;
+}
 
 TEST(RTTChannels, testRobotCommandsLoop) {
     RobotCommandsBluePublisher pubBlue;
@@ -38,7 +43,7 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
     rtt::RobotCommands commands;
 
-    commands.push_back({.id = TEST_VALUE});
+    commands.push_back({ .id = TEST_VALUE });
 
     pubBlue.publish(commands);
     pubYellow.publish(commands);
@@ -52,16 +57,16 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
 // Robot feedback loop test
 bool robotFeedbackLoopTestPassed = false;
-void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) { robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE; }
+void onRobotFeedback(const rtt::RobotsFeedback& feedbacks) {
+    robotFeedbackLoopTestPassed = feedbacks.feedback.at(0).id == TEST_VALUE;
+}
 TEST(RTTChannels, testRobotFeedbackLoop) {
     RobotFeedbackPublisher pub;
     RobotFeedbackSubscriber sub(onRobotFeedback);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     rtt::RobotsFeedback feedbacks;
-    feedbacks.feedback.push_back({
-        .id = TEST_VALUE
-    });
+    feedbacks.feedback.push_back({ .id = TEST_VALUE });
 
     pub.publish(feedbacks);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -71,7 +76,9 @@ TEST(RTTChannels, testRobotFeedbackLoop) {
 
 // Settings loop test
 bool settingsLoopTestPassed = false;
-void onSettings(const proto::GameSettings& settings) { settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL; }
+void onSettings(const proto::GameSettings& settings) {
+    settingsLoopTestPassed = settings.is_yellow() == TEST_BOOL;
+}
 TEST(RTTChannels, testSettingsLoop) {
     SettingsPublisher pub;
     SettingsSubscriber sub(onSettings);
@@ -88,7 +95,9 @@ TEST(RTTChannels, testSettingsLoop) {
 
 // World loop test
 bool worldLoopTestPassed = false;
-void onWorld(const proto::State& world) { worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE; }
+void onWorld(const proto::State& world) {
+    worldLoopTestPassed = world.ball_camera_world().ball().pos().x() == TEST_VALUE;
+}
 TEST(RTTChannels, testWorldLoop) {
     WorldPublisher pub;
     WorldSubscriber sub(onWorld);
@@ -106,8 +115,12 @@ TEST(RTTChannels, testWorldLoop) {
 // Settings loop test
 bool aiYellowDataLoopTestPassed = false;
 bool aiBlueDataLoopTestPassed = false;
-void onYellowAIData(const rtt::AIData& data) { aiYellowDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE; }
-void onBlueAIData(const rtt::AIData& data) { aiBlueDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE; }
+void onYellowAIData(const rtt::AIData& data) {
+    aiYellowDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE;
+}
+void onBlueAIData(const rtt::AIData& data) {
+    aiBlueDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE;
+}
 TEST(RTTChannels, testAIDataLoop) {
     AIBlueDataPublisher bluePub;
     AIYellowDataPublisher yellowPub;
@@ -119,7 +132,7 @@ TEST(RTTChannels, testAIDataLoop) {
 
     rtt::AIData data;
     for (int i = 0; i < TEST_VALUE; i++) {
-        data.robotPaths.push_back(rtt::RobotPath {.robotId = TEST_VALUE});
+        data.robotPaths.push_back(rtt::RobotPath{ .robotId = TEST_VALUE });
     }
 
     bluePub.publish(data);

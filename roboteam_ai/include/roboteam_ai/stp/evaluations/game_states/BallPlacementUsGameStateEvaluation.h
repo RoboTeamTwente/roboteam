@@ -9,7 +9,7 @@
 
 namespace rtt::ai::stp::evaluation {
 /**
-     * @brief Class that evaluates the ball placement us game state
+ * @brief Class that evaluates the ball placement us game state
  */
 class BallPlacementUsGameStateEvaluation : public BaseEvaluation {
    public:

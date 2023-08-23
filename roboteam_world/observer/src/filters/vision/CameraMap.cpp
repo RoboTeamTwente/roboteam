@@ -5,7 +5,7 @@
 #include "filters/vision/CameraMap.h"
 
 void CameraMap::addCamera(const Camera &camera) {
-    map.insert({camera.getID(),camera});
+    map.insert({ camera.getID(), camera });
 }
 
 const Camera &CameraMap::operator[](unsigned int id) const {

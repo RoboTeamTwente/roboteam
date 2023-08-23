@@ -71,7 +71,7 @@ class GameSettings {
      * @brief Gets the mode that RobotHub is in
      * @return The mode that RobotHub is in
      */
-    static  net::RobotHubMode getRobotHubMode();
+    static net::RobotHubMode getRobotHubMode();
 
     /**
      * @brief Sets the RobotHub mode
@@ -82,8 +82,8 @@ class GameSettings {
 
    private:
     static std::atomic<bool> primaryAI;
-    static std::atomic<bool> yellow; /**< Indicates whether this is the yellow team */
-    static std::atomic<bool> left; /**< Indicates whether we are playing on the left side */
+    static std::atomic<bool> yellow;                    /**< Indicates whether this is the yellow team */
+    static std::atomic<bool> left;                      /**< Indicates whether we are playing on the left side */
     static std::atomic<net::RobotHubMode> robotHubMode; /**< The mode in which RobotHub is sending robot commands */
 };
 

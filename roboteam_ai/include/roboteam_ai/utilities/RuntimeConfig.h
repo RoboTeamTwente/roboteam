@@ -28,6 +28,6 @@ class RuntimeConfig {
     static inline std::atomic<bool> isPaused;
 };
 
-}  // namespace rtt::ai::new_interface
+}  // namespace rtt::ai
 
 #endif  // RTT_RUNTIMECONFIG_H

@@ -10,11 +10,11 @@
  */
 #include <iostream>
 #include <map>
+#include <roboteam_utils/Field.hpp>
 #include <vector>
 
 #include "gtest/gtest_prod.h"
 #include "stp/StpInfo.h"
-#include <roboteam_utils/Field.hpp>
 #include "world/views/RobotView.hpp"
 #include "world/views/WorldDataView.hpp"
 
@@ -61,7 +61,7 @@ class Dealer {
      * @brief Structure that defines the dealer flag. The dealer flag will give a certain factor with the influence it should have on assigning the roles
      */
     struct DealerFlag {
-        DealerFlagTitle title; /**< Factor that the dealer should take into account */
+        DealerFlagTitle title;       /**< Factor that the dealer should take into account */
         DealerFlagPriority priority; /**< Influence the factor has on assigning the roles */
         /**
          * @brief Explicit constructor of the DealerFlag structure
@@ -78,9 +78,9 @@ class Dealer {
      * @brief Structure that defines the role info. The role info gives information about the role that should be assigned
      */
     struct RoleInfo {
-        DealerFlagPriority priority; /**< Priority of the role */
+        DealerFlagPriority priority;   /**< Priority of the role */
         std::vector<DealerFlag> flags; /**< Vector of dealer flags about the role */
-        int forcedID = -1;  /**< The ID this role should be force pushed on, -1 if the dealer should decide */
+        int forcedID = -1;             /**< The ID this role should be force pushed on, -1 if the dealer should decide */
     };
 
     using FlagMap = std::map<std::string, RoleInfo>; /**< Mapping of a role to its distribution information */
@@ -120,13 +120,13 @@ class Dealer {
 
    private:
     v::WorldDataView world; /**< The world data */
-    rtt::Field *field; /**< The field data */
+    rtt::Field *field;      /**< The field data */
 
     /**
      * @brief Score of a certain flag (/factor) with its weight that it was multiplied with (to be used in normalization)
      */
     struct FlagScore {
-        double score; /**< Score of the flag */
+        double score;  /**< Score of the flag */
         double weight; /**< Weight of the score */
     };
 
@@ -134,7 +134,7 @@ class Dealer {
      * @brief Final score a specific robot with its sum of score and sum of weights (to be used in normalization)
      */
     struct RobotRoleScore {
-        double sumScore; /**< Score of the role for this robot */
+        double sumScore;   /**< Score of the role for this robot */
         double sumWeights; /**< weight of the score */
     };
 

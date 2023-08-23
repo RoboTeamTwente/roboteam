@@ -53,7 +53,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<plays::AttackingPass>());
-//    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
+    //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
     plays.emplace_back(std::make_unique<plays::DefendShot>());
@@ -98,29 +98,28 @@ void STPManager::start(std::atomic_flag &exitApplication) {
     }
 
     double avgTickDuration = 0;
-    double alpha = 1.0/100.0; // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
+    double alpha = 1.0 / 100.0;  // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
 
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
             double tickDuration = static_cast<double>(roboteam_utils::Timer::measure([&]() {
-                // Tick AI
-                runOneLoopCycle();
-                tickCounter++;
-            }).count());
-            avgTickDuration = alpha * tickDuration + (1 - alpha) * avgTickDuration; // Exponential moving average
+                                                          // Tick AI
+                                                          runOneLoopCycle();
+                                                          tickCounter++;
+                                                      }).count());
+            avgTickDuration = alpha * tickDuration + (1 - alpha) * avgTickDuration;  // Exponential moving average
 
+            stpTimer.limit(
+                [&]() {
+                    auto &publisher = interfaceGateway->publisher();
+                    if (currentPlay != nullptr) {
+                        publisher.publishStpStatus(currentPlay, plays, tickCounter, tickDuration, avgTickDuration);
+                    }
 
-            stpTimer.limit([&]() {
-                auto &publisher = interfaceGateway->publisher();
-                if (currentPlay != nullptr) {
-                    publisher.publishStpStatus(currentPlay, plays, tickCounter, tickDuration, avgTickDuration);
-                }
-
-                publisher
-                    .publishWorld()
-                    .publishVisuals();
-            }, 45);
+                    publisher.publishWorld().publishVisuals();
+                },
+                45);
 
             // If this is primary AI, broadcast settings every second
             if (GameSettings::isPrimaryAI()) {
@@ -187,7 +186,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     ai::stp::ComputationManager::clearStoredComputations();
 
     /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
-    if(!ignoreWorldAge){
+    if (!ignoreWorldAge) {
         if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
             RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
             currentPlay = nullptr;
@@ -208,5 +207,5 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     currentPlay->update();
 }
 
-STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway): interfaceGateway(std::move(interfaceGateway)) { }
+STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : interfaceGateway(std::move(interfaceGateway)) {}
 }  // namespace rtt

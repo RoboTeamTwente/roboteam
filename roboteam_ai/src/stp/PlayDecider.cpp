@@ -14,7 +14,6 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
     std::vector<Play*> validPlays;
     // Only add plays that are valid
     for (auto& each : plays) {
-        
         if (RuntimeConfig::ignoreInvariants || each->isValidPlayToStart()) {
             validPlays.push_back(each.get());
         }
@@ -41,9 +40,7 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
     return std::max_element(playsWithScores.begin(), playsWithScores.end(), [](auto& lhs, auto& rhs) { return lhs.second < rhs.second; })->first;
 }
 
-bool PlayDecider::didLockPlay() noexcept {
-    return playLock.didChange.exchange(false);
-}
+bool PlayDecider::didLockPlay() noexcept { return playLock.didChange.exchange(false); }
 
 void PlayDecider::lockPlay(const std::optional<std::string> playName) {
     std::scoped_lock lock(playLock.lock);

@@ -17,7 +17,7 @@ namespace rtt {
 
         virtual ~Shape() = default;
     };
-}
+}  // namespace rtt
 
 
 #endif  // RTT_SHAPE_H

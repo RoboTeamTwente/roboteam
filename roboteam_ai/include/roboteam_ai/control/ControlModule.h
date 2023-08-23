@@ -22,7 +22,7 @@ namespace rtt::ai::control {
  */
 class ControlModule {
    protected:
-    static inline std::vector<rtt::RobotCommand> robotCommands; /**< Vector of all robot commands */
+    static inline std::vector<rtt::RobotCommand> robotCommands;          /**< Vector of all robot commands */
     static inline std::map<unsigned int, AnglePID> simulatorAnglePIDmap; /**< Angle controller for each robot */
 
     /**

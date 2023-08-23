@@ -1,6 +1,7 @@
 #include "stp/roles/active/PenaltyTaker.h"
-#include "stp/tactics/active/GetBall.h"
+
 #include "stp/tactics/active/DriveWithBall.h"
+#include "stp/tactics/active/GetBall.h"
 #include "stp/tactics/active/OrbitKick.h"
 
 namespace rtt::ai::stp::role {

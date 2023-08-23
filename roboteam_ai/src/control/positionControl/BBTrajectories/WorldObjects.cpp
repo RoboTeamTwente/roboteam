@@ -93,7 +93,8 @@ void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::
     }
 }
 
-void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, std::vector<Vector2> pathPoints, double timeStep, double dist) {
+void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, std::vector<Vector2> pathPoints, double timeStep,
+                                           double dist) {
     auto startPositionBall = world->getWorld()->getBall()->get()->position;
     auto VelocityBall = world->getWorld()->getBall()->get()->velocity;
     std::vector<Vector2> ballTrajectory;
@@ -108,7 +109,7 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
     }
 
     for (size_t i = 1; i < ballTrajectory.size(); i++) {
-        if (pathPoints[i].dist(ballTrajectory[i]) < dist){
+        if (pathPoints[i].dist(ballTrajectory[i]) < dist) {
             insertCollisionData(collisionDatas, CollisionData{ballTrajectory[i], pathPoints[i], i * timeStep, "BallCollision"});
             return;
         }

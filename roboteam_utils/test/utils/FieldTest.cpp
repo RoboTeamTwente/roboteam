@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/Field.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/Field.hpp>
 
 using namespace rtt;
 
@@ -84,9 +85,9 @@ TEST(FieldTest, equals) {
         double goalWidth = SimpleRandom::getDouble(0.1, 1);
         double goalHeight = SimpleRandom::getDouble(0.1, defenseHeight);
         double boundary = SimpleRandom::getDouble(0.1, 5);
-        double centerRadius = SimpleRandom::getDouble(0.1, std::fmin(fieldHeight/2, fieldWidth/2 - defenseWidth));
+        double centerRadius = SimpleRandom::getDouble(0.1, std::fmin(fieldHeight / 2, fieldWidth / 2 - defenseWidth));
 
-        double penaltyPointDistanceFromCenter = SimpleRandom::getDouble(centerRadius, fieldWidth/2 - defenseWidth);
+        double penaltyPointDistanceFromCenter = SimpleRandom::getDouble(centerRadius, fieldWidth / 2 - defenseWidth);
         Vector2 leftPenaltyPoint(-penaltyPointDistanceFromCenter, 0);
         Vector2 rightPenaltyPoint(penaltyPointDistanceFromCenter, 0);
 

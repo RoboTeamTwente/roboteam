@@ -19,9 +19,9 @@ namespace rtt::world::robot {
 /**
  * @brief Structure that stores info about whether the robot has the ball
  */
-struct hasBallInfo{
+struct hasBallInfo {
     bool hasBall; /**< Indicates whether the robot has the ball */
-    int score; /**< Gives a score to the confidence of this info */
+    int score;    /**< Gives a score to the confidence of this info */
 };
 
 /**
@@ -30,26 +30,26 @@ struct hasBallInfo{
  */
 class Robot {
    private:
-    int id; /**< ID of the robot */
+    int id;    /**< ID of the robot */
     Team team; /**< Team the robot belongs to */
 
     Vector2 pos; /**< Position of the robot */
     Vector2 vel; /**< Velocity of the robot */
     Angle angle; /**< Angle of the robot */
 
-    double distanceToBall; /**< Distance from the robot to the ball */
+    double distanceToBall;  /**< Distance from the robot to the ball */
     double angleDiffToBall; /**< Angle of the robot relative to the ball */
 
     double angularVelocity; /**< Angular velocity of the ball */
     bool batteryLow{false}; /**< Indicates whether the battery of the robot is low */
 
-    bool workingDribbler; /**< Indicates whether the robot has a working dribbler */
+    bool workingDribbler;     /**< Indicates whether the robot has a working dribbler */
     bool workingBallSensor{}; /**< Indicates whether the robot has a working ball sensor */
 
     bool ballSensorSeesBall{}; /**< Indicates whether the ball sensor sees the ball */
-    float ballPos{}; /**< The position of the ball */
-    bool dribblerSeesBall{}; /**< Indicates whether the dribbler sees the ball */
-    bool robotHasBall{}; /**< Indicates whether the robot has the ball */
+    float ballPos{};           /**< The position of the ball */
+    bool dribblerSeesBall{};   /**< Indicates whether the dribbler sees the ball */
+    bool robotHasBall{};       /**< Indicates whether the robot has the ball */
 
     static inline std::unordered_map<int, hasBallInfo> hasBallUpdateMap; /**< Map that stores a score that indicates how likely we think it is that each robot has the ball */
 
@@ -64,7 +64,7 @@ class Robot {
      * @brief Determines which robot has the ball
      * @param ball The current ball data
      */
-    void updateHasBallMap(std::optional<view::BallView>& ball);
+    void updateHasBallMap(std::optional<view::BallView> &ball);
 
     /**
      * @brief Set the angle of the robot according to the given angle

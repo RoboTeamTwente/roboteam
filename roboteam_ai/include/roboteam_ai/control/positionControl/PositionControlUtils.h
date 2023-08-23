@@ -15,7 +15,7 @@ namespace rtt::ai::control {
  */
 class PositionControlUtils {
    private:
-    static constexpr double MAX_TARGET_DEVIATION = 0.05; /**< Maximum distance a target can deviate before it is defined as a new position */
+    static constexpr double MAX_TARGET_DEVIATION = 0.05;                                 /**< Maximum distance a target can deviate before it is defined as a new position */
     static constexpr double MIN_DISTANCE_TARGET_REACHED = 2 * Constants::ROBOT_RADIUS(); /**< minimum distance needed to consider the current target reached */
 
    public:

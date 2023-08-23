@@ -37,11 +37,11 @@ enum class Status { Waiting, Success, Failure, Running };
  * @brief The AvoidObjects struct containing what the robot should avoid
  */
 struct AvoidObjects {
-    bool shouldAvoidBall = false; /***< Indicates whether the robot should avoid the ball */
-    bool shouldAvoidDefenseArea = true; /***< Indicates whether the robot should avoid the defense area */
-    bool shouldAvoidOutOfField = true; /***< Indicates whether the robot should avoid going out of the field */
-    bool shouldAvoidOurRobots = true; /***< Indicates whether the robot should avoid allied robots */
-    bool shouldAvoidTheirRobots = true; /***< Indicates whether the robot should avoid the enemy robots */
+    bool shouldAvoidBall = false;                                      /***< Indicates whether the robot should avoid the ball */
+    bool shouldAvoidDefenseArea = true;                                /***< Indicates whether the robot should avoid the defense area */
+    bool shouldAvoidOutOfField = true;                                 /***< Indicates whether the robot should avoid going out of the field */
+    bool shouldAvoidOurRobots = true;                                  /***< Indicates whether the robot should avoid allied robots */
+    bool shouldAvoidTheirRobots = true;                                /***< Indicates whether the robot should avoid the enemy robots */
     double avoidBallDist = 2.0 * stp::control_constants::ROBOT_RADIUS; /***< The minimum distance a robot should keep to the ball when avoiding the ball */
 };
 }  // namespace rtt::ai::stp

@@ -3,6 +3,7 @@
 //
 
 #include "Polynomial.h"
+
 #include <cmath>
 namespace rtt {
     std::optional<std::pair<double, double>> solveQuadratic(double a, double b, double c) {
@@ -32,12 +33,12 @@ namespace rtt {
         if (discriminant < 0) {
             return {};
         } else if (discriminant == 0) {
-            return {-b / (2 * a)};
+            return { -b / (2 * a) };
         }
         discriminant = sqrt(discriminant);
         double t0 = (-b - discriminant) / (2 * a);
         double t1 = (-b + discriminant) / (2 * a);
-        return a > 0 ? std::vector{t0, t1} : std::vector{t1, t0};
+        return a > 0 ? std::vector{ t0, t1 } : std::vector{ t1, t0 };
     }
 
     int countQuadraticSolutions(double a, double b, double c) {
@@ -49,4 +50,4 @@ namespace rtt {
         }
         return 2;
     }
-}
+}  // namespace rtt

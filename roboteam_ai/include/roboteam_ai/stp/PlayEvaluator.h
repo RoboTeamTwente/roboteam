@@ -6,6 +6,7 @@
 #define RTT_PLAYEVALUATOR_H
 
 #include <roboteam_utils/Field.hpp>
+
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

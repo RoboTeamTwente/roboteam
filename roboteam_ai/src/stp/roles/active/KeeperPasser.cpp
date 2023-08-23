@@ -4,9 +4,9 @@
 
 #include "stp/roles/active/KeeperPasser.h"
 
+#include "stp/tactics/KeeperBlockBall.h"
 #include "stp/tactics/active/GetBall.h"
 #include "stp/tactics/active/KickAtPos.h"
-#include "stp/tactics/KeeperBlockBall.h"
 
 namespace rtt::ai::stp::role {
 

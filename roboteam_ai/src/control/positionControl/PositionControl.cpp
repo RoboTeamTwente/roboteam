@@ -9,12 +9,10 @@
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
-std::vector<Vector2> PositionControl::getComputedPath(int ID) {
-    return computedPaths[ID];
-}
+std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
-RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
-                                                  Vector2 &targetPosition, stp::PIDType pidType) {
+RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
+                                                  stp::PIDType pidType) {
     collisionDetector.setField(field);
 
     // if the robot is close to the final position and can't get there, stop
@@ -174,8 +172,7 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
     return std::nullopt;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
-                                                               Vector2 &targetPosition) {
+std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition) {
     double angleBetweenIntermediatePoints = M_PI_4 / 2;
 
     // Radius and point extension of intermediate points are based on the fieldHeight
@@ -224,8 +221,8 @@ std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Ve
     return intermediatePointsSorted;
 }
 
-bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition,
-                                                  const Vector2 &currentPosition, ai::stp::AvoidObjects avoidObjects) {
+bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
+                                                  ai::stp::AvoidObjects avoidObjects) {
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&
          (targetPosition - computedPaths[robotId][computedPaths[robotId].size() - 1]).length() > stp::control_constants::GO_TO_POS_ERROR_MARGIN) ||

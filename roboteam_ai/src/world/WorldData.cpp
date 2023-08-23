@@ -8,8 +8,7 @@
 #include "utilities/GameSettings.h"
 
 namespace rtt::world {
-WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
-    : time{protoMsg.time()} {
+WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept : time{protoMsg.time()} {
     auto &ours = GameSettings::isYellow() ? protoMsg.yellow() : protoMsg.blue();
     auto &others = GameSettings::isYellow() ? protoMsg.blue() : protoMsg.yellow();
 
@@ -29,18 +28,18 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
     // for (auto &each : others) {
     //     robots.emplace_back( each, Team::them, getBall());
     // }
-    
+
     for (auto &each : ours) {
-        if(isnan(each.pos().x())){
+        if (isnan(each.pos().x())) {
             RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
-        }else {
+        } else {
             robots.emplace_back(each, Team::us, getBall());
         }
     }
     for (auto &each : others) {
-        if(isnan(each.pos().x())){
+        if (isnan(each.pos().x())) {
             RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
-        }else {
+        } else {
             robots.emplace_back(each, Team::them, getBall());
         }
     }
@@ -50,10 +49,10 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept
     them.reserve(amountThem);
     setViewVectors();
 
-    //TODO: add information from robots which were only seen on feedback but not on vision
-    if (GameSettings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0){
+    // TODO: add information from robots which were only seen on feedback but not on vision
+    if (GameSettings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0) {
         RTT_WARNING("Received feedback from unseen robots!")
-    } else if (!GameSettings::isYellow() && protoMsg.blue_unseen_robots_size() > 0){
+    } else if (!GameSettings::isYellow() && protoMsg.blue_unseen_robots_size() > 0) {
         RTT_WARNING("Received feedback from unseen robots!")
     }
 }

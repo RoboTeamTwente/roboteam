@@ -25,10 +25,9 @@ class STPManager {
      */
     void runOneLoopCycle();
 
-
-    int tickCounter = 0; /**< Counter that keeps track of the ticks */
-    bool fieldInitialized = false; /**< Indicates whether the field is initialized successfully */
-    bool robotsInitialized = false; /**< Indicates whether the robots are initialized successfully */
+    int tickCounter = 0;                                              /**< Counter that keeps track of the ticks */
+    bool fieldInitialized = false;                                    /**< Indicates whether the field is initialized successfully */
+    bool robotsInitialized = false;                                   /**< Indicates whether the robots are initialized successfully */
     std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
 
     static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */

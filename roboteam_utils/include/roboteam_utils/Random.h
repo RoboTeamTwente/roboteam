@@ -1,6 +1,6 @@
 #pragma once
-#include <random>
 #include <iterator>
+#include <random>
 
 class Time;
 
@@ -10,7 +10,7 @@ class Time;
  * using Time::now() is pretty much always a bad idea, and that the user is better off using e.g. the time of the world
  */
 class Random {
-   public:
+public:
     explicit Random(long seed);
     explicit Random(const Time& time);
     /**
@@ -23,7 +23,7 @@ class Random {
     double getUniform();
     std::mt19937& instance();  // Can be used for custom distributions
 
-   private:
+private:
     std::mt19937 engine;
 };
 

@@ -25,7 +25,7 @@ class PathPlanningAlgorithm {
     /**
      * @brief Virtual destructor of the PathPlanningAlgorithm
      */
-     virtual ~PathPlanningAlgorithm() = default;
+    virtual ~PathPlanningAlgorithm() = default;
 
     /**
      * @brief Algorithm specific path computation. It should take into account the obstacles in the field

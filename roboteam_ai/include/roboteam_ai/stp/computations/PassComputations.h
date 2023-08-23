@@ -8,8 +8,9 @@
 #include <roboteam_utils/LineSegment.h>
 #include <stp/constants/GeneralizationConstants.h>
 
-#include "roboteam_utils/Grid.h"
 #include <roboteam_utils/Field.hpp>
+
+#include "roboteam_utils/Grid.h"
 #include "world/World.hpp"
 #include "world/views/RobotView.hpp"
 
@@ -71,8 +72,8 @@ class PassComputations {
      * @param world the current world
      * @return bool indicating whether this point is (likely) possible to pass to
      */
-    static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations, Vector2 passerLocation,
-                                         const Field& field, const world::World* world);
+    static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations, Vector2 passerLocation, const Field& field,
+                                         const world::World* world);
 
     /**
      * @brief Determines which robot should be the keeper (either previous keeper, or robot closest to goal if there was no keeper)

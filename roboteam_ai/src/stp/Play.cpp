@@ -131,15 +131,11 @@ void Play::distributeRoles() noexcept {
 std::unordered_map<Role *, Status> const &Play::getRoleStatuses() const { return roleStatuses; }
 
 bool Play::isValidPlayToKeep() noexcept {
-    return  (!shouldEndPlay() && std::all_of(keepPlayEvaluation.begin(), keepPlayEvaluation.end(), [this](auto &x) {
-        return PlayEvaluator::checkEvaluation(x, world);
-    }));
+    return (!shouldEndPlay() && std::all_of(keepPlayEvaluation.begin(), keepPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); }));
 }
 
 bool Play::isValidPlayToStart() const noexcept {
-    return std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) {
-        return PlayEvaluator::checkEvaluation(x, world);
-    });
+    return std::all_of(startPlayEvaluation.begin(), startPlayEvaluation.end(), [this](auto &x) { return PlayEvaluator::checkEvaluation(x, world); });
 }
 
 uint8_t Play::getLastScore() const { return lastScore.value_or(0); }

@@ -7,17 +7,17 @@
 
 #include <atomic>
 #include <mutex>
+
 #include "Play.hpp"
 
 namespace rtt::ai::stp {
 
 struct PlayLock {
     std::atomic<bool> didChange; /**< Bool indicating if the current play was changed using lockPlay method */
-    std::atomic<bool> isSet; /**< Bool indicating if the current play was set using lockPlay method */
+    std::atomic<bool> isSet;     /**< Bool indicating if the current play was set using lockPlay method */
 
     std::optional<std::string> playName; /**< The play name that is set in the interface */
-    std::mutex lock; /**< Mutex to lock the interfacePlayStr */
-
+    std::mutex lock;                     /**< Mutex to lock the interfacePlayStr */
 };
 
 /**
@@ -28,7 +28,6 @@ class PlayDecider {
     static inline PlayLock playLock; /**< The play that is locked in the interface */
 
    public:
-
     /**
      * @brief Returns if the play was changed using the lockPlay method. Also resets the didChange bool to false
      * @return true if the play was changed using the lockPlay, false otherwise

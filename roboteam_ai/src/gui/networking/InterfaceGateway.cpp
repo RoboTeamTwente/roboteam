@@ -13,9 +13,7 @@ namespace rtt::ai::gui::net {
 
 InterfaceGateway::~InterfaceGateway() = default;
 
-InterfacePublisher& InterfaceGateway::publisher() {
-    return _publisher;
-}
+InterfacePublisher& InterfaceGateway::publisher() { return _publisher; }
 
 //// r = 114. t = 116. rtt = 11400+1160+116 = 12676
 
@@ -46,7 +44,6 @@ InterfaceGateway::InterfaceGateway(int port) : webSocketServer(port), _publisher
         });
     });
 
-
     const auto [didSucceed, errorLog] = webSocketServer.listen();
     if (!didSucceed) {
         RTT_ERROR("Could not start WebSocketServer :", errorLog);
@@ -57,4 +54,4 @@ InterfaceGateway::InterfaceGateway(int port) : webSocketServer(port), _publisher
     webSocketServer.start();
 }
 
-}  // namespace rtt::ai::io
+}  // namespace rtt::ai::gui::net

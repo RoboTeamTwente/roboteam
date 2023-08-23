@@ -19,7 +19,7 @@ namespace rtt::ai::control {
 class BBTPathTracking {
    private:
     static constexpr unsigned long STEPS_AHEAD = 1; /**< Maximum amount of steps that can be taken into account */
-    PidTracking pidTracking; /**< PID tracker of the trajectory */
+    PidTracking pidTracking;                        /**< PID tracker of the trajectory */
 
    public:
     /**

@@ -20,7 +20,9 @@ constexpr int SETTINGS_TRANSMISSION_INTERVAL_MS = 1000;
 /// All things related to the sending of robot commands ///
 ///////////////////////////////////////////////////////////
 enum class Rotation {
-    NO_ROTATION, LEFT_ROTATION, RIGHT_ROTATION
+    NO_ROTATION,
+    LEFT_ROTATION,
+    RIGHT_ROTATION
 };
 enum class Movement {
     FORWARD,
@@ -33,7 +35,10 @@ enum class Movement {
     STILL,
 };
 enum class Team {
-    NEITHER, YELLOW, BLUE, BOTH
+    NEITHER,
+    YELLOW,
+    BLUE,
+    BOTH
 };
 
 bool shouldSendRobotCommands = false;
@@ -240,7 +245,7 @@ bool handleCommand(std::string cmd) {
         c = static_cast<char>(toupper(c));
 
     // Now handle command
-    if (cmd.empty()) { // Abort, freeze, stop all robots aaaaah
+    if (cmd.empty()) {  // Abort, freeze, stop all robots aaaaah
         targetAllRobotIDs = true;
         currentMovement = Movement::STILL;
         currentRotation = Rotation::NO_ROTATION;
@@ -402,7 +407,6 @@ void runCommandLineInterface() {
 /////////////////////////
 
 int main() {
-
     std::thread settingsTransmitter(runSettingsSending);
     std::thread commandsTransmitter(runCommandSending);
     std::thread interfaceThread(runCommandLineInterface);

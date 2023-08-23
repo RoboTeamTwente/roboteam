@@ -1,10 +1,11 @@
+#include <gtest/gtest.h>
+
+#include <AIDataNetworker.hpp>
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-#include <AIDataNetworker.hpp>
 #include <iostream>
-#include <gtest/gtest.h>
 
 /* Each computer can only have a single publisher per channel.
  * To make sure all publishers do not accidentally share a channel,
@@ -15,11 +16,16 @@
 
 using namespace rtt::net;
 
-void sharedOnRobotCommands(const rtt::RobotCommands& command) {}
-void sharedOnRobotsFeedback(const rtt::RobotsFeedback& robotFeedback) {}
-void sharedOnSettings(const proto::GameSettings& settings) {}
-void sharedOnWorld(const proto::State& world) {}
-void sharedOnAIData(const rtt::AIData& data) {}
+void sharedOnRobotCommands(const rtt::RobotCommands& command) {
+}
+void sharedOnRobotsFeedback(const rtt::RobotsFeedback& robotFeedback) {
+}
+void sharedOnSettings(const proto::GameSettings& settings) {
+}
+void sharedOnWorld(const proto::State& world) {
+}
+void sharedOnAIData(const rtt::AIData& data) {
+}
 
 TEST(RTTCMDPub, nullptrDontCrash) {
     EXPECT_NO_THROW(
@@ -49,6 +55,5 @@ TEST(RTTCMDPub, nullptrDontCrash) {
 
         AIBlueDataPublisher blueAIPub;
         AIBlueDataSubscriber blueAISub1(sharedOnAIData);
-        AIBlueDataSubscriber blueAISub2(sharedOnAIData);
-    );
+        AIBlueDataSubscriber blueAISub2(sharedOnAIData););
 }

@@ -3,9 +3,10 @@
 //
 #include <gtest/gtest.h>
 
+#include <roboteam_utils/Field.hpp>
+
 #include "helpers/FieldHelper.h"
 #include "helpers/WorldHelper.h"
-#include <roboteam_utils/Field.hpp>
 #include "world/FieldComputations.h"
 #include "world/World.hpp"
 

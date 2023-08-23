@@ -4,11 +4,12 @@
 
 #ifndef RTT_LOGFILEWRITER_H
 #define RTT_LOGFILEWRITER_H
-#include "LogFileHeader.h"
-#include "proto/State.pb.h"
 #include <fstream>
 
-namespace rtt{
+#include "LogFileHeader.h"
+#include "proto/State.pb.h"
+
+namespace rtt {
     class LogFileWriter {
     public:
         LogFileWriter() = default;
@@ -26,14 +27,13 @@ namespace rtt{
          * Returns true if done so succesfully.The given timestamp is checked: it must be the same or increasing!
          */
         bool addMessage(const logged_proto_type& message, logged_time_type timestamp);
+
     private:
         std::unique_ptr<std::ofstream> file;
         logged_time_type last_written_timestamp = 0;
         std::vector<char> serialization_buffer;
     };
-}
+}  // namespace rtt
 
 
-
-
-#endif //RTT_LOGFILEWRITER_H
+#endif  // RTT_LOGFILEWRITER_H

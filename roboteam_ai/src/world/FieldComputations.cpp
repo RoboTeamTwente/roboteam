@@ -62,10 +62,12 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Fie
     return visibleParts;
 }
 
-double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) { return ourGoal ? field.leftGoalArea.rightLine().distanceToLine(point) : field.rightGoalArea.leftLine().distanceToLine(point); }
+double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) {
+    return ourGoal ? field.leftGoalArea.rightLine().distanceToLine(point) : field.rightGoalArea.leftLine().distanceToLine(point);
+}
 
-std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
-                                                                            double margin, bool ignoreGoalLine) {
+std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd, double margin,
+                                                                            bool ignoreGoalLine) {
     auto defenseArea = getDefenseArea(field, ourGoal, margin, field.boundaryWidth);
 
     std::vector<Vector2> intersections;

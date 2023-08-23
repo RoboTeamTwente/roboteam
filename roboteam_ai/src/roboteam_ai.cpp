@@ -1,7 +1,8 @@
 #include <roboteam_utils/Print.h>
+
+#include <csignal>
 #include <memory>
 #include <utility>
-#include <csignal>
 
 #include "RobotHubMode.h"
 #include "STPManager.h"
@@ -63,9 +64,7 @@ int main(int argc, char** argv) {
     }
 
     // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
-    rtt::GameSettings::setRobotHubMode(
-        rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::net::RobotHubMode::BASESTATION : rtt::net::RobotHubMode::SIMULATOR
-    );
+    rtt::GameSettings::setRobotHubMode(rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::net::RobotHubMode::BASESTATION : rtt::net::RobotHubMode::SIMULATOR);
 
     RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
     RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
@@ -79,8 +78,8 @@ int main(int argc, char** argv) {
     }
 
     RTT_DEBUG("Initialize Interface Server");
-    auto interfaceGateway = std::make_shared<rtt::ai::gui::net::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677); /// Shared-prt because the variable is shared accross threads
-
+    auto interfaceGateway =
+        std::make_shared<rtt::ai::gui::net::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677);  /// Shared-prt because the variable is shared accross threads
 
     initializeExitHandler();
     std::thread stpThread(runStp, interfaceGateway);

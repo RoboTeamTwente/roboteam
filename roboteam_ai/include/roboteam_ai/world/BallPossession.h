@@ -4,6 +4,7 @@
 #include <gtest/gtest_prod.h>
 
 #include <roboteam_utils/Field.hpp>
+
 #include "world/views/WorldDataView.hpp"
 
 namespace rtt::ai {

@@ -24,15 +24,15 @@ namespace rtt::ai::control {
 class PositionControl {
    private:
     static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot will keep to avoid collisions */
-    CollisionDetector collisionDetector; /**< Detects collisions on the trajectory */
-    rtt::BB::WorldObjects worldObjects; /**< Calculates collisions */
-    NumTreesPlanning pathPlanningAlgorithm = NumTreesPlanning(collisionDetector); /**< Creates new trajectories when a collision is detected */
-    DensePathTracking pathTrackingAlgorithm; /**< Tracks the path */
-    BBTPathTracking pathTrackingAlgorithmBBT; /**< Tracks the BBT path */
+    CollisionDetector collisionDetector;                                              /**< Detects collisions on the trajectory */
+    rtt::BB::WorldObjects worldObjects;                                               /**< Calculates collisions */
+    NumTreesPlanning pathPlanningAlgorithm = NumTreesPlanning(collisionDetector);     /**< Creates new trajectories when a collision is detected */
+    DensePathTracking pathTrackingAlgorithm;                                          /**< Tracks the path */
+    BBTPathTracking pathTrackingAlgorithmBBT;                                         /**< Tracks the BBT path */
 
-    std::unordered_map<int, Trajectory2D> computedTrajectories; /**< Map of computed trajectories for each robot */
-    std::unordered_map<int, std::vector<Vector2>> computedPaths; /**< Map of computed paths for each robot */
-    std::unordered_map<int, std::vector<Vector2>> computedPathsVel; /**< Map of computed velocities for each robot */
+    std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
+    std::unordered_map<int, std::vector<Vector2>> computedPaths;                           /**< Map of computed paths for each robot */
+    std::unordered_map<int, std::vector<Vector2>> computedPathsVel;                        /**< Map of computed velocities for each robot */
     std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel; /**< Map of pairs containing position and velocity for each robot */
 
     /**
@@ -101,9 +101,8 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    rtt::BB::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
-                                                        Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
-                                                        stp::AvoidObjects avoidObjects);
+    rtt::BB::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+                                                        Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by

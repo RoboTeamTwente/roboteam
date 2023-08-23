@@ -5,12 +5,12 @@
 #ifndef RTT_INTERFACEPUBLISHER_H
 #define RTT_INTERFACEPUBLISHER_H
 
-#include "stp/Play.hpp"
-
-#include <proto/GUI.pb.h>
 #include <ixwebsocket/IXWebSocketServer.h>
+#include <proto/GUI.pb.h>
 
 #include <functional>
+
+#include "stp/Play.hpp"
 
 namespace rtt::ai::gui::net {
 class InterfaceGateway;
@@ -56,5 +56,5 @@ class InterfacePublisher {
         }
     }
 };
-}  // namespace rtt::ai::io
+}  // namespace rtt::ai::gui::net
 #endif  // RTT_INTERFACEPUBLISHER_H

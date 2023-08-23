@@ -1,11 +1,16 @@
 #include "Random.h"
-#include "Time.h"
 
 #include <limits>
 
-Random::Random(long seed) : engine(seed) {}
+#include "Time.h"
 
-Random::Random(const Time &time) : Random(time.asNanoSeconds()) {}
+Random::Random(long seed)
+    : engine(seed) {
+}
+
+Random::Random(const Time &time)
+    : Random(time.asNanoSeconds()) {
+}
 
 double Random::getGaussian() {
     // We could also instantiate these as class members
@@ -13,7 +18,9 @@ double Random::getGaussian() {
     return gauss(engine);
 }
 
-std::mt19937 &Random::instance() { return engine; }
+std::mt19937 &Random::instance() {
+    return engine;
+}
 
 double Random::getUniform() {
     std::uniform_real_distribution<double> uniform(0.0, 1.0);

@@ -2,6 +2,7 @@
 #define RTT_ARGPARSER_H
 
 #include <string>
+
 #include "roboteam_utils/Print.h"
 
 
@@ -18,7 +19,7 @@ namespace rtt {
                     RTT_WARNING("Warning! flag '", flag, "' raised but no value given.");
                     return std::nullopt;
                 }
-                return {""};
+                return { "" };
             }
             // Return value right after flag
             return { *(it + 1) };
@@ -27,6 +28,6 @@ namespace rtt {
         // Flag not present, return "nothing"
         return std::nullopt;
     }
-}
+}  // namespace rtt
 
 #endif  // RTT_ARGPARSER_H

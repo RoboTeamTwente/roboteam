@@ -10,9 +10,9 @@ namespace rtt::world {
  * @brief Enumerator used for indicating the team
  */
 enum Team : short {
-    us, /**< Our team */
+    us,   /**< Our team */
     them, /**< Enemy team */
-    both /**< If a robot has both as team -> invalid. */
+    both  /**< If a robot has both as team -> invalid. */
 };
 }  // namespace rtt::world
 

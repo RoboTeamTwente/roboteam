@@ -7,15 +7,16 @@
 
 #include "Camera.h"
 
-class CameraMap{
+class CameraMap {
 public:
     void addCamera(const Camera& camera);
     const Camera& operator[](unsigned int id) const;
     void clear();
     [[nodiscard]] bool hasCamera(unsigned int id) const;
+
 private:
-    std::map<unsigned int,Camera> map;
+    std::map<unsigned int, Camera> map;
 };
 
 
-#endif //RTT_CAMERAMAP_H
+#endif  // RTT_CAMERAMAP_H

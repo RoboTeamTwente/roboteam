@@ -7,8 +7,8 @@
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/constants/ControlConstants.h"
-#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/active/KeeperPasser.h"
+#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {

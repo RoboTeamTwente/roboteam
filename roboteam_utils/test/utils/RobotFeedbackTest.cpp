@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/RobotFeedback.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/RobotFeedback.hpp>
 
 using namespace rtt;
 
 RobotFeedbackSource randomFeedbackSource() {
-    std::vector<RobotFeedbackSource> allSources = {RobotFeedbackSource::SIMULATOR, RobotFeedbackSource::BASESTATION};
+    std::vector<RobotFeedbackSource> allSources = { RobotFeedbackSource::SIMULATOR, RobotFeedbackSource::BASESTATION };
     return *SimpleRandom::getRandomElement(allSources.begin(), allSources.end());
 }
 Team randomTeam() {
-    std::vector<Team> allTeams = {Team::YELLOW, Team::BLUE};
+    std::vector<Team> allTeams = { Team::YELLOW, Team::BLUE };
     return *SimpleRandom::getRandomElement(allTeams.begin(), allTeams.end());
 }
 

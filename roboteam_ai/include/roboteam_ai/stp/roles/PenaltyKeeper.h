@@ -6,9 +6,10 @@
 #ifndef RTT_PENALTYKEEPER_H
 #define RTT_PENALTYKEEPER_H
 
+#include <roboteam_utils/Field.hpp>
+
 #include "Keeper.h"
 #include "stp/Role.hpp"
-#include <roboteam_utils/Field.hpp>
 
 namespace rtt::ai::stp::role {
 

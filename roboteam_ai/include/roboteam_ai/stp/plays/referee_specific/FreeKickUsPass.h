@@ -73,7 +73,6 @@ class FreeKickUsPass : public Play {
      */
     bool ballKicked();
 
-
     PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
 };
 }  // namespace rtt::ai::stp::play

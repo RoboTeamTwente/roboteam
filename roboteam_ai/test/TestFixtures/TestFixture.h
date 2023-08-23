@@ -13,12 +13,12 @@
 #include <QtWidgets/QApplication>
 #include <iostream>
 
+#include "RobotHubMode.h"
 #include "helpers/FieldHelper.h"
 #include "helpers/WorldHelper.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "world/World.hpp"
-#include "RobotHubMode.h"
 
 /**
  * Plays are included here
@@ -52,7 +52,6 @@ class RTT_AI_Tests : public ::testing::Test {
 
     /// This function is called before each test is run, ensuring the default environment for each test
     void SetUp() override {
-
         // Defaulting to us being left and yellow
         // Set these fields just like they are set in roboteam_ai.cpp
         rtt::GameSettings::setPrimaryAI(true);

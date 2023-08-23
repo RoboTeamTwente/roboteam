@@ -3,6 +3,7 @@
 //
 
 #include "utilities/RefGameState.h"
+
 #include "utilities/RefCommand.h"
 
 namespace rtt::ai {
@@ -16,12 +17,8 @@ bool RefGameState::hasFollowUpCommand() const { return followUpCommandId != RefC
 
 inline std::ostream& operator<<(std::ostream& os, const rtt::ai::RefGameState& gs) {
     os << "RefGameState{"
-       << "\n.strategyName = " << gs.getStrategyName()
-       << "\n.ruleSetName = " << gs.getRuleSet().title
-       << "\n.keeperId = " << gs.keeperId
-       << "\n.commandId = " << static_cast<std::underlying_type<rtt::RefCommand>::type>(gs.commandId)
-       << "\n.isFollowUpCommand = " << gs.isfollowUpCommand
-       << "\n.followUpCommandId = " << static_cast<std::underlying_type<rtt::RefCommand>::type>(gs.followUpCommandId)
-    << "\n}";
+       << "\n.strategyName = " << gs.getStrategyName() << "\n.ruleSetName = " << gs.getRuleSet().title << "\n.keeperId = " << gs.keeperId
+       << "\n.commandId = " << static_cast<std::underlying_type<rtt::RefCommand>::type>(gs.commandId) << "\n.isFollowUpCommand = " << gs.isfollowUpCommand
+       << "\n.followUpCommandId = " << static_cast<std::underlying_type<rtt::RefCommand>::type>(gs.followUpCommandId) << "\n}";
     return os;
-}// namespace rtt::ai
+}  // namespace rtt::ai

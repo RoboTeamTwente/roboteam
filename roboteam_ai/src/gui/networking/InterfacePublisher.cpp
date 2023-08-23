@@ -15,7 +15,8 @@ namespace rtt::ai::gui::net {
 
 InterfacePublisher::InterfacePublisher(ix::WebSocketServer& _wss) : wss(_wss) {}
 
-InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay, InterfacePublisher::PlayView plays, int currentTick, double tickDuration, double averageTickDuration) {
+InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay, InterfacePublisher::PlayView plays, int currentTick, double tickDuration,
+                                                         double averageTickDuration) {
     auto envelope = proto::MsgToInterface();
     const auto stpStatus = envelope.mutable_stp_status();
     stpStatus->set_current_tick(currentTick);
@@ -113,4 +114,4 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
     return *this;
 }
 
-}  // namespace rtt::ai::io
+}  // namespace rtt::ai::gui::net

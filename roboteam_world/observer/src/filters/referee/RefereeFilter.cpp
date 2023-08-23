@@ -5,7 +5,7 @@
 #include "filters/referee/RefereeFilter.h"
 
 void RefereeFilter::process(const std::vector<proto::SSL_Referee> &refereePackets) {
-    if(refereePackets.empty()){
+    if (refereePackets.empty()) {
         return;
     }
     firstMessageReceived = true;
@@ -18,9 +18,9 @@ void RefereeFilter::process(const std::vector<proto::SSL_Referee> &refereePacket
 }
 
 std::optional<proto::SSL_Referee> RefereeFilter::getLastRefereeMessage() const {
-    if(firstMessageReceived){
+    if (firstMessageReceived) {
         return latestMessage;
-    }else{
+    } else {
         return std::nullopt;
     }
 }

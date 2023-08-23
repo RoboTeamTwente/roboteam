@@ -24,6 +24,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_BasestationConfigurationPayload {
@@ -31,194 +32,194 @@ typedef struct _REM_BasestationConfigurationPayload {
 } REM_BasestationConfigurationPayload;
 
 typedef struct _REM_BasestationConfiguration {
-    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
-    uint32_t   toRobotId           ; // integer [0, 15]              Id of the receiving robot
-    bool       toColor             ; // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
-    bool       toBC                ; // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
-    bool       toBS                ; // integer [0, 1]               Bit indicating this packet is meant for the basestation
-    bool       toPC                ; // integer [0, 1]               Bit indicating this packet is meant for the PC
-    uint32_t   fromRobotId         ; // integer [0, 15]              Id of the transmitting robot
-    bool       fromColor           ; // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
-    bool       reserved            ; // integer [0, 1]               reserved
-    bool       fromBS              ; // integer [0, 1]               Bit indicating this packet is coming from the basestation
-    bool       fromPC              ; // integer [0, 1]               Bit indicating this packet is coming from the PC
-    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
-    uint32_t   messageId           ; // integer [0, 15]              messageId. Can be used for aligning packets
-    uint32_t   timestamp           ; // integer [0, 16777215]        Timestamp in milliseconds
-    uint32_t   payloadSize         ; // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
-    bool       channel             ; // integer [0, 1]               Channel on which the basestation and robots communicate
+    uint32_t header;       // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t toRobotId;    // integer [0, 15]              Id of the receiving robot
+    bool toColor;          // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
+    bool toBC;             // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
+    bool toBS;             // integer [0, 1]               Bit indicating this packet is meant for the basestation
+    bool toPC;             // integer [0, 1]               Bit indicating this packet is meant for the PC
+    uint32_t fromRobotId;  // integer [0, 15]              Id of the transmitting robot
+    bool fromColor;        // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
+    bool reserved;         // integer [0, 1]               reserved
+    bool fromBS;           // integer [0, 1]               Bit indicating this packet is coming from the basestation
+    bool fromPC;           // integer [0, 1]               Bit indicating this packet is coming from the PC
+    uint32_t remVersion;   // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t messageId;    // integer [0, 15]              messageId. Can be used for aligning packets
+    uint32_t timestamp;    // integer [0, 16777215]        Timestamp in milliseconds
+    uint32_t payloadSize;  // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
+    bool channel;          // integer [0, 1]               Channel on which the basestation and robots communicate
 } REM_BasestationConfiguration;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_BasestationConfiguration_get_header(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_header(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[0]));
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_toRobotId(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_toRobotId(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[1] & 0b11110000) >> 4);
 }
 
-static inline bool REM_BasestationConfiguration_get_toColor(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_toColor(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[1] & 0b00001000) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_toBC(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_toBC(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[1] & 0b00000100) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_toBS(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_toBS(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[1] & 0b00000010) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_toPC(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_toPC(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[1] & 0b00000001) > 0;
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_fromRobotId(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_fromRobotId(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[2] & 0b11110000) >> 4);
 }
 
-static inline bool REM_BasestationConfiguration_get_fromColor(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_fromColor(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[2] & 0b00001000) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_reserved(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_reserved(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[2] & 0b00000100) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_fromBS(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_fromBS(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[2] & 0b00000010) > 0;
 }
 
-static inline bool REM_BasestationConfiguration_get_fromPC(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_fromPC(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[2] & 0b00000001) > 0;
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_remVersion(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_remVersion(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[3] & 0b11110000) >> 4);
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_messageId(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_messageId(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[3] & 0b00001111));
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_timestamp(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_timestamp(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[4]) << 16) | ((rembcp->payload[5]) << 8) | ((rembcp->payload[6]));
 }
 
-static inline uint32_t REM_BasestationConfiguration_get_payloadSize(REM_BasestationConfigurationPayload *rembcp){
+static inline uint32_t REM_BasestationConfiguration_get_payloadSize(REM_BasestationConfigurationPayload *rembcp) {
     return ((rembcp->payload[7]));
 }
 
-static inline bool REM_BasestationConfiguration_get_channel(REM_BasestationConfigurationPayload *rembcp){
+static inline bool REM_BasestationConfiguration_get_channel(REM_BasestationConfigurationPayload *rembcp) {
     return (rembcp->payload[8] & 0b10000000) > 0;
 }
 
 // ================================ SETTERS ================================
-static inline void REM_BasestationConfiguration_set_header(REM_BasestationConfigurationPayload *rembcp, uint32_t header){
+static inline void REM_BasestationConfiguration_set_header(REM_BasestationConfigurationPayload *rembcp, uint32_t header) {
     rembcp->payload[0] = header;
 }
 
-static inline void REM_BasestationConfiguration_set_toRobotId(REM_BasestationConfigurationPayload *rembcp, uint32_t toRobotId){
+static inline void REM_BasestationConfiguration_set_toRobotId(REM_BasestationConfigurationPayload *rembcp, uint32_t toRobotId) {
     rembcp->payload[1] = ((toRobotId << 4) & 0b11110000) | (rembcp->payload[1] & 0b00001111);
 }
 
-static inline void REM_BasestationConfiguration_set_toColor(REM_BasestationConfigurationPayload *rembcp, bool toColor){
+static inline void REM_BasestationConfiguration_set_toColor(REM_BasestationConfigurationPayload *rembcp, bool toColor) {
     rembcp->payload[1] = ((toColor << 3) & 0b00001000) | (rembcp->payload[1] & 0b11110111);
 }
 
-static inline void REM_BasestationConfiguration_set_toBC(REM_BasestationConfigurationPayload *rembcp, bool toBC){
+static inline void REM_BasestationConfiguration_set_toBC(REM_BasestationConfigurationPayload *rembcp, bool toBC) {
     rembcp->payload[1] = ((toBC << 2) & 0b00000100) | (rembcp->payload[1] & 0b11111011);
 }
 
-static inline void REM_BasestationConfiguration_set_toBS(REM_BasestationConfigurationPayload *rembcp, bool toBS){
+static inline void REM_BasestationConfiguration_set_toBS(REM_BasestationConfigurationPayload *rembcp, bool toBS) {
     rembcp->payload[1] = ((toBS << 1) & 0b00000010) | (rembcp->payload[1] & 0b11111101);
 }
 
-static inline void REM_BasestationConfiguration_set_toPC(REM_BasestationConfigurationPayload *rembcp, bool toPC){
+static inline void REM_BasestationConfiguration_set_toPC(REM_BasestationConfigurationPayload *rembcp, bool toPC) {
     rembcp->payload[1] = (toPC & 0b00000001) | (rembcp->payload[1] & 0b11111110);
 }
 
-static inline void REM_BasestationConfiguration_set_fromRobotId(REM_BasestationConfigurationPayload *rembcp, uint32_t fromRobotId){
+static inline void REM_BasestationConfiguration_set_fromRobotId(REM_BasestationConfigurationPayload *rembcp, uint32_t fromRobotId) {
     rembcp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (rembcp->payload[2] & 0b00001111);
 }
 
-static inline void REM_BasestationConfiguration_set_fromColor(REM_BasestationConfigurationPayload *rembcp, bool fromColor){
+static inline void REM_BasestationConfiguration_set_fromColor(REM_BasestationConfigurationPayload *rembcp, bool fromColor) {
     rembcp->payload[2] = ((fromColor << 3) & 0b00001000) | (rembcp->payload[2] & 0b11110111);
 }
 
-static inline void REM_BasestationConfiguration_set_reserved(REM_BasestationConfigurationPayload *rembcp, bool reserved){
+static inline void REM_BasestationConfiguration_set_reserved(REM_BasestationConfigurationPayload *rembcp, bool reserved) {
     rembcp->payload[2] = ((reserved << 2) & 0b00000100) | (rembcp->payload[2] & 0b11111011);
 }
 
-static inline void REM_BasestationConfiguration_set_fromBS(REM_BasestationConfigurationPayload *rembcp, bool fromBS){
+static inline void REM_BasestationConfiguration_set_fromBS(REM_BasestationConfigurationPayload *rembcp, bool fromBS) {
     rembcp->payload[2] = ((fromBS << 1) & 0b00000010) | (rembcp->payload[2] & 0b11111101);
 }
 
-static inline void REM_BasestationConfiguration_set_fromPC(REM_BasestationConfigurationPayload *rembcp, bool fromPC){
+static inline void REM_BasestationConfiguration_set_fromPC(REM_BasestationConfigurationPayload *rembcp, bool fromPC) {
     rembcp->payload[2] = (fromPC & 0b00000001) | (rembcp->payload[2] & 0b11111110);
 }
 
-static inline void REM_BasestationConfiguration_set_remVersion(REM_BasestationConfigurationPayload *rembcp, uint32_t remVersion){
+static inline void REM_BasestationConfiguration_set_remVersion(REM_BasestationConfigurationPayload *rembcp, uint32_t remVersion) {
     rembcp->payload[3] = ((remVersion << 4) & 0b11110000) | (rembcp->payload[3] & 0b00001111);
 }
 
-static inline void REM_BasestationConfiguration_set_messageId(REM_BasestationConfigurationPayload *rembcp, uint32_t messageId){
+static inline void REM_BasestationConfiguration_set_messageId(REM_BasestationConfigurationPayload *rembcp, uint32_t messageId) {
     rembcp->payload[3] = (messageId & 0b00001111) | (rembcp->payload[3] & 0b11110000);
 }
 
-static inline void REM_BasestationConfiguration_set_timestamp(REM_BasestationConfigurationPayload *rembcp, uint32_t timestamp){
+static inline void REM_BasestationConfiguration_set_timestamp(REM_BasestationConfigurationPayload *rembcp, uint32_t timestamp) {
     rembcp->payload[4] = (timestamp >> 16);
     rembcp->payload[5] = (timestamp >> 8);
     rembcp->payload[6] = timestamp;
 }
 
-static inline void REM_BasestationConfiguration_set_payloadSize(REM_BasestationConfigurationPayload *rembcp, uint32_t payloadSize){
+static inline void REM_BasestationConfiguration_set_payloadSize(REM_BasestationConfigurationPayload *rembcp, uint32_t payloadSize) {
     rembcp->payload[7] = payloadSize;
 }
 
-static inline void REM_BasestationConfiguration_set_channel(REM_BasestationConfigurationPayload *rembcp, bool channel){
+static inline void REM_BasestationConfiguration_set_channel(REM_BasestationConfigurationPayload *rembcp, bool channel) {
     rembcp->payload[8] = ((channel << 7) & 0b10000000) | (rembcp->payload[8] & 0b01111111);
 }
 
 // ================================ ENCODE ================================
-static inline void encodeREM_BasestationConfiguration(REM_BasestationConfigurationPayload *rembcp, REM_BasestationConfiguration *rembc){
-    REM_BasestationConfiguration_set_header              (rembcp, rembc->header);
-    REM_BasestationConfiguration_set_toRobotId           (rembcp, rembc->toRobotId);
-    REM_BasestationConfiguration_set_toColor             (rembcp, rembc->toColor);
-    REM_BasestationConfiguration_set_toBC                (rembcp, rembc->toBC);
-    REM_BasestationConfiguration_set_toBS                (rembcp, rembc->toBS);
-    REM_BasestationConfiguration_set_toPC                (rembcp, rembc->toPC);
-    REM_BasestationConfiguration_set_fromRobotId         (rembcp, rembc->fromRobotId);
-    REM_BasestationConfiguration_set_fromColor           (rembcp, rembc->fromColor);
-    REM_BasestationConfiguration_set_reserved            (rembcp, rembc->reserved);
-    REM_BasestationConfiguration_set_fromBS              (rembcp, rembc->fromBS);
-    REM_BasestationConfiguration_set_fromPC              (rembcp, rembc->fromPC);
-    REM_BasestationConfiguration_set_remVersion          (rembcp, rembc->remVersion);
-    REM_BasestationConfiguration_set_messageId           (rembcp, rembc->messageId);
-    REM_BasestationConfiguration_set_timestamp           (rembcp, rembc->timestamp);
-    REM_BasestationConfiguration_set_payloadSize         (rembcp, rembc->payloadSize);
-    REM_BasestationConfiguration_set_channel             (rembcp, rembc->channel);
+static inline void encodeREM_BasestationConfiguration(REM_BasestationConfigurationPayload *rembcp, REM_BasestationConfiguration *rembc) {
+    REM_BasestationConfiguration_set_header(rembcp, rembc->header);
+    REM_BasestationConfiguration_set_toRobotId(rembcp, rembc->toRobotId);
+    REM_BasestationConfiguration_set_toColor(rembcp, rembc->toColor);
+    REM_BasestationConfiguration_set_toBC(rembcp, rembc->toBC);
+    REM_BasestationConfiguration_set_toBS(rembcp, rembc->toBS);
+    REM_BasestationConfiguration_set_toPC(rembcp, rembc->toPC);
+    REM_BasestationConfiguration_set_fromRobotId(rembcp, rembc->fromRobotId);
+    REM_BasestationConfiguration_set_fromColor(rembcp, rembc->fromColor);
+    REM_BasestationConfiguration_set_reserved(rembcp, rembc->reserved);
+    REM_BasestationConfiguration_set_fromBS(rembcp, rembc->fromBS);
+    REM_BasestationConfiguration_set_fromPC(rembcp, rembc->fromPC);
+    REM_BasestationConfiguration_set_remVersion(rembcp, rembc->remVersion);
+    REM_BasestationConfiguration_set_messageId(rembcp, rembc->messageId);
+    REM_BasestationConfiguration_set_timestamp(rembcp, rembc->timestamp);
+    REM_BasestationConfiguration_set_payloadSize(rembcp, rembc->payloadSize);
+    REM_BasestationConfiguration_set_channel(rembcp, rembc->channel);
 }
 
 // ================================ DECODE ================================
-static inline void decodeREM_BasestationConfiguration(REM_BasestationConfiguration *rembc, REM_BasestationConfigurationPayload *rembcp){
-    rembc->header        = REM_BasestationConfiguration_get_header(rembcp);
-    rembc->toRobotId     = REM_BasestationConfiguration_get_toRobotId(rembcp);
-    rembc->toColor       = REM_BasestationConfiguration_get_toColor(rembcp);
-    rembc->toBC          = REM_BasestationConfiguration_get_toBC(rembcp);
-    rembc->toBS          = REM_BasestationConfiguration_get_toBS(rembcp);
-    rembc->toPC          = REM_BasestationConfiguration_get_toPC(rembcp);
-    rembc->fromRobotId   = REM_BasestationConfiguration_get_fromRobotId(rembcp);
-    rembc->fromColor     = REM_BasestationConfiguration_get_fromColor(rembcp);
-    rembc->reserved      = REM_BasestationConfiguration_get_reserved(rembcp);
-    rembc->fromBS        = REM_BasestationConfiguration_get_fromBS(rembcp);
-    rembc->fromPC        = REM_BasestationConfiguration_get_fromPC(rembcp);
-    rembc->remVersion    = REM_BasestationConfiguration_get_remVersion(rembcp);
-    rembc->messageId     = REM_BasestationConfiguration_get_messageId(rembcp);
-    rembc->timestamp     = REM_BasestationConfiguration_get_timestamp(rembcp);
-    rembc->payloadSize   = REM_BasestationConfiguration_get_payloadSize(rembcp);
-    rembc->channel       = REM_BasestationConfiguration_get_channel(rembcp);
+static inline void decodeREM_BasestationConfiguration(REM_BasestationConfiguration *rembc, REM_BasestationConfigurationPayload *rembcp) {
+    rembc->header = REM_BasestationConfiguration_get_header(rembcp);
+    rembc->toRobotId = REM_BasestationConfiguration_get_toRobotId(rembcp);
+    rembc->toColor = REM_BasestationConfiguration_get_toColor(rembcp);
+    rembc->toBC = REM_BasestationConfiguration_get_toBC(rembcp);
+    rembc->toBS = REM_BasestationConfiguration_get_toBS(rembcp);
+    rembc->toPC = REM_BasestationConfiguration_get_toPC(rembcp);
+    rembc->fromRobotId = REM_BasestationConfiguration_get_fromRobotId(rembcp);
+    rembc->fromColor = REM_BasestationConfiguration_get_fromColor(rembcp);
+    rembc->reserved = REM_BasestationConfiguration_get_reserved(rembcp);
+    rembc->fromBS = REM_BasestationConfiguration_get_fromBS(rembcp);
+    rembc->fromPC = REM_BasestationConfiguration_get_fromPC(rembcp);
+    rembc->remVersion = REM_BasestationConfiguration_get_remVersion(rembcp);
+    rembc->messageId = REM_BasestationConfiguration_get_messageId(rembcp);
+    rembc->timestamp = REM_BasestationConfiguration_get_timestamp(rembcp);
+    rembc->payloadSize = REM_BasestationConfiguration_get_payloadSize(rembcp);
+    rembc->channel = REM_BasestationConfiguration_get_channel(rembcp);
 }
 
 #endif /*__REM_BASESTATION_CONFIGURATION_H*/

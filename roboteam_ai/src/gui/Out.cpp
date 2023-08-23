@@ -3,6 +3,7 @@
 //
 
 #include "gui/Out.h"
+
 #include "utilities/GameSettings.h"
 
 namespace rtt::ai::gui {
@@ -49,10 +50,10 @@ proto::Drawing* Out::initDrawing(const DrawArgs& args) {
     return drawing;
 }
 
-void Out::consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer&)> consumer){
+void Out::consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer&)> consumer) {
     consumer(*visualizations);
     visualizations->mutable_drawings()->Clear();
     visualizations->mutable_metrics()->Clear();
 }
 
-}  // namespace rtt::ai::new_interface
+}  // namespace rtt::ai::gui

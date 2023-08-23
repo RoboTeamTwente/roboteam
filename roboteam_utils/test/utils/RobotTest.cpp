@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/Robot.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/Robot.hpp>
 
 using namespace rtt;
 

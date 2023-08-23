@@ -1,22 +1,22 @@
 #ifndef WORLDHANDLER_H
 #define WORLDHANDLER_H
 
-#include <proto/State.pb.h>
-
-#include <RobotFeedbackNetworker.hpp>
-#include <WorldNetworker.hpp>
-
 #include <observer/Observer.h>
-#include <utility>
-#include "RobocupReceiver.h"
-#include <memory>
-#include <vector>
-#include <exception>
+#include <proto/State.pb.h>
 #include <roboteam_logging/LogFileReader.h>
 #include <roboteam_logging/LogFileWriter.h>
 
+#include <RobotFeedbackNetworker.hpp>
+#include <WorldNetworker.hpp>
+#include <exception>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "RobocupReceiver.h"
+
 class Handler {
-   private:
+private:
     std::unique_ptr<rtt::net::RobotFeedbackSubscriber> feedbackSubscriber;
     std::unique_ptr<rtt::net::WorldPublisher> worldPublisher;
 
@@ -29,7 +29,7 @@ class Handler {
 
     static std::optional<rtt::LogFileWriter> fileWriter;
 
-   public:
+public:
     Handler() = default;
 
     /*

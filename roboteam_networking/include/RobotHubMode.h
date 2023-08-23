@@ -5,9 +5,10 @@
 #ifndef RTT_ROBOTHUBMODE_H
 #define RTT_ROBOTHUBMODE_H
 
+#include <proto/GameSettings.pb.h>
+
 #include <string>
 #include <string_view>
-#include <proto/GameSettings.pb.h>
 
 namespace rtt::net {
     /**
@@ -50,6 +51,6 @@ namespace rtt::net {
         }
     }
 
-}  // namespace rtt
+}  // namespace rtt::net
 
 #endif  // RTT_ROBOTHUBMODE_H

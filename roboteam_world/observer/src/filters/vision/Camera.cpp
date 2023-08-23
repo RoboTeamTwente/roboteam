@@ -3,19 +3,21 @@
 //
 
 #include "filters/vision/Camera.h"
+
 #include <cfloat>
 
-Camera::Camera(const proto::SSL_GeometryCameraCalibration &calibrationData) :
-        id(calibrationData.camera_id()),
-        pos(Eigen::Vector3d(calibrationData.derived_camera_world_tx(), calibrationData.derived_camera_world_ty(),
-                            calibrationData.derived_camera_world_tz())),
-        translation(Eigen::Vector3d(calibrationData.tx(), calibrationData.ty(), calibrationData.tz())),
-        rotation(Eigen::Quaterniond(calibrationData.q3(), calibrationData.q0(), calibrationData.q1(),
-                                    calibrationData.q2()).normalized()),
-        principalPoint(Eigen::Vector2d(calibrationData.principal_point_x(), calibrationData.principal_point_y())),
-        focalLength(calibrationData.focal_length()),
-        distortion(calibrationData.distortion()) {
-    //image width data is sometimes not present.
+Camera::Camera(const proto::SSL_GeometryCameraCalibration& calibrationData)
+    : id(calibrationData.camera_id()),
+      pos(Eigen::Vector3d(calibrationData.derived_camera_world_tx(), calibrationData.derived_camera_world_ty(),
+                          calibrationData.derived_camera_world_tz())),
+      translation(Eigen::Vector3d(calibrationData.tx(), calibrationData.ty(), calibrationData.tz())),
+      rotation(Eigen::Quaterniond(calibrationData.q3(), calibrationData.q0(), calibrationData.q1(),
+                                  calibrationData.q2())
+                   .normalized()),
+      principalPoint(Eigen::Vector2d(calibrationData.principal_point_x(), calibrationData.principal_point_y())),
+      focalLength(calibrationData.focal_length()),
+      distortion(calibrationData.distortion()) {
+    // image width data is sometimes not present.
     if (calibrationData.has_pixel_image_width()) {
         imageWidth = calibrationData.pixel_image_width();
     } else {
@@ -52,21 +54,23 @@ double Camera::radialDistortion(double radius) const {
     return rd;
 }
 
-double Camera::radialDistortionInv(double radius) const { return radius * (1.0 + radius * radius * distortion); }
-Eigen::Vector2d Camera::radialDistortion(Eigen::Vector2d &imagePoint) const {
+double Camera::radialDistortionInv(double radius) const {
+    return radius * (1.0 + radius * radius * distortion);
+}
+Eigen::Vector2d Camera::radialDistortion(Eigen::Vector2d& imagePoint) const {
     double rd = radialDistortion(imagePoint.norm());
     imagePoint.normalize();  // We do in place normalization for speed
     Eigen::Vector2d distortedPoint = imagePoint * rd;
     return distortedPoint;
 }
-Eigen::Vector2d Camera::radialDistortionInv(Eigen::Vector2d &imagePoint) const {
+Eigen::Vector2d Camera::radialDistortionInv(Eigen::Vector2d& imagePoint) const {
     double rd = radialDistortionInv(imagePoint.norm());
     imagePoint.normalize();
     Eigen::Vector2d distortedPoint = imagePoint * rd;
     return distortedPoint;
 }
 
-Eigen::Vector2d Camera::fieldToImage(const Eigen::Vector3d &fieldPoint) const {
+Eigen::Vector2d Camera::fieldToImage(const Eigen::Vector3d& fieldPoint) const {
     // First transform the point into camera coordinates
     Eigen::Vector3d camCoorPoint = rotation * fieldPoint + translation;
     // Then project it onto the image:
@@ -77,7 +81,7 @@ Eigen::Vector2d Camera::fieldToImage(const Eigen::Vector3d &fieldPoint) const {
     return focalLength * distortedProjection + principalPoint;
 }
 
-Eigen::Vector3d Camera::imageToField(const Eigen::Vector2d &imagePoint, double assumedHeight) const {
+Eigen::Vector3d Camera::imageToField(const Eigen::Vector2d& imagePoint, double assumedHeight) const {
     // Translate imagePoint to coordinatesystem to undistort (with distortion centre at 0)
     Eigen::Vector2d translatedImagePoint = (imagePoint - principalPoint) / focalLength;
     // Undistort the point
@@ -94,16 +98,15 @@ Eigen::Vector3d Camera::imageToField(const Eigen::Vector2d &imagePoint, double a
     double t = rayPlaneIntersection(Eigen::Vector3d(0, 0, assumedHeight), Eigen::Vector3d(0, 0, 1), zeroInCam, rayInCam);
     return zeroInCam + rayInCam * t;
 }
-double Camera::rayPlaneIntersection(const Eigen::Vector3d& planeOrigin,const Eigen::Vector3d& planeNormal,const Eigen::Vector3d& rayOrigin,const Eigen::Vector3d& rayDirection){
+double Camera::rayPlaneIntersection(const Eigen::Vector3d& planeOrigin, const Eigen::Vector3d& planeNormal, const Eigen::Vector3d& rayOrigin, const Eigen::Vector3d& rayDirection) {
     return (-planeNormal).dot(rayOrigin - planeOrigin) / (planeNormal.dot(rayDirection));
-
 }
 bool Camera::isPositionVisible(const Eigen::Vector3d& fieldPoint, double marginFactor) const {
-    if(imageWidth == -1 || imageHeight == -1){
+    if (imageWidth == -1 || imageHeight == -1) {
         return true;
     }
     Eigen::Vector2d imagePos = fieldToImage(fieldPoint);
-    double margin = marginFactor * std::max(imageWidth,imageHeight);
+    double margin = marginFactor * std::max(imageWidth, imageHeight);
     double minWidth = margin;
     double maxWidth = imageWidth - margin;
     double minHeight = margin;
@@ -113,10 +116,10 @@ bool Camera::isPositionVisible(const Eigen::Vector3d& fieldPoint, double marginF
 
 Eigen::Vector2d Camera::linearProjectToHorizontalPlane(const Eigen::Vector3d& objectPos, double planeHeight) const {
     Eigen::Vector3d origin = position();
-    Eigen::Vector3d rayDirection = objectPos-origin;
-    Eigen::Vector3d planeOrigin(0,0,planeHeight);
-    Eigen::Vector3d planeNormal(0,0,1);
-    double t = rayPlaneIntersection(planeOrigin,planeNormal,origin,rayDirection);
-    Eigen::Vector3d groundPos = origin + t*rayDirection;
-    return Eigen::Vector2d(groundPos.x(),groundPos.y());
+    Eigen::Vector3d rayDirection = objectPos - origin;
+    Eigen::Vector3d planeOrigin(0, 0, planeHeight);
+    Eigen::Vector3d planeNormal(0, 0, 1);
+    double t = rayPlaneIntersection(planeOrigin, planeNormal, origin, rayDirection);
+    Eigen::Vector3d groundPos = origin + t * rayDirection;
+    return Eigen::Vector2d(groundPos.x(), groundPos.y());
 }

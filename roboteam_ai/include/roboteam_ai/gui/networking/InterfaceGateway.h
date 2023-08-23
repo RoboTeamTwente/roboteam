@@ -52,6 +52,6 @@ class InterfaceGateway {
     InterfacePublisher& publisher();
 };
 
-}  // namespace rtt::ai::io
+}  // namespace rtt::ai::gui::net
 
 #endif  // RTT_INTERFACEGATEWAY_H

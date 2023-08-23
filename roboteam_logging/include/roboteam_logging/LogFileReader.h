@@ -5,9 +5,10 @@
 #ifndef RTT_LOGFILEREADER_H
 #define RTT_LOGFILEREADER_H
 
-#include "LogFileHeader.h"
 #include <fstream>
-namespace rtt{
+
+#include "LogFileHeader.h"
+namespace rtt {
 
     /**
      * @brief Class which reads the stored log files.
@@ -20,22 +21,21 @@ namespace rtt{
         bool open(const std::string& file_name);
         void close();
 
-        std::pair<logged_time_type ,logged_proto_type> readFrame(std::size_t frame_number);
-        std::pair<logged_time_type,logged_proto_type> readNext();
+        std::pair<logged_time_type, logged_proto_type> readFrame(std::size_t frame_number);
+        std::pair<logged_time_type, logged_proto_type> readNext();
 
         [[nodiscard]] std::size_t fileMessageCount() const;
         void resetToStartOfFile();
+
     private:
-        std::pair<logged_time_type ,logged_proto_type> readPacket(long file_offset);
+        std::pair<logged_time_type, logged_proto_type> readPacket(long file_offset);
         bool indexFile();
 
         std::unique_ptr<std::ifstream> file;
-        std::vector<long> index;//index[packetnumber] returns the offset the packet is in
+        std::vector<long> index;  // index[packetnumber] returns the offset the packet is in
         int version = -1;
-
     };
-}
+}  // namespace rtt
 
 
-
-#endif //RTT_LOGFILEREADER_H
+#endif  // RTT_LOGFILEREADER_H

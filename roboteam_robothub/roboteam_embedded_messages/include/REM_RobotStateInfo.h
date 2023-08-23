@@ -42,6 +42,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_RobotStateInfoPayload {
@@ -49,451 +50,451 @@ typedef struct _REM_RobotStateInfoPayload {
 } REM_RobotStateInfoPayload;
 
 typedef struct _REM_RobotStateInfo {
-    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
-    uint32_t   toRobotId           ; // integer [0, 15]              Id of the receiving robot
-    bool       toColor             ; // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
-    bool       toBC                ; // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
-    bool       toBS                ; // integer [0, 1]               Bit indicating this packet is meant for the basestation
-    bool       toPC                ; // integer [0, 1]               Bit indicating this packet is meant for the PC
-    uint32_t   fromRobotId         ; // integer [0, 15]              Id of the transmitting robot
-    bool       fromColor           ; // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
-    bool       reserved            ; // integer [0, 1]               reserved
-    bool       fromBS              ; // integer [0, 1]               Bit indicating this packet is coming from the basestation
-    bool       fromPC              ; // integer [0, 1]               Bit indicating this packet is coming from the PC
-    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
-    uint32_t   messageId           ; // integer [0, 15]              messageId. Can be used for aligning packets
-    uint32_t   timestamp           ; // integer [0, 16777215]        Timestamp in milliseconds
-    uint32_t   payloadSize         ; // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
-    float      xsensAcc1           ; // float   [-156.960, 156.960]  xsensAcc1
-    float      xsensAcc2           ; // float   [-156.960, 156.960]  xsensAcc2
-    float      xsensYaw            ; // float   [-50000.000, 50000.000] xsensYaw
-    float      rateOfTurn          ; // float   [-20.000, 20.000]    rateOfTurn
-    float      wheelSpeed1         ; // float   [-1000.000, 1000.000] wheelSpeed1
-    float      wheelSpeed2         ; // float   [-1000.000, 1000.000] wheelSpeed2
-    float      wheelSpeed3         ; // float   [-1000.000, 1000.000] wheelSpeed3
-    float      wheelSpeed4         ; // float   [-1000.000, 1000.000] wheelSpeed4
-    float      dribbleSpeed        ; // float   [0.000, 5000.000]    dribblerSpeed
-    float      filteredDribbleSpeed; // float   [0.000, 5000.000]    filtered dribblerSpeed
-    float      dribblespeedBeforeGotBall; // float   [0.000, 5000.000]    dribblerSpeed at at the time dribbler thinks it got the ball
-    float      bodyXIntegral       ; // float   [-5000.000, 5000.000] Integral value from the PID for body_x
-    float      bodyYIntegral       ; // float   [-5000.000, 5000.000] Integral value from the PID for body_y
-    float      bodyWIntegral       ; // float   [-5000.000, 5000.000] Integral value from the PID for body_w
-    float      bodyYawIntegral     ; // float   [-5000.000, 5000.000] Integral value from the PID for body_Yaw
-    float      wheel1Integral      ; // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_1
-    float      wheel2Integral      ; // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_2
-    float      wheel3Integral      ; // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_3
-    float      wheel4Integral      ; // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_4
+    uint32_t header;                  // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t toRobotId;               // integer [0, 15]              Id of the receiving robot
+    bool toColor;                     // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
+    bool toBC;                        // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
+    bool toBS;                        // integer [0, 1]               Bit indicating this packet is meant for the basestation
+    bool toPC;                        // integer [0, 1]               Bit indicating this packet is meant for the PC
+    uint32_t fromRobotId;             // integer [0, 15]              Id of the transmitting robot
+    bool fromColor;                   // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
+    bool reserved;                    // integer [0, 1]               reserved
+    bool fromBS;                      // integer [0, 1]               Bit indicating this packet is coming from the basestation
+    bool fromPC;                      // integer [0, 1]               Bit indicating this packet is coming from the PC
+    uint32_t remVersion;              // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t messageId;               // integer [0, 15]              messageId. Can be used for aligning packets
+    uint32_t timestamp;               // integer [0, 16777215]        Timestamp in milliseconds
+    uint32_t payloadSize;             // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
+    float xsensAcc1;                  // float   [-156.960, 156.960]  xsensAcc1
+    float xsensAcc2;                  // float   [-156.960, 156.960]  xsensAcc2
+    float xsensYaw;                   // float   [-50000.000, 50000.000] xsensYaw
+    float rateOfTurn;                 // float   [-20.000, 20.000]    rateOfTurn
+    float wheelSpeed1;                // float   [-1000.000, 1000.000] wheelSpeed1
+    float wheelSpeed2;                // float   [-1000.000, 1000.000] wheelSpeed2
+    float wheelSpeed3;                // float   [-1000.000, 1000.000] wheelSpeed3
+    float wheelSpeed4;                // float   [-1000.000, 1000.000] wheelSpeed4
+    float dribbleSpeed;               // float   [0.000, 5000.000]    dribblerSpeed
+    float filteredDribbleSpeed;       // float   [0.000, 5000.000]    filtered dribblerSpeed
+    float dribblespeedBeforeGotBall;  // float   [0.000, 5000.000]    dribblerSpeed at at the time dribbler thinks it got the ball
+    float bodyXIntegral;              // float   [-5000.000, 5000.000] Integral value from the PID for body_x
+    float bodyYIntegral;              // float   [-5000.000, 5000.000] Integral value from the PID for body_y
+    float bodyWIntegral;              // float   [-5000.000, 5000.000] Integral value from the PID for body_w
+    float bodyYawIntegral;            // float   [-5000.000, 5000.000] Integral value from the PID for body_Yaw
+    float wheel1Integral;             // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_1
+    float wheel2Integral;             // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_2
+    float wheel3Integral;             // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_3
+    float wheel4Integral;             // float   [-5000.000, 5000.000] Integral value from the PID for Wheel_4
 } REM_RobotStateInfo;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_RobotStateInfo_get_header(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_header(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[0]));
 }
 
-static inline uint32_t REM_RobotStateInfo_get_toRobotId(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_toRobotId(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[1] & 0b11110000) >> 4);
 }
 
-static inline bool REM_RobotStateInfo_get_toColor(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_toColor(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[1] & 0b00001000) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_toBC(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_toBC(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[1] & 0b00000100) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_toBS(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_toBS(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[1] & 0b00000010) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_toPC(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_toPC(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[1] & 0b00000001) > 0;
 }
 
-static inline uint32_t REM_RobotStateInfo_get_fromRobotId(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_fromRobotId(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[2] & 0b11110000) >> 4);
 }
 
-static inline bool REM_RobotStateInfo_get_fromColor(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_fromColor(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[2] & 0b00001000) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_reserved(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_reserved(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[2] & 0b00000100) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_fromBS(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_fromBS(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[2] & 0b00000010) > 0;
 }
 
-static inline bool REM_RobotStateInfo_get_fromPC(REM_RobotStateInfoPayload *remrsip){
+static inline bool REM_RobotStateInfo_get_fromPC(REM_RobotStateInfoPayload *remrsip) {
     return (remrsip->payload[2] & 0b00000001) > 0;
 }
 
-static inline uint32_t REM_RobotStateInfo_get_remVersion(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_remVersion(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[3] & 0b11110000) >> 4);
 }
 
-static inline uint32_t REM_RobotStateInfo_get_messageId(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_messageId(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[3] & 0b00001111));
 }
 
-static inline uint32_t REM_RobotStateInfo_get_timestamp(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_timestamp(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[4]) << 16) | ((remrsip->payload[5]) << 8) | ((remrsip->payload[6]));
 }
 
-static inline uint32_t REM_RobotStateInfo_get_payloadSize(REM_RobotStateInfoPayload *remrsip){
+static inline uint32_t REM_RobotStateInfo_get_payloadSize(REM_RobotStateInfoPayload *remrsip) {
     return ((remrsip->payload[7]));
 }
 
-static inline float REM_RobotStateInfo_get_xsensAcc1(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_xsensAcc1(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _xsensAcc1 = ((remrsip->payload[8]) << 8) | ((remrsip->payload[9]));
     return (_xsensAcc1 * 0.0047901121538109F) + -156.9600000000000080F;
 }
 
-static inline float REM_RobotStateInfo_get_xsensAcc2(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_xsensAcc2(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _xsensAcc2 = ((remrsip->payload[10]) << 8) | ((remrsip->payload[11]));
     return (_xsensAcc2 * 0.0047901121538109F) + -156.9600000000000080F;
 }
 
-static inline float REM_RobotStateInfo_get_xsensYaw(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_xsensYaw(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _xsensYaw = ((remrsip->payload[12]) << 24) | ((remrsip->payload[13]) << 16) | ((remrsip->payload[14]) << 8) | ((remrsip->payload[15]));
     return (_xsensYaw * 0.0000232830643708F) + -50000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_rateOfTurn(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_rateOfTurn(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _rateOfTurn = ((remrsip->payload[16]) << 8) | ((remrsip->payload[17]));
     return (_rateOfTurn * 0.0006103608758679F) + -20.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheelSpeed1(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheelSpeed1(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheelSpeed1 = ((remrsip->payload[18]) << 8) | ((remrsip->payload[19]));
     return (_wheelSpeed1 * 0.0305180437933928F) + -1000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheelSpeed2(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheelSpeed2(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheelSpeed2 = ((remrsip->payload[20]) << 8) | ((remrsip->payload[21]));
     return (_wheelSpeed2 * 0.0305180437933928F) + -1000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheelSpeed3(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheelSpeed3(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheelSpeed3 = ((remrsip->payload[22]) << 8) | ((remrsip->payload[23]));
     return (_wheelSpeed3 * 0.0305180437933928F) + -1000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheelSpeed4(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheelSpeed4(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheelSpeed4 = ((remrsip->payload[24]) << 8) | ((remrsip->payload[25]));
     return (_wheelSpeed4 * 0.0305180437933928F) + -1000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_dribbleSpeed(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_dribbleSpeed(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _dribbleSpeed = ((remrsip->payload[26]) << 8) | ((remrsip->payload[27]));
     return (_dribbleSpeed * 0.0762951094834821F);
 }
 
-static inline float REM_RobotStateInfo_get_filteredDribbleSpeed(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_filteredDribbleSpeed(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _filteredDribbleSpeed = ((remrsip->payload[28]) << 8) | ((remrsip->payload[29]));
     return (_filteredDribbleSpeed * 0.0762951094834821F);
 }
 
-static inline float REM_RobotStateInfo_get_dribblespeedBeforeGotBall(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_dribblespeedBeforeGotBall(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _dribblespeedBeforeGotBall = ((remrsip->payload[30]) << 8) | ((remrsip->payload[31]));
     return (_dribblespeedBeforeGotBall * 0.0762951094834821F);
 }
 
-static inline float REM_RobotStateInfo_get_bodyXIntegral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_bodyXIntegral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _bodyXIntegral = ((remrsip->payload[32]) << 8) | ((remrsip->payload[33]));
     return (_bodyXIntegral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_bodyYIntegral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_bodyYIntegral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _bodyYIntegral = ((remrsip->payload[34]) << 8) | ((remrsip->payload[35]));
     return (_bodyYIntegral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_bodyWIntegral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_bodyWIntegral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _bodyWIntegral = ((remrsip->payload[36]) << 8) | ((remrsip->payload[37]));
     return (_bodyWIntegral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_bodyYawIntegral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_bodyYawIntegral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _bodyYawIntegral = ((remrsip->payload[38]) << 8) | ((remrsip->payload[39]));
     return (_bodyYawIntegral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheel1Integral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheel1Integral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheel1Integral = ((remrsip->payload[40]) << 8) | ((remrsip->payload[41]));
     return (_wheel1Integral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheel2Integral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheel2Integral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheel2Integral = ((remrsip->payload[42]) << 8) | ((remrsip->payload[43]));
     return (_wheel2Integral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheel3Integral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheel3Integral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheel3Integral = ((remrsip->payload[44]) << 8) | ((remrsip->payload[45]));
     return (_wheel3Integral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
-static inline float REM_RobotStateInfo_get_wheel4Integral(REM_RobotStateInfoPayload *remrsip){
+static inline float REM_RobotStateInfo_get_wheel4Integral(REM_RobotStateInfoPayload *remrsip) {
     uint32_t _wheel4Integral = ((remrsip->payload[46]) << 8) | ((remrsip->payload[47]));
     return (_wheel4Integral * 0.1525902189669642F) + -5000.0000000000000000F;
 }
 
 // ================================ SETTERS ================================
-static inline void REM_RobotStateInfo_set_header(REM_RobotStateInfoPayload *remrsip, uint32_t header){
+static inline void REM_RobotStateInfo_set_header(REM_RobotStateInfoPayload *remrsip, uint32_t header) {
     remrsip->payload[0] = header;
 }
 
-static inline void REM_RobotStateInfo_set_toRobotId(REM_RobotStateInfoPayload *remrsip, uint32_t toRobotId){
+static inline void REM_RobotStateInfo_set_toRobotId(REM_RobotStateInfoPayload *remrsip, uint32_t toRobotId) {
     remrsip->payload[1] = ((toRobotId << 4) & 0b11110000) | (remrsip->payload[1] & 0b00001111);
 }
 
-static inline void REM_RobotStateInfo_set_toColor(REM_RobotStateInfoPayload *remrsip, bool toColor){
+static inline void REM_RobotStateInfo_set_toColor(REM_RobotStateInfoPayload *remrsip, bool toColor) {
     remrsip->payload[1] = ((toColor << 3) & 0b00001000) | (remrsip->payload[1] & 0b11110111);
 }
 
-static inline void REM_RobotStateInfo_set_toBC(REM_RobotStateInfoPayload *remrsip, bool toBC){
+static inline void REM_RobotStateInfo_set_toBC(REM_RobotStateInfoPayload *remrsip, bool toBC) {
     remrsip->payload[1] = ((toBC << 2) & 0b00000100) | (remrsip->payload[1] & 0b11111011);
 }
 
-static inline void REM_RobotStateInfo_set_toBS(REM_RobotStateInfoPayload *remrsip, bool toBS){
+static inline void REM_RobotStateInfo_set_toBS(REM_RobotStateInfoPayload *remrsip, bool toBS) {
     remrsip->payload[1] = ((toBS << 1) & 0b00000010) | (remrsip->payload[1] & 0b11111101);
 }
 
-static inline void REM_RobotStateInfo_set_toPC(REM_RobotStateInfoPayload *remrsip, bool toPC){
+static inline void REM_RobotStateInfo_set_toPC(REM_RobotStateInfoPayload *remrsip, bool toPC) {
     remrsip->payload[1] = (toPC & 0b00000001) | (remrsip->payload[1] & 0b11111110);
 }
 
-static inline void REM_RobotStateInfo_set_fromRobotId(REM_RobotStateInfoPayload *remrsip, uint32_t fromRobotId){
+static inline void REM_RobotStateInfo_set_fromRobotId(REM_RobotStateInfoPayload *remrsip, uint32_t fromRobotId) {
     remrsip->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remrsip->payload[2] & 0b00001111);
 }
 
-static inline void REM_RobotStateInfo_set_fromColor(REM_RobotStateInfoPayload *remrsip, bool fromColor){
+static inline void REM_RobotStateInfo_set_fromColor(REM_RobotStateInfoPayload *remrsip, bool fromColor) {
     remrsip->payload[2] = ((fromColor << 3) & 0b00001000) | (remrsip->payload[2] & 0b11110111);
 }
 
-static inline void REM_RobotStateInfo_set_reserved(REM_RobotStateInfoPayload *remrsip, bool reserved){
+static inline void REM_RobotStateInfo_set_reserved(REM_RobotStateInfoPayload *remrsip, bool reserved) {
     remrsip->payload[2] = ((reserved << 2) & 0b00000100) | (remrsip->payload[2] & 0b11111011);
 }
 
-static inline void REM_RobotStateInfo_set_fromBS(REM_RobotStateInfoPayload *remrsip, bool fromBS){
+static inline void REM_RobotStateInfo_set_fromBS(REM_RobotStateInfoPayload *remrsip, bool fromBS) {
     remrsip->payload[2] = ((fromBS << 1) & 0b00000010) | (remrsip->payload[2] & 0b11111101);
 }
 
-static inline void REM_RobotStateInfo_set_fromPC(REM_RobotStateInfoPayload *remrsip, bool fromPC){
+static inline void REM_RobotStateInfo_set_fromPC(REM_RobotStateInfoPayload *remrsip, bool fromPC) {
     remrsip->payload[2] = (fromPC & 0b00000001) | (remrsip->payload[2] & 0b11111110);
 }
 
-static inline void REM_RobotStateInfo_set_remVersion(REM_RobotStateInfoPayload *remrsip, uint32_t remVersion){
+static inline void REM_RobotStateInfo_set_remVersion(REM_RobotStateInfoPayload *remrsip, uint32_t remVersion) {
     remrsip->payload[3] = ((remVersion << 4) & 0b11110000) | (remrsip->payload[3] & 0b00001111);
 }
 
-static inline void REM_RobotStateInfo_set_messageId(REM_RobotStateInfoPayload *remrsip, uint32_t messageId){
+static inline void REM_RobotStateInfo_set_messageId(REM_RobotStateInfoPayload *remrsip, uint32_t messageId) {
     remrsip->payload[3] = (messageId & 0b00001111) | (remrsip->payload[3] & 0b11110000);
 }
 
-static inline void REM_RobotStateInfo_set_timestamp(REM_RobotStateInfoPayload *remrsip, uint32_t timestamp){
+static inline void REM_RobotStateInfo_set_timestamp(REM_RobotStateInfoPayload *remrsip, uint32_t timestamp) {
     remrsip->payload[4] = (timestamp >> 16);
     remrsip->payload[5] = (timestamp >> 8);
     remrsip->payload[6] = timestamp;
 }
 
-static inline void REM_RobotStateInfo_set_payloadSize(REM_RobotStateInfoPayload *remrsip, uint32_t payloadSize){
+static inline void REM_RobotStateInfo_set_payloadSize(REM_RobotStateInfoPayload *remrsip, uint32_t payloadSize) {
     remrsip->payload[7] = payloadSize;
 }
 
-static inline void REM_RobotStateInfo_set_xsensAcc1(REM_RobotStateInfoPayload *remrsip, float xsensAcc1){
-    uint32_t _xsensAcc1 = (uint32_t)((xsensAcc1 +156.9600000000000080F) / 0.0047901121538109F);
+static inline void REM_RobotStateInfo_set_xsensAcc1(REM_RobotStateInfoPayload *remrsip, float xsensAcc1) {
+    uint32_t _xsensAcc1 = (uint32_t)((xsensAcc1 + 156.9600000000000080F) / 0.0047901121538109F);
     remrsip->payload[8] = (_xsensAcc1 >> 8);
     remrsip->payload[9] = _xsensAcc1;
 }
 
-static inline void REM_RobotStateInfo_set_xsensAcc2(REM_RobotStateInfoPayload *remrsip, float xsensAcc2){
-    uint32_t _xsensAcc2 = (uint32_t)((xsensAcc2 +156.9600000000000080F) / 0.0047901121538109F);
+static inline void REM_RobotStateInfo_set_xsensAcc2(REM_RobotStateInfoPayload *remrsip, float xsensAcc2) {
+    uint32_t _xsensAcc2 = (uint32_t)((xsensAcc2 + 156.9600000000000080F) / 0.0047901121538109F);
     remrsip->payload[10] = (_xsensAcc2 >> 8);
     remrsip->payload[11] = _xsensAcc2;
 }
 
-static inline void REM_RobotStateInfo_set_xsensYaw(REM_RobotStateInfoPayload *remrsip, float xsensYaw){
-    uint32_t _xsensYaw = (uint32_t)((xsensYaw +50000.0000000000000000F) / 0.0000232830643708F);
+static inline void REM_RobotStateInfo_set_xsensYaw(REM_RobotStateInfoPayload *remrsip, float xsensYaw) {
+    uint32_t _xsensYaw = (uint32_t)((xsensYaw + 50000.0000000000000000F) / 0.0000232830643708F);
     remrsip->payload[12] = (_xsensYaw >> 24);
     remrsip->payload[13] = (_xsensYaw >> 16);
     remrsip->payload[14] = (_xsensYaw >> 8);
     remrsip->payload[15] = _xsensYaw;
 }
 
-static inline void REM_RobotStateInfo_set_rateOfTurn(REM_RobotStateInfoPayload *remrsip, float rateOfTurn){
-    uint32_t _rateOfTurn = (uint32_t)((rateOfTurn +20.0000000000000000F) / 0.0006103608758679F);
+static inline void REM_RobotStateInfo_set_rateOfTurn(REM_RobotStateInfoPayload *remrsip, float rateOfTurn) {
+    uint32_t _rateOfTurn = (uint32_t)((rateOfTurn + 20.0000000000000000F) / 0.0006103608758679F);
     remrsip->payload[16] = (_rateOfTurn >> 8);
     remrsip->payload[17] = _rateOfTurn;
 }
 
-static inline void REM_RobotStateInfo_set_wheelSpeed1(REM_RobotStateInfoPayload *remrsip, float wheelSpeed1){
-    uint32_t _wheelSpeed1 = (uint32_t)((wheelSpeed1 +1000.0000000000000000F) / 0.0305180437933928F);
+static inline void REM_RobotStateInfo_set_wheelSpeed1(REM_RobotStateInfoPayload *remrsip, float wheelSpeed1) {
+    uint32_t _wheelSpeed1 = (uint32_t)((wheelSpeed1 + 1000.0000000000000000F) / 0.0305180437933928F);
     remrsip->payload[18] = (_wheelSpeed1 >> 8);
     remrsip->payload[19] = _wheelSpeed1;
 }
 
-static inline void REM_RobotStateInfo_set_wheelSpeed2(REM_RobotStateInfoPayload *remrsip, float wheelSpeed2){
-    uint32_t _wheelSpeed2 = (uint32_t)((wheelSpeed2 +1000.0000000000000000F) / 0.0305180437933928F);
+static inline void REM_RobotStateInfo_set_wheelSpeed2(REM_RobotStateInfoPayload *remrsip, float wheelSpeed2) {
+    uint32_t _wheelSpeed2 = (uint32_t)((wheelSpeed2 + 1000.0000000000000000F) / 0.0305180437933928F);
     remrsip->payload[20] = (_wheelSpeed2 >> 8);
     remrsip->payload[21] = _wheelSpeed2;
 }
 
-static inline void REM_RobotStateInfo_set_wheelSpeed3(REM_RobotStateInfoPayload *remrsip, float wheelSpeed3){
-    uint32_t _wheelSpeed3 = (uint32_t)((wheelSpeed3 +1000.0000000000000000F) / 0.0305180437933928F);
+static inline void REM_RobotStateInfo_set_wheelSpeed3(REM_RobotStateInfoPayload *remrsip, float wheelSpeed3) {
+    uint32_t _wheelSpeed3 = (uint32_t)((wheelSpeed3 + 1000.0000000000000000F) / 0.0305180437933928F);
     remrsip->payload[22] = (_wheelSpeed3 >> 8);
     remrsip->payload[23] = _wheelSpeed3;
 }
 
-static inline void REM_RobotStateInfo_set_wheelSpeed4(REM_RobotStateInfoPayload *remrsip, float wheelSpeed4){
-    uint32_t _wheelSpeed4 = (uint32_t)((wheelSpeed4 +1000.0000000000000000F) / 0.0305180437933928F);
+static inline void REM_RobotStateInfo_set_wheelSpeed4(REM_RobotStateInfoPayload *remrsip, float wheelSpeed4) {
+    uint32_t _wheelSpeed4 = (uint32_t)((wheelSpeed4 + 1000.0000000000000000F) / 0.0305180437933928F);
     remrsip->payload[24] = (_wheelSpeed4 >> 8);
     remrsip->payload[25] = _wheelSpeed4;
 }
 
-static inline void REM_RobotStateInfo_set_dribbleSpeed(REM_RobotStateInfoPayload *remrsip, float dribbleSpeed){
+static inline void REM_RobotStateInfo_set_dribbleSpeed(REM_RobotStateInfoPayload *remrsip, float dribbleSpeed) {
     uint32_t _dribbleSpeed = (uint32_t)(dribbleSpeed / 0.0762951094834821F);
     remrsip->payload[26] = (_dribbleSpeed >> 8);
     remrsip->payload[27] = _dribbleSpeed;
 }
 
-static inline void REM_RobotStateInfo_set_filteredDribbleSpeed(REM_RobotStateInfoPayload *remrsip, float filteredDribbleSpeed){
+static inline void REM_RobotStateInfo_set_filteredDribbleSpeed(REM_RobotStateInfoPayload *remrsip, float filteredDribbleSpeed) {
     uint32_t _filteredDribbleSpeed = (uint32_t)(filteredDribbleSpeed / 0.0762951094834821F);
     remrsip->payload[28] = (_filteredDribbleSpeed >> 8);
     remrsip->payload[29] = _filteredDribbleSpeed;
 }
 
-static inline void REM_RobotStateInfo_set_dribblespeedBeforeGotBall(REM_RobotStateInfoPayload *remrsip, float dribblespeedBeforeGotBall){
+static inline void REM_RobotStateInfo_set_dribblespeedBeforeGotBall(REM_RobotStateInfoPayload *remrsip, float dribblespeedBeforeGotBall) {
     uint32_t _dribblespeedBeforeGotBall = (uint32_t)(dribblespeedBeforeGotBall / 0.0762951094834821F);
     remrsip->payload[30] = (_dribblespeedBeforeGotBall >> 8);
     remrsip->payload[31] = _dribblespeedBeforeGotBall;
 }
 
-static inline void REM_RobotStateInfo_set_bodyXIntegral(REM_RobotStateInfoPayload *remrsip, float bodyXIntegral){
-    uint32_t _bodyXIntegral = (uint32_t)((bodyXIntegral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_bodyXIntegral(REM_RobotStateInfoPayload *remrsip, float bodyXIntegral) {
+    uint32_t _bodyXIntegral = (uint32_t)((bodyXIntegral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[32] = (_bodyXIntegral >> 8);
     remrsip->payload[33] = _bodyXIntegral;
 }
 
-static inline void REM_RobotStateInfo_set_bodyYIntegral(REM_RobotStateInfoPayload *remrsip, float bodyYIntegral){
-    uint32_t _bodyYIntegral = (uint32_t)((bodyYIntegral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_bodyYIntegral(REM_RobotStateInfoPayload *remrsip, float bodyYIntegral) {
+    uint32_t _bodyYIntegral = (uint32_t)((bodyYIntegral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[34] = (_bodyYIntegral >> 8);
     remrsip->payload[35] = _bodyYIntegral;
 }
 
-static inline void REM_RobotStateInfo_set_bodyWIntegral(REM_RobotStateInfoPayload *remrsip, float bodyWIntegral){
-    uint32_t _bodyWIntegral = (uint32_t)((bodyWIntegral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_bodyWIntegral(REM_RobotStateInfoPayload *remrsip, float bodyWIntegral) {
+    uint32_t _bodyWIntegral = (uint32_t)((bodyWIntegral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[36] = (_bodyWIntegral >> 8);
     remrsip->payload[37] = _bodyWIntegral;
 }
 
-static inline void REM_RobotStateInfo_set_bodyYawIntegral(REM_RobotStateInfoPayload *remrsip, float bodyYawIntegral){
-    uint32_t _bodyYawIntegral = (uint32_t)((bodyYawIntegral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_bodyYawIntegral(REM_RobotStateInfoPayload *remrsip, float bodyYawIntegral) {
+    uint32_t _bodyYawIntegral = (uint32_t)((bodyYawIntegral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[38] = (_bodyYawIntegral >> 8);
     remrsip->payload[39] = _bodyYawIntegral;
 }
 
-static inline void REM_RobotStateInfo_set_wheel1Integral(REM_RobotStateInfoPayload *remrsip, float wheel1Integral){
-    uint32_t _wheel1Integral = (uint32_t)((wheel1Integral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_wheel1Integral(REM_RobotStateInfoPayload *remrsip, float wheel1Integral) {
+    uint32_t _wheel1Integral = (uint32_t)((wheel1Integral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[40] = (_wheel1Integral >> 8);
     remrsip->payload[41] = _wheel1Integral;
 }
 
-static inline void REM_RobotStateInfo_set_wheel2Integral(REM_RobotStateInfoPayload *remrsip, float wheel2Integral){
-    uint32_t _wheel2Integral = (uint32_t)((wheel2Integral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_wheel2Integral(REM_RobotStateInfoPayload *remrsip, float wheel2Integral) {
+    uint32_t _wheel2Integral = (uint32_t)((wheel2Integral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[42] = (_wheel2Integral >> 8);
     remrsip->payload[43] = _wheel2Integral;
 }
 
-static inline void REM_RobotStateInfo_set_wheel3Integral(REM_RobotStateInfoPayload *remrsip, float wheel3Integral){
-    uint32_t _wheel3Integral = (uint32_t)((wheel3Integral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_wheel3Integral(REM_RobotStateInfoPayload *remrsip, float wheel3Integral) {
+    uint32_t _wheel3Integral = (uint32_t)((wheel3Integral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[44] = (_wheel3Integral >> 8);
     remrsip->payload[45] = _wheel3Integral;
 }
 
-static inline void REM_RobotStateInfo_set_wheel4Integral(REM_RobotStateInfoPayload *remrsip, float wheel4Integral){
-    uint32_t _wheel4Integral = (uint32_t)((wheel4Integral +5000.0000000000000000F) / 0.1525902189669642F);
+static inline void REM_RobotStateInfo_set_wheel4Integral(REM_RobotStateInfoPayload *remrsip, float wheel4Integral) {
+    uint32_t _wheel4Integral = (uint32_t)((wheel4Integral + 5000.0000000000000000F) / 0.1525902189669642F);
     remrsip->payload[46] = (_wheel4Integral >> 8);
     remrsip->payload[47] = _wheel4Integral;
 }
 
 // ================================ ENCODE ================================
-static inline void encodeREM_RobotStateInfo(REM_RobotStateInfoPayload *remrsip, REM_RobotStateInfo *remrsi){
-    REM_RobotStateInfo_set_header              (remrsip, remrsi->header);
-    REM_RobotStateInfo_set_toRobotId           (remrsip, remrsi->toRobotId);
-    REM_RobotStateInfo_set_toColor             (remrsip, remrsi->toColor);
-    REM_RobotStateInfo_set_toBC                (remrsip, remrsi->toBC);
-    REM_RobotStateInfo_set_toBS                (remrsip, remrsi->toBS);
-    REM_RobotStateInfo_set_toPC                (remrsip, remrsi->toPC);
-    REM_RobotStateInfo_set_fromRobotId         (remrsip, remrsi->fromRobotId);
-    REM_RobotStateInfo_set_fromColor           (remrsip, remrsi->fromColor);
-    REM_RobotStateInfo_set_reserved            (remrsip, remrsi->reserved);
-    REM_RobotStateInfo_set_fromBS              (remrsip, remrsi->fromBS);
-    REM_RobotStateInfo_set_fromPC              (remrsip, remrsi->fromPC);
-    REM_RobotStateInfo_set_remVersion          (remrsip, remrsi->remVersion);
-    REM_RobotStateInfo_set_messageId           (remrsip, remrsi->messageId);
-    REM_RobotStateInfo_set_timestamp           (remrsip, remrsi->timestamp);
-    REM_RobotStateInfo_set_payloadSize         (remrsip, remrsi->payloadSize);
-    REM_RobotStateInfo_set_xsensAcc1           (remrsip, remrsi->xsensAcc1);
-    REM_RobotStateInfo_set_xsensAcc2           (remrsip, remrsi->xsensAcc2);
-    REM_RobotStateInfo_set_xsensYaw            (remrsip, remrsi->xsensYaw);
-    REM_RobotStateInfo_set_rateOfTurn          (remrsip, remrsi->rateOfTurn);
-    REM_RobotStateInfo_set_wheelSpeed1         (remrsip, remrsi->wheelSpeed1);
-    REM_RobotStateInfo_set_wheelSpeed2         (remrsip, remrsi->wheelSpeed2);
-    REM_RobotStateInfo_set_wheelSpeed3         (remrsip, remrsi->wheelSpeed3);
-    REM_RobotStateInfo_set_wheelSpeed4         (remrsip, remrsi->wheelSpeed4);
-    REM_RobotStateInfo_set_dribbleSpeed        (remrsip, remrsi->dribbleSpeed);
+static inline void encodeREM_RobotStateInfo(REM_RobotStateInfoPayload *remrsip, REM_RobotStateInfo *remrsi) {
+    REM_RobotStateInfo_set_header(remrsip, remrsi->header);
+    REM_RobotStateInfo_set_toRobotId(remrsip, remrsi->toRobotId);
+    REM_RobotStateInfo_set_toColor(remrsip, remrsi->toColor);
+    REM_RobotStateInfo_set_toBC(remrsip, remrsi->toBC);
+    REM_RobotStateInfo_set_toBS(remrsip, remrsi->toBS);
+    REM_RobotStateInfo_set_toPC(remrsip, remrsi->toPC);
+    REM_RobotStateInfo_set_fromRobotId(remrsip, remrsi->fromRobotId);
+    REM_RobotStateInfo_set_fromColor(remrsip, remrsi->fromColor);
+    REM_RobotStateInfo_set_reserved(remrsip, remrsi->reserved);
+    REM_RobotStateInfo_set_fromBS(remrsip, remrsi->fromBS);
+    REM_RobotStateInfo_set_fromPC(remrsip, remrsi->fromPC);
+    REM_RobotStateInfo_set_remVersion(remrsip, remrsi->remVersion);
+    REM_RobotStateInfo_set_messageId(remrsip, remrsi->messageId);
+    REM_RobotStateInfo_set_timestamp(remrsip, remrsi->timestamp);
+    REM_RobotStateInfo_set_payloadSize(remrsip, remrsi->payloadSize);
+    REM_RobotStateInfo_set_xsensAcc1(remrsip, remrsi->xsensAcc1);
+    REM_RobotStateInfo_set_xsensAcc2(remrsip, remrsi->xsensAcc2);
+    REM_RobotStateInfo_set_xsensYaw(remrsip, remrsi->xsensYaw);
+    REM_RobotStateInfo_set_rateOfTurn(remrsip, remrsi->rateOfTurn);
+    REM_RobotStateInfo_set_wheelSpeed1(remrsip, remrsi->wheelSpeed1);
+    REM_RobotStateInfo_set_wheelSpeed2(remrsip, remrsi->wheelSpeed2);
+    REM_RobotStateInfo_set_wheelSpeed3(remrsip, remrsi->wheelSpeed3);
+    REM_RobotStateInfo_set_wheelSpeed4(remrsip, remrsi->wheelSpeed4);
+    REM_RobotStateInfo_set_dribbleSpeed(remrsip, remrsi->dribbleSpeed);
     REM_RobotStateInfo_set_filteredDribbleSpeed(remrsip, remrsi->filteredDribbleSpeed);
     REM_RobotStateInfo_set_dribblespeedBeforeGotBall(remrsip, remrsi->dribblespeedBeforeGotBall);
-    REM_RobotStateInfo_set_bodyXIntegral       (remrsip, remrsi->bodyXIntegral);
-    REM_RobotStateInfo_set_bodyYIntegral       (remrsip, remrsi->bodyYIntegral);
-    REM_RobotStateInfo_set_bodyWIntegral       (remrsip, remrsi->bodyWIntegral);
-    REM_RobotStateInfo_set_bodyYawIntegral     (remrsip, remrsi->bodyYawIntegral);
-    REM_RobotStateInfo_set_wheel1Integral      (remrsip, remrsi->wheel1Integral);
-    REM_RobotStateInfo_set_wheel2Integral      (remrsip, remrsi->wheel2Integral);
-    REM_RobotStateInfo_set_wheel3Integral      (remrsip, remrsi->wheel3Integral);
-    REM_RobotStateInfo_set_wheel4Integral      (remrsip, remrsi->wheel4Integral);
+    REM_RobotStateInfo_set_bodyXIntegral(remrsip, remrsi->bodyXIntegral);
+    REM_RobotStateInfo_set_bodyYIntegral(remrsip, remrsi->bodyYIntegral);
+    REM_RobotStateInfo_set_bodyWIntegral(remrsip, remrsi->bodyWIntegral);
+    REM_RobotStateInfo_set_bodyYawIntegral(remrsip, remrsi->bodyYawIntegral);
+    REM_RobotStateInfo_set_wheel1Integral(remrsip, remrsi->wheel1Integral);
+    REM_RobotStateInfo_set_wheel2Integral(remrsip, remrsi->wheel2Integral);
+    REM_RobotStateInfo_set_wheel3Integral(remrsip, remrsi->wheel3Integral);
+    REM_RobotStateInfo_set_wheel4Integral(remrsip, remrsi->wheel4Integral);
 }
 
 // ================================ DECODE ================================
-static inline void decodeREM_RobotStateInfo(REM_RobotStateInfo *remrsi, REM_RobotStateInfoPayload *remrsip){
-    remrsi->header       = REM_RobotStateInfo_get_header(remrsip);
-    remrsi->toRobotId    = REM_RobotStateInfo_get_toRobotId(remrsip);
-    remrsi->toColor      = REM_RobotStateInfo_get_toColor(remrsip);
-    remrsi->toBC         = REM_RobotStateInfo_get_toBC(remrsip);
-    remrsi->toBS         = REM_RobotStateInfo_get_toBS(remrsip);
-    remrsi->toPC         = REM_RobotStateInfo_get_toPC(remrsip);
-    remrsi->fromRobotId  = REM_RobotStateInfo_get_fromRobotId(remrsip);
-    remrsi->fromColor    = REM_RobotStateInfo_get_fromColor(remrsip);
-    remrsi->reserved     = REM_RobotStateInfo_get_reserved(remrsip);
-    remrsi->fromBS       = REM_RobotStateInfo_get_fromBS(remrsip);
-    remrsi->fromPC       = REM_RobotStateInfo_get_fromPC(remrsip);
-    remrsi->remVersion   = REM_RobotStateInfo_get_remVersion(remrsip);
-    remrsi->messageId    = REM_RobotStateInfo_get_messageId(remrsip);
-    remrsi->timestamp    = REM_RobotStateInfo_get_timestamp(remrsip);
-    remrsi->payloadSize  = REM_RobotStateInfo_get_payloadSize(remrsip);
-    remrsi->xsensAcc1    = REM_RobotStateInfo_get_xsensAcc1(remrsip);
-    remrsi->xsensAcc2    = REM_RobotStateInfo_get_xsensAcc2(remrsip);
-    remrsi->xsensYaw     = REM_RobotStateInfo_get_xsensYaw(remrsip);
-    remrsi->rateOfTurn   = REM_RobotStateInfo_get_rateOfTurn(remrsip);
-    remrsi->wheelSpeed1  = REM_RobotStateInfo_get_wheelSpeed1(remrsip);
-    remrsi->wheelSpeed2  = REM_RobotStateInfo_get_wheelSpeed2(remrsip);
-    remrsi->wheelSpeed3  = REM_RobotStateInfo_get_wheelSpeed3(remrsip);
-    remrsi->wheelSpeed4  = REM_RobotStateInfo_get_wheelSpeed4(remrsip);
+static inline void decodeREM_RobotStateInfo(REM_RobotStateInfo *remrsi, REM_RobotStateInfoPayload *remrsip) {
+    remrsi->header = REM_RobotStateInfo_get_header(remrsip);
+    remrsi->toRobotId = REM_RobotStateInfo_get_toRobotId(remrsip);
+    remrsi->toColor = REM_RobotStateInfo_get_toColor(remrsip);
+    remrsi->toBC = REM_RobotStateInfo_get_toBC(remrsip);
+    remrsi->toBS = REM_RobotStateInfo_get_toBS(remrsip);
+    remrsi->toPC = REM_RobotStateInfo_get_toPC(remrsip);
+    remrsi->fromRobotId = REM_RobotStateInfo_get_fromRobotId(remrsip);
+    remrsi->fromColor = REM_RobotStateInfo_get_fromColor(remrsip);
+    remrsi->reserved = REM_RobotStateInfo_get_reserved(remrsip);
+    remrsi->fromBS = REM_RobotStateInfo_get_fromBS(remrsip);
+    remrsi->fromPC = REM_RobotStateInfo_get_fromPC(remrsip);
+    remrsi->remVersion = REM_RobotStateInfo_get_remVersion(remrsip);
+    remrsi->messageId = REM_RobotStateInfo_get_messageId(remrsip);
+    remrsi->timestamp = REM_RobotStateInfo_get_timestamp(remrsip);
+    remrsi->payloadSize = REM_RobotStateInfo_get_payloadSize(remrsip);
+    remrsi->xsensAcc1 = REM_RobotStateInfo_get_xsensAcc1(remrsip);
+    remrsi->xsensAcc2 = REM_RobotStateInfo_get_xsensAcc2(remrsip);
+    remrsi->xsensYaw = REM_RobotStateInfo_get_xsensYaw(remrsip);
+    remrsi->rateOfTurn = REM_RobotStateInfo_get_rateOfTurn(remrsip);
+    remrsi->wheelSpeed1 = REM_RobotStateInfo_get_wheelSpeed1(remrsip);
+    remrsi->wheelSpeed2 = REM_RobotStateInfo_get_wheelSpeed2(remrsip);
+    remrsi->wheelSpeed3 = REM_RobotStateInfo_get_wheelSpeed3(remrsip);
+    remrsi->wheelSpeed4 = REM_RobotStateInfo_get_wheelSpeed4(remrsip);
     remrsi->dribbleSpeed = REM_RobotStateInfo_get_dribbleSpeed(remrsip);
-    remrsi->filteredDribbleSpeed= REM_RobotStateInfo_get_filteredDribbleSpeed(remrsip);
-    remrsi->dribblespeedBeforeGotBall= REM_RobotStateInfo_get_dribblespeedBeforeGotBall(remrsip);
-    remrsi->bodyXIntegral= REM_RobotStateInfo_get_bodyXIntegral(remrsip);
-    remrsi->bodyYIntegral= REM_RobotStateInfo_get_bodyYIntegral(remrsip);
-    remrsi->bodyWIntegral= REM_RobotStateInfo_get_bodyWIntegral(remrsip);
-    remrsi->bodyYawIntegral= REM_RobotStateInfo_get_bodyYawIntegral(remrsip);
-    remrsi->wheel1Integral= REM_RobotStateInfo_get_wheel1Integral(remrsip);
-    remrsi->wheel2Integral= REM_RobotStateInfo_get_wheel2Integral(remrsip);
-    remrsi->wheel3Integral= REM_RobotStateInfo_get_wheel3Integral(remrsip);
-    remrsi->wheel4Integral= REM_RobotStateInfo_get_wheel4Integral(remrsip);
+    remrsi->filteredDribbleSpeed = REM_RobotStateInfo_get_filteredDribbleSpeed(remrsip);
+    remrsi->dribblespeedBeforeGotBall = REM_RobotStateInfo_get_dribblespeedBeforeGotBall(remrsip);
+    remrsi->bodyXIntegral = REM_RobotStateInfo_get_bodyXIntegral(remrsip);
+    remrsi->bodyYIntegral = REM_RobotStateInfo_get_bodyYIntegral(remrsip);
+    remrsi->bodyWIntegral = REM_RobotStateInfo_get_bodyWIntegral(remrsip);
+    remrsi->bodyYawIntegral = REM_RobotStateInfo_get_bodyYawIntegral(remrsip);
+    remrsi->wheel1Integral = REM_RobotStateInfo_get_wheel1Integral(remrsip);
+    remrsi->wheel2Integral = REM_RobotStateInfo_get_wheel2Integral(remrsip);
+    remrsi->wheel3Integral = REM_RobotStateInfo_get_wheel3Integral(remrsip);
+    remrsi->wheel4Integral = REM_RobotStateInfo_get_wheel4Integral(remrsip);
 }
 
 #endif /*__REM_ROBOT_STATE_INFO_H*/

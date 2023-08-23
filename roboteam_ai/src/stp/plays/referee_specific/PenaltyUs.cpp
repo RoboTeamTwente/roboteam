@@ -24,10 +24,12 @@ PenaltyUs::PenaltyUs() : Play() {
 
     /// Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::Keeper>(role::Keeper("keeper")), std::make_unique<role::PenaltyTaker>(role::PenaltyTaker("kicker")), std::make_unique<role::Halt>(role::Halt("halt_0")),
-        std::make_unique<role::Halt>(role::Halt("halt_1")),     std::make_unique<role::Halt>(role::Halt("halt_2")),         std::make_unique<role::Halt>(role::Halt("halt_3")),
-        std::make_unique<role::Halt>(role::Halt("halt_4")),     std::make_unique<role::Halt>(role::Halt("halt_5")),         std::make_unique<role::Halt>(role::Halt("halt_6")),
-        std::make_unique<role::Halt>(role::Halt("halt_7")),     std::make_unique<role::Halt>(role::Halt("halt_8")),
+        std::make_unique<role::Keeper>(role::Keeper("keeper")), std::make_unique<role::PenaltyTaker>(role::PenaltyTaker("kicker")),
+        std::make_unique<role::Halt>(role::Halt("halt_0")),     std::make_unique<role::Halt>(role::Halt("halt_1")),
+        std::make_unique<role::Halt>(role::Halt("halt_2")),     std::make_unique<role::Halt>(role::Halt("halt_3")),
+        std::make_unique<role::Halt>(role::Halt("halt_4")),     std::make_unique<role::Halt>(role::Halt("halt_5")),
+        std::make_unique<role::Halt>(role::Halt("halt_6")),     std::make_unique<role::Halt>(role::Halt("halt_7")),
+        std::make_unique<role::Halt>(role::Halt("halt_8")),
     };
 }
 
@@ -74,7 +76,8 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);
     stpInfos["kicker"].setShotType(ShotType::MAX);
-    if (stpInfos["kicker"].getRobot().has_value()) stpInfos["kicker"].setMaxRobotVelocity(std::max((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length(), 0.5));
+    if (stpInfos["kicker"].getRobot().has_value())
+        stpInfos["kicker"].setMaxRobotVelocity(std::max((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length(), 0.5));
 }
 
 }  // namespace rtt::ai::stp::play

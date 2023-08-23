@@ -5,8 +5,9 @@
 #include <gtest/gtest.h>
 #include <helpers/FieldHelper.h>
 #include <roboteam_utils/Random.h>
-#include <roboteam_utils/Field.hpp>
 #include <world/FieldComputations.h>
+
+#include <roboteam_utils/Field.hpp>
 
 namespace rtt {
 using namespace rtt::world;
@@ -14,9 +15,7 @@ using namespace rtt::ai;
 
 double MAXIMUM_DIFFERENCE = 0.000001;
 
-rtt::Field createTestField() {
-    return Field::createField(12, 9, 1.8, 3.6, 0.18, 1.8, 0.3, 0.5, {-2, 0}, {2, 0});
-}
+rtt::Field createTestField() { return Field::createField(12, 9, 1.8, 3.6, 0.18, 1.8, 0.3, 0.5, {-2, 0}, {2, 0}); }
 
 /* Checks whether the margins of the functions that return an Polygon are all in outwards direction by checking if the actual size of the area
  * matches with the expected size of the area. */
@@ -100,7 +99,7 @@ TEST(FieldComputationTest, goal_distance) {
     EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
     testPoint = Vector2(2, 3.6);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, true, testPoint);
-    actualDistance = sqrt(2.7*2.7 + 8*8);
+    actualDistance = sqrt(2.7 * 2.7 + 8 * 8);
     EXPECT_NEAR(expectedDistance, actualDistance, MAXIMUM_DIFFERENCE);
     testPoint = Vector2(4, 0.5);
     expectedDistance = FieldComputations::getDistanceToGoal(testField, false, testPoint);
@@ -126,12 +125,12 @@ TEST(FieldComputationTest, total_goal_angle) {
 
     testPoint = testField.playArea.topLeft();
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, false, testPoint);
-    actualAngle = atan((4.5+0.9) / 12) - atan((4.5-0.9) / 12);
+    actualAngle = atan((4.5 + 0.9) / 12) - atan((4.5 - 0.9) / 12);
     EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
 
     testPoint = testField.rightGoalArea.topLeft() + Vector2(0, -0.4);
     expectedAngle = FieldComputations::getTotalGoalAngle(testField, true, testPoint);
-    actualAngle = atan(0.4 / 12) + atan((1.8-0.4) / 12);
+    actualAngle = atan(0.4 / 12) + atan((1.8 - 0.4) / 12);
     EXPECT_NEAR(expectedAngle, actualAngle, MAXIMUM_DIFFERENCE);
 
     testPoint = testField.rightGoalArea.bottomLeft() + Vector2(1.2, 0);

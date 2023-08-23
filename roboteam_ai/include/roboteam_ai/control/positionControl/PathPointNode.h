@@ -13,7 +13,7 @@ namespace rtt::ai::control {
  */
 class PathPointNode {
    private:
-    Vector2 position; /**< Position of the node */
+    Vector2 position;                /**< Position of the node */
     PathPointNode *parent = nullptr; /**< Parent node of the node */
 
    public:

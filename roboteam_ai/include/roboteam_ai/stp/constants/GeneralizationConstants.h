@@ -58,15 +58,15 @@ struct ScoredPosition {
  * Generalized Position Profiles to be used in plays.
  * They consist of a generalized weight combination.
  */
-constexpr ScoreProfile SafePosition = {1, 1, 0, 0.5}; /**< Scoring weights for Safe Position */
+constexpr ScoreProfile SafePosition = {1, 1, 0, 0.5};        /**< Scoring weights for Safe Position */
 constexpr ScoreProfile OffensivePosition = {1, 0.5, 0.5, 0}; /**< Scoring weights for Offensive Position */
-constexpr ScoreProfile BlockingPosition = {0, 0.5, 0, 1}; /**< Scoring weights for Blocking Positions */
-constexpr ScoreProfile AttackingPass = {0.5, 1, 1, 0}; /**< Scoring weights for Attacking Pass */
-constexpr ScoreProfile SafePass = {1, 1, 0.5, 0}; /**< Scoring weights for Safe Pass */
-constexpr ScoreProfile LineOfSight = {0, 1, 0, 0}; /**< Scoring weights for Line of Sight score */
-constexpr ScoreProfile Open = {1, 0, 0, 0}; /**< Scoring weights for Open score */
-constexpr ScoreProfile GoalShot = {0, 0, 1, 0}; /**< Scoring weights for Goal Shot Score */
-constexpr ScoreProfile ChippingPass = {0, 0.0,0,1}; /**< Scoring weights for ChippingPass score */
+constexpr ScoreProfile BlockingPosition = {0, 0.5, 0, 1};    /**< Scoring weights for Blocking Positions */
+constexpr ScoreProfile AttackingPass = {0.5, 1, 1, 0};       /**< Scoring weights for Attacking Pass */
+constexpr ScoreProfile SafePass = {1, 1, 0.5, 0};            /**< Scoring weights for Safe Pass */
+constexpr ScoreProfile LineOfSight = {0, 1, 0, 0};           /**< Scoring weights for Line of Sight score */
+constexpr ScoreProfile Open = {1, 0, 0, 0};                  /**< Scoring weights for Open score */
+constexpr ScoreProfile GoalShot = {0, 0, 1, 0};              /**< Scoring weights for Goal Shot Score */
+constexpr ScoreProfile ChippingPass = {0, 0.0, 0, 1};        /**< Scoring weights for ChippingPass score */
 
 /**
  * @brief Generalized Keys for passing information form the old play to the new.
@@ -81,12 +81,12 @@ enum class KeyInfo {
  * Allows for saving specific information from the old play to the new.
  */
 struct StoreInfo {
-    std::optional<int> robotID;  /**< ID of the robot */
-    std::optional<Vector2> robotPosition; /**< Current position of the robot */
-    std::optional<Vector2> moveToPosition; /**< Position the robot should move to */
-    std::optional<Vector2> defendPosition; /**< Position the robot should defend */
+    std::optional<int> robotID;             /**< ID of the robot */
+    std::optional<Vector2> robotPosition;   /**< Current position of the robot */
+    std::optional<Vector2> moveToPosition;  /**< Position the robot should move to */
+    std::optional<Vector2> defendPosition;  /**< Position the robot should defend */
     std::optional<Vector2> shootAtPosition; /**< Position the robot should shoot at */
-    std::optional<Vector2> passToRobot; /**< Position of a robot the robot should pass to */
+    std::optional<Vector2> passToRobot;     /**< Position of a robot the robot should pass to */
 };
 
 using PlayInfos = std::unordered_map<KeyInfo, StoreInfo>; /**< Place to store info in that is needed between Plays. Used in storePlayInfo. */

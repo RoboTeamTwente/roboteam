@@ -5,8 +5,8 @@
 #ifndef ROBOTEAM_UTILS_ROBOTSHAPE_H_
 #define ROBOTEAM_UTILS_ROBOTSHAPE_H_
 
-#include "Circle.h"
 #include "Angle.h"
+#include "Circle.h"
 #include "Line.h"
 
 namespace rtt {
@@ -14,12 +14,13 @@ namespace rtt {
 
     class RobotShape {
     private:
-        //The first three are necessary to determine the entire shape
+        // The first three are necessary to determine the entire shape
         Circle circle;
         double centerToFront;
         Angle orientation;
-        //The following is not necessary but prevents a lot of recomputation using sin() and cos() like functions which can be pretty expensive
+        // The following is not necessary but prevents a lot of recomputation using sin() and cos() like functions which can be pretty expensive
         LineSegment kickerLine;
+
     public:
         RobotShape(const Vector2 &pos, double centerToFront, double radius, Angle orientation);
 
@@ -52,8 +53,8 @@ namespace rtt {
 
         [[nodiscard]] bool doesIntersect(const LineSegment &segment) const;
 
-        //tries to find intersection points of a line segment with the robot. In some edge cases,
-        //multiple points very close to eachother might be returned because of numerical errors.
+        // tries to find intersection points of a line segment with the robot. In some edge cases,
+        // multiple points very close to eachother might be returned because of numerical errors.
         [[nodiscard]] std::vector<Vector2> intersects(const LineSegment &segment) const;
 
         [[nodiscard]] double radius() const;
@@ -61,5 +62,5 @@ namespace rtt {
         [[nodiscard]] double centerToFrontDist() const;
     };
 
-}
-#endif //ROBOTEAM_UTILS_ROBOTSHAPE_H_
+}  // namespace rtt
+#endif  // ROBOTEAM_UTILS_ROBOTSHAPE_H_

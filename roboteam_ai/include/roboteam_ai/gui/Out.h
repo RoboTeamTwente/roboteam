@@ -73,6 +73,6 @@ class Out {
     static google::protobuf::Arena arena;
 };
 
-}  // namespace rtt::ai::new_interface
+}  // namespace rtt::ai::gui
 
 #endif  // RTT_OUT_H

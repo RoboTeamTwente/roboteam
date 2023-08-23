@@ -5,14 +5,14 @@
 #ifndef RTT_PIDTRACKING_H
 #define RTT_PIDTRACKING_H
 
+#include <unordered_map>
+
 #include "PathTrackingAlgorithm.h"
 #include "control/positionControl/PositionControlUtils.h"
 #include "roboteam_utils/Position.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/pid.h"
 #include "utilities/Constants.h"
-
-#include <unordered_map>
 
 namespace rtt::ai::control {
 
@@ -21,7 +21,7 @@ namespace rtt::ai::control {
  */
 class PidTracking : public PathTrackingAlgorithm {
    private:
-    static constexpr double MAX_VELOCITY = Constants::MAX_VEL(); /**< Maximum allowed velocity */
+    static constexpr double MAX_VELOCITY = Constants::MAX_VEL();  /**< Maximum allowed velocity */
     std::unordered_map<int, std::pair<PID, PID>> pidMapping = {}; /**< Map of PID controllers for each robot */
 
    public:

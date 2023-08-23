@@ -34,7 +34,7 @@ namespace rtt {
         [[nodiscard]] int getNumPointsY() const;
         [[nodiscard]] double getStepSizeX() const;
         [[nodiscard]] double getStepSizeY() const;
-        [[nodiscard]] const std::vector<std::vector<Vector2>> &getPoints() const;
+        [[nodiscard]] const std::vector<std::vector<Vector2>>& getPoints() const;
 
         bool operator==(const Grid& other) const;
 
@@ -52,6 +52,6 @@ namespace rtt {
         double stepSizeX;
         double stepSizeY;
     };
-} // namespace rtt
+}  // namespace rtt
 
 #endif  // RTT_GRID_H

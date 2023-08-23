@@ -175,7 +175,6 @@ void DefendShot::calculateInfoForKeeper() noexcept {
     stpInfos["keeper"].setKickOrChip(KickOrChip::KICK);
 }
 
-
 void DefendShot::calculateInfoForOffenders() noexcept {
     stpInfos["offender_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
 }

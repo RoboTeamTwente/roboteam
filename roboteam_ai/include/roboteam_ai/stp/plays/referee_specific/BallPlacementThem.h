@@ -50,7 +50,6 @@ class BallPlacementThem : public Play {
      * @return The name of the play as string
      */
     const char* getName() const override;
-
 };
 }  // namespace rtt::ai::stp::play
 

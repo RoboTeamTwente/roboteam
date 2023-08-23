@@ -4,6 +4,7 @@
 #include <utilities/Constants.h>
 #include <utilities/GameSettings.h>
 
+#include <QtNetwork>
 #include <RobotCommandsNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
@@ -11,7 +12,7 @@
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
 #include <string_view>
-#include <QtNetwork>
+
 #include "proto/GUI.pb.h"
 
 namespace rtt::world {
@@ -30,8 +31,8 @@ using namespace rtt::world;
  */
 class IOManager {
    private:
-    proto::State state; /**< State given by the roboteam_observer */
-    uint64_t stateTimeMs; /** Time of the last state update in milliseconds since epoch */
+    proto::State state;               /**< State given by the roboteam_observer */
+    uint64_t stateTimeMs;             /** Time of the last state update in milliseconds since epoch */
     uint64_t stateWorldLastTimestamp; /** Timestamp of the last world update in the state */
 
     std::unique_ptr<rtt::net::WorldSubscriber> worldSubscriber; /**< The socket that receives the world information */
@@ -42,11 +43,11 @@ class IOManager {
      */
     void handleState(const proto::State& state);
 
-    std::unique_ptr<rtt::net::RobotCommandsBluePublisher> robotCommandsBluePublisher; /**< The socket that publishes the robot commands for the blue team */
+    std::unique_ptr<rtt::net::RobotCommandsBluePublisher> robotCommandsBluePublisher;     /**< The socket that publishes the robot commands for the blue team */
     std::unique_ptr<rtt::net::RobotCommandsYellowPublisher> robotCommandsYellowPublisher; /**< The socket that publishes the robot commands for the yellow team */
 
     /** Only the primary AI publishes settings. The secondary AI subscribes to those settings so they are on the same line */
-    std::unique_ptr<rtt::net::SettingsPublisher> settingsPublisher; /**< The socket that publishes the settings from interface */
+    std::unique_ptr<rtt::net::SettingsPublisher> settingsPublisher;   /**< The socket that publishes the settings from interface */
     std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber; /**< The socket that receives the settings for interface */
 
     rtt::ai::Pause* pause; /**< Pauses the robots when needed */
@@ -110,17 +111,15 @@ class IOManager {
     bool obtainTeamColorChannel(bool yellowChannel);
 
     std::mutex stateMutex; /**< Synchronizer for the state */
-    
 
     QUdpSocket simulator_socket;
     std::mutex simulator_socket_mutex; /**< Synchronizer for the simulator socket */
     /**
      * @brief Sends a packet to the simulator on port 10300
-     * 
+     *
      * @param packet The packet that needs to be sent of type SimulatorCommand
      */
     void sendPacketToSimulator(const SimulatorCommand& packet);
-
 };
 
 extern IOManager io;

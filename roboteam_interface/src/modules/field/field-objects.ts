@@ -189,7 +189,7 @@ export class FieldDrawing extends Graphics {
           this.lineStyle(4, fieldColors.rightGoal)
           break
         default:
-          this.lineStyle(1, Colors.fieldLines)
+          this.lineStyle(2, Colors.fieldLines)
       }
 
       this.moveTo(mmToPx(line.p1!.x!), mmToPx(line.p1!.y!)).lineTo(
@@ -199,7 +199,7 @@ export class FieldDrawing extends Graphics {
     })
 
     fieldGeometry.fieldArcs?.forEach((arc) => {
-      this.lineStyle(1, Colors.fieldLines, 1)
+      this.lineStyle(2, Colors.fieldLines, 1)
         .moveTo(mmToPx(arc.center!.x!), mmToPx(arc.center!.y!))
         .arc(mmToPx(arc.center!.x!), mmToPx(arc.center!.y!), mmToPx(arc.radius!), 0, 2 * Math.PI)
     })

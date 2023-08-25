@@ -30,7 +30,7 @@ const props = defineProps<{
         </ul>
 
         <h2 class="card-title">Shortcuts</h2>
-        <ul class="">
+        <ul class="flex flex-col gap-2">
           <li>
             Place ball:
             <div class="kbd kbd-sm font-mono">shift</div>
@@ -42,6 +42,21 @@ const props = defineProps<{
             <div class="kbd kbd-sm font-mono">alt</div>
             +
             <div class="kbd kbd-sm font-mono">right click</div>
+          </li>
+          <li>
+            Zoom in/out:
+            <div class="kbd kbd-sm font-mono">ctrl</div>
+            +
+            <div class="kbd kbd-sm font-mono">wheel</div>
+          </li>
+
+          <li>
+            Move camera:
+            <div class="kbd kbd-sm font-mono">ctrl</div>
+            +
+            <div class="kbd kbd-sm font-mono">right click</div>
+            +
+            <div class="kbd kbd-sm font-mono">drag mouse</div>
           </li>
         </ul>
       </div>

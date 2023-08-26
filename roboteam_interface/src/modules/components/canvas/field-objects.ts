@@ -64,6 +64,7 @@ export class CustomPixiApplication extends Application {
     fieldLines: Container
     objects: Container
     drawings: Container
+    ball: Container
   }
 
 
@@ -81,13 +82,15 @@ export class CustomPixiApplication extends Application {
     this.layers = {
       fieldLines: new Container(),
       objects: new Container(),
-      drawings: new Container()
+      drawings: new Container(),
+      ball: new Container()
     }
 
     // order matters
     this.centeredContainer.addChild(this.layers.fieldLines)
     this.centeredContainer.addChild(this.layers.objects)
     this.centeredContainer.addChild(this.layers.drawings)
+    this.centeredContainer.addChild(this.layers.ball)
   }
 }
 

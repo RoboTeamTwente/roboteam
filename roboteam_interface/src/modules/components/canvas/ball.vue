@@ -38,7 +38,7 @@ watch(
     ball.value = new BallDrawing()
     ball.value.scale.set(uiStore.scaling.ball)
 
-    app.value?.layers.objects.addChild(ball.value)
+    app.value?.layers.ball.addChild(ball.value)
     app.value?.ticker.add(onPixiTick)
 
     onCleanup(() => {

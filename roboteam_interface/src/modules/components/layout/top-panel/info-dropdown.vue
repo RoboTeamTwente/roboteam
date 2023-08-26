@@ -10,13 +10,13 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="dropdown dropdown-end">
+  <div class="dropdown dropdown-end relative">
     <label tabindex="0" class="btn btn-circle btn-ghost btn-sm">
       <font-awesome-icon icon="fa-info-circle" />
     </label>
     <div
       tabindex="0"
-      class="card compact dropdown-content shadow-lg bg-base-100 rounded-box w-96 border dark:border-base-300"
+      class="card compact dropdown-content shadow-lg bg-base-100 rounded-box w-96 border dark:border-base-300 z-50"
     >
       <div class="card-body">
         <button class="btn btn-error btn-sm" @click="() => emit('disconnect-from-ai')">
@@ -25,8 +25,8 @@ const props = defineProps<{
         <h2 class="card-title">Stats</h2>
         <ul>
           <li class='mb-2'><font-awesome-icon icon='hashtag' /> Tick number: {{ props.currentTick }}</li>
-          <li class='mb-2'><font-awesome-icon icon='stopwatch' /> Tick duration: {{ props.tickDuration.toFixed(2) }}ms</li>
-          <li class='mb-2'><font-awesome-icon icon='angle-double-right' /> Avg. duration: {{ props.avgTickDuration.toFixed(2) }}ms</li>
+          <li class='mb-2'><font-awesome-icon icon='stopwatch' /> Tick duration: <span class='font-mono'>{{ props.tickDuration.toFixed(2) }}ms</span></li>
+          <li class='mb-2'><font-awesome-icon icon='angle-double-right' /> Avg. duration: <span class='font-mono'>{{ props.avgTickDuration.toFixed(2) }}ms</span></li>
         </ul>
 
         <h2 class="card-title">Shortcuts</h2>

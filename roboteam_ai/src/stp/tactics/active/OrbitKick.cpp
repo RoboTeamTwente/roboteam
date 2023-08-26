@@ -43,9 +43,7 @@ bool OrbitKick::isTacticFailing(const StpInfo &info) noexcept {
     return !info.getPositionToShootAt() || !info.getRobot()->get()->hasBall();
 }
 
-bool OrbitKick::shouldTacticReset(const StpInfo &info) noexcept {
-    return false;
-}
+bool OrbitKick::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 const char *OrbitKick::getName() { return "Orbit Kick"; }
 

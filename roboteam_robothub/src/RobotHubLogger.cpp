@@ -1,44 +1,39 @@
-#include <RobotHubLogger.hpp>
-
-#include <thread>
-
 #include <REM_BaseTypes.h>
 #include <REM_Packet.h>
 #include <REM_RobotCommand.h>
 #include <REM_RobotFeedback.h>
-
 #include <roboteam_utils/Time.h>
+
+#include <RobotHubLogger.hpp>
 #include <roboteam_utils/Format.hpp>
+#include <thread>
 
 namespace rtt {
 
 RobotHubLogger::RobotHubLogger(std::string filename) : filename(filename) {
-
     filestream.open(filename, std::ios::out | std::ios::binary);
-    
+
     if (!filestream.is_open()) {
         throw std::runtime_error("Could not open log file " + filename);
     }
 }
 
-void RobotHubLogger::writeREM(REM_PacketPayload* packet){
-    uint64_t timestamp = static_cast<uint64_t>( Time::now().asMilliSeconds() );
+void RobotHubLogger::writeREM(REM_PacketPayload* packet) {
+    uint64_t timestamp = static_cast<uint64_t>(Time::now().asMilliSeconds());
     writeREM(packet, timestamp);
 }
 
-void RobotHubLogger::writeREM(REM_PacketPayload* packetPayload, uint64_t timestamp){
-    write((uint8_t*) packetPayload, REM_Packet_get_payloadSize(packetPayload), timestamp);
-}
+void RobotHubLogger::writeREM(REM_PacketPayload* packetPayload, uint64_t timestamp) { write((uint8_t*)packetPayload, REM_Packet_get_payloadSize(packetPayload), timestamp); }
 
-void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timestamp){
+void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timestamp) {
     // Write the uint64_t timestamp to the file using reinterpret_casts
     // TODO Check if this is written in little endian
     filestream.write(reinterpret_cast<char*>(&timestamp), sizeof(uint64_t));
     // Write the packet
-    filestream.write((char*) byte_buffer, size);
+    filestream.write((char*)byte_buffer, size);
 }
 
-} // namespace rtt
+}  // namespace rtt
 
 /*int main(int argc, char **argv) {
 
@@ -77,7 +72,7 @@ void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timesta
 
     REM_RobotFeedbackPayload feedbackPayload;
     encodeREM_RobotFeedback(&feedbackPayload, &feedback);
-    
+
     for (int i = 0; i < 100; i++) {
         logger.writeREM(&payload);
 

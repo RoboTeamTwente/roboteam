@@ -13,8 +13,8 @@
 #define HUNGARIAN_H
 
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "Vector2.h"
 

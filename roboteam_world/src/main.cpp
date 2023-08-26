@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     std::string visionport_str = "10006";
     std::string refereeport_str = "10003";
 
-    const std::vector<std::string> args(argv, argv + argc); 
+    const std::vector<std::string> args(argv, argv + argc);
 
     // Search for log flag --log
     auto itLog = std::find(args.begin(), args.end(), std::string("--log"));
@@ -25,19 +25,27 @@ int main(int argc, char** argv) {
     std::optional<std::string> val;
 
     val = rtt::findFlagValue(args, "--vision-ip");
-    if(val){ visionip = *val; }
+    if (val) {
+        visionip = *val;
+    }
 
     val = rtt::findFlagValue(args, "--referee-ip");
-    if(val){ refereeip = *val; }
+    if (val) {
+        refereeip = *val;
+    }
 
     val = rtt::findFlagValue(args, "--vision-port");
-    if(val){ visionport_str = *val; }
+    if (val) {
+        visionport_str = *val;
+    }
 
     val = rtt::findFlagValue(args, "--referee-port");
-    if(val){ refereeport_str = *val; }
+    if (val) {
+        refereeport_str = *val;
+    }
 
-    int visionport  = std::stoi( visionport_str );
-    int refereeport = std::stoi( refereeport_str );
+    int visionport = std::stoi(visionport_str);
+    int refereeport = std::stoi(refereeport_str);
 
     Handler handler;
     handler.start(visionip, refereeip, visionport, refereeport, shouldLog);

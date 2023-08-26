@@ -1,11 +1,10 @@
 #pragma once
 
 #include <map>
+#include <optional>
+#include <roboteam_utils/Teams.hpp>
 #include <string>
 #include <vector>
-#include <optional>
-
-#include <roboteam_utils/Teams.hpp>
 
 namespace rtt::robothub::simulation {
 typedef struct SimulationError {

@@ -16,17 +16,13 @@ BallPlacementThem::BallPlacementThem() : Play() {
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::BallPlacementThemGameState);
 
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{std::make_unique<role::BallAvoider>(role::BallAvoider("keeper")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_3")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_4")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_5")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_6")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_7")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_8")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("waller_9")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("harasser"))};
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        std::make_unique<role::BallAvoider>(role::BallAvoider("keeper")),   std::make_unique<role::BallAvoider>(role::BallAvoider("waller_1")),
+        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_2")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_3")),
+        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_4")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_5")),
+        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_6")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_7")),
+        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_8")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_9")),
+        std::make_unique<role::BallAvoider>(role::BallAvoider("harasser"))};
 }
 
 uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {
@@ -61,7 +57,6 @@ void BallPlacementThem::calculateInfoForRoles() noexcept {
 }
 
 void BallPlacementThem::calculateInfoForWallers() noexcept {
-
     constexpr auto wallerNames = std::array{"waller_1", "waller_2", "waller_3", "waller_4", "waller_5", "waller_6", "waller_7", "waller_8", "waller_9"};
     auto activeWallerNames = std::vector<std::string>{};
     for (auto name : wallerNames) {
@@ -73,7 +68,7 @@ void BallPlacementThem::calculateInfoForWallers() noexcept {
         auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
 
         wallerStpInfo.setPositionToMoveTo(
-            Vector2(FieldComputations::getDefenseArea(field, true, 0, 0)[2].x + 2 * control_constants::ROBOT_RADIUS, side * 1.7 * (i+1) * control_constants::ROBOT_RADIUS));
+            Vector2(FieldComputations::getDefenseArea(field, true, 0, 0)[2].x + 2 * control_constants::ROBOT_RADIUS, side * 1.7 * (i + 1) * control_constants::ROBOT_RADIUS));
         wallerStpInfo.setAngle((Vector2{0, 0} - field.leftGoalArea.rightLine().center()).angle());
     }
 }
@@ -86,9 +81,7 @@ void BallPlacementThem::calculateInfoForHarasser() noexcept {
     stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }
 
-void BallPlacementThem::calculateInfoForKeeper() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
-}
+void BallPlacementThem::calculateInfoForKeeper() noexcept { stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center()); }
 
 const char* BallPlacementThem::getName() const { return "Ball Placement Them"; }
 }  // namespace rtt::ai::stp::play

@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <roboteam_utils/LineSegment.h>
+
 #include <roboteam_utils/LazyRectangle.hpp>
 namespace rtt {
 static LazyRectangle rect(Vector2(-1, 1), Vector2(1, 2));

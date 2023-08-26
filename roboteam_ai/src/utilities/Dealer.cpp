@@ -15,6 +15,7 @@
 #include <stdio.h>
 
 #include <iterator>
+#include <numeric>
 
 #include "interface/api/Output.h"
 #include "utilities/GameStateManager.hpp"

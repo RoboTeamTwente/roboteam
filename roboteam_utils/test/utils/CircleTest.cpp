@@ -5,10 +5,10 @@
 #include <gtest/gtest.h>
 
 #include <cmath>
+#include <roboteam_utils/LazyRectangle.hpp>
 
 #include "roboteam_utils/Circle.h"
 #include "roboteam_utils/Random.h"
-#include <roboteam_utils/LazyRectangle.hpp>
 
 using namespace rtt;
 
@@ -186,7 +186,7 @@ TEST(CircleTests, intersectionsTest) {
     Circle circle({0, 0}, 1);
     LineSegment noIntersectLine({-2, 2}, {2, 2});
     ASSERT_TRUE(circle.intersects(noIntersectLine).empty());
-    LineSegment noIntersectLineSegment( {2, 0}, {3, 0});
+    LineSegment noIntersectLineSegment({2, 0}, {3, 0});
     ASSERT_TRUE(circle.intersects(noIntersectLineSegment).empty());
 
     LineSegment oneIntersectLine({-2, 1}, {2, 1});
@@ -196,22 +196,22 @@ TEST(CircleTests, intersectionsTest) {
     LineSegment twoIntersectLine({-2, 0}, {2, 0});
     ASSERT_EQ(circle.intersects(twoIntersectLine).size(), 2);
     auto intersections = circle.intersects(twoIntersectLine);
-    auto possibility1 = std::vector<Vector2>{ Vector2(1, 0), Vector2(-1, 0) };
-    auto possibility2 = std::vector<Vector2>{ Vector2(-1, 0), Vector2(1, 0) };
+    auto possibility1 = std::vector<Vector2>{Vector2(1, 0), Vector2(-1, 0)};
+    auto possibility2 = std::vector<Vector2>{Vector2(-1, 0), Vector2(1, 0)};
     ASSERT_TRUE(intersections == possibility1 || intersections == possibility2);
 
-    LineSegment containsOneEnd( {-2, 0}, {0, 0} );
+    LineSegment containsOneEnd({-2, 0}, {0, 0});
     ASSERT_EQ(circle.intersects(containsOneEnd).size(), 1);
     ASSERT_EQ(circle.intersects(containsOneEnd).at(0), Vector2(-1, 0));
 
-    LineSegment containsTwoEnds( {-0.5, 0}, {0.5, 0} );
+    LineSegment containsTwoEnds({-0.5, 0}, {0.5, 0});
     for (const auto& a : circle.intersects(containsTwoEnds)) {
         std::cout << a << std::endl;
     }
     ASSERT_TRUE(circle.intersects(containsTwoEnds).empty());
 
-    LineSegment diagonalLineSegment( {-2, -2}, {2, 2});
+    LineSegment diagonalLineSegment({-2, -2}, {2, 2});
     auto intersectionsDiagonal = circle.intersects(twoIntersectLine);
-    auto possibilityDiagonal1 = std::vector<Vector2>{ Vector2(-0.71, -0.71), Vector2(0.71, 0.71) };
-    auto possibilityDiagonal2 = std::vector<Vector2>{ Vector2(0.71, 0.71), Vector2(-0.71, -0.71) };
+    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-0.71, -0.71), Vector2(0.71, 0.71)};
+    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(0.71, 0.71), Vector2(-0.71, -0.71)};
 }

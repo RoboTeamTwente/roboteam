@@ -36,7 +36,7 @@ TEST(RobotAndView, test_getters) {
     ASSERT_EQ(data.getVel(), Vector2(3, 0));
     ASSERT_EQ(data.getAngularVelocity(), 5.0);
 
-    //TODO: set this to true once we have working sensors
+    // TODO: set this to true once we have working sensors
     ASSERT_EQ(data.isWorkingBallSensor(), false);
     ASSERT_EQ(data.isBatteryLow(), false);
 

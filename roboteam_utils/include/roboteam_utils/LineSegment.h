@@ -133,11 +133,10 @@ class LineSegment {
      */
     [[nodiscard]] Vector2 direction() const;
 
-
     /**
-      * Moves the line's start and end points by the given vector
-      */
-    void move(const Vector2& by);
+     * Moves the line's start and end points by the given vector
+     */
+    void move(const Vector2 &by);
 
     /**
      * Rotates the line around the middle point by the given angle
@@ -167,14 +166,14 @@ class LineSegment {
      * @param line
      * @return
      */
-    [[nodiscard]] bool preciseDoesIntersect(const LineSegment&line) const;
+    [[nodiscard]] bool preciseDoesIntersect(const LineSegment &line) const;
 
     /**
      * Gets the point on this LineSegment that is closest to any point of the other line
      * If other line is parallel to this,
      * @return point on this LineSegment closest to given line
      */
-    [[nodiscard]] std::optional<Vector2> getClosestPointToLine(const Line&) const;
+    [[nodiscard]] std::optional<Vector2> getClosestPointToLine(const Line &) const;
 
    private:
     /**

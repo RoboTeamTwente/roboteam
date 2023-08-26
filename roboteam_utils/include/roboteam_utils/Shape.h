@@ -9,15 +9,14 @@
 
 // TODO: add other shared functions here and use this as a base class for more shape-related classes
 namespace rtt {
-    class Shape {
-    public:
-        [[nodiscard]] virtual bool contains(const Vector2& point) const = 0;
+class Shape {
+   public:
+    [[nodiscard]] virtual bool contains(const Vector2& point) const = 0;
 
-        [[nodiscard]] virtual Vector2 project(const Vector2& point) const = 0;
+    [[nodiscard]] virtual Vector2 project(const Vector2& point) const = 0;
 
-        virtual ~Shape() = default;
-    };
-}
-
+    virtual ~Shape() = default;
+};
+}  // namespace rtt
 
 #endif  // RTT_SHAPE_H

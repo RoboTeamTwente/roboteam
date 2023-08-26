@@ -3,6 +3,8 @@
 #include <libusb-1.0/libusb.h>
 
 // #include <RobotHubLogger.hpp>
+#include <RobotHubMode.h>
+
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <RobotHubStatistics.hpp>
@@ -13,12 +15,11 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <roboteam_utils/FileLogger.hpp>
 #include <roboteam_utils/RobotCommands.hpp>
 #include <roboteam_utils/RobotFeedback.hpp>
 #include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
-#include <roboteam_utils/FileLogger.hpp>
-#include <RobotHubMode.h>
 
 namespace rtt::robothub {
 
@@ -59,11 +60,11 @@ class RobotHub {
     void handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedback, rtt::Team team);
     bool sendRobotFeedback(const rtt::RobotsFeedback &feedback);
 
-    void handleRobotStateInfo(const REM_RobotStateInfo& robotStateInfo, rtt::Team team);
+    void handleRobotStateInfo(const REM_RobotStateInfo &robotStateInfo, rtt::Team team);
 
-    void handleBasestationLog(const std::string& basestationLogMessage, rtt::Team team);
+    void handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team);
 
-    void handleSimulationErrors(const std::vector<simulation::SimulationError>&);
+    void handleSimulationErrors(const std::vector<simulation::SimulationError> &);
 };
 
 class FailedToInitializeNetworkersException : public std::exception {

@@ -5,27 +5,40 @@
 #ifndef RTT_PLAYDECIDER_HPP
 #define RTT_PLAYDECIDER_HPP
 
+#include <atomic>
+#include <mutex>
+
 #include "Play.hpp"
 
 namespace rtt::ai::stp {
+
+struct PlayLock {
+    std::atomic<bool> didChange; /**< Bool indicating if the current play was changed using lockPlay method */
+    std::atomic<bool> isSet;     /**< Bool indicating if the current play was set using lockPlay method */
+
+    std::optional<std::string> playName; /**< The play name that is set in the interface */
+    std::mutex lock;                     /**< Mutex to lock the interfacePlayStr */
+};
 
 /**
  * @brief Class that defines the play decider. It decides the best play from a vector of plays.
  * If there is a play set in the interface, this play will be picked.
  */
 class PlayDecider {
-//    static inline Play* interfacePlay; /**< play that's set from the interface in case it's overridden */
-//    static inline std::optional<std::string> interfacePlayStr;
+    static inline PlayLock playLock; /**< The play that is locked in the interface */
 
    public:
     /**
-     * @brief Sets the locked play, read variable above
-     * @param play Play to lock to
+     * @brief Returns if the play was changed using the lockPlay method. Also resets the didChange bool to false
+     * @return true if the play was changed using the lockPlay, false otherwise
      */
-//    static void lockInterfacePlay(Play* play);
-//    static void lockInterfacePlay(const std::string playName);
-//
-//    static bool interfacePlayChanged; /**< Bool indicating if the current play was manually changed in the interface */
+    static bool didLockPlay() noexcept;
+
+    /**
+     * @brief Sets play name to lock
+     * @param playName playName to lock to
+     */
+    static void lockPlay(const std::optional<std::string> playName);
 
     /**
      * @brief This function checks if there is a locked play. If there is, pick that play.

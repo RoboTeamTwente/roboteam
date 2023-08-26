@@ -1,17 +1,16 @@
-#include <QtNetwork>
 #include "utilities/IOManager.h"
 
+#include <QtNetwork>
 #include <algorithm>
 #include <chrono>
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "RobotHubMode.h"
-#include "interface/api/Input.h"
 #include "proto/GameSettings.pb.h"
 #include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
-#include "utilities/Pause.h"
+#include "utilities/RuntimeConfig.h"
 #include "utilities/normalize.h"
 #include "world/World.hpp"
 
@@ -35,8 +34,8 @@ bool IOManager::init(bool isPrimaryAI) {
         }
     } else {
         try {
-            this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings& settings) { GameSettings::handleSettingsFromPrimaryAI(settings);
-            });
+            this->settingsSubscriber =
+                std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings& settings) { GameSettings::handleSettingsFromPrimaryAI(settings); });
         } catch (const zmqpp::zmq_internal_exception& e) {
             success = false;
             RTT_ERROR("Failed to open settings subscriber channel")
@@ -72,7 +71,7 @@ void IOManager::handleState(const proto::State& stateMsg) {
         ai::GameStateManager::setRefereeData(state.referee(), data);
 
         // TODO: Fix for new GameStateManager
-        //ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
+        // ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
     }
 }
 
@@ -106,7 +105,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 }
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
-    if (!Pause::isPaused() && !robotCommands.empty()) {
+    if (!RuntimeConfig::isPaused && !robotCommands.empty()) {
         this->addCameraAngleToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, GameSettings::isYellow());

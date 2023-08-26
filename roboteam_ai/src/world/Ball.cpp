@@ -4,7 +4,6 @@
 
 #include "world/Ball.hpp"
 
-#include "interface/api/Input.h"
 #include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
@@ -24,9 +23,8 @@ constexpr static float SIMULATION_FRICTION = 1.22;
  */
 constexpr static float REAL_FRICTION = 0.5;
 
-
 Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos().x(), copy.pos().y()}, velocity{copy.vel().x(), copy.vel().y()}, visible{copy.visible()} {
-    if (!visible || position == Vector2()){
+    if (!visible || position == Vector2()) {
         initBallAtExpectedPosition(data);
         updateBallAtRobotPosition(data);
     }
@@ -55,11 +53,6 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
     ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
-
-    // Visualize the Expected Ball End Position
-    //ai::interface::Input::drawData(ai::interface::Visual::BALL_DATA, {expectedEndPosition}, ai::Constants::BALL_COLOR(), -1, ai::interface::Drawing::CIRCLES, 8, 8, 6);
-    //ai::interface::Input::drawData(ai::interface::Visual::BALL_DATA, {position, expectedEndPosition}, ai::Constants::BALL_COLOR(), -1,
-    //                               ai::interface::Drawing::LINES_CONNECTED);
 }
 
 void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {

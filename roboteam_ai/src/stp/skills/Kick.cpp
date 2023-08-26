@@ -4,15 +4,14 @@
 
 #include "stp/skills/Kick.h"
 
-#include "stp/constants/ControlConstants.h"
-
 #include "roboteam_utils/Print.h"
+#include "stp/constants/ControlConstants.h"
 
 namespace rtt::ai::stp::skill {
 
 Status Kick::onUpdate(const StpInfo &info) noexcept {
     // Check for robot optional
-    if(!info.getRobot()){
+    if (!info.getRobot()) {
         return Status::Failure;
     }
 

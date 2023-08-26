@@ -4,6 +4,7 @@
 #include <functional>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
+
 #include "proto/GameSettings.pb.h"
 
 namespace rtt::net {

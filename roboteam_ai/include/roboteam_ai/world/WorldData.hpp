@@ -5,8 +5,8 @@
 #ifndef RTT_WORLD_DATA_HPP
 #define RTT_WORLD_DATA_HPP
 
-#include <proto/RobotFeedback.pb.h>
 #include <proto/GameSettings.pb.h>
+#include <proto/RobotFeedback.pb.h>
 #include <proto/World.pb.h>
 
 #include <optional>
@@ -42,12 +42,12 @@ class WorldData {
      */
     WorldData(const World *data, proto::World &protoMsg) noexcept;
 
-    std::vector<rtt::world::robot::Robot> robots; /**< Owning container of robots */
+    std::vector<rtt::world::robot::Robot> robots;             /**< Owning container of robots */
     std::vector<world::view::RobotView> robotsNonOwning = {}; /**< Non owning vector of views */
-    std::vector<world::view::RobotView> us = {}; /**< Non-owning container of Robot const* const's (aka RobotView) for our team */
-    std::vector<world::view::RobotView> them = {}; /** Non-owning container of RobotViews of the enemy team< */
-    std::optional<rtt::world::ball::Ball> ball; /**< Optional ball, None variant if not visible */
-    uint64_t time{}; /**<Timestamp identical to the protobuf message's time() */
+    std::vector<world::view::RobotView> us = {};              /**< Non-owning container of Robot const* const's (aka RobotView) for our team */
+    std::vector<world::view::RobotView> them = {};            /** Non-owning container of RobotViews of the enemy team< */
+    std::optional<rtt::world::ball::Ball> ball;               /**< Optional ball, None variant if not visible */
+    uint64_t time{};                                          /**<Timestamp identical to the protobuf message's time() */
 
    public:
     /**

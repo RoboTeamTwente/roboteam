@@ -19,7 +19,6 @@ class Chipper : public Role {
      */
     Chipper(std::string name);
 };
-} // namespace rtt::ai::stp::role
-
+}  // namespace rtt::ai::stp::role
 
 #endif  // RTT_CHIPPER_H

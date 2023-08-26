@@ -1,19 +1,19 @@
 #ifndef WORLDHANDLER_H
 #define WORLDHANDLER_H
 
+#include <observer/Observer.h>
 #include <proto/State.pb.h>
+#include <roboteam_logging/LogFileReader.h>
+#include <roboteam_logging/LogFileWriter.h>
 
 #include <RobotFeedbackNetworker.hpp>
 #include <WorldNetworker.hpp>
-
-#include <observer/Observer.h>
-#include <utility>
-#include "RobocupReceiver.h"
-#include <memory>
-#include <vector>
 #include <exception>
-#include <roboteam_logging/LogFileReader.h>
-#include <roboteam_logging/LogFileWriter.h>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "RobocupReceiver.h"
 
 class Handler {
    private:
@@ -51,6 +51,5 @@ class FailedToInitializeNetworkersException : public std::exception {
 class FailedToSetupSSLClients : public std::exception {
     const char* what() const throw();
 };
-
 
 #endif

@@ -6,10 +6,11 @@
 
 #include <roboteam_utils/Grid.h>
 
+#include <roboteam_utils/Field.hpp>
+
 #include "stp/constants/ControlConstants.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
-#include <roboteam_utils/Field.hpp>
 #include "world/World.hpp"
 
 namespace rtt::ai::control {

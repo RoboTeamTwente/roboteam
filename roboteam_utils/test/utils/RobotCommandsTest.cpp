@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/RobotCommands.hpp>
-
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/RobotCommands.hpp>
 
 using namespace rtt;
 
 KickType randomKickType() {
-    std::vector<KickType> allKicks = { KickType::NO_KICK, KickType::KICK, KickType::CHIP };
+    std::vector<KickType> allKicks = {KickType::NO_KICK, KickType::KICK, KickType::CHIP};
     return *SimpleRandom::getRandomElement(allKicks.begin(), allKicks.end());
 }
 
@@ -31,21 +31,19 @@ TEST(RobotCommandsTest, instantiation) {
 }
 
 TEST(RobotCommandsTest, equals) {
-    RobotCommand command = {
-        .id = SimpleRandom::getInt(0, 15),
-        .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
-        .targetAngle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
-        .targetAngularVelocity = SimpleRandom::getDouble(-5.0, 5.0),
-        .useAngularVelocity = SimpleRandom::getBool(),
-        .cameraAngleOfRobot = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
-        .cameraAngleOfRobotIsSet = SimpleRandom::getBool(),
-        .kickSpeed = SimpleRandom::getDouble(0.0, 5.0),
-        .waitForBall = SimpleRandom::getBool(),
-        .kickType = randomKickType(),
-        .kickAtAngle = SimpleRandom::getBool(),
-        .dribblerSpeed = SimpleRandom::getDouble(0.0, 5.0),
-        .ignorePacket = SimpleRandom::getBool()
-    };
+    RobotCommand command = {.id = SimpleRandom::getInt(0, 15),
+                            .velocity = Vector2(SimpleRandom::getDouble(-10.0, 10.0), SimpleRandom::getDouble(-10.0, 10.0)),
+                            .targetAngle = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
+                            .targetAngularVelocity = SimpleRandom::getDouble(-5.0, 5.0),
+                            .useAngularVelocity = SimpleRandom::getBool(),
+                            .cameraAngleOfRobot = Angle(SimpleRandom::getDouble(-M_PI, M_PI)),
+                            .cameraAngleOfRobotIsSet = SimpleRandom::getBool(),
+                            .kickSpeed = SimpleRandom::getDouble(0.0, 5.0),
+                            .waitForBall = SimpleRandom::getBool(),
+                            .kickType = randomKickType(),
+                            .kickAtAngle = SimpleRandom::getBool(),
+                            .dribblerSpeed = SimpleRandom::getDouble(0.0, 5.0),
+                            .ignorePacket = SimpleRandom::getBool()};
     RobotCommand copy = command;
     ASSERT_EQ(command, copy);
 }

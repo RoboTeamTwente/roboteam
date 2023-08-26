@@ -14,7 +14,7 @@ typedef struct Ball {
     bool isVisible = false;         // If the ball is currently visible
     unsigned int area;              // The amount of pixels this ball has in the camera
 
-    bool operator== (const Ball& other) const;
+    bool operator==(const Ball& other) const;
 } Ball;
 
-} // namespace rtt
+}  // namespace rtt

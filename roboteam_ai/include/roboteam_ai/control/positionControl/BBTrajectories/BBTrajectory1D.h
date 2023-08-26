@@ -13,8 +13,8 @@ namespace rtt::BB {
  * @brief Represents a segment of a one-dimensional bang-bang trajectory.
  */
 struct BBTrajectoryPart {
-    double tEnd; /**< Time it takes to get to the end of trajectory part */
-    double acc; /**< Acceleration of the current trajectory part */
+    double tEnd;     /**< Time it takes to get to the end of trajectory part */
+    double acc;      /**< Acceleration of the current trajectory part */
     double startVel; /**< Velocity at the start of the trajectory part */
     double startPos; /**< Position at the start of the trajectory part */
 };
@@ -168,9 +168,9 @@ class BBTrajectory1D {
     void updatePart(int index, double tEnd, double acc, double vel, double pos);
 
     std::array<BBTrajectoryPart, 3> parts; /**< Array of length 3 containing all parts of a BBT */
-    unsigned short int numParts = 0; /**< Unsigned short integer which stores the amount of parts used in the BBT */
-    double finalPos; /**< Target position to go to */
-    double maxVel; /**< Maximum allowed velocity */
+    unsigned short int numParts = 0;       /**< Unsigned short integer which stores the amount of parts used in the BBT */
+    double finalPos;                       /**< Target position to go to */
+    double maxVel;                         /**< Maximum allowed velocity */
 };
 }  // namespace rtt::BB
 

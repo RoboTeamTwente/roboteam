@@ -105,9 +105,7 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
 
     auto possiblePassers = ourRobots;
     // Remove robots that cannot kick
-    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) {
-        return !Constants::ROBOT_HAS_KICKER(rbv->getId());
-    });
+    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
 
     // If there is no robot that can kick, return -1
     if (possiblePassers.empty()) return bestPasserId;
@@ -116,9 +114,7 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     if (closestPasser.has_value()) bestPasserId = closestPasser.value()->getId();
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
-    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) {
-        return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId());
-    });
+    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
 
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possiblePassers.empty()) return bestPasserId;

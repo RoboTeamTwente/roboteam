@@ -32,7 +32,7 @@ std::string BasestationIdentifier::toString() const {
     return "(serialIdentifier=" + std::to_string(id) + ", usbAddress=" + std::to_string(address) + ")";
 }
 
-Basestation::Basestation(libusb_device *const device) : device(device), identifier(getIdentifierOfDevice(device)) {
+Basestation::Basestation(libusb_device* const device) : device(device), identifier(getIdentifierOfDevice(device)) {
     if (!Basestation::isDeviceABasestation(device)) {
         throw FailedToOpenDeviceException("Device is not a basestation");
     }

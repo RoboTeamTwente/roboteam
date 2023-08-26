@@ -2,9 +2,8 @@
 // Created by tijmen on 13-01-22.
 //
 
-#include <simulation/SimulatorManager.hpp>
-
 #include <roboteam_utils/Teams.hpp>
+#include <simulation/SimulatorManager.hpp>
 
 int main() {
     using namespace rtt::robothub::simulation;

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <roboteam_utils/RobotFeedback.hpp>
+#include <proto/RobotFeedback.pb.h>
 
 #include <functional>
+#include <roboteam_utils/RobotFeedback.hpp>
 #include <utils/Publisher.hpp>
 #include <utils/Subscriber.hpp>
-
-#include <proto/RobotFeedback.pb.h>
 
 namespace rtt::net {
 

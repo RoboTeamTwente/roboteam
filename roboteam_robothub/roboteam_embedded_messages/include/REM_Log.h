@@ -23,6 +23,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_LogPayload {
@@ -30,183 +31,127 @@ typedef struct _REM_LogPayload {
 } REM_LogPayload;
 
 typedef struct _REM_Log {
-    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
-    uint32_t   toRobotId           ; // integer [0, 15]              Id of the receiving robot
-    bool       toColor             ; // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
-    bool       toBC                ; // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
-    bool       toBS                ; // integer [0, 1]               Bit indicating this packet is meant for the basestation
-    bool       toPC                ; // integer [0, 1]               Bit indicating this packet is meant for the PC
-    uint32_t   fromRobotId         ; // integer [0, 15]              Id of the transmitting robot
-    bool       fromColor           ; // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
-    bool       reserved            ; // integer [0, 1]               reserved
-    bool       fromBS              ; // integer [0, 1]               Bit indicating this packet is coming from the basestation
-    bool       fromPC              ; // integer [0, 1]               Bit indicating this packet is coming from the PC
-    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
-    uint32_t   messageId           ; // integer [0, 15]              messageId. Can be used for aligning packets
-    uint32_t   timestamp           ; // integer [0, 16777215]        Timestamp in milliseconds
-    uint32_t   payloadSize         ; // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
+    uint32_t header;       // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t toRobotId;    // integer [0, 15]              Id of the receiving robot
+    bool toColor;          // integer [0, 1]               Color of the receiving robot / basestation. Yellow = 0, Blue = 1
+    bool toBC;             // integer [0, 1]               Bit indicating this packet has to be broadcasted to all robots
+    bool toBS;             // integer [0, 1]               Bit indicating this packet is meant for the basestation
+    bool toPC;             // integer [0, 1]               Bit indicating this packet is meant for the PC
+    uint32_t fromRobotId;  // integer [0, 15]              Id of the transmitting robot
+    bool fromColor;        // integer [0, 1]               Color of the transmitting robot / basestation. Yellow = 0, Blue = 1
+    bool reserved;         // integer [0, 1]               reserved
+    bool fromBS;           // integer [0, 1]               Bit indicating this packet is coming from the basestation
+    bool fromPC;           // integer [0, 1]               Bit indicating this packet is coming from the PC
+    uint32_t remVersion;   // integer [0, 15]              Version of roboteam_embedded_messages
+    uint32_t messageId;    // integer [0, 15]              messageId. Can be used for aligning packets
+    uint32_t timestamp;    // integer [0, 16777215]        Timestamp in milliseconds
+    uint32_t payloadSize;  // integer [0, 255]             Size of the payload. At most 255 bytes including the generic_packet_header. Keep the 127 byte SX1280 limit in mind
 } REM_Log;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_Log_get_header(REM_LogPayload *remlp){
-    return ((remlp->payload[0]));
-}
+static inline uint32_t REM_Log_get_header(REM_LogPayload *remlp) { return ((remlp->payload[0])); }
 
-static inline uint32_t REM_Log_get_toRobotId(REM_LogPayload *remlp){
-    return ((remlp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_toRobotId(REM_LogPayload *remlp) { return ((remlp->payload[1] & 0b11110000) >> 4); }
 
-static inline bool REM_Log_get_toColor(REM_LogPayload *remlp){
-    return (remlp->payload[1] & 0b00001000) > 0;
-}
+static inline bool REM_Log_get_toColor(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00001000) > 0; }
 
-static inline bool REM_Log_get_toBC(REM_LogPayload *remlp){
-    return (remlp->payload[1] & 0b00000100) > 0;
-}
+static inline bool REM_Log_get_toBC(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000100) > 0; }
 
-static inline bool REM_Log_get_toBS(REM_LogPayload *remlp){
-    return (remlp->payload[1] & 0b00000010) > 0;
-}
+static inline bool REM_Log_get_toBS(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000010) > 0; }
 
-static inline bool REM_Log_get_toPC(REM_LogPayload *remlp){
-    return (remlp->payload[1] & 0b00000001) > 0;
-}
+static inline bool REM_Log_get_toPC(REM_LogPayload *remlp) { return (remlp->payload[1] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Log_get_fromRobotId(REM_LogPayload *remlp){
-    return ((remlp->payload[2] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_fromRobotId(REM_LogPayload *remlp) { return ((remlp->payload[2] & 0b11110000) >> 4); }
 
-static inline bool REM_Log_get_fromColor(REM_LogPayload *remlp){
-    return (remlp->payload[2] & 0b00001000) > 0;
-}
+static inline bool REM_Log_get_fromColor(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00001000) > 0; }
 
-static inline bool REM_Log_get_reserved(REM_LogPayload *remlp){
-    return (remlp->payload[2] & 0b00000100) > 0;
-}
+static inline bool REM_Log_get_reserved(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000100) > 0; }
 
-static inline bool REM_Log_get_fromBS(REM_LogPayload *remlp){
-    return (remlp->payload[2] & 0b00000010) > 0;
-}
+static inline bool REM_Log_get_fromBS(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000010) > 0; }
 
-static inline bool REM_Log_get_fromPC(REM_LogPayload *remlp){
-    return (remlp->payload[2] & 0b00000001) > 0;
-}
+static inline bool REM_Log_get_fromPC(REM_LogPayload *remlp) { return (remlp->payload[2] & 0b00000001) > 0; }
 
-static inline uint32_t REM_Log_get_remVersion(REM_LogPayload *remlp){
-    return ((remlp->payload[3] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_Log_get_remVersion(REM_LogPayload *remlp) { return ((remlp->payload[3] & 0b11110000) >> 4); }
 
-static inline uint32_t REM_Log_get_messageId(REM_LogPayload *remlp){
-    return ((remlp->payload[3] & 0b00001111));
-}
+static inline uint32_t REM_Log_get_messageId(REM_LogPayload *remlp) { return ((remlp->payload[3] & 0b00001111)); }
 
-static inline uint32_t REM_Log_get_timestamp(REM_LogPayload *remlp){
-    return ((remlp->payload[4]) << 16) | ((remlp->payload[5]) << 8) | ((remlp->payload[6]));
-}
+static inline uint32_t REM_Log_get_timestamp(REM_LogPayload *remlp) { return ((remlp->payload[4]) << 16) | ((remlp->payload[5]) << 8) | ((remlp->payload[6])); }
 
-static inline uint32_t REM_Log_get_payloadSize(REM_LogPayload *remlp){
-    return ((remlp->payload[7]));
-}
+static inline uint32_t REM_Log_get_payloadSize(REM_LogPayload *remlp) { return ((remlp->payload[7])); }
 
 // ================================ SETTERS ================================
-static inline void REM_Log_set_header(REM_LogPayload *remlp, uint32_t header){
-    remlp->payload[0] = header;
-}
+static inline void REM_Log_set_header(REM_LogPayload *remlp, uint32_t header) { remlp->payload[0] = header; }
 
-static inline void REM_Log_set_toRobotId(REM_LogPayload *remlp, uint32_t toRobotId){
-    remlp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remlp->payload[1] & 0b00001111);
-}
+static inline void REM_Log_set_toRobotId(REM_LogPayload *remlp, uint32_t toRobotId) { remlp->payload[1] = ((toRobotId << 4) & 0b11110000) | (remlp->payload[1] & 0b00001111); }
 
-static inline void REM_Log_set_toColor(REM_LogPayload *remlp, bool toColor){
-    remlp->payload[1] = ((toColor << 3) & 0b00001000) | (remlp->payload[1] & 0b11110111);
-}
+static inline void REM_Log_set_toColor(REM_LogPayload *remlp, bool toColor) { remlp->payload[1] = ((toColor << 3) & 0b00001000) | (remlp->payload[1] & 0b11110111); }
 
-static inline void REM_Log_set_toBC(REM_LogPayload *remlp, bool toBC){
-    remlp->payload[1] = ((toBC << 2) & 0b00000100) | (remlp->payload[1] & 0b11111011);
-}
+static inline void REM_Log_set_toBC(REM_LogPayload *remlp, bool toBC) { remlp->payload[1] = ((toBC << 2) & 0b00000100) | (remlp->payload[1] & 0b11111011); }
 
-static inline void REM_Log_set_toBS(REM_LogPayload *remlp, bool toBS){
-    remlp->payload[1] = ((toBS << 1) & 0b00000010) | (remlp->payload[1] & 0b11111101);
-}
+static inline void REM_Log_set_toBS(REM_LogPayload *remlp, bool toBS) { remlp->payload[1] = ((toBS << 1) & 0b00000010) | (remlp->payload[1] & 0b11111101); }
 
-static inline void REM_Log_set_toPC(REM_LogPayload *remlp, bool toPC){
-    remlp->payload[1] = (toPC & 0b00000001) | (remlp->payload[1] & 0b11111110);
-}
+static inline void REM_Log_set_toPC(REM_LogPayload *remlp, bool toPC) { remlp->payload[1] = (toPC & 0b00000001) | (remlp->payload[1] & 0b11111110); }
 
-static inline void REM_Log_set_fromRobotId(REM_LogPayload *remlp, uint32_t fromRobotId){
+static inline void REM_Log_set_fromRobotId(REM_LogPayload *remlp, uint32_t fromRobotId) {
     remlp->payload[2] = ((fromRobotId << 4) & 0b11110000) | (remlp->payload[2] & 0b00001111);
 }
 
-static inline void REM_Log_set_fromColor(REM_LogPayload *remlp, bool fromColor){
-    remlp->payload[2] = ((fromColor << 3) & 0b00001000) | (remlp->payload[2] & 0b11110111);
-}
+static inline void REM_Log_set_fromColor(REM_LogPayload *remlp, bool fromColor) { remlp->payload[2] = ((fromColor << 3) & 0b00001000) | (remlp->payload[2] & 0b11110111); }
 
-static inline void REM_Log_set_reserved(REM_LogPayload *remlp, bool reserved){
-    remlp->payload[2] = ((reserved << 2) & 0b00000100) | (remlp->payload[2] & 0b11111011);
-}
+static inline void REM_Log_set_reserved(REM_LogPayload *remlp, bool reserved) { remlp->payload[2] = ((reserved << 2) & 0b00000100) | (remlp->payload[2] & 0b11111011); }
 
-static inline void REM_Log_set_fromBS(REM_LogPayload *remlp, bool fromBS){
-    remlp->payload[2] = ((fromBS << 1) & 0b00000010) | (remlp->payload[2] & 0b11111101);
-}
+static inline void REM_Log_set_fromBS(REM_LogPayload *remlp, bool fromBS) { remlp->payload[2] = ((fromBS << 1) & 0b00000010) | (remlp->payload[2] & 0b11111101); }
 
-static inline void REM_Log_set_fromPC(REM_LogPayload *remlp, bool fromPC){
-    remlp->payload[2] = (fromPC & 0b00000001) | (remlp->payload[2] & 0b11111110);
-}
+static inline void REM_Log_set_fromPC(REM_LogPayload *remlp, bool fromPC) { remlp->payload[2] = (fromPC & 0b00000001) | (remlp->payload[2] & 0b11111110); }
 
-static inline void REM_Log_set_remVersion(REM_LogPayload *remlp, uint32_t remVersion){
-    remlp->payload[3] = ((remVersion << 4) & 0b11110000) | (remlp->payload[3] & 0b00001111);
-}
+static inline void REM_Log_set_remVersion(REM_LogPayload *remlp, uint32_t remVersion) { remlp->payload[3] = ((remVersion << 4) & 0b11110000) | (remlp->payload[3] & 0b00001111); }
 
-static inline void REM_Log_set_messageId(REM_LogPayload *remlp, uint32_t messageId){
-    remlp->payload[3] = (messageId & 0b00001111) | (remlp->payload[3] & 0b11110000);
-}
+static inline void REM_Log_set_messageId(REM_LogPayload *remlp, uint32_t messageId) { remlp->payload[3] = (messageId & 0b00001111) | (remlp->payload[3] & 0b11110000); }
 
-static inline void REM_Log_set_timestamp(REM_LogPayload *remlp, uint32_t timestamp){
+static inline void REM_Log_set_timestamp(REM_LogPayload *remlp, uint32_t timestamp) {
     remlp->payload[4] = (timestamp >> 16);
     remlp->payload[5] = (timestamp >> 8);
     remlp->payload[6] = timestamp;
 }
 
-static inline void REM_Log_set_payloadSize(REM_LogPayload *remlp, uint32_t payloadSize){
-    remlp->payload[7] = payloadSize;
-}
+static inline void REM_Log_set_payloadSize(REM_LogPayload *remlp, uint32_t payloadSize) { remlp->payload[7] = payloadSize; }
 
 // ================================ ENCODE ================================
-static inline void encodeREM_Log(REM_LogPayload *remlp, REM_Log *reml){
-    REM_Log_set_header              (remlp, reml->header);
-    REM_Log_set_toRobotId           (remlp, reml->toRobotId);
-    REM_Log_set_toColor             (remlp, reml->toColor);
-    REM_Log_set_toBC                (remlp, reml->toBC);
-    REM_Log_set_toBS                (remlp, reml->toBS);
-    REM_Log_set_toPC                (remlp, reml->toPC);
-    REM_Log_set_fromRobotId         (remlp, reml->fromRobotId);
-    REM_Log_set_fromColor           (remlp, reml->fromColor);
-    REM_Log_set_reserved            (remlp, reml->reserved);
-    REM_Log_set_fromBS              (remlp, reml->fromBS);
-    REM_Log_set_fromPC              (remlp, reml->fromPC);
-    REM_Log_set_remVersion          (remlp, reml->remVersion);
-    REM_Log_set_messageId           (remlp, reml->messageId);
-    REM_Log_set_timestamp           (remlp, reml->timestamp);
-    REM_Log_set_payloadSize         (remlp, reml->payloadSize);
+static inline void encodeREM_Log(REM_LogPayload *remlp, REM_Log *reml) {
+    REM_Log_set_header(remlp, reml->header);
+    REM_Log_set_toRobotId(remlp, reml->toRobotId);
+    REM_Log_set_toColor(remlp, reml->toColor);
+    REM_Log_set_toBC(remlp, reml->toBC);
+    REM_Log_set_toBS(remlp, reml->toBS);
+    REM_Log_set_toPC(remlp, reml->toPC);
+    REM_Log_set_fromRobotId(remlp, reml->fromRobotId);
+    REM_Log_set_fromColor(remlp, reml->fromColor);
+    REM_Log_set_reserved(remlp, reml->reserved);
+    REM_Log_set_fromBS(remlp, reml->fromBS);
+    REM_Log_set_fromPC(remlp, reml->fromPC);
+    REM_Log_set_remVersion(remlp, reml->remVersion);
+    REM_Log_set_messageId(remlp, reml->messageId);
+    REM_Log_set_timestamp(remlp, reml->timestamp);
+    REM_Log_set_payloadSize(remlp, reml->payloadSize);
 }
 
 // ================================ DECODE ================================
-static inline void decodeREM_Log(REM_Log *reml, REM_LogPayload *remlp){
-    reml->header         = REM_Log_get_header(remlp);
-    reml->toRobotId      = REM_Log_get_toRobotId(remlp);
-    reml->toColor        = REM_Log_get_toColor(remlp);
-    reml->toBC           = REM_Log_get_toBC(remlp);
-    reml->toBS           = REM_Log_get_toBS(remlp);
-    reml->toPC           = REM_Log_get_toPC(remlp);
-    reml->fromRobotId    = REM_Log_get_fromRobotId(remlp);
-    reml->fromColor      = REM_Log_get_fromColor(remlp);
-    reml->reserved       = REM_Log_get_reserved(remlp);
-    reml->fromBS         = REM_Log_get_fromBS(remlp);
-    reml->fromPC         = REM_Log_get_fromPC(remlp);
-    reml->remVersion     = REM_Log_get_remVersion(remlp);
-    reml->messageId      = REM_Log_get_messageId(remlp);
-    reml->timestamp      = REM_Log_get_timestamp(remlp);
-    reml->payloadSize    = REM_Log_get_payloadSize(remlp);
+static inline void decodeREM_Log(REM_Log *reml, REM_LogPayload *remlp) {
+    reml->header = REM_Log_get_header(remlp);
+    reml->toRobotId = REM_Log_get_toRobotId(remlp);
+    reml->toColor = REM_Log_get_toColor(remlp);
+    reml->toBC = REM_Log_get_toBC(remlp);
+    reml->toBS = REM_Log_get_toBS(remlp);
+    reml->toPC = REM_Log_get_toPC(remlp);
+    reml->fromRobotId = REM_Log_get_fromRobotId(remlp);
+    reml->fromColor = REM_Log_get_fromColor(remlp);
+    reml->reserved = REM_Log_get_reserved(remlp);
+    reml->fromBS = REM_Log_get_fromBS(remlp);
+    reml->fromPC = REM_Log_get_fromPC(remlp);
+    reml->remVersion = REM_Log_get_remVersion(remlp);
+    reml->messageId = REM_Log_get_messageId(remlp);
+    reml->timestamp = REM_Log_get_timestamp(remlp);
+    reml->payloadSize = REM_Log_get_payloadSize(remlp);
 }
 
 #endif /*__REM_LOG_H*/

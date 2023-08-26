@@ -13,7 +13,7 @@ namespace rtt {
  * Use the operator<< for writing to the file.
  * Saves at destruction. Use flush for intermediate saving. */
 class FileLogger : public std::ofstream {
-public:
+   public:
     // Will create and open the file you specify. Eg. "log/LOG.txt"
     explicit FileLogger(const std::string& filePath);
     // Will close the file
@@ -21,11 +21,12 @@ public:
 };
 
 class FailedToOpenFileException : public std::exception {
-public:
+   public:
     explicit FailedToOpenFileException(const std::string& message);
-    [[nodiscard]] const char *what() const noexcept override;
-private:
+    [[nodiscard]] const char* what() const noexcept override;
+
+   private:
     const std::string message;
 };
 
-} // namespace rtt::robothub
+}  // namespace rtt

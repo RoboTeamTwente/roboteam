@@ -78,7 +78,7 @@ class ChippingPass : public Play {
     /**
      * @brief Calculate info for the blocker roles
      */
-    void calculateInfoForBlocker () noexcept;
+    void calculateInfoForBlocker() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

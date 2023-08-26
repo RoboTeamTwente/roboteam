@@ -31,8 +31,6 @@ Vector2 HalfLine::project(const Vector2 &point) const {
     return projection;
 }
 
-Line HalfLine::toLine() const {
-    return Line(this->start, this->goesThrough);
-}
+Line HalfLine::toLine() const { return Line(this->start, this->goesThrough); }
 
 }  // namespace rtt

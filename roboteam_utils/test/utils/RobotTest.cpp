@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/Robot.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/Robot.hpp>
 
 using namespace rtt;
 
@@ -27,32 +28,30 @@ TEST(RobotTest, instantiation) {
     ASSERT_EQ(r.capOffset, Angle());
 }
 
-const std::vector<Team> allTeams = { Team::YELLOW, Team::BLUE };
+const std::vector<Team> allTeams = {Team::YELLOW, Team::BLUE};
 
 TEST(RobotTest, equals) {
     for (int i = 0; i < 50; i++) {
-        Robot r = {
-            .id = SimpleRandom::getInt(0, 15),
-            .team = *SimpleRandom::getRandomElement(allTeams.begin(), allTeams.end()),
-            .position = Vector2(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20)),
-            .velocity = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
-            .angle = Angle(SimpleRandom::getDouble(0, 7)),
-            .angularVelocity = SimpleRandom::getDouble(-3, 3),
-            .ballSensorSeesBall = SimpleRandom::getBool(),
-            .ballSensorIsWorking = SimpleRandom::getBool(),
-            .ballPositionOnSensor = SimpleRandom::getDouble(-0.5, 0.5),
-            .dribblerSeesBall = SimpleRandom::getBool(),
-            .dribblerSpeed = SimpleRandom::getDouble(0, 50),
-            .xSensIsCalibrated = SimpleRandom::getBool(),
-            .capacitorIsCharged = SimpleRandom::getBool(),
-            .signalStrength = SimpleRandom::getDouble(0, 10),
-            .batteryLevel = SimpleRandom::getDouble(18, 24),
-            .radius = SimpleRandom::getDouble(0.06, 0.09),
-            .height = SimpleRandom::getDouble(0.10, 0.15),
-            .frontWidth = SimpleRandom::getDouble(0.10, 0.13),
-            .dribblerWidth = SimpleRandom::getDouble(0.7, 0.10),
-            .capOffset = Angle(SimpleRandom::getDouble(-M_PI, M_PI))
-        };
+        Robot r = {.id = SimpleRandom::getInt(0, 15),
+                   .team = *SimpleRandom::getRandomElement(allTeams.begin(), allTeams.end()),
+                   .position = Vector2(SimpleRandom::getDouble(-20, 20), SimpleRandom::getDouble(-20, 20)),
+                   .velocity = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
+                   .angle = Angle(SimpleRandom::getDouble(0, 7)),
+                   .angularVelocity = SimpleRandom::getDouble(-3, 3),
+                   .ballSensorSeesBall = SimpleRandom::getBool(),
+                   .ballSensorIsWorking = SimpleRandom::getBool(),
+                   .ballPositionOnSensor = SimpleRandom::getDouble(-0.5, 0.5),
+                   .dribblerSeesBall = SimpleRandom::getBool(),
+                   .dribblerSpeed = SimpleRandom::getDouble(0, 50),
+                   .xSensIsCalibrated = SimpleRandom::getBool(),
+                   .capacitorIsCharged = SimpleRandom::getBool(),
+                   .signalStrength = SimpleRandom::getDouble(0, 10),
+                   .batteryLevel = SimpleRandom::getDouble(18, 24),
+                   .radius = SimpleRandom::getDouble(0.06, 0.09),
+                   .height = SimpleRandom::getDouble(0.10, 0.15),
+                   .frontWidth = SimpleRandom::getDouble(0.10, 0.13),
+                   .dribblerWidth = SimpleRandom::getDouble(0.7, 0.10),
+                   .capOffset = Angle(SimpleRandom::getDouble(-M_PI, M_PI))};
 
         auto copy = r;
 

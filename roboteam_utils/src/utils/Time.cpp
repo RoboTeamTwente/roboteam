@@ -67,9 +67,7 @@ std::string Time::getDate(char separator) {
 
     // Convert time to text
     std::stringstream ss;
-    ss << std::put_time(&brokenTime, "%Y") << separator
-        << std::put_time(&brokenTime, "%m") << separator
-        << std::put_time(&brokenTime, "%d");
+    ss << std::put_time(&brokenTime, "%Y") << separator << std::put_time(&brokenTime, "%m") << separator << std::put_time(&brokenTime, "%d");
 
     return ss.str();
 }
@@ -83,9 +81,7 @@ std::string Time::getTime(char separator) {
 
     // Convert time to text
     std::stringstream ss;
-    ss << std::put_time(&brokenTime, "%H") << separator
-        << std::put_time(&brokenTime, "%M") << separator
-        << std::put_time(&brokenTime, "%S");
+    ss << std::put_time(&brokenTime, "%H") << separator << std::put_time(&brokenTime, "%M") << separator << std::put_time(&brokenTime, "%S");
 
     return ss.str();
 }
@@ -106,9 +102,9 @@ std::string Time::getTimeWithMilliseconds(char separator) {
     // Convert these values to text
     std::stringstream ss;
     ss << std::put_time(&brokenTime, "%H") << separator     // Hours
-        << std::put_time(&brokenTime, "%M") << separator    // Minutes
-        << std::put_time(&brokenTime, "%S") << "."          // Seconds
-        << std::setfill('0') << std::setw(3) << ms.count(); // Milliseconds
+       << std::put_time(&brokenTime, "%M") << separator     // Minutes
+       << std::put_time(&brokenTime, "%S") << "."           // Seconds
+       << std::setfill('0') << std::setw(3) << ms.count();  // Milliseconds
 
     return ss.str();
 }

@@ -50,14 +50,14 @@ TEST(Grid, spreadTest) {
     double totalX = 0;
     double totalY = 0;
     for (auto nestedPoints : grid.getPoints()) {
-        for (auto point : nestedPoints){
+        for (auto point : nestedPoints) {
             totalX += point.x;
             totalY += point.y;
         }
     }
     // As floating point errors are accumulated above, these numbers won't be the exact same (even DOUBLE_EQ won't accept the error). An accuracy of 1e-10 is required
-    EXPECT_NEAR(totalX/5.0, 0.0, 1e-10);
-    EXPECT_NEAR(totalY/3.0, 0.0, 1e-10);
+    EXPECT_NEAR(totalX / 5.0, 0.0, 1e-10);
+    EXPECT_NEAR(totalY / 3.0, 0.0, 1e-10);
 }
 
 TEST(Grid, equals) {

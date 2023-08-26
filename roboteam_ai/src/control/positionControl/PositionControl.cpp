@@ -5,16 +5,14 @@
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
-#include "interface_api/Out.h"
+#include "gui/Out.h"
 #include "roboteam_utils/Print.h"
 
 namespace rtt::ai::control {
-std::vector<Vector2> PositionControl::getComputedPath(int ID) {
-    return computedPaths[ID];
-}
+std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
-RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity,
-                                                  Vector2 &targetPosition, stp::PIDType pidType) {
+RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
+                                                  stp::PIDType pidType) {
     collisionDetector.setField(field);
 
     // if the robot is close to the final position and can't get there, stop
@@ -80,7 +78,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         }
     }
 
-    rtt::ai::new_interface::Out::draw(
+    rtt::ai::gui::Out::draw(
         {
             .label = "path_lines" + std::to_string(robotId),
             .color = proto::Drawing::MAGENTA,
@@ -91,7 +89,7 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         },
         computedPaths[robotId]);
 
-    rtt::ai::new_interface::Out::draw(
+    rtt::ai::gui::Out::draw(
         {
             .label = "path_dots" + std::to_string(robotId),
             .color = proto::Drawing::GREEN,
@@ -122,9 +120,6 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     commandCollision.robotCommand.velocity = trackingVelocityVector;
     commandCollision.robotCommand.targetAngle = trackingVelocity.rot;
 
-    interface::Input::addDrawing(interface::Drawing(interface::Visual::PATHFINDING, computedPaths[robotId], QColorConstants::Magenta, robotId,
-                                                    interface::Drawing::LINES_CONNECTED, 10, 10, 10));
-
     return commandCollision;
 }
 
@@ -142,13 +137,6 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
         auto trajectoryAroundCollision = calculateTrajectoryAroundCollision(world, field, intermediatePathCollision, trajectoryToIntermediatePoint, targetPosition, robotId,
                                                                             maxRobotVelocity, timeStep, avoidObjects);
         if (trajectoryAroundCollision.has_value()) {
-            // interface::Input::drawData(interface::Visual::PATHFINDING, intermediatePoints, Qt::green, robotId, interface::Drawing::CROSSES);
-            // interface::Input::drawData(interface::Visual::PATHFINDING, {firstCollision->collisionPosition}, Qt::red, robotId, interface::Drawing::CROSSES);
-
-            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryToIntermediatePoint.getPathApproach(timeStep), Qt::white, robotId,
-            //                            interface::Drawing::LINES_CONNECTED);
-            // interface::Input::drawData(interface::Visual::PATHFINDING, trajectoryAroundCollision.value().getPathApproach(timeStep), Qt::yellow, robotId,
-            //                            interface::Drawing::LINES_CONNECTED);
             return trajectoryAroundCollision.value();
         }
         intermediatePointsSorted.pop();
@@ -184,8 +172,7 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
     return std::nullopt;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
-                                                               Vector2 &targetPosition) {
+std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition) {
     double angleBetweenIntermediatePoints = M_PI_4 / 2;
 
     // Radius and point extension of intermediate points are based on the fieldHeight
@@ -234,8 +221,8 @@ std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Ve
     return intermediatePointsSorted;
 }
 
-bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition,
-                                                  const Vector2 &currentPosition, ai::stp::AvoidObjects avoidObjects) {
+bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
+                                                  ai::stp::AvoidObjects avoidObjects) {
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&
          (targetPosition - computedPaths[robotId][computedPaths[robotId].size() - 1]).length() > stp::control_constants::GO_TO_POS_ERROR_MARGIN) ||

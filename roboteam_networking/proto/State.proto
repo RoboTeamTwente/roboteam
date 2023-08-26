@@ -7,8 +7,6 @@ import "messages_robocup_ssl_wrapper.proto";
 import "messages_robocup_ssl_referee.proto";
 import "messages_robocup_ssl_geometry.proto";
 
-import "Handshake.proto";
-import "UiOptions.proto";
 import "RobotFeedback.proto";
 
 package proto;
@@ -24,9 +22,4 @@ message State {
     repeated SSL_WrapperPacket processed_vision_packets = 10;
     repeated SSL_Referee processed_referee_packets = 11;
     repeated RobotsFeedback processed_feedback_packets = 12;
-}
-
-message ModuleState {
-    State system_state = 1;
-    repeated Handshake handshakes = 2;
 }

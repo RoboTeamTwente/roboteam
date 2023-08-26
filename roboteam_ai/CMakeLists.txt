@@ -8,7 +8,6 @@ add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/StrategyManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/GameStateManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Constants.cpp
-        ${PROJECT_SOURCE_DIR}/src/utilities/Pause.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/RefGameState.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/Dealer.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/IOManager.cpp
@@ -18,9 +17,9 @@ add_library(roboteam_ai_utils
 )
 target_link_libraries(roboteam_ai_utils
         PUBLIC Qt5::Network
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
+        PRIVATE roboteam_ai_gui
 )
 target_include_directories(roboteam_ai_utils
         PRIVATE include/roboteam_ai
@@ -44,14 +43,12 @@ target_include_directories(roboteam_ai_skills
 target_link_libraries(roboteam_ai_skills
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
 )
 target_compile_options(roboteam_ai_skills PRIVATE "${COMPILER_FLAGS}")
 
 ###### TACTICS #######
 add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/Tactic.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/constants/ControlConstants.cpp
         # /
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/KeeperBlockBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/TestTactic.cpp
@@ -76,7 +73,6 @@ target_include_directories(roboteam_ai_tactics
 target_link_libraries(roboteam_ai_tactics
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
-        PRIVATE Qt5::Widgets
 )
 target_compile_options(roboteam_ai_tactics PRIVATE "${COMPILER_FLAGS}")
 
@@ -110,7 +106,6 @@ target_include_directories(roboteam_ai_roles
 target_link_libraries(roboteam_ai_roles
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
-        PRIVATE Qt5::Widgets
 )
 target_compile_options(roboteam_ai_roles PRIVATE "${COMPILER_FLAGS}")
 
@@ -150,13 +145,11 @@ target_include_directories(roboteam_ai_plays
         PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai_plays
-        PUBLIC roboteam_interface_utils_lib
-        PRIVATE ixwebsocket #TODO: Why do we need this dependency here?
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE roboteam_ai_interface
-        PRIVATE Qt5::Widgets
         PRIVATE NFParam
+        PRIVATE roboteam_ai_utils
+        PRIVATE roboteam_ai_world
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 
@@ -212,7 +205,6 @@ target_include_directories(roboteam_ai_evaluation
 target_link_libraries(roboteam_ai_evaluation
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
         PRIVATE NFParam
 )
 target_compile_options(roboteam_ai_evaluation PRIVATE "${COMPILER_FLAGS}")
@@ -229,7 +221,6 @@ target_include_directories(roboteam_ai_computation
 )
 target_link_libraries(roboteam_ai_computation
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         PRIVATE NFParam
 )
@@ -264,66 +255,30 @@ target_include_directories(roboteam_ai_control
 target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
-        PRIVATE roboteam_ai_interface
+        PRIVATE roboteam_ai_gui
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 
-###### INTERFACE *HEADERS* #######
-set(INTERFACE_HEADERS
-        #QT wants to know about these headers
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PidBox.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PidsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/MainControlsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/mainWindow.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/RobotsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/RuleSetWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/STPVisualizerWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/VisualizationSettingsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/widget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/SettingsWidget.h
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/PlaysWidget.hpp
-        ${PROJECT_SOURCE_DIR}/include/roboteam_ai/interface/widgets/GraphWidget.h
-)
-
 ###### INTERFACE #######
-add_library(roboteam_ai_interface
-        ${INTERFACE_HEADERS}
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/mainWindow.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/widget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/api/Input.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/api/Output.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/STPVisualizerWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/RobotsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/PidBox.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/PidsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/MainControlsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/VisualizationSettingsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/api/Toggles.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/RuleSetWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/GraphWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/SettingsWidget.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface/widgets/PlaysWidget.cpp
-        # After removing the interface, only this file should remain
-        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceGateway.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface_api/Out.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface_api/RuntimeConfig.cpp
+add_library(roboteam_ai_gui
+        ${PROJECT_SOURCE_DIR}/src/gui/networking/InterfaceGateway.cpp
+        ${PROJECT_SOURCE_DIR}/src/gui/Out.cpp
 
-        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfacePublisher.cpp
-        ${PROJECT_SOURCE_DIR}/src/interface_api/InterfaceSubscriber.cpp
+        ${PROJECT_SOURCE_DIR}/src/gui/networking/InterfacePublisher.cpp
+        ${PROJECT_SOURCE_DIR}/src/gui/networking/InterfaceSubscriber.cpp
+
+        ${PROJECT_SOURCE_DIR}/src/interface/api/Output.cpp
 )
-target_include_directories(roboteam_ai_interface
+target_include_directories(roboteam_ai_gui
         PRIVATE include/roboteam_ai
 )
-target_link_libraries(roboteam_ai_interface
-        PRIVATE Qt5::Widgets
+target_link_libraries(roboteam_ai_gui
         PUBLIC Qt5::Network
         PRIVATE ixwebsocket
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE roboteam_interface_utils_lib
 )
-target_compile_options(roboteam_ai_interface PRIVATE "${COMPILER_FLAGS}")
+target_compile_options(roboteam_ai_gui PRIVATE "${COMPILER_FLAGS}")
 
 ###### WORLD #######
 add_library(roboteam_ai_world
@@ -342,7 +297,6 @@ target_include_directories(roboteam_ai_world
 target_link_libraries(roboteam_ai_world
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
 )
 target_compile_options(roboteam_ai_world PRIVATE "${COMPILER_FLAGS}")
 
@@ -357,16 +311,16 @@ target_include_directories(roboteam_ai
 target_link_libraries(roboteam_ai
         PRIVATE ixwebsocket
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
+
         # Watch out! The order of these libraries apparently matters!
-        PRIVATE roboteam_ai_interface
-        PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
+        PRIVATE roboteam_ai_utils
+        PRIVATE roboteam_ai_gui
+        PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
         PRIVATE Qt5::Charts
-        PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics
         PRIVATE roboteam_ai_evaluation
@@ -387,7 +341,6 @@ target_include_directories(testHelpers
 target_link_libraries(testHelpers
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_ai_utils
         )
 
@@ -421,10 +374,9 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE testHelpers
         PRIVATE ixwebsocket
         PRIVATE roboteam_utils
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_networking
         # Watch out! The order of these libraries apparently matters!
-        PRIVATE roboteam_ai_interface
+        PRIVATE roboteam_ai_gui
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_control
@@ -452,7 +404,6 @@ target_include_directories(positionScoringTest
         )
 
 target_link_libraries(positionScoringTest
-        PRIVATE Qt5::Widgets
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_networking
         PRIVATE roboteam_ai_plays
@@ -466,5 +417,5 @@ target_link_libraries(positionScoringTest
         PRIVATE testHelpers
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_control
-        PRIVATE roboteam_ai_interface
+        PRIVATE roboteam_ai_gui
         )

@@ -60,8 +60,7 @@ void BBTrajectory1D::trapezoidalProfile(double startPos, double startVel, double
     double t2;
     if (maximumVel != 0) {
         t2 = (endCoastPos - startCoastPos) / maximumVel;
-    }
-    else{
+    } else {
         t2 = 0;
     }
 
@@ -96,8 +95,7 @@ void BBTrajectory1D::generateTrajectory(double startPos, double startVel, double
     }
 }
 
-BBTrajectory1D::BBTrajectory1D(double startPos, double startVel, double endPos, double maximumVel, double maximumAcc)
-    : maxVel{maximumVel} {
+BBTrajectory1D::BBTrajectory1D(double startPos, double startVel, double endPos, double maximumVel, double maximumAcc) : maxVel{maximumVel} {
     generateTrajectory(startPos, startVel, endPos, maximumVel, maximumAcc);
 }
 

@@ -6,8 +6,8 @@
 #define RTT_GOALCOMPUTATIONS_H
 
 #include <roboteam_utils/LineSegment.h>
-#include <roboteam_utils/Field.hpp>
 
+#include <roboteam_utils/Field.hpp>
 #include <world/World.hpp>
 
 namespace rtt::ai::stp::computations {

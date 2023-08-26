@@ -3,6 +3,7 @@
 //
 
 #include "Circle.h"
+
 #include "Polynomial.h"
 
 namespace rtt {
@@ -43,7 +44,7 @@ bool Circle::doesIntersectOrContain2(const Rectangle &other) {
 
     if (other.contains(center)) return true;
 
-    std::vector<LineSegment> segments = { other.leftLine(), other.topLine(), other.rightLine(), other.bottomLine() };
+    std::vector<LineSegment> segments = {other.leftLine(), other.topLine(), other.rightLine(), other.bottomLine()};
     for (const LineSegment &segment : segments)
         if (doesIntersectOrContain(segment)) return true;
 
@@ -66,35 +67,31 @@ Circle Circle::operator*=(double scale) { return {center, radius *= fabs(scale)}
 Circle Circle::operator/=(double scale) { return {center, radius /= fabs(scale)}; }
 
 std::ostream &Circle::write(std::ostream &os) const { return os << "Circle({" << center.x << ", " << center.y << "}, " << radius << ")"; }
-bool Circle::contains(const Vector2 &point) const{
-  return (center-point).length2() <= radius*radius;
-}
+bool Circle::contains(const Vector2 &point) const { return (center - point).length2() <= radius * radius; }
 
-void Circle::move(const Vector2 &by) {
-  center +=by;
-}
+void Circle::move(const Vector2 &by) { center += by; }
 
-//https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
+// https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
 std::vector<Vector2> Circle::intersects(const LineSegment &segment) const {
-  Vector2 d = segment.direction();
-  Vector2 f = segment.start-center;
+    Vector2 d = segment.direction();
+    Vector2 f = segment.start - center;
 
-  double a = d.dot(d);
-  double b = 2*f.dot(d);
-  double c = f.dot(f)-radius*radius;
-  //Note the values here are sorted ascending already
-  std::optional<std::pair<double,double>> values = solveQuadraticPositiveA(a,b,c);
-  if(!values){
-    return {};
-  }
-  std::vector<Vector2> intersections;
-  if(values->first>=0 && values->first<=1){
-    intersections.push_back(segment.start+d*values->first);
-  }
-  if(values->second >= 0 && values->second<=1 && values->second != values->first ){
-    intersections.push_back(segment.start+d*values->second);
-  }
-  return intersections;
+    double a = d.dot(d);
+    double b = 2 * f.dot(d);
+    double c = f.dot(f) - radius * radius;
+    // Note the values here are sorted ascending already
+    std::optional<std::pair<double, double>> values = solveQuadraticPositiveA(a, b, c);
+    if (!values) {
+        return {};
+    }
+    std::vector<Vector2> intersections;
+    if (values->first >= 0 && values->first <= 1) {
+        intersections.push_back(segment.start + d * values->first);
+    }
+    if (values->second >= 0 && values->second <= 1 && values->second != values->first) {
+        intersections.push_back(segment.start + d * values->second);
+    }
+    return intersections;
 }
 std::ostream &operator<<(std::ostream &os, rtt::Circle const &circle) { return circle.write(os); }
 

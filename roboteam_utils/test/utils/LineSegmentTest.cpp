@@ -1,18 +1,17 @@
 #include <gtest/gtest.h>
-
-#include <roboteam_utils/LineSegment.h>
 #include <roboteam_utils/Line.h>
+#include <roboteam_utils/LineSegment.h>
 #include <roboteam_utils/Random.h>
 
 using namespace rtt;
 
 TEST(LineSegmentTests, firstIntersects) {
     // The firstIntersects function should return the closest int
-    LineSegment a({ -2, 0 }, { 2, 0 });
+    LineSegment a({-2, 0}, {2, 0});
 
-    Line b({ 0, 2 }, { 0, -2 });
+    Line b({0, 2}, {0, -2});
     ASSERT_EQ(a.getClosestPointToLine(b).value(), Vector2(0, 0));
-    Line c({ 50, 1 }, { -50, -1 });
+    Line c({50, 1}, {-50, -1});
     ASSERT_EQ(a.getClosestPointToLine(c).value(), Vector2(0, 0));
 
     Line d({2, 2}, {2, -2});
@@ -39,19 +38,19 @@ TEST(LineSegmentTests, center) {
 
         auto distCenterStart = lineSeg.center().dist(lineSeg.start);
         auto distCenterEnd = lineSeg.center().dist(lineSeg.end);
-        ASSERT_TRUE(std::fabs(distCenterStart-distCenterEnd) < 1e-12); //ASSERT_DOUBLE_EQ can fail here due to small numerical errors for nearly parallel lines,
-                                                                       //though these errors should really stay small in practice.
+        ASSERT_TRUE(std::fabs(distCenterStart - distCenterEnd) < 1e-12);  // ASSERT_DOUBLE_EQ can fail here due to small numerical errors for nearly parallel lines,
+                                                                          // though these errors should really stay small in practice.
     }
 }
 
 TEST(LineSegmentTests, resize) {
-    auto null = LineSegment({0,0}, {0,0});
+    auto null = LineSegment({0, 0}, {0, 0});
     auto resizedNull = null;
     resizedNull.resize(69);
     ASSERT_EQ(null, resizedNull);
 
     // Resizing to 0 should result in a point
-    auto normalLineSeg = LineSegment({1,0}, {5, 5});
+    auto normalLineSeg = LineSegment({1, 0}, {5, 5});
     normalLineSeg.resize(0);
     ASSERT_TRUE(normalLineSeg.isPoint());
 

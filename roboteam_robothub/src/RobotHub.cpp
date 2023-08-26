@@ -1,14 +1,13 @@
 #include <REM_BaseTypes.h>
 #include <REM_RobotCommand.h>
 #include <RobotHub.h>
+#include <RobotHubMode.h>
 #include <roboteam_utils/Print.h>
 #include <roboteam_utils/Time.h>
-#include <RobotHubMode.h>
+#include <roboteam_utils/Vector2.h>
 
 #include <cmath>
-
 #include <sstream>
-#include <roboteam_utils/Vector2.h>
 
 namespace rtt::robothub {
 
@@ -36,8 +35,8 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
-    this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo& robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
-    this->basestationManager->setBasestationLogCallback([&](const std::string& log, rtt::Team color) { this->handleBasestationLog(log, color); });
+    this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+    this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
     // if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
 }
@@ -207,22 +206,20 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     robotsFeedback.source = rtt::RobotFeedbackSource::SIMULATOR;
     robotsFeedback.team = feedback.color;
 
-    for (auto const&[robotId, hasBall] : feedback.robotIdHasBall) {
-        rtt::RobotFeedback robotFeedback = {
-            .id = robotId,
-            .ballSensorSeesBall = hasBall,
-            .ballPosition = 0,
-            .ballSensorIsWorking = true,
-            .dribblerSeesBall = hasBall,
-            .velocity = { 0, 0 },
-            .angle = 0,
-            .xSensIsCalibrated = true,
-            .capacitorIsCharged = true,
-            .wheelLocked = 0,
-            .wheelBraking = 0,
-            .batteryLevel = 23.0f,
-            .signalStrength = 0
-        };
+    for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
+        rtt::RobotFeedback robotFeedback = {.id = robotId,
+                                            .ballSensorSeesBall = hasBall,
+                                            .ballPosition = 0,
+                                            .ballSensorIsWorking = true,
+                                            .dribblerSeesBall = hasBall,
+                                            .velocity = {0, 0},
+                                            .angle = 0,
+                                            .xSensIsCalibrated = true,
+                                            .capacitorIsCharged = true,
+                                            .wheelLocked = 0,
+                                            .wheelBraking = 0,
+                                            .batteryLevel = 23.0f,
+                                            .signalStrength = 0};
         robotsFeedback.feedback.push_back(robotFeedback);
 
         // Increment the feedback counter of this robot
@@ -240,21 +237,19 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
     robotsFeedback.source = rtt::RobotFeedbackSource::BASESTATION;
     robotsFeedback.team = basestationColor;
 
-    rtt::RobotFeedback robotFeedback = {
-        .id = static_cast<int>(feedback.fromRobotId),
-        .ballSensorSeesBall = feedback.ballSensorSeesBall,
-        .ballPosition = feedback.ballPos,
-        .ballSensorIsWorking = feedback.ballSensorWorking,
-        .dribblerSeesBall = feedback.dribblerSeesBall,
-        .velocity = Vector2(Angle(feedback.theta), feedback.rho),
-        .angle = Angle(feedback.angle),
-        .xSensIsCalibrated = feedback.XsensCalibrated,
-        .capacitorIsCharged = feedback.capacitorCharged,
-        .wheelLocked = static_cast<int>(feedback.wheelLocked),
-        .wheelBraking = static_cast<int>(feedback.wheelBraking),
-        .batteryLevel = static_cast<float>(feedback.batteryLevel),
-        .signalStrength = static_cast<int>(feedback.rssi)
-    };
+    rtt::RobotFeedback robotFeedback = {.id = static_cast<int>(feedback.fromRobotId),
+                                        .ballSensorSeesBall = feedback.ballSensorSeesBall,
+                                        .ballPosition = feedback.ballPos,
+                                        .ballSensorIsWorking = feedback.ballSensorWorking,
+                                        .dribblerSeesBall = feedback.dribblerSeesBall,
+                                        .velocity = Vector2(Angle(feedback.theta), feedback.rho),
+                                        .angle = Angle(feedback.angle),
+                                        .xSensIsCalibrated = feedback.XsensCalibrated,
+                                        .capacitorIsCharged = feedback.capacitorCharged,
+                                        .wheelLocked = static_cast<int>(feedback.wheelLocked),
+                                        .wheelBraking = static_cast<int>(feedback.wheelBraking),
+                                        .batteryLevel = static_cast<float>(feedback.batteryLevel),
+                                        .signalStrength = static_cast<int>(feedback.rssi)};
     robotsFeedback.feedback.push_back(robotFeedback);
 
     this->sendRobotFeedback(robotsFeedback);
@@ -271,7 +266,7 @@ bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     return bytesSent > 0;
 }
 
-void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo& info, rtt::Team team) {
+void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
     // if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
 }
 
@@ -281,7 +276,7 @@ void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rt
 }
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {
-    for (const auto& error : errors) {
+    for (const auto &error : errors) {
         std::string message;
         if (error.code.has_value() && error.message.has_value())
             message = "Received Simulation error! code=" + error.code.value() + "    message=" + error.message.value();

@@ -1,10 +1,11 @@
 #pragma once
 
+#include <RobotHubMode.h>
+
 #include <array>
 #include <basestation/BasestationManager.hpp>
 #include <chrono>
 #include <string>
-#include <RobotHubMode.h>
 
 namespace rtt::robothub {
 

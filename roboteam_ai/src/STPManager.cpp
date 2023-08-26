@@ -6,17 +6,18 @@
 #include <chrono>
 
 #include "control/ControlModule.h"
-#include "interface_api/InterfaceGateway.h"
-#include "interface_api/RuntimeConfig.h"
+#include "gui/networking/InterfaceGateway.h"
 #include "stp/PlayDecider.hpp"
 #include "stp/PlayEvaluator.h"
 #include "stp/computations/ComputationManager.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/IOManager.h"
+#include "utilities/RuntimeConfig.h"
 
 /**
  * Plays are included here
  */
+#include "gui/Out.h"
 #include "stp/plays/defensive/DefendPass.h"
 #include "stp/plays/defensive/DefendShot.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
@@ -49,31 +50,31 @@ namespace rtt {
 
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
 const STPManager::PlaysVec STPManager::plays = ([] {
-    auto plays = std::vector<std::unique_ptr<rtt::ai::stp::Play>>();
+    auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
-//    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::Attack>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::Halt>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendShot>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KeeperKickBall>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefensiveStopFormation>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::AggressiveStopFormation>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementThem>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::TimeOut>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThemPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUsPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThem>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUsPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThemPrepare>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickThem>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsAtGoal>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
-    plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
+    plays.emplace_back(std::make_unique<plays::AttackingPass>());
+    //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
+    plays.emplace_back(std::make_unique<plays::Attack>());
+    plays.emplace_back(std::make_unique<plays::Halt>());
+    plays.emplace_back(std::make_unique<plays::DefendShot>());
+    plays.emplace_back(std::make_unique<plays::DefendPass>());
+    plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
+    plays.emplace_back(std::make_unique<plays::DefensiveStopFormation>());
+    plays.emplace_back(std::make_unique<plays::AggressiveStopFormation>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementUs>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementThem>());
+    // plays.emplace_back(std::make_unique<play::TimeOut>());
+    plays.emplace_back(std::make_unique<plays::PenaltyThemPrepare>());
+    plays.emplace_back(std::make_unique<plays::PenaltyUsPrepare>());
+    plays.emplace_back(std::make_unique<plays::PenaltyThem>());
+    plays.emplace_back(std::make_unique<plays::PenaltyUs>());
+    plays.emplace_back(std::make_unique<plays::KickOffUsPrepare>());
+    plays.emplace_back(std::make_unique<plays::KickOffThemPrepare>());
+    plays.emplace_back(std::make_unique<plays::FreeKickThem>());
+    plays.emplace_back(std::make_unique<plays::FreeKickUsAtGoal>());
+    plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
+    plays.emplace_back(std::make_unique<plays::KickOffUs>());
+    plays.emplace_back(std::make_unique<plays::KickOffThem>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
@@ -96,37 +97,29 @@ void STPManager::start(std::atomic_flag &exitApplication) {
         }
     }
 
-    double accumulator = 0;
-    double alpha = 1.0/100.0; // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
-    int lastTickCount = 0;
-    int statsUpdateRate = 5;
+    double avgTickDuration = 0;
+    double alpha = 1.0 / 100.0;  // Represents the weight of the current tick duration in the average tick duration ~~ equivalent to about 100 samples
 
     roboteam_utils::Timer stpTimer;
     stpTimer.loop(
         [&]() {
-            const auto tickDuration = roboteam_utils::Timer::measure([&]() {
-                // Tick AI
-                runOneLoopCycle();
-                tickCounter++;
-            }).count();
+            double tickDuration = static_cast<double>(roboteam_utils::Timer::measure([&]() {
+                                                          // Tick AI
+                                                          runOneLoopCycle();
+                                                          tickCounter++;
+                                                      }).count());
+            avgTickDuration = alpha * tickDuration + (1 - alpha) * avgTickDuration;  // Exponential moving average
 
-            stpTimer.limit([&]() {
-                if (currentPlay == nullptr) { return; }
-                interfaceGateway->publisher()
-                    .publishStpStatus(currentPlay, plays, tickCounter)
-                    .publishWorld()
-                    .publishVisuals();
-
-            }, 45);
-
-            accumulator = alpha * tickDuration + (1 - alpha) * accumulator; // Exponential moving average
             stpTimer.limit(
                 [&]() {
-                    rtt::ai::new_interface::Out::decimal("Average tick", accumulator, "ms");
-                    rtt::ai::new_interface::Out::bounded("FPS", (tickCounter - lastTickCount) * statsUpdateRate, 0, 60, "fps");
-                    lastTickCount = tickCounter;
+                    auto &publisher = interfaceGateway->publisher();
+                    if (currentPlay != nullptr) {
+                        publisher.publishStpStatus(currentPlay, plays, tickCounter, tickDuration, avgTickDuration);
+                    }
+
+                    publisher.publishWorld().publishVisuals();
                 },
-                statsUpdateRate);
+                45);
 
             // If this is primary AI, broadcast settings every second
             if (GameSettings::isPrimaryAI()) {
@@ -158,7 +151,6 @@ void STPManager::runOneLoopCycle() {
                 roboteam_utils::rotate(&packet);
             }
         }
-        // mainWindow->updateProcessedVisionPackets(vision_packets);
 
         auto const &[_, world] = world::World::instance();
         world->updateWorld(worldMessage);
@@ -194,7 +186,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     ai::stp::ComputationManager::clearStoredComputations();
 
     /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
-    if(!ignoreWorldAge){
+    if (!ignoreWorldAge) {
         if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
             RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
             currentPlay = nullptr;
@@ -204,17 +196,9 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
-    if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::new_interface::RuntimeConfig::ignoreInvariants || ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) {
+    if (!currentPlay || !currentPlay->isValidPlayToKeep() || rtt::ai::RuntimeConfig::ignoreInvariants || ai::stp::PlayDecider::didLockPlay()) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
-
-        // If play was set from the interface override the play selected by PlayDecider
-        if (rtt::ai::new_interface::RuntimeConfig::interfacePlay.hasChanged) [[unlikely]] {
-            currentPlay = ai::stp::PlayDecider::getPlayForName(
-                rtt::ai::new_interface::RuntimeConfig::interfacePlay.pop(), plays
-            );
-        }
-
         currentPlay->updateField(_world->getField().value());
         currentPlay->initialize();
     } else {
@@ -223,5 +207,5 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     currentPlay->update();
 }
 
-STPManager::STPManager(std::shared_ptr<rtt::ai::io::InterfaceGateway> interfaceGateway): interfaceGateway(std::move(interfaceGateway)) { }
+STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : interfaceGateway(std::move(interfaceGateway)) {}
 }  // namespace rtt

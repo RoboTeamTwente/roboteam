@@ -2,8 +2,9 @@
 // Created by agata on 29/06/2022.
 //
 
-#include "stp/skills/GoToPos.h"
 #include "stp/tactics/passive/BallStandBack.h"
+
+#include "stp/skills/GoToPos.h"
 
 namespace rtt::ai::stp::tactic {
 

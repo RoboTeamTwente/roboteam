@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 
-#include "Vector2.h"
 #include "Rectangle.hpp"
+#include "Vector2.h"
 
 namespace rtt {
 class LineSegment;
@@ -115,7 +115,7 @@ class LazyRectangle : public Rectangle {
      * @param point the point to be projected
      * @return the result of the projection
      */
-    [[nodiscard]] Vector2 project(const Vector2& point) const override;
+    [[nodiscard]] Vector2 project(const Vector2 &point) const override;
     /**
      * @brief This method is used internally for lineSegment intersection. It checks whether
      * @param point point to check for

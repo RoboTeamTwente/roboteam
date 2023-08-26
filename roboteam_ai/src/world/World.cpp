@@ -67,12 +67,9 @@ void World::updateWorld(proto::World &protoWorld) {
 }
 
 // Converts millimeters to meters
-constexpr double mmToM(double mm) {
-    return mm / 1000.0;
-}
+constexpr double mmToM(double mm) { return mm / 1000.0; }
 
 void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
-
     // TODO Check if the new field actually differs? Maybe with google::protobuf::util::MessageDifferencer
     // https://stackoverflow.com/questions/3228107/google-protocol-buffers-compare
 
@@ -82,27 +79,18 @@ void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
     // so we need to derive specifically these lines from a list of named lines... Kill me plz
     double penaltyAreaDepth = 0.0;
     double penaltyAreaWidth = 0.0;
-    for (const auto& line : protoField.field_lines()) {
+    for (const auto &line : protoField.field_lines()) {
         if (line.name() == "LeftPenaltyStretch") {
             penaltyAreaWidth = std::fabs(line.p2().y() - line.p1().y());
-        }
-        else if(line.name() == "LeftFieldLeftPenaltyStretch") {
+        } else if (line.name() == "LeftFieldLeftPenaltyStretch") {
             penaltyAreaDepth = std::fabs(line.p2().x() - line.p1().x());
         }
     }
 
-    auto fields = Field::createField(
-        mmToM(protoField.field_length()),
-        mmToM(protoField.field_width()),
-        mmToM(penaltyAreaDepth), // Imagine if GRSim would actually use the protoField.penalty_area_dept and width fields...
-        mmToM(penaltyAreaWidth),
-        mmToM(protoField.goal_depth()),
-        mmToM(protoField.goal_width()),
-        mmToM(protoField.boundary_width()),
-        0.5,
-        Vector2(-2, 0),
-        Vector2(2, 0)
-    );
+    auto fields = Field::createField(mmToM(protoField.field_length()), mmToM(protoField.field_width()),
+                                     mmToM(penaltyAreaDepth),  // Imagine if GRSim would actually use the protoField.penalty_area_dept and width fields...
+                                     mmToM(penaltyAreaWidth), mmToM(protoField.goal_depth()), mmToM(protoField.goal_width()), mmToM(protoField.boundary_width()), 0.5,
+                                     Vector2(-2, 0), Vector2(2, 0));
 
     this->currentField = fields;
 }
@@ -110,7 +98,6 @@ void World::updateField(proto::SSL_GeometryFieldSize &protoField) {
 void World::updateField(rtt::Field &protoField) { this->currentField = protoField; }
 
 World::World() : currentWorld{std::nullopt}, lastTick{0} { history.reserve(HISTORY_SIZE); }
-
 
 void World::updateTickTime() noexcept {
     if (!getWorld()) {  // no world currently

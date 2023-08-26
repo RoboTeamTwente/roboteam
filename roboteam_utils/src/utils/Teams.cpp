@@ -24,4 +24,4 @@ std::string relativeTeamToString(RelativeTeam team) {
     }
 }
 
-} // namespace rtt
+}  // namespace rtt

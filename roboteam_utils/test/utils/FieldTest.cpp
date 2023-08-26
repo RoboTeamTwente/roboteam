@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/Field.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/Field.hpp>
 
 using namespace rtt;
 
@@ -51,16 +52,7 @@ TEST(FieldTest, instantiation) {
     Vector2 leftPenaltyPoint(-2, 0);
     Vector2 rightPenaltyPoint(2, 0);
 
-    auto f = Field::createField(fieldWidth,
-                                fieldHeight,
-                                defenseWidth,
-                                defenseHeight,
-                                goalWidth,
-                                goalHeight,
-                                boundary,
-                                centerRadius,
-                                leftPenaltyPoint,
-                                rightPenaltyPoint);
+    auto f = Field::createField(fieldWidth, fieldHeight, defenseWidth, defenseHeight, goalWidth, goalHeight, boundary, centerRadius, leftPenaltyPoint, rightPenaltyPoint);
 
     const double DELTA = 1e-12;
     testCoherence(f);
@@ -84,22 +76,13 @@ TEST(FieldTest, equals) {
         double goalWidth = SimpleRandom::getDouble(0.1, 1);
         double goalHeight = SimpleRandom::getDouble(0.1, defenseHeight);
         double boundary = SimpleRandom::getDouble(0.1, 5);
-        double centerRadius = SimpleRandom::getDouble(0.1, std::fmin(fieldHeight/2, fieldWidth/2 - defenseWidth));
+        double centerRadius = SimpleRandom::getDouble(0.1, std::fmin(fieldHeight / 2, fieldWidth / 2 - defenseWidth));
 
-        double penaltyPointDistanceFromCenter = SimpleRandom::getDouble(centerRadius, fieldWidth/2 - defenseWidth);
+        double penaltyPointDistanceFromCenter = SimpleRandom::getDouble(centerRadius, fieldWidth / 2 - defenseWidth);
         Vector2 leftPenaltyPoint(-penaltyPointDistanceFromCenter, 0);
         Vector2 rightPenaltyPoint(penaltyPointDistanceFromCenter, 0);
 
-        auto f = Field::createField(fieldWidth,
-                                    fieldHeight,
-                                    defenseWidth,
-                                    defenseHeight,
-                                    goalWidth,
-                                    goalHeight,
-                                    boundary,
-                                    centerRadius,
-                                    leftPenaltyPoint,
-                                    rightPenaltyPoint);
+        auto f = Field::createField(fieldWidth, fieldHeight, defenseWidth, defenseHeight, goalWidth, goalHeight, boundary, centerRadius, leftPenaltyPoint, rightPenaltyPoint);
 
         testCoherence(f);
 

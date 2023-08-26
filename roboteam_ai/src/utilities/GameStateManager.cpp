@@ -2,8 +2,9 @@
 
 #include <roboteam_utils/Print.h>
 
-#include "interface_api/RuntimeConfig.h"
+#include "interface/api/Output.h"
 #include "utilities/GameSettings.h"
+#include "utilities/RuntimeConfig.h"
 #include "utilities/StrategyManager.h"
 #include "world/World.hpp"
 
@@ -147,7 +148,7 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
 // Initialize static variables
 GameState GameStateManager::getCurrentGameState() {
     GameState newGameState;
-    if (new_interface::RuntimeConfig::useReferee){
+    if (RuntimeConfig::useReferee) {
         newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
 
         if (GameSettings::isYellow()) {

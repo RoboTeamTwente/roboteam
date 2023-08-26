@@ -25,7 +25,7 @@ void Skill::refreshRobotCommand() noexcept {
     this->command = emptyCmd;
 }
 
-void Skill::terminate() noexcept {currentStatus = Status::Success;}
+void Skill::terminate() noexcept { currentStatus = Status::Success; }
 
 Status Skill::update(StpInfo const& info) noexcept {
     robot = info.getRobot();

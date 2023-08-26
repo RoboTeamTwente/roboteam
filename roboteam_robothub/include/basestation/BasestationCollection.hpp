@@ -2,13 +2,12 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include <roboteam_utils/Teams.hpp>
-
 #include <basestation/Basestation.hpp>
 #include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
+#include <roboteam_utils/Teams.hpp>
 #include <thread>
 #include <vector>
 

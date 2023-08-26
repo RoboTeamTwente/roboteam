@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-#include <roboteam_utils/FastRectangle.hpp>
 #include <roboteam_utils/Random.h>
+
+#include <roboteam_utils/FastRectangle.hpp>
 
 using namespace rtt;
 
@@ -13,10 +14,7 @@ void testCoherence(const FastRectangle& fr) {
     ASSERT_EQ(fr.topRight(), Vector2(fr.right(), fr.top()));
 
     // Test if center is correct
-    Vector2 calculatedCenter(
-        (fr.right() + fr.left()) / 2,
-        (fr.bottom() + fr.top()) / 2
-        );
+    Vector2 calculatedCenter((fr.right() + fr.left()) / 2, (fr.bottom() + fr.top()) / 2);
     ASSERT_EQ(fr.center(), calculatedCenter);
 
     // Test if line segments are correct
@@ -53,7 +51,6 @@ TEST(FastRectangleTest, instantiation) {
 }
 
 TEST(FastRectangleTest, contains) {
-
     FastRectangle fr(1, 1, -1, -1);
 
     // 'contains' tests for points within the rectangle, not on the edge

@@ -5,14 +5,15 @@
 #ifndef RTT_OBSERVER_H
 #define RTT_OBSERVER_H
 
+#include <proto/State.pb.h>
 #include <proto/messages_robocup_ssl_referee.pb.h>
 #include <proto/messages_robocup_ssl_wrapper.pb.h>
-#include <proto/State.pb.h>
 #include <roboteam_utils/Time.h>
+
 #include <roboteam_utils/RobotFeedback.hpp>
 
-#include "filters/vision/VisionFilter.h"
 #include "filters/referee/RefereeFilter.h"
+#include "filters/vision/VisionFilter.h"
 #include "parameters/RobotParameterDatabase.h"
 
 /**
@@ -23,7 +24,7 @@
  * @author Rolf
  */
 class Observer {
-public:
+   public:
     /**
      * Calls all of the feedbacks for processing relevant data given the given input data.
      * @param time time to extrapolate the world to
@@ -31,19 +32,17 @@ public:
      * @param refereePackets All of the packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
-    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets,
-                 const std::vector<proto::SSL_Referee>& refereePackets,
-                 const std::vector<rtt::RobotsFeedback>& robotData);
+    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+                         const std::vector<rtt::RobotsFeedback>& robotData);
 
-private:
+   private:
     RobotParameterDatabase parameterDatabase;
     VisionFilter visionFilter;
     RefereeFilter refereeFilter;
 
     void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
 
-    void updateReferee(const std::vector<proto::SSL_Referee> &refereePackets);
+    void updateReferee(const std::vector<proto::SSL_Referee>& refereePackets);
 };
 
-
-#endif //RTT_OBSERVER_H
+#endif  // RTT_OBSERVER_H

@@ -29,11 +29,8 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "WorldRobot.proto"
     "GameSettings.proto"
     "RobotParameters.proto"
-    "UiOptions.proto"
-    "Handshake.proto"
-    "AIData.proto"
     "RobotProcessedFeedback.proto"
-    "NewInterface.proto"
+    "GUI.proto"
 )
 
 add_library(roboteam_networking_proto STATIC "${NET_PROTO_SRCS}" "${NET_PROTO_HDRS}")

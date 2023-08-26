@@ -1,8 +1,8 @@
 #include <roboteam_utils/Print.h>
-#include <roboteam_utils/Format.hpp>
 
 #include <RobotHubStatistics.hpp>
 #include <chrono>
+#include <roboteam_utils/Format.hpp>
 #include <sstream>
 
 namespace rtt::robothub {
@@ -127,9 +127,7 @@ std::string RobotHubStatistics::getRobotHubMode() const {
     return text;
 }
 
-std::string RobotHubStatistics::getAmountOfBasestations() const {
-    return formatString("%-9d", this->basestationManagerStatus.basestationCollection.amountOfBasestations);
-}
+std::string RobotHubStatistics::getAmountOfBasestations() const { return formatString("%-9d", this->basestationManagerStatus.basestationCollection.amountOfBasestations); }
 
 std::string RobotHubStatistics::getWantedBasestations() const {
     std::string basestations = wantedBasestationsToString(this->basestationManagerStatus.basestationCollection.wantedBasestations);

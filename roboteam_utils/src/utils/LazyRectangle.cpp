@@ -13,8 +13,8 @@ constexpr const unsigned int RIGHT = 0x02;
 constexpr const unsigned int BOTTOM = 0x04;
 constexpr const unsigned int TOP = 0x08;
 namespace rtt {
-    LazyRectangle::LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
-    LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
+LazyRectangle::LazyRectangle(const Vector2 &corner, const Vector2 &oppositeCorner) : corner1{corner}, corner2{oppositeCorner} {}
+LazyRectangle::LazyRectangle(const Vector2 &bottomLeft, double x, double y) : corner1{bottomLeft}, corner2{Vector2(bottomLeft.x + x, bottomLeft.y + y)} {}
 unsigned int LazyRectangle::CohenSutherlandCode(const Vector2 &point) const {
     double x = point.x;
     double y = point.y;
@@ -109,7 +109,7 @@ std::vector<Vector2> LazyRectangle::intersects(const LineSegment &line) const {
             } else if (codeOut & RIGHT) {  // point is to the right of clip window
                 y = y0 + (y1 - y0) * (right() - x0) / (x1 - x0);
                 x = right();
-            } else{  // point is to the left of clip window
+            } else {  // point is to the left of clip window
                 assert(codeOut & LEFT);
                 y = y0 + (y1 - y0) * (left() - x0) / (x1 - x0);
                 x = left();
@@ -144,10 +144,7 @@ bool LazyRectangle::doesIntersect(const LineSegment &line) const { return !inter
 // include the boundary for this calculation!
 bool LazyRectangle::contains(const Vector2 &point) const { return right() >= point.x && left() <= point.x && top() >= point.y && bottom() <= point.y; }
 
-Vector2 LazyRectangle::project(const Vector2 &point) const {
-    return {std::clamp(point.x, left(), right()),
-            std::clamp(point.y, bottom(), top())};
-}
+Vector2 LazyRectangle::project(const Vector2 &point) const { return {std::clamp(point.x, left(), right()), std::clamp(point.y, bottom(), top())}; }
 
 std::ostream &LazyRectangle::write(std::ostream &os) const { return os << "Rect: " << corner1 << corner2; }
 

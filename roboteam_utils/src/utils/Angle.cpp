@@ -59,13 +59,11 @@ Angle &Angle::operator-=(const Angle &other) noexcept {
     this->normalize();
     return *this;
 }
- Angle &Angle::operator=(double scalar) noexcept {
-        this->angle = scalar;
-        this->normalize();
-        return *this;
-    }
+Angle &Angle::operator=(double scalar) noexcept {
+    this->angle = scalar;
+    this->normalize();
+    return *this;
+}
 
-    double Angle::getValue() const noexcept {
-        return angle;
-    }
+double Angle::getValue() const noexcept { return angle; }
 }  // namespace rtt

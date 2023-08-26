@@ -41,8 +41,8 @@ struct CommandCollision {
 class WorldObjects {
    private:
     rtt::ai::GameStateManager gameStateManager; /**< Manages the different game states given by the referee and decides on rulesets accordingly */
-    rtt::ai::GameState gameState; /**< Current game state */
-    rtt::ai::RuleSet ruleset; /**< current set of rules that adhere to the current game state */
+    rtt::ai::GameState gameState;               /**< Current game state */
+    rtt::ai::RuleSet ruleset;                   /**< current set of rules that adhere to the current game state */
 
    public:
     /**
@@ -84,8 +84,7 @@ class WorldObjects {
      * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
      */
-    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
-                                        double timeStep);
+    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an

@@ -2,13 +2,12 @@
 
 #include <Angle.h>
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <optional>
 
 #include "HalfLine.h"
 #include "Line.h"
-
 #include "Print.h"
 
 namespace rtt {
@@ -16,9 +15,7 @@ double LineSegment::length() const { return (end - start).length(); }
 
 double LineSegment::length2() const { return (end - start).length2(); }
 
-Vector2 LineSegment::center() const {
-    return (this->start + this->end) / 2;
-}
+Vector2 LineSegment::center() const { return (this->start + this->end) / 2; }
 
 bool LineSegment::isPoint() const { return start == end; }
 
@@ -145,24 +142,21 @@ bool LineSegment::isOnFiniteLine(const Vector2 &point) const {
 
 bool LineSegment::operator==(const LineSegment &other) const { return ((start == other.start && end == other.end) || (start == other.end && end == other.start)); }
 
-Vector2 LineSegment::direction() const {
-    return end-start;
-}
+Vector2 LineSegment::direction() const { return end - start; }
 
 void LineSegment::move(const Vector2 &by) {
-    start+=by;
-    end+=by;
+    start += by;
+    end += by;
 }
 
-void LineSegment::rotate (const Angle angle, const Vector2 rotationPoint){
-
+void LineSegment::rotate(const Angle angle, const Vector2 rotationPoint) {
     Vector2 midpoint = rotationPoint;
 
-    Vector2 startNewMidpoint = Vector2 { start.x - midpoint.x, start.y - midpoint.y};
-    Vector2 endNewMidpoint = Vector2 { end.x - midpoint.x, end.y - midpoint.y};
+    Vector2 startNewMidpoint = Vector2{start.x - midpoint.x, start.y - midpoint.y};
+    Vector2 endNewMidpoint = Vector2{end.x - midpoint.x, end.y - midpoint.y};
 
-    Vector2 startRotated = Vector2 {(cos(angle)*startNewMidpoint.x - sin(angle)*startNewMidpoint.y), (sin(angle)*startNewMidpoint.x + cos(angle)*startNewMidpoint.y)};
-    Vector2 endRotated = Vector2 {(cos(angle)*endNewMidpoint.x - sin(angle)*endNewMidpoint.y), (sin(angle)*endNewMidpoint.x + cos(angle)*endNewMidpoint.y) };
+    Vector2 startRotated = Vector2{(cos(angle) * startNewMidpoint.x - sin(angle) * startNewMidpoint.y), (sin(angle) * startNewMidpoint.x + cos(angle) * startNewMidpoint.y)};
+    Vector2 endRotated = Vector2{(cos(angle) * endNewMidpoint.x - sin(angle) * endNewMidpoint.y), (sin(angle) * endNewMidpoint.x + cos(angle) * endNewMidpoint.y)};
 
     startRotated.x += midpoint.x;
     startRotated.y += midpoint.y;
@@ -217,7 +211,7 @@ std::optional<Vector2> LineSegment::firstIntersects(const LineSegment &line) con
                 }
             } else {
                 // we return the point closest to the start of p
-                return p + r * fmax(fmin(t0,t1),0);
+                return p + r * fmax(fmin(t0, t1), 0);
             }
             return std::nullopt;  // there was no intersection with the interval [0,1] so the lineas are colinear but have no overlap
         } else {
@@ -235,7 +229,7 @@ std::optional<Vector2> LineSegment::firstIntersects(const LineSegment &line) con
     }
     return std::nullopt;
 }
-bool LineSegment::preciseDoesIntersect(const LineSegment&line) const{
+bool LineSegment::preciseDoesIntersect(const LineSegment &line) const {
     Vector2 p = start, q = line.start, r = direction(), s = line.direction();
     double denom = r.cross(s);
     double numer = (q - p).cross(r);

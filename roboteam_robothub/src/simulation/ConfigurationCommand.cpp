@@ -54,12 +54,8 @@ void ConfigurationCommand::addRobotSpecs(int id, rtt::Team color, RobotPropertie
     specs->mutable_wheel_angles()->set_front_left(robotProperties.frontLeftWheelAngle);
 }
 
-void ConfigurationCommand::setVisionPort(int port) { 
-    this->configurationCommand.mutable_config()->set_vision_port(port); 
-}
+void ConfigurationCommand::setVisionPort(int port) { this->configurationCommand.mutable_config()->set_vision_port(port); }
 
-proto::simulation::SimulatorCommand& ConfigurationCommand::getPacket() { 
-    return this->configurationCommand; 
-}
+proto::simulation::SimulatorCommand& ConfigurationCommand::getPacket() { return this->configurationCommand; }
 
 }  // namespace rtt::robothub::simulation

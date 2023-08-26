@@ -4,15 +4,14 @@
 
 #include "stp/plays/offensive/ChippingPass.h"
 
-
 #include <roboteam_utils/LineSegment.h>
 
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/constants/ControlConstants.h"
 #include "stp/roles/Keeper.h"
-#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/active/Chipper.h"
+#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
 #include "world/views/RobotView.hpp"
@@ -47,7 +46,7 @@ uint8_t ChippingPass::score(const rtt::Field& field) noexcept {
 
     if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
 
-    return stp::computations::PassComputations:: scorePass(passInfo, world, field);
+    return stp::computations::PassComputations::scorePass(passInfo, world, field);
 }
 
 Dealer::FlagMap ChippingPass::decideRoleFlags() const noexcept {
@@ -92,7 +91,7 @@ void ChippingPass::calculateInfoForRoles() noexcept {
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        
+
         // Passer now goes to a front grid, where the receiver is not
         if (receiverLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
             stpInfos["passer"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::BlockingPosition, field, world));
@@ -119,11 +118,13 @@ void ChippingPass::calculateInfoForRoles() noexcept {
     }
 
     if (enemyMap.size() < 3) {
-        stpInfos["pass_defender_1"].setPositionToDefend(Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_2"].setPositionToDefend(Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2, field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
-    }
-    else {
+        stpInfos["pass_defender_1"].setPositionToDefend(
+            Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(
+            Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
+                                                                field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
+    } else {
         stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
         enemyMap.erase(enemyMap.begin());
         stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
@@ -177,7 +178,7 @@ void ChippingPass::calculateInfoForAttackers() noexcept {
     }
 }
 
-bool ChippingPass::ballKicked() { //Also for ball chipped
+bool ChippingPass::ballKicked() {  // Also for ball chipped
     // TODO: create better way of checking when ball has been kicked
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {
         return role != nullptr && role->getName() == "passer" && strcmp(role->getCurrentTactic()->getName(), "Formation") == 0;

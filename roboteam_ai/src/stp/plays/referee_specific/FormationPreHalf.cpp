@@ -32,7 +32,6 @@ uint8_t FormationPreHalf::score(const rtt::Field& field) noexcept {
 }
 
 void FormationPreHalf::calculateInfoForRoles() noexcept {
-
     auto height = field.playArea.height();
     auto width = field.playArea.width();
     // Keeper

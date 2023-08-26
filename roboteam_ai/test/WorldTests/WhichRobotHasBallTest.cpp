@@ -134,7 +134,6 @@ TEST(worldTest, NoRobotHasBall) {
 
     std::optional<rtt::world::view::RobotView> robot;
 
-
     /** Test 1.4 : both, all out of range */
     robot = world->whichRobotHasBall(rtt::world::Team::both);
     EXPECT_FALSE(robot.has_value());

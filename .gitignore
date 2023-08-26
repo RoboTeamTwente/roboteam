@@ -1,7 +1,7 @@
 .idea/
 cmake-build-debug/
 cmake-build-release/
-build/
+build*/
 /.vscode
 .DS_Store
 
@@ -20,8 +20,8 @@ lerna-debug.log*
 
 # Interface files
 node_modules
-/roboteam_interface_vue/node_modules/
-/roboteam_interface_vue/src-tauri/target/
+/roboteam_interface/node_modules/
+/roboteam_interface/src-tauri/target/
 *.local
 dist-ssr
 

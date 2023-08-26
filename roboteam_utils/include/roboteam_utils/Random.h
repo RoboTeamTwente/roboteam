@@ -1,6 +1,6 @@
 #pragma once
-#include <random>
 #include <iterator>
+#include <random>
 
 class Time;
 
@@ -30,7 +30,7 @@ class Random {
 /* This class will generate a simple random value, meant for testing.
  * Warning: This does not give true random values, but predictable ones. */
 class SimpleRandom {
-public:
+   public:
     // Returns a random integer within the given range
     static int getInt(int low, int high);
     // Returns a random integer;
@@ -54,8 +54,7 @@ public:
     template <class Iterator>
     static Iterator getRandomElement(Iterator start, Iterator end) {
         auto dist = std::distance(start, end);
-        if (dist == 0)
-            return end;
+        if (dist == 0) return end;
         auto randomPosition = SimpleRandom::getLong(0, dist - 1);
         std::advance(start, randomPosition);
         return start;

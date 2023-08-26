@@ -1,7 +1,8 @@
 #include "Random.h"
-#include "Time.h"
 
 #include <limits>
+
+#include "Time.h"
 
 Random::Random(long seed) : engine(seed) {}
 
@@ -39,9 +40,7 @@ int SimpleRandom::getInt(int low, int high) {
     return distribution(engine);
 }
 
-int SimpleRandom::getInt() {
-    return SimpleRandom::getInt(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-}
+int SimpleRandom::getInt() { return SimpleRandom::getInt(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()); }
 
 long SimpleRandom::getLong(long low, long high) {
     std::uniform_int_distribution<long> distribution(low, high);
@@ -50,10 +49,6 @@ long SimpleRandom::getLong(long low, long high) {
     return distribution(engine);
 }
 
-long SimpleRandom::getLong() {
-    return SimpleRandom::getLong(std::numeric_limits<long>::min(), std::numeric_limits<long>::max());
-}
+long SimpleRandom::getLong() { return SimpleRandom::getLong(std::numeric_limits<long>::min(), std::numeric_limits<long>::max()); }
 
-bool SimpleRandom::getBool() {
-    return static_cast<bool>(SimpleRandom::getInt(0, 1));
-}
+bool SimpleRandom::getBool() { return static_cast<bool>(SimpleRandom::getInt(0, 1)); }

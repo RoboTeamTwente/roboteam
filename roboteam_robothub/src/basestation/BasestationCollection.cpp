@@ -10,7 +10,7 @@
 
 namespace rtt::robothub::basestation {
 
-constexpr int TIME_UNTIL_BASESTATION_IS_UNWANTED_S = 1;        // 1 second with no interaction
+constexpr int TIME_UNTIL_BASESTATION_IS_UNWANTED_S = 1;         // 1 second with no interaction
 constexpr int BASESTATION_SELECTION_UPDATE_FREQUENCY_MS = 420;  // Why 420? No reason at all...
 
 BasestationCollection::BasestationCollection() {
@@ -66,7 +66,7 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
         if (!deviceIsInBasestationList(pluggedBasestationDevice, this->basestations)) {
             // This basestation device is plugged in but not in our list -> add it
             RTT_DEBUG("Adding plugged-in basestation")
-            
+
             try {
                 auto newBasestation = std::make_shared<Basestation>(pluggedBasestationDevice);
                 newBasestation->setIncomingMessageCallback(callbackForNewBasestations);
@@ -74,7 +74,7 @@ void BasestationCollection::addNewBasestations(const std::vector<libusb_device*>
                 // Lock the basestations list so we can safely add this basestation
                 std::scoped_lock<std::mutex> lock(this->basestationsMutex);
                 this->basestations.push_back(newBasestation);
-            } catch (const FailedToOpenDeviceException &e) {
+            } catch (const FailedToOpenDeviceException& e) {
                 RTT_ERROR(e.what())
                 RTT_INFO("Did you edit your PC's user permissions?")
             }
@@ -96,9 +96,7 @@ int BasestationCollection::sendMessageToBasestation(BasestationMessage& message,
     return bytesSent;
 }
 
-void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback) {
-    this->messageFromBasestationCallback = callback;
-}
+void BasestationCollection::setIncomingMessageCallback(std::function<void(const BasestationMessage&, rtt::Team)> callback) { this->messageFromBasestationCallback = callback; }
 
 BasestationCollectionStatus BasestationCollection::getStatus() const {
     const BasestationCollectionStatus status{.wantedBasestations = this->getWantedBasestations(),
@@ -242,7 +240,7 @@ void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     getConfigurationMessage.fromPC = true;
     getConfigurationMessage.remVersion = REM_LOCAL_VERSION;
     getConfigurationMessage.payloadSize = REM_PACKET_SIZE_REM_BASESTATION_GET_CONFIGURATION;
-    
+
     REM_BasestationGetConfigurationPayload getConfigurationPayload;
     encodeREM_BasestationGetConfiguration(&getConfigurationPayload, &getConfigurationMessage);
 
@@ -446,26 +444,26 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
-    uint64_t type = (uint64_t) message.payloadBuffer[0];
-    if(type != 36 && type != 39 && type != 43){
-        RTT_INFO("onMessageFromBasestation() REM = ",  (uint64_t) message.payloadBuffer[0])
+    uint64_t type = (uint64_t)message.payloadBuffer[0];
+    if (type != 36 && type != 39 && type != 43) {
+        RTT_INFO("onMessageFromBasestation() REM = ", (uint64_t)message.payloadBuffer[0])
     }
-    
+
     // If this message contains what channel the basestation has, parse it and update our map
-    REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
-    
+    REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
+
     if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
-        uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel( (REM_BasestationConfigurationPayload*) message.payloadBuffer );
+        uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel((REM_BasestationConfigurationPayload*)message.payloadBuffer);
         WirelessChannel basestation_channel = BasestationCollection::remChannelToWirelessChannel(basestation_channel_rem);
         this->setChannelOfBasestation(basestationId, basestation_channel);
     }
 
-    if(REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG){
-        REM_LogPayload* logPayload = (REM_LogPayload*) message.payloadBuffer;
+    if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG) {
+        REM_LogPayload* logPayload = (REM_LogPayload*)message.payloadBuffer;
         uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
-        char* charstring = (char*) &message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];
+        char* charstring = (char*)&message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];
         std::string str = std::string(charstring, message_length);
-        std::cout << "[BS]" << str; // Logs should always end with \n, so no std::endl needed
+        std::cout << "[BS]" << str;  // Logs should always end with \n, so no std::endl needed
     }
 
     // This function can be called by multiple basestations simultaneously, so protect it with a mutex
@@ -547,7 +545,8 @@ bool BasestationCollection::wirelessChannelToREMChannel(WirelessChannel channel)
         case WirelessChannel::BLUE_CHANNEL:
             remChannel = true;
             break;
-        case WirelessChannel::YELLOW_CHANNEL: default:
+        case WirelessChannel::YELLOW_CHANNEL:
+        default:
             remChannel = false;
             break;
     }

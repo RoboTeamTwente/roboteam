@@ -4,45 +4,39 @@
 
 #include "filters/vision/RobotFeedbackFilter.h"
 
-void RobotFeedbackFilter::process(const std::vector<rtt::RobotsFeedback> &feedback) {
-    for(const auto& message : feedback){
+void RobotFeedbackFilter::process(const std::vector<rtt::RobotsFeedback>& feedback) {
+    for (const auto& message : feedback) {
         auto& map = message.team == rtt::Team::YELLOW ? yellowMap : blueMap;
 
-        for(const auto& robotFeedback : message.feedback) {
+        for (const auto& robotFeedback : message.feedback) {
             RobotID id(robotFeedback.id);
             auto iterator = map.find(id);
-            if(iterator == map.end()){
-                map.emplace(id,robotFeedback);
-            }else{
+            if (iterator == map.end()) {
+                map.emplace(id, robotFeedback);
+            } else {
                 iterator->second.process(robotFeedback);
             }
         }
     }
-
 }
 
-std::vector<std::pair<TeamRobotID,proto::RobotProcessedFeedback>> RobotFeedbackFilter::getRecentFeedback() const{
-    std::vector<std::pair<TeamRobotID,proto::RobotProcessedFeedback>> feedbackVec;
-    for (const auto& [id,robot] : blueMap){
-        feedbackVec.emplace_back(TeamRobotID(id.robotID,TeamColor::BLUE),robot.getFilteredFeedback());
+std::vector<std::pair<TeamRobotID, proto::RobotProcessedFeedback>> RobotFeedbackFilter::getRecentFeedback() const {
+    std::vector<std::pair<TeamRobotID, proto::RobotProcessedFeedback>> feedbackVec;
+    for (const auto& [id, robot] : blueMap) {
+        feedbackVec.emplace_back(TeamRobotID(id.robotID, TeamColor::BLUE), robot.getFilteredFeedback());
     }
-    for (const auto& [id,robot] : yellowMap){
-        feedbackVec.emplace_back(TeamRobotID(id.robotID,TeamColor::YELLOW),robot.getFilteredFeedback());
+    for (const auto& [id, robot] : yellowMap) {
+        feedbackVec.emplace_back(TeamRobotID(id.robotID, TeamColor::YELLOW), robot.getFilteredFeedback());
     }
     return feedbackVec;
 }
 
-//For now very simple, simply stores feedback
-SingleRobotFeedbackFilter::SingleRobotFeedbackFilter(const rtt::RobotFeedback &feedback) : storedFeedback{feedback}{
+// For now very simple, simply stores feedback
+SingleRobotFeedbackFilter::SingleRobotFeedbackFilter(const rtt::RobotFeedback& feedback) : storedFeedback{feedback} {}
 
-}
+void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback& feedback) { storedFeedback = feedback; }
 
-void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback &feedback) {
-    storedFeedback = feedback;
-}
-
-
-//TODO: now just returns last received feedback: use timestamps and some cutoff limit to prevent sending old feedback
+// TODO: now just returns last received feedback: use timestamps and some cutoff limit to prevent sending old feedback
 proto::RobotProcessedFeedback SingleRobotFeedbackFilter::getFilteredFeedback() const {
     proto::RobotProcessedFeedback feedback;
     feedback.set_ball_sensor_sees_ball(storedFeedback.ballSensorSeesBall);
@@ -54,7 +48,7 @@ proto::RobotProcessedFeedback SingleRobotFeedbackFilter::getFilteredFeedback() c
     feedback.set_signal_strength(storedFeedback.signalStrength);
     feedback.set_capacitor_is_charged(storedFeedback.capacitorIsCharged);
 
-    //TODO: wheel ordering? which bit corresponds to which wheel?
+    // TODO: wheel ordering? which bit corresponds to which wheel?
     feedback.mutable_wheelinformation()->mutable_rightfront()->set_braking(storedFeedback.wheelBraking & 1);
     feedback.mutable_wheelinformation()->mutable_rightfront()->set_locked(storedFeedback.wheelLocked & 1);
 

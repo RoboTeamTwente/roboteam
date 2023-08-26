@@ -11,6 +11,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "REM_BaseTypes.h"
 
 typedef struct _REM_SX1280FillerPayload {
@@ -18,34 +19,28 @@ typedef struct _REM_SX1280FillerPayload {
 } REM_SX1280FillerPayload;
 
 typedef struct _REM_SX1280Filler {
-    uint32_t   header              ; // integer [0, 255]             Header byte indicating the type of packet
-    uint32_t   remVersion          ; // integer [0, 15]              Version of roboteam_embedded_messages
-    uint64_t   fillerBits          ; // integer [0, 68719476735]     SX1280 requires a minimum of 6 bytes payload. See documentation page 124.
+    uint32_t header;      // integer [0, 255]             Header byte indicating the type of packet
+    uint32_t remVersion;  // integer [0, 15]              Version of roboteam_embedded_messages
+    uint64_t fillerBits;  // integer [0, 68719476735]     SX1280 requires a minimum of 6 bytes payload. See documentation page 124.
 } REM_SX1280Filler;
 
 // ================================ GETTERS ================================
-static inline uint32_t REM_SX1280Filler_get_header(REM_SX1280FillerPayload *remsxfp){
-    return ((remsxfp->payload[0]));
-}
+static inline uint32_t REM_SX1280Filler_get_header(REM_SX1280FillerPayload *remsxfp) { return ((remsxfp->payload[0])); }
 
-static inline uint32_t REM_SX1280Filler_get_remVersion(REM_SX1280FillerPayload *remsxfp){
-    return ((remsxfp->payload[1] & 0b11110000) >> 4);
-}
+static inline uint32_t REM_SX1280Filler_get_remVersion(REM_SX1280FillerPayload *remsxfp) { return ((remsxfp->payload[1] & 0b11110000) >> 4); }
 
-static inline uint64_t REM_SX1280Filler_get_fillerBits(REM_SX1280FillerPayload *remsxfp){
+static inline uint64_t REM_SX1280Filler_get_fillerBits(REM_SX1280FillerPayload *remsxfp) {
     return ((remsxfp->payload[1] & 0b00001111) << 32) | ((remsxfp->payload[2]) << 24) | ((remsxfp->payload[3]) << 16) | ((remsxfp->payload[4]) << 8) | ((remsxfp->payload[5]));
 }
 
 // ================================ SETTERS ================================
-static inline void REM_SX1280Filler_set_header(REM_SX1280FillerPayload *remsxfp, uint32_t header){
-    remsxfp->payload[0] = header;
-}
+static inline void REM_SX1280Filler_set_header(REM_SX1280FillerPayload *remsxfp, uint32_t header) { remsxfp->payload[0] = header; }
 
-static inline void REM_SX1280Filler_set_remVersion(REM_SX1280FillerPayload *remsxfp, uint32_t remVersion){
+static inline void REM_SX1280Filler_set_remVersion(REM_SX1280FillerPayload *remsxfp, uint32_t remVersion) {
     remsxfp->payload[1] = ((remVersion << 4) & 0b11110000) | (remsxfp->payload[1] & 0b00001111);
 }
 
-static inline void REM_SX1280Filler_set_fillerBits(REM_SX1280FillerPayload *remsxfp, uint64_t fillerBits){
+static inline void REM_SX1280Filler_set_fillerBits(REM_SX1280FillerPayload *remsxfp, uint64_t fillerBits) {
     remsxfp->payload[1] = ((fillerBits >> 32) & 0b00001111) | (remsxfp->payload[1] & 0b11110000);
     remsxfp->payload[2] = (fillerBits >> 24);
     remsxfp->payload[3] = (fillerBits >> 16);
@@ -54,17 +49,17 @@ static inline void REM_SX1280Filler_set_fillerBits(REM_SX1280FillerPayload *rems
 }
 
 // ================================ ENCODE ================================
-static inline void encodeREM_SX1280Filler(REM_SX1280FillerPayload *remsxfp, REM_SX1280Filler *remsxf){
-    REM_SX1280Filler_set_header              (remsxfp, remsxf->header);
-    REM_SX1280Filler_set_remVersion          (remsxfp, remsxf->remVersion);
-    REM_SX1280Filler_set_fillerBits          (remsxfp, remsxf->fillerBits);
+static inline void encodeREM_SX1280Filler(REM_SX1280FillerPayload *remsxfp, REM_SX1280Filler *remsxf) {
+    REM_SX1280Filler_set_header(remsxfp, remsxf->header);
+    REM_SX1280Filler_set_remVersion(remsxfp, remsxf->remVersion);
+    REM_SX1280Filler_set_fillerBits(remsxfp, remsxf->fillerBits);
 }
 
 // ================================ DECODE ================================
-static inline void decodeREM_SX1280Filler(REM_SX1280Filler *remsxf, REM_SX1280FillerPayload *remsxfp){
-    remsxf->header       = REM_SX1280Filler_get_header(remsxfp);
-    remsxf->remVersion   = REM_SX1280Filler_get_remVersion(remsxfp);
-    remsxf->fillerBits   = REM_SX1280Filler_get_fillerBits(remsxfp);
+static inline void decodeREM_SX1280Filler(REM_SX1280Filler *remsxf, REM_SX1280FillerPayload *remsxfp) {
+    remsxf->header = REM_SX1280Filler_get_header(remsxfp);
+    remsxf->remVersion = REM_SX1280Filler_get_remVersion(remsxfp);
+    remsxf->fillerBits = REM_SX1280Filler_get_fillerBits(remsxfp);
 }
 
 #endif /*__REM_SX1280FILLER_H*/

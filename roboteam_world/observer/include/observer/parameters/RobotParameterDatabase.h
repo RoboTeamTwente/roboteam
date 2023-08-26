@@ -5,8 +5,9 @@
 #ifndef RTT_ROBOTPARAMETERDATABASE_H
 #define RTT_ROBOTPARAMETERDATABASE_H
 #include <proto/messages_robocup_ssl_referee.pb.h>
+
 #include "observer/data/RobotParameters.h"
-struct TwoTeamRobotParameters{
+struct TwoTeamRobotParameters {
     bool blueChanged = false;
     bool yellowChanged = false;
     RobotParameters blueParameters;
@@ -15,17 +16,17 @@ struct TwoTeamRobotParameters{
     [[nodiscard]] proto::TeamParameters blueTeamProto() const;
 };
 class RobotParameterDatabase {
-public:
+   public:
     TwoTeamRobotParameters update(const proto::SSL_Referee& refMessage);
     [[nodiscard]] TwoTeamRobotParameters getParams() const;
 
     static RobotParameters getTeamParameters(const std::string& teamName);
-private:
+
+   private:
     std::string blueName;
     RobotParameters blueParameters;
     std::string yellowName;
     RobotParameters yellowParameters;
 };
 
-
-#endif //RTT_ROBOTPARAMETERDATABASE_H
+#endif  // RTT_ROBOTPARAMETERDATABASE_H

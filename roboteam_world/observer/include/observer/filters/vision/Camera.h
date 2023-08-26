@@ -5,8 +5,9 @@
 #ifndef RTT_CAMERA_H
 #define RTT_CAMERA_H
 
-#include <Eigen/Dense>
 #include <proto/messages_robocup_ssl_geometry.pb.h>
+
+#include <Eigen/Dense>
 
 /**
  * @author Rolf
@@ -14,7 +15,7 @@
  * Note that one should be careful handling units with this class, as the internal implementation mirrors that of ssl-vision, which is in mm.
  */
 class Camera {
-public:
+   public:
     /**
      * @brief Construct a camera from the calibration data received in a ssl-vision message
      */
@@ -38,7 +39,7 @@ public:
      * @param planeHeight height of the plane,
      * @return The vector in meters on the plane
      */
-    [[nodiscard]] Eigen::Vector2d linearProjectToHorizontalPlane(const Eigen::Vector3d& objectPos,double planeHeight) const;
+    [[nodiscard]] Eigen::Vector2d linearProjectToHorizontalPlane(const Eigen::Vector3d& objectPos, double planeHeight) const;
     /**
      * @brief !! Position is in millimeters, NOT meters!!
      * Checks if the position is visible. The marginFactor is subtracted from the image boundaries in pixels on each side
@@ -66,15 +67,14 @@ public:
      */
     [[nodiscard]] Eigen::Vector3d imageToField(const Eigen::Vector2d& imagePoint, double assumedHeight) const;
 
-
-
-private:
+   private:
     [[nodiscard]] Eigen::Vector2d radialDistortion(Eigen::Vector2d& imagePoint) const;
     [[nodiscard]] double radialDistortion(double radius) const;
     [[nodiscard]] double radialDistortionInv(double radius) const;
     [[nodiscard]] Eigen::Vector2d radialDistortionInv(Eigen::Vector2d& imagePoint) const;
 
-    static double rayPlaneIntersection(const Eigen::Vector3d& planeOrigin,const Eigen::Vector3d& planeNormal,const Eigen::Vector3d& rayOrigin,const Eigen::Vector3d& rayDirection);
+    static double rayPlaneIntersection(const Eigen::Vector3d& planeOrigin, const Eigen::Vector3d& planeNormal, const Eigen::Vector3d& rayOrigin,
+                                       const Eigen::Vector3d& rayDirection);
     unsigned int id;
     Eigen::Vector3d pos;
     Eigen::Vector3d translation;
@@ -86,5 +86,4 @@ private:
     int imageHeight;
 };
 
-
-#endif //RTT_CAMERA_H
+#endif  // RTT_CAMERA_H

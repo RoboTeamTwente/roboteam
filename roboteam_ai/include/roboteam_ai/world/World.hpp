@@ -53,7 +53,7 @@ class World {
     template <typename T>
     struct AcquireInfo {
         std::lock_guard<std::mutex> mtx; /**< Lock guard for the info */
-        T *data; /**< Pointer to the type of data to lock */
+        T *data;                         /**< Pointer to the type of data to lock */
     };
 
    public:
@@ -99,7 +99,6 @@ class World {
      * behavior due to uninitialized memory
      */
     explicit World();
-
 
     /**
      * @brief Updates the currentWorld
@@ -195,14 +194,14 @@ class World {
      */
     void toHistory(WorldData &world) noexcept;
 
-    std::mutex updateMutex; /**< Mutex used when constructing robots to prevent updating of updateMap without wanting it */
-    std::vector<rtt::world::WorldData> history; /**< History of the world, this is where old world data is pushed to */
-    size_t currentIndex{0}; /**< Current index into the circular buffer that is the world history */
+    std::mutex updateMutex;                               /**< Mutex used when constructing robots to prevent updating of updateMap without wanting it */
+    std::vector<rtt::world::WorldData> history;           /**< History of the world, this is where old world data is pushed to */
+    size_t currentIndex{0};                               /**< Current index into the circular buffer that is the world history */
     std::optional<WorldData> currentWorld = std::nullopt; /**< Current world, None if no world has been constructed yet, Some if a world is valid */
-    std::optional<Field> currentField; /**< The current field data */
-    uint64_t lastTick; /**< Timestamp of the last tick */
-    uint64_t tickDuration{}; /**< Duration between ticks */
-    ai::control::PositionControl positionControl; /**< The position controller, initially null */
+    std::optional<Field> currentField;                    /**< The current field data */
+    uint64_t lastTick;                                    /**< Timestamp of the last tick */
+    uint64_t tickDuration{};                              /**< Duration between ticks */
+    ai::control::PositionControl positionControl;         /**< The position controller, initially null */
 };
 }  // namespace rtt::world
 

@@ -62,10 +62,12 @@ std::vector<LineSegment> FieldComputations::getVisiblePartsOfGoal(const rtt::Fie
     return visibleParts;
 }
 
-double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) { return ourGoal ? field.leftGoalArea.rightLine().distanceToLine(point) : field.rightGoalArea.leftLine().distanceToLine(point); }
+double FieldComputations::getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point) {
+    return ourGoal ? field.leftGoalArea.rightLine().distanceToLine(point) : field.rightGoalArea.leftLine().distanceToLine(point);
+}
 
-std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd,
-                                                                            double margin, bool ignoreGoalLine) {
+std::shared_ptr<Vector2> FieldComputations::lineIntersectionWithDefenseArea(const rtt::Field &field, bool ourGoal, const Vector2 &lineStart, const Vector2 &lineEnd, double margin,
+                                                                            bool ignoreGoalLine) {
     auto defenseArea = getDefenseArea(field, ourGoal, margin, field.boundaryWidth);
 
     std::vector<Vector2> intersections;
@@ -142,7 +144,6 @@ Polygon FieldComputations::getDefenseArea(const rtt::Field &field, bool ourDefen
     topPenalty = ourDefenseArea ? topPenalty + Vector2(margin, margin) : topPenalty + Vector2(-margin, margin);
 
     std::vector<Vector2> defenseArea = {belowGoal, bottomPenalty, topPenalty, aboveGoal};
-    //interface::Input::drawDebugData(defenseArea);
     return {defenseArea};
 }
 
@@ -154,14 +155,12 @@ Polygon FieldComputations::getGoalArea(const rtt::Field &field, bool ourGoal, do
     Vector2 outerTopGoal = ourGoal ? field.leftGoalArea.topRight() + Vector2(margin, margin) : field.rightGoalArea.topLeft() + Vector2(-margin, margin);
 
     std::vector<Vector2> goalArea = {outerBottomGoal, innerBottomGoal, innerTopGoal, outerTopGoal};
-    //interface::Input::drawDebugData(goalArea, ourGoal ? Qt::green : Qt::red, interface::Drawing::LINES_CONNECTED);
     return Polygon(goalArea);
 }
 
 Polygon FieldComputations::getFieldEdge(const rtt::Field &field, double margin) {
     std::vector<Vector2> fieldEdge = {field.playArea.bottomLeft() + Vector2(-margin, -margin), field.playArea.topLeft() + Vector2(-margin, margin),
                                       field.playArea.topRight() + Vector2(margin, margin), field.playArea.bottomRight() + Vector2(margin, -margin)};
-    //interface::Input::drawDebugData(fieldEdge, Qt::red, interface::Drawing::LINES_CONNECTED);
     return Polygon(fieldEdge);
 }
 

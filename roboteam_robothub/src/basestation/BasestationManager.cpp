@@ -1,9 +1,10 @@
+#include <REM_BaseTypes.h>
+#include <REM_Log.h>
+#include <REM_Packet.h>
+#include <roboteam_utils/Print.h>
+
 #include <basestation/BasestationManager.hpp>
 #include <cstring>
-#include <REM_BaseTypes.h>
-#include <REM_Packet.h>
-#include <REM_Log.h>
-#include <roboteam_utils/Print.h>
 #include <sstream>
 
 namespace rtt::robothub::basestation {
@@ -106,11 +107,11 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
 }
 
 void BasestationManager::handleIncomingMessage(const BasestationMessage& message, rtt::Team color) const {
-    REM_PacketPayload* packetPayload = (REM_PacketPayload*) message.payloadBuffer;
+    REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
     uint32_t payloadSize = REM_Packet_get_payloadSize(packetPayload);
     uint8_t packetType = REM_Packet_get_header(packetPayload);
 
-    if(message.payloadSize != payloadSize) {
+    if (message.payloadSize != payloadSize) {
         RTT_ERROR("Payload size of message does not match the size specified in the packet header. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);
         return;
     }
@@ -142,15 +143,15 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
 
             REM_Log log;
             decodeREM_Log(&log, &payload);
-            
+
             uint32_t logLength = message.payloadSize - REM_PACKET_SIZE_REM_LOG;
-            
-            static constexpr int charsToSkip = 1; // We skip the last character of log messages, as its always a '\n'
+
+            static constexpr int charsToSkip = 1;  // We skip the last character of log messages, as its always a '\n'
 
             // Convert the received log bytes into a string
             std::ostringstream oss;
             for (int i = REM_PACKET_SIZE_REM_LOG; i < message.payloadSize - charsToSkip; i++) {
-                oss << static_cast<char>(message.payloadBuffer[i]); // Convert uint32_t byte to char and store in stream
+                oss << static_cast<char>(message.payloadBuffer[i]);  // Convert uint32_t byte to char and store in stream
             }
             std::string logMessage = oss.str();
 
@@ -174,7 +175,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
             RTT_WARNING("Unhandled basestation message: ", packetType)
             break;
         }
-        // TODO: Other packets can be handled as well
+            // TODO: Other packets can be handled as well
     }
 }
 

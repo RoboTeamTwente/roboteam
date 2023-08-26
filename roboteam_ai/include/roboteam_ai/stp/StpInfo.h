@@ -6,10 +6,10 @@
 #define RTT_STPINFO_H
 
 #include <optional>
+#include <roboteam_utils/Field.hpp>
 
 #include "constants/GeneralizationConstants.h"
 #include "utilities/StpInfoEnums.h"
-#include <roboteam_utils/Field.hpp>
 #include "world/views/BallView.hpp"
 #include "world/views/RobotView.hpp"
 

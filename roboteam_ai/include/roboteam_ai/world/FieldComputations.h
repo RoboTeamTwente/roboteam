@@ -6,13 +6,12 @@
 
 #include <cmath>
 #include <mutex>
+#include <roboteam_utils/Field.hpp>
 
 #include "control/ControlUtils.h"
-#include "interface/api/Input.h"
 #include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"
-#include <roboteam_utils/Field.hpp>
 
 namespace rtt::world::view {
 class WorldDataView;
@@ -29,8 +28,8 @@ namespace rtt::ai {
  */
 class FieldComputations {
    private:
-    static constexpr double NEGLIGIBLE_LENGTH = 0.000001;  /**< If a line length is below or equal to this threshold then is it neglected during determining the blockades. */
-    static constexpr double PROJECTION_MARGIN = 0.02;  /**< Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections */
+    static constexpr double NEGLIGIBLE_LENGTH = 0.000001; /**< If a line length is below or equal to this threshold then is it neglected during determining the blockades. */
+    static constexpr double PROJECTION_MARGIN = 0.02;     /**< Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections */
 
    public:
     /**
@@ -147,8 +146,8 @@ class FieldComputations {
     static double getDistanceToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point);
 
     /**
-     * @brief Determine the intersection between a LineSegment and the boundary of the defence area and return the intersection point closest to the start of the line (if the LineSegment
-     * does not intersect then return a null pointer).
+     * @brief Determine the intersection between a LineSegment and the boundary of the defence area and return the intersection point closest to the start of the line (if the
+     * LineSegment does not intersect then return a null pointer).
      * @param field The field used to determine where the defence area is located.
      * @param ourGoal True if we want to compute the intersection with our defence area, false if we compute this for the opponents defence area.
      * @param lineStart The location of the start of the LineSegment.
@@ -229,8 +228,8 @@ class FieldComputations {
      * blockades).
      * @return All the parts of the goal that are blocked.
      */
-    static std::vector<LineSegment> getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
-                                                             const std::vector<rtt::world::view::RobotView> &robots, int id = -1, bool ourTeam = false);
+    static std::vector<LineSegment> getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point, const std::vector<rtt::world::view::RobotView> &robots,
+                                                             int id = -1, bool ourTeam = false);
 
     /**
      * @brief Check whether a given robot really blocks a part of the goal (which is not the case if the robot belongs to a given team or if the robot has a given id) and if so

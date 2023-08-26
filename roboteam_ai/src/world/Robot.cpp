@@ -4,10 +4,10 @@
 
 #include "world/Robot.hpp"
 
+#include "roboteam_utils/Print.h"
 #include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
-#include "roboteam_utils/Print.h"
 
 namespace rtt::world::robot {
 Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional<view::BallView> ball)
@@ -66,9 +66,9 @@ void Robot::setWorkingBallSensor(bool _workingBallSensor) noexcept { Robot::work
 
 void Robot::setBallSensorSeesBall(bool _seesBall) noexcept { ballSensorSeesBall = _seesBall; }
 
-void Robot::setDribblerSeesBall(bool _seesBall) noexcept { 
-    if(_seesBall) RTT_INFO("Robot " + std::to_string(id) + " has ball")
-    dribblerSeesBall = _seesBall; 
+void Robot::setDribblerSeesBall(bool _seesBall) noexcept {
+    if (_seesBall) RTT_INFO("Robot " + std::to_string(id) + " has ball")
+    dribblerSeesBall = _seesBall;
 }
 
 void Robot::setHasBall(bool _hasBall) noexcept { Robot::robotHasBall = _hasBall; }

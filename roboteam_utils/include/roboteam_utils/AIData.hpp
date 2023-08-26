@@ -1,9 +1,9 @@
 #pragma once
 
+#include <roboteam_utils/Vector2.h>
+
 #include <string>
 #include <vector>
-
-#include <roboteam_utils/Vector2.h>
 
 namespace rtt {
 
@@ -33,4 +33,4 @@ typedef struct AIData {
     bool operator==(const AIData& other) const;
 } AIData;
 
-} // namespace rtt
+}  // namespace rtt

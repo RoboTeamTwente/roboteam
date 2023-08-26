@@ -5,7 +5,7 @@
 #include "Grid.h"
 namespace rtt {
 
-const Grid DEFAULT_GRID(0, 0, 3, 3, 3, 3); // A Default grid, starting at (0, 0) with 3x3=9 elements
+const Grid DEFAULT_GRID(0, 0, 3, 3, 3, 3);  // A Default grid, starting at (0, 0) with 3x3=9 elements
 
 Grid::Grid(double offSetX, double offSetY, double regionWidth, double regionHeight, int numPointsX, int numPointsY)
     : offSetX{offSetX}, offSetY{offSetY}, regionHeight{regionHeight}, regionWidth{regionWidth}, numPointsX{numPointsX}, numPointsY{numPointsY} {
@@ -60,12 +60,8 @@ double Grid::getStepSizeX() const { return stepSizeX; }
 double Grid::getStepSizeY() const { return stepSizeY; }
 
 bool Grid::operator==(const Grid &other) const {
-    return this->getOffSetX() == other.getOffSetX()
-        && this->getOffSetY() == other.getOffSetY()
-        && this->getRegionWidth() == other.getRegionWidth()
-        && this->getRegionHeight() == other.getRegionHeight()
-        && this->getNumPointsX() == other.getNumPointsX()
-        && this->getNumPointsY() == other.getNumPointsY();
+    return this->getOffSetX() == other.getOffSetX() && this->getOffSetY() == other.getOffSetY() && this->getRegionWidth() == other.getRegionWidth() &&
+           this->getRegionHeight() == other.getRegionHeight() && this->getNumPointsX() == other.getNumPointsX() && this->getNumPointsY() == other.getNumPointsY();
 }
 
 }  // namespace rtt

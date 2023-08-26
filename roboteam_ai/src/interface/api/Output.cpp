@@ -1,10 +1,4 @@
-//
-// Created by mrlukasbos on 18-1-19.
-//
-
 #include "interface/api/Output.h"
-
-#include "world/World.hpp"
 
 namespace rtt::ai::interface {
 
@@ -17,30 +11,11 @@ pidVals Output::keeperInterceptPID = Constants::standardKeeperInterceptPID();
 
 rtt::Vector2 Output::markerPosition = {0, 0};  // initialize on middle of the field
 bool Output::useRefereeCommands = false;
-bool Output::timeOutAtTop = Constants::STD_TIMEOUT_TO_TOP();
 
 std::mutex Output::markerMutex;
 std::mutex Output::refMutex;
 
 GameState Output::interfaceGameState("halt_strategy", Constants::RULESET_DEFAULT());
-
-void Output::sendHaltCommand() {
-    auto const &[_, world] = rtt::world::World::instance();
-    // TODO: This check prevents a segfault when we don't have a world (roboteam_observer is off), but it should be checked earlier I think
-    if (world->getWorld().has_value()) {
-        if (rtt::ai::Pause::isPaused()) {
-            // Already halted so unhalt
-            rtt::ai::Pause::resume();
-        } else {
-            // grSim will continue moving the robots unless halt commands are explicitly sent
-            rtt::ai::Pause::pause(world->getWorld());
-        }
-    }
-
-    else {
-        RTT_WARNING("Cannot pause robots, there is no world! Check roboteam_world")
-    }
-}
 
 const Vector2 &Output::getInterfaceMarkerPosition() {
     std::lock_guard<std::mutex> lock(markerMutex);
@@ -61,8 +36,6 @@ void Output::setUseRefereeCommands(bool useRefereeCommands) {
     std::lock_guard<std::mutex> lock(refMutex);
     Output::useRefereeCommands = useRefereeCommands;
 }
-
-bool Output::isTimeOutAtTop() { return timeOutAtTop; }
 
 void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSet.title = std::move(name); }
 

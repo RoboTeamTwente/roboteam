@@ -8,7 +8,6 @@
 #include <numeric>
 #include <optional>
 #include <utility>
-#include <cmath>
 
 namespace rtt {
 /// constructor for rectangles oriented straight with respect to the x-axis.

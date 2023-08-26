@@ -4,7 +4,6 @@
 
 #include "stp/PlayEvaluator.h"
 
-#include <STPManager.h>
 #include <stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.h>
 #include <stp/evaluations/game_states/BallPlacementUsGameStateEvaluation.h>
 #include <stp/evaluations/game_states/FreeKickThemGameStateEvaluation.h>

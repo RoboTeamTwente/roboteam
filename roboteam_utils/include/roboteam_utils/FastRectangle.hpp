@@ -1,8 +1,8 @@
 #pragma once
 
-#include <roboteam_utils/Vector2.h>
 #include <roboteam_utils/LineSegment.h>
 #include <roboteam_utils/Polygon.h>
+#include <roboteam_utils/Vector2.h>
 
 #include <roboteam_utils/Rectangle.hpp>
 
@@ -11,7 +11,7 @@ namespace rtt {
    Optimized by precalculating many variables that are already known from
    the beginning, because field data is often read, but never changed. */
 class FastRectangle : public Rectangle {
-public:
+   public:
     // Creates a simple unit rectangle between (0,0) and (1,1)
     FastRectangle();
     // Creates a rectangle from a top, right, bottom and left boundary
@@ -46,7 +46,7 @@ public:
     LineSegment bottomLine() const override;
     LineSegment leftLine() const override;
 
-private:
+   private:
     double _top;
     double _right;
     double _bottom;
@@ -56,4 +56,4 @@ private:
     Vector2 _center;
 };
 
-} // namespace rtt
+}  // namespace rtt

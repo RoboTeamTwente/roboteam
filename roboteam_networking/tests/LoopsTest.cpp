@@ -1,12 +1,12 @@
+#include <gtest/gtest.h>
+#include <roboteam_utils/Random.h>
+
 #include <RobotCommandsNetworker.hpp>
 #include <RobotFeedbackNetworker.hpp>
 #include <SettingsNetworker.hpp>
 #include <WorldNetworker.hpp>
-#include <AIDataNetworker.hpp>
 #include <chrono>
 #include <memory>
-#include <gtest/gtest.h>
-#include <roboteam_utils/Random.h>
 
 /* These tests will check if you send something with a publisher of type X,
  * you will receive the same data with the subscriber of X.
@@ -18,7 +18,7 @@
 using namespace rtt::net;
 
 constexpr int TEST_BOOL = true;
-constexpr int TEST_VALUE = 69; // Nice
+constexpr int TEST_VALUE = 69;  // Nice
 constexpr int PAUSE_MS = 50;
 
 // Robot commands loop test
@@ -45,7 +45,6 @@ TEST(RTTChannels, testRobotCommandsLoop) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
-
     EXPECT_TRUE(robotCommandsBlueLoopTestPassed);
     EXPECT_TRUE(robotCommandsYellowLoopTestPassed);
 }
@@ -59,9 +58,7 @@ TEST(RTTChannels, testRobotFeedbackLoop) {
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     rtt::RobotsFeedback feedbacks;
-    feedbacks.feedback.push_back({
-        .id = TEST_VALUE
-    });
+    feedbacks.feedback.push_back({.id = TEST_VALUE});
 
     pub.publish(feedbacks);
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
@@ -101,31 +98,4 @@ TEST(RTTChannels, testWorldLoop) {
     std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
 
     EXPECT_TRUE(worldLoopTestPassed);
-}
-
-// Settings loop test
-bool aiYellowDataLoopTestPassed = false;
-bool aiBlueDataLoopTestPassed = false;
-void onYellowAIData(const rtt::AIData& data) { aiYellowDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE; }
-void onBlueAIData(const rtt::AIData& data) { aiBlueDataLoopTestPassed = data.robotPaths.size() == TEST_VALUE; }
-TEST(RTTChannels, testAIDataLoop) {
-    AIBlueDataPublisher bluePub;
-    AIYellowDataPublisher yellowPub;
-
-    AIYellowDataSubscriber yellowSub(onYellowAIData);
-    AIBlueDataSubscriber blueSub(onBlueAIData);
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
-
-    rtt::AIData data;
-    for (int i = 0; i < TEST_VALUE; i++) {
-        data.robotPaths.push_back(rtt::RobotPath {.robotId = TEST_VALUE});
-    }
-
-    bluePub.publish(data);
-    yellowPub.publish(data);
-    std::this_thread::sleep_for(std::chrono::milliseconds(PAUSE_MS));
-
-    EXPECT_TRUE(aiYellowDataLoopTestPassed);
-    EXPECT_TRUE(aiBlueDataLoopTestPassed);
 }

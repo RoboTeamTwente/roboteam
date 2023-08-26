@@ -17,9 +17,9 @@ namespace rtt::ai::control {
 class NumTreesPlanning : public PathPlanningAlgorithm {
    private:
     static constexpr double AVOIDANCE_DISTANCE = 5 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot should keep when avoiding */
-    static constexpr double TARGET_THRESHOLD = 0.1; /**< Maximum distance the robot can be from the target position for it to be successful */
-    static constexpr int MAX_BRANCHING = 10; /**< Maximum amount of different trajectories that can be taken into account */
-    static constexpr int MAX_ITERATIONS = 10; /**< Maximum amount of times the trajectories can be evaluated */
+    static constexpr double TARGET_THRESHOLD = 0.1;                             /**< Maximum distance the robot can be from the target position for it to be successful */
+    static constexpr int MAX_BRANCHING = 10;                                    /**< Maximum amount of different trajectories that can be taken into account */
+    static constexpr int MAX_ITERATIONS = 10;                                   /**< Maximum amount of times the trajectories can be evaluated */
 
     /**
      * Generate 2 new points to the side of the collisionPosition, such that the points and the parent point form

@@ -24,7 +24,7 @@ class ComputationManager {
     }
 
     inline static std::unordered_map<Vector2, gen::PositionScores> calculatedScores{}; /**< vector of calculated position scores */
-    inline static std::vector<Vector2> calculatedWallPositions{}; /**< vector of determined wall positions */
+    inline static std::vector<Vector2> calculatedWallPositions{};                      /**< vector of determined wall positions */
 };
 }  // namespace rtt::ai::stp
 

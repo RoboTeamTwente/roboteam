@@ -12,9 +12,9 @@
 
 #include <cmath>
 #include <optional>
+#include <roboteam_utils/Field.hpp>
 
 #include "utilities/Constants.h"
-#include <roboteam_utils/Field.hpp>
 
 using Vector2 = rtt::Vector2;
 using Angle = rtt::Angle;

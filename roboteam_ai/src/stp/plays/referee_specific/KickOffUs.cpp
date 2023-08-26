@@ -95,8 +95,7 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 bool KickOffUs::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
 
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT * 0.5)
-        return true;
+    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT * 0.5) return true;
 
     return false;
 }

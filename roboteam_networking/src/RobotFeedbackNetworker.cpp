@@ -1,6 +1,5 @@
 #include <RobotFeedbackNetworker.hpp>
 
-
 namespace rtt::net {
 
 proto::RobotFeedbackSource feedbackSourceToProto(rtt::RobotFeedbackSource source) {
@@ -79,21 +78,19 @@ rtt::RobotsFeedback protoFeedbackToRobotsFeedback(const proto::RobotsFeedback& p
     robotsFeedback.source = protoFeedbackSourceToSource(protoFeedbacks.source());
 
     for (const auto& protoFeedback : protoFeedbacks.robots_feedback()) {
-        rtt::RobotFeedback feedback = {
-            .id = protoFeedback.id(),
-            .ballSensorSeesBall = protoFeedback.ball_sensor_sees_ball(),
-            .ballPosition = protoFeedback.ball_position(),
-            .ballSensorIsWorking = protoFeedback.ball_sensor_is_working(),
-            .dribblerSeesBall = protoFeedback.dribbler_sees_ball(),
-            .velocity = Vector2(protoFeedback.estimated_velocity_x(), protoFeedback.estimated_velocity_y()),
-            .angle = Angle(protoFeedback.estimated_angle()),
-            .xSensIsCalibrated = protoFeedback.xsens_is_calibrated(),
-            .capacitorIsCharged = protoFeedback.capacitor_is_charged(),
-            .wheelLocked = protoFeedback.wheels_locked(),
-            .wheelBraking = protoFeedback.wheels_braking(),
-            .batteryLevel = protoFeedback.battery_level(),
-            .signalStrength = protoFeedback.signal_strength()
-        };
+        rtt::RobotFeedback feedback = {.id = protoFeedback.id(),
+                                       .ballSensorSeesBall = protoFeedback.ball_sensor_sees_ball(),
+                                       .ballPosition = protoFeedback.ball_position(),
+                                       .ballSensorIsWorking = protoFeedback.ball_sensor_is_working(),
+                                       .dribblerSeesBall = protoFeedback.dribbler_sees_ball(),
+                                       .velocity = Vector2(protoFeedback.estimated_velocity_x(), protoFeedback.estimated_velocity_y()),
+                                       .angle = Angle(protoFeedback.estimated_angle()),
+                                       .xSensIsCalibrated = protoFeedback.xsens_is_calibrated(),
+                                       .capacitorIsCharged = protoFeedback.capacitor_is_charged(),
+                                       .wheelLocked = protoFeedback.wheels_locked(),
+                                       .wheelBraking = protoFeedback.wheels_braking(),
+                                       .batteryLevel = protoFeedback.battery_level(),
+                                       .signalStrength = protoFeedback.signal_strength()};
         robotsFeedback.feedback.push_back(feedback);
     }
 

@@ -13,14 +13,14 @@ namespace rtt {
  */
 class AnglePID {
    private:
-    double P; /**< Proportional part of the controller */
-    double I; /**< Integral part of the controller */
-    double D; /**< Derivative part of the controller */
-    double min; /**< Minimum allowed angular velocity */
-    double max; /**< Maximum allowed angular velocity */
+    double P;              /**< Proportional part of the controller */
+    double I;              /**< Integral part of the controller */
+    double D;              /**< Derivative part of the controller */
+    double min;            /**< Minimum allowed angular velocity */
+    double max;            /**< Maximum allowed angular velocity */
     double previous_error; /**< Error from previous tick */
-    double integral; /**< Integral of the previous errors */
-    double dt; /**< Time difference since previous tick */
+    double integral;       /**< Integral of the previous errors */
+    double dt;             /**< Time difference since previous tick */
 
    public:
     /**

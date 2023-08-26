@@ -1,13 +1,13 @@
 #pragma once
 
+#include "LineSegment.h"
 #include "Shape.h"
 #include "Vector2.h"
-#include "LineSegment.h"
 
 namespace rtt {
 
 class Rectangle : public Shape {
-public:
+   public:
     // Gets the width of the rectangle
     [[nodiscard]] virtual double width() const = 0;
     // Gets the height of the rectangle
@@ -42,4 +42,4 @@ public:
     [[nodiscard]] virtual LineSegment bottomLine() const = 0;
 };
 
-} // namespace rtt
+}  // namespace rtt

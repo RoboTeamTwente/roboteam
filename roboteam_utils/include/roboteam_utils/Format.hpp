@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
+#include <string>
 
 namespace rtt {
 
@@ -23,4 +23,4 @@ std::string formatString(const std::string& format, Args... args) {
     return std::string(buf.get(), buf.get() + size - 1);  // We don't want the '\0' inside
 }
 
-} // namespace rtt
+}  // namespace rtt

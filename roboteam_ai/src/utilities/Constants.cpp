@@ -1,12 +1,10 @@
-//
-// Created by mrlukasbos on 8-2-19.
-//
-
 #include "utilities/Constants.h"
 
 #include <roboteam_utils/Print.h>
 
 #include "utilities/GameSettings.h"
+
+// Emiel Steerneman Aug 24 2023 TODO : Combine this file with include/roboteam_ai/stp/constants/ControlConstants.h
 
 namespace rtt::ai {
 
@@ -35,34 +33,6 @@ double Constants::MAX_ACC_LOWER() { return 10.0; }
 double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER() * 1.2; }  // magic number
 
 double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic number
-
-// was 0.03 before STP
-
-int Constants::ROBOT_DRAWING_SIZE() { return 6; }
-
-int Constants::BALL_DRAWING_SIZE() { return 4; }
-
-int Constants::TACTIC_COLOR_DRAWING_SIZE() { return 15; }
-
-int Constants::WINDOW_FIELD_MARGIN() { return 5; }
-
-bool Constants::STD_SHOW_ROLES() { return true; }
-
-bool Constants::STD_SHOW_TACTICS() { return false; }
-
-bool Constants::STD_SHOW_TACTICS_COLORS() { return true; }
-
-bool Constants::STD_SHOW_VELOCITIES() { return true; }
-
-bool Constants::STD_SHOW_ANGLES() { return true; }
-
-bool Constants::STD_SHOW_ROBOT_INVALIDS() { return true; }
-
-bool Constants::STD_SHOW_BALL_PLACEMENT_MARKER() { return true; }
-
-bool Constants::STD_USE_REFEREE() { return true; }
-
-bool Constants::STD_TIMEOUT_TO_TOP() { return false; }
 
 // The max distance the ball can be from the robot for the robot to have the ball
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
@@ -192,20 +162,6 @@ bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
-QColor Constants::FIELD_LINE_COLOR() { return Qt::white; }
-
-QColor Constants::ROBOT_COLOR_BLUE() { return {150, 150, 255, 255}; }
-
-QColor Constants::ROBOT_COLOR_YELLOW() { return {255, 255, 0, 255}; }
-
-QColor Constants::BALL_COLOR() { return {255, 120, 50, 255}; }
-
-QColor Constants::TEXT_COLOR() { return Qt::white; }
-
-QColor Constants::SELECTED_ROBOT_COLOR() { return Qt::magenta; }
-
-std::vector<QColor> Constants::TACTIC_COLORS() { return {{255, 0, 255, 50}, {0, 255, 255, 50}, {255, 255, 0, 50}, {0, 255, 0, 50}, {0, 0, 255, 100}}; }
-
 pidVals Constants::standardNumTreePID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
 
 pidVals Constants::standardReceivePID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
@@ -216,21 +172,16 @@ pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() 
 
 pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-RuleSet Constants::RULESET_DEFAULT()            { return {"default",            2,   6.5, 0.0, ROBOT_RADIUS(), true}; }
-RuleSet Constants::RULESET_HALT()               { return {"halt",               0.0, 0.0, 0.0, -1,             true}; }
-RuleSet Constants::RULESET_STOP()               { return {"stop",               1.3, 0.0, 0.8, -1,             false};}
-RuleSet Constants::RULESET_BALLPLACEMENT_THEM() { return {"ballplacement_them", 1.3, 6.5, 0.8, -1,             true}; }
-RuleSet Constants::RULESET_BALLPLACEMENT_US()   { return {"ballplacement_us",   1.5, 6.5, 0.0, -1,             true}; }
-RuleSet Constants::RULESET_KICKOFF()            { return {"kickoff",            1.5, 6.5, 0.5, -1,             true}; }
+RuleSet Constants::RULESET_DEFAULT() { return {"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true}; }
+RuleSet Constants::RULESET_HALT() { return {"halt", 0.0, 0.0, 0.0, -1, true}; }
+RuleSet Constants::RULESET_STOP() { return {"stop", 1.3, 0.0, 0.8, -1, false}; }
+RuleSet Constants::RULESET_BALLPLACEMENT_THEM() { return {"ballplacement_them", 1.3, 6.5, 0.8, -1, true}; }
+RuleSet Constants::RULESET_BALLPLACEMENT_US() { return {"ballplacement_us", 1.5, 6.5, 0.0, -1, true}; }
+RuleSet Constants::RULESET_KICKOFF() { return {"kickoff", 1.5, 6.5, 0.5, -1, true}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {
-        RULESET_DEFAULT(),
-        RULESET_HALT(),
-        RULESET_STOP(),
-        RULESET_BALLPLACEMENT_THEM(),
-        RULESET_BALLPLACEMENT_US(),
-        RULESET_KICKOFF(),
+        RULESET_DEFAULT(), RULESET_HALT(), RULESET_STOP(), RULESET_BALLPLACEMENT_THEM(), RULESET_BALLPLACEMENT_US(), RULESET_KICKOFF(),
     };
 }
 

@@ -19,9 +19,9 @@ namespace rtt::world::ball {
  * @brief Ball class that stores info about the ball and adds some utilities
  */
 class Ball {
-public:
-    Vector2 position; /**< Position of the ball */
-    Vector2 velocity; /**< Velocity of the ball */
+   public:
+    Vector2 position;     /**< Position of the ball */
+    Vector2 velocity;     /**< Velocity of the ball */
     bool visible = false; /**< Whether the ball is visible by any camera */
 
     /**

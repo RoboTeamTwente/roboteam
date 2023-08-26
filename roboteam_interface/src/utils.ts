@@ -41,3 +41,13 @@ export const robotNameMap = (team: 'BLACK' | 'PURPLE', id: number) => {
 
   return ''
 }
+
+export const formatFloat = (pos?: number | null): string => {
+  if (pos === undefined || pos === null) {
+    return '0.00'
+  }
+
+  const value = Math.abs(pos).toFixed(2)
+  const sign = pos > -0.0001 ? '+' : '-'
+  return `${sign}${value}`
+}

@@ -9,6 +9,13 @@ import SidebarResizer from './modules/components/layout/sidebar-resizer.vue'
 import ConnectModal from './modules/components/connect-modal.vue'
 import { useAiController } from './modules/composables/ai-controller'
 
+import PixiApp from './modules/components/canvas/pixi-app.vue'
+import FieldLines from './modules/components/canvas/field-lines.vue'
+import Ball from './modules/components/canvas/ball.vue'
+import Robots from './modules/components/canvas/robots.vue'
+import Visualizations from './modules/components/canvas/visualizations.vue'
+import { formatFloat } from './utils'
+
 const aiController = useAiController()
 const uiStore = useUIStore()
 const visionData = useVisionDataStore()
@@ -40,12 +47,21 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
 
     <!-- Game Canvas START -->
     <main
-      class="game-canvas flex flex-col justify-center bg-base-200 min-h-0 p-4"
+      id='game-canvas-container'
+      class="game-canvas flex flex-col justify-center bg-base-200 min-h-0 p-4 relative"
       :class="{
         '!justify-start': visionData.latestWorld == null
       }"
     >
-      <game-canvas v-if="visionData.latestWorld !== null" />
+      <div v-if='uiStore.pointerLocation' class='absolute top-4 left-4 badge badge-secondary font-mono'>
+        x: {{ formatFloat(uiStore.pointerLocation?.x) }} y: {{ formatFloat(uiStore.pointerLocation?.y)}}
+      </div>
+      <pixi-app v-if="visionData.latestField !== null" :length='visionData.latestField.fieldLength' :width='visionData.latestField.fieldWidth' >
+        <field-lines  :field-geometry='visionData.latestField' :is-yellow='aiController.isYellow'/>
+        <ball />
+        <robots />
+        <visualizations />
+      </pixi-app>
       <div v-else class="alert alert-warning justify-start">
         <font-awesome-icon icon="fa-circle-exclamation" />
         No field data

@@ -7,16 +7,16 @@ import {
   Text,
   Texture
 } from 'pixi.js'
-import { proto } from '../../generated/proto'
 import IDrawing = proto.IDrawing
-import { useAIDataStore } from '../stores/data-stores/ai-data-store'
 import { DeepReadonly, toRaw } from 'vue'
 
 // @ts-ignore
-import pixel from '../../assets/pixel-white.png'
+import pixel from '../../../assets/pixel-white.png'
 import IWorldRobot = proto.IWorldRobot
 import { IApplicationOptions } from '@pixi/app/lib/Application'
-import { NoUndefinedField } from '../../utils'
+import { proto } from '../../../generated/proto'
+import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
+import { NoUndefinedField } from '../../../utils'
 
 export const Colors = {
   yellow: '#feff00',
@@ -59,16 +59,35 @@ const mmToPx = (mm: number): number => {
 }
 
 export class CustomPixiApplication extends Application {
-  drawingsContainer: Container
+  readonly centeredContainer: Container
+  layers: {
+    fieldLines: Container
+    objects: Container
+    drawings: Container
+  }
+
 
   constructor(options?: Partial<IApplicationOptions>) {
     super(options)
-    this.drawingsContainer = new Container()
+
+    this.centeredContainer = new Container()
 
     // this puts the (0, 0) coordinates to the center of the stage
-    this.drawingsContainer.x = this.screen.width / 2
-    this.drawingsContainer.y = this.screen.height / 2
-    this.stage.addChild(this.drawingsContainer)
+    this.centeredContainer.x = this.screen.width / 2
+    this.centeredContainer.y = this.screen.height / 2
+    this.stage.addChild(this.centeredContainer)
+
+
+    this.layers = {
+      fieldLines: new Container(),
+      objects: new Container(),
+      drawings: new Container()
+    }
+
+    // order matters
+    this.centeredContainer.addChild(this.layers.fieldLines)
+    this.centeredContainer.addChild(this.layers.objects)
+    this.centeredContainer.addChild(this.layers.drawings)
   }
 }
 

@@ -1,41 +1,38 @@
-<script setup lang="ts">
+<script setup lang='ts'>
 import { Container } from 'pixi.js'
-import { CustomPixiApplication, RobotDrawing } from './field-objects'
-import { onUnmounted, watch } from 'vue'
-import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
-import { proto } from '../../generated/proto'
+import { appSymbol, stageSymbol, useMoveRobots } from './utils'
+import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
+import { useUIStore } from '../../stores/ui-store'
+import { OUT_OF_CANVAS_COORDINATES } from '../../../utils'
+import { proto } from '../../../generated/proto'
 import IWorldRobot = proto.IWorldRobot
-import { useUIStore } from '../stores/ui-store'
-import { useAIDataStore } from '../stores/data-stores/ai-data-store'
-import { OUT_OF_CANVAS_COORDINATES } from '../../utils'
+import { inject, onBeforeUnmount, watch } from 'vue'
+import { RobotDrawing } from './field-objects'
+
+
+const
+  app = inject(appSymbol)!,
+  stage = inject(stageSymbol)!,
+  visionData = useVisionDataStore(),
+  aiData = useAIDataStore(),
+  uiStore = useUIStore()
 
 // Internal (non-reactive) variables
-let layer: Container | null = new Container(),
+let
   yellowRobots = new Map<number, RobotDrawing>(),
   blueRobots = new Map<number, RobotDrawing>()
 
-// Reactive values
-const props = defineProps<{
-    app: CustomPixiApplication
-  }>(),
-  visionData = useVisionDataStore(),
-  uiStore = useUIStore(),
-  aiData = useAIDataStore()
+useMoveRobots(app, stage)
 
 // Methods
-const init = () => {
-    layer = new Container()
-    props.app.drawingsContainer.addChild(layer)
-    props.app.ticker.add(onPixiTick)
-  },
-  cleanUp = () => {
-    console.log('Cleaning up robot drawings')
-    layer?.destroy({ children: true })
-    layer = null
+const
+  cleanup = () => {
+    yellowRobots.forEach((robot) => robot.destroy({ children: true }))
+    blueRobots.forEach((robot) => robot.destroy({ children: true }))
     yellowRobots.clear()
     blueRobots.clear()
-
-    props.app.ticker.remove(onPixiTick)
+    app.value?.ticker.remove(onPixiTick)
   },
   renderRobot = (robot: IWorldRobot, isYellow: boolean) => {
     const robotId = robot.id ?? -1
@@ -51,7 +48,7 @@ const init = () => {
       })
 
       drawing.scale.set(uiStore.scaling.robots)
-      layer?.addChild(drawing)
+      app.value?.layers.objects.addChild(drawing)
       drawings.set(robotId, drawing)
     }
 
@@ -81,6 +78,11 @@ const init = () => {
     world?.blue!.forEach((robot) => renderRobot(robot, false))
   }
 
+watch(app, (app, _, onCleanup) => {
+  app?.ticker.add(onPixiTick)
+  onCleanup(cleanup)
+}, { immediate: true })
+
 // When the scaling setting changes, update the scaling of the drawings
 watch(
   () => uiStore.scaling.robots,
@@ -90,17 +92,7 @@ watch(
   }
 )
 
-// When the container or team color changes, re-initialize the drawings
-watch(
-  [() => props.app, () => aiData.state?.gameSettings?.isYellow],
-  () => {
-    cleanUp()
-    init()
-  },
-  { immediate: true }
-)
-
-onUnmounted(cleanUp)
+onBeforeUnmount(cleanup)
 </script>
 
 <template>

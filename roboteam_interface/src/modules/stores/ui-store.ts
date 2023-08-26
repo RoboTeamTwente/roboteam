@@ -14,7 +14,11 @@ export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
 export type UiStore = {
   bottomPanel: Panel
   leftPanel: Panel
-  selectedRobots: Set<number>
+  selectedRobots: Set<number>,
+  pointerLocation: {
+    x: number
+    y: number
+  } | null,
   scaling: {
     ball: number
     robots: number
@@ -41,6 +45,7 @@ const defaultState: () => UiStore = () => ({
     selectableTabs: Object.keys(TABS_DEFINITION) as TabKey[]
   },
   selectedRobots: new Set([]),
+  pointerLocation: null,
   scaling: {
     ball: 1,
     robots: 1

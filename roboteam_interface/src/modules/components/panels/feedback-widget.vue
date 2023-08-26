@@ -2,19 +2,11 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useUIStore } from '../../stores/ui-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import { formatFloat } from '../../../utils'
 
 const visionData = useVisionDataStore()
 const uiStore = useUIStore()
 
-const formatFloat = (pos?: number | null): string => {
-  if (pos === undefined || pos === null) {
-    return '0.00'
-  }
-
-  const value = Math.abs(pos).toFixed(2)
-  const sign = pos > -0.0001 ? '+' : '-'
-  return `${sign}${value}`
-}
 </script>
 
 <template>

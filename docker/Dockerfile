@@ -41,7 +41,7 @@ RUN apt-get install -y vim git cmake pkg-config python3 python3-pip ccache
 
 RUN git clone https://github.com/RoboTeamTwente/roboteam.git --recursive
 WORKDIR /roboteam
-RUN ./install_UBUNTU_20_04.sh
+RUN ./install_UBUNTU_22_04.sh
 RUN mkdir build 
 WORKDIR /roboteam/build
 RUN cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) roboteam_observer roboteam_ai roboteam_robothub

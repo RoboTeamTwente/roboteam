@@ -10,7 +10,7 @@ import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 
 const
   aiController = useAiController(),
-  visionData  = useVisionDataStore(),
+  visionData = useVisionDataStore(),
   isDark = useDark(),
   content = ref<string>('')
 
@@ -19,9 +19,9 @@ const disabled = computed(() => aiController.useReferee)
 // Move all robots from both teams to side of field
 const robotsToSide = () => {
   let teleportRobot = []
-  const fieldLength= visionData.latestField!.fieldLength / 1000;
-  const fieldWidth = visionData.latestField!.fieldWidth / 1000 + 0.3;
-  const startX = -fieldLength / 2;
+  const fieldLength = visionData.latestField!.fieldLength / 1000
+  const fieldWidth = visionData.latestField!.fieldWidth / 1000 + 0.3
+  const startX = -fieldLength / 2
 
   for (const team of [proto.Team.BLUE, proto.Team.YELLOW]) {
     for (let i = 0; i < 16; i++) {
@@ -58,6 +58,49 @@ const ballToCenter = () => {
   sendSimulatorCommand()
 }
 
+const recordPosition = () => {
+  if (!visionData.latestWorld) {
+    return
+  }
+
+  const ballPos = {
+    'x': visionData.latestWorld.ball!.pos!.x,
+    'y': visionData.latestWorld.ball!.pos!.y,
+    'z': visionData.latestWorld.ball!.z,
+    'vx': visionData.latestWorld.ball!.vel?.x,
+    'vy': visionData.latestWorld.ball!.vel?.y,
+    'vz': visionData.latestWorld.ball!.zVel
+  }
+
+  let robots = []
+  for (const robot of visionData.latestWorld.blue!) {
+    robots.push({
+      'id': { 'id': robot.id, 'team': proto.Team.BLUE },
+      'x': robot.pos!.x,
+      'y': robot.pos!.y,
+      'orientation': robot.angle
+    })
+  }
+
+  for (const robot of visionData.latestWorld.yellow!) {
+    robots.push({
+      'id': { 'id': robot.id, 'team': proto.Team.YELLOW },
+      'x': robot.pos!.x,
+      'y': robot.pos!.y,
+      'orientation': robot.angle
+    })
+  }
+
+  content.value = JSON.stringify({
+    'control': {
+      'teleportBall': ballPos,
+      'teleportRobot': robots
+    }
+  }, null, 2)
+
+  sendSimulatorCommand()
+}
+
 const sendSimulatorCommand = () => {
   aiController.sendSimulatorCommand(JSON.parse(content.value))
 }
@@ -66,7 +109,8 @@ const sendSimulatorCommand = () => {
 </script>
 
 <template>
-  <div class='mt-4 flex flex-wrap gap-4 max-w-md'>
+  <div class='mt-2 text-lg font-medium'>Quick actions</div>
+  <div class='flex flex-wrap gap-4'>
     <button
       :disabled='disabled'
       class='btn btn-sm btn-secondary gap-2'
@@ -79,15 +123,26 @@ const sendSimulatorCommand = () => {
     <button
       :disabled='disabled'
       class='btn btn-sm btn-secondary gap-2'
-      @click="ballToCenter"
+      @click='ballToCenter'
     >
       <font-awesome-icon icon='fa-crosshairs' />
       Move ball to center
     </button>
+
+    <button
+      :disabled='disabled'
+      class='btn btn-sm btn-secondary btn-outline gap-2'
+      @click='recordPosition'
+    >
+      <font-awesome-icon icon='fa-save' />
+      Record current position
+    </button>
   </div>
   <div class='mt-4 fex gap-4'>
     <div class='text-lg font-medium'>Simulator command content</div>
-    <div class='text-sm font-medium mb-2'>The json command has to confirm the ssl simulator command specification (check the proto files)</div>
+    <div class='text-sm font-medium mb-2'>The json command has to confirm the ssl simulator command specification (check
+      the proto files)
+    </div>
     <v-ace-editor
       v-model:value='content'
       lang='json'
@@ -99,9 +154,9 @@ const sendSimulatorCommand = () => {
     <button
       :disabled='disabled'
       class='btn btn-sm btn-secondary gap-2'
-      @click="sendSimulatorCommand"
+      @click='sendSimulatorCommand'
     >
-      <font-awesome-icon icon='fa-satellite-dish' @click='sendSimulatorCommand' />
+      <font-awesome-icon icon='fa-satellite-dish' />
       Send command
     </button>
 

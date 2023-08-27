@@ -6,6 +6,7 @@ import { proto } from '../../../generated/proto'
 import { VAceEditor } from 'vue3-ace-editor'
 import { useDark } from '@vueuse/core'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import { FORMATION_1, FORMATION_2 } from '../../../utils'
 
 
 const
@@ -64,30 +65,30 @@ const recordPosition = () => {
   }
 
   const ballPos = {
-    'x': visionData.latestWorld.ball!.pos!.x,
-    'y': visionData.latestWorld.ball!.pos!.y,
-    'z': visionData.latestWorld.ball!.z,
-    'vx': visionData.latestWorld.ball!.vel?.x,
-    'vy': visionData.latestWorld.ball!.vel?.y,
-    'vz': visionData.latestWorld.ball!.zVel
+    'x': visionData.latestWorld.ball!.pos!.x!.toFixed(3),
+    'y': visionData.latestWorld.ball!.pos!.y!.toFixed(3),
+    'z': visionData.latestWorld.ball!.z!.toFixed(3),
+    'vx': visionData.latestWorld.ball!.vel?.x!.toFixed(3),
+    'vy': visionData.latestWorld.ball!.vel?.y!.toFixed(3),
+    'vz': visionData.latestWorld.ball!.zVel!.toFixed(3)
   }
 
   let robots = []
   for (const robot of visionData.latestWorld.blue!) {
     robots.push({
       'id': { 'id': robot.id, 'team': proto.Team.BLUE },
-      'x': robot.pos!.x,
-      'y': robot.pos!.y,
-      'orientation': robot.angle
+      'x': robot.pos!.x!.toFixed(3),
+      'y': robot.pos!.y!.toFixed(3),
+      'orientation': robot.angle!.toFixed(3)
     })
   }
 
   for (const robot of visionData.latestWorld.yellow!) {
     robots.push({
       'id': { 'id': robot.id, 'team': proto.Team.YELLOW },
-      'x': robot.pos!.x,
-      'y': robot.pos!.y,
-      'orientation': robot.angle
+      'x': robot.pos!.x!.toFixed(3),
+      'y': robot.pos!.y!.toFixed(3),
+      'orientation': robot.angle!.toFixed(3)
     })
   }
 
@@ -98,6 +99,16 @@ const recordPosition = () => {
     }
   }, null, 2)
 
+  sendSimulatorCommand()
+}
+
+const formation1 = () => {
+  content.value = JSON.stringify(FORMATION_1, null, 2)
+  sendSimulatorCommand()
+}
+
+const formation2 = () => {
+  content.value = JSON.stringify(FORMATION_2, null, 2)
   sendSimulatorCommand()
 }
 
@@ -118,6 +129,24 @@ const sendSimulatorCommand = () => {
     >
       <font-awesome-icon icon='fa-arrows' />
       Move robots to side
+    </button>
+
+    <button
+      :disabled='disabled'
+      class='btn btn-sm btn-secondary gap-2'
+      @click='formation1'
+    >
+      <font-awesome-icon icon='fa-arrows' />
+      Formation 1
+    </button>
+
+    <button
+      :disabled='disabled'
+      class='btn btn-sm btn-secondary gap-2'
+      @click='formation2'
+    >
+      <font-awesome-icon icon='fa-arrows' />
+      Formation 2
     </button>
 
     <button

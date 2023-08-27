@@ -2,29 +2,35 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, ref } from 'vue'
 import { useAiController } from '../../composables/ai-controller'
-import { proto, SimulatorCommand } from '../../../generated/proto'
+import { proto } from '../../../generated/proto'
 import { VAceEditor } from 'vue3-ace-editor'
 import { useDark } from '@vueuse/core'
+import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 
 
 const
   aiController = useAiController(),
+  visionData  = useVisionDataStore(),
   isDark = useDark(),
   content = ref<string>('')
 
 const disabled = computed(() => aiController.useReferee)
 
 // Move all robots from both teams to side of field
-// TODO take field size into account. Currently assumes field size is 12x9
 const robotsToSide = () => {
   let teleportRobot = []
+  const fieldLength= visionData.latestField!.fieldLength / 1000;
+  const fieldWidth = visionData.latestField!.fieldWidth / 1000 + 0.3;
+  const startX = -fieldLength / 2;
+
   for (const team of [proto.Team.BLUE, proto.Team.YELLOW]) {
     for (let i = 0; i < 16; i++) {
-      const x = -6 + i * 0.3
+      const x = startX + (i * fieldWidth / 15) * 0.5
+      const sideMultiplier = (team === proto.Team.YELLOW) ? 1 : -1
       teleportRobot.push({
         'id': { 'id': i, 'team': team },
-        'x': (team === proto.Team.YELLOW ? x : -x),
-        'y': -4.6,
+        'x': x * sideMultiplier,
+        'y': -fieldWidth / 2,
         'orientation': 0
       })
     }

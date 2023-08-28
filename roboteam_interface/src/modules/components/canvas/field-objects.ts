@@ -67,7 +67,6 @@ export class CustomPixiApplication extends Application {
     ball: Container
   }
 
-
   constructor(options?: Partial<IApplicationOptions>) {
     super(options)
 
@@ -77,7 +76,6 @@ export class CustomPixiApplication extends Application {
     this.centeredContainer.x = this.screen.width / 2
     this.centeredContainer.y = this.screen.height / 2
     this.stage.addChild(this.centeredContainer)
-
 
     this.layers = {
       fieldLines: new Container(),

@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, ref } from 'vue'
 import { useAiController } from '../../composables/ai-controller'
@@ -8,9 +8,7 @@ import { useDark } from '@vueuse/core'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { FORMATION_1, FORMATION_2 } from '../../../utils'
 
-
-const
-  aiController = useAiController(),
+const aiController = useAiController(),
   visionData = useVisionDataStore(),
   isDark = useDark(),
   content = ref<string>('')
@@ -26,35 +24,48 @@ const robotsToSide = () => {
 
   for (const team of [proto.Team.BLUE, proto.Team.YELLOW]) {
     for (let i = 0; i < 16; i++) {
-      const x = startX + (i * fieldWidth / 15) * 0.5
-      const sideMultiplier = (team === proto.Team.YELLOW) ? 1 : -1
+      const x = startX + ((i * fieldWidth) / 15) * 0.5
+      const sideMultiplier = team === proto.Team.YELLOW ? 1 : -1
       teleportRobot.push({
-        'id': { 'id': i, 'team': team },
-        'x': x * sideMultiplier,
-        'y': -fieldWidth / 2,
-        'orientation': 0
+        id: { id: i, team: team },
+        x: x * sideMultiplier,
+        y: -fieldWidth / 2,
+        orientation: 0
       })
     }
   }
 
-  content.value = JSON.stringify({
-    'control': {
-      'teleportRobot': teleportRobot
-    }
-  }, null, 2)
+  content.value = JSON.stringify(
+    {
+      control: {
+        teleportRobot: teleportRobot
+      }
+    },
+    null,
+    2
+  )
 
   sendSimulatorCommand()
 }
 
 // Move ball to center of field
 const ballToCenter = () => {
-  content.value = JSON.stringify({
-    'control': {
-      'teleportBall': {
-        'x': 0, 'y': 0, 'z': 0, 'vx': 0, 'vy': 0, 'vz': 0
+  content.value = JSON.stringify(
+    {
+      control: {
+        teleportBall: {
+          x: 0,
+          y: 0,
+          z: 0,
+          vx: 0,
+          vy: 0,
+          vz: 0
+        }
       }
-    }
-  }, null, 2)
+    },
+    null,
+    2
+  )
 
   sendSimulatorCommand()
 }
@@ -65,39 +76,43 @@ const recordPosition = () => {
   }
 
   const ballPos = {
-    'x': visionData.latestWorld.ball!.pos!.x!.toFixed(3),
-    'y': visionData.latestWorld.ball!.pos!.y!.toFixed(3),
-    'z': visionData.latestWorld.ball!.z!.toFixed(3),
-    'vx': visionData.latestWorld.ball!.vel?.x!.toFixed(3),
-    'vy': visionData.latestWorld.ball!.vel?.y!.toFixed(3),
-    'vz': visionData.latestWorld.ball!.zVel!.toFixed(3)
+    x: visionData.latestWorld.ball!.pos!.x!.toFixed(3),
+    y: visionData.latestWorld.ball!.pos!.y!.toFixed(3),
+    z: visionData.latestWorld.ball!.z!.toFixed(3),
+    vx: visionData.latestWorld.ball!.vel?.x!.toFixed(3),
+    vy: visionData.latestWorld.ball!.vel?.y!.toFixed(3),
+    vz: visionData.latestWorld.ball!.zVel!.toFixed(3)
   }
 
   let robots = []
   for (const robot of visionData.latestWorld.blue!) {
     robots.push({
-      'id': { 'id': robot.id, 'team': proto.Team.BLUE },
-      'x': robot.pos!.x!.toFixed(3),
-      'y': robot.pos!.y!.toFixed(3),
-      'orientation': robot.angle!.toFixed(3)
+      id: { id: robot.id, team: proto.Team.BLUE },
+      x: robot.pos!.x!.toFixed(3),
+      y: robot.pos!.y!.toFixed(3),
+      orientation: robot.angle!.toFixed(3)
     })
   }
 
   for (const robot of visionData.latestWorld.yellow!) {
     robots.push({
-      'id': { 'id': robot.id, 'team': proto.Team.YELLOW },
-      'x': robot.pos!.x!.toFixed(3),
-      'y': robot.pos!.y!.toFixed(3),
-      'orientation': robot.angle!.toFixed(3)
+      id: { id: robot.id, team: proto.Team.YELLOW },
+      x: robot.pos!.x!.toFixed(3),
+      y: robot.pos!.y!.toFixed(3),
+      orientation: robot.angle!.toFixed(3)
     })
   }
 
-  content.value = JSON.stringify({
-    'control': {
-      'teleportBall': ballPos,
-      'teleportRobot': robots
-    }
-  }, null, 2)
+  content.value = JSON.stringify(
+    {
+      control: {
+        teleportBall: ballPos,
+        teleportRobot: robots
+      }
+    },
+    null,
+    2
+  )
 
   sendSimulatorCommand()
 }
@@ -115,79 +130,61 @@ const formation2 = () => {
 const sendSimulatorCommand = () => {
   aiController.sendSimulatorCommand(JSON.parse(content.value))
 }
-
-
 </script>
 
 <template>
-  <div class='mt-2 text-lg font-medium'>Quick actions</div>
-  <div class='flex flex-wrap gap-4'>
-    <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary gap-2'
-      @click='robotsToSide'
-    >
-      <font-awesome-icon icon='fa-arrows' />
+  <div class="mt-2 text-lg font-medium">Quick actions</div>
+  <div class="flex flex-wrap gap-4">
+    <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="robotsToSide">
+      <font-awesome-icon icon="fa-arrows" />
       Move robots to side
     </button>
 
-    <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary gap-2'
-      @click='formation1'
-    >
-      <font-awesome-icon icon='fa-arrows' />
+    <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="formation1">
+      <font-awesome-icon icon="fa-arrows" />
       Formation 1
     </button>
 
-    <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary gap-2'
-      @click='formation2'
-    >
-      <font-awesome-icon icon='fa-arrows' />
+    <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="formation2">
+      <font-awesome-icon icon="fa-arrows" />
       Formation 2
     </button>
 
-    <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary gap-2'
-      @click='ballToCenter'
-    >
-      <font-awesome-icon icon='fa-crosshairs' />
+    <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="ballToCenter">
+      <font-awesome-icon icon="fa-crosshairs" />
       Move ball to center
     </button>
 
     <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary btn-outline gap-2'
-      @click='recordPosition'
+      :disabled="disabled"
+      class="btn btn-sm btn-secondary btn-outline gap-2"
+      @click="recordPosition"
     >
-      <font-awesome-icon icon='fa-save' />
+      <font-awesome-icon icon="fa-save" />
       Record current position
     </button>
   </div>
-  <div class='mt-4 fex gap-4'>
-    <div class='text-lg font-medium'>Simulator command content</div>
-    <div class='text-sm font-medium mb-2'>The json command has to confirm the ssl simulator command specification (check
-      the proto files)
+  <div class="mt-4 fex gap-4">
+    <div class="text-lg font-medium">Simulator command content</div>
+    <div class="text-sm font-medium mb-2">
+      The json command has to confirm the ssl simulator command specification (check the proto
+      files)
     </div>
     <v-ace-editor
-      v-model:value='content'
-      lang='json'
-      :theme="isDark ? 'github_dark' : 'github' "
-      min-lines='10'
-      :max-lines='Infinity'
-      class='mb-2 rounded-lg border dark:border-base-300'
+      v-model:value="content"
+      lang="json"
+      :theme="isDark ? 'github_dark' : 'github'"
+      min-lines="10"
+      :max-lines="Infinity"
+      class="mb-2 rounded-lg border dark:border-base-300"
     />
     <button
-      :disabled='disabled'
-      class='btn btn-sm btn-secondary gap-2'
-      @click='sendSimulatorCommand'
+      :disabled="disabled"
+      class="btn btn-sm btn-secondary gap-2"
+      @click="sendSimulatorCommand"
     >
-      <font-awesome-icon icon='fa-satellite-dish' />
+      <font-awesome-icon icon="fa-satellite-dish" />
       Send command
     </button>
-
   </div>
 </template>

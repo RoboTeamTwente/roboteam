@@ -16,7 +16,7 @@ const transformCoordinates = (point: IPoint) => {
 }
 
 export const zoom = (factor: number, x: number, y: number, stage: Container) => {
-  factor = factor > 0 ? 1.10 : 0.90
+  factor = factor > 0 ? 1.1 : 0.9
 
   const worldPos = {
     x: (x - stage.x) / stage.scale.x,
@@ -28,18 +28,23 @@ export const zoom = (factor: number, x: number, y: number, stage: Container) => 
     y: stage.scale.y * factor
   }
 
-  const newScreenPos = { x: (worldPos.x) * newScale.x + stage.x, y: (worldPos.y) * newScale.y + stage.y }
+  const newScreenPos = {
+    x: worldPos.x * newScale.x + stage.x,
+    y: worldPos.y * newScale.y + stage.y
+  }
 
-  stage.x -= (newScreenPos.x - x)
-  stage.y -= (newScreenPos.y - y)
+  stage.x -= newScreenPos.x - x
+  stage.y -= newScreenPos.y - y
   stage.scale.x = newScale.x
   stage.scale.y = newScale.y
 }
 
-
-export const useMoveCamera = (canvasRef: Ref<HTMLCanvasElement | null>, appRef: ShallowRef<CustomPixiApplication | null>) => {
+export const useMoveCamera = (
+  canvasRef: Ref<HTMLCanvasElement | null>,
+  appRef: ShallowRef<CustomPixiApplication | null>
+) => {
   const ctrlKey = useKeyModifier('Control')
-  let lastPos: null | { x: number, y: number } = null
+  let lastPos: null | { x: number; y: number } = null
 
   useEventListener(canvasRef, 'wheel', (e: WheelEvent) => {
     if (!ctrlKey.value) return
@@ -47,15 +52,19 @@ export const useMoveCamera = (canvasRef: Ref<HTMLCanvasElement | null>, appRef: 
     zoom(e.deltaY, e.offsetX, e.offsetY, appRef.value!.stage!)
   })
 
-  useEventListener(canvasRef, 'mouseup', () => lastPos = null)
-  useEventListener(canvasRef, 'mousedown', (e: MouseEvent) => lastPos = { x: e.offsetX, y: e.offsetY })
+  useEventListener(canvasRef, 'mouseup', () => (lastPos = null))
+  useEventListener(
+    canvasRef,
+    'mousedown',
+    (e: MouseEvent) => (lastPos = { x: e.offsetX, y: e.offsetY })
+  )
   useEventListener(canvasRef, 'mousemove', (e: MouseEvent) => {
     if (!ctrlKey.value) return
     if (appRef.value?.stage === null) return
     if (lastPos === null) return
 
-    appRef.value!.stage!.x += (e.offsetX - lastPos.x)
-    appRef.value!.stage!.y += (e.offsetY - lastPos.y)
+    appRef.value!.stage!.x += e.offsetX - lastPos.x
+    appRef.value!.stage!.y += e.offsetY - lastPos.y
     lastPos = { x: e.offsetX, y: e.offsetY }
   })
 }
@@ -64,8 +73,7 @@ export const useMoveBall = (
   app: ShallowRef<CustomPixiApplication>,
   stage: ShallowRef<Container<DisplayObject>>
 ) => {
-  const
-    aiController = useAiController(),
+  const aiController = useAiController(),
     shiftKey = useKeyModifier('Shift'),
     { pressed } = useMousePressed()
 
@@ -84,8 +92,7 @@ export const useMoveRobots = (
   app: ShallowRef<CustomPixiApplication>,
   stage: ShallowRef<Container<DisplayObject>>
 ) => {
-  const
-    aiController = useAiController(),
+  const aiController = useAiController(),
     uiStore = useUIStore(),
     aiData = useAIDataStore(),
     shiftKey = useKeyModifier('Alt'),
@@ -95,8 +102,11 @@ export const useMoveRobots = (
     if (!shiftKey.value || !pressed.value) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
 
-    const robots = [...uiStore.selectedRobots].map(id => ({
-      id: { id: id, 'team': aiData.state!.gameSettings!.isYellow ? proto.Team.YELLOW : proto.Team.BLUE },
+    const robots = [...uiStore.selectedRobots].map((id) => ({
+      id: {
+        id: id,
+        team: aiData.state!.gameSettings!.isYellow ? proto.Team.YELLOW : proto.Team.BLUE
+      },
       orientation: 0,
       ...pos
     }))
@@ -121,9 +131,9 @@ export const usePointerLocation = (
     if (!stage.value) return
     const pos = e.getLocalPosition(app.value?.centeredContainer!)
     uiStore.pointerLocation = transformCoordinates(pos)
-  });
+  })
 
   useEventListener(stage, 'pointerleave', () => {
     uiStore.pointerLocation = null
-  });
+  })
 }

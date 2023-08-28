@@ -7,16 +7,16 @@ export const useRefereeDataStore = defineStore('refereeDataStore', () => {
   const data = shallowRef<ISSL_Referee[]>([])
 
   const pushRefereeData = (msg: ISSL_Referee[]) => {
-      if (data.value.length + msg.length > 250) {
-        console.warn('Too many referee messages, removing oldest')
-        data.value = data.value.slice(msg.length)
-      }
+    if (data.value.length + msg.length > 250) {
+      console.warn('Too many referee messages, removing oldest')
+      data.value = data.value.slice(msg.length)
+    }
 
-      data.value = [...data.value, ...msg]
+    data.value = [...data.value, ...msg]
 
-      if (msg.length > 0) {
-        console.log(data.value)
-      }
+    if (msg.length > 0) {
+      console.log(data.value)
+    }
   }
 
   return {

@@ -14,11 +14,11 @@ export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
 export type UiStore = {
   bottomPanel: Panel
   leftPanel: Panel
-  selectedRobots: Set<number>,
+  selectedRobots: Set<number>
   pointerLocation: {
     x: number
     y: number
-  } | null,
+  } | null
   scaling: {
     ball: number
     robots: number

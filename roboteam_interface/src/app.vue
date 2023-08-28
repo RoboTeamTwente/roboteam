@@ -47,17 +47,25 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
 
     <!-- Game Canvas START -->
     <main
-      id='game-canvas-container'
+      id="game-canvas-container"
       class="game-canvas flex flex-col justify-center bg-base-200 min-h-0 p-4 relative"
       :class="{
         '!justify-start': visionData.latestWorld == null
       }"
     >
-      <div v-if='uiStore.pointerLocation' class='absolute top-4 left-4 badge badge-secondary font-mono'>
-        x: {{ formatFloat(uiStore.pointerLocation?.x) }} y: {{ formatFloat(uiStore.pointerLocation?.y)}}
+      <div
+        v-if="uiStore.pointerLocation"
+        class="absolute top-4 left-4 badge badge-secondary font-mono"
+      >
+        x: {{ formatFloat(uiStore.pointerLocation?.x) }} y:
+        {{ formatFloat(uiStore.pointerLocation?.y) }}
       </div>
-      <pixi-app v-if="visionData.latestField !== null" :length='visionData.latestField.fieldLength' :width='visionData.latestField.fieldWidth' >
-        <field-lines  :field-geometry='visionData.latestField' :is-yellow='aiController.isYellow'/>
+      <pixi-app
+        v-if="visionData.latestField !== null"
+        :length="visionData.latestField.fieldLength"
+        :width="visionData.latestField.fieldWidth"
+      >
+        <field-lines :field-geometry="visionData.latestField" :is-yellow="aiController.isYellow" />
         <ball />
         <robots />
         <visualizations />

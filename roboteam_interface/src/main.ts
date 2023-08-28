@@ -6,8 +6,7 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-
-import './ace-config';
+import './ace-config'
 import './index.css'
 import App from './app.vue'
 

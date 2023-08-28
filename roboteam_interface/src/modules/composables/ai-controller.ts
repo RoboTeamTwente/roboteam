@@ -11,8 +11,7 @@ import { useRefereeDataStore } from '../stores/data-stores/referee-store'
 
 export const useAiController = defineStore('aiController', () => {
   // Dependencies
-  const
-    stpData = useSTPDataStore(),
+  const stpData = useSTPDataStore(),
     visionData = useVisionDataStore(),
     visualizationData = useVisualizationStore(),
     aiData = useAIDataStore(),

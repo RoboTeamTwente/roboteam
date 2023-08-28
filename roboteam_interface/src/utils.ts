@@ -7,8 +7,8 @@ export type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullab
 export type DeepReadonly<T> = T extends Function
   ? T
   : T extends object
-    ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
-    : T
+  ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+  : T
 export type ShallowReadonlyRef<T> = ShallowRef<DeepReadonly<T>>
 
 export const sleep = (time: number) => {
@@ -22,426 +22,426 @@ export const OUT_OF_CANVAS_COORDINATES = {
 }
 
 export const FORMATION_1 = {
-  'control': {
-    'teleportBall': {
-      'x': '0.000',
-      'y': '0.000',
-      'z': '0.021',
-      'vx': '0.000',
-      'vy': '0.000',
-      'vz': '0.000'
+  control: {
+    teleportBall: {
+      x: '0.000',
+      y: '0.000',
+      z: '0.021',
+      vx: '0.000',
+      vy: '0.000',
+      vz: '0.000'
     },
-    'teleportRobot': [
+    teleportRobot: [
       {
-        'id': {
-          'id': 0,
-          'team': 2
+        id: {
+          id: 0,
+          team: 2
         },
-        'x': '-1.500',
-        'y': '1.120',
-        'orientation': '0.000'
+        x: '-1.500',
+        y: '1.120',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 1,
-          'team': 2
+        id: {
+          id: 1,
+          team: 2
         },
-        'x': '-1.500',
-        'y': '-0.000',
-        'orientation': '0.000'
+        x: '-1.500',
+        y: '-0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 2,
-          'team': 2
+        id: {
+          id: 2,
+          team: 2
         },
-        'x': '-1.500',
-        'y': '-1.120',
-        'orientation': '0.000'
+        x: '-1.500',
+        y: '-1.120',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 3,
-          'team': 2
+        id: {
+          id: 3,
+          team: 2
         },
-        'x': '-0.550',
-        'y': '0.000',
-        'orientation': '0.000'
+        x: '-0.550',
+        y: '0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 4,
-          'team': 2
+        id: {
+          id: 4,
+          team: 2
         },
-        'x': '-2.500',
-        'y': '-0.000',
-        'orientation': '0.000'
+        x: '-2.500',
+        y: '-0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 5,
-          'team': 2
+        id: {
+          id: 5,
+          team: 2
         },
-        'x': '-3.600',
-        'y': '-0.000',
-        'orientation': '0.000'
+        x: '-3.600',
+        y: '-0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 6,
-          'team': 2
+        id: {
+          id: 6,
+          team: 2
         },
-        'x': '-3.200',
-        'y': '0.750',
-        'orientation': '0.000'
+        x: '-3.200',
+        y: '0.750',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 7,
-          'team': 2
+        id: {
+          id: 7,
+          team: 2
         },
-        'x': '-3.200',
-        'y': '-0.750',
-        'orientation': '-0.001'
+        x: '-3.200',
+        y: '-0.750',
+        orientation: '-0.001'
       },
       {
-        'id': {
-          'id': 8,
-          'team': 2
+        id: {
+          id: 8,
+          team: 2
         },
-        'x': '-3.200',
-        'y': '1.500',
-        'orientation': '0.000'
+        x: '-3.200',
+        y: '1.500',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 9,
-          'team': 2
+        id: {
+          id: 9,
+          team: 2
         },
-        'x': '-3.198',
-        'y': '-1.500',
-        'orientation': '-0.012'
+        x: '-3.198',
+        y: '-1.500',
+        orientation: '-0.012'
       },
       {
-        'id': {
-          'id': 10,
-          'team': 2
+        id: {
+          id: 10,
+          team: 2
         },
-        'x': '-3.200',
-        'y': '2.250',
-        'orientation': '0.000'
+        x: '-3.200',
+        y: '2.250',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 0,
-          'team': 1
+        id: {
+          id: 0,
+          team: 1
         },
-        'x': '1.500',
-        'y': '1.120',
-        'orientation': '3.142'
+        x: '1.500',
+        y: '1.120',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 1,
-          'team': 1
+        id: {
+          id: 1,
+          team: 1
         },
-        'x': '1.500',
-        'y': '0.000',
-        'orientation': '-3.142'
+        x: '1.500',
+        y: '0.000',
+        orientation: '-3.142'
       },
       {
-        'id': {
-          'id': 2,
-          'team': 1
+        id: {
+          id: 2,
+          team: 1
         },
-        'x': '1.500',
-        'y': '-1.120',
-        'orientation': '3.142'
+        x: '1.500',
+        y: '-1.120',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 3,
-          'team': 1
+        id: {
+          id: 3,
+          team: 1
         },
-        'x': '0.550',
-        'y': '-0.000',
-        'orientation': '-3.142'
+        x: '0.550',
+        y: '-0.000',
+        orientation: '-3.142'
       },
       {
-        'id': {
-          'id': 4,
-          'team': 1
+        id: {
+          id: 4,
+          team: 1
         },
-        'x': '2.500',
-        'y': '0.000',
-        'orientation': '3.142'
+        x: '2.500',
+        y: '0.000',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 5,
-          'team': 1
+        id: {
+          id: 5,
+          team: 1
         },
-        'x': '3.600',
-        'y': '0.000',
-        'orientation': '3.142'
+        x: '3.600',
+        y: '0.000',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 6,
-          'team': 1
+        id: {
+          id: 6,
+          team: 1
         },
-        'x': '3.200',
-        'y': '0.750',
-        'orientation': '3.142'
+        x: '3.200',
+        y: '0.750',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 7,
-          'team': 1
+        id: {
+          id: 7,
+          team: 1
         },
-        'x': '3.200',
-        'y': '-0.750',
-        'orientation': '3.142'
+        x: '3.200',
+        y: '-0.750',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 8,
-          'team': 1
+        id: {
+          id: 8,
+          team: 1
         },
-        'x': '3.200',
-        'y': '1.500',
-        'orientation': '3.142'
+        x: '3.200',
+        y: '1.500',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 9,
-          'team': 1
+        id: {
+          id: 9,
+          team: 1
         },
-        'x': '3.200',
-        'y': '-1.500',
-        'orientation': '3.142'
+        x: '3.200',
+        y: '-1.500',
+        orientation: '3.142'
       },
       {
-        'id': {
-          'id': 10,
-          'team': 1
+        id: {
+          id: 10,
+          team: 1
         },
-        'x': '3.200',
-        'y': '2.250',
-        'orientation': '3.142'
+        x: '3.200',
+        y: '2.250',
+        orientation: '3.142'
       }
     ]
   }
 }
 
 export const FORMATION_2 = {
-  'control': {
-    'teleportBall': {
-      'x': '0.000',
-      'y': '0.000',
-      'z': '0.021',
-      'vx': '0.000',
-      'vy': '0.000',
-      'vz': '0.000'
+  control: {
+    teleportBall: {
+      x: '0.000',
+      y: '0.000',
+      z: '0.021',
+      vx: '0.000',
+      vy: '0.000',
+      vz: '0.000'
     },
-    'teleportRobot': [
+    teleportRobot: [
       {
-        'id': {
-          'id': 0,
-          'team': 2
+        id: {
+          id: 0,
+          team: 2
         },
-        'x': '-4.200',
-        'y': '-0.000',
-        'orientation': '0.000'
+        x: '-4.200',
+        y: '-0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 1,
-          'team': 2
+        id: {
+          id: 1,
+          team: 2
         },
-        'x': '-3.400',
-        'y': '-0.200',
-        'orientation': '0.000'
+        x: '-3.400',
+        y: '-0.200',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 2,
-          'team': 2
+        id: {
+          id: 2,
+          team: 2
         },
-        'x': '-3.400',
-        'y': '0.200',
-        'orientation': '0.000'
+        x: '-3.400',
+        y: '0.200',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 3,
-          'team': 2
+        id: {
+          id: 3,
+          team: 2
         },
-        'x': '-0.700',
-        'y': '-0.000',
-        'orientation': '0.000'
+        x: '-0.700',
+        y: '-0.000',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 4,
-          'team': 2
+        id: {
+          id: 4,
+          team: 2
         },
-        'x': '-0.700',
-        'y': '2.250',
-        'orientation': '0.000'
+        x: '-0.700',
+        y: '2.250',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 5,
-          'team': 2
+        id: {
+          id: 5,
+          team: 2
         },
-        'x': '-0.700',
-        'y': '-2.250',
-        'orientation': '0.000'
+        x: '-0.700',
+        y: '-2.250',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 6,
-          'team': 2
+        id: {
+          id: 6,
+          team: 2
         },
-        'x': '-2.000',
-        'y': '0.750',
-        'orientation': '0.000'
+        x: '-2.000',
+        y: '0.750',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 7,
-          'team': 2
+        id: {
+          id: 7,
+          team: 2
         },
-        'x': '-2.000',
-        'y': '-0.750',
-        'orientation': '0.000'
+        x: '-2.000',
+        y: '-0.750',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 8,
-          'team': 2
+        id: {
+          id: 8,
+          team: 2
         },
-        'x': '-2.000',
-        'y': '1.500',
-        'orientation': '0.000'
+        x: '-2.000',
+        y: '1.500',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 9,
-          'team': 2
+        id: {
+          id: 9,
+          team: 2
         },
-        'x': '-2.000',
-        'y': '-1.500',
-        'orientation': '0.000'
+        x: '-2.000',
+        y: '-1.500',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 10,
-          'team': 2
+        id: {
+          id: 10,
+          team: 2
         },
-        'x': '-2.000',
-        'y': '2.250',
-        'orientation': '0.000'
+        x: '-2.000',
+        y: '2.250',
+        orientation: '0.000'
       },
       {
-        'id': {
-          'id': 0,
-          'team': 1
+        id: {
+          id: 0,
+          team: 1
         },
-        'x': '4.200',
-        'y': '-0.000',
-        'orientation': '-3.141'
+        x: '4.200',
+        y: '-0.000',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 1,
-          'team': 1
+        id: {
+          id: 1,
+          team: 1
         },
-        'x': '3.400',
-        'y': '-0.200',
-        'orientation': '3.141'
+        x: '3.400',
+        y: '-0.200',
+        orientation: '3.141'
       },
       {
-        'id': {
-          'id': 2,
-          'team': 1
+        id: {
+          id: 2,
+          team: 1
         },
-        'x': '3.400',
-        'y': '0.200',
-        'orientation': '3.141'
+        x: '3.400',
+        y: '0.200',
+        orientation: '3.141'
       },
       {
-        'id': {
-          'id': 3,
-          'team': 1
+        id: {
+          id: 3,
+          team: 1
         },
-        'x': '0.700',
-        'y': '0.000',
-        'orientation': '3.141'
+        x: '0.700',
+        y: '0.000',
+        orientation: '3.141'
       },
       {
-        'id': {
-          'id': 4,
-          'team': 1
+        id: {
+          id: 4,
+          team: 1
         },
-        'x': '0.700',
-        'y': '2.250',
-        'orientation': '-3.141'
+        x: '0.700',
+        y: '2.250',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 5,
-          'team': 1
+        id: {
+          id: 5,
+          team: 1
         },
-        'x': '0.700',
-        'y': '-2.250',
-        'orientation': '-3.141'
+        x: '0.700',
+        y: '-2.250',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 6,
-          'team': 1
+        id: {
+          id: 6,
+          team: 1
         },
-        'x': '2.000',
-        'y': '0.750',
-        'orientation': '-3.141'
+        x: '2.000',
+        y: '0.750',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 7,
-          'team': 1
+        id: {
+          id: 7,
+          team: 1
         },
-        'x': '2.000',
-        'y': '-0.750',
-        'orientation': '-3.141'
+        x: '2.000',
+        y: '-0.750',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 8,
-          'team': 1
+        id: {
+          id: 8,
+          team: 1
         },
-        'x': '2.000',
-        'y': '1.500',
-        'orientation': '-3.141'
+        x: '2.000',
+        y: '1.500',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 9,
-          'team': 1
+        id: {
+          id: 9,
+          team: 1
         },
-        'x': '2.000',
-        'y': '-1.500',
-        'orientation': '-3.141'
+        x: '2.000',
+        y: '-1.500',
+        orientation: '-3.141'
       },
       {
-        'id': {
-          'id': 10,
-          'team': 1
+        id: {
+          id: 10,
+          team: 1
         },
-        'x': '2.000',
-        'y': '2.250',
-        'orientation': '-3.141'
+        x: '2.000',
+        y: '2.250',
+        orientation: '-3.141'
       }
     ]
   }
@@ -481,117 +481,115 @@ export const formatFloat = (pos?: number | null): string => {
   return `${sign}${value}`
 }
 
-
 export const sslRefCommandToString = (command: SSL_Referee.Command): string => {
   switch (command) {
     case SSL_Referee.Command.HALT:
-      return 'Halt';
+      return 'Halt'
     case SSL_Referee.Command.STOP:
-      return 'Stop';
+      return 'Stop'
     case SSL_Referee.Command.NORMAL_START:
-      return 'Normal Start';
+      return 'Normal Start'
     case SSL_Referee.Command.FORCE_START:
-      return 'Force Start';
+      return 'Force Start'
     case SSL_Referee.Command.PREPARE_KICKOFF_YELLOW:
-      return 'Prepare Kickoff Yellow';
+      return 'Prepare Kickoff Yellow'
     case SSL_Referee.Command.PREPARE_KICKOFF_BLUE:
-      return 'Prepare Kickoff Blue';
+      return 'Prepare Kickoff Blue'
     case SSL_Referee.Command.PREPARE_PENALTY_YELLOW:
-      return 'Prepare Penalty Yellow';
+      return 'Prepare Penalty Yellow'
     case SSL_Referee.Command.PREPARE_PENALTY_BLUE:
-      return 'Prepare Penalty Blue';
+      return 'Prepare Penalty Blue'
     case SSL_Referee.Command.DIRECT_FREE_YELLOW:
-      return 'Direct Free Yellow';
+      return 'Direct Free Yellow'
     case SSL_Referee.Command.DIRECT_FREE_BLUE:
-      return 'Direct Free Blue';
+      return 'Direct Free Blue'
     case SSL_Referee.Command.INDIRECT_FREE_YELLOW:
-      return 'Indirect Free Yellow';
+      return 'Indirect Free Yellow'
     case SSL_Referee.Command.INDIRECT_FREE_BLUE:
-      return 'Indirect Free Blue';
+      return 'Indirect Free Blue'
     case SSL_Referee.Command.TIMEOUT_YELLOW:
-      return 'Timeout Yellow';
+      return 'Timeout Yellow'
     case SSL_Referee.Command.TIMEOUT_BLUE:
-      return 'Timeout Blue';
+      return 'Timeout Blue'
     case SSL_Referee.Command.BALL_PLACEMENT_YELLOW:
-      return 'Ball Placement Yellow';
+      return 'Ball Placement Yellow'
     case SSL_Referee.Command.BALL_PLACEMENT_BLUE:
-      return 'Ball Placement Blue';
+      return 'Ball Placement Blue'
     default:
-      return 'Unknown';
+      return 'Unknown'
   }
 }
 
 export const sslRefCommandToIconName = (command: SSL_Referee.Command): string => {
   switch (command) {
     case SSL_Referee.Command.HALT:
-      return 'fa-stop';
+      return 'fa-stop'
     case SSL_Referee.Command.STOP:
-      return 'fa-pause';
+      return 'fa-pause'
     case SSL_Referee.Command.NORMAL_START:
-      return 'fa-play';
+      return 'fa-play'
     case SSL_Referee.Command.FORCE_START:
-      return 'fa-play-circle';
+      return 'fa-play-circle'
     case SSL_Referee.Command.PREPARE_KICKOFF_YELLOW:
-      return 'fa-flag';
+      return 'fa-flag'
     case SSL_Referee.Command.PREPARE_KICKOFF_BLUE:
-      return 'fa-flag';
+      return 'fa-flag'
     case SSL_Referee.Command.PREPARE_PENALTY_YELLOW:
-      return 'fa-exclamation-triangle';
+      return 'fa-exclamation-triangle'
     case SSL_Referee.Command.PREPARE_PENALTY_BLUE:
-      return 'fa-exclamation-triangle';
+      return 'fa-exclamation-triangle'
     case SSL_Referee.Command.DIRECT_FREE_YELLOW:
-      return 'fa-arrow-right';
+      return 'fa-arrow-right'
     case SSL_Referee.Command.DIRECT_FREE_BLUE:
-      return 'fa-arrow-right';
+      return 'fa-arrow-right'
     case SSL_Referee.Command.INDIRECT_FREE_YELLOW:
-      return 'fa-arrow-up';
+      return 'fa-arrow-up'
     case SSL_Referee.Command.INDIRECT_FREE_BLUE:
-      return 'fa-arrow-up';
+      return 'fa-arrow-up'
     case SSL_Referee.Command.TIMEOUT_YELLOW:
-      return 'fa-clock';
+      return 'fa-clock'
     case SSL_Referee.Command.TIMEOUT_BLUE:
-      return 'fa-clock';
+      return 'fa-clock'
     case SSL_Referee.Command.BALL_PLACEMENT_YELLOW:
-      return 'fa-soccer-ball-o';
+      return 'fa-soccer-ball-o'
     case SSL_Referee.Command.BALL_PLACEMENT_BLUE:
-      return 'fa-soccer-ball-o';
+      return 'fa-soccer-ball-o'
     default:
-      return 'fa-question-circle';
+      return 'fa-question-circle'
   }
 }
 
-export const stageToString = (stage: Stage): string  => {
+export const stageToString = (stage: Stage): string => {
   switch (stage) {
     case Stage.NORMAL_FIRST_HALF_PRE:
-      return "Normal First Half (Pre-Match)";
+      return 'Normal First Half (Pre-Match)'
     case Stage.NORMAL_FIRST_HALF:
-      return "Normal First Half";
+      return 'Normal First Half'
     case Stage.NORMAL_HALF_TIME:
-      return "Normal Half Time";
+      return 'Normal Half Time'
     case Stage.NORMAL_SECOND_HALF_PRE:
-      return "Normal Second Half (Pre-Match)";
+      return 'Normal Second Half (Pre-Match)'
     case Stage.NORMAL_SECOND_HALF:
-      return "Normal Second Half";
+      return 'Normal Second Half'
     case Stage.EXTRA_TIME_BREAK:
-      return "Extra Time Break";
+      return 'Extra Time Break'
     case Stage.EXTRA_FIRST_HALF_PRE:
-      return "Extra First Half (Pre-Match)";
+      return 'Extra First Half (Pre-Match)'
     case Stage.EXTRA_FIRST_HALF:
-      return "Extra First Half";
+      return 'Extra First Half'
     case Stage.EXTRA_HALF_TIME:
-      return "Extra Half Time";
+      return 'Extra Half Time'
     case Stage.EXTRA_SECOND_HALF_PRE:
-      return "Extra Second Half (Pre-Match)";
+      return 'Extra Second Half (Pre-Match)'
     case Stage.EXTRA_SECOND_HALF:
-      return "Extra Second Half";
+      return 'Extra Second Half'
     case Stage.PENALTY_SHOOTOUT_BREAK:
-      return "Penalty Shootout Break";
+      return 'Penalty Shootout Break'
     case Stage.PENALTY_SHOOTOUT:
-      return "Penalty Shootout";
+      return 'Penalty Shootout'
     case Stage.POST_GAME:
-      return "Post-Game";
+      return 'Post-Game'
     default:
-      return "Unknown";
+      return 'Unknown'
   }
 }
-

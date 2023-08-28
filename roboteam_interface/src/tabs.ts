@@ -6,6 +6,7 @@ import Feedback       from './modules/components/panels/feedback-widget.vue'
 import PlayEvaluation from './modules/components/panels/play-evaluation-widget.vue'
 import Metrics        from './modules/components/panels/metrics-widget.vue'
 import UiSettings     from './modules/components/ui-settings/ui-settings.vue'
+import RefereeWidget from './modules/components/panels/referee-widget.vue'
 
 export const TABS_DEFINITION = {
   'Game Settings': {
@@ -31,6 +32,10 @@ export const TABS_DEFINITION = {
   Metrics: {
     icon: 'fa-gauge',
     component: markRaw(Metrics)
+  },
+  Referee: {
+    icon: 'fa-flag-checkered',
+    component: markRaw(RefereeWidget)
   },
   'UI Settings': {
     icon: 'fa-gear',

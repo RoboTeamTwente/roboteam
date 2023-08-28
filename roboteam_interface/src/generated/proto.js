@@ -3963,7 +3963,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.ISTPStatus|null} [stpStatus] MsgToInterface stpStatus
          * @property {proto.IAIState|null} [aiState] MsgToInterface aiState
          * @property {proto.IState|null} [state] MsgToInterface state
-         * @property {proto.MsgToInterface.IVisualizationBuffer|null} [visualizations] MsgToInterface visualizations
+         * @property {proto.MsgToInterface.IDataBuffer|null} [data] MsgToInterface data
          */
 
         /**
@@ -4006,24 +4006,24 @@ export const proto = $root.proto = (() => {
         MsgToInterface.prototype.state = null;
 
         /**
-         * MsgToInterface visualizations.
-         * @member {proto.MsgToInterface.IVisualizationBuffer|null|undefined} visualizations
+         * MsgToInterface data.
+         * @member {proto.MsgToInterface.IDataBuffer|null|undefined} data
          * @memberof proto.MsgToInterface
          * @instance
          */
-        MsgToInterface.prototype.visualizations = null;
+        MsgToInterface.prototype.data = null;
 
         // OneOf field names bound to virtual getters and setters
         let $oneOfFields;
 
         /**
          * MsgToInterface kind.
-         * @member {"stpStatus"|"aiState"|"state"|"visualizations"|undefined} kind
+         * @member {"stpStatus"|"aiState"|"state"|"data"|undefined} kind
          * @memberof proto.MsgToInterface
          * @instance
          */
         Object.defineProperty(MsgToInterface.prototype, "kind", {
-            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "aiState", "state", "visualizations"]),
+            get: $util.oneOfGetter($oneOfFields = ["stpStatus", "aiState", "state", "data"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -4057,8 +4057,8 @@ export const proto = $root.proto = (() => {
                 $root.proto.AIState.encode(message.aiState, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.state != null && Object.hasOwnProperty.call(message, "state"))
                 $root.proto.State.encode(message.state, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.visualizations != null && Object.hasOwnProperty.call(message, "visualizations"))
-                $root.proto.MsgToInterface.VisualizationBuffer.encode(message.visualizations, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.data != null && Object.hasOwnProperty.call(message, "data"))
+                $root.proto.MsgToInterface.DataBuffer.encode(message.data, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -4106,7 +4106,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 4: {
-                        message.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.decode(reader, reader.uint32());
+                        message.data = $root.proto.MsgToInterface.DataBuffer.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -4173,14 +4173,14 @@ export const proto = $root.proto = (() => {
                         return "state." + error;
                 }
             }
-            if (message.visualizations != null && message.hasOwnProperty("visualizations")) {
+            if (message.data != null && message.hasOwnProperty("data")) {
                 if (properties.kind === 1)
                     return "kind: multiple values";
                 properties.kind = 1;
                 {
-                    let error = $root.proto.MsgToInterface.VisualizationBuffer.verify(message.visualizations);
+                    let error = $root.proto.MsgToInterface.DataBuffer.verify(message.data);
                     if (error)
-                        return "visualizations." + error;
+                        return "data." + error;
                 }
             }
             return null;
@@ -4213,10 +4213,10 @@ export const proto = $root.proto = (() => {
                     throw TypeError(".proto.MsgToInterface.state: object expected");
                 message.state = $root.proto.State.fromObject(object.state);
             }
-            if (object.visualizations != null) {
-                if (typeof object.visualizations !== "object")
-                    throw TypeError(".proto.MsgToInterface.visualizations: object expected");
-                message.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.fromObject(object.visualizations);
+            if (object.data != null) {
+                if (typeof object.data !== "object")
+                    throw TypeError(".proto.MsgToInterface.data: object expected");
+                message.data = $root.proto.MsgToInterface.DataBuffer.fromObject(object.data);
             }
             return message;
         };
@@ -4249,10 +4249,10 @@ export const proto = $root.proto = (() => {
                 if (options.oneofs)
                     object.kind = "state";
             }
-            if (message.visualizations != null && message.hasOwnProperty("visualizations")) {
-                object.visualizations = $root.proto.MsgToInterface.VisualizationBuffer.toObject(message.visualizations, options);
+            if (message.data != null && message.hasOwnProperty("data")) {
+                object.data = $root.proto.MsgToInterface.DataBuffer.toObject(message.data, options);
                 if (options.oneofs)
-                    object.kind = "visualizations";
+                    object.kind = "data";
             }
             return object;
         };
@@ -4283,27 +4283,29 @@ export const proto = $root.proto = (() => {
             return typeUrlPrefix + "/proto.MsgToInterface";
         };
 
-        MsgToInterface.VisualizationBuffer = (function() {
+        MsgToInterface.DataBuffer = (function() {
 
             /**
-             * Properties of a VisualizationBuffer.
+             * Properties of a DataBuffer.
              * @memberof proto.MsgToInterface
-             * @interface IVisualizationBuffer
-             * @property {Array.<proto.IDrawing>|null} [drawings] VisualizationBuffer drawings
-             * @property {Array.<proto.IMetric>|null} [metrics] VisualizationBuffer metrics
+             * @interface IDataBuffer
+             * @property {Array.<proto.IDrawing>|null} [drawings] DataBuffer drawings
+             * @property {Array.<proto.IMetric>|null} [metrics] DataBuffer metrics
+             * @property {Array.<proto.ISSL_Referee>|null} [referee] DataBuffer referee
              */
 
             /**
-             * Constructs a new VisualizationBuffer.
+             * Constructs a new DataBuffer.
              * @memberof proto.MsgToInterface
-             * @classdesc Represents a VisualizationBuffer.
-             * @implements IVisualizationBuffer
+             * @classdesc Represents a DataBuffer.
+             * @implements IDataBuffer
              * @constructor
-             * @param {proto.MsgToInterface.IVisualizationBuffer=} [properties] Properties to set
+             * @param {proto.MsgToInterface.IDataBuffer=} [properties] Properties to set
              */
-            function VisualizationBuffer(properties) {
+            function DataBuffer(properties) {
                 this.drawings = [];
                 this.metrics = [];
+                this.referee = [];
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -4311,43 +4313,51 @@ export const proto = $root.proto = (() => {
             }
 
             /**
-             * VisualizationBuffer drawings.
+             * DataBuffer drawings.
              * @member {Array.<proto.IDrawing>} drawings
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @instance
              */
-            VisualizationBuffer.prototype.drawings = $util.emptyArray;
+            DataBuffer.prototype.drawings = $util.emptyArray;
 
             /**
-             * VisualizationBuffer metrics.
+             * DataBuffer metrics.
              * @member {Array.<proto.IMetric>} metrics
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @instance
              */
-            VisualizationBuffer.prototype.metrics = $util.emptyArray;
+            DataBuffer.prototype.metrics = $util.emptyArray;
 
             /**
-             * Creates a new VisualizationBuffer instance using the specified properties.
-             * @function create
-             * @memberof proto.MsgToInterface.VisualizationBuffer
-             * @static
-             * @param {proto.MsgToInterface.IVisualizationBuffer=} [properties] Properties to set
-             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer instance
+             * DataBuffer referee.
+             * @member {Array.<proto.ISSL_Referee>} referee
+             * @memberof proto.MsgToInterface.DataBuffer
+             * @instance
              */
-            VisualizationBuffer.create = function create(properties) {
-                return new VisualizationBuffer(properties);
+            DataBuffer.prototype.referee = $util.emptyArray;
+
+            /**
+             * Creates a new DataBuffer instance using the specified properties.
+             * @function create
+             * @memberof proto.MsgToInterface.DataBuffer
+             * @static
+             * @param {proto.MsgToInterface.IDataBuffer=} [properties] Properties to set
+             * @returns {proto.MsgToInterface.DataBuffer} DataBuffer instance
+             */
+            DataBuffer.create = function create(properties) {
+                return new DataBuffer(properties);
             };
 
             /**
-             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * Encodes the specified DataBuffer message. Does not implicitly {@link proto.MsgToInterface.DataBuffer.verify|verify} messages.
              * @function encode
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
-             * @param {proto.MsgToInterface.IVisualizationBuffer} message VisualizationBuffer message or plain object to encode
+             * @param {proto.MsgToInterface.IDataBuffer} message DataBuffer message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            VisualizationBuffer.encode = function encode(message, writer) {
+            DataBuffer.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
                 if (message.drawings != null && message.drawings.length)
@@ -4356,37 +4366,40 @@ export const proto = $root.proto = (() => {
                 if (message.metrics != null && message.metrics.length)
                     for (let i = 0; i < message.metrics.length; ++i)
                         $root.proto.Metric.encode(message.metrics[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.referee != null && message.referee.length)
+                    for (let i = 0; i < message.referee.length; ++i)
+                        $root.proto.SSL_Referee.encode(message.referee[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 return writer;
             };
 
             /**
-             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
+             * Encodes the specified DataBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.DataBuffer.verify|verify} messages.
              * @function encodeDelimited
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
-             * @param {proto.MsgToInterface.IVisualizationBuffer} message VisualizationBuffer message or plain object to encode
+             * @param {proto.MsgToInterface.IDataBuffer} message DataBuffer message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            VisualizationBuffer.encodeDelimited = function encodeDelimited(message, writer) {
+            DataBuffer.encodeDelimited = function encodeDelimited(message, writer) {
                 return this.encode(message, writer).ldelim();
             };
 
             /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer.
+             * Decodes a DataBuffer message from the specified reader or buffer.
              * @function decode
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
              * @param {number} [length] Message length if known beforehand
-             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             * @returns {proto.MsgToInterface.DataBuffer} DataBuffer
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            VisualizationBuffer.decode = function decode(reader, length) {
+            DataBuffer.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MsgToInterface.VisualizationBuffer();
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.MsgToInterface.DataBuffer();
                 while (reader.pos < end) {
                     let tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -4402,6 +4415,12 @@ export const proto = $root.proto = (() => {
                             message.metrics.push($root.proto.Metric.decode(reader, reader.uint32()));
                             break;
                         }
+                    case 3: {
+                            if (!(message.referee && message.referee.length))
+                                message.referee = [];
+                            message.referee.push($root.proto.SSL_Referee.decode(reader, reader.uint32()));
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -4411,30 +4430,30 @@ export const proto = $root.proto = (() => {
             };
 
             /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
+             * Decodes a DataBuffer message from the specified reader or buffer, length delimited.
              * @function decodeDelimited
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             * @returns {proto.MsgToInterface.DataBuffer} DataBuffer
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            VisualizationBuffer.decodeDelimited = function decodeDelimited(reader) {
+            DataBuffer.decodeDelimited = function decodeDelimited(reader) {
                 if (!(reader instanceof $Reader))
                     reader = new $Reader(reader);
                 return this.decode(reader, reader.uint32());
             };
 
             /**
-             * Verifies a VisualizationBuffer message.
+             * Verifies a DataBuffer message.
              * @function verify
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            VisualizationBuffer.verify = function verify(message) {
+            DataBuffer.verify = function verify(message) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
                 if (message.drawings != null && message.hasOwnProperty("drawings")) {
@@ -4455,60 +4474,80 @@ export const proto = $root.proto = (() => {
                             return "metrics." + error;
                     }
                 }
+                if (message.referee != null && message.hasOwnProperty("referee")) {
+                    if (!Array.isArray(message.referee))
+                        return "referee: array expected";
+                    for (let i = 0; i < message.referee.length; ++i) {
+                        let error = $root.proto.SSL_Referee.verify(message.referee[i]);
+                        if (error)
+                            return "referee." + error;
+                    }
+                }
                 return null;
             };
 
             /**
-             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
+             * Creates a DataBuffer message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {proto.MsgToInterface.VisualizationBuffer} VisualizationBuffer
+             * @returns {proto.MsgToInterface.DataBuffer} DataBuffer
              */
-            VisualizationBuffer.fromObject = function fromObject(object) {
-                if (object instanceof $root.proto.MsgToInterface.VisualizationBuffer)
+            DataBuffer.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.MsgToInterface.DataBuffer)
                     return object;
-                let message = new $root.proto.MsgToInterface.VisualizationBuffer();
+                let message = new $root.proto.MsgToInterface.DataBuffer();
                 if (object.drawings) {
                     if (!Array.isArray(object.drawings))
-                        throw TypeError(".proto.MsgToInterface.VisualizationBuffer.drawings: array expected");
+                        throw TypeError(".proto.MsgToInterface.DataBuffer.drawings: array expected");
                     message.drawings = [];
                     for (let i = 0; i < object.drawings.length; ++i) {
                         if (typeof object.drawings[i] !== "object")
-                            throw TypeError(".proto.MsgToInterface.VisualizationBuffer.drawings: object expected");
+                            throw TypeError(".proto.MsgToInterface.DataBuffer.drawings: object expected");
                         message.drawings[i] = $root.proto.Drawing.fromObject(object.drawings[i]);
                     }
                 }
                 if (object.metrics) {
                     if (!Array.isArray(object.metrics))
-                        throw TypeError(".proto.MsgToInterface.VisualizationBuffer.metrics: array expected");
+                        throw TypeError(".proto.MsgToInterface.DataBuffer.metrics: array expected");
                     message.metrics = [];
                     for (let i = 0; i < object.metrics.length; ++i) {
                         if (typeof object.metrics[i] !== "object")
-                            throw TypeError(".proto.MsgToInterface.VisualizationBuffer.metrics: object expected");
+                            throw TypeError(".proto.MsgToInterface.DataBuffer.metrics: object expected");
                         message.metrics[i] = $root.proto.Metric.fromObject(object.metrics[i]);
+                    }
+                }
+                if (object.referee) {
+                    if (!Array.isArray(object.referee))
+                        throw TypeError(".proto.MsgToInterface.DataBuffer.referee: array expected");
+                    message.referee = [];
+                    for (let i = 0; i < object.referee.length; ++i) {
+                        if (typeof object.referee[i] !== "object")
+                            throw TypeError(".proto.MsgToInterface.DataBuffer.referee: object expected");
+                        message.referee[i] = $root.proto.SSL_Referee.fromObject(object.referee[i]);
                     }
                 }
                 return message;
             };
 
             /**
-             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
+             * Creates a plain object from a DataBuffer message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
-             * @param {proto.MsgToInterface.VisualizationBuffer} message VisualizationBuffer
+             * @param {proto.MsgToInterface.DataBuffer} message DataBuffer
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            VisualizationBuffer.toObject = function toObject(message, options) {
+            DataBuffer.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 let object = {};
                 if (options.arrays || options.defaults) {
                     object.drawings = [];
                     object.metrics = [];
+                    object.referee = [];
                 }
                 if (message.drawings && message.drawings.length) {
                     object.drawings = [];
@@ -4520,36 +4559,41 @@ export const proto = $root.proto = (() => {
                     for (let j = 0; j < message.metrics.length; ++j)
                         object.metrics[j] = $root.proto.Metric.toObject(message.metrics[j], options);
                 }
+                if (message.referee && message.referee.length) {
+                    object.referee = [];
+                    for (let j = 0; j < message.referee.length; ++j)
+                        object.referee[j] = $root.proto.SSL_Referee.toObject(message.referee[j], options);
+                }
                 return object;
             };
 
             /**
-             * Converts this VisualizationBuffer to JSON.
+             * Converts this DataBuffer to JSON.
              * @function toJSON
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            VisualizationBuffer.prototype.toJSON = function toJSON() {
+            DataBuffer.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
-             * Gets the default type url for VisualizationBuffer
+             * Gets the default type url for DataBuffer
              * @function getTypeUrl
-             * @memberof proto.MsgToInterface.VisualizationBuffer
+             * @memberof proto.MsgToInterface.DataBuffer
              * @static
              * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns {string} The default type url
              */
-            VisualizationBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            DataBuffer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
                 if (typeUrlPrefix === undefined) {
                     typeUrlPrefix = "type.googleapis.com";
                 }
-                return typeUrlPrefix + "/proto.MsgToInterface.VisualizationBuffer";
+                return typeUrlPrefix + "/proto.MsgToInterface.DataBuffer";
             };
 
-            return VisualizationBuffer;
+            return DataBuffer;
         })();
 
         return MsgToInterface;

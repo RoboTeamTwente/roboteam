@@ -1542,8 +1542,8 @@ export namespace proto {
         /** MsgToInterface state */
         state?: (proto.IState|null);
 
-        /** MsgToInterface visualizations */
-        visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
+        /** MsgToInterface data */
+        data?: (proto.MsgToInterface.IDataBuffer|null);
     }
 
     /** Represents a MsgToInterface. */
@@ -1564,11 +1564,11 @@ export namespace proto {
         /** MsgToInterface state. */
         public state?: (proto.IState|null);
 
-        /** MsgToInterface visualizations. */
-        public visualizations?: (proto.MsgToInterface.IVisualizationBuffer|null);
+        /** MsgToInterface data. */
+        public data?: (proto.MsgToInterface.IDataBuffer|null);
 
         /** MsgToInterface kind. */
-        public kind?: ("stpStatus"|"aiState"|"state"|"visualizations");
+        public kind?: ("stpStatus"|"aiState"|"state"|"data");
 
         /**
          * Creates a new MsgToInterface instance using the specified properties.
@@ -1650,103 +1650,109 @@ export namespace proto {
 
     namespace MsgToInterface {
 
-        /** Properties of a VisualizationBuffer. */
-        interface IVisualizationBuffer {
+        /** Properties of a DataBuffer. */
+        interface IDataBuffer {
 
-            /** VisualizationBuffer drawings */
+            /** DataBuffer drawings */
             drawings?: (proto.IDrawing[]|null);
 
-            /** VisualizationBuffer metrics */
+            /** DataBuffer metrics */
             metrics?: (proto.IMetric[]|null);
+
+            /** DataBuffer referee */
+            referee?: (proto.ISSL_Referee[]|null);
         }
 
-        /** Represents a VisualizationBuffer. */
-        class VisualizationBuffer implements IVisualizationBuffer {
+        /** Represents a DataBuffer. */
+        class DataBuffer implements IDataBuffer {
 
             /**
-             * Constructs a new VisualizationBuffer.
+             * Constructs a new DataBuffer.
              * @param [properties] Properties to set
              */
-            constructor(properties?: proto.MsgToInterface.IVisualizationBuffer);
+            constructor(properties?: proto.MsgToInterface.IDataBuffer);
 
-            /** VisualizationBuffer drawings. */
+            /** DataBuffer drawings. */
             public drawings: proto.IDrawing[];
 
-            /** VisualizationBuffer metrics. */
+            /** DataBuffer metrics. */
             public metrics: proto.IMetric[];
 
+            /** DataBuffer referee. */
+            public referee: proto.ISSL_Referee[];
+
             /**
-             * Creates a new VisualizationBuffer instance using the specified properties.
+             * Creates a new DataBuffer instance using the specified properties.
              * @param [properties] Properties to set
-             * @returns VisualizationBuffer instance
+             * @returns DataBuffer instance
              */
-            public static create(properties?: proto.MsgToInterface.IVisualizationBuffer): proto.MsgToInterface.VisualizationBuffer;
+            public static create(properties?: proto.MsgToInterface.IDataBuffer): proto.MsgToInterface.DataBuffer;
 
             /**
-             * Encodes the specified VisualizationBuffer message. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
-             * @param message VisualizationBuffer message or plain object to encode
+             * Encodes the specified DataBuffer message. Does not implicitly {@link proto.MsgToInterface.DataBuffer.verify|verify} messages.
+             * @param message DataBuffer message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encode(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encode(message: proto.MsgToInterface.IDataBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Encodes the specified VisualizationBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.VisualizationBuffer.verify|verify} messages.
-             * @param message VisualizationBuffer message or plain object to encode
+             * Encodes the specified DataBuffer message, length delimited. Does not implicitly {@link proto.MsgToInterface.DataBuffer.verify|verify} messages.
+             * @param message DataBuffer message or plain object to encode
              * @param [writer] Writer to encode to
              * @returns Writer
              */
-            public static encodeDelimited(message: proto.MsgToInterface.IVisualizationBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: proto.MsgToInterface.IDataBuffer, writer?: $protobuf.Writer): $protobuf.Writer;
 
             /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer.
+             * Decodes a DataBuffer message from the specified reader or buffer.
              * @param reader Reader or buffer to decode from
              * @param [length] Message length if known beforehand
-             * @returns VisualizationBuffer
+             * @returns DataBuffer
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface.VisualizationBuffer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): proto.MsgToInterface.DataBuffer;
 
             /**
-             * Decodes a VisualizationBuffer message from the specified reader or buffer, length delimited.
+             * Decodes a DataBuffer message from the specified reader or buffer, length delimited.
              * @param reader Reader or buffer to decode from
-             * @returns VisualizationBuffer
+             * @returns DataBuffer
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface.VisualizationBuffer;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): proto.MsgToInterface.DataBuffer;
 
             /**
-             * Verifies a VisualizationBuffer message.
+             * Verifies a DataBuffer message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
             public static verify(message: { [k: string]: any }): (string|null);
 
             /**
-             * Creates a VisualizationBuffer message from a plain object. Also converts values to their respective internal types.
+             * Creates a DataBuffer message from a plain object. Also converts values to their respective internal types.
              * @param object Plain object
-             * @returns VisualizationBuffer
+             * @returns DataBuffer
              */
-            public static fromObject(object: { [k: string]: any }): proto.MsgToInterface.VisualizationBuffer;
+            public static fromObject(object: { [k: string]: any }): proto.MsgToInterface.DataBuffer;
 
             /**
-             * Creates a plain object from a VisualizationBuffer message. Also converts values to other types if specified.
-             * @param message VisualizationBuffer
+             * Creates a plain object from a DataBuffer message. Also converts values to other types if specified.
+             * @param message DataBuffer
              * @param [options] Conversion options
              * @returns Plain object
              */
-            public static toObject(message: proto.MsgToInterface.VisualizationBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public static toObject(message: proto.MsgToInterface.DataBuffer, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
             /**
-             * Converts this VisualizationBuffer to JSON.
+             * Converts this DataBuffer to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };
 
             /**
-             * Gets the default type url for VisualizationBuffer
+             * Gets the default type url for DataBuffer
              * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns The default type url
              */

@@ -7,22 +7,26 @@ import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
 import { useVisualizationStore } from '../stores/data-stores/visualization-store'
 import { useProtoWebSocket } from './proto-websocket'
 import { rand } from '@vueuse/core'
+import { useRefereeDataStore } from '../stores/data-stores/referee-store'
 
 export const useAiController = defineStore('aiController', () => {
   // Dependencies
-  const stpData = useSTPDataStore(),
+  const
+    stpData = useSTPDataStore(),
     visionData = useVisionDataStore(),
     visualizationData = useVisualizationStore(),
-    aiData = useAIDataStore()
+    aiData = useAIDataStore(),
+    refereeData = useRefereeDataStore()
 
   const { status, send, open, close } = useProtoWebSocket((message) =>
     ({
       aiState: () => aiData.updateStateFromProto(message.aiState!),
       stpStatus: () => stpData.processSTPMsg(message.stpStatus!),
       state: () => visionData.processVisionMsg(message.state!),
-      visualizations: () => {
-        visualizationData.pushDrawings(message.visualizations!.drawings!)
-        visualizationData.pushMetrics(message.visualizations!.metrics!)
+      data: () => {
+        visualizationData.pushDrawings(message.data!.drawings!)
+        visualizationData.pushMetrics(message.data!.metrics!)
+        refereeData.pushRefereeData(message.data!.referee!)
       }
     }[message.kind!]())
   )
@@ -30,7 +34,7 @@ export const useAiController = defineStore('aiController', () => {
   // Actions
   const setBallPos = (x: number, y: number) => send('setBallPos', { x, y })
 
-  const sendSimulatorCommand = (command: ISimulatorCommand) => send('simulatorCommand', command);
+  const sendSimulatorCommand = (command: ISimulatorCommand) => send('simulatorCommand', command)
 
   // Writable computed properties
   const useReferee = computed({

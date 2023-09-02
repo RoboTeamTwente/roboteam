@@ -2,6 +2,7 @@
 
 #include <csignal>
 #include <memory>
+#include <sstream>
 #include <utility>
 
 #include "RobotHubMode.h"
@@ -66,11 +67,17 @@ int main(int argc, char** argv) {
     // We default to the simulator, but if the --basestation flag is given, we set the mode to basestation
     rtt::GameSettings::setRobotHubMode(rtt::findFlagValue(args, "--basestation", true).has_value() ? rtt::net::RobotHubMode::BASESTATION : rtt::net::RobotHubMode::SIMULATOR);
 
-    RTT_INFO("AI initialized as: ", (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY"))
-    RTT_INFO("Starting as color: ", (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE"))
-    RTT_INFO("Starting in mode: ", rtt::net::robotHubModeToString(rtt::GameSettings::getRobotHubMode()))
-    RTT_INFO("Playing on side: ", (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT"))
-    RTT_INFO("This AI will ", rtt::GameSettings::isPrimaryAI() ? "" : "NOT ", "broadcast settings")
+    const auto interfacePort = rtt::GameSettings::isPrimaryAI() ? 12676 : 12677;
+    std::ostringstream ss;
+    ss << "\n";
+    ss << "🤖 AI Information\n";
+    ss << "├── Initialized as: " << (rtt::GameSettings::isPrimaryAI() ? "PRIMARY" : "SECONDARY") << "\n";
+    ss << "├── Interface port: " << interfacePort << "\n";
+    ss << "├── Starting as color: " << (rtt::GameSettings::isYellow() ? "🟨 YELLOW" : "🟦 BLUE") << "\n";
+    ss << "├── Starting in mode: " << rtt::net::robotHubModeToString(rtt::GameSettings::getRobotHubMode()) << "🕹️\n";
+    ss << "├── Playing on side: " << (rtt::GameSettings::isLeft() ? "⬅️ LEFT" : "➡️ RIGHT") << "\n";
+    ss << "└── This AI will " << (rtt::GameSettings::isPrimaryAI() ? "" : "NOT") << " broadcast settings \n";
+    RTT_INFO(ss.str());
 
     if (!rtt::ai::io::io.init(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Failed to initialize IO Manager. Exiting...")
@@ -78,8 +85,7 @@ int main(int argc, char** argv) {
     }
 
     RTT_DEBUG("Initialize Interface Server");
-    auto interfaceGateway =
-        std::make_shared<rtt::ai::gui::net::InterfaceGateway>(rtt::GameSettings::isPrimaryAI() ? 12676 : 12677);  /// Shared-prt because the variable is shared accross threads
+    auto interfaceGateway = std::make_shared<rtt::ai::gui::net::InterfaceGateway>(interfacePort);  /// Shared-prt because the variable is shared accross threads
 
     initializeExitHandler();
     std::thread stpThread(runStp, interfaceGateway);

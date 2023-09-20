@@ -36,6 +36,7 @@ add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/skills/Orbit.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/OrbitAngular.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/skills/TestSkill.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/skills/DemoKeeperDefendGoal.cpp
 )
 target_include_directories(roboteam_ai_skills
         PRIVATE include/roboteam_ai
@@ -60,6 +61,8 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/ChipAtPos.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/OrbitKick.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/DemoKeeperBlockBall.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/DemoKeeperMove.cpp
         # passive/
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/AvoidBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockBall.cpp
@@ -82,6 +85,7 @@ add_library(roboteam_ai_roles
         # /
         ${PROJECT_SOURCE_DIR}/src/stp/roles/TestRole.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/Keeper.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/DemoKeeper.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/PenaltyKeeper.cpp
         # active
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Attacker.cpp
@@ -118,6 +122,7 @@ add_library(roboteam_ai_plays
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/DefendPass.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/DefendShot.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/KeeperKickBall.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/defensive/KeeperDemo.cpp
         # offensive/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/Attack.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/offensive/AttackingPass.cpp

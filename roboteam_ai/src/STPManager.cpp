@@ -21,6 +21,7 @@
 #include "stp/plays/defensive/DefendPass.h"
 #include "stp/plays/defensive/DefendShot.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
+#include "stp/plays/defensive/KeeperDemo.h"
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
 #include "stp/plays/offensive/ChippingPass.h"
@@ -41,6 +42,7 @@
 #include "stp/plays/referee_specific/PenaltyThemPrepare.h"
 #include "stp/plays/referee_specific/PenaltyUs.h"
 #include "stp/plays/referee_specific/PenaltyUsPrepare.h"
+
 
 namespace io = rtt::ai::io;
 namespace ai = rtt::ai;
@@ -75,6 +77,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<plays::KickOffUs>());
     plays.emplace_back(std::make_unique<plays::KickOffThem>());
+    plays.emplace_back(std::make_unique<plays::KeeperDemo>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());

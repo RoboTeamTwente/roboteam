@@ -117,7 +117,7 @@ std::optional<HalfLine> DemoKeeperMove::estimateBallTrajectory(const world::view
 bool DemoKeeperMove::isEndTactic() noexcept { return true; }
 
 bool DemoKeeperMove::isTacticFailing(const StpInfo &info) noexcept { 
-    if ((info.getBall()->get()->position - info.getRobot().value()->getPos()).length() > stp::control_constants::DEMO_KEEPER_LOWER_BOUND) {
+    if (info.getBall()->get()->visible and ((info.getBall()->get()->position - info.getRobot().value()->getPos()).length() > stp::control_constants::DEMO_KEEPER_LOWER_BOUND)) {
         return true;
     } else {
         return false;

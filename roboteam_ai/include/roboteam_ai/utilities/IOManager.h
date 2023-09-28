@@ -46,10 +46,6 @@ class IOManager {
     std::unique_ptr<rtt::net::RobotCommandsBluePublisher> robotCommandsBluePublisher;     /**< The socket that publishes the robot commands for the blue team */
     std::unique_ptr<rtt::net::RobotCommandsYellowPublisher> robotCommandsYellowPublisher; /**< The socket that publishes the robot commands for the yellow team */
 
-    /** Only the primary AI publishes settings. The secondary AI subscribes to those settings so they are on the same line */
-    std::unique_ptr<rtt::net::SettingsPublisher> settingsPublisher;   /**< The socket that publishes the settings from interface */
-    std::unique_ptr<rtt::net::SettingsSubscriber> settingsSubscriber; /**< The socket that receives the settings for interface */
-
     rtt::ai::Pause* pause; /**< Pauses the robots when needed */
 
     /**
@@ -71,12 +67,6 @@ class IOManager {
      * @param robotCommands Commands that need to be published
      */
     void publishAllRobotCommands(rtt::RobotCommands& robotCommands);
-
-    /**
-     * @brief Publishes the settings on the settingsPublisher channel
-     * @param settings The settings that need to be published
-     */
-    void publishSettings();
 
     /**
      * @brief Initializes the IOManager

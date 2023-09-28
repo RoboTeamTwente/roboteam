@@ -121,11 +121,6 @@ void STPManager::start(std::atomic_flag &exitApplication) {
                 },
                 45);
 
-            // If this is primary AI, broadcast settings every second
-            if (GameSettings::isPrimaryAI()) {
-                stpTimer.limit([&]() { io::io.publishSettings(); }, ai::Constants::SETTINGS_BROADCAST_RATE());
-            }
-
             if (exitApplication.test()) {
                 stpTimer.stop();
             }

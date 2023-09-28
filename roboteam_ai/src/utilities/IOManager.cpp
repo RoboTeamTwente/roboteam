@@ -25,22 +25,6 @@ bool IOManager::init(bool isPrimaryAI) {
     auto worldCallback = std::bind(&IOManager::handleState, this, std::placeholders::_1);
     this->worldSubscriber = std::make_unique<rtt::net::WorldSubscriber>(worldCallback);
 
-    if (isPrimaryAI) {
-        try {
-            this->settingsPublisher = std::make_unique<rtt::net::SettingsPublisher>();
-        } catch (const zmqpp::zmq_internal_exception& e) {
-            success = false;
-            RTT_ERROR("Failed to open settings publisher channel. Is it already taken?")
-        }
-    } else {
-        try {
-            this->settingsSubscriber =
-                std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings& settings) { GameSettings::handleSettingsFromPrimaryAI(settings); });
-        } catch (const zmqpp::zmq_internal_exception& e) {
-            success = false;
-            RTT_ERROR("Failed to open settings subscriber channel")
-        }
-    }
     return success;
 }
 
@@ -72,19 +56,6 @@ void IOManager::handleState(const proto::State& stateMsg) {
 
         // TODO: Fix for new GameStateManager
         // ai::GameStateManager::setGameStateFromReferee(state.referee(), data->getWorld());
-    }
-}
-
-void IOManager::publishSettings() {
-    proto::GameSettings protoSetting;
-
-    protoSetting.set_is_primary_ai(GameSettings::isPrimaryAI());
-    protoSetting.set_is_left(GameSettings::isLeft());
-    protoSetting.set_is_yellow(GameSettings::isYellow());
-    protoSetting.set_robot_hub_mode(robotHubModeToProto(GameSettings::getRobotHubMode()));
-
-    if (this->settingsPublisher != nullptr) {
-        this->settingsPublisher->publish(protoSetting);
     }
 }
 

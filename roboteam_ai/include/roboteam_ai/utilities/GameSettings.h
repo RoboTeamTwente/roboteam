@@ -10,7 +10,6 @@ namespace rtt {
 
 /**
  * Game settings that must be shared between all players and the referee (e.g. who is playing on which side, which team is yellow, etc.)
- * These settings are set by the primary AI, and are read-only for secondary AIs.
  * Importantly referee can also change these settings, thus this class must be thread-safe, since referee is handled in a separate (IO) thread.
  *
  * The AI has to be able to handle any changes to these settings WITHOUT restart. Thus settings such as visions_port that require a restart of
@@ -25,10 +24,16 @@ class GameSettings {
     GameSettings() = delete;
 
     /**
-     * This function takes directly the values of the settings of Primary AI, and will convert them to settings this AI should have.
-     * @param settings The settings of the primary AI received from the Settings subscriber
+     * @brief Checks whether the settings have changed since the last time they were read
+     * @return Boolean that tells whether the settings have changed
      */
-    static void handleSettingsFromPrimaryAI(const proto::GameSettings& settings);
+    static bool hasChanges();
+
+    /**
+     * This function takes directly the values from the proto message and sets them in the GameSettings class.
+     * @param settings The proto::GameSettings
+     */
+    static void copyFrom(const proto::GameSettings& settings);
 
     /**
      * @brief Checks whether this AI is the primary AI
@@ -40,7 +45,7 @@ class GameSettings {
      * @brief Sets the ID of this AI
      * @param id The ID of this AI
      */
-    static void setPrimaryAI(bool value);
+    static void setPrimaryAI(bool is_primary_AI);
 
     /**
      * @brief Checks whether this is the yellow team
@@ -53,7 +58,7 @@ class GameSettings {
      * @param yellow Indicates whether this is the yellow team
      * @return Boolean that tells whether the team has been set succesfully
      */
-    static bool setYellow(bool yellow);
+    static bool setYellow(bool is_yellow);
 
     /**
      * @brief Checks whether we are playing on the left side
@@ -65,7 +70,7 @@ class GameSettings {
      * @brief Sets the side we are playing on
      * @param left Indicates whether we are playing on the left side
      */
-    static void setLeft(bool left);
+    static void setLeft(bool is_left);
 
     /**
      * @brief Gets the mode that RobotHub is in
@@ -76,15 +81,15 @@ class GameSettings {
     /**
      * @brief Sets the RobotHub mode
      * @param mode The mode RobotHub should be in
-     * @return Boolean that tells whether the mode has been set successfully
      */
-    static bool setRobotHubMode(net::RobotHubMode mode);
+    static void setRobotHubMode(net::RobotHubMode mode);
 
    private:
-    static std::atomic<bool> primaryAI;
-    static std::atomic<bool> yellow;                    /**< Indicates whether this is the yellow team */
-    static std::atomic<bool> left;                      /**< Indicates whether we are playing on the left side */
-    static std::atomic<net::RobotHubMode> robotHubMode; /**< The mode in which RobotHub is sending robot commands */
+    static std::atomic<bool> has_changes;                 // Indicates whether any of the settings have changed since the last time they were read
+    static std::atomic<bool> primary_AI;                  // Indicates whether this is the primary AI
+    static std::atomic<bool> yellow;                      // Indicates whether this is the yellow team
+    static std::atomic<bool> left;                        // Indicates whether we are playing on the left side
+    static std::atomic<net::RobotHubMode> robothub_mode;  // The mode in which RobotHub is sending robot commands
 };
 
 }  // namespace rtt

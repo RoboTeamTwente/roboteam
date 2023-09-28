@@ -12,7 +12,7 @@ add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/Dealer.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/IOManager.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/RefCommand.cpp
-        ${PROJECT_SOURCE_DIR}/src/utilities/Settings.cpp
+        ${PROJECT_SOURCE_DIR}/src/utilities/GameSettings.cpp
         ${PROJECT_SOURCE_DIR}/src/utilities/normalize.cpp
 )
 target_link_libraries(roboteam_ai_utils

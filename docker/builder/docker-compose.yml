@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  roboteam_builder:
+    build:
+      context: ../
+      target: development
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_builder
+    restart: "no"
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./build.sh"
+    volumes:
+      - ../../:/home/roboteamtwente/

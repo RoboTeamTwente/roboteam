@@ -1,0 +1,105 @@
+version: '3'
+
+services:
+
+  roboteam_primary_ai:
+    build: 
+      context: ../
+      target: run
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_primary_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_ai --primary-ai"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12676:12676 # Primary AI Port
+    ports:
+      - 12676:12676 # Primary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_secondary_ai:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_secondary_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_ai --secondary-ai"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12677:12677 # Secondary AI Port
+    ports:
+      - 12677:12677 # Secondary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_observer:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_observer
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10006:10006 # Vision port vision
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # Referee port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_robothub:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_robothub
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_robothub"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_interface:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_interface
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "yarn serve --host 0.0.0.0"
+    ports:
+      - 8080:8080
+    volumes:
+      - ../../roboteam_interface/:/home/roboteamtwente/
+
+  erforce_simulator:
+    image: rtt-build-env:latest
+    container_name: RTT_erforce_simulator
+    restart: always
+    working_dir: "/home/roboteamtwente/external/framework/build/bin/"
+    command: sh -c "./simulator-cli"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    volumes:
+      - ../../:/home/roboteamtwente/

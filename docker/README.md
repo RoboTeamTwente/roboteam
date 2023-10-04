@@ -7,7 +7,8 @@ For a simulation tournament (2022/04), every team had to put their program in a 
 ## Structure
 The description of the environment is located in the Dockerfile inside the `docker` folder. The file is divided in two targets: "development" and "release".
 
-Release target is only intended as a GitHub Action target, its purpose is to create the Docker image containing runnable binaries that can be pushed into a Registry. If you really want to build it locally you can do it by first building the development target, then compile sources with it and then build the release target. Development target is intended as a normal usage target.
+Release target is only intended as a GitHub Action target, its purpose is to create the Docker image containing runnable binaries that can be pushed into a Registry. If you really want to build it locally you can do it by first building the development target, then compile sources with it and then build the release target. Note that release target contains only RoboTeamTwente binaries and not external ones like erforce simulator or erforce autoref.
+Development target is instead intended as a normal usage target.
 
 Inside `docker` folder there are three subdirectories: `builder` `game` and `simulator`.
 Every folder contains a convenient docker compose file:
@@ -24,6 +25,12 @@ echo ROBOTEAM_REPO=$(pwd)/ >> ~/.bashrc
 source ~/.bashrc
 ```
 
+Init submodules:
+```
+cd $ROBOTEAM_REPO
+git submodule update --init --recursive
+```
+
 Every subproject is meant to be executed as a service using its own container from a docker-compose.
 Every RTT subproject (service) runs in its own 'rtt-build-env' container, this way that all dependencies and requirements are satisfied. 
 Subproject containers start their own software from `build/release/bin` folder mounted as a volume.
@@ -34,7 +41,6 @@ Subproject containers start their own software from `build/release/bin` folder m
 3) Spin-up "simulator"/"game" compose
 4) (Game-only) Download, install and run ssl-vision
 4) Download and run ssl-game-controller (https://github.com/RoboCup-SSL/ssl-game-controller/releases)
-5) (opt.) Download, install and run an autoref (e.g. https://github.com/robotics-erlangen/autoref)
 
 As simple as that.
 

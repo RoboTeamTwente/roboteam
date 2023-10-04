@@ -27,6 +27,13 @@ then
                 echo "Building external/framework"
                 mkdir -p build && pushd build
                 cmake .. && make simulator-cli -j$(nproc)
+                popd
+            popd
+            pushd autoref
+                echo "Building external/autoref"
+                mkdir -p build && pushd build
+                cmake .. && make autoref-cli -j$(nproc)
+                popd
             popd
         popd
         echo "Done, exiting builder.."

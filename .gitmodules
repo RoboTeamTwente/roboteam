@@ -1,3 +1,6 @@
 [submodule "external/framework"]
 	path = external/framework
 	url = https://github.com/robotics-erlangen/framework.git
+[submodule "external/autoref"]
+	path = external/autoref
+	url = https://github.com/robotics-erlangen/autoref.git

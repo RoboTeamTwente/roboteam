@@ -87,6 +87,20 @@ services:
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
 
+  erforce_autoref:
+    image: rtt-build-env:latest
+    container_name: RTT_erforce_autoref
+    restart: always
+    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
+    command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10020:10020 #Vision port simulator
+      - 10003:10003 #Ref port
+      - 10010:10010 #Tracker port
+    volumes:
+      - ../../:/home/roboteamtwente/
+
   erforce_simulator:
     image: rtt-build-env:latest
     container_name: RTT_erforce_simulator

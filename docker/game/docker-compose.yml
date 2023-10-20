@@ -22,23 +22,6 @@ services:
     volumes:
       - ../../build/release/:/home/roboteamtwente/
 
-  roboteam_secondary_ai:
-    image: rtt-build-env:latest
-    container_name: RTT_roboteam_secondary_ai
-    restart: always
-    working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_ai --secondary-ai --basestation"
-    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
-    expose:
-      - 1-65535:1-65535 # For zeromq ports
-      - 12677:12677 # Secondary AI Port
-    ports:
-      - 12677:12677 # Secondary AI Port
-    environment:
-      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
-    volumes:
-      - ../../build/release/:/home/roboteamtwente/
-
   roboteam_observer:
     image: rtt-build-env:latest
     container_name: RTT_roboteam_observer
@@ -100,6 +83,14 @@ services:
       - 10010:10010 #Tracker port
     volumes:
       - ../../:/home/roboteamtwente/
+
+  ssl-game-controller:
+    image: robocupssl/ssl-game-controller:latest
+    container_name: RTT_ssl-game-controller
+    restart: always
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    ports:
+      - "8081:8081/tcp" # UI port
 
 #  ssl_vision:
 #    image: rtt-build-env:latest

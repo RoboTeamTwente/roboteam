@@ -95,9 +95,9 @@ services:
     command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
-      - 10020:10020 #Vision port simulator
-      - 10003:10003 #Ref port
-      - 10010:10010 #Tracker port
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # Ref port
+      - 10010:10010 # Tracker port
     volumes:
       - ../../:/home/roboteamtwente/
 
@@ -117,3 +117,11 @@ services:
       - 30013:30013 #Simulation Feedback Port
     volumes:
       - ../../:/home/roboteamtwente/
+
+  ssl-game-controller:
+    image: robocupssl/ssl-game-controller:latest
+    container_name: RTT_ssl-game-controller
+    restart: always
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    ports:
+      - "8081:8081/tcp" # UI port

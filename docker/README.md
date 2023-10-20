@@ -31,7 +31,9 @@ cd $ROBOTEAM_REPO
 git submodule update --init --recursive
 ```
 
-Every subproject is meant to be executed as a service using its own container from a docker-compose.
+Then, install prerequisite: install Docker https://docs.docker.com/engine/install/, if you want you can add yourself to docker group in order to run Docker command without invoking root user https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user and finally install docker compose.
+
+Every subproject is meant to be executed as a service using its own container from a docker compose.
 Every RTT subproject (service) runs in its own 'rtt-build-env' container, this way that all dependencies and requirements are satisfied. 
 Subproject containers start their own software from `build/release/bin` folder mounted as a volume.
 
@@ -40,19 +42,19 @@ Subproject containers start their own software from `build/release/bin` folder m
 2) Spin-up "builder" compose
 3) Spin-up "simulator"/"game" compose
 4) (Game-only) Download, install and run ssl-vision
-4) Download and run ssl-game-controller (https://github.com/RoboCup-SSL/ssl-game-controller/releases)
+5) You can now reach game controller UI on localhost:8081 and roboteam interface on localhost:8080, connect to primary_ai (port 12676) or secondary_ai (port 12677).
 
 As simple as that.
 
 1. Whenever you want to build all RTT services (normal operation) you simply need to run:
 ```
 cd $ROBOTEAM_REPO/docker/builder
-docker-compose up
+docker compose up
 ```
 2. Start services:
 ```
 cd $ROBOTEAM_REPO/docker/<simulator / game>
-docker-compose up <-d>
+docker compose up <-d>
 ```
 When you want to stop services:
 ```

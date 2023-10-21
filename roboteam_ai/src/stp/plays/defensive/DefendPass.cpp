@@ -26,17 +26,17 @@ DefendPass::DefendPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
-        std::make_unique<role::Keeper>(role::Keeper("keeper")),
-        std::make_unique<role::BallDefender>(role::BallDefender("defender_1")),
-        std::make_unique<role::BallDefender>(role::BallDefender("defender_2")),
-        std::make_unique<role::Harasser>(role::Harasser("harasser")),
-        std::make_unique<role::BallDefender>(role::BallDefender("defender_helper_1")),
-        std::make_unique<role::BallDefender>(role::BallDefender("defender_helper_2")),
-        std::make_unique<role::BallDefender>(role::BallDefender("midfielder_1")),
-        std::make_unique<role::BallDefender>(role::BallDefender("midfielder_2")),
-        std::make_unique<role::RobotDefender>(role::RobotDefender("robot_defender")),
-        std::make_unique<role::Formation>(role::Formation("offender_1")),
-        std::make_unique<role::Formation>(role::Formation("offender_2")),
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::BallDefender>("defender_2"),
+        std::make_unique<role::Harasser>("harasser"),
+        std::make_unique<role::BallDefender>("defender_helper_1"),
+        std::make_unique<role::BallDefender>("defender_helper_2"),
+        std::make_unique<role::BallDefender>("midfielder_1"),
+        std::make_unique<role::BallDefender>("midfielder_2"),
+        std::make_unique<role::RobotDefender>("robot_defender"),
+        std::make_unique<role::Formation>("offender_1"),
+        std::make_unique<role::Formation>("offender_2"),
     };
 }
 

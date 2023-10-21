@@ -20,18 +20,21 @@ FreeKickUsAtGoal::FreeKickUsAtGoal() : Play() {
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::NormalOrFreeKickUsGameState);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{std::make_unique<role::Keeper>(("keeper")),
-                                                                                       std::make_unique<role::FreeKickTaker>(("free_kick_taker")),
-                                                                                       std::make_unique<role::Formation>(("attacker_1")),
-                                                                                       std::make_unique<role::Formation>(("attacker_2")),
-                                                                                       std::make_unique<role::Formation>(("midfielder_left")),
-                                                                                       std::make_unique<role::Formation>(("midfielder_mid")),
-                                                                                       std::make_unique<role::Formation>(("midfielder_right")),
-                                                                                       std::make_unique<role::Formation>(("attacking_midfielder")),
-                                                                                       std::make_unique<role::BallDefender>(("defender_left")),
-                                                                                       std::make_unique<role::BallDefender>(("defender_mid")),
-                                                                                       std::make_unique<role::BallDefender>(("defender_right"))};
+    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::FreeKickTaker>("free_kick_taker"),
+        std::make_unique<role::Formation>("attacker_1"),
+        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Formation>("midfielder_left"),
+        std::make_unique<role::Formation>("midfielder_mid"),
+        std::make_unique<role::Formation>("midfielder_right"),
+        std::make_unique<role::Formation>("attacking_midfielder"),
+        std::make_unique<role::BallDefender>("defender_left"),
+        std::make_unique<role::BallDefender>("defender_mid"),
+        std::make_unique<role::BallDefender>("defender_right")
+    };
 }
+
 
 uint8_t FreeKickUsAtGoal::score(const rtt::Field& field) noexcept {
     // If we are in the FreeKickUsAtGoal gameState, we always want to execute this play

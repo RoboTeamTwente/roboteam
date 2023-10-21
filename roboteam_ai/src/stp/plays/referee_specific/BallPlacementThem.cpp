@@ -17,12 +17,18 @@ BallPlacementThem::BallPlacementThem() : Play() {
     keepPlayEvaluation.emplace_back(eval::BallPlacementThemGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::BallAvoider>(role::BallAvoider("keeper")),   std::make_unique<role::BallAvoider>(role::BallAvoider("waller_1")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_2")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_3")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_4")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_5")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_6")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_7")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_8")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_9")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("harasser"))};
+        std::make_unique<role::BallAvoider>("keeper"),
+        std::make_unique<role::BallAvoider>("waller_1"),
+        std::make_unique<role::BallAvoider>("waller_2"),
+        std::make_unique<role::BallAvoider>("waller_3"),
+        std::make_unique<role::BallAvoider>("waller_4"),
+        std::make_unique<role::BallAvoider>("waller_5"),
+        std::make_unique<role::BallAvoider>("waller_6"),
+        std::make_unique<role::BallAvoider>("waller_7"),
+        std::make_unique<role::BallAvoider>("waller_8"),
+        std::make_unique<role::BallAvoider>("waller_9"),
+        std::make_unique<role::BallAvoider>("harasser")
+    };
 }
 
 uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {

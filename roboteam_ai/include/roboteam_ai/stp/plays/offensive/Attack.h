@@ -53,6 +53,11 @@ class Attack : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
+     * @brief Calculates info for the pass defenders
+    */
+   void calculateInfoForPassDefenders() noexcept;
+
+    /**
      * @brief Check if play should end. True when attacker role is finished.
      */
     bool shouldEndPlay() noexcept override;

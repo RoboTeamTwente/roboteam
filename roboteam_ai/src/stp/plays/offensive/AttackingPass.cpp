@@ -16,6 +16,7 @@
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
 #include "world/views/RobotView.hpp"
+#include <roboteam_utils/Hungarian.h>
 
 namespace rtt::ai::stp::play {
 AttackingPass::AttackingPass() : Play() {
@@ -29,17 +30,19 @@ AttackingPass::AttackingPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{std::make_unique<role::Keeper>(role::Keeper("keeper")),
-                                                                                       std::make_unique<role::Passer>(role::Passer("passer")),
-                                                                                       std::make_unique<role::PassReceiver>(role::PassReceiver("receiver")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("pass_defender_1")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("pass_defender_2")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("pass_defender_3")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_1")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_2")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("ball_blocker")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("attacker_left")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("attacker_right"))};
+    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::Passer>("passer"),
+        std::make_unique<role::PassReceiver>("receiver"),
+        std::make_unique<role::BallDefender>("pass_defender_1"),
+        std::make_unique<role::BallDefender>("pass_defender_2"),
+        std::make_unique<role::BallDefender>("pass_defender_3"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::Formation>("ball_blocker"),
+        std::make_unique<role::Formation>("attacker_left"),
+        std::make_unique<role::Formation>("attacker_right")
+    };
 }
 
 uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
@@ -73,6 +76,7 @@ void AttackingPass::calculateInfoForRoles() noexcept {
     calculateInfoForDefenders();
     calculateInfoForAttackers();
     calculateInfoForBlocker();
+    calculateInfoForPassDefenders();
 
     /// Keeper
     stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
@@ -104,38 +108,6 @@ void AttackingPass::calculateInfoForRoles() noexcept {
             stpInfos["passer"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, targetGrid, gen::BlockingPosition, field, world));
         }
     }
-
-    auto enemyRobots = world->getWorld()->getThem();
-
-    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-
-    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
-
-    std::map<double, Vector2> enemyMap;
-
-    for (auto enemy : enemyRobots) {
-        double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
-        if (enemy->hasBall()) continue;
-        enemyMap.insert({score, enemy->getPos()});
-    }
-
-    if (enemyMap.size() < 3) {
-        stpInfos["pass_defender_1"].setPositionToDefend(
-            Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_2"].setPositionToDefend(
-            Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
-        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
-                                                                field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
-    } else {
-        stpInfos["pass_defender_1"].setPositionToDefend(enemyMap.begin()->second);
-        enemyMap.erase(enemyMap.begin());
-        stpInfos["pass_defender_2"].setPositionToDefend(enemyMap.begin()->second);
-        enemyMap.erase(enemyMap.begin());
-        stpInfos["pass_defender_3"].setPositionToDefend(enemyMap.begin()->second);
-    }
-    stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);
-    stpInfos["pass_defender_2"].setBlockDistance(BlockDistance::ROBOTRADIUS);
-    stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
 }
 
 void AttackingPass::calculateInfoForDefenders() noexcept {
@@ -180,6 +152,73 @@ void AttackingPass::calculateInfoForAttackers() noexcept {
     }
 }
 
+void AttackingPass::calculateInfoForPassDefenders() noexcept{
+    auto enemyRobots = world->getWorld()->getThem();
+
+    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+
+    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
+
+    std::map<double, Vector2> enemyMap;
+
+    for (auto enemy : enemyRobots) {
+        double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
+        if (enemy->hasBall()) continue;
+        enemyMap.insert({score, enemy->getPos()});
+    }
+
+    if (enemyMap.size() < 3) {
+        stpInfos["pass_defender_1"].setPositionToDefend(
+            Vector2{field.middleLeftGrid.getOffSetY() + field.middleLeftGrid.getRegionHeight() / 2, field.middleLeftGrid.getOffSetX() + field.middleLeftGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_2"].setPositionToDefend(
+            Vector2{field.middleMidGrid.getOffSetY() + field.middleMidGrid.getRegionHeight() / 2, field.middleMidGrid.getOffSetX() + field.middleMidGrid.getRegionWidth() / 2});
+        stpInfos["pass_defender_3"].setPositionToDefend(Vector2{field.middleRightGrid.getOffSetY() + field.middleRightGrid.getRegionHeight() / 2,
+                                                                field.middleRightGrid.getOffSetX() + field.middleRightGrid.getRegionWidth() / 2});
+    } else {
+        Vector2 enemy1 = enemyMap.begin()->second;
+        stpInfos["pass_defender_1"].setPositionToDefend(enemy1);
+        enemyMap.erase(enemyMap.begin());
+        Vector2 enemy2 = enemyMap.begin()->second;
+        stpInfos["pass_defender_2"].setPositionToDefend(enemy2);
+        enemyMap.erase(enemyMap.begin());
+        Vector2 enemy3 = enemyMap.begin()->second;
+        stpInfos["pass_defender_3"].setPositionToDefend(enemy3);
+        std::vector<Vector2> enemies = {enemy1, enemy2, enemy3};
+
+        // Check if the pass_defenders are already assigned, if so check if the assignment is optimal
+        // and if not, update the assignment. This results in the pass_defenders not switching between enemies
+        // when another enemy is closer to the goal.
+        if (stpInfos["pass_defender_1"].getRobot() && stpInfos["pass_defender_2"].getRobot() && stpInfos["pass_defender_3"].getRobot()) {
+            std::vector<std::vector<double>> cost_matrix;
+            cost_matrix.resize(3);
+            for (int i = 0; i < 3; i++) {
+                cost_matrix[i].resize(3);
+            }
+
+            // Calculate the distance between the pass_defenders and their enemies
+            for (int i = 0; i < 3; i++) {
+                cost_matrix[0][i] = (stpInfos["pass_defender_1"].getRobot()->get()->getPos() - enemies[i]).length();
+                cost_matrix[1][i] = (stpInfos["pass_defender_2"].getRobot()->get()->getPos() - enemies[i]).length();
+                cost_matrix[2][i] = (stpInfos["pass_defender_3"].getRobot()->get()->getPos() - enemies[i]).length();
+            }
+
+            // Calculate the optimal assignment of enemies to pass_defenders
+            std::vector<int> assignments;
+            rtt::Hungarian::Solve(cost_matrix, assignments);
+            // Update the enemies for pass_defenders
+            enemy1 = enemies[assignments[0]];
+            enemy2 = enemies[assignments[1]];
+            enemy3 = enemies[assignments[2]];
+            stpInfos["pass_defender_1"].setPositionToDefend(enemy1);
+            stpInfos["pass_defender_2"].setPositionToDefend(enemy2);
+            stpInfos["pass_defender_3"].setPositionToDefend(enemy3);
+        }
+    }
+    stpInfos["pass_defender_1"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_2"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+    stpInfos["pass_defender_3"].setBlockDistance(BlockDistance::ROBOTRADIUS);
+}
+
 bool AttackingPass::ballKicked() {
     // TODO: create better way of checking when ball has been kicked
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {
@@ -200,5 +239,5 @@ bool AttackingPass::shouldEndPlay() noexcept {
     return false;
 }
 
-const char* AttackingPass::getName() const { return "AttackingPass"; }
+const char* AttackingPass::getName() const { return "Attacking Pass"; }
 }  // namespace rtt::ai::stp::play

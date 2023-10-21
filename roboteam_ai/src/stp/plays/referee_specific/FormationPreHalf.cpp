@@ -18,12 +18,18 @@ FormationPreHalf::FormationPreHalf() : Play() {
     keepPlayEvaluation.emplace_back(eval::PreHalfGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::Formation>(role::Formation("keeper")),      std::make_unique<role::Formation>(role::Formation("formation_0")),
-        std::make_unique<role::Formation>(role::Formation("formation_1")), std::make_unique<role::Formation>(role::Formation("formation_2")),
-        std::make_unique<role::Formation>(role::Formation("formation_3")), std::make_unique<role::Formation>(role::Formation("formation_4")),
-        std::make_unique<role::Formation>(role::Formation("formation_5")), std::make_unique<role::Formation>(role::Formation("formation_6")),
-        std::make_unique<role::Formation>(role::Formation("formation_7")), std::make_unique<role::Formation>(role::Formation("formation_8")),
-        std::make_unique<role::Formation>(role::Formation("formation_9"))};
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Formation>("formation_0"),
+        std::make_unique<role::Formation>("formation_1"),
+        std::make_unique<role::Formation>("formation_2"),
+        std::make_unique<role::Formation>("formation_3"),
+        std::make_unique<role::Formation>("formation_4"),
+        std::make_unique<role::Formation>("formation_5"),
+        std::make_unique<role::Formation>("formation_6"),
+        std::make_unique<role::Formation>("formation_7"),
+        std::make_unique<role::Formation>("formation_8"),
+        std::make_unique<role::Formation>("formation_9")
+    };
 }
 
 uint8_t FormationPreHalf::score(const rtt::Field& field) noexcept {

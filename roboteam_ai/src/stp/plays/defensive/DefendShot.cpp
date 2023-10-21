@@ -22,17 +22,19 @@ DefendShot::DefendShot() : Play() {
     keepPlayEvaluation.emplace_back(eval::TheyHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{std::make_unique<role::Keeper>(role::Keeper("keeper")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_1")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_2")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_3")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("waller_4")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("midfielder_1")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("midfielder_2")),
-                                                                                       std::make_unique<role::BallDefender>(role::BallDefender("midfielder_3")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("offender_1")),
-                                                                                       std::make_unique<role::Harasser>(role::Harasser("harasser")),
-                                                                                       std::make_unique<role::Formation>("ball_blocker")};
+    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::Formation>("waller_3"),
+        std::make_unique<role::Formation>("waller_4"),
+        std::make_unique<role::BallDefender>("midfielder_1"),
+        std::make_unique<role::BallDefender>("midfielder_2"),
+        std::make_unique<role::BallDefender>("midfielder_3"),
+        std::make_unique<role::Formation>("offender_1"),
+        std::make_unique<role::Harasser>("harasser"),
+        std::make_unique<role::Formation>("ball_blocker")
+    };
 }
 
 uint8_t DefendShot::score(const rtt::Field& field) noexcept {

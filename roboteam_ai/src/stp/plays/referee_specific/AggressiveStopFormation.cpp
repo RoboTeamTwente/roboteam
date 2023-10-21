@@ -19,17 +19,19 @@ AggressiveStopFormation::AggressiveStopFormation() : Play() {
     keepPlayEvaluation.emplace_back(eval::StopGameState);
 
     /// Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{std::make_unique<role::Keeper>(role::Keeper("keeper")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_3"))};
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::BallAvoider>("defender_0"),
+        std::make_unique<role::BallAvoider>("defender_1"),
+        std::make_unique<role::BallAvoider>("defender_2"),
+        std::make_unique<role::BallAvoider>("mid_field_0"),
+        std::make_unique<role::BallAvoider>("mid_field_1"),
+        std::make_unique<role::BallAvoider>("mid_field_2"),
+        std::make_unique<role::BallAvoider>("offender_0"),
+        std::make_unique<role::BallAvoider>("offender_1"),
+        std::make_unique<role::BallAvoider>("offender_2"),
+        std::make_unique<role::BallAvoider>("offender_3")
+    };
 }
 
 uint8_t AggressiveStopFormation::score(const rtt::Field& field) noexcept {

@@ -22,17 +22,19 @@ KeeperKickBall::KeeperKickBall() : Play() {
     keepPlayEvaluation.emplace_back(eval::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(eval::TheyDoNotHaveBall);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{std::make_unique<role::KeeperPasser>(("keeper")),
-                                                                                       std::make_unique<role::PassReceiver>(("receiver")),
-                                                                                       std::make_unique<role::Formation>(("defender_left")),
-                                                                                       std::make_unique<role::Formation>(("defender_mid")),
-                                                                                       std::make_unique<role::Formation>(("defender_right")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("midfielder_left")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("midfielder_mid")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("midfielder_right")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("attacker_left")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("attacker_mid")),
-                                                                                       std::make_unique<role::Formation>(role::Formation("attacker_right"))};
+    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        std::make_unique<role::KeeperPasser>("keeper"),
+        std::make_unique<role::PassReceiver>("receiver"),
+        std::make_unique<role::Formation>("defender_left"),
+        std::make_unique<role::Formation>("defender_mid"),
+        std::make_unique<role::Formation>("defender_right"),
+        std::make_unique<role::Formation>("midfielder_left"),
+        std::make_unique<role::Formation>("midfielder_mid"),
+        std::make_unique<role::Formation>("midfielder_right"),
+        std::make_unique<role::Formation>("attacker_left"),
+        std::make_unique<role::Formation>("attacker_mid"),
+        std::make_unique<role::Formation>("attacker_right")
+    };
 }
 
 uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {

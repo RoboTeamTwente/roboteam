@@ -51,6 +51,11 @@ class AttackingPass : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
+     * @brief Calculates info for the pass defenders
+    */
+   void calculateInfoForPassDefenders() noexcept;
+
+    /**
      * @brief Retrieves the name of the play
      * @return The name of the play as string
      */

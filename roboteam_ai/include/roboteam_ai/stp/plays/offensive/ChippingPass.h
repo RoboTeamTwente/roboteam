@@ -55,6 +55,11 @@ class ChippingPass : public Play {
     void calculateInfoForAttackers() noexcept;
 
     /**
+     * @brief Calculates info for the pass defenders
+     */
+    void calculateInfoForPassDefenders() noexcept;
+
+    /**
      * @brief Gets the name of the play
      * @return The name of the play
      */

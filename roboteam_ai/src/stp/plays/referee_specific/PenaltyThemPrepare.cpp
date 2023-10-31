@@ -1,5 +1,6 @@
 #include "stp/plays/referee_specific/PenaltyThemPrepare.h"
 
+#include "stp/roles/passive/BallAvoider.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -15,17 +16,19 @@ PenaltyThemPrepare::PenaltyThemPrepare() : Play() {
     keepPlayEvaluation.emplace_back(eval::PenaltyThemPrepareGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"),
-        std::make_unique<role::Formation>("formation_0"),
-        std::make_unique<role::Formation>("formation_1"),
-        std::make_unique<role::Formation>("formation_2"),
-        std::make_unique<role::Formation>("formation_3"),
-        std::make_unique<role::Formation>("formation_4"),
-        std::make_unique<role::Formation>("formation_5"),
-        std::make_unique<role::Formation>("formation_6"),
-        std::make_unique<role::Formation>("formation_7"),
-        std::make_unique<role::Formation>("formation_8"),
-        std::make_unique<role::Formation>("formation_9")
+        std::make_unique<role::BallAvoider>("formation_0"),
+        std::make_unique<role::BallAvoider>("formation_1"),
+        std::make_unique<role::BallAvoider>("formation_2"),
+        std::make_unique<role::BallAvoider>("formation_3"),
+        std::make_unique<role::BallAvoider>("formation_4"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::BallAvoider>("formation_5"),
+        std::make_unique<role::BallAvoider>("formation_6"),
+        std::make_unique<role::BallAvoider>("formation_7"),
+        std::make_unique<role::BallAvoider>("formation_8"),
+        std::make_unique<role::BallAvoider>("formation_9"),
     };
 }
 
@@ -35,9 +38,26 @@ uint8_t PenaltyThemPrepare::score(const rtt::Field& field) noexcept {
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
 }
 
+Dealer::FlagMap PenaltyThemPrepare::decideRoleFlags() const noexcept {
+    Dealer::FlagMap flagMap;
+
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    flagMap.insert({"formation_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
+
+    return flagMap;
+}
+
 void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
-    // We need at least a keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
 
     // During their penalty, all our robots should be behind the ball to not interfere.
     // Create a grid pattern of robots on their side of the field
@@ -81,23 +101,6 @@ void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
         auto angleToGoal = (field.leftGoalArea.rightLine().center() - position).toAngle();
         stpInfos[formationName].setAngle(angleToGoal);
     }
-}
-
-Dealer::FlagMap PenaltyThemPrepare::decideRoleFlags() const noexcept {
-    Dealer::FlagMap flagMap;
-
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
-    flagMap.insert({"formation_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    return flagMap;
 }
 
 const char* PenaltyThemPrepare::getName() const { return "Penalty Them Prepare"; }

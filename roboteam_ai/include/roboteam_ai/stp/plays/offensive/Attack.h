@@ -38,26 +38,6 @@ class Attack : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the midfielders
-     */
-    void calculateInfoForMidfielders() noexcept;
-
-    /**
-     * @brief Calculates info for the attackers
-     */
-    void calculateInfoForAttackers() noexcept;
-
-    /**
-     * @brief Calculates info for the pass defenders
-    */
-   void calculateInfoForPassDefenders() noexcept;
-
-    /**
      * @brief Check if play should end. True when attacker role is finished.
      */
     bool shouldEndPlay() noexcept override;
@@ -67,11 +47,6 @@ class Attack : public Play {
      * @return The name of the play as string
      */
     const char* getName() const override;
-
-    /**
-     * @brief calculates info for the blocker roll
-     */
-    void calculateInfoForBlocker() noexcept;
 };
 
 }  // namespace rtt::ai::stp::play

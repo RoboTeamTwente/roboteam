@@ -1,5 +1,6 @@
 #include "stp/plays/referee_specific/PenaltyUsPrepare.h"
 
+#include "stp/roles/passive/BallAvoider.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -15,17 +16,19 @@ PenaltyUsPrepare::PenaltyUsPrepare() : Play() {
     keepPlayEvaluation.emplace_back(eval::PenaltyUsPrepareGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"),
-        std::make_unique<role::Formation>("kicker_formation"),
-        std::make_unique<role::Formation>("formation_0"),
-        std::make_unique<role::Formation>("formation_1"),
-        std::make_unique<role::Formation>("formation_2"),
-        std::make_unique<role::Formation>("formation_3"),
-        std::make_unique<role::Formation>("formation_4"),
-        std::make_unique<role::Formation>("formation_5"),
-        std::make_unique<role::Formation>("formation_6"),
-        std::make_unique<role::Formation>("formation_7"),
-        std::make_unique<role::Formation>("formation_8")
+        std::make_unique<role::BallAvoider>("kicker_formation"),
+        std::make_unique<role::BallAvoider>("formation_0"),
+        std::make_unique<role::BallAvoider>("formation_1"),
+        std::make_unique<role::BallAvoider>("formation_2"),
+        std::make_unique<role::BallAvoider>("formation_3"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::BallAvoider>("formation_4"),
+        std::make_unique<role::BallAvoider>("formation_5"),
+        std::make_unique<role::BallAvoider>("formation_6"),
+        std::make_unique<role::BallAvoider>("formation_7"),
+        std::make_unique<role::BallAvoider>("formation_8"),
     };
 }
 
@@ -87,13 +90,12 @@ void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
 Dealer::FlagMap PenaltyUsPrepare::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
 
-    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER, DealerFlagPriority::KEEPER);
-    Dealer::DealerFlag kickerFirstPriority(DealerFlagTitle::CAN_KICK_BALL, DealerFlagPriority::REQUIRED);
-    Dealer::DealerFlag kickerSecondPriority(DealerFlagTitle::CAN_DETECT_BALL, DealerFlagPriority::HIGH_PRIORITY);
-    Dealer::DealerFlag kickerThirdPriority(DealerFlagTitle::CLOSEST_TO_BALL, DealerFlagPriority::MEDIUM_PRIORITY);
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
+    Dealer::DealerFlag kickerFlag(DealerFlagTitle::CAN_KICK_BALL);
+    Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"kicker_formation", {DealerFlagPriority::REQUIRED, {kickerFirstPriority, kickerSecondPriority, kickerThirdPriority}}});
+    flagMap.insert({"kicker_formation", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
     flagMap.insert({"formation_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_2", {DealerFlagPriority::LOW_PRIORITY, {}}});

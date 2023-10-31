@@ -22,17 +22,19 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
     keepPlayEvaluation.emplace_back(eval::NormalOrFreeKickUsGameState);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
         std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::BallDefender>("defender_left"),
-        std::make_unique<role::BallDefender>("defender_mid"),
-        std::make_unique<role::BallDefender>("defender_right"),
-        std::make_unique<role::Formation>("midfielder_left"),
-        std::make_unique<role::Formation>("midfielder_mid"),
-        std::make_unique<role::Formation>("midfielder_right"),
-        std::make_unique<role::Formation>("attacker_left"),
-        std::make_unique<role::Formation>("attacker_right")
+        std::make_unique<role::BallDefender>("defender_0"),
+        std::make_unique<role::BallDefender>("attacker_0"),
+        std::make_unique<role::Formation>("defender_1"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Formation>("defender_2"),
+        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::Formation>("attacker_1"),
     };
 }
 
@@ -49,30 +51,24 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"free_kick_taker", {DealerFlagPriority::REQUIRED, {}, passInfo.passerId}});
-    flagMap.insert({"receiver", {DealerFlagPriority::HIGH_PRIORITY, {}, passInfo.receiverId}});
-    flagMap.insert({"defender_left", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_mid", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_right", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"midfielder_left", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"midfielder_mid", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"midfielder_right", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_left", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_right", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"waller_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void FreeKickUsPass::calculateInfoForRoles() noexcept {
-    calculateInfoForDefenders();
-    calculateInfoForMidfielders();
-    calculateInfoForAttackers();
-
-    /// Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
-
-    /// Midfielder
-    stpInfos["midfielder"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePosition, field, world));
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
@@ -95,36 +91,6 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
             auto targetGrid = stpInfos["free_kick_taker"].getRobot()->get()->getPos().y < 0 ? field.bottomMidGrid : field.topMidGrid;
             stpInfos["free_kick_taker"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, targetGrid, gen::BlockingPosition, field, world));
         }
-    }
-}
-
-void FreeKickUsPass::calculateInfoForDefenders() noexcept {
-    stpInfos["defender_left"].setPositionToDefend(field.leftGoalArea.topRight());
-    stpInfos["defender_left"].setBlockDistance(BlockDistance::HALFWAY);
-
-    stpInfos["defender_mid"].setPositionToDefend(field.leftGoalArea.bottomRight());
-    stpInfos["defender_mid"].setBlockDistance(BlockDistance::HALFWAY);
-
-    stpInfos["defender_right"].setPositionToDefend(field.leftGoalArea.rightLine().center());
-    stpInfos["defender_right"].setBlockDistance(BlockDistance::CLOSE);
-}
-
-void FreeKickUsPass::calculateInfoForMidfielders() noexcept {
-    stpInfos["midfielder_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::OffensivePosition, field, world));
-    stpInfos["midfielder_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::OffensivePosition, field, world));
-    stpInfos["midfielder_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::OffensivePosition, field, world));
-}
-
-void FreeKickUsPass::calculateInfoForAttackers() noexcept {
-    if (passInfo.passLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
-        stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
-        stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::OffensivePosition, field, world));
-    } else if (passInfo.passLocation.y < field.middleMidGrid.getOffSetY()) {  // Receiver is going to right of the field
-        stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::OffensivePosition, field, world));
-        stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world));
-    } else {  // Receiver is going to middle of the field
-        stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::OffensivePosition, field, world));
-        stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::OffensivePosition, field, world));
     }
 }
 

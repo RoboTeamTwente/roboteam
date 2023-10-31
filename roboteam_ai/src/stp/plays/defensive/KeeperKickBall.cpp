@@ -9,6 +9,7 @@
 #include "stp/constants/ControlConstants.h"
 #include "stp/roles/active/KeeperPasser.h"
 #include "stp/roles/active/PassReceiver.h"
+#include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -23,17 +24,19 @@ KeeperKickBall::KeeperKickBall() : Play() {
     keepPlayEvaluation.emplace_back(eval::TheyDoNotHaveBall);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+        // Roles is we play 6v6
         std::make_unique<role::KeeperPasser>("keeper"),
         std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Formation>("defender_left"),
-        std::make_unique<role::Formation>("defender_mid"),
-        std::make_unique<role::Formation>("defender_right"),
-        std::make_unique<role::Formation>("midfielder_left"),
-        std::make_unique<role::Formation>("midfielder_mid"),
-        std::make_unique<role::Formation>("midfielder_right"),
-        std::make_unique<role::Formation>("attacker_left"),
-        std::make_unique<role::Formation>("attacker_mid"),
-        std::make_unique<role::Formation>("attacker_right")
+        std::make_unique<role::BallDefender>("defender_0"),
+        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::Formation>("attacker_0"),
+        std::make_unique<role::BallDefender>("defender_2"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::Formation>("attacker_1"),
+        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Formation>("attacker_3"),
+        std::make_unique<role::BallDefender>("defender_4"),
     };
 }
 
@@ -50,23 +53,22 @@ Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    flagMap.insert({"defender_left", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"defender_mid", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_right", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"midfielder_left", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"midfielder_mid", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"midfielder_right", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_left", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_mid", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_right", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_4", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void KeeperKickBall::calculateInfoForRoles() noexcept {
-    calculateInfoForDefenders();
-    calculateInfoForMidfielders();
-    calculateInfoForAttackers();
+    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
@@ -80,24 +82,6 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
     }
-}
-
-void KeeperKickBall::calculateInfoForDefenders() noexcept {
-    stpInfos["defender_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topLeftGrid, gen::SafePosition, field, world));
-    stpInfos["defender_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleLeftGrid, gen::BlockingPosition, field, world));
-    stpInfos["defender_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomLeftGrid, gen::SafePosition, field, world));
-}
-
-void KeeperKickBall::calculateInfoForMidfielders() noexcept {
-    stpInfos["midfielder_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::SafePosition, field, world));
-    stpInfos["midfielder_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePosition, field, world));
-    stpInfos["midfielder_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::SafePosition, field, world));
-}
-
-void KeeperKickBall::calculateInfoForAttackers() noexcept {
-    stpInfos["attacker_left"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::SafePass, field, world));
-    stpInfos["attacker_mid"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::SafePass, field, world));
-    stpInfos["attacker_right"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::SafePass, field, world));
 }
 
 bool KeeperKickBall::ballKicked() {
@@ -121,7 +105,7 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
         return true;
 
     // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    if (!field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
+    // if (!field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
 
     return false;
 }

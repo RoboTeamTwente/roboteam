@@ -11,43 +11,40 @@
 namespace rtt::ai::stp::play {
 
 KickOffThem::KickOffThem() : Play() {
-    startPlayEvaluation.clear();  // DONT TOUCH.
+    startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::KickOffThemGameState);
 
-    keepPlayEvaluation.clear();  // DONT TOUCH.
+    keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::KickOffThemGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Halt>("halt_0"),
         std::make_unique<role::Halt>("halt_1"),
         std::make_unique<role::Halt>("halt_2"),
         std::make_unique<role::Halt>("halt_3"),
         std::make_unique<role::Halt>("halt_4"),
+        // Additional roles if we play 11v11
         std::make_unique<role::Halt>("halt_5"),
         std::make_unique<role::Halt>("halt_6"),
         std::make_unique<role::Halt>("halt_7"),
         std::make_unique<role::Halt>("halt_8"),
-        std::make_unique<role::Halt>("halt_9")
+        std::make_unique<role::Halt>("halt_9"),
     };
 }
 
 uint8_t KickOffThem::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffThemGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
-}
-
-void KickOffThem::calculateInfoForRoles() noexcept {
-    // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center() + Vector2(control_constants::DISTANCE_FROM_GOAL_CLOSE, 0));
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
+    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
 }
 
 Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -57,10 +54,11 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     flagMap.insert({"halt_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"halt_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
+
+void KickOffThem::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForKeeper(stpInfos, field, world); }
 
 bool KickOffThem::shouldEndPlay() noexcept { return false; }
 

@@ -40,26 +40,6 @@ class ChippingPass : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the midfielders
-     */
-    void calculateInfoForMidfielders() noexcept;
-
-    /**
-     * @brief Calculates info for the attackers
-     */
-    void calculateInfoForAttackers() noexcept;
-
-    /**
-     * @brief Calculates info for the pass defenders
-     */
-    void calculateInfoForPassDefenders() noexcept;
-
-    /**
      * @brief Gets the name of the play
      * @return The name of the play
      */
@@ -79,11 +59,6 @@ class ChippingPass : public Play {
     bool ballKicked();
 
     PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
-
-    /**
-     * @brief Calculate info for the blocker roles
-     */
-    void calculateInfoForBlocker() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

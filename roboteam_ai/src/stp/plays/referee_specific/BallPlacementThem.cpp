@@ -17,17 +17,19 @@ BallPlacementThem::BallPlacementThem() : Play() {
     keepPlayEvaluation.emplace_back(eval::BallPlacementThemGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        // Roles is we play 6v6
         std::make_unique<role::BallAvoider>("keeper"),
+        std::make_unique<role::BallAvoider>("harasser"),
+        std::make_unique<role::BallAvoider>("waller_0"),
         std::make_unique<role::BallAvoider>("waller_1"),
         std::make_unique<role::BallAvoider>("waller_2"),
         std::make_unique<role::BallAvoider>("waller_3"),
+        // Additional roles if we play 11v11
         std::make_unique<role::BallAvoider>("waller_4"),
         std::make_unique<role::BallAvoider>("waller_5"),
         std::make_unique<role::BallAvoider>("waller_6"),
         std::make_unique<role::BallAvoider>("waller_7"),
         std::make_unique<role::BallAvoider>("waller_8"),
-        std::make_unique<role::BallAvoider>("waller_9"),
-        std::make_unique<role::BallAvoider>("harasser")
     };
 }
 
@@ -39,9 +41,11 @@ uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {
 
 Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
-    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER, DealerFlagPriority::KEEPER);
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
+    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -50,33 +54,14 @@ Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
     flagMap.insert({"waller_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"harasser", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void BallPlacementThem::calculateInfoForRoles() noexcept {
-    calculateInfoForWallers();
-    calculateInfoForKeeper();
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
-}
-
-void BallPlacementThem::calculateInfoForWallers() noexcept {
-    constexpr auto wallerNames = std::array{"waller_1", "waller_2", "waller_3", "waller_4", "waller_5", "waller_6", "waller_7", "waller_8", "waller_9"};
-    auto activeWallerNames = std::vector<std::string>{};
-    for (auto name : wallerNames) {
-        if (stpInfos[name].getRobot().has_value()) activeWallerNames.emplace_back(name);
-    }
-    for (int i = 0; i < activeWallerNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        const auto side = i % 2 == 0 ? 1 : -1;
-        auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
-
-        wallerStpInfo.setPositionToMoveTo(
-            Vector2(FieldComputations::getDefenseArea(field, true, 0, 0)[2].x + 2 * control_constants::ROBOT_RADIUS, side * 1.7 * (i + 1) * control_constants::ROBOT_RADIUS));
-        wallerStpInfo.setAngle((Vector2{0, 0} - field.leftGoalArea.rightLine().center()).angle());
-    }
 }
 
 void BallPlacementThem::calculateInfoForHarasser() noexcept {
@@ -86,8 +71,6 @@ void BallPlacementThem::calculateInfoForHarasser() noexcept {
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }
-
-void BallPlacementThem::calculateInfoForKeeper() noexcept { stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center()); }
 
 const char* BallPlacementThem::getName() const { return "Ball Placement Them"; }
 }  // namespace rtt::ai::stp::play

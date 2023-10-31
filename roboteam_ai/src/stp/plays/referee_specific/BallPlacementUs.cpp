@@ -18,35 +18,55 @@ BallPlacementUs::BallPlacementUs() : Play() {
     keepPlayEvaluation.emplace_back(eval::BallPlacementUsGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::BallPlacer>("ball_placer"),
-        std::make_unique<role::BallAvoider>("keeper"),
-        std::make_unique<role::BallAvoider>("ball_avoider_0"),
-        std::make_unique<role::BallAvoider>("ball_avoider_1"),
-        std::make_unique<role::BallAvoider>("ball_avoider_2"),
-        std::make_unique<role::BallAvoider>("ball_avoider_3"),
-        std::make_unique<role::BallAvoider>("ball_avoider_4"),
-        std::make_unique<role::BallAvoider>("ball_avoider_5"),
-        std::make_unique<role::BallAvoider>("ball_avoider_6"),
-        std::make_unique<role::BallAvoider>("ball_avoider_7"),
-        std::make_unique<role::BallAvoider>("ball_avoider_8")
-    };
+        // Roles is we play 6v6
+        std::make_unique<role::BallAvoider>("keeper"), std::make_unique<role::BallPlacer>("ball_placer"), std::make_unique<role::BallAvoider>("formation_back_0"),
+        std::make_unique<role::BallAvoider>("formation_mid_0"), std::make_unique<role::BallAvoider>("formation_front_0"), std::make_unique<role::BallAvoider>("formation_mid_1"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::BallAvoider>("formation_back_1"), std::make_unique<role::BallAvoider>("formation_front_1"), std::make_unique<role::BallAvoider>("formation_back_2"),
+        std::make_unique<role::BallAvoider>("formation_mid_2"), std::make_unique<role::BallAvoider>("formation_front_2")};
 }
 
 uint8_t BallPlacementUs::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallPlacementUsGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
+    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
+}
+
+Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
+    Dealer::FlagMap flagMap;
+    Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
+    Dealer::DealerFlag dribblerFlag(DealerFlagTitle::WITH_WORKING_DRIBBLER);
+
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerFlag, detectionFlag}}});
+    flagMap.insert({"formation_back_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_back_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_back_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_front_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_front_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_front_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+
+    return flagMap;
 }
 
 void BallPlacementUs::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForFormation(stpInfos, roles, field, world);
 
-    auto ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+    Vector2 ballTarget = Vector2();
 
     // Adjust placement position to be one robot radius away in the distance of movement
-    if (stpInfos["ball_placer"].getRobot())
+    if (stpInfos["ball_placer"].getRobot()) {
+        ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
         ballTarget -= (world->getWorld()->get()->getBall()->get()->position - stpInfos["ball_placer"].getRobot()->get()->getPos()).stretchToLength(control_constants::ROBOT_RADIUS);
+    } else {
+        // If we don't have a ball placer, set the target location to the ball, such that the dealer will
+        // assign the robot closest to the ball to the ball placer role
+        ballTarget = world->getWorld()->get()->getBall()->get()->position;
+    }
 
     stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
@@ -57,29 +77,6 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
         stpInfos["ball_placer"].setDribblerSpeed(100);
     }
-
-    /// TODO: figure out what the rest of the robots should do during our ball placement
-}
-
-Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
-    Dealer::FlagMap flagMap;
-    Dealer::DealerFlag ballPlacementPriority(DealerFlagTitle::CAN_DETECT_BALL, DealerFlagPriority::REQUIRED);
-    Dealer::DealerFlag dribblerPriority(DealerFlagTitle::WITH_WORKING_DRIBBLER, DealerFlagPriority::REQUIRED);
-    Dealer::DealerFlag ballPlacementPreference(DealerFlagTitle::CLOSEST_TO_BALL, DealerFlagPriority::HIGH_PRIORITY);
-
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
-    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerPriority, ballPlacementPriority, ballPlacementPreference}}});
-    flagMap.insert({"ball_avoider_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"ball_avoider_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-
-    return flagMap;
 }
 
 const char* BallPlacementUs::getName() const { return "Ball Placement Us"; }

@@ -19,7 +19,8 @@
 #include "world/FieldComputations.h"
 #include "world/World.hpp"
 #include "world/views/WorldDataView.hpp"
-
+#include "stp/StpInfo.h"
+#include "stp/Role.hpp"
 namespace rtt::ai::stp {
 
 /**
@@ -76,6 +77,68 @@ class PositionComputations {
      * @return A position that is not within the min allowed distance to the ball
      */
     static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
+
+    /**
+     * @brief Calculates info for the keeper
+     * @param stpInfos The current stpInfos
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the harasser role
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the defenders
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForDefenders(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the attackers
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the wallers
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForWallers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the formations
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForFormation(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world) noexcept;
+
+    /**
+     * @brief Calculates info for the formations on our side of the field
+     * @param stpInfos The current stpInfos
+     * @param roles The current roles
+     * @param field The current field
+     * @param world The current world
+     */
+    static void calculateInfoForFormationOurSide(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world) noexcept;
 
    private:
     /**

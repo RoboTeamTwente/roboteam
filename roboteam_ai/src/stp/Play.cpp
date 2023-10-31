@@ -112,6 +112,13 @@ void Play::distributeRoles() noexcept {
     }
 
     auto flagMap = decideRoleFlags();
+
+    // Only keep the first n roles, where n is the amount of robots we have
+    // This order is based on the order of the roles array
+    // for (int i = 6; i < roles.size(); i++) {
+    for (int i = world->getWorld()->getUs().size(); i < roles.size(); i++) {
+        flagMap.erase(roles[i]->getName());
+    }
     auto distribution = dealer.distribute(world->getWorld()->getUs(), flagMap, stpInfos);
 
     // TODO-Max if role exists in oldStpInfos then copy those.

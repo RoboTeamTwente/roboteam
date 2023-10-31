@@ -61,14 +61,12 @@ class Dealer {
      * @brief Structure that defines the dealer flag. The dealer flag will give a certain factor with the influence it should have on assigning the roles
      */
     struct DealerFlag {
-        DealerFlagTitle title;       /**< Factor that the dealer should take into account */
-        DealerFlagPriority priority; /**< Influence the factor has on assigning the roles */
+        DealerFlagTitle title; /**< Factor that the dealer should take into account */
         /**
          * @brief Explicit constructor of the DealerFlag structure
          * @param title Title of the dealer flag
-         * @param priority priority of the dealer flag
          */
-        explicit DealerFlag(DealerFlagTitle title, DealerFlagPriority priority);
+        explicit DealerFlag(DealerFlagTitle title);
     };
 
     /// The priority of the role with the falgs that need to be considered.
@@ -131,22 +129,6 @@ class Dealer {
     };
 
     /**
-     * @brief Final score a specific robot with its sum of score and sum of weights (to be used in normalization)
-     */
-    struct RobotRoleScore {
-        double sumScore;   /**< Score of the role for this robot */
-        double sumWeights; /**< weight of the score */
-    };
-
-    /**
-     * @brief Calculates the score for a flag by multiplying the factor and score
-     * The factor is based on the priority and the score is based on the trueness of a property
-     * @param robot The robot that the flag is based on
-     * @param flag The flag for which the score should be calculated
-     * @return Score for a flag. First is score, second is weight (for normalization)
-     */
-    FlagScore getRobotScoreForFlag(v::RobotView robot, DealerFlag flag);
-    /**
      * @brief Calculates the score for a distance between a point and a robot
      * @param stpInfo The information that is needed for calculating the score
      * @param robot The robot for which the distance needs to be scored
@@ -191,9 +173,9 @@ class Dealer {
      * @brief Calculates the score for all flags for a role, for one robot (so will be called 11 times for each role)
      * @param dealerFlags The flags that need to be scored
      * @param robot The robot that the score should be calculated for
-     * @return The score of all flags combined and the weight for how much they should be taken into account
+     * @return The score of all flags combined
      */
-    RobotRoleScore getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &dealerFlags, const v::RobotView &robot);
+    double getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &dealerFlags, const v::RobotView &robot);
 
     /**
      * @brief Distributes the forced roles first, so that other rest of the function does not need to compute extra information

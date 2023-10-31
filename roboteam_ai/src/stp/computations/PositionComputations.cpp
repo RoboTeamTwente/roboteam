@@ -305,13 +305,13 @@ void PositionComputations::calculateInfoForDefenders(std::unordered_map<std::str
     if (activeDefenderNames.empty()) {
         auto loopSize = std::min(defenderNames.size(), enemyMap.size());
         for (int i = 0; i < loopSize; i++) {
-            stpInfos["defender_" + std::to_string(i + 1)].setPositionToDefend(enemyMap.begin()->second);
+            stpInfos["defender_" + std::to_string(i)].setPositionToDefend(enemyMap.begin()->second);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = loopSize; i < defenderNames.size(); i++) {
             // For each waller, stand in the right wall position and look at the ball
             auto positionToMoveTo = PositionComputations::getWallPosition(i, defenderNames.size() - enemyMap.size(), field, world);
-            auto& wallerStpInfo = stpInfos["defender_" + std::to_string(i + 1)];
+            auto& wallerStpInfo = stpInfos["defender_" + std::to_string(i)];
 
             wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
             wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());

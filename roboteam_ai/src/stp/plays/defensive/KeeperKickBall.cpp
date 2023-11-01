@@ -98,10 +98,10 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
     // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
     if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
 
-    // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
+    // If the keeper doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
-        stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score)
+        stp::computations::PassComputations::calculatePass(gen::SafePass, world, field).passScore >
+            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::SafePass, field, world).score)
         return true;
 
     // If the ball is outside our defense area the keeper should not go after it so we should stop this play

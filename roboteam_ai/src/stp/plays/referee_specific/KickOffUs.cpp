@@ -35,31 +35,6 @@ uint8_t KickOffUs::score(const rtt::Field &field) noexcept {
     return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
 }
 
-void KickOffUs::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-
-    // Kicker
-    // TODO: set good position to shoot at (compute pass location)- possibly do this in the kick_off_taker role
-    Vector2 passLocation = Vector2(-1.0, 1.0);
-    stpInfos["kick_off_taker"].setPositionToShootAt(passLocation);
-    stpInfos["kick_off_taker"].setShotType(ShotType::PASS);
-    stpInfos["kick_off_taker"].setKickOrChip(KickOrChip::KICK);
-    // TODO: set good position to move to after pass
-    stpInfos["kick_off_taker"].setPositionToMoveTo(Vector2(0, 0));
-
-    // Receiver
-    // TODO: set receiving position based on pass computation
-    if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passLocation);
-    } else {
-        auto ball = world->getWorld()->getBall()->get();
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passLocation, ballTrajectory.start, ballTrajectory.end);
-        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
-    }
-}
-
 Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
 
@@ -81,6 +56,30 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
     flagMap.insert({"halt_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
+}
+
+void KickOffUs::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    // Kicker
+    // TODO: set good position to shoot at (compute pass location)- possibly do this in the kick_off_taker role
+    Vector2 passLocation = Vector2(-1.0, 1.0);
+    stpInfos["kick_off_taker"].setPositionToShootAt(passLocation);
+    stpInfos["kick_off_taker"].setShotType(ShotType::PASS);
+    stpInfos["kick_off_taker"].setKickOrChip(KickOrChip::KICK);
+    // TODO: set good position to move to after pass
+    stpInfos["kick_off_taker"].setPositionToMoveTo(Vector2(0, 0));
+
+    // Receiver
+    // TODO: set receiving position based on pass computation
+    if (!ballKicked()) {
+        stpInfos["receiver"].setPositionToMoveTo(passLocation);
+    } else {
+        auto ball = world->getWorld()->getBall()->get();
+        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
+        auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passLocation, ballTrajectory.start, ballTrajectory.end);
+        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
+        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
+    }
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {

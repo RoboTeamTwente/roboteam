@@ -38,27 +38,7 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
 uint8_t KickOffUsPrepare::score(const rtt::Field& field) noexcept {
     /// List of all factors that combined results in an evaluation how good the play is.
     scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffUsPrepareGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
-}
-
-void KickOffUsPrepare::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
-
-    // The "kicker" will go to the ball
-    if (stpInfos["kicker"].getRobot() && stpInfos["kicker"].getRobot()->get()->getPos().x < 0) {
-        Vector2 robotPos = stpInfos["kicker"].getRobot()->get()->getPos();
-        Vector2 ballPos = world->getWorld()->getBall()->get()->position;
-        if ((robotPos - ballPos).length() < 0.7) {
-            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
-        } else if (robotPos.y > 0) {
-            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.6));
-        } else {
-            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, -0.6));
-        }
-    } else {
-        stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
-    }
+    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
 }
 
 Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
@@ -81,6 +61,26 @@ Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
     flagMap.insert({"formation_front_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
+}
+
+void KickOffUsPrepare::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
+
+    // The "kicker" will go to the ball
+    if (stpInfos["kicker"].getRobot() && stpInfos["kicker"].getRobot()->get()->getPos().x < 0) {
+        Vector2 robotPos = stpInfos["kicker"].getRobot()->get()->getPos();
+        Vector2 ballPos = world->getWorld()->getBall()->get()->position;
+        if ((robotPos - ballPos).length() < 0.7) {
+            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
+        } else if (robotPos.y > 0) {
+            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.6));
+        } else {
+            stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, -0.6));
+        }
+    } else {
+        stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.25, 0.0));
+    }
 }
 
 const char* KickOffUsPrepare::getName() const { return "Kick Off Us Prepare"; }

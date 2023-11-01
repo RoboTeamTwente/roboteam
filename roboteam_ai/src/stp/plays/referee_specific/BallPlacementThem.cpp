@@ -6,6 +6,7 @@
 
 #include "stp/roles/Keeper.h"
 #include "stp/roles/passive/BallAvoider.h"
+#include "stp/roles/passive/BallDefender.h"
 
 namespace rtt::ai::stp::play {
 
@@ -22,14 +23,14 @@ BallPlacementThem::BallPlacementThem() : Play() {
         std::make_unique<role::BallAvoider>("harasser"),
         std::make_unique<role::BallAvoider>("waller_0"),
         std::make_unique<role::BallAvoider>("waller_1"),
-        std::make_unique<role::BallAvoider>("waller_2"),
-        std::make_unique<role::BallAvoider>("waller_3"),
+        std::make_unique<role::BallDefender>("defender_0"),
+        std::make_unique<role::BallDefender>("defender_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::BallAvoider>("waller_4"),
-        std::make_unique<role::BallAvoider>("waller_5"),
-        std::make_unique<role::BallAvoider>("waller_6"),
-        std::make_unique<role::BallAvoider>("waller_7"),
-        std::make_unique<role::BallAvoider>("waller_8"),
+        std::make_unique<role::BallAvoider>("waller_2"),
+        std::make_unique<role::BallDefender>("defender_2"),
+        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::BallAvoider>("waller_3"),
+        std::make_unique<role::BallAvoider>("attacker_0"),
     };
 }
 
@@ -49,11 +50,11 @@ Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
     flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -61,6 +62,8 @@ Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
 void BallPlacementThem::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
 }
 

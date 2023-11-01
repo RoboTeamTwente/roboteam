@@ -335,6 +335,11 @@ void PositionComputations::calculateInfoForDefenders(std::unordered_map<std::str
         enemies.emplace_back(enemyMap.begin()->second);
         enemyMap.erase(enemyMap.begin());
     }
+    for (int i = 0; i < activeDefenderNames.size(); i++) {
+        for (int j = 0; j < row_length; j++) {
+            cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
+        }
+    }
     // Calculate the optimal assignment of enemies to pass_defenders using the hungarian algorithm and set the position to defend for each
     // active pass defender
     std::vector<int> assignments;

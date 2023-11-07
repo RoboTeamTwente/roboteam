@@ -11,8 +11,6 @@ This repository contains the following projects:
 
 \* `RoboTeam World` its executable is named `roboteam_observer`, since `RoboTeam AI` also contains a class named `World`, which caused confusion.
 
-
-
 ## How to
 Refer to `docker/README.md` for usage of our software.
 

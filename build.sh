@@ -7,10 +7,15 @@ then
     OK=1
 fi
 
+# Check if the script is being executed from inside container or explicitly
+# asked to run it on host environment
 if [ -f /.dockerenv ] || [ "$OK" = "1" ];
 then
     if [ "$0" == "./build.sh" ];
     then
+        echo "Checking submodules"
+        git submodule update --init --recursive
+        echo "Done"
         #rm -rf build
         mkdir -p build
         pushd build

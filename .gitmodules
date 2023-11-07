@@ -4,3 +4,7 @@
 [submodule "external/autoref"]
 	path = external/autoref
 	url = https://github.com/robotics-erlangen/autoref.git
+[submodule "roboteam_autoref"]
+	path = roboteam_autoref
+	url = git@github.com:RoboTeamTwente/roboteam_autoref.git
+	branch = main

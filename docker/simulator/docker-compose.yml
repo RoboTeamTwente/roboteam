@@ -87,6 +87,22 @@ services:
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
 
+  roboteam_autoref:
+    image: gradle:8.4.0-jdk17
+    container_name: RTT_roboteam_autoref
+    user: gradle # Do not build as root
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./gradlew run --args=\"-cli -active --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10007:10007 # GC port
+      - 5558:5558 # World port
+    environment:
+      - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
+    volumes:
+      - ../../roboteam_autoref/:/home/roboteamtwente/
+
   erforce_autoref:
     image: rtt-build-env:latest
     container_name: RTT_erforce_autoref
@@ -96,7 +112,7 @@ services:
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10020:10020 # Vision port simulator
-      - 10003:10003 # Ref port
+      - 10003:10003 # GC port
       - 10010:10010 # Tracker port
     volumes:
       - ../../:/home/roboteamtwente/

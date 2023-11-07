@@ -1,0 +1,122 @@
+version: '3'
+
+services:
+
+  roboteam_primary_ai:
+    build: 
+      context: ../
+      target: development
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_primary_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_ai --primary-ai --basestation"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12676:12676 # Primary AI Port
+    ports:
+      - 12676:12676 # Primary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_observer:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_observer
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10006 --referee-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10006:10006 # Vision port vision
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # Referee port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_robothub:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_robothub
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_robothub"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+
+  roboteam_interface:
+    image: rtt-build-env:latest
+    container_name: RTT_roboteam_interface
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "yarn serve --host 0.0.0.0"
+    ports:
+      - 8080:8080
+    volumes:
+      - ../../roboteam_interface/:/home/roboteamtwente/
+
+  roboteam_autoref:
+    image: gradle:8.4.0-jdk17
+    container_name: RTT_roboteam_autoref
+    user: gradle # Do not build as root
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./gradlew run --args=\"-cli -active --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10007:10007 # GC port
+      - 5558:5558 # World port
+    environment:
+      - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
+    volumes:
+      - ../../roboteam_autoref/:/home/roboteamtwente/
+
+  erforce_autoref:
+    image: rtt-build-env:latest
+    container_name: RTT_erforce_autoref
+    restart: always
+    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
+    command: sh -c "./autoref-cli --vision-port 10006 --tracker-port 10010 --gc-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10006:10006 #Vision port
+      - 10003:10003 #Ref port
+      - 10010:10010 #Tracker port
+    volumes:
+      - ../../:/home/roboteamtwente/
+
+  ssl-game-controller:
+    image: robocupssl/ssl-game-controller:latest
+    container_name: RTT_ssl-game-controller
+    restart: always
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    ports:
+      - "8081:8081/tcp" # UI port
+
+#  ssl_vision:
+#    image: rtt-build-env:latest
+#    container_name: RTT_ssl_vision
+#    restart: always
+#    working_dir: "/home/roboteamtwente/"
+#    command: sh -c "./bin/vision"
+#    expose:
+#      - 10006:10006 # Vision port
+#    environment:
+#      - LC_NUMERIC=en_US.UTF-8
+#    volumes:
+#      - ../../external/ssl-vision/:/home/roboteamtwente/

@@ -194,8 +194,8 @@ void Dealer::distributeFixedIds(std::vector<v::RobotView> &robots, FlagMap &flag
             if (robots[i_robot]->getId() == required_id) {           // If the correct robot has been found
                 robot_found = true;                                  //
                 assignments.insert({role->first, robots[i_robot]});  //     Assign the robot to the role
-                robots.erase(robots.begin() + i_robot);              //     Remove the robot from the list of robot
-                role = flagMap.erase(role);                          //     Remove the role from the map of roles
+                // robots.erase(robots.begin() + i_robot);              //     Remove the robot from the list of robot
+                // role = flagMap.erase(role);                          //     Remove the role from the map of roles
                 break;
             }
         }
@@ -254,14 +254,17 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     std::optional<Vector2> target_position;
     // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
     if (stpInfo.getEnemyRobot().has_value()) target_position = stpInfo.getEnemyRobot().value()->getPos();
-    // if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
+    if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
+    if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
     // If robot is keeper, set distance to self. Basically 0
     if (stpInfo.getRoleName() == "keeper" && robot->getId() == GameStateManager::getCurrentGameState().keeperId) target_position = robot->getPos();
 
     // No target found to move to
     if (!target_position) {
-        RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
+        // only print warning if halt not in rolename
+        if (stpInfo.getRoleName().find("halt") == std::string::npos)
+            RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
 

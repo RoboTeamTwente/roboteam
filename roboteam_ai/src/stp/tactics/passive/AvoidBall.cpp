@@ -14,6 +14,7 @@
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Rotate.h"
 #include "utilities/GameStateManager.hpp"
+#include "stp/tactics/passive/BlockBall.h"
 
 namespace rtt::ai::stp::tactic {
 
@@ -24,7 +25,23 @@ std::optional<StpInfo> AvoidBall::calculateInfoForSkill(StpInfo const& info) noe
     auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
     if (!skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
-    if (!skillStpInfo.getPositionToMoveTo()) skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
+
+    if (!skillStpInfo.getPositionToMoveTo()) {
+        if (info.getEnemyRobot() || info.getPositionToDefend()) {
+            auto defendPos = info.getEnemyRobot() ? info.getEnemyRobot().value()->getPos() : info.getPositionToDefend().value();
+            auto targetPosition = BlockBall::calculateTargetPosition(info.getBall().value(), defendPos, info.getBlockDistance());
+
+            // Make sure this position is valid
+            targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, defendPos, info.getBall()->get()->position);
+            targetPosition.x = std::min(0.0, targetPosition.x);
+
+            skillStpInfo.setPositionToMoveTo(targetPosition);
+        } else {
+            skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
+        }
+    } 
+
+
     skillStpInfo.setDribblerSpeed(0);
 
     Vector2 targetPos = skillStpInfo.getPositionToMoveTo().value();

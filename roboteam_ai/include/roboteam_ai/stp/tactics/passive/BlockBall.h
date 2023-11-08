@@ -19,6 +19,15 @@ class BlockBall : public Tactic {
      */
     BlockBall();
 
+    /**
+     * @brief Calculates the position for the blocker
+     * @param ball Ball
+     * @param field Field
+     * @param enemyRobot Enemy robot closest to ball
+     * @return Target position for the blocker
+     */
+    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos, BlockDistance blockDistance) noexcept;
+
    private:
     /**
      * @brief Calculate the info for skills from the StpInfo struct parameter
@@ -54,15 +63,6 @@ class BlockBall : public Tactic {
      * @return The name of this tactic
      */
     const char *getName() override;
-
-    /**
-     * @brief Calculates the position for the blocker
-     * @param ball Ball
-     * @param field Field
-     * @param enemyRobot Enemy robot closest to ball
-     * @return Target position for the blocker
-     */
-    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos, BlockDistance blockDistance) noexcept;
 };
 }  // namespace rtt::ai::stp::tactic
 

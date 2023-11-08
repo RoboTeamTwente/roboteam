@@ -23,12 +23,12 @@ BallPlacementThem::BallPlacementThem() : Play() {
         std::make_unique<role::BallAvoider>("harasser"),
         std::make_unique<role::BallAvoider>("waller_0"),
         std::make_unique<role::BallAvoider>("waller_1"),
-        std::make_unique<role::BallDefender>("defender_0"),
-        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::BallAvoider>("defender_0"),
+        std::make_unique<role::BallAvoider>("defender_1"),
         // Additional roles if we play 11v11
         std::make_unique<role::BallAvoider>("waller_2"),
-        std::make_unique<role::BallDefender>("defender_2"),
-        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::BallAvoider>("defender_2"),
+        std::make_unique<role::BallAvoider>("defender_3"),
         std::make_unique<role::BallAvoider>("waller_3"),
         std::make_unique<role::BallAvoider>("attacker_0"),
     };

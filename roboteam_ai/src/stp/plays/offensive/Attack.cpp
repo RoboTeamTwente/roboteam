@@ -72,9 +72,8 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
 
 void Attack::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
 
     // Striker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);

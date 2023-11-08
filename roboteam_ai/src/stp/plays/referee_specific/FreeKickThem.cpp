@@ -66,8 +66,7 @@ Dealer::FlagMap FreeKickThem::decideRoleFlags() const noexcept {
 
 void FreeKickThem::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
-    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
 }

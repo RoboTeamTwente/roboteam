@@ -68,8 +68,7 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
 void DefendShot::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world);
-    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
-    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 }
 

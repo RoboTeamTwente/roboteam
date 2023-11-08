@@ -8,6 +8,7 @@
 #include <roboteam_utils/Tube.h>
 
 #include <roboteam_utils/Field.hpp>
+
 #include "roboteam_utils/Hungarian.h"
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PositionScoring.h"
@@ -250,7 +251,7 @@ void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 }
 
-void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> stpInfos,
+void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,
                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
                                                     world::World *world) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
@@ -263,7 +264,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     auto enemyAngle = enemyClosestToBall->get()->getAngle();
     auto enemyToGoalAngle = (field.leftGoalArea.leftLine().center() - enemyClosestToBall->get()->getPos()).angle();
 
-    // If enemy is more than 90 degrees away from our goal AND does have the ball, stand between the enemy and our goal
+    // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(enemyToGoalAngle) > M_PI / 2) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos = FieldComputations::projectPointToValidPositionOnLine(
@@ -281,13 +282,17 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     }
 }
 
-void PositionComputations::calculateInfoForDefenders(std::unordered_map<std::string, StpInfo> &stpInfos,
+void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
                                                      std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
                                                      world::World *world) noexcept {
-    // List of all active defender, such that we can defend the n closests enemies
+    // List of all active defender and waller names
     auto defenderNames = std::vector<std::string>{};
+    auto wallerNames = std::vector<std::string>{};
+    auto additionalWallerNames = std::vector<std::string>{};
     for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
-        if (roles[i]->getName().find("defender") != std::string::npos) {
+        if (roles[i]->getName().find("waller") != std::string::npos) {
+            wallerNames.emplace_back(roles[i]->getName());
+        } else if (roles[i]->getName().find("defender") != std::string::npos) {
             defenderNames.emplace_back(roles[i]->getName());
         }
     }
@@ -310,70 +315,66 @@ void PositionComputations::calculateInfoForDefenders(std::unordered_map<std::str
     if (activeDefenderNames.empty()) {
         auto loopSize = std::min(defenderNames.size(), enemyMap.size());
         for (int i = 0; i < loopSize; i++) {
-            stpInfos["defender_" + std::to_string(i)].setPositionToDefend(enemyMap.begin()->second);
+            auto defendPostion = enemyMap.begin()->second;
+            defendPostion.x = std::min(0.0, defendPostion.x);
+            stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = loopSize; i < defenderNames.size(); i++) {
-            // For each waller, stand in the right wall position and look at the ball
-            auto positionToMoveTo = PositionComputations::getWallPosition(i, defenderNames.size() - enemyMap.size(), field, world);
-            auto &wallerStpInfo = stpInfos["defender_" + std::to_string(i)];
-
-            wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-            wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
-
-            // If the waller is close to its target, ignore collisions
-            constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
-            if ((wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
-                wallerStpInfo.setShouldAvoidOurRobots(false);
+            additionalWallerNames.emplace_back("defender_" + std::to_string(i));
+        }
+    } else {
+        // Calculate the distance between the defenders and their enemies
+        std::vector<std::vector<double>> cost_matrix;
+        cost_matrix.resize(activeDefenderNames.size());
+        int row_length = std::min(activeDefenderNames.size(), enemyMap.size());
+        for (int i = 0; i < activeDefenderNames.size(); i++) {
+            cost_matrix[i].resize(row_length);
+            // Check if there are still enemies left
+            if (enemyMap.empty()) continue;
+            enemies.emplace_back(enemyMap.begin()->second);
+            enemyMap.erase(enemyMap.begin());
+        }
+        for (int i = 0; i < activeDefenderNames.size(); i++) {
+            for (int j = 0; j < row_length; j++) {
+                cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
             }
         }
-        return;
-    };
-    // Calculate the distance between the defenders and their enemies
-    std::vector<std::vector<double>> cost_matrix;
-    cost_matrix.resize(activeDefenderNames.size());
-    int row_length = std::min(activeDefenderNames.size(), enemyMap.size());
-    for (int i = 0; i < activeDefenderNames.size(); i++) {
-        cost_matrix[i].resize(row_length);
-        // Check if there are still enemies left
-        if (enemyMap.empty()) continue;
-        enemies.emplace_back(enemyMap.begin()->second);
-        enemyMap.erase(enemyMap.begin());
-    }
-    for (int i = 0; i < activeDefenderNames.size(); i++) {
-        for (int j = 0; j < row_length; j++) {
-            cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
-        }
-    }
-    // Calculate the optimal assignment of enemies to pass_defenders using the hungarian algorithm and set the position to defend for each
-    // active pass defender
-    std::vector<int> assignments;
-    rtt::Hungarian::Solve(cost_matrix, assignments);
-    int currentWallerIndex = 0;
-    for (int i = 0; i < activeDefenderNames.size(); i++) {
-        // If assignments is -1, it means the pass defender does not get an enemy assigned to it, because there are more pass defenders than enemies
-        if (assignments[i] == -1) {
-            // For each waller, stand in the right wall position and look at the ball
-            auto positionToMoveTo = PositionComputations::getWallPosition(currentWallerIndex, activeDefenderNames.size() - enemies.size(), field, world);
-            currentWallerIndex++;
-            auto &wallerStpInfo = stpInfos[activeDefenderNames[i]];
-
-            wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-            wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
-
-            // If the waller is close to its target, ignore collisions
-            constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
-            if ((wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
-                wallerStpInfo.setShouldAvoidOurRobots(false);
-            }
-        } else {
-            if (enemies[assignments[i]].x > 0) {
-                stpInfos[activeDefenderNames[i]].setPositionToDefend(Vector2(0, enemies[assignments[i]].y));
-                stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
+        // Calculate the optimal assignment of enemies to pass_defenders using the hungarian algorithm and set the position to defend for each
+        // active pass defender
+        std::vector<int> assignments;
+        rtt::Hungarian::Solve(cost_matrix, assignments);
+        int currentWallerIndex = 0;
+        for (int i = 0; i < activeDefenderNames.size(); i++) {
+            // If assignments is -1, it means the pass defender does not get an enemy assigned to it, because there are more pass defenders than enemies
+            if (assignments[i] == -1) {
+                additionalWallerNames.emplace_back(activeDefenderNames[i]);
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
                 stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
             }
+        }
+    }
+    for (int i = 0; i < wallerNames.size() + additionalWallerNames.size(); ++i) {
+        // For each waller, stand in the right wall position and look at the ball
+        auto positionToMoveTo = PositionComputations::getWallPosition(i, wallerNames.size() + additionalWallerNames.size(), field, world);
+        std::string currentWallerName;
+        if (i < additionalWallerNames.size() / 2) {
+            currentWallerName = additionalWallerNames[i];
+        } else if (i < wallerNames.size() + additionalWallerNames.size() / 2) {
+            currentWallerName = wallerNames[i - additionalWallerNames.size() / 2];
+        } else {
+            currentWallerName = additionalWallerNames[i - wallerNames.size()];
+        }
+        auto &wallerStpInfo = stpInfos[currentWallerName];
+
+        wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
+        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
+
+        // If the waller is close to its target, ignore collisions
+        constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
+        if (wallerStpInfo.getRobot() && (wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
+            wallerStpInfo.setShouldAvoidOurRobots(false);
         }
     }
 }
@@ -409,37 +410,6 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
         stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::OffensivePosition, field, world));
         stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePass, field, world));
         stpInfos["attacker_5"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::OffensivePosition, field, world));
-    }
-}
-
-void PositionComputations::calculateInfoForWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                   std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                   world::World *world) noexcept {
-    // List of all active defender, such that we can defend the n closests enemies
-    auto wallerNames = std::vector<std::string>{};
-    for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
-        if (roles[i]->getName().find("waller") != std::string::npos) {
-            wallerNames.emplace_back(roles[i]->getName());
-        }
-    }
-    auto activeWallerNames = std::vector<std::string>{};
-    for (auto name : wallerNames) {
-        if (stpInfos[name].getRobot().has_value()) activeWallerNames.emplace_back(name);
-    }
-
-    for (int i = 0; i < activeWallerNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        auto positionToMoveTo = PositionComputations::getWallPosition(i, activeWallerNames.size(), field, world);
-        auto &wallerStpInfo = stpInfos[activeWallerNames[i]];
-
-        wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
-
-        // If the waller is close to its target, ignore collisions
-        constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
-        if ((wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
-            wallerStpInfo.setShouldAvoidOurRobots(false);
-        }
     }
 }
 
@@ -509,15 +479,14 @@ void PositionComputations::calculateInfoForPenalty(std::unordered_map<std::strin
     auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
     constexpr double PENALTY_MARK_X = 0;
     int amountOfPassiveRobots = 0;
-    if (currentGameState == "PenaltyUsPrepare") {
+    if (currentGameState == "penalty_us_prepare") {
         constexpr double PENALTY_MARK_X = -2.0;
         amountOfPassiveRobots = world->getWorld()->getUs().size() - 2;
-    } else if (currentGameState == "PenaltyThemPrepare") {
+    } else if (currentGameState == "penalty_them_prepare") {
         constexpr double PENALTY_MARK_X = 2.0;
         amountOfPassiveRobots = world->getWorld()->getUs().size() - 1;
     } else {
-        std::cout << currentGameState << std::endl;
-        constexpr double PENALTY_MARK_X = 2.0;
+        RTT_ERROR("Invalid gamestate for penalty");
     }
     // Determine where behind our robots have to stand
     auto ballPosition = world->getWorld()->getBall();

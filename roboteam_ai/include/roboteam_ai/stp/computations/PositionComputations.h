@@ -93,7 +93,7 @@ class PositionComputations {
      * @param field The current field
      * @param world The current world
      */
-    static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles,
+    static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles,
                                          const Field &field, world::World *world) noexcept;
 
     /**
@@ -103,7 +103,7 @@ class PositionComputations {
      * @param field The current field
      * @param world The current world
      */
-    static void calculateInfoForDefenders(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
+    static void calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
                                           const Field &field, world::World *world) noexcept;
 
     /**
@@ -115,16 +115,6 @@ class PositionComputations {
      */
     static void calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
                                           const Field &field, world::World *world) noexcept;
-
-    /**
-     * @brief Calculates info for the wallers
-     * @param stpInfos The current stpInfos
-     * @param roles The current roles
-     * @param field The current field
-     * @param world The current world
-     */
-    static void calculateInfoForWallers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
-                                        const Field &field, world::World *world) noexcept;
 
     /**
      * @brief Calculates info for the formations

@@ -20,6 +20,7 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
 
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::NormalOrFreeKickUsGameState);
+    keepPlayEvaluation.emplace_back(eval::TheyDoNotHaveBall);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
@@ -27,12 +28,12 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
         std::make_unique<role::PassReceiver>("receiver"),
         std::make_unique<role::BallDefender>("defender_0"),
-        std::make_unique<role::BallDefender>("attacker_0"),
-        std::make_unique<role::Formation>("defender_1"),
+        std::make_unique<role::Formation>("attacker_0"),
+        std::make_unique<role::BallDefender>("defender_1"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Formation>("defender_2"),
+        std::make_unique<role::BallDefender>("defender_2"),
         std::make_unique<role::Formation>("waller_2"),
         std::make_unique<role::Formation>("attacker_1"),
     };
@@ -66,8 +67,7 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
 
 void FreeKickUsPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForWallers(stpInfos, roles, field, world);
-    PositionComputations::calculateInfoForDefenders(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     if (!ballKicked()) {
@@ -81,6 +81,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
+        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
         // free_kick_taker now goes to a front grid, where the receiver is not
         if (receiverLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
@@ -110,9 +111,12 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting
-    return !ballKicked() && stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot()->get()->getDistanceToBall() > 0.25 &&
-            stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-               1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score;
+    if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
+        stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
+            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score)
+        return true;
+
+    return false;
 }
 
 const char* FreeKickUsPass::getName() const { return "Free Kick Us Pass"; }

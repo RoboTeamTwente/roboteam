@@ -35,7 +35,6 @@ Dealer::FlagMap Halt::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
 
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -45,6 +44,7 @@ Dealer::FlagMap Halt::decideRoleFlags() const noexcept {
     flagMap.insert({"halt_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_10", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }

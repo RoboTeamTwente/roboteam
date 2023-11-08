@@ -39,8 +39,10 @@ bool OrbitKick::isEndTactic() noexcept {
 }
 
 bool OrbitKick::isTacticFailing(const StpInfo &info) noexcept {
-    // Fail tactic if the robot doesn't have the ball or if there is no shootTarget
-    return !info.getPositionToShootAt() || !info.getRobot()->get()->hasBall();
+    // Fail tactic if there is no shootTarget or we don't have the ball during Rotate
+    if (!info.getPositionToShootAt()) return true;
+    if (skills.current_num() == 0 && !info.getRobot()->get()->hasBall()) return true;
+    return false;
 }
 
 bool OrbitKick::shouldTacticReset(const StpInfo &info) noexcept { return false; }

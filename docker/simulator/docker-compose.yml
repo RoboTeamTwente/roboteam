@@ -3,10 +3,7 @@ version: '3'
 services:
 
   roboteam_primary_ai:
-    build: 
-      context: ../
-      target: run
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_primary_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -23,7 +20,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_secondary_ai:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_secondary_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -40,7 +37,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_observer:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_observer
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -57,7 +54,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_robothub:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_robothub
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -77,7 +74,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_interface:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_interface
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -104,7 +101,7 @@ services:
       - ../../roboteam_autoref/:/home/roboteamtwente/
 
   erforce_autoref:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_erforce_autoref
     restart: always
     working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
@@ -118,7 +115,7 @@ services:
       - ../../:/home/roboteamtwente/
 
   erforce_simulator:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_erforce_simulator
     restart: always
     working_dir: "/home/roboteamtwente/external/framework/build/bin/"

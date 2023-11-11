@@ -3,10 +3,7 @@ version: '3'
 services:
 
   roboteam_primary_ai:
-    build: 
-      context: ../
-      target: development
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_primary_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -23,7 +20,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_observer:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_observer
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -40,7 +37,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_robothub:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_robothub
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -60,7 +57,7 @@ services:
       - ../../build/release/:/home/roboteamtwente/
 
   roboteam_interface:
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_interface
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -107,16 +104,3 @@ services:
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     ports:
       - "8081:8081/tcp" # UI port
-
-#  ssl_vision:
-#    image: rtt-build-env:latest
-#    container_name: RTT_ssl_vision
-#    restart: always
-#    working_dir: "/home/roboteamtwente/"
-#    command: sh -c "./bin/vision"
-#    expose:
-#      - 10006:10006 # Vision port
-#    environment:
-#      - LC_NUMERIC=en_US.UTF-8
-#    volumes:
-#      - ../../external/ssl-vision/:/home/roboteamtwente/

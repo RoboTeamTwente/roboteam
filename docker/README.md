@@ -7,7 +7,7 @@ For a simulation tournament (2022/04), every team had to put their program in a 
 ## Structure
 The description of the environment is located in the Dockerfile inside the `docker` folder. The file is divided in two targets: "development" and "release".
 
-Release target is only intended as a GitHub Action target, its purpose is to create the Docker image containing runnable binaries that can be pushed into a Registry. If you really want to build it locally you can do it by first building the development target, then compile sources with it and then build the release target. Note that release target contains only RoboTeamTwente binaries and not external ones like erforce simulator or erforce autoref.
+**Release target is only intended as a GitHub Action target**, its purpose is to create the Docker image containing runnable binaries that can be pushed into a Registry. If you really want to build it locally you can do it by first building the development target, then compile sources with it and then build the release target. Note that release target contains only RoboTeamTwente binaries and not external ones like erforce simulator or erforce autoref, it does not contain RTT autoref either.
 Development target is instead intended as a normal usage target.
 
 Inside `docker` folder there are three subdirectories: `builder` `game` and `simulator`.
@@ -34,10 +34,10 @@ git submodule update --init --recursive
 Then, install prerequisite: install Docker https://docs.docker.com/engine/install/, if you want you can add yourself to docker group in order to run Docker command without invoking root user https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user and finally install docker compose.
 
 Every subproject is meant to be executed as a service using its own container from a docker compose.
-Every RTT subproject (service) runs in its own 'rtt-build-env' container, this way that all dependencies and requirements are satisfied. 
+Every RTT subproject (service) runs in its own container (based on the same roboteamtwente image), this way that all dependencies and requirements are satisfied. 
 Subproject containers start their own software from `build/release/bin` folder mounted as a volume.
 
-### Normal usage
+### Normal/development usage
 1) Make your edits on RTT sources
 2) Spin-up "builder" compose
 3) Spin-up "simulator"/"game" compose
@@ -64,19 +64,32 @@ docker compose down
 Note: you may want to use `docker logs -t <container_name>` to see command output of a specific container (service).
 Example: `docker logs -t RTT_roboteam_primary_ai`
 
+### Release usage
+Pull release image:
+```
+docker pull roboteamtwente/roboteam:latest
+```
+Run the image:
+```
+docker run -itd --name rtt-release-env -h rtt-release-env roboteamtwente/roboteam:latest
+```
+
 #### TODO
 https://lemariva.com/blog/2020/10/vscode-c-development-and-debugging-containers
 
 ### Docker geeks
-#### Build environment
-You can manually build the 'build environment' container doing:
+We highly discourage executing command under this section unless you know what you are doing and for some reason you need to edit dockerfiles or composes structure.
+
+Note: remember that our "composes" download image from Dockerhub if not available locally, thus, if you want to test with a new image you need to build the new image and tag it with the same name (`roboteamtwente/roboteam:development` or `roboteamtwente/roboteam:latest`).
+#### Development environment
+You can manually build the 'development environment' container executing:
 ```
-docker build -t rtt-build-env .
+docker build -t roboteamtwente/roboteam:development --target development .
 ```
 
 Spin-up the just built container:
 ```
-docker run -itd --name rtt-build-env -h rtt-build-env -v $ROBOTEAM_REPO:/home/roboteamtwente/roboteam rtt-build-env
+docker run -itd --name rtt-build-env -h rtt-build-env -v $ROBOTEAM_REPO:/home/roboteamtwente/roboteam roboteamtwente/roboteam:development
 ```
 
 Then, you can compile sources using `build.sh` script located in the repo root folder from inside the container.
@@ -94,7 +107,18 @@ Remember that you can stop/start 'rtt-build-env' container simply using:
 docker <start/stop> rtt-build-env
 ```
 
-Note: avoid tagging the "run" stage container with the same name "rtt-build-env", otherwise when you will start the "build" compose you won't be able to compile sources (because the compose will be re-using the container with that name).
+#### Release environment
+Note: **if you really want to build the release container** (highly discouraged) you must first build the development container as explained in the previous section, then you need to compile sources using `build.sh` script and lastly you can build the container.
+
+Note that the release container can be downloaded from Dockerhub (highly recommended) by a simple:
+`docker pull roboteamtwente/roboteam:latest`.
+
+In order to build the release container, you must call the `docker build` command from parent folder, otherwise docker is not able to copy files from outside context:
+```
+cd ../
+docker build -t roboteamtwente/roboteam:latest --target release -f ./docker/Dockerfile .
+```
+
 #### Manually starting a service
 You can start a service by simply executing the binary from the rtt-build-env container.
 Example:

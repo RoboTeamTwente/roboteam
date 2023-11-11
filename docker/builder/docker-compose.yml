@@ -6,7 +6,7 @@ services:
     build:
       context: ../
       target: development
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_builder
     restart: "no"
     working_dir: "/home/roboteamtwente/"

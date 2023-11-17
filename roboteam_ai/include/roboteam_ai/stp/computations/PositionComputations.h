@@ -137,14 +137,6 @@ class PositionComputations {
                                                  std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
                                                  world::World *world) noexcept;
 
-    /**
-     * @brief Calculates info for the formations during a penalty
-     * @param stpInfos The current stpInfos
-     * @param field The current field
-     * @param world The current world
-     */
-    static void calculateInfoForPenalty(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
-
    private:
     /**
      * @brief Calculates a position outside of a given shape

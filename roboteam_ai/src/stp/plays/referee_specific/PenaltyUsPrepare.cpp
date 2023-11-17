@@ -5,6 +5,9 @@
 
 namespace rtt::ai::stp::play {
 
+// The x position on which we take the penalty
+constexpr double PENALTY_MARK_US_X = -2.0;
+
 PenaltyUsPrepare::PenaltyUsPrepare() : Play() {
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::PenaltyUsPrepareGameState);
@@ -59,9 +62,51 @@ Dealer::FlagMap PenaltyUsPrepare::decideRoleFlags() const noexcept {
 
 void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
     // We need at least a keeper, and a kicker positioned behind the ball
-    PositionComputations::calculateInfoForPenalty(stpInfos, field, world);
     stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center()));
     stpInfos["kicker_formation"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position - Vector2{0.25, 0.0});
+
+    // During our penalty, all our robots should be behind the ball to not interfere.
+    // Create a grid pattern of robots on our side of the field
+    int amountOfPassiveRobots = world->getWorld()->getUs().size() - 2;
+    // Determine where behind our robots have to stand
+    auto ballPosition = world->getWorld()->getBall();
+    // If there is no ball, use the default division A penalty mark position
+    double ballX = ballPosition.has_value() ? ballPosition.value()->position.x : PENALTY_MARK_US_X;
+    double limitX = std::min(ballX, PENALTY_MARK_US_X) - Constants::PENALTY_DISTANCE_BEHIND_BALL();
+
+    // Then, figure out at what interval the robots will stand on a horizontal line
+    double horizontalRange = std::fabs(field.playArea.left() - limitX);
+    double horizontalHalfStep = horizontalRange / amountOfPassiveRobots;  // 5 robots for stepSize, divided by 2 for half stepSize
+
+    // Lastly, figure out vertical stepSize
+    double verticalRange = std::fabs(field.leftDefenseArea.bottom() - field.playArea.bottom());
+    double verticalHalfStep = verticalRange / (2.0 * 2.0);  // 2 rows, divided by 2 for half stepSize
+
+    double startX = field.playArea.left() + horizontalHalfStep;
+    double bottomY = field.playArea.bottom() + verticalHalfStep;
+    double topY = bottomY + 2 * verticalHalfStep;
+
+    const std::string formationPrefix = "formation_";
+
+    /// Bottom row of robots
+    for (int i = 0; i < amountOfPassiveRobots / 2; i++) {
+        auto formationName = formationPrefix + std::to_string(i);
+        auto position = Vector2(startX + i * 2 * horizontalHalfStep, bottomY);
+        stpInfos[formationName].setPositionToMoveTo(position);
+
+        auto angleToGoal = (field.rightGoalArea.leftLine().center() - position).toAngle();
+        stpInfos[formationName].setAngle(angleToGoal);
+    }
+
+    /// Top row of robots
+    for (int i = amountOfPassiveRobots / 2; i < amountOfPassiveRobots; i++) {
+        auto formationName = formationPrefix + std::to_string(i);
+        auto position = Vector2(startX + (i - amountOfPassiveRobots / 2) * 2 * horizontalHalfStep, topY);
+        stpInfos[formationName].setPositionToMoveTo(position);
+
+        auto angleToGoal = (field.rightGoalArea.leftLine().center() - position).toAngle();
+        stpInfos[formationName].setAngle(angleToGoal);
+    }
 }
 
 const char* PenaltyUsPrepare::getName() const { return "Penalty Us Prepare"; }

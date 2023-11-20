@@ -64,7 +64,9 @@ void IOManager::handleState(const proto::State& stateMsg) {
         } else if (state.referee().blue().name() == ROBOTEAM_TWENTE) {
             GameSettings::setYellow(false);
         }
-        GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
+        if (GameSettings::isPrimaryAI()) {
+            GameSettings::setLeft(!(state.referee().blue_team_on_positive_half() ^ GameSettings::isYellow()));
+        }
         if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
 

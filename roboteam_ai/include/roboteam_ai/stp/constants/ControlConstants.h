@@ -31,7 +31,7 @@ constexpr uint8_t MAX_ROBOT_COUNT = 11; /**< Maximum allowed number of robots */
 /// Ball constants
 constexpr double BALL_STILL_VEL = 0.1;                              /**< Velocity of the ball at which it is considered still */
 constexpr double BALL_STILL_VEL2 = BALL_STILL_VEL * BALL_STILL_VEL; /**< Squared velocity of the ball at which it is considered still */
-constexpr double BALL_GOT_SHOT_LIMIT = 1.3;                         /**< Velocity of the ball at which it is considered shot */
+constexpr double BALL_GOT_SHOT_LIMIT = 0.6;                         /**< Velocity of the ball at which it is considered shot */
 constexpr double BALL_IS_MOVING_SLOW_LIMIT = 1;                     /**< Velocity of the ball at which it is considered moving slow */
 constexpr double BALL_IS_CLOSE = 0.5;                               /**< Distance from the ball to a robot at which the ball is considered close */
 constexpr double BALL_RADIUS = 0.0215;                              /**< Radius of the ball */

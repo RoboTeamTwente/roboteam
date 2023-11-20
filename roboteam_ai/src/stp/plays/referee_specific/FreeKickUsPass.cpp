@@ -69,6 +69,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);

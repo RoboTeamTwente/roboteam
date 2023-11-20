@@ -13,6 +13,7 @@
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PositionScoring.h"
 #include "world/World.hpp"
+#include "stp/computations/PassComputations.h"
 
 namespace rtt::ai::stp {
 
@@ -471,6 +472,40 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     for (int i = 0; i < formationFrontNames.size(); i++) {
         stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1)});
     }
+}
+
+void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos,
+                                                            std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
+                                                            world::World *world, rtt::ai::stp::PassInfo passInfo) noexcept {
+    auto ballPosition = world->getWorld()->getBall()->get()->position;
+    auto passLocation = passInfo.passLocation;
+    auto passerId = passInfo.passerId;
+    auto receiverId = passInfo.receiverId;
+    // Make a list of all robots that are not the passer, receiver or keeper, which need to make sure they are not in the way of the pass
+    auto toBeCheckedRobots = std::vector<std::string>{};
+    for (auto& role : stpInfos) {
+        if (role.second.getRobot().has_value()) {
+            auto robotId = role.second.getRobot()->get()->getId();
+            auto robotName = role.first;
+            if (robotId != passerId && robotId != receiverId && robotName != "keeper") {
+                toBeCheckedRobots.emplace_back(role.first);
+            }
+        }
+    }
+    // Make a tube around the pass trajectory, and make sure all robots outside of this tube
+    std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, passLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
+    for (auto& robot : toBeCheckedRobots) {
+        auto robotPositionToMoveTo = stpInfos[robot].getPositionToMoveTo();
+        if (robotPositionToMoveTo == std::nullopt || !robotPositionToMoveTo.has_value()) {
+            continue;
+        }
+        if (!avoidShape->contains(robotPositionToMoveTo.value())) {
+            continue;
+        }
+        auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
+        stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
+    }
+
 }
 
 }  // namespace rtt::ai::stp

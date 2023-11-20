@@ -38,7 +38,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: roboteamtwente/roboteam:development
-          options: -v ${{ github.workspace }}:/home/roboteamtwente/
+          options: -v ${{ github.workspace }}:/home/roboteamtwente/ --user roboteamtwente
           run: |
             ./build.sh
       - 

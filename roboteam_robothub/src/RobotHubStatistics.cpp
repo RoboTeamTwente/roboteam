@@ -49,6 +49,9 @@ void RobotHubStatistics::print() const {
 
     std::stringstream ss;
 
+    // Clear and flush
+    ss << "\x1B[2J\x1B[H" << std::flush;
+
     ss << "                          ┏━━━━━━━━━━━━━━━━━━━┓                           " << std::endl
        << "┏━━━━━━━━━━━━━━━━━━━━━━━━━┫ Roboteam RobotHub ┣━━━┳━━━━━━━━━━━━━━━━━━━━━━┓" << std::endl
        << "┃                         ┗━━━━━━━━━━━━━━━━━━━┛   ┃                      ┃" << std::endl

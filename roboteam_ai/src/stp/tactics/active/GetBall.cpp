@@ -22,7 +22,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
 
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
-    double ballDistance = (ballPosition - robotPosition).length();
+    double ballDistance = (ballPosition - robotPosition).length() - control_constants::ROBOT_RADIUS - control_constants::BALL_RADIUS;
 
     if (skillStpInfo.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && ballDistance < control_constants::AVOID_BALL_DISTANCE) {
         // don't move too close to the ball until the angle to the ball is (roughly) correct
@@ -47,7 +47,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
 
 bool GetBall::isTacticFailing(const StpInfo &info) noexcept { return false; }
 
-bool GetBall::shouldTacticReset(const StpInfo &info) noexcept { return (!info.getRobot()->get()->hasBall() && skills.current_num() == 1); }
+bool GetBall::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 bool GetBall::isEndTactic() noexcept {
     // This is not an end tactic

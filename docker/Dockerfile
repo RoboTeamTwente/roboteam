@@ -1,68 +1,85 @@
-# ========================== #
-#        INSTRUCTIONS        #
-# ========================== #
+# RTT Build Environment
+# The purpose of this container is to have a stable, quick and reliable environment
+# to build RTT software.
 #
-#	==== QUICKLY BOOT
-#     $ docker run --init --rm --net=host roboteamtwente/roboteam:latest ./roboteam_robothub
-#	  $ docker run --init --rm --net=host roboteamtwente/roboteam:latest ./roboteam_observer
-#     $ xhost local:
-#	  $ docker run --init --rm --net=host -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY rtt-release /roboteam_ai
+# =========================================================================== #
 #
+# Manually build the container:
+#   docker build -t rtt-build-env .
 #
+# Spin-up the container:
+#   docker run -itd --name rtt-build-env -h rtt-build-env -v <abs_path_to_the_repo_root>/:/home/roboteamtwente/roboteam rtt-build-env
 #
-#   ==== DO IT YOURSELF
-#   Step 1.1: Build
-#     $ docker build . --target development -t rtt-development
-#     $ docker build . --target release -t rtt-release
+# Start/Stop container:
+#   docker <start/stop> rtt-build-env
 #
-#   Step 2: Allow X11 access
-#     $ xhost local:
-#   This will give local VMs acces to the X11-server, which is needed to do GUI stuff
-#   https://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers
+# Attach to the container: 
+#   docker exec -it -w /home/roboteamtwente rtt-build-env /bin/bash
 #
-#   Step 3.1: Create a development container, to which you can e.g. hook into with VSCode
-#     $ docker run -it -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY --net=host --name rtt rtt-development
-#	OR
-#	Step 3.2: Start any executable 
-#	  $ docker run --init --rm --net=host rtt-release /roboteam_observer
-#	  $ docker run --init --rm --net=host -v /tmp/.X11-unix/ -e DISPLAY=$DISPLAY rtt-release /roboteam_ai
-#	  $ docker run --init --rm --net=host rtt-release /roboteam_robothub
+# =========================================================================== #
 #
-# ========================== #
 
+# Development target
+FROM alpine:3.18 AS development
 
+ENV TZ="Europe/Rome"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# ========================== #
-#   DEVELOPMENT CONTAINER    #
-# ========================== #
-FROM ubuntu:22.04 AS development
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y vim git cmake pkg-config python3 python3-pip ccache
+ARG USERNAME=roboteamtwente
 
-RUN git clone https://github.com/RoboTeamTwente/roboteam.git --recursive
-WORKDIR /roboteam
-RUN ./install_UBUNTU_22_04.sh
-RUN mkdir build 
-WORKDIR /roboteam/build
-RUN cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) roboteam_observer roboteam_ai roboteam_robothub
-WORKDIR /roboteam
+RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
+    clang ninja-build autoconf automake pkgconfig \
+    python3 py3-pip git ccache sudo \
+    libzmq zeromq-dev libzmq-static eigen-dev gtest-dev \
+    libtbb-dev boost-dev curl unzip wget zlib-dev zip nodejs npm \
+    openssl-dev sdl2-dev libudev-zero libudev-zero-dev libusb libusb-dev \
+    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
+RUN npm install -g yarn
 
+WORKDIR /root/protobuf
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protobuf-cpp-3.20.3.zip -O protobuf.zip && unzip protobuf.zip && rm protobuf.zip
+WORKDIR /root/protobuf/protobuf-3.20.3
+RUN ./configure && make -j$(nproc) && make check -j$(nproc) && make install && ldconfig . && cd .. && rm -rf /root/protobuf/protobuf-3.20.3
 
+ENV HOME=/home/$USERNAME
+ENV USER=$USERNAME
 
-# ========================== #
-#     RELEASE CONTAINER      #
-# ========================== #
-FROM ubuntu:22.04 AS release
-COPY --from=development /roboteam/build/release/bin/roboteam_observer         /roboteam_observer
-COPY --from=development /roboteam/build/release/bin/roboteam_ai               /roboteam_ai
-COPY --from=development /roboteam/build/release/bin/roboteam_robothub         /roboteam_robothub
+RUN adduser -D $USER && \
+    echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER && \
+    chmod 0440 /etc/sudoers.d/$USER
 
-COPY --from=development /usr/lib/x86_64-linux-gnu                             /usr/lib/x86_64-linux-gnu
-COPY --from=development /usr/share/fonts                                      /usr/share/fonts
-COPY --from=development /roboteam/build/release/lib/libzmqpp.so               /usr/lib/libzmqpp.so
-COPY --from=development /roboteam/build/release/lib/libNFParam.so             /usr/lib/libNFParam.so
-COPY --from=development /usr/local/lib/libprotobuf.so.30.0.6                  /usr/lib/libprotobuf.so.30
+USER $USER
+WORKDIR $HOME
 
-# The entire /usr/lib/x86_64-linux-gnu folder is cloned since it's too much of a hassle to figure out what is and isn't needed
-# TODO figure out how to exlude large files such as /usr/lib/x86_64-linux-gnu/libLLVM* (200+MB)
-# Can't use .dockerignore for this https://github.com/moby/moby/issues/33923
+# Release target
+FROM alpine:3.18 AS release
+
+ENV TZ="Europe/Rome"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ARG USERNAME=roboteamtwente
+ENV HOME=/home/$USERNAME
+ENV USER=$USERNAME
+
+RUN apk add --no-cache \
+    libtool libzmq libzmq-static libudev-zero libusb \
+    zeromq-dev eigen-dev gtest-dev \
+    libtbb-dev boost-dev zlib-dev \
+    openssl-dev sdl2-dev  \
+    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
+    sudo nodejs npm
+RUN npm install -g yarn
+
+COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
+COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc
+
+RUN adduser -D $USER && \
+    echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER && \
+    chmod 0440 /etc/sudoers.d/$USER
+
+USER $USER
+WORKDIR $HOME
+
+ENV LD_LIBRARY_PATH=$HOME/lib/
+# Note: cannot COPY from outside context, build from parent folder
+COPY --chown=$USER:$USER ../build/release/ $HOME/

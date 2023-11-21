@@ -87,7 +87,12 @@ void ChippingPass::calculateInfoForRoles() noexcept {
         // Receiver goes to the passLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        auto receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+        Vector2 receiverLocation;
+        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
+            receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+        } else {
+            receiverLocation = ball->position;
+        }
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
 
         // Passer now goes to a front grid, where the receiver is not

@@ -4,11 +4,11 @@
 #
 # =========================================================================== #
 #
-# Manually build the container:
-#   docker build -t rtt-build-env .
+# Manually build the development container:
+#   docker build -t roboteamtwente/roboteam:development --target development .
 #
-# Spin-up the container:
-#   docker run -itd --name rtt-build-env -h rtt-build-env -v <abs_path_to_the_repo_root>/:/home/roboteamtwente/roboteam rtt-build-env
+# Spin-up the development container:
+#   docker run -itd --name rtt-build-env -h rtt-build-env -v <abs_path_to_the_repo_root>/:/home/roboteamtwente/roboteam roboteamtwente/roboteam:development
 #
 # Start/Stop container:
 #   docker <start/stop> rtt-build-env
@@ -80,6 +80,9 @@ RUN adduser -D $USER && \
 USER $USER
 WORKDIR $HOME
 
+# Add roboteam libraries to LD path
 ENV LD_LIBRARY_PATH=$HOME/lib/
+
+# Copy just build binaries (roboteam software) from volume to container home
 # Note: cannot COPY from outside context, build from parent folder
 COPY --chown=$USER:$USER ../build/release/ $HOME/

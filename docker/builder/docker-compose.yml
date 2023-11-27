@@ -3,13 +3,23 @@ version: '3'
 services:
 
   roboteam_builder:
-    build:
-      context: ../
-      target: development
-    image: rtt-build-env:latest
+    image: roboteamtwente/roboteam:development
     container_name: RTT_roboteam_builder
     restart: "no"
     working_dir: "/home/roboteamtwente/"
     command: sh -c "./build.sh"
     volumes:
       - ../../:/home/roboteamtwente/
+
+  roboteam_builder_old:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_builder_old
+    restart: "no"
+    depends_on:
+      roboteam_builder:
+        condition: service_completed_successfully
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./build.sh -o $COMMIT"
+    volumes:
+      - ../../:/home/roboteamtwente/
+    profiles: ["diff"]

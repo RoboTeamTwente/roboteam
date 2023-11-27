@@ -42,6 +42,8 @@ void GameSettings::setLeft(bool _left) {
         left = _left;
         return;
     }
+
+    RTT_INFO("This secondary AI can not alter settings")
 }
 
 net::RobotHubMode GameSettings::getRobotHubMode() { return robotHubMode; }

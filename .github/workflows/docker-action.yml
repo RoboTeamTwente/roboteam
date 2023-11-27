@@ -42,6 +42,7 @@ jobs:
           image: roboteamtwente/roboteam:development
           options: -v ${{ github.workspace }}:/home/roboteamtwente/
           run: |
+            sudo chown -R $(id -u):$(id -g) .
             ./build.sh
       - 
         name: Build and push release from sources

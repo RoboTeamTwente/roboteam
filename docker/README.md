@@ -44,6 +44,12 @@ In order to access Basestation tty from inside Docker container we first need to
 echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0483\", ATTRS{idProduct}==\"5740\", ATTRS{serial}==\"*\", SYMLINK+=\"rtt-basestation\"" | sudo tee -a /etc/udev/rules.d/99-rtt-basestation.rules
 ```
 
+Add yourself to the dialout group:
+```
+sudo usermod -a -G dialout $USER
+```
+Finally, reboot your pc to apply.
+
 ### Normal/development usage
 1) Make your edits on RTT sources
 2) Spin-up "builder" compose
@@ -64,7 +70,7 @@ or, if you want to build diff (compare current ai with a previous version):
 ```
 COMMIT=<commit> docker compose --profile diff up
 ```
-NOTE: if you dont't specify COMMIT=<commit> the default will be origin/main~1
+NOTE: if you dont't specify COMMIT=<commit>, the default will be origin/main~1
 
 2. Start services:
 ```
@@ -79,8 +85,7 @@ docker compose --profile <simulator / diff /game> down
 Note: you may want to use `docker logs -t <container_name>` to see output of a container (service).
 Example: `docker logs -t RTT_roboteam_primary_ai`
 
-#### Diff
-Explain how diff work
+NOTE: If you notice USB errors when running "game" compose, do a `docker compose --profile game down`, detach and re-attach basestation and the start game again.
 
 ### Release usage
 Pull release image:

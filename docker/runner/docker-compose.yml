@@ -118,7 +118,7 @@ services:
     container_name: RTT_roboteam_robothub_game
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_robothub"
+    command: sh -c "sudo bash -c \"export LD_LIBRARY_PATH=/home/roboteamtwente/lib/ && ./bin/roboteam_robothub\"" # "sudo" needed to access USB device
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 1-65535:1-65535 # For zeromq ports
@@ -132,8 +132,9 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
+    privileged: true
     devices:
-      - /dev/rtt-basestation:/dev/ttyACM1 # Fix, not working
+      - /dev/rtt-basestation:/dev/ttyACM1
     profiles: ["game"]
 
   roboteam_interface:

@@ -267,9 +267,10 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
             RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
+    target_position = target_position.value() + stpInfo.getTargetLocationSpeed() * stp::control_constants::DEALER_SPEED_FACTOR;
 
     // Target found. Calculate distance
-    distance = robot->getPos().dist(*target_position);
+    distance = (robot->getPos() + robot->getVel() * stp::control_constants::DEALER_SPEED_FACTOR).dist(*target_position);
 
     return costForDistance(distance, field->playArea.width(), field->playArea.height());
 }

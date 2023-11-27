@@ -216,6 +216,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
                                                     world::World *world) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+    stpInfos["harasser"].setTargetLocationSpeed(world->getWorld()->getBall()->get()->velocity);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
@@ -265,20 +266,27 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     auto enemyRobots = world->getWorld()->getThem();
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
-    std::map<double, Vector2> enemyMap;
+    std::map<double, EnemyInfo> enemyMap;
     std::vector<Vector2> enemies;
     for (auto enemy : enemyRobots) {
         if (enemy->hasBall()) continue;
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
-        enemyMap.insert({score, enemy->getPos()});
+        EnemyInfo info = {enemy->getPos(), enemy->getVel()};
+        enemyMap.insert({score, info});
     }
+
     // If defenders do not have a position yet, don't do hungarian algorithm
     if (activeDefenderNames.empty()) {
         auto loopSize = std::min(defenderNames.size(), enemyMap.size());
         for (int i = 0; i < loopSize; i++) {
-            auto defendPostion = enemyMap.begin()->second;
-            defendPostion.x = std::min(0.0, defendPostion.x);
+            Vector2 defendPostion = enemyMap.begin()->second.position;
+            Vector2 defendSpeed = enemyMap.begin()->second.velocity;
+            if (defendPostion.x > 0) {
+                defendPostion.x = 0;
+                defendSpeed.x = 0;
+            }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
+            stpInfos["defender_" + std::to_string(i)].setTargetLocationSpeed(defendSpeed);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = loopSize; i < defenderNames.size(); i++) {
@@ -293,7 +301,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             cost_matrix[i].resize(row_length);
             // Check if there are still enemies left
             if (enemyMap.empty()) continue;
-            enemies.emplace_back(enemyMap.begin()->second);
+            enemies.emplace_back(enemyMap.begin()->second.position);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = 0; i < activeDefenderNames.size(); i++) {

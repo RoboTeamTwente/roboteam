@@ -54,6 +54,7 @@ constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.04; /**< Angle error for a rob
 // Maximum inaccuracy during ballplacement
 constexpr double BALL_PLACEMENT_MARGIN = 0.15; /**< Distance error for the ball to be considered to have reached the ball placement position*/
 constexpr double DEALER_SPEED_FACTOR = 0.5; /**< Multiplication factor of speed used by the dealer */
+constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9; /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
 
 /// Invariant constants
 constexpr uint8_t FUZZY_TRUE = 255;          /**< Value at which the fuzzy logic is considered 100% true */

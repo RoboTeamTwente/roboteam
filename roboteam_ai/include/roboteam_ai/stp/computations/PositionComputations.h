@@ -28,6 +28,7 @@ namespace rtt::ai::stp {
 struct EnemyInfo {
     Vector2 position;
     Vector2 velocity;
+    int id;
 };
 
 /**

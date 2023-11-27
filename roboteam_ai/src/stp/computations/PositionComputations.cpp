@@ -271,10 +271,13 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     for (auto enemy : enemyRobots) {
         if (enemy->hasBall()) continue;
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
-        EnemyInfo info = {enemy->getPos(), enemy->getVel()};
+        if (std::find(ComputationManager::calculatedEnemyMapIds.begin(), ComputationManager::calculatedEnemyMapIds.end(), enemy->getId()) != ComputationManager::calculatedEnemyMapIds.end()) {
+            score *= stp::control_constants::ENEMY_ALREADY_ASSIGNED_MULTIPLIER;
+        }
+        EnemyInfo info = {enemy->getPos(), enemy->getVel(), enemy->getId()};
         enemyMap.insert({score, info});
     }
-
+    ComputationManager::calculatedEnemyMapIds.clear();
     // If defenders do not have a position yet, don't do hungarian algorithm
     if (activeDefenderNames.empty()) {
         auto loopSize = std::min(defenderNames.size(), enemyMap.size());
@@ -287,6 +290,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
             stpInfos["defender_" + std::to_string(i)].setTargetLocationSpeed(defendSpeed);
+            ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = loopSize; i < defenderNames.size(); i++) {
@@ -302,6 +306,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             // Check if there are still enemies left
             if (enemyMap.empty()) continue;
             enemies.emplace_back(enemyMap.begin()->second.position);
+            ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
         for (int i = 0; i < activeDefenderNames.size(); i++) {

@@ -37,8 +37,8 @@ void KickOffThemPrepare::calculateInfoForRoles() noexcept {
     auto width = field.playArea.width();
 
     // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
+//    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
+//    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 
     double defense_line_x = field.leftDefenseArea.right() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
     // regular bots

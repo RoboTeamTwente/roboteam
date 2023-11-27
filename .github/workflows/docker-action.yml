@@ -36,15 +36,16 @@ jobs:
           target: development
           tags: roboteamtwente/roboteam:development
       - 
-        name: Build sources
+        name: Build sources from development
         uses: addnab/docker-run-action@v3
         with:
           image: roboteamtwente/roboteam:development
           options: -v ${{ github.workspace }}:/home/roboteamtwente/
           run: |
-            sudo ./build.sh
+            sudo chown -R $(id -u):$(id -g) .
+            ./build.sh
       - 
-        name: Build and push release
+        name: Build and push release from sources
         uses: docker/build-push-action@v4
         with:
           context: .

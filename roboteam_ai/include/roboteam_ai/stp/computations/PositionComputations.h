@@ -16,12 +16,12 @@
 
 #include "stp/Role.hpp"
 #include "stp/StpInfo.h"
+#include "stp/computations/PassComputations.h"
 #include "stp/constants/GeneralizationConstants.h"
 #include "utilities/Constants.h"
 #include "world/FieldComputations.h"
 #include "world/World.hpp"
 #include "world/views/WorldDataView.hpp"
-#include "stp/computations/PassComputations.h"
 
 namespace rtt::ai::stp {
 
@@ -110,8 +110,9 @@ class PositionComputations {
      * @param field The current field
      * @param world The current world
      */
-    static void calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
-                                          const Field &field, world::World *world) noexcept;
+    static void calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
+                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
+                                                    world::World *world) noexcept;
 
     /**
      * @brief Calculates info for the attackers
@@ -151,9 +152,8 @@ class PositionComputations {
      * @param world The current world
      * @param passInfo The current passInfo
      */
-    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                 std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                 world::World *world, rtt::ai::stp::PassInfo passInfo) noexcept;
+    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
+                                             const Field &field, world::World *world, Vector2 passLocation) noexcept;
 
    private:
     /**

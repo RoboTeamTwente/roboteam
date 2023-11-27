@@ -11,9 +11,9 @@
 
 #include "roboteam_utils/Hungarian.h"
 #include "stp/computations/ComputationManager.h"
+#include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "world/World.hpp"
-#include "stp/computations/PassComputations.h"
 
 namespace rtt::ai::stp {
 
@@ -245,8 +245,8 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
 }
 
 void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                     world::World *world) noexcept {
+                                                               std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
+                                                               world::World *world) noexcept {
     // List of all active defender and waller names
     auto defenderNames = std::vector<std::string>{};
     auto wallerNames = std::vector<std::string>{};
@@ -443,26 +443,23 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
 }
 
 void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                            std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                            world::World *world, rtt::ai::stp::PassInfo passInfo) noexcept {
+                                                        std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world,
+                                                        Vector2 passLocation) noexcept {
     auto ballPosition = world->getWorld()->getBall()->get()->position;
-    auto passLocation = passInfo.passLocation;
-    auto passerId = passInfo.passerId;
-    auto receiverId = passInfo.receiverId;
     // Make a list of all robots that are not the passer, receiver or keeper, which need to make sure they are not in the way of the pass
     auto toBeCheckedRobots = std::vector<std::string>{};
-    for (auto& role : stpInfos) {
+    for (auto &role : stpInfos) {
         if (role.second.getRobot().has_value()) {
             auto robotId = role.second.getRobot()->get()->getId();
             auto robotName = role.first;
-            if (robotId != passerId && robotId != receiverId && robotName != "keeper") {
+            if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker") {
                 toBeCheckedRobots.emplace_back(role.first);
             }
         }
     }
     // Make a tube around the pass trajectory, and make sure all robots outside of this tube
     std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, passLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
-    for (auto& robot : toBeCheckedRobots) {
+    for (auto &robot : toBeCheckedRobots) {
         auto robotPositionToMoveTo = stpInfos[robot].getPositionToMoveTo();
         if (robotPositionToMoveTo == std::nullopt || !robotPositionToMoveTo.has_value()) {
             continue;
@@ -473,7 +470,6 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
-
 }
 
 }  // namespace rtt::ai::stp

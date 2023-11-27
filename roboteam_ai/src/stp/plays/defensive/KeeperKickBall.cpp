@@ -69,7 +69,7 @@ Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {
 void KeeperKickBall::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);

@@ -50,7 +50,7 @@ void RobotHubStatistics::print() const {
     std::stringstream ss;
 
     // Clear and flush
-    ss << "\x1B[2J\x1B[H" << std::flush;
+    ss << "\x1B[2J\x1B[H" << std::flush << std::endl;
 
     ss << "                          ┏━━━━━━━━━━━━━━━━━━━┓                           " << std::endl
        << "┏━━━━━━━━━━━━━━━━━━━━━━━━━┫ Roboteam RobotHub ┣━━━┳━━━━━━━━━━━━━━━━━━━━━━┓" << std::endl
@@ -71,7 +71,7 @@ void RobotHubStatistics::print() const {
        << "┃" << b[3] << " │" << b[7] << " │ " << b[11] << " │ " << b[15] << " ┃ Feedback:    " << this->numberToSideBox(this->feedbackPacketsDropped) << " ┃" << std::endl
        << "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━┛" << std::endl;
 
-    RTT_INFO("\n", ss.str())
+    RTT_INFO("", ss.str())
 }
 
 void RobotHubStatistics::incrementCommandsReceivedCounter(int id, rtt::Team color) {

@@ -27,7 +27,7 @@ namespace rtt::ai::stp::role {
 
 PenaltyKeeper::PenaltyKeeper(std::string name) : Keeper(std::move(name)) {
     // create state machine and initializes the first state
-    robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::Formation(), tactic::KeeperBlockBall()};
+    //robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::Formation(), tactic::KeeperBlockBall()};
 }
 
 Status PenaltyKeeper::update(StpInfo const& info) noexcept {

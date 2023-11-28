@@ -102,25 +102,25 @@ void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     // When doing free kicks, we have to immediately kick the ball, hence, we only check for 1 tick
     // TODO: this is a bit of a hacky way to avoid double touch fouls. Figuring out a better way to do this would be nice
     if (ai::GameStateManager::getCurrentGameState().getStrategyName() == "free_kick_us" || ai::GameStateManager::getCurrentGameState().getStrategyName() == "kickoff_us") {
-        auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 0.9 && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-        if (hasBallAccordingToVision || dribblerSeesBall) setHasBall(true);
+        // auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 0.9 && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+        if (dribblerSeesBall) setHasBall(true);
         return;
     }
 
     // On the field, use data from the dribbler and vision to determine if we have the ball
     if (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) {
         // If the ball is not visible, we should go closer to the ball before thinking we have it, for safety (since we can't actually see if we have the ball or not)
-        auto hasBallDist = ball->get()->visible ? ai::Constants::HAS_BALL_DISTANCE() : ai::Constants::HAS_BALL_DISTANCE() * 0.75;
-        auto hasBallAccordingToVision = distanceToBall < hasBallDist && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+        auto hasBallDist = ball->get()->visible ? ai::Constants::HAS_BALL_DISTANCE() * 2 : ai::Constants::HAS_BALL_DISTANCE() * 0.75;
+        auto hasBallAccordingToVision = distanceToBall < hasBallDist && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE() * 2;
+        //
 
         // Increase the hasBall score depending on how sure we are that we have the ball
-        if (hasBallAccordingToVision && dribblerSeesBall)
-            hasBallUpdateMap[id].score += 2;
-        else if (hasBallAccordingToVision && !dribblerSeesBall)
-            hasBallUpdateMap[id].score += 1;
-        else if (!hasBallAccordingToVision && dribblerSeesBall && distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 1.5 &&
-                 angleDiffToBall < ai::Constants::HAS_BALL_ANGLE() * 1.5)
-            hasBallUpdateMap[id].score += 1;
+        if (hasBallAccordingToVision && dribblerSeesBall) hasBallUpdateMap[id].score += 2;
+        // else if (hasBallAccordingToVision && !dribblerSeesBall)
+        // hasBallUpdateMap[id].score += 1;
+        // else if (!hasBallAccordingToVision && dribblerSeesBall && distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 1.5 &&
+        //  angleDiffToBall < ai::Constants::HAS_BALL_ANGLE() * 1.5)
+        // hasBallUpdateMap[id].score += 1;
         else
             hasBallUpdateMap[id].score -= 2;
 

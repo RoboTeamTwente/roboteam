@@ -47,6 +47,7 @@ Status Tactic::update(StpInfo const &info) noexcept {
 
     // if the failing condition is true, the current tactic will fail
     if (skill_info && isTacticFailing(skill_info.value())) {
+        RTT_INFO(getName(), "Tactic failed")
         currentStatus = Status::Failure;
         return Status::Failure;
     }

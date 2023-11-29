@@ -4,7 +4,7 @@ import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 
 const stpData = useSTPDataStore()
 
-/*</script>
+</script>
 
 <template>
     Performance
@@ -63,10 +63,10 @@ export default defineComponent({
     this.increment_counters();
   },
   watch: {
-    'stpData.latest.currentPlay.playName'() {
+    'stpData.latest.currentPlay.playName'() { // When a change is produced in this variable, execute increment_counters
       this.increment_counters();
     }
   }
 });
 
-</script>*/
+</script>

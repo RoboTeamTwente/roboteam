@@ -90,11 +90,11 @@ NOTE: If you notice USB errors when running "game" compose, do a `docker compose
 ### Release usage
 Pull release image:
 ```
-docker pull roboteamtwente/roboteam:latest
+docker pull tollsimy/roboteam-rl:latest
 ```
 Run the image:
 ```
-docker run -itd --name rtt-release-env -h rtt-release-env roboteamtwente/roboteam:latest
+docker run -itd --name rtt-release-env -h rtt-release-env tollsimy/roboteam-rl:latest
 ```
 
 #### TODO
@@ -103,22 +103,22 @@ https://lemariva.com/blog/2020/10/vscode-c-development-and-debugging-containers
 ### Docker geeks
 We highly discourage executing command under this section unless you know what you are doing and for some reason you need to edit dockerfiles or composes structure.
 
-Note: remember that our "composes" download image from Dockerhub if not available locally, thus, if you want to test with a new image you need to build the new image and tag it with the same name (`roboteamtwente/roboteam:development` or `roboteamtwente/roboteam:latest`).
+Note: remember that our "composes" download image from Dockerhub if not available locally, thus, if you want to test with a new image you need to build the new image and tag it with the same name (`tollsimy/roboteam-rl:development` or `tollsimy/roboteam-rl:latest`).
 #### Development environment
 You can manually build the 'development environment' container executing:
 ```
-docker build -t roboteamtwente/roboteam:development --target development .
+docker build -t tollsimy/roboteam-rl:development --target development .
 ```
 
 Spin-up the just built container:
 ```
-docker run -itd --name rtt-build-env -h rtt-build-env -v $ROBOTEAM_REPO:/home/roboteamtwente/roboteam roboteamtwente/roboteam:development
+docker run -itd --name rtt-build-env -h rtt-build-env -v $ROBOTEAM_REPO:/home/tollsimy/roboteam-rl tollsimy/roboteam-rl:development
 ```
 
 Then, you can compile sources using `build.sh` script located in the repo root folder from inside the container.
 First, attach to a contanier shell: 
 ```
-docker exec -it -u roboteamtwente -w /home/roboteamtwente/roboteam rtt-build-env /bin/bash
+docker exec -it -u roboteamtwente -w /home/tollsimy/roboteam-rl rtt-build-env /bin/bash
 ```
 then you can execute build script (or manually compiler whatever you want):
 ```
@@ -134,12 +134,12 @@ docker <start/stop> rtt-build-env
 Note: **if you really want to build the release container** (highly discouraged) you must first build the development container as explained in the previous section, then you need to compile sources using `build.sh` script and lastly you can build the container.
 
 Note that the release container can be downloaded from Dockerhub (highly recommended) by a simple:
-`docker pull roboteamtwente/roboteam:latest`.
+`docker pull tollsimy/roboteam-rl:latest`.
 
 In order to build the release container, you must call the `docker build` command from parent folder, otherwise docker is not able to copy files from outside context:
 ```
 cd ../
-docker build -t roboteamtwente/roboteam:latest --target release -f ./docker/Dockerfile .
+docker build -t tollsimy/roboteam-rl:latest --target release -f ./docker/Dockerfile .
 ```
 
 #### Manually starting a service

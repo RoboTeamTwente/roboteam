@@ -34,12 +34,12 @@ jobs:
           context: ./docker
           push: true
           target: development
-          tags: roboteamtwente/roboteam:development
+          tags: tollsimy/roboteam-rl:development
       - 
         name: Build sources from development
         uses: addnab/docker-run-action@v3
         with:
-          image: roboteamtwente/roboteam:development
+          image: tollsimy/roboteam-rl:development
           options: -v ${{ github.workspace }}:/home/roboteamtwente/
           run: |
             sudo chown -R $(id -u):$(id -g) .
@@ -52,4 +52,4 @@ jobs:
           file: ./docker/Dockerfile
           push: true
           target: release
-          tags: roboteamtwente/roboteam:latest
+          tags: tollsimy/roboteam-rl:latest

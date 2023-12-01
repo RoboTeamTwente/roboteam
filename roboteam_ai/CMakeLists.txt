@@ -26,6 +26,23 @@ target_include_directories(roboteam_ai_utils
 )
 target_compile_options(roboteam_ai_utils PRIVATE "${COMPILER_FLAGS}")
 
+###### ROBOTEAM AI RL #######
+set(Torch_DIR "/home/libtorch/share/cmake/Torch")
+find_package(Torch REQUIRED)
+
+add_library(roboteam_ai_rl
+        ${PROJECT_SOURCE_DIR}/src/rl/rl.cpp
+)
+target_include_directories(roboteam_ai_rl
+        PRIVATE include/roboteam_ai
+)
+target_link_libraries(roboteam_ai_rl
+        PRIVATE "${TORCH_LIBRARIES}"
+)
+
+target_compile_options(roboteam_ai_rl PRIVATE "${TORCH_CXX_FLAGS}")
+set_property(TARGET roboteam_ai_rl PROPERTY CXX_STANDARD 17)
+
 ###### SKILLS #######
 add_library(roboteam_ai_skills
         ${PROJECT_SOURCE_DIR}/src/stp/Skill.cpp
@@ -320,6 +337,7 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_ai_plays
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_roles
+        PRIVATE roboteam_ai_rl
         PRIVATE Qt5::Charts
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_tactics

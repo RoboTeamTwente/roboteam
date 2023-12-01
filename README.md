@@ -14,20 +14,26 @@ This repository contains the following projects:
 ## How to
 Refer to `docker/README.md` for usage of our software.
 
-## IDEs
-### VSCode
+## Libtorch
+Note: there are plenty of issues when trying to link libtorch in an Alpine Linux container because of GLIBC version and musl. This is the reason why we switched to and Ubuntu23-based Docker image.
+
+The libtorch version used is libtorch cpu: libtorch-cxx11-abi-shared-with-deps.
+
+## Development
+### IDEs
+#### VSCode
 You can install VSCode from the [website](https://code.visualstudio.com/download) or via `apt` or `snap`. We recommend to install the [`C/C++ Extension Pack`](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack) extension, which will provide you with IntelliSense (code completion), debugging, code browsing, and CMake support. Other neat extensions are [`GitLens`](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens), [`Git Graph`](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph), [`GoogleTest Adapter`](https://marketplace.visualstudio.com/items?itemName=DavidSchuldenfrei.gtest-adapter), and [`Copilot`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot). If you want to develop from within a container, install [`Remote Development`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack).
 
-### Clion
+#### Clion
 To install [CLion](https://www.jetbrains.com/clion/), you need a [student license](https://www.jetbrains.com/community/education/#students/).
 
 Make sure you have the dependencies installed. Within CLion, go to the CMakeLists.txt and click on it. CLion will generate a pop-up saying "project files not loaded" in blue in the top right corner. Clicking it will have CMake load the project. This means it generates instructions on how the files should be compiled in order to produce the executables specified in the CMakeLists.txt file. You can now compile the targets!
 
-### Code Style Formatting
+#### Code Style Formatting
 To be consistent in the code style, we use clang-format. You can use clang-format to automatically format your code during every commit and you can use clang-format in CLion to format all code files in a given folder. Format the code by running `format.sh`
 ## See also
 
-### Tracy Profiler
+#### Tracy Profiler
 Tracy is quite cool(and lightweight) profiler, that can help you analyze the performance of your code.
 
 To enable Tracy

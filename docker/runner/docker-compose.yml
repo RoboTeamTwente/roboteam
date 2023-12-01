@@ -3,7 +3,7 @@ version: '3'
 services:
 
   roboteam_primary_ai:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_primary_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -21,7 +21,7 @@ services:
     profiles: ["simulator","diff","game"]
   
   roboteam_secondary_ai:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_secondary_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -39,7 +39,7 @@ services:
     profiles: ["simulator"]
 
   roboteam_prev_ai:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_prev_ai
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -57,7 +57,7 @@ services:
     profiles: ["diff"]
 
   roboteam_observer_sim:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_observer_sim
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -75,7 +75,7 @@ services:
     profiles: ["simulator","diff"]
 
   roboteam_observer_game:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_observer_game
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -93,7 +93,7 @@ services:
     profiles: ["game"]
 
   roboteam_robothub_sim:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_robothub_sim
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -114,7 +114,7 @@ services:
     profiles: ["simulator","diff"]
 
   roboteam_robothub_game:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_robothub_game
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -138,7 +138,7 @@ services:
     profiles: ["game"]
 
   roboteam_interface:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_interface
     restart: always
     working_dir: "/home/roboteamtwente/"
@@ -167,7 +167,7 @@ services:
     profiles: ["simulator","diff","game"]
 
   erforce_autoref_sim:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_erforce_autoref_sim
     restart: always
     working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
@@ -182,7 +182,7 @@ services:
     profiles: ["simulator","diff"]
 
   erforce_autoref_game:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_erforce_autoref_game
     restart: always
     working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
@@ -197,7 +197,7 @@ services:
     profiles: ["game"]
 
   erforce_simulator:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_erforce_simulator
     restart: always
     working_dir: "/home/roboteamtwente/external/framework/build/bin/"

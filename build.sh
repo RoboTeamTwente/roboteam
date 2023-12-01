@@ -100,7 +100,7 @@ then
             mkdir -p build_old/release
             pushd build_old
                 echo -e "${GREEN}Building old RoboTeamTwente AI${RESET}"
-                git clone https://github.com/RoboTeamTwente/roboteam.git /tmp/roboteam || true # Do not fail if directory already exist
+                git clone https://github.com/tollsimy/roboteam-rl.git /tmp/roboteam || true # Do not fail if directory already exist
                 pushd /tmp/roboteam/
                     echo -e "${GREEN}Building old commit: $(git describe --always --dirty)${RESET}"
                     git reset --hard --recurse-submodule $COMMIT

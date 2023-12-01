@@ -3,7 +3,7 @@ version: '3'
 services:
 
   roboteam_builder:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_builder
     restart: "no"
     working_dir: "/home/roboteamtwente/"
@@ -12,7 +12,7 @@ services:
       - ../../:/home/roboteamtwente/
 
   roboteam_builder_old:
-    image: roboteamtwente/roboteam:development
+    image: tollsimy/roboteam-rl:development
     container_name: RTT_roboteam_builder_old
     restart: "no"
     depends_on:

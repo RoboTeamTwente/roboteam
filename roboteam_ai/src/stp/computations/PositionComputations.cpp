@@ -40,56 +40,54 @@ Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, co
 }
 
 std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Field &field, const rtt::world::World *world, int amountDefenders) {
-    if (amountDefenders <= 0) return {};  // we need at least 1 defender to be able to compute a wall
+    // Return an empty vector if there are no defenders
+    if (amountDefenders <= 0) {
+        return {};
+    }
 
-    double radius = control_constants::ROBOT_RADIUS;
-    double spacingRobots = radius * 0.5;
-    double spaceBetweenDefenseArea = 2 * radius;
+    // Constants for positioning the defenders
+    const double radius = control_constants::ROBOT_RADIUS;
+    const double spacingRobots = radius * 0.5;
+    const double spaceBetweenDefenseArea = 2 * radius;
 
+    // Calculate the position of the ball, projected onto the field
     Vector2 ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
 
     std::vector<Vector2> positions = {};
-
-    Vector2 projectedPosition;
+    Vector2 projectedPosition = {};
     std::vector<Vector2> lineBorderIntersects = {};
 
-    /// Get defense area border geometry
-    std::vector<LineSegment> defenseAreaBorder = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).getBoundary();
-
-    /// Find intersect of ball to goal on the border of the defense area
+    // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-
     lineBorderIntersects = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).intersections(ball2GoalLine);
 
+    // If there are intersections, sort them and use the first one. Otherwise, use a default position
     if (!lineBorderIntersects.empty()) {
-        std::sort(std::begin(lineBorderIntersects), std::end(lineBorderIntersects), [](Vector2 a, Vector2 b) { return a.x > b.x; });
-        projectedPosition = lineBorderIntersects.front();  // Always use the first one
+        std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
+        projectedPosition = lineBorderIntersects.front();
     } else {
         projectedPosition = Vector2{field.leftGoalArea.rightLine().center().x, field.leftDefenseArea.bottom()};
     }
 
+    // Initialize the wallLine
     LineSegment wallLine;
 
-    // TODO: The wall line used to be as long as the line of the defense area it belonged to.
-    // This meant that later, when we intersect it with a circle to decide the positions of the robots,
-    // there is a possibility that the circle becomes bigger than the linesegment, resulting in an infinite loop.
-    // A quick fix for this is extending the line segments, but in my eyes, it is a beun fix, because there is
-    // still no guarantee it is big enough
+    // Define the defense areas
+    auto defenseAreaOur = FieldComputations::getDefenseArea(field, true, 0, 0);
+    auto defenseAreaTheir = FieldComputations::getDefenseArea(field, false, 0, 0);
+
+    // Determine the wall line based on the ball's position
     if (ballPos.x < field.leftDefenseArea.right()) {
-        // case when the projected position is below penalty line
+        // Case when the projected position is below or above our defense area
         if (ballPos.y < 0) {
-            wallLine = LineSegment(Vector2{FieldComputations::getDefenseArea(field, true, 0, 0)[0].x, FieldComputations::getDefenseArea(field, true, 0, 0)[0].y},
-                                   Vector2{FieldComputations::getDefenseArea(field, false, 0, 0)[0].x, FieldComputations::getDefenseArea(field, false, 0, 0)[0].y});
-            //            wallLine = LineSegment(field.leftDefenseArea.bottomLeft(), field.rightDefenseArea.bottomRight());
+            wallLine = LineSegment(defenseAreaOur[0], defenseAreaTheir[0]);
             wallLine.move({0, -spaceBetweenDefenseArea});
         } else {
-            wallLine = LineSegment(Vector2{FieldComputations::getDefenseArea(field, true, 0, 0)[3].x, FieldComputations::getDefenseArea(field, true, 0, 0)[3].y},
-                                   Vector2{FieldComputations::getDefenseArea(field, false, 0, 0)[3].x, FieldComputations::getDefenseArea(field, false, 0, 0)[3].y});
-            //            wallLine = LineSegment(field.leftDefenseArea.topLeft(), field.rightDefenseArea.topRight());
+            wallLine = LineSegment(defenseAreaOur[3], defenseAreaTheir[3]);
             wallLine.move({0, spaceBetweenDefenseArea});
         }
-        // case when it is above the penalty line no further away than side lines of the defense area
     } else if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
+        // Case when it is to the right of our defense area
         double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
         double lineYTop = field.playArea.top();
         double lineYBottom = field.playArea.bottom();
@@ -103,15 +101,15 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         double newLength = 2 * std::max(field.playArea.width(), field.playArea.height());
         wallLine.resize(newLength);
 
-        // But limit this resizing to the edges of the field (we dont want to place robots outside of the field
-        auto oneHalf = LineSegment(wallLine.center(), wallLine.start);
+        // Limit this resizing to the edges of the field (we don't want to place robots outside of the field)
+        auto oneHalf = LineSegment(projectedPosition, wallLine.start);
         auto intersectionOne = FieldComputations::lineIntersectionWithField(field, oneHalf.start, oneHalf.end, 0.0);
         if (intersectionOne.has_value()) {
             // Then limit this side of the wall line until this intersection
             wallLine.start = intersectionOne.value();
         }
 
-        auto otherHalf = LineSegment(wallLine.center(), wallLine.end);
+        auto otherHalf = LineSegment(projectedPosition, wallLine.end);
         auto intersectionOther = FieldComputations::lineIntersectionWithField(field, otherHalf.start, otherHalf.end, 0.0);
         if (intersectionOther.has_value()) {
             // Then limit this side of the wall line until this intersection
@@ -119,43 +117,42 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         }
     }
 
+    size_t defendersCount = static_cast<size_t>(amountDefenders);
     int i = 1;
+
+    // If the number of defenders is even, start just outside of the projected position to make sure the projected position is the middle of the wall
     if (amountDefenders % 2 == 0) {
         int j = 1;
-        while (positions.size() < static_cast<size_t>(amountDefenders)) {
-            auto circle = Circle(projectedPosition, (i - 0.5) * spacingRobots + j * radius);
-            std::vector<Vector2> intersects;
-            intersects = circle.intersects(wallLine);
-            for (auto intersect : intersects) {
-                positions.push_back(intersect);
-            }
-            j = j + 2;
-            i = i + 1;
+        while (positions.size() < defendersCount) {
+            double circleRadius = (i - 0.5) * spacingRobots + j * radius;
+            Circle circle = Circle(projectedPosition, circleRadius);
+            std::vector<Vector2> intersects = circle.intersects(wallLine);
+            positions.insert(positions.end(), intersects.begin(), intersects.end());
+            j += 2;
+            i += 1;
         }
-    } else {
+    }
+    // If the number of defenders is odd, start positioning from the projected position
+    else {
         positions.push_back(projectedPosition);
-        while (positions.size() < static_cast<size_t>(amountDefenders)) {
-            auto circle = Circle(projectedPosition, i * 2 * radius + spacingRobots * i);
-            std::vector<Vector2> intersects;
-            intersects = circle.intersects(wallLine);
-            for (auto intersect : intersects) {
-                positions.push_back(intersect);
-            }
-            i = i + 1;
+        while (positions.size() < defendersCount) {
+            double circleRadius = i * 2 * radius + spacingRobots * i;
+            Circle circle = Circle(projectedPosition, circleRadius);
+            std::vector<Vector2> intersects = circle.intersects(wallLine);
+            positions.insert(positions.end(), intersects.begin(), intersects.end());
+            i += 1;
         }
     }
 
-    // For the robots not to change the position withing the wall
+    // Sort the positions to prevent robots from changing their position within the wall
     if (ballPos.x < field.leftDefenseArea.right()) {
-        if (ballPos.y < 0) {
-            std::sort(std::begin(positions), std::end(positions), [](Vector2 a, Vector2 b) { return a.x < b.x; });
-        } else {
-            std::sort(std::begin(positions), std::end(positions), [](Vector2 a, Vector2 b) { return a.x > b.x; });
-        }
+        // If the ball is in the lower half of the field, sort by ascending x. Otherwise, sort by descending x.
+        auto compareX = (ballPos.y < 0) ? [](Vector2 a, Vector2 b) { return a.x < b.x; } : [](Vector2 a, Vector2 b) { return a.x > b.x; };
+        std::sort(std::begin(positions), std::end(positions), compareX);
     } else {
+        // If the ball is in the right half of the field, sort by ascending y.
         std::sort(std::begin(positions), std::end(positions), [](Vector2 a, Vector2 b) { return a.y < b.y; });
     }
-
     return positions;
 }
 Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
@@ -271,7 +268,8 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     for (auto enemy : enemyRobots) {
         if (enemy->hasBall()) continue;
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
-        if (std::find(ComputationManager::calculatedEnemyMapIds.begin(), ComputationManager::calculatedEnemyMapIds.end(), enemy->getId()) != ComputationManager::calculatedEnemyMapIds.end()) {
+        if (std::find(ComputationManager::calculatedEnemyMapIds.begin(), ComputationManager::calculatedEnemyMapIds.end(), enemy->getId()) !=
+            ComputationManager::calculatedEnemyMapIds.end()) {
             score *= stp::control_constants::ENEMY_ALREADY_ASSIGNED_MULTIPLIER;
         }
         EnemyInfo info = {enemy->getPos(), enemy->getVel(), enemy->getId()};

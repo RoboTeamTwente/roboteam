@@ -473,6 +473,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
             continue;
         }
         auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
+        stpInfos[robot].setShouldAvoidBall(true);
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
 }

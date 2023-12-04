@@ -131,6 +131,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.remVersion = REM_LOCAL_VERSION;
         // command.messageId = 0; TODO implement incrementing message id
         command.payloadSize = REM_PACKET_SIZE_REM_ROBOT_COMMAND;
+        command.timestamp = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 10);
 
         command.kickAtAngle = robotCommand.kickAtAngle;
         command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::KICK;

@@ -4,10 +4,6 @@
  * to a position that a robot might need to travel to. The lower the score of a robot, the better.
  */
 
-// TODO Fix issue where roles get redistributed whilst robots are already in position
-// This issue occurs when there are multiple roles classes (defender+midfielder) that have the same priority
-// 01-24-2022 emiel : Not sure if these are still a thing ^^^^^ Who wrote these?
-
 #include "utilities/Dealer.h"
 
 #include <roboteam_utils/Hungarian.h>
@@ -194,8 +190,8 @@ void Dealer::distributeFixedIds(std::vector<v::RobotView> &robots, FlagMap &flag
             if (robots[i_robot]->getId() == required_id) {           // If the correct robot has been found
                 robot_found = true;                                  //
                 assignments.insert({role->first, robots[i_robot]});  //     Assign the robot to the role
-                // robots.erase(robots.begin() + i_robot);              //     Remove the robot from the list of robot
-                // role = flagMap.erase(role);                          //     Remove the role from the map of roles
+                robots.erase(robots.begin() + i_robot);              //     Remove the robot from the list of robot
+                role = flagMap.erase(role);                          //     Remove the role from the map of roles
                 break;
             }
         }
@@ -248,8 +244,6 @@ double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &deale
 // Get the distance score for a robot to a position when there is a position that role needs to go to
 double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::RobotView &robot) {
     double distance;
-
-    // ADD SPEEED SOMEWHERE HERE :()CD
 
     std::optional<Vector2> target_position;
     // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo

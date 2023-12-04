@@ -161,6 +161,7 @@ class Play {
     size_t previousRobotNum{}; /**< The previous amount of robots. This is used to check if we need to re-deal (if a robot disappears for example) */
 
     int previousKeeperId = -1; /**< The previous keeperId. This is used to check if we need to re-deal (if keeper id was changed from UI or GameController) */
+    int previousMaxRobots = -1; /**< The previous maxRobots. This is used to check if we need to re-deal */
 };
 }  // namespace rtt::ai::stp
 

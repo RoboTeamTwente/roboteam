@@ -41,13 +41,13 @@ enum class DealerFlagTitle {
 /**
  * @brief Enumerator that defines the priority of the dealerFlags
  */
-enum class DealerFlagPriority { LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY, REQUIRED, KEEPER };
+enum class DealerFlagPriority { CARD, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY, REQUIRED, KEEPER };
 
 /**
  * @brief The order at which the Priority will be dealt with (Keeper first, Low last).
  */
-static std::vector<DealerFlagPriority> PriorityOrder{DealerFlagPriority::KEEPER, DealerFlagPriority::REQUIRED, DealerFlagPriority::HIGH_PRIORITY,
-                                                     DealerFlagPriority::MEDIUM_PRIORITY, DealerFlagPriority::LOW_PRIORITY};
+static std::vector<DealerFlagPriority> PriorityOrder{DealerFlagPriority::KEEPER,          DealerFlagPriority::REQUIRED,     DealerFlagPriority::HIGH_PRIORITY,
+                                                     DealerFlagPriority::MEDIUM_PRIORITY, DealerFlagPriority::LOW_PRIORITY, DealerFlagPriority::CARD};
 
 /**
  * @brief Class that defines the dealer. The dealer will assign a role to each robot according to their states

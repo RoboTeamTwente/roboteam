@@ -153,8 +153,10 @@ GameState GameStateManager::getCurrentGameState() {
 
         if (GameSettings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
+            newGameState.maxAllowedRobots = getRefereeData().yellow().max_allowed_bots();
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();
+            newGameState.maxAllowedRobots = getRefereeData().blue().max_allowed_bots();
         }
 
         // TODO: FIX for the new config system

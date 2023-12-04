@@ -6,6 +6,7 @@
 
 #include "Constants.h"
 #include "RuleSet.h"
+#include "stp/constants/ControlConstants.h"
 
 namespace rtt::ai {
 /**
@@ -26,6 +27,7 @@ struct GameState {
 
     RuleSet ruleSet;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
+    int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
 
     /**
      * @brief Getter for the ruleset according to its name

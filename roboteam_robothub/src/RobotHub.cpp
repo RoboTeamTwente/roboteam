@@ -121,6 +121,7 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 
         REM_RobotCommand command = {};
         command.header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+        command.timestamp = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) / 10;
         command.toRobotId = robotCommand.id;
         command.toColor = color == rtt::Team::BLUE;
         command.fromPC = true;

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
+import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 
 const stpData = useSTPDataStore()
+const visionData = useVisionDataStore()
 
 </script>
 
@@ -28,17 +30,30 @@ const stpData = useSTPDataStore()
       Effective game time:
       {{(total_time/1000).toFixed(2)}}
     </div>
+
+    <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Counter of keeper actions:</p>
+    <div>
+      {{keeper_kick_counter}}
+    </div>
+
+    <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Average robots' speed:</p>
+    <div>
+      {{average_team_speed}}
+    </div>
+
 </template>
 
 <script lang="ts">
 
 import { defineComponent, ref, watch } from 'vue';
+import { proto } from '../../../generated/proto';
 
 export default defineComponent({
   data() {
     return {
       stpData: useSTPDataStore(),
-      offensive_plays: ['Attack', 'AttackingPass', 'KeeperKickBall'],
+      visionData: useVisionDataStore(),
+      offensive_plays: ['Attack', 'AttackingPass', 'ChippingPass'],
       defensive_plays: ['Defend Shot', 'Defend Pass', 'Keeper Kick Ball'],
       /*neutral_plays: ['Halt', 'BallPlacementUs', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
       'PenaltyUs', 'KickOffUsPrepare', 'KickOffThemPrepare', 'FreeKickThem', 'FreeKickUsAtGoal', 'FreeKickUsPass', 'KickOffUs', 'KickOffThem'],*/
@@ -52,11 +67,15 @@ export default defineComponent({
       current_play: 'Halt',
       last_time: 0, 
       interval_time: 0,
-      total_time: 0
+      total_time: 0,
+
+      keeper_kick_counter: 0,
+
+      average_team_speed: 0
     };
   },
   methods: {
-    increment_counters() {
+    possession_counters() {
 
       const playName = this.stpData.latest?.currentPlay?.playName;
       this.current_play = String(playName);
@@ -71,11 +90,41 @@ export default defineComponent({
 
       this.possession = this.offensive_timer / (this.offensive_timer + this.defensive_timer) * 100
 
+    },
+
+    keeper_actions_counter() {
+      if (this.current_play === 'Keeper Kick Ball') {
+        this.keeper_kick_counter++;
+      }
+    },
+
+    average_speed_calculator() {
+      let robots = this.visionData.ourRobots?.values
+      let vel_module = 0
+      
+      let speeds_array: number[] = [];
+      if (robots) {
+      for (const robot of robots) {
+        vel_module = vel_module + Math.sqrt(robot.vel.x^2 + robot.vel.y^2); 
+      }
+      }
+
+      /*robotsData.forEach((robot: any) => {
+        console.log(`ID: ${robot.id}, Name: ${robot.name}`);
+        let vel_module = Math.sqrt(robot.vel.x^2 + robot.vel.y^2); 
+        speeds_array.push(vel_module);
+      });*/
+
+      //let sum = speeds_array.reduce((acu, i) => acu + i, 0);
+
+      this.average_team_speed = vel_module/11 //sum / speeds_array.length;
     }
 
   },
   mounted() {
-    this.increment_counters();
+    this.possession_counters();
+    this.keeper_actions_counter();
+    this.average_speed_calculator();
   },
   watch: {
     'stpData.latest.currentPlay.playName'() { 
@@ -91,7 +140,8 @@ export default defineComponent({
 
         this.last_time = Date.now();
       }
-      this.increment_counters();
+      this.possession_counters();
+      this.keeper_actions_counter();
     }
   }
 });

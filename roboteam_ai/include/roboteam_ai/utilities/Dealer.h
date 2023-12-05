@@ -24,16 +24,10 @@ namespace v = rtt::world::view;
  * @brief Enumerator that defines the name of the dealerFlags
  */
 enum class DealerFlagTitle {
-    CLOSE_TO_THEIR_GOAL,
-    CLOSE_TO_OUR_GOAL,
-    CLOSE_TO_BALL,
-    CLOSE_TO_POSITIONING,
     WITH_WORKING_BALL_SENSOR,
     WITH_WORKING_DRIBBLER,
-    NOT_IMPORTANT,
     READY_TO_INTERCEPT_GOAL_SHOT,
     KEEPER,
-    CLOSEST_TO_BALL,
     CAN_DETECT_BALL,
     CAN_KICK_BALL
 };

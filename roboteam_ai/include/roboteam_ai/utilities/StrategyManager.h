@@ -43,9 +43,8 @@ class StrategyManager {
     /**
      * @brief Forces the AI into a given game state
      * @param command The game state that should be considered
-     * @param ballOpt Data about the ball
      */
-    void forceCurrentRefGameState(RefCommand command, std::optional<rtt::world::view::BallView> ballOpt);
+    void forceCurrentRefGameState(RefCommand command);
 
     /**
      * @brief Gets the game state that belongs to the given command

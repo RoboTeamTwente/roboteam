@@ -83,7 +83,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
 /// Start running behaviour trees. While doing so, publish settings and log the FPS of the system
 void STPManager::start(std::atomic_flag &exitApplication) {
     // make sure we start in halt state for safety
-    ai::GameStateManager::forceNewGameState(RefCommand::HALT, std::nullopt);
+    ai::GameStateManager::forceNewGameState(RefCommand::HALT);
     RTT_INFO("Start looping")
     RTT_INFO("Waiting for field_data and robots...")
 

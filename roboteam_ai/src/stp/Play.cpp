@@ -156,7 +156,7 @@ void Play::distributeRoles() noexcept {
             }
         }
     }
-    if (!cardIdAssigned) {
+    if (!cardIdAssigned && cardId != -1) {
         RTT_INFO("No robot assigned to cardId, resetting to -1")
         cardId = -1;
     }

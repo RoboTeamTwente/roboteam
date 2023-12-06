@@ -32,7 +32,7 @@ cd $ROBOTEAM_REPO
 git submodule update --init --recursive
 ```
 
-Then, install prerequisite: install Docker https://docs.docker.com/engine/install/, if you want you can add yourself to docker group in order to run Docker command without invoking root user https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user and finally install docker compose.
+Then, install prerequisite: install **Docker Engine** and make sure to download "server" version, **not Docker Desktop** (we experienced issues with volumes permissions): https://docs.docker.com/engine/install/, if you want you can add yourself to docker group in order to run Docker command without invoking root user https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user and finally install docker compose.
 
 Every subproject is meant to be executed as a service using its own container from a docker compose.
 Every RTT subproject (service) runs in its own container (based on the same roboteamtwente image), this way that all dependencies and requirements are satisfied. 

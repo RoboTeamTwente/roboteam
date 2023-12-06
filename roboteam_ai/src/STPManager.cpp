@@ -28,7 +28,6 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 #include "stp/plays/referee_specific/BallPlacementUs.h"
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
-#include "stp/plays/referee_specific/FormationPreHalf.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 #include "stp/plays/referee_specific/FreeKickUsPass.h"
@@ -53,7 +52,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<plays::AttackingPass>());
-    //    plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
+    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
     plays.emplace_back(std::make_unique<plays::DefendShot>());
@@ -75,7 +74,6 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<plays::KickOffUs>());
     plays.emplace_back(std::make_unique<plays::KickOffThem>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FormationPreHalf>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());

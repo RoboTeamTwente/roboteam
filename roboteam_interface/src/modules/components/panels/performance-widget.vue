@@ -38,7 +38,10 @@ const visionData = useVisionDataStore()
 
     <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Average robots' speed:</p>
     <div>
-      {{average_team_speed}}
+      Instant average speed: {{ instant_team_speed }}
+    </div>
+    <div>
+      Average average speed: {{ average_team_speed }}
     </div>
 
 </template>
@@ -69,9 +72,11 @@ export default defineComponent({
       interval_time: 0,
       total_time: 0,
 
-      keeper_kick_counter: 0,
+      timer_switch: 0, 
 
-      average_team_speed: 0
+      keeper_kick_counter: 0,
+      average_team_speed: 0, 
+      instant_team_speed: 0
     };
   },
   methods: {
@@ -98,34 +103,43 @@ export default defineComponent({
       }
     },
 
-    average_speed_calculator() {
-      let robots = this.visionData.ourRobots?.values
+    instant_speed_calculator() {
+      let robots = this.visionData.ourRobots || []
       let vel_module = 0
-      
-      let speeds_array: number[] = [];
-      if (robots) {
-      for (const robot of robots) {
-        vel_module = vel_module + Math.sqrt(robot.vel.x^2 + robot.vel.y^2); 
-      }
+  
+      for (let robot of robots) {
+        vel_module += Math.sqrt(Math.pow(robot.vel?.x!,2) + Math.pow(robot.vel?.y!,2)); 
       }
 
-      /*robotsData.forEach((robot: any) => {
-        console.log(`ID: ${robot.id}, Name: ${robot.name}`);
-        let vel_module = Math.sqrt(robot.vel.x^2 + robot.vel.y^2); 
-        speeds_array.push(vel_module);
-      });*/
+      this.instant_team_speed = vel_module/11 
+    },
 
-      //let sum = speeds_array.reduce((acu, i) => acu + i, 0);
+    define_event() {
+      setInterval(() => {
+        const playName = this.stpData.latest?.currentPlay?.playName;
+        this.current_play = String(playName);
 
-      this.average_team_speed = vel_module/11 //sum / speeds_array.length;
+        if (this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) {
+
+        this.average_team_speed = (this.average_team_speed*this.timer_switch + this.instant_team_speed*0.1) / (this.timer_switch + 0.1)
+        this.timer_switch = this.timer_switch + 0.1;
+        this.instant_speed_calculator();
+
+        }
+      }, 100);
     }
 
   },
+
+  created() {
+    this.define_event(); // Init when the script is run
+  },
+
   mounted() {
     this.possession_counters();
     this.keeper_actions_counter();
-    this.average_speed_calculator();
   },
+
   watch: {
     'stpData.latest.currentPlay.playName'() { 
       if (this.last_time === 0) {

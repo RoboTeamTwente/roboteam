@@ -155,7 +155,7 @@ services:
     user: gradle # Do not build as root
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./gradlew run --args=\"-cli -active --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""
+    command: sh -c "./gradlew run --args=\"-cli --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10007:10007 # GC port

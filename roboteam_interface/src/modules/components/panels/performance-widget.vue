@@ -56,6 +56,9 @@ export default defineComponent({
     return {
       stpData: useSTPDataStore(),
       visionData: useVisionDataStore(),
+
+      match_started: false, 
+
       offensive_plays: ['Attack', 'AttackingPass', 'ChippingPass'],
       defensive_plays: ['Defend Shot', 'Defend Pass', 'Keeper Kick Ball'],
       /*neutral_plays: ['Halt', 'BallPlacementUs', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
@@ -119,7 +122,7 @@ export default defineComponent({
         const playName = this.stpData.latest?.currentPlay?.playName;
         this.current_play = String(playName);
 
-        if (this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) {
+        if ((this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) && this.match_started === true) {
 
         this.average_team_speed = (this.average_team_speed*this.timer_switch + this.instant_team_speed*0.1) / (this.timer_switch + 0.1)
         this.timer_switch = this.timer_switch + 0.1;
@@ -127,12 +130,26 @@ export default defineComponent({
 
         }
       }, 100);
+      
+    }, 
+
+    is_started() {
+      const is_started_interval = setInterval(() => {
+        const playName = this.stpData.latest?.currentPlay?.playName;
+        this.current_play = String(playName);
+        if (!this.defensive_plays.includes(String(playName)) && !this.offensive_plays.includes(String(playName)))
+        {
+          this.match_started = true
+          clearInterval(is_started_interval)
+        }},
+        100);
     }
 
   },
 
   created() {
     this.define_event(); // Init when the script is run
+    this.is_started();
   },
 
   mounted() {

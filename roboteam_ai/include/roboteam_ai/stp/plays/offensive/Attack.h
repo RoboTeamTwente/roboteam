@@ -38,7 +38,7 @@ class Attack : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Check if play should end. True when attacker role is finished.
+     * @brief Check if play should end. True when stri role is finished.
      */
     bool shouldEndPlay() noexcept override;
 

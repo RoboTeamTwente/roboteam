@@ -10,7 +10,7 @@
 #include "stp/computations/GoalComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/roles/Keeper.h"
-#include "stp/roles/active/Attacker.h"
+#include "stp/roles/active/Striker.h"
 #include "stp/roles/passive/BallDefender.h"
 #include "stp/roles/passive/Formation.h"
 
@@ -30,7 +30,7 @@ Attack::Attack() : Play() {
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::Attacker>("striker"),
+        std::make_unique<role::Striker>("striker"),
         std::make_unique<role::BallDefender>("defender_0"),
         std::make_unique<role::Formation>("attacker_0"),
         std::make_unique<role::BallDefender>("defender_1"),

@@ -234,7 +234,7 @@ double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &deale
     for (auto flag : dealerFlags) {
         // The lower the score, the better
         // If a flag is not met, we really don't want that robot to be assigned to that role
-        // For example, it can not kick, so it should not be assigned to the attacker role
+        // For example, it can not kick, so it should not be assigned to the striker role
         // Hence, we multiple by at least 11
         robotScore += 1000 * getDefaultFlagScores(robot, flag);
     }

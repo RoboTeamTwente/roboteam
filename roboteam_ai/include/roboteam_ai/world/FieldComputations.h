@@ -33,11 +33,16 @@ class FieldComputations {
 
    public:
     /**
-     * @brief Get the margin that should be used for the defense area avoidance and set ball avoidance
-     * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
-     * @return A tuple with the margin that should be used for the defense area avoidance and the ball avoidance
+     * @brief Get the margin that should be used for the defense area avoidance 
+     * @return A tuple with the margin that should be used for the defense area avoidance
     */
-    static std::tuple<double, double> getDefenseAreaMarginAndAvoidance(stp::AvoidObjects avoidObjects);
+    static std::tuple<double, double> getDefenseAreaMargin();
+
+    /**
+     * @brief Get ball avoidance based on current game state
+     * @return A bool indicating whether ball avoidance should be used or not
+    */
+    static bool getBallAvoidance();
 
 
     /**

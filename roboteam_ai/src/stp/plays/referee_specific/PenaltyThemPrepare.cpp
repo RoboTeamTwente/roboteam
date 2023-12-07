@@ -1,6 +1,5 @@
 #include "stp/plays/referee_specific/PenaltyThemPrepare.h"
 
-#include "stp/roles/passive/BallAvoider.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -18,17 +17,17 @@ PenaltyThemPrepare::PenaltyThemPrepare() : Play() {
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"),
-        std::make_unique<role::BallAvoider>("formation_0"),
-        std::make_unique<role::BallAvoider>("formation_1"),
-        std::make_unique<role::BallAvoider>("formation_2"),
-        std::make_unique<role::BallAvoider>("formation_3"),
-        std::make_unique<role::BallAvoider>("formation_4"),
+        std::make_unique<role::Formation>("formation_0"),
+        std::make_unique<role::Formation>("formation_1"),
+        std::make_unique<role::Formation>("formation_2"),
+        std::make_unique<role::Formation>("formation_3"),
+        std::make_unique<role::Formation>("formation_4"),
         // Additional roles if we play 11v11
-        std::make_unique<role::BallAvoider>("formation_5"),
-        std::make_unique<role::BallAvoider>("formation_6"),
-        std::make_unique<role::BallAvoider>("formation_7"),
-        std::make_unique<role::BallAvoider>("formation_8"),
-        std::make_unique<role::BallAvoider>("formation_9"),
+        std::make_unique<role::Formation>("formation_5"),
+        std::make_unique<role::Formation>("formation_6"),
+        std::make_unique<role::Formation>("formation_7"),
+        std::make_unique<role::Formation>("formation_8"),
+        std::make_unique<role::Formation>("formation_9"),
     };
 }
 

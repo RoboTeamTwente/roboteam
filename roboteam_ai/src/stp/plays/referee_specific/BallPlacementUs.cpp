@@ -5,7 +5,7 @@
 #include "stp/plays/referee_specific/BallPlacementUs.h"
 
 #include "stp/roles/active/BallPlacer.h"
-#include "stp/roles/passive/BallAvoider.h"
+#include "stp/roles/passive/Formation.h"
 #include "utilities/GameStateManager.hpp"
 
 namespace rtt::ai::stp::play {
@@ -19,11 +19,11 @@ BallPlacementUs::BallPlacementUs() : Play() {
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::BallAvoider>("keeper"), std::make_unique<role::BallPlacer>("ball_placer"), std::make_unique<role::BallAvoider>("formation_back_0"),
-        std::make_unique<role::BallAvoider>("formation_mid_0"), std::make_unique<role::BallAvoider>("formation_front_0"), std::make_unique<role::BallAvoider>("formation_mid_1"),
+        std::make_unique<role::Formation>("keeper"), std::make_unique<role::BallPlacer>("ball_placer"), std::make_unique<role::Formation>("formation_back_0"),
+        std::make_unique<role::Formation>("formation_mid_0"), std::make_unique<role::Formation>("formation_front_0"), std::make_unique<role::Formation>("formation_mid_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::BallAvoider>("formation_back_1"), std::make_unique<role::BallAvoider>("formation_front_1"), std::make_unique<role::BallAvoider>("formation_back_2"),
-        std::make_unique<role::BallAvoider>("formation_mid_2"), std::make_unique<role::BallAvoider>("formation_front_2")};
+        std::make_unique<role::Formation>("formation_back_1"), std::make_unique<role::Formation>("formation_front_1"), std::make_unique<role::Formation>("formation_back_2"),
+        std::make_unique<role::Formation>("formation_mid_2"), std::make_unique<role::Formation>("formation_front_2")};
 }
 
 uint8_t BallPlacementUs::score(const rtt::Field& field) noexcept {
@@ -72,6 +72,7 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
     stpInfos["ball_placer"].setShouldAvoidDefenseArea(false);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
+    stpInfos["ball_placer"].setShouldAvoidBall(false);
 
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < 1.0) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {

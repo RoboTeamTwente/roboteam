@@ -5,7 +5,7 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"
-#include "stp/roles/passive/BallAvoider.h"
+#include "stp/roles/passive/Formation.h"
 #include "stp/roles/passive/BallDefender.h"
 
 namespace rtt::ai::stp::play {
@@ -19,18 +19,18 @@ BallPlacementThem::BallPlacementThem() : Play() {
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::BallAvoider>("keeper"),
-        std::make_unique<role::BallAvoider>("harasser"),
-        std::make_unique<role::BallAvoider>("waller_0"),
-        std::make_unique<role::BallAvoider>("waller_1"),
-        std::make_unique<role::BallAvoider>("defender_0"),
-        std::make_unique<role::BallAvoider>("defender_1"),
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Formation>("harasser"),
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::BallDefender>("defender_0"),
+        std::make_unique<role::BallDefender>("defender_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::BallAvoider>("waller_2"),
-        std::make_unique<role::BallAvoider>("defender_2"),
-        std::make_unique<role::BallAvoider>("defender_3"),
-        std::make_unique<role::BallAvoider>("waller_3"),
-        std::make_unique<role::BallAvoider>("attacker_0"),
+        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::BallDefender>("defender_2"),
+        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::Formation>("waller_3"),
+        std::make_unique<role::Formation>("attacker_0"),
     };
 }
 
@@ -69,7 +69,6 @@ void BallPlacementThem::calculateInfoForRoles() noexcept {
 void BallPlacementThem::calculateInfoForHarasser() noexcept {
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
-    targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, world->getWorld()->getBall().value()->position, field);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }

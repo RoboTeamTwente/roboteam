@@ -79,9 +79,6 @@ void FreeKickThem::calculateInfoForHarasser() noexcept {
 
     auto enemyToBall = (world->getWorld()->getBall()->get()->position - enemyClosestToBall->getPos());
     auto targetPos = placementPos + (enemyToBall).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
-
-    // Make sure this is not too close to the ball
-    targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, world->getWorld()->getBall().value()->position, field);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setAngle(enemyToBall.angle() + M_PI);
 }

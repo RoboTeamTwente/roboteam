@@ -7,7 +7,7 @@
 
 namespace rtt::ai {
 
-std::tuple<double, double> FieldComputations::getDefenseAreaMarginAndAvoidance(stp::AvoidObjects avoidObjects) {
+std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
     double theirDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
     double ourDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
 
@@ -16,8 +16,6 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMarginAndAvoidance(s
 
     if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
         theirDefenseAreaMargin += 0.2;
-        avoidObjects.shouldAvoidBall = true;
-        avoidObjects.avoidBallDist = stp::control_constants::AVOID_BALL_DISTANCE;
     } else if (currentGameState == "free_kick_us") {
         theirDefenseAreaMargin += 0.2;
     }
@@ -26,8 +24,19 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMarginAndAvoidance(s
     return std::make_tuple(theirDefenseAreaMargin, ourDefenseAreaMargin);
 }
 
+bool FieldComputations::getBallAvoidance() {
+    std::string ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().title;
+    std::string currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+
+    if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
+        return true;
+    }
+
+    return false;
+}
+
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, Vector2 ballLocation) {
-    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMarginAndAvoidance(avoidObjects);
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
         return false;
@@ -247,7 +256,7 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
 }
 
 Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point) {
-    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMarginAndAvoidance(stp::AvoidObjects());
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (field.playArea.contains(point) && !field.rightDefenseArea.contains(point, theirDefenseAreaMargin) && !field.leftDefenseArea.contains(point, ourDefenseAreaMargin))
         return point;
 
@@ -296,7 +305,7 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
 }
 
 Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin) {
-    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMarginAndAvoidance(avoidObjects);
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
     auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);
 

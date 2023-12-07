@@ -228,7 +228,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos = FieldComputations::projectPointToValidPositionOnLine(
             field, enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS), enemyPos,
-            enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(10), AvoidObjects{}, 0.0, control_constants::ROBOT_RADIUS * 2, 0.0);
+            enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(10), AvoidObjects{});
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
         // Maybe reset such that we go to formation tactic?

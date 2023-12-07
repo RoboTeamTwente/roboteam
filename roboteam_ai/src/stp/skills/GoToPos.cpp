@@ -12,17 +12,14 @@ namespace rtt::ai::stp::skill {
 
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     Vector2 targetPos = info.getPositionToMoveTo().value();
-
-    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid())) {
-        targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid());
-    }
-
     auto avoidObj = info.getObjectsToAvoid();
-
-    if (GameStateManager::getCurrentGameState().getRuleSet().title == "stop") {
-        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, info.getBall()->get()->position, info.getField().value());
-        avoidObj.avoidBallDist = control_constants::AVOID_BALL_DISTANCE;
-        avoidObj.shouldAvoidBall = true;
+    std::string roleName = info.getRoleName();
+    Vector2 ballLocation = info.getBall()->get()->position;
+    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj, (0.0), ballLocation) && roleName != "ball_placer") {
+        targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
+        if (avoidObj.shouldAvoidBall) {
+            targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
+        }
     }
 
     rtt::BB::CommandCollision commandCollision;

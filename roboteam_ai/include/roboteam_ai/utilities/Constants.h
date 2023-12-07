@@ -89,9 +89,6 @@ class Constants {
     static RuleSet RULESET_DEFAULT();
     static RuleSet RULESET_HALT();
     static RuleSet RULESET_STOP();
-    static RuleSet RULESET_BALLPLACEMENT_THEM();
-    static RuleSet RULESET_BALLPLACEMENT_US();
-    static RuleSet RULESET_KICKOFF();
 
     /**
      * @brief Returns a vector of all the predefined rulesets

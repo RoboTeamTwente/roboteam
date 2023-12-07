@@ -1,5 +1,6 @@
 #include <basestation/LibusbUtilities.h>
 #include <roboteam_utils/Print.h>
+#include <REM_BaseTypes.h>
 
 #include <basestation/Basestation.hpp>
 #include <chrono>
@@ -114,6 +115,7 @@ void Basestation::listenForIncomingMessages() {
     BasestationMessage incomingMessage;
 
     RTT_DEBUG(this->identifier.toString(), " listenForIncomingMessages()");
+    RTT_DEBUG("Local rem version: ", REM_LOCAL_VERSION);
 
     while (this->shouldListenForIncomingMessages) {
         bool hasReadMessage = this->readBasestationMessage(incomingMessage);

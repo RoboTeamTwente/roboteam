@@ -119,15 +119,11 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
     for (const auto &robotCommand : commands) {
         // Convert the RobotCommand to a command for the basestation
 
-        REM_RobotCommand command;
+        REM_RobotCommand command = {};
         command.header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
         command.toRobotId = robotCommand.id;
         command.toColor = color == rtt::Team::BLUE;
-        command.fromBS = false;
         command.fromPC = true;
-        command.toPC = false;
-        command.toBS = false;
-        command.toBC = false;
         command.remVersion = REM_LOCAL_VERSION;
         // command.messageId = 0; TODO implement incrementing message id
         command.payloadSize = REM_PACKET_SIZE_REM_ROBOT_COMMAND;

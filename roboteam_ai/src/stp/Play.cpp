@@ -17,7 +17,6 @@ void Play::initialize() noexcept {
     distributeRoles();
     for (auto &role : roles) {
         if (role == nullptr) continue;
-        if (role->getName() == "ball_placer") continue;
         stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
     }
     previousRobotNum = world->getWorld()->getRobotsNonOwning().size();
